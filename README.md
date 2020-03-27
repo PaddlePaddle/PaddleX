@@ -1,4 +1,8 @@
-<div align=center><img src="./paddlex.png" width = "450" height = "73" alt="PaddleX" align=center />
+<div align=center>
+
+<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/paddlexlogo.png" width = "450" height = "73" alt="PaddleX" align=center />
+
+</div>
 
 飞桨全流程开发客户端，集飞桨核心框架、模型库、工具及组件等深度学习开发全流程所需能力于一身，不仅为您提供一键安装的客户端，开源开放的技术内核更方便您根据实际生产需求进行直接调用或二次开发，是提升深度学习项目开发效率的最佳辅助工具。
 
