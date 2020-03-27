@@ -2,7 +2,9 @@
 
 <div align=center>
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/paddlexlogo.png" width = "450" height = "69" alt="PaddleX" align=center />
+<br/><img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/paddlexlogo.png" width = "450" height = "69" alt="PaddleX" align=center />
+
+</br>
 
 </div>
 
