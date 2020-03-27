@@ -10,8 +10,6 @@
 
 
 
-
-
 飞桨全流程开发客户端，集飞桨核心框架、模型库、工具及组件等深度学习开发全流程所需能力于一身，不仅为您提供一键安装的客户端，开源开放的技术内核更方便您根据实际生产需求进行直接调用或二次开发，是提升深度学习项目开发效率的最佳辅助工具。
 
 PaddleX由PaddleX Client可视化前端和PaddleX Core后端技术内核两个部分组成。
@@ -167,7 +165,11 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 **如果您有更多问题或建议，欢迎以issue的形式，加入PaddleX官方QQ群（1045148026）直接反馈您的问题和需求**
 
+<div align=center>
+
 <img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" alt="09qq群二维码" align=center />
+
+</div>
 
 
 
