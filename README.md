@@ -26,6 +26,11 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 * <a href="#1">**产品特性**</a>
 * <a href="#2">**PaddleX Client可视化前端**</a>
+  1. <a href="#a">下载客户端</a>
+  2. <a href="#b">准备数据</a>
+  3. <a href="#c">导入我的数据集</a>
+  4. <a href="#d">创建项目</a>
+  5. <a href="#e">项目开发</a>
 * <a href="#3">**PaddleX Core后端技术内核**</a>
 * <a href="#4">**FAQ**</a>
 
@@ -53,19 +58,19 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 ## <a name="2">PaddleX Client可视化前端</a>
 
-**第一步：下载客户端**
+**<a name="a">第一步：下载客户端</a>**
 
 您需要前往 [官网](https://www.paddlepaddle.org.cn/paddle/paddlex)填写基本信息后下载试用PaddleX可视化前端
 
 
 
-**第二步：准备数据**
+**<a name="b">第二步：准备数据**</a>
 
 在开始模型训练前，您需要根据不同的任务类型，将数据标注为相应的格式。目前PaddleX支持【图像分类】、【目标检测】、【语义分割】、【实例分割】四种任务类型。不同类型任务的数据处理方式可查看[数据标注方式]([https://github.com/jiangjiajun/PaddleSolution/tree/master/Docs/3_%E6%A0%87%E6%B3%A8%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE](https://github.com/jiangjiajun/PaddleSolution/tree/master/Docs/3_标注自己的训练数据))。
 
 
 
-**第三步：导入我的数据集**
+**<a name="c">第三步：导入我的数据集</a>**
 
 ①数据标注完成后，您需要根据不同的任务，将数据和标注文件，按照客户端提示更名并保存到正确的文件中。
 
@@ -81,7 +86,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 
 
-**第四步：创建项目**
+**<a name="d">第四步：创建项目</a>**
 
 ① 在完成数据导入后，您可以点击「新建项目」创建一个项目。
 
@@ -91,7 +96,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 
 
-**第四步：项目开发**
+<a name="e">**第五步：项目开发**</a>
 
 ① **数据选择**：项目创建完成后，您需要选择已载入客户端并校验后的数据集，并点击下一步，进入参数配置页面。
 
