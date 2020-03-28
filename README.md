@@ -66,7 +66,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 **<a name="b">第二步：准备数据**</a>
 
-在开始模型训练前，您需要根据不同的任务类型，将数据标注为相应的格式。目前PaddleX支持【图像分类】、【目标检测】、【语义分割】、【实例分割】四种任务类型。不同类型任务的数据处理方式可查看[数据标注方式]([https://github.com/jiangjiajun/PaddleSolution/tree/master/Docs/3_%E6%A0%87%E6%B3%A8%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE](https://github.com/jiangjiajun/PaddleSolution/tree/master/Docs/3_标注自己的训练数据))。
+在开始模型训练前，您需要根据不同的任务类型，将数据标注为相应的格式。目前PaddleX支持【图像分类】、【目标检测】、【语义分割】、【实例分割】四种任务类型。不同类型任务的数据处理方式可查看[数据标注方式](https://github.com/jiangjiajun/PaddleSolution/tree/master/Docs/3_标注自己的训练数据)。
 
 
 
