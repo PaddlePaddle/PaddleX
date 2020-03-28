@@ -1,0 +1,51 @@
+{
+  "flags": {},
+  "shapes": [
+    {
+      "label": "person",
+      "line_color": null,
+      "fill_color": null,
+      "points": [
+        [
+          191,
+          107
+        ],
+        [
+          313,
+          329
+        ]
+      ],
+      "shape_type": "rectangle"
+    },
+    {
+      "label": "person",
+      "line_color": null,
+      "fill_color": null,
+      "points": [
+        [
+          365,
+          83
+        ],
+        [
+          500,
+          333
+        ]
+      ],
+      "shape_type": "rectangle"
+    }
+  ],
+  "lineColor": [
+    0,
+    255,
+    0,
+    128
+  ],
+  "fillColor": [
+    255,
+    0,
+    0,
+    128
+  ],
+  "imagePath": "2011_000003.jpg",
+  "imageData": null
+}
