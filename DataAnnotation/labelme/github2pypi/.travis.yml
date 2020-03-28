@@ -1,0 +1,26 @@
+sudo: false
+
+cache:
+  - pip
+
+dist: trusty
+
+language: python
+
+python:
+  - '3.6'
+  - '2.7'
+
+branches:
+  only:
+    - master
+
+notifications:
+  email: false
+
+install:
+  - true  # drop pip install -r requirements.txt
+
+script:
+  - pip install flake8
+  - flake8 .
