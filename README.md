@@ -14,9 +14,9 @@
 
 PaddleX由PaddleX Client可视化前端和PaddleX Core后端技术内核两个部分组成。
 
-PaddleX Client是提升项目开发效率的核心模块，开发者可快速完成深度学习模型全流程开发。而开源开放的后端技术内核PaddleX Core， 为开发者提供统一的任务API，在集成飞桨模型库、工具组件的基础上，提供更高层、简洁的开发方式。开发者可以根据实际业务需求，选择使用可视化前端，或直接调用PaddleX Core后端技术内核完成任务开发。
+PaddleX Client是提升项目开发效率、有效降低深度学习应用中繁杂的配置成本的前端模块，帮助开发者快速完成深度学习模型全流程开发。开源开放的后端技术内核--PaddleX Core，为开发者提供了基于飞桨核心框架的全流程应用API，在集成飞桨模型库、工具组件的基础上，提供更高层、简洁的开发方式。开发者可以根据实际业务需求，选择使用可视化前端，或直接调用PaddleX Core后端技术内核进行任务开发或软件集成。
 
- PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界面， 还保证了开发者可以直接灵活地使用底层技术模块。
+PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界面， 还保证开发者可以直接灵活地使用底层技术模块。
 
  我们诚挚地邀请您前往 [官网](https://www.paddlepaddle.org.cn/paddle/paddlex)下载试用PaddleX可视化前端，并获得您宝贵的意见或开源项目贡献。
 
@@ -186,6 +186,10 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
      例如：GTX 1070+以上性能的显卡
 
+     ***Windows及Linux系统CUDA版本及驱动版本对应表：***
+
+     <img src="./images/10CUDA与驱动版本对应表.png" alt="10CUDA与驱动版本对应表" align=center />
+
      * **CPU**：
 
      PaddleX 当前支持您用本地CPU进行训练，但推荐使用GPU以获得更好的开发体验。
@@ -201,7 +205,6 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 **如果您有更多问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的意见及建议**
 
 <div align=center>
-
 <img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" alt="09qq群二维码" align=center />
 
 </div>
