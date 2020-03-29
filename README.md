@@ -182,21 +182,21 @@ PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界�
 
      * **GPU**（Windows及Linux系统）：
 
-     推荐使用支持CUDA的NVIDIA显卡（驱动版本>=411.31，显存8G以上）
+     推荐使用支持CUDA的NVIDIA显卡，例如：GTX 1070+以上性能的显卡；
 
-     例如：GTX 1070+以上性能的显卡
+     Windows系统X86_64驱动版本>=411.31；
 
-     ***Windows及Linux系统CUDA版本及驱动版本对应表：***
+     Linux系统X86_64驱动版本>=410.48；
 
-     <img src="./images/10CUDA与驱动版本对应表.png" alt="10CUDA与驱动版本对应表" align=center />
+     显存8G以上；
 
      * **CPU**：
 
      PaddleX 当前支持您用本地CPU进行训练，但推荐使用GPU以获得更好的开发体验。
 
-     * **内存：**建议8G以上
+     * **内存** ：建议8G以上
 
-     * **硬盘空间：**建议SSD剩余空间1T以上（非必须）
+     * **硬盘空间** ：建议SSD剩余空间1T以上（非必须）
 
        ***注：PaddleX 在 Windows及Mac系统只支持单卡模式。Windows暂时不支持NCCL。*** 
 
@@ -205,7 +205,7 @@ PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界�
 **如果您有更多问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的意见及建议**
 
 <div align=center>
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" alt="09qq群二维码" align=center />
+<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" width = "450" height = "350" alt="09qq群二维码" align=center />
 
 </div>
 
