@@ -1,4 +1,0 @@
-__ignore__
-_background_
-car
-track
