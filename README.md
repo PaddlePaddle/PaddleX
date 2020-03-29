@@ -205,7 +205,7 @@ PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界�
 **如果您有更多问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的意见及建议**
 
 <div align=center>
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" width = "450" height = "350" alt="09qq群二维码" align=center />
+<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" alt="09qq群二维码" align=center />
 
 </div>
 
