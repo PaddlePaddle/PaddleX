@@ -104,7 +104,7 @@ PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界�
 
 ② **参数配置**：主要分为**模型参数**、**训练参数**、**优化策略**三部分。您可根据实际需求选择模型结构及对应的训练参数、优化策略，使得任务效果最佳。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/04%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE.png" width = "500" height = "500" alt="04参数配置" align=center />
+<img src="./images/04参数配置-2.png" width = "500" height = "500" alt="04参数配置-2" align=center />
 
 参数配置完成后，点击启动训练，模型开始训练并进行效果评估。
 
