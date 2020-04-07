@@ -1,8 +1,7 @@
 
 
 <div align=center>
-
-<br/><img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/paddlexlogo.png" width = "450" height = "69" alt="PaddleX" align=center />
+<br/><img src="./images/paddlexlogo.png" width = "450" height = "69" alt="PaddleX" align=center />
 
 </br>
 
@@ -14,9 +13,9 @@
 
 PaddleX由PaddleX Client可视化前端和PaddleX Core后端技术内核两个部分组成。
 
-PaddleX Client是提升项目开发效率的核心模块，开发者可快速完成深度学习模型全流程开发。而开源开放的后端技术内核PaddleX Core， 为开发者提供统一的任务API，在集成飞桨模型库、工具组件的基础上，提供更高层、简洁的开发方式。开发者可以根据实际业务需求，选择使用可视化前端，或直接调用PaddleX Core后端技术内核完成任务开发。
+PaddleX Client是提升项目开发效率、有效降低深度学习应用中繁杂的配置成本的前端模块，帮助开发者快速完成深度学习模型全流程开发。开源开放的后端技术内核--PaddleX Core，为开发者提供了基于飞桨核心框架的全流程应用API，在集成飞桨模型库、工具组件的基础上，提供更高层、简洁的开发方式。开发者可以根据实际业务需求，选择使用可视化前端，或直接调用PaddleX Core后端技术内核进行任务开发或软件集成。
 
- PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界面， 还保证了开发者可以直接灵活地使用底层技术模块。
+PaddleX不仅打通了深度学习开发的全流程、提供可视化开发界面， 还保证开发者可以直接灵活地使用底层技术模块。
 
  我们诚挚地邀请您前往 [官网](https://www.paddlepaddle.org.cn/paddle/paddlex)下载试用PaddleX可视化前端，并获得您宝贵的意见或开源项目贡献。
 
@@ -40,7 +39,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 1. **全流程打通**
 
-将深度学习开发从数据接入、模型训练、参数调优、模型评估、预测部署全流程打通，省去了对各环节间串连的代码开发与脚本调用，极大地提升了开发效率。
+将深度学习开发从数据接入、模型训练、参数调优、模型评估、预测部署全流程打通，并提供可视化的使用界面，省去了对各环节间串连的代码开发与脚本调用，极大地提升了开发效率。
 
 2. **开源技术内核**
 
@@ -48,7 +47,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 3. **产业深度兼容**
 
-高度兼容Windows、Mac、Linux系统，同时支持NVIDIA GPU加速深度学习训练。本地开发、保证数据安全，并提供图形化开发界面，高度符合产业应用的实际需求。
+提供兼容Windows、Mac、Linux多平台的客户端，同时支持NVIDIA GPU加速深度学习训练。无需繁琐的前置依赖，一键安装，开箱即用。本地开发、保证数据安全，高度符合产业应用的实际需求。
 
 4. **教程与服务**
 
@@ -66,7 +65,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 **<a name="b">第二步：准备数据**</a>
 
-在开始模型训练前，您需要根据不同的任务类型，将数据标注为相应的格式。目前PaddleX支持【图像分类】、【目标检测】、【语义分割】、【实例分割】四种任务类型。不同类型任务的数据处理方式可查看[数据标注方式](https://github.com/jiangjiajun/PaddleSolution/tree/master/Docs/3_标注自己的训练数据)。
+在开始模型训练前，您需要根据不同的任务类型，将数据标注为相应的格式。目前PaddleX支持【图像分类】、【目标检测】、【语义分割】、【实例分割】四种任务类型。不同类型任务的数据处理方式可查看[数据标注方式](https://github.com/PaddlePaddle/PaddleX/tree/master/DataAnnotation/AnnotationNote)。
 
 
 
@@ -76,13 +75,13 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 ②在工具内新建数据集，选择与数据集匹配的任务类型，并选择数据集对应的路径，将数据集导入。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/00%E6%95%B0%E6%8D%AE%E9%9B%86%E5%AF%BC%E5%85%A5%E8%AF%B4%E6%98%8E.png" width = "500" height = "350" alt="00数据集导入说明" align=center />
+<img src="./images/00%E6%95%B0%E6%8D%AE%E9%9B%86%E5%AF%BC%E5%85%A5%E8%AF%B4%E6%98%8E.png" width = "500" height = "350" alt="00数据集导入说明" align=center />
 
 ③选定导入数据集后，工具会自动校验数据及标注文件是否合规，校验成功后，您可根据实际需求，将数据集按比例划分为训练集、验证集、测试集。
 
 ④您可在「数据分析」模块按规则预览您标注的数据集，双击单张图片可放大查看。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/01%E6%95%B0%E6%8D%AE%E5%88%87%E5%88%86%E5%8F%8A%E9%A2%84%E8%A7%88.png" width = "500" height = "300" alt="01数据切分及预览" align=center />
+<img src="./images/01%E6%95%B0%E6%8D%AE%E5%88%87%E5%88%86%E5%8F%8A%E9%A2%84%E8%A7%88.png" width = "500" height = "300" alt="01数据切分及预览" align=center />
 
 
 
@@ -92,7 +91,7 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 ② 您可根据实际任务需求选择项目的任务类型，需要注意项目所采用的数据集也带有任务类型属性，两者需要进行匹配。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/02%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE.png" width = "500" height = "300" alt="02创建项目" align=center />
+<img src="./images/02%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE.png" width = "500" height = "300" alt="02创建项目" align=center />
 
 
 
@@ -100,11 +99,11 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 ① **数据选择**：项目创建完成后，您需要选择已载入工具并校验后的数据集，并点击下一步，进入参数配置页面。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/03%E9%80%89%E6%8B%A9%E6%95%B0%E6%8D%AE%E9%9B%86.png" width = "400" height = "200" alt="03选择数据集" align=center />
+<img src="./images/03%E9%80%89%E6%8B%A9%E6%95%B0%E6%8D%AE%E9%9B%86.png" width = "400" height = "200" alt="03选择数据集" align=center />
 
 ② **参数配置**：主要分为**模型参数**、**训练参数**、**优化策略**三部分。您可根据实际需求选择模型结构及对应的训练参数、优化策略，使得任务效果最佳。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/04%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE.png" width = "500" height = "500" alt="04参数配置" align=center />
+<img src="./images/04参数配置-2.png" width = "500" height = "500" alt="04参数配置-2" align=center />
 
 参数配置完成后，点击启动训练，模型开始训练并进行效果评估。
 
@@ -112,9 +111,9 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 在训练过程中，您可通过VisualDL查看模型训练过程时的参数变化、日志详情，及当前最优的训练集和验证集训练指标。模型在训练过程中通过点击"终止训练"随时终止训练过程。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/05%E8%AE%AD%E7%BB%83%E5%8F%AF%E8%A7%86%E5%8C%96.png" width = "500" height = "350" alt="05训练可视化" align=center />
+<img src="./images/05%E8%AE%AD%E7%BB%83%E5%8F%AF%E8%A7%86%E5%8C%96.png" width = "500" height = "350" alt="05训练可视化" align=center />
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/06VisualDL.png" width = "500" height = "300" alt="06VisualDL" align=center />
+<img src="./images/06VisualDL.png" width = "500" height = "300" alt="06VisualDL" align=center />
 
 模型训练结束后，点击”下一步“，进入模型评估页面。
 
@@ -126,13 +125,13 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 根据评估结果，您可决定进入模型发布页面，或返回先前步骤调整参数配置重新进行训练。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/07%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0.jpg" width = "500" height = "550" alt="07模型评估" align=center />
+<img src="./images/07%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0.jpg" width = "500" height = "550" alt="07模型评估" align=center />
 
 ⑤**模型发布**
 
 当模型效果满意后，您可根据实际的生产环境需求，选择将模型发布为需要的版本。
 
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/08%E6%A8%A1%E5%9E%8B%E5%8F%91%E5%B8%83.png" width = "450" height = "350" alt="08模型发布" align=center />
+<img src="./images/08%E6%A8%A1%E5%9E%8B%E5%8F%91%E5%B8%83.png" width = "450" height = "350" alt="08模型发布" align=center />
 
 
 
@@ -168,11 +167,46 @@ PaddleX Client是提升项目开发效率的核心模块，开发者可快速完
 
 
 
-**如果您有更多问题或建议，欢迎以issue的形式，加入PaddleX官方QQ群（1045148026）直接反馈您的问题和需求**
+5. **为什么我的安装总是报错？**
+
+   PaddleX的安装包中打包了PaddlePaddle全流程开发所需的所有依赖，理论上不需要您额外安装CUDA等ToolKit (如使用NVIDIA GPU), 但对操作系统版本、处理器架构、驱动版本等有一定要求，如安装发生错误，建议您先检查开发环境是否与PaddleX推荐环境匹配。
+
+   **这里我们推荐您在以下环境中安装使用PaddleX：**
+
+   * **操作系统：** 
+     * Windows 7/8/10（推荐Windows 10）；
+     * Mac OS 10.13+ ；
+     * Ubuntu 18.04+；
+
+   ​       ***注：处理器需为x86_64架构，支持 MKL***
+
+   * **训练硬件：**
+
+     * **GPU**（Windows及Linux系统）：
+
+       推荐使用支持CUDA的NVIDIA显卡，例如：GTX 1070+以上性能的显卡；
+
+       Windows系统X86_64驱动版本>=411.31；
+
+       Linux系统X86_64驱动版本>=410.48；
+
+       显存8G以上；
+     * **CPU**：
+
+       PaddleX 当前支持您用本地CPU进行训练，但推荐使用GPU以获得更好的开发体验。
+
+     * **内存** ：建议8G以上
+
+     * **硬盘空间** ：建议SSD剩余空间1T以上（非必须）
+
+   ​       ***注：PaddleX 在 Windows及Mac系统只支持单卡模式。Windows暂时不支持NCCL。*** 
+
+
+
+**如果您有更多问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的意见及建议**
 
 <div align=center>
-
-<img src="https://github.com/PaddlePaddle/PaddleX/blob/master/images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" alt="09qq群二维码" align=center />
+<img src="./images/09qq%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" alt="09qq群二维码" align=center />
 
 </div>
 
