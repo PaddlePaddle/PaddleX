@@ -26,7 +26,7 @@
   3. <a href="#c">导入我的数据集</a>
   4. <a href="#d">创建项目</a>
   5. <a href="#e">项目开发</a>
-* <a href="#3">**PaddleX Core后端技术内核**</a>
+* <a href="#3">**PaddleX 后端技术内核**</a>
 * <a href="#4">**FAQ**</a>
 
 
@@ -51,7 +51,7 @@
 
 
 
-## <a name="2">PaddleX Client可视化前端</a>
+## <a name="2">PaddleX 可视化前端</a>
 
 **<a name="a">第一步：下载可视化前端</a>**
 
