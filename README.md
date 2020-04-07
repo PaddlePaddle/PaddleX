@@ -20,7 +20,7 @@
 ## 目录
 
 * <a href="#1">**产品特性**</a>
-* <a href="#2">**PaddleX Client可视化前端**</a>
+* <a href="#2">**PaddleX 可视化前端**</a>
   1. <a href="#a">下载可视化前端</a>
   2. <a href="#b">准备数据</a>
   3. <a href="#c">导入我的数据集</a>
@@ -53,7 +53,7 @@
 
 ## <a name="2">PaddleX Client可视化前端</a>
 
-**<a name="a">第一步：下载</a>**
+**<a name="a">第一步：下载可视化前端</a>**
 
 您需要前往 [官网](https://www.paddlepaddle.org.cn/paddle/paddlex)填写基本信息后下载试用PaddleX可视化前端
 
@@ -131,9 +131,9 @@
 
 
 
-## <a name="3">PaddleX Core后端技术内核</a>
+## <a name="3">PaddleX 技术内核</a>
 
-
+将于2020年5月下旬全面开源，敬请期待
 
 
 
