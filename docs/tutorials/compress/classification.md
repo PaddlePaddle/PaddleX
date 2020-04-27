@@ -8,7 +8,7 @@
 > 第三步：根据第二步计算的敏感度，设定`eval_metric_loss`，对模型裁剪后重新在训练数据集上训练
 
 ## 步骤一 训练MobileNetV2
-> 模型训练使用文档可以直接参考[分类模型训练](../train/classification.md)，本文档在该代码基础上添加了部分参数选项，用户可直接下载模型训练代码[tutorials/compress/classification/mobilenetv2.py](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/classification/mobilenetv2.py)  
+> 模型训练使用文档可以直接参考[分类模型训练](../train/classification.md)，本文档在该代码基础上添加了部分参数选项，用户可直接下载模型训练代码[tutorials/compress/classification/mobilenetv2.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/classification/mobilenetv2.py)  
 > 使用如下命令开始模型训练
 ```
 python mobilenetv2.py
