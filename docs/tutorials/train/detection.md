@@ -14,7 +14,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import paddlex as pdx
 ```
 
-> 这里使用昆虫数据集，训练集、验证集和测试集共包含1938个样本，6个类别。
+> 这里使用昆虫数据集，训练集、验证集和测试集共包含217个样本，6个类别。
 
 ```python
 insect_dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'

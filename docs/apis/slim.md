@@ -25,14 +25,14 @@ paddlex.slim.export_quant_model(model, test_dataset, batch_size=2, batch_num=10,
 导出量化模型，该接口实现了Post Quantization量化方式，需要传入测试数据集，并设定`batch_size`和`batch_num`，模型会以`batch_size`的大小计算`batch_num`批样本数据，并以这些样本数据的计算结果为统计信息进行模型量化。
 
 ### 参数
-```
+
 * **model**(paddlex.cls.models/paddlex.det.models/paddlex.seg.models): paddlex加载的模型。
 * **test_dataset**(paddlex.dataset): 测试数据集
 * **batch_size**(int): 进行前向计算时的批数据大小
 * **batch_num**(int): 进行向前计算时批数据数量
 * **save_dir**(str): 量化后模型的保存目录
 * **cache_dir**(str): 量化过程中的统计数据临时存储目录
-```
+
 
 ### 使用示例
 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/vegetables_mobilenet.tar.gz)，[数据集](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
