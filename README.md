@@ -1,7 +1,10 @@
 <img src="./paddlex.png" width = "300" height = "47" alt="PaddleX" align=center />
 
-[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)  
+[![Build Status](https://travis-ci.org/PaddlePaddle/PaddleX.svg?branch=release/v1.6)](https://travis-ci.org/PaddlePaddle/PaddleX)
+[![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
+[![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)
+![python version](https://img.shields.io/badge/python-3.6+-orange.svg)
+![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
 
 PaddleX是基于飞桨技术生态的全流程深度学习模型开发工具。具备易集成，易使用，全流程等特点。PaddleX作为深度学习开发工具，不仅提供了开源的内核代码，可供用户灵活使用或集成，同时也提供了配套的前端可视化客户端套件，让用户以可视化地方式进行模型开发，访问[PaddleX官网](https://www.paddlepaddle.org.cn/paddlex/download)获取更多相关细节。
 ## 安装
