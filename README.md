@@ -1,4 +1,5 @@
 <img src="./paddlex.png" width = "200" height = "31" alt="PaddleX" align=center />
+
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)  
 
