@@ -1,14 +1,14 @@
 # 检测模型裁剪
 
 ---
-本文档训练代码可直接在PaddleX的Repo中下载，[代码tutorials/compress/detection](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/detection)  
+本文档训练代码可直接在PaddleX的Repo中下载，[代码tutorials/compress/detection](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/detection)  
 本文档按如下方式对模型进行了裁剪
 > 第一步：在训练数据集上训练YOLOv3
 > 第二步：在验证数据集上计算模型中各个参数的敏感度信息  
 > 第三步：根据第二步计算的敏感度，设定`eval_metric_loss`，对模型裁剪后重新在训练数据集上训练
 
 ## 步骤一 训练YOLOv3
-> 模型训练使用文档可以直接参考[检测模型训练](../train/detection.md)，本文档在该代码基础上添加了部分参数选项，用户可直接下载模型训练代码[tutorials/compress/detection/yolov3_mobilnet.py](http://gitlab.baidu.com/Paddle/PaddleX/blob/develop_details/tutorials/compress/detection/yolov3_mobilenet.py)  
+> 模型训练使用文档可以直接参考[检测模型训练](../train/detection.md)，本文档在该代码基础上添加了部分参数选项，用户可直接下载模型训练代码[tutorials/compress/detection/yolov3_mobilnet.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/detection/yolov3_mobilenet.py)  
 > 使用如下命令开始模型训练
 ```
 python yolov3_mobilenet.py
@@ -37,7 +37,7 @@ pdx.slim.cal_params_sensitivities(model,
                                 eval_dataset,
                                 batch_size=8)
 ```
-> 本步骤代码已整理至[tutorials/compress/detection/cal_sensitivities_file.py](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/detection/cal_sensitivities_file.py)，用户可直接下载使用  
+> 本步骤代码已整理至[tutorials/compress/detection/cal_sensitivities_file.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/detection/cal_sensitivities_file.py)，用户可直接下载使用  
 > 使用如下命令开始计算敏感度
 ```
 python cal_sensitivities_file.py --model_dir output/yolov3_mobile/best_model --dataset insect_det --save_file sensitivities.data

@@ -1,7 +1,7 @@
 # 训练语义分割模型
 
 ---
-更多语义分割模型在Cityscapes数据集上的训练代码可参考[代码tutorials/train/segmentation/unet.py](http://gitlab.baidu.com/Paddle/PaddleX/blob/develop/tutorials/train/segmentation/unet.py)、[代码tutorials/train/segmentation/deeplabv3p.py](http://gitlab.baidu.com/Paddle/PaddleX/blob/develop/tutorials/train/segmentation/deeplabv3p.py)。
+更多语义分割模型在Cityscapes数据集上的训练代码可参考[代码tutorials/train/segmentation/unet.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/unet.py)、[代码tutorials/train/segmentation/deeplabv3p.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/deeplabv3p.py)。
 
 **1.下载并解压训练所需的数据集**
 
@@ -57,7 +57,7 @@ eval_dataset = pdx.datasets.SegDataset(
 
 **4.创建DeepLabv3+模型，并进行训练**
 
-> 创建DeepLabv3+模型，`num_classes` 需要设置为不包含背景类的类别数，即: 目标类别数量(1)，详细代码可参见[demo](http://gitlab.baidu.com/Paddle/PaddleX/blob/develop/tutorials/train/segmentation/deeplabv3p.py#L44)。
+> 创建DeepLabv3+模型，`num_classes` 需要设置为不包含背景类的类别数，即: 目标类别数量(1)，详细代码可参见[demo](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/deeplabv3p.py#L44)。
 
 ```python
 num_classes = num_classes

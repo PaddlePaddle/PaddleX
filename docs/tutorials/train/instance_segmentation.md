@@ -2,7 +2,7 @@
 
 ------
 
-本文档训练代码可直接下载[代码tutorials/train/detection/mask_rcnn_r50_fpn.py](http://gitlab.baidu.com/Paddle/PaddleX/blob/develop/tutorials/train/detection/mask_rcnn_r50_fpn.py)。
+本文档训练代码可直接下载[代码tutorials/train/detection/mask_rcnn_r50_fpn.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/mask_rcnn_r50_fpn.py)。
 
 **1.下载并解压训练所需的数据集**
 

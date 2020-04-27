@@ -1,4 +1,6 @@
 <img src="./paddlex.png" width = "200" height = "31" alt="PaddleX" align=center />
+[![Build Status][image-1]][1]
+[![License][image-2]]()
 
 PaddleX是基于飞桨技术生态的全流程深度学习模型开发工具。具备易集成，易使用，全流程等特点。PaddleX作为深度学习开发工具，不仅提供了开源的内核代码，可供用户灵活使用或集成，同时也提供了配套的前端可视化客户端套件，让用户以可视化地方式进行模型开发，访问[PaddleX官网](https://www.paddlepaddle.org.cn/paddlex/download)获取更多相关细节。
 ## 安装

@@ -20,14 +20,14 @@ PaddleX提供了两种裁剪训练方式，
 1. 第1种方法，用户自行计算裁剪配置
 ```
 # 训练模型
-python classification/mobilenet.py
+python classification/mobilenetv2.py
 # 计算模型参数敏感度
 python classification/cal_sensitivities_file.py --model_dir=output/mobilenetv2/epoch_10 --save_file=./sensitivities.data
 # 裁剪训练
-python classification/mobilenet.py  --model_dir=output/mobilenetv2/epoch_10 --sensetive_file=./sensitivities.data --eval_metric_loss=0.05
+python classification/mobilenetv2.py  --model_dir=output/mobilenetv2/epoch_10 --sensitivities_file=./sensitivities.data --eval_metric_loss=0.05
 ```
 2. 第2种方法，使用PaddleX预先计算好的参数敏感度文件
 ```
 # 自动下载PaddleX预先在ImageNet上计算好的参数敏感度信息文件
-python classification/mobilenet.py --sensitivities_file=DEFAULT --eval_metric_loss=0.05
+python classification/mobilenetv2.py --sensitivities_file=DEFAULT --eval_metric_loss=0.05
 ```

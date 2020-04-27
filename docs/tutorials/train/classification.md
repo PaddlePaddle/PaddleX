@@ -1,7 +1,7 @@
 # 训练图像分类模型
 
 ---
-本文档训练代码可参考PaddleX的[代码tutorial/train/classification/mobilenetv2.py](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/train/classification/mobilenetv2.py)
+本文档训练代码可参考PaddleX的[代码tutorial/train/classification/mobilenetv2.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/classification/mobilenetv2.py)
 
 **1.下载并解压训练所需的数据集**
 

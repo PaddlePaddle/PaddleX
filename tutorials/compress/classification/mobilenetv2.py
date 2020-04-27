@@ -63,14 +63,14 @@ def train(model_dir=None, sensitivities_file=None, eval_metric_loss=0.05):
             model_dir)
         pretrain_weights = model_dir
 
-    save_dir = './output/mobilenet'
+    save_dir = './output/mobilenetv2'
     if sensitivities_file is not None:
         # DEFAULT 指使用模型预置的参数敏感度信息作为裁剪依据
         if sensitivities_file != "DEFAULT":
             assert os.path.exists(
                 sensitivities_file), "Path {} not exist".format(
                     sensitivities_file)
-        save_dir = './output/mobilenet_prune'
+        save_dir = './output/mobilenetv2_prune'
 
     model.train(
         num_epochs=10,

@@ -19,6 +19,7 @@ import colorama
 from colorama import init
 import paddlex
 
+init(autorest=True)
 levels = {0: 'ERROR', 1: 'WARNING', 2: 'INFO', 3: 'DEBUG'}
 
 
@@ -28,7 +29,6 @@ def log(level=2, message="", use_color=False):
     current_time = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
     if paddlex.log_level >= level:
         if use_color:
-            init(autoreset=True)
             print("\033[1;31;40m{} [{}]\t{}\033[0m".format(
                 current_time, levels[level],
                 message).encode("utf-8").decode("latin1"))

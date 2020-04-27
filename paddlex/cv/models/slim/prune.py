@@ -73,7 +73,7 @@ def sensitivity(program,
             logging.info(
                 "Total evaluate iters={}, current={}, progress={}, eta={}".
                 format(
-                    total_evaluate_iters, current_iter, progress,
+                    total_evaluate_iters, current_iter+1, progress,
                     seconds_to_hms(
                         int(cost * (total_evaluate_iters - current_iter)))),
                 use_color=True)

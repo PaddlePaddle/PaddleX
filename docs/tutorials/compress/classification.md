@@ -1,17 +1,17 @@
 # 分类模型裁剪
 
 ---
-本文档训练代码可直接在PaddleX的Repo中下载，[代码tutorials/compress/classification](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/classification)  
+本文档训练代码可直接在PaddleX的Repo中下载，[代码tutorials/compress/classification](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/classification)  
 本文档按如下方式对模型进行了裁剪
 > 第一步：在训练数据集上训练MobileNetV2  
 > 第二步：在验证数据集上计算模型中各个参数的敏感度信息  
 > 第三步：根据第二步计算的敏感度，设定`eval_metric_loss`，对模型裁剪后重新在训练数据集上训练
 
 ## 步骤一 训练MobileNetV2
-> 模型训练使用文档可以直接参考[分类模型训练](../train/classification.md)，本文档在该代码基础上添加了部分参数选项，用户可直接下载模型训练代码[tutorials/compress/classification/mobilenet.py](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/classification/mobilenet.py)  
+> 模型训练使用文档可以直接参考[分类模型训练](../train/classification.md)，本文档在该代码基础上添加了部分参数选项，用户可直接下载模型训练代码[tutorials/compress/classification/mobilenetv2.py](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/classification/mobilenetv2.py)  
 > 使用如下命令开始模型训练
 ```
-python mobilenet.py
+python mobilenetv2.py
 ```
 
 ## 步骤二 计算参数敏感度
@@ -23,7 +23,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import paddlex as pdx
 
-model_dir = './output/mobilenet/best_model'
+model_dir = './output/mobilenetv2/best_model'
 model = pdx.load_model(model_dir)
 
 # 定义验证所用的数据集
@@ -38,16 +38,16 @@ pdx.slim.cal_params_sensitivities(model,
                                 eval_dataset,
                                 batch_size=8)
 ```
-> 本步骤代码已整理至[tutorials/compress/classification/cal_sensitivities_file.py](http://gitlab.baidu.com/Paddle/PaddleX/tree/develop/tutorials/compress/classification/cal_sensitivities_file.py)，用户可直接下载使用  
+> 本步骤代码已整理至[tutorials/compress/classification/cal_sensitivities_file.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/classification/cal_sensitivities_file.py)，用户可直接下载使用  
 > 使用如下命令开始计算敏感度
 ```
-python cal_sensitivities_file.py --model_dir output/mobilenet/best_model --dataset vegetables_cls --save_file sensitivities.data
+python cal_sensitivities_file.py --model_dir output/mobilenetv2/best_model --dataset vegetables_cls --save_file sensitivities.data
 ```
 
 ## 步骤三 开始裁剪训练
 > 本步骤代码与步骤一使用同一份代码文件，使用如下命令开始裁剪训练
 ```
-python mobilenet.py --model_dir output/mobilenet/best_model --sensitivities_file sensitivities.data --eval_metric_loss 0.10
+python mobilenetv2.py --model_dir output/mobilenetv2/best_model --sensitivities_file sensitivities.data --eval_metric_loss 0.10
 ```
 
 ## 实验效果

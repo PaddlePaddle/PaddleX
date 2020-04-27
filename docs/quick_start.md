@@ -1,6 +1,6 @@
 # 10分钟快速上手使用
 
-本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读文档[使用教程-模型训练](/tutorials/train)来了解更多模型任务的训练使用方式。
+本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读PaddleX的**使用教程**来了解更多模型任务的训练使用方式。
 
 ## 1. 准备蔬菜分类数据集
 ```
@@ -88,4 +88,5 @@ Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'cate
 ## 其它推荐
 - 1.[目标检测模型训练](tutorials/train/detection.md)
 - 2.[语义分割模型训练](tutorials/train/segmentation.md)
+- 3.[实例分割模型训练](tutorials/train/instance_segmentation.md)
 - 3.[模型太大，想要更小的模型，试试模型裁剪吧!](tutorials/compress/classification.md)
