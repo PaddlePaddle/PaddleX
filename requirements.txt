@@ -1,0 +1,8 @@
+pyyaml
+tqdm
+colorama
+sklearn
+cython
+pycocotools
+visualdl=1.3.0
+paddleslim=1.0.1
