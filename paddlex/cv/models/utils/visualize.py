@@ -25,7 +25,7 @@ def visualize_detection(image, result, threshold=0.5, save_dir=None):
 
     image_name = os.path.split(image)[-1]
     image = Image.open(image).convert('RGB')
-    image = draw_bbox_mask(image, results, threshold=threshold)
+    image = draw_bbox_mask(image, result, threshold=threshold)
     if save_dir is not None:
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)

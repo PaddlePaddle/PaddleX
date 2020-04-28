@@ -18,6 +18,7 @@ PaddleX是基于飞桨技术生态的深度学习全流程开发工具。具备�
    gpu_configure.md
    tutorials/index.rst
    metrics.md
+   deploy.md
    FAQ.md
 
 * PaddleX版本: v0.1.0
