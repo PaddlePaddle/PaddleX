@@ -19,7 +19,7 @@ import colorama
 from colorama import init
 import paddlex
 
-init(autorest=True)
+init(autoreset=True)
 levels = {0: 'ERROR', 1: 'WARNING', 2: 'INFO', 3: 'DEBUG'}
 
 

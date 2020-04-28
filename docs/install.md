@@ -12,6 +12,9 @@ conda activate paddlex
 # cpu版: pip install paddlepaddle
 pip install paddlepaddle-gpu
 
+# 安装cython
+pip install cython
+
 # 安装PaddleX
 pip install paddlex
 ```
