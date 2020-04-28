@@ -36,3 +36,12 @@ pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonA
 # 安装PaddleX
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
+
+## 安装github上代码
+github代码会跟随开发进度不断更新，安装只需将上面步骤中的`pip install paddlex`改成如下方式即可
+```
+git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX 
+git checkout develop
+python setup.py install
+```
