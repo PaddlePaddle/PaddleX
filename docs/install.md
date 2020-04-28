@@ -27,9 +27,10 @@ conda activate paddlex
 
 # 安装paddlepaddle
 # cpu版: pip install paddlepaddle
-pip install paddlepaddle-gpu-i https://mirror.baidu.com/pypi/simple
+pip install paddlepaddle-gpu -i https://mirror.baidu.com/pypi/simple
 
 # 安装pycocotools
+pip install cython -i https://mirror.baidu.com/pypi/simple
 pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
 
 # 安装PaddleX
