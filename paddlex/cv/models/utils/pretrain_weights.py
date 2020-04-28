@@ -76,10 +76,10 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
         try:
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
-            if isinstance(hub.ResourceNotFoundError):
+            if isinstance(e, hub.ResourceNotFoundError):
                 raise Exception(
                     "Resource for backbone {} not found".format(backbone))
-            elif isinstance(hub.ServerConnectionError):
+            elif isinstance(e, hub.ServerConnectionError):
                 raise Exception(
                     "Cannot get reource for backbone {}, please check your internet connecgtion"
                     .format(backbone))
