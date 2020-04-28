@@ -449,7 +449,7 @@ class RandomDistort:
     """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作
 
     1. 对变换的操作顺序进行随机化操作。
-    2. 按照1中的顺序以一定的概率对图像进行随机像素内容变换。
+    2. 按照1中的顺序以一定的概率在范围[-range, range]对图像进行随机像素内容变换。
 
     Args:
         brightness_range (float): 明亮度因子的范围。默认为0.5。
@@ -460,9 +460,6 @@ class RandomDistort:
         saturation_prob (float): 随机调整饱和度的概率。默认为0.5。
         hue_range (int): 色调因子的范围。默认为18。
         hue_prob (float): 随机调整色调的概率。默认为0.5。
-        is_order (bool): 是否按照固定顺序
-                        [变换明亮度、变换对比度、变换饱和度、变换色彩]
-                        执行像素内容变换操作。默认为False。
     """
 
     def __init__(self,
@@ -473,8 +470,7 @@ class RandomDistort:
                  saturation_range=0.5,
                  saturation_prob=0.5,
                  hue_range=18,
-                 hue_prob=0.5,
-                 is_order=False):
+                 hue_prob=0.5):
         self.brightness_range = brightness_range
         self.brightness_prob = brightness_prob
         self.contrast_range = contrast_range
@@ -483,7 +479,6 @@ class RandomDistort:
         self.saturation_prob = saturation_prob
         self.hue_range = hue_range
         self.hue_prob = hue_prob
-        self.is_order = is_order
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -506,17 +501,7 @@ class RandomDistort:
         hue_lower = -self.hue_range
         hue_upper = self.hue_range
         ops = [brightness, contrast, saturation, hue]
-        if self.is_order:
-            prob = np.random.uniform(0, 1)
-            if prob < 0.5:
-                ops = [
-                    brightness,
-                    saturation,
-                    hue,
-                    contrast,
-                ]
-        else:
-            random.shuffle(ops)
+        random.shuffle(ops)
         params_dict = {
             'brightness': {
                 'brightness_lower': brightness_lower,
