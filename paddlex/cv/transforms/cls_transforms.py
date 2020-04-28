@@ -48,8 +48,9 @@ class Compose:
             tuple: 根据网络所需字段所组成的tuple；
                 字段由transforms中的最后一个数据预处理操作决定。
         """
-        im = cv2.imread(im).astype('float32')
-        if im is None:
+        try:
+            im = cv2.imread(im).astype('float32')
+        except:
             raise TypeError('Can\'t read The image file {}!'.format(im))
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         for op in self.transforms:
