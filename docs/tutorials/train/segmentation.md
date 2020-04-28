@@ -1,7 +1,7 @@
 # 训练语义分割模型
 
 ---
-更多语义分割模型在Cityscapes数据集上的训练代码可参考[代码tutorials/train/segmentation/unet.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/unet.py)、[代码tutorials/train/segmentation/deeplabv3p.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/deeplabv3p.py)。
+更多语义分割模型在视盘数据集上的训练代码可参考[代码tutorials/train/segmentation/deeplabv3p.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/deeplabv3p.py)。
 
 **1.下载并解压训练所需的数据集**
 
@@ -114,4 +114,4 @@ import paddlex as pdx
 pdx.seg.visualize(image_name, predict_result, weight=0.4)
 ```
 
-![](../images/visualized_deeplab.jpg)
+![](../../images/visualized_deeplab.jpg)
