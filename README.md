@@ -17,6 +17,7 @@ PaddleX是基于飞桨技术生态的全流程深度学习模型开发工具。�
 - [10分钟快速上手PaddleX模型训练](docs/quick_start.md)
 - [PaddleX使用教程](docs/tutorials)
 - [PaddleX模型库](docs/model_zoo.md)
+- [导出模型部署](docs/deploy.md)
 
 
 ## 反馈
