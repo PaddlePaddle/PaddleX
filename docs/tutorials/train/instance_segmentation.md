@@ -113,4 +113,4 @@ predict_result = model.predict('./garbage_ins_det/JPEGImages/000114.bmp')
 ```python
 pdx.det.visualize('./garbage_ins_det/JPEGImages/000114.bmp', predict_result, threshold=0.7, save_dir='./output/mask_rcnn_r50_fpn')
 ```
-![](../images/visualized_maskrcnn.bmp)
+![](../../images/visualized_maskrcnn.bmp)
