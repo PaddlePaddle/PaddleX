@@ -65,7 +65,8 @@ class ResNet(object):
                  nonlocal_stages=[],
                  gcb_stages=[],
                  gcb_params=dict(),
-                 num_classes=None):
+                 num_classes=None,
+                 lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0]):
         super(ResNet, self).__init__()
 
         if isinstance(feature_maps, Integral):
@@ -79,6 +80,10 @@ class ResNet(object):
         assert norm_type in ['bn', 'sync_bn', 'affine_channel']
         assert not (len(nonlocal_stages)>0 and layers<50), \
                     "non-local is not supported for resnet18 or resnet34"
+        assert len(
+            lr_mult_list
+        ) == 5, "lr_mult_list length in ResNet must be 5 but got {}!!".format(
+            len(lr_mult_list))
 
         self.layers = layers
         self.freeze_at = freeze_at
@@ -113,6 +118,8 @@ class ResNet(object):
         self.gcb_stages = gcb_stages
         self.gcb_params = gcb_params
         self.num_classes = num_classes
+        self.lr_mult_list = lr_mult_list
+        self.curr_stage = 0
 
     def _conv_offset(self,
                      input,
@@ -128,8 +135,7 @@ class ResNet(object):
             filter_size=filter_size,
             stride=stride,
             padding=padding,
-            param_attr=ParamAttr(
-                initializer=Constant(0.0), name=name + ".w_0"),
+            param_attr=ParamAttr(initializer=Constant(0.0), name=name + ".w_0"),
             bias_attr=ParamAttr(initializer=Constant(0.0), name=name + ".b_0"),
             act=act,
             name=name)
@@ -143,7 +149,9 @@ class ResNet(object):
                    groups=1,
                    act=None,
                    name=None,
-                   dcn_v2=False):
+                   dcn_v2=False,
+                   use_lr_mult_list=False):
+        lr_mult = self.lr_mult_list[self.curr_stage] if use_lr_mult_list else 1.0
         _name = self.prefix_name + name if self.prefix_name != '' else name
         if not dcn_v2:
             conv = fluid.layers.conv2d(
@@ -154,7 +162,8 @@ class ResNet(object):
                 padding=(filter_size - 1) // 2,
                 groups=groups,
                 act=None,
-                param_attr=ParamAttr(name=_name + "_weights"),
+                param_attr=ParamAttr(name=_name + "_weights",
+                                     learning_rate=lr_mult),
                 bias_attr=False,
                 name=_name + '.conv2d.output.1')
         else:
@@ -191,7 +200,7 @@ class ResNet(object):
         bn_name = self.na.fix_conv_norm_name(name)
         bn_name = self.prefix_name + bn_name if self.prefix_name != '' else bn_name
 
-        norm_lr = 0. if self.freeze_norm else 1.
+        norm_lr = 0. if self.freeze_norm else lr_mult
         norm_decay = self.norm_decay
         pattr = ParamAttr(
             name=bn_name + '_scale',
@@ -253,7 +262,8 @@ class ResNet(object):
                     pool_padding=0,
                     ceil_mode=True,
                     pool_type='avg')
-                return self._conv_norm(input, ch_out, 1, 1, name=name)
+                return self._conv_norm(input, ch_out, 1, 1, name=name,
+                                      use_lr_mult_list=True)
             return self._conv_norm(input, ch_out, 1, stride, name=name)
         else:
             return input
@@ -448,6 +458,7 @@ class ResNet(object):
             feature_maps = range(2, max(self.feature_maps) + 1)
 
         for i in feature_maps:
+            self.curr_stage += 1
             res = self.layer_warp(res, i)
             if i in self.feature_maps:
                 res_endpoints.append(res)

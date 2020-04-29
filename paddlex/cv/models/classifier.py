@@ -300,6 +300,17 @@ class ResNet101_vd(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ResNet101_vd, self).__init__(
             model_name='ResNet101_vd', num_classes=num_classes)
+        
+        
+class ResNet50_vd_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet50_vd_ssld, self).__init__(model_name='ResNet50_vd_ssld',
+                                               num_classes=num_classes)
+        
+class ResNet101_vd_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet101_vd_ssld, self).__init__(model_name='ResNet101_vd_ssld',
+                                               num_classes=num_classes)
 
 
 class DarkNet53(BaseClassifier):
@@ -330,6 +341,19 @@ class MobileNetV3_large(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(MobileNetV3_large, self).__init__(
             model_name='MobileNetV3_large', num_classes=num_classes)
+        
+        
+        
+class MobileNetV3_small_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_small_ssld, self).__init__(model_name='MobileNetV3_small_ssld',
+                                                num_classes=num_classes)
+
+
+class MobileNetV3_large_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_ssld, self).__init__(model_name='MobileNetV3_large_ssld',
+                                                num_classes=num_classes)
 
 
 class Xception65(BaseClassifier):

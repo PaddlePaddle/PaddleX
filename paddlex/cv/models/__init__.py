@@ -19,11 +19,15 @@ from .classifier import ResNet50
 from .classifier import ResNet101
 from .classifier import ResNet50_vd
 from .classifier import ResNet101_vd
+from .classifier import ResNet50_vd_ssld
+from .classifier import ResNet101_vd_ssld
 from .classifier import DarkNet53
 from .classifier import MobileNetV1
 from .classifier import MobileNetV2
 from .classifier import MobileNetV3_small
 from .classifier import MobileNetV3_large
+from .classifier import MobileNetV3_small_ssld
+from .classifier import MobileNetV3_large_ssld
 from .classifier import Xception41
 from .classifier import Xception65
 from .classifier import DenseNet121
