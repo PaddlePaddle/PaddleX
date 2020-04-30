@@ -52,6 +52,5 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
-    save_interval_epochs=10,
     save_dir='output/yolov3_darknet53',
     use_vdl=True)
