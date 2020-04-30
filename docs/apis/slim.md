@@ -35,7 +35,7 @@ paddlex.slim.export_quant_model(model, test_dataset, batch_size=2, batch_num=10,
 
 
 ### 使用示例
-点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/vegetables_mobilenet.tar.gz)，[数据集](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
+点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/vegetables_mobilenetv2.tar.gz)，[数据集](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
 ```
 import paddlex as pdx
 model = pdx.load_model('vegetables_mobilenet')
