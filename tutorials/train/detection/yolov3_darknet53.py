@@ -44,7 +44,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 num_classes = len(train_dataset.labels)
-model = pdx.det.YOLOv3(num_classes=num_classes)
+model = pdx.det.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
 model.train(
     num_epochs=270,
     train_dataset=train_dataset,
@@ -52,5 +52,6 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
-    save_dir='output/yolov3_mobilenetv1',
+    save_interval_epochs=10,
+    save_dir='output/yolov3_darknet53',
     use_vdl=True)

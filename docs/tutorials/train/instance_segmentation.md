@@ -14,11 +14,11 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import paddlex as pdx
 ```
 
-> 这里使用垃圾分拣数据集，训练集、验证集和测试共包含283个样本，6个类别。
+> 这里使用小度熊分拣数据集，训练集、验证集和测试共包含21个样本，1个类别。
 
 ```python
-garbage_dataset = 'https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz'
-pdx.utils.download_and_decompress(garbage_dataset, path='./')
+xiaoduxiong_dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz'
+pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 ```
 
 **2.定义训练和验证过程中的数据处理和增强操作**
@@ -47,19 +47,19 @@ eval_transforms = transforms.Compose([
 
 ```python
 train_dataset = pdx.datasets.CocoDetection(
-    data_dir='garbage_ins_det/JPEGImages',
-    ann_file='garbage_ins_det/train.json',
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/train.json',
     transforms=train_transforms,
     shuffle=True)
 eval_dataset = pdx.datasets.CocoDetection(
-    data_dir='garbage_ins_det/JPEGImages',
-    ann_file='garbage_ins_det/val.json',
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/val.json',
     transforms=eval_transforms)
 ```
 
 **4.创建Mask RCNN模型，并进行训练**
 
-> 创建带FPN结构的Mask RCNN模型，`num_classes` 需要设置为包含背景类的类别数，即: 目标类别数量(6) + 1。
+> 创建带FPN结构的Mask RCNN模型，`num_classes` 需要设置为包含背景类的类别数，即: 目标类别数量(1) + 1。
 
 ```python
 num_classes = len(train_dataset.labels)
@@ -75,6 +75,7 @@ model.train(
     train_batch_size=1,
     eval_dataset=eval_dataset,
     learning_rate=0.00125,
+    warmup_steps=10,
     lr_decay_epochs=[8, 11],
     save_dir='output/mask_rcnn_r50_fpn',
     use_vdl=True)
@@ -98,19 +99,19 @@ print("eval_metrics:", eval_metrics)
 > 结果输出：
 
 ```python
-eval_metrics: {'bbox_mmap': 0.858306, 'segm_mmap': 0.864278}
+eval_metrics: OrderedDict([('bbox_mmap', 0.5038283828382838), ('segm_mmap', 0.7025202520252025)])
 
 ```
 
 > 训练完用模型对图片进行测试。
 
 ```python
-predict_result = model.predict('./garbage_ins_det/JPEGImages/000114.bmp')
+predict_result = model.predict('./xiaoduxiong_ins_det/JPEGImages/WechatIMG114.jpeg')
 ```
 
 > 可视化测试结果：
 
 ```python
-pdx.det.visualize('./garbage_ins_det/JPEGImages/000114.bmp', predict_result, threshold=0.7, save_dir='./output/mask_rcnn_r50_fpn')
+pdx.det.visualize('./xiaoduxiong_ins_det/JPEGImages/WechatIMG114.jpeg', predict_result, threshold=0.7, save_dir='./output/mask_rcnn_r50_fpn')
 ```
-![](../../images/visualized_maskrcnn.bmp)
+![](../../images/visualized_maskrcnn.jpeg)

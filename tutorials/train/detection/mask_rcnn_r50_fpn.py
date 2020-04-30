@@ -5,9 +5,9 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 from paddlex.det import transforms
 import paddlex as pdx
 
-# 下载和解压垃圾分拣数据集
-garbage_dataset = 'https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz'
-pdx.utils.download_and_decompress(garbage_dataset, path='./')
+# 下载和解压小度熊分拣数据集
+xiaoduxiong_dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz'
+pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
@@ -25,13 +25,13 @@ eval_transforms = transforms.Compose([
 
 # 定义训练和验证所用的数据集
 train_dataset = pdx.datasets.CocoDetection(
-    data_dir='garbage_ins_det/JPEGImages',
-    ann_file='garbage_ins_det/train.json',
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/train.json',
     transforms=train_transforms,
     shuffle=True)
 eval_dataset = pdx.datasets.CocoDetection(
-    data_dir='garbage_ins_det/JPEGImages',
-    ann_file='garbage_ins_det/val.json',
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/val.json',
     transforms=eval_transforms)
 
 # 初始化模型，并进行训练
@@ -48,6 +48,7 @@ model.train(
     train_batch_size=1,
     eval_dataset=eval_dataset,
     learning_rate=0.00125,
+    warmup_steps=10,
     lr_decay_epochs=[8, 11],
     save_dir='output/mask_rcnn_r50_fpn',
     use_vdl=True)
