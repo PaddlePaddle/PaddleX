@@ -40,10 +40,10 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
-## COCODetection类
+## CocoDetection类
 
 ```
-paddlex.datasets.COCODetection(data_dir, ann_file, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
+paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
