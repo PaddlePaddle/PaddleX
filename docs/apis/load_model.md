@@ -16,21 +16,21 @@ paddlex.load_model(model_dir)
 * **paddlex.cv.models**, 模型类。
 
 ### 示例
-> 1. [点击下载](https://bj.bcebos.com/paddlex/models/garbage_epoch_12.tar.gz)PaddleX在垃圾分拣数据上训练的MaskRCNN模型
-> 2. [点击下载](https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz)垃圾分拣数据集
+> 1. [点击下载](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)PaddleX在小度熊分拣数据上训练的MaskRCNN模型
+> 2. [点击下载](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz)小度熊分拣数据集
 
 ```
 import paddlex as pdx
 
-model_dir = './garbage_epoch_12'
-data_dir = './garbage_ins_det/JPEGImages'
-ann_file = './garbage_ins_det/val.json'
+model_dir = './xiaoduxiong_epoch_12'
+data_dir = './xiaoduxiong_ins_det/JPEGImages'
+ann_file = './xiaoduxiong_ins_det/val.json'
 
 # 加载垃圾分拣模型
 model = pdx.load_model(model_dir)
 
 # 预测
-pred_result = model.predict('./garbage_ins_det/JPEGImages/000114.bmp')
+pred_result = model.predict('./xiaoduxiong_ins_det/JPEGImages/WechatIMG114.jpeg')
 
 # 在验证集上进行评估
 eval_reader = pdx.cv.datasets.CocoDetection(data_dir=data_dir,

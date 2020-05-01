@@ -14,13 +14,13 @@ paddlex.det.visualize(image, result, threshold=0.5, save_dir=None)
 > * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下
 
 ### 使用示例
-> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/garbage_epoch_12.tar.gz)和[测试图片](https://bj.bcebos.com/paddlex/datasets/garbage.bmp)
+> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)和[测试图片](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong.jpeg)
 ```
 import paddlex as pdx
-model = pdx.load_model('garbage_epoch_12')
-result = model.predict('garbage.bmp')
-pdx.det.visualize('garbage.bmp', result, save_dir='./')
-# 预测结果保存在./visualize_garbage.bmp
+model = pdx.load_model('xiaoduxiong_epoch_12')
+result = model.predict('xiaoduxiong.jpeg')
+pdx.det.visualize('xiaoduxiong.jpeg', result, save_dir='./')
+# 预测结果保存在./visualize_xiaoduxiong.jpeg
 ```
 
 ## 语义分割预测结果可视化

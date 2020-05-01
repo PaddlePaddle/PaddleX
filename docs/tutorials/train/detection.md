@@ -2,7 +2,7 @@
 
 ------
 
-更多检测模型在VOC数据集或COCO数据集上的训练代码可参考[代码tutorials/train/detection/faster_rcnn_r50_fpn.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/faster_rcnn_r50_fpn.py)、[代码tutorials/train/detection/yolov3_mobilenetv1.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_mobilenetv1.py)。
+更多检测模型在VOC数据集或COCO数据集上的训练代码可参考[代码tutorials/train/detection/faster_rcnn_r50_fpn.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/faster_rcnn_r50_fpn.py)、[代码tutorials/train/detection/yolov3_darknet53.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_darknet53.py)。
 
 **1.下载并解压训练所需的数据集**
 
@@ -116,4 +116,4 @@ predict_result = model.predict('./insect_det/JPEGImages/1968.jpg')
 pdx.det.visualize('./insect_det/JPEGImages/1968.jpg', predict_result, threshold=0.5, save_dir='./output/faster_rcnn_r50_fpn')
 ```
 
-![](../images/visualized_fasterrcnn.jpg)
+![](../../images/visualized_fasterrcnn.jpg)
