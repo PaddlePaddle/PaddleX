@@ -16,6 +16,10 @@ image_pretrain = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet50_vd_pretrained.tar',
     'ResNet101_vd':
     'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet101_vd_pretrained.tar',
+    'ResNet50_vd_ssld':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet50_vd_ssld_pretrained.tar',
+    'ResNet101_vd_ssld':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet101_vd_ssld_pretrained.tar',
     'MobileNetV1':
     'http://paddle-imagenet-models-name.bj.bcebos.com/MobileNetV1_pretrained.tar',
     'MobileNetV2_x1.0':
@@ -32,6 +36,10 @@ image_pretrain = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/MobileNetV3_small_x1_0_pretrained.tar',
     'MobileNetV3_large':
     'https://paddle-imagenet-models-name.bj.bcebos.com/MobileNetV3_large_x1_0_pretrained.tar',
+    'MobileNetV3_small_x1_0_ssld':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/MobileNetV3_small_x1_0_ssld_pretrained.tar',
+    'MobileNetV3_large_x1_0_ssld':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/MobileNetV3_large_x1_0_ssld_pretrained.tar',
     'DarkNet53':
     'https://paddle-imagenet-models-name.bj.bcebos.com/DarkNet53_ImageNet1k_pretrained.tar',
     'DenseNet121':
@@ -68,6 +76,10 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
             backbone = 'Seg{}'.format(backbone)
         elif backbone == 'MobileNetV2':
             backbone = 'MobileNetV2_x1.0'
+        elif backbone == 'MobileNetV3_small_ssld':
+            backbone = 'MobileNetV3_small_x1_0_ssld'
+        elif backbone == 'MobileNetV3_large_ssld':
+            backbone = 'MobileNetV3_large_x1_0_ssld'
         if model_type == 'detector':
             if backbone == 'ResNet50':
                 backbone = 'DetResNet50'
