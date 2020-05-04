@@ -44,7 +44,7 @@ eval_dataset = pdx.datasets.ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/train_list.txt',
     label_list='vegetables_cls/labels.txt',
-    transforms=train_transforms)
+    transforms=eval_transforms)
 ```
 > 模型训练
 
