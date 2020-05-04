@@ -40,6 +40,10 @@ class Compose:
             raise ValueError('The length of transforms ' + \
                             'must be equal or larger than 1!')
         self.transforms = transforms
+        self.use_mixup = False
+        for t in self.transforms:
+            if t.__class__.__name__ == 'MixupImage':
+                self.use_mixup = True
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -85,6 +89,9 @@ class Compose:
             # copy augment_shape from origin_shape
             im_info['augment_shape'] = np.array([im.shape[0],
                                                  im.shape[1]]).astype('int32')
+            if not self.use_mixup:
+                if 'mixup' in im_info:
+                    del im_info['mixup']
             # decode mixup image
             if 'mixup' in im_info:
                 im_info['mixup'] = \
