@@ -194,9 +194,7 @@ class YOLOv3(BaseAPI):
             ValueError: 模型从inference model进行加载。
         """
         if not self.trainable:
-            raise ValueError(
-                "Model is not trainable since it was loaded from a inference model."
-            )
+            raise ValueError("Model is not trainable from load_model method.")
         if metric is None:
             if isinstance(train_dataset, paddlex.datasets.CocoDetection):
                 metric = 'COCO'

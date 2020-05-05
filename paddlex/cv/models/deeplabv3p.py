@@ -257,9 +257,7 @@ class DeepLabv3p(BaseAPI):
             ValueError: 模型从inference model进行加载。
         """
         if not self.trainable:
-            raise ValueError(
-                "Model is not trainable since it was loaded from a inference model."
-            )
+            raise ValueError("Model is not trainable from load_model method.")
 
         self.labels = train_dataset.labels
 

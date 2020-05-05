@@ -98,6 +98,7 @@ def load_model(model_dir):
                 model.__dict__[k] = v
 
     logging.info("Model[{}] loaded.".format(info['Model']))
+    model.trainable = False
     return model
 
 

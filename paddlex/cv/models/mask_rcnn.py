@@ -165,9 +165,7 @@ class MaskRCNN(FasterRCNN):
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
         if not self.trainable:
-            raise Exception(
-                "Model is not trainable since it was loaded from a inference model."
-            )
+            raise Exception("Model is not trainable from load_model method.")
         self.labels = copy.deepcopy(train_dataset.labels)
         self.labels.insert(0, 'background')
         # 构建训练网络
