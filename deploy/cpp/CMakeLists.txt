@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(PaddleObjectDetector CXX C)
+project(PaddleX CXX C)
 
 option(WITH_MKL        "Compile demo with MKL/OpenBlas support,defaultuseMKL."          ON)
 option(WITH_GPU        "Compile demo with GPU/CPU, default use CPU."                    ON)
@@ -74,7 +74,7 @@ if (WIN32)
   include_directories("${PADDLE_DIR}/paddle/include")
   link_directories("${PADDLE_DIR}/paddle/fluid/inference")
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
-
+  unset(OpenCV_DIR CACHE)
 else ()
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
   include_directories("${PADDLE_DIR}/paddle/include")

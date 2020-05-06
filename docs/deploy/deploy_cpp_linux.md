@@ -1,7 +1,7 @@
 # Linux平台编译指南
 
 ## 说明
-本文档在 `Linux`平台使用`GCC 4.8.5` 和 `GCC 4.9.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [从源码编译Paddle预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_usage/deploy/inference/build_and_install_lib_cn.html#id15)。
+本文档在 `Linux`平台使用`GCC 4.8.5` 和 `GCC 4.9.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [从源码编译Paddle预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
 
 ## 前置条件
 * G++ 4.8.2 ~ 4.9.4
@@ -19,7 +19,7 @@
 
 ### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
 
-PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_usage/deploy/inference/build_and_install_lib_cn.html)
+PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id1)
 
 
 下载并解压后`/root/projects/fluid_inference`目录包含内容为：
@@ -32,7 +32,7 @@ fluid_inference
 └── version.txt # 版本和编译信息
 ```
 
-**注意:** 预编译版本除`nv-jetson-cuda10-cudnn7.5-trt5` 以外其它包都是基于`GCC 4.8.5`编译，使用高版本`GCC`可能存在 `ABI`兼容性问题，建议降级或[自行编译预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html)。
+**注意:** 预编译版本除`nv-jetson-cuda10-cudnn7.5-trt5` 以外其它包都是基于`GCC 4.8.5`编译，使用高版本`GCC`可能存在 `ABI`兼容性问题，建议降级或[自行编译预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
 
 
 ### Step4: 编译
@@ -74,7 +74,6 @@ make
  sh ./scripts/build.sh
  ```
 
-
 ### Step5: 预测及可视化
 编译成功后，预测demo的可执行程序分别为`build/detector`，`build/classifer`，`build/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
@@ -87,28 +86,31 @@ make
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
 
+## 样例
+
+可使用[垃圾检测模型](deploy.md#导出inference模型)中生成的`inference_model`模型和测试图片进行预测。
 
 `样例一`：
 
-不使用`GPU`测试图片 `/root/projects/images/test.jpeg`  
+不使用`GPU`测试图片 `/path/to/garbage.bmp`  
 
 ```shell
-./build/detector --model_dir=/root/projects/models/yolov3_darknet --image=/root/projects/images/test.jpeg
+./build/detector --model_dir=/path/to/inference_model --image=/path/to/garbage.bmp --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
 
 `样例二`:
 
-使用`GPU`预测多个图片`/root/projects/image_list.txt`，image_list.txt内容的格式如下：
+使用`GPU`预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
 ```
-/root/projects/images/test.jpeg
-/root/projects/images/test1.jpeg
+/path/to/images/garbage1.jpeg
+/path/to/images/garbage2.jpeg
 ...
-/root/projects/images/testn.jpeg
+/path/to/images/garbagen.jpeg
 ```
 ```shell
-./build/detector --model_dir=/root/projects/models/yolov3_darknet --image_list=/root/projects/images_list.txt --use_gpu=1
+./build/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 

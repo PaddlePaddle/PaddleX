@@ -1,7 +1,7 @@
 # Visual Studio 2019 Community CMake 编译指南
 
+## 说明
 Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试。微软从`Visual Studio 2017`开始即支持直接管理`CMake`跨平台编译项目，但是直到`2019`才提供了稳定和完全的支持，所以如果你想使用CMake管理项目编译构建，我们推荐你使用`Visual Studio 2019`环境下构建。
-
 
 ## 前置条件
 * Visual Studio 2019
@@ -16,6 +16,9 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 
 下载源代码
 ```shell
+d:
+mkdir projects
+cd projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
 
@@ -26,14 +29,13 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 PaddlePaddle C++ 预测库针对不同的`CPU`和`CUDA`版本提供了不同的预编译版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/windows_cpp_inference.html)
 
-解压后`D:\projects\fluid_inference`目录包含内容为：
+解压后`D:\projects\fluid_inference*\`目录下主要包含的内容为：
 ```
-fluid_inference
-├── paddle # paddle核心库和头文件
+├── \paddle\ # paddle核心库和头文件
 |
-├── third_party # 第三方依赖库和头文件
+├── \third_party\ # 第三方依赖库和头文件
 |
-└── version.txt # 版本和编译信息
+└── \version.txt # 版本和编译信息
 ```
 
 ### Step3: 安装配置OpenCV
@@ -48,36 +50,40 @@ fluid_inference
 ### Step4: 使用Visual Studio 2019直接编译CMake
 
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-![step2](https://paddleseg.bj.bcebos.com/inference/vs2019_step1.png)
+
+![step2](images/vs2019_step1.png)
+
 2. 点击： `文件`->`打开`->`CMake`
-![step2.1](https://paddleseg.bj.bcebos.com/inference/vs2019_step2.png)
+
+![step2.1](images/vs2019_step2.png)
 
 选择项目代码所在路径，并打开`CMakeList.txt`：
 
-![step2.2](https://paddleseg.bj.bcebos.com/inference/vs2019_step3.png)
+![step2.2](images/vs2019_step3.png)
 
-3. 点击：`项目`->`cpp_inference_demo的CMake设置`
+3. 点击：`项目`->`PADDLEX_INFERENCE的CMake设置`
 
-![step3](https://paddleseg.bj.bcebos.com/inference/vs2019_step4.png)
+![step3](images/vs2019_step4.png)
 
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径
 
-三个编译参数的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量对齐，**使用9.0、10.0版本，不使用9.2、10.1等版本CUDA库**）：
+依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量对齐，**使用9.0、10.0版本，不使用9.2、10.1等版本CUDA库**）：
 
 |  参数名   | 含义  |
 |  ----  | ----  |
-| *CUDA_LIB  | CUDA的库路径 |
+| *CUDA_LIB  | CUDA的库路径, 注：请将CUDNN的cudnn.lib文件拷贝到CUDA_LIB路径下 |
 | OPENCV_DIR  | OpenCV的安装路径， |
-| PADDLE_DIR | Paddle预测库的路径 |
+| PADDLE_DIR | Paddle c++预测库的路径 |
 
-**注意：** 1. 使用`CPU`版预测库，请把`WITH_GPU`的勾去掉 2. 如果使用的是`openblas`版本，请把`WITH_MKL`勾去掉
-![step4](https://paddleseg.bj.bcebos.com/inference/vs2019_step5.png)
+**注意：** 1. 使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾 2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
+
+![step4](images/vs2019_step5.png)
 
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
 
 5. 点击`生成`->`全部生成`
 
-![step6](https://paddleseg.bj.bcebos.com/inference/vs2019_step6.png)
+![step6](images/vs2019_step6.png)
 
 
 ### Step5: 预测及可视化
@@ -85,7 +91,8 @@ fluid_inference
 上述`Visual Studio 2019`编译产出的可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
 ```
-cd D:\projects\PaddleX\inference\out\build\x64-Release
+d:
+cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 
 编译成功后，预测demo的入口程序为`detector`，`classifer`，`segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
@@ -100,12 +107,16 @@ cd D:\projects\PaddleX\inference\out\build\x64-Release
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
 
 
+## 样例
+
+可使用[垃圾检测模型](deploy.md#导出inference模型)中生成的`inference_model`模型和测试图片进行预测。
+
 `样例一`：
 
-不使用`GPU`测试图片  `D:\\images\\test.jpeg`  
+不使用`GPU`测试图片  `\\path\\to\\garbage.bmp`  
 
 ```shell
-.\detector --model_dir=D:\\models\\yolov3_darknet --image=D:\\images\\test.jpeg
+.\detector --model_dir=\\path\\to\\inference_model --image=D:\\images\\garbage.bmp --save_dir=output
 
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
@@ -113,15 +124,15 @@ cd D:\projects\PaddleX\inference\out\build\x64-Release
 
 `样例二`:
 
-使用`GPU`预测多个图片`D:\\images\\image_list.txt`，image_list.txt内容的格式如下：
+使用`GPU`预测多个图片`\\path\\to\\image_list.txt`，image_list.txt内容的格式如下：
 ```
-D:\\images\\test.jpeg
-D:\\images\\test1.jpeg
+\\path\\to\\images\\garbage1.jpeg
+\\path\\to\\images\\garbage2.jpeg
 ...
-D:\\images\\testn.jpeg
+\\path\\to\\images\\garbagen.jpeg
 ```
 ```shell
-.\detector --model_dir=D:\\models\\yolov3_darknet --image_list=D:\\images\\images_list.txt --use_gpu=1
+.\detector --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
