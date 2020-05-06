@@ -9,6 +9,10 @@
 PaddleX是基于飞桨技术生态的全流程深度学习模型开发工具。具备易集成，易使用，全流程等特点。PaddleX作为深度学习开发工具，不仅提供了开源的内核代码，可供用户灵活使用或集成，同时也提供了配套的前端可视化客户端套件，让用户以可视化的方式进行模型开发，免去代码开发过程，访问[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)获取更多相关细节。
 ## 安装
 ### pip安装（使用Python代码进行模型训练）
+> **依赖**
+> - cython
+> - pycocotools
+> - python3
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
