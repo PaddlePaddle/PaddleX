@@ -143,13 +143,13 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
 ```
 
 随机裁剪图像，模型训练时的数据增强操作。  
-1. 若allow_no_crop为True，则在thresholds加入’no_crop’
-2. 随机打乱thresholds
+1. 若allow_no_crop为True，则在thresholds加入’no_crop’。
+2. 随机打乱thresholds。
 3. 遍历thresholds中各元素：
-    (1) 如果当前thresh为’no_crop’，则返回原始图像和标注信息
+    (1) 如果当前thresh为’no_crop’，则返回原始图像和标注信息。
     (2) 随机取出aspect_ratio和scaling中的值并由此计算出候选裁剪区域的高、宽、起始点。
-    (3) 计算真实标注框与候选裁剪区域IoU，若全部真实标注框的IoU都小于thresh，则继续第3步
-    (4) 如果cover_all_box为True且存在真实标注框的IoU小于thresh，则继续第3步
+    (3) 计算真实标注框与候选裁剪区域IoU，若全部真实标注框的IoU都小于thresh，则继续第3步。
+    (4) 如果cover_all_box为True且存在真实标注框的IoU小于thresh，则继续第3步。
     (5) 筛选出位于候选裁剪区域内的真实标注框，若有效框的个数为0，则继续第3步，否则进行第4步。
 4. 换算有效真值标注框相对候选裁剪区域的位置坐标。
 5. 换算有效分割区域相对候选裁剪区域的位置坐标。
