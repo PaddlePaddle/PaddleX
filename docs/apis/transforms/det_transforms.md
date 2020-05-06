@@ -122,56 +122,42 @@ paddlex.det.transforms.MixupImage(alpha=1.5, beta=1.5, mixup_epoch=-1)
 
 ## RandomExpand类
 ```python
-paddlex.det.transforms.RandomExpand(max_ratio=4., prob=0.5, mean=[127.5, 127.5, 127.5])
+paddlex.det.transforms.RandomExpand(ratio=4., prob=0.5, fill_value=[123.675, 116.28, 103.53])
 ```
 
-随机扩张图像，模型训练时的数据增强操作，模型训练时的数据增强操作。  
-1. 随机选取扩张比例（扩张比例大于1时才进行扩张）。  
-2. 计算扩张后图像大小。  
-3. 初始化像素值为数据集均值的图像，并将原图像随机粘贴于该图像上。  
+随机扩张图像，模型训练时的数据增强操作。
+1. 随机选取扩张比例（扩张比例大于1时才进行扩张）。
+2. 计算扩张后图像大小。
+3. 初始化像素值为输入填充值的图像，并将原图像随机粘贴于该图像上。
 4. 根据原图像粘贴位置换算出扩张后真实标注框的位置坐标。
+5. 根据原图像粘贴位置换算出扩张后真实分割区域的位置坐标。
 
 ### 参数
-* **max_ratio** (float): 图像扩张的最大比例。默认为4.0。
+* **ratio** (float): 图像扩张的最大比例。默认为4.0。
 * **prob** (float): 随机扩张的概率。默认为0.5。
-* **mean** (list): 图像数据集的均值（0-255）。默认为[127.5, 127.5, 127.5]。
+* **fill_value** (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。
 
 ## RandomCrop类
 ```python
-paddlex.det.transforms.RandomCrop(batch_sampler=None, satisfy_all=False, avoid_no_bbox=True)
+paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3, .5, .7, .9], scaling=[.3, 1.], num_attempts=50, allow_no_crop=True, cover_all_box=False)
 ```
 
 随机裁剪图像，模型训练时的数据增强操作。  
-1. 根据batch_sampler计算获取裁剪候选区域的位置。  
-    (1) 根据min scale、max scale、min aspect ratio、max aspect ratio计算随机剪裁的高、宽。  
-    (2) 根据随机剪裁的高、宽随机选取剪裁的起始点。  
-    (3) 筛选出裁剪候选区域：  
-    * 当satisfy_all为True时，需所有真实标注框与裁剪候选区域的重叠度满足需求时，该裁剪候选区域才可保留。  
-    * 当satisfy_all为False时，当有一个真实标注框与裁剪候选区域的重叠度满足需求时，该裁剪候选区域就可保留。  
-2. 遍历所有裁剪候选区域：  
-    (1) 若真实标注框与候选裁剪区域不重叠，或其中心点不在候选裁剪区域，则将该真实标注框去除。  
-    (2) 计算相对于该候选裁剪区域，真实标注框的位置，并筛选出对应的类别、混合得分。  
-    (3) 若avoid_no_bbox为False，返回当前裁剪后的信息即可；反之，要找到一个裁剪区域中真实标注框个数不为0的区域，才返回裁剪后的信息。
+1. 若allow_no_crop为True，则在thresholds加入’no_crop’
+2. 随机打乱thresholds
+3. 遍历thresholds中各元素：
+    (1) 如果当前thresh为’no_crop’，则返回原始图像和标注信息
+    (2) 随机取出aspect_ratio和scaling中的值并由此计算出候选裁剪区域的高、宽、起始点。
+    (3) 计算真实标注框与候选裁剪区域IoU，若全部真实标注框的IoU都小于thresh，则继续第3步
+    (4) 如果cover_all_box为True且存在真实标注框的IoU小于thresh，则继续第3步
+    (5) 筛选出位于候选裁剪区域内的真实标注框，若有效框的个数为0，则继续第3步，否则进行第4步。
+4. 换算有效真值标注框相对候选裁剪区域的位置坐标。
+5. 换算有效分割区域相对候选裁剪区域的位置坐标。
 
 ### 参数
-* **batch_sampler** (list): 随机裁剪参数的多种组合，每种组合包含8个值，如下：
-    - max sample (int)：满足当前组合的裁剪区域的个数上限。
-    - max trial (int): 查找满足当前组合的次数。
-    - min scale (float): 裁剪面积相对原面积，每条边缩短比例的最小限制。
-    - max scale (float): 裁剪面积相对原面积，每条边缩短比例的最大限制。
-    - min aspect ratio (float): 裁剪后短边缩放比例的最小限制。
-    - max aspect ratio (float): 裁剪后短边缩放比例的最大限制。
-    - min overlap (float): 真实标注框与裁剪图像重叠面积的最小限制。
-    - max overlap (float): 真实标注框与裁剪图像重叠面积的最大限制。
-
-    默认值为None，当为None时采用如下设置：
-
-    [[1, 1, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0],  
-     [1, 50, 0.3, 1.0, 0.5, 2.0, 0.1, 1.0],  
-     [1, 50, 0.3, 1.0, 0.5, 2.0, 0.3, 1.0],  
-     [1, 50, 0.3, 1.0, 0.5, 2.0, 0.5, 1.0],  
-     [1, 50, 0.3, 1.0, 0.5, 2.0, 0.7, 1.0],  
-     [1, 50, 0.3, 1.0, 0.5, 2.0, 0.9, 1.0],  
-     [1, 50, 0.3, 1.0, 0.5, 2.0, 0.0, 1.0]]
-* **satisfy_all** (bool): 是否需要所有标注框满足条件，裁剪候选区域才保留。默认为False。
-* **avoid_no_bbox** (bool)： 是否对裁剪图像不存在标注框的图像进行保留。默认为True。
+* **aspect_ratio** (list): 裁剪后短边缩放比例的取值范围，以[min, max]形式表示。默认值为[.5, 2.]。
+* **thresholds** (list): 判断裁剪候选区域是否有效所需的IoU阈值取值列表。默认值为[.0, .1, .3, .5, .7, .9]。
+* **scaling** (list): 裁剪面积相对原面积的取值范围，以[min, max]形式表示。默认值为[.3, 1.]。
+* **num_attempts** (int): 在放弃寻找有效裁剪区域前尝试的次数。默认值为50。
+* **allow_no_crop** (bool): 是否允许未进行裁剪。默认值为True。
+* **cover_all_box** (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
