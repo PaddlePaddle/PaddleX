@@ -19,11 +19,11 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 文档
 推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/latest/index.html)，快速查阅读使用教程和API文档说明。
 
-常用文档
 - [10分钟快速上手PaddleX模型训练](docs/quick_start.md)
 - [PaddleX使用教程](docs/tutorials)
 - [PaddleX模型库](docs/model_zoo.md)
 - [导出模型部署](docs/deploy.md)
+- [使用PaddleX客户端进行模型训练](docs/client_use.md)
 
 
 ## 反馈
