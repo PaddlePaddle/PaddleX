@@ -45,16 +45,16 @@ WITH_GPU=ON
 WITH_TENSORRT=OFF
 # 上一步下载的 Paddle 预测库路径
 PADDLE_DIR=/root/projects/deps/fluid_inference/
-# OPENCV 路径, 如果使用自带预编译版本可不设置
-OPENCV_DIR=$(pwd)/deps/opencv346/
 # CUDA 的 lib 路径
 CUDA_LIB=/usr/local/cuda/lib64/
 # CUDNN 的 lib 路径
-CUDNN_LIB=/usr/local/cuda/lib64/
+CUDNN_LIB=/usr/local/cudnn/lib64/
+
+# OPENCV 路径, 如果使用自带预编译版本可不设置
+OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
+sh $(pwd)/scripts/bootstrap.sh
 
 # 以下无需改动
-
-sh $(pwd)/scripts/bootstrap.sh
 rm -rf build
 mkdir -p build
 cd build
@@ -76,7 +76,7 @@ make
 
 
 ### Step5: 预测及可视化
-编译成功后，预测demo的入口程序为`build/detector`，`build/classifer`，`build/segmenter`，其主要命令参数说明如下：
+编译成功后，预测demo的可执行程序分别为`build/detector`，`build/classifer`，`build/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |

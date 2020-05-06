@@ -1,18 +1,19 @@
-# compile with cuda
-WITH_GPU=OFF
-# compile with tensorrt
+# 是否使用GPU(即是否使用 CUDA)
+WITH_GPU=ON
+# 是否集成 TensorRT(仅WITH_GPU=ON 有效)
 WITH_TENSORRT=OFF
-# path to paddle inference lib
-PADDLE_DIR=/path/to/paddle_inference_lib/
-# path to cuda lib
-CUDA_LIB=/path/to/cuda_lib/
-# path to cudnn lib 
-CUDNN_LIB=/path/to/cudnn_lib/
-# path to opencv lib
-OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
+# 上一步下载的 Paddle 预测库路径
+PADDLE_DIR=/root/projects/deps/fluid_inference/
+# CUDA 的 lib 路径
+CUDA_LIB=/usr/local/cuda/lib64/
+# CUDNN 的 lib 路径
+CUDNN_LIB=/usr/local/cudnn/lib64/
 
+# OPENCV 路径, 如果使用自带预编译版本可不设置
+OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
 sh $(pwd)/scripts/bootstrap.sh
 
+# 以下无需改动
 rm -rf build
 mkdir -p build
 cd build
@@ -22,6 +23,5 @@ cmake .. \
     -DPADDLE_DIR=${PADDLE_DIR} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
-    -DOPENCV_DIR=${OPENCV_DIR} \
-    -DWITH_STATIC_LIB=OFF 
+    -DOPENCV_DIR=${OPENCV_DIR}
 make
