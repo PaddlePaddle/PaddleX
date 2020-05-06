@@ -14,7 +14,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
 
 ### PaddleX模型训练客户端安装（使用可视化界面进行模型训练）
-进入官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddleX)
+> 进入官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddleX)
 
 ## 文档
 推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/latest/index.html)，快速查阅读使用教程和API文档说明。
