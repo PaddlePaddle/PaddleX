@@ -12,13 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .ops import *
-from .box_utils import *
+try:
+    from collections.abc import Sequence
+except Exception:
+    from collections import Sequence
+
 import random
 import os.path as osp
 import numpy as np
-from PIL import Image, ImageEnhance
+
 import cv2
+from PIL import Image, ImageEnhance
+
+from .ops import *
+from .box_utils import *
 
 
 class Compose:
@@ -81,7 +88,7 @@ class Compose:
                 im = cv2.imread(im_file).astype('float32')
             except:
                 raise TypeError(
-                   'Can\'t read The image file {}!'.format(im_file))
+                    'Can\'t read The image file {}!'.format(im_file))
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
@@ -658,9 +665,17 @@ class MixupImage:
         gt_score2 = im_info['mixup'][2]['gt_score']
         gt_score = np.concatenate(
             (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
+        if 'gt_poly' in label_info:
+            gt_poly1 = label_info['gt_poly']
+            gt_poly2 = im_info['mixup'][2]['gt_poly']
+            label_info['gt_poly'] = gt_poly1 + gt_poly2
+        is_crowd1 = label_info['is_crowd']
+        is_crowd2 = im_info['mixup'][2]['is_crowd']
+        is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
         label_info['gt_bbox'] = gt_bbox
         label_info['gt_score'] = gt_score
         label_info['gt_class'] = gt_class
+        label_info['is_crowd'] = is_crowd
         im_info['augment_shape'] = np.array([im.shape[0],
                                              im.shape[1]]).astype('int32')
         im_info.pop('mixup')
@@ -672,23 +687,30 @@ class MixupImage:
 
 class RandomExpand:
     """随机扩张图像，模型训练时的数据增强操作。
-
     1. 随机选取扩张比例（扩张比例大于1时才进行扩张）。
     2. 计算扩张后图像大小。
-    3. 初始化像素值为数据集均值的图像，并将原图像随机粘贴于该图像上。
+    3. 初始化像素值为输入填充值的图像，并将原图像随机粘贴于该图像上。
     4. 根据原图像粘贴位置换算出扩张后真实标注框的位置坐标。
-
+    5. 根据原图像粘贴位置换算出扩张后真实分割区域的位置坐标。
     Args:
-        max_ratio (float): 图像扩张的最大比例。默认为4.0。
+        ratio (float): 图像扩张的最大比例。默认为4.0。
         prob (float): 随机扩张的概率。默认为0.5。
-        mean (list): 图像数据集的均值（0-255）。默认为[127.5, 127.5, 127.5]。
-
+        fill_value (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。
     """
 
-    def __init__(self, max_ratio=4., prob=0.5, mean=[127.5, 127.5, 127.5]):
-        self.max_ratio = max_ratio
-        self.mean = mean
+    def __init__(self,
+                 ratio=4.,
+                 prob=0.5,
+                 fill_value=[123.675, 116.28, 103.53]):
+        super(RandomExpand, self).__init__()
+        assert ratio > 1.01, "expand ratio must be larger than 1.01"
+        self.ratio = ratio
         self.prob = prob
+        assert isinstance(fill_value, Sequence), \
+            "fill value must be sequence"
+        if not isinstance(fill_value, tuple):
+            fill_value = tuple(fill_value)
+        self.fill_value = fill_value
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -696,7 +718,6 @@ class RandomExpand:
             im (np.ndarray): 图像np.ndarray数据。
             im_info (dict, 可选): 存储与图像相关的信息。
             label_info (dict, 可选): 存储与标注框相关的信息。
-
         Returns:
             tuple: 当label_info为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
                    当label_info不为空时，返回的tuple为(im, im_info, label_info)，分别对应图像np.ndarray数据、
@@ -708,7 +729,6 @@ class RandomExpand:
                                           其中n代表真实标注框的个数。
                        - gt_class (np.ndarray): 随机扩张后每个真实标注框对应的类别序号，形状为(n, 1)，
                                            其中n代表真实标注框的个数。
-
         Raises:
             TypeError: 形参数据类型不满足需求。
         """
@@ -723,108 +743,68 @@ class RandomExpand:
                 'gt_class' not in label_info:
             raise TypeError('Cannot do RandomExpand! ' + \
                             'Becasuse gt_bbox/gt_class is not in label_info!')
-        prob = np.random.uniform(0, 1)
-        augment_shape = im_info['augment_shape']
-        im_width = augment_shape[1]
-        im_height = augment_shape[0]
-        gt_bbox = label_info['gt_bbox']
-        gt_class = label_info['gt_class']
-
-        if prob < self.prob:
-            if self.max_ratio - 1 >= 0.01:
-                expand_ratio = np.random.uniform(1, self.max_ratio)
-                height = int(im_height * expand_ratio)
-                width = int(im_width * expand_ratio)
-                h_off = math.floor(np.random.uniform(0, height - im_height))
-                w_off = math.floor(np.random.uniform(0, width - im_width))
-                expand_bbox = [
-                    -w_off / im_width, -h_off / im_height,
-                    (width - w_off) / im_width, (height - h_off) / im_height
-                ]
-                expand_im = np.ones((height, width, 3))
-                expand_im = np.uint8(expand_im * np.squeeze(self.mean))
-                expand_im = Image.fromarray(expand_im)
-                im = im.astype('uint8')
-                im = Image.fromarray(im)
-                expand_im.paste(im, (int(w_off), int(h_off)))
-                expand_im = np.asarray(expand_im)
-                for i in range(gt_bbox.shape[0]):
-                    gt_bbox[i][0] = gt_bbox[i][0] / im_width
-                    gt_bbox[i][1] = gt_bbox[i][1] / im_height
-                    gt_bbox[i][2] = gt_bbox[i][2] / im_width
-                    gt_bbox[i][3] = gt_bbox[i][3] / im_height
-                gt_bbox, gt_class, _ = filter_and_process(
-                    expand_bbox, gt_bbox, gt_class)
-                for i in range(gt_bbox.shape[0]):
-                    gt_bbox[i][0] = gt_bbox[i][0] * width
-                    gt_bbox[i][1] = gt_bbox[i][1] * height
-                    gt_bbox[i][2] = gt_bbox[i][2] * width
-                    gt_bbox[i][3] = gt_bbox[i][3] * height
-                im = expand_im.astype('float32')
-                label_info['gt_bbox'] = gt_bbox
-                label_info['gt_class'] = gt_class
-                im_info['augment_shape'] = np.array([height,
-                                                     width]).astype('int32')
-        if label_info is None:
-            return (im, im_info)
-        else:
+        if np.random.uniform(0., 1.) < self.prob:
             return (im, im_info, label_info)
+
+        augment_shape = im_info['augment_shape']
+        height = int(augment_shape[0])
+        width = int(augment_shape[1])
+
+        expand_ratio = np.random.uniform(1., self.ratio)
+        h = int(height * expand_ratio)
+        w = int(width * expand_ratio)
+        if not h > height or not w > width:
+            return (im, im_info, label_info)
+        y = np.random.randint(0, h - height)
+        x = np.random.randint(0, w - width)
+        canvas = np.ones((h, w, 3), dtype=np.float32)
+        canvas *= np.array(self.fill_value, dtype=np.float32)
+        canvas[y:y + height, x:x + width, :] = im
+
+        im_info['augment_shape'] = np.array([h, w]).astype('int32')
+        if 'gt_bbox' in label_info and len(label_info['gt_bbox']) > 0:
+            label_info['gt_bbox'] += np.array([x, y] * 2, dtype=np.float32)
+        if 'gt_poly' in label_info and len(label_info['gt_poly']) > 0:
+            label_info['gt_poly'] = expand_segms(label_info['gt_poly'], x, y,
+                                                 height, width, expand_ratio)
+        return (canvas, im_info, label_info)
 
 
 class RandomCrop:
     """随机裁剪图像。
-
-    1. 根据batch_sampler计算获取裁剪候选区域的位置。
-        (1) 根据min scale、max scale、min aspect ratio、max aspect ratio计算随机剪裁的高、宽。
-        (2) 根据随机剪裁的高、宽随机选取剪裁的起始点。
-        (3) 筛选出裁剪候选区域：
-            - 当satisfy_all为True时，需所有真实标注框与裁剪候选区域的重叠度满足需求时，该裁剪候选区域才可保留。
-            - 当satisfy_all为False时，当有一个真实标注框与裁剪候选区域的重叠度满足需求时，该裁剪候选区域就可保留。
-    2. 遍历所有裁剪候选区域：
-        (1) 若真实标注框与候选裁剪区域不重叠，或其中心点不在候选裁剪区域，
-            则将该真实标注框去除。
-        (2) 计算相对于该候选裁剪区域，真实标注框的位置，并筛选出对应的类别、混合得分。
-        (3) 若avoid_no_bbox为False，返回当前裁剪后的信息即可；
-            反之，要找到一个裁剪区域中真实标注框个数不为0的区域，才返回裁剪后的信息。
+    1. 若allow_no_crop为True，则在thresholds加入’no_crop’。
+    2. 随机打乱thresholds。
+    3. 遍历thresholds中各元素：
+        (1) 如果当前thresh为’no_crop’，则返回原始图像和标注信息。
+        (2) 随机取出aspect_ratio和scaling中的值并由此计算出候选裁剪区域的高、宽、起始点。
+        (3) 计算真实标注框与候选裁剪区域IoU，若全部真实标注框的IoU都小于thresh，则继续第3步。
+        (4) 如果cover_all_box为True且存在真实标注框的IoU小于thresh，则继续第3步。
+        (5) 筛选出位于候选裁剪区域内的真实标注框，若有效框的个数为0，则继续第3步，否则进行第4步。
+    4. 换算有效真值标注框相对候选裁剪区域的位置坐标。
+    5. 换算有效分割区域相对候选裁剪区域的位置坐标。
 
     Args:
-        batch_sampler (list): 随机裁剪参数的多种组合，每种组合包含8个值，如下：
-            - max sample (int)：满足当前组合的裁剪区域的个数上限。
-            - max trial (int): 查找满足当前组合的次数。
-            - min scale (float): 裁剪面积相对原面积，每条边缩短比例的最小限制。
-            - max scale (float): 裁剪面积相对原面积，每条边缩短比例的最大限制。
-            - min aspect ratio (float): 裁剪后短边缩放比例的最小限制。
-            - max aspect ratio (float): 裁剪后短边缩放比例的最大限制。
-            - min overlap (float): 真实标注框与裁剪图像重叠面积的最小限制。
-            - max overlap (float): 真实标注框与裁剪图像重叠面积的最大限制。
-            默认值为None，当为None时采用如下设置：
-                [[1, 1, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0],
-                 [1, 50, 0.3, 1.0, 0.5, 2.0, 0.1, 1.0],
-                 [1, 50, 0.3, 1.0, 0.5, 2.0, 0.3, 1.0],
-                 [1, 50, 0.3, 1.0, 0.5, 2.0, 0.5, 1.0],
-                 [1, 50, 0.3, 1.0, 0.5, 2.0, 0.7, 1.0],
-                 [1, 50, 0.3, 1.0, 0.5, 2.0, 0.9, 1.0],
-                 [1, 50, 0.3, 1.0, 0.5, 2.0, 0.0, 1.0]]
-        satisfy_all (bool): 是否需要所有标注框满足条件，裁剪候选区域才保留。默认为False。
-        avoid_no_bbox (bool)： 是否对裁剪图像不存在标注框的图像进行保留。默认为True。
-
+        aspect_ratio (list): 裁剪后短边缩放比例的取值范围，以[min, max]形式表示。默认值为[.5, 2.]。
+        thresholds (list): 判断裁剪候选区域是否有效所需的IoU阈值取值列表。默认值为[.0, .1, .3, .5, .7, .9]。
+        scaling (list): 裁剪面积相对原面积的取值范围，以[min, max]形式表示。默认值为[.3, 1.]。
+        num_attempts (int): 在放弃寻找有效裁剪区域前尝试的次数。默认值为50。
+        allow_no_crop (bool): 是否允许未进行裁剪。默认值为True。
+        cover_all_box (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
     """
 
     def __init__(self,
-                 batch_sampler=None,
-                 satisfy_all=False,
-                 avoid_no_bbox=True):
-        if batch_sampler is None:
-            batch_sampler = [[1, 1, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                             [1, 50, 0.3, 1.0, 0.5, 2.0, 0.1, 1.0],
-                             [1, 50, 0.3, 1.0, 0.5, 2.0, 0.3, 1.0],
-                             [1, 50, 0.3, 1.0, 0.5, 2.0, 0.5, 1.0],
-                             [1, 50, 0.3, 1.0, 0.5, 2.0, 0.7, 1.0],
-                             [1, 50, 0.3, 1.0, 0.5, 2.0, 0.9, 1.0],
-                             [1, 50, 0.3, 1.0, 0.5, 2.0, 0.0, 1.0]]
-        self.batch_sampler = batch_sampler
-        self.satisfy_all = satisfy_all
-        self.avoid_no_bbox = avoid_no_bbox
+                 aspect_ratio=[.5, 2.],
+                 thresholds=[.0, .1, .3, .5, .7, .9],
+                 scaling=[.3, 1.],
+                 num_attempts=50,
+                 allow_no_crop=True,
+                 cover_all_box=False):
+        self.aspect_ratio = aspect_ratio
+        self.thresholds = thresholds
+        self.scaling = scaling
+        self.num_attempts = num_attempts
+        self.allow_no_crop = allow_no_crop
+        self.cover_all_box = cover_all_box
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -859,66 +839,84 @@ class RandomCrop:
                 'gt_class' not in label_info:
             raise TypeError('Cannot do RandomCrop! ' + \
                             'Becasuse gt_bbox/gt_class is not in label_info!')
-        augment_shape = im_info['augment_shape']
-        im_width = augment_shape[1]
-        im_height = augment_shape[0]
-        gt_bbox = label_info['gt_bbox']
-        gt_bbox_tmp = gt_bbox.copy()
-        for i in range(gt_bbox_tmp.shape[0]):
-            gt_bbox_tmp[i][0] = gt_bbox[i][0] / im_width
-            gt_bbox_tmp[i][1] = gt_bbox[i][1] / im_height
-            gt_bbox_tmp[i][2] = gt_bbox[i][2] / im_width
-            gt_bbox_tmp[i][3] = gt_bbox[i][3] / im_height
-        gt_class = label_info['gt_class']
 
-        gt_score = None
-        if 'gt_score' in label_info:
-            gt_score = label_info['gt_score']
-        sampled_bbox = []
-        gt_bbox_tmp = gt_bbox_tmp.tolist()
-        for sampler in self.batch_sampler:
-            found = 0
-            for i in range(sampler[1]):
-                if found >= sampler[0]:
-                    break
-                sample_bbox = generate_sample_bbox(sampler)
-                if satisfy_sample_constraint(sampler, sample_bbox, gt_bbox_tmp,
-                                             self.satisfy_all):
-                    sampled_bbox.append(sample_bbox)
-                    found = found + 1
-        im = np.array(im)
-        while sampled_bbox:
-            idx = int(np.random.uniform(0, len(sampled_bbox)))
-            sample_bbox = sampled_bbox.pop(idx)
-            sample_bbox = clip_bbox(sample_bbox)
-            crop_bbox, crop_class, crop_score = \
-                filter_and_process(sample_bbox, gt_bbox_tmp, gt_class, gt_score)
-            if self.avoid_no_bbox:
-                if len(crop_bbox) < 1:
-                    continue
-            xmin = int(sample_bbox[0] * im_width)
-            xmax = int(sample_bbox[2] * im_width)
-            ymin = int(sample_bbox[1] * im_height)
-            ymax = int(sample_bbox[3] * im_height)
-            im = im[ymin:ymax, xmin:xmax]
-            for i in range(crop_bbox.shape[0]):
-                crop_bbox[i][0] = crop_bbox[i][0] * (xmax - xmin)
-                crop_bbox[i][1] = crop_bbox[i][1] * (ymax - ymin)
-                crop_bbox[i][2] = crop_bbox[i][2] * (xmax - xmin)
-                crop_bbox[i][3] = crop_bbox[i][3] * (ymax - ymin)
-            label_info['gt_bbox'] = crop_bbox
-            label_info['gt_class'] = crop_class
-            label_info['gt_score'] = crop_score
-            im_info['augment_shape'] = np.array([ymax - ymin,
-                                                 xmax - xmin]).astype('int32')
-            if label_info is None:
-                return (im, im_info)
-            else:
-                return (im, im_info, label_info)
-        if label_info is None:
-            return (im, im_info)
-        else:
+        if len(label_info['gt_bbox']) == 0:
             return (im, im_info, label_info)
+
+        augment_shape = im_info['augment_shape']
+        w = augment_shape[1]
+        h = augment_shape[0]
+        gt_bbox = label_info['gt_bbox']
+        thresholds = list(self.thresholds)
+        if self.allow_no_crop:
+            thresholds.append('no_crop')
+        np.random.shuffle(thresholds)
+
+        for thresh in thresholds:
+            if thresh == 'no_crop':
+                return (im, im_info, label_info)
+
+            found = False
+            for i in range(self.num_attempts):
+                scale = np.random.uniform(*self.scaling)
+                min_ar, max_ar = self.aspect_ratio
+                aspect_ratio = np.random.uniform(
+                    max(min_ar, scale**2), min(max_ar, scale**-2))
+                crop_h = int(h * scale / np.sqrt(aspect_ratio))
+                crop_w = int(w * scale * np.sqrt(aspect_ratio))
+                crop_y = np.random.randint(0, h - crop_h)
+                crop_x = np.random.randint(0, w - crop_w)
+                crop_box = [crop_x, crop_y, crop_x + crop_w, crop_y + crop_h]
+                iou = iou_matrix(gt_bbox, np.array([crop_box],
+                                                   dtype=np.float32))
+                if iou.max() < thresh:
+                    continue
+
+                if self.cover_all_box and iou.min() < thresh:
+                    continue
+
+                cropped_box, valid_ids = crop_box_with_center_constraint(
+                    gt_bbox, np.array(crop_box, dtype=np.float32))
+                if valid_ids.size > 0:
+                    found = True
+                    break
+
+            if found:
+                if 'gt_poly' in label_info and len(label_info['gt_poly']) > 0:
+                    crop_polys = crop_segms(label_info['gt_poly'], valid_ids,
+                                            np.array(crop_box, dtype=np.int64),
+                                            h, w)
+                    if [] in crop_polys:
+                        delete_id = list()
+                        valid_polys = list()
+                        for id, crop_poly in enumerate(crop_polys):
+                            if crop_poly == []:
+                                delete_id.append(id)
+                            else:
+                                valid_polys.append(crop_poly)
+                        valid_ids = np.delete(valid_ids, delete_id)
+                        if len(valid_polys) == 0:
+                            return (im, im_info, label_info)
+                        label_info['gt_poly'] = valid_polys
+                    else:
+                        label_info['gt_poly'] = crop_polys
+                im = crop_image(im, crop_box)
+                label_info['gt_bbox'] = np.take(cropped_box, valid_ids, axis=0)
+                label_info['gt_class'] = np.take(
+                    label_info['gt_class'], valid_ids, axis=0)
+                im_info['augment_shape'] = np.array(
+                    [crop_box[3] - crop_box[1],
+                     crop_box[2] - crop_box[0]]).astype('int32')
+                if 'gt_score' in label_info:
+                    label_info['gt_score'] = np.take(
+                        label_info['gt_score'], valid_ids, axis=0)
+
+                if 'is_crowd' in label_info:
+                    label_info['is_crowd'] = np.take(
+                        label_info['is_crowd'], valid_ids, axis=0)
+                return (im, im_info, label_info)
+
+        return (im, im_info, label_info)
 
 
 class ArrangeFasterRCNN:
