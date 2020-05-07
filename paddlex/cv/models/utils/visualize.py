@@ -15,14 +15,14 @@
 import os
 import cv2
 import numpy as np
-#import matplotlib
-#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw
+
+import paddlex.utils.logging as logging
 from .detection_eval import fixed_linspace, backup_linspace, loadRes
 
 
-def visualize_detection(image, result, threshold=0.5, save_dir=None):
+def visualize_detection(image, result, threshold=0.5, save_dir='./'):
     """
         Visualize bbox and mask results
     """
@@ -35,11 +35,12 @@ def visualize_detection(image, result, threshold=0.5, save_dir=None):
             os.makedirs(save_dir)
         out_path = os.path.join(save_dir, 'visualize_{}'.format(image_name))
         image.save(out_path, quality=95)
+        logging.info('The visualized result is saved as {}'.format(out_path))
     else:
         return image
 
 
-def visualize_segmentation(image, result, weight=0.6, save_dir=None):
+def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
     """
     Convert segment result to color image, and save added image.
     Args:
@@ -66,6 +67,7 @@ def visualize_segmentation(image, result, weight=0.6, save_dir=None):
         image_name = os.path.split(image)[-1]
         out_path = os.path.join(save_dir, 'visualize_{}'.format(image_name))
         cv2.imwrite(out_path, vis_result)
+        logging.info('The visualized result is saved as {}'.format(out_path))
     else:
         return vis_result
 
@@ -285,6 +287,8 @@ def draw_pr_curve(eval_details_file=None,
             dpi=800)
         plt.close()
 
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
     cal_pr(coco, pred_bbox, iou_thresh, save_dir, style='bbox')
     if pred_mask is not None:
         cal_pr(coco, pred_mask, iou_thresh, save_dir, style='segm')
