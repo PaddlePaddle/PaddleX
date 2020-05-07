@@ -111,31 +111,40 @@ def bgr2rgb(im):
     return im[:, :, ::-1]
 
 
-def brightness(im, brightness_lower, brightness_upper):
-    brightness_delta = np.random.uniform(brightness_lower, brightness_upper)
-    im = ImageEnhance.Brightness(im).enhance(brightness_delta)
-    return im
-
-
-def contrast(im, contrast_lower, contrast_upper):
-    contrast_delta = np.random.uniform(contrast_lower, contrast_upper)
-    im = ImageEnhance.Contrast(im).enhance(contrast_delta)
+def hue(im, hue_lower, hue_upper):
+    delta = np.random.uniform(hue_lower, hue_upper)
+    u = np.cos(delta * np.pi)
+    w = np.sin(delta * np.pi)
+    bt = np.array([[1.0, 0.0, 0.0], [0.0, u, -w], [0.0, w, u]])
+    tyiq = np.array([[0.299, 0.587, 0.114], [0.596, -0.274, -0.321],
+                     [0.211, -0.523, 0.311]])
+    ityiq = np.array([[1.0, 0.956, 0.621], [1.0, -0.272, -0.647],
+                      [1.0, -1.107, 1.705]])
+    t = np.dot(np.dot(ityiq, bt), tyiq).T
+    im = np.dot(im, t)
     return im
 
 
 def saturation(im, saturation_lower, saturation_upper):
-    saturation_delta = np.random.uniform(saturation_lower, saturation_upper)
-    im = ImageEnhance.Color(im).enhance(saturation_delta)
+    delta = np.random.uniform(saturation_lower, saturation_upper)
+    gray = im * np.array([[[0.299, 0.587, 0.114]]], dtype=np.float32)
+    gray = gray.sum(axis=2, keepdims=True)
+    gray *= (1.0 - delta)
+    im *= delta
+    im += gray
     return im
 
 
-def hue(im, hue_lower, hue_upper):
-    hue_delta = np.random.uniform(hue_lower, hue_upper)
-    im = np.array(im.convert('HSV'))
-    im[:, :, 0] = im[:, :, 0] + hue_delta
-    im = Image.fromarray(im, mode='HSV').convert('RGB')
+def contrast(im, contrast_lower, contrast_upper):
+    delta = np.random.uniform(contrast_lower, contrast_upper)
+    im *= delta
     return im
 
+
+def brightness(im, brightness_lower, brightness_upper):
+    delta = np.random.uniform(brightness_lower, brightness_upper)
+    im += delta
+    return im
 
 def rotate(im, rotate_lower, rotate_upper):
     rotate_delta = np.random.uniform(rotate_lower, rotate_upper)
