@@ -757,9 +757,9 @@ class RandomExpand:
             return (im, im_info, label_info)
         y = np.random.randint(0, h - height)
         x = np.random.randint(0, w - width)
-        canvas = np.ones((h, w, 3), dtype=np.uint8)
-        canvas *= np.array(self.fill_value, dtype=np.uint8)
-        canvas[y:y + height, x:x + width, :] = im.astype(np.uint8)
+        canvas = np.ones((h, w, 3), dtype=np.float32)
+        canvas *= np.array(self.fill_value, dtype=np.float32)
+        canvas[y:y + height, x:x + width, :] = im
 
         im_info['augment_shape'] = np.array([h, w]).astype('int32')
         if 'gt_bbox' in label_info and len(label_info['gt_bbox']) > 0:
