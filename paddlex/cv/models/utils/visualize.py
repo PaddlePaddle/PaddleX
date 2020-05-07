@@ -278,7 +278,7 @@ def draw_pr_curve(eval_details_file=None,
             color = [float(c) / 255 for c in color]
             color.append(0.75)
             plt.plot(x, sr_array, color=color, label=nm, linewidth=1)
-        plt.legend(loc="lower right", fontsize=5)
+        plt.legend(loc="lower left", fontsize=5)
         plt.savefig(
             os.path.join(save_dir, "./{}_pr_curve(iou-{}).png".format(
                 style, iou_thresh)),
