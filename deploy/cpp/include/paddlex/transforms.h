@@ -35,10 +35,8 @@ class ImageBlob {
   std::vector<int> ori_im_size_ = std::vector<int>(2);
   // Newest image height and width after process
   std::vector<int> new_im_size_ = std::vector<int>(2);
-  // Image height and width before padding
-  std::vector<int> im_size_before_padding_ = std::vector<int>(2);
   // Image height and width before resize
-  std::vector<int> im_size_before_resize_ = std::vector<int>(2);
+  std::vector<std::vector<int>> im_size_before_resize_;
   // Reshape order
   std::vector<std::string> reshape_order_;
   // Resize scale
@@ -49,7 +47,6 @@ class ImageBlob {
   void clear() {
     ori_im_size_.clear();
     new_im_size_.clear();
-    im_size_before_padding_.clear();
     im_size_before_resize_.clear();
     reshape_order_.clear();
     im_data_.clear();
@@ -165,8 +162,8 @@ class Padding : public Transform {
         width_ = item["target_size"].as<int>();
         height_ = item["target_size"].as<int>();
       } else if (item["target_size"].IsSequence()) {
-        width_ = item["target_size"].as<std::vector<int>>()[0];
-        height_ = item["target_size"].as<std::vector<int>>()[1];
+        width_ = item["target_size"].as<std::vector<int>>()[1];
+        height_ = item["target_size"].as<std::vector<int>>()[0];
       }
     }
     if (item["im_padding_value"].IsDefined()) {

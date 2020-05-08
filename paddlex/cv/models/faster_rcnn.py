@@ -36,6 +36,7 @@ class FasterRCNN(BaseAPI):
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
+        fixed_input_shape (list): 长度为2，维度为1的list，如:[640,720]，用来固定模型输入:'image'的shape，默认为None。
     """
 
     def __init__(self,
@@ -43,7 +44,8 @@ class FasterRCNN(BaseAPI):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512]):
+                 anchor_sizes=[32, 64, 128, 256, 512],
+                fixed_input_shape=None):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
@@ -57,6 +59,7 @@ class FasterRCNN(BaseAPI):
         self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
         self.labels = None
+        self.fixed_input_shape = fixed_input_shape
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -109,7 +112,8 @@ class FasterRCNN(BaseAPI):
             aspect_ratios=self.aspect_ratios,
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
-            test_pre_nms_top_n=test_pre_nms_top_n)
+            test_pre_nms_top_n=test_pre_nms_top_n,
+            fixed_input_shape = self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)

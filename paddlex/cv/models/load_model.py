@@ -23,7 +23,7 @@ import paddlex
 import paddlex.utils.logging as logging
 
 
-def load_model(model_dir):
+def load_model(model_dir, fixed_input_shape=None):
     if not osp.exists(osp.join(model_dir, "model.yml")):
         raise Exception("There's not model.yml in {}".format(model_dir))
     with open(osp.join(model_dir, "model.yml")) as f:
@@ -38,6 +38,8 @@ def load_model(model_dir):
     if not hasattr(paddlex.cv.models, info['Model']):
         raise Exception("There's no attribute {} in paddlex.cv.models".format(
             info['Model']))
+
+    info['_init_params']['fixed_input_shape'] = fixed_input_shape
 
     if info['_Attributes']['model_type'] == 'classifier':
         model = paddlex.cv.models.BaseClassifier(**info['_init_params'])

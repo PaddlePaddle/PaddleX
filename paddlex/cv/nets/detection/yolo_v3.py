@@ -33,7 +33,8 @@ class YOLOv3:
                  nms_iou_threshold=0.45,
                  train_random_shapes=[
                      320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ]):
+                 ],
+                 fixed_input_shape=None):
         if anchors is None:
             anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                        [59, 119], [116, 90], [156, 198], [373, 326]]
@@ -54,6 +55,7 @@ class YOLOv3:
         self.norm_decay = 0.0
         self.prefix_name = ''
         self.train_random_shapes = train_random_shapes
+        self.fixed_input_shape = fixed_input_shape
 
     def _head(self, feats):
         outputs = []
@@ -247,8 +249,13 @@ class YOLOv3:
 
     def generate_inputs(self):
         inputs = OrderedDict()
-        inputs['image'] = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+        if self.fixed_input_shape is not None:
+            input_shape =[None, 3, self.fixed_input_shape[0], self.fixed_input_shape[1]]
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if self.mode == 'train':
             inputs['gt_box'] = fluid.data(
                 dtype='float32', shape=[None, None, 4], name='gt_box')

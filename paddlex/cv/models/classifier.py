@@ -35,9 +35,10 @@ class BaseClassifier(BaseAPI):
                           'MobileNetV1', 'MobileNetV2', 'Xception41',
                           'Xception65', 'Xception71']。默认为'ResNet50'。
         num_classes (int): 类别数。默认为1000。
+        fixed_input_shape (list): 长度为2，维度为1的list，如:[640,720]，用来固定模型输入:'image'的shape，默认为None。
     """
 
-    def __init__(self, model_name='ResNet50', num_classes=1000):
+    def __init__(self, model_name='ResNet50', num_classes=1000, fixed_input_shape=None):
         self.init_params = locals()
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(paddlex.cv.nets, str.lower(model_name)):
@@ -46,10 +47,16 @@ class BaseClassifier(BaseAPI):
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
+        self.fixed_input_shape = fixed_input_shape
 
     def build_net(self, mode='train'):
-        image = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+        if self.fixed_input_shape is not None:
+            input_shape =[None, 3, self.fixed_input_shape[0], self.fixed_input_shape[1]]
+            image = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            image = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if mode != 'test':
             label = fluid.data(dtype='int64', shape=[None, 1], name='label')
         model = getattr(paddlex.cv.nets, str.lower(self.model_name))

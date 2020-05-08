@@ -283,7 +283,7 @@ class BaseAPI:
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info("Model saved in {}.".format(save_dir))
 
-    def export_inference_model(self, save_dir):
+    def export_inference_model(self, save_dir, fixed_input_shape=None):
         test_input_names = [
             var.name for var in list(self.test_inputs.values())
         ]
@@ -316,11 +316,30 @@ class BaseAPI:
         model_info['_ModelInputsOutputs']['test_outputs'] = [
             [k, v.name] for k, v in self.test_outputs.items()
         ]
+        resize = {'ResizeByShort': {}}
+        padding = {'Padding':{}}
 
+        if model_info['_Attributes']['model_type'] == 'classifier':
+            crop_size = 0
+            for transform in model_info['Transforms']:
+                if 'CenterCrop' in transform:
+                    crop_size = transform['CenterCrop']['crop_size']
+                    break
+            assert crop_size == fixed_input_shape[0], "fixed_input_shape must == CenterCrop:crop_size:{}".format(crop_size)
+            assert crop_size == fixed_input_shape[1], "fixed_input_shape must == CenterCrop:crop_size:{}".format(crop_size)
+            if crop_size == 0:
+                logging.warning("fixed_input_shape must == input shape when trainning")
+        else:
+            resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
+            resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
+            padding['Padding']['target_size'] = list(fixed_input_shape)
+            model_info['Transforms'].append(resize)
+            model_info['Transforms'].append(padding)
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info(

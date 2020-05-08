@@ -287,6 +287,76 @@ class ResizeByLong:
         else:
             return (im, im_info, label)
 
+class ResizeByShort:
+    """根据图像的短边调整图像大小（resize）。
+
+    1. 获取图像的长边和短边长度。
+    2. 根据短边与short_size的比例，计算长边的目标长度，
+       此时高、宽的resize比例为short_size/原图短边长度。
+    3. 如果max_size>0，调整resize比例：
+       如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
+    4. 根据调整大小的比例对图像进行resize。
+
+    Args:
+        target_size (int): 短边目标长度。默认为800。
+        max_size (int): 长边目标长度的最大限制。默认为1333。
+
+     Raises:
+        TypeError: 形参数据类型不满足需求。
+    """
+
+    def __init__(self, short_size=800, max_size=1333):
+        self.max_size = int(max_size)
+        if not isinstance(short_size, int):
+            raise TypeError(
+                "Type of short_size is invalid. Must be Integer, now is {}".
+                format(type(short_size)))
+        self.short_size = short_size
+        if not (isinstance(self.max_size, int)):
+            raise TypeError("max_size: input type is invalid.")
+
+    def __call__(self, im, im_info=None, label_info=None):
+        """
+        Args:
+            im (numnp.ndarraypy): 图像np.ndarray数据。
+            im_info (dict, 可选): 存储与图像相关的信息。
+            label_info (dict, 可选): 存储与标注框相关的信息。
+
+        Returns:
+            tuple: 当label_info为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
+                   当label_info不为空时，返回的tuple为(im, im_info, label_info)，分别对应图像np.ndarray数据、
+                   存储与标注框相关信息的字典。
+                   其中，im_info更新字段为：
+                       - im_resize_info (np.ndarray): resize后的图像高、resize后的图像宽、resize后的图像相对原始图的缩放比例
+                                                 三者组成的np.ndarray，形状为(3,)。
+
+        Raises:
+            TypeError: 形参数据类型不满足需求。
+            ValueError: 数据长度不匹配。
+        """
+        if im_info is None:
+            im_info = dict()
+        if not isinstance(im, np.ndarray):
+            raise TypeError("ResizeByShort: image type is not numpy.")
+        if len(im.shape) != 3:
+            raise ValueError('ResizeByShort: image is not 3-dimensional.')
+        im_short_size = min(im.shape[0], im.shape[1])
+        im_long_size = max(im.shape[0], im.shape[1])
+        scale = float(self.short_size) / im_short_size
+        if self.max_size > 0 and np.round(
+                scale * im_long_size) > self.max_size:
+            scale = float(self.max_size) / float(im_long_size)
+        resized_width = int(round(im.shape[1] * scale))
+        resized_height = int(round(im.shape[0] * scale))
+        im_resize_info = [resized_height, resized_width, scale]
+        im = cv2.resize(
+            im, (resized_width, resized_height),
+            interpolation=cv2.INTER_LINEAR)
+        im_info['im_resize_info'] = np.array(im_resize_info).astype(np.float32)
+        if label_info is None:
+            return (im, im_info)
+        else:
+            return (im, im_info, label_info)
 
 class ResizeRangeScaling:
     """对图像长边随机resize到指定范围内，短边按比例进行缩放。当存在标注图像时，则同步进行处理。

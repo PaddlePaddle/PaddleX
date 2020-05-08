@@ -201,10 +201,12 @@ class Padding:
 
     Args:
         coarsest_stride (int): 填充后的图像长、宽为该参数的倍数，默认为1。
+        target_size (int|list): 填充后的图像长、宽，默认为1。
     """
 
-    def __init__(self, coarsest_stride=1):
+    def __init__(self, coarsest_stride=1, target_size=None):
         self.coarsest_stride = coarsest_stride
+        self.target_size = target_size
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -221,9 +223,10 @@ class Padding:
         Raises:
             TypeError: 形参数据类型不满足需求。
             ValueError: 数据长度不匹配。
+            ValueError: target_size小于原图的大小。
         """
 
-        if self.coarsest_stride == 1:
+        if self.coarsest_stride == 1 and self.target_size is None:
             if label_info is None:
                 return (im, im_info)
             else:
@@ -240,6 +243,20 @@ class Padding:
                 np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
             padding_im_w = int(
                 np.ceil(im_w / self.coarsest_stride) * self.coarsest_stride)
+        if self.target_size is not None:
+            if isinstance(self.target_size, int):
+                padding_im_h = self.target_size
+                padding_im_w = self.target_size
+            else:
+                padding_im_h = self.target_size[0]
+                padding_im_w = self.target_size[1]
+            pad_height = padding_im_h - im_h
+            pad_width = padding_im_w - im_w
+
+            if pad_height < 0 or pad_width < 0:
+                raise ValueError(
+                'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
+                .format(im_w, im_h, padding_im_w, padding_im_h))
         padding_im = np.zeros((padding_im_h, padding_im_w, im_c),
                               dtype=np.float32)
         padding_im[:im_h, :im_w, :] = im
