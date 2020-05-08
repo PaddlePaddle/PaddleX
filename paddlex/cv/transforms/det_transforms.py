@@ -541,15 +541,13 @@ class RandomDistort:
             'saturation': self.saturation_prob,
             'hue': self.hue_prob
         }
-        im = im.astype('uint8')
-        im = Image.fromarray(im)
         for id in range(4):
             params = params_dict[ops[id].__name__]
             prob = prob_dict[ops[id].__name__]
             params['im'] = im
+            
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
-        im = np.asarray(im).astype('float32')
         if label_info is None:
             return (im, im_info)
         else:
@@ -598,7 +596,7 @@ class MixupImage:
             img1.astype('float32') * factor
         img[:img2.shape[0], :img2.shape[1], :] += \
             img2.astype('float32') * (1.0 - factor)
-        return img.astype('uint8')
+        return img.astype('float32')
 
     def __call__(self, im, im_info=None, label_info=None):
         """
