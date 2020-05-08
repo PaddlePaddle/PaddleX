@@ -15,7 +15,6 @@
 import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw
 
 import paddlex.utils.logging as logging
@@ -222,6 +221,7 @@ def draw_pr_curve(eval_details_file=None,
         return mean_s
 
     def cal_pr(coco_gt, coco_dt, iou_thresh, save_dir, style='bbox'):
+        import matplotlib.pyplot as plt
         from pycocotools.cocoeval import COCOeval
         coco_dt = loadRes(coco_gt, coco_dt)
         np.linspace = fixed_linspace

@@ -220,3 +220,39 @@ def load_pretrain_weights(exe, main_prog, weights_dir, fuse_bn=False):
             len(vars_to_load), weights_dir))
     if fuse_bn:
         fuse_bn_weights(exe, main_prog, weights_dir)
+
+
+class EarlyStop:
+    def __init__(self, patience, thresh):
+        self.patience = patience
+        self.counter = 0
+        self.score = None
+        self.max = 0
+        self.thresh = thresh
+        if patience < 1:
+            raise Exception("Argument patience should be a positive integer.")
+
+    def __call__(self, current_score):
+        if self.score is None:
+            self.score = current_score
+            return False
+        elif current_score > self.max:
+            self.counter = 0
+            self.score = current_score
+            self.max = current_score
+            return False
+        else:
+            if (abs(self.score - current_score) < self.thresh
+                    or current_score < self.score):
+                self.counter += 1
+                self.score = current_score
+                logging.debug(
+                    "EarlyStopping: %i / %i" % (self.counter, self.patience))
+                if self.counter >= self.patience:
+                    logging.info("EarlyStopping: Stop training")
+                    return True
+                return False
+            else:
+                self.counter = 0
+                self.score = current_score
+                return False

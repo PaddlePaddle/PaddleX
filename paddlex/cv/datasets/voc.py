@@ -18,7 +18,6 @@ import os.path as osp
 import random
 import numpy as np
 import xml.etree.ElementTree as ET
-from pycocotools.coco import COCO
 import paddlex.utils.logging as logging
 from .dataset import Dataset
 from .dataset import is_pic
@@ -51,6 +50,7 @@ class VOCDetection(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
+        from pycocotools.coco import COCO
         super(VOCDetection, self).__init__(
             transforms=transforms,
             num_workers=num_workers,
