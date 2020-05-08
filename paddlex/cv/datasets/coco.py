@@ -19,7 +19,6 @@ import random
 import numpy as np
 import paddlex.utils.logging as logging
 import paddlex as pst
-from pycocotools.coco import COCO
 from .voc import VOCDetection
 from .dataset import is_pic
 
@@ -47,6 +46,8 @@ class CocoDetection(VOCDetection):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
+        from pycocotools.coco import COCO
+
         super(VOCDetection, self).__init__(
             transforms=transforms,
             num_workers=num_workers,

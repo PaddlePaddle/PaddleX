@@ -163,7 +163,9 @@ class FasterRCNN(BaseAPI):
               lr_decay_epochs=[8, 11],
               lr_decay_gamma=0.1,
               metric=None,
-              use_vdl=False):
+              use_vdl=False,
+              early_stop=False,
+              early_stop_patience=5):
         """训练。
 
         Args:
@@ -186,6 +188,9 @@ class FasterRCNN(BaseAPI):
             lr_decay_gamma (float): 默认优化器的学习率衰减率。默认为0.1。
             metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认值为None。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认值为False。
+            early_stop (bool): 是否使用提前终止训练策略。默认值为False。
+            early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
+                连续下降或持平，则终止训练。默认值为5。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -234,7 +239,9 @@ class FasterRCNN(BaseAPI):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self,
                  eval_dataset,

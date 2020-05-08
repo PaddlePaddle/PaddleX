@@ -162,7 +162,9 @@ class YOLOv3(BaseAPI):
               metric=None,
               use_vdl=False,
               sensitivities_file=None,
-              eval_metric_loss=0.05):
+              eval_metric_loss=0.05,
+              early_stop=False,
+              early_stop_patience=5):
         """训练。
 
         Args:
@@ -188,6 +190,9 @@ class YOLOv3(BaseAPI):
             sensitivities_file (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，
                 则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
             eval_metric_loss (float): 可容忍的精度损失。默认为0.05。
+            early_stop (bool): 是否使用提前终止训练策略。默认值为False。
+            early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
+                连续下降或持平，则终止训练。默认值为5。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -239,7 +244,9 @@ class YOLOv3(BaseAPI):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self,
                  eval_dataset,
