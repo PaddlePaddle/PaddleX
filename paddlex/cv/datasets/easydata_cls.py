@@ -76,7 +76,7 @@ class EasyDataCls(ImageNet):
                     raise IOError(
                         'The image file {} is not exist!'.format(img_file))
                 with open(json_file, mode='r', \
-                          encoding=get_encoding(label_list)) as j:
+                          encoding=get_encoding(json_file)) as j:
                     json_info = json.load(j)
                 label = json_info['labels'][0]['name']
                 self.file_list.append([img_file, self.labels.index(label)])

@@ -79,7 +79,7 @@ class EasyDataSeg(Dataset):
                     raise IOError(
                         'The image file {} is not exist!'.format(img_file))
                 with open(json_file, mode='r', \
-                          encoding=get_encoding(label_list)) as j:
+                          encoding=get_encoding(json_file)) as j:
                     json_info = json.load(j)
                 im = cv2.imread(img_file)
                 im_w = im.shape[1]
