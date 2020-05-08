@@ -40,12 +40,12 @@ paddlex.det.draw_pr_curve(eval_details_file=None, gt=None, pred_bbox=None, pred_
 **注意：**`eval_details_file`的优先级更高，只要`eval_details_file`不为None，就会从`eval_details_file`提取真值信息和预测结果做分析。当`eval_details_file`为None时，则用`gt`、`pred_mask`、`pred_mask`做分析。
 
 ### 使用示例
-点击下载如下示例中的[模型]()和[数据集](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)
+点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)和[数据集](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)
 
-> 方式一：分析训练过程中保存的模型文件夹中的评估结果文件`eval_details.json`，例如[模型]()中的`eval_details.json`。
+> 方式一：分析训练过程中保存的模型文件夹中的评估结果文件`eval_details.json`，例如[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)中的`eval_details.json`。
 ```
 import paddlex as pdx
-eval_details_file = 'insect_epoch_/eval_details.json'
+eval_details_file = 'insect_epoch_270/eval_details.json'
 pdx.det.draw_pr_curve(eval_details_file, save_dir='./insect')
 ```
 > 方式二：分析模型评估函数返回的评估结果。
@@ -58,10 +58,11 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 from paddlex.det import transforms
 import paddlex as pdx
 
-model = pdx.load_model('xiaoduxiong_epoch_12')
-eval_dataset = pdx.datasets.CocoDetection(
-    data_dir='xiaoduxiong_ins_det/JPEGImages',
-    ann_file='xiaoduxiong_ins_det/val.json',
+model = pdx.load_model('insect_epoch_270')
+eval_dataset = pdx.datasets.VOCDetection(
+    data_dir='insect_det',
+    file_list='insect_det/val_list.txt',
+    label_list='insect_det/labels.txt',
     transforms=model.eval_transforms)
 metrics, evaluate_details = model.evaluate(eval_dataset, batch_size=8, return_details=True)
 gt = evaluate_details['gt']
