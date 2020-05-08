@@ -38,7 +38,7 @@ paddlex.cls.ResNet50(num_classes=1000)
 > > - **sensitivities_file** (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
 > > - **eval_metric_loss** (float): 可容忍的精度损失。默认为0.05。
 > > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
+> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 
 #### 分类器评估函数接口
 
@@ -135,7 +135,7 @@ paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor_
 > > - **sensitivities_file** (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，则自动下载在PascalVOC数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
 > > - **eval_metric_loss** (float): 可容忍的精度损失。默认为0.05。
 > > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
+> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 
 #### YOLOv3评估函数接口
 
@@ -213,7 +213,7 @@ paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspec
 > > - **metric** (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认值为None。
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认值为False。
 > > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
+> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 
 #### FasterRCNN评估函数接口
 
@@ -293,7 +293,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 > > - **metric** (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认值为None。
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认值为False。
 > > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
+> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 
 #### MaskRCNN评估函数接口
 
@@ -379,7 +379,7 @@ paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride
 > > - **sensitivities_file** (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
 > > - **eval_metric_loss** (float): 可容忍的精度损失。默认为0.05。
 > > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
+> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 
 #### DeepLabv3评估函数接口
 
@@ -457,7 +457,7 @@ paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, us
 > > - **sensitivities_file** (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
 > > - **eval_metric_loss** (float): 可容忍的精度损失。默认为0.05。
 > > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
+> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 
 #### Unet评估函数接口
 

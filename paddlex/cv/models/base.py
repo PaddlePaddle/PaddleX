@@ -513,7 +513,6 @@ class BaseAPI:
                     'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
                     .format(best_model_epoch, best_accuracy_key,
                             best_accuracy))
-                if eval_dataset is not None:
-                    if early_stop:
-                        if earlystop(current_accuracy):
-                            break
+                if eval_dataset is not None and early_stop:
+                    if earlystop(current_accuracy):
+                        break
