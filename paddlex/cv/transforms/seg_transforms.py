@@ -959,15 +959,12 @@ class RandomDistort:
             'saturation': self.saturation_prob,
             'hue': self.hue_prob
         }
-        im = im.astype('uint8')
-        im = Image.fromarray(im)
         for id in range(4):
             params = params_dict[ops[id].__name__]
             prob = prob_dict[ops[id].__name__]
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
-        im = np.asarray(im).astype('float32')
         if label is None:
             return (im, im_info)
         else:
