@@ -250,7 +250,9 @@ class YOLOv3:
     def generate_inputs(self):
         inputs = OrderedDict()
         if self.fixed_input_shape is not None:
-            input_shape =[None, 3, self.fixed_input_shape[0], self.fixed_input_shape[1]]
+            input_shape = [
+                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+            ]
             inputs['image'] = fluid.data(
                 dtype='float32', shape=input_shape, name='image')
         else:

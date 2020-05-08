@@ -92,15 +92,16 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
 
   int padding_w = 0;
   int padding_h = 0;
-  if (width_ > 0 & height_ > 0) {
+  if (width_ > 1 & height_ > 1) {
     padding_w = width_ - im->cols;
     padding_h = height_ - im->rows;
-  } else if (coarsest_stride_ > 0) {
+  } else if (coarsest_stride_ > 1) {
     padding_h =
         ceil(im->rows * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
     padding_w =
         ceil(im->cols * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
   }
+
   if (padding_h < 0 || padding_w < 0) {
     std::cerr << "[Padding] Computed padding_h=" << padding_h
               << ", padding_w=" << padding_w

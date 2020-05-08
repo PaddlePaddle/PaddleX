@@ -39,11 +39,11 @@ void Model::create_predictor(const std::string& model_dir,
   // 开启内存优化
   config.EnableMemoryOptim();
   if (use_trt){
-    config.EnableTensorRtEngine(1 << 20      /* workspace_size*/,  
-                        32        /* max_batch_size*/,  
+    config.EnableTensorRtEngine(1 << 20      /* workspace_size*/,
+                        32        /* max_batch_size*/,
                         20                 /* min_subgraph_size*/,
                         paddle::AnalysisConfig::Precision::kFloat32 /* precision*/,
-                        false             /* use_static*/,
+                        true             /* use_static*/,
                         false             /* use_calib_mode*/);
   }
   predictor_ = std::move(CreatePaddlePredictor(config));

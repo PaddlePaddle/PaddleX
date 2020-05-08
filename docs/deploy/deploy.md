@@ -14,6 +14,12 @@
 paddlex --export_inference --model_dir=./garbage_epoch_12 --save_dir=./inference_model
 ```
 
+使用TensorRT预测时，需指定模型的图像输入shape:[w,h]，需要注意的是分类模型请保持于训练时输入的shape一致。
+
+```
+paddlex --export_inference --model_dir=./garbage_epoch_12 --save_dir=./inference_model --fixed_input_shape=[640,960]
+```
+
 ### Python部署
 PaddleX已经集成了基于Python的高性能预测接口，在安装PaddleX后，可参照如下代码示例，进行预测。相关的接口文档可参考[paddlex.deploy](apis/deploy.md)
 > 点击下载测试图片 [garbage.bmp](https://bj.bcebos.com/paddlex/datasets/garbage.bmp)

@@ -114,8 +114,6 @@ if (NOT WIN32)
   if (WITH_TENSORRT AND WITH_GPU)
       include_directories("${TENSORRT_DIR}/include")
       link_directories("${TENSORRT_DIR}/lib")
-      #include_directories("${PADDLE_DIR}/third_party/install/tensorrt/include")
-      #link_directories("${PADDLE_DIR}/third_party/install/tensorrt/lib")
   endif()
 endif(NOT WIN32)
 
@@ -172,7 +170,7 @@ endif()
 
 if (NOT WIN32)
     set(DEPS ${DEPS}
-        ${MATH_LIB} ${MKLDNN_LIB} 
+        ${MATH_LIB} ${MKLDNN_LIB}
         glog gflags protobuf z xxhash yaml-cpp
         )
     if(EXISTS "${PADDLE_DIR}/third_party/install/snappystream/lib")
@@ -199,8 +197,6 @@ if(WITH_GPU)
     if (WITH_TENSORRT)
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
-      #set(DEPS ${DEPS} ${PADDLE_DIR}/third_party/install/tensorrt/lib/libnvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
-      #set(DEPS ${DEPS} ${PADDLE_DIR}/third_party/install/tensorrt/lib/libnvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
     set(DEPS ${DEPS} ${CUDA_LIB}/libcudart${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -216,7 +212,7 @@ if (NOT WIN32)
     set(DEPS ${DEPS} ${EXTERNAL_LIB})
 endif()
 
-set(DEPS ${DEPS} ${OpenCV_LIBS}) 
+set(DEPS ${DEPS} ${OpenCV_LIBS})
 add_executable(classifier src/classifier.cpp src/transforms.cpp src/paddlex.cpp)
 ADD_DEPENDENCIES(classifier ext-yaml-cpp)
 target_link_libraries(classifier ${DEPS})
@@ -256,4 +252,3 @@ if (WIN32 AND WITH_MKL)
     )
 
 endif()
-

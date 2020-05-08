@@ -44,8 +44,7 @@ class FasterRCNN(BaseAPI):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512],
-                fixed_input_shape=None):
+                 anchor_sizes=[32, 64, 128, 256, 512]):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
@@ -59,7 +58,7 @@ class FasterRCNN(BaseAPI):
         self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
         self.labels = None
-        self.fixed_input_shape = fixed_input_shape
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -113,7 +112,7 @@ class FasterRCNN(BaseAPI):
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
-            fixed_input_shape = self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)

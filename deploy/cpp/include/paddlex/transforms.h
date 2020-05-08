@@ -152,18 +152,19 @@ class Padding : public Transform {
   virtual void Init(const YAML::Node& item) {
     if (item["coarsest_stride"].IsDefined()) {
       coarsest_stride_ = item["coarsest_stride"].as<int>();
-      if (coarsest_stride_ <= 1) {
+      if (coarsest_stride_ < 1) {
         std::cerr << "[Padding] coarest_stride should greater than 0"
                   << std::endl;
         exit(-1);
       }
-    } else {
+    }
+    if (item["target_size"].IsDefined()){
       if (item["target_size"].IsScalar()) {
         width_ = item["target_size"].as<int>();
         height_ = item["target_size"].as<int>();
       } else if (item["target_size"].IsSequence()) {
-        width_ = item["target_size"].as<std::vector<int>>()[1];
-        height_ = item["target_size"].as<std::vector<int>>()[0];
+        width_ = item["target_size"].as<std::vector<int>>()[0];
+        height_ = item["target_size"].as<std::vector<int>>()[1];
       }
     }
     if (item["im_padding_value"].IsDefined()) {

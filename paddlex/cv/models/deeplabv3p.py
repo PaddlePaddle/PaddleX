@@ -48,7 +48,6 @@ class DeepLabv3p(BaseAPI):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None时，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。默认255。
-        fixed_input_shape (list): 长度为2，维度为1的list，如:[640,720]，用来固定模型输入:'image'的shape，默认为None。
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: backbone取值不在['Xception65', 'Xception41', 'MobileNetV2_x0.25',
@@ -69,8 +68,7 @@ class DeepLabv3p(BaseAPI):
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255,
-                 fixed_input_shape=None):
+                 ignore_index=255):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -119,7 +117,7 @@ class DeepLabv3p(BaseAPI):
         self.enable_decoder = enable_decoder
         self.labels = None
         self.sync_bn = True
-        self.fixed_input_shape = fixed_input_shape
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone):
         def mobilenetv2(backbone):
@@ -185,7 +183,7 @@ class DeepLabv3p(BaseAPI):
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
             ignore_index=self.ignore_index,
-            fixed_input_shape = self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()

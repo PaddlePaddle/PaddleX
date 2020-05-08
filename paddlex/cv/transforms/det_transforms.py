@@ -211,7 +211,7 @@ class Padding:
         target_size (int|list): 填充后的图像长、宽，默认为1。
     """
 
-    def __init__(self, coarsest_stride=1, target_size=None):
+    def __init__(self, coarsest_stride=1, target_size=1):
         self.coarsest_stride = coarsest_stride
         self.target_size = target_size
 
@@ -233,11 +233,12 @@ class Padding:
             ValueError: target_size小于原图的大小。
         """
 
-        if self.coarsest_stride == 1 and self.target_size is None:
-            if label_info is None:
-                return (im, im_info)
-            else:
-                return (im, im_info, label_info)
+        if self.coarsest_stride == 1:
+            if isinstance(self.target_size, int) and self.target_size == 1:
+                if label_info is None:
+                    return (im, im_info)
+                else:
+                    return (im, im_info, label_info)
         if im_info is None:
             im_info = dict()
         if not isinstance(im, np.ndarray):
@@ -250,18 +251,17 @@ class Padding:
                 np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
             padding_im_w = int(
                 np.ceil(im_w / self.coarsest_stride) * self.coarsest_stride)
-        if self.target_size is not None:
-            if isinstance(self.target_size, int):
-                padding_im_h = self.target_size
-                padding_im_w = self.target_size
-            else:
-                padding_im_h = self.target_size[0]
-                padding_im_w = self.target_size[1]
-            pad_height = padding_im_h - im_h
-            pad_width = padding_im_w - im_w
 
-            if pad_height < 0 or pad_width < 0:
-                raise ValueError(
+        if isinstance(self.target_size, int) and self.target_size != 1:
+            padding_im_h = self.target_size
+            padding_im_w = self.target_size
+        elif isinstance(self.target_size, list):
+            padding_im_w = self.target_size[0]
+            padding_im_h = self.target_size[1]
+        pad_height = padding_im_h - im_h
+        pad_width = padding_im_w - im_w
+        if pad_height < 0 or pad_width < 0:
+            raise ValueError(
                 'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
                 .format(im_w, im_h, padding_im_w, padding_im_h))
         padding_im = np.zeros((padding_im_h, padding_im_w, im_c),
@@ -562,7 +562,7 @@ class RandomDistort:
             params = params_dict[ops[id].__name__]
             prob = prob_dict[ops[id].__name__]
             params['im'] = im
-            
+
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
         if label_info is None:

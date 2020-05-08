@@ -39,18 +39,24 @@ fluid_inference
 
 编译`cmake`的命令在`scripts/build.sh`中，请根据实际情况修改主要参数，其主要内容说明如下：
 ```
+
 # 是否使用GPU(即是否使用 CUDA)
-WITH_GPU=ON
+WITH_GPU=OFF
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
 WITH_TENSORRT=OFF
-# 上一步下载的 Paddle 预测库路径
-PADDLE_DIR=/root/projects/deps/fluid_inference/
+# TensorRT 的lib路径
+TENSORRT_DIR=/path/to/TensorRT/
+# Paddle 预测库路径
+PADDLE_DIR=/path/to/fluid_inference/
+# Paddle 的预测库是否使用静态库来编译
+# 使用TensorRT时，Paddle的预测库通常为动态库
+WITH_STATIC_LIB=ON
 # CUDA 的 lib 路径
-CUDA_LIB=/usr/local/cuda/lib64/
+CUDA_LIB=/path/to/cuda/lib/
 # CUDNN 的 lib 路径
-CUDNN_LIB=/usr/local/cudnn/lib64/
+CUDNN_LIB=/path/to/cudnn/lib/
 
-# OPENCV 路径, 如果使用自带预编译版本可不设置
+# OPENCV 路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
 sh $(pwd)/scripts/bootstrap.sh
 
@@ -61,7 +67,9 @@ cd build
 cmake .. \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
+    -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
+    -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
     -DOPENCV_DIR=${OPENCV_DIR}
@@ -83,6 +91,7 @@ make
 | image  | 要预测的图片文件路径 |
 | image_list  | 按行存储图片路径的.txt文件 |
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
+| use_trt  | 是否使用 TensorTr 预测, 支持值为0或1(默认值为0) |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
 
@@ -113,4 +122,3 @@ make
 ./build/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
-

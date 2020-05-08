@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
                   << result.boxes[i].coordinate[0] << ", "
                   << result.boxes[i].coordinate[1] << ", "
                   << result.boxes[i].coordinate[2] << ", "
-                  << result.boxes[i].coordinate[3] << std::endl;
+                  << result.boxes[i].coordinate[3] << ")" << std::endl;
       }
 
       // 可视化
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
                 << result.boxes[i].coordinate[0] << ", "
                 << result.boxes[i].coordinate[1] << ", "
                 << result.boxes[i].coordinate[2] << ", "
-                << result.boxes[i].coordinate[3] << std::endl;
+                << result.boxes[i].coordinate[3] << ")" << std::endl;
     }
 
     // 可视化
