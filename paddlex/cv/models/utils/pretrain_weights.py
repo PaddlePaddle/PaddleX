@@ -87,8 +87,9 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
             backbone)
         
         url = image_pretrain[backbone]
-        paddlex.utils.download(url, path=new_save_dir)
-        return osp.join(new_save_dir, backbone)
+        fname = osp.split(url)[-1].split('.')[0]
+        paddlex.utils.download_and_decompress(url, path=new_save_dir)
+        return osp.join(new_save_dir, fname)
     elif flag == 'COCO':
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
@@ -96,7 +97,9 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
         assert backbone in coco_pretrain, "There is not COCO pretrain weights for {}, you may try ImageNet.".format(
             backbone)
         url = coco_pretrain[backbone]
-        paddlex.utils.download(url, path=new_save_dir)
+        fname = osp.split(url)[-1].split('.')[0]
+        paddlex.utils.download_and_decompress(url, path=new_save_dir)
+        return osp.join(new_save_dir, fname)
     else:
         raise Exception(
             "pretrain_weights need to be defined as directory path or `IMAGENET` or 'COCO' (download pretrain weights automatically)."
