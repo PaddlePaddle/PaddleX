@@ -40,8 +40,16 @@ paddlex.det.draw_pr_curve(eval_details_file=None, gt=None, pred_bbox=None, pred_
 **注意：**`eval_details_file`的优先级更高，只要`eval_details_file`不为None，就会从`eval_details_file`提取真值信息和预测结果做分析。当`eval_details_file`为None时，则用`gt`、`pred_mask`、`pred_mask`做分析。
 
 ### 使用示例
-> 示例一：
-点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)和[数据集](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz)
+点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)和[数据集](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)
+
+> 方式一：分析训练过程中保存的模型文件夹中的评估结果文件`eval_details.json`，例如[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)中的`eval_details.json`。
+```
+import paddlex as pdx
+eval_details_file = 'insect_epoch_270/eval_details.json'
+pdx.det.draw_pr_curve(eval_details_file, save_dir='./insect')
+```
+> 方式二：分析模型评估函数返回的评估结果。
+
 ```
 import os
 # 选择使用0号卡
@@ -50,40 +58,18 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 from paddlex.det import transforms
 import paddlex as pdx
 
-eval_transforms = transforms.Compose([
-    transforms.Normalize(),
-    transforms.ResizeByShort(short_size=800, max_size=1333),
-    transforms.Padding(coarsest_stride=32)
-])
-
-eval_dataset = pdx.datasets.CocoDetection(
-    data_dir='xiaoduxiong_ins_det/JPEGImages',
-    ann_file='xiaoduxiong_ins_det/val.json',
-    transforms=eval_transforms)
-
-model = pdx.load_model('xiaoduxiong_epoch_12')
-metrics, evaluate_details = model.evaluate(eval_dataset, batch_size=1, return_details=True)
+model = pdx.load_model('insect_epoch_270')
+eval_dataset = pdx.datasets.VOCDetection(
+    data_dir='insect_det',
+    file_list='insect_det/val_list.txt',
+    label_list='insect_det/labels.txt',
+    transforms=model.eval_transforms)
+metrics, evaluate_details = model.evaluate(eval_dataset, batch_size=8, return_details=True)
 gt = evaluate_details['gt']
 bbox = evaluate_details['bbox']
-mask = evaluate_details['mask']
-
-# 分别可视化bbox和mask的准召曲线
-pdx.det.draw_pr_curve(gt=gt, pred_bbox=bbox, pred_mask=mask, save_dir='./xiaoduxiong')
+pdx.det.draw_pr_curve(gt=gt, pred_bbox=bbox, save_dir='./insect')
 ```
-预测框的各个类别的准确率和召回率的对应关系、召回率和置信度阈值的对应关系可视化如下：
-![](./images/xiaoduxiong_bbox_pr_curve(iou-0.5).png)
 
-预测mask的各个类别的准确率和召回率的对应关系、召回率和置信度阈值的对应关系可视化如下：
-![](./images/xiaoduxiong_segm_pr_curve(iou-0.5).png)
-
-> 示例二：
-使用[yolov3_darknet53.py示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_darknet53.py)训练完成后，加载模型评估结果文件进行分析:
-
-```
-import paddlex as pdx
-eval_details_file = 'output/yolov3_darknet53/best_model/eval_details.json'
-pdx.det.draw_pr_curve(eval_details_file, save_dir='./insect')
-```
 预测框的各个类别的准确率和召回率的对应关系、召回率和置信度阈值的对应关系可视化如下：
 ![](./images/insect_bbox_pr_curve(iou-0.5).png)
 
