@@ -75,7 +75,7 @@ paddlex.cls.ResNet50(num_classes=1000)
 
 ### 其它分类器类
 
-除`ResNet50`外，`paddlex.cls`下还提供了`ResNet18`、`ResNet34`、`ResNet101`、`ResNet50_vd`、`ResNet101_vd`、`DarkNet53`、`MobileNetV1`、`MobileNetV2`、`MobileNetV3_small`、`MobileNetV3_large`、`Xception41`、`Xception65`、`Xception71`、`ShuffleNetV2`,  使用方式（包括函数接口和参数）均与`ResNet50`一致，各模型效果可参考[模型库](../model_zoo.md)中列表。
+除`ResNet50`外，`paddlex.cls`下还提供了`ResNet18`、`ResNet34`、`ResNet101`、`ResNet50_vd`、`ResNet101_vd`、`ResNet50_vd_ssld`、`ResNet101_vd_ssld`、`DarkNet53`、`MobileNetV1`、`MobileNetV2`、`MobileNetV3_small`、`MobileNetV3_large`、`MobileNetV3_small_ssld`、`MobileNetV3_large_ssld`、`Xception41`、`Xception65`、`Xception71`、`ShuffleNetV2`,  使用方式（包括函数接口和参数）均与`ResNet50`一致，各模型效果可参考[模型库](../model_zoo.md)中列表。
 
 
 
