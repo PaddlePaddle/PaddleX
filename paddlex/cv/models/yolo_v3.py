@@ -95,9 +95,9 @@ class YOLOv3(BaseAPI):
         elif backbone_name == 'MobileNetV1':
             backbone = paddlex.cv.nets.MobileNetV1(norm_type='sync_bn')
         elif backbone_name.startswith('MobileNetV3'):
-            models_name = backbone_name.split('_')[1]
+            model_name = backbone_name.split('_')[1]
             backbone = paddlex.cv.nets.MobileNetV3(
-                norm_type='sync_bn', models_name=models_name)
+                norm_type='sync_bn', model_name=model_name)
         return backbone
 
     def build_net(self, mode='train'):
