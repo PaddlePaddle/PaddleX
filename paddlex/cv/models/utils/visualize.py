@@ -16,14 +16,6 @@ import os
 import cv2
 import colorsys
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.figure as mplfigure
-import matplotlib.colors as mplc
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-
 import paddlex.utils.logging as logging
 from .detection_eval import fixed_linspace, backup_linspace, loadRes
 
@@ -130,6 +122,13 @@ def clip_bbox(bbox):
 
 
 def draw_bbox_mask(image, results, threshold=0.5):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib as mpl
+    import matplotlib.figure as mplfigure
+    import matplotlib.colors as mplc
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
     # refer to  https://github.com/facebookresearch/detectron2/blob/master/detectron2/utils/visualizer.py
     def _change_color_brightness(color, brightness_factor):
         assert brightness_factor >= -1.0 and brightness_factor <= 1.0
@@ -303,6 +302,9 @@ def draw_pr_curve(eval_details_file=None,
         raise Exception("There is no predicted bbox.")
     if pred_mask is not None and len(pred_mask) == 0:
         raise Exception("There is no predicted mask.")
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
     coco = COCO()
