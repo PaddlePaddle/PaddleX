@@ -20,6 +20,12 @@ from . import seg
 from . import cls
 from . import slim
 
+try:
+    import pycocotools
+except:
+    print("[WARNING] pycocotools is not installed, detection model is not available now.")
+    print("[WARNING] pycocotools install: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md")
+
 env_info = get_environ_info()
 load_model = cv.models.load_model
 datasets = cv.datasets
