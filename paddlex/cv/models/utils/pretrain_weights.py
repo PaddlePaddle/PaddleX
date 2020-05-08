@@ -85,19 +85,9 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
                 backbone = 'DetResNet50'
         assert backbone in image_pretrain, "There is not ImageNet pretrain weights for {}, you may try COCO.".format(
             backbone)
-        try:
-            hub.download(backbone, save_path=new_save_dir)
-        except Exception as e:
-            if isinstance(e, hub.ResourceNotFoundError):
-                raise Exception(
-                    "Resource for backbone {} not found".format(backbone))
-            elif isinstance(e, hub.ServerConnectionError):
-                raise Exception(
-                    "Cannot get reource for backbone {}, please check your internet connecgtion"
-                    .format(backbone))
-            else:
-                raise Exception(
-                    "Unexpected error, please make sure paddlehub >= 1.6.2")
+        
+        url = image_pretrain[backbone]
+        paddlex.utils.download(url, path=new_save_dir)
         return osp.join(new_save_dir, backbone)
     elif flag == 'COCO':
         new_save_dir = save_dir
@@ -105,20 +95,8 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
             new_save_dir = paddlex.pretrain_dir
         assert backbone in coco_pretrain, "There is not COCO pretrain weights for {}, you may try ImageNet.".format(
             backbone)
-        try:
-            hub.download(backbone, save_path=new_save_dir)
-        except Exception as e:
-            if isinstance(hub.ResourceNotFoundError):
-                raise Exception(
-                    "Resource for backbone {} not found".format(backbone))
-            elif isinstance(hub.ServerConnectionError):
-                raise Exception(
-                    "Cannot get reource for backbone {}, please check your internet connecgtion"
-                    .format(backbone))
-            else:
-                raise Exception(
-                    "Unexpected error, please make sure paddlehub >= 1.6.2")
-        return osp.join(new_save_dir, backbone)
+        url = coco_pretrain[backbone]
+        paddlex.utils.download(url, path=new_save_dir)
     else:
         raise Exception(
             "pretrain_weights need to be defined as directory path or `IMAGENET` or 'COCO' (download pretrain weights automatically)."
