@@ -17,6 +17,7 @@ import copy
 import os.path as osp
 import random
 import numpy as np
+from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import paddlex.utils.logging as logging
 from .dataset import Dataset
@@ -66,7 +67,7 @@ class VOCDetection(Dataset):
         annotations['categories'] = []
         annotations['annotations'] = []
 
-        cname2cid = {}
+        cname2cid = OrderedDict()
         label_id = 1
         with open(label_list, 'r', encoding=get_encoding(label_list)) as fr:
             for line in fr.readlines():
