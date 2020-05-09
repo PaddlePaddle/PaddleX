@@ -48,7 +48,7 @@ class EasyDataDet(VOCDetection):
                  transforms=None,
                  num_workers='auto',
                  buffer_size=100,
-                 parallel_method='process',
+                 parallel_method='thread',
                  shuffle=False):
         super(VOCDetection, self).__init__(
             transforms=transforms,
