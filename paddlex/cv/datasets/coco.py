@@ -112,7 +112,7 @@ class CocoDetection(VOCDetection):
 
             im_info = {
                 'im_id': np.array([img_id]).astype('int32'),
-                'origin_shape': np.array([im_h, im_w]).astype('int32'),
+                'image_shape': np.array([im_h, im_w]).astype('int32'),
             }
             label_info = {
                 'is_crowd': is_crowd,
