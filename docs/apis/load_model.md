@@ -34,7 +34,7 @@ pred_result = model.predict('./xiaoduxiong_ins_det/JPEGImages/WechatIMG114.jpeg'
 
 # 在验证集上进行评估
 eval_reader = pdx.cv.datasets.CocoDetection(data_dir=data_dir,
-                                            ann_file=ann_file
+                                            ann_file=ann_file,
                                             transforms=model.eval_transforms)
 eval_result = model.evaluate(eval_reader, batch_size=1)
 ```
