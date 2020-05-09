@@ -109,7 +109,9 @@ paddlex.cls.transforms.RandomDistort(brightness_range=0.9, brightness_prob=0.5, 
 
 以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。  
 1. 对变换的操作顺序进行随机化操作。
-2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。
+2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+
+【注意】该数据增强必须在数据增强Normalize之前使用。
 
 ### 参数
 * **brightness_range** (float): 明亮度因子的范围。默认为0.9。
