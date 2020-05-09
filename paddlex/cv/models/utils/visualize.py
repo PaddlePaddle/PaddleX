@@ -67,8 +67,7 @@ def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
         out_path = os.path.join(save_dir, 'visualize_{}'.format(image_name))
         cv2.imwrite(out_path, vis_result)
         logging.info('The visualized result is saved as {}'.format(out_path))
-    else:
-        return vis_result
+    return vis_result
 
 
 def get_color_map_list(num_classes):
