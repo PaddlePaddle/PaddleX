@@ -13,20 +13,19 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-import copy
 import os.path as osp
 import random
+import copy
+import json
+import cv2
 import numpy as np
-from collections import OrderedDict
-import xml.etree.ElementTree as ET
 import paddlex.utils.logging as logging
-from .dataset import Dataset
+from .voc import VOCDetection
 from .dataset import is_pic
 from .dataset import get_encoding
 
-
-class VOCDetection(Dataset):
-    """读取PascalVOC格式的检测数据集，并对样本进行相应的处理。
+class EasyDataDet(VOCDetection):
+    """读取EasyDataDet格式的检测数据集，并对样本进行相应的处理。
 
     Args:
         data_dir (str): 数据集所在的目录路径。
@@ -41,7 +40,7 @@ class VOCDetection(Dataset):
             线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
-
+    
     def __init__(self,
                  data_dir,
                  file_list,
@@ -51,7 +50,6 @@ class VOCDetection(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
-        from pycocotools.coco import COCO
         super(VOCDetection, self).__init__(
             transforms=transforms,
             num_workers=num_workers,
@@ -61,15 +59,15 @@ class VOCDetection(Dataset):
         self.file_list = list()
         self.labels = list()
         self._epoch = 0
-
+        
         annotations = {}
         annotations['images'] = []
         annotations['categories'] = []
         annotations['annotations'] = []
-
-        cname2cid = OrderedDict()
+        
+        cname2cid = {}
         label_id = 1
-        with open(label_list, 'r', encoding=get_encoding(label_list)) as fr:
+        with open(label_list, encoding=get_encoding(label_list)) as fr:
             for line in fr.readlines():
                 cname2cid[line.strip()] = label_id
                 label_id += 1
@@ -81,52 +79,50 @@ class VOCDetection(Dataset):
                 'id': v,
                 'name': k
             })
+            
+        from pycocotools.mask import decode
         ct = 0
         ann_ct = 0
-        with open(file_list, 'r', encoding=get_encoding(file_list)) as fr:
-            while True:
-                line = fr.readline()
-                if not line:
-                    break
-                img_file, xml_file = [osp.join(data_dir, x) \
+        with open(file_list, encoding=get_encoding(file_list)) as f:
+            for line in f:
+                img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
                 if not is_pic(img_file):
                     continue
-                if not osp.isfile(xml_file):
+                if not osp.isfile(json_file):
                     continue
                 if not osp.exists(img_file):
                     raise IOError(
                         'The image file {} is not exist!'.format(img_file))
-                tree = ET.parse(xml_file)
-                if tree.find('id') is None:
-                    im_id = np.array([ct])
-                else:
-                    ct = int(tree.find('id').text)
-                    im_id = np.array([int(tree.find('id').text)])
-
-                objs = tree.findall('object')
-                im_w = float(tree.find('size').find('width').text)
-                im_h = float(tree.find('size').find('height').text)
+                with open(json_file, mode='r', \
+                          encoding=get_encoding(json_file)) as j:
+                    json_info = json.load(j)
+                im_id = np.array([ct])
+                im = cv2.imread(img_file)
+                im_w = im.shape[1]
+                im_h = im.shape[0]
+                objs = json_info['labels']
                 gt_bbox = np.zeros((len(objs), 4), dtype=np.float32)
                 gt_class = np.zeros((len(objs), 1), dtype=np.int32)
                 gt_score = np.ones((len(objs), 1), dtype=np.float32)
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
+                gt_poly = [None] * len(objs)
                 for i, obj in enumerate(objs):
-                    cname = obj.find('name').text
+                    cname = obj['name']
                     gt_class[i][0] = cname2cid[cname]
-                    _difficult = int(obj.find('difficult').text)
-                    x1 = float(obj.find('bndbox').find('xmin').text)
-                    y1 = float(obj.find('bndbox').find('ymin').text)
-                    x2 = float(obj.find('bndbox').find('xmax').text)
-                    y2 = float(obj.find('bndbox').find('ymax').text)
-                    x1 = max(0, x1)
-                    y1 = max(0, y1)
-                    x2 = min(im_w - 1, x2)
-                    y2 = min(im_h - 1, y2)
+                    x1 = max(0, obj['x1'])
+                    y1 = max(0, obj['y1'])
+                    x2 = min(im_w - 1, obj['x2'])
+                    y2 = min(im_h - 1, obj['y2'])
                     gt_bbox[i] = [x1, y1, x2, y2]
                     is_crowd[i][0] = 0
-                    difficult[i][0] = _difficult
+                    if 'mask' in obj:
+                        mask_dict = {}
+                        mask_dict['size'] = [im_h, im_w]
+                        mask_dict['counts'] = obj['mask'].encode()
+                        mask = decode(mask_dict)
+                        gt_poly[i] = self.mask2polygon(mask)
                     annotations['annotations'].append({
                         'iscrowd':
                         0,
@@ -135,15 +131,16 @@ class VOCDetection(Dataset):
                         'bbox': [x1, y1, x2 - x1 + 1, y2 - y1 + 1],
                         'area':
                         float((x2 - x1 + 1) * (y2 - y1 + 1)),
+                        'segmentation':
+                        [[x1, y1, x1, y2, x2, y2, x2, y1]] if gt_poly[i] is None else gt_poly[i],
                         'category_id':
                         cname2cid[cname],
                         'id':
                         ann_ct,
                         'difficult':
-                        _difficult
+                        0
                     })
                     ann_ct += 1
-
                 im_info = {
                     'im_id': im_id,
                     'origin_shape': np.array([im_h, im_w]).astype('int32'),
@@ -153,9 +150,10 @@ class VOCDetection(Dataset):
                     'gt_class': gt_class,
                     'gt_bbox': gt_bbox,
                     'gt_score': gt_score,
-                    'gt_poly': [],
                     'difficult': difficult
                 }
+                if None not in gt_poly:
+                    label_info['gt_poly'] = gt_poly
                 voc_rec = (im_info, label_info)
                 if len(objs) != 0:
                     self.file_list.append([img_file, voc_rec])
@@ -176,33 +174,17 @@ class VOCDetection(Dataset):
         logging.info("{} samples in file {}".format(
             len(self.file_list), file_list))
         self.num_samples = len(self.file_list)
+        from pycocotools.coco import COCO
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
-
-    def iterator(self):
-        self._epoch += 1
-        self._pos = 0
-        files = copy.deepcopy(self.file_list)
-        if self.shuffle:
-            random.shuffle(files)
-        files = files[:self.num_samples]
-        self.num_samples = len(files)
-        for f in files:
-            records = f[1]
-            im_info = copy.deepcopy(records[0])
-            label_info = copy.deepcopy(records[1])
-            im_info['epoch'] = self._epoch
-            if self.num_samples > 1:
-                mix_idx = random.randint(1, self.num_samples - 1)
-                mix_pos = (mix_idx + self._pos) % self.num_samples
-            else:
-                mix_pos = 0
-            im_info['mixup'] = [
-                files[mix_pos][0],
-                copy.deepcopy(files[mix_pos][1][0]),
-                copy.deepcopy(files[mix_pos][1][1])
-            ]
-            self._pos += 1
-            sample = [f[0], im_info, label_info]
-            yield sample
+        
+    def mask2polygon(self, mask):
+        contours, hierarchy = cv2.findContours(
+            (mask).astype(np.uint8), cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        segmentation = []
+        for contour in contours:
+            contour_list = contour.flatten().tolist()
+            if len(contour_list) > 4:
+                segmentation.append(contour_list)
+        return segmentation

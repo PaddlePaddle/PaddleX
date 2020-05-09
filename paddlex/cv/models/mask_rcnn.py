@@ -162,11 +162,12 @@ class MaskRCNN(FasterRCNN):
             ValueError: 模型从inference model进行加载。
         """
         if metric is None:
-            if isinstance(train_dataset, paddlex.datasets.CocoDetection):
+            if isinstance(train_dataset, paddlex.datasets.CocoDetection) or \
+                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
                 metric = 'COCO'
             else:
                 raise Exception(
-                    "train_dataset should be datasets.COCODetection.")
+                    "train_dataset should be datasets.COCODetection or datasets.EasyDataDet.")
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
         if not self.trainable:
