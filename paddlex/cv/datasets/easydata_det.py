@@ -19,8 +19,6 @@ import copy
 import json
 import cv2
 import numpy as np
-from pycocotools.coco import COCO
-from pycocotools.mask import decode
 import paddlex.utils.logging as logging
 from .voc import VOCDetection
 from .dataset import is_pic
@@ -82,6 +80,7 @@ class EasyDataDet(VOCDetection):
                 'name': k
             })
             
+        from pycocotools.mask import decode
         ct = 0
         ann_ct = 0
         with open(file_list, encoding=get_encoding(file_list)) as f:
@@ -133,7 +132,7 @@ class EasyDataDet(VOCDetection):
                         'area':
                         float((x2 - x1 + 1) * (y2 - y1 + 1)),
                         'segmentation':
-                        [] if gt_poly[i] is None else gt_poly[i],
+                        [[x1, y1, x1, y2, x2, y2, x2, y1]] if gt_poly[i] is None else gt_poly[i],
                         'category_id':
                         cname2cid[cname],
                         'id':
@@ -175,6 +174,7 @@ class EasyDataDet(VOCDetection):
         logging.info("{} samples in file {}".format(
             len(self.file_list), file_list))
         self.num_samples = len(self.file_list)
+        from pycocotools.coco import COCO
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()

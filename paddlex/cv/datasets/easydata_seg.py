@@ -19,7 +19,6 @@ import copy
 import json
 import cv2
 import numpy as np
-from pycocotools.mask import decode
 import paddlex.utils.logging as logging
 from .dataset import Dataset
 from .dataset import get_encoding
@@ -59,6 +58,7 @@ class EasyDataSeg(Dataset):
         self.labels = list()
         self._epoch = 0
 
+        from pycocotools.mask import decode
         cname2cid = {}
         label_id = 0
         with open(label_list, encoding=get_encoding(label_list)) as fr:
