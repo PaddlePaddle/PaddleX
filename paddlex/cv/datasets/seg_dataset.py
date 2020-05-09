@@ -33,7 +33,7 @@ class SegDataset(Dataset):
         num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为4。
         buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
         parallel_method (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'
-            线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。
+            线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
 
@@ -44,7 +44,7 @@ class SegDataset(Dataset):
                  transforms=None,
                  num_workers='auto',
                  buffer_size=100,
-                 parallel_method='thread',
+                 parallel_method='process',
                  shuffle=False):
         super(SegDataset, self).__init__(
             transforms=transforms,

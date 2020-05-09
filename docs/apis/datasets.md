@@ -16,7 +16,7 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 > * **transforms** (paddlex.cls.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.cls.transforms](./transforms/cls_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。  
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
 ## VOCDetection类
@@ -37,7 +37,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > * **transforms** (paddlex.det.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.det.transforms](./transforms/det_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
 ## CocoDetection类
@@ -57,7 +57,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > * **transforms** (paddlex.det.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.det.transforms](./transforms/det_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。  
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
 ## SegDataset类
@@ -78,7 +78,7 @@ paddlex.datasets.SegDataset(data_dir, file_list, label_list, transforms=None, nu
 > * **transforms** (paddlex.seg.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.seg.transforms](./transforms/seg_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。 
 
 ## EasyDataCls类
@@ -96,7 +96,7 @@ paddlex.datasets.SegDataset(data_dir, file_list, label_list, transforms=None, nu
 > * **transforms** (paddlex.seg.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.cls.transforms](./transforms/cls_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
 
 ## EasyDataDet类
@@ -116,7 +116,7 @@ paddlex.datasets.EasyDataDet(data_dir, file_list, label_list, transforms=None, n
 > * **transforms** (paddlex.det.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.det.transforms](./transforms/det_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
 
@@ -137,5 +137,5 @@ paddlex.datasets.EasyDataSeg(data_dir, file_list, label_list, transforms=None, n
 > * **transforms** (paddlex.seg.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.seg.transforms](./transforms/seg_transforms.md)。  
 > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
-> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。  
+> * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。 
