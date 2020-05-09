@@ -19,16 +19,18 @@
 
 ### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
 
-PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本:
+PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.7版本，以下提供了多个不同版本的Paddle预测库:
 
 |  版本说明   | 预测库(1.7.2版本)  |
 |  ----  | ----  |
 | ubuntu14.04_cpu_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cpu_avx_openblas  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-avx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cpu_noavx_openblas  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-noavx-openblas/fluid_inference.tgz) |
 | ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
 | ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz ) |
 | ubuntu14.04_cuda10.1_cudnn7.6_avx_mkl_trt6  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda10.1-cudnn7.6-avx-mkl-trt6%2Ffluid_inference.tgz) |
 
-更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id1)
+更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/windows_cpp_inference.html#id1)
 
 下载并解压后`/root/projects/fluid_inference`目录包含内容为：
 ```
@@ -47,9 +49,10 @@ fluid_inference
 
 编译`cmake`的命令在`scripts/build.sh`中，请根据实际情况修改主要参数，其主要内容说明如下：
 ```
-
 # 是否使用GPU(即是否使用 CUDA)
 WITH_GPU=OFF
+# 使用MKL or openblas
+WITH_MKL=ON
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
 WITH_TENSORRT=OFF
 # TensorRT 的lib路径
@@ -74,6 +77,7 @@ mkdir -p build
 cd build
 cmake .. \
     -DWITH_GPU=${WITH_GPU} \
+    -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \

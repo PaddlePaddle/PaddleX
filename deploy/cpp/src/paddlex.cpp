@@ -255,7 +255,6 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   auto im_tensor = predictor_->GetInputTensor("image");
   im_tensor->Reshape({1, 3, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
-  std::cout << "input image: " << h << " " << w << std::endl;
 
   // 使用加载的模型进行预测
   predictor_->ZeroCopyRun();

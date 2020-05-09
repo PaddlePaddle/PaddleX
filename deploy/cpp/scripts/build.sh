@@ -1,5 +1,7 @@
 # 是否使用GPU(即是否使用 CUDA)
 WITH_GPU=OFF
+# 使用MKL or openblas
+WITH_MKL=ON
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
 WITH_TENSORRT=OFF
 # TensorRT 的lib路径
@@ -24,6 +26,7 @@ mkdir -p build
 cd build
 cmake .. \
     -DWITH_GPU=${WITH_GPU} \
+    -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
