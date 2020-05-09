@@ -19,8 +19,16 @@
 
 ### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
 
-PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id1)
+PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本:
 
+|  版本说明   | 预测库(1.7.2版本)  |
+|  ----  | ----  |
+| ubuntu14.04_cpu_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz ) |
+| ubuntu14.04_cuda10.1_cudnn7.6_avx_mkl_trt6  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda10.1-cudnn7.6-avx-mkl-trt6%2Ffluid_inference.tgz) |
+
+更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id1)
 
 下载并解压后`/root/projects/fluid_inference`目录包含内容为：
 ```
@@ -97,14 +105,14 @@ make
 
 ## 样例
 
-可使用[垃圾检测模型](deploy.md#导出inference模型)中生成的`inference_model`模型和测试图片进行预测。
+可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 
-不使用`GPU`测试图片 `/path/to/garbage.bmp`  
+不使用`GPU`测试图片 `/path/to/xiaoduxiong.jpeg`  
 
 ```shell
-./build/detector --model_dir=/path/to/inference_model --image=/path/to/garbage.bmp --save_dir=output
+./build/detector --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
@@ -113,10 +121,10 @@ make
 
 使用`GPU`预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
 ```
-/path/to/images/garbage1.jpeg
-/path/to/images/garbage2.jpeg
+/path/to/images/xiaoduxiong1.jpeg
+/path/to/images/xiaoduxiong2.jpeg
 ...
-/path/to/images/garbagen.jpeg
+/path/to/images/xiaoduxiongn.jpeg
 ```
 ```shell
 ./build/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output

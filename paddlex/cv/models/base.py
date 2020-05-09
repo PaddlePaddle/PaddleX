@@ -283,7 +283,7 @@ class BaseAPI:
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info("Model saved in {}.".format(save_dir))
 
-    def export_inference_model(self, save_dir, fixed_input_shape=None):
+    def export_inference_model(self, save_dir):
         test_input_names = [
             var.name for var in list(self.test_inputs.values())
         ]

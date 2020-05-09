@@ -109,14 +109,14 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 ## 样例
 
-可使用[垃圾检测模型](deploy.md#导出inference模型)中生成的`inference_model`模型和测试图片进行预测。
+可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 
-不使用`GPU`测试图片  `\\path\\to\\garbage.bmp`  
+不使用`GPU`测试图片  `\\path\\to\\xiaoduxiong.jpeg`  
 
 ```shell
-.\detector --model_dir=\\path\\to\\inference_model --image=D:\\images\\garbage.bmp --save_dir=output
+.\detector --model_dir=\\path\\to\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
 
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
@@ -126,13 +126,12 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 使用`GPU`预测多个图片`\\path\\to\\image_list.txt`，image_list.txt内容的格式如下：
 ```
-\\path\\to\\images\\garbage1.jpeg
-\\path\\to\\images\\garbage2.jpeg
+\\path\\to\\images\\xiaoduxiong1.jpeg
+\\path\\to\\images\\xiaoduxiong2.jpeg
 ...
-\\path\\to\\images\\garbagen.jpeg
+\\path\\to\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
 .\detector --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
-
