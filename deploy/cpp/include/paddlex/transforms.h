@@ -158,7 +158,7 @@ class Padding : public Transform {
         exit(-1);
       }
     }
-    if (item["target_size"].IsDefined()){
+    if (item["target_size"].IsDefined()) {
       if (item["target_size"].IsScalar()) {
         width_ = item["target_size"].as<int>();
         height_ = item["target_size"].as<int>();

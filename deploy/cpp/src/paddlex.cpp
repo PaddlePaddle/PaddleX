@@ -38,13 +38,14 @@ void Model::create_predictor(const std::string& model_dir,
   config.SwitchSpecifyInputNames(true);
   // 开启内存优化
   config.EnableMemoryOptim();
-  if (use_trt){
-    config.EnableTensorRtEngine(1 << 20      /* workspace_size*/,
-                        32        /* max_batch_size*/,
-                        20                 /* min_subgraph_size*/,
-                        paddle::AnalysisConfig::Precision::kFloat32 /* precision*/,
-                        true             /* use_static*/,
-                        false             /* use_calib_mode*/);
+  if (use_trt) {
+    config.EnableTensorRtEngine(
+        1 << 20 /* workspace_size*/,
+        32 /* max_batch_size*/,
+        20 /* min_subgraph_size*/,
+        paddle::AnalysisConfig::Precision::kFloat32 /* precision*/,
+        true /* use_static*/,
+        false /* use_calib_mode*/);
   }
   predictor_ = std::move(CreatePaddlePredictor(config));
 }
@@ -294,20 +295,21 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                      result->score_map.shape[3],
                      CV_32FC1,
                      result->score_map.data.data());
-  int idx=1;
+  int idx = 1;
   int len_postprocess = inputs_.im_size_before_resize_.size();
   for (std::vector<std::string>::reverse_iterator iter =
            inputs_.reshape_order_.rbegin();
-       iter != inputs_.reshape_order_.rend(); ++iter) {
+       iter != inputs_.reshape_order_.rend();
+       ++iter) {
     if (*iter == "padding") {
-      auto before_shape = inputs_.im_size_before_resize_[len_postprocess-idx];
+      auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
       inputs_.im_size_before_resize_.pop_back();
       auto padding_w = before_shape[0];
       auto padding_h = before_shape[1];
       mask_label = mask_label(cv::Rect(0, 0, padding_w, padding_h));
       mask_score = mask_score(cv::Rect(0, 0, padding_w, padding_h));
     } else if (*iter == "resize") {
-      auto before_shape = inputs_.im_size_before_resize_[len_postprocess-idx];
+      auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
       inputs_.im_size_before_resize_.pop_back();
       auto resize_w = before_shape[0];
       auto resize_h = before_shape[1];

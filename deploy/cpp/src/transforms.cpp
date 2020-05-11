@@ -56,7 +56,7 @@ float ResizeByShort::GenerateScale(const cv::Mat& im) {
 }
 
 bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
-  data->im_size_before_resize_.push_back({im->rows,im->cols});
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
 
   float scale = GenerateScale(*im);
@@ -87,7 +87,7 @@ bool CenterCrop::Run(cv::Mat* im, ImageBlob* data) {
 }
 
 bool Padding::Run(cv::Mat* im, ImageBlob* data) {
-  data->im_size_before_resize_.push_back({im->rows,im->cols});
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("padding");
 
   int padding_w = 0;
@@ -121,7 +121,7 @@ bool ResizeByLong::Run(cv::Mat* im, ImageBlob* data) {
               << std::endl;
     return false;
   }
-  data->im_size_before_resize_.push_back({im->rows,im->cols});
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
   int origin_w = im->cols;
   int origin_h = im->rows;
@@ -147,7 +147,7 @@ bool Resize::Run(cv::Mat* im, ImageBlob* data) {
               << std::endl;
     return false;
   }
-  data->im_size_before_resize_.push_back({im->rows,im->cols});
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
 
   cv::resize(
