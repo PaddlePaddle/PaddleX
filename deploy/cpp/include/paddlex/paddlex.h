@@ -38,12 +38,14 @@ class Model {
  public:
   void Init(const std::string& model_dir,
             bool use_gpu = false,
+            bool use_trt = false,
             int gpu_id = 0) {
-    create_predictor(model_dir, use_gpu, gpu_id);
+    create_predictor(model_dir, use_gpu, use_trt, gpu_id);
   }
 
   void create_predictor(const std::string& model_dir,
                         bool use_gpu = false,
+                        bool use_trt = false,
                         int gpu_id = 0);
 
   bool load_config(const std::string& model_dir);

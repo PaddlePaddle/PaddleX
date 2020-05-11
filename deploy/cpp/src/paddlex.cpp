@@ -18,6 +18,7 @@ namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
+                             bool use_trt,
                              int gpu_id) {
   // 读取配置文件
   if (!load_config(model_dir)) {
@@ -37,6 +38,15 @@ void Model::create_predictor(const std::string& model_dir,
   config.SwitchSpecifyInputNames(true);
   // 开启内存优化
   config.EnableMemoryOptim();
+  if (use_trt) {
+    config.EnableTensorRtEngine(
+        1 << 20 /* workspace_size*/,
+        32 /* max_batch_size*/,
+        20 /* min_subgraph_size*/,
+        paddle::AnalysisConfig::Precision::kFloat32 /* precision*/,
+        true /* use_static*/,
+        false /* use_calib_mode*/);
+  }
   predictor_ = std::move(CreatePaddlePredictor(config));
 }
 
@@ -246,7 +256,6 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   auto im_tensor = predictor_->GetInputTensor("image");
   im_tensor->Reshape({1, 3, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
-  std::cout << "input image: " << h << " " << w << std::endl;
 
   // 使用加载的模型进行预测
   predictor_->ZeroCopyRun();
@@ -286,19 +295,24 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                      result->score_map.shape[3],
                      CV_32FC1,
                      result->score_map.data.data());
-
+  int idx = 1;
+  int len_postprocess = inputs_.im_size_before_resize_.size();
   for (std::vector<std::string>::reverse_iterator iter =
            inputs_.reshape_order_.rbegin();
        iter != inputs_.reshape_order_.rend();
        ++iter) {
     if (*iter == "padding") {
-      auto padding_w = inputs_.im_size_before_padding_[0];
-      auto padding_h = inputs_.im_size_before_padding_[1];
+      auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
+      inputs_.im_size_before_resize_.pop_back();
+      auto padding_w = before_shape[0];
+      auto padding_h = before_shape[1];
       mask_label = mask_label(cv::Rect(0, 0, padding_w, padding_h));
       mask_score = mask_score(cv::Rect(0, 0, padding_w, padding_h));
     } else if (*iter == "resize") {
-      auto resize_w = inputs_.im_size_before_resize_[0];
-      auto resize_h = inputs_.im_size_before_resize_[1];
+      auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
+      inputs_.im_size_before_resize_.pop_back();
+      auto resize_w = before_shape[0];
+      auto resize_h = before_shape[1];
       cv::resize(mask_label,
                  mask_label,
                  cv::Size(resize_h, resize_w),
@@ -312,6 +326,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                  0,
                  cv::INTER_NEAREST);
     }
+    ++idx;
   }
   result->label_map.data.assign(mask_label.begin<uint8_t>(),
                                 mask_label.end<uint8_t>());

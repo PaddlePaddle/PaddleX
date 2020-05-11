@@ -60,6 +60,7 @@ class MaskRCNN(FasterRCNN):
             self.mask_head_resolution = 28
         else:
             self.mask_head_resolution = 14
+        self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
@@ -73,7 +74,8 @@ class MaskRCNN(FasterRCNN):
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
             num_convs=num_convs,
-            mask_head_resolution=self.mask_head_resolution)
+            mask_head_resolution=self.mask_head_resolution,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)

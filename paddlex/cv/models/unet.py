@@ -77,6 +77,7 @@ class UNet(DeepLabv3p):
         self.class_weight = class_weight
         self.ignore_index = ignore_index
         self.labels = None
+        self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.UNet(
@@ -86,7 +87,8 @@ class UNet(DeepLabv3p):
             use_bce_loss=self.use_bce_loss,
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
-            ignore_index=self.ignore_index)
+            ignore_index=self.ignore_index,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()

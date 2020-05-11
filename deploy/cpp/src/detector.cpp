@@ -24,6 +24,7 @@
 
 DEFINE_string(model_dir, "", "Path of inference model");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
+DEFINE_bool(use_trt, false, "Infering with TensorRT");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
@@ -44,7 +45,7 @@ int main(int argc, char** argv) {
 
   // 加载模型
   PaddleX::Model model;
-  model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_gpu_id);
+  model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_use_trt, FLAGS_gpu_id);
 
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
   std::string save_dir = "output";
@@ -68,7 +69,7 @@ int main(int argc, char** argv) {
                   << result.boxes[i].coordinate[0] << ", "
                   << result.boxes[i].coordinate[1] << ", "
                   << result.boxes[i].coordinate[2] << ", "
-                  << result.boxes[i].coordinate[3] << std::endl;
+                  << result.boxes[i].coordinate[3] << ")" << std::endl;
       }
 
       // 可视化
@@ -91,7 +92,7 @@ int main(int argc, char** argv) {
                 << result.boxes[i].coordinate[0] << ", "
                 << result.boxes[i].coordinate[1] << ", "
                 << result.boxes[i].coordinate[2] << ", "
-                << result.boxes[i].coordinate[3] << std::endl;
+                << result.boxes[i].coordinate[3] << ")" << std::endl;
     }
 
     // 可视化

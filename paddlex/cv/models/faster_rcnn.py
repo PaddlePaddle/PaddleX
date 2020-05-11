@@ -57,6 +57,7 @@ class FasterRCNN(BaseAPI):
         self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
         self.labels = None
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -109,7 +110,8 @@ class FasterRCNN(BaseAPI):
             aspect_ratios=self.aspect_ratios,
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
-            test_pre_nms_top_n=test_pre_nms_top_n)
+            test_pre_nms_top_n=test_pre_nms_top_n,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)

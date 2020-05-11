@@ -93,6 +93,8 @@ class Compose:
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
                 [im.shape[0], im.shape[1], 1.], dtype=np.float32)
+            im_info['image_shape'] = np.array([im.shape[0],
+                                               im.shape[1]]).astype('int32')
             if not self.use_mixup:
                 if 'mixup' in im_info:
                     del im_info['mixup']
@@ -193,11 +195,16 @@ class ResizeByShort:
 
 
 class Padding:
-    """将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],
+    """1.将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],
        `coarest_stride`为32，则由于300不为32的倍数，因此在图像最右和最下使用0值
        进行padding，最终输出图像为[320, 640]。
+       2.或者，将图像的长和宽padding到target_size指定的shape，如输入的图像为[300，640]，
+         a. `target_size` = 960，在图像最右和最下使用0值进行padding，最终输出
+            图像为[960, 960]。
+         b. `target_size` = [640, 960]，在图像最右和最下使用0值进行padding，最终
+            输出图像为[640, 960]。
 
-    1. 如果coarsest_stride为1则直接返回。
+    1. 如果coarsest_stride为1，target_size为None则直接返回。
     2. 获取图像的高H、宽W。
     3. 计算填充后图像的高H_new、宽W_new。
     4. 构建大小为(H_new, W_new, 3)像素值为0的np.ndarray，
@@ -205,10 +212,26 @@ class Padding:
 
     Args:
         coarsest_stride (int): 填充后的图像长、宽为该参数的倍数，默认为1。
+        target_size (int|list|tuple): 填充后的图像长、宽，默认为None，coarset_stride优先级更高。
+
+    Raises:
+        TypeError: 形参`target_size`数据类型不满足需求。
+        ValueError: 形参`target_size`为(list|tuple)时，长度不满足需求。
     """
 
-    def __init__(self, coarsest_stride=1):
+    def __init__(self, coarsest_stride=1, target_size=None):
         self.coarsest_stride = coarsest_stride
+        if target_size is not None:
+            if not isinstance(target_size, int):
+                if not isinstance(target_size, tuple) and not isinstance(
+                        target_size, list):
+                    raise TypeError(
+                        "Padding: Type of target_size must in (int|list|tuple)."
+                    )
+                elif len(target_size) != 2:
+                    raise ValueError(
+                        "Padding: Length of target_size must equal 2.")
+        self.target_size = target_size
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -225,13 +248,9 @@ class Padding:
         Raises:
             TypeError: 形参数据类型不满足需求。
             ValueError: 数据长度不匹配。
+            ValueError: coarsest_stride，target_size需有且只有一个被指定。
+            ValueError: target_size小于原图的大小。
         """
-
-        if self.coarsest_stride == 1:
-            if label_info is None:
-                return (im, im_info)
-            else:
-                return (im, im_info, label_info)
         if im_info is None:
             im_info = dict()
         if not isinstance(im, np.ndarray):
@@ -239,11 +258,29 @@ class Padding:
         if len(im.shape) != 3:
             raise ValueError('Padding: image is not 3-dimensional.')
         im_h, im_w, im_c = im.shape[:]
-        if self.coarsest_stride > 1:
+
+        if isinstance(self.target_size, int):
+            padding_im_h = self.target_size
+            padding_im_w = self.target_size
+        elif isinstance(self.target_size, list) or isinstance(
+                self.target_size, tuple):
+            padding_im_w = self.target_size[0]
+            padding_im_h = self.target_size[1]
+        elif self.coarsest_stride > 0:
             padding_im_h = int(
                 np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
             padding_im_w = int(
                 np.ceil(im_w / self.coarsest_stride) * self.coarsest_stride)
+        else:
+            raise ValueError(
+                "coarsest_stridei(>1) or target_size(list|int) need setting in Padding transform"
+            )
+        pad_height = padding_im_h - im_h
+        pad_width = padding_im_w - im_w
+        if pad_height < 0 or pad_width < 0:
+            raise ValueError(
+                'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
+                .format(im_w, im_h, padding_im_w, padding_im_h))
         padding_im = np.zeros((padding_im_h, padding_im_w, im_c),
                               dtype=np.float32)
         padding_im[:im_h, :im_w, :] = im
@@ -539,7 +576,7 @@ class RandomDistort:
             params = params_dict[ops[id].__name__]
             prob = prob_dict[ops[id].__name__]
             params['im'] = im
-            
+
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
         if label_info is None:

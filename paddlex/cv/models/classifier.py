@@ -46,10 +46,18 @@ class BaseClassifier(BaseAPI):
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
+        self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
-        image = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+        if self.fixed_input_shape is not None:
+            input_shape = [
+                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+            ]
+            image = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            image = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if mode != 'test':
             label = fluid.data(dtype='int64', shape=[None, 1], name='label')
         model = getattr(paddlex.cv.nets, str.lower(self.model_name))

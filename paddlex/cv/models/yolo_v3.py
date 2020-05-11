@@ -80,6 +80,7 @@ class YOLOv3(BaseAPI):
         self.label_smooth = label_smooth
         self.sync_bn = True
         self.train_random_shapes = train_random_shapes
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone_name):
         if backbone_name == 'DarkNet53':
@@ -113,7 +114,8 @@ class YOLOv3(BaseAPI):
             nms_topk=self.nms_topk,
             nms_keep_topk=self.nms_keep_topk,
             nms_iou_threshold=self.nms_iou_threshold,
-            train_random_shapes=self.train_random_shapes)
+            train_random_shapes=self.train_random_shapes,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict([('bbox', model_out)])

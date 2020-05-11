@@ -317,11 +317,11 @@ class BaseAPI:
         model_info['_ModelInputsOutputs']['test_outputs'] = [
             [k, v.name] for k, v in self.test_outputs.items()
         ]
-
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info(
