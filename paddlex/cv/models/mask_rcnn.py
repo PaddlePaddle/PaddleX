@@ -32,7 +32,7 @@ class MaskRCNN(FasterRCNN):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50vd', 'ResNet101', 'ResNet101vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -46,7 +46,7 @@ class MaskRCNN(FasterRCNN):
                  anchor_sizes=[32, 64, 128, 256, 512]):
         self.init_params = locals()
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50vd', 'ResNet101', 'ResNet101vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -130,7 +130,9 @@ class MaskRCNN(FasterRCNN):
               lr_decay_epochs=[8, 11],
               lr_decay_gamma=0.1,
               metric=None,
-              use_vdl=False):
+              use_vdl=False,
+              early_stop=False,
+              early_stop_patience=5):
         """训练。
 
         Args:
@@ -153,17 +155,21 @@ class MaskRCNN(FasterRCNN):
             lr_decay_gamma (float): 默认优化器的学习率衰减率。默认为0.1。
             metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认值为False。
+            early_stop (bool): 是否使用提前终止训练策略。默认值为False。
+            early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
+                连续下降或持平，则终止训练。默认值为5。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
             ValueError: 模型从inference model进行加载。
         """
         if metric is None:
-            if isinstance(train_dataset, paddlex.datasets.CocoDetection):
+            if isinstance(train_dataset, paddlex.datasets.CocoDetection) or \
+                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
                 metric = 'COCO'
             else:
                 raise Exception(
-                    "train_dataset should be datasets.COCODetection.")
+                    "train_dataset should be datasets.COCODetection or datasets.EasyDataDet.")
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
         if not self.trainable:
@@ -201,7 +207,9 @@ class MaskRCNN(FasterRCNN):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self,
                  eval_dataset,

@@ -24,6 +24,7 @@ import json
 import functools
 import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
+from paddlex.utils.utils import EarlyStop
 import paddlex
 from collections import OrderedDict
 from os import path as osp
@@ -334,7 +335,9 @@ class BaseAPI:
                    save_interval_epochs=1,
                    log_interval_steps=10,
                    save_dir='output',
-                   use_vdl=False):
+                   use_vdl=False,
+                   early_stop=False,
+                   early_stop_patience=5):
         if not osp.isdir(save_dir):
             if osp.exists(save_dir):
                 os.remove(save_dir)
@@ -396,6 +399,9 @@ class BaseAPI:
             train_step_component = OrderedDict()
             eval_component = OrderedDict()
 
+        thresh = 0.0001
+        if early_stop:
+            earlystop = EarlyStop(early_stop_patience, thresh)
         best_accuracy_key = ""
         best_accuracy = -1.0
         best_model_epoch = 1
@@ -507,3 +513,6 @@ class BaseAPI:
                     'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
                     .format(best_model_epoch, best_accuracy_key,
                             best_accuracy))
+                if eval_dataset is not None and early_stop:
+                    if earlystop(current_accuracy):
+                        break

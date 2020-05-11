@@ -66,8 +66,8 @@ class Compose:
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if label is not None:
-            label = np.asarray(Image.open(label))
-
+            if not isinstance(label, np.ndarray):
+                label = np.asarray(Image.open(label))
         for op in self.transforms:
             outputs = op(im, im_info, label)
             im = outputs[0]

@@ -32,7 +32,7 @@ class FasterRCNN(BaseAPI):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50vd', 'ResNet101', 'ResNet101vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -47,7 +47,7 @@ class FasterRCNN(BaseAPI):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50vd', 'ResNet101', 'ResNet101vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -67,7 +67,7 @@ class FasterRCNN(BaseAPI):
         elif backbone_name == 'ResNet50':
             layers = 50
             variant = 'b'
-        elif backbone_name == 'ResNet50vd':
+        elif backbone_name == 'ResNet50_vd':
             layers = 50
             variant = 'd'
             norm_type = 'affine_channel'
@@ -75,7 +75,7 @@ class FasterRCNN(BaseAPI):
             layers = 101
             variant = 'b'
             norm_type = 'affine_channel'
-        elif backbone_name == 'ResNet101vd':
+        elif backbone_name == 'ResNet101_vd':
             layers = 101
             variant = 'd'
             norm_type = 'affine_channel'
@@ -165,7 +165,9 @@ class FasterRCNN(BaseAPI):
               lr_decay_epochs=[8, 11],
               lr_decay_gamma=0.1,
               metric=None,
-              use_vdl=False):
+              use_vdl=False,
+              early_stop=False,
+              early_stop_patience=5):
         """训练。
 
         Args:
@@ -178,7 +180,7 @@ class FasterRCNN(BaseAPI):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为20。
             save_dir (str): 模型保存路径。默认值为'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：
                 fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
             learning_rate (float): 默认优化器的初始学习率。默认为0.0025。
@@ -188,6 +190,9 @@ class FasterRCNN(BaseAPI):
             lr_decay_gamma (float): 默认优化器的学习率衰减率。默认为0.1。
             metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认值为None。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认值为False。
+            early_stop (bool): 是否使用提前终止训练策略。默认值为False。
+            early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
+                连续下降或持平，则终止训练。默认值为5。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -196,11 +201,12 @@ class FasterRCNN(BaseAPI):
         if metric is None:
             if isinstance(train_dataset, paddlex.datasets.CocoDetection):
                 metric = 'COCO'
-            elif isinstance(train_dataset, paddlex.datasets.VOCDetection):
+            elif isinstance(train_dataset, paddlex.datasets.VOCDetection) or \
+                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
                 metric = 'VOC'
             else:
                 raise ValueError(
-                    "train_dataset should be datasets.VOCDetection or datasets.COCODetection."
+                    "train_dataset should be datasets.VOCDetection or datasets.COCODetection or datasets.EasyDataDet."
                 )
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
@@ -235,7 +241,9 @@ class FasterRCNN(BaseAPI):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self,
                  eval_dataset,

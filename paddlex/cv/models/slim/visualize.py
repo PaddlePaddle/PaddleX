@@ -15,9 +15,6 @@
 import os.path as osp
 import tqdm
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 from .prune import cal_model_size
 from paddleslim.prune import load_sensitivities
 
@@ -30,6 +27,10 @@ def visualize(model, sensitivities_file, save_dir='./'):
         model (paddlex.cv.models): paddlex中的模型。
         sensitivities_file (str): 敏感度文件存储路径。
     """
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
     program = model.test_prog
     place = model.places[0]
     fig = plt.figure()
