@@ -212,11 +212,25 @@ class Padding:
 
     Args:
         coarsest_stride (int): 填充后的图像长、宽为该参数的倍数，默认为1。
-        target_size (int|list): 填充后的图像长、宽，默认为None，coarset_stride优先级更高。
+        target_size (int|list|tuple): 填充后的图像长、宽，默认为None，coarset_stride优先级更高。
+
+    Raises:
+        TypeError: 形参`target_size`数据类型不满足需求。
+        ValueError: 形参`target_size`为(list|tuple)时，长度不满足需求。
     """
 
     def __init__(self, coarsest_stride=1, target_size=None):
         self.coarsest_stride = coarsest_stride
+        if target_size is not None:
+            if not isinstance(target_size, int):
+                if not isinstance(target_size, tuple) and not isinstance(
+                        target_size, list):
+                    raise TypeError(
+                        "Padding: Type of target_size must in (int|list|tuple)."
+                    )
+                elif len(target_size) != 2:
+                    raise ValueError(
+                        "Padding: Length of target_size must equal 2.")
         self.target_size = target_size
 
     def __call__(self, im, im_info=None, label_info=None):
@@ -237,12 +251,6 @@ class Padding:
             ValueError: coarsest_stride，target_size需有且只有一个被指定。
             ValueError: target_size小于原图的大小。
         """
-
-        if self.coarsest_stride == 1 and self.target_size is None:
-            if label_info is None:
-                return (im, im_info)
-            else:
-                return (im, im_info, label_info)
         if im_info is None:
             im_info = dict()
         if not isinstance(im, np.ndarray):
@@ -254,10 +262,11 @@ class Padding:
         if isinstance(self.target_size, int):
             padding_im_h = self.target_size
             padding_im_w = self.target_size
-        elif isinstance(self.target_size, list):
+        elif isinstance(self.target_size, list) or isinstance(
+                self.target_size, tuple):
             padding_im_w = self.target_size[0]
             padding_im_h = self.target_size[1]
-        elif self.coarsest_stride > 1:
+        elif self.coarsest_stride > 0:
             padding_im_h = int(
                 np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
             padding_im_w = int(
