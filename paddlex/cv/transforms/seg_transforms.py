@@ -272,7 +272,7 @@ class ResizeByLong:
                 当label不为空时，返回的tuple为(im, im_info, label)，分别对应图像np.ndarray数据、
                 存储与图像相关信息的字典和标注图像np.ndarray数据。
                 其中，im_info新增字段为：
-                    -shape_before_resize (tuple): 保存resize之前图像的形状(h, w）。
+                    -shape_before_resize (tuple): 保存resize之前图像的形状(h, w)。
         """
         if im_info is None:
             im_info = OrderedDict()
@@ -324,12 +324,11 @@ class ResizeByShort:
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
-            tuple: 当label_info为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
-                   当label_info不为空时，返回的tuple为(im, im_info, label_info)，分别对应图像np.ndarray数据、
-                   存储与标注框相关信息的字典。
+            tuple: 当label为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
+                   当label不为空时，返回的tuple为(im, im_info, label)，分别对应图像np.ndarray数据、
+                   存储与图像相关信息的字典和标注图像np.ndarray数据。
                    其中，im_info更新字段为：
-                       - im_resize_info (np.ndarray): resize后的图像高、resize后的图像宽、resize后的图像相对原始图的缩放比例
-                                                 三者组成的np.ndarray，形状为(3,)。
+                       -shape_before_resize (tuple): 保存resize之前图像的形状(h, w)。
 
         Raises:
             TypeError: 形参数据类型不满足需求。
