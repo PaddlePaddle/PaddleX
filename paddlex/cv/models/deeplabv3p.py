@@ -396,13 +396,13 @@ class DeepLabv3p(BaseAPI):
             fetch_list=list(self.test_outputs.values()))
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
-        keys = list(im_info.keys())
-        for k in keys[::-1]:
-            if k == 'shape_before_resize':
-                h, w = im_info[k][0], im_info[k][1]
+        for info in im_info[::-1]:
+            if info[0] == 'resize':
+                w, h = info[1][1], info[1][0]
                 pred = cv2.resize(pred, (w, h), cv2.INTER_NEAREST)
-            elif k == 'shape_before_padding':
-                h, w = im_info[k][0], im_info[k][1]
+            elif info[0] == 'padding':
+                w, h = info[1][1], info[1][0]
                 pred = pred[0:h, 0:w]
-
+            else:
+                raise Exception("Unexpected info '{}' in im_info".format(info[0]))
         return {'label_map': pred, 'score_map': result[1]}

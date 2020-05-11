@@ -48,9 +48,10 @@ class Compose:
         """
         Args:
             im (str/np.ndarray): 图像路径/图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息，dict中的字段如下：
-                - shape_before_resize (tuple): 图像resize之前的大小（h, w）。
-                - shape_before_padding (tuple): 图像padding之前的大小（h, w）。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (str/np.ndarray): 标注图像路径/标注图像np.ndarray数据。
 
         Returns:
@@ -58,7 +59,7 @@ class Compose:
         """
 
         if im_info is None:
-            im_info = dict()
+            im_info = list()
         try:
             im = cv2.imread(im).astype('float32')
         except:
@@ -93,7 +94,10 @@ class RandomHorizontalFlip:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -125,7 +129,10 @@ class RandomVerticalFlip:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -191,7 +198,10 @@ class Resize:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -208,7 +218,7 @@ class Resize:
         """
         if im_info is None:
             im_info = OrderedDict()
-        im_info['shape_before_resize'] = im.shape[:2]
+        im_info.append(('resize', im.shape[:2]))
 
         if not isinstance(im, np.ndarray):
             raise TypeError("ResizeImage: image type is not np.ndarray.")
@@ -264,7 +274,10 @@ class ResizeByLong:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -277,7 +290,7 @@ class ResizeByLong:
         if im_info is None:
             im_info = OrderedDict()
 
-        im_info['shape_before_resize'] = im.shape[:2]
+        im_info.append(('resize', im.shape[:2]))
         im = resize_long(im, self.long_size)
         if label is not None:
             label = resize_long(label, self.long_size, cv2.INTER_NEAREST)
@@ -311,7 +324,10 @@ class ResizeRangeScaling:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -364,7 +380,10 @@ class ResizeStepScaling:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -432,7 +451,10 @@ class Normalize:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
          Returns:
@@ -486,7 +508,10 @@ class Padding:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -501,7 +526,7 @@ class Padding:
         """
         if im_info is None:
             im_info = OrderedDict()
-        im_info['shape_before_padding'] = im.shape[:2]
+        im_info.append(('padding', im.shape[:2]))
 
         im_height, im_width = im.shape[0], im.shape[1]
         if isinstance(self.target_size, int):
@@ -574,7 +599,10 @@ class RandomPaddingCrop:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
          Returns:
@@ -650,7 +678,10 @@ class RandomBlur:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -703,7 +734,10 @@ class RandomRotate:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -765,7 +799,10 @@ class RandomScaleAspect:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -847,7 +884,10 @@ class RandomDistort:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
@@ -922,7 +962,10 @@ class ArrangeSegmenter:
         """
         Args:
             im (np.ndarray): 图像np.ndarray数据。
-            im_info (dict): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
