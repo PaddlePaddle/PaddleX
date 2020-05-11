@@ -60,25 +60,35 @@ def main():
         print("Repo: https://github.com/PaddlePaddle/PaddleX.git")
         print("Email: paddlex@baidu.com")
         return
+
     if args.export_inference:
         assert args.model_dir is not None, "--model_dir should be defined while exporting inference model"
         assert args.save_dir is not None, "--save_dir should be defined to save inference model"
-        fixed_input_shape = eval(args.fixed_input_shape)
-        assert len(
-            fixed_input_shape) == 2, "len of fixed input shape must == 2"
+
+        fixed_input_shape = None
+        if args.fixed_input_shape is not None:
+            fixed_input_shape = eval(args.fixed_input_shape)
+            assert len(
+                fixed_input_shape) == 2, "len of fixed input shape must == 2"
 
         model = pdx.load_model(args.model_dir, fixed_input_shape)
         model.export_inference_model(args.save_dir)
 
-   # if args.export_onnx:
-   #     assert args.model_dir is not None, "--model_dir should be defined while exporting onnx model"
-   #     assert args.save_dir is not None, "--save_dir should be defined to save onnx model"
-   #     fixed_input_shape = eval(args.fixed_input_shape)
-   #     assert len(
-   #         fixed_input_shape) == 2, "len of fixed input shape must == 2"
+    if args.export_onnx:
+        assert args.model_dir is not None, "--model_dir should be defined while exporting onnx model"
+        assert args.save_dir is not None, "--save_dir should be defined to save onnx model"
 
-   #     model = pdx.load_model(args.model_dir, fixed_input_shape)
-   #     model.export_onnx_model(args.save_dir)
+        fixed_input_shape = None
+        if args.fixed_input_shape is not None:
+            fixed_input_shape = eval(args.fixed_input_shape)
+            assert len(
+                fixed_input_shape) == 2, "len of fixed input shape must == 2"
+
+        model = pdx.load_model(args.model_dir, fixed_input_shape)
+
+        model_name = os.path.basename(args.model_dir.strip('/')).split('/')[-1]
+        onnx_name = model_name + '.onnx'
+        model.export_onnx_model(args.save_dir, onnx_name=onnx_name)
 
 
 if __name__ == "__main__":
