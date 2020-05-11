@@ -16,14 +16,16 @@ from __future__ import absolute_import
 import os.path as osp
 import random
 import copy
+import json
+import cv2
+import numpy as np
 import paddlex.utils.logging as logging
 from .dataset import Dataset
 from .dataset import get_encoding
 from .dataset import is_pic
 
-
-class SegDataset(Dataset):
-    """读取语义分割任务数据集，并对样本进行相应的处理。
+class EasyDataSeg(Dataset):
+    """读取EasyDataSeg语义分割任务数据集，并对样本进行相应的处理。
 
     Args:
         data_dir (str): 数据集所在的目录路径。
@@ -46,7 +48,7 @@ class SegDataset(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
-        super(SegDataset, self).__init__(
+        super(EasyDataSeg, self).__init__(
             transforms=transforms,
             num_workers=num_workers,
             buffer_size=buffer_size,
@@ -56,25 +58,46 @@ class SegDataset(Dataset):
         self.labels = list()
         self._epoch = 0
 
-        with open(label_list, encoding=get_encoding(label_list)) as f:
-            for line in f:
-                item = line.strip()
-                self.labels.append(item)
-
+        from pycocotools.mask import decode
+        cname2cid = {}
+        label_id = 0
+        with open(label_list, encoding=get_encoding(label_list)) as fr:
+            for line in fr.readlines():
+                cname2cid[line.strip()] = label_id
+                label_id += 1
+                self.labels.append(line.strip())
+                
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
-                items = line.strip().split()
-                if not is_pic(items[0]):
+                img_file, json_file = [osp.join(data_dir, x) \
+                        for x in line.strip().split()[:2]]
+                if not is_pic(img_file):
                     continue
-                full_path_im = osp.join(data_dir, items[0])
-                full_path_label = osp.join(data_dir, items[1])
-                if not osp.exists(full_path_im):
+                if not osp.isfile(json_file):
+                    continue
+                if not osp.exists(img_file):
                     raise IOError(
-                        'The image file {} is not exist!'.format(full_path_im))
-                if not osp.exists(full_path_label):
-                    raise IOError('The image file {} is not exist!'.format(
-                        full_path_label))
-                self.file_list.append([full_path_im, full_path_label])
+                        'The image file {} is not exist!'.format(img_file))
+                with open(json_file, mode='r', \
+                          encoding=get_encoding(json_file)) as j:
+                    json_info = json.load(j)
+                im = cv2.imread(img_file)
+                im_w = im.shape[1]
+                im_h = im.shape[0]
+                objs = json_info['labels']
+                lable_npy = np.zeros([im_h, im_w]).astype('uint8')
+                for i, obj in enumerate(objs):
+                    cname = obj['name']
+                    cid = cname2cid[cname]
+                    mask_dict = {}
+                    mask_dict['size'] = [im_h, im_w]
+                    mask_dict['counts'] = obj['mask'].encode()
+                    mask = decode(mask_dict)
+                    mask *= cid
+                    conflict_index = np.where(((lable_npy > 0) & (mask == cid)) == True)
+                    mask[conflict_index] = 0
+                    lable_npy += mask
+                self.file_list.append([img_file, lable_npy])
         self.num_samples = len(self.file_list)
         logging.info("{} samples in file {}".format(
             len(self.file_list), file_list))
@@ -88,6 +111,6 @@ class SegDataset(Dataset):
         files = files[:self.num_samples]
         self.num_samples = len(files)
         for f in files:
-            label_path = f[1]
-            sample = [f[0], None, label_path]
+            lable_npy = f[1]
+            sample = [f[0], None, lable_npy]
             yield sample

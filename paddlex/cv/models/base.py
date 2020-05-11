@@ -255,7 +255,10 @@ class BaseAPI:
             if osp.exists(save_dir):
                 os.remove(save_dir)
             os.makedirs(save_dir)
-        fluid.save(self.train_prog, osp.join(save_dir, 'model'))
+        if self.train_prog is not None:
+            fluid.save(self.train_prog, osp.join(save_dir, 'model'))
+        else:
+            fluid.save(self.test_prog, osp.join(save_dir, 'model'))
         model_info = self.get_model_info()
         model_info['status'] = self.status
         with open(
@@ -317,11 +320,11 @@ class BaseAPI:
         model_info['_ModelInputsOutputs']['test_outputs'] = [
             [k, v.name] for k, v in self.test_outputs.items()
         ]
-
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info(

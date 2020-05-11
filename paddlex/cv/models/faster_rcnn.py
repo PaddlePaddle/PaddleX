@@ -57,6 +57,7 @@ class FasterRCNN(BaseAPI):
         self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
         self.labels = None
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -109,7 +110,8 @@ class FasterRCNN(BaseAPI):
             aspect_ratios=self.aspect_ratios,
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
-            test_pre_nms_top_n=test_pre_nms_top_n)
+            test_pre_nms_top_n=test_pre_nms_top_n,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -178,7 +180,7 @@ class FasterRCNN(BaseAPI):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为20。
             save_dir (str): 模型保存路径。默认值为'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：
                 fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
             learning_rate (float): 默认优化器的初始学习率。默认为0.0025。
@@ -199,11 +201,12 @@ class FasterRCNN(BaseAPI):
         if metric is None:
             if isinstance(train_dataset, paddlex.datasets.CocoDetection):
                 metric = 'COCO'
-            elif isinstance(train_dataset, paddlex.datasets.VOCDetection):
+            elif isinstance(train_dataset, paddlex.datasets.VOCDetection) or \
+                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
                 metric = 'VOC'
             else:
                 raise ValueError(
-                    "train_dataset should be datasets.VOCDetection or datasets.COCODetection."
+                    "train_dataset should be datasets.VOCDetection or datasets.COCODetection or datasets.EasyDataDet."
                 )
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric

@@ -60,6 +60,7 @@ class MaskRCNN(FasterRCNN):
             self.mask_head_resolution = 28
         else:
             self.mask_head_resolution = 14
+        self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
@@ -73,7 +74,8 @@ class MaskRCNN(FasterRCNN):
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
             num_convs=num_convs,
-            mask_head_resolution=self.mask_head_resolution)
+            mask_head_resolution=self.mask_head_resolution,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -162,11 +164,12 @@ class MaskRCNN(FasterRCNN):
             ValueError: 模型从inference model进行加载。
         """
         if metric is None:
-            if isinstance(train_dataset, paddlex.datasets.CocoDetection):
+            if isinstance(train_dataset, paddlex.datasets.CocoDetection) or \
+                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
                 metric = 'COCO'
             else:
                 raise Exception(
-                    "train_dataset should be datasets.COCODetection.")
+                    "train_dataset should be datasets.COCODetection or datasets.EasyDataDet.")
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
         if not self.trainable:

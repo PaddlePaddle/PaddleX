@@ -54,6 +54,7 @@ class UNet(object):
                 自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，
                 即平时使用的交叉熵损失函数。
             ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。
+            fixed_input_shape (list): 长度为2，维度为1的list，如:[640,720]，用来固定模型输入:'image'的shape，默认为None。
 
         Raises:
             ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
@@ -69,7 +70,8 @@ class UNet(object):
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255):
+                 ignore_index=255,
+                 fixed_input_shape=None):
         # dice_loss或bce_loss只适用两类分割中
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise Exception(
@@ -97,6 +99,7 @@ class UNet(object):
         self.use_dice_loss = use_dice_loss
         self.class_weight = class_weight
         self.ignore_index = ignore_index
+        self.fixed_input_shape = fixed_input_shape
 
     def _double_conv(self, data, out_ch):
         param_attr = fluid.ParamAttr(
@@ -226,8 +229,16 @@ class UNet(object):
 
     def generate_inputs(self):
         inputs = OrderedDict()
-        inputs['image'] = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+
+        if self.fixed_input_shape is not None:
+            input_shape = [
+                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+            ]
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if self.mode == 'train':
             inputs['label'] = fluid.data(
                 dtype='int32', shape=[None, 1, None, None], name='label')
