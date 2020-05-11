@@ -125,7 +125,6 @@ def fix_input_shape(info, fixed_input_shape=None):
                 logging.warning(
                     "fixed_input_shape must == input shape when trainning")
         else:
-            print("*" * 10)
             resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
             resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
             padding['Padding']['target_size'] = list(fixed_input_shape)

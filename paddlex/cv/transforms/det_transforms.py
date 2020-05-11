@@ -208,10 +208,10 @@ class Padding:
 
     Args:
         coarsest_stride (int): 填充后的图像长、宽为该参数的倍数，默认为1。
-        target_size (int|list): 填充后的图像长、宽，默认为1。
+        target_size (int|list): 填充后的图像长、宽，默认为None。
     """
 
-    def __init__(self, coarsest_stride=1, target_size=1):
+    def __init__(self, coarsest_stride=1, target_size=None):
         self.coarsest_stride = coarsest_stride
         self.target_size = target_size
 
@@ -230,15 +230,15 @@ class Padding:
         Raises:
             TypeError: 形参数据类型不满足需求。
             ValueError: 数据长度不匹配。
+            ValueError: coarsest_stride，target_size需有且只有一个被指定，coarset_stride优先级更高。
             ValueError: target_size小于原图的大小。
         """
 
-        if self.coarsest_stride == 1:
-            if isinstance(self.target_size, int) and self.target_size == 1:
-                if label_info is None:
-                    return (im, im_info)
-                else:
-                    return (im, im_info, label_info)
+        if self.coarsest_stride == 1 and self.target_size is None:
+            if label_info is None:
+                return (im, im_info)
+            else:
+                return (im, im_info, label_info)
         if im_info is None:
             im_info = dict()
         if not isinstance(im, np.ndarray):
@@ -251,13 +251,16 @@ class Padding:
                 np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
             padding_im_w = int(
                 np.ceil(im_w / self.coarsest_stride) * self.coarsest_stride)
-
-        if isinstance(self.target_size, int) and self.target_size != 1:
+        elif isinstance(self.target_size, int):
             padding_im_h = self.target_size
             padding_im_w = self.target_size
         elif isinstance(self.target_size, list):
             padding_im_w = self.target_size[0]
             padding_im_h = self.target_size[1]
+        else:
+            raise ValueError(
+                "coarsest_stridei(>1) or target_size(list|int) need setting in Padding transform"
+            )
         pad_height = padding_im_h - im_h
         pad_width = padding_im_w - im_w
         if pad_height < 0 or pad_width < 0:

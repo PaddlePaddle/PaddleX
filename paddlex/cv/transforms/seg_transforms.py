@@ -287,6 +287,7 @@ class ResizeByLong:
         else:
             return (im, im_info, label)
 
+
 class ResizeByShort:
     """根据图像的短边调整图像大小（resize）。
 
@@ -315,12 +316,12 @@ class ResizeByShort:
         if not (isinstance(self.max_size, int)):
             raise TypeError("max_size: input type is invalid.")
 
-    def __call__(self, im, im_info=None, label_info=None):
+    def __call__(self, im, im_info=None, label=None):
         """
         Args:
             im (numnp.ndarraypy): 图像np.ndarray数据。
             im_info (dict, 可选): 存储与图像相关的信息。
-            label_info (dict, 可选): 存储与标注框相关的信息。
+            label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
             tuple: 当label_info为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
@@ -335,11 +336,12 @@ class ResizeByShort:
             ValueError: 数据长度不匹配。
         """
         if im_info is None:
-            im_info = dict()
+            im_info = OrderedDict()
         if not isinstance(im, np.ndarray):
             raise TypeError("ResizeByShort: image type is not numpy.")
         if len(im.shape) != 3:
             raise ValueError('ResizeByShort: image is not 3-dimensional.')
+        im_info['shape_before_resize'] = im.shape[:2]
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
@@ -348,15 +350,18 @@ class ResizeByShort:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
-        im_resize_info = [resized_height, resized_width, scale]
         im = cv2.resize(
             im, (resized_width, resized_height),
-            interpolation=cv2.INTER_LINEAR)
-        im_info['im_resize_info'] = np.array(im_resize_info).astype(np.float32)
-        if label_info is None:
+            interpolation=cv2.INTER_NEAREST)
+        if label is not None:
+            im = cv2.resize(
+                label, (resized_width, resized_height),
+                interpolation=cv2.INTER_NEAREST)
+        if label is None:
             return (im, im_info)
         else:
-            return (im, im_info, label_info)
+            return (im, im_info, label)
+
 
 class ResizeRangeScaling:
     """对图像长边随机resize到指定范围内，短边按比例进行缩放。当存在标注图像时，则同步进行处理。
