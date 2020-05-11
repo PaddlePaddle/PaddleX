@@ -93,6 +93,8 @@ class Compose:
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
                 [im.shape[0], im.shape[1], 1.], dtype=np.float32)
+            im_info['image_shape'] = np.array([im.shape[0],
+                                               im.shape[1]]).astype('int32')
             if not self.use_mixup:
                 if 'mixup' in im_info:
                     del im_info['mixup']
