@@ -333,7 +333,10 @@ class ResizeByShort:
         """
         Args:
             im (numnp.ndarraypy): 图像np.ndarray数据。
-            im_info (dict, 可选): 存储与图像相关的信息。
+            im_info (list): 存储图像reisze或padding前的shape信息，如
+                [('resize', [200, 300]), ('padding', [400, 600])]表示
+                图像在过resize前shape为(200, 300)， 过padding前shape为
+                (400, 600)
             label (np.ndarray): 标注图像np.ndarray数据。
 
         Returns:
