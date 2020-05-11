@@ -30,6 +30,12 @@ def arg_parser():
         default=False,
         help="export inference model for C++/Python deployment")
     parser.add_argument(
+        "--export_onnx",
+        "-eo",
+        action="store_true",
+        default=False,
+        help="export onnx model for deployment")
+    parser.add_argument(
         "--fixed_input_shape",
         "-fs",
         default=None,
@@ -64,15 +70,15 @@ def main():
         model = pdx.load_model(args.model_dir, fixed_input_shape)
         model.export_inference_model(args.save_dir)
 
-    if args.export_onnx:
-        assert args.model_dir is not None, "--model_dir should be defined while exporting onnx model"
-        assert args.save_dir is not None, "--save_dir should be defined to save onnx model"
-        fixed_input_shape = eval(args.fixed_input_shape)
-        assert len(
-            fixed_input_shape) == 2, "len of fixed input shape must == 2"
+   # if args.export_onnx:
+   #     assert args.model_dir is not None, "--model_dir should be defined while exporting onnx model"
+   #     assert args.save_dir is not None, "--save_dir should be defined to save onnx model"
+   #     fixed_input_shape = eval(args.fixed_input_shape)
+   #     assert len(
+   #         fixed_input_shape) == 2, "len of fixed input shape must == 2"
 
-        model = pdx.load_model(args.model_dir, fixed_input_shape)
-        model.export_onnx_model(args.save_dir)
+   #     model = pdx.load_model(args.model_dir, fixed_input_shape)
+   #     model.export_onnx_model(args.save_dir)
 
 
 if __name__ == "__main__":
