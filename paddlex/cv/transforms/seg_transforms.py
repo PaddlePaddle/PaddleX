@@ -353,7 +353,7 @@ class ResizeByShort:
             raise TypeError("ResizeByShort: image type is not numpy.")
         if len(im.shape) != 3:
             raise ValueError('ResizeByShort: image is not 3-dimensional.')
-        im_info['shape_before_resize'] = im.shape[:2]
+        im_info.append(('resize', im.shape[:2]))
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size

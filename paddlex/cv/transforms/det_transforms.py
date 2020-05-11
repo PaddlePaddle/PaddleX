@@ -193,11 +193,16 @@ class ResizeByShort:
 
 
 class Padding:
-    """将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],
+    """1.将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],
        `coarest_stride`为32，则由于300不为32的倍数，因此在图像最右和最下使用0值
        进行padding，最终输出图像为[320, 640]。
+       2.或者，将图像的长和宽padding到target_size指定的shape，如输入的图像为[300，640]，
+         a. `target_size` = 960，在图像最右和最下使用0值进行padding，最终输出
+            图像为[960, 960]。
+         b. `target_size` = [640, 960]，在图像最右和最下使用0值进行padding，最终
+            输出图像为[640, 960]。
 
-    1. 如果coarsest_stride为1则直接返回。
+    1. 如果coarsest_stride为1，target_size为None则直接返回。
     2. 获取图像的高H、宽W。
     3. 计算填充后图像的高H_new、宽W_new。
     4. 构建大小为(H_new, W_new, 3)像素值为0的np.ndarray，
@@ -205,7 +210,7 @@ class Padding:
 
     Args:
         coarsest_stride (int): 填充后的图像长、宽为该参数的倍数，默认为1。
-        target_size (int|list): 填充后的图像长、宽，默认为None。
+        target_size (int|list): 填充后的图像长、宽，默认为None，coarset_stride优先级更高。
     """
 
     def __init__(self, coarsest_stride=1, target_size=None):
@@ -227,7 +232,7 @@ class Padding:
         Raises:
             TypeError: 形参数据类型不满足需求。
             ValueError: 数据长度不匹配。
-            ValueError: coarsest_stride，target_size需有且只有一个被指定，coarset_stride优先级更高。
+            ValueError: coarsest_stride，target_size需有且只有一个被指定。
             ValueError: target_size小于原图的大小。
         """
 
@@ -243,17 +248,18 @@ class Padding:
         if len(im.shape) != 3:
             raise ValueError('Padding: image is not 3-dimensional.')
         im_h, im_w, im_c = im.shape[:]
-        if self.coarsest_stride > 1:
-            padding_im_h = int(
-                np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
-            padding_im_w = int(
-                np.ceil(im_w / self.coarsest_stride) * self.coarsest_stride)
-        elif isinstance(self.target_size, int):
+
+        if isinstance(self.target_size, int):
             padding_im_h = self.target_size
             padding_im_w = self.target_size
         elif isinstance(self.target_size, list):
             padding_im_w = self.target_size[0]
             padding_im_h = self.target_size[1]
+        elif self.coarsest_stride > 1:
+            padding_im_h = int(
+                np.ceil(im_h / self.coarsest_stride) * self.coarsest_stride)
+            padding_im_w = int(
+                np.ceil(im_w / self.coarsest_stride) * self.coarsest_stride)
         else:
             raise ValueError(
                 "coarsest_stridei(>1) or target_size(list|int) need setting in Padding transform"
