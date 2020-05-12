@@ -281,24 +281,16 @@ class DeepLabv3p(BaseAPI):
         # 构建训练、验证、预测网络
         self.build_program()
         # 初始化网络权重
+        self.net_initialize(
+            startup_prog=fluid.default_startup_program(),
+            pretrain_weights=pretrain_weights,
+            save_dir=save_dir,
+            sensitivities_file=sensitivities_file,
+            eval_metric_loss=eval_metric_loss,
+            resume_checkpoint=resume_checkpoint)
+        start_epoch = 0
         if resume_checkpoint:
-            self.resume_checkpoint(
-                path=resume_checkpoint,
-                startup_prog=fluid.default_startup_program())
-            scope = fluid.global_scope()
-            v = scope.find_var('@LR_DECAY_COUNTER@')
-            step = np.array(v.get_tensor())[0] if v else 0
-            num_steps_each_epoch = train_dataset.num_samples // train_batch_size
-            start_epoch = step // num_steps_each_epoch + 1
-        else:
-            self.net_initialize(
-                startup_prog=fluid.default_startup_program(),
-                pretrain_weights=pretrain_weights,
-                save_dir=save_dir,
-                sensitivities_file=sensitivities_file,
-                eval_metric_loss=eval_metric_loss)
-            start_epoch = 0
-
+            start_epoch = self.completed_epochs
         # 训练
         self.train_loop(
             start_epoch=start_epoch,

@@ -70,6 +70,8 @@ class BaseAPI:
         self.sync_bn = False
         # 当前模型状态
         self.status = 'Normal'
+        # 已完成迭代轮数，为恢复训练时的起始轮数
+        self.completed_epochs = 0
 
     def _get_single_card_bs(self, batch_size):
         if batch_size % len(self.places) == 0:
@@ -182,22 +184,36 @@ class BaseAPI:
                        fuse_bn=False,
                        save_dir='.',
                        sensitivities_file=None,
-                       eval_metric_loss=0.05):
-        pretrain_dir = osp.join(save_dir, 'pretrain')
-        if not os.path.isdir(pretrain_dir):
-            if os.path.exists(pretrain_dir):
-                os.remove(pretrain_dir)
-            os.makedirs(pretrain_dir)
-        if hasattr(self, 'backbone'):
-            backbone = self.backbone
-        else:
-            backbone = self.__class__.__name__
-        pretrain_weights = get_pretrain_weights(
-            pretrain_weights, self.model_type, backbone, pretrain_dir)
+                       eval_metric_loss=0.05,
+                       resume_checkpoint=None):
+        if not resume_checkpoint:
+            pretrain_dir = osp.join(save_dir, 'pretrain')
+            if not os.path.isdir(pretrain_dir):
+                if os.path.exists(pretrain_dir):
+                    os.remove(pretrain_dir)
+                os.makedirs(pretrain_dir)
+            if hasattr(self, 'backbone'):
+                backbone = self.backbone
+            else:
+                backbone = self.__class__.__name__
+            pretrain_weights = get_pretrain_weights(
+                pretrain_weights, self.model_type, backbone, pretrain_dir)
         if startup_prog is None:
             startup_prog = fluid.default_startup_program()
         self.exe.run(startup_prog)
-        if pretrain_weights is not None:
+        if resume_checkpoint:
+            logging.info(
+                "Resume checkpoint from {}.".format(resume_checkpoint),
+                use_color=True)
+            paddlex.utils.utils.load_pretrain_weights(
+                self.exe, self.train_prog, resume_checkpoint, resume=True)
+            if not osp.exists(osp.join(resume_checkpoint, "model.yml")):
+                raise Exception(
+                    "There's not model.yml in {}".format(resume_checkpoint))
+            with open(osp.join(resume_checkpoint, "model.yml")) as f:
+                info = yaml.load(f.read(), Loader=yaml.Loader)
+                self.completed_epochs = info['completed_epochs']
+        elif pretrain_weights is not None:
             logging.info(
                 "Load pretrain weights from {}.".format(pretrain_weights),
                 use_color=True)
@@ -225,17 +241,6 @@ class BaseAPI:
                 .format(origin_flops, current_flops, remaining_ratio),
                 use_color=True)
             self.status = 'Prune'
-
-    def resume_checkpoint(self, path, startup_prog=None):
-        if not osp.isdir(path):
-            raise Exception("Model pretrain path {} does not "
-                            "exists.".format(path))
-        if osp.exists(osp.join(path, 'model.pdparams')):
-            path = osp.join(path, 'model')
-        if startup_prog is None:
-            startup_prog = fluid.default_startup_program()
-        self.exe.run(startup_prog)
-        fluid.load(self.train_prog, path, executor=self.exe)
 
     def get_model_info(self):
         info = dict()
@@ -272,6 +277,7 @@ class BaseAPI:
                     name = op.__class__.__name__
                     attr = op.__dict__
                     info['Transforms'].append({name: attr})
+        info['completed_epochs'] = self.completed_epochs
         return info
 
     def save_model(self, save_dir):
@@ -513,6 +519,7 @@ class BaseAPI:
                         return_details=True)
                     logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                         i + 1, dict2str(self.eval_metrics)))
+                    self.completed_epochs += 1
                     # 保存最优模型
                     best_accuracy_key = list(self.eval_metrics.keys())[0]
                     current_accuracy = self.eval_metrics[best_accuracy_key]
