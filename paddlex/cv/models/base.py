@@ -213,6 +213,17 @@ class BaseAPI:
             prune_program(self, prune_params_ratios)
             self.status = 'Prune'
 
+    def resume_checkpoint(self, path, startup_prog=None):
+        if not osp.isdir(path):
+            raise Exception("Model pretrain path {} does not "
+                            "exists.".format(path))
+        if osp.exists(osp.join(path, 'model.pdparams')):
+            path = osp.join(path, 'model')
+        if startup_prog is None:
+            startup_prog = fluid.default_startup_program()
+        self.exe.run(startup_prog)
+        fluid.load(self.train_prog, path, executor=self.exe)
+
     def get_model_info(self):
         info = dict()
         info['version'] = paddlex.__version__
@@ -334,6 +345,7 @@ class BaseAPI:
                    num_epochs,
                    train_dataset,
                    train_batch_size,
+                   start_epoch=0,
                    eval_dataset=None,
                    save_interval_epochs=1,
                    log_interval_steps=10,
@@ -408,7 +420,7 @@ class BaseAPI:
         best_accuracy_key = ""
         best_accuracy = -1.0
         best_model_epoch = 1
-        for i in range(num_epochs):
+        for i in range(start_epoch, num_epochs):
             records = list()
             step_start_time = time.time()
             epoch_start_time = time.time()
