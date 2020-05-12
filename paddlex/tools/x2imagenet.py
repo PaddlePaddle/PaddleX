@@ -23,10 +23,18 @@ import numpy as np
 from .base import MyEncoder, is_pic, get_encoding
 
 class EasyData2ImageNet(object):
+    """将使用EasyData标注的分类数据集转换为COCO数据集。
+    """
     def __init__(self):
         pass
     
     def convert(self, image_dir, json_dir, dataset_save_dir):
+        """转换。
+        Args:
+            image_dir (str): 图像文件存放的路径。
+            json_dir (str): 与每张图像对应的json文件的存放路径。
+            dataset_save_dir (str): 转换后数据集存放路径。
+        """
         assert osp.exists(image_dir), "The image folder does not exist!"
         assert osp.exists(json_dir), "The json folder does not exist!"
         assert osp.exists(dataset_save_dir), "The save folder does not exist!"

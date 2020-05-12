@@ -29,6 +29,7 @@ class X2Seg(object):
         self.labels2ids = {'_background_': 0}
         
     def shapes_to_label(self, img_shape, shapes, label_name_to_value):
+        # This function is based on https://github.com/wkentaro/labelme/blob/master/labelme/utils/shape.py.
         def shape_to_mask(img_shape, points, shape_type=None,
                   line_width=10, point_size=5):
             mask = np.zeros(img_shape[:2], dtype=np.uint8)
@@ -102,6 +103,12 @@ class X2Seg(object):
         return color_map
     
     def convert(self, image_dir, json_dir, dataset_save_dir):
+        """转换。
+        Args:
+            image_dir (str): 图像文件存放的路径。
+            json_dir (str): 与每张图像对应的json文件的存放路径。
+            dataset_save_dir (str): 转换后数据集存放路径。
+        """
         assert osp.exists(image_dir), "The image folder does not exist!"
         assert osp.exists(json_dir), "The json folder does not exist!"
         assert osp.exists(dataset_save_dir), "The save folder does not exist!"
@@ -130,6 +137,8 @@ class X2Seg(object):
         
 
 class JingLing2Seg(X2Seg):
+    """将使用标注精灵标注的数据集转换为Seg数据集。
+    """
     def __init__(self):
         super(JingLing2Seg, self).__init__() 
         
@@ -198,6 +207,8 @@ class JingLing2Seg(X2Seg):
                 
                 
 class LabelMe2Seg(X2Seg):
+    """将使用LabelMe标注的数据集转换为Seg数据集。
+    """
     def __init__(self):
         super(LabelMe2Seg, self).__init__()
     
@@ -246,6 +257,8 @@ class LabelMe2Seg(X2Seg):
                 
                             
 class EasyData2Seg(X2Seg):
+    """将使用EasyData标注的分割数据集转换为Seg数据集。
+    """
     def __init__(self):
         super(EasyData2Seg, self).__init__()
     

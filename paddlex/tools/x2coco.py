@@ -55,22 +55,28 @@ class X2COCO(object):
         annotation["id"] = object_id + 1
         return annotation
     
-    def convert(self, image_input_dir, json_input_dir, dataset_save_dir):
-        assert osp.exists(image_input_dir), "he image folder does not exist!"
-        assert osp.exists(json_input_dir), "The json folder does not exist!"
+    def convert(self, image_dir, json_dir, dataset_save_dir):
+        """转换。
+        Args:
+            image_dir (str): 图像文件存放的路径。
+            json_dir (str): 与每张图像对应的json文件的存放路径。
+            dataset_save_dir (str): 转换后数据集存放路径。
+        """
+        assert osp.exists(image_dir), "he image folder does not exist!"
+        assert osp.exists(json_dir), "The json folder does not exist!"
         assert osp.exists(dataset_save_dir), "The save folder does not exist!"
         # Convert the image files.
         new_image_dir = osp.join(dataset_save_dir, "JPEGImages")
         if osp.exists(new_image_dir):
             shutil.rmtree(new_image_dir)
         os.makedirs(new_image_dir)
-        for img_name in os.listdir(image_input_dir):
+        for img_name in os.listdir(image_dir):
             if is_pic(img_name):
                 shutil.copyfile(
-                            osp.join(image_input_dir, img_name),
+                            osp.join(image_dir, img_name),
                             osp.join(new_image_dir, img_name))
         # Convert the json files.
-        self.analyse_json(new_image_dir, json_input_dir)
+        self.parse_json(new_image_dir, json_dir)
         coco_data = {}
         coco_data["images"] = self.images_list
         coco_data["categories"] = self.categories_list
@@ -84,6 +90,8 @@ class X2COCO(object):
     
     
 class LabelMe2COCO(X2COCO):
+    """将使用LabelMe标注的数据集转换为COCO数据集。
+    """
     def __init__(self):
         super(LabelMe2COCO, self).__init__()
         
@@ -127,7 +135,7 @@ class LabelMe2COCO(X2COCO):
             right_bottom_r - left_top_r
         ]
     
-    def analyse_json(self, img_dir, json_dir):
+    def parse_json(self, img_dir, json_dir):
         image_id = -1
         object_id = -1
         labels_list = []
@@ -168,6 +176,8 @@ class LabelMe2COCO(X2COCO):
                         
     
 class EasyData2COCO(X2COCO):
+    """将使用EasyData标注的检测或分割数据集转换为COCO数据集。
+    """
     def __init__(self):
         super(EasyData2COCO, self).__init__()        
     
@@ -196,7 +206,7 @@ class EasyData2COCO(X2COCO):
         annotation["id"] = object_id + 1
         return annotation
         
-    def analyse_json(self, img_dir, json_dir):
+    def parse_json(self, img_dir, json_dir):
         from pycocotools.mask import decode
         image_id = -1
         object_id = -1
