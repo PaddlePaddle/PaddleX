@@ -364,7 +364,6 @@ class BaseAPI:
                    num_epochs,
                    train_dataset,
                    train_batch_size,
-                   start_epoch=0,
                    eval_dataset=None,
                    save_interval_epochs=1,
                    log_interval_steps=10,
@@ -439,6 +438,7 @@ class BaseAPI:
         best_accuracy_key = ""
         best_accuracy = -1.0
         best_model_epoch = -1
+        start_epoch = self.completed_epochs
         for i in range(start_epoch, num_epochs):
             records = list()
             step_start_time = time.time()

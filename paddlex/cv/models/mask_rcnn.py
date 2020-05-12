@@ -202,12 +202,8 @@ class MaskRCNN(FasterRCNN):
             fuse_bn=fuse_bn,
             save_dir=save_dir,
             resume_checkpoint=resume_checkpoint)
-        start_epoch = 0
-        if resume_checkpoint:
-            start_epoch = self.completed_epochs
         # 训练
         self.train_loop(
-            start_epoch=start_epoch,
             num_epochs=num_epochs,
             train_dataset=train_dataset,
             train_batch_size=train_batch_size,

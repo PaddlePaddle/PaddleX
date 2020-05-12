@@ -240,12 +240,8 @@ class YOLOv3(BaseAPI):
             sensitivities_file=sensitivities_file,
             eval_metric_loss=eval_metric_loss,
             resume_checkpoint=resume_checkpoint)
-        start_epoch = 0
-        if resume_checkpoint:
-            start_epoch = self.completed_epochs
         # 训练
         self.train_loop(
-            start_epoch=start_epoch,
             num_epochs=num_epochs,
             train_dataset=train_dataset,
             train_batch_size=train_batch_size,
