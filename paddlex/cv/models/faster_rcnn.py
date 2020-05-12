@@ -232,9 +232,8 @@ class FasterRCNN(BaseAPI):
         self.net_initialize(
             startup_prog=fluid.default_startup_program(),
             pretrain_weights=pretrain_weights,
+            fuse_bn=fuse_bn,
             save_dir=save_dir,
-            sensitivities_file=sensitivities_file,
-            eval_metric_loss=eval_metric_loss,
             resume_checkpoint=resume_checkpoint)
         start_epoch = 0
         if resume_checkpoint:

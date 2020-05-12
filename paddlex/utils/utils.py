@@ -300,8 +300,8 @@ def load_pretrain_weights(exe,
                 if pretrained_shape != actual_shape:
                     raise Exception(
                         "Shape of optimizer variable {} doesn't match.(Last: {}, Now: {}), {}"
-                        .format(var.name, opt_dict[var.name].shape,
-                                var.shape), exception_message)
+                        .format(var.name, pretrained_shape,
+                                actual_shape), exception_message)
             optimizer_varname_list = [var.name for var in optimizer_var_list]
             if os.exists(osp.join(weights_dir, 'learning_rate')
                          ) and 'learning_rate' not in optimizer_varname_list:
