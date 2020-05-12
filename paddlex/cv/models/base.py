@@ -204,13 +204,23 @@ class BaseAPI:
                 self.exe, self.train_prog, pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
+            import paddleslim
             from .slim.prune_config import get_sensitivities
             sensitivities_file = get_sensitivities(sensitivities_file, self,
                                                    save_dir)
             from .slim.prune import get_params_ratios, prune_program
+            logging.info(
+                "Start to prune program with eval_metric_loss = {}".format(
+                    eval_metric_loss))
+            origin_flops = paddleslim.analysis.flops(self.test_prog)
             prune_params_ratios = get_params_ratios(
                 sensitivities_file, eval_metric_loss=eval_metric_loss)
             prune_program(self, prune_params_ratios)
+            current_flops = paddleslim.analysis.flops(self.test_prog)
+            remaining_ratio = current_flops / origin_flops
+            logging.info(
+                "Finish prune program, before FLOPs:{}, after prune FLOPs:{}, remaining ratio:{}"
+                .format(origin_flops, current_flops, remaining_ratio))
             self.status = 'Prune'
 
     def get_model_info(self):
