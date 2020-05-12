@@ -19,17 +19,21 @@ from . import det
 from . import seg
 from . import cls
 from . import slim
+from . import convertor
 
 try:
     import pycocotools
 except:
-    print("[WARNING] pycocotools is not installed, detection model is not available now.")
-    print("[WARNING] pycocotools install: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md")
+    print(
+        "[WARNING] pycocotools is not installed, detection model is not available now."
+    )
+    print(
+        "[WARNING] pycocotools install: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md"
+    )
 
 import paddlehub as hub
 if hub.version.hub_version < '1.6.2':
     raise Exception("[ERROR] paddlehub >= 1.6.2 is required")
-
 
 env_info = get_environ_info()
 load_model = cv.models.load_model

@@ -83,12 +83,8 @@ def main():
             fixed_input_shape = eval(args.fixed_input_shape)
             assert len(
                 fixed_input_shape) == 2, "len of fixed input shape must == 2"
-
         model = pdx.load_model(args.model_dir, fixed_input_shape)
-
-        model_name = os.path.basename(args.model_dir.strip('/')).split('/')[-1]
-        onnx_name = model_name + '.onnx'
-        model.export_onnx_model(args.save_dir, onnx_name=onnx_name)
+        pdx.convertor.export_onnx_model(model, args.save_dir)
 
 
 if __name__ == "__main__":
