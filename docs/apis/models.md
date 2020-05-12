@@ -182,7 +182,7 @@ paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspec
 **参数:**
 
 > - **num_classes** (int): 包含了背景类的类别数。默认为81。
-> - **backbone** (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50vd', 'ResNet101', 'ResNet101vd']。默认为'ResNet50'。
+> - **backbone** (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
 > - **with_fpn** (bool): 是否使用FPN结构。默认为True。
 > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -262,7 +262,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 **参数:**
 
 > - **num_classes** (int): 包含了背景类的类别数。默认为81。
-> - **backbone** (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50vd', 'ResNet101', 'ResNet101vd']。默认为'ResNet50'。
+> - **backbone** (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
 > - **with_fpn** (bool): 是否使用FPN结构。默认为True。
 > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。

@@ -254,3 +254,11 @@ class Dataset:
             buffer_size=self.buffer_size,
             batch_size=batch_size,
             drop_last=drop_last)
+
+    def set_num_samples(self, num_samples):
+        if num_samples > len(self.file_list):
+            logging.warning(
+                "You want set num_samples to {}, but your dataset only has {} samples, so we will keep your dataset num_samples as {}"
+                .format(num_samples, len(self.file_list), len(self.file_list)))
+            num_samples = len(self.file_list)
+        self.num_samples = num_samples
