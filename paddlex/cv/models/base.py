@@ -408,7 +408,6 @@ class BaseAPI:
                 for v in test_outputs_names
             ]
             # Make graph
-            onnx_name = 'test'
             onnx_graph = helper.make_graph(
                 nodes=onnx_nodes,
                 name=onnx_name,
@@ -431,6 +430,8 @@ class BaseAPI:
             if onnx_model is not None:
                 try:
                     onnx_model_file = osp.join(save_dir, onnx_name)
+                    if not os.path.exists(save_dir):
+                        os.mkdir(save_dir)
                     with open(onnx_model_file, 'wb') as f:
                         f.write(onnx_model.SerializeToString())
                     print(
