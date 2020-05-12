@@ -89,7 +89,7 @@ paddlex.cls.ResNet50(num_classes=1000)
 paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor_masks=None, ignore_threshold=0.7, nms_score_threshold=0.01, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=0.45, label_smooth=False, train_random_shapes=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608])
 ```
 
-构建YOLOv3检测器，并实现其训练、评估和预测。  
+构建YOLOv3检测器，并实现其训练、评估和预测。 **注意在YOLOv3，num_classes不需要包含背景类，如目标包括人、狗两种，则num_classes设为2即可，这里与FasterRCNN/MaskRCNN有差别*
 
 **参数:**
 
@@ -177,7 +177,7 @@ paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspec
 
 ```
 
-构建FasterRCNN检测器，并实现其训练、评估和预测。  
+构建FasterRCNN检测器，并实现其训练、评估和预测。 **注意在FasterRCNN中，num_classes需要设置为类别数+背景类，如目标包括人、狗两种，则num_classes需设为3，多的一种为背景类别**
 
 **参数:**
 
@@ -257,7 +257,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 
 ```
 
-构建MaskRCNN检测器，并实现其训练、评估和预测。  
+构建MaskRCNN检测器，并实现其训练、评估和预测。**注意在FasterRCNN中，num_classes需要设置为类别数+背景类，如目标包括人、狗两种，则num_classes需设为3，多的一种为背景类别**
 
 **参数:**
 
