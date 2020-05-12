@@ -13,6 +13,14 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+import os
+if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
+    os.environ['FLAGS_eager_delete_tensor_gb'] = '0.0'
+if 'FLAGS_allocator_strategy' not in os.environ:
+    os.environ['FLAGS_allocator_strategy'] = 'auto_growth'
+if "CUDA_VISIBLE_DEVICES" in os.environ:
+    if os.environ["CUDA_VISIBLE_DEVICES"].count("-1") > 0:
+        os.environ["CUDA_VISIBLE_DEVICES"] = ""
 from .utils.utils import get_environ_info
 from . import cv
 from . import det
@@ -23,8 +31,12 @@ from . import slim
 try:
     import pycocotools
 except:
-    print("[WARNING] pycocotools is not installed, detection model is not available now.")
-    print("[WARNING] pycocotools install: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md")
+    print(
+        "[WARNING] pycocotools is not installed, detection model is not available now."
+    )
+    print(
+        "[WARNING] pycocotools install: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md"
+    )
 
 import paddlehub as hub
 if hub.version.hub_version < '1.6.2':
