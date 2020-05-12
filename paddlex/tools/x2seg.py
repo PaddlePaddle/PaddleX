@@ -29,7 +29,7 @@ class X2Seg(object):
         self.labels2ids = {'_background_': 0}
         
     def shapes_to_label(self, img_shape, shapes, label_name_to_value):
-        # This function is based on https://github.com/wkentaro/labelme/blob/master/labelme/utils/shape.py.
+        # 该函数基于https://github.com/wkentaro/labelme/blob/master/labelme/utils/shape.py实现。
         def shape_to_mask(img_shape, points, shape_type=None,
                   line_width=10, point_size=5):
             mask = np.zeros(img_shape[:2], dtype=np.uint8)
@@ -83,13 +83,6 @@ class X2Seg(object):
         return cls, ins
     
     def get_color_map_list(self, num_classes):
-        """ Returns the color map for visualizing the segmentation mask,
-            which can support arbitrary number of classes.
-        Args:
-            num_classes: Number of classes
-        Returns:
-            The color map
-        """
         color_map = num_classes * [0, 0, 0]
         for i in range(0, num_classes):
             j = 0
