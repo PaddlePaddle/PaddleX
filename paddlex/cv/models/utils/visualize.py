@@ -66,7 +66,7 @@ def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
         image_name = str(int(time.time())) + '.jpg'
     else:
         image_name = os.path.split(image)[-1]
-        image = cv2.imread(image)
+        im = cv2.imread(image)
 
     vis_result = cv2.addWeighted(im, weight, pseudo_img, 1 - weight, 0)
 
