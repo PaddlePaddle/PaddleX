@@ -69,20 +69,23 @@ def main():
         if args.fixed_input_shape is not None:
             fixed_input_shape = eval(args.fixed_input_shape)
             assert len(
-                fixed_input_shape) == 2, "len of fixed input shape must == 2"
+                fixed_input_shape
+            ) == 2, "len of fixed input shape must == 2, such as [224,224]"
 
         model = pdx.load_model(args.model_dir, fixed_input_shape)
         model.export_inference_model(args.save_dir)
 
     if args.export_onnx:
         assert args.model_dir is not None, "--model_dir should be defined while exporting onnx model"
-        assert args.save_dir is not None, "--save_dir should be defined to save onnx model"
+        assert args.save_dir is not None, "--save_dir should be defined to create onnx model"
+        assert args.fixed_input_shape is not None, "--fixed_input_shape should be defined [w,h] to create onnx model, such as [224,224]"
 
-        fixed_input_shape = None
+        fixed_input_shape = []
         if args.fixed_input_shape is not None:
             fixed_input_shape = eval(args.fixed_input_shape)
             assert len(
-                fixed_input_shape) == 2, "len of fixed input shape must == 2"
+                fixed_input_shape
+            ) == 2, "len of fixed input shape must == 2, such as [224,224]"
         model = pdx.load_model(args.model_dir, fixed_input_shape)
         pdx.convertor.export_onnx_model(model, args.save_dir)
 
