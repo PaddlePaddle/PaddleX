@@ -29,8 +29,8 @@ def visualize_detection(image, result, threshold=0.5, save_dir='./'):
     if isinstance(image, np.ndarray):
         image_name = str(int(time.time())) + '.jpg'
     else:
-        image = cv2.imread(image)
         image_name = os.path.split(image)[-1]
+        image = cv2.imread(image)
 
     image = draw_bbox_mask(image, result, threshold=threshold)
     if save_dir is not None:
@@ -65,8 +65,8 @@ def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
         im = image
         image_name = str(int(time.time())) + '.jpg'
     else:
-        image = cv2.imread(image)
         image_name = os.path.split(image)[-1]
+        image = cv2.imread(image)
 
     vis_result = cv2.addWeighted(im, weight, pseudo_img, 1 - weight, 0)
 
