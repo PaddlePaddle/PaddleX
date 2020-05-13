@@ -10,7 +10,9 @@ SET(TENSORRT_DIR "" CACHE PATH "Compile demo with TensorRT")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
-
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/demo)
 include(cmake/yaml-cpp.cmake)
 
 include_directories("${CMAKE_SOURCE_DIR}/")
@@ -213,15 +215,19 @@ if (NOT WIN32)
 endif()
 
 set(DEPS ${DEPS} ${OpenCV_LIBS})
-add_executable(classifier src/classifier.cpp src/transforms.cpp src/paddlex.cpp)
+add_library(paddlex_inference SHARED src/visualize src/transforms.cpp src/paddlex.cpp)
+ADD_DEPENDENCIES(paddlex_inference ext-yaml-cpp)
+target_link_libraries(paddlex_inference ${DEPS})
+
+add_executable(classifier demo/classifier.cpp src/transforms.cpp src/paddlex.cpp)
 ADD_DEPENDENCIES(classifier ext-yaml-cpp)
 target_link_libraries(classifier ${DEPS})
 
-add_executable(detector src/detector.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
+add_executable(detector demo/detector.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
 ADD_DEPENDENCIES(detector ext-yaml-cpp)
 target_link_libraries(detector ${DEPS})
 
-add_executable(segmenter src/segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
+add_executable(segmenter demo/segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
 ADD_DEPENDENCIES(segmenter ext-yaml-cpp)
 target_link_libraries(segmenter ${DEPS})
 
@@ -252,3 +258,10 @@ if (WIN32 AND WITH_MKL)
     )
 
 endif()
+
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/visualize.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/transforms.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/paddlex.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
