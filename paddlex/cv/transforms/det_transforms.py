@@ -24,11 +24,20 @@ import numpy as np
 import cv2
 from PIL import Image, ImageEnhance
 
+from .imgaug_support import execute_imgaug
 from .ops import *
 from .box_utils import *
 
 
-class Compose:
+class DetTransform:
+    """检测数据处理基类
+    """
+
+    def __init__(self):
+        pass
+
+
+class Compose(DetTransform):
     """根据数据预处理/增强列表对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
 
@@ -49,8 +58,16 @@ class Compose:
         self.transforms = transforms
         self.use_mixup = False
         for t in self.transforms:
-            if t.__class__.__name__ == 'MixupImage':
+            if type(t).__name__ == 'MixupImage':
                 self.use_mixup = True
+        # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
+        for op in self.transforms:
+            if not isinstance(op, DetTransform):
+                import imgaug.augmenters as iaa
+                if not isinstance(op, iaa.Augmenter):
+                    raise Exception(
+                        "Elements in transforms should be defined in 'paddlex.det.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
+                    )
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -84,11 +101,18 @@ class Compose:
         def decode_image(im_file, im_info, label_info):
             if im_info is None:
                 im_info = dict()
-            try:
-                im = cv2.imread(im_file).astype('float32')
-            except:
-                raise TypeError(
-                    'Can\'t read The image file {}!'.format(im_file))
+            if isinstance(im_file, np.ndarray):
+                if len(im_file.shape) != 3:
+                    raise Exception(
+                        "im should be 3-dimensions, but now is {}-dimensions".
+                        format(len(im_file.shape)))
+                im = im_file
+            else:
+                try:
+                    im = cv2.imread(im_file).astype('float32')
+                except:
+                    raise TypeError(
+                        'Can\'t read The image file {}!'.format(im_file))
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
@@ -117,12 +141,28 @@ class Compose:
         for op in self.transforms:
             if im is None:
                 return None
-            outputs = op(im, im_info, label_info)
-            im = outputs[0]
+            if isinstance(op, DetTransform):
+                outputs = op(im, im_info, label_info)
+                im = outputs[0]
+            else:
+                if label_info is not None:
+                    gt_poly = label_info.get('gt_poly', None)
+                    gt_bbox = label_info['gt_bbox']
+                    if gt_poly is None:
+                        im, aug_bbox = execute_imgaug(op, im, bboxes=gt_bbox)
+                    else:
+                        im, aug_bbox, aug_poly = execute_imgaug(
+                            op, im, bboxes=gt_bbox, polygons=gt_poly)
+                        label_info['gt_poly'] = aug_poly
+                    label_info['gt_bbox'] = aug_bbox
+                    outputs = (im, im_info, label_info)
+                else:
+                    im, = execute_imgaug(op, im)
+                    outputs = (im, im_info)
         return outputs
 
 
-class ResizeByShort:
+class ResizeByShort(DetTransform):
     """根据图像的短边调整图像大小（resize）。
 
     1. 获取图像的长边和短边长度。
@@ -194,7 +234,7 @@ class ResizeByShort:
             return (im, im_info, label_info)
 
 
-class Padding:
+class Padding(DetTransform):
     """1.将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],
        `coarest_stride`为32，则由于300不为32的倍数，因此在图像最右和最下使用0值
        进行padding，最终输出图像为[320, 640]。
@@ -290,7 +330,7 @@ class Padding:
             return (padding_im, im_info, label_info)
 
 
-class Resize:
+class Resize(DetTransform):
     """调整图像大小（resize）。
 
     - 当目标大小（target_size）类型为int时，根据插值方式，
@@ -369,7 +409,7 @@ class Resize:
             return (im, im_info, label_info)
 
 
-class RandomHorizontalFlip:
+class RandomHorizontalFlip(DetTransform):
     """随机翻转图像、标注框、分割信息，模型训练时的数据增强操作。
 
     1. 随机采样一个0-1之间的小数，当小数小于水平翻转概率时，
@@ -447,7 +487,7 @@ class RandomHorizontalFlip:
             return (im, im_info, label_info)
 
 
-class Normalize:
+class Normalize(DetTransform):
     """对图像进行标准化。
 
     1. 归一化图像到到区间[0.0, 1.0]。
@@ -491,7 +531,7 @@ class Normalize:
             return (im, im_info, label_info)
 
 
-class RandomDistort:
+class RandomDistort(DetTransform):
     """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作
 
     1. 对变换的操作顺序进行随机化操作。
@@ -585,7 +625,7 @@ class RandomDistort:
             return (im, im_info, label_info)
 
 
-class MixupImage:
+class MixupImage(DetTransform):
     """对图像进行mixup操作,模型训练时的数据增强操作，目前仅YOLOv3模型支持该transform。
 
     当label_info中不存在mixup字段时，直接返回，否则进行下述操作：
@@ -714,7 +754,7 @@ class MixupImage:
             return (im, im_info, label_info)
 
 
-class RandomExpand:
+class RandomExpand(DetTransform):
     """随机扩张图像，模型训练时的数据增强操作。
     1. 随机选取扩张比例（扩张比例大于1时才进行扩张）。
     2. 计算扩张后图像大小。
@@ -796,7 +836,7 @@ class RandomExpand:
         return (canvas, im_info, label_info)
 
 
-class RandomCrop:
+class RandomCrop(DetTransform):
     """随机裁剪图像。
     1. 若allow_no_crop为True，则在thresholds加入’no_crop’。
     2. 随机打乱thresholds。
@@ -944,7 +984,7 @@ class RandomCrop:
         return (im, im_info, label_info)
 
 
-class ArrangeFasterRCNN:
+class ArrangeFasterRCNN(DetTransform):
     """获取FasterRCNN模型训练/验证/预测所需信息。
 
     Args:
@@ -1019,7 +1059,7 @@ class ArrangeFasterRCNN:
         return outputs
 
 
-class ArrangeMaskRCNN:
+class ArrangeMaskRCNN(DetTransform):
     """获取MaskRCNN模型训练/验证/预测所需信息。
 
     Args:
@@ -1103,7 +1143,7 @@ class ArrangeMaskRCNN:
         return outputs
 
 
-class ArrangeYOLOv3:
+class ArrangeYOLOv3(DetTransform):
     """获取YOLOv3模型训练/验证/预测所需信息。
 
     Args:
