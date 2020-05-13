@@ -1,6 +1,5 @@
 <img src="./paddlex.png" width = "300" height = "47" alt="PaddleX" align=center />
 
-[![Build Status](https://travis-ci.org/PaddlePaddle/PaddleX.svg?branch=release/v1.6)](https://travis-ci.org/PaddlePaddle/PaddleX)
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
 [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)
 ![python version](https://img.shields.io/badge/python-3.6+-orange.svg)
@@ -19,6 +18,7 @@ PaddleX提供两种使用模式，满足不同的场景和用户需求：
 ### 开发模式
 
 **前置依赖**
+* paddlepaddle >= 1.7.0
 * python >= 3.5
 * cython
 * pycocotools
