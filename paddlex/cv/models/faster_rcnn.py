@@ -167,7 +167,8 @@ class FasterRCNN(BaseAPI):
               metric=None,
               use_vdl=False,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -193,6 +194,7 @@ class FasterRCNN(BaseAPI):
             early_stop (bool): 是否使用提前终止训练策略。默认值为False。
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -231,7 +233,9 @@ class FasterRCNN(BaseAPI):
             startup_prog=fluid.default_startup_program(),
             pretrain_weights=pretrain_weights,
             fuse_bn=fuse_bn,
-            save_dir=save_dir)
+            save_dir=save_dir,
+            resume_checkpoint=resume_checkpoint)
+
         # 训练
         self.train_loop(
             num_epochs=num_epochs,
