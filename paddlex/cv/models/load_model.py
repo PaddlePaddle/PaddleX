@@ -23,7 +23,7 @@ import paddlex
 import paddlex.utils.logging as logging
 
 
-def load_model(model_dir):
+def load_model(model_dir, fixed_input_shape=None):
     if not osp.exists(osp.join(model_dir, "model.yml")):
         raise Exception("There's not model.yml in {}".format(model_dir))
     with open(osp.join(model_dir, "model.yml")) as f:
@@ -44,6 +44,7 @@ def load_model(model_dir):
     else:
         model = getattr(paddlex.cv.models,
                         info['Model'])(**info['_init_params'])
+    model.fixed_input_shape = fixed_input_shape
     if status == "Normal" or \
             status == "Prune" or status == "fluid.save":
         startup_prog = fluid.Program()
@@ -78,6 +79,8 @@ def load_model(model_dir):
             model.test_outputs[var_desc[0]] = out
     if 'Transforms' in info:
         transforms_mode = info.get('TransformsMode', 'RGB')
+        # 固定模型的输入shape
+        fix_input_shape(info, fixed_input_shape=fixed_input_shape)
         if transforms_mode == 'RGB':
             to_rgb = True
         else:
@@ -100,6 +103,33 @@ def load_model(model_dir):
     logging.info("Model[{}] loaded.".format(info['Model']))
     model.trainable = False
     return model
+
+
+def fix_input_shape(info, fixed_input_shape=None):
+    if fixed_input_shape is not None:
+        resize = {'ResizeByShort': {}}
+        padding = {'Padding': {}}
+        if info['_Attributes']['model_type'] == 'classifier':
+            crop_size = 0
+            for transform in info['Transforms']:
+                if 'CenterCrop' in transform:
+                    crop_size = transform['CenterCrop']['crop_size']
+                    break
+            assert crop_size == fixed_input_shape[
+                0], "fixed_input_shape must == CenterCrop:crop_size:{}".format(
+                    crop_size)
+            assert crop_size == fixed_input_shape[
+                1], "fixed_input_shape must == CenterCrop:crop_size:{}".format(
+                    crop_size)
+            if crop_size == 0:
+                logging.warning(
+                    "fixed_input_shape must == input shape when trainning")
+        else:
+            resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
+            resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
+            padding['Padding']['target_size'] = list(fixed_input_shape)
+            info['Transforms'].append(resize)
+            info['Transforms'].append(padding)
 
 
 def build_transforms(model_type, transforms_info, to_rgb=True):

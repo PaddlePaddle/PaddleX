@@ -143,7 +143,7 @@ class EasyDataDet(VOCDetection):
                     ann_ct += 1
                 im_info = {
                     'im_id': im_id,
-                    'origin_shape': np.array([im_h, im_w]).astype('int32'),
+                    'image_shape': np.array([im_h, im_w]).astype('int32'),
                 }
                 label_info = {
                     'is_crowd': is_crowd,

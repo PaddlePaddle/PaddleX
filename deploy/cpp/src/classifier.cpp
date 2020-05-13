@@ -23,6 +23,7 @@
 
 DEFINE_string(model_dir, "", "Path of inference model");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
+DEFINE_bool(use_trt, false, "Infering with TensorRT");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
@@ -42,7 +43,7 @@ int main(int argc, char** argv) {
 
   // 加载模型
   PaddleX::Model model;
-  model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_gpu_id);
+  model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_use_trt, FLAGS_gpu_id);
 
   // 进行预测
   if (FLAGS_image_list != "") {

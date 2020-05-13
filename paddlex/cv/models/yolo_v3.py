@@ -80,6 +80,7 @@ class YOLOv3(BaseAPI):
         self.label_smooth = label_smooth
         self.sync_bn = True
         self.train_random_shapes = train_random_shapes
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone_name):
         if backbone_name == 'DarkNet53':
@@ -113,7 +114,8 @@ class YOLOv3(BaseAPI):
             nms_topk=self.nms_topk,
             nms_keep_topk=self.nms_keep_topk,
             nms_iou_threshold=self.nms_iou_threshold,
-            train_random_shapes=self.train_random_shapes)
+            train_random_shapes=self.train_random_shapes,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict([('bbox', model_out)])
@@ -164,7 +166,8 @@ class YOLOv3(BaseAPI):
               sensitivities_file=None,
               eval_metric_loss=0.05,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -193,6 +196,7 @@ class YOLOv3(BaseAPI):
             early_stop (bool): 是否使用提前终止训练策略。默认值为False。
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -234,7 +238,8 @@ class YOLOv3(BaseAPI):
             pretrain_weights=pretrain_weights,
             save_dir=save_dir,
             sensitivities_file=sensitivities_file,
-            eval_metric_loss=eval_metric_loss)
+            eval_metric_loss=eval_metric_loss,
+            resume_checkpoint=resume_checkpoint)
         # 训练
         self.train_loop(
             num_epochs=num_epochs,

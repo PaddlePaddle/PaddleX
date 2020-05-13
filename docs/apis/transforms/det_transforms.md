@@ -85,7 +85,9 @@ paddlex.det.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, 
 
 以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。  
 1. 对变换的操作顺序进行随机化操作。
-2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。
+2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+
+【注意】该数据增强必须在数据增强Normalize之前使用。
 
 ### 参数
 * **brightness_range** (float): 明亮度因子的范围。默认为0.5。
@@ -135,7 +137,9 @@ paddlex.det.transforms.RandomExpand(ratio=4., prob=0.5, fill_value=[123.675, 116
 ### 参数
 * **ratio** (float): 图像扩张的最大比例。默认为4.0。
 * **prob** (float): 随机扩张的概率。默认为0.5。
-* **fill_value** (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。
+* **fill_value** (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。  
+
+【注意】该数据增强必须在数据增强Resize、ResizeByShort之前使用。
 
 ## RandomCrop类
 ```python
@@ -152,7 +156,9 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
     (4) 如果cover_all_box为True且存在真实标注框的IoU小于thresh，则继续第3步。
     (5) 筛选出位于候选裁剪区域内的真实标注框，若有效框的个数为0，则继续第3步，否则进行第4步。
 4. 换算有效真值标注框相对候选裁剪区域的位置坐标。
-5. 换算有效分割区域相对候选裁剪区域的位置坐标。
+5. 换算有效分割区域相对候选裁剪区域的位置坐标。  
+
+【注意】该数据增强必须在数据增强Resize、ResizeByShort之前使用。
 
 ### 参数
 * **aspect_ratio** (list): 裁剪后短边缩放比例的取值范围，以[min, max]形式表示。默认值为[.5, 2.]。

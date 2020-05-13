@@ -19,8 +19,18 @@
 
 ### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
 
-PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id1)
+PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.7版本，以下提供了多个不同版本的Paddle预测库:
 
+|  版本说明   | 预测库(1.7.2版本)  |
+|  ----  | ----  |
+| ubuntu14.04_cpu_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cpu_avx_openblas  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-avx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cpu_noavx_openblas  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-cpu-noavx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz ) |
+| ubuntu14.04_cuda10.1_cudnn7.6_avx_mkl_trt6  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.2-gpu-cuda10.1-cudnn7.6-avx-mkl-trt6%2Ffluid_inference.tgz) |
+
+更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/windows_cpp_inference.html#id1)
 
 下载并解压后`/root/projects/fluid_inference`目录包含内容为：
 ```
@@ -40,17 +50,24 @@ fluid_inference
 编译`cmake`的命令在`scripts/build.sh`中，请根据实际情况修改主要参数，其主要内容说明如下：
 ```
 # 是否使用GPU(即是否使用 CUDA)
-WITH_GPU=ON
+WITH_GPU=OFF
+# 使用MKL or openblas
+WITH_MKL=ON
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
 WITH_TENSORRT=OFF
-# 上一步下载的 Paddle 预测库路径
-PADDLE_DIR=/root/projects/deps/fluid_inference/
+# TensorRT 的lib路径
+TENSORRT_DIR=/path/to/TensorRT/
+# Paddle 预测库路径
+PADDLE_DIR=/path/to/fluid_inference/
+# Paddle 的预测库是否使用静态库来编译
+# 使用TensorRT时，Paddle的预测库通常为动态库
+WITH_STATIC_LIB=ON
 # CUDA 的 lib 路径
-CUDA_LIB=/usr/local/cuda/lib64/
+CUDA_LIB=/path/to/cuda/lib/
 # CUDNN 的 lib 路径
-CUDNN_LIB=/usr/local/cudnn/lib64/
+CUDNN_LIB=/path/to/cudnn/lib/
 
-# OPENCV 路径, 如果使用自带预编译版本可不设置
+# OPENCV 路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
 sh $(pwd)/scripts/bootstrap.sh
 
@@ -60,8 +77,11 @@ mkdir -p build
 cd build
 cmake .. \
     -DWITH_GPU=${WITH_GPU} \
+    -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
+    -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
+    -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
     -DOPENCV_DIR=${OPENCV_DIR}
@@ -83,19 +103,20 @@ make
 | image  | 要预测的图片文件路径 |
 | image_list  | 按行存储图片路径的.txt文件 |
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
+| use_trt  | 是否使用 TensorTr 预测, 支持值为0或1(默认值为0) |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
 
 ## 样例
 
-可使用[垃圾检测模型](deploy.md#导出inference模型)中生成的`inference_model`模型和测试图片进行预测。
+可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 
-不使用`GPU`测试图片 `/path/to/garbage.bmp`  
+不使用`GPU`测试图片 `/path/to/xiaoduxiong.jpeg`  
 
 ```shell
-./build/detector --model_dir=/path/to/inference_model --image=/path/to/garbage.bmp --save_dir=output
+./build/detector --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
@@ -104,13 +125,12 @@ make
 
 使用`GPU`预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
 ```
-/path/to/images/garbage1.jpeg
-/path/to/images/garbage2.jpeg
+/path/to/images/xiaoduxiong1.jpeg
+/path/to/images/xiaoduxiong2.jpeg
 ...
-/path/to/images/garbagen.jpeg
+/path/to/images/xiaoduxiongn.jpeg
 ```
 ```shell
 ./build/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
-

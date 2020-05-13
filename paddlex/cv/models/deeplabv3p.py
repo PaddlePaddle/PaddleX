@@ -48,7 +48,6 @@ class DeepLabv3p(BaseAPI):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None时，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。默认255。
-
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: backbone取值不在['Xception65', 'Xception41', 'MobileNetV2_x0.25',
@@ -118,6 +117,7 @@ class DeepLabv3p(BaseAPI):
         self.enable_decoder = enable_decoder
         self.labels = None
         self.sync_bn = True
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone):
         def mobilenetv2(backbone):
@@ -182,7 +182,8 @@ class DeepLabv3p(BaseAPI):
             use_bce_loss=self.use_bce_loss,
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
-            ignore_index=self.ignore_index)
+            ignore_index=self.ignore_index,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()
@@ -233,7 +234,8 @@ class DeepLabv3p(BaseAPI):
               sensitivities_file=None,
               eval_metric_loss=0.05,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -257,6 +259,7 @@ class DeepLabv3p(BaseAPI):
             early_stop (bool): 是否使用提前终止训练策略。默认值为False。
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 模型从inference model进行加载。
@@ -283,7 +286,8 @@ class DeepLabv3p(BaseAPI):
             pretrain_weights=pretrain_weights,
             save_dir=save_dir,
             sensitivities_file=sensitivities_file,
-            eval_metric_loss=eval_metric_loss)
+            eval_metric_loss=eval_metric_loss,
+            resume_checkpoint=resume_checkpoint)
         # 训练
         self.train_loop(
             num_epochs=num_epochs,
@@ -396,13 +400,14 @@ class DeepLabv3p(BaseAPI):
             fetch_list=list(self.test_outputs.values()))
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
-        keys = list(im_info.keys())
-        for k in keys[::-1]:
-            if k == 'shape_before_resize':
-                h, w = im_info[k][0], im_info[k][1]
+        for info in im_info[::-1]:
+            if info[0] == 'resize':
+                w, h = info[1][1], info[1][0]
                 pred = cv2.resize(pred, (w, h), cv2.INTER_NEAREST)
-            elif k == 'shape_before_padding':
-                h, w = im_info[k][0], im_info[k][1]
+            elif info[0] == 'padding':
+                w, h = info[1][1], info[1][0]
                 pred = pred[0:h, 0:w]
-
+            else:
+                raise Exception("Unexpected info '{}' in im_info".format(
+                    info[0]))
         return {'label_map': pred, 'score_map': result[1]}

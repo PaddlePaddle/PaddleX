@@ -32,7 +32,7 @@ class FasterRCNN(BaseAPI):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50vd', 'ResNet101', 'ResNet101vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -47,7 +47,7 @@ class FasterRCNN(BaseAPI):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50vd', 'ResNet101', 'ResNet101vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -57,6 +57,7 @@ class FasterRCNN(BaseAPI):
         self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
         self.labels = None
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -66,7 +67,7 @@ class FasterRCNN(BaseAPI):
         elif backbone_name == 'ResNet50':
             layers = 50
             variant = 'b'
-        elif backbone_name == 'ResNet50vd':
+        elif backbone_name == 'ResNet50_vd':
             layers = 50
             variant = 'd'
             norm_type = 'affine_channel'
@@ -74,7 +75,7 @@ class FasterRCNN(BaseAPI):
             layers = 101
             variant = 'b'
             norm_type = 'affine_channel'
-        elif backbone_name == 'ResNet101vd':
+        elif backbone_name == 'ResNet101_vd':
             layers = 101
             variant = 'd'
             norm_type = 'affine_channel'
@@ -109,7 +110,8 @@ class FasterRCNN(BaseAPI):
             aspect_ratios=self.aspect_ratios,
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
-            test_pre_nms_top_n=test_pre_nms_top_n)
+            test_pre_nms_top_n=test_pre_nms_top_n,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -165,7 +167,8 @@ class FasterRCNN(BaseAPI):
               metric=None,
               use_vdl=False,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -191,6 +194,7 @@ class FasterRCNN(BaseAPI):
             early_stop (bool): 是否使用提前终止训练策略。默认值为False。
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -229,7 +233,9 @@ class FasterRCNN(BaseAPI):
             startup_prog=fluid.default_startup_program(),
             pretrain_weights=pretrain_weights,
             fuse_bn=fuse_bn,
-            save_dir=save_dir)
+            save_dir=save_dir,
+            resume_checkpoint=resume_checkpoint)
+
         # 训练
         self.train_loop(
             num_epochs=num_epochs,

@@ -146,14 +146,13 @@ class VOCDetection(Dataset):
 
                 im_info = {
                     'im_id': im_id,
-                    'origin_shape': np.array([im_h, im_w]).astype('int32'),
+                    'image_shape': np.array([im_h, im_w]).astype('int32'),
                 }
                 label_info = {
                     'is_crowd': is_crowd,
                     'gt_class': gt_class,
                     'gt_bbox': gt_bbox,
                     'gt_score': gt_score,
-                    'gt_poly': [],
                     'difficult': difficult
                 }
                 voc_rec = (im_info, label_info)

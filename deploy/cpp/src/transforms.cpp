@@ -56,8 +56,7 @@ float ResizeByShort::GenerateScale(const cv::Mat& im) {
 }
 
 bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
-  data->im_size_before_resize_[0] = im->rows;
-  data->im_size_before_resize_[1] = im->cols;
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
 
   float scale = GenerateScale(*im);
@@ -88,21 +87,21 @@ bool CenterCrop::Run(cv::Mat* im, ImageBlob* data) {
 }
 
 bool Padding::Run(cv::Mat* im, ImageBlob* data) {
-  data->im_size_before_padding_[0] = im->rows;
-  data->im_size_before_padding_[1] = im->cols;
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("padding");
 
   int padding_w = 0;
   int padding_h = 0;
-  if (width_ > 0 & height_ > 0) {
+  if (width_ > 1 & height_ > 1) {
     padding_w = width_ - im->cols;
     padding_h = height_ - im->rows;
-  } else if (coarsest_stride_ > 0) {
+  } else if (coarsest_stride_ > 1) {
     padding_h =
         ceil(im->rows * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
     padding_w =
         ceil(im->cols * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
   }
+
   if (padding_h < 0 || padding_w < 0) {
     std::cerr << "[Padding] Computed padding_h=" << padding_h
               << ", padding_w=" << padding_w
@@ -122,8 +121,7 @@ bool ResizeByLong::Run(cv::Mat* im, ImageBlob* data) {
               << std::endl;
     return false;
   }
-  data->im_size_before_resize_[0] = im->rows;
-  data->im_size_before_resize_[1] = im->cols;
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
   int origin_w = im->cols;
   int origin_h = im->rows;
@@ -149,8 +147,7 @@ bool Resize::Run(cv::Mat* im, ImageBlob* data) {
               << std::endl;
     return false;
   }
-  data->im_size_before_resize_[0] = im->rows;
-  data->im_size_before_resize_[1] = im->cols;
+  data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
 
   cv::resize(
