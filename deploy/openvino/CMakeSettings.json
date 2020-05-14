@@ -17,29 +17,9 @@
                     "type": "PATH"
                 },
                 {
-                    "name": "PADDLE_DIR",
-                    "value": "C:/projects/fluid_install_dir_win_cpu_1.6/fluid_install_dir_win_cpu_1.6",
+                    "name": "OPENVINO_DIR",
+                    "value": "C:/projetcs/inference_engine",
                     "type": "PATH"
-                },
-                {
-                    "name": "CMAKE_BUILD_TYPE",
-                    "value": "Release",
-                    "type": "STRING"
-                },
-                {
-                    "name": "WITH_STATIC_LIB",
-                    "value": "True",
-                    "type": "BOOL"
-                },
-                {
-                    "name": "WITH_MKL",
-                    "value": "True",
-                    "type": "BOOL"
-                },
-                {
-                    "name": "WITH_GPU",
-                    "value": "False",
-                    "type": "BOOL"
                 }
             ]
         }

@@ -17,6 +17,7 @@ import paddle.fluid as fluid
 import os
 import sys
 import paddlex as pdx
+import paddlex.utils.logging as logging
 
 __all__ = ['export_onnx']
 
@@ -45,10 +46,10 @@ def export_onnx_model(model, save_dir):
         from fluid_onnx.variables import paddle_variable_to_onnx_tensor, paddle_onnx_weight
         from debug.model_check import debug_model, Tracker
     except Exception as e:
-        print(e)
-        print(
-            "Import Module Failed! Please install paddle2onnx. Related requirements \
-             see https://github.com/PaddlePaddle/paddle2onnx.")
+        logging.error(e)
+        logging.error(
+            "Import Module Failed! Please install paddle2onnx. Related requirements see https://github.com/PaddlePaddle/paddle2onnx."
+        )
         sys.exit(-1)
     place = fluid.CPUPlace()
     exe = fluid.Executor(place)
@@ -74,7 +75,7 @@ def export_onnx_model(model, save_dir):
             paddle_variable_to_onnx_tensor(v, global_block)
             for v in test_input_names
         ]
-        print("load the model parameter done.")
+        logging.INFO("load the model parameter done.")
         onnx_nodes = []
         op_check_list = []
         op_trackers = []
@@ -107,8 +108,8 @@ def export_onnx_model(model, save_dir):
                 else:
                     if op.type not in ['feed', 'fetch']:
                         op_check_list.append(op.type)
-        print('The operator sets to run test case.')
-        print(set(op_check_list))
+        logging.info('The operator sets to run test case.')
+        logging.info(set(op_check_list))
 
         # Create outputs
         # Get the new names for outputs if they've been renamed in nodes' making
@@ -145,4 +146,4 @@ def export_onnx_model(model, save_dir):
                 os.mkdir(save_dir)
             with open(onnx_model_file, 'wb') as f:
                 f.write(onnx_model.SerializeToString())
-            print("Saved converted model to path: %s" % onnx_model_file)
+            logging.info("Saved converted model to path: %s" % onnx_model_file)
