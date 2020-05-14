@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/images/paddlex.png" width="300" height ="50" alt="PaddleX" align="middle" />
+  <img src="./docs/images/paddlex.png" width="320" height ="60" alt="PaddleX" align="middle" />
 </p>
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
@@ -13,8 +13,8 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件开发的深度�
 
 - **全流程打通:** 
   - 数据准备：无缝集成[EasyData智能数据服务平台](https://ai.baidu.com/easydata/), 助力开发者高效获取AI开发所需高质量数据。
-  - 模型训练：基于飞桨核心框架集成PaddleCls, PaddleDetection, PaddleSeg视觉开发套件，VisualDL可视化分析组件，高效完成模型训练。
-  - 多端部署：内置PaddleSlim模型压缩工具和AES模型加密SDK，结合Paddle Inference和Paddle Lite便捷完成可靠且高性能的多端部署。
+  - 模型训练：基于飞桨核心框架集成[PaddleClas](https://github.com/PaddlePaddle/PaddleClas), [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection), [PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg)视觉开发套件，[VisualDL](https://github.com/PaddlePaddle/VisualDL)可视化分析组件，高效完成模型训练。
+  - 多端部署：内置PaddleSlim模型压缩工具和AES模型加密SDK，结合Paddle Inference和Paddle Lite便捷完成高性能且可靠的多端部署。
 
 - **融合产业实践:** 
   - 精选飞桨产业实践的成熟模型结构，开放案例实践教学，加速开发者产业落地。
@@ -59,9 +59,9 @@ GUI模式的使用教程可参考[PaddleX GUI模式使用教程](docs/client_use
 推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/latest/index.html)，快速查阅读使用教程和API文档说明。
 
 - [10分钟快速上手PaddleX模型训练](docs/quick_start.md)
-- [PaddleX使用教程](docs/tutorials)
+- [PaddleX全流程训练](docs/tutorials)
 - [PaddleX模型库](docs/model_zoo.md)
-- [模型多端部署](docs/deploy.md)
+- [PaddleX多端部署](docs/deploy.md)
 
 ## 在线教程
 
