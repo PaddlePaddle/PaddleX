@@ -120,6 +120,7 @@ class ResNet(object):
         self.num_classes = num_classes
         self.lr_mult_list = lr_mult_list
         self.curr_stage = 0
+        self.features = []
 
     def _conv_offset(self,
                      input,
@@ -474,7 +475,9 @@ class ResNet(object):
                 size=self.num_classes,
                 param_attr=fluid.param_attr.ParamAttr(
                     initializer=fluid.initializer.Uniform(-stdv, stdv)))
-            return out
+            self.features.append(out)
+#             out.persistable=True
+            return out, self.features
 
         return OrderedDict([('res{}_sum'.format(self.feature_maps[idx]), feat)
                             for idx, feat in enumerate(res_endpoints)])
