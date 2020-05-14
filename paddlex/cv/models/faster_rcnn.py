@@ -259,7 +259,7 @@ class FasterRCNN(BaseAPI):
 
         Args:
             eval_dataset (paddlex.datasets): 验证数据读取器。
-            batch_size (int): 验证数据批大小。默认为1。
+            batch_size (int): 验证数据批大小。默认为1。当前只支持设置为1。
             epoch_id (int): 当前评估模型所在的训练轮数。
             metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认为None，
                 根据用户传入的Dataset自动选择，如为VOCDetection，则metric为'VOC';
@@ -288,7 +288,11 @@ class FasterRCNN(BaseAPI):
                         "eval_dataset should be datasets.VOCDetection or datasets.COCODetection."
                     )
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
-
+        if batch_size > 1:
+            batch_size = 1
+            logging.warning(
+                "Faster RCNN supports batch_size=1 only during evaluating, so batch_size is forced to be set to 1."
+            )
         dataset = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
 

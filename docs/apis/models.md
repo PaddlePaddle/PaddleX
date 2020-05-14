@@ -228,7 +228,7 @@ paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspec
 > **参数：**
 >
 > > - **eval_dataset** (paddlex.datasets): 验证数据读取器。
-> > - **batch_size** (int): 验证数据批大小。默认为1。
+> > - **batch_size** (int): 验证数据批大小。默认为1。当前只支持设置为1。
 > > - **epoch_id** (int): 当前评估模型所在的训练轮数。
 > > - **metric** (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认为None，根据用户传入的Dataset自动选择，如为VOCDetection，则`metric`为'VOC'; 如为COCODetection，则`metric`为'COCO'。
 > > - **return_details** (bool): 是否返回详细信息。默认值为False。
@@ -309,7 +309,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 > **参数：**
 >
 > > - **eval_dataset** (paddlex.datasets): 验证数据读取器。
-> > - **batch_size** (int): 验证数据批大小。默认为1。
+> > - **batch_size** (int): 验证数据批大小。默认为1。当前只支持设置为1。
 > > - **epoch_id** (int): 当前评估模型所在的训练轮数。
 > > - **metric** (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认为None，根据用户传入的Dataset自动选择，如为VOCDetection，则`metric`为'VOC'; 如为COCODetection，则`metric`为'COCO'。
 > > - **return_details** (bool): 是否返回详细信息。默认值为False。
