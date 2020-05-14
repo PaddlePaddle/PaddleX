@@ -35,6 +35,10 @@ int main(int argc, char** argv) {
     std::cerr << "--model_dir need to be defined" << std::endl;
     return -1;
   }
+  if (FLAGS_cfg_dir == "") {
+    std::cerr << "--cfg_dir need to be defined" << std::endl;
+    return -1;
+  }
   if (FLAGS_image == "" & FLAGS_image_list == "") {
     std::cerr << "--image or --image_list need to be defined" << std::endl;
     return -1;
