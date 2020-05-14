@@ -26,32 +26,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include <inference_engine.hpp>
+using namespace InferenceEngine;
+
 namespace PaddleX {
-
-// Object for storing all preprocessed data
-class ImageBlob {
- public:
-  // Original image height and width
-  std::vector<int> ori_im_size_ = std::vector<int>(2);
-  // Newest image height and width after process
-  std::vector<int> new_im_size_ = std::vector<int>(2);
-  // Image height and width before resize
-  std::vector<std::vector<int>> im_size_before_resize_;
-  // Reshape order
-  std::vector<std::string> reshape_order_;
-  // Resize scale
-  float scale = 1.0;
-  // Buffer for image data after preprocessing
-  std::vector<float> im_data_;
-
-  void clear() {
-    ori_im_size_.clear();
-    new_im_size_.clear();
-    im_size_before_resize_.clear();
-    reshape_order_.clear();
-    im_data_.clear();
-  }
-};
 
 // Abstraction of preprocessing opration class
 class Transform {
@@ -74,34 +52,6 @@ class Normalize : public Transform {
   std::vector<float> std_;
 };
 
-class ResizeByShort : public Transform {
- public:
-  virtual void Init(const YAML::Node& item) {
-    short_size_ = item["short_size"].as<int>();
-    if (item["max_size"].IsDefined()) {
-      max_size_ = item["max_size"].as<int>();
-    } else {
-      max_size_ = -1;
-    }
-  };
-  virtual bool Run(cv::Mat* im, ImageBlob* data);
-
- private:
-  float GenerateScale(const cv::Mat& im);
-  int short_size_;
-  int max_size_;
-};
-
-class ResizeByLong : public Transform {
- public:
-  virtual void Init(const YAML::Node& item) {
-    long_size_ = item["long_size"].as<int>();
-  };
-  virtual bool Run(cv::Mat* im, ImageBlob* data);
-
- private:
-  int long_size_;
-};
 
 class Resize : public Transform {
  public:
@@ -147,44 +97,11 @@ class CenterCrop : public Transform {
   int width_;
 };
 
-class Padding : public Transform {
- public:
-  virtual void Init(const YAML::Node& item) {
-    if (item["coarsest_stride"].IsDefined()) {
-      coarsest_stride_ = item["coarsest_stride"].as<int>();
-      if (coarsest_stride_ < 1) {
-        std::cerr << "[Padding] coarest_stride should greater than 0"
-                  << std::endl;
-        exit(-1);
-      }
-    }
-    if (item["target_size"].IsDefined()) {
-      if (item["target_size"].IsScalar()) {
-        width_ = item["target_size"].as<int>();
-        height_ = item["target_size"].as<int>();
-      } else if (item["target_size"].IsSequence()) {
-        width_ = item["target_size"].as<std::vector<int>>()[0];
-        height_ = item["target_size"].as<std::vector<int>>()[1];
-      }
-    }
-    if (item["im_padding_value"].IsDefined()) {
-      value_ = item["im_padding_value"].as<std::vector<float>>();
-    }
-  }
-  virtual bool Run(cv::Mat* im, ImageBlob* data);
-
- private:
-  int coarsest_stride_ = -1;
-  int width_ = 0;
-  int height_ = 0;
-  std::vector<float> value_;
-};
-
 class Transforms {
  public:
   void Init(const YAML::Node& node, bool to_rgb = true);
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
-  bool Run(cv::Mat* im, ImageBlob* data);
+  bool Run(cv::Mat* im, Blob::ptr data);
 
  private:
   std::vector<std::shared_ptr<Transform>> transforms_;

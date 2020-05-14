@@ -56,9 +56,8 @@ class Model {
   std::string name;
   std::vector<std::string> labels;
   Transforms transforms_;
-  ImageBlob inputs_;
-  float* outputs_;
-  ExecutableNetwork executable_network_;
+  Blob::Ptr inputs_;
+  Blob::Ptr output_
   CNNNetwork network_;
 };
 }  // namespce of PaddleX
