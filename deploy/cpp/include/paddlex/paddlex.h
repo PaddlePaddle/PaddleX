@@ -32,6 +32,11 @@
 #include "include/paddlex/results.h"
 #include "include/paddlex/transforms.h"
 
+#ifdef WITH_ENCRYPTION
+#include "paddle_model_decrypt.h"
+#include "model_code.h"
+#endif
+
 namespace PaddleX {
 
 class Model {
@@ -39,14 +44,16 @@ class Model {
   void Init(const std::string& model_dir,
             bool use_gpu = false,
             bool use_trt = false,
-            int gpu_id = 0) {
-    create_predictor(model_dir, use_gpu, use_trt, gpu_id);
+            int gpu_id = 0,
+            std::string key = "") {
+    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key);
   }
 
   void create_predictor(const std::string& model_dir,
                         bool use_gpu = false,
                         bool use_trt = false,
-                        int gpu_id = 0);
+                        int gpu_id = 0,
+                        std::string key = "");
 
   bool load_config(const std::string& model_dir);
 
