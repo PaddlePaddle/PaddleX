@@ -17,7 +17,7 @@
                     "type": "PATH"
                 },
                 {
-                    "name": "OPENVINO_DIR",
+                    "name": "OPENVINO_LIB",
                     "value": "C:/projetcs/inference_engine",
                     "type": "PATH"
                 }
