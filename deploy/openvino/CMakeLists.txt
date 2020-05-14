@@ -34,9 +34,10 @@ if (NOT DEFINED OPENCV_DIR OR ${OPENCV_DIR} STREQUAL "")
 endif()
 
 include_directories("${OPENVINO_LIB}/")
-include_directories("${OPENVINO_LIB}/include/")
 link_directories("${OPENVINO_LIB}/lib")
-link_directories("${OPENVINO_LIB}/externel/tbb/lib/")
+include_directories("${OPENVINO_LIB}/include/")
+link_directories("${OPENVINO_LIB}/external/tbb/lib/")
+include_directories("${OPENVINO_LIB}/external/tbb/include/tbb/")
 
 if (WIN32)
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
