@@ -476,7 +476,6 @@ class ResNet(object):
                 param_attr=fluid.param_attr.ParamAttr(
                     initializer=fluid.initializer.Uniform(-stdv, stdv)))
             self.features.append(out)
-#             out.persistable=True
             return out, self.features
 
         return OrderedDict([('res{}_sum'.format(self.feature_maps[idx]), feat)
