@@ -28,6 +28,7 @@ from . import seg
 from . import cls
 from . import slim
 from . import tools
+from . import explanation
 
 try:
     import pycocotools

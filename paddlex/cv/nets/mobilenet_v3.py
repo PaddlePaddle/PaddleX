@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import OrderedDict
 import paddle.fluid as fluid
 from paddle.fluid.param_attr import ParamAttr
 from paddle.fluid.regularizer import L2Decay
@@ -327,7 +328,7 @@ class MobileNetV3():
                                   size=self.num_classes,
                                   param_attr=ParamAttr(name='fc_weights'),
                                   bias_attr=ParamAttr(name='fc_offset'))            
-            return out
+            return OrderedDict([('logits', out)])
 
         if not self.with_extra_blocks:
             return blocks

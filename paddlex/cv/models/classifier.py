@@ -60,10 +60,12 @@ class BaseClassifier(BaseAPI):
         if mode != 'test':
             label = fluid.data(dtype='int64', shape=[None, 1], name='label')
         model = getattr(paddlex.cv.nets, str.lower(self.model_name))
-        net_out, feat = model(image, num_classes=self.num_classes)
-        softmax_out = fluid.layers.softmax(net_out, use_cudnn=False)
+        net_out = model(image, num_classes=self.num_classes)
+        softmax_out = fluid.layers.softmax(net_out['logits'], use_cudnn=False)
         inputs = OrderedDict([('image', image)])
-        outputs = OrderedDict([('predict', softmax_out), ('net_out', feat[-1])])
+        outputs = net_out
+        outputs.update({'predict': softmax_out})
+        outputs.move_to_end('predict', last=False)
         if mode != 'test':
             cost = fluid.layers.cross_entropy(input=softmax_out, label=label)
             avg_cost = fluid.layers.mean(cost)
