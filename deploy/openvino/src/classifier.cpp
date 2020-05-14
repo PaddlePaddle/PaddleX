@@ -21,10 +21,10 @@
 
 #include "include/paddlex/paddlex.h"
 
-DEFINE_string(model_dir, "../../../openvino/model-optimizer/resnet18/best_model.xml", "Path of inference model");
-DEFINE_string(cfg_dir, "../../../openvino/model-optimizer/resnet18/model.yml", "Path of inference model");
+DEFINE_string(model_dir, "", "Path of inference model");
+DEFINE_string(cfg_dir, "", "Path of inference model");
 DEFINE_string(device, "CPU", "Device name");
-DEFINE_string(image, "/chenlingchi/docker/unet_test.jpg", "Path of test image file");
+DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 
 int main(int argc, char** argv) {
