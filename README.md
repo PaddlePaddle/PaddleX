@@ -7,21 +7,26 @@
 ![python version](https://img.shields.io/badge/python-3.6+-orange.svg)
 ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
 
-PaddleX是基于飞桨开发套件和工具组件的深度学习全流程开发工具。具备全流程打通、融合产业实践、易用易集成和多端部署四大特点。
-并提供两种开发模式，满足多种场景和不同的用户需求：
-- **Python模式：** 通过Python API方式完成模型的训练、调优、部署或集成, 该模式最为灵活,功能最全, 代码全面开源，有更高的定制化空间。
-- **GUI模式：** 提供以PaddleX API集成的跨平台GUI客户端，用户可通过可视化界面的方式快速完成飞桨产业实践验证的经典模型训练，该模式仅提供`Python模式`下常用的功能。
+PaddleX是基于飞桨核心框架、开发套件和工具组件开发的深度学习全流程工具。具备**全流程打通**、**融合产业实践**、**易用易集成**三大特点。
 
 ## 特点
 
 - **全流程打通:** 
+  - 数据准备：无缝集成[EasyData智能数据服务平台](https://ai.baidu.com/easydata/), 助力开发者高效获取AI开发所需高质量数据。
+  - 模型训练：基于飞桨核心框架集成PaddleCls, PaddleDetection, PaddleSeg视觉开发套件，VisualDL可视化分析组件，高效完成模型训练。
+  - 多端部署：内置PaddleSlim模型压缩工具和AES模型加密SDK，结合Paddle Inference和Paddle Lite便捷完成可靠且高性能的多端部署。
 
 - **融合产业实践:** 
+  - 精选飞桨产业实践的成熟模型结构，开放案例实践教学，加速开发者产业落地。
+  - 通过PaddleHub内置丰富的飞桨高质量预训练模型，助力开发者高效实现飞桨Master模式。
 
 - **易用易集成:**
+  - PadldeX提供简洁易用的全流程API，几行代码即可实现上百种数据增强、模型可解释性、C++模型部署等功能。
+  - 提供以PaddleX API为核心集成的跨平台GUI界面，降低深度学习全流程应用门槛。
 
-- **多端部署:**
-
+**NOTE:** PaddleX提供两种开发模式，满足不同场景和用户需求：
+- **Python模式：** 通过Python API方式完成全流程使用或集成，该模式最为灵活，功能最全, 有更高的定制化空间。
+- **GUI模式：** 通过以PaddleX API集成的跨平台GUI客户端，以可视化界面的方式快速完成飞桨产业实践验证的经典模型训练，该模式仅提供`Python模式`下常用的功能。
 
 ### Python模式安装
 
