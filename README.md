@@ -7,7 +7,7 @@
 ![python version](https://img.shields.io/badge/python-3.6+-orange.svg)
 ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
 
-PaddleX是基于飞桨核心框架、开发套件和工具组件开发的深度学习全流程工具。具备**全流程打通**、**融合产业实践**、**易用易集成**三大特点。
+PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习全流程开发工具。具备**全流程打通**、**融合产业实践**、**易用易集成**三大特点。
 
 ## 特点
 
@@ -23,7 +23,6 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件开发的深度�
 - **易用易集成:**
   - PadldeX提供简洁易用的全流程API，几行代码即可实现上百种数据增强、模型可解释性、C++模型部署等功能。
   - 提供以PaddleX API为核心集成的跨平台GUI界面，降低深度学习全流程应用门槛。
-
 
 
 ## 安装
@@ -77,15 +76,10 @@ GUI模式的使用教程可参考[PaddleX GUI模式使用教程](docs/client_use
 - PaddleX用户QQ群: 1045148026 (手机QQ扫描如下二维码快速加入)  
 <img src="./docs/images/QQGroup.jpeg" width="195" height="300" alt="QQGroup" align="center" />
 
+## FAQ
 
-## 飞桨技术生态
+## 更新日志
 
-PaddleX全流程开发工具依赖以下飞桨开发套件与工具组件
+## 贡献代码
 
-- [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection)
-- [PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg)
-- [PaddleClas](https://github.com/PaddlePaddle/PaddleClas)
-- [PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)
-- [PaddleHub](https://github.com/PaddlePaddle/PaddleHub)
-- [Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite)
-- [VisualDL](https://github.com/PaddlePaddle/VisualDL)
+我们非常欢迎您为PaddleX贡献代码或者提供使用建议。如果您可以修复某个issue或者增加一个新功能，欢迎给我们提交Pull Requests.
