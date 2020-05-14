@@ -17,7 +17,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
   - 多端部署：内置[PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)模型压缩工具和AES模型加密SDK，结合Paddle Inference和[Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite)便捷完成高性能且可靠的多端部署。
 
 - **融合产业实践:** 
-  - 精选飞桨产业实践的成熟模型结构，开放案例实践教学，加速开发者产业落地。
+  - 精选飞桨产业实践的成熟模型结构，开放案例实践教程，加速开发者产业落地。
   - 通过[PaddleHub](https://github.com/PaddlePaddle/Paddle)内置丰富的飞桨高质量预训练模型，助力开发者高效实现飞桨Master模式。
 
 - **易用易集成:**
