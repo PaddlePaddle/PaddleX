@@ -29,7 +29,7 @@ void Model::create_predictor(const std::string& model_dir,
     input_info->getPreProcess().setResizeAlgorithm(RESIZE_BILINEAR);
     input_info->setLayout(Layout::NCHW);
     input_info->setPrecision(Precision::FP32);
-
+    executable_network_ = ie.LoadNetwork(network_, device);
     load_config(cfg_dir);
 }
 
@@ -56,15 +56,14 @@ bool Model::load_config(const std::string& cfg_dir) {
   return true;
 }
 
-bool Model::preprocess(cv::Mat* input_im, ImageBlob* blob) {
-  if (!transforms_.Run(input_im, &inputs_)) {
+bool Model::preprocess(cv::Mat* input_im) {
+  if (!transforms_.Run(input_im, inputs_)) {
     return false;
   }
   return true;
 }
 
 bool Model::predict(const cv::Mat& im, ClsResult* result) {
-  inputs_.clear();
   if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
                  "function predict()!"
@@ -77,14 +76,12 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
     return false;
   }
   // 处理输入图像
-
-  executable_network = ie.LoadNetwork(network_, device);
-  InferRequest infer_request = executable_network.CreateInferRequest();
+  InferRequest infer_request = executable_network_.CreateInferRequest();
   std::string input_name = network_.getInputsInfo().begin()->first;
-  input_ = infer_request.GetBlob(input_name);
+  inputs_ = infer_request.GetBlob(input_name);
 
   auto im_clone = im.clone();
-  if (!preprocess(&im_clone, inputs_)) {
+  if (!preprocess(&im_clone)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
@@ -93,12 +90,12 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
 
   std::string output_name = network_.getOutputsInfo().begin()->first;
   output_ = infer_request.GetBlob(output_name);
-  MemoryBlob::CPtr moutput = as<MemoryBlob>(output);
+  MemoryBlob::CPtr moutput = as<MemoryBlob>(output_);
   auto moutputHolder = moutput->rmap();
   float* outputs_data = moutputHolder.as<float *>();
 
   // 对模型输出结果进行后处理
-  auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_));
+  auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_data));
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
   result->category = labels[result->category_id];

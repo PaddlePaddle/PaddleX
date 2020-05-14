@@ -48,16 +48,17 @@ class Model {
 
   bool load_config(const std::string& model_dir);
 
-  bool preprocess(cv::Mat* input_im, ImageBlob* blob);
+  bool preprocess(cv::Mat* input_im);
 
-  bool predict(cv::Mat* im, ClsResult* result);
+  bool predict(const cv::Mat& im, ClsResult* result);
 
   std::string type;
   std::string name;
   std::vector<std::string> labels;
   Transforms transforms_;
   Blob::Ptr inputs_;
-  Blob::Ptr output_
+  Blob::Ptr output_;
   CNNNetwork network_;
+  ExecutableNetwork executable_network_;
 };
 }  // namespce of PaddleX

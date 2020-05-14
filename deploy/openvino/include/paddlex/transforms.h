@@ -35,7 +35,7 @@ namespace PaddleX {
 class Transform {
  public:
   virtual void Init(const YAML::Node& item) = 0;
-  virtual bool Run(cv::Mat* im, ImageBlob* data) = 0;
+  virtual bool Run(cv::Mat* im) = 0;
 };
 
 class Normalize : public Transform {
@@ -45,38 +45,31 @@ class Normalize : public Transform {
     std_ = item["std"].as<std::vector<float>>();
   }
 
-  virtual bool Run(cv::Mat* im, ImageBlob* data);
+  virtual bool Run(cv::Mat* im);
 
  private:
   std::vector<float> mean_;
   std::vector<float> std_;
 };
 
-
-class Resize : public Transform {
+class ResizeByShort : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
-    if (item["target_size"].IsScalar()) {
-      height_ = item["target_size"].as<int>();
-      width_ = item["target_size"].as<int>();
-      interp_ = item["interp"].as<std::string>();
-    } else if (item["target_size"].IsSequence()) {
-      std::vector<int> target_size = item["target_size"].as<std::vector<int>>();
-      width_ = target_size[0];
-      height_ = target_size[1];
+    short_size_ = item["short_size"].as<int>();
+    if (item["max_size"].IsDefined()) {
+      max_size_ = item["max_size"].as<int>();
+    } else {
+      max_size_ = -1;
     }
-    if (height_ <= 0 || width_ <= 0) {
-      std::cerr << "[Resize] target_size should greater than 0" << std::endl;
-      exit(-1);
-    }
-  }
-  virtual bool Run(cv::Mat* im, ImageBlob* data);
+  };
+  virtual bool Run(cv::Mat* im);
 
  private:
-  int height_;
-  int width_;
-  std::string interp_;
+  float GenerateScale(const cv::Mat& im);
+  int short_size_;
+  int max_size_;
 };
+
 
 class CenterCrop : public Transform {
  public:
@@ -90,7 +83,7 @@ class CenterCrop : public Transform {
       height_ = crop_size[1];
     }
   }
-  virtual bool Run(cv::Mat* im, ImageBlob* data);
+  virtual bool Run(cv::Mat* im);
 
  private:
   int height_;
@@ -101,7 +94,7 @@ class Transforms {
  public:
   void Init(const YAML::Node& node, bool to_rgb = true);
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
-  bool Run(cv::Mat* im, Blob::ptr data);
+  bool Run(cv::Mat* im, Blob::Ptr blob);
 
  private:
   std::vector<std::shared_ptr<Transform>> transforms_;

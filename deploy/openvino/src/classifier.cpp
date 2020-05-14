@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
     while (getline(inf, image_path)) {
       PaddleX::ClsResult result;
       cv::Mat im = cv::imread(image_path, 1);
-      model.predict(&im, &result);
+      model.predict(im, &result);
       std::cout << "Predict label: " << result.category
                 << ", label_id:" << result.category_id
                 << ", score: " << result.score << std::endl;
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   } else {
     PaddleX::ClsResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
-    model.predict(&im, &result);
+    model.predict(im, &result);
     std::cout << "Predict label: " << result.category
               << ", label_id:" << result.category_id
               << ", score: " << result.score << std::endl;
