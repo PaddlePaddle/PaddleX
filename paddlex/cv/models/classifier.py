@@ -27,7 +27,6 @@ from .base import BaseAPI
 
 class BaseClassifier(BaseAPI):
     """构建分类器，并实现其训练、评估、预测和模型导出。
-
     Args:
         model_name (str): 分类器的模型名字，取值范围为['ResNet18',
                           'ResNet34', 'ResNet50', 'ResNet101',
@@ -61,10 +60,10 @@ class BaseClassifier(BaseAPI):
         if mode != 'test':
             label = fluid.data(dtype='int64', shape=[None, 1], name='label')
         model = getattr(paddlex.cv.nets, str.lower(self.model_name))
-        net_out = model(image, num_classes=self.num_classes)
+        net_out, feat = model(image, num_classes=self.num_classes)
         softmax_out = fluid.layers.softmax(net_out, use_cudnn=False)
         inputs = OrderedDict([('image', image)])
-        outputs = OrderedDict([('predict', softmax_out)])
+        outputs = OrderedDict([('predict', softmax_out), ('net_out', feat[-1])])
         if mode != 'test':
             cost = fluid.layers.cross_entropy(input=softmax_out, label=label)
             avg_cost = fluid.layers.mean(cost)
@@ -115,7 +114,6 @@ class BaseClassifier(BaseAPI):
               early_stop_patience=5,
               resume_checkpoint=None):
         """训练。
-
         Args:
             num_epochs (int): 训练迭代轮数。
             train_dataset (paddlex.datasets): 训练数据读取器。
@@ -139,7 +137,6 @@ class BaseClassifier(BaseAPI):
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
             resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
-
         Raises:
             ValueError: 模型从inference model进行加载。
         """
@@ -183,13 +180,11 @@ class BaseClassifier(BaseAPI):
                  epoch_id=None,
                  return_details=False):
         """评估。
-
         Args:
             eval_dataset (paddlex.datasets): 验证数据读取器。
             batch_size (int): 验证数据批大小。默认为1。
             epoch_id (int): 当前评估模型所在的训练轮数。
             return_details (bool): 是否返回详细信息。
-
         Returns:
           dict: 当return_details为False时，返回dict, 包含关键字：'acc1'、'acc5'，
               分别表示最大值的accuracy、前5个最大值的accuracy。
@@ -248,12 +243,10 @@ class BaseClassifier(BaseAPI):
 
     def predict(self, img_file, transforms=None, topk=1):
         """预测。
-
         Args:
             img_file (str): 预测图像路径。
             transforms (paddlex.cls.transforms): 数据预处理操作。
             topk (int): 预测时前k个最大值。
-
         Returns:
             list: 其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，
             分别对应预测类别id、预测类别标签、预测得分。
@@ -279,7 +272,20 @@ class BaseClassifier(BaseAPI):
             'score': result[0][0][l]
         } for l in pred_label]
         return res
-
+    
+    def explanation_predict(self, images):
+        self.arrange_transforms(
+                transforms=self.test_transforms, mode='test')
+        new_imgs = []
+        for i in range(images.shape[0]):
+            img = images[i]
+            new_imgs.append(self.test_transforms(img)[0])
+        new_imgs = np.array(new_imgs)
+        result = self.exe.run(
+            self.test_prog,
+            feed={'image': new_imgs},
+            fetch_list=list(self.test_outputs.values()))
+        return result[1:]
 
 class ResNet18(BaseClassifier):
     def __init__(self, num_classes=1000):
