@@ -21,7 +21,7 @@ import paddle.fluid as fluid
 import os
 import re
 import numpy as np
-import datetime
+import time
 
 
 class PaddleXPostTrainingQuantization(PostTrainingQuantization):
@@ -134,18 +134,18 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         batch_id = 0
         logging.info("Start to run batch!")
         for data in self._data_loader():
-            start = datetime.datetime.now()
+            start = time.time()
             self._executor.run(
                 program=self._program,
                 feed=data,
                 fetch_list=self._fetch_list,
                 return_numpy=False)
             self._sample_data(batch_id)
-            end = datetime.datetime.now()
-            logging.debug('[Run batch data] Batch={}/{}, time_each_batch={} ms.'.format(
+            end = time.time()
+            logging.debug('[Run batch data] Batch={}/{}, time_each_batch={} s.'.format(
                 str(batch_id + 1),
                 str(batch_ct),
-                str((end-start).microseconds)))
+                str(end-start)))
             batch_id += 1
             if self._batch_nums and batch_id >= self._batch_nums:
                 break
@@ -241,7 +241,7 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         # apply channel_wise_abs_max quantization for weights
         ct = 1
         for var_name in self._quantized_weight_var_name:
-            start = datetime.datetime.now()
+            start = time.time()
             data = self._sampling_data[var_name]
             scale_factor_per_channel = []
             for i in range(data.shape[0]):
@@ -249,18 +249,18 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                 scale_factor_per_channel.append(abs_max_value)
             self._quantized_var_scale_factor[
                 var_name] = scale_factor_per_channel
-            end = datetime.datetime.now()
-            logging.debug('[Calculate weight] Weight_id={}/{}, time_each_weight={} ms.'.format(
+            end = time.time()
+            logging.debug('[Calculate weight] Weight_id={}/{}, time_each_weight={} s.'.format(
                 str(ct),
                 str(len(self._quantized_weight_var_name)),
-                str((end-start).microseconds)))
+                str(end-start)))
             ct += 1
             
         ct = 1
         # apply kl quantization for activation
         if self._is_use_cache_file:
             for var_name in self._quantized_act_var_name:
-                start = datetime.datetime.now()
+                start = time.time()
                 sampling_data = []
                 filenames = [f for f in os.listdir(self._cache_dir) \
                     if re.match(var_name + '_[0-9]+.npy', f)]
@@ -276,15 +276,15 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                 else:
                     self._quantized_var_scale_factor[var_name] = \
                         np.max(np.abs(sampling_data))
-                end = datetime.datetime.now()
-                logging.debug('[Calculate activation] Activation_id={}/{}, time_each_activation={} ms.'.format(
+                end = time.time()
+                logging.debug('[Calculate activation] Activation_id={}/{}, time_each_activation={} s.'.format(
                     str(ct),
                     str(len(self._quantized_act_var_name)),
-                    str((end-start).microseconds)))
+                    str(end-start)))
                 ct += 1
         else:
             for var_name in self._quantized_act_var_name:
-                start = datetime.datetime.now()
+                start = time.time()
                 self._sampling_data[var_name] = np.concatenate(
                     self._sampling_data[var_name])
                 if self._algo == "KL":
@@ -293,9 +293,9 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                 else:
                     self._quantized_var_scale_factor[var_name] = \
                         np.max(np.abs(self._sampling_data[var_name]))
-                end = datetime.datetime.now()
-                logging.debug('[Calculate activation] Activation_id={}/{}, time_each_activation={} ms.'.format(
+                end = time.time()
+                logging.debug('[Calculate activation] Activation_id={}/{}, time_each_activation={} s.'.format(
                     str(ct),
                     str(len(self._quantized_act_var_name)),
-                    str((end-start).microseconds)))
+                    str(end-start)))
                 ct += 1
