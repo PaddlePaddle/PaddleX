@@ -45,6 +45,8 @@ def visualize(img_file,
 def get_lime_explaier(img, model, num_samples=3000, batch_size=50):
     def predict_func(image):
         image = image.astype('float32')
+        for i in range(image.shape[0]):
+            image[i] = cv2.cvtColor(image[i], cv2.COLOR_RGB2BGR)
         model.test_transforms.transforms = model.test_transforms.transforms[-2:]
         out = model.explanation_predict(image)
         return out[0]
