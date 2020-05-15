@@ -111,8 +111,8 @@ class Compose(DetTransform):
                 try:
                     im = cv2.imread(im_file).astype('float32')
                 except:
-                    raise TypeError(
-                        'Can\'t read The image file {}!'.format(im_file))
+                    raise TypeError('Can\'t read The image file {}!'.format(
+                        im_file))
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
@@ -145,19 +145,10 @@ class Compose(DetTransform):
                 outputs = op(im, im_info, label_info)
                 im = outputs[0]
             else:
+                im = execute_imgaug(op, im)
                 if label_info is not None:
-                    gt_poly = label_info.get('gt_poly', None)
-                    gt_bbox = label_info['gt_bbox']
-                    if gt_poly is None:
-                        im, aug_bbox = execute_imgaug(op, im, bboxes=gt_bbox)
-                    else:
-                        im, aug_bbox, aug_poly = execute_imgaug(
-                            op, im, bboxes=gt_bbox, polygons=gt_poly)
-                        label_info['gt_poly'] = aug_poly
-                    label_info['gt_bbox'] = aug_bbox
                     outputs = (im, im_info, label_info)
                 else:
-                    im, = execute_imgaug(op, im)
                     outputs = (im, im_info)
         return outputs
 
@@ -218,8 +209,8 @@ class ResizeByShort(DetTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(
-                scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -302,8 +293,8 @@ class Padding(DetTransform):
         if isinstance(self.target_size, int):
             padding_im_h = self.target_size
             padding_im_w = self.target_size
-        elif isinstance(self.target_size, list) or isinstance(
-                self.target_size, tuple):
+        elif isinstance(self.target_size, list) or isinstance(self.target_size,
+                                                              tuple):
             padding_im_w = self.target_size[0]
             padding_im_h = self.target_size[1]
         elif self.coarsest_stride > 0:
@@ -321,8 +312,8 @@ class Padding(DetTransform):
             raise ValueError(
                 'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
                 .format(im_w, im_h, padding_im_w, padding_im_h))
-        padding_im = np.zeros((padding_im_h, padding_im_w, im_c),
-                              dtype=np.float32)
+        padding_im = np.zeros(
+            (padding_im_h, padding_im_w, im_c), dtype=np.float32)
         padding_im[:im_h, :im_w, :] = im
         if label_info is None:
             return (padding_im, im_info)
@@ -932,8 +923,9 @@ class RandomCrop(DetTransform):
                 crop_y = np.random.randint(0, h - crop_h)
                 crop_x = np.random.randint(0, w - crop_w)
                 crop_box = [crop_x, crop_y, crop_x + crop_w, crop_y + crop_h]
-                iou = iou_matrix(gt_bbox, np.array([crop_box],
-                                                   dtype=np.float32))
+                iou = iou_matrix(
+                    gt_bbox, np.array(
+                        [crop_box], dtype=np.float32))
                 if iou.max() < thresh:
                     continue
 
@@ -941,16 +933,21 @@ class RandomCrop(DetTransform):
                     continue
 
                 cropped_box, valid_ids = crop_box_with_center_constraint(
-                    gt_bbox, np.array(crop_box, dtype=np.float32))
+                    gt_bbox, np.array(
+                        crop_box, dtype=np.float32))
                 if valid_ids.size > 0:
                     found = True
                     break
 
             if found:
                 if 'gt_poly' in label_info and len(label_info['gt_poly']) > 0:
-                    crop_polys = crop_segms(label_info['gt_poly'], valid_ids,
-                                            np.array(crop_box, dtype=np.int64),
-                                            h, w)
+                    crop_polys = crop_segms(
+                        label_info['gt_poly'],
+                        valid_ids,
+                        np.array(
+                            crop_box, dtype=np.int64),
+                        h,
+                        w)
                     if [] in crop_polys:
                         delete_id = list()
                         valid_polys = list()
