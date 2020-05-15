@@ -11,16 +11,16 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
 
 ## 特点
 
-- **全流程打通:** 
-  - 数据准备：无缝集成[EasyData智能数据服务平台](https://ai.baidu.com/easydata/), 助力开发者高效获取AI开发所需高质量数据。
+- **全流程打通** 
+  - 数据准备：支持LabelMe，精灵标注等主流数据标注工具协议，同时无缝集成[EasyData智能数据服务平台](https://ai.baidu.com/easydata/), 助力开发者高效获取AI开发所需高质量数据。
   - 模型训练：基于飞桨核心框架集成[PaddleClas](https://github.com/PaddlePaddle/PaddleClas), [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection), [PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg)视觉开发套件，[VisualDL](https://github.com/PaddlePaddle/VisualDL)可视化分析组件，高效完成模型训练。
   - 多端部署：内置[PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)模型压缩工具和AES模型加密SDK，结合Paddle Inference和[Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite)便捷完成高性能且可靠的多端部署。
 
-- **融合产业实践:** 
+- **融合产业实践** 
   - 精选飞桨产业实践的成熟模型结构，开放案例实践教程，加速开发者产业落地。
   - 通过[PaddleHub](https://github.com/PaddlePaddle/Paddle)内置丰富的飞桨高质量预训练模型，助力开发者高效实现飞桨Master模式。
 
-- **易用易集成:**
+- **易用易集成**
   - PadldeX提供简洁易用的全流程API，几行代码即可实现上百种数据增强、模型可解释性、C++模型部署等功能。
   - 提供以PaddleX API为核心集成的跨平台GUI界面，降低深度学习全流程应用门槛。
 
