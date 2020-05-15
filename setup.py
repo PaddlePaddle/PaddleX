@@ -30,7 +30,7 @@ setuptools.setup(
     setup_requires=['cython', 'numpy', 'sklearn'],
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
-        'visualdl==1.3.0', 'paddleslim==1.0.1'
+        'visualdl==1.3.0', 'paddleslim==1.0.1', 'visualdl==2.0.0a2'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
