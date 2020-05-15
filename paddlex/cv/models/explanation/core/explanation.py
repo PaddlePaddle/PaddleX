@@ -13,6 +13,7 @@
 #limitations under the License.
 
 from .explanation_algorithms import CAM, LIME, NormLIME
+from .normlime_base import precompute_normlime_weights
 
 
 class Explanation(object):
@@ -48,4 +49,3 @@ class Explanation(object):
 
         """
         return self.explain_algorithm.explain(data_, visualization, save_to_disk, save_dir)
-

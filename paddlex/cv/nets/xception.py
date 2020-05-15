@@ -19,7 +19,6 @@ from __future__ import print_function
 import contextlib
 import paddle
 import math
-from collections import OrderedDict
 import paddle.fluid as fluid
 from .segmentation.model_utils.libs import scope, name_scope
 from .segmentation.model_utils.libs import bn, bn_relu, relu
@@ -105,7 +104,7 @@ class Xception():
                         initializer=fluid.initializer.Uniform(-stdv, stdv)),
                     bias_attr=fluid.param_attr.ParamAttr(name='bias'))
 
-            return OrderedDict([('logits', out)])
+            return out
         else:
             return data
 

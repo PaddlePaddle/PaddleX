@@ -15,7 +15,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from collections import OrderedDict
 import paddle
 import paddle.fluid as fluid
 import math
@@ -97,7 +96,7 @@ class DenseNet(object):
                     initializer=fluid.initializer.Uniform(-stdv, stdv),
                     name="fc_weights"),
                 bias_attr=ParamAttr(name='fc_offset'))
-            return OrderedDict([('logits', out)])
+            return out
 
     def make_transition(self, input, num_output_features, name=None):
         bn_ac = fluid.layers.batch_norm(

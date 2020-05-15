@@ -18,7 +18,6 @@ from __future__ import print_function
 
 import six
 import math
-from collections import OrderedDict
 
 from paddle import fluid
 from paddle.fluid.param_attr import ParamAttr
@@ -137,10 +136,8 @@ class DarkNet(object):
     def __call__(self, input):
         """
         Get the backbone of DarkNet, that is output for the 5 stages.
-
         Args:
             input (Variable): input variable.
-
         Returns:
             The last variables of each stage.
         """
@@ -183,6 +180,6 @@ class DarkNet(object):
                     initializer=fluid.initializer.Uniform(-stdv, stdv),
                     name='fc_weights'),
                 bias_attr=ParamAttr(name='fc_offset'))
-            return OrderedDict([('logits', out)])
+            return out
 
         return blocks

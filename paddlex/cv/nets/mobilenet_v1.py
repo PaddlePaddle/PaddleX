@@ -16,7 +16,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from collections import OrderedDict
 from paddle import fluid
 from paddle.fluid.param_attr import ParamAttr
 from paddle.fluid.regularizer import L2Decay
@@ -25,7 +24,6 @@ from paddle.fluid.regularizer import L2Decay
 class MobileNetV1(object):
     """
     MobileNet v1, see https://arxiv.org/abs/1704.04861
-
     Args:
         norm_type (str): normalization type, 'bn' and 'sync_bn' are supported
         norm_decay (float): weight decay for normalization layer weights
@@ -197,7 +195,7 @@ class MobileNetV1(object):
                 param_attr=ParamAttr(
                     initializer=fluid.initializer.MSRA(), name="fc7_weights"),
                 bias_attr=ParamAttr(name="fc7_offset"))
-            return OrderedDict([('logits', out)])
+            return output
 
         if not self.with_extra_blocks:
             return blocks
