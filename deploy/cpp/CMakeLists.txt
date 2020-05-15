@@ -277,7 +277,7 @@ endif()
 
 file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/visualize.h"
 DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
-file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/transforms.h"
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/results.h"
 DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
 file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/paddlex.h"
 DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
