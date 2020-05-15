@@ -15,6 +15,12 @@ SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/demo)
+
+if (NOT WIN32)
+    SET(YAML_BUILD_TYPE ON CACHE BOOL "yaml build shared library.")
+else()
+    SET(YAML_BUILD_TYPE OFF CACHE BOOL "yaml build shared library.")
+endif()
 include(cmake/yaml-cpp.cmake)
 
 include_directories("${CMAKE_SOURCE_DIR}/")
@@ -30,6 +36,7 @@ macro(safe_set_static_flag)
       endif(${flag_var} MATCHES "/MD")
     endforeach(flag_var)
 endmacro()
+
 
 if (WITH_ENCRYPTION)
 add_definitions( -DWITH_ENCRYPTION=${WITH_ENCRYPTION})
@@ -191,6 +198,7 @@ else()
     set(DEPS ${DEPS}
         ${MATH_LIB} ${MKLDNN_LIB}
         glog gflags_static libprotobuf zlibstatic xxhash libyaml-cppmt)
+
     set(DEPS ${DEPS} libcmt shlwapi)
     if (EXISTS "${PADDLE_DIR}/third_party/install/snappy/lib")
         set(DEPS ${DEPS} snappy)
