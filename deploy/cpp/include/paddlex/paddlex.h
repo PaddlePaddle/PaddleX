@@ -28,9 +28,9 @@
 
 #include "paddle_inference_api.h"  // NOLINT
 
-#include "include/paddlex/config_parser.h"
-#include "include/paddlex/results.h"
-#include "include/paddlex/transforms.h"
+#include "config_parser.h"
+#include "results.h"
+#include "transforms.h"
 
 #ifdef WITH_ENCRYPTION
 #include "paddle_model_decrypt.h"
