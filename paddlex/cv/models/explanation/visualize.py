@@ -28,6 +28,9 @@ def visualize(img_file,
               num_samples=3000, 
               batch_size=50,
               save_dir='./'):
+    model_info = self.get_model_info()
+    if model_info['status'] != 'Normal':
+        raise Exception('The explanation only can deal with the Normal model')
     model.arrange_transforms(
                 transforms=model.test_transforms, mode='test')
     tmp_transforms = copy.deepcopy(model.test_transforms)
