@@ -1,4 +1,4 @@
-# 使用PaddleX客户端进行模型训练
+# PaddleX-GUI使用文档
 
 **第一步：下载PaddleX客户端**
 

@@ -2,6 +2,8 @@
 
 本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读PaddleX的**使用教程**来了解更多模型任务的训练使用方式。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/439860)
 
+
+pip install
 ## 1. 准备蔬菜分类数据集
 ```
 wget https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz

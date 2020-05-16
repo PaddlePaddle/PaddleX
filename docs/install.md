@@ -1,8 +1,8 @@
-# 安装
+# 快速安装
 
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于1.7.1)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick)
 
-> 推荐使用Anaconda Python环境，Anaconda下安装PaddleX参考文档[Anaconda安装使用](./anaconda_install.md)
+> 推荐使用Anaconda Python环境，Anaconda下安装PaddleX参考文档[Anaconda安装使用](../appendix/anaconda_install.md)
 
 ## Github代码安装
 github代码会跟随开发进度不断更新
