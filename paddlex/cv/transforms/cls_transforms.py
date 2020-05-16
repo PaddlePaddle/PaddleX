@@ -87,9 +87,9 @@ class Compose(ClsTransform):
                 import imgaug.augmenters as iaa
                 if isinstance(op, iaa.Augmenter):
                     im, = execute_imgaug(op, im)
-                output = (im, )
+                outputs = (im, )
                 if label is not None:
-                    output = (im, label)
+                    outputs = (im, label)
         return outputs
 
 
