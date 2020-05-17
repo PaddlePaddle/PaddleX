@@ -3,11 +3,12 @@ Anaconda是一个开源的Python发行版本，其包含了conda、Python等180�
 
 ## Windows安装Anaconda
 ### 第一步 下载
-在Anaconda官网[(https://www.anaconda.com/products/individual)](https://www.anaconda.com/products/individual)选择下载Windows Python3.7 64-Bit版本
+- 在Anaconda官网[(https://www.anaconda.com/products/individual)](https://www.anaconda.com/products/individual)选择下载Windows Python3.7 64-Bit版本
+- 确保已经安装`Visual C++ Build Tools`(可以在开始菜单中找到)，如未安装，请[点击下载](https://go.microsoft.com/fwlink/?LinkId=691126)安装。
 
 ### 第二步 安装
 运行下载的安装包(以.exe为后辍)，根据引导完成安装, 用户可自行修改安装目录（如下图）
-![](./images/anaconda_windows.png)
+![](../images/anaconda_windows.png)
 
 ### 第三步 使用
 - 点击Windows系统左下角的Windows图标，打开：所有程序->Anaconda3/2（64-bit）->Anaconda Prompt  
@@ -21,7 +22,7 @@ conda activate my_paddlex
 conda install git
 # 安装pycocotools
 pip install cython
-pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
+pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 # 安装paddlepaddle-gpu
 pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 # 安装paddlex
