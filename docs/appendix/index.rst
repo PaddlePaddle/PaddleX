@@ -3,18 +3,11 @@
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: 目录:
 
-   quick_start.md
-   install.md
-   tutorials/index.rst
    model_zoo.md
-   apis/index
-   client_use.md
-   update.md
-   FAQ.md
-   appendix/index.rst
+   metrics.md
 
 * PaddleX版本: v0.1.7
 * 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  

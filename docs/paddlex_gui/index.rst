@@ -14,7 +14,7 @@ PaddleX GUI是基于PaddleX开发实现的可视化模型训练套件，可以�
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: 文档目录:
 
    download.md
