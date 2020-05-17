@@ -3,23 +3,30 @@
 本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读PaddleX的**使用教程**来了解更多模型任务的训练使用方式。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/439860)
 
 
-pip install
-## 1. 准备蔬菜分类数据集
+## 1. 安装PaddleX
+> 安装相关过程和问题可以参考PaddleX的[安装文档](./install.md)。
+```
+pip install paddlex -i https://mirror.baidu.com/pypi/simple
+```
+
+## 2. 准备蔬菜分类数据集
 ```
 wget https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz
 tar xzvf vegetables_cls.tar.gz
 ```
 
-## 2. 训练代码开发
-通过如下`train.py`代码进行训练
-> 设置使用0号GPU卡
-```
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-import paddlex as pdx
-```
+## 3. 训练代码开发
+PaddleX的所有模型训练和预测均只涉及到5个API接口，分别是
+> - [transforms](apis/transforms/index) 图像数据处理
+> - [datasets](apis/datasets.md) 数据集加载
+> - [models](apis/models.md) 模型类型定义
+> - [train](apis/models.md) 开始训练
+> - [predict](apis/models.md) 模型预测 
+ 
+在本示例，通过如下`train.py`代码进行训练, 训练环境为1张Tesla P40 GPU卡。  
 
-> 定义训练和验证时的数据处理流程, 在`train_transforms`中加入了`RandomCrop`和`RandomHorizontalFlip`两种数据增强方式
+### 3.1 定义`transforms`数据处理流程
+由于训练时数据增强操作的加入，因此模型在训练和验证过程中，数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#RandomCrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#RandomHorizontalFlip)两种数据增强方式
 ```
 from paddlex.cls import transforms
 train_transforms = transforms.Compose([

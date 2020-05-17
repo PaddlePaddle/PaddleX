@@ -1,4 +1,4 @@
-# 分割-paddlex.seg.transforms
+# 语义分割-seg.transforms
 
 对用于分割任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
 

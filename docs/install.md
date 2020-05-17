@@ -4,10 +4,17 @@
 
 > 推荐使用Anaconda Python环境，Anaconda下安装PaddleX参考文档[Anaconda安装使用](../appendix/anaconda_install.md)
 
-## Github代码安装
-github代码会跟随开发进度不断更新
+## pip安装
 
 > 注意其中pycocotools在Windows安装较为特殊，可参考下面的Windows安装命令  
+
+```
+pip install paddlex -i https://mirror.baidu.com/pypi/simple
+```
+
+
+## Github代码安装
+github代码会跟随开发进度不断更新
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX.git
@@ -16,10 +23,6 @@ git checkout develop
 python setup.py install
 ```
 
-## pip安装
-```
-pip install paddlex -i https://mirror.baidu.com/pypi/simple
-```
 
 ## 安装问题
 ### 1. pycocotools安装问题  
