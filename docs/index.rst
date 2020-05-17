@@ -25,8 +25,8 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    install.md
    tutorials/index.rst
    cv_solutions.md
-   apis/index
-   paddlex_gui.md
+   apis/index.rst
+   paddlex_gui/index.rst
    update.md
    FAQ.md
    appendix/index.rst
