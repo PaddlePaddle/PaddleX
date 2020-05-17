@@ -26,9 +26,10 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 > PaddleX依赖pycocotools包，如安装pycocotools失败，可参照如下方式安装pycocotools
 
 **Windows**  
+> Windows安装时可能会提示缺少`Microsoft Visual C++ 2015 build tools`，[点击下载](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
 ```
 pip install cython
-pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
+pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 ```
 
 **Linux/Mac安装**
