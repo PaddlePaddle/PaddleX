@@ -95,7 +95,7 @@ make
  ```
 
 ### Step5: 预测及可视化
-编译成功后，预测demo的可执行程序分别为`build/detector`，`build/classifer`，`build/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifer`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -116,7 +116,7 @@ make
 不使用`GPU`测试图片 `/path/to/xiaoduxiong.jpeg`  
 
 ```shell
-./build/detector --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg --save_dir=output
+./build/demo/detector --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
@@ -131,6 +131,6 @@ make
 /path/to/images/xiaoduxiongn.jpeg
 ```
 ```shell
-./build/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output
+./build/demo/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
