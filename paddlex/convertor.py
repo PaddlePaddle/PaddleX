@@ -46,11 +46,10 @@ def export_onnx_model(model, save_dir):
         from fluid_onnx.variables import paddle_variable_to_onnx_tensor, paddle_onnx_weight
         from debug.model_check import debug_model, Tracker
     except Exception as e:
-        logging.error(e)
         logging.error(
             "Import Module Failed! Please install paddle2onnx. Related requirements see https://github.com/PaddlePaddle/paddle2onnx."
         )
-        sys.exit(-1)
+        raise e
     place = fluid.CPUPlace()
     exe = fluid.Executor(place)
     inference_scope = fluid.global_scope()
