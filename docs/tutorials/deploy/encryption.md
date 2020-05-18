@@ -6,7 +6,7 @@
 
 ### 1.1 工具组成
 
-[链接](http://wiki.baidu.com/pages/viewpage.action?pageId=1128566963)
+[PaddleX模型加密SDK下载](https://bj.bcebos.com/paddlex/tools/paddlex-encryption.zip)
 
 下载并解压后，目录包含内容为：
 ```
