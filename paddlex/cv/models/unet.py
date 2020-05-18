@@ -121,7 +121,8 @@ class UNet(DeepLabv3p):
               sensitivities_file=None,
               eval_metric_loss=0.05,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -145,14 +146,14 @@ class UNet(DeepLabv3p):
             early_stop (bool): 是否使用提前终止训练策略。默认值为False。
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 模型从inference model进行加载。
         """
-        return super(
-            UNet,
-            self).train(num_epochs, train_dataset, train_batch_size,
-                        eval_dataset, save_interval_epochs, log_interval_steps,
-                        save_dir, pretrain_weights, optimizer, learning_rate,
-                        lr_decay_power, use_vdl, sensitivities_file,
-                        eval_metric_loss, early_stop, early_stop_patience)
+        return super(UNet, self).train(
+            num_epochs, train_dataset, train_batch_size, eval_dataset,
+            save_interval_epochs, log_interval_steps, save_dir,
+            pretrain_weights, optimizer, learning_rate, lr_decay_power,
+            use_vdl, sensitivities_file, eval_metric_loss, early_stop,
+            early_stop_patience, resume_checkpoint)

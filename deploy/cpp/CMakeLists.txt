@@ -5,12 +5,29 @@ option(WITH_MKL        "Compile demo with MKL/OpenBlas support,defaultuseMKL."  
 option(WITH_GPU        "Compile demo with GPU/CPU, default use CPU."                    ON)
 option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   OFF)
 option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile demo with encryption tool."   OFF)
 
-SET(TENSORRT_DIR "" CACHE PATH "Compile demo with TensorRT")
+SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
+SET(ENCRYPTION_DIR"" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 
+if (NOT WIN32)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/demo)
+else()
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
+endif()
+
+if (NOT WIN32)
+    SET(YAML_BUILD_TYPE ON CACHE BOOL "yaml build shared library.")
+else()
+    SET(YAML_BUILD_TYPE OFF CACHE BOOL "yaml build shared library.")
+endif()
 include(cmake/yaml-cpp.cmake)
 
 include_directories("${CMAKE_SOURCE_DIR}/")
@@ -26,6 +43,11 @@ macro(safe_set_static_flag)
       endif(${flag_var} MATCHES "/MD")
     endforeach(flag_var)
 endmacro()
+
+
+if (WITH_ENCRYPTION)
+add_definitions( -DWITH_ENCRYPTION=${WITH_ENCRYPTION})
+endif()
 
 if (WITH_MKL)
     ADD_DEFINITIONS(-DUSE_MKL)
@@ -183,6 +205,7 @@ else()
     set(DEPS ${DEPS}
         ${MATH_LIB} ${MKLDNN_LIB}
         glog gflags_static libprotobuf zlibstatic xxhash libyaml-cppmt)
+
     set(DEPS ${DEPS} libcmt shlwapi)
     if (EXISTS "${PADDLE_DIR}/third_party/install/snappy/lib")
         set(DEPS ${DEPS} snappy)
@@ -207,21 +230,35 @@ if(WITH_GPU)
   endif()
 endif()
 
+if(WITH_ENCRYPTION)
+  if(NOT WIN32)
+      include_directories("${ENCRYPTION_DIR}/include")
+      link_directories("${ENCRYPTION_DIR}/lib")
+      set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/libpmodel-decrypt${CMAKE_SHARED_LIBRARY_SUFFIX})
+  else()
+    message(FATAL_ERROR "Encryption Tool don't support WINDOWS")
+  endif()
+endif()
+
 if (NOT WIN32)
     set(EXTERNAL_LIB "-ldl -lrt -lgomp -lz -lm -lpthread")
     set(DEPS ${DEPS} ${EXTERNAL_LIB})
 endif()
 
 set(DEPS ${DEPS} ${OpenCV_LIBS})
-add_executable(classifier src/classifier.cpp src/transforms.cpp src/paddlex.cpp)
+add_library(paddlex_inference SHARED src/visualize src/transforms.cpp src/paddlex.cpp)
+ADD_DEPENDENCIES(paddlex_inference ext-yaml-cpp)
+target_link_libraries(paddlex_inference ${DEPS})
+
+add_executable(classifier demo/classifier.cpp src/transforms.cpp src/paddlex.cpp)
 ADD_DEPENDENCIES(classifier ext-yaml-cpp)
 target_link_libraries(classifier ${DEPS})
 
-add_executable(detector src/detector.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
+add_executable(detector demo/detector.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
 ADD_DEPENDENCIES(detector ext-yaml-cpp)
 target_link_libraries(detector ${DEPS})
 
-add_executable(segmenter src/segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
+add_executable(segmenter demo/segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
 ADD_DEPENDENCIES(segmenter ext-yaml-cpp)
 target_link_libraries(segmenter ${DEPS})
 
@@ -252,3 +289,14 @@ if (WIN32 AND WITH_MKL)
     )
 
 endif()
+
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/visualize.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/config_parser.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/transforms.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/results.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )
+file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/paddlex.h"
+DESTINATION  "${CMAKE_BINARY_DIR}/include/"  )

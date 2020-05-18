@@ -2,7 +2,7 @@
 
 ## 计算参数敏感度
 ```
-paddlex.slim.cal_params_sensetives(model, save_file, eval_dataset, batch_size=8)
+paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size=8)
 ```
 计算模型中可裁剪参数在验证集上的敏感度，并将敏感度信息保存至文件`save_file`
 1. 获取模型中可裁剪卷积Kernel的名称。

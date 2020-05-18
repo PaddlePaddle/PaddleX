@@ -31,7 +31,7 @@ std::vector<int> GenerateColorMap(int num_class) {
   return colormap;
 }
 
-cv::Mat VisualizeDet(const cv::Mat& img,
+cv::Mat Visualize(const cv::Mat& img,
                      const DetResult& result,
                      const std::map<int, std::string>& labels,
                      const std::vector<int>& colormap,
@@ -105,7 +105,7 @@ cv::Mat VisualizeDet(const cv::Mat& img,
   return vis_img;
 }
 
-cv::Mat VisualizeSeg(const cv::Mat& img,
+cv::Mat Visualize(const cv::Mat& img,
                      const SegResult& result,
                      const std::map<int, std::string>& labels,
                      const std::vector<int>& colormap) {

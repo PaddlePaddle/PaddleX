@@ -13,13 +13,22 @@
 # limitations under the License.
 
 from .ops import *
+from .imgaug_support import execute_imgaug
 import random
 import os.path as osp
 import numpy as np
 from PIL import Image, ImageEnhance
 
 
-class Compose:
+class ClsTransform:
+    """分类Transform的基类
+    """
+
+    def __init__(self):
+        pass
+
+
+class Compose(ClsTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
 
@@ -39,6 +48,15 @@ class Compose:
                             'must be equal or larger than 1!')
         self.transforms = transforms
 
+        # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
+        for op in self.transforms:
+            if not isinstance(op, ClsTransform):
+                import imgaug.augmenters as iaa
+                if not isinstance(op, iaa.Augmenter):
+                    raise Exception(
+                        "Elements in transforms should be defined in 'paddlex.cls.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
+                    )
+
     def __call__(self, im, label=None):
         """
         Args:
@@ -48,20 +66,34 @@ class Compose:
             tuple: 根据网络所需字段所组成的tuple；
                 字段由transforms中的最后一个数据预处理操作决定。
         """
-        try:
-            im = cv2.imread(im).astype('float32')
-        except:
-            raise TypeError('Can\'t read The image file {}!'.format(im))
+        if isinstance(im, np.ndarray):
+            if len(im.shape) != 3:
+                raise Exception(
+                    "im should be 3-dimension, but now is {}-dimensions".
+                    format(len(im.shape)))
+        else:
+            try:
+                im = cv2.imread(im).astype('float32')
+            except:
+                raise TypeError('Can\'t read The image file {}!'.format(im))
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         for op in self.transforms:
-            outputs = op(im, label)
-            im = outputs[0]
-            if len(outputs) == 2:
-                label = outputs[1]
+            if isinstance(op, ClsTransform):
+                outputs = op(im, label)
+                im = outputs[0]
+                if len(outputs) == 2:
+                    label = outputs[1]
+            else:
+                import imgaug.augmenters as iaa
+                if isinstance(op, iaa.Augmenter):
+                    im, = execute_imgaug(op, im)
+                outputs = (im, )
+                if label is not None:
+                    outputs = (im, label)
         return outputs
 
 
-class RandomCrop:
+class RandomCrop(ClsTransform):
     """对图像进行随机剪裁，模型训练时的数据增强操作。
 
     1. 根据lower_scale、lower_ratio、upper_ratio计算随机剪裁的高、宽。
@@ -104,7 +136,7 @@ class RandomCrop:
             return (im, label)
 
 
-class RandomHorizontalFlip:
+class RandomHorizontalFlip(ClsTransform):
     """以一定的概率对图像进行随机水平翻转，模型训练时的数据增强操作。
 
     Args:
@@ -132,7 +164,7 @@ class RandomHorizontalFlip:
             return (im, label)
 
 
-class RandomVerticalFlip:
+class RandomVerticalFlip(ClsTransform):
     """以一定的概率对图像进行随机垂直翻转，模型训练时的数据增强操作。
 
     Args:
@@ -160,7 +192,7 @@ class RandomVerticalFlip:
             return (im, label)
 
 
-class Normalize:
+class Normalize(ClsTransform):
     """对图像进行标准化。
 
     1. 对图像进行归一化到区间[0.0, 1.0]。
@@ -195,7 +227,7 @@ class Normalize:
             return (im, label)
 
 
-class ResizeByShort:
+class ResizeByShort(ClsTransform):
     """根据图像短边对图像重新调整大小（resize）。
 
     1. 获取图像的长边和短边长度。
@@ -242,7 +274,7 @@ class ResizeByShort:
             return (im, label)
 
 
-class CenterCrop:
+class CenterCrop(ClsTransform):
     """以图像中心点扩散裁剪长宽为`crop_size`的正方形
 
     1. 计算剪裁的起始点。
@@ -272,7 +304,7 @@ class CenterCrop:
             return (im, label)
 
 
-class RandomRotate:
+class RandomRotate(ClsTransform):
     def __init__(self, rotate_range=30, prob=0.5):
         """以一定的概率对图像在[-rotate_range, rotaterange]角度范围内进行旋转，模型训练时的数据增强操作。
 
@@ -306,7 +338,7 @@ class RandomRotate:
             return (im, label)
 
 
-class RandomDistort:
+class RandomDistort(ClsTransform):
     """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。
 
     1. 对变换的操作顺序进行随机化操作。
@@ -397,7 +429,7 @@ class RandomDistort:
             return (im, label)
 
 
-class ArrangeClassifier:
+class ArrangeClassifier(ClsTransform):
     """获取训练/验证/预测所需信息。注意：此操作不需用户自己显示调用
 
     Args:

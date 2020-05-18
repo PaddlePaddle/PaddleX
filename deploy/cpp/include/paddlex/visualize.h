@@ -46,13 +46,13 @@ namespace PaddleX {
 // Generate visualization colormap for each class
 std::vector<int> GenerateColorMap(int num_class);
 
-cv::Mat VisualizeDet(const cv::Mat& img,
+cv::Mat Visualize(const cv::Mat& img,
                      const DetResult& results,
                      const std::map<int, std::string>& labels,
                      const std::vector<int>& colormap,
                      float threshold = 0.5);
 
-cv::Mat VisualizeSeg(const cv::Mat& img,
+cv::Mat Visualize(const cv::Mat& img,
                      const SegResult& result,
                      const std::map<int, std::string>& labels,
                      const std::vector<int>& colormap);

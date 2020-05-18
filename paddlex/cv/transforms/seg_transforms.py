@@ -14,6 +14,7 @@
 # limitations under the License.
 
 from .ops import *
+from .imgaug_support import execute_imgaug
 import random
 import os.path as osp
 import numpy as np
@@ -22,7 +23,15 @@ import cv2
 from collections import OrderedDict
 
 
-class Compose:
+class SegTransform:
+    """ 分割transform基类
+    """
+
+    def __init__(self):
+        pass
+
+
+class Compose(SegTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
 
@@ -43,6 +52,14 @@ class Compose:
                             'must be equal or larger than 1!')
         self.transforms = transforms
         self.to_rgb = False
+        # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
+        for op in self.transforms:
+            if not isinstance(op, SegTransform):
+                import imgaug.augmenters as iaa
+                if not isinstance(op, iaa.Augmenter):
+                    raise Exception(
+                        "Elements in transforms should be defined in 'paddlex.seg.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
+                    )
 
     def __call__(self, im, im_info=None, label=None):
         """
@@ -60,26 +77,39 @@ class Compose:
 
         if im_info is None:
             im_info = list()
-        try:
-            im = cv2.imread(im).astype('float32')
-        except:
-            raise ValueError('Can\'t read The image file {}!'.format(im))
+        if isinstance(im, np.ndarray):
+            if len(im.shape) != 3:
+                raise Exception(
+                    "im should be 3-dimensions, but now is {}-dimensions".
+                    format(len(im.shape)))
+        else:
+            try:
+                im = cv2.imread(im).astype('float32')
+            except:
+                raise ValueError('Can\'t read The image file {}!'.format(im))
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if label is not None:
             if not isinstance(label, np.ndarray):
                 label = np.asarray(Image.open(label))
         for op in self.transforms:
-            outputs = op(im, im_info, label)
-            im = outputs[0]
-            if len(outputs) >= 2:
-                im_info = outputs[1]
-            if len(outputs) == 3:
-                label = outputs[2]
+            if isinstance(op, SegTransform):
+                outputs = op(im, im_info, label)
+                im = outputs[0]
+                if len(outputs) >= 2:
+                    im_info = outputs[1]
+                if len(outputs) == 3:
+                    label = outputs[2]
+            else:
+                im = execute_imgaug(op, im)
+                if label is not None:
+                    outputs = (im, im_info, label)
+                else:
+                    outputs = (im, im_info)
         return outputs
 
 
-class RandomHorizontalFlip:
+class RandomHorizontalFlip(SegTransform):
     """以一定的概率对图像进行水平翻转。当存在标注图像时，则同步进行翻转。
 
     Args:
@@ -115,7 +145,7 @@ class RandomHorizontalFlip:
             return (im, im_info, label)
 
 
-class RandomVerticalFlip:
+class RandomVerticalFlip(SegTransform):
     """以一定的概率对图像进行垂直翻转。当存在标注图像时，则同步进行翻转。
 
     Args:
@@ -150,7 +180,7 @@ class RandomVerticalFlip:
             return (im, im_info, label)
 
 
-class Resize:
+class Resize(SegTransform):
     """调整图像大小（resize），当存在标注图像时，则同步进行处理。
 
     - 当目标大小（target_size）类型为int时，根据插值方式，
@@ -260,7 +290,7 @@ class Resize:
             return (im, im_info, label)
 
 
-class ResizeByLong:
+class ResizeByLong(SegTransform):
     """对图像长边resize到固定值，短边按比例进行缩放。当存在标注图像时，则同步进行处理。
 
     Args:
@@ -301,7 +331,7 @@ class ResizeByLong:
             return (im, im_info, label)
 
 
-class ResizeByShort:
+class ResizeByShort(SegTransform):
     """根据图像的短边调整图像大小（resize）。
 
     1. 获取图像的长边和短边长度。
@@ -360,8 +390,8 @@ class ResizeByShort:
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(
-                scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -378,7 +408,7 @@ class ResizeByShort:
             return (im, im_info, label)
 
 
-class ResizeRangeScaling:
+class ResizeRangeScaling(SegTransform):
     """对图像长边随机resize到指定范围内，短边按比例进行缩放。当存在标注图像时，则同步进行处理。
 
     Args:
@@ -392,8 +422,8 @@ class ResizeRangeScaling:
     def __init__(self, min_value=400, max_value=600):
         if min_value > max_value:
             raise ValueError('min_value must be less than max_value, '
-                             'but they are {} and {}.'.format(
-                                 min_value, max_value))
+                             'but they are {} and {}.'.format(min_value,
+                                                              max_value))
         self.min_value = min_value
         self.max_value = max_value
 
@@ -427,7 +457,7 @@ class ResizeRangeScaling:
             return (im, im_info, label)
 
 
-class ResizeStepScaling:
+class ResizeStepScaling(SegTransform):
     """对图像按照某一个比例resize，这个比例以scale_step_size为步长
     在[min_scale_factor, max_scale_factor]随机变动。当存在标注图像时，则同步进行处理。
 
@@ -502,7 +532,7 @@ class ResizeStepScaling:
             return (im, im_info, label)
 
 
-class Normalize:
+class Normalize(SegTransform):
     """对图像进行标准化。
     1.尺度缩放到 [0,1]。
     2.对图像进行减均值除以标准差操作。
@@ -550,7 +580,7 @@ class Normalize:
             return (im, im_info, label)
 
 
-class Padding:
+class Padding(SegTransform):
     """对图像或标注图像进行padding，padding方向为右和下。
     根据提供的值对图像或标注图像进行padding操作。
 
@@ -642,7 +672,7 @@ class Padding:
             return (im, im_info, label)
 
 
-class RandomPaddingCrop:
+class RandomPaddingCrop(SegTransform):
     """对图像和标注图进行随机裁剪，当所需要的裁剪尺寸大于原图时，则进行padding操作。
 
     Args:
@@ -730,8 +760,8 @@ class RandomPaddingCrop:
                 h_off = np.random.randint(img_height - crop_height + 1)
                 w_off = np.random.randint(img_width - crop_width + 1)
 
-                im = im[h_off:(crop_height + h_off), w_off:(
-                    w_off + crop_width), :]
+                im = im[h_off:(crop_height + h_off), w_off:(w_off + crop_width
+                                                            ), :]
                 if label is not None:
                     label = label[h_off:(crop_height + h_off), w_off:(
                         w_off + crop_width)]
@@ -741,7 +771,7 @@ class RandomPaddingCrop:
             return (im, im_info, label)
 
 
-class RandomBlur:
+class RandomBlur(SegTransform):
     """以一定的概率对图像进行高斯模糊。
 
     Args：
@@ -787,7 +817,7 @@ class RandomBlur:
             return (im, im_info, label)
 
 
-class RandomRotate:
+class RandomRotate(SegTransform):
     """对图像进行随机旋转, 模型训练时的数据增强操作。
     在旋转区间[-rotate_range, rotate_range]内，对图像进行随机旋转，当存在标注图像时，同步进行，
     并对旋转后的图像和标注图像进行相应的padding。
@@ -859,7 +889,7 @@ class RandomRotate:
             return (im, im_info, label)
 
 
-class RandomScaleAspect:
+class RandomScaleAspect(SegTransform):
     """裁剪并resize回原始尺寸的图像和标注图像。
     按照一定的面积比和宽高比对图像进行裁剪，并reszie回原始图像的图像，当存在标注图时，同步进行。
 
@@ -922,7 +952,7 @@ class RandomScaleAspect:
             return (im, im_info, label)
 
 
-class RandomDistort:
+class RandomDistort(SegTransform):
     """对图像进行随机失真。
 
     1. 对变换的操作顺序进行随机化操作。
@@ -1018,7 +1048,7 @@ class RandomDistort:
             return (im, im_info, label)
 
 
-class ArrangeSegmenter:
+class ArrangeSegmenter(SegTransform):
     """获取训练/验证/预测所需的信息。
 
     Args:

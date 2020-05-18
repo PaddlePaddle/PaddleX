@@ -19,7 +19,8 @@ namespace PaddleX {
 void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
                              bool use_trt,
-                             int gpu_id) {
+                             int gpu_id,
+                             std::string key) {
   // 读取配置文件
   if (!load_config(model_dir)) {
     std::cerr << "Parse file 'model.yml' failed!" << std::endl;
@@ -28,7 +29,14 @@ void Model::create_predictor(const std::string& model_dir,
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
-  config.SetModel(model_file, params_file);
+#ifdef WITH_ENCRYPTION
+  if (key != ""){
+    paddle_security_load_model(&config, key.c_str(), model_file.c_str(), params_file.c_str());
+  }
+#endif
+  if (key == ""){
+    config.SetModel(model_file, params_file);
+  }
   if (use_gpu) {
     config.EnableUseGpu(100, gpu_id);
   } else {
