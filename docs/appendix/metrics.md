@@ -6,7 +6,7 @@ PaddleX在模型训练、评估过程中，都会有相应的日志和指标反�
 
 PaddleX所有模型在训练过程中，输出的日志信息都包含了6个通用的统计信息，用于辅助用户进行模型训练，例如**分割模型**的训练日志，如下图所示。
 
-![](./images/seg_train.png)
+![](../images/seg_train.png)
 
 各字段含义如下:
 
@@ -26,7 +26,7 @@ PaddleX所有模型在训练过程中，输出的日志信息都包含了6个通
 
 PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epochs`参数，每间隔一定轮数进行评估和保存。例如**分类模型**的评估日志，如下图所示。
 
-![](images/cls_eval.png)
+![](../images/cls_eval.png)
 
 上图中第1行表明验证数据集中样本数为240，需要迭代8步才能评估完所有验证数据；第5行用于表明第2轮的模型已经完成保存操作；第6行则表明当前保存的模型中，第2轮的模型在验证集上指标最优（分类任务看`acc1`，此时`acc1`值为0.258333），最优模型会保存在`best_model`目录中。
 
@@ -38,7 +38,7 @@ PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epoc
 
 > 注： acck准确率是针对一张图片进行计算的：把模型在各个类别上的预测得分按从高往低进行排序，取出前k个预测类别，若这k个预测类别包含了真值类，则认为该图片分类正确。
 
-![](images/cls_train.png)
+![](../images/cls_train.png)
 
 
 上图中第1行中的`acc1`表示参与当前迭代步数的训练样本的平均top1准确率，值越高代表模型越优；`acc5`表示参与当前迭代步数的训练样本的平均top5（若类别数n少于5，则为topn）准确率，值越高代表模型越优。第4行中的`loss`表示整个训练集的平均损失函数值，`acc1`表示整个训练集的平均top1准确率，`acc5`表示整个训练集的平均top5准确率。
@@ -46,7 +46,7 @@ PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epoc
 
 ### 评估日志字段
 
-![](images/cls_eval.png)
+![](../images/cls_eval.png)
 
 上图中第3行中的`acc1`表示整个验证集的平均top1准确率，`acc5`表示整个验证集的平均top5准确率。
 
@@ -59,7 +59,7 @@ PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epoc
 
 YOLOv3的训练日志只包括训练通用统计信息（见上文训练通用统计信息）。
 
-![](images/yolo_train.png)
+![](../images/yolo_train.png)
 
 上图中第5行`loss`表示整个训练集的平均损失函数loss值。
 
@@ -75,7 +75,7 @@ FasterRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`lo
 | loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
 | loss              | 所有子网络损失函数值之和          |
 
-![](images/faster_train.png)
+![](../images/faster_train.png)
 
 上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
 
@@ -93,7 +93,7 @@ MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss
 | loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
 | loss              | 所有子网络损失函数值之和          |
 
-![](images/mask_train.png)
+![](../images/mask_train.png)
 
 上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
 
@@ -103,7 +103,7 @@ MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss
 
 #### VOC评估标准
 
-![](images/voc_eval.png)
+![](../images/voc_eval.png)
 
 > 注：`map`为平均准确率的平均值，即IoU(Intersection Over Union)取0.5时各个类别的准确率-召回率曲线下面积的平均值。
 
@@ -115,11 +115,11 @@ MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss
 
 COCO格式的数据集不仅可以用于训练目标检测模型，也可以用于训练实例分割模型。在目标检测中，PaddleX主要反馈针对检测框的`bbox_mmAP`指标；在实例分割中，还包括针对Mask的`seg_mmAP`指标。如下所示，第一张日志截图为目标检测的评估结果，第二张日志截图为实例分割的评估结果。
 
-![](images/faster_eval.png)
+![](../images/faster_eval.png)
 
 上图中红框标注的`bbox_mmap`表示整个验证集的检测框平均准确率平均值。
 
-![](images/mask_eval.png)
+![](../images/mask_eval.png)
 上图中红框标注的`bbox_mmap`和`seg_mmap`分别表示整个验证集的检测框平均准确率平均值、Mask平均准确率平均值。
 
 ## 分割特有统计信息
@@ -128,7 +128,7 @@ COCO格式的数据集不仅可以用于训练目标检测模型，也可以用�
 
 语义分割的训练日志只包括训练通用统计信息（见上文训练通用统计信息）。
 
-![](images/seg_train.png)
+![](../images/seg_train.png)
 
 ### 评估日志字段
 
@@ -142,4 +142,4 @@ COCO格式的数据集不仅可以用于训练目标检测模型，也可以用�
 | category_acc       | 各类别的准确率，即各类别预测正确的像素数/预测为该类别的总像素数  |
 | kappa      | kappa系数，用于一致性检验  |
 
-![](images/seg_eval.png)
+![](../images/seg_eval.png)

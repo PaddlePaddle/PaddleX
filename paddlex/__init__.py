@@ -48,4 +48,4 @@ load_model = cv.models.load_model
 datasets = cv.datasets
 
 log_level = 2
-__version__ = '0.1.7.github'
+__version__ = '0.1.9.github'

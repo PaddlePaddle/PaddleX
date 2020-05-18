@@ -19,7 +19,7 @@ long_description = "PaddleX. A end-to-end deeplearning model development toolkit
 
 setuptools.setup(
     name="paddlex",
-    version='0.1.7',
+    version='0.1.9',
     author="paddlex",
     author_email="paddlex@baidu.com",
     description=long_description,
