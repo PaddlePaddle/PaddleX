@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 import paddle.fluid as fluid
 import os
+import sys
 import numpy as np
 import time
 import math
@@ -251,6 +252,9 @@ class BaseAPI:
             del self.init_params['self']
         if '__class__' in self.init_params:
             del self.init_params['__class__']
+        if 'model_name' in self.init_params:
+            del self.init_params['model_name']
+
         info['_init_params'] = self.init_params
 
         info['_Attributes']['num_classes'] = self.num_classes

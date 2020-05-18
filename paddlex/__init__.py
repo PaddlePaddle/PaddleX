@@ -27,6 +27,7 @@ from . import det
 from . import seg
 from . import cls
 from . import slim
+from . import convertor
 from . import tools
 
 try:
