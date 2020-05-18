@@ -87,11 +87,11 @@ def precompute_normlime_weights(list_data_, predict_fn, num_samples=3000, batch_
     return compute_normlime_weights(fname_list, save_dir, num_samples)
 
 
-def save_one_lime_predict_and_kmean_labels(lime_exp_all_weights, image_pred_labels, cluster_labels, save_path):
+def save_one_lime_predict_and_kmean_labels(lime_all_weights, image_pred_labels, cluster_labels, save_path):
 
     lime_weights = {}
     for label in image_pred_labels:
-        lime_weights[label] = lime_exp_all_weights[label]
+        lime_weights[label] = lime_all_weights[label]
 
     for_normlime_weights = {
         'lime_weights': lime_weights,  # a dict: class_label: (seg_label, weight)
@@ -145,15 +145,15 @@ def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, sav
 
         pred_label = pred_label[:top_k]
 
-        algo = lime_base.LimeImageExplainer()
-        explainer = algo.explain_instance(image_show[0], predict_fn, pred_label, 0,
+        algo = lime_base.LimeImageInterpreter()
+        interpreter = algo.interpret_instance(image_show[0], predict_fn, pred_label, 0,
                                           num_samples=num_samples, batch_size=batch_size)
 
         cluster_labels = kmeans_model.predict(
-            get_feature_for_kmeans(compute_features_for_kmeans(image_show).transpose((1, 2, 0)), explainer.segments)
+            get_feature_for_kmeans(compute_features_for_kmeans(image_show).transpose((1, 2, 0)), interpreter.segments)
         )
         save_one_lime_predict_and_kmean_labels(
-            explainer.local_exp, pred_label,
+            interpreter.local_weights, pred_label,
             cluster_labels,
             save_path
         )

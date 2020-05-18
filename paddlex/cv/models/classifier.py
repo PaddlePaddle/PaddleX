@@ -275,7 +275,7 @@ class BaseClassifier(BaseAPI):
         } for l in pred_label]
         return res
     
-    def explanation_predict(self, images):
+    def interpretation_predict(self, images):
         self.arrange_transforms(
                 transforms=self.test_transforms, mode='test')
         new_imgs = []

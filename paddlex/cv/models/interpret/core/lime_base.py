@@ -1,18 +1,33 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-#
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+"""
+Copyright (c) 2016, Marco Tulio Correia Ribeiro
+All rights reserved.
 
-from __future__ import print_function
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""
+"""
+The code in this file (lime_base.py) is modified from https://github.com/marcotcr/lime.
+"""
+
+
 import numpy as np
 import scipy as sp
 import sklearn
@@ -88,7 +103,7 @@ class LimeBase(object):
         return np.array(used_features)
 
     def feature_selection(self, data, labels, weights, num_features, method):
-        """Selects features for the model. see explain_instance_with_data to
+        """Selects features for the model. see interpret_instance_with_data to
            understand the parameters."""
         if method == 'none':
             return np.array(range(data.shape[1]))
@@ -154,15 +169,15 @@ class LimeBase(object):
             return self.feature_selection(data, labels, weights,
                                           num_features, n_method)
 
-    def explain_instance_with_data(self,
-                                   neighborhood_data,
-                                   neighborhood_labels,
-                                   distances,
-                                   label,
-                                   num_features,
-                                   feature_selection='auto',
-                                   model_regressor=None):
-        """Takes perturbed data, labels and distances, returns explanation.
+    def interpret_instance_with_data(self,
+                                     neighborhood_data,
+                                     neighborhood_labels,
+                                     distances,
+                                     label,
+                                     num_features,
+                                     feature_selection='auto',
+                                     model_regressor=None):
+        """Takes perturbed data, labels and distances, returns interpretation.
 
         Args:
             neighborhood_data: perturbed data, 2d array. first element is
@@ -170,8 +185,8 @@ class LimeBase(object):
             neighborhood_labels: corresponding perturbed labels. should have as
                                  many columns as the number of possible labels.
             distances: distances to original data point.
-            label: label for which we want an explanation
-            num_features: maximum number of features in explanation
+            label: label for which we want an interpretation
+            num_features: maximum number of features in interpretation
             feature_selection: how to select num_features. options are:
                 'forward_selection': iteratively add features to the model.
                     This is costly when num_features is high
@@ -183,7 +198,7 @@ class LimeBase(object):
                 'none': uses all features, ignores num_features
                 'auto': uses forward_selection if num_features <= 6, and
                     'highest_weights' otherwise.
-            model_regressor: sklearn regressor to use in explanation.
+            model_regressor: sklearn regressor to use in interpretation.
                 Defaults to Ridge regression if None. Must have
                 model_regressor.coef_ and 'sample_weight' as a parameter
                 to model_regressor.fit()
@@ -194,8 +209,8 @@ class LimeBase(object):
             exp is a sorted list of tuples, where each tuple (x,y) corresponds
             to the feature id (x) and the local weight (y). The list is sorted
             by decreasing absolute value of y.
-            score is the R^2 value of the returned explanation
-            local_pred is the prediction of the explanation model on the original instance
+            score is the R^2 value of the returned interpretation
+            local_pred is the prediction of the interpretation model on the original instance
         """
 
         weights = self.kernel_fn(distances)
@@ -227,7 +242,7 @@ class LimeBase(object):
                 prediction_score, local_pred)
 
 
-class ImageExplanation(object):
+class ImageInterpretation(object):
     def __init__(self, image, segments):
         """Init function.
 
@@ -238,7 +253,7 @@ class ImageExplanation(object):
         self.image = image
         self.segments = segments
         self.intercept = {}
-        self.local_exp = {}
+        self.local_weights = {}
         self.local_pred = None
 
     def get_image_and_mask(self, label, positive_only=True, negative_only=False, hide_rest=False,
@@ -246,40 +261,40 @@ class ImageExplanation(object):
         """Init function.
 
         Args:
-            label: label to explain
+            label: label to interpret
             positive_only: if True, only take superpixels that positively contribute to
                 the prediction of the label.
             negative_only: if True, only take superpixels that negatively contribute to
                 the prediction of the label. If false, and so is positive_only, then both
                 negativey and positively contributions will be taken.
                 Both can't be True at the same time
-            hide_rest: if True, make the non-explanation part of the return
+            hide_rest: if True, make the non-interpretation part of the return
                 image gray
-            num_features: number of superpixels to include in explanation
-            min_weight: minimum weight of the superpixels to include in explanation
+            num_features: number of superpixels to include in interpretation
+            min_weight: minimum weight of the superpixels to include in interpretation
 
         Returns:
             (image, mask), where image is a 3d numpy array and mask is a 2d
             numpy array that can be used with
             skimage.segmentation.mark_boundaries
         """
-        if label not in self.local_exp:
-            raise KeyError('Label not in explanation')
+        if label not in self.local_weights:
+            raise KeyError('Label not in interpretation')
         if positive_only & negative_only:
             raise ValueError("Positive_only and negative_only cannot be true at the same time.")
         segments = self.segments
         image = self.image
-        exp = self.local_exp[label]
+        local_weights_label = self.local_weights[label]
         mask = np.zeros(segments.shape, segments.dtype)
         if hide_rest:
             temp = np.zeros(self.image.shape)
         else:
             temp = self.image.copy()
         if positive_only:
-            fs = [x[0] for x in exp
+            fs = [x[0] for x in local_weights_label
                   if x[1] > 0 and x[1] > min_weight][:num_features]
         if negative_only:
-            fs = [x[0] for x in exp
+            fs = [x[0] for x in local_weights_label
                   if x[1] < 0 and abs(x[1]) > min_weight][:num_features]
         if positive_only or negative_only:
             for f in fs:
@@ -287,7 +302,7 @@ class ImageExplanation(object):
                 mask[segments == f] = 1
             return temp, mask
         else:
-            for f, w in exp[:num_features]:
+            for f, w in local_weights_label[:num_features]:
                 if np.abs(w) < min_weight:
                     continue
                 c = 0 if w < 0 else 1
@@ -300,32 +315,31 @@ class ImageExplanation(object):
         """
 
         Args:
-            label: label to explain
+            label: label to interpret
             min_weight:
 
         Returns:
             image, is a 3d numpy array
         """
-        if label not in self.local_exp:
-            raise KeyError('Label not in explanation')
+        if label not in self.local_weights:
+            raise KeyError('Label not in interpretation')
 
         from matplotlib import cm
 
         segments = self.segments
         image = self.image
-        exp = self.local_exp[label]
+        local_weights_label = self.local_weights[label]
         temp = np.zeros_like(image)
 
-        weight_max = abs(exp[0][1])
-        exp = [(f, w/weight_max) for f, w in exp]
-        exp = sorted(exp, key=lambda x: x[1], reverse=True)  # negatives are at last.
+        weight_max = abs(local_weights_label[0][1])
+        local_weights_label = [(f, w/weight_max) for f, w in local_weights_label]
+        local_weights_label = sorted(local_weights_label, key=lambda x: x[1], reverse=True)  # negatives are at last.
 
         cmaps = cm.get_cmap('Spectral')
-        # sigmoid_space = 1 / (1 + np.exp(-np.linspace(-20, 20, len(exp))))
-        colors = cmaps(np.linspace(0, 1, len(exp)))
+        colors = cmaps(np.linspace(0, 1, len(local_weights_label)))
         colors = colors[:, :3]
 
-        for i, (f, w) in enumerate(exp):
+        for i, (f, w) in enumerate(local_weights_label):
             if np.abs(w) < min_weight:
                 continue
             temp[segments == f] = image[segments == f].copy()
@@ -333,14 +347,14 @@ class ImageExplanation(object):
         return temp
 
 
-class LimeImageExplainer(object):
-    """Explains predictions on Image (i.e. matrix) data.
+class LimeImageInterpreter(object):
+    """Interpres predictions on Image (i.e. matrix) data.
     For numerical features, perturb them by sampling from a Normal(0,1) and
     doing the inverse operation of mean-centering and scaling, according to the
     means and stds in the training data. For categorical features, perturb by
     sampling according to the training distribution, and making a binary
     feature that is 1 when the value is the same as the instance being
-    explained."""
+    interpreted."""
 
     def __init__(self, kernel_width=.25, kernel=None, verbose=False,
                  feature_selection='auto', random_state=None):
@@ -355,7 +369,7 @@ class LimeImageExplainer(object):
             verbose: if true, print local prediction values from linear model
             feature_selection: feature selection method. can be
                 'forward_selection', 'lasso_path', 'none' or 'auto'.
-                See function 'explain_instance_with_data' in lime_base.py for
+                See function 'einterpret_instance_with_data' in lime_base.py for
                 details on what each of the options does.
             random_state: an integer or numpy.RandomState that will be used to
                 generate random numbers. If None, the random state will be
@@ -373,18 +387,18 @@ class LimeImageExplainer(object):
         self.feature_selection = feature_selection
         self.base = LimeBase(kernel_fn, verbose, random_state=self.random_state)
 
-    def explain_instance(self, image, classifier_fn, labels=(1,),
-                         hide_color=None,
-                         num_features=100000, num_samples=1000,
-                         batch_size=10,
-                         distance_metric='cosine',
-                         model_regressor=None
-                         ):
-        """Generates explanations for a prediction.
+    def interpret_instance(self, image, classifier_fn, labels=(1,),
+                           hide_color=None,
+                           num_features=100000, num_samples=1000,
+                           batch_size=10,
+                           distance_metric='cosine',
+                           model_regressor=None
+                           ):
+        """Generates interpretations for a prediction.
 
         First, we generate neighborhood data by randomly perturbing features
         from the instance (see __data_inverse). We then learn locally weighted
-        linear models on this neighborhood data to explain each of the classes
+        linear models on this neighborhood data to interpret each of the classes
         in an interpretable way (see lime_base.py).
 
         Args:
@@ -393,19 +407,19 @@ class LimeImageExplainer(object):
             classifier_fn: classifier prediction probability function, which
                 takes a numpy array and outputs prediction probabilities.  For
                 ScikitClassifiers , this is classifier.predict_proba.
-            labels: iterable with labels to be explained.
+            labels: iterable with labels to be interpreted.
             hide_color: TODO
-            num_features: maximum number of features present in explanation
+            num_features: maximum number of features present in interpretation
             num_samples: size of the neighborhood to learn the linear model
             batch_size: TODO
             distance_metric: the distance metric to use for weights.
-            model_regressor: sklearn regressor to use in explanation. Defaults
+            model_regressor: sklearn regressor to use in interpretation. Defaults
             to Ridge regression in LimeBase. Must have model_regressor.coef_
             and 'sample_weight' as a parameter to model_regressor.fit()
 
         Returns:
-            An ImageExplanation object (see lime_image.py) with the corresponding
-            explanations.
+            An ImageIinterpretation object (see lime_image.py) with the corresponding
+            interpretations.
         """
         if len(image.shape) == 2:
             image = gray2rgb(image)
@@ -455,15 +469,15 @@ class LimeImageExplainer(object):
             metric=distance_metric
         ).ravel()
 
-        ret_exp = ImageExplanation(image, segments)
+        interpretation_image = ImageInterpretation(image, segments)
         for label in top:
-            (ret_exp.intercept[label],
-             ret_exp.local_exp[label],
-             ret_exp.score, ret_exp.local_pred) = self.base.explain_instance_with_data(
+            (interpretation_image.intercept[label],
+             interpretation_image.local_weights[label],
+             interpretation_image.score, interpretation_image.local_pred) = self.base.interpret_instance_with_data(
                 data, labels, distances, label, num_features,
                 model_regressor=model_regressor,
                 feature_selection=self.feature_selection)
-        return ret_exp
+        return interpretation_image
 
     def data_labels(self,
                     image,

@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-from .cv.models.explanation import visualize
+from .cv.models.interpret import visualize
 
 visualize = visualize.visualize

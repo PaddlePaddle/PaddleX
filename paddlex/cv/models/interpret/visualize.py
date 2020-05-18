@@ -17,19 +17,19 @@ import cv2
 import copy
 import os.path as osp
 import numpy as np
-from .core.explanation import Explanation
+from .core.interpretation import Interpretation
 from .core.normlime_base import precompute_normlime_weights
 
 
 def visualize(img_file, 
               model, 
               dataset=None,
-              explanation_type='lime',
+              algo='lime',
               num_samples=3000, 
               batch_size=50,
               save_dir='./'):
     if model.status != 'Normal':
-        raise Exception('The explanation only can deal with the Normal model')
+        raise Exception('The interpretation only can deal with the Normal model')
     model.arrange_transforms(
                 transforms=model.test_transforms, mode='test')
     tmp_transforms = copy.deepcopy(model.test_transforms)
@@ -37,48 +37,48 @@ def visualize(img_file,
     img = tmp_transforms(img_file)[0]
     img = np.around(img).astype('uint8')
     img = np.expand_dims(img, axis=0)
-    explaier = None
-    if explanation_type == 'lime':
-        explaier = get_lime_explaier(img, model, dataset, num_samples=num_samples, batch_size=batch_size)
-    elif explanation_type == 'normlime':
+    interpreter = None
+    if algo == 'lime':
+        interpreter = get_lime_interpreter(img, model, dataset, num_samples=num_samples, batch_size=batch_size)
+    elif algo == 'normlime':
         if dataset is None:
-            raise Exception('The dataset is None. Cannot implement this kind of explanation')
-        explaier = get_normlime_explaier(img, model, dataset, 
+            raise Exception('The dataset is None. Cannot implement this kind of interpretation')
+        interpreter = get_normlime_interpreter(img, model, dataset, 
                                      num_samples=num_samples, batch_size=batch_size,
                                      save_dir=save_dir)
     else:
-        raise Exception('The {} explanantion method is not supported yet!'.format(explanation_type))
+        raise Exception('The {} interpretation method is not supported yet!'.format(algo))
     img_name = osp.splitext(osp.split(img_file)[-1])[0]
-    explaier.explain(img, save_dir=save_dir)
+    interpreter.interpret(img, save_dir=save_dir)
     
     
-def get_lime_explaier(img, model, dataset, num_samples=3000, batch_size=50):
+def get_lime_interpreter(img, model, dataset, num_samples=3000, batch_size=50):
     def predict_func(image):
         image = image.astype('float32')
         for i in range(image.shape[0]):
             image[i] = cv2.cvtColor(image[i], cv2.COLOR_RGB2BGR)
         tmp_transforms = copy.deepcopy(model.test_transforms.transforms)
         model.test_transforms.transforms = model.test_transforms.transforms[-2:]
-        out = model.explanation_predict(image)
+        out = model.interpretation_predict(image)
         model.test_transforms.transforms = tmp_transforms
         return out[0]
     labels_name = None
     if dataset is not None:
         labels_name = dataset.labels
-    explaier = Explanation('lime', 
+    interpreter = Interpretation('lime', 
                             predict_func,
                             labels_name,
                             num_samples=num_samples, 
                             batch_size=batch_size)
-    return explaier
+    return interpreter
 
 
-def get_normlime_explaier(img, model, dataset, num_samples=3000, batch_size=50, save_dir='./'):
+def get_normlime_interpreter(img, model, dataset, num_samples=3000, batch_size=50, save_dir='./'):
     def precompute_predict_func(image):
         image = image.astype('float32')
         tmp_transforms = copy.deepcopy(model.test_transforms.transforms)
         model.test_transforms.transforms = model.test_transforms.transforms[-2:]
-        out = model.explanation_predict(image)
+        out = model.interpretation_predict(image)
         model.test_transforms.transforms = tmp_transforms
         return out[0]
     def predict_func(image):
@@ -87,7 +87,7 @@ def get_normlime_explaier(img, model, dataset, num_samples=3000, batch_size=50, 
             image[i] = cv2.cvtColor(image[i], cv2.COLOR_RGB2BGR)
         tmp_transforms = copy.deepcopy(model.test_transforms.transforms)
         model.test_transforms.transforms = model.test_transforms.transforms[-2:]
-        out = model.explanation_predict(image)
+        out = model.interpretation_predict(image)
         model.test_transforms.transforms = tmp_transforms
         return out[0]
     labels_name = None
@@ -105,13 +105,13 @@ def get_normlime_explaier(img, model, dataset, num_samples=3000, batch_size=50, 
                                       num_samples=num_samples, 
                                       batch_size=batch_size,
                                       save_dir=save_dir)
-    explaier = Explanation('normlime', 
+    interpreter = Interpretation('normlime', 
                             predict_func,
                             labels_name,
                             num_samples=num_samples, 
                             batch_size=batch_size,
                             normlime_weights=npy_dir)
-    return explaier
+    return interpreter
 
 
 def precompute_for_normlime(predict_func, dataset, num_samples=3000, batch_size=50, save_dir='./'):

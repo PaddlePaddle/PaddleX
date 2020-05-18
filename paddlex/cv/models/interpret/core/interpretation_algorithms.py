@@ -46,12 +46,13 @@ class CAM(object):
         logit = result[0][0]
         if abs(np.sum(logit) - 1.0) > 1e-4:
             # softmax
+            logit = logit - np.max(logit)
             exp_result = np.exp(logit)
             probability = exp_result / np.sum(exp_result)
         else:
             probability = logit
 
-        # only explain top 1
+        # only interpret top 1
         pred_label = np.argsort(probability)
         pred_label = pred_label[-1:]
 
@@ -71,7 +72,7 @@ class CAM(object):
         print(f'predicted result: {ln} with probability {probability[pred_label[0]]:.3f}')
         return feature_maps, fc_weights
 
-    def explain(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
+    def interpret(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
         feature_maps, fc_weights = self.preparation_cam(data_)
         cam = get_cam(self.image, feature_maps, fc_weights, self.predicted_label)
 
@@ -123,7 +124,7 @@ class LIME(object):
         self.predict_fn = predict_fn
         self.labels = None
         self.image = None
-        self.lime_explainer = None
+        self.lime_interpreter = None
         self.label_names = label_names
 
     def preparation_lime(self, data_):
@@ -134,12 +135,13 @@ class LIME(object):
 
         if abs(np.sum(result) - 1.0) > 1e-4:
             # softmax
+            result = result - np.max(result)
             exp_result = np.exp(result)
             probability = exp_result / np.sum(exp_result)
         else:
             probability = result
 
-        # only explain top 1
+        # only interpret top 1
         pred_label = np.argsort(probability)
         pred_label = pred_label[-1:]
 
@@ -156,14 +158,14 @@ class LIME(object):
         print(f'predicted result: {ln} with probability {probability[pred_label[0]]:.3f}')
 
         end = time.time()
-        algo = lime_base.LimeImageExplainer()
-        explainer = algo.explain_instance(self.image, self.predict_fn, self.labels, 0,
-                                          num_samples=self.num_samples, batch_size=self.batch_size)
-        self.lime_explainer = explainer
+        algo = lime_base.LimeImageInterpreter()
+        interpreter = algo.interpret_instance(self.image, self.predict_fn, self.labels, 0,
+                                              num_samples=self.num_samples, batch_size=self.batch_size)
+        self.lime_interpreter = interpreter
         print('lime time: ', time.time() - end, 's.')
 
-    def explain(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
-        if self.lime_explainer is None:
+    def interpret(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
+        if self.lime_interpreter is None:
             self.preparation_lime(data_)
 
         if visualization or save_to_disk:
@@ -187,13 +189,13 @@ class LIME(object):
             axes[0].imshow(self.image)
             axes[0].set_title(f"label {ln}, proba: {self.predicted_probability: .3f}")
 
-            axes[1].imshow(mark_boundaries(self.image, self.lime_explainer.segments))
+            axes[1].imshow(mark_boundaries(self.image, self.lime_interpreter.segments))
             axes[1].set_title("superpixel segmentation")
 
             # LIME visualization
             for i, w in enumerate(weights_choices):
-                num_to_show = auto_choose_num_features_to_show(self.lime_explainer, l, w)
-                temp, mask = self.lime_explainer.get_image_and_mask(
+                num_to_show = auto_choose_num_features_to_show(self.lime_interpreter, l, w)
+                temp, mask = self.lime_interpreter.get_image_and_mask(
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols + i].imshow(mark_boundaries(temp, mask))
@@ -274,20 +276,20 @@ class NormLIME(object):
         print('performing NormLIME operations ...')
 
         cluster_labels = self.predict_cluster_labels(
-            compute_features_for_kmeans(image_show).transpose((1, 2, 0)), self._lime.lime_explainer.segments
+            compute_features_for_kmeans(image_show).transpose((1, 2, 0)), self._lime.lime_interpreter.segments
         )
 
         g_weights = self.predict_using_normlime_weights(self.labels, cluster_labels)
 
         return g_weights
 
-    def explain(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
+    def interpret(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
         if self.normlime_weights is None:
             raise ValueError("Not find the correct precomputed NormLIME result. \n"
                              "\t Try to call compute_normlime_weights() first or load the correct path.")
 
         g_weights = self.preparation_normlime(data_)
-        lime_weights = self._lime.lime_explainer.local_exp
+        lime_weights = self._lime.lime_interpreter.local_weights
 
         if visualization or save_to_disk:
             import matplotlib.pyplot as plt
@@ -312,23 +314,23 @@ class NormLIME(object):
             axes[0].imshow(self.image)
             axes[0].set_title(f"label {ln}, proba: {self.predicted_probability: .3f}")
 
-            axes[1].imshow(mark_boundaries(self.image, self._lime.lime_explainer.segments))
+            axes[1].imshow(mark_boundaries(self.image, self._lime.lime_interpreter.segments))
             axes[1].set_title("superpixel segmentation")
 
             # LIME visualization
             for i, w in enumerate(weights_choices):
-                num_to_show = auto_choose_num_features_to_show(self._lime.lime_explainer, l, w)
+                num_to_show = auto_choose_num_features_to_show(self._lime.lime_interpreter, l, w)
                 nums_to_show.append(num_to_show)
-                temp, mask = self._lime.lime_explainer.get_image_and_mask(
+                temp, mask = self._lime.lime_interpreter.get_image_and_mask(
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols + i].imshow(mark_boundaries(temp, mask))
                 axes[ncols + i].set_title(f"LIME: first {num_to_show} superpixels")
 
             # NormLIME visualization
-            self._lime.lime_explainer.local_exp = g_weights
+            self._lime.lime_interpreter.local_weights = g_weights
             for i, num_to_show in enumerate(nums_to_show):
-                temp, mask = self._lime.lime_explainer.get_image_and_mask(
+                temp, mask = self._lime.lime_interpreter.get_image_and_mask(
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols * 2 + i].imshow(mark_boundaries(temp, mask))
@@ -336,15 +338,15 @@ class NormLIME(object):
 
             # NormLIME*LIME visualization
             combined_weights = combine_normlime_and_lime(lime_weights, g_weights)
-            self._lime.lime_explainer.local_exp = combined_weights
+            self._lime.lime_interpreter.local_weights = combined_weights
             for i, num_to_show in enumerate(nums_to_show):
-                temp, mask = self._lime.lime_explainer.get_image_and_mask(
+                temp, mask = self._lime.lime_interpreter.get_image_and_mask(
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols * 3 + i].imshow(mark_boundaries(temp, mask))
                 axes[ncols * 3 + i].set_title(f"Combined: first {num_to_show} superpixels")
 
-            self._lime.lime_explainer.local_exp = lime_weights
+            self._lime.lime_interpreter.local_weights = lime_weights
 
         if save_to_disk and save_outdir is not None:
             os.makedirs(save_outdir, exist_ok=True)
@@ -354,9 +356,9 @@ class NormLIME(object):
             plt.show()
 
 
-def auto_choose_num_features_to_show(lime_explainer, label, percentage_to_show):
-    segments = lime_explainer.segments
-    lime_weights = lime_explainer.local_exp[label]
+def auto_choose_num_features_to_show(lime_interpreter, label, percentage_to_show):
+    segments = lime_interpreter.segments
+    lime_weights = lime_interpreter.local_weights[label]
     num_pixels_threshold_in_a_sp = segments.shape[0] * segments.shape[1] // len(np.unique(segments)) // 8
 
     # l1 norm with filtered weights.
@@ -381,7 +383,7 @@ def auto_choose_num_features_to_show(lime_explainer, label, percentage_to_show):
         return 5
 
     if n == 0:
-        return auto_choose_num_features_to_show(lime_explainer, label, percentage_to_show-0.1)
+        return auto_choose_num_features_to_show(lime_interpreter, label, percentage_to_show-0.1)
 
     return n
 
