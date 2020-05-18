@@ -71,6 +71,8 @@ def main():
             assert len(
                 fixed_input_shape
             ) == 2, "len of fixed input shape must == 2, such as [224,224]"
+        else:
+            fixed_input_shape = None
 
         model = pdx.load_model(args.model_dir, fixed_input_shape)
         model.export_inference_model(args.save_dir)
