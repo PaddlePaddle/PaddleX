@@ -371,6 +371,8 @@ class BaseAPI:
                    use_vdl=False,
                    early_stop=False,
                    early_stop_patience=5):
+        if train_dataset.num_samples < train_batch_size:
+            raise Exception('The amount of training datset must be larger than batch size.')
         if not osp.isdir(save_dir):
             if osp.exists(save_dir):
                 os.remove(save_dir)
