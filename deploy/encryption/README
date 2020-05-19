@@ -1,0 +1,15 @@
+在 centos 7 上编译通过
+
+1. Compiler
+    mkdir build && cd build
+    cmake ..
+    make
+
+
+2. output
+    include/model_code.h
+    include/paddle_model_encrypt.h
+    include/paddle_model_decrypt.h
+    lib/libpmodel-encrypt.so
+    lib/libpmodel-decrypt.so
+    bin/paddle_encrypt_tool

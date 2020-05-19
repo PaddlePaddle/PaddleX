@@ -1,0 +1,10 @@
+{
+    global:
+        paddle_generate_random_key;
+        paddle_encrypt_model;
+        paddle_security_load_model;
+        paddle_check_file_encrypted;
+        paddle_encrypt_dir;
+    local:
+        *;
+};
