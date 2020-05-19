@@ -16,7 +16,7 @@ import os
 import numpy as np
 import glob
 
-from ..as_data_reader.readers import read_image
+from paddlex.interpret.as_data_reader.readers import read_image
 from . import lime_base
 from ._session_preparation import compute_features_for_kmeans, h_pre_models_kmeans
 
