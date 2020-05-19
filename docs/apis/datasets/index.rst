@@ -29,3 +29,4 @@ PaddleX目前支持主流的CV数据集格式和 `EasyData <https://ai.baidu.com
    classification.md
    detection.md
    semantic_segmentation.md
+   dataset_convert.md

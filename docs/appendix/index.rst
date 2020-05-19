@@ -8,6 +8,9 @@
 
    model_zoo.md
    metrics.md
+   how_to_convert_dataset.md
+   datasets.md
+
 
 * PaddleX版本: v0.1.7
 * 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  

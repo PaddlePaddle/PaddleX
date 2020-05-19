@@ -29,7 +29,6 @@ from . import cls
 from . import slim
 from . import convertor
 from . import tools
-from . import interpret
 from . import deploy
 
 try:
@@ -51,4 +50,7 @@ load_model = cv.models.load_model
 datasets = cv.datasets
 
 log_level = 2
+
+from . import interpret
+
 __version__ = '0.2.0.github'

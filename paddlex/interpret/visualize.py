@@ -21,7 +21,7 @@ import paddlex as pdx
 from .interpretation_predict import interpretation_predict
 from .core.interpretation import Interpretation
 from .core.normlime_base import precompute_normlime_weights
-
+from .core._session_preparation import gen_user_home
 
 def visualize(img_file, 
               model, 
@@ -109,7 +109,7 @@ def get_normlime_interpreter(img, model, dataset, num_samples=3000, batch_size=5
     labels_name = None
     if dataset is not None:
         labels_name = dataset.labels
-    root_path = os.environ['HOME']
+    root_path = gen_user_home()
     root_path = osp.join(root_path, '.paddlex')
     pre_models_path = osp.join(root_path, "pre_models")
     if not osp.exists(pre_models_path):
