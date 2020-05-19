@@ -7,7 +7,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
   | - **数据准备**: 支持 `EasyData智能数据服务平台数据协议 <https://ai.baidu.com/easydata/>`_ ，通过平台便捷完成智能标注，低质数据清洗工作；同时兼容主流标注工具协议, 助力开发者更快完成数据准备工作。
   | - **模型训练**: 基于飞桨核心框架集成 `PaddleClas <https://github.com/PaddlePaddle/PaddleClas>`_ ，`PaddleDetection <https://github.com/PaddlePaddle/PaddleDetection>`_ ，`PaddleSeg <https://github.com/PaddlePaddle/PaddleSeg>`_ 视觉开发套件，丰富的高质量预训练模型，更快实现工业级模型训练。
   | - **模型调优**: 内置模型可解释性模块、`VisualDL <https://github.com/PaddlePaddle/VisualDL>`_ 可视化分析组件，提供丰富的信息更好地理解模型，优化模型。
-  | _ **多端安全部署**: 内置 `PaddleSlim <https://github.com/PaddlePaddle/PaddleSlim>`_ 模型压缩工具和AES模型加密SDK，结合Paddle Inference和 `Paddle Lite <https://github.com/PaddlePaddle/Paddle-Lite>`_ 便捷完成高性能的多端安全部署。
+  | - **多端安全部署**: 内置 `PaddleSlim <https://github.com/PaddlePaddle/PaddleSlim>`_ 模型压缩工具和AES模型加密SDK，结合Paddle Inference和 `Paddle Lite <https://github.com/PaddlePaddle/Paddle-Lite>`_ 便捷完成高性能的多端安全部署。
 
 融合产业实践
   | - 精选飞桨产业实践的成熟模型结构，开放案例实践教程，加速开发者产业落地。
