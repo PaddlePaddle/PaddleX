@@ -136,10 +136,8 @@ class DarkNet(object):
     def __call__(self, input):
         """
         Get the backbone of DarkNet, that is output for the 5 stages.
-
         Args:
             input (Variable): input variable.
-
         Returns:
             The last variables of each stage.
         """
