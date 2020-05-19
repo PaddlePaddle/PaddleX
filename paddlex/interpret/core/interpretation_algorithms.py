@@ -442,3 +442,6 @@ def save_fig(data_, save_outdir, algorithm_name, num_samples=3000):
                 save_outdir, f_out
             )
         )
+    print('The image of intrepretation result save in {}'.format(os.path.join(
+                save_outdir, f_out
+            )))
