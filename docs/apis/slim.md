@@ -8,7 +8,7 @@ paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size
 1. 获取模型中可裁剪卷积Kernel的名称。
 2. 计算每个可裁剪卷积Kernel不同裁剪率下的敏感度。
 【注意】卷积的敏感度是指在不同裁剪率下评估数据集预测精度的损失，通过得到的敏感度，可以决定最终模型需要裁剪的参数列表和各裁剪参数对应的裁剪率。  
-[查看使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/classification/cal_sensitivities_file.py#L33)
+[查看使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/classification/cal_sensitivities_file.py#L33) [查看裁剪教程](../tutorials/compress/classification.md)
 
 ### 参数
 
