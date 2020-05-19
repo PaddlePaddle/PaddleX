@@ -13,15 +13,30 @@
 #limitations under the License.
 
 import os
+import os.path as osp
 import paddle.fluid as fluid
+import paddlex as pdx
 import numpy as np
 from paddle.fluid.param_attr import ParamAttr
-from ..as_data_reader.readers import preprocess_image
+from paddlex.interpret.as_data_reader.readers import preprocess_image
 
-root_path = os.environ['HOME']
-root_path = os.path.join(root_path, '.paddlex')
-h_pre_models = os.path.join(root_path, "pre_models")
-h_pre_models_kmeans = os.path.join(h_pre_models, "kmeans_model.pkl")
+def gen_user_home():
+    if "HOME" in os.environ:
+        home_path = os.environ["HOME"]
+        if os.path.exists(home_path) and os.path.isdir(home_path):
+            return home_path
+    return os.path.expanduser('~')
+
+
+root_path = gen_user_home()
+root_path = osp.join(root_path, '.paddlex')
+h_pre_models = osp.join(root_path, "pre_models")
+if not osp.exists(h_pre_models):
+    if not osp.exists(root_path):
+        os.makedirs(root_path)
+    url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
+    pdx.utils.download_and_decompress(url, path=root_path)
+h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
 
 
 def paddle_get_fc_weights(var_name="fc_0.w_0"):

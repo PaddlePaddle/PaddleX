@@ -21,7 +21,7 @@ import paddlex as pdx
 from .interpretation_predict import interpretation_predict
 from .core.interpretation import Interpretation
 from .core.normlime_base import precompute_normlime_weights
-
+from .core._session_preparation import gen_user_home
 
 def visualize(img_file, 
               model, 
@@ -44,6 +44,8 @@ def visualize(img_file,
         'Now the interpretation visualize only be supported in classifier!'
     if model.status != 'Normal':
         raise Exception('The interpretation only can deal with the Normal model')
+    if not osp.exists(save_dir):
+        os.makedirs(save_dir)
     model.arrange_transforms(
                 transforms=model.test_transforms, mode='test')
     tmp_transforms = copy.deepcopy(model.test_transforms)
@@ -107,13 +109,14 @@ def get_normlime_interpreter(img, model, dataset, num_samples=3000, batch_size=5
     labels_name = None
     if dataset is not None:
         labels_name = dataset.labels
-    root_path = os.environ['HOME']
+    root_path = gen_user_home()
     root_path = osp.join(root_path, '.paddlex')
     pre_models_path = osp.join(root_path, "pre_models")
     if not osp.exists(pre_models_path):
-        os.makedirs(pre_models_path)
+        if not osp.exists(root_path):
+            os.makedirs(root_path)
         url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
-        pdx.utils.download_and_decompress(url, path=pre_models_path)
+        pdx.utils.download_and_decompress(url, path=root_path)
     npy_dir = precompute_for_normlime(precompute_predict_func, 
                                       dataset, 
                                       num_samples=num_samples, 

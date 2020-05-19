@@ -24,18 +24,15 @@ test_dataset = pdx.datasets.ImageNet(
     transforms=model.test_transforms)
 
 # 可解释性可视化
-# LIME算法
 pdx.interpret.visualize(
-    'mini_imagenet_veg/mushroom/n07734744_1106.JPEG',
-    model,
-    test_dataset,
-    algo='lime',
-    save_dir='./')
-
-# NormLIME算法
+         'mini_imagenet_veg/mushroom/n07734744_1106.JPEG', 
+          model,
+          test_dataset, 
+          algo='lime',
+          save_dir='./')
 pdx.interpret.visualize(
-    'mini_imagenet_veg/mushroom/n07734744_1106.JPEG',
-    model,
-    test_dataset,
-    algo='normlime',
-    save_dir='./')
+         'mini_imagenet_veg/mushroom/n07734744_1106.JPEG', 
+          model, 
+          test_dataset, 
+          algo='normlime',
+          save_dir='./')

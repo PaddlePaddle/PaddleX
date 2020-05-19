@@ -139,9 +139,10 @@ class BaseAPI:
         dataset.num_samples = batch_size * batch_num
         try:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
+            PaddleXPostTrainingQuantization._collect_target_varnames
         except:
             raise Exception(
-                "Model Quantization is not available, try to upgrade your paddlepaddle>=1.7.0"
+                "Model Quantization is not available, try to upgrade your paddlepaddle>=1.8.0"
             )
         is_use_cache_file = True
         if cache_dir is None:

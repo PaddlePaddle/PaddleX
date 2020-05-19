@@ -36,6 +36,7 @@ from skimage.color import gray2rgb
 from sklearn.linear_model import Ridge, lars_path
 from sklearn.utils import check_random_state
 
+import tqdm
 import copy
 from functools import partial
 from skimage.segmentation import quickshift
@@ -509,7 +510,7 @@ class LimeImageInterpreter(object):
         labels = []
         data[0, :] = 1
         imgs = []
-        for row in data:
+        for row in tqdm.tqdm(data):
             temp = copy.deepcopy(image)
             zeros = np.where(row == 0)[0]
             mask = np.zeros(segments.shape).astype(bool)
