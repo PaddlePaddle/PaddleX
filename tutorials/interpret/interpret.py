@@ -2,11 +2,12 @@ import os
 # 选择使用0号卡
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+import os.path as osp
 import paddlex as pdx
-from paddlex.cla import transforms
+from paddlex.cls import transforms
 
 # 下载和解压Imagenet果蔬分类数据集
-veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/mini_imagenet_veg.tar.gz'
+veg_dataset = 'https://bj.bcebos.com/paddlex/interpret/mini_imagenet_veg.tar.gz'
 pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义测试集的transform
@@ -24,7 +25,7 @@ test_dataset = pdx.datasets.ImageNet(
     transforms=test_transforms)
 
 # 下载和解压已训练好的MobileNetV2模型
-model_file = 'https://bj.bcebos.com/paddlex/models/mini_imagenet_veg_mobilenetv2.tar.gz'
+model_file = 'https://bj.bcebos.com/paddlex/interpret/mini_imagenet_veg_mobilenetv2.tar.gz'
 pdx.utils.download_and_decompress(model_file, path='./')
 
 # 导入模型
