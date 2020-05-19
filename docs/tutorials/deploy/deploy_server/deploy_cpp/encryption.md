@@ -1,4 +1,4 @@
-# Paddle模型加密方案
+# 模型加密
 
 飞桨团队推出模型加密方案，使用业内主流的AES加密技术对最终模型进行加密。飞桨用户可以通过PaddleX导出模型后，使用该方案对模型进行加密，预测时使用解密SDK进行模型解密并完成推理，大大提升AI应用安全性和开发效率。
 
@@ -29,8 +29,8 @@ paddlex-encryption
 ./paddlex-encryption/tool/paddlex_encrypt_tool -model_dir /path/to/paddlex_inference_model -save_dir /path/to/paddlex_encrypted_model
 ```
 
-`-model_dir`用于指定inference模型路径，可使用[导出小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
-![](images/encryt.png)
+`-model_dir`用于指定inference模型路径，可使用[导出小度熊识别模型](../deploy_python.html#inference)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
+![](../../../../images/encryt.png)
 
 ## 2. PaddleX C++加密部署
 
@@ -50,7 +50,7 @@ paddlex-encryption
 
 ## 样例
 
-可使用[导出小度熊识别模型](deploy.md#导出inference模型)中的测试图片进行预测。
+可使用[导出小度熊识别模型](../deploy_python.html#inference)中的测试图片进行预测。
 
 `样例一`：
 
