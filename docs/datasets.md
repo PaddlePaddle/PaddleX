@@ -42,7 +42,7 @@ labelB
 ...
 ```
 [点击这里](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)，下载蔬菜分类分类数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.ImageNet`([API说明](./apis/datasets.html#imagenet))加载分类数据集。
+在PaddleX中，使用`paddlex.cv.datasets.ImageNet`([API说明](./apis/datasets/classification.html#imagenet))加载分类数据集。
 
 ## 目标检测VOC
 目标检测VOC数据集包含图像文件夹、标注信息文件夹、标签文件及图像列表文件。
@@ -82,7 +82,7 @@ labelB
 ...
 ```
 [点击这里](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)，下载昆虫检测数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.VOCDetection`([API说明](./apis/datasets.html#vocdetection))加载目标检测VOC数据集。
+在PaddleX中，使用`paddlex.cv.datasets.VOCDetection`([API说明](./apis/datasets/detection.html#vocdetection))加载目标检测VOC数据集。
 
 ## 目标检测和实例分割COCO
 目标检测和实例分割COCO数据集包含图像文件夹及图像标注信息文件。
@@ -156,7 +156,7 @@ labelB
 
 
 [点击这里](https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz)，下载垃圾实例分割数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.COCODetection`([API说明](./apis/datasets.html#cocodetection))加载COCO格式数据集。
+在PaddleX中，使用`paddlex.cv.datasets.COCODetection`([API说明](./apis/datasets/detection.html#cocodetection))加载COCO格式数据集。
 
 ## 语义分割数据
 语义分割数据集包含原图、标注图及相应的文件列表文件。
@@ -201,7 +201,7 @@ labelB
 例如0，1，2，3表示有4种类别，标注类别最多为256类。其中可以指定特定的像素值用于表示该值的像素不参与训练和评估（默认为255）。
 
 [点击这里](https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz)，下载视盘语义分割数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.SegReader`([API说明](./apis/datasets.html#segreader))加载语义分割数据集。
+在PaddleX中，使用`paddlex.cv.datasets.SegReader`([API说明](./apis/datasets/semantic_segmentation.html#segdataset))加载语义分割数据集。
 
 
 ## 图像分类EasyDataCls
@@ -246,7 +246,7 @@ labelB
 ...
 ```
 [点击这里](https://ai.baidu.com/easydata/)，可以标注图像分类EasyDataCls数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.EasyDataCls`([API说明](./apis/datasets.html#easydatacls))加载分类数据集。
+在PaddleX中，使用`paddlex.cv.datasets.EasyDataCls`([API说明](./apis/datasets/classification.html#easydatacls))加载分类数据集。
 
 
 ## 目标检测和实例分割EasyDataDet
@@ -305,7 +305,7 @@ labelB
 ```
 
 [点击这里](https://ai.baidu.com/easydata/)，可以标注图像分类EasyDataDet数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.EasyDataDet`([API说明](./apis/datasets.html#easydatadet))加载分类数据集。
+在PaddleX中，使用`paddlex.cv.datasets.EasyDataDet`([API说明](./apis/datasets/detection.html#easydatadet))加载分类数据集。
 
 ## 语义分割EasyDataSeg
 
@@ -363,5 +363,5 @@ labelB
 ```
 
 [点击这里](https://ai.baidu.com/easydata/)，可以标注图像分类EasyDataSeg数据集。  
-在PaddleX中，使用`paddlex.cv.datasets.EasyDataSeg`([API说明](./apis/datasets.html#easydataseg))加载分类数据集。
+在PaddleX中，使用`paddlex.cv.datasets.EasyDataSeg`([API说明](./apis/datasets/semantic_segmentation.html#easydataseg))加载分类数据集。
 

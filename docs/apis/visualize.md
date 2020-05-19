@@ -137,6 +137,7 @@ paddlex.interpret.visualize(img_file,
 
 
 ### 使用示例
+> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/interpret/mini_imagenet_veg_mobilenetv2.tar.gz)和[数据集](https://bj.bcebos.com/paddlex/interpret/mini_imagenet_veg.tar.gz)，参考[`paddlex.datasets.ImageNet`类](.//datasets/classification.html#imagenet)构建test_dataset。在该数据集上预测可解释性的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/interpret.py)。
 ```
 import paddlex as pdx
 model = pdx.load_model('mini_imagenet_veg_mobilenetv2')
