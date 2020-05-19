@@ -9,4 +9,3 @@ C++部署方案位于目录PaddleX/deploy/cpp/下，且独立于PaddleX其他模
 
    deploy_cpp_win_vs2019.md
    deploy_cpp_linux.md
-   encryption.md
