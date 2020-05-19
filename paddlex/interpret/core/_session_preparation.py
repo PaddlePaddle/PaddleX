@@ -15,6 +15,7 @@
 import os
 import os.path as osp
 import paddle.fluid as fluid
+import paddlex as pdx
 import numpy as np
 from paddle.fluid.param_attr import ParamAttr
 from ..as_data_reader.readers import preprocess_image
