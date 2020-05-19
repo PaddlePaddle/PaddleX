@@ -106,7 +106,7 @@ d:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 
-编译成功后，预测demo的入口程序为`demo\detector`，`demo\classifer`，`demo\segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+编译成功后，预测demo的入口程序为`paddlex_inference\detector.exe`，`paddlex_inference\classifer.exe`，`paddlex_inference\segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -127,7 +127,7 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 不使用`GPU`测试图片  `\\path\\to\\xiaoduxiong.jpeg`  
 
 ```shell
-.\detector --model_dir=\\path\\to\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
 
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
@@ -143,6 +143,6 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 \\path\\to\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
-.\detector --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
