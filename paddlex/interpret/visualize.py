@@ -113,7 +113,8 @@ def get_normlime_interpreter(img, model, dataset, num_samples=3000, batch_size=5
     root_path = osp.join(root_path, '.paddlex')
     pre_models_path = osp.join(root_path, "pre_models")
     if not osp.exists(pre_models_path):
-        os.makedirs(root_path)
+        if not osp.exists(root_path):
+            os.makedirs(root_path)
         url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
         pdx.utils.download_and_decompress(url, path=root_path)
     npy_dir = precompute_for_normlime(precompute_predict_func, 
