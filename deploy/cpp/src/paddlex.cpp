@@ -31,6 +31,8 @@ void Model::create_predictor(const std::string& model_dir,
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
 #ifdef WITH_ENCRYPTION
   if (key != ""){
+    model_file = model_dir + OS_PATH_SEP + "__model__.encrypted";
+    params_file = model_dir + OS_PATH_SEP + "__params__.encrypted";
     paddle_security_load_model(&config, key.c_str(), model_file.c_str(), params_file.c_str());
   }
 #endif

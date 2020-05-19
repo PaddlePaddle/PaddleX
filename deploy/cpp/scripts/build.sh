@@ -4,26 +4,27 @@ WITH_GPU=OFF
 WITH_MKL=ON
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
 WITH_TENSORRT=OFF
-# TensorRT 的lib路径
+# TensorRT 的路径
 TENSORRT_DIR=/path/to/TensorRT/
 # Paddle 预测库路径
-PADDLE_DIR=/path/to/fluid_inference/
+PADDLE_DIR=/docker/jiangjiajun/PaddleDetection/deploy/cpp/fluid_inference
 # Paddle 的预测库是否使用静态库来编译
 # 使用TensorRT时，Paddle的预测库通常为动态库
 WITH_STATIC_LIB=OFF
 # CUDA 的 lib 路径
-CUDA_LIB=/path/to/cuda/lib/
+CUDA_LIB=/usr/local/cuda/lib64
 # CUDNN 的 lib 路径
-CUDNN_LIB=/path/to/cudnn/lib/
+CUDNN_LIB=/usr/local/cuda/lib64
 
-# 是否加载加密后的模型
-WITH_ENCRYPTION=OFF
-# 加密工具的路径
-ENCRYPTION_DIR=/path/to/encryption_tool/
+# 是否加载加密后的模型 
+WITH_ENCRYPTION=ON
+# 加密工具的路径, 如果使用自带预编译版本可不修改
+sh $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具
+ENCRYPTION_DIR=$(pwd)/paddlex-encryption
 
 # OPENCV 路径, 如果使用自带预编译版本可不修改
+sh $(pwd)/scripts/bootstrap.sh  # 下载预编译版本的opencv
 OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
-sh $(pwd)/scripts/bootstrap.sh
 
 # 以下无需改动
 rm -rf build
