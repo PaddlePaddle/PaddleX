@@ -32,16 +32,13 @@ pdx.utils.download_and_decompress(model_file, path='./')
 model = pdx.load_model('mini_imagenet_veg_mobilenetv2')
 
 # 可解释性可视化
-save_dir = 'interpret_results'
-if not osp.exists(save_dir):
-    os.makedirs(save_dir)
 pdx.interpret.visualize('mini_imagenet_veg/mushroom/n07734744_1106.JPEG', 
           model,
           test_dataset, 
           algo='lime',
-          save_dir=save_dir)
+          save_dir='./')
 pdx.interpret.visualize('mini_imagenet_veg/mushroom/n07734744_1106.JPEG', 
           model, 
           test_dataset, 
           algo='normlime',
-          save_dir=save_dir)
+          save_dir='./')

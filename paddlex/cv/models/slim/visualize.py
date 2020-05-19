@@ -61,5 +61,5 @@ def visualize(model, sensitivities_file, save_dir='./'):
             va='bottom',
             fontsize=3)
     suffix = osp.splitext(sensitivities_file)[-1]
-    plt.savefig('sensitivities.png', dpi=800)
+    plt.savefig(osp.join(save_dir, 'sensitivities.png'), dpi=800)
     plt.close()

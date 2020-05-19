@@ -14,7 +14,5 @@
 
 from __future__ import absolute_import
 from . import visualize
-from . import core
-from . import as_data_reader
 
 visualize = visualize.visualize
