@@ -1,4 +1,4 @@
-# Visual Studio 2019 Community CMake 编译指南
+# Windows平台部署
 
 ## 说明
 Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试。微软从`Visual Studio 2017`开始即支持直接管理`CMake`跨平台编译项目，但是直到`2019`才提供了稳定和完全的支持，所以如果你想使用CMake管理项目编译构建，我们推荐你使用`Visual Studio 2019`环境下构建。
@@ -62,19 +62,19 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
 
-![step2](images/vs2019_step1.png)
+![step2](../../images/vs2019_step1.png)
 
 2. 点击： `文件`->`打开`->`CMake`
 
-![step2.1](images/vs2019_step2.png)
+![step2.1](../../images/vs2019_step2.png)
 
 选择项目代码所在路径，并打开`CMakeList.txt`：
 
-![step2.2](images/vs2019_step3.png)
+![step2.2](../../images/vs2019_step3.png)
 
 3. 点击：`项目`->`PADDLEX_INFERENCE的CMake设置`
 
-![step3](images/vs2019_step4.png)
+![step3](../../images/vs2019_step4.png)
 
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径
 
@@ -88,16 +88,18 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 **注意：** 1. 使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾 2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
 
-![step4](images/vs2019_step5.png)
+![step4](../../images/vs2019_step5.png)
 
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
 
 5. 点击`生成`->`全部生成`
 
-![step6](images/vs2019_step6.png)
+![step6](../../images/vs2019_step6.png)
 
 
 ### Step5: 预测及可视化
+
+参考[导出inference模型](../deploy_python.html#inference)将模型导出为inference格式模型。
 
 上述`Visual Studio 2019`编译产出的可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
@@ -106,7 +108,7 @@ d:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 
-编译成功后，预测demo的入口程序为`demo\detector`，`demo\classifer`，`demo\segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+编译成功后，预测demo的入口程序为`paddlex_inference\detector.exe`，`paddlex_inference\classifer.exe`，`paddlex_inference\segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -120,14 +122,14 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 ## 样例
 
-可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
+可使用[小度熊识别模型](../deploy_python.html#inference)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 
 不使用`GPU`测试图片  `\\path\\to\\xiaoduxiong.jpeg`  
 
 ```shell
-.\detector --model_dir=\\path\\to\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
 
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
@@ -143,6 +145,6 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 \\path\\to\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
-.\detector --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
