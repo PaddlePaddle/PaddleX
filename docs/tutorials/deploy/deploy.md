@@ -39,6 +39,39 @@ C++部署方案位于目录`deploy/cpp/`下，且独立于PaddleX其他模块。
 - Linux平台：[linux](deploy_cpp_linux.md)
 - window平台：[windows](deploy_cpp_win_vs2019.md)
 
+### OpenVINO部署demo
+
+OpenVINO部署demo位于目录`deploy/openvino/`下，且独立于PaddleX其他模块，该demo目前支持在 Linux 完成编译和部署运行。目前PaddleX到OpenVINO的部署流程如下：
+
+graph LR
+   PaddleX --> ONNX --> OpenVINO IR --> OpenVINO Inference Engine
+#### step1
+
+PaddleX输出ONNX模型方法如下：
+
+```
+paddlex --export_onnx --model_dir=./xiaoduxiong_epoch_12 --save_dir=./onnx_model
+```
+
+|目前支持的模型|
+|-----|
+|ResNet18|
+|ResNet34|
+|ResNet50|
+|ResNet101|
+|ResNet50_vd|
+|ResNet101_vd|
+|ResNet50_vd_ssld|
+|ResNet101_vd_ssld
+|DarkNet53|
+|MobileNetV1|
+|MobileNetV2|
+|DenseNet121|
+|DenseNet161|
+|DenseNet201|
+
+得到ONNX模型后，OpenVINO的部署参考：[OpenVINO部署](deploy_openvino.md)
+
 ### 预测性能对比
 
 #### 测试环境

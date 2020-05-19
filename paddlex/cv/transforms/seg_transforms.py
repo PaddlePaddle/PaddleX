@@ -101,11 +101,10 @@ class Compose(SegTransform):
                 if len(outputs) == 3:
                     label = outputs[2]
             else:
+                im = execute_imgaug(op, im)
                 if label is not None:
-                    im, label = execute_imgaug(op, im, segment_map=label)
                     outputs = (im, im_info, label)
                 else:
-                    im, = execute_imgaug(op, im)
                     outputs = (im, im_info)
         return outputs
 
@@ -391,8 +390,8 @@ class ResizeByShort(SegTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(
-                scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -423,8 +422,8 @@ class ResizeRangeScaling(SegTransform):
     def __init__(self, min_value=400, max_value=600):
         if min_value > max_value:
             raise ValueError('min_value must be less than max_value, '
-                             'but they are {} and {}.'.format(
-                                 min_value, max_value))
+                             'but they are {} and {}.'.format(min_value,
+                                                              max_value))
         self.min_value = min_value
         self.max_value = max_value
 
@@ -761,8 +760,8 @@ class RandomPaddingCrop(SegTransform):
                 h_off = np.random.randint(img_height - crop_height + 1)
                 w_off = np.random.randint(img_width - crop_width + 1)
 
-                im = im[h_off:(crop_height + h_off), w_off:(
-                    w_off + crop_width), :]
+                im = im[h_off:(crop_height + h_off), w_off:(w_off + crop_width
+                                                            ), :]
                 if label is not None:
                     label = label[h_off:(crop_height + h_off), w_off:(
                         w_off + crop_width)]

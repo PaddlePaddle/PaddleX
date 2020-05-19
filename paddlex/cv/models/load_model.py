@@ -38,12 +38,9 @@ def load_model(model_dir, fixed_input_shape=None):
     if not hasattr(paddlex.cv.models, info['Model']):
         raise Exception("There's no attribute {} in paddlex.cv.models".format(
             info['Model']))
-
-    if info['_Attributes']['model_type'] == 'classifier':
-        model = paddlex.cv.models.BaseClassifier(**info['_init_params'])
-    else:
-        model = getattr(paddlex.cv.models,
-                        info['Model'])(**info['_init_params'])
+    if 'model_name' in info['_init_params']:
+        del info['_init_params']['model_name']
+    model = getattr(paddlex.cv.models, info['Model'])(**info['_init_params'])
     model.fixed_input_shape = fixed_input_shape
     if status == "Normal" or \
             status == "Prune" or status == "fluid.save":

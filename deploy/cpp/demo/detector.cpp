@@ -26,6 +26,7 @@ DEFINE_string(model_dir, "", "Path of inference model");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_bool(use_trt, false, "Infering with TensorRT");
 DEFINE_int32(gpu_id, 0, "GPU card id");
+DEFINE_string(key, "", "key of encryption");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
@@ -45,7 +46,7 @@ int main(int argc, char** argv) {
 
   // 加载模型
   PaddleX::Model model;
-  model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_use_trt, FLAGS_gpu_id);
+  model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_use_trt, FLAGS_gpu_id, FLAGS_key);
 
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
   std::string save_dir = "output";
@@ -74,7 +75,7 @@ int main(int argc, char** argv) {
 
       // 可视化
       cv::Mat vis_img =
-          PaddleX::VisualizeDet(im, result, model.labels, colormap, 0.5);
+          PaddleX::Visualize(im, result, model.labels, colormap, 0.5);
       std::string save_path =
           PaddleX::generate_save_path(FLAGS_save_dir, image_path);
       cv::imwrite(save_path, vis_img);
@@ -97,7 +98,7 @@ int main(int argc, char** argv) {
 
     // 可视化
     cv::Mat vis_img =
-        PaddleX::VisualizeDet(im, result, model.labels, colormap, 0.5);
+        PaddleX::Visualize(im, result, model.labels, colormap, 0.5);
     std::string save_path =
         PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
     cv::imwrite(save_path, vis_img);

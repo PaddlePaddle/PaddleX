@@ -106,7 +106,7 @@ d:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 
-编译成功后，预测demo的入口程序为`detector`，`classifer`，`segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+编译成功后，预测demo的入口程序为`demo\detector`，`demo\classifer`，`demo\segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |

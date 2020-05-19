@@ -27,6 +27,7 @@ from . import det
 from . import seg
 from . import cls
 from . import slim
+from . import convertor
 from . import tools
 
 try:
@@ -48,4 +49,4 @@ load_model = cv.models.load_model
 datasets = cv.datasets
 
 log_level = 2
-__version__ = '0.1.7.github'
+__version__ = '0.2.0.github'

@@ -1,4 +1,4 @@
-# 分类-paddlex.cls.transforms
+# 图像分类-cls.transforms
 
 对图像分类任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
 
