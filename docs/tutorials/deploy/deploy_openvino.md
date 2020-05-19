@@ -110,7 +110,7 @@ paddlex --export_onnx --model_dir=/path/to/xiaoduxiong_epoch_12 --save_dir=/path
 
 ### 样例
 
-可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
+可使用[小度熊识别模型](deploy_server/deploy_python.html#inference)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 
