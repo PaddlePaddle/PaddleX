@@ -18,7 +18,7 @@ import paddle.fluid as fluid
 import paddlex as pdx
 import numpy as np
 from paddle.fluid.param_attr import ParamAttr
-from ..as_data_reader.readers import preprocess_image
+from paddlex.interpret.as_data_reader.readers import preprocess_image
 
 def gen_user_home():
     if "HOME" in os.environ:
