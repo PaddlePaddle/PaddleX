@@ -29,6 +29,7 @@ from . import cls
 from . import slim
 from . import convertor
 from . import tools
+from . import interpret
 
 try:
     import pycocotools
