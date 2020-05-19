@@ -31,7 +31,7 @@ PaddleX提供两种开发模式，满足不同场景和用户需求：
 
 - **Python开发模式：** 通过Python API方式完成全流程使用或集成，该模型提供全面、灵活、开放的深度学习功能，有更高的定制化空间。
 
-- **GUI开发模式：** PaddleX-GUI支持`Python开发模式`下的常用功能，以更低门槛的方式快速完成产业验证的模型训练。
+- **Padlde-GUI模式：** PaddleX-GUI支持`Python开发模式`下的常用功能，以更低门槛的方式快速完成产业验证的模型训练。
 
 开发者可根据自身需要按需选择不同的模式进行安装使用。
 
@@ -48,7 +48,7 @@ PaddleX提供两种开发模式，满足不同场景和用户需求：
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
 
-### GUI开发模式安装
+### PaddleX-GUI安装
 
 进入PaddleX官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载绿色安装包，开箱即用。
 Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/latest/paddlex_gui/index.html)
