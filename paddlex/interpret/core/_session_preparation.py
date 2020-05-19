@@ -15,7 +15,7 @@
 import os
 import os.path as osp
 import paddle.fluid as fluid
-import paddlex
+import paddlex as pdx
 import numpy as np
 from paddle.fluid.param_attr import ParamAttr
 from ..as_data_reader.readers import preprocess_image
@@ -35,7 +35,7 @@ if not osp.exists(h_pre_models):
     if not osp.exists(root_path):
         os.makedirs(root_path)
     url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
-    paddlex.utils.download_and_decompress(url, path=root_path)
+    pdx.utils.download_and_decompress(url, path=root_path)
 h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
 
 
