@@ -10,3 +10,4 @@ PaddleX API说明文档
    slim.md
    load_model.md
    visualize.md
+   deploy.md
