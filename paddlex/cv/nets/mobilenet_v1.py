@@ -24,7 +24,6 @@ from paddle.fluid.regularizer import L2Decay
 class MobileNetV1(object):
     """
     MobileNet v1, see https://arxiv.org/abs/1704.04861
-
     Args:
         norm_type (str): normalization type, 'bn' and 'sync_bn' are supported
         norm_decay (float): weight decay for normalization layer weights
