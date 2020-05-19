@@ -17,9 +17,10 @@ import numpy as np
 import time
 
 from . import lime_base
-from ..as_data_reader.readers import read_image
 from ._session_preparation import paddle_get_fc_weights, compute_features_for_kmeans, h_pre_models_kmeans
 from .normlime_base import combine_normlime_and_lime, get_feature_for_kmeans, load_kmeans_model
+from paddlex.interpret.as_data_reader.readers import read_image
+
 
 import cv2
 
