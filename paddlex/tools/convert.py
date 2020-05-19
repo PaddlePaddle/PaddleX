@@ -14,4 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .convert import *
+from .x2imagenet import EasyData2ImageNet
+from .x2coco import LabelMe2COCO
+from .x2coco import EasyData2COCO
+from .x2voc import LabelMe2VOC
+from .x2voc import EasyData2VOC
+from .x2seg import JingLing2Seg
+from .x2seg import LabelMe2Seg
+from .x2seg import EasyData2Seg
+
+easydata2imagenet = EasyData2ImageNet().convert
+labelme2coco = LabelMe2COCO().convert
+easydata2coco = EasyData2COCO().convert
+labelme2voc = LabelMe2VOC().convert
+easydata2voc = EasyData2VOC().convert
+jingling2seg = JingLing2Seg().convert
+labelme2seg = LabelMe2Seg().convert
+easydata2seg = EasyData2Seg().convert
