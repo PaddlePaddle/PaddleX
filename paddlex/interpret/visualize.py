@@ -21,14 +21,7 @@ import paddlex as pdx
 from .interpretation_predict import interpretation_predict
 from .core.interpretation import Interpretation
 from .core.normlime_base import precompute_normlime_weights
-
-
-def gen_user_home():
-    if "HOME" in os.environ:
-        home_path = os.environ["HOME"]
-        if os.path.exists(home_path) and os.path.isdir(home_path):
-            return home_path
-    return os.path.expanduser('~')
+from .core._session_preparation import gen_user_home
 
 def visualize(img_file, 
               model, 
