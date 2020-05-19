@@ -4,7 +4,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 import os.path as osp
 import paddlex as pdx
-from paddlex.cls import transforms
 
 # 下载和解压Imagenet果蔬分类数据集
 veg_dataset = 'https://bj.bcebos.com/paddlex/interpret/mini_imagenet_veg.tar.gz'
@@ -16,7 +15,6 @@ pdx.utils.download_and_decompress(model_file, path='./')
 
 # 加载模型
 model = pdx.load_model('mini_imagenet_veg_mobilenetv2')
-
 
 # 定义测试所用的数据集
 test_dataset = pdx.datasets.ImageNet(
