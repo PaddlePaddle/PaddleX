@@ -274,20 +274,7 @@ class BaseClassifier(BaseAPI):
             'score': result[0][0][l]
         } for l in pred_label]
         return res
-    
-    def interpretation_predict(self, images):
-        self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-        new_imgs = []
-        for i in range(images.shape[0]):
-            img = images[i]
-            new_imgs.append(self.test_transforms(img)[0])
-        new_imgs = np.array(new_imgs)
-        result = self.exe.run(
-            self.test_prog,
-            feed={'image': new_imgs},
-            fetch_list=list(self.explanation_feats.values()))
-        return result
+
 
 class ResNet18(BaseClassifier):
     def __init__(self, num_classes=1000):
