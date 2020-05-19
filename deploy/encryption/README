@@ -1,15 +1,19 @@
-在 centos 7 上编译通过
+在 centos 7 上GCC 4.8.5 编译通过
 
-1. Compiler
-    mkdir build && cd build
-    cmake ..
-    make
+Step1: 编译
+    编译 cmake 的命令在 build.sh 中，请根据实际情况修改主要参数PADDLE_INCLUDE_DIR的路径
+    修改脚本设置好参数后，执行build脚本
+    sh build.sh
 
+Step2: output
+    2.1 头文件
+        include/model_code.h
+        include/paddle_model_encrypt.h
+        include/paddle_model_decrypt.h
 
-2. output
-    include/model_code.h
-    include/paddle_model_encrypt.h
-    include/paddle_model_decrypt.h
-    lib/libpmodel-encrypt.so
-    lib/libpmodel-decrypt.so
-    bin/paddle_encrypt_tool
+    2.2 编译产出库
+        lib/libpmodel-encrypt.so
+        lib/libpmodel-decrypt.so
+
+    2.3 执行工具（使用-h参数查看）
+        bin/paddle_encrypt_tool

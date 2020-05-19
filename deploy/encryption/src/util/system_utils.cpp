@@ -1,7 +1,3 @@
-//
-// Created by zhongjiafeng on 5/11/20.
-//
-
 #include <sys/timeb.h>
 #include <unistd.h>
 #include <string.h>

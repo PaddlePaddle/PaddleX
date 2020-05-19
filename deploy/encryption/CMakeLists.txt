@@ -24,6 +24,7 @@ set(OPENSSL_LIBS
 include_directories(
         include
         ${OPENSSL_INCLUDE}
+	${PADDLE_INCLUDE_DIR}
 )
 
 add_subdirectory(${SRC_ROOT_DIR})

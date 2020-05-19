@@ -1,7 +1,3 @@
-//
-// Created by zhongjiafeng on 5/11/20.
-//
-
 #ifndef PADDLE_MODEL_PROTECT_CONSTANT_CONSTANT_MODEL_H
 #define PADDLE_MODEL_PROTECT_CONSTANT_CONSTANT_MODEL_H
 

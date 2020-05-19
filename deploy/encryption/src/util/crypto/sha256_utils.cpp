@@ -1,7 +1,3 @@
-//
-// Created by zhongjiafeng on 5/12/20.
-//
-
 #include "sha256_utils.h"
 #include <iomanip>
 #include <stdio.h>
