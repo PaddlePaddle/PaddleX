@@ -242,7 +242,13 @@ class NormLIME(object):
         self.label_names = label_names
 
     def predict_cluster_labels(self, feature_map, segments):
-        return self.kmeans_model.predict(get_feature_for_kmeans(feature_map, segments))
+        X = get_feature_for_kmeans(feature_map, segments)
+        try:
+            cluster_labels = self.kmeans_model.predict(X)
+        except AttributeError:
+            from sklearn.metrics import pairwise_distances_argmin_min
+            cluster_labels, _ = pairwise_distances_argmin_min(X, self.kmeans_model.cluster_centers_)
+        return cluster_labels
 
     def predict_using_normlime_weights(self, pred_labels, predicted_cluster_labels):
         # global weights
