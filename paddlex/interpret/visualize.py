@@ -110,7 +110,7 @@ def get_normlime_interpreter(img, model, dataset, num_samples=3000, batch_size=5
     if dataset is not None:
         labels_name = dataset.labels
     root_path = os.environ['HOME']
-    root_path = osp.join(root_path, '.paddlex0')
+    root_path = osp.join(root_path, '.paddlex')
     pre_models_path = osp.join(root_path, "pre_models")
     if not osp.exists(pre_models_path):
         os.makedirs(root_path)
