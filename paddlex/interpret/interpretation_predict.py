@@ -25,5 +25,5 @@ def interpretation_predict(model, images):
     result = model.exe.run(
         model.test_prog,
         feed={'image': new_imgs},
-        fetch_list=list(model.explanation_feats.values()))
+        fetch_list=list(model.interpretation_feats.values()))
     return result

@@ -65,7 +65,7 @@ class BaseClassifier(BaseAPI):
         inputs = OrderedDict([('image', image)])
         outputs = OrderedDict([('predict', softmax_out)])
         if mode == 'test':
-            self.explanation_feats = OrderedDict([('logits', net_out)])
+            self.interpretation_feats = OrderedDict([('logits', net_out)])
         if mode != 'test':
             cost = fluid.layers.cross_entropy(input=softmax_out, label=label)
             avg_cost = fluid.layers.mean(cost)
