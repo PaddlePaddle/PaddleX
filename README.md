@@ -12,17 +12,17 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
 ## 特点
 
 - **全流程打通** 
-  - 数据准备：支持LabelMe，精灵标注等主流数据标注工具协议，同时无缝集成[EasyData智能数据服务平台](https://ai.baidu.com/easydata/), 助力开发者高效获取AI开发所需高质量数据。
-  - 模型训练：基于飞桨核心框架集成[PaddleClas](https://github.com/PaddlePaddle/PaddleClas), [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection), [PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg)视觉开发套件，[VisualDL](https://github.com/PaddlePaddle/VisualDL)可视化分析组件，高效完成模型训练。
-  - 多端部署：内置[PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)模型压缩工具和AES模型加密SDK，结合Paddle Inference和[Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite)便捷完成高性能且可靠的多端部署。
+  - **数据准备**：支持[EasyData智能数据服务平台](https://ai.baidu.com/easydata/)数据协议，通过平台便捷完成智能标注,低质数据清洗工作, 同时兼容主流标注工具协议, 助力开发者更快完成数据准备工作。
+  - **模型训练**：集成[PaddleClas](https://github.com/PaddlePaddle/PaddleClas), [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection), [PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg)视觉开发套件，丰富的高质量预训练模型，更快实现工业级模型效果。
+  - **模型调优**：内置模型可解释性模块、[VisualDL](https://github.com/PaddlePaddle/VisualDL)可视化分析组件, 提供丰富的信息更好地理解模型，优化模型。
+  - **多端安全部署**：内置[PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)模型压缩工具和**模型加密部署模块**，结合Paddle Inference或[Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite)便捷完成高性能的多端安全部署。
 
 - **融合产业实践** 
   - 精选飞桨产业实践的成熟模型结构，开放案例实践教程，加速开发者产业落地。
-  - 通过[PaddleHub](https://github.com/PaddlePaddle/Paddle)内置丰富的飞桨高质量预训练模型，助力开发者高效实现飞桨Master模式。
 
 - **易用易集成**
-  - PadldeX提供简洁易用的全流程API，几行代码即可实现上百种数据增强、模型可解释性、C++模型部署等功能。
-  - 提供以PaddleX API为核心集成的跨平台GUI界面，降低深度学习全流程应用门槛。
+  - 统一易用的全流程API，5步完成模型训练，10行代码实现Python/C++高性能部署。
+  - 提供以PaddleX为核心集成的跨平台可视化工具PaddleX-GUI，快速体验飞桨深度学习全流程。
 
 
 ## 安装
@@ -31,7 +31,7 @@ PaddleX提供两种开发模式，满足不同场景和用户需求：
 
 - **Python开发模式：** 通过Python API方式完成全流程使用或集成，该模型提供全面、灵活、开放的深度学习功能，有更高的定制化空间。
 
-- **GUI开发模式：** 以PaddleX API为核心集成的跨平台GUI客户端，支持`Python开发模式`下的常用功能，以更低门槛的方式快速完成产业验证的模型训练。
+- **Padlde-GUI模式：** PaddleX-GUI支持`Python开发模式`下的常用功能，以更低门槛的方式快速完成产业验证的模型训练。
 
 开发者可根据自身需要按需选择不同的模式进行安装使用。
 
@@ -48,20 +48,19 @@ PaddleX提供两种开发模式，满足不同场景和用户需求：
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
 
-### GUI开发模式安装
+### PaddleX-GUI安装
 
 进入PaddleX官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载绿色安装包，开箱即用。
-GUI模式的使用教程可参考[PaddleX GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/latest/paddlex_gui/index.html)
+Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/latest/paddlex_gui/index.html)
 
 ## 使用文档 
 
 推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/latest/index.html)，快速查阅读使用教程和API文档说明。
 
-- [10分钟快速上手](https://paddlex.readthedocs.io/zh_CN/latest/quick_start.html)
-- [PaddleX模型训练](https://paddlex.readthedocs.io/zh_CN/latest/tutorials/train/index.html#id1)
-- [PaddleX模型压缩](https://paddlex.readthedocs.io/zh_CN/latest/slim/index.html#id1)
-- [PaddleX模型库](https://paddlex.readthedocs.io/zh_CN/latest/model_zoo.html#id1)
-- [PaddleX多端部署](docs/deploy.md)
+- [10分钟快速上手使用](https://paddlex.readthedocs.io/zh_CN/latest/quick_start.html)
+- [PaddleX全流程开发教程](https://paddlex.readthedocs.io/zh_CN/latest/tutorials/index.html)
+- [PaddleX视觉方案介绍](https://paddlex.readthedocs.io/zh_CN/latest/cv_solutions.html)
+- [PaddleX API参考文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/index.html)
 
 ## 在线教程
 
@@ -74,13 +73,17 @@ GUI模式的使用教程可参考[PaddleX GUI模式使用教程](https://paddlex
 ## 交流与反馈
 
 - 项目官网: https://www.paddlepaddle.org.cn/paddle/paddlex
-- PaddleX用户QQ群: 1045148026 (手机QQ扫描如下二维码快速加入)  
+- PaddleX用户交流群: 1045148026 (手机QQ扫描如下二维码快速加入)  
 <img src="./docs/images/QQGroup.jpeg" width="195" height="300" alt="QQGroup" align="center" />
 
 ## FAQ
 
 ## 更新日志
+* 2020.05.20
 
+  **`v1.0.0`**
+  * 初始版本发布。
+  
 ## 贡献代码
 
 我们非常欢迎您为PaddleX贡献代码或者提供使用建议。如果您可以修复某个issue或者增加一个新功能，欢迎给我们提交Pull Requests.
