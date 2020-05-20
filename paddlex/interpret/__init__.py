@@ -15,4 +15,5 @@
 from __future__ import absolute_import
 from . import visualize
 
-visualize = visualize.visualize
+lime = visualize.lime
+normlime = visualize.normlime

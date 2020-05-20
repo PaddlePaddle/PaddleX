@@ -13,12 +13,14 @@
 #limitations under the License.
 
 import os
+import os.path as osp
 import numpy as np
 import glob
 
 from paddlex.interpret.as_data_reader.readers import read_image
+import paddlex.utils.logging as logging
 from . import lime_base
-from ._session_preparation import compute_features_for_kmeans, h_pre_models_kmeans
+from ._session_preparation import compute_features_for_kmeans, gen_user_home
 
 
 def load_kmeans_model(fname):
@@ -102,6 +104,15 @@ def save_one_lime_predict_and_kmean_labels(lime_all_weights, image_pred_labels, 
 
 
 def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, save_dir):
+    root_path = gen_user_home()
+    root_path = osp.join(root_path, '.paddlex')
+    h_pre_models = osp.join(root_path, "pre_models")
+    if not osp.exists(h_pre_models):
+        if not osp.exists(root_path):
+            os.makedirs(root_path)
+        url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
+        pdx.utils.download_and_decompress(url, path=root_path)
+    h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
     kmeans_model = load_kmeans_model(h_pre_models_kmeans)
 
     for data_index, each_data_ in enumerate(list_data_):
@@ -113,11 +124,10 @@ def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, sav
             save_path = os.path.join(save_dir, save_path)
 
         if os.path.exists(save_path):
-            print(f'{save_path} exists, not computing this one.')
+            logging.info(save_path + ' exists, not computing this one.', use_color=True)
             continue
-
-        print('processing', each_data_ if isinstance(each_data_, str) else data_index,
-              f', {data_index}/{len(list_data_)}')
+        img_file_name = each_data_ if isinstance(each_data_, str) else data_index
+        logging.info('processing '+ img_file_name + ' [{}/{}]'.format(data_index, len(list_data_)), use_color=True)
 
         image_show = read_image(each_data_)
         result = predict_fn(image_show)
@@ -149,9 +159,12 @@ def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, sav
         interpreter = algo.interpret_instance(image_show[0], predict_fn, pred_label, 0,
                                           num_samples=num_samples, batch_size=batch_size)
 
-        cluster_labels = kmeans_model.predict(
-            get_feature_for_kmeans(compute_features_for_kmeans(image_show).transpose((1, 2, 0)), interpreter.segments)
-        )
+        X = get_feature_for_kmeans(compute_features_for_kmeans(image_show).transpose((1, 2, 0)), interpreter.segments)
+        try:
+            cluster_labels = kmeans_model.predict(X)
+        except AttributeError:
+            from sklearn.metrics import pairwise_distances_argmin_min
+            cluster_labels, _ = pairwise_distances_argmin_min(X, kmeans_model.cluster_centers_)
         save_one_lime_predict_and_kmean_labels(
             interpreter.local_weights, pred_label,
             cluster_labels,

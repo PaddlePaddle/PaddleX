@@ -13,11 +13,12 @@
 #limitations under the License.
 
 import os
+import os.path as osp
 import numpy as np
 import time
 
 from . import lime_base
-from ._session_preparation import paddle_get_fc_weights, compute_features_for_kmeans, h_pre_models_kmeans
+from ._session_preparation import paddle_get_fc_weights, compute_features_for_kmeans, gen_user_home
 from .normlime_base import combine_normlime_and_lime, get_feature_for_kmeans, load_kmeans_model
 from paddlex.interpret.as_data_reader.readers import read_image
 
@@ -215,6 +216,15 @@ class LIME(object):
 class NormLIME(object):
     def __init__(self, predict_fn, label_names, num_samples=3000, batch_size=50,
                  kmeans_model_for_normlime=None, normlime_weights=None):
+        root_path = gen_user_home()
+        root_path = osp.join(root_path, '.paddlex')
+        h_pre_models = osp.join(root_path, "pre_models")
+        if not osp.exists(h_pre_models):
+            if not osp.exists(root_path):
+                os.makedirs(root_path)
+            url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
+            pdx.utils.download_and_decompress(url, path=root_path)
+        h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
         if kmeans_model_for_normlime is None:
             try:
                 self.kmeans_model = load_kmeans_model(h_pre_models_kmeans)
@@ -242,7 +252,13 @@ class NormLIME(object):
         self.label_names = label_names
 
     def predict_cluster_labels(self, feature_map, segments):
-        return self.kmeans_model.predict(get_feature_for_kmeans(feature_map, segments))
+        X = get_feature_for_kmeans(feature_map, segments)
+        try:
+            cluster_labels = self.kmeans_model.predict(X)
+        except AttributeError:
+            from sklearn.metrics import pairwise_distances_argmin_min
+            cluster_labels, _ = pairwise_distances_argmin_min(X, self.kmeans_model.cluster_centers_)
+        return cluster_labels
 
     def predict_using_normlime_weights(self, pred_labels, predicted_cluster_labels):
         # global weights
