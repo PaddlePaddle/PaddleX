@@ -1,6 +1,6 @@
-# 模型加密
+# 模型加密部署
 
-飞桨团队推出模型加密方案，使用业内主流的AES加密技术对最终模型进行加密。飞桨用户可以通过PaddleX导出模型后，使用该方案对模型进行加密，预测时使用解密SDK进行模型解密并完成推理，大大提升AI应用安全性和开发效率。
+PaddleX提供一个轻量级的模型加密部署方案，通过PaddleX内置的模型加密工具对推理模型进行加密，预测部署SDK支持直接加载密文模型并完成推理，提升AI模型部署的安全性。
 
 **注意：目前加密方案仅支持Linux系统**
 
@@ -62,6 +62,7 @@ paddlex-encryption
 ```
 
 `-model_dir`用于指定inference模型路径（参考[导出inference模型](deploy_python.html#inference)将模型导出为inference格式模型），可使用[导出小度熊识别模型](deploy_python.html#inference)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
+
 ![](../images/encrypt.png)
 
 ## 2. PaddleX C++加密部署
