@@ -114,27 +114,54 @@ pdx.slim.visualize(model, 'mobilenetv2.sensitivities', save_dir='./')
 # 可视化结果保存在./sensitivities.png
 ```
 
-## 可解释性结果可视化
+## LIME可解释性结果可视化
 ```
-paddlex.interpret.visualize(img_file, 
-                            model, 
-                            dataset=None, 
-                            algo='lime',
-                            num_samples=3000, 
-                            batch_size=50,
-                            save_dir='./')
+paddlex.interpret.lime(img_file, 
+                       model, 
+                       num_samples=3000, 
+                       batch_size=50,
+                       save_dir='./')
 ```
-将模型预测结果的可解释性可视化，目前只支持分类模型。
+使用LIME算法将模型预测结果的可解释性可视化。  
+LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME的思想是以输入样本为中心，在其附近的空间中进行随机采样，每个采样通过原模型得到新的输出，这样得到一系列的输入和对应的输出，LIME用一个简单的、可解释的模型（比如线性回归模型）来拟合这个映射关系，得到每个输入维度的权重，以此来解释模型。    
+
+**注意：** 可解释性结果可视化目前只支持分类模型。
 
 ### 参数
 >* **img_file** (str): 预测图像路径。
 >* **model** (paddlex.cv.models): paddlex中的模型。
->* **dataset** (paddlex.datasets): 数据集读取器，默认为None。
->* **algo** (str): 可解释性方式，当前可选'lime'和'normlime'。
 >* **num_samples** (int): LIME用于学习线性模型的采样数，默认为3000。
 >* **batch_size** (int): 预测数据batch大小，默认为50。
 >* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。 
 
 
 ### 使用示例
-> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/interpret.py)。
+> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/lime.py)。
+
+
+## NormLIME可解释性结果可视化
+```
+paddlex.interpret.normlime(img_file, 
+                           model, 
+                           dataset=None,
+                           num_samples=3000, 
+                           batch_size=50,
+                           save_dir='./')
+```
+使用NormLIME算法将模型预测结果的可解释性可视化。
+NormLIME是利用一定数量的样本来出一个全局的解释。NormLIME会提前计算一定数量的测试样本的LIME结果，然后对相同的特征进行权重的归一化，这样来得到一个全局的输入和输出的关系。
+
+**注意：** 可解释性结果可视化目前只支持分类模型。
+
+### 参数
+>* **img_file** (str): 预测图像路径。
+>* **model** (paddlex.cv.models): paddlex中的模型。
+>* **dataset** (paddlex.datasets): 数据集读取器，默认为None。
+>* **num_samples** (int): LIME用于学习线性模型的采样数，默认为3000。
+>* **batch_size** (int): 预测数据batch大小，默认为50。
+>* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。 
+
+**注意：** dataset`读取的是一个数据集，该数据集不宜过大，否则计算时间会较长，但应包含所有类别的数据。
+### 使用示例
+> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)。
+
