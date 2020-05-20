@@ -116,9 +116,8 @@ def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, sav
         if os.path.exists(save_path):
             logging.info(save_path + ' exists, not computing this one.', use_color=True)
             continue
-
-        logging.info('processing'+each_data_ if isinstance(each_data_, str) else data_index + \
-              f'+{data_index}/{len(list_data_)}', use_color=True)
+        img_file_name = each_data_ if isinstance(each_data_, str) else data_index
+        logging.info('processing '+ img_file_name + ' [{}/{}]'.format(data_index, len(list_data_)), use_color=True)
 
         image_show = read_image(each_data_)
         result = predict_fn(image_show)
