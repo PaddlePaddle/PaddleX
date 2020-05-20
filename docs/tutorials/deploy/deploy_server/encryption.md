@@ -77,7 +77,7 @@ paddlex-encryption
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
 | use_trt  | 是否使用 TensorTr 预测, 支持值为0或1(默认值为0) |
 | gpu_id  | GPU 设备ID, 默认值为0 |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
+| save_dir | 保存可视化结果的路径, 默认值为"output"，classifier无该参数 |
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
 
 
