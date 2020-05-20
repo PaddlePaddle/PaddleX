@@ -30,17 +30,10 @@ The code in this file (lime_base.py) is modified from https://github.com/marcotc
 
 import numpy as np
 import scipy as sp
-import sklearn
-import sklearn.preprocessing
-from skimage.color import gray2rgb
-from sklearn.linear_model import Ridge, lars_path
-from sklearn.utils import check_random_state
 
 import tqdm
 import copy
 from functools import partial
-from skimage.segmentation import quickshift
-from skimage.measure import regionprops
 
 
 class LimeBase(object):
@@ -59,6 +52,7 @@ class LimeBase(object):
                 generate random numbers. If None, the random state will be
                 initialized using the internal numpy seed.
         """
+        from sklearn.utils import check_random_state
         self.kernel_fn = kernel_fn
         self.verbose = verbose
         self.random_state = check_random_state(random_state)
@@ -75,6 +69,7 @@ class LimeBase(object):
             (alphas, coefs), both are arrays corresponding to the
             regularization parameter and coefficients, respectively
         """
+        from sklearn.linear_model import lars_path
         x_vector = weighted_data
         alphas, _, coefs = lars_path(x_vector,
                                      weighted_labels,
@@ -106,6 +101,7 @@ class LimeBase(object):
     def feature_selection(self, data, labels, weights, num_features, method):
         """Selects features for the model. see interpret_instance_with_data to
            understand the parameters."""
+        from sklearn.linear_model import Ridge
         if method == 'none':
             return np.array(range(data.shape[1]))
         elif method == 'forward_selection':
@@ -213,7 +209,7 @@ class LimeBase(object):
             score is the R^2 value of the returned interpretation
             local_pred is the prediction of the interpretation model on the original instance
         """
-
+        from sklearn.linear_model import Ridge
         weights = self.kernel_fn(distances)
         labels_column = neighborhood_labels[:, label]
         used_features = self.feature_selection(neighborhood_data,
@@ -376,6 +372,7 @@ class LimeImageInterpreter(object):
                 generate random numbers. If None, the random state will be
                 initialized using the internal numpy seed.
         """
+        from sklearn.utils import check_random_state
         kernel_width = float(kernel_width)
 
         if kernel is None:
@@ -422,6 +419,10 @@ class LimeImageInterpreter(object):
             An ImageIinterpretation object (see lime_image.py) with the corresponding
             interpretations.
         """
+        import sklearn
+        from skimage.measure import regionprops
+        from skimage.segmentation import quickshift
+        from skimage.color import gray2rgb
         if len(image.shape) == 2:
             image = gray2rgb(image)
 

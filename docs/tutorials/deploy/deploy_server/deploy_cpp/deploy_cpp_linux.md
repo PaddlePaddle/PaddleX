@@ -1,4 +1,4 @@
-# Linux平台编译指南
+# Linux平台部署
 
 ## 说明
 本文档在 `Linux`平台使用`GCC 4.8.5` 和 `GCC 4.9.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [从源码编译Paddle预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
@@ -103,6 +103,9 @@ make
  ```
 
 ### Step5: 预测及可视化
+
+参考[导出inference模型](../deploy_python.html#inference)将模型导出为inference格式模型。
+
 编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifer`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
@@ -117,7 +120,7 @@ make
 
 ## 样例
 
-可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
+可使用[小度熊识别模型](../deploy_python.html#inference)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 

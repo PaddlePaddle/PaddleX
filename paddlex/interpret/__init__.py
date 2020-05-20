@@ -16,4 +16,8 @@ from __future__ import absolute_import
 from . import visualize
 
 lime = visualize.lime
+<<<<<<< HEAD
 normlime = visualize.normlime
+=======
+normlime = visualize.normlime
+>>>>>>> 092ff478a435193ca13c62b37c5374788e48e142
