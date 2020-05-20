@@ -259,8 +259,8 @@ class ResizeByShort(ClsTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(
-                scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -455,7 +455,7 @@ class ArrangeClassifier(ClsTransform):
             tuple: 当mode为'train'或'eval'时，返回(im, label)，分别对应图像np.ndarray数据、
                 图像类别id；当mode为'test'或'quant'时，返回(im, )，对应图像np.ndarray数据。
         """
-        im = permute(im, False)
+        im = permute(im, False).astype('float32')
         if self.mode == 'train' or self.mode == 'eval':
             outputs = (im, label)
         else:
