@@ -1,16 +1,45 @@
-# OpenVINO 分类demo编译
+# OpenVINO部署
 
-## 说明
+## 方案简介
+OpenVINO部署方案位于目录`PaddleX/deploy/openvino/`下，且独立于PaddleX其他模块，该方案目前支持在 **Linux** 完成编译和部署运行。
+
+PaddleX到OpenVINO的部署流程如下：
+
+> PaddleX --> ONNX --> OpenVINO IR --> OpenVINO Inference Engine
+
+|目前支持OpenVINO部署的PaddleX模型|
+|-----|
+|ResNet18|
+|ResNet34|
+|ResNet50|
+|ResNet101|
+|ResNet50_vd|
+|ResNet101_vd|
+|ResNet50_vd_ssld|
+|ResNet101_vd_ssld|
+|DarkNet53|
+|MobileNetV1|
+|MobileNetV2|
+|DenseNet121|
+|DenseNet161|
+|DenseNet201|
+
+## 部署流程
+
+### 说明
 本文档在 `Ubuntu`使用`GCC 4.8.5` 进行了验证，如果需要使用更多G++版本和平台的OpenVino编译，请参考: [OpenVINO](https://github.com/openvinotoolkit/openvino/blob/2020/build-instruction.md)。
 
-## 验证环境
+
+### 验证环境
 * Ubuntu* 16.04 (64-bit) with GCC* 4.8.5
 * CMake 3.12
 * Python 2.7 or higher
 
 请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
 
- `git clone https://github.com/PaddlePaddle/PaddleX.git`
+```
+ git clone https://github.com/PaddlePaddle/PaddleX.git
+```
 
 **说明**：其中`C++`预测代码在`/root/projects/PaddleX/deploy/openvino` 目录，该目录不依赖任何`PaddleX`下其他目录。
 
@@ -29,7 +58,7 @@
 - ngraph:
 说明：openvino编译的过程中会生成ngraph的lib文件，位于{openvino根目录}/bin/intel64/Release/lib/下。
 
-### Step2: 编译demo
+### Step2: 编译
 
 
 编译`cmake`的命令在`scripts/build.sh`中，请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
@@ -51,7 +80,7 @@ cmake .. \
     -DOPENCV_DIR=${OPENCV_DIR} \
     -DGFLAGS_DIR=${GFLAGS_DIR} \
     -DOPENVINO_DIR=${OPENVINO_DIR} \
-    -DNGRAPH_LIB=${NGRAPH_LIB} 
+    -DNGRAPH_LIB=${NGRAPH_LIB}
 make
 ```
 
@@ -62,10 +91,17 @@ make
 
 ### Step3: 模型转换
 
-将[]()生成的onnx文件转换为OpencVINO支持的格式，请参考：[Model Optimizer文档](https://docs.openvinotoolkit.org/latest/_docs_MO_DG_Deep_Learning_Model_Optimizer_DevGuide.html)
+将PaddleX模型转换成ONNX模型：
+
+```
+paddlex --export_onnx --model_dir=/path/to/xiaoduxiong_epoch_12 --save_dir=/path/to/onnx_model
+```
+
+将生成的onnx模型转换为OpenVINO支持的格式，请参考：[Model Optimizer文档](https://docs.openvinotoolkit.org/latest/_docs_MO_DG_Deep_Learning_Model_Optimizer_DevGuide.html)
 
 ### Step4: 预测
-编译成功后，预测demo的可执行程序分别为`build/classifer`，其主要命令参数说明如下：
+
+编译成功后，分类任务的预测可执行程序为`classifier`，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -74,17 +110,14 @@ make
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台, 默认值为"CPU" |
 
-
-## 样例
-
-可使用[小度熊识别模型](deploy.md#导出inference模型)中导出的`inference_model`和测试图片进行预测。
+#### 样例
 
 `样例一`：
 
 测试图片 `/path/to/xiaoduxiong.jpeg`  
 
 ```shell
-./build/classifier --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg
+./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/xiaoduxiong.jpeg
 ```
 
 
@@ -97,7 +130,7 @@ make
 ...
 /path/to/images/xiaoduxiongn.jpeg
 ```
-```shell
-./build/classifier --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt -
-```
 
+```shell
+./build/classifier --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt
+```

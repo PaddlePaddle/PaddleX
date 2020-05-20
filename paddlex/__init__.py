@@ -53,4 +53,4 @@ log_level = 2
 
 from . import interpret
 
-__version__ = '0.2.0.github'
+__version__ = '1.0.1.github'
