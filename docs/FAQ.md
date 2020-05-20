@@ -1,7 +1,7 @@
 # 常见问题
 
 ## 1. 训练参数如何调整
-参考[参数调整文档](appendix/paramters.md)
+> 参考[参数调整文档](appendix/parameters.md)
 
 ## 2. 训练过程因显存不够出错
 
