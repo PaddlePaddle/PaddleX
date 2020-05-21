@@ -42,7 +42,7 @@ def sensitivity(program,
     if pruned_ratios is None:
         pruned_ratios = np.arange(0.1, 1, step=0.1)
 
-    total_evaluate_iters = 1
+    total_evaluate_iters = 0
     for name in param_names:
         if name not in sensitivities:
             sensitivities[name] = {}
@@ -52,12 +52,6 @@ def sensitivity(program,
                 len(list(pruned_ratios)) - len(sensitivities[name]))
     eta = '-'
     start_time = time.time()
-    progress = 1.0 / total_evaluate_iters
-    progress = "%.2f%%" % (progress * 100)
-    logging.info(
-        "Total evaluate iters={}, current={}, progress={}, eta={}".format(
-            total_evaluate_iters, 1, progress, eta),
-        use_color=True)
     baseline = eval_func(graph.program)
     cost = time.time() - start_time
     eta = cost * (total_evaluate_iters - 1)
@@ -73,7 +67,7 @@ def sensitivity(program,
             logging.info(
                 "Total evaluate iters={}, current={}, progress={}, eta={}".
                 format(
-                    total_evaluate_iters, current_iter+1, progress,
+                    total_evaluate_iters, current_iter, progress,
                     seconds_to_hms(
                         int(cost * (total_evaluate_iters - current_iter)))),
                 use_color=True)
