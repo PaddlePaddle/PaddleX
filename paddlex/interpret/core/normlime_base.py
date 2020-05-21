@@ -13,13 +13,14 @@
 #limitations under the License.
 
 import os
+import os.path as osp
 import numpy as np
 import glob
 
 from paddlex.interpret.as_data_reader.readers import read_image
 import paddlex.utils.logging as logging
 from . import lime_base
-from ._session_preparation import compute_features_for_kmeans, h_pre_models_kmeans
+from ._session_preparation import compute_features_for_kmeans, gen_user_home
 
 
 def load_kmeans_model(fname):
@@ -103,6 +104,15 @@ def save_one_lime_predict_and_kmean_labels(lime_all_weights, image_pred_labels, 
 
 
 def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, save_dir):
+    root_path = gen_user_home()
+    root_path = osp.join(root_path, '.paddlex')
+    h_pre_models = osp.join(root_path, "pre_models")
+    if not osp.exists(h_pre_models):
+        if not osp.exists(root_path):
+            os.makedirs(root_path)
+        url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
+        pdx.utils.download_and_decompress(url, path=root_path)
+    h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
     kmeans_model = load_kmeans_model(h_pre_models_kmeans)
 
     for data_index, each_data_ in enumerate(list_data_):

@@ -28,17 +28,6 @@ def gen_user_home():
     return os.path.expanduser('~')
 
 
-root_path = gen_user_home()
-root_path = osp.join(root_path, '.paddlex')
-h_pre_models = osp.join(root_path, "pre_models")
-if not osp.exists(h_pre_models):
-    if not osp.exists(root_path):
-        os.makedirs(root_path)
-    url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
-    pdx.utils.download_and_decompress(url, path=root_path)
-h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
-
-
 def paddle_get_fc_weights(var_name="fc_0.w_0"):
     fc_weights = fluid.global_scope().find_var(var_name).get_tensor()
     return np.array(fc_weights)
@@ -50,6 +39,14 @@ def paddle_resize(extracted_features, outsize):
 
 
 def compute_features_for_kmeans(data_content):
+    root_path = gen_user_home()
+    root_path = osp.join(root_path, '.paddlex')
+    h_pre_models = osp.join(root_path, "pre_models")
+    if not osp.exists(h_pre_models):
+        if not osp.exists(root_path):
+            os.makedirs(root_path)
+        url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
+        pdx.utils.download_and_decompress(url, path=root_path)
     def conv_bn_layer(input,
                       num_filters,
                       filter_size,
