@@ -61,7 +61,7 @@ eval_dataset = pdx.datasets.ImageNet(
 本文档中使用百度基于蒸馏方法得到的MobileNetV3预训练模型，模型结构与MobileNetV3一致，但精度更高。PaddleX内置了20多种分类模型，查阅[PaddleX模型库](appendix/model_zoo.md)了解更多分类模型。
 ```
 num_classes = len(train_dataset.labels)
-model.pdx.cls.MobileNetV3_small_ssld(num_classes=num_classes)
+model = pdx.cls.MobileNetV3_small_ssld(num_classes=num_classes)
 ```
 
 ### 3.4 定义训练参数
