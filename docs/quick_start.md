@@ -86,7 +86,7 @@ python train.py
 ## 5. 训练过程中查看训练指标
 模型在训练过程中，所有的迭代信息将以标注输出流的形式，输出到命令执行的终端上，用户也可通过visualdl以可视化的方式查看训练指标的变化，通过如下方式启动visualdl后，在浏览器打开https://0.0.0.0:8001 (或 https://localhost:8001)即可。
 ```
-visualdl --logdir output/mobilenetv2/vdl_log --port 8000
+visualdl --logdir output/mobilenetv2/vdl_log --port 8001
 ```
 ![](./images/vdl1.jpg)
 
