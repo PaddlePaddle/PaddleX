@@ -103,14 +103,14 @@ class RandomCrop(ClsTransform):
 
     Args:
         crop_size (int): 随机裁剪后重新调整的目标边长。默认为224。
-        lower_scale (float): 裁剪面积相对原面积比例的最小限制。默认为0.88。
+        lower_scale (float): 裁剪面积相对原面积比例的最小限制。默认为0.08。
         lower_ratio (float): 宽变换比例的最小限制。默认为3. / 4。
         upper_ratio (float): 宽变换比例的最大限制。默认为4. / 3。
     """
 
     def __init__(self,
                  crop_size=224,
-                 lower_scale=0.88,
+                 lower_scale=0.08,
                  lower_ratio=3. / 4,
                  upper_ratio=4. / 3):
         self.crop_size = crop_size
