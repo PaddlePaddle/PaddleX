@@ -100,6 +100,7 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 ### Step5: 预测及可视化
 
 参考[导出inference模型](../deploy_python.html#inference)将模型导出为inference格式模型。
+**注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](../upgrade_version.md)对模型版本进行升级。**
 
 上述`Visual Studio 2019`编译产出的可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
