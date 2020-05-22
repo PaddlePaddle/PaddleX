@@ -133,17 +133,17 @@ class VOCDetection(Dataset):
                     box_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
                     box_element = obj.find(box_tag)
                     pattern = re.compile('<xmin>', re.IGNORECASE)
-                    xmin_element = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
-                    x1 = float(box_element.find(xmin_element).text)
+                    xmin_tag = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
+                    x1 = float(box_element.find(xmin_tag).text)
                     pattern = re.compile('<ymin>', re.IGNORECASE)
-                    ymin_element = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
-                    y1 = float(box_element.find(ymin_element).text)
+                    ymin_tag = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
+                    y1 = float(box_element.find(ymin_tag).text)
                     pattern = re.compile('<xmax>', re.IGNORECASE)
-                    xmax_element = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
-                    x2 = float(box_element.find(xmax_element).text)
+                    xmax_tag = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
+                    x2 = float(box_element.find(xmax_tag).text)
                     pattern = re.compile('<ymax>', re.IGNORECASE)
-                    ymax_element = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
-                    y2 = float(box_element.find(ymax_element).text)
+                    ymax_tag = pattern.findall(str(ET.tostringlist(box_element)))[0][1:-1]
+                    y2 = float(box_element.find(ymax_tag).text)
                     x1 = max(0, x1)
                     y1 = max(0, y1)
                     if im_w > 0.5 and im_h > 0.5:
