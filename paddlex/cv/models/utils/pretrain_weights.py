@@ -56,6 +56,8 @@ image_pretrain = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/Xception65_deeplab_pretrained.tar',
     'ShuffleNetV2':
     'https://paddle-imagenet-models-name.bj.bcebos.com/ShuffleNetV2_pretrained.tar',
+    'HRNet_W18':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W18_C_pretrained.tar',
 }
 
 coco_pretrain = {
@@ -85,10 +87,11 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
                 backbone = 'DetResNet50'
         assert backbone in image_pretrain, "There is not ImageNet pretrain weights for {}, you may try COCO.".format(
             backbone)
-        #        url = image_pretrain[backbone]
-        #        fname = osp.split(url)[-1].split('.')[0]
-        #        paddlex.utils.download_and_decompress(url, path=new_save_dir)
-        #        return osp.join(new_save_dir, fname)
+        if backbone == "HRNet_W18":
+            url = image_pretrain[backbone]
+            fname = osp.split(url)[-1].split('.')[0]
+            paddlex.utils.download_and_decompress(url, path=new_save_dir)
+            return osp.join(new_save_dir, fname)
         try:
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:

@@ -21,7 +21,7 @@ import copy
 
 from paddle import fluid
 
-from .fpn import FPN
+from .fpn import (FPN, HRFPN)
 from .rpn_head import (RPNHead, FPNRPNHead)
 from .roi_extractor import (RoIAlign, FPNRoIAlign)
 from .bbox_head import (BBoxHead, TwoFCHead)
@@ -82,7 +82,12 @@ class FasterRCNN(object):
         self.backbone = backbone
         self.mode = mode
         if with_fpn and fpn is None:
-            fpn = FPN()
+            if self.backbone.__class__.__name__.startswith('HRNet'):
+                fpn = HRFPN()
+                fpn.min_level = 2
+                fpn.max_level = 6
+            else:
+                fpn = FPN()
         self.fpn = fpn
         self.num_classes = num_classes
         if rpn_head is None:
