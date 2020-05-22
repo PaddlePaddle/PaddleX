@@ -1,6 +1,6 @@
-# Predictor部署-paddlex.deploy
+# 预测部署-paddlex.deploy
 
-使用AnalysisPredictor进行预测部署。
+使用Paddle Inference进行高性能的Python预测部署。更多关于Paddle Inference信息请参考[Paddle Inference文档](https://paddle-inference.readthedocs.io/en/latest/#)
 
 ## Predictor类
 
@@ -22,6 +22,7 @@ paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, use_mkl=False, use_
 > >
 > > ```
 > > import paddlex
+> >
 > > model = paddlex.deploy.Predictor(model_dir, use_gpu=True)
 > > result = model.predict(image_file)
 > > ```
