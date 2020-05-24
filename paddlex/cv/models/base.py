@@ -31,8 +31,6 @@ from collections import OrderedDict
 from os import path as osp
 from paddle.fluid.framework import Program
 from .utils.pretrain_weights import get_pretrain_weights
-fluid.default_startup_program().random_seed = 1000
-fluid.default_main_program().random_seed = 1000
 
 
 def dict2str(dict_input):
@@ -200,6 +198,8 @@ class BaseAPI:
                 backbone = self.backbone
             else:
                 backbone = self.__class__.__name__
+                if backbone == "HRNet":
+                    backbone = backbone + "_W{}".format(self.width)
             pretrain_weights = get_pretrain_weights(
                 pretrain_weights, self.model_type, backbone, pretrain_dir)
         if startup_prog is None:

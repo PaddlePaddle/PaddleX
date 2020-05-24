@@ -195,7 +195,9 @@ class MaskRCNN(FasterRCNN):
         # 构建训练、验证、测试网络
         self.build_program()
         fuse_bn = True
-        if self.with_fpn and self.backbone in ['ResNet18', 'ResNet50']:
+        if self.with_fpn and self.backbone in [
+                'ResNet18', 'ResNet50', 'HRNet_W18'
+        ]:
             fuse_bn = False
         self.net_initialize(
             startup_prog=fluid.default_startup_program(),
