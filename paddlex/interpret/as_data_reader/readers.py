@@ -20,6 +20,7 @@ import six
 import glob
 from .data_path_utils import _find_classes
 from PIL import Image
+import paddlex.utils.logging as logging
 
 
 def resize_short(img, target_size, interpolation=None):
@@ -117,7 +118,7 @@ def read_image(img_path, target_size=256, crop_size=224):
         assert len(img_path.shape) == 4
         return img_path
     else:
-        ValueError(f"Not recognized data type {type(img_path)}.")
+        ValueError("Not recognized data type {}.".format(type(img_path)))
 
 
 class ReaderConfig(object):
@@ -156,7 +157,7 @@ class ReaderConfig(object):
 
                 img = cv2.imread(img_path)
                 if img is None:
-                    print(img_path)
+                    logging.info(img_path)
                     continue
                 img = resize_short(img, target_size, interpolation=None)
                 img = crop_image(img, crop_size, center=self.is_test)
@@ -208,7 +209,7 @@ def create_reader(list_image_path, list_label=None, is_test=False):
 
             img = cv2.imread(img_path)
             if img is None:
-                print(img_path)
+                logging.info(img_path)
                 continue
 
             img = resize_short(img, target_size, interpolation=None)

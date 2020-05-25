@@ -367,7 +367,8 @@ class FasterRCNN(BaseAPI):
 
         Returns:
             list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标、预测框得分组成。
+              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+              预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
