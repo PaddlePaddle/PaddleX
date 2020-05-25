@@ -39,7 +39,7 @@ eval_dataset = pdx.datasets.SegDataset(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 num_classes = len(train_dataset.labels)
-model = pdx.seg.HRNet(num_classes=num_classes, width=64)
+model = pdx.seg.HRNet(num_classes=num_classes)
 model.train(
     num_epochs=20,
     train_dataset=train_dataset,
