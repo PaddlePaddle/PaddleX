@@ -117,12 +117,12 @@ class FasterRCNN(BaseAPI):
             model_out = model.build_net(inputs)
             loss = model_out['loss']
             self.optimizer.minimize(loss)
-            outputs = OrderedDict([('loss', model_out['loss']),
-                                   ('loss_cls', model_out['loss_cls']),
-                                   ('loss_bbox', model_out['loss_bbox']),
-                                   ('loss_rpn_cls', model_out['loss_rpn_cls']),
-                                   ('loss_rpn_bbox',
-                                    model_out['loss_rpn_bbox'])])
+            outputs = OrderedDict(
+                [('loss', model_out['loss']),
+                 ('loss_cls', model_out['loss_cls']),
+                 ('loss_bbox', model_out['loss_bbox']),
+                 ('loss_rpn_cls', model_out['loss_rpn_cls']), (
+                     'loss_rpn_bbox', model_out['loss_rpn_bbox'])])
         else:
             outputs = model.build_net(inputs)
         return inputs, outputs
@@ -310,11 +310,10 @@ class FasterRCNN(BaseAPI):
                 'im_info': im_infos,
                 'im_shape': im_shapes,
             }
-            outputs = self.exe.run(
-                self.test_prog,
-                feed=[feed_data],
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=False)
+            outputs = self.exe.run(self.test_prog,
+                                   feed=[feed_data],
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -339,13 +338,13 @@ class FasterRCNN(BaseAPI):
                 res['is_difficult'] = (np.array(res_is_difficult),
                                        [res_is_difficult_lod])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
         box_ap_stats, eval_details = eval_results(
             results, metric, eval_dataset.coco_gt, with_background=True)
         metrics = OrderedDict(
-            zip(['bbox_mmap' if metric == 'COCO' else 'bbox_map'],
-                box_ap_stats))
+            zip(['bbox_mmap'
+                 if metric == 'COCO' else 'bbox_map'], box_ap_stats))
         if return_details:
             return metrics, eval_details
         return metrics
@@ -359,7 +358,8 @@ class FasterRCNN(BaseAPI):
 
         Returns:
             list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标、预测框得分组成。
+              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+              预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -373,15 +373,14 @@ class FasterRCNN(BaseAPI):
         im = np.expand_dims(im, axis=0)
         im_resize_info = np.expand_dims(im_resize_info, axis=0)
         im_shape = np.expand_dims(im_shape, axis=0)
-        outputs = self.exe.run(
-            self.test_prog,
-            feed={
-                'image': im,
-                'im_info': im_resize_info,
-                'im_shape': im_shape
-            },
-            fetch_list=list(self.test_outputs.values()),
-            return_numpy=False)
+        outputs = self.exe.run(self.test_prog,
+                               feed={
+                                   'image': im,
+                                   'im_info': im_resize_info,
+                                   'im_shape': im_shape
+                               },
+                               fetch_list=list(self.test_outputs.values()),
+                               return_numpy=False)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)
