@@ -72,9 +72,9 @@ class VOCDetection(Dataset):
         label_id = 1
         with open(label_list, 'r', encoding=get_encoding(label_list)) as fr:
             for line in fr.readlines():
-                cname2cid[line.strip()] = label_id
+                cname2cid[line[:-1]] = label_id
                 label_id += 1
-                self.labels.append(line.strip())
+                self.labels.append(line[:-1])
         logging.info("Starting to read file list from dataset...")
         for k, v in cname2cid.items():
             annotations['categories'].append({
