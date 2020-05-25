@@ -63,9 +63,10 @@ class SegResult : public BaseResult {
  public:
   Mask<int64_t> label_map;
   Mask<float> score_map;
+  std::string type = "seg";
   void clear() {
     label_map.clear();
     score_map.clear();
   }
 };
-}  // namespce of PaddleX
+}  // namespace PaddleX
