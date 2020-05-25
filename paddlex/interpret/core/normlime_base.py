@@ -21,6 +21,7 @@ from paddlex.interpret.as_data_reader.readers import read_image
 import paddlex.utils.logging as logging
 from . import lime_base
 from ._session_preparation import compute_features_for_kmeans, gen_user_home
+import paddlex.utils.logging as logging
 
 
 def load_kmeans_model(fname):
