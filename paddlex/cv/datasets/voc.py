@@ -113,7 +113,7 @@ class VOCDetection(Dataset):
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
-                    cname = obj.find('name').text
+                    cname = obj.find('name').text.strip()
                     gt_class[i][0] = cname2cid[cname]
                     _difficult = int(obj.find('difficult').text)
                     x1 = float(obj.find('bndbox').find('xmin').text)
