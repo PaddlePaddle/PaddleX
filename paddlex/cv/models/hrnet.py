@@ -13,6 +13,7 @@
 #limitations under the License.
 
 from __future__ import absolute_import
+import paddle.fluid as fluid
 import paddlex
 from collections import OrderedDict
 from .deeplabv3p import DeepLabv3p
@@ -101,6 +102,24 @@ class HRNet(DeepLabv3p):
             outputs['pred'] = model_out[0]
             outputs['logit'] = model_out[1]
         return inputs, outputs
+
+    def default_optimizer(self,
+                          learning_rate,
+                          num_epochs,
+                          num_steps_each_epoch,
+                          lr_decay_power=0.9):
+        decay_step = num_epochs * num_steps_each_epoch
+        lr_decay = fluid.layers.polynomial_decay(
+            learning_rate,
+            decay_step,
+            end_learning_rate=0,
+            power=lr_decay_power)
+        optimizer = fluid.optimizer.Momentum(
+            lr_decay,
+            momentum=0.9,
+            regularization=fluid.regularizer.L2Decay(
+                regularization_coeff=5e-04))
+        return optimizer
 
     def train(self,
               num_epochs,
