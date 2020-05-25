@@ -67,7 +67,6 @@ def centroid_using_superpixels(features, segments):
     one_list = np.zeros((len(np.unique(segments)), features.shape[2]))
     for i, r in enumerate(regions):
         one_list[i] = features[int(r.centroid[0] + 0.5), int(r.centroid[1] + 0.5), :]
-    # print(one_list.shape)
     return one_list
 
 
@@ -85,7 +84,7 @@ def precompute_normlime_weights(list_data_, predict_fn, num_samples=3000, batch_
     precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, save_dir)
 
     # load precomputed results, compute normlime weights and save.
-    fname_list = glob.glob(os.path.join(save_dir, f'lime_weights_s{num_samples}*.npy'))
+    fname_list = glob.glob(os.path.join(save_dir, 'lime_weights_s{}.npy'.format(num_samples)))
     return compute_normlime_weights(fname_list, save_dir, num_samples)
 
 
@@ -117,10 +116,10 @@ def precompute_lime_weights(list_data_, predict_fn, num_samples, batch_size, sav
 
     for data_index, each_data_ in enumerate(list_data_):
         if isinstance(each_data_, str):
-            save_path = f"lime_weights_s{num_samples}_{each_data_.split('/')[-1].split('.')[0]}.npy"
+            save_path = "lime_weights_s{}_{}.npy".format(num_samples, each_data_.split('/')[-1].split('.')[0])
             save_path = os.path.join(save_dir, save_path)
         else:
-            save_path = f"lime_weights_s{num_samples}_{data_index}.npy"
+            save_path = "lime_weights_s{}_{}.npy".format(num_samples, data_index)
             save_path = os.path.join(save_dir, save_path)
 
         if os.path.exists(save_path):
@@ -180,9 +179,9 @@ def compute_normlime_weights(a_list_lime_fnames, save_dir, lime_num_samples):
             lime_weights = lime_weights_and_cluster['lime_weights']
             cluster = lime_weights_and_cluster['cluster']
         except:
-            print('When loading precomputed LIME result, skipping', f)
+            logging.info('When loading precomputed LIME result, skipping' + str(f))
             continue
-        print('Loading precomputed LIME result,', f)
+        logging.info('Loading precomputed LIME result,' + str(f))
 
         pred_labels = lime_weights.keys()
         for y in pred_labels:
@@ -207,23 +206,23 @@ def compute_normlime_weights(a_list_lime_fnames, save_dir, lime_num_samples):
 
     # check normlime
     if len(normlime_weights_all_labels.keys()) < max(normlime_weights_all_labels.keys()) + 1:
-        print(
-            "\n"
-            "Warning: !!! \n"
-            f"There are at least {max(normlime_weights_all_labels.keys()) + 1} classes, "
-            f"but the NormLIME has results of only {len(normlime_weights_all_labels.keys())} classes. \n"
-            "It may have cause unstable results in the later computation"
-            " but can be improved by computing more test samples."
+        logging.info(
+            "\n" + \
+            "Warning: !!! \n" + \
+            "There are at least {} classes, ".format(max(normlime_weights_all_labels.keys()) + 1) + \
+            "but the NormLIME has results of only {} classes. \n".format(len(normlime_weights_all_labels.keys())) + \
+            "It may have cause unstable results in the later computation" + \
+            " but can be improved by computing more test samples." + \
             "\n"
         )
 
     n = 0
-    f_out = f'normlime_weights_s{lime_num_samples}_samples_{len(a_list_lime_fnames)}-{n}.npy'
+    f_out = 'normlime_weights_s{}_samples_{}-{}.npy'.format(lime_num_samples, len(a_list_lime_fnames), n)
     while os.path.exists(
             os.path.join(save_dir, f_out)
     ):
         n += 1
-        f_out = f'normlime_weights_s{lime_num_samples}_samples_{len(a_list_lime_fnames)}-{n}.npy'
+        f_out = 'normlime_weights_s{}_samples_{}-{}.npy'.format(lime_num_samples, len(a_list_lime_fnames), n)
         continue
 
     np.save(
