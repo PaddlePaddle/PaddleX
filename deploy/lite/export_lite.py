@@ -19,30 +19,30 @@ import argparse
 
 def export_lite():
     opt = lite.Opt()
-    model_file = os.path.join(FLAGS.model_path, '__model__')
-    params_file = os.path.join(FLAGS.model_path, '__params__')
-    opt.run_optimize("", model_file, params_file, FLAGS.place, FLAGS.save_dir)
+    model_file = os.path.join(FLAGS.model_dir, '__model__')
+    params_file = os.path.join(FLAGS.model_dir, '__params__')
+    opt.run_optimize("", model_file, params_file, FLAGS.place, FLAGS.save_file)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--model_path",
+        "--model_dir",
         type=str,
         default="",
-        help="model path.",
+        help="path of '__model__' and '__params__'.",
         required=True)
     parser.add_argument(
         "--place",
         type=str,
         default="arm",
-        help="preprocess config path.",
+        help="run place: 'arm|opencl|x86|npu|xpu|rknpu|apu'.",
         required=True)
     parser.add_argument(
-        "--save_dir",
+        "--save_file",
         type=str,
         default="paddlex.onnx",
-        help="Directory for storing the output visualization files.",
+        help="file name for storing the output files.",
         required=True)
     FLAGS = parser.parse_args()
     export_lite()
