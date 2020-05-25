@@ -72,9 +72,9 @@ class VOCDetection(Dataset):
         label_id = 1
         with open(label_list, 'r', encoding=get_encoding(label_list)) as fr:
             for line in fr.readlines():
-                cname2cid[line[:-1]] = label_id
+                cname2cid[line.strip()]] = label_id
                 label_id += 1
-                self.labels.append(line[:-1])
+                self.labels.append(line.strip())
         logging.info("Starting to read file list from dataset...")
         for k, v in cname2cid.items():
             annotations['categories'].append({
@@ -124,7 +124,7 @@ class VOCDetection(Dataset):
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
-                    cname = obj.find(name_tag).text
+                    cname = obj.find(name_tag).text.strip()
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
                     diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
