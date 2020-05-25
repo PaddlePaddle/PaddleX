@@ -34,6 +34,7 @@ import scipy as sp
 import tqdm
 import copy
 from functools import partial
+import paddlex.utils.logging as logging
 
 
 class LimeBase(object):
@@ -230,9 +231,9 @@ class LimeBase(object):
         local_pred = easy_model.predict(neighborhood_data[0, used_features].reshape(1, -1))
 
         if self.verbose:
-            print('Intercept', easy_model.intercept_)
-            print('Prediction_local', local_pred,)
-            print('Right:', neighborhood_labels[0, label])
+            logging.info('Intercept' + str(easy_model.intercept_))
+            logging.info('Prediction_local' + str(local_pred))
+            logging.info('Right:' + str(neighborhood_labels[0, label]))
         return (easy_model.intercept_,
                 sorted(zip(used_features, easy_model.coef_),
                        key=lambda x: np.abs(x[1]), reverse=True),
@@ -451,7 +452,6 @@ class LimeImageInterpreter(object):
             d = cdist(centroids, centroids, 'sqeuclidean')
 
             for x in np.unique(segments):
-                # print(np.argmin(d[x]))
                 a = [image[segments == i] for i in np.argsort(d[x])[1:6]]
                 mx = np.mean(np.concatenate(a), axis=0)
                 fudged_image[segments == x] = mx

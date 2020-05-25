@@ -35,6 +35,6 @@
     -   id: cpplint-cpp-source
         name: cpplint
         description: Check C++ code style using cpplint.py.
-        entry: bash cpplint_pre_commit.hook
+        entry: bash ./tools/codestyle/cpplint_pre_commit.hook
         language: system
         files: \.(c|cc|cxx|cpp|cu|h|hpp|hxx)$

@@ -23,7 +23,7 @@ def execute_imgaug(augmenter, im, bboxes=None, polygons=None,
     import imgaug.augmentables.bbs as bbs
 
     aug_im = im.astype('uint8')
-    aug_im = augmenter.augment(image=aug_im)
+    aug_im = augmenter.augment(image=aug_im).astype('float32')
     return aug_im
 
     # TODO imgaug的标注处理逻辑与paddlex已存的transform存在部分差异

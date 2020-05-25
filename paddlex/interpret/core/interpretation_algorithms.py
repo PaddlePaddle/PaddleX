@@ -21,6 +21,7 @@ from . import lime_base
 from ._session_preparation import paddle_get_fc_weights, compute_features_for_kmeans, gen_user_home
 from .normlime_base import combine_normlime_and_lime, get_feature_for_kmeans, load_kmeans_model
 from paddlex.interpret.as_data_reader.readers import read_image
+import paddlex.utils.logging as logging
 
 
 import cv2
@@ -71,7 +72,8 @@ class CAM(object):
         if self.label_names is not None:
             ln = self.label_names[l]
 
-        print(f'predicted result: {ln} with probability {probability[pred_label[0]]:.3f}')
+        prob_str = "%.3f" % (probability[pred_label[0]])
+        logging.info("predicted result: {} with probability {}.".format(ln, prob_str))
         return feature_maps, fc_weights
 
     def interpret(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
@@ -96,7 +98,8 @@ class CAM(object):
                 ax.axis("off")
             axes = axes.ravel()
             axes[0].imshow(self.image)
-            axes[0].set_title(f"label {ln}, proba: {self.predicted_probability: .3f}")
+            prob_str = "{%.3f}" % (self.predicted_probability)
+            axes[0].set_title("label {}, proba: {}".format(ln, prob_str))
 
             axes[1].imshow(cam)
             axes[1].set_title("CAM")
@@ -157,14 +160,15 @@ class LIME(object):
         if self.label_names is not None:
             ln = self.label_names[l]
             
-        print(f'predicted result: {ln} with probability {probability[pred_label[0]]:.3f}')
+        prob_str = "%.3f" % (probability[pred_label[0]])
+        logging.info("predicted result: {} with probability {}.".format(ln, prob_str))
 
         end = time.time()
         algo = lime_base.LimeImageInterpreter()
         interpreter = algo.interpret_instance(self.image, self.predict_fn, self.labels, 0,
                                               num_samples=self.num_samples, batch_size=self.batch_size)
         self.lime_interpreter = interpreter
-        print('lime time: ', time.time() - end, 's.')
+        logging.info('lime time: ' + str(time.time() - end) + 's.')
 
     def interpret(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
         if self.lime_interpreter is None:
@@ -189,7 +193,8 @@ class LIME(object):
                 ax.axis("off")
             axes = axes.ravel()
             axes[0].imshow(self.image)
-            axes[0].set_title(f"label {ln}, proba: {self.predicted_probability: .3f}")
+            prob_str = "{%.3f}" % (self.predicted_probability)
+            axes[0].set_title("label {}, proba: {}".format(ln, prob_str))
 
             axes[1].imshow(mark_boundaries(self.image, self.lime_interpreter.segments))
             axes[1].set_title("superpixel segmentation")
@@ -201,7 +206,7 @@ class LIME(object):
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols + i].imshow(mark_boundaries(temp, mask))
-                axes[ncols + i].set_title(f"label {ln}, first {num_to_show} superpixels")
+                axes[ncols + i].set_title("label {}, first {} superpixels".format(ln, num_to_show))
 
         if save_to_disk and save_outdir is not None:
             os.makedirs(save_outdir, exist_ok=True)
@@ -232,8 +237,9 @@ class NormLIME(object):
                 raise ValueError("NormLIME needs the KMeans model, where we provided a default one in "
                                  "pre_models/kmeans_model.pkl.")
         else:
-            print("Warning: It is *strongly* suggested to use the default KMeans model in pre_models/kmeans_model.pkl. "
-                  "Use another one will change the final result.")
+            logging.debug("Warning: It is *strongly* suggested to use the \
+            default KMeans model in pre_models/kmeans_model.pkl. \
+            Use another one will change the final result.")
             self.kmeans_model = load_kmeans_model(kmeans_model_for_normlime)
 
         self.num_samples = num_samples
@@ -243,7 +249,7 @@ class NormLIME(object):
             self.normlime_weights = np.load(normlime_weights, allow_pickle=True).item()
         except:
             self.normlime_weights = None
-            print("Warning: not find the correct precomputed Normlime result.")
+            logging.debug("Warning: not find the correct precomputed Normlime result.")
 
         self.predict_fn = predict_fn
 
@@ -289,8 +295,7 @@ class NormLIME(object):
         self.predicted_probability = self._lime.predicted_probability
         self.image = image_show[0]
         self.labels = self._lime.labels
-        # print(f'predicted result: {self.predicted_label} with probability {self.predicted_probability: .3f}')
-        print('performing NormLIME operations ...')
+        logging.info('performing NormLIME operations ...')
 
         cluster_labels = self.predict_cluster_labels(
             compute_features_for_kmeans(image_show).transpose((1, 2, 0)), self._lime.lime_interpreter.segments
@@ -329,7 +334,8 @@ class NormLIME(object):
 
             axes = axes.ravel()
             axes[0].imshow(self.image)
-            axes[0].set_title(f"label {ln}, proba: {self.predicted_probability: .3f}")
+            prob_str = "{%.3f}" % (self.predicted_probability)
+            axes[0].set_title("label {}, proba: {}".format(ln, prob_str))
 
             axes[1].imshow(mark_boundaries(self.image, self._lime.lime_interpreter.segments))
             axes[1].set_title("superpixel segmentation")
@@ -342,7 +348,7 @@ class NormLIME(object):
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols + i].imshow(mark_boundaries(temp, mask))
-                axes[ncols + i].set_title(f"LIME: first {num_to_show} superpixels")
+                axes[ncols + i].set_title("LIME: first {} superpixels".format(num_to_show))
 
             # NormLIME visualization
             self._lime.lime_interpreter.local_weights = g_weights
@@ -351,7 +357,7 @@ class NormLIME(object):
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols * 2 + i].imshow(mark_boundaries(temp, mask))
-                axes[ncols * 2 + i].set_title(f"NormLIME: first {num_to_show} superpixels")
+                axes[ncols * 2 + i].set_title("NormLIME: first {} superpixels".format(num_to_show))
 
             # NormLIME*LIME visualization
             combined_weights = combine_normlime_and_lime(lime_weights, g_weights)
@@ -361,7 +367,7 @@ class NormLIME(object):
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols * 3 + i].imshow(mark_boundaries(temp, mask))
-                axes[ncols * 3 + i].set_title(f"Combined: first {num_to_show} superpixels")
+                axes[ncols * 3 + i].set_title("Combined: first {} superpixels".format(num_to_show))
 
             self._lime.lime_interpreter.local_weights = lime_weights
 
@@ -433,32 +439,32 @@ def save_fig(data_, save_outdir, algorithm_name, num_samples=3000):
     import matplotlib.pyplot as plt
     if isinstance(data_, str):
         if algorithm_name == 'cam':
-            f_out = f"{algorithm_name}_{data_.split('/')[-1]}.png"
+            f_out = "{}_{}.png".format(algorithm_name, data_.split('/')[-1])
         else:
-            f_out = f"{algorithm_name}_{data_.split('/')[-1]}_s{num_samples}.png"
+            f_out = "{}_{}_s{}.png".format(algorithm_name, data_.split('/')[-1], num_samples)
         plt.savefig(
             os.path.join(save_outdir, f_out)
         )
     else:
         n = 0
         if algorithm_name == 'cam':
-            f_out = f'cam-{n}.png'
+            f_out = 'cam-{}.png'.format(n)
         else:
-            f_out = f'{algorithm_name}_s{num_samples}-{n}.png'
+            f_out = '{}_s{}-{}.png'.format(algorithm_name, num_samples, n)
         while os.path.exists(
                 os.path.join(save_outdir, f_out)
         ):
             n += 1
             if algorithm_name == 'cam':
-                f_out = f'cam-{n}.png'
+                f_out = 'cam-{}.png'.format(n)
             else:
-                f_out = f'{algorithm_name}_s{num_samples}-{n}.png'
+                f_out = '{}_s{}-{}.png'.format(algorithm_name, num_samples, n)
             continue
         plt.savefig(
             os.path.join(
                 save_outdir, f_out
             )
         )
-    print('The image of intrepretation result save in {}'.format(os.path.join(
+    logging.info('The image of intrepretation result save in {}'.format(os.path.join(
                 save_outdir, f_out
             )))

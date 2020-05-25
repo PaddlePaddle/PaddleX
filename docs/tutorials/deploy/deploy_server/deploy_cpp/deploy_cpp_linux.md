@@ -104,7 +104,8 @@ make
 
 ### Step5: 预测及可视化
 
-参考[导出inference模型](../deploy_python.html#inference)将模型导出为inference格式模型。
+参考[导出inference模型](../../deploy_python.html#inference)将模型导出为inference格式模型。
+**注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](../../upgrade_version.md)对模型版本进行升级。**
 
 编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifer`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 

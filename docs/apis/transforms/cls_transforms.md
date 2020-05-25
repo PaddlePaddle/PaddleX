@@ -15,7 +15,7 @@ paddlex.cls.transforms.Compose(transforms)
 
 ## RandomCrop类
 ```python
-paddlex.cls.transforms.RandomCrop(crop_size=224, lower_scale=0.88, lower_ratio=3. / 4, upper_ratio=4. / 3)
+paddlex.cls.transforms.RandomCrop(crop_size=224, lower_scale=0.08, lower_ratio=3. / 4, upper_ratio=4. / 3)
 ```
 
 对图像进行随机剪裁，模型训练时的数据增强操作。
@@ -26,7 +26,7 @@ paddlex.cls.transforms.RandomCrop(crop_size=224, lower_scale=0.88, lower_ratio=3
 
 ### 参数
 * **crop_size** (int): 随机裁剪后重新调整的目标边长。默认为224。
-* **lower_scale** (float): 裁剪面积相对原面积比例的最小限制。默认为0.88。
+* **lower_scale** (float): 裁剪面积相对原面积比例的最小限制。默认为0.08。
 * **lower_ratio** (float): 宽变换比例的最小限制。默认为3. / 4。
 * **upper_ratio** (float): 宽变换比例的最小限制。默认为4. / 3。
 

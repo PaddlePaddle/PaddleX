@@ -50,7 +50,7 @@ def visualize(model, sensitivities_file, save_dir='./'):
         min(np.array(x)) - 0.01,
         max(np.array(x)) + 0.01, 0.05)
     my_y_ticks = np.arange(0.05, 1, 0.05)
-    plt.xticks(my_x_ticks, rotation=30, fontsize=8)
+    plt.xticks(my_x_ticks, rotation=15, fontsize=8)
     plt.yticks(my_y_ticks, fontsize=8)
     for a, b in zip(x, y):
         plt.text(
