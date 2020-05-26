@@ -1280,7 +1280,7 @@ class ComposedRCNNTransforms(Compose):
                 Padding(coarsest_stride=32)
             ]
 
-        super(RCNNTransforms, self).__init__(transforms)
+        super(ComposedRCNNTransforms, self).__init__(transforms)
 
 
 class ComposedYOLOTransforms(Compose):
@@ -1338,4 +1338,4 @@ class ComposedYOLOTransforms(Compose):
                     target_size=width, interp='CUBIC'), Normalize(
                         mean=mean, std=std)
             ]
-        super(YOLOTransforms, self).__init__(transforms)
+        super(ComposedYOLOTransforms, self).__init__(transforms)

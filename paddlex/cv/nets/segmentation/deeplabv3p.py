@@ -135,7 +135,8 @@ class DeepLabv3p(object):
         param_attr = fluid.ParamAttr(
             name=name_scope + 'weights',
             regularizer=None,
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.06))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.06))
         with scope('encoder'):
             channel = 256
             with scope("image_pool"):
@@ -151,8 +152,8 @@ class DeepLabv3p(object):
                         padding=0,
                         param_attr=param_attr))
                 input_shape = fluid.layers.shape(input)
-                image_avg = fluid.layers.resize_bilinear(
-                    image_avg, input_shape[2:])
+                image_avg = fluid.layers.resize_bilinear(image_avg,
+                                                         input_shape[2:])
 
             with scope("aspp0"):
                 aspp0 = bn_relu(
@@ -244,7 +245,8 @@ class DeepLabv3p(object):
         param_attr = fluid.ParamAttr(
             name=name_scope + 'weights',
             regularizer=None,
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.06))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.06))
         with scope('decoder'):
             with scope('concat'):
                 decode_shortcut = bn_relu(
@@ -326,9 +328,6 @@ class DeepLabv3p(object):
         if self.mode == 'train':
             inputs['label'] = fluid.data(
                 dtype='int32', shape=[None, 1, None, None], name='label')
-        elif self.mode == 'eval':
-            inputs['label'] = fluid.data(
-                dtype='int32', shape=[None, 1, None, None], name='label')
         return inputs
 
     def build_net(self, inputs):
@@ -351,7 +350,8 @@ class DeepLabv3p(object):
             name=name_scope + 'weights',
             regularizer=fluid.regularizer.L2DecayRegularizer(
                 regularization_coeff=0.0),
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.01))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.01))
         with scope('logit'):
             with fluid.name_scope('last_conv'):
                 logit = conv(

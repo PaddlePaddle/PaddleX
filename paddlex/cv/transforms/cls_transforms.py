@@ -494,13 +494,14 @@ class ComposedClsTransforms(Compose):
                  std=[0.229, 0.224, 0.225]):
         width = crop_size
         if isinstance(crop_size, list):
-            if shape[0] != shape[1]:
+            if crop_size[0] != crop_size[1]:
                 raise Exception(
-                    "In classifier model, width and height should be equal")
+                    "In classifier model, width and height should be equal, please modify your parameter `crop_size`"
+                )
             width = crop_size[0]
         if width % 32 != 0:
             raise Exception(
-                "In classifier model, width and height should be multiple of 32, e.g 224、256、320...."
+                "In classifier model, width and height should be multiple of 32, e.g 224、256、320...., please modify your parameter `crop_size`"
             )
 
         if mode == 'train':
@@ -513,7 +514,7 @@ class ComposedClsTransforms(Compose):
         else:
             # 验证/预测时的transforms
             transforms = [
-                ReiszeByShort(short_size=int(width * 1.14)),
+                ResizeByShort(short_size=int(width * 1.14)),
                 CenterCrop(crop_size=width), Normalize(
                     mean=mean, std=std)
             ]
