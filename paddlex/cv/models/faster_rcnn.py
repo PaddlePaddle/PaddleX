@@ -32,7 +32,7 @@ class FasterRCNN(BaseAPI):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -47,7 +47,8 @@ class FasterRCNN(BaseAPI):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
+            'HRNet_W18'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -79,6 +80,12 @@ class FasterRCNN(BaseAPI):
             layers = 101
             variant = 'd'
             norm_type = 'affine_channel'
+        elif backbone_name == 'HRNet_W18':
+            backbone = paddlex.cv.nets.hrnet.HRNet(
+                width=18, freeze_norm=True, norm_decay=0., freeze_at=0)
+            if self.with_fpn is False:
+                self.with_fpn = True
+            return backbone
         if self.with_fpn:
             backbone = paddlex.cv.nets.resnet.ResNet(
                 norm_type='bn' if norm_type is None else norm_type,
@@ -227,7 +234,9 @@ class FasterRCNN(BaseAPI):
         # 构建训练、验证、测试网络
         self.build_program()
         fuse_bn = True
-        if self.with_fpn and self.backbone in ['ResNet18', 'ResNet50']:
+        if self.with_fpn and self.backbone in [
+                'ResNet18', 'ResNet50', 'HRNet_W18'
+        ]:
             fuse_bn = False
         self.net_initialize(
             startup_prog=fluid.default_startup_program(),

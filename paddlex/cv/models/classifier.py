@@ -40,8 +40,8 @@ class BaseClassifier(BaseAPI):
         self.init_params = locals()
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(paddlex.cv.nets, str.lower(model_name)):
-            raise Exception(
-                "ERROR: There's no model named {}.".format(model_name))
+            raise Exception("ERROR: There's no model named {}.".format(
+                model_name))
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
@@ -218,15 +218,14 @@ class BaseClassifier(BaseAPI):
                 num_pad_samples = batch_size - num_samples
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
-            outputs = self.exe.run(
-                self.parallel_test_prog,
-                feed={'image': images},
-                fetch_list=list(self.test_outputs.values()))
+            outputs = self.exe.run(self.parallel_test_prog,
+                                   feed={'image': images},
+                                   fetch_list=list(self.test_outputs.values()))
             outputs = [outputs[0][:num_samples]]
             true_labels.extend(labels)
             pred_scores.extend(outputs[0].tolist())
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
 
         pred_top1_label = np.argsort(pred_scores)[:, -1]
         pred_topk_label = np.argsort(pred_scores)[:, -k:]
@@ -263,10 +262,9 @@ class BaseClassifier(BaseAPI):
             self.arrange_transforms(
                 transforms=self.test_transforms, mode='test')
             im = self.test_transforms(img_file)
-        result = self.exe.run(
-            self.test_prog,
-            feed={'image': im},
-            fetch_list=list(self.test_outputs.values()))
+        result = self.exe.run(self.test_prog,
+                              feed={'image': im},
+                              fetch_list=list(self.test_outputs.values()))
         pred_label = np.argsort(result[0][0])[::-1][:true_topk]
         res = [{
             'category_id': l,
@@ -400,3 +398,9 @@ class ShuffleNetV2(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ShuffleNetV2, self).__init__(
             model_name='ShuffleNetV2', num_classes=num_classes)
+
+
+class HRNet_W18(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W18, self).__init__(
+            model_name='HRNet_W18', num_classes=num_classes)
