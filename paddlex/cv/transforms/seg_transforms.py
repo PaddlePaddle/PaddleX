@@ -108,6 +108,12 @@ class Compose(SegTransform):
                     outputs = (im, im_info)
         return outputs
 
+    def add_augmenters(self, augmenters):
+        if not isinstance(augmenters, list):
+            raise Exception(
+                "augmenters should be list type in func add_augmenters()")
+        self.transforms = augmenters + self.transforms.transforms
+
 
 class RandomHorizontalFlip(SegTransform):
     """以一定的概率对图像进行水平翻转。当存在标注图像时，则同步进行翻转。

@@ -156,7 +156,6 @@ class Compose(DetTransform):
         if not isinstance(augmenters, list):
             raise Exception(
                 "augmenters should be list type in func add_augmenters()")
-        assert mode == 'train', "There should be exists augmenters while on train mode"
         self.transforms = augmenters + self.transforms.transforms
 
 
