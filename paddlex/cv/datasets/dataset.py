@@ -23,7 +23,6 @@ import random
 import platform
 import chardet
 import paddlex.utils.logging as logging
-from paddlex.cv.transforms.template import TemplateTransforms
 
 
 class EndSignal():
@@ -233,8 +232,6 @@ class Dataset:
         if transforms is None:
             raise Exception("transform should be defined.")
         self.transforms = transforms
-        if isinstance(transforms, TemplateTransforms):
-            self.transforms = transforms.transforms
         self.num_workers = num_workers
         self.buffer_size = buffer_size
         self.parallel_method = parallel_method
