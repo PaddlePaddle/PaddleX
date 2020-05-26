@@ -27,6 +27,7 @@ from PIL import Image, ImageEnhance
 from .imgaug_support import execute_imgaug
 from .ops import *
 from .box_utils import *
+from .template import TemplateTransforms
 
 
 class DetTransform:
@@ -1227,3 +1228,109 @@ class ArrangeYOLOv3(DetTransform):
             im_shape = im_info['image_shape']
             outputs = (im, im_shape)
         return outputs
+
+
+class BasicRCNNTransforms(TemplateTransforms):
+    """ RCNN模型(faster-rcnn/mask-rcnn)图像处理流程，具体如下，
+        训练阶段：
+        1. 随机以0.5的概率将图像水平翻转
+        2. 图像归一化
+        3. 图像按比例Resize，scale计算方式如下
+            scale = min_max_size[0] / short_size_of_image
+            if max_size_of_image * scale > min_max_size[1]:
+                scale = min_max_size[1] / max_size_of_image
+        4. 将3步骤的长宽进行padding，使得长宽为32的倍数
+        验证阶段：
+        1. 图像归一化
+        2. 图像按比例Resize，scale计算方式同上训练阶段
+        3. 将2步骤的长宽进行padding，使得长宽为32的倍数
+
+        Args:
+            mode(str): 图像处理流程所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
+            min_max_size(list): 图像在缩放时，最小边和最大边的约束条件
+            mean(list): 图像均值
+            std(list): 图像方差
+    """
+
+    def __init__(self,
+                 mode,
+                 min_max_size=[800, 1333],
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225]):
+        super(RCNNTransforms, self).__init__(mode=mode)
+        if self.mode == 'train':
+            # 训练时的transforms，包含数据增强
+            self.transforms = transforms.Compose([
+                transforms.RandomHorizontalFlip(prob=0.5),
+                transforms.Normalize(
+                    mean=mean, std=std), transforms.ResizeByShort(
+                        short_size=min_max_size[0], max_size=min_max_size[1]),
+                transforms.Padding(coarsest_stride=32)
+            ])
+        else:
+            # 验证/预测时的transforms
+            self.transforms = transforms.Compose([
+                transforms.Normalize(
+                    mean=mean, std=std), transforms.ResizeByShort(
+                        short_size=min_max_size[0], max_size=min_max_size[1]),
+                transforms.Padding(coarsest_stride=32)
+            ])
+
+
+class BasicYOLOTransforms(TemplateTransforms):
+    """YOLOv3模型的图像预处理流程，具体如下，
+        训练阶段：
+        1. 在前mixup_epoch轮迭代中，使用MixupImage策略，见https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#mixupimage
+        2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调
+        3. 随机扩充图像，见https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#randomexpand
+        4. 随机裁剪图像
+        5. 将4步骤的输出图像Resize成shape参数的大小
+        6. 随机0.5的概率水平翻转图像
+        7. 图像归一化
+        验证/预测阶段：
+        1. 将图像Resize成shape参数大小
+        2. 图像归一化
+
+        Args:
+            mode(str): 图像处理流程所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
+            shape(list): 输入模型中图像的大小，输入模型的图像会被Resize成此大小
+            mixup_epoch(int): 模型训练过程中，前mixup_epoch会使用mixup策略
+            mean(list): 图像均值
+            std(list): 图像方差
+    """
+
+    def __init__(self,
+                 mode,
+                 shape=[608, 608],
+                 mixup_epoch=250,
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225]):
+        super(YOLOTransforms, self).__init__(mode=mode)
+        width = shape
+        if isinstance(shape, list):
+            if shape[0] != shape[1]:
+                raise Exception(
+                    "In YOLOv3 model, width and height should be equal")
+            width = shape[0]
+        if width % 32 != 0:
+            raise Exception(
+                "In YOLOv3 model, width and height should be multiple of 32, e.g 224、256、320...."
+            )
+
+        if self.mode == 'train':
+            # 训练时的transforms，包含数据增强
+            self.transforms = transforms.Compose([
+                transforms.MixupImage(mixup_epoch=mixup_epoch),
+                transforms.RandomDistort(), transforms.RandomExpand(),
+                transforms.RandomCrop(), transforms.Resize(
+                    target_size=width, interp='RANDOM'),
+                transforms.RandomHorizontalFlip(), transforms.Normalize(
+                    mean=mean, std=std)
+            ])
+        else:
+            # 验证/预测时的transforms
+            self.transforms = transforms.Compose([
+                transforms.Resize(
+                    target_size=width, interp='CUBIC'), transforms.Normalize(
+                        mean=mean, std=std)
+            ])

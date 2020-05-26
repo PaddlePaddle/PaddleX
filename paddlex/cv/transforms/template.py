@@ -12,7 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import cls_transforms
-from . import det_transforms
-from . import seg_transforms
-from . import template
+
+class TemplateTransforms:
+    def __init__(self, mode):
+        assert mode in [
+            'train', 'eval', 'test'
+        ], "Parameter mode in TemplateTransforms should be one of ['train', 'eval', 'test']"
+        self.mode = mode
+
+    def add_augmenters(self, augmenters):
+        if not isinstance(augmenters, list):
+            raise Exception(
+                "augmenters should be list type in func add_augmenters()")
+        assert mode == 'train', "There should be exists augmenters while on train mode"
+        self.transforms = augmenters + self.transforms.transforms

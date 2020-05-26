@@ -23,6 +23,7 @@ import random
 import platform
 import chardet
 import paddlex.utils.logging as logging
+from paddlex.cv.transforms.template import TemplateTransforms
 
 
 class EndSignal():
@@ -209,8 +210,8 @@ def GenerateMiniBatch(batch_data):
     padding_batch = []
     for data in batch_data:
         im_c, im_h, im_w = data[0].shape[:]
-        padding_im = np.zeros((im_c, max_shape[1], max_shape[2]),
-                              dtype=np.float32)
+        padding_im = np.zeros(
+            (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
         padding_im[:, :im_h, :im_w] = data[0]
         padding_batch.append((padding_im, ) + data[1:])
     return padding_batch
@@ -226,12 +227,14 @@ class Dataset:
         if num_workers == 'auto':
             import multiprocessing as mp
             num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
-        if platform.platform().startswith(
-                "Darwin") or platform.platform().startswith("Windows"):
+        if platform.platform().startswith("Darwin") or platform.platform(
+        ).startswith("Windows"):
             parallel_method = 'thread'
         if transforms is None:
             raise Exception("transform should be defined.")
         self.transforms = transforms
+        if isinstance(transforms, TemplateTransforms):
+            self.transforms = transforms.transforms
         self.num_workers = num_workers
         self.buffer_size = buffer_size
         self.parallel_method = parallel_method
