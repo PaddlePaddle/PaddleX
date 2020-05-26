@@ -98,15 +98,15 @@ make
 ```
 **注意：** linux环境下编译会自动下载OPENCV, PaddleX-Encryption, YAML，如果编译环境无法访问外网，可手动下载：
 
-- [OPENCV](https://paddleseg.bj.bcebos.com/deploy/docker/opencv3gcc4.8.tar.bz2)
-- [PaddleX-Encryption](https://bj.bcebos.com/paddlex/tools/paddlex-encryption.zip)
-- [YAML](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
+- [opencv3gcc4.8.tar.bz2](https://paddleseg.bj.bcebos.com/deploy/docker/opencv3gcc4.8.tar.bz2)
+- [paddlex-encryption.zip](https://bj.bcebos.com/paddlex/tools/paddlex-encryption.zip)
+- [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 
-OPENCV文件下载后解压，然后在script/build.sh中指定`OPENCE_DIR`为解压后的路径。
+opencv3gcc4.8.tar.bz2文件下载后解压，然后在script/build.sh中指定`OPENCE_DIR`为解压后的路径。
 
-PaddleX-Encryption文件下载后解压，然后在script/build.sh中指定`ENCRYPTION_DIR`为解压后的路径。
+paddlex-encryption.zip文件下载后解压，然后在script/build.sh中指定`ENCRYPTION_DIR`为解压后的路径。
 
-YAML文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
+yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
 
 修改脚本设置好主要参数后，执行`build`脚本：
  ```shell

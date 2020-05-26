@@ -87,13 +87,13 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 | PADDLE_DIR | Paddle c++预测库的路径 |
 
 **注意：**
-1. 使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾 2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
+1. 使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
 
-2. Windows环境下编译会自动下载YAML，如果编译环境无法访问外网，可手动下载：
+2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
 
-- [YAML](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
+3. Windows环境下编译会自动下载YAML，如果编译环境无法访问外网，可手动下载： [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 
-YAML文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
+yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
 
 ![step4](../../images/vs2019_step5.png)
 
