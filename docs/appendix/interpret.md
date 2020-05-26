@@ -17,15 +17,3 @@ LIME的使用方式可参见[代码示例](https://github.com/PaddlePaddle/Paddl
 图中绿色区域代表起正向作用的超像素，红色区域代表起反向作用的超像素，"First n superpixels"代表前n个权重比较大的超像素（由上述步骤5计算所得结果）。
 
 
-## NormLIME
-NormLIME是在LIME上的改进，LIME的解释是局部性的，是针对当前样本给的特定解释，而NormLIME是利用一定数量的样本对当前样本的一个全局性的解释，有一定的降噪效果。其实现步骤如下所示：  
-1. 下载Kmeans模型参数和ResNet50_vc网络前三层参数。（ResNet50_vc的参数是在ImageNet上训练所得网络的参数；使用ImageNet图像作为数据集，每张图像从ResNet50_vc的第三层输出提取对应超象素位置上的平均特征和质心上的特征，训练将得到此处的Kmeans模型）  
-2. 计算测试集中每张图像的LIME结果。（如无测试集，可用验证集代替）  
-3. 使用Kmeans模型对所有图像中的所有像素进行聚类。  
-4. 对在同一个簇的超像素（相同的特征）进行权重的归一化，得到每个超像素的权重，以此来解释模型。  
-
-NormLIME的使用方式可参见[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)和[api介绍](../apis/visualize.html#normlime)。在使用时，参数中的`num_samples`设置尤为重要，其表示上述步骤2中的随机采样的个数，若设置过小会影响可解释性结果的稳定性，若设置过大则将在上述步骤3耗费较长时间；参数`batch_size`则表示在计算上述步骤3时，预测的batch size，若设置过小将在上述步骤3耗费较长时间，而上限则根据机器配置决定；而`dataset`则是由测试集或验证集构造的数据。  
-
-最终NormLIME可解释性算法的可视化结果如下所示：  
-![](../images/normlime.png)  
-图中绿色区域代表起正向作用的超像素，红色区域代表起反向作用的超像素，"First n superpixels"代表前n个权重比较大的超像素（由上述步骤5计算所得结果）。图中最后一行代表把LIME和NormLIME对应超像素权重相乘的结果。
