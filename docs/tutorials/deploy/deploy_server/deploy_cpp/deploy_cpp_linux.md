@@ -96,7 +96,7 @@ cmake .. \
 make
 
 ```
-**注意：** linux环境下编译会自动下载OPENCV, PaddleX-Encryption, YAML，如果编译环境无法访问外网，可手动下载：
+**注意：** linux环境下编译会自动下载OPENCV, PaddleX-Encryption和YAML，如果编译环境无法访问外网，可手动下载：
 
 - [opencv3gcc4.8.tar.bz2](https://paddleseg.bj.bcebos.com/deploy/docker/opencv3gcc4.8.tar.bz2)
 - [paddlex-encryption.zip](https://bj.bcebos.com/paddlex/tools/paddlex-encryption.zip)
