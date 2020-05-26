@@ -1091,7 +1091,7 @@ class ArrangeSegmenter(SegTransform):
             return (im, )
 
 
-class BasicSegTransforms(TemplateTransforms):
+class ComposedTransforms(Compose):
     """ 语义分割模型(UNet/DeepLabv3p)的图像处理流程，具体如下
         训练阶段：
         1. 随机对图像以0.5的概率水平翻转
@@ -1113,18 +1113,15 @@ class BasicSegTransforms(TemplateTransforms):
                  train_crop_size=[769, 769],
                  mean=[0.5, 0.5, 0.5],
                  std=[0.5, 0.5, 0.5]):
-        super(TemplateSegTransforms, self).__init__(mode=mode)
         if self.mode == 'train':
             # 训练时的transforms，包含数据增强
-            self.transforms = transforms.Compose([
-                transforms.RandomHorizontalFlip(),
-                transforms.ResizeStepScaling(),
-                transforms.RandomPaddingCrop(crop_size=train_crop_size),
-                transforms.Normalize(
+            transforms = [
+                RandomHorizontalFlip(prob=0.5), ResizeStepScaling(),
+                RandomPaddingCrop(crop_size=train_crop_size), Normalize(
                     mean=mean, std=std)
-            ])
+            ]
         else:
             # 验证/预测时的transforms
-            self.transforms = transforms.Compose(
-                [transforms.Normalize(
-                    mean=mean, std=std)])
+            transforms = [transforms.Normalize(mean=mean, std=std)]
+
+        super(ComposedSegTransforms, self).__init__(transforms)
