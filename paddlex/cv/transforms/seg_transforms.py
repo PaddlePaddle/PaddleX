@@ -21,7 +21,6 @@ import numpy as np
 from PIL import Image
 import cv2
 from collections import OrderedDict
-from .template import TemplateTransforms
 
 
 class SegTransform:
