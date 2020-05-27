@@ -129,7 +129,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
 | use_trt  | 是否使用 TensorTr 预测, 支持值为0或1(默认值为0) |
 | gpu_id  | GPU 设备ID, 默认值为0 |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
+| save_dir | 保存可视化结果的路径, 默认值为"output"，**classfier无该参数** |
 
 ## 样例
 
