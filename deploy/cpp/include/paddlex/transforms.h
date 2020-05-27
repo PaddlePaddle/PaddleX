@@ -83,7 +83,7 @@ class ResizeByShort : public Transform {
     } else {
       max_size_ = -1;
     }
-  };
+  }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
@@ -96,7 +96,7 @@ class ResizeByLong : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
     long_size_ = item["long_size"].as<int>();
-  };
+  }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
@@ -167,9 +167,6 @@ class Padding : public Transform {
         height_ = item["target_size"].as<std::vector<int>>()[1];
       }
     }
-    if (item["im_padding_value"].IsDefined()) {
-      value_ = item["im_padding_value"].as<std::vector<float>>();
-    }
   }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
@@ -177,7 +174,6 @@ class Padding : public Transform {
   int coarsest_stride_ = -1;
   int width_ = 0;
   int height_ = 0;
-  std::vector<float> value_;
 };
 
 class Transforms {
