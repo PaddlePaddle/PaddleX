@@ -204,7 +204,7 @@ class MaskRCNN(object):
                 bg_thresh_hi=self.bg_thresh_hi,
                 bg_thresh_lo=self.bg_thresh_lo,
                 bbox_reg_weights=self.bbox_reg_weights,
-                calass_nums=self.num_classes,
+                class_nums=self.num_classes,
                 use_random=self.rpn_head.use_random)
 
             rois = outputs[0]
