@@ -110,7 +110,7 @@ class LabelMe2COCO(X2COCO):
         annotation["segmentation"] = [list(np.asarray(points).flatten())]
         annotation["iscrowd"] = 0
         annotation["image_id"] = image_id + 1
-        annotation["bbox"] = list(map(float, get_bbox(height, width, points)))
+        annotation["bbox"] = list(map(float, self.get_bbox(height, width, points)))
         annotation["area"] = annotation["bbox"][2] * annotation["bbox"][3]
         annotation["category_id"] = label_to_num[label]
         annotation["id"] = object_id + 1
