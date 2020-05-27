@@ -49,11 +49,13 @@ train_dataset = pdx.datasets.ImageNet(
     file_list='vegetables_cls/train_list.txt',
     label_list='vegetables_cls/labels.txt',
     transforms=train_transforms,
+    parallel_method='thread',
     shuffle=True)
 eval_dataset = pdx.datasets.ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/val_list.txt',
     label_list='vegetables_cls/labels.txt',
+    parallel_method='thread',
     transforms=eval_transforms)
 ```
 
