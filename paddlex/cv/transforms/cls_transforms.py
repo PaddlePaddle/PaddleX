@@ -92,6 +92,12 @@ class Compose(ClsTransform):
                     outputs = (im, label)
         return outputs
 
+    def add_augmenters(self, augmenters):
+        if not isinstance(augmenters, list):
+            raise Exception(
+                "augmenters should be list type in func add_augmenters()")
+        self.transforms = augmenters + self.transforms.transforms
+
 
 class RandomCrop(ClsTransform):
     """对图像进行随机剪裁，模型训练时的数据增强操作。
@@ -461,3 +467,56 @@ class ArrangeClassifier(ClsTransform):
         else:
             outputs = (im, )
         return outputs
+
+
+class ComposedClsTransforms(Compose):
+    """ 分类模型的基础Transforms流程，具体如下
+        训练阶段：
+        1. 随机从图像中crop一块子图，并resize成crop_size大小
+        2. 将1的输出按0.5的概率随机进行水平翻转
+        3. 将图像进行归一化
+        验证/预测阶段：
+        1. 将图像按比例Resize，使得最小边长度为crop_size[0] * 1.14
+        2. 从图像中心crop出一个大小为crop_size的图像
+        3. 将图像进行归一化
+
+        Args:
+            mode(str): 图像处理流程所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
+            crop_size(int|list): 输入模型里的图像大小
+            mean(list): 图像均值
+            std(list): 图像方差
+    """
+
+    def __init__(self,
+                 mode,
+                 crop_size=[224, 224],
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225]):
+        width = crop_size
+        if isinstance(crop_size, list):
+            if crop_size[0] != crop_size[1]:
+                raise Exception(
+                    "In classifier model, width and height should be equal, please modify your parameter `crop_size`"
+                )
+            width = crop_size[0]
+        if width % 32 != 0:
+            raise Exception(
+                "In classifier model, width and height should be multiple of 32, e.g 224、256、320...., please modify your parameter `crop_size`"
+            )
+
+        if mode == 'train':
+            # 训练时的transforms，包含数据增强
+            transforms = [
+                RandomCrop(crop_size=width), RandomHorizontalFlip(prob=0.5),
+                Normalize(
+                    mean=mean, std=std)
+            ]
+        else:
+            # 验证/预测时的transforms
+            transforms = [
+                ResizeByShort(short_size=int(width * 1.14)),
+                CenterCrop(crop_size=width), Normalize(
+                    mean=mean, std=std)
+            ]
+
+        super(ComposedClsTransforms, self).__init__(transforms)
