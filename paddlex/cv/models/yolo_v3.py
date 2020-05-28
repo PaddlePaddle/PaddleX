@@ -249,6 +249,10 @@ class YOLOv3(BaseAPI):
 
         self.train_batch_size =  train_batch_size
         self.labels = train_dataset.labels
+        if pretrain_weights == "Object365":
+            for transform in train_dataset.transforms.transforms:
+                if isinstance(transform, paddlex.det.transforms.Normalize):
+                    transform.is_scale = False
         if self.use_iou_loss or self.use_iou_aware_loss:
             if self.train_random_shapes is None or len(self.train_random_shapes) == 0:
                 for transform in train_dataset.transforms.transforms:

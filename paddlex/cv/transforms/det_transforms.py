@@ -494,6 +494,7 @@ class Normalize(DetTransform):
     Args:
         mean (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
         std (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+        is_scale (bool): 是否对图像归一化。默认为True。
 
     Raises:
         TypeError: 形参数据类型不满足需求。
