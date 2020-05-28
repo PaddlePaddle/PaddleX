@@ -114,7 +114,7 @@ def multithread_reader(mapper,
         while not isinstance(sample, EndSignal):
             batch_data.append(sample)
             if len(batch_data) == batch_size:
-                batch_data = GenerateMiniBatch(batch_data)
+                batch_data = GenerateMiniBatch(batch_data, mapper)
                 yield batch_data
                 batch_data = []
             sample = out_queue.get()
@@ -126,11 +126,11 @@ def multithread_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = GenerateMiniBatch(batch_data)
+                    batch_data = GenerateMiniBatch(batch_data, mapper)
                     yield batch_data
                     batch_data = []
         if not drop_last and len(batch_data) != 0:
-            batch_data = GenerateMiniBatch(batch_data)
+            batch_data = GenerateMiniBatch(batch_data, mapper)
             yield batch_data
             batch_data = []
 
@@ -187,18 +187,21 @@ def multiprocess_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = GenerateMiniBatch(batch_data)
+                    batch_data = GenerateMiniBatch(batch_data, mapper)
                     yield batch_data
                     batch_data = []
         if len(batch_data) != 0 and not drop_last:
-            batch_data = GenerateMiniBatch(batch_data)
+            batch_data = GenerateMiniBatch(batch_data, mapper)
             yield batch_data
             batch_data = []
 
     return queue_reader
 
 
-def GenerateMiniBatch(batch_data):
+def GenerateMiniBatch(batch_data, mapper):
+    if mapper.batch_transforms is not None:
+        for op in mapper.batch_transforms:
+            batch_data = op(batch_data)
     if len(batch_data) == 1:
         return batch_data
     width = [data[0].shape[2] for data in batch_data]
@@ -209,8 +212,8 @@ def GenerateMiniBatch(batch_data):
     padding_batch = []
     for data in batch_data:
         im_c, im_h, im_w = data[0].shape[:]
-        padding_im = np.zeros(
-            (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
+        padding_im = np.zeros((im_c, max_shape[1], max_shape[2]),
+                              dtype=np.float32)
         padding_im[:, :im_h, :im_w] = data[0]
         padding_batch.append((padding_im, ) + data[1:])
     return padding_batch
@@ -226,8 +229,8 @@ class Dataset:
         if num_workers == 'auto':
             import multiprocessing as mp
             num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
-        if platform.platform().startswith("Darwin") or platform.platform(
-        ).startswith("Windows"):
+        if platform.platform().startswith(
+                "Darwin") or platform.platform().startswith("Windows"):
             parallel_method = 'thread'
         if transforms is None:
             raise Exception("transform should be defined.")

@@ -58,13 +58,18 @@ class YOLOv3(BaseAPI):
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45,
                  label_smooth=False,
+                 use_iou_loss=False,
+                 use_iou_aware_loss=False,
+                 iou_aware_factor=0.4,
+                 use_drop_block=False,
+                 use_dcn_v2=False,
                  train_random_shapes=[
                      320, 352, 384, 416, 448, 480, 512, 544, 576, 608
                  ]):
         self.init_params = locals()
         super(YOLOv3, self).__init__('detector')
         backbones = [
-            'DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large'
+            'DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large', 'ResNet50_vd'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -79,8 +84,18 @@ class YOLOv3(BaseAPI):
         self.nms_iou_threshold = nms_iou_threshold
         self.label_smooth = label_smooth
         self.sync_bn = True
+        self.use_iou_loss = use_iou_loss
+        self.use_iou_aware_loss = use_iou_aware_loss
+        self.iou_aware_factor = iou_aware_factor
+        self.use_drop_block = use_drop_block
+        self.use_dcn_v2 = use_dcn_v2
         self.train_random_shapes = train_random_shapes
         self.fixed_input_shape = None
+        if self.anchors is None:
+            self.anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+                       [59, 119], [116, 90], [156, 198], [373, 326]]
+        if self.anchor_masks is None:
+            self.anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
 
     def _get_backbone(self, backbone_name):
         if backbone_name == 'DarkNet53':
@@ -93,6 +108,16 @@ class YOLOv3(BaseAPI):
                 norm_decay=0.,
                 feature_maps=[3, 4, 5],
                 freeze_at=0)
+        elif backbone_name == 'ResNet50_vd':
+            backbone = paddlex.cv.nets.ResNet(
+                norm_type='sync_bn',
+                layers=50,
+                variant='d',
+                freeze_norm=False,
+                norm_decay=0.,
+                feature_maps=[3, 4, 5],
+                freeze_at=0,
+                dcn_v2_stages=[5] if self.use_dcn_v2 else [])
         elif backbone_name == 'MobileNetV1':
             backbone = paddlex.cv.nets.MobileNetV1(norm_type='sync_bn')
         elif backbone_name.startswith('MobileNetV3'):
@@ -115,7 +140,12 @@ class YOLOv3(BaseAPI):
             nms_keep_topk=self.nms_keep_topk,
             nms_iou_threshold=self.nms_iou_threshold,
             train_random_shapes=self.train_random_shapes,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            use_iou_loss=self.use_iou_loss,
+            use_iou_aware_loss=self.use_iou_aware_loss,
+            iou_aware_factor=self.iou_aware_factor,
+            use_drop_block=self.use_drop_block,
+            batch_size=self.train_batch_size if hasattr(self, 'train_batch_size') else 8)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict([('bbox', model_out)])
@@ -217,7 +247,22 @@ class YOLOv3(BaseAPI):
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
 
+        self.train_batch_size =  train_batch_size
         self.labels = train_dataset.labels
+        if self.use_iou_loss or self.use_iou_aware_loss:
+            if self.train_random_shapes is None or len(self.train_random_shapes) == 0:
+                for transform in train_dataset.transforms.transforms:
+                    if isinstance(transform, paddlex.det.transforms.Resize):
+                        self.train_random_shapes = [transform.target_size]
+                        break
+            train_dataset.transforms.batch_transforms = []
+            reshape_bt = paddlex.det.transforms.RandomShape
+            train_dataset.transforms.batch_transforms.append(reshape_bt(
+                                                                      random_shapes=self.train_random_shapes))
+            iou_bt = paddlex.det.transforms.GenerateYoloTarget
+            train_dataset.transforms.batch_transforms.append(iou_bt(anchors=self.anchors,
+                                                                  anchor_masks=self.anchor_masks,
+                                                                  num_classes=self.num_classes))
         # 构建训练网络
         if optimizer is None:
             # 构建默认的优化策略
@@ -306,10 +351,11 @@ class YOLOv3(BaseAPI):
             images = np.array([d[0] for d in data])
             im_sizes = np.array([d[1] for d in data])
             feed_data = {'image': images, 'im_size': im_sizes}
-            outputs = self.exe.run(self.test_prog,
-                                   feed=[feed_data],
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=False)
+            outputs = self.exe.run(
+                self.test_prog,
+                feed=[feed_data],
+                fetch_list=list(self.test_outputs.values()),
+                return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -325,13 +371,13 @@ class YOLOv3(BaseAPI):
                 res['gt_label'] = (res_gt_label, [])
                 res['is_difficult'] = (res_is_difficult, [])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
-                                                               1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
+                epoch_id, step + 1, total_steps))
         box_ap_stats, eval_details = eval_results(
             results, metric, eval_dataset.coco_gt, with_background=False)
         evaluate_metrics = OrderedDict(
-            zip(['bbox_mmap'
-                 if metric == 'COCO' else 'bbox_map'], box_ap_stats))
+            zip(['bbox_mmap' if metric == 'COCO' else 'bbox_map'],
+                box_ap_stats))
         if return_details:
             return evaluate_metrics, eval_details
         return evaluate_metrics
@@ -345,8 +391,7 @@ class YOLOv3(BaseAPI):
 
         Returns:
             list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
-              预测框得分组成。
+              预测框类别名称、预测框坐标、预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -359,11 +404,14 @@ class YOLOv3(BaseAPI):
             im, im_size = self.test_transforms(img_file)
         im = np.expand_dims(im, axis=0)
         im_size = np.expand_dims(im_size, axis=0)
-        outputs = self.exe.run(self.test_prog,
-                               feed={'image': im,
-                                     'im_size': im_size},
-                               fetch_list=list(self.test_outputs.values()),
-                               return_numpy=False)
+        outputs = self.exe.run(
+            self.test_prog,
+            feed={
+                'image': im,
+                'im_size': im_size
+            },
+            fetch_list=list(self.test_outputs.values()),
+            return_numpy=False)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)

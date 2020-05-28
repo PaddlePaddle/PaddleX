@@ -13,9 +13,12 @@
 # limitations under the License.
 
 from paddle import fluid
+from paddle.fluid.initializer import NumpyArrayInitializer
 from paddle.fluid.param_attr import ParamAttr
 from paddle.fluid.regularizer import L2Decay
 from collections import OrderedDict
+from .loss import yolo_loss
+from .iou_aware import get_iou_aware_score
 
 
 class YOLOv3:
@@ -34,7 +37,12 @@ class YOLOv3:
                  train_random_shapes=[
                      320, 352, 384, 416, 448, 480, 512, 544, 576, 608
                  ],
-                 fixed_input_shape=None):
+                 fixed_input_shape=None,
+                 use_iou_loss=False,
+                 use_iou_aware_loss=False,
+                 iou_aware_factor=0.4,
+                 use_drop_block=False,
+                 batch_size=8):
         if anchors is None:
             anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                        [59, 119], [116, 90], [156, 198], [373, 326]]
@@ -56,6 +64,13 @@ class YOLOv3:
         self.prefix_name = ''
         self.train_random_shapes = train_random_shapes
         self.fixed_input_shape = fixed_input_shape
+        self.use_iou_loss = use_iou_loss
+        self.use_iou_aware_loss = use_iou_aware_loss
+        self.iou_aware_factor = iou_aware_factor
+        self.use_drop_block = use_drop_block
+        self.block_size = 3
+        self.keep_prob = 0.9
+        self.batch_size = batch_size
 
     def _head(self, feats):
         outputs = []
@@ -71,7 +86,10 @@ class YOLOv3:
                 channel=512 // (2**i),
                 name=self.prefix_name + 'yolo_block.{}'.format(i))
 
-            num_filters = len(self.anchor_masks[i]) * (self.num_classes + 5)
+            if self.use_iou_aware_loss:
+                num_filters = len(self.anchor_masks[i]) * (self.num_classes + 6)
+            else:
+                num_filters = len(self.anchor_masks[i]) * (self.num_classes + 5)
             block_out = fluid.layers.conv2d(
                 input=tip,
                 num_filters=num_filters,
@@ -155,6 +173,55 @@ class YOLOv3:
         out = fluid.layers.resize_nearest(
             input=input, scale=float(scale), name=name)
         return out
+    
+    def _dropblock(self, input, block_size=3, keep_prob=0.9):
+        is_test = False if self.mode == 'train' else True
+        if is_test:
+            return input
+
+        def calculate_gamma(input, block_size, keep_prob):
+            input_shape = fluid.layers.shape(input)
+            feat_shape_tmp = fluid.layers.slice(input_shape, [0], [3], [4])
+            feat_shape_tmp = fluid.layers.cast(feat_shape_tmp, dtype="float32")
+            feat_shape_t = fluid.layers.reshape(feat_shape_tmp, [1, 1, 1, 1])
+            feat_area = fluid.layers.pow(feat_shape_t, factor=2)
+
+            block_shape_t = fluid.layers.fill_constant(
+                shape=[1, 1, 1, 1], value=block_size, dtype='float32')
+            block_area = fluid.layers.pow(block_shape_t, factor=2)
+
+            useful_shape_t = feat_shape_t - block_shape_t + 1
+            useful_area = fluid.layers.pow(useful_shape_t, factor=2)
+
+            upper_t = feat_area * (1 - keep_prob)
+            bottom_t = block_area * useful_area
+            output = upper_t / bottom_t
+            return output
+
+        gamma = calculate_gamma(input, block_size=block_size, keep_prob=keep_prob)
+        input_shape = fluid.layers.shape(input)
+        p = fluid.layers.expand_as(gamma, input)
+        input_shape_tmp = fluid.layers.cast(input_shape, dtype="int64")
+        random_matrix = fluid.layers.uniform_random(
+            input_shape_tmp, dtype='float32', min=0.0, max=1.0, seed=1)
+        one_zero_m = fluid.layers.less_than(random_matrix, p)
+        one_zero_m.stop_gradient = True
+        one_zero_m = fluid.layers.cast(one_zero_m, dtype="float32")
+        mask_flag = fluid.layers.pool2d(
+            one_zero_m,
+            pool_size=block_size,
+            pool_type='max',
+            pool_stride=1,
+            pool_padding=block_size // 2)
+        mask = 1.0 - mask_flag
+        elem_numel = fluid.layers.reduce_prod(input_shape)
+        elem_numel_m = fluid.layers.cast(elem_numel, dtype="float32")
+        elem_numel_m.stop_gradient = True
+        elem_sum = fluid.layers.reduce_sum(mask)
+        elem_sum_m = fluid.layers.cast(elem_sum, dtype="float32")
+        elem_sum_m.stop_gradient = True
+        output = input * mask * elem_numel_m / elem_sum_m
+        return output
 
     def _detection_block(self, input, channel, name=None):
         assert channel % 2 == 0, "channel({}) cannot be divided by 2 in detection block({})".format(
@@ -179,6 +246,16 @@ class YOLOv3:
                 padding=1,
                 is_test=is_test,
                 name='{}.{}.1'.format(name, i))
+            if self.use_drop_block and i == 0 and channel != 512:
+                conv = self._dropblock(
+                    conv,
+                    block_size=self.block_size,
+                    keep_prob=self.keep_prob)
+        if self.use_drop_block and channel == 512:
+            conv = self._dropblock(
+                conv,
+                block_size=self.block_size,
+                keep_prob=self.keep_prob)
         route = self._conv_bn(
             conv,
             channel,
@@ -197,31 +274,28 @@ class YOLOv3:
             name='{}.tip'.format(name))
         return route, tip
 
-    def _get_loss(self, inputs, gt_box, gt_label, gt_score):
+    def _get_loss(self, inputs, gt_box, gt_label, gt_score, targets):
         losses = []
-        downsample = 32
-        for i, input in enumerate(inputs):
-            loss = fluid.layers.yolov3_loss(
-                x=input,
-                gt_box=gt_box,
-                gt_label=gt_label,
-                gt_score=gt_score,
-                anchors=self.anchors,
-                anchor_mask=self.anchor_masks[i],
-                class_num=self.num_classes,
-                ignore_thresh=self.ignore_thresh,
-                downsample_ratio=downsample,
-                use_label_smooth=self.label_smooth,
-                name=self.prefix_name + 'yolo_loss' + str(i))
-            losses.append(fluid.layers.reduce_mean(loss))
-            downsample //= 2
-        return sum(losses)
+        yolo_loss_obj = yolo_loss.YOLOv3Loss(batch_size=self.batch_size,
+                                             ignore_thresh=self.ignore_thresh,
+                                             label_smooth=self.label_smooth,
+                                             iou_loss_weight=2.5 if self.use_iou_loss else None,
+                                             iou_aware_loss_weight=1.0 if self.use_iou_aware_loss else None)
+        return yolo_loss_obj(inputs, gt_box, gt_label, gt_score, targets,
+                             self.anchors, self.anchor_masks,
+                             self.mask_anchors, self.num_classes,
+                             self.prefix_name, max(self.train_random_shapes))
 
     def _get_prediction(self, inputs, im_size):
         boxes = []
         scores = []
         downsample = 32
         for i, input in enumerate(inputs):
+            if self.use_iou_aware_loss:
+                input = get_iou_aware_score(input,
+                                            len(self.anchor_masks[i]),
+                                            self.num_classes,
+                                            self.iou_aware_factor)
             box, score = fluid.layers.yolo_box(
                 x=input,
                 img_size=im_size,
@@ -267,6 +341,12 @@ class YOLOv3:
                 dtype='float32', shape=[None, None], name='gt_score')
             inputs['im_size'] = fluid.data(
                 dtype='int32', shape=[None, 2], name='im_size')
+            if self.use_iou_loss or self.use_iou_aware_loss:
+                for i, mask in enumerate(self.anchor_masks):
+                    inputs['target{}'.format(i)] = fluid.data(
+                        dtype='float32', 
+                        shape=[None, len(mask), 6 + self.num_classes, None, None], 
+                        name='target{}'.format(i))
         elif self.mode == 'eval':
             inputs['im_size'] = fluid.data(
                 dtype='int32', shape=[None, 2], name='im_size')
@@ -285,22 +365,6 @@ class YOLOv3:
 
     def build_net(self, inputs):
         image = inputs['image']
-        if self.mode == 'train':
-            if isinstance(self.train_random_shapes,
-                          (list, tuple)) and len(self.train_random_shapes) > 0:
-                import numpy as np
-                shapes = np.array(self.train_random_shapes)
-                shapes = np.stack([shapes, shapes], axis=1).astype('float32')
-                shapes_tensor = fluid.layers.assign(shapes)
-                index = fluid.layers.uniform_random(
-                    shape=[1], dtype='float32', min=0.0, max=1)
-                index = fluid.layers.cast(
-                    index * len(self.train_random_shapes), dtype='int32')
-                shape = fluid.layers.gather(shapes_tensor, index)
-                shape = fluid.layers.reshape(shape, [-1])
-                shape = fluid.layers.cast(shape, dtype='int32')
-                image = fluid.layers.resize_nearest(
-                    image, out_shape=shape, align_corners=False)
         feats = self.backbone(image)
         if isinstance(feats, OrderedDict):
             feat_names = list(feats.keys())
@@ -320,8 +384,14 @@ class YOLOv3:
             whwh = fluid.layers.cast(whwh, dtype='float32')
             whwh.stop_gradient = True
             normalized_box = fluid.layers.elementwise_div(gt_box, whwh)
+            targets = []
+            if self.use_iou_loss or self.use_iou_aware_loss:
+                for i, mask in enumerate(self.anchor_masks):
+                    k = 'target{}'.format(i)
+                    if k in inputs:
+                        targets.append(inputs[k])
             return self._get_loss(head_outputs, normalized_box, gt_label,
-                                  gt_score)
+                                  gt_score, targets)
         else:
             im_size = inputs['im_size']
             return self._get_prediction(head_outputs, im_size)

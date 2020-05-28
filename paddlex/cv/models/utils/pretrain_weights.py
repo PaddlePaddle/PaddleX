@@ -56,20 +56,11 @@ image_pretrain = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/Xception65_deeplab_pretrained.tar',
     'ShuffleNetV2':
     'https://paddle-imagenet-models-name.bj.bcebos.com/ShuffleNetV2_pretrained.tar',
-    'HRNet_W18':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W18_C_pretrained.tar',
-    'HRNet_W30':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W30_C_pretrained.tar',
-    'HRNet_W32':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W32_C_pretrained.tar',
-    'HRNet_W40':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W40_C_pretrained.tar',
-    'HRNet_W48':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W48_C_pretrained.tar',
-    'HRNet_W60':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W60_C_pretrained.tar',
-    'HRNet_W64':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W64_C_pretrained.tar',
+}
+
+obj365_pretrain = {
+    'ResNet50_vd_dcn_db_obj365':
+    'https://paddlemodels.bj.bcebos.com/object_detection/ResNet50_vd_dcn_db_obj365_pretrained.tar',
 }
 
 coco_pretrain = {
@@ -117,6 +108,18 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
                 raise Exception(
                     "Unexpected error, please make sure paddlehub >= 1.6.2")
         return osp.join(new_save_dir, backbone)
+    elif flag == 'Object365':
+        new_save_dir = save_dir
+        if hasattr(paddlex, 'pretrain_dir'):
+            new_save_dir = paddlex.pretrain_dir
+        if backbone == 'ResNet50_vd':
+            backbone = 'ResNet50_vd_dcn_db_obj365'
+        assert backbone in obj365_pretrain, "There is not Object365 pretrain weights for {}, you may try ImageNet.".format(
+            backbone)
+        url = obj365_pretrain[backbone]
+        fname = osp.split(url)[-1].split('.')[0]
+        paddlex.utils.download_and_decompress(url, path=new_save_dir)
+        return osp.join(new_save_dir, fname)
     elif flag == 'COCO':
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
@@ -144,5 +147,5 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
         return osp.join(new_save_dir, backbone)
     else:
         raise Exception(
-            "pretrain_weights need to be defined as directory path or `IMAGENET` or 'COCO' (download pretrain weights automatically)."
+            "pretrain_weights need to be defined as directory path or `IMAGENET` or `Object365` or 'COCO' (download pretrain weights automatically)."
         )
