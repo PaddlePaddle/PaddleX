@@ -19,6 +19,7 @@ import time
 
 from . import lime_base
 from ._session_preparation import paddle_get_fc_weights, compute_features_for_kmeans, gen_user_home
+from ._session_preparation import get_precomputed_normlime_weights, mobilenet_predict
 from .normlime_base import combine_normlime_and_lime, get_feature_for_kmeans, load_kmeans_model
 from paddlex.interpret.as_data_reader.readers import read_image
 import paddlex.utils.logging as logging
@@ -218,7 +219,7 @@ class LIME(object):
         return
 
 
-class NormLIME(object):
+class NormLIMEStandard(object):
     def __init__(self, predict_fn, label_names, num_samples=3000, batch_size=50,
                  kmeans_model_for_normlime=None, normlime_weights=None):
         root_path = gen_user_home()
@@ -365,6 +366,185 @@ class NormLIME(object):
             for i, num_to_show in enumerate(nums_to_show):
                 temp, mask = self._lime.lime_interpreter.get_image_and_mask(
                     l, positive_only=False, hide_rest=False, num_features=num_to_show
+                )
+                axes[ncols * 3 + i].imshow(mark_boundaries(temp, mask))
+                axes[ncols * 3 + i].set_title("Combined: first {} superpixels".format(num_to_show))
+
+            self._lime.lime_interpreter.local_weights = lime_weights
+
+        if save_to_disk and save_outdir is not None:
+            os.makedirs(save_outdir, exist_ok=True)
+            save_fig(data_, save_outdir, 'normlime', self.num_samples)
+
+        if visualization:
+            plt.show()
+
+
+class NormLIME(object):
+    def __init__(self, predict_fn, label_names, num_samples=3000, batch_size=50,
+                 kmeans_model_for_normlime=None):
+        root_path = gen_user_home()
+        root_path = osp.join(root_path, '.paddlex')
+        h_pre_models = osp.join(root_path, "pre_models")
+        if not osp.exists(h_pre_models):
+            if not osp.exists(root_path):
+                os.makedirs(root_path)
+            url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
+            pdx.utils.download_and_decompress(url, path=root_path)
+        h_pre_models_kmeans = osp.join(h_pre_models, "kmeans_model.pkl")
+        if kmeans_model_for_normlime is None:
+            try:
+                self.kmeans_model = load_kmeans_model(h_pre_models_kmeans)
+            except:
+                raise ValueError("NormLIME needs the KMeans model, where we provided a default one in "
+                                 "pre_models/kmeans_model.pkl.")
+        else:
+            logging.debug("Warning: It is *strongly* suggested to use the \
+            default KMeans model in pre_models/kmeans_model.pkl. \
+            Use another one will change the final result.")
+            self.kmeans_model = load_kmeans_model(kmeans_model_for_normlime)
+
+        self.num_samples = num_samples
+        self.batch_size = batch_size
+
+        try:
+            self.normlime_weights = get_precomputed_normlime_weights()
+        except:
+            self.normlime_weights = None
+            logging.debug("Warning: not find the correct precomputed Normlime result.")
+
+        self.predict_fn = predict_fn
+
+        self.labels = None
+        self.image = None
+        self.label_names = label_names
+
+    def predict_cluster_labels(self, feature_map, segments):
+        X = get_feature_for_kmeans(feature_map, segments)
+        try:
+            cluster_labels = self.kmeans_model.predict(X)
+        except AttributeError:
+            from sklearn.metrics import pairwise_distances_argmin_min
+            cluster_labels, _ = pairwise_distances_argmin_min(X, self.kmeans_model.cluster_centers_)
+        return cluster_labels
+
+    def get_normlime_weights(self, img_file, predicted_cluster_labels):
+        probability = mobilenet_predict(img_file)[0][0]
+
+        # according to the top_5 probability.
+        labels_imagenet = np.argsort(probability)[-5:]
+
+        if probability[labels_imagenet[-1]] < 0.1:
+            g_weights = []
+            for i, k in enumerate(predicted_cluster_labels):
+                g_weights.append((i, 1.0 / len(predicted_cluster_labels)))
+
+            g_weights = {self.labels[-1]: g_weights}
+
+            logging.debug("Warning: the precomputed NormLIME cannot find the corresponding class in ImageNet, \
+            thus is not suitable for this sample, and will output the LIME result.")
+
+            return g_weights
+
+        g_weights = []
+        for i, k in enumerate(predicted_cluster_labels):
+            w = 0.0
+            for y in labels_imagenet:
+                g_weights_y = self.normlime_weights.get(y, {})
+                w += probability[y] * g_weights_y.get(k, 0.0)
+
+            g_weights.append((i, w))
+
+        g_weights = sorted(g_weights,
+                           key=lambda x: np.abs(x[1]), reverse=True)
+        g_weights = {self.labels[-1]: g_weights}
+        return g_weights
+
+    def preparation_normlime(self, data_):
+        self._lime = LIME(
+            self.predict_fn,
+            self.label_names,
+            self.num_samples,
+            self.batch_size
+        )
+        self._lime.preparation_lime(data_)
+
+        image_show = read_image(data_)
+
+        self.predicted_label = self._lime.predicted_label
+        self.predicted_probability = self._lime.predicted_probability
+        self.image = image_show[0]
+        self.labels = self._lime.labels
+        logging.info('performing NormLIME operations ...')
+
+        cluster_labels = self.predict_cluster_labels(
+            compute_features_for_kmeans(image_show).transpose((1, 2, 0)), self._lime.lime_interpreter.segments
+        )
+
+        g_weights = self.get_normlime_weights(image_show, cluster_labels)
+
+        return g_weights
+
+    def interpret(self, data_, visualization=True, save_to_disk=True, save_outdir=None):
+        if self.normlime_weights is None:
+            raise ValueError("Not find the correct precomputed NormLIME result. \n"
+                             "\t Try to call compute_normlime_weights() first or load the correct path.")
+
+        g_weights = self.preparation_normlime(data_)
+        lime_weights = self._lime.lime_interpreter.local_weights
+
+        if visualization or save_to_disk:
+            import matplotlib.pyplot as plt
+            from skimage.segmentation import mark_boundaries
+            l = self.labels[0]
+            ln = l
+            if self.label_names is not None:
+                ln = self.label_names[l]
+
+            psize = 5
+            nrows = 4
+            weights_choices = [0.4, 0.5, 0.6, 0.7, 0.8]
+            nums_to_show = []
+            ncols = len(weights_choices)
+
+            plt.close()
+            f, axes = plt.subplots(nrows, ncols, figsize=(psize * ncols, psize * nrows))
+            for ax in axes.ravel():
+                ax.axis("off")
+
+            axes = axes.ravel()
+            axes[0].imshow(self.image)
+            prob_str = "{%.3f}" % (self.predicted_probability)
+            axes[0].set_title("label {}, proba: {}".format(ln, prob_str))
+
+            axes[1].imshow(mark_boundaries(self.image, self._lime.lime_interpreter.segments))
+            axes[1].set_title("superpixel segmentation")
+
+            # LIME visualization
+            for i, w in enumerate(weights_choices):
+                num_to_show = auto_choose_num_features_to_show(self._lime.lime_interpreter, l, w)
+                nums_to_show.append(num_to_show)
+                temp, mask = self._lime.lime_interpreter.get_image_and_mask(
+                    l, positive_only=True, hide_rest=False, num_features=num_to_show
+                )
+                axes[ncols + i].imshow(mark_boundaries(temp, mask))
+                axes[ncols + i].set_title("LIME: first {} superpixels".format(num_to_show))
+
+            # NormLIME visualization
+            self._lime.lime_interpreter.local_weights = g_weights
+            for i, num_to_show in enumerate(nums_to_show):
+                temp, mask = self._lime.lime_interpreter.get_image_and_mask(
+                    l, positive_only=True, hide_rest=False, num_features=num_to_show
+                )
+                axes[ncols * 2 + i].imshow(mark_boundaries(temp, mask))
+                axes[ncols * 2 + i].set_title("NormLIME: first {} superpixels".format(num_to_show))
+
+            # NormLIME*LIME visualization
+            combined_weights = combine_normlime_and_lime(lime_weights, g_weights)
+            self._lime.lime_interpreter.local_weights = combined_weights
+            for i, num_to_show in enumerate(nums_to_show):
+                temp, mask = self._lime.lime_interpreter.get_image_and_mask(
+                    l, positive_only=True, hide_rest=False, num_features=num_to_show
                 )
                 axes[ncols * 3 + i].imshow(mark_boundaries(temp, mask))
                 axes[ncols * 3 + i].set_title("Combined: first {} superpixels".format(num_to_show))

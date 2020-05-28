@@ -157,17 +157,12 @@ def get_normlime_interpreter(img, model, dataset, num_samples=3000, batch_size=5
             os.makedirs(root_path)
         url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
         pdx.utils.download_and_decompress(url, path=root_path)
-    npy_dir = precompute_for_normlime(precompute_predict_func, 
-                                      dataset, 
-                                      num_samples=num_samples, 
-                                      batch_size=batch_size,
-                                      save_dir=save_dir)
-    interpreter = Interpretation('normlime', 
+
+    interpreter = Interpretation('normlime',
                             predict_func,
                             labels_name,
                             num_samples=num_samples, 
-                            batch_size=batch_size,
-                            normlime_weights=npy_dir)
+                            batch_size=batch_size)
     return interpreter
 
 

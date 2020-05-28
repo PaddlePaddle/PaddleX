@@ -295,8 +295,10 @@ class ImageInterpretation(object):
             fs = [x[0] for x in local_weights_label
                   if x[1] < 0 and abs(x[1]) > min_weight][:num_features]
         if positive_only or negative_only:
+            c = 1 if positive_only else 0
             for f in fs:
                 temp[segments == f] = image[segments == f].copy()
+                temp[segments == f, c] = np.max(image)
                 mask[segments == f] = 1
             return temp, mask
         else:

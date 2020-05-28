@@ -12,7 +12,7 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-from .interpretation_algorithms import CAM, LIME, NormLIME
+from .interpretation_algorithms import CAM, LIME, NormLIME, NormLIMEStandard
 from .normlime_base import precompute_normlime_weights
 
 
@@ -24,7 +24,8 @@ class Interpretation(object):
         supported_algorithms = {
             'cam': CAM,
             'lime': LIME,
-            'normlime': NormLIME
+            'normlime': NormLIME,
+            'normlime_standard': NormLIMEStandard
         }
 
         self.algorithm_name = interpretation_algorithm_name.lower()
