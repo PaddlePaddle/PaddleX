@@ -134,7 +134,7 @@ PaddleX GUI是一个应用PaddleX实现的一个图形化开发客户端产品�
 
 4. **为什么模型裁剪分析耗时这么长？**
 
-   模型裁剪分析过程是对模型各卷积层的敏感度信息进行分析，根据各参数对模型效果的影响进行不同比例的裁剪。此过程需要重复多次直至FLOPS满足要求，最后再进行精调训练获得最终裁剪后的模型，因此耗时较长。有关模型裁剪的原理，可参见文档[剪裁原理介绍]([https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#2-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E5%89%AA%E8%A3%81%E5%8E%9F%E7%90%86](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#2-卷积核剪裁原理))
+   模型裁剪分析过程是对模型各卷积层的敏感度信息进行分析，根据各参数对模型效果的影响进行不同比例的裁剪。此过程需要重复多次直至FLOPS满足要求，最后再进行精调训练获得最终裁剪后的模型，因此耗时较长。有关模型裁剪的原理，可参见文档[剪裁原理介绍](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#2-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E5%89%AA%E8%A3%81%E5%8E%9F%E7%90%86)
 
    
 
