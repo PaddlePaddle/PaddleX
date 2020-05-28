@@ -23,6 +23,7 @@ from .segmentation import DeepLabv3p
 from .xception import Xception
 from .densenet import DenseNet
 from .shufflenet_v2 import ShuffleNetV2
+from .hrnet import HRNet
 
 
 def resnet18(input, num_classes=1000):
@@ -51,14 +52,20 @@ def resnet50_vd(input, num_classes=1000):
 
 
 def resnet50_vd_ssld(input, num_classes=1000):
-    model = ResNet(layers=50, num_classes=num_classes, 
-                   variant='d', lr_mult_list=[1.0, 0.1, 0.2, 0.2, 0.3])
+    model = ResNet(
+        layers=50,
+        num_classes=num_classes,
+        variant='d',
+        lr_mult_list=[1.0, 0.1, 0.2, 0.2, 0.3])
     return model(input)
 
 
 def resnet101_vd_ssld(input, num_classes=1000):
-    model = ResNet(layers=101, num_classes=num_classes, 
-                   variant='d', lr_mult_list=[1.0, 0.1, 0.2, 0.2, 0.3])
+    model = ResNet(
+        layers=101,
+        num_classes=num_classes,
+        variant='d',
+        lr_mult_list=[1.0, 0.1, 0.2, 0.2, 0.3])
     return model(input)
 
 
@@ -93,14 +100,18 @@ def mobilenetv3_large(input, num_classes=1000):
 
 
 def mobilenetv3_small_ssld(input, num_classes=1000):
-    model = MobileNetV3(num_classes=num_classes, model_name='small',
-                        lr_mult_list=[0.25, 0.25, 0.5, 0.5, 0.75])
+    model = MobileNetV3(
+        num_classes=num_classes,
+        model_name='small',
+        lr_mult_list=[0.25, 0.25, 0.5, 0.5, 0.75])
     return model(input)
 
 
 def mobilenetv3_large_ssld(input, num_classes=1000):
-    model = MobileNetV3(num_classes=num_classes, model_name='large',
-                        lr_mult_list=[0.25, 0.25, 0.5, 0.5, 0.75])
+    model = MobileNetV3(
+        num_classes=num_classes,
+        model_name='large',
+        lr_mult_list=[0.25, 0.25, 0.5, 0.5, 0.75])
     return model(input)
 
 
@@ -133,6 +144,12 @@ def densenet201(input, num_classes=1000):
     model = DenseNet(layers=201, num_classes=num_classes)
     return model(input)
 
+
 def shufflenetv2(input, num_classes=1000):
     model = ShuffleNetV2(num_classes=num_classes)
+    return model(input)
+
+
+def hrnet_w18(input, num_classes=1000):
+    model = HRNet(width=18, num_classes=num_classes)
     return model(input)

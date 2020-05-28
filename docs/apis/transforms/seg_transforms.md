@@ -120,7 +120,7 @@ paddlex.seg.transforms.RandomBlur(prob=0.1)
 * **prob** (float): 图像模糊概率。默认为0.1。
 
 
-## RandomRotation类
+## RandomRotate类
 ```python
 paddlex.seg.transforms.RandomRotate(rotate_range=15, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
 ```

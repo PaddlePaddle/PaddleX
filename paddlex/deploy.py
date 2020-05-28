@@ -97,8 +97,6 @@ class Predictor:
             config.disable_glog_info()
         if memory_optimize:
             config.enable_memory_optim()
-        else:
-            config.diable_memory_optim()
 
         # 开启计算图分析优化，包括OP融合等
         config.switch_ir_optim(True)

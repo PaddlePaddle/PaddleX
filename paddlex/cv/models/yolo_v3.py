@@ -306,11 +306,10 @@ class YOLOv3(BaseAPI):
             images = np.array([d[0] for d in data])
             im_sizes = np.array([d[1] for d in data])
             feed_data = {'image': images, 'im_size': im_sizes}
-            outputs = self.exe.run(
-                self.test_prog,
-                feed=[feed_data],
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=False)
+            outputs = self.exe.run(self.test_prog,
+                                   feed=[feed_data],
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -326,13 +325,13 @@ class YOLOv3(BaseAPI):
                 res['gt_label'] = (res_gt_label, [])
                 res['is_difficult'] = (res_is_difficult, [])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
         box_ap_stats, eval_details = eval_results(
             results, metric, eval_dataset.coco_gt, with_background=False)
         evaluate_metrics = OrderedDict(
-            zip(['bbox_mmap' if metric == 'COCO' else 'bbox_map'],
-                box_ap_stats))
+            zip(['bbox_mmap'
+                 if metric == 'COCO' else 'bbox_map'], box_ap_stats))
         if return_details:
             return evaluate_metrics, eval_details
         return evaluate_metrics
@@ -346,7 +345,8 @@ class YOLOv3(BaseAPI):
 
         Returns:
             list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标、预测框得分组成。
+              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+              预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -359,14 +359,11 @@ class YOLOv3(BaseAPI):
             im, im_size = self.test_transforms(img_file)
         im = np.expand_dims(im, axis=0)
         im_size = np.expand_dims(im_size, axis=0)
-        outputs = self.exe.run(
-            self.test_prog,
-            feed={
-                'image': im,
-                'im_size': im_size
-            },
-            fetch_list=list(self.test_outputs.values()),
-            return_numpy=False)
+        outputs = self.exe.run(self.test_prog,
+                               feed={'image': im,
+                                     'im_size': im_size},
+                               fetch_list=list(self.test_outputs.values()),
+                               return_numpy=False)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)
