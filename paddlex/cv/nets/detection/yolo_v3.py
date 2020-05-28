@@ -34,15 +34,17 @@ class YOLOv3:
                  nms_topk=1000,
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45,
-                 train_random_shapes=[
-                     320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ],
+                 train_random_shapes="Deprecated",
                  fixed_input_shape=None,
                  use_iou_loss=False,
                  use_iou_aware_loss=False,
                  iou_aware_factor=0.4,
                  use_drop_block=False,
-                 batch_size=8):
+                 batch_size=8,
+                 max_shape = 608):
+        if train_random_shapes != "Deprecated":
+            raise Exception("The 'train_random_shapes' is deprecated. If you want to set train_random_shapes, " \
+                            + "you can use BatchRandomShape. The details you can see ")
         if anchors is None:
             anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                        [59, 119], [116, 90], [156, 198], [373, 326]]
@@ -62,7 +64,6 @@ class YOLOv3:
         self.nms_iou_threshold = nms_iou_threshold
         self.norm_decay = 0.0
         self.prefix_name = ''
-        self.train_random_shapes = train_random_shapes
         self.fixed_input_shape = fixed_input_shape
         self.use_iou_loss = use_iou_loss
         self.use_iou_aware_loss = use_iou_aware_loss
@@ -71,6 +72,7 @@ class YOLOv3:
         self.block_size = 3
         self.keep_prob = 0.9
         self.batch_size = batch_size
+        self.max_shape = max_shape
 
     def _head(self, feats):
         outputs = []
@@ -284,7 +286,7 @@ class YOLOv3:
         return yolo_loss_obj(inputs, gt_box, gt_label, gt_score, targets,
                              self.anchors, self.anchor_masks,
                              self.mask_anchors, self.num_classes,
-                             self.prefix_name, max(self.train_random_shapes))
+                             self.prefix_name, self.max_shape)
 
     def _get_prediction(self, inputs, im_size):
         boxes = []

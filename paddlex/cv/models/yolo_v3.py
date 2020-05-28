@@ -44,7 +44,10 @@ class YOLOv3(BaseAPI):
         nms_keep_topk (int): 进行NMS后，每个图像要保留的总检测框数。默认为100。
         nms_iou_threshold (float): 进行NMS时，用于剔除检测框IOU的阈值。默认为0.45。
         label_smooth (bool): 是否使用label smooth。默认值为False。
-        train_random_shapes (list|tuple): 训练时从列表中随机选择图像大小。默认值为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
+        use_iou_loss (bool): 是否使用IoU Loss。默认为False。
+        use_iou_aware_loss (bool): 是否使用IoU Aware Loss。默认为False。
+        use_drop_block (bool): 是否使用DropBlock模块。默认为False。
+        use_dcn_v2 (bool): 是否使用Deformable Convolution v2(可变形卷积)。默认为False。
     """
 
     def __init__(self,
@@ -62,10 +65,7 @@ class YOLOv3(BaseAPI):
                  use_iou_aware_loss=False,
                  iou_aware_factor=0.4,
                  use_drop_block=False,
-                 use_dcn_v2=False,
-                 train_random_shapes=[
-                     320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ]):
+                 use_dcn_v2=False):
         self.init_params = locals()
         super(YOLOv3, self).__init__('detector')
         backbones = [
@@ -89,7 +89,6 @@ class YOLOv3(BaseAPI):
         self.iou_aware_factor = iou_aware_factor
         self.use_drop_block = use_drop_block
         self.use_dcn_v2 = use_dcn_v2
-        self.train_random_shapes = train_random_shapes
         self.fixed_input_shape = None
         if self.anchors is None:
             self.anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
@@ -139,13 +138,13 @@ class YOLOv3(BaseAPI):
             nms_topk=self.nms_topk,
             nms_keep_topk=self.nms_keep_topk,
             nms_iou_threshold=self.nms_iou_threshold,
-            train_random_shapes=self.train_random_shapes,
             fixed_input_shape=self.fixed_input_shape,
             use_iou_loss=self.use_iou_loss,
             use_iou_aware_loss=self.use_iou_aware_loss,
             iou_aware_factor=self.iou_aware_factor,
             use_drop_block=self.use_drop_block,
-            batch_size=self.train_batch_size if hasattr(self, 'train_batch_size') else 8)
+            batch_size=self.train_batch_size,
+            max_shape=self.max_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict([('bbox', model_out)])
@@ -254,15 +253,18 @@ class YOLOv3(BaseAPI):
                 if isinstance(transform, paddlex.det.transforms.Normalize):
                     transform.is_scale = False
         if self.use_iou_loss or self.use_iou_aware_loss:
-            if self.train_random_shapes is None or len(self.train_random_shapes) == 0:
-                for transform in train_dataset.transforms.transforms:
-                    if isinstance(transform, paddlex.det.transforms.Resize):
-                        self.train_random_shapes = [transform.target_size]
+            self.max_shape = 0
+            for transform in train_dataset.transforms.transforms:
+                if isinstance(transform, paddlex.det.transforms.Resize):
+                    self.max_shape = [transform.target_size]
+                    break
+            if train_dataset.transforms.batch_transforms is None:
+                train_dataset.transforms.batch_transforms = []
+            else:
+                for bt in train_dataset.transforms.batch_transforms:
+                    if isinstance(bt, paddlex.det.transforms.BatchRandomShape):
+                        self.max_shape = max(bt.random_shapes)
                         break
-            train_dataset.transforms.batch_transforms = []
-            reshape_bt = paddlex.det.transforms.RandomShape
-            train_dataset.transforms.batch_transforms.append(reshape_bt(
-                                                                      random_shapes=self.train_random_shapes))
             iou_bt = paddlex.det.transforms.GenerateYoloTarget
             train_dataset.transforms.batch_transforms.append(iou_bt(anchors=self.anchors,
                                                                   anchor_masks=self.anchor_masks,

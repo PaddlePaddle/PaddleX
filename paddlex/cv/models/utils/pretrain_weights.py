@@ -73,7 +73,7 @@ image_pretrain = {
 }
 
 obj365_pretrain = {
-    'ResNet50_vd_dcn_db_obj365':
+    'ResNet50_vd_obj365':
     'https://paddlemodels.bj.bcebos.com/object_detection/ResNet50_vd_dcn_db_obj365_pretrained.tar',
 }
 
@@ -127,13 +127,27 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
         if hasattr(paddlex, 'pretrain_dir'):
             new_save_dir = paddlex.pretrain_dir
         if backbone == 'ResNet50_vd':
-            backbone = 'ResNet50_vd_dcn_db_obj365'
-        assert backbone in obj365_pretrain, "There is not Object365 pretrain weights for {}, you may try ImageNet.".format(
+            backbone = 'ResNet50_vd_obj365'
+        assert backbone in obj365_pretrain, "There is not Object365 pretrain weights for {}, try use pretrain_weights='IMAGENET'".format(
             backbone)
-        url = obj365_pretrain[backbone]
-        fname = osp.split(url)[-1].split('.')[0]
-        paddlex.utils.download_and_decompress(url, path=new_save_dir)
-        return osp.join(new_save_dir, fname)
+#         url = obj365_pretrain[backbone]
+#         fname = osp.split(url)[-1].split('.')[0]
+#         paddlex.utils.download_and_decompress(url, path=new_save_dir)
+#         return osp.join(new_save_dir, fname)
+        try:
+            hub.download(backbone, save_path=new_save_dir)
+        except Exception as e:
+            if isinstance(hub.ResourceNotFoundError):
+                raise Exception("Resource for backbone {} not found".format(
+                    backbone))
+            elif isinstance(hub.ServerConnectionError):
+                raise Exception(
+                    "Cannot get reource for backbone {}, please check your internet connecgtion"
+                    .format(backbone))
+            else:
+                raise Exception(
+                    "Unexpected error, please make sure paddlehub >= 1.6.2")
+        return osp.join(new_save_dir, backbone)
     elif flag == 'COCO':
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):

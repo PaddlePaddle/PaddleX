@@ -18,8 +18,9 @@ import numpy as np
 from PIL import Image, ImageEnhance
 
 
-def normalize(im, mean, std):
-    im = im / 255.0
+def normalize(im, mean, std, is_scale=True):
+    if is_scale:
+        im = im / 255.0
     im -= mean
     im /= std
     return im

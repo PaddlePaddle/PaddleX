@@ -1238,7 +1238,7 @@ class ArrangeYOLOv3(DetTransform):
         return outputs
     
     
-class RandomShape(DetTransform):
+class BatchRandomShape(DetTransform):
     """调整图像大小（resize）。
     
     对batch数据中的每张图像全部resize到random_shapes中任意一个大小。
@@ -1300,128 +1300,7 @@ class RandomShape(DetTransform):
             data_list[0] = im
             batch_data[data_id] = tuple(data_list)
             np.save('im.npy', im)
-        return batch_data        
-    
-    
-class GenerateYoloTarget(DetTransform):
-    """生成YOLOv3的ground truth（真实标注框）在不同特征层的位置转换信息。
-       该transform只在YOLOv3计算细粒度loss时使用。
-       
-       Args:
-           anchors (list|tuple): anchor框的宽度和高度。
-           anchor_masks (list|tuple): 在计算损失时，使用anchor的mask索引。
-           num_classes (int): 类别数。默认为80。
-           iou_thresh (float): iou阈值，当anchor和真实标注框的iou大于该阈值时，计入target。默认为1.0。
-    """
-    
-    def __init__(self, 
-                 anchors, 
-                 anchor_masks,
-                 num_classes=80,
-                 iou_thresh=1.):
-        super(GenerateYoloTarget, self).__init__()
-        self.anchors = anchors
-        self.anchor_masks = anchor_masks
-        self.num_classes = num_classes
-        self.iou_thresh = iou_thresh
-        
-    def __call__(self, batch_data):
-        """
-        Args:
-            batch_data (list): 由与图像相关的各种信息组成的batch数据。
-
-        Returns:
-            list: 由与图像相关的各种信息组成的batch数据。
-                  其中，每个数据新添加的字段为：
-                           - target0 (np.ndarray): YOLOv3的ground truth在特征层0的位置转换信息，
-                                   形状为(特征层0的anchor数量, 6+类别数, 特征层0的h, 特征层0的w)。
-                           - target1 (np.ndarray): YOLOv3的ground truth在特征层1的位置转换信息，
-                                   形状为(特征层1的anchor数量, 6+类别数, 特征层1的h, 特征层1的w)。
-                           - ...
-                           -targetn (np.ndarray): YOLOv3的ground truth在特征层n的位置转换信息，
-                                   形状为(特征层n的anchor数量, 6+类别数, 特征层n的h, 特征层n的w)。
-                    n的是大小由anchor_masks的长度决定。
-        """
-        im = batch_data[0][0]
-        h = im.shape[1]
-        w = im.shape[2]
-        an_hw = np.array(self.anchors) / np.array([[w, h]])
-        for data_id, data in enumerate(batch_data):
-            gt_bbox = data[1]
-            gt_class = data[2]
-            gt_score = data[3]
-            im_shape = data[4]
-            origin_h = float(im_shape[0])
-            origin_w = float(im_shape[1])
-            data_list = list(data)
-            for i, mask in enumerate(self.anchor_masks):
-                downsample_ratio = 32 // pow(2, i)
-                grid_h = int(h / downsample_ratio)
-                grid_w = int(w / downsample_ratio)
-                target = np.zeros(
-                    (len(mask), 6 + self.num_classes, grid_h, grid_w),
-                    dtype=np.float32)
-                for b in range(gt_bbox.shape[0]):
-                    gx = gt_bbox[b, 0] / float(origin_w)
-                    gy = gt_bbox[b, 1] / float(origin_h)
-                    gw = gt_bbox[b, 2] / float(origin_w)
-                    gh = gt_bbox[b, 3] / float(origin_h)
-                    cls = gt_class[b]
-                    score = gt_score[b]
-                    if gw <= 0. or gh <= 0. or score <= 0.:
-                        continue
-                    # find best match anchor index
-                    best_iou = 0.
-                    best_idx = -1
-                    for an_idx in range(an_hw.shape[0]):
-                        iou = jaccard_overlap(
-                            [0., 0., gw, gh],
-                            [0., 0., an_hw[an_idx, 0], an_hw[an_idx, 1]])
-                        if iou > best_iou:
-                            best_iou = iou
-                            best_idx = an_idx
-                    gi = int(gx * grid_w)
-                    gj = int(gy * grid_h)
-                    # gtbox should be regresed in this layes if best match 
-                    # anchor index in anchor mask of this layer
-                    if best_idx in mask:
-                        best_n = mask.index(best_idx)
-                        # x, y, w, h, scale
-                        target[best_n, 0, gj, gi] = gx * grid_w - gi
-                        target[best_n, 1, gj, gi] = gy * grid_h - gj
-                        target[best_n, 2, gj, gi] = np.log(
-                            gw * w / self.anchors[best_idx][0])
-                        target[best_n, 3, gj, gi] = np.log(
-                            gh * h / self.anchors[best_idx][1])
-                        target[best_n, 4, gj, gi] = 2.0 - gw * gh
-                        # objectness record gt_score
-                        target[best_n, 5, gj, gi] = score
-                        # classification
-                        target[best_n, 6 + cls, gj, gi] = 1.
-                    # For non-matched anchors, calculate the target if the iou 
-                    # between anchor and gt is larger than iou_thresh
-                    if self.iou_thresh < 1:
-                        for idx, mask_i in enumerate(mask):
-                            if mask_i == best_idx: continue
-                            iou = jaccard_overlap(
-                                [0., 0., gw, gh],
-                                [0., 0., an_hw[mask_i, 0], an_hw[mask_i, 1]])
-                            if iou > self.iou_thresh:
-                                # x, y, w, h, scale
-                                target[idx, 0, gj, gi] = gx * grid_w - gi
-                                target[idx, 1, gj, gi] = gy * grid_h - gj
-                                target[idx, 2, gj, gi] = np.log(
-                                    gw * w / self.anchors[mask_i][0])
-                                target[idx, 3, gj, gi] = np.log(
-                                    gh * h / self.anchors[mask_i][1])
-                                target[idx, 4, gj, gi] = 2.0 - gw * gh
-                                # objectness record gt_score
-                                target[idx, 5, gj, gi] = score
-                                # classification
-                                target[idx, 6 + cls, gj, gi] = 1.
-                data_list.append(target)
-            batch_data[data_id] = tuple(data_list)
-        return batch_data           
+        return batch_data                
 
 
 class ComposedRCNNTransforms(Compose):
@@ -1489,6 +1368,8 @@ class ComposedYOLOTransforms(Compose):
             mixup_epoch(int): 模型训练过程中，前mixup_epoch会使用mixup策略
             mean(list): 图像均值
             std(list): 图像方差
+            random_shapes (list): resize大小选择列表。
+                默认为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
     """
 
     def __init__(self,
@@ -1496,7 +1377,10 @@ class ComposedYOLOTransforms(Compose):
                  shape=[608, 608],
                  mixup_epoch=250,
                  mean=[0.485, 0.456, 0.406],
-                 std=[0.229, 0.224, 0.225]):
+                 std=[0.229, 0.224, 0.225],
+                 random_shapes=[
+                     320, 352, 384, 416, 448, 480, 512, 544, 576, 608
+                 ]):
         width = shape
         if isinstance(shape, list):
             if shape[0] != shape[1]:
@@ -1517,6 +1401,9 @@ class ComposedYOLOTransforms(Compose):
                     interp='RANDOM'), RandomHorizontalFlip(), Normalize(
                         mean=mean, std=std)
             ]
+            batch_transforms = [
+                BatchRandomShape(random_shapes=random_shapes)
+            ]
         else:
             # 验证/预测时的transforms
             transforms = [
@@ -1524,4 +1411,4 @@ class ComposedYOLOTransforms(Compose):
                     target_size=width, interp='CUBIC'), Normalize(
                         mean=mean, std=std)
             ]
-        super(ComposedYOLOTransforms, self).__init__(transforms)
+        super(ComposedYOLOTransforms, self).__init__(transforms, batch_transforms)
