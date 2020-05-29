@@ -1,4 +1,4 @@
-# <a name="2">PaddleX GUI使用文档</a>
+# PaddleX GUI使用文档
 
 飞桨全流程开发工具，集飞桨核心框架、模型库、工具及组件等深度学习开发全流程所需能力于一身，易用易集成，是开发者快速入门深度学习、提升深度学习项目开发效率的最佳辅助工具。
 
@@ -10,13 +10,13 @@ PaddleX GUI是一个应用PaddleX实现的一个图形化开发客户端产品�
 
 ## 目录
 
-* <a href="#1">**产品特性**</a>
-* <a href="#2">**PaddleX GUI可视化前端**</a>
-* <a href="#4">**FAQ**</a>
+* **产品特性**
+* **PaddleX GUI可视化前端**
+* **FAQ**
 
 
 
-## <a name="1">产品特性</a>
+## 产品特性
 
 \-  **全流程打通**
 
@@ -36,7 +36,7 @@ PaddleX GUI是一个应用PaddleX实现的一个图形化开发客户端产品�
 
 
 
-## <a name="2">PaddleX GUI可视化前端</a>
+## PaddleX GUI 可视化前端
 
 **第一步：准备数据**
 
@@ -110,26 +110,25 @@ PaddleX GUI是一个应用PaddleX实现的一个图形化开发客户端产品�
 
 
 
-## <a name="4">FAQ</a>
+## FAQ
 
 1. **为什么训练速度这么慢？**
 
-   PaddleX完全采用您本地的硬件进行计算，深度学习任务确实对算力的要求比较高，为了使您能快速体验应用PaddleX进行开发，我们适配了CPU硬件，但强烈建议您使用GPU以提升训练速度和开发体验。
+   PaddleX完全采用您本地的硬件进行计算，深度学习任务确实对算力要求较高，为了使您能快速体验应用PaddleX进行开发，我们适配了CPU硬件，但强烈建议您使用GPU以提升训练速度和开发体验。
 
    
 
 2. **我可以在服务器或云平台上部署PaddleX么？**
 
-   PaddleX GUI是一个适配本地单机安装的客户端，无法在服务器上直接进行部署，您可以直接使用PaddleX Core后端技术内核，或采用飞桨核心框架进行服务器上的部署。如果您希望使用公有算力，强烈建议您尝试飞桨产品系列中的 [EasyDL](https://ai.baidu.com/easydl/) 或 [AI Studio](https://aistudio.baidu.com/aistudio/index)进行开发。
+   PaddleX GUI是一个适配本地单机安装的客户端，无法在服务器上直接进行部署，您可以直接使用PaddleX API，或采用飞桨核心框架进行服务器上的部署。如果您希望使用公有算力，强烈建议您尝试飞桨产品系列中的 [EasyDL](https://ai.baidu.com/easydl/) 或 [AI Studio](https://aistudio.baidu.com/aistudio/index)进行开发。
 
    
 
 3. **PaddleX支持EasyData标注的数据吗？**
 
-   目前PaddleX不支持EasyData标注的数据，但您可以通过调用后端代码转换成适配的数据集格式，具体请参见
-
-   [数据集转换](https://paddlex.readthedocs.io/zh_CN/latest/appendix/how_to_convert_dataset.html)
-
+   支持，PaddleX可顺畅读取EasyData标注的数据。但当前版本的PaddleX GUI暂时无法支持直接导入EasyData数据格式，您可以参照文档，将[数据集进行转换](https://paddlex.readthedocs.io/zh_CN/latest/appendix/how_to_convert_dataset.html)再导入PaddleX GUI进行后续开发。
+   同时，我们也在紧密开发PaddleX GUI可直接导入EasyData数据格式的功能。
+   
    
 
 4. **为什么模型裁剪分析耗时这么长？**
@@ -140,7 +139,7 @@ PaddleX GUI是一个应用PaddleX实现的一个图形化开发客户端产品�
 
 5. **如何调用后端代码？**
 
-   PaddleX团队为您整理了相关的API接口文档，方便您学习和使用。具体请参见[PaddleX API说明文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/index.html)
+   PaddleX 团队为您整理了相关的API接口文档，方便您学习和使用。具体请参见[PaddleX API说明文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/index.html)
 
 
 
