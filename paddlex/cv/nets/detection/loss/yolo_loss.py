@@ -19,6 +19,7 @@ from __future__ import print_function
 from paddle import fluid
 from .iou_loss import IouLoss
 from .iou_aware_loss import IouAwareLoss
+import paddlex
 
     
 class YOLOv3Loss(object):
@@ -157,7 +158,7 @@ class YOLOv3Loss(object):
 
             loss_cls = fluid.layers.sigmoid_cross_entropy_with_logits(cls, tcls)
             loss_cls = fluid.layers.elementwise_mul(loss_cls, tobj, axis=0)
-            loss_cls = fluid.layers.reduce_sum(loss_cls)
+            loss_cls = fluid.layers.reduce_sum(loss_cls, dim=[1, 2, 3, 4])
 
             loss_xys.append(fluid.layers.reduce_mean(loss_x + loss_y))
             loss_whs.append(fluid.layers.reduce_mean(loss_w + loss_h))
@@ -270,6 +271,7 @@ class YOLOv3Loss(object):
 
         # 1. get pred bbox, which is same with YOLOv3 infer mode, use yolo_box here
         # NOTE: img_size is set as 1.0 to get noramlized pred bbox
+        batch_size = int(batch_size / paddlex.env_info['num'])
         bbox, prob = fluid.layers.yolo_box(
             x=output,
             img_size=fluid.layers.ones(

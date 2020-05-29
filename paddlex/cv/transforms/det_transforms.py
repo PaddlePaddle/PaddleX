@@ -1299,7 +1299,6 @@ class BatchRandomShape(DetTransform):
             im = np.swapaxes(im, 1, 0)
             data_list[0] = im
             batch_data[data_id] = tuple(data_list)
-            np.save('im.npy', im)
         return batch_data                
 
 
