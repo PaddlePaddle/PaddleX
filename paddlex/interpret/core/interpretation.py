@@ -20,12 +20,10 @@ class Interpretation(object):
     """
     Base class for all interpretation algorithms.
     """
-    def __init__(self, interpretation_algorithm_name, predict_fn, label_names, **kwargs):
-        supported_algorithms = {
-            'cam': CAM,
-            'lime': LIME,
-            'normlime': NormLIME
-        }
+
+    def __init__(self, interpretation_algorithm_name, predict_fn, label_names,
+                 **kwargs):
+        supported_algorithms = {'cam': CAM, 'lime': LIME, 'normlime': NormLIME}
 
         self.algorithm_name = interpretation_algorithm_name.lower()
         assert self.algorithm_name in supported_algorithms.keys()
@@ -33,10 +31,13 @@ class Interpretation(object):
 
         # initialization for the interpretation algorithm.
         self.algorithm = supported_algorithms[self.algorithm_name](
-            self.predict_fn, label_names, **kwargs
-        )
+            self.predict_fn, label_names, **kwargs)
 
-    def interpret(self, data_, visualization=True, save_to_disk=True, save_dir='./tmp'):
+    def interpret(self,
+                  data_,
+                  visualization=True,
+                  save_to_disk=True,
+                  save_dir='./tmp'):
         """
 
         Args:
@@ -48,4 +49,5 @@ class Interpretation(object):
         Returns:
 
         """
-        return self.algorithm.interpret(data_, visualization, save_to_disk, save_dir)
+        return self.algorithm.interpret(data_, visualization, save_to_disk,
+                                        save_dir)
