@@ -139,32 +139,3 @@ def compute_features_for_kmeans(data_content):
                      feed={'image': images})
 
     return result[0][0]
-
-
-def mobilenet_predict(images):
-    root_path = gen_user_home()
-    root_path = osp.join(root_path, '.paddlex')
-    h_pre_models = osp.join(root_path, "pre_models")
-    if not osp.exists(h_pre_models):
-        if not osp.exists(root_path):
-            os.makedirs(root_path)
-        url = "https://bj.bcebos.com/paddlex/interpret/pre_models.tar.gz"
-        pdx.utils.download_and_decompress(url, path=root_path)
-
-    mobilenet_v2_trained_model = osp.join(h_pre_models, "mobilenetv2")
-    model = pdx.load_model(mobilenet_v2_trained_model)
-
-    assert model.model_type == 'classifier', \
-        'Now the interpretation visualize only be supported in classifier!'
-    if model.status != 'Normal':
-        raise Exception(
-            'The interpretation only can deal with the Normal model')
-
-    model.test_transforms.transforms = model.test_transforms.transforms[-2:]
-    model.arrange_transforms(transforms=model.test_transforms, mode='test')
-    images = model.test_transforms(images[0])
-    result = model.exe.run(model.test_prog,
-                           feed={'image': images},
-                           fetch_list=list(model.test_outputs.values()))
-
-    return result

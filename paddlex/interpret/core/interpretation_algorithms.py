@@ -19,7 +19,6 @@ import time
 
 from . import lime_base
 from ._session_preparation import paddle_get_fc_weights, compute_features_for_kmeans, gen_user_home
-from ._session_preparation import get_precomputed_normlime_weights, mobilenet_predict
 from .normlime_base import combine_normlime_and_lime, get_feature_for_kmeans, load_kmeans_model
 from paddlex.interpret.as_data_reader.readers import read_image
 import paddlex.utils.logging as logging
