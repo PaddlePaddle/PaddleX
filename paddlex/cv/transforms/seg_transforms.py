@@ -1127,6 +1127,6 @@ class ComposedSegTransforms(Compose):
             ]
         else:
             # 验证/预测时的transforms
-            transforms = [Resize(512), Normalize(mean=mean, std=std)]
+            transforms = [Normalize(mean=mean, std=std)]
 
         super(ComposedSegTransforms, self).__init__(transforms)
