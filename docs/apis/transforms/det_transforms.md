@@ -167,3 +167,133 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
 * **num_attempts** (int): 在放弃寻找有效裁剪区域前尝试的次数。默认值为50。
 * **allow_no_crop** (bool): 是否允许未进行裁剪。默认值为True。
 * **cover_all_box** (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
+
+## ComposedRCNNTransforms类
+```python
+paddlex.det.transforms.ComposedRCNNTransforms(mode, min_max_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+```
+目标检测FasterRCNN和实例分割MaskRCNN模型中已经组合好的数据处理流程，开发者可以直接使用ComposedRCNNTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomHorizontalFlip](#RandomHorizontalFlip)数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
+ComposedRCNNTransforms共包括以下几个步骤：
+> 训练阶段：
+> > 1. 随机以0.5的概率将图像水平翻转
+> > 2. 将图像进行归一化
+> > 3. 图像采用[ResizeByShort](#ResizeByShort)方式，根据min_max_size参数，进行缩入
+> > 4. 使用[Padding](#Padding)将图像的长和宽分别Padding成32的倍数
+> 验证/预测阶段：
+> > 1. 将图像进行归一化
+> > 2. 图像采用[ResizeByShort](#ResizeByShort)方式，根据min_max_size参数，进行缩入
+> > 3. 使用[Padding](#Padding)将图像的长和宽分别Padding成32的倍数
+
+### 参数
+* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
+* **min_max_size** (list): 输入模型中图像的最短边长度和最长边长度，参考[ResizeByShort](#ResizeByShort)（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)，默认[800, 1333]
+* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
+* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
+
+### 添加数据增强方式
+```python
+ComposedRCNNTransforms.add_augmenters(augmenters)
+```
+> **参数**
+> * **augmenters**(list): 数据增强方式列表
+
+#### 使用示例
+```
+import paddlex as pdx
+from paddlex.det import transforms
+train_transforms = transforms.ComposedRCNNTransforms(mode='train', min_max_size=[800, 1333])
+eval_transforms = transforms.ComposedRCNNTransforms(mode='eval', min_max_size=[800, 1333])
+
+# 添加数据增强
+import imgaug.augmenters as iaa
+train_transforms.add_augmenters([
+			transforms.RandomDistort(),
+			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
+])
+```
+上面代码等价于
+```
+import paddlex as pdx
+from paddlex.det import transforms
+train_transforms = transforms.Composed([
+		transforms.RandomDistort(),
+		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
+		# 上面两个为通过add_augmenters额外添加的数据增强方式
+		transforms.RandomHorizontalFlip(prob=0.5),
+		transforms.Normalize(),
+        transforms.ResizeByShort(short_size=800, max_size=1333),
+        transforms.Padding(coarsest_stride=32)
+])
+eval_transforms = transforms.Composed([
+		transforms.Normalize(),
+        transforms.ResizeByShort(short_size=800, max_size=1333),
+        transforms.Padding(coarsest_stride=32)
+])
+```
+
+
+## ComposedYOLOTransforms类
+```python
+paddlex.det.transforms.ComposedYOLOTransforms(mode, shape=[608, 608], mixup_epoch=250, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+```
+目标检测YOLOv3模型中已经组合好的数据处理流程，开发者可以直接使用ComposedYOLOTransforms，简化手动组合transforms的过程, 该类中已经包含了[MixupImage](#MixupImage)、[RandomDistort](#RandomDistort)、[RandomExpand](#RandomExpand)、[RandomCrop](#RandomCrop)、[RandomHorizontalFlip](#RandomHorizontalFlip)5种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
+ComposedYOLOTransforms共包括以下几个步骤：
+> 训练阶段：
+> > 1. 在前mixup_epoch轮迭代中，使用MixupImage策略
+> > 2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调
+> > 3. 随机扩充图像
+> > 4. 随机裁剪图像
+> > 5. 将4步骤的输出图像Resize成shape参数的大小
+> > 6. 随机0.5的概率水平翻转图像
+> > 7. 图像归一化
+> 验证/预测阶段：
+> > 1. 将图像Resize成shape参数大小
+> > 2. 图像归一化
+
+### 参数
+* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
+* **shape** (list): 输入模型中图像的大小（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)， 默认[608, 608]
+* **mixup_epoch**(int): 模型训练过程中，在前mixup_epoch轮迭代中，使用mixup策略，如果为-1，则不使用mixup策略， 默认250。
+* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
+* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
+
+### 添加数据增强方式
+```python
+ComposedYOLOTransforms.add_augmenters(augmenters)
+```
+> **参数**
+> * **augmenters**(list): 数据增强方式列表
+
+#### 使用示例
+```
+import paddlex as pdx
+from paddlex.det import transforms
+train_transforms = transforms.ComposedYOLOTransforms(mode='train', shape=[480, 480])
+eval_transforms = transforms.ComposedYOLOTransforms(mode='eval', shape=[480, 480])
+
+# 添加数据增强
+import imgaug.augmenters as iaa
+train_transforms.add_augmenters([
+			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
+])
+```
+上面代码等价于
+```
+import paddlex as pdx
+from paddlex.det import transforms
+train_transforms = transforms.Composed([
+		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
+		# 上面为通过add_augmenters额外添加的数据增强方式
+        transforms.MixupImage(mixup_epoch=250),
+        transforms.RandomDistort(),
+        transforms.RandomExpand(),
+        transforms.RandomCrop(),
+        transforms.Resize(target_size=480, interp='RANDOM'),
+        transforms.RandomHorizontalFlip(prob=0.5),
+        transforms.Normalize()
+])
+eval_transforms = transforms.Composed([
+        transforms.Resize(target_size=480, interp='CUBIC'),
+		transforms.Normalize()
+])
+```

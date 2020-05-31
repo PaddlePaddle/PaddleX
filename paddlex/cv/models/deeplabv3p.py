@@ -190,11 +190,6 @@ class DeepLabv3p(BaseAPI):
         if mode == 'train':
             self.optimizer.minimize(model_out)
             outputs['loss'] = model_out
-        elif mode == 'eval':
-            outputs['loss'] = model_out[0]
-            outputs['pred'] = model_out[1]
-            outputs['label'] = model_out[2]
-            outputs['mask'] = model_out[3]
         else:
             outputs['pred'] = model_out[0]
             outputs['logit'] = model_out[1]
@@ -336,18 +331,26 @@ class DeepLabv3p(BaseAPI):
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
-            labels = np.array([d[1] for d in data])
+
+            _, _, im_h, im_w = images.shape
+            labels = list()
+            for d in data:
+                padding_label = np.zeros(
+                    (1, im_h, im_w)).astype('int64') + self.ignore_index
+                padding_label[:, :im_h, :im_w] = d[1]
+                labels.append(padding_label)
+            labels = np.array(labels)
+
             num_samples = images.shape[0]
             if num_samples < batch_size:
                 num_pad_samples = batch_size - num_samples
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
             feed_data = {'image': images}
-            outputs = self.exe.run(
-                self.parallel_test_prog,
-                feed=feed_data,
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=True)
+            outputs = self.exe.run(self.parallel_test_prog,
+                                   feed=feed_data,
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=True)
             pred = outputs[0]
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
@@ -364,8 +367,7 @@ class DeepLabv3p(BaseAPI):
 
         metrics = OrderedDict(
             zip(['miou', 'category_iou', 'macc', 'category_acc', 'kappa'],
-                [miou, category_iou, macc, category_acc,
-                 conf_mat.kappa()]))
+                [miou, category_iou, macc, category_acc, conf_mat.kappa()]))
         if return_details:
             eval_details = {
                 'confusion_matrix': conf_mat.confusion_matrix.tolist()
@@ -394,10 +396,10 @@ class DeepLabv3p(BaseAPI):
                 transforms=self.test_transforms, mode='test')
             im, im_info = self.test_transforms(im_file)
         im = np.expand_dims(im, axis=0)
-        result = self.exe.run(
-            self.test_prog,
-            feed={'image': im},
-            fetch_list=list(self.test_outputs.values()))
+        result = self.exe.run(self.test_prog,
+                              feed={'image': im},
+                              fetch_list=list(self.test_outputs.values()),
+                              use_program_cache=True)
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
         logit = result[1]
@@ -413,6 +415,6 @@ class DeepLabv3p(BaseAPI):
                 pred = pred[0:h, 0:w]
                 logit = logit[0:h, 0:w, :]
             else:
-                raise Exception("Unexpected info '{}' in im_info".format(
-                    info[0]))
+                raise Exception("Unexpected info '{}' in im_info".format(info[
+                    0]))
         return {'label_map': pred, 'score_map': logit}

@@ -17,5 +17,6 @@ from . import cv
 
 UNet = cv.models.UNet
 DeepLabv3p = cv.models.DeepLabv3p
+HRNet = cv.models.HRNet
 transforms = cv.transforms.seg_transforms
 visualize = cv.models.utils.visualize.visualize_segmentation

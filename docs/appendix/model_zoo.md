@@ -27,6 +27,7 @@
 | DenseNet161|116.3MB  | 8.863       | 78.6     | 94.1     |
 | DenseNet201|  84.6MB   | 8.173       | 77.6     | 93.7     |
 | ShuffleNetV2 | 9.0MB   | 10.941        | 68.8     | 88.5     |
+| HRNet_W18 | 21.29MB | 7.368 (V100 GPU) | 76.9 | 93.4 |
 
 ## 目标检测模型
 
@@ -41,6 +42,7 @@
 |FasterRCNN-ResNet50_vd-FPN|168.7MB | 45.773 | 38.9 |
 |FasterRCNN-ResNet101-FPN| 251.7MB | 55.782 | 38.7 |
 |FasterRCNN-ResNet101_vd-FPN |252MB | 58.785 | 40.5 |
+|FasterRCNN-HRNet_W18-FPN |115.5MB | 57.11 | 36 |
 |YOLOv3-DarkNet53|252.4MB | 21.944 | 38.9 |
 |YOLOv3-MobileNetv1 |101.2MB | 12.771 | 29.3 |
 |YOLOv3-MobileNetv3|94.6MB | - | 31.6 |
@@ -49,4 +51,3 @@
 ## 实例分割模型
 
 > 表中模型相关指标均为在MSCOCO数据集上测试得到。
-

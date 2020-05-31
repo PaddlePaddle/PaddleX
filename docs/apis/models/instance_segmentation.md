@@ -12,7 +12,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 > **参数**
 
 > > - **num_classes** (int): 包含了背景类的类别数。默认为81。
-> > - **backbone** (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
+> > - **backbone** (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
 > > - **with_fpn** (bool): 是否使用FPN结构。默认为True。
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -82,4 +82,4 @@ predict(self, img_file, transforms=None)
 >
 > **返回值**
 >
-> > - **list**: 预测结果列表，列表中每个元素均为一个dict，key'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
+> > - **list**: 预测结果列表，列表中每个元素均为一个dict，key'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。

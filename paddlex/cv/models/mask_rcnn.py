@@ -32,7 +32,7 @@ class MaskRCNN(FasterRCNN):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -46,7 +46,8 @@ class MaskRCNN(FasterRCNN):
                  anchor_sizes=[32, 64, 128, 256, 512]):
         self.init_params = locals()
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
+            'HRNet_W18'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -81,13 +82,13 @@ class MaskRCNN(FasterRCNN):
             model_out = model.build_net(inputs)
             loss = model_out['loss']
             self.optimizer.minimize(loss)
-            outputs = OrderedDict([('loss', model_out['loss']),
-                                   ('loss_cls', model_out['loss_cls']),
-                                   ('loss_bbox', model_out['loss_bbox']),
-                                   ('loss_mask', model_out['loss_mask']),
-                                   ('loss_rpn_cls', model_out['loss_rpn_cls']),
-                                   ('loss_rpn_bbox',
-                                    model_out['loss_rpn_bbox'])])
+            outputs = OrderedDict(
+                [('loss', model_out['loss']),
+                 ('loss_cls', model_out['loss_cls']),
+                 ('loss_bbox', model_out['loss_bbox']),
+                 ('loss_mask', model_out['loss_mask']),
+                 ('loss_rpn_cls', model_out['loss_rpn_cls']), (
+                     'loss_rpn_bbox', model_out['loss_rpn_bbox'])])
         else:
             outputs = model.build_net(inputs)
         return inputs, outputs
@@ -194,7 +195,9 @@ class MaskRCNN(FasterRCNN):
         # 构建训练、验证、测试网络
         self.build_program()
         fuse_bn = True
-        if self.with_fpn and self.backbone in ['ResNet18', 'ResNet50']:
+        if self.with_fpn and self.backbone in [
+                'ResNet18', 'ResNet50', 'HRNet_W18'
+        ]:
             fuse_bn = False
         self.net_initialize(
             startup_prog=fluid.default_startup_program(),
@@ -276,11 +279,10 @@ class MaskRCNN(FasterRCNN):
                 'im_info': im_infos,
                 'im_shape': im_shapes,
             }
-            outputs = self.exe.run(
-                self.test_prog,
-                feed=[feed_data],
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=False)
+            outputs = self.exe.run(self.test_prog,
+                                   feed=[feed_data],
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths()),
@@ -292,8 +294,8 @@ class MaskRCNN(FasterRCNN):
             res['im_shape'] = (im_shapes, [])
             res['im_id'] = (np.array(res_im_id), [])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
 
         ap_stats, eval_details = eval_results(
             results,
@@ -302,8 +304,8 @@ class MaskRCNN(FasterRCNN):
             with_background=True,
             resolution=self.mask_head_resolution)
         if metric == 'VOC':
-            if isinstance(ap_stats[0], np.ndarray) and isinstance(
-                    ap_stats[1], np.ndarray):
+            if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
+                                                                  np.ndarray):
                 metrics = OrderedDict(
                     zip(['bbox_map', 'segm_map'],
                         [ap_stats[0][1], ap_stats[1][1]]))
@@ -311,8 +313,8 @@ class MaskRCNN(FasterRCNN):
                 metrics = OrderedDict(
                     zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
         elif metric == 'COCO':
-            if isinstance(ap_stats[0], np.ndarray) and isinstance(
-                    ap_stats[1], np.ndarray):
+            if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
+                                                                  np.ndarray):
                 metrics = OrderedDict(
                     zip(['bbox_mmap', 'segm_mmap'],
                         [ap_stats[0][0], ap_stats[1][0]]))
@@ -331,8 +333,10 @@ class MaskRCNN(FasterRCNN):
             transforms (paddlex.det.transforms): 数据预处理操作。
 
         Returns:
-            dict: 预测结果列表，每个预测结果由预测框类别标签、预测框类别名称、预测框坐标、预测框内的二值图、
-                预测框得分组成。
+            dict: 预测结果列表，每个预测结果由预测框类别标签、预测框类别名称、
+                  预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+                  原图大小的预测二值图（1表示预测框类别，0表示背景类）、
+                  预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -346,15 +350,15 @@ class MaskRCNN(FasterRCNN):
         im = np.expand_dims(im, axis=0)
         im_resize_info = np.expand_dims(im_resize_info, axis=0)
         im_shape = np.expand_dims(im_shape, axis=0)
-        outputs = self.exe.run(
-            self.test_prog,
-            feed={
-                'image': im,
-                'im_info': im_resize_info,
-                'im_shape': im_shape
-            },
-            fetch_list=list(self.test_outputs.values()),
-            return_numpy=False)
+        outputs = self.exe.run(self.test_prog,
+                               feed={
+                                   'image': im,
+                                   'im_info': im_resize_info,
+                                   'im_shape': im_shape
+                               },
+                               fetch_list=list(self.test_outputs.values()),
+                               return_numpy=False,
+                               use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)
@@ -368,8 +372,8 @@ class MaskRCNN(FasterRCNN):
         import pycocotools.mask as mask_util
         for index, xywh_res in enumerate(xywh_results):
             del xywh_res['image_id']
-            xywh_res['mask'] = mask_util.decode(
-                segm_results[index]['segmentation'])
+            xywh_res['mask'] = mask_util.decode(segm_results[index][
+                'segmentation'])
             xywh_res['category'] = self.labels[xywh_res['category_id']]
             results.append(xywh_res)
         return results
