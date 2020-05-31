@@ -266,7 +266,7 @@ class YOLOv3(BaseAPI):
                     if isinstance(bt, paddlex.det.transforms.BatchRandomShape):
                         self.max_shape = max(bt.random_shapes)
                         break
-            self.init_params['max_shape'] = max_shape
+            self.init_params['max_shape'] = self.max_shape
             iou_bt = paddlex.det.transforms.GenerateYoloTarget
             train_dataset.transforms.batch_transforms.append(iou_bt(anchors=self.anchors,
                                                                   anchor_masks=self.anchor_masks,
