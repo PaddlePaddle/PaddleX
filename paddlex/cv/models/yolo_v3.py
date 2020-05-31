@@ -144,7 +144,7 @@ class YOLOv3(BaseAPI):
             iou_aware_factor=self.iou_aware_factor,
             use_drop_block=self.use_drop_block,
             batch_size=self.train_batch_size,
-            max_shape=self.max_shape if hasattr(self, 'max_shape') else 608)
+            max_shape=self.max_shape if hasattr(self, 'max_shape') else None)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict([('bbox', model_out)])
@@ -266,6 +266,7 @@ class YOLOv3(BaseAPI):
                     if isinstance(bt, paddlex.det.transforms.BatchRandomShape):
                         self.max_shape = max(bt.random_shapes)
                         break
+            self.init_params['max_shape'] = max_shape
             iou_bt = paddlex.det.transforms.GenerateYoloTarget
             train_dataset.transforms.batch_transforms.append(iou_bt(anchors=self.anchors,
                                                                   anchor_masks=self.anchor_masks,
