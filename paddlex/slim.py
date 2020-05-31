@@ -31,4 +31,4 @@ def export_quant_model(model,
         batch_size=batch_size,
         batch_num=batch_num,
         save_dir=save_dir,
-        cache_dir='./temp')
+        cache_dir=cache_dir)
