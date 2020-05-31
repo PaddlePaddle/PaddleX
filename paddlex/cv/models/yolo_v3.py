@@ -363,7 +363,8 @@ class YOLOv3(BaseAPI):
                                feed={'image': im,
                                      'im_size': im_size},
                                fetch_list=list(self.test_outputs.values()),
-                               return_numpy=False)
+                               return_numpy=False,
+                               use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)
