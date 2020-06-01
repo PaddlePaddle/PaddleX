@@ -24,6 +24,7 @@ from paddle.fluid.initializer import Normal, Xavier
 from paddle.fluid.regularizer import L2Decay
 from paddle.fluid.initializer import MSRA
 
+
 __all__ = ['BBoxHead', 'TwoFCHead']
 
 
@@ -82,7 +83,8 @@ class BBoxHead(object):
             background_label=0,
             #bbox_loss
             sigma=1.0,
-            num_classes=81):
+            num_classes=81,
+            bbox_loss_type='SmoothL1Loss'):
         super(BBoxHead, self).__init__()
         self.head = head
         self.prior_box_var = prior_box_var
@@ -99,6 +101,7 @@ class BBoxHead(object):
         self.sigma = sigma
         self.num_classes = num_classes
         self.head_feat = None
+        self.bbox_loss_type = bbox_loss_type
 
     def get_head_feat(self, input=None):
         """
@@ -126,6 +129,7 @@ class BBoxHead(object):
                 [N, num_anchors * 4, H, W].
         """
         head_feat = self.get_head_feat(roi_feat)
+        
         # when ResNetC5 output a single feature map
         if not isinstance(self.head, TwoFCHead):
             head_feat = fluid.layers.pool2d(
@@ -173,18 +177,50 @@ class BBoxHead(object):
         """
 
         cls_score, bbox_pred = self._get_output(roi_feat)
-
         labels_int64 = fluid.layers.cast(x=labels_int32, dtype='int64')
         labels_int64.stop_gradient = True
         loss_cls = fluid.layers.softmax_with_cross_entropy(
             logits=cls_score, label=labels_int64, numeric_stable_mode=True)
         loss_cls = fluid.layers.reduce_mean(loss_cls)
-        loss_bbox = fluid.layers.smooth_l1(
-            x=bbox_pred,
-            y=bbox_targets,
-            inside_weight=bbox_inside_weights,
-            outside_weight=bbox_outside_weights,
-            sigma=self.sigma)
+        if self.bbox_loss_type == 'CiouLoss':
+            from .loss.diou_loss import DiouLoss
+            loss_obj = DiouLoss(loss_weight=10.,
+                                is_cls_agnostic=False,
+                                num_classes=self.num_classes,
+                                use_complete_iou_loss=True)
+            loss_bbox = loss_obj(
+                x=bbox_pred,
+                y=bbox_targets,
+                inside_weight=bbox_inside_weights,
+                outside_weight=bbox_outside_weights)
+        elif self.bbox_loss_type == 'DiouLoss':
+            from .loss.diou_loss import DiouLoss
+            loss_obj = DiouLoss(loss_weight=12.,
+                                is_cls_agnostic=False,
+                                num_classes=self.num_classes,
+                                use_complete_iou_loss=False)
+            loss_bbox = loss_obj(
+                x=bbox_pred,
+                y=bbox_targets,
+                inside_weight=bbox_inside_weights,
+                outside_weight=bbox_outside_weights)
+        elif self.bbox_loss_type == 'GiouLoss':
+            from .loss.giou_loss import GiouLoss
+            loss_obj = GiouLoss(loss_weight=10.,
+                                is_cls_agnostic=False,
+                                num_classes=self.num_classes)
+            loss_bbox = loss_obj(
+                x=bbox_pred,
+                y=bbox_targets,
+                inside_weight=bbox_inside_weights,
+                outside_weight=bbox_outside_weights)
+        else:
+            loss_bbox = fluid.layers.smooth_l1(
+                x=bbox_pred,
+                y=bbox_targets,
+                inside_weight=bbox_inside_weights,
+                outside_weight=bbox_outside_weights,
+                sigma=self.sigma)
         loss_bbox = fluid.layers.reduce_mean(loss_bbox)
         return {'loss_cls': loss_cls, 'loss_bbox': loss_bbox}
 
@@ -229,14 +265,21 @@ class BBoxHead(object):
         cliped_box = fluid.layers.box_clip(input=decoded_box, im_info=im_shape)
         if return_box_score:
             return {'bbox': cliped_box, 'score': cls_prob}
-        pred_result = fluid.layers.multiclass_nms(
-            bboxes=cliped_box,
-            scores=cls_prob,
-            score_threshold=self.score_threshold,
-            nms_top_k=self.nms_top_k,
-            keep_top_k=self.keep_top_k,
-            nms_threshold=self.nms_threshold,
-            normalized=self.normalized,
-            nms_eta=self.nms_eta,
-            background_label=self.background_label)
+        if self.bbox_loss_type == 'CiouLoss':
+            from .nms import MultiClassDiouNMS
+            nms_obj = MultiClassDiouNMS(score_threshold=self.score_threshold,
+                                        nms_threshold=self.nms_threshold,
+                                        keep_top_k=self.keep_top_k)
+            pred_result = nms_obj(bboxes=cliped_box, scores=cls_prob)
+        else:
+            pred_result = fluid.layers.multiclass_nms(
+                bboxes=cliped_box,
+                scores=cls_prob,
+                score_threshold=self.score_threshold,
+                nms_top_k=self.nms_top_k,
+                keep_top_k=self.keep_top_k,
+                nms_threshold=self.nms_threshold,
+                normalized=self.normalized,
+                nms_eta=self.nms_eta,
+                background_label=self.background_label)
         return {'bbox': pred_result}

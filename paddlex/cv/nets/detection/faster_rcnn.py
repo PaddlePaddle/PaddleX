@@ -70,6 +70,7 @@ class FasterRCNN(object):
             keep_top_k=100,
             nms_threshold=0.5,
             score_threshold=0.05,
+            bbox_loss_type='SmoothL1Loss',
             #bbox_assigner
             batch_size_per_im=512,
             fg_fraction=.25,
@@ -145,7 +146,8 @@ class FasterRCNN(object):
                 keep_top_k=keep_top_k,
                 nms_threshold=nms_threshold,
                 score_threshold=score_threshold,
-                num_classes=num_classes)
+                num_classes=num_classes,
+                bbox_loss_type=bbox_loss_type)
         self.bbox_head = bbox_head
         self.batch_size_per_im = batch_size_per_im
         self.fg_fraction = fg_fraction
@@ -189,7 +191,6 @@ class FasterRCNN(object):
                 bbox_reg_weights=self.bbox_reg_weights,
                 class_nums=self.num_classes,
                 use_random=self.rpn_head.use_random)
-
             rois = outputs[0]
             labels_int32 = outputs[1]
             bbox_targets = outputs[2]
@@ -211,10 +212,12 @@ class FasterRCNN(object):
         else:
             roi_feat = self.roi_extractor(body_feats, rois, spatial_scale)
 
+        
         if self.mode == 'train':
             loss = self.bbox_head.get_loss(roi_feat, labels_int32,
                                            bbox_targets, bbox_inside_weights,
                                            bbox_outside_weights)
+    
             loss.update(rpn_loss)
             total_loss = fluid.layers.sum(list(loss.values()))
             loss.update({'loss': total_loss})

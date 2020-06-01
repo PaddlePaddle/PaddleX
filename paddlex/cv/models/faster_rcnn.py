@@ -43,7 +43,8 @@ class FasterRCNN(BaseAPI):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512]):
+                 anchor_sizes=[32, 64, 128, 256, 512],
+                 bbox_loss_type='SmoothL1Loss'):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
@@ -57,6 +58,7 @@ class FasterRCNN(BaseAPI):
         self.with_fpn = with_fpn
         self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
+        self.bbox_loss_type = bbox_loss_type
         self.labels = None
         self.fixed_input_shape = None
 
@@ -72,6 +74,8 @@ class FasterRCNN(BaseAPI):
             layers = 50
             variant = 'd'
             norm_type = 'affine_channel'
+            if self.bbox_loss_type != 'SmoothL1Loss':
+                norm_type = 'bn'
         elif backbone_name == 'ResNet101':
             layers = 101
             variant = 'b'
@@ -118,7 +122,8 @@ class FasterRCNN(BaseAPI):
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            bbox_loss_type=self.bbox_loss_type)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -134,26 +139,49 @@ class FasterRCNN(BaseAPI):
             outputs = model.build_net(inputs)
         return inputs, outputs
 
+#     def default_optimizer(self, learning_rate, warmup_steps, warmup_start_lr,
+#                           lr_decay_epochs, lr_decay_gamma,
+#                           num_steps_each_epoch):
+#         if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
+#             raise Exception("warmup_steps should less than {}".format(
+#                 lr_decay_epochs[0] * num_steps_each_epoch))
+#         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
+#         values = [(lr_decay_gamma**i) * learning_rate
+#                   for i in range(len(lr_decay_epochs) + 1)]
+#         lr_decay = fluid.layers.piecewise_decay(
+#             boundaries=boundaries, values=values)
+#         lr_warmup = fluid.layers.linear_lr_warmup(
+#             learning_rate=lr_decay,
+#             warmup_steps=warmup_steps,
+#             start_lr=warmup_start_lr,
+#             end_lr=learning_rate)
+#         optimizer = fluid.optimizer.Momentum(
+#             learning_rate=lr_warmup,
+#             momentum=0.9,
+#             regularization=fluid.regularizer.L2Decay(1e-04))
+#         return optimizer
+
     def default_optimizer(self, learning_rate, warmup_steps, warmup_start_lr,
                           lr_decay_epochs, lr_decay_gamma,
                           num_steps_each_epoch):
-        if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
-            raise Exception("warmup_steps should less than {}".format(
-                lr_decay_epochs[0] * num_steps_each_epoch))
+        #if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
+        #    raise Exception("warmup_steps should less than {}".format(
+        #        lr_decay_epochs[0] * num_steps_each_epoch))
         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
         values = [(lr_decay_gamma**i) * learning_rate
                   for i in range(len(lr_decay_epochs) + 1)]
         lr_decay = fluid.layers.piecewise_decay(
             boundaries=boundaries, values=values)
-        lr_warmup = fluid.layers.linear_lr_warmup(
-            learning_rate=lr_decay,
-            warmup_steps=warmup_steps,
-            start_lr=warmup_start_lr,
-            end_lr=learning_rate)
+        #lr_warmup = fluid.layers.linear_lr_warmup(
+        #    learning_rate=lr_decay,
+        #    warmup_steps=warmup_steps,
+        #    start_lr=warmup_start_lr,
+        #    end_lr=learning_rate)
         optimizer = fluid.optimizer.Momentum(
-            learning_rate=lr_warmup,
+            #learning_rate=lr_warmup,
+            learning_rate=lr_decay,
             momentum=0.9,
-            regularization=fluid.regularizer.L2Decay(1e-04))
+            regularization=fluid.regularizer.L2DecayRegularizer(1e-04))
         return optimizer
 
     def train(self,
