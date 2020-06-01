@@ -27,6 +27,7 @@ from PIL import Image, ImageEnhance
 from .imgaug_support import execute_imgaug
 from .ops import *
 from .box_utils import *
+import paddlex.utils.logging as logging
 
 
 class DetTransform:
@@ -156,6 +157,10 @@ class Compose(DetTransform):
         if not isinstance(augmenters, list):
             raise Exception(
                 "augmenters should be list type in func add_augmenters()")
+        transform_names = [type(x).__name__ for x in self.transforms]
+        for aug in augmenters:
+            if type(aug).__name__ in transform_names:
+                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
