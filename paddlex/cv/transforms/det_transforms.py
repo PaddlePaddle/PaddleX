@@ -156,7 +156,7 @@ class Compose(DetTransform):
         if not isinstance(augmenters, list):
             raise Exception(
                 "augmenters should be list type in func add_augmenters()")
-        self.transforms = augmenters + self.transforms.transforms
+        self.transforms = augmenters + self.transforms
 
 
 class ResizeByShort(DetTransform):
