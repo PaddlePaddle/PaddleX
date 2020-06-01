@@ -264,7 +264,8 @@ class BaseClassifier(BaseAPI):
             im = self.test_transforms(img_file)
         result = self.exe.run(self.test_prog,
                               feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()))
+                              fetch_list=list(self.test_outputs.values()),
+                              use_program_cache=True)
         pred_label = np.argsort(result[0][0])[::-1][:true_topk]
         res = [{
             'category_id': l,

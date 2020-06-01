@@ -398,7 +398,8 @@ class DeepLabv3p(BaseAPI):
         im = np.expand_dims(im, axis=0)
         result = self.exe.run(self.test_prog,
                               feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()))
+                              fetch_list=list(self.test_outputs.values()),
+                              use_program_cache=True)
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
         logit = result[1]
