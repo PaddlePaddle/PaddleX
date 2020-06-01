@@ -10,22 +10,12 @@ insect_dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(insect_dataset, path='./')
 
 # 定义训练和验证时的transforms
-train_transforms = transforms.Compose([
-    transforms.MixupImage(mixup_epoch=250),
-    transforms.RandomDistort(),
-    transforms.RandomExpand(),
-    transforms.RandomCrop(),
-    transforms.Resize(target_size=608, interp='RANDOM'),
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize(),
-])
-
-eval_transforms = transforms.Compose([
-    transforms.Resize(target_size=608, interp='CUBIC'),
-    transforms.Normalize(),
-])
+# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#composedyolotransforms
+train_transforms = transforms.ComposedYOLOv3Transforms(mode='train', shape=[608, 608])
+eval_transforms = transforms.ComposedYOLOv3Transforms(mode='eva', shape=[608, 608])
 
 # 定义训练和验证所用的数据集
+# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/detection.html#vocdetection
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -43,6 +33,8 @@ eval_dataset = pdx.datasets.VOCDetection(
 # VisualDL启动方式: visualdl --logdir output/yolov3_darknet/vdl_log --port 8001
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+
+# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/models/detection.html#yolov3
 num_classes = len(train_dataset.labels)
 model = pdx.det.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
 model.train(

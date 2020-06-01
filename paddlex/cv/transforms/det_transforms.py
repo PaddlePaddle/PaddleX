@@ -1287,7 +1287,7 @@ class ComposedRCNNTransforms(Compose):
         super(ComposedRCNNTransforms, self).__init__(transforms)
 
 
-class ComposedYOLOTransforms(Compose):
+class ComposedYOLOv3Transforms(Compose):
     """YOLOv3模型的图像预处理流程，具体如下，
         训练阶段：
         1. 在前mixup_epoch轮迭代中，使用MixupImage策略，见https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#mixupimage
@@ -1342,4 +1342,4 @@ class ComposedYOLOTransforms(Compose):
                     target_size=width, interp='CUBIC'), Normalize(
                         mean=mean, std=std)
             ]
-        super(ComposedYOLOTransforms, self).__init__(transforms)
+        super(ComposedYOLOv3Transforms, self).__init__(transforms)

@@ -232,12 +232,12 @@ eval_transforms = transforms.Composed([
 ```
 
 
-## ComposedYOLOTransforms类
+## ComposedYOLOv3Transforms类
 ```python
-paddlex.det.transforms.ComposedYOLOTransforms(mode, shape=[608, 608], mixup_epoch=250, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.det.transforms.ComposedYOLOv3Transforms(mode, shape=[608, 608], mixup_epoch=250, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ```
-目标检测YOLOv3模型中已经组合好的数据处理流程，开发者可以直接使用ComposedYOLOTransforms，简化手动组合transforms的过程, 该类中已经包含了[MixupImage](#MixupImage)、[RandomDistort](#RandomDistort)、[RandomExpand](#RandomExpand)、[RandomCrop](#RandomCrop)、[RandomHorizontalFlip](#RandomHorizontalFlip)5种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
-ComposedYOLOTransforms共包括以下几个步骤：
+目标检测YOLOv3模型中已经组合好的数据处理流程，开发者可以直接使用ComposedYOLOv3Transforms，简化手动组合transforms的过程, 该类中已经包含了[MixupImage](#MixupImage)、[RandomDistort](#RandomDistort)、[RandomExpand](#RandomExpand)、[RandomCrop](#RandomCrop)、[RandomHorizontalFlip](#RandomHorizontalFlip)5种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
+ComposedYOLOv3Transforms共包括以下几个步骤：
 > 训练阶段：
 > > 1. 在前mixup_epoch轮迭代中，使用MixupImage策略
 > > 2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调
@@ -259,7 +259,7 @@ ComposedYOLOTransforms共包括以下几个步骤：
 
 ### 添加数据增强方式
 ```python
-ComposedYOLOTransforms.add_augmenters(augmenters)
+ComposedYOLOv3Transforms.add_augmenters(augmenters)
 ```
 > **参数**
 > * **augmenters**(list): 数据增强方式列表
@@ -268,8 +268,8 @@ ComposedYOLOTransforms.add_augmenters(augmenters)
 ```
 import paddlex as pdx
 from paddlex.det import transforms
-train_transforms = transforms.ComposedYOLOTransforms(mode='train', shape=[480, 480])
-eval_transforms = transforms.ComposedYOLOTransforms(mode='eval', shape=[480, 480])
+train_transforms = transforms.ComposedYOLOv3Transforms(mode='train', shape=[480, 480])
+eval_transforms = transforms.ComposedYOLOv3Transforms(mode='eval', shape=[480, 480])
 
 # 添加数据增强
 import imgaug.augmenters as iaa
