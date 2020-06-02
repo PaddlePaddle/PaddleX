@@ -96,10 +96,12 @@ class BaseClassifier(BaseAPI):
                     "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
                     exit=False)
                 logging.error(
-                    "See this doc for more information: xxxx", exit=False)
+                    "See this doc for more information: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
+                    exit=False)
                 logging.error(
-                    "warmup_steps should less than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
-                    format(lr_decay_epochs[0] * num_steps_each_epoch))
+                    "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
+                    format(lr_decay_epochs[0] * num_steps_each_epoch,
+                           warmup_steps // num_steps_each_epoch))
 
             lr_decay = fluid.layers.linear_lr_warmup(
                 learning_rate=lr_decay,
