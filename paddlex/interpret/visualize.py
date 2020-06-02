@@ -168,7 +168,7 @@ def get_normlime_interpreter(img,
         normlime_weights_file = precompute_global_classifier(
             dataset,
             predict_func,
-            save_path=normlime_weights_file,
+            save_path=osp.join(save_dir, normlime_weights_file),
             batch_size=batch_size)
 
     interpreter = Interpretation(
