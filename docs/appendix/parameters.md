@@ -47,3 +47,11 @@ warmup_steps <= lr_decay_epochs[0] * num_steps_each_epoch
 其中公式中`num_steps_each_epoch = num_samples_in_train_dataset // train_batch_size`。  
 
 >  因此如若在训练时PaddleX提示`warmup_steps should be less than xxx`时，即可根据上述公式来调整你的`lr_decay_epochs`或者是`warmup_steps`使得两个参数满足上面的条件
+
+> - 图像分类模型 [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/classification.html#train)
+> - FasterRCNN [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/detection.html#fasterrcnn)
+> - YOLOv3 [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/detection.html#yolov3)
+> - MaskRCNN [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/instance_segmentation.html#maskrcnn)
+> - DeepLab [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#deeplabv3p)
+> - UNet [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#unet)
+> - HRNet [train接口文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#hrnet)
