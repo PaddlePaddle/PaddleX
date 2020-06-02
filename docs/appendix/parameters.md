@@ -23,3 +23,27 @@ Batch Size指模型在训练过程中，一次性处理的样本数量, 如若�
 - [实例分割MaskRCNN-train](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/instance_segmentation.html#train)
 - [语义分割DeepLabv3p-train](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#train)
 - [语义分割UNet](https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#id2)
+
+## 关于lr_decay_epoch, warmup_steps等参数的说明
+
+在PaddleX或其它深度学习模型的训练过程中，经常见到lr_decay_epoch, warmup_steps, warmup_start_lr等参数设置，下面介绍一些这些参数的作用。  
+
+首先这些参数都是用于控制模型训练过程中学习率的变化方式，例如我们在训练时将learning_rate设为0.1, 通常情况，在模型的训练过程中，学习率一直以0.1不变训练下去, 但为了调出更好的模型效果，我们往往不希望学习率一直保持不变。
+
+### warmup_steps和warmup_start_lr
+
+我们在训练模型时，一般都会使用预训练模型，例如检测模型在训练时使用backbone在ImageNet数据集上的预训练权重。但由于在自行训练时，自己的数据与ImageNet数据集存在较大的差异，可能会一开始由于梯度过大使得训练出现问题，因此可以在刚开始训练时，让学习率以一个较小的值，慢慢增长到设定的学习率。因此`warmup_steps`和`warmup_start_lr`就是这个作用，模型开始训练时，学习率会从`warmup_start_lr`开始，在`warmup_steps`内线性增长到设定的学习率。
+
+### lr_decay_epochs和lr_decay_gamma
+
+`lr_decay_epochs`用于让学习率在模型训练后期逐步衰减，它一般是一个list，如[6, 8, 10]，表示学习率在第6个epoch时衰减一次，第8个epoch时再衰减一次，第10个epoch时再衰减一次。每次学习率衰减为之前的学习率*lr_decay_gamma
+
+### PaddleX中对warmup_steps和lr_decay_epochs的约束限制
+
+在PaddleX中，限制warmup需要在第一个学习率decay衰减前结束，因此要满足下面的公式
+```
+warmup_steps <= lr_decay_epochs[0] * num_steps_each_epoch
+```
+其中公式中`num_steps_each_epoch = num_samples_in_train_dataset // train_batch_size`。  
+
+>  因此如若在训练时PaddleX提示`warmup_steps should be less than xxx`时，即可根据上述公式来调整你的`lr_decay_epochs`或者是`warmup_steps`使得两个参数满足上面的条件

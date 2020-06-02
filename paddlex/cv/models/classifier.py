@@ -52,8 +52,7 @@ class BaseClassifier(BaseAPI):
             input_shape = [
                 None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
             ]
-            image = fluid.data(
-                dtype='float32', shape=input_shape, name='image')
+            image = fluid.data(dtype='float32', shape=input_shape, name='image')
         else:
             image = fluid.data(
                 dtype='float32', shape=[None, 3, None, None], name='image')
@@ -81,7 +80,8 @@ class BaseClassifier(BaseAPI):
             del outputs['loss']
         return inputs, outputs
 
-    def default_optimizer(self, learning_rate, lr_decay_epochs, lr_decay_gamma,
+    def default_optimizer(self, learning_rate, warmup_steps, warmup_start_lr,
+                          lr_decay_epochs, lr_decay_gamma,
                           num_steps_each_epoch):
         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
         values = [
@@ -90,6 +90,22 @@ class BaseClassifier(BaseAPI):
         ]
         lr_decay = fluid.layers.piecewise_decay(
             boundaries=boundaries, values=values)
+        if warmup_steps > 0:
+            if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
+                logging.error(
+                    "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
+                    exit=False)
+                logging.error(
+                    "See this doc for more information: xxxx", exit=False)
+                logging.error(
+                    "warmup_steps should less than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
+                    format(lr_decay_epochs[0] * num_steps_each_epoch))
+
+            lr_decay = fluid.layers.linear_lr_warmup(
+                learning_rate=lr_decay,
+                warmup_steps=warmup_steps,
+                start_lr=warmup_start_lr,
+                end_lr=learning_rate)
         optimizer = fluid.optimizer.Momentum(
             lr_decay,
             momentum=0.9,
@@ -107,6 +123,8 @@ class BaseClassifier(BaseAPI):
               pretrain_weights='IMAGENET',
               optimizer=None,
               learning_rate=0.025,
+              warmup_steps=0,
+              warmup_start_lr=0.0,
               lr_decay_epochs=[30, 60, 90],
               lr_decay_gamma=0.1,
               use_vdl=False,
@@ -129,6 +147,8 @@ class BaseClassifier(BaseAPI):
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：
                 fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
             learning_rate (float): 默认优化器的初始学习率。默认为0.025。
+            warmup_steps(int): 学习率从warmup_start_lr上升至设定的learning_rate，所需的步数，默认为0
+            warmup_start_lr(float): 学习率在warmup阶段时的起始值，默认为0.0
             lr_decay_epochs (list): 默认优化器的学习率衰减轮数。默认为[30, 60, 90]。
             lr_decay_gamma (float): 默认优化器的学习率衰减率。默认为0.1。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认值为False。
@@ -149,6 +169,8 @@ class BaseClassifier(BaseAPI):
             num_steps_each_epoch = train_dataset.num_samples // train_batch_size
             optimizer = self.default_optimizer(
                 learning_rate=learning_rate,
+                warmup_steps=warmup_steps,
+                warmup_start_lr=warmup_start_lr,
                 lr_decay_epochs=lr_decay_epochs,
                 lr_decay_gamma=lr_decay_gamma,
                 num_steps_each_epoch=num_steps_each_epoch)
@@ -193,8 +215,7 @@ class BaseClassifier(BaseAPI):
           tuple (metrics, eval_details): 当return_details为True时，增加返回dict，
               包含关键字：'true_labels'、'pred_scores'，分别代表真实类别id、每个类别的预测得分。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
         k = min(5, self.num_classes)
@@ -206,9 +227,8 @@ class BaseClassifier(BaseAPI):
                 self.test_prog).with_data_parallel(
                     share_vars_from=self.parallel_train_prog)
         batch_size_each_gpu = self._get_single_card_bs(batch_size)
-        logging.info(
-            "Start to evaluating(total_samples={}, total_steps={})...".format(
-                eval_dataset.num_samples, total_steps))
+        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
+                     format(eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
