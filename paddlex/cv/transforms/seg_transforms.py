@@ -21,6 +21,7 @@ import numpy as np
 from PIL import Image
 import cv2
 from collections import OrderedDict
+import paddlex.utils.logging as logging
 
 
 class SegTransform:
@@ -112,7 +113,11 @@ class Compose(SegTransform):
         if not isinstance(augmenters, list):
             raise Exception(
                 "augmenters should be list type in func add_augmenters()")
-        self.transforms = augmenters + self.transforms.transforms
+        transform_names = [type(x).__name__ for x in self.transforms]
+        for aug in augmenters:
+            if type(aug).__name__ in transform_names:
+                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+        self.transforms = augmenters + self.transforms
 
 
 class RandomHorizontalFlip(SegTransform):

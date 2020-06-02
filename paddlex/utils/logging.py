@@ -47,9 +47,10 @@ def info(message="", use_color=False):
     log(level=2, message=message, use_color=use_color)
 
 
-def warning(message="", use_color=False):
+def warning(message="", use_color=True):
     log(level=1, message=message, use_color=use_color)
 
 
-def error(message="", use_color=False):
+def error(message="", use_color=True):
     log(level=0, message=message, use_color=use_color)
+    sys.exit(-1)
