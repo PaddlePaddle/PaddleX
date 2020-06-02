@@ -38,7 +38,7 @@ Batch Size指模型在训练过程中，一次性处理的样本数量, 如若�
 
 `lr_decay_epochs`用于让学习率在模型训练后期逐步衰减，它一般是一个list，如[6, 8, 10]，表示学习率在第6个epoch时衰减一次，第8个epoch时再衰减一次，第10个epoch时再衰减一次。每次学习率衰减为之前的学习率*lr_decay_gamma
 
-### PaddleX中对warmup_steps和lr_decay_epochs的约束限制
+### PaddleX中的warmup_steps和lr_decay_epochs
 
 在PaddleX中，限制warmup需要在第一个学习率decay衰减前结束，因此要满足下面的公式
 ```
