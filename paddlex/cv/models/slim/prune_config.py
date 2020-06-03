@@ -162,7 +162,7 @@ def get_prune_params(model):
                 continue
             prune_names.append(param.name)
     elif model_type.startswith("MobileNetV3"):
-        if model_type == 'MobileNetV3_small':
+        if model_type.startswith('MobileNetV3_small'):
             expand_prune_id = [3, 4]
         else:
             expand_prune_id = [2, 3, 4, 8, 9, 11]
