@@ -53,6 +53,11 @@ class FasterRCNN(BaseAPI):
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
+        bbox_loss_types = [
+            'SmoothL1Loss', 'CiouLoss', 'DiouLoss', 'GiouLoss'
+        ]
+        assert backbone in backbones, "bbox_loss_type should be one of {}".format(
+            bbox_loss_types)
         self.backbone = backbone
         self.num_classes = num_classes
         self.with_fpn = with_fpn
@@ -84,6 +89,8 @@ class FasterRCNN(BaseAPI):
             layers = 101
             variant = 'd'
             norm_type = 'affine_channel'
+            if self.bbox_loss_type != 'SmoothL1Loss':
+                norm_type = 'bn'
         elif backbone_name == 'HRNet_W18':
             backbone = paddlex.cv.nets.hrnet.HRNet(
                 width=18, freeze_norm=True, norm_decay=0., freeze_at=0)

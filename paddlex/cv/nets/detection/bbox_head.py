@@ -188,39 +188,25 @@ class BBoxHead(object):
                                 is_cls_agnostic=False,
                                 num_classes=self.num_classes,
                                 use_complete_iou_loss=True)
-            loss_bbox = loss_obj(
-                x=bbox_pred,
-                y=bbox_targets,
-                inside_weight=bbox_inside_weights,
-                outside_weight=bbox_outside_weights)
         elif self.bbox_loss_type == 'DiouLoss':
             from .loss.diou_loss import DiouLoss
             loss_obj = DiouLoss(loss_weight=12.,
                                 is_cls_agnostic=False,
                                 num_classes=self.num_classes,
                                 use_complete_iou_loss=False)
-            loss_bbox = loss_obj(
-                x=bbox_pred,
-                y=bbox_targets,
-                inside_weight=bbox_inside_weights,
-                outside_weight=bbox_outside_weights)
         elif self.bbox_loss_type == 'GiouLoss':
             from .loss.giou_loss import GiouLoss
             loss_obj = GiouLoss(loss_weight=10.,
                                 is_cls_agnostic=False,
                                 num_classes=self.num_classes)
-            loss_bbox = loss_obj(
+        else:
+            from .loss.smoothl1_loss import SmoothL1Loss
+            loss_obj = SmoothL1Loss(self.sigma)
+        loss_bbox = loss_obj(
                 x=bbox_pred,
                 y=bbox_targets,
                 inside_weight=bbox_inside_weights,
                 outside_weight=bbox_outside_weights)
-        else:
-            loss_bbox = fluid.layers.smooth_l1(
-                x=bbox_pred,
-                y=bbox_targets,
-                inside_weight=bbox_inside_weights,
-                outside_weight=bbox_outside_weights,
-                sigma=self.sigma)
         loss_bbox = fluid.layers.reduce_mean(loss_bbox)
         return {'loss_cls': loss_cls, 'loss_bbox': loss_bbox}
 
