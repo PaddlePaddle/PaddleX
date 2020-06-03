@@ -544,6 +544,9 @@ class LimeImageInterpreter(object):
         labels = []
         data[0, :] = 1
         imgs = []
+
+        logging.info("Computing LIME.", use_color=True)
+
         for row in tqdm.tqdm(data):
             temp = copy.deepcopy(image)
             zeros = np.where(row == 0)[0]

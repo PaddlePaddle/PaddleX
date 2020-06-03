@@ -287,8 +287,14 @@ def precompute_global_classifier(dataset,
     x_data = []
     y_labels = []
 
+    num_features = len(kmeans_model.cluster_centers_)
+
+    logging.info(
+        "Initialization for NormLIME: Computing each sample in the test list.",
+        use_color=True)
+
     for each_data_ in tqdm.tqdm(image_list):
-        x_data_i = np.zeros((len(kmeans_model.cluster_centers_)))
+        x_data_i = np.zeros((num_features))
         image_show = read_image(each_data_)
         result = predict_fn(image_show)
         result = result[0]  # only one image here.
@@ -324,28 +330,86 @@ def precompute_global_classifier(dataset,
         y_labels.append(pred_y_i)
         x_data.append(x_data_i)
 
+    if len(np.unique(y_labels)) < 2:
+        logging.info("Warning: The test samples in the dataset is limited.\n \
+                     NormLIME may have no effect on the results.\n \
+                     Try to add more test samples, or see the results of LIME.")
+        num_classes = np.max(np.unique(y_labels)) + 1
+        normlime_weights_all_labels = {}
+        for class_index in range(num_classes):
+            w = np.ones((num_features)) / num_features
+            normlime_weights_all_labels[class_index] = {
+                i: wi
+                for i, wi in enumerate(w)
+            }
+        logging.info("Saving the computed normlime_weights in {}".format(
+            save_path))
+
+        np.save(save_path, normlime_weights_all_labels)
+        return save_path
+
     clf = LogisticRegression(multi_class='multinomial', max_iter=1000)
     clf.fit(x_data, y_labels)
 
-    num_classes = len(np.unique(y_labels))
+    num_classes = np.max(np.unique(y_labels)) + 1
     normlime_weights_all_labels = {}
 
-    for class_index in range(num_classes):
-        w = clf.coef_[class_index]
+    if len(y_labels) / len(np.unique(y_labels)) < 3:
+        logging.info("Warning: The test samples in the dataset is limited.\n \
+                     NormLIME may have no effect on the results.\n \
+                     Try to add more test samples, or see the results of LIME.")
 
-        # softmax
-        w = w - np.max(w)
-        exp_w = np.exp(w * 10)
-        w = exp_w / np.sum(exp_w)
+    if len(np.unique(y_labels)) == 2:
+        # binary: clf.coef_ has shape of [1, num_features]
+        for class_index in range(num_classes):
+            if class_index not in clf.classes_:
+                w = np.ones((num_features)) / num_features
+                normlime_weights_all_labels[class_index] = {
+                    i: wi
+                    for i, wi in enumerate(w)
+                }
+                continue
 
-        normlime_weights_all_labels[class_index] = {
-            i: wi
-            for i, wi in enumerate(w)
-        }
+            if clf.classes_[0] == class_index:
+                w = -clf.coef_[0]
+            else:
+                w = clf.coef_[0]
+
+            # softmax
+            w = w - np.max(w)
+            exp_w = np.exp(w * 10)
+            w = exp_w / np.sum(exp_w)
+
+            normlime_weights_all_labels[class_index] = {
+                i: wi
+                for i, wi in enumerate(w)
+            }
+    else:
+        # clf.coef_ has shape of [len(np.unique(y_labels)), num_features]
+        for class_index in range(num_classes):
+            if class_index not in clf.classes_:
+                w = np.ones((num_features)) / num_features
+                normlime_weights_all_labels[class_index] = {
+                    i: wi
+                    for i, wi in enumerate(w)
+                }
+                continue
+
+            coef_class_index = np.where(clf.classes_ == class_index)[0][0]
+            w = clf.coef_[coef_class_index]
+
+            # softmax
+            w = w - np.max(w)
+            exp_w = np.exp(w * 10)
+            w = exp_w / np.sum(exp_w)
+
+            normlime_weights_all_labels[class_index] = {
+                i: wi
+                for i, wi in enumerate(w)
+            }
 
     logging.info("Saving the computed normlime_weights in {}".format(
         save_path))
-
     np.save(save_path, normlime_weights_all_labels)
 
     return save_path
