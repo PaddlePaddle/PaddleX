@@ -281,14 +281,8 @@ def get_params_ratios(sensitivities_file, eval_metric_loss=0.05):
     if not osp.exists(sensitivities_file):
         raise Exception('The sensitivities file is not exists!')
     sensitivitives = paddleslim.prune.load_sensitivities(sensitivities_file)
-<<<<<<< HEAD
     params_ratios = paddleslim.prune.get_ratios_by_loss(
         sensitivitives, eval_metric_loss)
-    
-=======
-    params_ratios = paddleslim.prune.get_ratios_by_loss(sensitivitives,
-                                                        eval_metric_loss)
->>>>>>> 7df89bb4e3e8cca1c9c57bf5f316fc9eb873a149
     return params_ratios
 
 
