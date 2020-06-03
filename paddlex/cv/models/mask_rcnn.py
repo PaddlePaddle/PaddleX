@@ -97,8 +97,16 @@ class MaskRCNN(FasterRCNN):
                           lr_decay_epochs, lr_decay_gamma,
                           num_steps_each_epoch):
         if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
-            raise Exception("warmup_step should less than {}".format(
-                lr_decay_epochs[0] * num_steps_each_epoch))
+            logging.error(
+                "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
+                exit=False)
+            logging.error(
+                "See this doc for more information: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
+                exit=False)
+            logging.error(
+                "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
+                format(lr_decay_epochs[0] * num_steps_each_epoch, warmup_steps
+                       // num_steps_each_epoch))
         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
         values = [(lr_decay_gamma**i) * learning_rate
                   for i in range(len(lr_decay_epochs) + 1)]
@@ -244,8 +252,7 @@ class MaskRCNN(FasterRCNN):
                 预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、
                 预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -266,9 +273,8 @@ class MaskRCNN(FasterRCNN):
 
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         results = list()
-        logging.info(
-            "Start to evaluating(total_samples={}, total_steps={})...".format(
-                eval_dataset.num_samples, total_steps))
+        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
+                     format(eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -310,8 +316,7 @@ class MaskRCNN(FasterRCNN):
                     zip(['bbox_map', 'segm_map'],
                         [ap_stats[0][1], ap_stats[1][1]]))
             else:
-                metrics = OrderedDict(
-                    zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
+                metrics = OrderedDict(zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
         elif metric == 'COCO':
             if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
                                                                   np.ndarray):
@@ -357,7 +362,8 @@ class MaskRCNN(FasterRCNN):
                                    'im_shape': im_shape
                                },
                                fetch_list=list(self.test_outputs.values()),
-                               return_numpy=False)
+                               return_numpy=False,
+                               use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)
