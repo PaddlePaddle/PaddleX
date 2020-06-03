@@ -25,10 +25,6 @@ test_dataset = pdx.datasets.ImageNet(
     label_list=osp.join(dataset, 'labels.txt'),
     transforms=model.test_transforms)
 
-import numpy as np
-np.random.seed(5)
-perm = np.random.permutation(len(test_dataset.file_list))
-
 # 可解释性可视化
 pdx.interpret.normlime(
     test_dataset.file_list[0][0],
