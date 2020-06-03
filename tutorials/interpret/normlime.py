@@ -29,18 +29,11 @@ import numpy as np
 np.random.seed(5)
 perm = np.random.permutation(len(test_dataset.file_list))
 
-for i in range(len(test_dataset.file_list)):
-
-    # 可解释性可视化
-    pdx.interpret.normlime(
-        test_dataset.file_list[perm[i]][0],
-        model,
-        test_dataset,
-        save_dir='./',
-        normlime_weights_file='{}_{}.npy'.format(
-            dataset.split('/')[-1], model.model_name))
-
-    if i == 1:
-        # first iter will have an initialization process, followed by the interpretation.
-        # second iter will directly load the initialization process, followed by the interpretation.
-        break
+# 可解释性可视化
+pdx.interpret.normlime(
+    test_dataset.file_list[0][0],
+    model,
+    test_dataset,
+    save_dir='./',
+    normlime_weights_file='{}_{}.npy'.format(
+        dataset.split('/')[-1], model.model_name))
