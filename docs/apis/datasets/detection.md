@@ -25,7 +25,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > ```
 > append_backgrounds(image_dir)
 > ```
-> > 示例：[代码](../../tuning_strategy.html#id2)
+> > 示例：[代码](../../tuning_strategy/detection/backgrounds_training.html#id4)
 
 > > **参数**
 
@@ -55,7 +55,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > ```
 > append_backgrounds(image_dir)
 > ```
-> > 示例：[代码](../../tuning_strategy.html#id2)
+> > 示例：[代码](../../tuning_strategy/detection/backgrounds_training.html#id4)
 
 > > **参数**
 
@@ -86,7 +86,7 @@ paddlex.datasets.EasyDataDet(data_dir, file_list, label_list, transforms=None, n
 > ```
 > append_backgrounds(image_dir)
 > ```
-> > 示例：[代码](../../tuning_strategy.html#id2)
+> > 示例：[代码](../../tuning_strategy/detection/backgrounds_training.html#id4)
 
 > > **参数**
 
