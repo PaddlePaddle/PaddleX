@@ -58,7 +58,7 @@ def lime(img_file, model, num_samples=3000, batch_size=50, save_dir='./'):
     interpreter = get_lime_interpreter(
         img, model, num_samples=num_samples, batch_size=batch_size)
     img_name = osp.splitext(osp.split(img_file)[-1])[0]
-    interpreter.interpret(img, save_dir=save_dir)
+    interpreter.interpret(img, save_dir=osp.join(save_dir, img_name))
 
 
 def normlime(img_file,
@@ -111,7 +111,7 @@ def normlime(img_file,
         save_dir=save_dir,
         normlime_weights_file=normlime_weights_file)
     img_name = osp.splitext(osp.split(img_file)[-1])[0]
-    interpreter.interpret(img, save_dir=save_dir)
+    interpreter.interpret(img, save_dir=osp.join(save_dir, img_name))
 
 
 def get_lime_interpreter(img, model, num_samples=3000, batch_size=50):
