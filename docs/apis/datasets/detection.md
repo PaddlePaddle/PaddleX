@@ -21,15 +21,15 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
-> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义VOCDetection类后调用其成员函数`append_backgrounds`添加背景图片即可：
+> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义VOCDetection类后调用其成员函数`add_negative_samples`添加背景图片即可：
 > ```
-> append_backgrounds(image_dir)
+> add_negative_samples(image_dir)
 > ```
-> > 示例：[代码](../../tuning_strategy/detection/backgrounds_training.html#id4)
+> > 示例：[代码](../../tuning_strategy/detection/negatives_training.html#id4)
 
 > > **参数**
 
-> > > * **image_dir** (str): 背景图片所在的目录路径。 
+> > > * **image_dir** (str): 背景图片所在的目录路径。
 
 ## CocoDetection类
 
@@ -51,15 +51,15 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
-> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义CocoDetection类后调用其成员函数`append_backgrounds`添加背景图片即可：
+> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义CocoDetection类后调用其成员函数`add_negative_samples`添加背景图片即可：
 > ```
-> append_backgrounds(image_dir)
+> add_negative_samples(image_dir)
 > ```
-> > 示例：[代码](../../tuning_strategy/detection/backgrounds_training.html#id4)
+> > 示例：[代码](../../tuning_strategy/detection/negatives_training.html#id4)
 
 > > **参数**
 
-> > > * **image_dir** (str): 背景图片所在的目录路径。 
+> > > * **image_dir** (str): 背景图片所在的目录路径。
 
 ## EasyDataDet类
 
@@ -82,13 +82,12 @@ paddlex.datasets.EasyDataDet(data_dir, file_list, label_list, transforms=None, n
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
 
 
-> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义EasyDataDet类后调用其成员函数`append_backgrounds`添加背景图片即可：
+> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义EasyDataDet类后调用其成员函数`add_negative_samples`添加背景图片即可：
 > ```
-> append_backgrounds(image_dir)
+> add_negative_samples(image_dir)
 > ```
-> > 示例：[代码](../../tuning_strategy/detection/backgrounds_training.html#id4)
+> > 示例：[代码](../../tuning_strategy/detection/negatives_training.html#id4)
 
 > > **参数**
 
-> > > * **image_dir** (str): 背景图片所在的目录路径。 
-
+> > > * **image_dir** (str): 背景图片所在的目录路径。
