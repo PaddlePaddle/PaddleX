@@ -102,11 +102,11 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
         assert backbone in image_pretrain, "There is not ImageNet pretrain weights for {}, you may try COCO.".format(
             backbone)
 
-        if backbone == 'AlexNet':
-            url = image_pretrain[backbone]
-            fname = osp.split(url)[-1].split('.')[0]
-            paddlex.utils.download_and_decompress(url, path=new_save_dir)
-            return osp.join(new_save_dir, fname)
+        #        if backbone == 'AlexNet':
+        #            url = image_pretrain[backbone]
+        #            fname = osp.split(url)[-1].split('.')[0]
+        #            paddlex.utils.download_and_decompress(url, path=new_save_dir)
+        #            return osp.join(new_save_dir, fname)
         try:
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
