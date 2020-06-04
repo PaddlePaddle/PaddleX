@@ -37,5 +37,6 @@ DenseNet161 = cv.models.DenseNet161
 DenseNet201 = cv.models.DenseNet201
 ShuffleNetV2 = cv.models.ShuffleNetV2
 HRNet_W18 = cv.models.HRNet_W18
+AlexNet = cv.models.AlexNet
 
 transforms = cv.transforms.cls_transforms

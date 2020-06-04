@@ -13,17 +13,26 @@
 # limitations under the License.
 
 import numpy as np
+import cv2
+import copy
+
 
 def interpretation_predict(model, images):
-    model.arrange_transforms(
-            transforms=model.test_transforms, mode='test')
+    images = images.astype('float32')
+    model.arrange_transforms(transforms=model.test_transforms, mode='test')
+    tmp_transforms = copy.deepcopy(model.test_transforms.transforms)
+    model.test_transforms.transforms = model.test_transforms.transforms[-2:]
+
     new_imgs = []
     for i in range(images.shape[0]):
-        img = images[i]
-        new_imgs.append(model.test_transforms(img)[0])
+        images[i] = cv2.cvtColor(images[i], cv2.COLOR_RGB2BGR)
+        new_imgs.append(model.test_transforms(images[i])[0])
+
     new_imgs = np.array(new_imgs)
-    result = model.exe.run(
-        model.test_prog,
-        feed={'image': new_imgs},
-        fetch_list=list(model.interpretation_feats.values()))
-    return result
+    out = model.exe.run(model.test_prog,
+                        feed={'image': new_imgs},
+                        fetch_list=list(model.interpretation_feats.values()))
+
+    model.test_transforms.transforms = tmp_transforms
+
+    return out
