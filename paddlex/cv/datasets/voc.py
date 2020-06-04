@@ -171,10 +171,11 @@ class VOCDetection(Dataset):
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
 
-    def append_backgrounds(self, image_dir):
+    def add_negative_samples(self, image_dir):
         import cv2
         if not osp.exists(image_dir):
-           raise Exception("{} background images directory does not exist.".format(image_dir))
+            raise Exception("{} background images directory does not exist.".
+                            format(image_dir))
         image_list = os.listdir(image_dir)
         max_img_id = max(self.coco_gt.getImgIds())
         for image in image_list:
@@ -187,7 +188,7 @@ class VOCDetection(Dataset):
             is_crowd = np.array([[0]], dtype=np.int32)
             difficult = np.zeros((1, 1), dtype=np.int32)
             gt_poly = [[[0, 0, 0, 1e-05, 1e-05, 1e-05, 1e-05, 0]]]
-            
+
             max_img_id += 1
             im_fname = osp.join(image_dir, image)
             img_data = cv2.imread(im_fname)
