@@ -41,7 +41,15 @@ def load_model(model_dir, fixed_input_shape=None):
     if 'model_name' in info['_init_params']:
         del info['_init_params']['model_name']
     model = getattr(paddlex.cv.models, info['Model'])(**info['_init_params'])
+
     model.fixed_input_shape = fixed_input_shape
+    if '_Attributes' in info:
+        if 'fixed_input_shape' in info['_Attributes']:
+            fixed_input_shape = info['_Attributes']['fixed_input_shape']
+            logging.info("Model already has fixed_input_shape with {}".format(
+                fixed_input_shape))
+            model.fixed_input_shape = fixed_input_shape
+
     if status == "Normal" or \
             status == "Prune" or status == "fluid.save":
         startup_prog = fluid.Program()
@@ -88,8 +96,8 @@ def load_model(model_dir, fixed_input_shape=None):
                 model.model_type, info['Transforms'], info['BatchTransforms'])
             model.eval_transforms = copy.deepcopy(model.test_transforms)
         else:
-            model.test_transforms = build_transforms(
-                model.model_type, info['Transforms'], to_rgb)
+            model.test_transforms = build_transforms(model.model_type,
+                                                     info['Transforms'], to_rgb)
             model.eval_transforms = copy.deepcopy(model.test_transforms)
 
     if '_Attributes' in info:
