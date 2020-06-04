@@ -44,13 +44,14 @@ class Compose(SegTransform):
 
     """
 
-    def __init__(self, transforms):
+    def __init__(self, transforms, batch_transforms=None):
         if not isinstance(transforms, list):
             raise TypeError('The transforms must be a list!')
         if len(transforms) < 1:
             raise ValueError('The length of transforms ' + \
                             'must be equal or larger than 1!')
         self.transforms = transforms
+        self.batch_transforms = batch_transforms
         self.to_rgb = False
         # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
         for op in self.transforms:
