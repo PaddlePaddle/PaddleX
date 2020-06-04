@@ -48,6 +48,8 @@ class BaseClassifier(BaseAPI):
         self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
+        if self.__class__.__name__ == "AlexNet":
+            assert self.fixed_input_shape is not None, "In AlexNet, input_shape should be defined, e.g. model = paddlex.cls.AlexNet(num_classes=1000, input_shape=[224, 224])"
         if self.fixed_input_shape is not None:
             input_shape = [
                 None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
@@ -427,3 +429,10 @@ class HRNet_W18(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(HRNet_W18, self).__init__(
             model_name='HRNet_W18', num_classes=num_classes)
+
+
+class AlexNet(BaseClassifier):
+    def __init__(self, num_classes=1000, input_shape=None):
+        super(AlexNet, self).__init__(
+            model_name='AlexNet', num_classes=num_classes)
+        self.fixed_input_shape = input_shape
