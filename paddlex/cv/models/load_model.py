@@ -46,9 +46,10 @@ def load_model(model_dir, fixed_input_shape=None):
     if '_Attributes' in info:
         if 'fixed_input_shape' in info['_Attributes']:
             fixed_input_shape = info['_Attributes']['fixed_input_shape']
-            logging.info("Model already has fixed_input_shape with {}".format(
-                fixed_input_shape))
-            model.fixed_input_shape = fixed_input_shape
+            if fixed_input_shape is not None:
+                logging.info("Model already has fixed_input_shape with {}".
+                             format(fixed_input_shape))
+                model.fixed_input_shape = fixed_input_shape
 
     if status == "Normal" or \
             status == "Prune" or status == "fluid.save":
