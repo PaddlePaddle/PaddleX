@@ -1110,13 +1110,13 @@ class CropImageWithDataAchorSampling(DetTransform):
         gt_bbox = label_info['gt_bbox']
         gt_bbox_tmp = gt_bbox.copy()
         for i in range(gt_bbox_tmp.shape[0]):
-            gt_bbox_tmp[i][0] = gt_bbox[i][0] / im_width
-            gt_bbox_tmp[i][1] = gt_bbox[i][1] / im_height
-            gt_bbox_tmp[i][2] = gt_bbox[i][2] / im_width
-            gt_bbox_tmp[i][3] = gt_bbox[i][3] / im_height
+            gt_bbox_tmp[i][0] = gt_bbox[i][0] / image_width
+            gt_bbox_tmp[i][1] = gt_bbox[i][1] / image_height
+            gt_bbox_tmp[i][2] = gt_bbox[i][2] / image_width
+            gt_bbox_tmp[i][3] = gt_bbox[i][3] / image_height
         gt_class = label_info['gt_class']
         gt_score = None
-        if 'gt_score' in sample:
+        if 'gt_score' in label_info:
             gt_score = label_info['gt_score']
         sampled_bbox = []
         gt_bbox_tmp = gt_bbox_tmp.tolist()
@@ -1505,13 +1505,7 @@ class ArrangeBlazeFace(DetTransform):
                     'Becasuse the im_info and label_info can not be None!')
             if len(label_info['gt_bbox']) != len(label_info['gt_class']):
                 raise ValueError("gt num mismatch: bbox and class.")
-            outputs = (im, label_info['gt_bbox'], label_info['gt_class'], im_info['image_shape'])
-        elif self.mode == 'eval':
-            if im_info is None :
-                raise TypeError(
-                    'Cannot do ArrangeBlazeFace! ' +
-                    'Becasuse the im_info can not be None!')
-            gt_bbox = im_info['gt_bbox']
+            gt_bbox = label_info['gt_bbox']
             im_shape = im_info['image_shape']
             im_height = im_shape[0]
             im_width = im_shape[1]
@@ -1520,8 +1514,23 @@ class ArrangeBlazeFace(DetTransform):
                 gt_bbox[i][1] = gt_bbox[i][1] / im_height
                 gt_bbox[i][2] = gt_bbox[i][2] / im_width
                 gt_bbox[i][3] = gt_bbox[i][3] / im_height
-            outputs = (im, gt_bbox, im_info['gt_class'],
-                       im_info['difficult'], im_info['im_id'])
+            outputs = (im, gt_bbox, label_info['gt_class'])
+        elif self.mode == 'eval':
+            if im_info is None :
+                raise TypeError(
+                    'Cannot do ArrangeBlazeFace! ' +
+                    'Becasuse the im_info can not be None!')
+            gt_bbox = label_info['gt_bbox']
+            im_shape = im_info['image_shape']
+            im_height = im_shape[0]
+            im_width = im_shape[1]
+            for i in range(gt_bbox.shape[0]):
+                gt_bbox[i][0] = gt_bbox[i][0] / im_width
+                gt_bbox[i][1] = gt_bbox[i][1] / im_height
+                gt_bbox[i][2] = gt_bbox[i][2] / im_width
+                gt_bbox[i][3] = gt_bbox[i][3] / im_height
+            outputs = (im, gt_bbox, label_info['gt_class'],
+                       label_info['difficult'], im_info['im_id'], im_shape)
         else:
             if im_info is None:
                 raise TypeError('Cannot do ArrangeBlazeFace! ' +

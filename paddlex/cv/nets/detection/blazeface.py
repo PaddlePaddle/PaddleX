@@ -20,6 +20,7 @@ from collections import OrderedDict
 class BlazeFace:
     def __init__(self,
                  backbone,
+                 mode='train',
                  min_sizes=[[16., 24.], [32., 48., 64., 80., 96., 128.]],
                  max_sizes=None,
                  steps=[8., 16.],
@@ -33,8 +34,8 @@ class BlazeFace:
                  nms_eta=1.0,
                  fixed_input_shape=None):
         self.backbone = backbone
+        self.mode=mode
         self.num_classes = num_classes
-        self.output_decoder = output_decoder
         self.min_sizes = min_sizes
         self.max_sizes = max_sizes
         self.steps = steps
@@ -130,24 +131,24 @@ class BlazeFace:
             inputs['image'] = fluid.data(
                 dtype='float32', shape=[None, 3, None, None], name='image')
         if self.mode == 'train':
-            inputs['gt_box'] = fluid.data(
-                dtype='float32', shape=[None, None, 4], lod_level=1, name='gt_box')
+            inputs['gt_bbox'] = fluid.data(
+                dtype='float32', shape=[None, 4], lod_level=1, name='gt_bbox')
             inputs['gt_label'] = fluid.data(
-                dtype='int32', shape=[None, None], lod_level=1, name='gt_label')
-            inputs['im_size'] = fluid.data(
-                dtype='int32', shape=[None, 2], name='im_size')
+                dtype='int32', shape=[None, 1], lod_level=1, name='gt_label')
         elif self.mode == 'eval':
-            inputs['gt_box'] = fluid.data(
-                dtype='float32', shape=[None, None, 4], lod_level=1, name='gt_box')
+            inputs['gt_bbox'] = fluid.data(
+                dtype='float32', shape=[None, 4], lod_level=1, name='gt_bbox')
             inputs['gt_label'] = fluid.data(
-                dtype='int32', shape=[None, None], lod_level=1, name='gt_label')
+                dtype='int32', shape=[None, 1], lod_level=1, name='gt_label')
             inputs['is_difficult'] = fluid.data(
                 dtype='int32', shape=[None, 1], lod_level=1, name='is_difficult')
             inputs['im_id'] = fluid.data(
                 dtype='int32', shape=[None, 1], name='im_id')
+            inputs['im_shape'] = fluid.data(
+                dtype='int32', shape=[None, 2], name='im_shape')
         elif self.mode == 'test':
-            inputs['im_size'] = fluid.data(
-                dtype='int32', shape=[None, 2], name='im_size')
+            inputs['im_shape'] = fluid.data(
+                dtype='int32', shape=[None, 2], name='im_shape')
         return inputs
     
     
@@ -156,22 +157,13 @@ class BlazeFace:
         if self.mode == 'train':
             gt_bbox = inputs['gt_bbox']
             gt_label = inputs['gt_label']
-            im_size = inputs['im_size']
-            num_boxes = fluid.layers.shape(gt_box)[1]
-            im_size_wh = fluid.layers.reverse(im_size, axis=1)
-            whwh = fluid.layers.concat([im_size_wh, im_size_wh], axis=1)
-            whwh = fluid.layers.unsqueeze(whwh, axes=[1])
-            whwh = fluid.layers.expand(whwh, expand_times=[1, num_boxes, 1])
-            whwh = fluid.layers.cast(whwh, dtype='float32')
-            whwh.stop_gradient = True
-            normalized_box = fluid.layers.elementwise_div(gt_box, whwh)
         body_feats = self.backbone(image)
         locs, confs, box, box_var = self._multi_box_head(
             inputs=body_feats,
             image=image,
             num_classes=self.num_classes,
             use_density_prior_box=self.use_density_prior_box)
-        if mode == 'train':
+        if self.mode == 'train':
             loss = fluid.layers.ssd_loss(
                 locs,
                 confs,
@@ -192,7 +184,7 @@ class BlazeFace:
                 box_var,
                 background_label=self.background_label,
                 nms_threshold=self.nms_threshold,
-                nms_top_k=self.nms_keep_topk,
+                nms_top_k=self.nms_topk,
                 keep_top_k=self.nms_keep_topk,
                 score_threshold=self.score_threshold,
                 nms_eta=self.nms_eta)

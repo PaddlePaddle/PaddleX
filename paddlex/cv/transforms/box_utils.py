@@ -460,3 +460,55 @@ def generate_sample_bbox_square(sampler, image_width, image_height):
     ymax = ymin + bbox_height
     sampled_bbox = [xmin, ymin, xmax, ymax]
     return sampled_bbox
+
+
+def bbox_coverage(bbox1, bbox2):
+    inter_box = intersect_bbox(bbox1, bbox2)
+    intersect_size = bbox_area(inter_box)
+
+    if intersect_size > 0:
+        bbox1_size = bbox_area(bbox1)
+        return intersect_size / bbox1_size
+    else:
+        return 0.
+    
+    
+def meet_emit_constraint(src_bbox, sample_bbox):
+    center_x = (src_bbox[2] + src_bbox[0]) / 2
+    center_y = (src_bbox[3] + src_bbox[1]) / 2
+    if center_x >= sample_bbox[0] and \
+            center_x <= sample_bbox[2] and \
+            center_y >= sample_bbox[1] and \
+            center_y <= sample_bbox[3]:
+        return True
+    return False
+
+
+def is_overlap(object_bbox, sample_bbox):
+    if object_bbox[0] >= sample_bbox[2] or \
+       object_bbox[2] <= sample_bbox[0] or \
+       object_bbox[1] >= sample_bbox[3] or \
+       object_bbox[3] <= sample_bbox[1]:
+        return False
+    else:
+        return True
+    
+    
+def intersect_bbox(bbox1, bbox2):
+    if bbox2[0] > bbox1[2] or bbox2[2] < bbox1[0] or \
+        bbox2[1] > bbox1[3] or bbox2[3] < bbox1[1]:
+        intersection_box = [0.0, 0.0, 0.0, 0.0]
+    else:
+        intersection_box = [
+            max(bbox1[0], bbox2[0]), max(bbox1[1], bbox2[1]),
+            min(bbox1[2], bbox2[2]), min(bbox1[3], bbox2[3])
+        ]
+    return intersection_box
+
+
+def clip_bbox(src_bbox):
+    src_bbox[0] = max(min(src_bbox[0], 1.0), 0.0)
+    src_bbox[1] = max(min(src_bbox[1], 1.0), 0.0)
+    src_bbox[2] = max(min(src_bbox[2], 1.0), 0.0)
+    src_bbox[3] = max(min(src_bbox[3], 1.0), 0.0)
+    return src_bbox

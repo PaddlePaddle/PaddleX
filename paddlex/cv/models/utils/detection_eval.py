@@ -84,6 +84,16 @@ def eval_results(results,
     return box_ap_stats, eval_details
 
 
+def clip_bbox(bbox, im_size=None):
+    h = 1. if im_size is None else im_size[0]
+    w = 1. if im_size is None else im_size[1]
+    xmin = max(min(bbox[0], w), 0.)
+    ymin = max(min(bbox[1], h), 0.)
+    xmax = max(min(bbox[2], w), 0.)
+    ymax = max(min(bbox[3], h), 0.)
+    return xmin, ymin, xmax, ymax
+
+
 def proposal_eval(results, coco_gt, outputfile, max_dets=(100, 300, 1000)):
     assert 'proposal' in results[0]
     assert outfile.endswith('.json')

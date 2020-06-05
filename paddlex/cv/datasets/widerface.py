@@ -86,6 +86,7 @@ class WIDERFACEDetection(VOCDetection):
                         continue
                     else:
                         is_discard = True
+                    print(img_file)
                     im = cv2.imread(img_file)
                     im_w = im.shape[1]
                     im_h = im.shape[0]

@@ -22,6 +22,7 @@ import paddlex.utils.logging as logging
 import paddlex
 from .base import BaseAPI
 from collections import OrderedDict
+from .utils.detection_eval import eval_results, bbox2out
 import copy
 
 class BlazeFace(BaseAPI):
@@ -74,13 +75,14 @@ class BlazeFace(BaseAPI):
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.detection.BlazeFace(
             backbone=self._get_backbone(self.backbone),
+            mode=mode,
             min_sizes=self.min_sizes,
             num_classes=self.num_classes,
             use_density_prior_box=self.use_density_prior_box,
             densities=self.densities,
             nms_threshold=self.nms_iou_threshold,
             nms_topk=self.nms_topk,
-            nms_keep_topk=self.nms_score_threshold,
+            nms_keep_topk=self.nms_keep_topk,
             score_threshold=self.nms_score_threshold,
             fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
@@ -263,6 +265,8 @@ class BlazeFace(BaseAPI):
             }
             res_im_id = [d[4] for d in data]
             res['im_id'] = (np.array(res_im_id), [])
+            res_im_shape = [d[5] for d in data]
+            res['im_shape'] = (np.array(res_im_shape), [])
             if metric == 'VOC':
                 res_gt_box = []
                 res_gt_label = []

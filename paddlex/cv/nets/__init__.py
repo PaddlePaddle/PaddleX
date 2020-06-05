@@ -24,6 +24,7 @@ from .xception import Xception
 from .densenet import DenseNet
 from .shufflenet_v2 import ShuffleNetV2
 from .hrnet import HRNet
+from .blazenet import BlazeNet
 
 
 def resnet18(input, num_classes=1000):
