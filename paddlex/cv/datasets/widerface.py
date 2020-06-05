@@ -156,6 +156,7 @@ class WIDERFACEDetection(VOCDetection):
                         self.file_list.append([img_file, voc_rec])
                         im_ct += 1
                         
+        self.num_samples = len(self.file_list)
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
