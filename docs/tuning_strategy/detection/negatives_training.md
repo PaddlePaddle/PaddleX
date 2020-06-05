@@ -41,17 +41,10 @@ from paddlex.det import transforms
 import paddlex as pdx
 
 # 定义训练和验证时的transforms
-train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize(),
-    transforms.ResizeByShort(short_size=600, max_size=1000),
-    transforms.Padding(coarsest_stride=32)
-])
-eval_transforms = transforms.Compose([
-    transforms.Normalize(),
-    transforms.ResizeByShort(short_size=600, max_size=1000),
-    transforms.Padding(coarsest_stride=32),
-])
+train_transforms = transforms.ComposedRCNNTransforms(
+    mode='train', min_max_size=[600, 1000])
+eval_transforms = transforms.ComposedRCNNTransforms(
+    mode='eval', min_max_size=[600, 1000])
 
 # 定义训练所用的数据集
 train_dataset = pdx.datasets.CocoDetection(
@@ -61,7 +54,8 @@ train_dataset = pdx.datasets.CocoDetection(
     shuffle=True,
     num_workers=2)
 # 训练集中加入无目标背景图片
-train_dataset.add_negative_samples('jinnan2_round1_train_20190305/normal_train_back/')
+train_dataset.add_negative_samples(
+    'jinnan2_round1_train_20190305/normal_train_back/')
 
 # 定义验证所用的数据集
 eval_dataset = pdx.datasets.CocoDetection(
