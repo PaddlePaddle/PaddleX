@@ -39,6 +39,7 @@ from .base import BaseAPI
 from .yolo_v3 import YOLOv3
 from .faster_rcnn import FasterRCNN
 from .mask_rcnn import MaskRCNN
+from .blazeface import BlazeFace
 from .unet import UNet
 from .deeplabv3p import DeepLabv3p
 from .hrnet import HRNet

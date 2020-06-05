@@ -18,6 +18,7 @@ from . import cv
 FasterRCNN = cv.models.FasterRCNN
 YOLOv3 = cv.models.YOLOv3
 MaskRCNN = cv.models.MaskRCNN
+BlazeFace = cv.models.BlazeFace
 transforms = cv.transforms.det_transforms
 visualize = cv.models.utils.visualize.visualize_detection
 draw_pr_curve = cv.models.utils.visualize.draw_pr_curve

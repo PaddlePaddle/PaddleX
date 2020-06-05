@@ -503,7 +503,7 @@ class Normalize(DetTransform):
         TypeError: 形参数据类型不满足需求。
     """
 
-    def __init__(self, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
+    def __init__(self, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], is_scale=True):
         self.mean = mean
         self.std = std
         if not (isinstance(self.mean, list) and isinstance(self.std, list)):
@@ -511,6 +511,7 @@ class Normalize(DetTransform):
         from functools import reduce
         if reduce(lambda x, y: x * y, self.std) == 0:
             raise TypeError('NormalizeImage: std is invalid!')
+        self.is_scale = is_scale
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -526,7 +527,7 @@ class Normalize(DetTransform):
         """
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std)
+        im = normalize(im, mean, std, self.is_scale)
         if label_info is None:
             return (im, im_info)
         else:
@@ -558,7 +559,8 @@ class RandomDistort(DetTransform):
                  saturation_range=0.5,
                  saturation_prob=0.5,
                  hue_range=18,
-                 hue_prob=0.5):
+                 hue_prob=0.5,
+                 is_order=False):
         self.brightness_range = brightness_range
         self.brightness_prob = brightness_prob
         self.contrast_range = contrast_range
@@ -567,6 +569,7 @@ class RandomDistort(DetTransform):
         self.saturation_prob = saturation_prob
         self.hue_range = hue_range
         self.hue_prob = hue_prob
+        self.is_order = is_order
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -589,7 +592,8 @@ class RandomDistort(DetTransform):
         hue_lower = -self.hue_range
         hue_upper = self.hue_range
         ops = [brightness, contrast, saturation, hue]
-        random.shuffle(ops)
+        if not self.is_order:
+            random.shuffle(ops)
         params_dict = {
             'brightness': {
                 'brightness_lower': brightness_lower,
@@ -767,12 +771,14 @@ class RandomExpand(DetTransform):
         ratio (float): 图像扩张的最大比例。默认为4.0。
         prob (float): 随机扩张的概率。默认为0.5。
         fill_value (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。
+        filter_bbox (bool): 是否对新的框进行过滤。默认为False。
     """
 
     def __init__(self,
                  ratio=4.,
                  prob=0.5,
-                 fill_value=[123.675, 116.28, 103.53]):
+                 fill_value=[123.675, 116.28, 103.53],
+                 filter_bbox=False):
         super(RandomExpand, self).__init__()
         assert ratio > 1.01, "expand ratio must be larger than 1.01"
         self.ratio = ratio
@@ -782,6 +788,7 @@ class RandomExpand(DetTransform):
         if not isinstance(fill_value, tuple):
             fill_value = tuple(fill_value)
         self.fill_value = fill_value
+        self.filter_bbox = filter_bbox
 
     def __call__(self, im, im_info=None, label_info=None):
         """
@@ -831,7 +838,35 @@ class RandomExpand(DetTransform):
 
         im_info['image_shape'] = np.array([h, w]).astype('int32')
         if 'gt_bbox' in label_info and len(label_info['gt_bbox']) > 0:
-            label_info['gt_bbox'] += np.array([x, y] * 2, dtype=np.float32)
+            if self.filter_bbox:
+                expand_bbox = [
+                    -x / width, -y / height,
+                    (w - x) / width, (h - y) / height
+                ]
+                gt_bbox = label_info['gt_bbox']
+                gt_class = label_info['gt_class']
+                for i in range(gt_bbox.shape[0]):
+                    gt_bbox[i][0] = gt_bbox[i][0] / width
+                    gt_bbox[i][1] = gt_bbox[i][1] / height
+                    gt_bbox[i][2] = gt_bbox[i][2] / width
+                    gt_bbox[i][3] = gt_bbox[i][3] / height
+                if 'gt_score' in label_info:
+                    gt_score = label_info['gt_score']
+                    gt_bbox, gt_class, gt_score = filter_and_process(
+                        expand_bbox, gt_bbox, gt_class, gt_score)
+                    label_info['gt_score'] = gt_score
+                else:
+                    gt_bbox, gt_class, _ = filter_and_process(
+                        expand_bbox, gt_bbox, gt_class)
+                for i in range(gt_bbox.shape[0]):
+                    gt_bbox[i][0] = gt_bbox[i][0] * w
+                    gt_bbox[i][1] = gt_bbox[i][1] * h
+                    gt_bbox[i][2] = gt_bbox[i][2] * w
+                    gt_bbox[i][3] = gt_bbox[i][3] * h
+                label_info['gt_bbox'] = gt_bbox
+                label_info['gt_class'] = gt_class
+            else:
+                label_info['gt_bbox'] += np.array([x, y] * 2, dtype=np.float32)
         if 'gt_poly' in label_info and len(label_info['gt_poly']) > 0:
             label_info['gt_poly'] = expand_segms(label_info['gt_poly'], x, y,
                                                  height, width, expand_ratio)
@@ -990,6 +1025,195 @@ class RandomCrop(DetTransform):
                 return (im, im_info, label_info)
 
         return (im, im_info, label_info)
+    
+    
+class CropImageWithDataAchorSampling(DetTransform):
+    def __init__(self,
+                 anchor_sampler=[[1, 10, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.2, 0.0]],
+                 batch_sampler=[[1, 50, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                               [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                               [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                               [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                               [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0]],
+                 target_size=None,
+                 das_anchor_scales=[16, 32, 64, 128],
+                 sampling_prob=0.5,
+                 min_size=8.,
+                 avoid_no_bbox=True):
+        """裁剪图像并修改对应标注框。
+        1. 缩放图像的高和宽。
+        2. 根据随机采样裁剪图像。
+        3. 缩放标注框。
+        4. 确认新的标注框是否在新的图像内。
+        
+        Args:
+            anchor_sampler (list): 根据anchor采样的裁剪参数列表所组成的集合。
+            batch_sampler (list): 裁剪参数列表所组成的集合。
+            - max sample (int)：满足当前组合的裁剪区域的个数上限。
+            - max trial (int): 查找满足当前组合的次数。
+            - min scale (float): 裁剪面积相对原面积，每条边缩短比例的最小限制。
+            - max scale (float): 裁剪面积相对原面积，每条边缩短比例的最大限制。
+            - min aspect ratio (float): 裁剪后短边缩放比例的最小限制。
+            - max aspect ratio (float): 裁剪后短边缩放比例的最大限制。
+            - min overlap (float): 真实标注框与裁剪图像重叠面积的最小限制。
+            - max overlap (float): 真实标注框与裁剪图像重叠面积的最大限制。
+              e.g.[[1, 10, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.2, 0.0]]
+                  或者
+                  [[1, 50, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                   [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                   [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                   [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+                   [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0]]
+              [max sample, max trial, min scale, max scale,
+               min aspect ratio, max aspect ratio,
+               min overlap, max overlap, min coverage, max coverage]
+            target_size (bool): target image size.
+            das_anchor_scales (list[float]): anchor采样的尺度列表。默认为[16, 32, 64, 128]。
+            min_size (float): 采样的标注框的最小面积为min_size*min_size。默认为8.。
+            avoid_no_bbox (bool): 裁剪后的图如果无标注框是否抛弃。默认为True。
+        """
+        self.anchor_sampler = anchor_sampler
+        self.batch_sampler = batch_sampler
+        self.target_size = target_size
+        self.sampling_prob = sampling_prob
+        self.min_size = min_size
+        self.avoid_no_bbox = avoid_no_bbox
+        self.das_anchor_scales = np.array(das_anchor_scales)
+
+    def __call__(self, im, im_info=None, label_info=None):
+        """
+        Args:
+            im (np.ndarray): 图像np.ndarray数据。
+            im_info (dict, 可选): 存储与图像相关的信息。
+            label_info (dict, 可选): 存储与标注框相关的信息。
+
+        Returns:
+            tuple: 当label_info为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
+                   当label_info不为空时，返回的tuple为(im, im_info, label_info)，分别对应图像np.ndarray数据、
+                   存储与标注框相关信息的字典。
+                   其中，im_info更新字段为：
+                           - image_shape (np.ndarray): 扩裁剪的图像高、宽二者组成的np.ndarray，形状为(2,)。
+                       label_info更新字段为：
+                           - gt_bbox (np.ndarray): 随机裁剪后真实标注框坐标，形状为(n, 4)，
+                                          其中n代表真实标注框的个数。
+                           - gt_class (np.ndarray): 随机裁剪后每个真实标注框对应的类别序号，形状为(n, 1)，
+                                           其中n代表真实标注框的个数。
+                           - gt_score (np.ndarray): 随机裁剪后每个真实标注框对应的混合得分，形状为(n, 1)，
+                                           其中n代表真实标注框的个数。
+
+        Raises:
+            TypeError: 形参数据类型不满足需求。
+        """
+        image_shape = im_info['image_shape']
+        image_width = image_shape[1]
+        image_height = image_shape[0]
+        gt_bbox = label_info['gt_bbox']
+        gt_bbox_tmp = gt_bbox.copy()
+        for i in range(gt_bbox_tmp.shape[0]):
+            gt_bbox_tmp[i][0] = gt_bbox[i][0] / im_width
+            gt_bbox_tmp[i][1] = gt_bbox[i][1] / im_height
+            gt_bbox_tmp[i][2] = gt_bbox[i][2] / im_width
+            gt_bbox_tmp[i][3] = gt_bbox[i][3] / im_height
+        gt_class = label_info['gt_class']
+        gt_score = None
+        if 'gt_score' in sample:
+            gt_score = label_info['gt_score']
+        sampled_bbox = []
+        gt_bbox_tmp = gt_bbox_tmp.tolist()
+
+        prob = np.random.uniform(0., 1.)
+        if prob > self.sampling_prob:  # anchor sampling
+            assert self.anchor_sampler
+            for sampler in self.anchor_sampler:
+                found = 0
+                for i in range(sampler[1]):
+                    if found >= sampler[0]:
+                        break
+                    sample_bbox = data_anchor_sampling(
+                        gt_bbox_tmp, image_width, image_height,
+                        self.das_anchor_scales, self.target_size)
+                    if sample_bbox == 0:
+                        break
+                    if satisfy_sample_constraint_coverage(sampler, sample_bbox,
+                                                          gt_bbox_tmp):
+                        sampled_bbox.append(sample_bbox)
+                        found = found + 1
+            im = np.array(im)
+            while sampled_bbox:
+                idx = int(np.random.uniform(0, len(sampled_bbox)))
+                sample_bbox = sampled_bbox.pop(idx)
+
+                crop_bbox, crop_class, crop_score = filter_and_process(
+                    sample_bbox, gt_bbox_tmp, gt_class, gt_score)
+                crop_bbox, crop_class, crop_score = bbox_area_sampling(
+                    crop_bbox, crop_class, crop_score, self.target_size,
+                    self.min_size)
+
+                if self.avoid_no_bbox:
+                    if len(crop_bbox) < 1:
+                        continue
+                im = crop_image_sampling(im, sample_bbox, image_width,
+                                         image_height, self.target_size)
+                for i in range(crop_bbox.shape[0]):
+                    crop_bbox[i][0] = crop_bbox[i][0] * im.shape[1]
+                    crop_bbox[i][1] = crop_bbox[i][1] * im.shape[0]
+                    crop_bbox[i][2] = crop_bbox[i][2] * im.shape[1]
+                    crop_bbox[i][3] = crop_bbox[i][3] * im.shape[0]
+                label_info['gt_bbox'] = crop_bbox
+                label_info['gt_class'] = crop_class
+                label_info['gt_score'] = crop_score
+                im_info['image_shape'] = np.array(
+                    [im.shape[0],
+                     im.shape[1]]).astype('int32')
+                return (im, im_info, label_info)
+            return (im, im_info, label_info)
+
+        else:
+            for sampler in self.batch_sampler:
+                found = 0
+                for i in range(sampler[1]):
+                    if found >= sampler[0]:
+                        break
+                    sample_bbox = generate_sample_bbox_square(
+                        sampler, image_width, image_height)
+                    if satisfy_sample_constraint_coverage(sampler, sample_bbox,
+                                                          gt_bbox_tmp):
+                        sampled_bbox.append(sample_bbox)
+                        found = found + 1
+            im = np.array(im)
+            while sampled_bbox:
+                idx = int(np.random.uniform(0, len(sampled_bbox)))
+                sample_bbox = sampled_bbox.pop(idx)
+                sample_bbox = clip_bbox(sample_bbox)
+
+                crop_bbox, crop_class, crop_score = filter_and_process(
+                    sample_bbox, gt_bbox_tmp, gt_class, gt_score)
+                # sampling bbox according the bbox area
+                crop_bbox, crop_class, crop_score = bbox_area_sampling(
+                    crop_bbox, crop_class, crop_score, self.target_size,
+                    self.min_size)
+
+                if self.avoid_no_bbox:
+                    if len(crop_bbox) < 1:
+                        continue
+                xmin = int(sample_bbox[0] * image_width)
+                xmax = int(sample_bbox[2] * image_width)
+                ymin = int(sample_bbox[1] * image_height)
+                ymax = int(sample_bbox[3] * image_height)
+                im = im[ymin:ymax, xmin:xmax]
+                for i in range(crop_bbox.shape[0]):
+                    crop_bbox[i][0] = crop_bbox[i][0] * (xmax - xmin)
+                    crop_bbox[i][1] = crop_bbox[i][1] * (ymax - ymin)
+                    crop_bbox[i][2] = crop_bbox[i][2] * (xmax - xmin)
+                    crop_bbox[i][3] = crop_bbox[i][3] * (ymax - ymin)
+                label_info['gt_bbox'] = crop_bbox
+                label_info['gt_class'] = crop_class
+                label_info['gt_score'] = crop_score
+                im_info['image_shape'] = np.array(
+                    [im.shape[0],
+                     im.shape[1]]).astype('int32')
+                return (im, im_info, label_info)
+            return (im, im_info, label_info)
 
 
 class ArrangeFasterRCNN(DetTransform):
@@ -1237,6 +1461,72 @@ class ArrangeYOLOv3(DetTransform):
                                 'Becasuse the im_info can not be None!')
             im_shape = im_info['image_shape']
             outputs = (im, im_shape)
+        return outputs
+    
+    
+class ArrangeBlazeFace(DetTransform):
+    """获取ArrangeBlazeFace模型训练/验证/预测所需信息。
+
+    Args:
+        mode (str): 指定数据用于何种用途，取值范围为['train', 'eval', 'test', 'quant']。
+
+    Raises:
+        ValueError: mode的取值不在['train', 'eval', 'test', 'quant']之内。
+    """
+
+    def __init__(self, mode=None):
+        if mode not in ['train', 'eval', 'test', 'quant']:
+            raise ValueError(
+                "mode must be in ['train', 'eval', 'test', 'quant']!")
+        self.mode = mode
+
+    def __call__(self, im, im_info=None, label_info=None):
+        """
+        Args:
+            im (np.ndarray): 图像np.ndarray数据。
+            im_info (dict, 可选): 存储与图像相关的信息。
+            label_info (dict, 可选): 存储与标注框相关的信息。
+
+        Returns:
+            tuple: 当mode为'train'时，返回(im, gt_bbox, gt_class, im_shape)，分别对应
+                图像np.ndarray数据、真实标注框、真实标注框对应的类别、图像大小信息；
+                当mode为'eval'时，返回(im, im_id)，分别对应图像np.ndarray数据、图像id；
+                当mode为'test'或'quant'时，返回(im, im_shape)，分别对应图像np.ndarray数据、图像大小信息。
+
+        Raises:
+            TypeError: 形参数据类型不满足需求。
+            ValueError: 数据长度不匹配。
+        """
+        im = permute(im, True)
+        if self.mode == 'train':
+            if im_info is None or label_info is None:
+                raise TypeError(
+                    'Cannot do ArrangeBlazeFace! ' +
+                    'Becasuse the im_info and label_info can not be None!')
+            if len(label_info['gt_bbox']) != len(label_info['gt_class']):
+                raise ValueError("gt num mismatch: bbox and class.")
+            outputs = (im, label_info['gt_bbox'], label_info['gt_class'], im_info['image_shape'])
+        elif self.mode == 'eval':
+            if im_info is None :
+                raise TypeError(
+                    'Cannot do ArrangeBlazeFace! ' +
+                    'Becasuse the im_info can not be None!')
+            gt_bbox = im_info['gt_bbox']
+            im_shape = im_info['image_shape']
+            im_height = im_shape[0]
+            im_width = im_shape[1]
+            for i in range(gt_bbox.shape[0]):
+                gt_bbox[i][0] = gt_bbox[i][0] / im_width
+                gt_bbox[i][1] = gt_bbox[i][1] / im_height
+                gt_bbox[i][2] = gt_bbox[i][2] / im_width
+                gt_bbox[i][3] = gt_bbox[i][3] / im_height
+            outputs = (im, gt_bbox, im_info['gt_class'],
+                       im_info['difficult'], im_info['im_id'])
+        else:
+            if im_info is None:
+                raise TypeError('Cannot do ArrangeBlazeFace! ' +
+                                'Becasuse the im_info can not be None!')
+            outputs = (im, im_info['image_shape'])
         return outputs
 
 
