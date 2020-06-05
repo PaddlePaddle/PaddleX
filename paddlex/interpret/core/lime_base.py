@@ -27,7 +27,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The code in this file (lime_base.py) is modified from https://github.com/marcotcr/lime.
 """
 
-
 import numpy as np
 import scipy as sp
 
@@ -39,10 +38,8 @@ import paddlex.utils.logging as logging
 
 class LimeBase(object):
     """Class for learning a locally linear sparse model from perturbed data"""
-    def __init__(self,
-                 kernel_fn,
-                 verbose=False,
-                 random_state=None):
+
+    def __init__(self, kernel_fn, verbose=False, random_state=None):
         """Init function
 
         Args:
@@ -72,15 +69,14 @@ class LimeBase(object):
         """
         from sklearn.linear_model import lars_path
         x_vector = weighted_data
-        alphas, _, coefs = lars_path(x_vector,
-                                     weighted_labels,
-                                     method='lasso',
-                                     verbose=False)
+        alphas, _, coefs = lars_path(
+            x_vector, weighted_labels, method='lasso', verbose=False)
         return alphas, coefs
 
     def forward_selection(self, data, labels, weights, num_features):
         """Iteratively adds features to the model"""
-        clf = Ridge(alpha=0, fit_intercept=True, random_state=self.random_state)
+        clf = Ridge(
+            alpha=0, fit_intercept=True, random_state=self.random_state)
         used_features = []
         for _ in range(min(num_features, data.shape[1])):
             max_ = -100000000
@@ -88,11 +84,13 @@ class LimeBase(object):
             for feature in range(data.shape[1]):
                 if feature in used_features:
                     continue
-                clf.fit(data[:, used_features + [feature]], labels,
+                clf.fit(data[:, used_features + [feature]],
+                        labels,
                         sample_weight=weights)
-                score = clf.score(data[:, used_features + [feature]],
-                                  labels,
-                                  sample_weight=weights)
+                score = clf.score(
+                    data[:, used_features + [feature]],
+                    labels,
+                    sample_weight=weights)
                 if score > max_:
                     best = feature
                     max_ = score
@@ -108,8 +106,8 @@ class LimeBase(object):
         elif method == 'forward_selection':
             return self.forward_selection(data, labels, weights, num_features)
         elif method == 'highest_weights':
-            clf = Ridge(alpha=0.01, fit_intercept=True,
-                        random_state=self.random_state)
+            clf = Ridge(
+                alpha=0.01, fit_intercept=True, random_state=self.random_state)
             clf.fit(data, labels, sample_weight=weights)
 
             coef = clf.coef_
@@ -125,7 +123,8 @@ class LimeBase(object):
                     nnz_indexes = argsort_data[::-1]
                     indices = weighted_data.indices[nnz_indexes]
                     num_to_pad = num_features - sdata
-                    indices = np.concatenate((indices, np.zeros(num_to_pad, dtype=indices.dtype)))
+                    indices = np.concatenate((indices, np.zeros(
+                        num_to_pad, dtype=indices.dtype)))
                     indices_set = set(indices)
                     pad_counter = 0
                     for i in range(data.shape[1]):
@@ -135,7 +134,8 @@ class LimeBase(object):
                             if pad_counter >= num_to_pad:
                                 break
                 else:
-                    nnz_indexes = argsort_data[sdata - num_features:sdata][::-1]
+                    nnz_indexes = argsort_data[sdata - num_features:sdata][::
+                                                                           -1]
                     indices = weighted_data.indices[nnz_indexes]
                 return indices
             else:
@@ -146,13 +146,13 @@ class LimeBase(object):
                     reverse=True)
                 return np.array([x[0] for x in feature_weights[:num_features]])
         elif method == 'lasso_path':
-            weighted_data = ((data - np.average(data, axis=0, weights=weights))
-                             * np.sqrt(weights[:, np.newaxis]))
-            weighted_labels = ((labels - np.average(labels, weights=weights))
-                               * np.sqrt(weights))
+            weighted_data = ((data - np.average(
+                data, axis=0, weights=weights)) *
+                             np.sqrt(weights[:, np.newaxis]))
+            weighted_labels = ((labels - np.average(
+                labels, weights=weights)) * np.sqrt(weights))
             nonzero = range(weighted_data.shape[1])
-            _, coefs = self.generate_lars_path(weighted_data,
-                                               weighted_labels)
+            _, coefs = self.generate_lars_path(weighted_data, weighted_labels)
             for i in range(len(coefs.T) - 1, 0, -1):
                 nonzero = coefs.T[i].nonzero()[0]
                 if len(nonzero) <= num_features:
@@ -164,8 +164,8 @@ class LimeBase(object):
                 n_method = 'forward_selection'
             else:
                 n_method = 'highest_weights'
-            return self.feature_selection(data, labels, weights,
-                                          num_features, n_method)
+            return self.feature_selection(data, labels, weights, num_features,
+                                          n_method)
 
     def interpret_instance_with_data(self,
                                      neighborhood_data,
@@ -214,30 +214,31 @@ class LimeBase(object):
         weights = self.kernel_fn(distances)
         labels_column = neighborhood_labels[:, label]
         used_features = self.feature_selection(neighborhood_data,
-                                               labels_column,
-                                               weights,
-                                               num_features,
-                                               feature_selection)
+                                               labels_column, weights,
+                                               num_features, feature_selection)
         if model_regressor is None:
-            model_regressor = Ridge(alpha=1, fit_intercept=True,
-                                    random_state=self.random_state)
+            model_regressor = Ridge(
+                alpha=1, fit_intercept=True, random_state=self.random_state)
         easy_model = model_regressor
         easy_model.fit(neighborhood_data[:, used_features],
-                       labels_column, sample_weight=weights)
+                       labels_column,
+                       sample_weight=weights)
         prediction_score = easy_model.score(
             neighborhood_data[:, used_features],
-            labels_column, sample_weight=weights)
+            labels_column,
+            sample_weight=weights)
 
-        local_pred = easy_model.predict(neighborhood_data[0, used_features].reshape(1, -1))
+        local_pred = easy_model.predict(neighborhood_data[0, used_features]
+                                        .reshape(1, -1))
 
         if self.verbose:
             logging.info('Intercept' + str(easy_model.intercept_))
             logging.info('Prediction_local' + str(local_pred))
             logging.info('Right:' + str(neighborhood_labels[0, label]))
-        return (easy_model.intercept_,
-                sorted(zip(used_features, easy_model.coef_),
-                       key=lambda x: np.abs(x[1]), reverse=True),
-                prediction_score, local_pred)
+        return (easy_model.intercept_, sorted(
+            zip(used_features, easy_model.coef_),
+            key=lambda x: np.abs(x[1]),
+            reverse=True), prediction_score, local_pred)
 
 
 class ImageInterpretation(object):
@@ -254,8 +255,13 @@ class ImageInterpretation(object):
         self.local_weights = {}
         self.local_pred = None
 
-    def get_image_and_mask(self, label, positive_only=True, negative_only=False, hide_rest=False,
-                           num_features=5, min_weight=0.):
+    def get_image_and_mask(self,
+                           label,
+                           positive_only=True,
+                           negative_only=False,
+                           hide_rest=False,
+                           num_features=5,
+                           min_weight=0.):
         """Init function.
 
         Args:
@@ -279,7 +285,9 @@ class ImageInterpretation(object):
         if label not in self.local_weights:
             raise KeyError('Label not in interpretation')
         if positive_only & negative_only:
-            raise ValueError("Positive_only and negative_only cannot be true at the same time.")
+            raise ValueError(
+                "Positive_only and negative_only cannot be true at the same time."
+            )
         segments = self.segments
         image = self.image
         local_weights_label = self.local_weights[label]
@@ -289,14 +297,20 @@ class ImageInterpretation(object):
         else:
             temp = self.image.copy()
         if positive_only:
-            fs = [x[0] for x in local_weights_label
-                  if x[1] > 0 and x[1] > min_weight][:num_features]
+            fs = [
+                x[0] for x in local_weights_label
+                if x[1] > 0 and x[1] > min_weight
+            ][:num_features]
         if negative_only:
-            fs = [x[0] for x in local_weights_label
-                  if x[1] < 0 and abs(x[1]) > min_weight][:num_features]
+            fs = [
+                x[0] for x in local_weights_label
+                if x[1] < 0 and abs(x[1]) > min_weight
+            ][:num_features]
         if positive_only or negative_only:
+            c = 1 if positive_only else 0
             for f in fs:
-                temp[segments == f] = image[segments == f].copy()
+                temp[segments == f] = [0, 255, 0]
+                # temp[segments == f, c] = np.max(image)
                 mask[segments == f] = 1
             return temp, mask
         else:
@@ -330,8 +344,11 @@ class ImageInterpretation(object):
         temp = np.zeros_like(image)
 
         weight_max = abs(local_weights_label[0][1])
-        local_weights_label = [(f, w/weight_max) for f, w in local_weights_label]
-        local_weights_label = sorted(local_weights_label, key=lambda x: x[1], reverse=True)  # negatives are at last.
+        local_weights_label = [(f, w / weight_max)
+                               for f, w in local_weights_label]
+        local_weights_label = sorted(
+            local_weights_label, key=lambda x: x[1],
+            reverse=True)  # negatives are at last.
 
         cmaps = cm.get_cmap('Spectral')
         colors = cmaps(np.linspace(0, 1, len(local_weights_label)))
@@ -354,8 +371,12 @@ class LimeImageInterpreter(object):
     feature that is 1 when the value is the same as the instance being
     interpreted."""
 
-    def __init__(self, kernel_width=.25, kernel=None, verbose=False,
-                 feature_selection='auto', random_state=None):
+    def __init__(self,
+                 kernel_width=.25,
+                 kernel=None,
+                 verbose=False,
+                 feature_selection='auto',
+                 random_state=None):
         """Init function.
 
         Args:
@@ -377,22 +398,27 @@ class LimeImageInterpreter(object):
         kernel_width = float(kernel_width)
 
         if kernel is None:
+
             def kernel(d, kernel_width):
-                return np.sqrt(np.exp(-(d ** 2) / kernel_width ** 2))
+                return np.sqrt(np.exp(-(d**2) / kernel_width**2))
 
         kernel_fn = partial(kernel, kernel_width=kernel_width)
 
         self.random_state = check_random_state(random_state)
         self.feature_selection = feature_selection
-        self.base = LimeBase(kernel_fn, verbose, random_state=self.random_state)
+        self.base = LimeBase(
+            kernel_fn, verbose, random_state=self.random_state)
 
-    def interpret_instance(self, image, classifier_fn, labels=(1,),
+    def interpret_instance(self,
+                           image,
+                           classifier_fn,
+                           labels=(1, ),
                            hide_color=None,
-                           num_features=100000, num_samples=1000,
+                           num_features=100000,
+                           num_samples=1000,
                            batch_size=10,
                            distance_metric='cosine',
-                           model_regressor=None
-                           ):
+                           model_regressor=None):
         """Generates interpretations for a prediction.
 
         First, we generate neighborhood data by randomly perturbing features
@@ -435,6 +461,7 @@ class LimeImageInterpreter(object):
         self.segments = segments
 
         fudged_image = image.copy()
+        # global_mean = np.mean(image, (0, 1))
         if hide_color is None:
             # if no hide_color, use the mean
             for x in np.unique(segments):
@@ -461,24 +488,30 @@ class LimeImageInterpreter(object):
 
         top = labels
 
-        data, labels = self.data_labels(image, fudged_image, segments,
-                                        classifier_fn, num_samples,
-                                        batch_size=batch_size)
+        data, labels = self.data_labels(
+            image,
+            fudged_image,
+            segments,
+            classifier_fn,
+            num_samples,
+            batch_size=batch_size)
 
         distances = sklearn.metrics.pairwise_distances(
-            data,
-            data[0].reshape(1, -1),
-            metric=distance_metric
-        ).ravel()
+            data, data[0].reshape(1, -1), metric=distance_metric).ravel()
 
         interpretation_image = ImageInterpretation(image, segments)
         for label in top:
             (interpretation_image.intercept[label],
              interpretation_image.local_weights[label],
-             interpretation_image.score, interpretation_image.local_pred) = self.base.interpret_instance_with_data(
-                data, labels, distances, label, num_features,
-                model_regressor=model_regressor,
-                feature_selection=self.feature_selection)
+             interpretation_image.score, interpretation_image.local_pred
+             ) = self.base.interpret_instance_with_data(
+                 data,
+                 labels,
+                 distances,
+                 label,
+                 num_features,
+                 model_regressor=model_regressor,
+                 feature_selection=self.feature_selection)
         return interpretation_image
 
     def data_labels(self,
@@ -511,6 +544,9 @@ class LimeImageInterpreter(object):
         labels = []
         data[0, :] = 1
         imgs = []
+
+        logging.info("Computing LIME.", use_color=True)
+
         for row in tqdm.tqdm(data):
             temp = copy.deepcopy(image)
             zeros = np.where(row == 0)[0]

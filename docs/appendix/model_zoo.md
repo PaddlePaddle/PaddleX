@@ -6,28 +6,28 @@
 
 | 模型  | 模型大小 | 预测速度（毫秒） | Top1准确率（%） | Top5准确率（%） |
 | :----|  :------- | :----------- | :--------- | :--------- |
-| ResNet18| 46.9MB   | 1.499        | 71.0     | 89.9     |
-| ResNet34| 87.5MB   | 2.272        | 74.6    | 92.1    |
-| ResNet50| 102.7MB  | 2.939        | 76.5     | 93.0     |
-| ResNet101 |179.1MB  | 5.314      | 77.6     | 93.6  |
-| ResNet50_vd |102.8MB  | 3.165        | 79.1     | 94.4     |
-| ResNet101_vd| 179.2MB  | 5.252       | 80.2   | 95.0     |
-| ResNet50_vd_ssld |102.8MB  | 3.165        | 82.4     | 96.1     |
-| ResNet101_vd_ssld| 179.2MB  | 5.252       | 83.7   | 96.7     |
-| DarkNet53|166.9MB  | 3.139       | 78.0     | 94.1     |
-| MobileNetV1 | 16.0MB   | 32.523        | 71.0     | 89.7    |
-| MobileNetV2 | 14.0MB   | 23.318        | 72.2     | 90.7    |
-| MobileNetV3_large|  21.0MB   | 19.308        | 75.3    | 93.2   |
-| MobileNetV3_small |  12.0MB   | 6.546        | 68.2    | 88.1     |
-| MobileNetV3_large_ssld|  21.0MB   | 19.308        | 79.0     | 94.5     |
-| MobileNetV3_small_ssld |  12.0MB   | 6.546        | 71.3     | 90.1     |
-| Xception41 |92.4MB   | 4.408       | 79.6    | 94.4     |
-| Xception65 | 144.6MB  | 6.464       | 80.3     | 94.5     |
-| DenseNet121 | 32.8MB   | 4.371       | 75.7     | 92.6     |
-| DenseNet161|116.3MB  | 8.863       | 78.6     | 94.1     |
-| DenseNet201|  84.6MB   | 8.173       | 77.6     | 93.7     |
-| ShuffleNetV2 | 9.0MB   | 10.941        | 68.8     | 88.5     |
-| HRNet_W18 | 21.29MB | 7.368 (V100 GPU) | 76.9 | 93.4 |
+| ResNet18| 46.9MB   | -        | 71.0     | 89.9     |
+| ResNet34| 87.5MB   | -        | 74.6    | 92.1    |
+| ResNet50| 102.7MB  | -        | 76.5     | 93.0     |
+| ResNet101 |179.1MB  | -      | 77.6     | 93.6  |
+| ResNet50_vd |102.8MB  |-        | 79.1     | 94.4     |
+| ResNet101_vd| 179.2MB  | -       | 80.2   | 95.0     |
+| ResNet50_vd_ssld |102.8MB  | -        | 82.4     | 96.1     |
+| ResNet101_vd_ssld| 179.2MB  | -       | 83.7   | 96.7     |
+| DarkNet53|166.9MB  | -       | 78.0     | 94.1     |
+| MobileNetV1 | 16.0MB   | -        | 71.0     | 89.7    |
+| MobileNetV2 | 14.0MB   | -        | 72.2     | 90.7    |
+| MobileNetV3_large|  21.0MB   | -        | 75.3    | 93.2   |
+| MobileNetV3_small |  12.0MB   | -        | 68.2    | 88.1     |
+| MobileNetV3_large_ssld|  21.0MB   | -        | 79.0     | 94.5     |
+| MobileNetV3_small_ssld |  12.0MB   | -        | 71.3     | 90.1     |
+| Xception41 |92.4MB   | -       | 79.6    | 94.4     |
+| Xception65 | 144.6MB  | -       | 80.3     | 94.5     |
+| DenseNet121 | 32.8MB   | -       | 75.7     | 92.6     |
+| DenseNet161|116.3MB  | -       | 78.6     | 94.1     |
+| DenseNet201|  84.6MB   | -       | 77.6     | 93.7     |
+| ShuffleNetV2 | 9.0MB   | -        | 68.8     | 88.5     |
+| HRNet_W18 | 21.29MB | - | 76.9 | 93.4 |
 
 ## 目标检测模型
 
