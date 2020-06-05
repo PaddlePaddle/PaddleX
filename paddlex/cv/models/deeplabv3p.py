@@ -337,7 +337,8 @@ class DeepLabv3p(BaseAPI):
             for d in data:
                 padding_label = np.zeros(
                     (1, im_h, im_w)).astype('int64') + self.ignore_index
-                padding_label[:, :im_h, :im_w] = d[1]
+                _, label_h, label_w = d[1].shape
+                padding_label[:, :label_h, :label_w] = d[1]
                 labels.append(padding_label)
             labels = np.array(labels)
 
@@ -398,7 +399,8 @@ class DeepLabv3p(BaseAPI):
         im = np.expand_dims(im, axis=0)
         result = self.exe.run(self.test_prog,
                               feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()))
+                              fetch_list=list(self.test_outputs.values()),
+                              use_program_cache=True)
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
         logit = result[1]

@@ -98,7 +98,7 @@ bool Model::load_config(const std::string& model_dir) {
 
 bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
   cv::Mat im = input_im.clone();
-  if (!transforms_.Run(&im, &inputs_)) {
+  if (!transforms_.Run(&im, blob)) {
     return false;
   }
   return true;

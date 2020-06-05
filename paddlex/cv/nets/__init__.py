@@ -24,6 +24,7 @@ from .xception import Xception
 from .densenet import DenseNet
 from .shufflenet_v2 import ShuffleNetV2
 from .hrnet import HRNet
+from .alexnet import AlexNet
 
 
 def resnet18(input, num_classes=1000):
@@ -152,4 +153,9 @@ def shufflenetv2(input, num_classes=1000):
 
 def hrnet_w18(input, num_classes=1000):
     model = HRNet(width=18, num_classes=num_classes)
+    return model(input)
+
+
+def alexnet(input, num_classes=1000):
+    model = AlexNet(num_classes=num_classes)
     return model(input)
