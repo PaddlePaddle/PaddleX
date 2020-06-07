@@ -201,7 +201,7 @@ class BaseAPI:
                 if backbone == "HRNet":
                     backbone = backbone + "_W{}".format(self.width)
             pretrain_weights = get_pretrain_weights(
-                pretrain_weights, self.model_type, backbone, pretrain_dir)
+                pretrain_weights, class_name, backbone, pretrain_dir)
         if startup_prog is None:
             startup_prog = fluid.default_startup_program()
         self.exe.run(startup_prog)
