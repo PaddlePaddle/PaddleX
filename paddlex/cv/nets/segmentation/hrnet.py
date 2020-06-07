@@ -38,7 +38,8 @@ class HRNet(object):
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255):
+                 ignore_index=255,
+                 fixed_input_shape=None):
         # dice_loss或bce_loss只适用两类分割中
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise ValueError(
@@ -66,6 +67,7 @@ class HRNet(object):
         self.use_dice_loss = use_dice_loss
         self.class_weight = class_weight
         self.ignore_index = ignore_index
+        self.fixed_input_shape = fixed_input_shape
         self.backbone = paddlex.cv.nets.hrnet.HRNet(
             width=width, feature_maps="stage4")
 
@@ -131,8 +133,16 @@ class HRNet(object):
 
     def generate_inputs(self):
         inputs = OrderedDict()
-        inputs['image'] = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+
+        if self.fixed_input_shape is not None:
+            input_shape = [
+                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+            ]
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if self.mode == 'train':
             inputs['label'] = fluid.data(
                 dtype='int32', shape=[None, 1, None, None], name='label')
