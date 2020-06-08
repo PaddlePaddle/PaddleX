@@ -8,7 +8,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 
 > 仅用于**目标检测**。读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_mobilenetv1.py#L29)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_darknet53.py#L29)
 
 > **参数**
 
@@ -20,6 +20,16 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
+
+> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义VOCDetection类后调用其成员函数`add_negative_samples`添加背景图片即可：
+> ```
+> add_negative_samples(image_dir)
+> ```
+> > 示例：[代码](../../tuning_strategy/detection/negatives_training.html#id4)
+
+> > **参数**
+
+> > > * **image_dir** (str): 背景图片所在的目录路径。
 
 ## CocoDetection类
 
@@ -41,6 +51,16 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
+> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义CocoDetection类后调用其成员函数`add_negative_samples`添加背景图片即可：
+> ```
+> add_negative_samples(image_dir)
+> ```
+> > 示例：[代码](../../tuning_strategy/detection/negatives_training.html#id4)
+
+> > **参数**
+
+> > > * **image_dir** (str): 背景图片所在的目录路径。
+
 ## EasyDataDet类
 
 ```
@@ -59,5 +79,15 @@ paddlex.datasets.EasyDataDet(data_dir, file_list, label_list, transforms=None, n
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
-> > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
+> > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
 
+
+> 【可选】支持在训练过程中加入无目标真值的背景图片来减少背景误检，定义EasyDataDet类后调用其成员函数`add_negative_samples`添加背景图片即可：
+> ```
+> add_negative_samples(image_dir)
+> ```
+> > 示例：[代码](../../tuning_strategy/detection/negatives_training.html#id4)
+
+> > **参数**
+
+> > > * **image_dir** (str): 背景图片所在的目录路径。
