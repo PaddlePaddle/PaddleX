@@ -194,12 +194,36 @@ class BaseAPI:
                 if os.path.exists(pretrain_dir):
                     os.remove(pretrain_dir)
                 os.makedirs(pretrain_dir)
+            if pretrain_weights is not None and \
+                not os.path.isdir(pretrain_weights) \
+                and not os.path.isfile(pretrain_weights):
+                if self.model_type == 'classifier':
+                    if pretrain_weights not in ['IMAGENET']:
+                        logging.warning(
+                            "Pretrain_weights for classifier should be defined as directory path or parameter file or 'IMAGENET' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            format(pretrain_weights))
+                        pretrain_weights = 'IMAGENET'
+                elif self.model_type == 'detector':
+                    if pretrain_weights not in ['IMAGENET', 'COCO']:
+                        logging.warning(
+                            "Pretrain_weights for detector should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            format(pretrain_weights))
+                        pretrain_weights = 'IMAGENET'
+                elif self.model_type == 'segmenter':
+                    if pretrain_weights not in [
+                            'IMAGENET', 'COCO', 'CITYSCAPES'
+                    ]:
+                        logging.warning(
+                            "Pretrain_weights for segmenter should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or 'CITYSCAPES', but it is {}, so we force to set it as 'IMAGENET'".
+                            format(pretrain_weights))
+                        pretrain_weights = 'IMAGENET'
             if hasattr(self, 'backbone'):
                 backbone = self.backbone
             else:
                 backbone = self.__class__.__name__
                 if backbone == "HRNet":
                     backbone = backbone + "_W{}".format(self.width)
+            class_name = self.__class__.__name__
             pretrain_weights = get_pretrain_weights(
                 pretrain_weights, class_name, backbone, pretrain_dir)
         if startup_prog is None:

@@ -102,7 +102,20 @@ coco_pretrain = {
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_2x.tar',
     'MaskRCNN_ResNet101_vd':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar',
-    'UNet': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz'
+    'UNet': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz',
+    'DeepLabv3p_MobileNetV2_x1.0':
+    'https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz',
+    'DeepLabv3p_Xception65':
+    'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz'
+}
+
+cityscapes_pretrain = {
+    'DeepLabv3p_MobileNetV2_x1.0':
+    'https://paddleseg.bj.bcebos.com/models/mobilenet_cityscapes.tgz',
+    'DeepLabv3p_Xception65':
+    'https://paddleseg.bj.bcebos.com/models/xception65_bn_cityscapes.tgz',
+    'HRNet_W18':
+    'https://paddleseg.bj.bcebos.com/models/hrnet_w18_bn_cityscapes.tgz'
 }
 
 
@@ -111,19 +124,38 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         return None
     elif osp.isdir(flag):
         return flag
-    warning_info = "{} supports to be finetuned with weights pretrained on the IMAGENET dataset only, so pretrain_weights is forced to be set to IMAGENET"
+    elif osp.isfile(flag):
+        return flag
+    warning_info = "{} does not support to be finetuned with weights pretrained on the {} dataset, so pretrain_weights is forced to be set to {}"
     if flag == 'COCO':
         if class_name == "FasterRCNN" and backbone in ['ResNet18'] or \
             class_name == "MaskRCNN" and backbone in ['ResNet18', 'HRNet_W18'] or \
             class_name == 'DeepLabv3p' and backbone in ['Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']:
             model_name = '{}_{}'.format(class_name, backbone)
-            logging.warning(warning_info.format(model_name))
+            logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'
         elif class_name == 'HRNet':
-            logging.warning(warning_info.format(class_name))
+            logging.warning(warning_info.format(class_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'
-    if flag == 'CITYSCAPES':
+    elif flag == 'CITYSCAPES':
         model_name = '{}_{}'.format(class_name, backbone)
+        if class_name == 'UNet':
+            logging.warning(warning_info.format(class_name, flag, 'IMAGENET'))
+            flag = 'COCO'
+        if class_name == 'HRNet' and backbone.split('_')[
+                -1] in ['W30', 'W32', 'W40', 'W48', 'W60', 'W64']:
+            logging.warning(warning_info.format(backbone, flag, 'IMAGENET'))
+            flag = 'IMAGENET'
+        if class_name == 'DeepLabv3p' and backbone in [
+                'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+        ]:
+            model_name = '{}_{}'.format(class_name, backbone)
+            logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
+            flag = 'IMAGENET'
+    elif flag == 'IMAGENET' and class_name == 'UNet':
+        logging.warning(warning_info.format(class_name, flag, 'COCO'))
+        flag = 'COCO'
 
     if flag == 'IMAGENET':
         new_save_dir = save_dir
@@ -160,19 +192,19 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
                 raise Exception(
                     "Unexpected error, please make sure paddlehub >= 1.6.2")
         return osp.join(new_save_dir, backbone)
-    elif flag == 'COCO':
+    elif flag in ['COCO', 'CITYSCAPES']:
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
             new_save_dir = paddlex.pretrain_dir
-        if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN']:
+        if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p']:
             backbone = '{}_{}'.format(class_name, backbone)
-        url = coco_pretrain[backbone]
+        if flag == 'COCO':
+            url = coco_pretrain[backbone]
+        elif flag == 'CITYSCAPES':
+            url = cityscapes_pretrain[backbone]
         fname = osp.split(url)[-1].split('.')[0]
         #        paddlex.utils.download_and_decompress(url, path=new_save_dir)
         #        return osp.join(new_save_dir, fname)
-
-        assert backbone in coco_pretrain, "There is not COCO pretrain weights for {}, you may try ImageNet.".format(
-            backbone)
         try:
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
@@ -189,5 +221,5 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         return osp.join(new_save_dir, backbone)
     else:
         raise Exception(
-            "pretrain_weights need to be defined as directory path or `IMAGENET` or 'COCO' (download pretrain weights automatically)."
+            "pretrain_weights need to be defined as directory path or 'IMAGENET' or 'COCO' or 'Cityscapes' (download pretrain weights automatically)."
         )

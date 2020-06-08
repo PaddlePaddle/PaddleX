@@ -150,7 +150,8 @@ class HRNet(DeepLabv3p):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
             save_dir (str): 模型保存路径。默认'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在IMAGENET图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+                则自动下载在IMAGENET图片数据上预训练的模型权重；若为字符串'CITYSCAPES'
+                则自动下载在CITYSCAPES图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
             optimizer (paddle.fluid.optimizer): 优化器。当改参数为None时，使用默认的优化器：使用
                 fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
             learning_rate (float): 默认优化器的初始学习率。默认0.01。
