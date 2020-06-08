@@ -140,7 +140,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
     elif flag == 'CITYSCAPES':
         model_name = '{}_{}'.format(class_name, backbone)
         if class_name == 'UNet':
-            logging.warning(warning_info.format(class_name, flag, 'IMAGENET'))
+            logging.warning(warning_info.format(class_name, flag, 'COCO'))
             flag = 'COCO'
         if class_name == 'HRNet' and backbone.split('_')[
                 -1] in ['W30', 'W32', 'W40', 'W48', 'W60', 'W64']:
