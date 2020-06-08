@@ -74,47 +74,47 @@ image_pretrain = {
 }
 
 coco_pretrain = {
-    'YOLOv3_DarkNet53':
+    'YOLOv3_DarkNet53_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar',
-    'YOLOv3_MobileNetV1':
+    'YOLOv3_MobileNetV1_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v1.tar',
-    'YOLOv3_MobileNetV3_large':
+    'YOLOv3_MobileNetV3_large_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v3.pdparams',
-    'YOLOv3_ResNet34':
+    'YOLOv3_ResNet34_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r34.tar',
-    'YOLOv3_ResNet50_vd':
+    'YOLOv3_ResNet50_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r50vd_dcn.tar',
-    'FasterRCNN_ResNet50':
+    'FasterRCNN_ResNet50_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_fpn_2x.tar',
-    'FasterRCNN_ResNet50_vd':
+    'FasterRCNN_ResNet50_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_vd_fpn_2x.tar',
-    'FasterRCNN_ResNet101':
+    'FasterRCNN_ResNet101_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_2x.tar',
-    'FasterRCNN_ResNet101_vd':
+    'FasterRCNN_ResNet101_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_vd_fpn_2x.tar',
-    'FasterRCNN_HRNet_W18':
+    'FasterRCNN_HRNet_W18_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_hrnetv2p_w18_2x.tar',
-    'MaskRCNN_ResNet50':
+    'MaskRCNN_ResNet50_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar',
-    'MaskRCNN_ResNet50_vd':
+    'MaskRCNN_ResNet50_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar',
-    'MaskRCNN_ResNet101':
+    'MaskRCNN_ResNet101_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_2x.tar',
-    'MaskRCNN_ResNet101_vd':
+    'MaskRCNN_ResNet101_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar',
-    'UNet': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz',
-    'DeepLabv3p_MobileNetV2_x1.0':
+    'UNet_COCO': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz',
+    'DeepLabv3p_MobileNetV2_x1.0_COCO':
     'https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz',
-    'DeepLabv3p_Xception65':
+    'DeepLabv3p_Xception65_COCO':
     'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz'
 }
 
 cityscapes_pretrain = {
-    'DeepLabv3p_MobileNetV2_x1.0':
+    'DeepLabv3p_MobileNetV2_x1.0_CITYSCAPES':
     'https://paddleseg.bj.bcebos.com/models/mobilenet_cityscapes.tgz',
-    'DeepLabv3p_Xception65':
+    'DeepLabv3p_Xception65_CITYSCAPES':
     'https://paddleseg.bj.bcebos.com/models/xception65_bn_cityscapes.tgz',
-    'HRNet_W18':
+    'HRNet_W18_CITYSCAPES':
     'https://paddleseg.bj.bcebos.com/models/hrnet_w18_bn_cityscapes.tgz'
 }
 
@@ -198,6 +198,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             new_save_dir = paddlex.pretrain_dir
         if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p']:
             backbone = '{}_{}'.format(class_name, backbone)
+        backbone = "{}_{}".format(backbone, flag)
         if flag == 'COCO':
             url = coco_pretrain[backbone]
         elif flag == 'CITYSCAPES':
