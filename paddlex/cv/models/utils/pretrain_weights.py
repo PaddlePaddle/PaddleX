@@ -99,7 +99,7 @@ coco_pretrain = {
     'MaskRCNN_ResNet50_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar',
     'MaskRCNN_ResNet101_COCO':
-    'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_2x.tar',
+    'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_fpn_1x.tar',
     'MaskRCNN_ResNet101_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar',
     'UNet_COCO': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz',
