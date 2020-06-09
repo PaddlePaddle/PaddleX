@@ -31,22 +31,22 @@
 
 ## 目标检测模型
 
-> 表中模型相关指标均为在MSCOCO数据集上使用PaddlePaddle Python预测接口测试得到（测试GPU型号为Nvidia Tesla P40测试得到）,表中符号`-`表示相关指标暂未测试。
+> 表中模型相关指标均为在MSCOCO数据集上使用PaddlePaddle Python预测接口测试得到（测试GPU型号为Nvidia Tesla V100测试得到）,表中符号`-`表示相关指标暂未测试。
 
 | 模型    | 模型大小    | 预测时间(毫秒) | BoxAP（%） |
 |:-------|:-----------|:-------------|:----------|
-|FasterRCNN-ResNet50|136.0MB| 316.912 | 35.2 |
-|FasterRCNN-ResNet50_vd| 136.1MB | 302.495 | 36.4 |
-|FasterRCNN-ResNet101| 212.5MB | 339.153 | 38.3 |
-|FasterRCNN-ResNet50-FPN| 167.7MB | 44.897 | 37.2 |
-|FasterRCNN-ResNet50_vd-FPN|167.8MB | 73.219 | 38.9 |
-|FasterRCNN-ResNet101-FPN| 244.2MB | 93.236 | 38.7 |
-|FasterRCNN-ResNet101_vd-FPN |244.3MB | 96.424 | 40.5 |
+|FasterRCNN-ResNet50|136.0MB| 197.715 | 35.2 |
+|FasterRCNN-ResNet50_vd| 136.1MB | 475.700 | 36.4 |
+|FasterRCNN-ResNet101| 212.5MB | 582.911 | 38.3 |
+|FasterRCNN-ResNet50-FPN| 167.7MB | 83.189 | 37.2 |
+|FasterRCNN-ResNet50_vd-FPN|167.8MB | 128.277 | 38.9 |
+|FasterRCNN-ResNet101-FPN| 244.2MB | 156.097 | 38.7 |
+|FasterRCNN-ResNet101_vd-FPN |244.3MB | 119.788 | 40.5 |
 |FasterRCNN-HRNet_W18-FPN |115.5MB | 81.592 | 36 |
-|YOLOv3-DarkNet53|249.2MB | 320.738 | 38.9 |
-|YOLOv3-MobileNetV1 |99.2MB | 349.461 | 29.3 |
-|YOLOv3-MobileNetV3_large|100.7MB | 480.075 | 31.6 |
-| YOLOv3-ResNet34|170.3MB | 417.680 | 36.2 |
+|YOLOv3-DarkNet53|249.2MB | 42.672 | 38.9 |
+|YOLOv3-MobileNetV1 |99.2MB | 15.442 | 29.3 |
+|YOLOv3-MobileNetV3_large|100.7MB | 143.322 | 31.6 |
+| YOLOv3-ResNet34|170.3MB | 23.185 | 36.2 |
 
 ## 实例分割模型
 
