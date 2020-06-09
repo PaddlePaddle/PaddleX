@@ -512,6 +512,7 @@ class BaseAPI:
             epoch_start_time = time.time()
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            self.completed_epochs += 1
             eval_epoch_start_time = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
@@ -525,7 +526,6 @@ class BaseAPI:
                         return_details=True)
                     logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                         i + 1, dict2str(self.eval_metrics)))
-                    self.completed_epochs += 1
                     # 保存最优模型
                     best_accuracy_key = list(self.eval_metrics.keys())[0]
                     current_accuracy = self.eval_metrics[best_accuracy_key]
