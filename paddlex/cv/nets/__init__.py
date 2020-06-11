@@ -20,6 +20,7 @@ from .mobilenet_v2 import MobileNetV2
 from .mobilenet_v3 import MobileNetV3
 from .segmentation import UNet
 from .segmentation import DeepLabv3p
+from .segmentation import FastSCNN
 from .xception import Xception
 from .densenet import DenseNet
 from .shufflenet_v2 import ShuffleNetV2

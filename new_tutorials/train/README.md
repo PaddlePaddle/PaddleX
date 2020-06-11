@@ -10,6 +10,9 @@
 |detection/mask_rcnn_f50_fpn.py | 实例分割MaskRCNN | 垃圾分拣 |
 |segmentation/deeplabv3p.py | 语义分割DeepLabV3| 视盘分割 |
 |segmentation/unet.py | 语义分割UNet | 视盘分割 |
+|segmentation/hrnet.py | 语义分割HRNet | 视盘分割 |
+|segmentation/fast_scnn.py | 语义分割FastSCNN | 视盘分割 |
+
 
 ## 开始训练
 在安装PaddleX后，使用如下命令开始训练
