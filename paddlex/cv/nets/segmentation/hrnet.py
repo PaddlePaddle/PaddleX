@@ -83,7 +83,8 @@ class HRNet(object):
         st4[3] = fluid.layers.resize_bilinear(st4[3], out_shape=shape)
 
         out = fluid.layers.concat(st4, axis=1)
-        last_channels = sum(self.backbone.channels[self.backbone.width][-1])
+        last_channels = sum(self.backbone.channels[str(self.backbone.width)][
+            -1])
 
         out = self._conv_bn_layer(
             input=out,
