@@ -727,22 +727,38 @@ class MixupImage(DetTransform):
                             'Becasuse gt_bbox/gt_class/gt_score is not in label_info!')
         gt_bbox1 = label_info['gt_bbox']
         gt_bbox2 = im_info['mixup'][2]['gt_bbox']
-        gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
         gt_class1 = label_info['gt_class']
         gt_class2 = im_info['mixup'][2]['gt_class']
-        gt_class = np.concatenate((gt_class1, gt_class2), axis=0)
-
         gt_score1 = label_info['gt_score']
         gt_score2 = im_info['mixup'][2]['gt_score']
-        gt_score = np.concatenate(
-            (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
         if 'gt_poly' in label_info:
             gt_poly1 = label_info['gt_poly']
             gt_poly2 = im_info['mixup'][2]['gt_poly']
-            label_info['gt_poly'] = gt_poly1 + gt_poly2
         is_crowd1 = label_info['is_crowd']
         is_crowd2 = im_info['mixup'][2]['is_crowd']
-        is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
+        
+        if 0 not in gt_class1 and 0 not in gt_class2:
+            gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
+            gt_class = np.concatenate((gt_class1, gt_class2), axis=0)
+            gt_score = np.concatenate(
+                (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly1 + gt_poly2
+            is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
+        elif 0 in gt_class1:
+            gt_bbox = gt_bbox2
+            gt_class = gt_class2
+            gt_score = gt_score2 * (1. - factor)
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly2
+            is_crowd = is_crowd2
+        else:
+            gt_bbox = gt_bbox1
+            gt_class = gt_class1
+            gt_score = gt_score1 * factor
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly1
+            is_crowd = is_crowd1
         label_info['gt_bbox'] = gt_bbox
         label_info['gt_score'] = gt_score
         label_info['gt_class'] = gt_class
@@ -814,6 +830,8 @@ class RandomExpand(DetTransform):
         if np.random.uniform(0., 1.) < self.prob:
             return (im, im_info, label_info)
 
+        if 'gt_class' in label_info and 0 in label_info['gt_class']:
+            return (im, im_info, label_info)
         image_shape = im_info['image_shape']
         height = int(image_shape[0])
         width = int(image_shape[1])
@@ -908,6 +926,8 @@ class RandomCrop(DetTransform):
                             'Becasuse gt_bbox/gt_class is not in label_info!')
 
         if len(label_info['gt_bbox']) == 0:
+            return (im, im_info, label_info)
+        if 'gt_class' in label_info and 0 in label_info['gt_class']:
             return (im, im_info, label_info)
 
         image_shape = im_info['image_shape']
@@ -1204,9 +1224,10 @@ class ArrangeYOLOv3(DetTransform):
             if gt_num > 0:
                 label_info['gt_class'][:gt_num, 0] = label_info[
                     'gt_class'][:gt_num, 0] - 1
-                gt_bbox[:gt_num, :] = label_info['gt_bbox'][:gt_num, :]
-                gt_class[:gt_num] = label_info['gt_class'][:gt_num, 0]
-                gt_score[:gt_num] = label_info['gt_score'][:gt_num, 0]
+                if -1 not in label_info['gt_class']:
+                    gt_bbox[:gt_num, :] = label_info['gt_bbox'][:gt_num, :]
+                    gt_class[:gt_num] = label_info['gt_class'][:gt_num, 0]
+                    gt_score[:gt_num] = label_info['gt_score'][:gt_num, 0]
             # parse [x1, y1, x2, y2] to [x, y, w, h]
             gt_bbox[:, 2:4] = gt_bbox[:, 2:4] - gt_bbox[:, :2]
             gt_bbox[:, :2] = gt_bbox[:, :2] + gt_bbox[:, 2:4] / 2.
@@ -1287,7 +1308,7 @@ class ComposedRCNNTransforms(Compose):
         super(ComposedRCNNTransforms, self).__init__(transforms)
 
 
-class ComposedYOLOTransforms(Compose):
+class ComposedYOLOv3Transforms(Compose):
     """YOLOv3模型的图像预处理流程，具体如下，
         训练阶段：
         1. 在前mixup_epoch轮迭代中，使用MixupImage策略，见https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#mixupimage
@@ -1342,4 +1363,4 @@ class ComposedYOLOTransforms(Compose):
                     target_size=width, interp='CUBIC'), Normalize(
                         mean=mean, std=std)
             ]
-        super(ComposedYOLOTransforms, self).__init__(transforms)
+        super(ComposedYOLOv3Transforms, self).__init__(transforms)

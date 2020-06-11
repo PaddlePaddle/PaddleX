@@ -35,6 +35,7 @@ from .classifier import DenseNet161
 from .classifier import DenseNet201
 from .classifier import ShuffleNetV2
 from .classifier import HRNet_W18
+from .classifier import AlexNet
 from .base import BaseAPI
 from .yolo_v3 import YOLOv3
 from .faster_rcnn import FasterRCNN

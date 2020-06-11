@@ -10,18 +10,12 @@ veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
 pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义训练和验证时的transforms
-train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224),
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize()
-])
-eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224),
-    transforms.Normalize()
-])
+# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/cls_transforms.html#composedclstransforms
+train_transforms = transforms.ComposedClsTransforms(mode='train', crop_size=[224, 224])
+eval_transforms = transforms.ComposedClsTransforms(mode='eval', crop_size=[224, 224])
 
 # 定义训练和验证所用的数据集
+# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/classification.html#imagenet
 train_dataset = pdx.datasets.ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/train_list.txt',
@@ -39,6 +33,8 @@ eval_dataset = pdx.datasets.ImageNet(
 # VisualDL启动方式: visualdl --logdir output/mobilenetv2/vdl_log --port 8001
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+
+# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/models/classification.html#resnet50
 model = pdx.cls.MobileNetV2(num_classes=len(train_dataset.labels))
 model.train(
     num_epochs=10,
