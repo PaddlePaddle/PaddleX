@@ -67,8 +67,8 @@ def parse_param_file(param_file, return_shape=True):
         f.close()
         return tuple(tensor_desc.dims)
     if tensor_desc.data_type != 5:
-        raise Exception(
-            "Unexpected data type while parse {}".format(param_file))
+        raise Exception("Unexpected data type while parse {}".format(
+            param_file))
     data_size = 4
     for i in range(len(tensor_shape)):
         data_size *= tensor_shape[i]
@@ -139,7 +139,12 @@ def load_pdparams(exe, main_prog, model_dir):
 
     vars_to_load = list()
     import pickle
-    with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
+
+    if osp.isfile(model_dir):
+        params_file = model_dir
+    else:
+        params_file = osp.join(model_dir, 'model.pdparams')
+    with open(params_file, 'rb') as f:
         params_dict = pickle.load(f) if six.PY2 else pickle.load(
             f, encoding='latin1')
     unused_vars = list()
@@ -185,8 +190,8 @@ def is_belong_to_optimizer(var):
     import paddle.fluid as fluid
     from paddle.fluid.proto.framework_pb2 import VarType
 
-    if not (isinstance(var, fluid.framework.Parameter)
-            or var.desc.need_check_feed()):
+    if not (isinstance(var, fluid.framework.Parameter) or
+            var.desc.need_check_feed()):
         return is_persistable(var)
     return False
 
@@ -206,9 +211,8 @@ def load_pdopt(exe, main_prog, model_dir):
     if len(optimizer_var_list) > 0:
         for var in optimizer_var_list:
             if var.name not in opt_dict:
-                raise Exception(
-                    "{} is not in saved paddlex optimizer, {}".format(
-                        var.name, exception_message))
+                raise Exception("{} is not in saved paddlex optimizer, {}".
+                                format(var.name, exception_message))
             if var.shape != opt_dict[var.name].shape:
                 raise Exception(
                     "Shape of optimizer variable {} doesn't match.(Last: {}, Now: {}), {}"
@@ -227,9 +231,8 @@ def load_pdopt(exe, main_prog, model_dir):
             "There is no optimizer parameters in the model, please set the optimizer!"
         )
     else:
-        logging.info(
-            "There are {} optimizer parameters in {} are loaded.".format(
-                len(optimizer_var_list), model_dir))
+        logging.info("There are {} optimizer parameters in {} are loaded.".
+                     format(len(optimizer_var_list), model_dir))
 
 
 def load_pretrain_weights(exe,
@@ -239,6 +242,12 @@ def load_pretrain_weights(exe,
                           resume=False):
     if not osp.exists(weights_dir):
         raise Exception("Path {} not exists.".format(weights_dir))
+    if osp.isfile(weights_dir):
+        if not weights_dir.endswith('.pdparams'):
+            raise Exception("File {} is not a paddle parameter file".format(
+                weights_dir))
+        load_pdparams(exe, main_prog, weights_dir)
+        return
     if osp.exists(osp.join(weights_dir, "model.pdparams")):
         load_pdparams(exe, main_prog, weights_dir)
         if resume:
@@ -255,9 +264,8 @@ def load_pretrain_weights(exe,
         if not isinstance(var, fluid.framework.Parameter):
             continue
         if not osp.exists(osp.join(weights_dir, var.name)):
-            logging.debug(
-                "[SKIP] Pretrained weight {}/{} doesn't exist".format(
-                    weights_dir, var.name))
+            logging.debug("[SKIP] Pretrained weight {}/{} doesn't exist".
+                          format(weights_dir, var.name))
             continue
         pretrained_shape = parse_param_file(osp.join(weights_dir, var.name))
         actual_shape = tuple(var.shape)
@@ -317,9 +325,8 @@ def load_pretrain_weights(exe,
                 "There is no optimizer parameters in the model, please set the optimizer!"
             )
         else:
-            logging.info(
-                "There are {} optimizer parameters in {} are loaded.".format(
-                    len(optimizer_var_list), weights_dir))
+            logging.info("There are {} optimizer parameters in {} are loaded.".
+                         format(len(optimizer_var_list), weights_dir))
 
 
 class EarlyStop:
@@ -342,12 +349,12 @@ class EarlyStop:
             self.max = current_score
             return False
         else:
-            if (abs(self.score - current_score) < self.thresh
-                    or current_score < self.score):
+            if (abs(self.score - current_score) < self.thresh or
+                    current_score < self.score):
                 self.counter += 1
                 self.score = current_score
-                logging.debug(
-                    "EarlyStopping: %i / %i" % (self.counter, self.patience))
+                logging.debug("EarlyStopping: %i / %i" %
+                              (self.counter, self.patience))
                 if self.counter >= self.patience:
                     logging.info("EarlyStopping: Stop training")
                     return True

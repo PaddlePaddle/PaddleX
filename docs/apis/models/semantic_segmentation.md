@@ -12,7 +12,7 @@ paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride
 > **参数**
 
 > > - **num_classes** (int): 类别数。
-> > - **backbone** (str): DeepLabv3+的backbone网络，实现特征图的计算，取值范围为['Xception65', 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']，'MobileNetV2_x1.0'。
+> > - **backbone** (str): DeepLabv3+的backbone网络，实现特征图的计算，取值范围为['Xception65', 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']，默认值为'MobileNetV2_x1.0'。
 > > - **output_stride** (int): backbone 输出特征图相对于输入的下采样倍数，一般取值为8或16。默认16。
 > > - **aspp_with_sep_conv** (bool):  decoder模块是否采用separable convolutions。默认True。
 > > - **decoder_use_sep_conv** (bool)： decoder模块是否采用separable convolutions。默认True。
@@ -40,7 +40,7 @@ train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, ev
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。默认'output'
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认'IMAGENET'。
+> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，则自动下载在COCO数据集上预训练的模型权重（注意：暂未提供Xception41、MobileNetV2_x0.25、MobileNetV2_x0.5、MobileNetV2_x1.5、MobileNetV2_x2.0的COCO预训练模型）；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES数据集上预训练的模型权重（注意：暂未提供Xception41、MobileNetV2_x0.25、MobileNetV2_x0.5、MobileNetV2_x1.5、MobileNetV2_x2.0的CITYSCAPES预训练模型）；为None，则不使用预训练模型。默认'IMAGENET'。
 > > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认的优化器：使用fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
 > > - **learning_rate** (float): 默认优化器的初始学习率。默认0.01。
 > > - **lr_decay_power** (float): 默认优化器学习率衰减指数。默认0.9。
@@ -209,7 +209,7 @@ train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, ev
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。默认'output'
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet数据集上预训练的模型权重；若为None，则不使用预训练模型。默认'IMAGENET'。
+> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet数据集上预训练的模型权重；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES图片数据上预训练的模型权重（注意：目前仅提供`width`取值为18的CITYSCAPES预训练模型）；为None，则不使用预训练模型。默认'IMAGENET'。
 > > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认的优化器：使用fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
 > > - **learning_rate** (float): 默认优化器的初始学习率。默认0.01。
 > > - **lr_decay_power** (float): 默认优化器学习率衰减指数。默认0.9。
