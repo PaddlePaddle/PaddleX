@@ -90,7 +90,6 @@ class BlazeNet(object):
                         name='double_blaze_{}'.format(k))
                 elif len(v) == 4:
                     layers.append(conv)
-                    fluid.layers.Print(layers[-1])
                     conv = self.BlazeBlock(
                         conv,
                         v[0],
@@ -103,8 +102,6 @@ class BlazeNet(object):
 
             if not self.with_extra_blocks:
                 return layers[-1]
-            fluid.layers.Print(layers[-2])
-            fluid.layers.Print(layers[-1])
             return layers[-2], layers[-1]
         else:
             conv1 = self._conv_norm(
