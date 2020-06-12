@@ -28,7 +28,6 @@ from .model_utils.libs import sigmoid_to_softmax
 from .model_utils.loss import softmax_with_loss
 from .model_utils.loss import dice_loss
 from .model_utils.loss import bce_loss
-import paddlex.utils.logging as logging
 from paddlex.cv.nets.xception import Xception
 from paddlex.cv.nets.mobilenet_v2 import MobileNetV2
 
