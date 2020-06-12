@@ -1,57 +1,161 @@
+# coding: utf8
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import os
 # 选择使用0号卡
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+# 使用CPU
+#os.environ['CUDA_VISIBLE_DEVICES'] = ''
+import argparse
 
 import paddlex as pdx
 from paddlex.seg import transforms
 
-# 下载和解压人像分割数据集
-human_seg_data = 'https://paddlex.bj.bcebos.com/humanseg/data/human_seg_data.zip'
-pdx.utils.download_and_decompress(human_seg_data, path='./')
+MODEL_TYPE = ['HumanSegMobile', 'HumanSegServer']
 
-# 下载和解压人像分割预训练模型
-pretrain_weights = 'https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_ckpt.zip'
-pdx.utils.download_and_decompress(
-    pretrain_weights, path='./output/human_seg/pretrain')
 
-# 定义训练和验证时的transforms
-train_transforms = transforms.Compose([
-    transforms.Resize([192, 192]), transforms.RandomHorizontalFlip(),
-    transforms.Normalize()
-])
+def parse_args():
+    parser = argparse.ArgumentParser(description='HumanSeg training')
+    parser.add_argument(
+        '--model_type',
+        dest='model_type',
+        help="Model type for traing, which is one of ('HumanSegMobile', 'HumanSegServer')",
+        type=str,
+        default='HumanSegMobile')
+    parser.add_argument(
+        '--data_dir',
+        dest='data_dir',
+        help='The root directory of dataset',
+        type=str)
+    parser.add_argument(
+        '--train_list',
+        dest='train_list',
+        help='Train list file of dataset',
+        type=str)
+    parser.add_argument(
+        '--val_list',
+        dest='val_list',
+        help='Val list file of dataset',
+        type=str,
+        default=None)
+    parser.add_argument(
+        '--save_dir',
+        dest='save_dir',
+        help='The directory for saving the model snapshot',
+        type=str,
+        default='./output')
+    parser.add_argument(
+        '--num_classes',
+        dest='num_classes',
+        help='Number of classes',
+        type=int,
+        default=2)
+    parser.add_argument(
+        "--image_shape",
+        dest="image_shape",
+        help="The image shape for net inputs.",
+        nargs=2,
+        default=[192, 192],
+        type=int)
+    parser.add_argument(
+        '--num_epochs',
+        dest='num_epochs',
+        help='Number epochs for training',
+        type=int,
+        default=100)
+    parser.add_argument(
+        '--batch_size',
+        dest='batch_size',
+        help='Mini batch size',
+        type=int,
+        default=128)
+    parser.add_argument(
+        '--learning_rate',
+        dest='learning_rate',
+        help='Learning rate',
+        type=float,
+        default=0.01)
+    parser.add_argument(
+        '--pretrain_weights',
+        dest='pretrain_weights',
+        help='The path of pretrianed weight',
+        type=str,
+        default=None)
+    parser.add_argument(
+        '--resume_checkpoint',
+        dest='resume_checkpoint',
+        help='The path of resume checkpoint',
+        type=str,
+        default=None)
+    parser.add_argument(
+        '--use_vdl',
+        dest='use_vdl',
+        help='Whether to use visualdl',
+        action='store_true')
+    parser.add_argument(
+        '--save_interval_epochs',
+        dest='save_interval_epochs',
+        help='The interval epochs for save a model snapshot',
+        type=int,
+        default=5)
 
-eval_transforms = transforms.Compose(
-    [transforms.Resize([192, 192]), transforms.Normalize()])
+    return parser.parse_args()
 
-# 定义训练和验证所用的数据集
-# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/semantic_segmentation.html#segdataset
-train_dataset = pdx.datasets.SegDataset(
-    data_dir='human_seg_data',
-    file_list='human_seg_data/train_list.txt',
-    label_list='human_seg_data/labels.txt',
-    transforms=train_transforms,
-    shuffle=True)
-eval_dataset = pdx.datasets.SegDataset(
-    data_dir='human_seg_data',
-    file_list='human_seg_data/val_list.txt',
-    label_list='human_seg_data/labels.txt',
-    transforms=eval_transforms)
 
-# 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标
-# VisualDL启动方式: visualdl --logdir output/unet/vdl_log --port 8001
-# 浏览器打开 https://0.0.0.0:8001即可
-# 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+def train(args):
+    train_transforms = transforms.Compose([
+        transforms.Resize(args.image_shape), transforms.RandomHorizontalFlip(),
+        transforms.Normalize()
+    ])
 
-# https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#hrnet
-num_classes = len(train_dataset.labels)
-model = pdx.seg.HRNet(num_classes=num_classes, width='18_small_v1')
-model.train(
-    num_epochs=10,
-    train_dataset=train_dataset,
-    train_batch_size=8,
-    eval_dataset=eval_dataset,
-    learning_rate=0.001,
-    pretrain_weights='./output/human_seg/pretrain/humanseg_mobile_ckpt',
-    save_dir='output/human_seg',
-    use_vdl=True)
+    eval_transforms = transforms.Compose(
+        [transforms.Resize(args.image_shape), transforms.Normalize()])
+
+    train_dataset = pdx.datasets.SegDataset(
+        data_dir=args.data_dir,
+        file_list=args.train_list,
+        transforms=train_transforms,
+        shuffle=True)
+    eval_dataset = pdx.datasets.SegDataset(
+        data_dir=args.data_dir,
+        file_list=args.val_list,
+        transforms=eval_transforms)
+
+    if args.model_type == 'HumanSegMobile':
+        model = pdx.seg.HRNet(
+            num_classes=args.num_classes, width='18_small_v1')
+    elif args.model_type == 'HumanSegServer':
+        model = pdx.seg.DeepLabv3p(
+            num_classes=args.num_classes, backbone='Xception65')
+    else:
+        raise ValueError(
+            "--model_type: {} is set wrong, it shold be one of ('HumanSegMobile', "
+            "'HumanSegLite', 'HumanSegServer')".format(args.model_type))
+    model.train(
+        num_epochs=args.num_epochs,
+        train_dataset=train_dataset,
+        train_batch_size=args.batch_size,
+        eval_dataset=eval_dataset,
+        save_interval_epochs=args.save_interval_epochs,
+        learning_rate=args.learning_rate,
+        pretrain_weights=args.pretrain_weights,
+        resume_checkpoint=args.resume_checkpoint,
+        save_dir=args.save_dir,
+        use_vdl=args.use_vdl)
+
+
+if __name__ == '__main__':
+    args = parse_args()
+    train(args)
