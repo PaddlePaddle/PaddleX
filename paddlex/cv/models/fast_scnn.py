@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,18 +13,17 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+import paddle.fluid as fluid
 import paddlex
 from collections import OrderedDict
 from .deeplabv3p import DeepLabv3p
 
 
-class UNet(DeepLabv3p):
-    """实现UNet网络的构建并进行训练、评估、预测和模型导出。
+class FastSCNN(DeepLabv3p):
+    """实现Fast SCNN网络的构建并进行训练、评估、预测和模型导出。
 
     Args:
         num_classes (int): 类别数。
-        upsample_mode (str): UNet decode时采用的上采样方式，取值为'bilinear'时利用双线行差值进行上菜样，
-            当输入其他选项时则利用反卷积进行上菜样，默认为'bilinear'。
         use_bce_loss (bool): 是否使用bce loss作为网络的损失函数，只能用于两类分割。可与dice loss同时使用。默认False。
         use_dice_loss (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。
             当use_bce_loss和use_dice_loss都为False时，使用交叉熵损失函数。默认False。
@@ -33,21 +32,27 @@ class UNet(DeepLabv3p):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。默认255。
+        multi_loss_weight (list): 多分支上的loss权重。默认计算一个分支上的loss，即默认值为[1.0]。
+            也支持计算两个分支或三个分支上的loss，权重按[fusion_branch_weight, higher_branch_weight, lower_branch_weight]排列，
+            fusion_branch_weight为空间细节分支和全局上下文分支融合后的分支上的loss权重，higher_branch_weight为空间细节分支上的loss权重，
+            lower_branch_weight为全局上下文分支上的loss权重，若higher_branch_weight和lower_branch_weight未设置则不会计算这两个分支上的loss。
 
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: class_weight为list, 但长度不等于num_class。
             class_weight为str, 但class_weight.low()不等于dynamic。
         TypeError: class_weight不为None时，其类型不是list或str。
+        TypeError: multi_loss_weight不为list。
+        ValueError: multi_loss_weight为list但长度小于0或者大于3。
     """
 
     def __init__(self,
                  num_classes=2,
-                 upsample_mode='bilinear',
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255):
+                 ignore_index=255,
+                 multi_loss_weight=[1.0]):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -70,24 +75,34 @@ class UNet(DeepLabv3p):
                 raise TypeError(
                     'Expect class_weight is a list or string but receive {}'.
                     format(type(class_weight)))
+
+        if not isinstance(multi_loss_weight, list):
+            raise TypeError(
+                'Expect multi_loss_weight is a list but receive {}'.format(
+                    type(multi_loss_weight)))
+        if len(multi_loss_weight) > 3 or len(multi_loss_weight) < 0:
+            raise ValueError(
+                "Length of multi_loss_weight should be lower than or equal to 3 but greater than 0."
+            )
+
         self.num_classes = num_classes
-        self.upsample_mode = upsample_mode
         self.use_bce_loss = use_bce_loss
         self.use_dice_loss = use_dice_loss
         self.class_weight = class_weight
+        self.multi_loss_weight = multi_loss_weight
         self.ignore_index = ignore_index
         self.labels = None
         self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
-        model = paddlex.cv.nets.segmentation.UNet(
+        model = paddlex.cv.nets.segmentation.FastSCNN(
             self.num_classes,
             mode=mode,
-            upsample_mode=self.upsample_mode,
             use_bce_loss=self.use_bce_loss,
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
             ignore_index=self.ignore_index,
+            multi_loss_weight=self.multi_loss_weight,
             fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
@@ -108,7 +123,7 @@ class UNet(DeepLabv3p):
               save_interval_epochs=1,
               log_interval_steps=2,
               save_dir='output',
-              pretrain_weights='COCO',
+              pretrain_weights='CITYSCAPES',
               optimizer=None,
               learning_rate=0.01,
               lr_decay_power=0.9,
@@ -128,8 +143,8 @@ class UNet(DeepLabv3p):
             save_interval_epochs (int): 模型保存间隔（单位：迭代轮数）。默认为1。
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
             save_dir (str): 模型保存路径。默认'output'。
-            pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'COCO'，
-                则自动下载在COCO图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'COCO'。
+            pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'CITYSCAPES'
+                则自动下载在CITYSCAPES图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'CITYSCAPES'。
             optimizer (paddle.fluid.optimizer): 优化器。当改参数为None时，使用默认的优化器：使用
                 fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
             learning_rate (float): 默认优化器的初始学习率。默认0.01。
@@ -146,7 +161,7 @@ class UNet(DeepLabv3p):
         Raises:
             ValueError: 模型从inference model进行加载。
         """
-        return super(UNet, self).train(
+        return super(FastSCNN, self).train(
             num_epochs, train_dataset, train_batch_size, eval_dataset,
             save_interval_epochs, log_interval_steps, save_dir,
             pretrain_weights, optimizer, learning_rate, lr_decay_power,

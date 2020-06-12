@@ -27,7 +27,6 @@ from .model_utils.loss import softmax_with_loss
 from .model_utils.loss import dice_loss
 from .model_utils.loss import bce_loss
 import paddlex
-import paddlex.utils.logging as logging
 
 
 class HRNet(object):

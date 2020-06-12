@@ -117,7 +117,9 @@ cityscapes_pretrain = {
     'DeepLabv3p_Xception65_CITYSCAPES':
     'https://paddleseg.bj.bcebos.com/models/xception65_bn_cityscapes.tgz',
     'HRNet_W18_CITYSCAPES':
-    'https://paddleseg.bj.bcebos.com/models/hrnet_w18_bn_cityscapes.tgz'
+    'https://paddleseg.bj.bcebos.com/models/hrnet_w18_bn_cityscapes.tgz',
+    'FastSCNN_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/fast_scnn_cityscape.tar'
 }
 
 
@@ -139,6 +141,10 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         elif class_name == 'HRNet':
             logging.warning(warning_info.format(class_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'
+        elif class_name == 'FastSCNN':
+            logging.warning(
+                warning_info.format(class_name, flag, 'CITYSCAPES'))
+            flag = 'CITYSCAPES'
     elif flag == 'CITYSCAPES':
         model_name = '{}_{}'.format(class_name, backbone)
         if class_name == 'UNet':
@@ -155,9 +161,14 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'
-    elif flag == 'IMAGENET' and class_name == 'UNet':
-        logging.warning(warning_info.format(class_name, flag, 'COCO'))
-        flag = 'COCO'
+    elif flag == 'IMAGENET':
+        if class_name == 'UNet':
+            logging.warning(warning_info.format(class_name, flag, 'COCO'))
+            flag = 'COCO'
+        elif class_name == 'FastSCNN':
+            logging.warning(
+                warning_info.format(class_name, flag, 'CITYSCAPES'))
+            flag = 'CITYSCAPES'
 
     if flag == 'IMAGENET':
         new_save_dir = save_dir
