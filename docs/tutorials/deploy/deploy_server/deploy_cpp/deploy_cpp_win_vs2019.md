@@ -132,7 +132,7 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 ## 样例
 
-可使用[小度熊识别模型](../../deploy_python.html#inference)中导出的`inference_model`和测试图片进行预测。
+可使用[小度熊识别模型](../deploy_python.md)中导出的`inference_model`和测试图片进行预测。
 
 `样例一`：
 
