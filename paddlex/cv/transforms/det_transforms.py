@@ -27,6 +27,7 @@ from PIL import Image, ImageEnhance
 from .imgaug_support import execute_imgaug
 from .ops import *
 from .box_utils import *
+import paddlex.utils.logging as logging
 
 
 class DetTransform:
@@ -151,6 +152,16 @@ class Compose(DetTransform):
                 else:
                     outputs = (im, im_info)
         return outputs
+
+    def add_augmenters(self, augmenters):
+        if not isinstance(augmenters, list):
+            raise Exception(
+                "augmenters should be list type in func add_augmenters()")
+        transform_names = [type(x).__name__ for x in self.transforms]
+        for aug in augmenters:
+            if type(aug).__name__ in transform_names:
+                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+        self.transforms = augmenters + self.transforms
 
 
 class ResizeByShort(DetTransform):
@@ -716,22 +727,38 @@ class MixupImage(DetTransform):
                             'Becasuse gt_bbox/gt_class/gt_score is not in label_info!')
         gt_bbox1 = label_info['gt_bbox']
         gt_bbox2 = im_info['mixup'][2]['gt_bbox']
-        gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
         gt_class1 = label_info['gt_class']
         gt_class2 = im_info['mixup'][2]['gt_class']
-        gt_class = np.concatenate((gt_class1, gt_class2), axis=0)
-
         gt_score1 = label_info['gt_score']
         gt_score2 = im_info['mixup'][2]['gt_score']
-        gt_score = np.concatenate(
-            (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
         if 'gt_poly' in label_info:
             gt_poly1 = label_info['gt_poly']
             gt_poly2 = im_info['mixup'][2]['gt_poly']
-            label_info['gt_poly'] = gt_poly1 + gt_poly2
         is_crowd1 = label_info['is_crowd']
         is_crowd2 = im_info['mixup'][2]['is_crowd']
-        is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
+        
+        if 0 not in gt_class1 and 0 not in gt_class2:
+            gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
+            gt_class = np.concatenate((gt_class1, gt_class2), axis=0)
+            gt_score = np.concatenate(
+                (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly1 + gt_poly2
+            is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
+        elif 0 in gt_class1:
+            gt_bbox = gt_bbox2
+            gt_class = gt_class2
+            gt_score = gt_score2 * (1. - factor)
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly2
+            is_crowd = is_crowd2
+        else:
+            gt_bbox = gt_bbox1
+            gt_class = gt_class1
+            gt_score = gt_score1 * factor
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly1
+            is_crowd = is_crowd1
         label_info['gt_bbox'] = gt_bbox
         label_info['gt_score'] = gt_score
         label_info['gt_class'] = gt_class
@@ -803,6 +830,8 @@ class RandomExpand(DetTransform):
         if np.random.uniform(0., 1.) < self.prob:
             return (im, im_info, label_info)
 
+        if 'gt_class' in label_info and 0 in label_info['gt_class']:
+            return (im, im_info, label_info)
         image_shape = im_info['image_shape']
         height = int(image_shape[0])
         width = int(image_shape[1])
@@ -897,6 +926,8 @@ class RandomCrop(DetTransform):
                             'Becasuse gt_bbox/gt_class is not in label_info!')
 
         if len(label_info['gt_bbox']) == 0:
+            return (im, im_info, label_info)
+        if 'gt_class' in label_info and 0 in label_info['gt_class']:
             return (im, im_info, label_info)
 
         image_shape = im_info['image_shape']
@@ -1193,9 +1224,10 @@ class ArrangeYOLOv3(DetTransform):
             if gt_num > 0:
                 label_info['gt_class'][:gt_num, 0] = label_info[
                     'gt_class'][:gt_num, 0] - 1
-                gt_bbox[:gt_num, :] = label_info['gt_bbox'][:gt_num, :]
-                gt_class[:gt_num] = label_info['gt_class'][:gt_num, 0]
-                gt_score[:gt_num] = label_info['gt_score'][:gt_num, 0]
+                if -1 not in label_info['gt_class']:
+                    gt_bbox[:gt_num, :] = label_info['gt_bbox'][:gt_num, :]
+                    gt_class[:gt_num] = label_info['gt_class'][:gt_num, 0]
+                    gt_score[:gt_num] = label_info['gt_score'][:gt_num, 0]
             # parse [x1, y1, x2, y2] to [x, y, w, h]
             gt_bbox[:, 2:4] = gt_bbox[:, 2:4] - gt_bbox[:, :2]
             gt_bbox[:, :2] = gt_bbox[:, :2] + gt_bbox[:, 2:4] / 2.
@@ -1227,3 +1259,108 @@ class ArrangeYOLOv3(DetTransform):
             im_shape = im_info['image_shape']
             outputs = (im, im_shape)
         return outputs
+
+
+class ComposedRCNNTransforms(Compose):
+    """ RCNN模型(faster-rcnn/mask-rcnn)图像处理流程，具体如下，
+        训练阶段：
+        1. 随机以0.5的概率将图像水平翻转
+        2. 图像归一化
+        3. 图像按比例Resize，scale计算方式如下
+            scale = min_max_size[0] / short_size_of_image
+            if max_size_of_image * scale > min_max_size[1]:
+                scale = min_max_size[1] / max_size_of_image
+        4. 将3步骤的长宽进行padding，使得长宽为32的倍数
+        验证阶段：
+        1. 图像归一化
+        2. 图像按比例Resize，scale计算方式同上训练阶段
+        3. 将2步骤的长宽进行padding，使得长宽为32的倍数
+
+        Args:
+            mode(str): 图像处理流程所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
+            min_max_size(list): 图像在缩放时，最小边和最大边的约束条件
+            mean(list): 图像均值
+            std(list): 图像方差
+    """
+
+    def __init__(self,
+                 mode,
+                 min_max_size=[800, 1333],
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225]):
+        if mode == 'train':
+            # 训练时的transforms，包含数据增强
+            transforms = [
+                RandomHorizontalFlip(prob=0.5), Normalize(
+                    mean=mean, std=std), ResizeByShort(
+                        short_size=min_max_size[0], max_size=min_max_size[1]),
+                Padding(coarsest_stride=32)
+            ]
+        else:
+            # 验证/预测时的transforms
+            transforms = [
+                Normalize(
+                    mean=mean, std=std), ResizeByShort(
+                        short_size=min_max_size[0], max_size=min_max_size[1]),
+                Padding(coarsest_stride=32)
+            ]
+
+        super(ComposedRCNNTransforms, self).__init__(transforms)
+
+
+class ComposedYOLOv3Transforms(Compose):
+    """YOLOv3模型的图像预处理流程，具体如下，
+        训练阶段：
+        1. 在前mixup_epoch轮迭代中，使用MixupImage策略，见https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#mixupimage
+        2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调
+        3. 随机扩充图像，见https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#randomexpand
+        4. 随机裁剪图像
+        5. 将4步骤的输出图像Resize成shape参数的大小
+        6. 随机0.5的概率水平翻转图像
+        7. 图像归一化
+        验证/预测阶段：
+        1. 将图像Resize成shape参数大小
+        2. 图像归一化
+
+        Args:
+            mode(str): 图像处理流程所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
+            shape(list): 输入模型中图像的大小，输入模型的图像会被Resize成此大小
+            mixup_epoch(int): 模型训练过程中，前mixup_epoch会使用mixup策略
+            mean(list): 图像均值
+            std(list): 图像方差
+    """
+
+    def __init__(self,
+                 mode,
+                 shape=[608, 608],
+                 mixup_epoch=250,
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225]):
+        width = shape
+        if isinstance(shape, list):
+            if shape[0] != shape[1]:
+                raise Exception(
+                    "In YOLOv3 model, width and height should be equal")
+            width = shape[0]
+        if width % 32 != 0:
+            raise Exception(
+                "In YOLOv3 model, width and height should be multiple of 32, e.g 224、256、320...."
+            )
+
+        if mode == 'train':
+            # 训练时的transforms，包含数据增强
+            transforms = [
+                MixupImage(mixup_epoch=mixup_epoch), RandomDistort(),
+                RandomExpand(), RandomCrop(), Resize(
+                    target_size=width,
+                    interp='RANDOM'), RandomHorizontalFlip(), Normalize(
+                        mean=mean, std=std)
+            ]
+        else:
+            # 验证/预测时的transforms
+            transforms = [
+                Resize(
+                    target_size=width, interp='CUBIC'), Normalize(
+                        mean=mean, std=std)
+            ]
+        super(ComposedYOLOv3Transforms, self).__init__(transforms)

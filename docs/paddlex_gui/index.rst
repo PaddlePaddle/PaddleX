@@ -21,7 +21,7 @@ PaddleX GUI是基于PaddleX开发实现的可视化模型训练套件，可以�
    how_to_use.md
    xx.md
 
-* PaddleX版本: v0.1.7
+* PaddleX GUI版本: v1.0
 * 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  
 * 项目GitHub: https://github.com/PaddlePaddle/PaddleX/tree/develop  
 * 官方QQ用户群: 1045148026  

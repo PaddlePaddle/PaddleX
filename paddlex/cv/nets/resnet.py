@@ -135,8 +135,10 @@ class ResNet(object):
             filter_size=filter_size,
             stride=stride,
             padding=padding,
-            param_attr=ParamAttr(initializer=Constant(0.0), name=name + ".w_0"),
-            bias_attr=ParamAttr(initializer=Constant(0.0), name=name + ".b_0"),
+            param_attr=ParamAttr(
+                initializer=Constant(0.0), name=name + ".w_0"),
+            bias_attr=ParamAttr(
+                initializer=Constant(0.0), name=name + ".b_0"),
             act=act,
             name=name)
         return out
@@ -151,7 +153,8 @@ class ResNet(object):
                    name=None,
                    dcn_v2=False,
                    use_lr_mult_list=False):
-        lr_mult = self.lr_mult_list[self.curr_stage] if use_lr_mult_list else 1.0
+        lr_mult = self.lr_mult_list[
+            self.curr_stage] if use_lr_mult_list else 1.0
         _name = self.prefix_name + name if self.prefix_name != '' else name
         if not dcn_v2:
             conv = fluid.layers.conv2d(
@@ -162,8 +165,8 @@ class ResNet(object):
                 padding=(filter_size - 1) // 2,
                 groups=groups,
                 act=None,
-                param_attr=ParamAttr(name=_name + "_weights",
-                                     learning_rate=lr_mult),
+                param_attr=ParamAttr(
+                    name=_name + "_weights", learning_rate=lr_mult),
                 bias_attr=False,
                 name=_name + '.conv2d.output.1')
         else:
@@ -202,14 +205,18 @@ class ResNet(object):
 
         norm_lr = 0. if self.freeze_norm else lr_mult
         norm_decay = self.norm_decay
+        if self.num_classes:
+            regularizer = None
+        else:
+            regularizer = L2Decay(norm_decay)
         pattr = ParamAttr(
             name=bn_name + '_scale',
             learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay))
+            regularizer=regularizer)
         battr = ParamAttr(
             name=bn_name + '_offset',
             learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay))
+            regularizer=regularizer)
 
         if self.norm_type in ['bn', 'sync_bn']:
             global_stats = True if self.freeze_norm else False
@@ -262,8 +269,8 @@ class ResNet(object):
                     pool_padding=0,
                     ceil_mode=True,
                     pool_type='avg')
-                return self._conv_norm(input, ch_out, 1, 1, name=name,
-                                      use_lr_mult_list=True)
+                return self._conv_norm(
+                    input, ch_out, 1, 1, name=name, use_lr_mult_list=True)
             return self._conv_norm(input, ch_out, 1, stride, name=name)
         else:
             return input

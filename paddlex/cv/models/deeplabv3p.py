@@ -1,16 +1,16 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-#
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import os.path as osp
@@ -190,11 +190,6 @@ class DeepLabv3p(BaseAPI):
         if mode == 'train':
             self.optimizer.minimize(model_out)
             outputs['loss'] = model_out
-        elif mode == 'eval':
-            outputs['loss'] = model_out[0]
-            outputs['pred'] = model_out[1]
-            outputs['label'] = model_out[2]
-            outputs['mask'] = model_out[3]
         else:
             outputs['pred'] = model_out[0]
             outputs['logit'] = model_out[1]
@@ -247,14 +242,16 @@ class DeepLabv3p(BaseAPI):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
             save_dir (str): 模型保存路径。默认'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认'IMAGENET。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，
+                则自动下载在COCO数据集上预训练的模型权重；若为字符串'CITYSCAPES'，
+                则自动下载在CITYSCAPES数据集上预训练的模型权重；若为None，则不使用预训练模型。默认'IMAGENET。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认的优化器：使用
                 fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
             learning_rate (float): 默认优化器的初始学习率。默认0.01。
             lr_decay_power (float): 默认优化器学习率衰减指数。默认0.9。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认False。
             sensitivities_file (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，
-                则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
+                则自动下载在Cityscapes图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
             eval_metric_loss (float): 可容忍的精度损失。默认为0.05。
             early_stop (bool): 是否使用提前终止训练策略。默认值为False。
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
@@ -336,18 +333,27 @@ class DeepLabv3p(BaseAPI):
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
-            labels = np.array([d[1] for d in data])
+
+            _, _, im_h, im_w = images.shape
+            labels = list()
+            for d in data:
+                padding_label = np.zeros(
+                    (1, im_h, im_w)).astype('int64') + self.ignore_index
+                _, label_h, label_w = d[1].shape
+                padding_label[:, :label_h, :label_w] = d[1]
+                labels.append(padding_label)
+            labels = np.array(labels)
+
             num_samples = images.shape[0]
             if num_samples < batch_size:
                 num_pad_samples = batch_size - num_samples
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
             feed_data = {'image': images}
-            outputs = self.exe.run(
-                self.parallel_test_prog,
-                feed=feed_data,
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=True)
+            outputs = self.exe.run(self.parallel_test_prog,
+                                   feed=feed_data,
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=True)
             pred = outputs[0]
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
@@ -364,8 +370,7 @@ class DeepLabv3p(BaseAPI):
 
         metrics = OrderedDict(
             zip(['miou', 'category_iou', 'macc', 'category_acc', 'kappa'],
-                [miou, category_iou, macc, category_acc,
-                 conf_mat.kappa()]))
+                [miou, category_iou, macc, category_acc, conf_mat.kappa()]))
         if return_details:
             eval_details = {
                 'confusion_matrix': conf_mat.confusion_matrix.tolist()
@@ -394,10 +399,10 @@ class DeepLabv3p(BaseAPI):
                 transforms=self.test_transforms, mode='test')
             im, im_info = self.test_transforms(im_file)
         im = np.expand_dims(im, axis=0)
-        result = self.exe.run(
-            self.test_prog,
-            feed={'image': im},
-            fetch_list=list(self.test_outputs.values()))
+        result = self.exe.run(self.test_prog,
+                              feed={'image': im},
+                              fetch_list=list(self.test_outputs.values()),
+                              use_program_cache=True)
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
         logit = result[1]
@@ -413,6 +418,6 @@ class DeepLabv3p(BaseAPI):
                 pred = pred[0:h, 0:w]
                 logit = logit[0:h, 0:w, :]
             else:
-                raise Exception("Unexpected info '{}' in im_info".format(
-                    info[0]))
+                raise Exception("Unexpected info '{}' in im_info".format(info[
+                    0]))
         return {'label_map': pred, 'score_map': logit}

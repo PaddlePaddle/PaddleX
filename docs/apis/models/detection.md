@@ -9,7 +9,7 @@ paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor_
 > 构建YOLOv3检测器。**注意在YOLOv3，num_classes不需要包含背景类，如目标包括human、dog两种，则num_classes设为2即可，这里与FasterRCNN/MaskRCNN有差别**
 
 > **参数**
-> 
+>
 > > - **num_classes** (int): 类别数。默认为80。
 > > - **backbone** (str): YOLOv3的backbone网络，取值范围为['DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large']。默认为'MobileNetV1'。
 > > - **anchors** (list|tuple): anchor框的宽度和高度，为None时表示使用默认值
@@ -42,7 +42,7 @@ train(self, num_epochs, train_dataset, train_batch_size=8, eval_dataset=None, sa
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为20。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。默认值为'output'。
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
+> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
 > > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
 > > - **learning_rate** (float): 默认优化器的学习率。默认为1.0/8000。
 > > - **warmup_steps** (int):  默认优化器进行warmup过程的步数。默认为1000。
@@ -53,7 +53,7 @@ train(self, num_epochs, train_dataset, train_batch_size=8, eval_dataset=None, sa
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认值为False。
 > > - **sensitivities_file** (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，则自动下载在PascalVOC数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
 > > - **eval_metric_loss** (float): 可容忍的精度损失。默认为0.05。
-> > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
+> > - **early_stop** (bool): 是否使用提前终止训练策略。默认值为False。
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 > > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
@@ -107,7 +107,7 @@ paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspec
 > **参数**
 
 > > - **num_classes** (int): 包含了背景类的类别数。默认为81。
-> > - **backbone** (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
+> > - **backbone** (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
 > > - **with_fpn** (bool): 是否使用FPN结构。默认为True。
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -129,7 +129,7 @@ train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, sa
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。默认值为'output'。
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
+> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，则自动下载在COCO数据集上预训练的模型权重（注意：暂未提供ResNet18的COCO预训练模型）；为None，则不使用预训练模型。默认为None。
 > > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
 > > - **learning_rate** (float): 默认优化器的初始学习率。默认为0.0025。
 > > - **warmup_steps** (int):  默认优化器进行warmup过程的步数。默认为500。

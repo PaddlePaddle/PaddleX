@@ -65,6 +65,15 @@ bool Model::load_config(const std::string& model_dir) {
   YAML::Node config = YAML::LoadFile(yaml_file);
   type = config["_Attributes"]["model_type"].as<std::string>();
   name = config["Model"].as<std::string>();
+  std::string version = config["version"].as<std::string>();
+  if (version[0] == '0') {
+    std::cerr << "[Init] Version of the loaded model is lower than 1.0.0, deployment "
+              << "cannot be done, please refer to "
+              << "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/upgrade_version.md "
+              << "to transfer version."
+              << std::endl;
+    return false;
+  }
   bool to_rgb = true;
   if (config["TransformsMode"].IsDefined()) {
     std::string mode = config["TransformsMode"].as<std::string>();
@@ -89,7 +98,7 @@ bool Model::load_config(const std::string& model_dir) {
 
 bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
   cv::Mat im = input_im.clone();
-  if (!transforms_.Run(&im, &inputs_)) {
+  if (!transforms_.Run(&im, blob)) {
     return false;
   }
   return true;

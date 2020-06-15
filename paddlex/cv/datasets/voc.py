@@ -14,6 +14,7 @@
 
 from __future__ import absolute_import
 import copy
+import os
 import os.path as osp
 import random
 import re
@@ -122,9 +123,13 @@ class VOCDetection(Dataset):
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
+<<<<<<< HEAD
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
                     cname = obj.find(name_tag).text.strip()
+=======
+                    cname = obj.find('name').text.strip()
+>>>>>>> e9b8c938bf48a74eba95458257b512cfcbdbcca3
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
                     diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
@@ -196,6 +201,44 @@ class VOCDetection(Dataset):
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
+
+    def add_negative_samples(self, image_dir):
+        import cv2
+        if not osp.exists(image_dir):
+            raise Exception("{} background images directory does not exist.".
+                            format(image_dir))
+        image_list = os.listdir(image_dir)
+        max_img_id = max(self.coco_gt.getImgIds())
+        for image in image_list:
+            if not is_pic(image):
+                continue
+            # False ground truth
+            gt_bbox = np.array([[0, 0, 1e-05, 1e-05]], dtype=np.float32)
+            gt_class = np.array([[0]], dtype=np.int32)
+            gt_score = np.ones((1, 1), dtype=np.float32)
+            is_crowd = np.array([[0]], dtype=np.int32)
+            difficult = np.zeros((1, 1), dtype=np.int32)
+            gt_poly = [[[0, 0, 0, 1e-05, 1e-05, 1e-05, 1e-05, 0]]]
+
+            max_img_id += 1
+            im_fname = osp.join(image_dir, image)
+            img_data = cv2.imread(im_fname)
+            im_h, im_w, im_c = img_data.shape
+            im_info = {
+                'im_id': np.array([max_img_id]).astype('int32'),
+                'image_shape': np.array([im_h, im_w]).astype('int32'),
+            }
+            label_info = {
+                'is_crowd': is_crowd,
+                'gt_class': gt_class,
+                'gt_bbox': gt_bbox,
+                'gt_score': gt_score,
+                'difficult': difficult,
+                'gt_poly': gt_poly
+            }
+            coco_rec = (im_info, label_info)
+            self.file_list.append([im_fname, coco_rec])
+        self.num_samples = len(self.file_list)
 
     def iterator(self):
         self._epoch += 1

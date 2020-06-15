@@ -21,6 +21,7 @@ import numpy as np
 from PIL import Image
 import cv2
 from collections import OrderedDict
+import paddlex.utils.logging as logging
 
 
 class SegTransform:
@@ -107,6 +108,16 @@ class Compose(SegTransform):
                 else:
                     outputs = (im, im_info)
         return outputs
+
+    def add_augmenters(self, augmenters):
+        if not isinstance(augmenters, list):
+            raise Exception(
+                "augmenters should be list type in func add_augmenters()")
+        transform_names = [type(x).__name__ for x in self.transforms]
+        for aug in augmenters:
+            if type(aug).__name__ in transform_names:
+                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+        self.transforms = augmenters + self.transforms
 
 
 class RandomHorizontalFlip(SegTransform):
@@ -1088,3 +1099,39 @@ class ArrangeSegmenter(SegTransform):
             return (im, im_info)
         else:
             return (im, )
+
+
+class ComposedSegTransforms(Compose):
+    """ 语义分割模型(UNet/DeepLabv3p)的图像处理流程，具体如下
+        训练阶段：
+        1. 随机对图像以0.5的概率水平翻转
+        2. 按不同的比例随机Resize原图
+        3. 从原图中随机crop出大小为train_crop_size大小的子图，如若crop出来的图小于train_crop_size，则会将图padding到对应大小
+        4. 图像归一化
+        预测阶段：
+        1. 图像归一化
+
+        Args:
+            mode(str): 图像处理所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
+            train_crop_size(list): 模型训练阶段，随机从原图crop的大小
+            mean(list): 图像均值
+            std(list): 图像方差
+    """
+
+    def __init__(self,
+                 mode,
+                 train_crop_size=[769, 769],
+                 mean=[0.5, 0.5, 0.5],
+                 std=[0.5, 0.5, 0.5]):
+        if mode == 'train':
+            # 训练时的transforms，包含数据增强
+            transforms = [
+                RandomHorizontalFlip(prob=0.5), ResizeStepScaling(),
+                RandomPaddingCrop(crop_size=train_crop_size), Normalize(
+                    mean=mean, std=std)
+            ]
+        else:
+            # 验证/预测时的transforms
+            transforms = [Normalize(mean=mean, std=std)]
+
+        super(ComposedSegTransforms, self).__init__(transforms)

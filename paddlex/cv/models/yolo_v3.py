@@ -1,16 +1,16 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-#
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import math
@@ -128,8 +128,16 @@ class YOLOv3(BaseAPI):
                           lr_decay_epochs, lr_decay_gamma,
                           num_steps_each_epoch):
         if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
-            raise Exception("warmup_steps should less than {}".format(
-                lr_decay_epochs[0] * num_steps_each_epoch))
+            logging.error(
+                "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
+                exit=False)
+            logging.error(
+                "See this doc for more information: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
+                exit=False)
+            logging.error(
+                "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
+                format(lr_decay_epochs[0] * num_steps_each_epoch, warmup_steps
+                       // num_steps_each_epoch))
         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
         values = [(lr_decay_gamma**i) * learning_rate
                   for i in range(len(lr_decay_epochs) + 1)]
@@ -180,7 +188,8 @@ class YOLOv3(BaseAPI):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为10。
             save_dir (str): 模型保存路径。默认值为'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，
+                则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：
                 fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
             learning_rate (float): 默认优化器的学习率。默认为1.0/8000。
@@ -277,8 +286,7 @@ class YOLOv3(BaseAPI):
                 eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
                 预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -298,19 +306,17 @@ class YOLOv3(BaseAPI):
 
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
-        logging.info(
-            "Start to evaluating(total_samples={}, total_steps={})...".format(
-                eval_dataset.num_samples, total_steps))
+        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
+                     format(eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
             im_sizes = np.array([d[1] for d in data])
             feed_data = {'image': images, 'im_size': im_sizes}
-            outputs = self.exe.run(
-                self.test_prog,
-                feed=[feed_data],
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=False)
+            outputs = self.exe.run(self.test_prog,
+                                   feed=[feed_data],
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -326,13 +332,13 @@ class YOLOv3(BaseAPI):
                 res['gt_label'] = (res_gt_label, [])
                 res['is_difficult'] = (res_is_difficult, [])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
         box_ap_stats, eval_details = eval_results(
             results, metric, eval_dataset.coco_gt, with_background=False)
         evaluate_metrics = OrderedDict(
-            zip(['bbox_mmap' if metric == 'COCO' else 'bbox_map'],
-                box_ap_stats))
+            zip(['bbox_mmap'
+                 if metric == 'COCO' else 'bbox_map'], box_ap_stats))
         if return_details:
             return evaluate_metrics, eval_details
         return evaluate_metrics
@@ -346,7 +352,8 @@ class YOLOv3(BaseAPI):
 
         Returns:
             list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标、预测框得分组成。
+              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+              预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -359,14 +366,12 @@ class YOLOv3(BaseAPI):
             im, im_size = self.test_transforms(img_file)
         im = np.expand_dims(im, axis=0)
         im_size = np.expand_dims(im_size, axis=0)
-        outputs = self.exe.run(
-            self.test_prog,
-            feed={
-                'image': im,
-                'im_size': im_size
-            },
-            fetch_list=list(self.test_outputs.values()),
-            return_numpy=False)
+        outputs = self.exe.run(self.test_prog,
+                               feed={'image': im,
+                                     'im_size': im_size},
+                               fetch_list=list(self.test_outputs.values()),
+                               return_numpy=False,
+                               use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)

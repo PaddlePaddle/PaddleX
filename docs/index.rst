@@ -26,13 +26,14 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    cv_solutions.md
    apis/index.rst
    paddlex_gui/index.rst
+   tuning_strategy/index.rst
    update.md
    FAQ.md
    appendix/index.rst
 
 * PaddleX版本: v1.0.0
 * 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  
-* 项目GitHub: https://github.com/PaddlePaddle/PaddleX/tree/develop  
+* 项目GitHub: https://github.com/PaddlePaddle/PaddleX
 * 官方QQ用户群: 1045148026  
 * GitHub Issue反馈: http://www.github.com/PaddlePaddle/PaddleX/issues
 

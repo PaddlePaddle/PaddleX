@@ -128,7 +128,6 @@ class CocoDetection(VOCDetection):
 
             coco_rec = (im_info, label_info)
             self.file_list.append([im_fname, coco_rec])
-
         if not len(self.file_list) > 0:
             raise Exception('not found any coco record in %s' % (ann_file))
         logging.info("{} samples in file {}".format(

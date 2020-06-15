@@ -1,16 +1,16 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-#
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import math
@@ -32,7 +32,7 @@ class FasterRCNN(BaseAPI):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50_vd', 'ResNet101', 'ResNet101_vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -47,7 +47,8 @@ class FasterRCNN(BaseAPI):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
+            'HRNet_W18'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -79,6 +80,12 @@ class FasterRCNN(BaseAPI):
             layers = 101
             variant = 'd'
             norm_type = 'affine_channel'
+        elif backbone_name == 'HRNet_W18':
+            backbone = paddlex.cv.nets.hrnet.HRNet(
+                width=18, freeze_norm=True, norm_decay=0., freeze_at=0)
+            if self.with_fpn is False:
+                self.with_fpn = True
+            return backbone
         if self.with_fpn:
             backbone = paddlex.cv.nets.resnet.ResNet(
                 norm_type='bn' if norm_type is None else norm_type,
@@ -117,12 +124,12 @@ class FasterRCNN(BaseAPI):
             model_out = model.build_net(inputs)
             loss = model_out['loss']
             self.optimizer.minimize(loss)
-            outputs = OrderedDict([('loss', model_out['loss']),
-                                   ('loss_cls', model_out['loss_cls']),
-                                   ('loss_bbox', model_out['loss_bbox']),
-                                   ('loss_rpn_cls', model_out['loss_rpn_cls']),
-                                   ('loss_rpn_bbox',
-                                    model_out['loss_rpn_bbox'])])
+            outputs = OrderedDict(
+                [('loss', model_out['loss']),
+                 ('loss_cls', model_out['loss_cls']),
+                 ('loss_bbox', model_out['loss_bbox']),
+                 ('loss_rpn_cls', model_out['loss_rpn_cls']), (
+                     'loss_rpn_bbox', model_out['loss_rpn_bbox'])])
         else:
             outputs = model.build_net(inputs)
         return inputs, outputs
@@ -131,8 +138,16 @@ class FasterRCNN(BaseAPI):
                           lr_decay_epochs, lr_decay_gamma,
                           num_steps_each_epoch):
         if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
-            raise Exception("warmup_steps should less than {}".format(
-                lr_decay_epochs[0] * num_steps_each_epoch))
+            logging.error(
+                "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
+                exit=False)
+            logging.error(
+                "See this doc for more information: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
+                exit=False)
+            logging.error(
+                "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
+                format(lr_decay_epochs[0] * num_steps_each_epoch, warmup_steps
+                       // num_steps_each_epoch))
         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
         values = [(lr_decay_gamma**i) * learning_rate
                   for i in range(len(lr_decay_epochs) + 1)]
@@ -181,7 +196,8 @@ class FasterRCNN(BaseAPI):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为20。
             save_dir (str): 模型保存路径。默认值为'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，
+                则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：
                 fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
             learning_rate (float): 默认优化器的初始学习率。默认为0.0025。
@@ -227,7 +243,9 @@ class FasterRCNN(BaseAPI):
         # 构建训练、验证、测试网络
         self.build_program()
         fuse_bn = True
-        if self.with_fpn and self.backbone in ['ResNet18', 'ResNet50']:
+        if self.with_fpn and self.backbone in [
+                'ResNet18', 'ResNet50', 'HRNet_W18'
+        ]:
             fuse_bn = False
         self.net_initialize(
             startup_prog=fluid.default_startup_program(),
@@ -273,8 +291,7 @@ class FasterRCNN(BaseAPI):
                 eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
                 预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -293,14 +310,12 @@ class FasterRCNN(BaseAPI):
             logging.warning(
                 "Faster RCNN supports batch_size=1 only during evaluating, so batch_size is forced to be set to 1."
             )
-        dataset = eval_dataset.generator(
-            batch_size=batch_size, drop_last=False)
+        dataset = eval_dataset.generator(batch_size=batch_size, drop_last=False)
 
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         results = list()
-        logging.info(
-            "Start to evaluating(total_samples={}, total_steps={})...".format(
-                eval_dataset.num_samples, total_steps))
+        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
+                     format(eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(enumerate(dataset()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
             im_infos = np.array([d[1] for d in data]).astype('float32')
@@ -310,11 +325,10 @@ class FasterRCNN(BaseAPI):
                 'im_info': im_infos,
                 'im_shape': im_shapes,
             }
-            outputs = self.exe.run(
-                self.test_prog,
-                feed=[feed_data],
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=False)
+            outputs = self.exe.run(self.test_prog,
+                                   feed=[feed_data],
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -339,13 +353,13 @@ class FasterRCNN(BaseAPI):
                 res['is_difficult'] = (np.array(res_is_difficult),
                                        [res_is_difficult_lod])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
         box_ap_stats, eval_details = eval_results(
             results, metric, eval_dataset.coco_gt, with_background=True)
         metrics = OrderedDict(
-            zip(['bbox_mmap' if metric == 'COCO' else 'bbox_map'],
-                box_ap_stats))
+            zip(['bbox_mmap'
+                 if metric == 'COCO' else 'bbox_map'], box_ap_stats))
         if return_details:
             return metrics, eval_details
         return metrics
@@ -359,7 +373,8 @@ class FasterRCNN(BaseAPI):
 
         Returns:
             list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标、预测框得分组成。
+              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+              预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -373,15 +388,15 @@ class FasterRCNN(BaseAPI):
         im = np.expand_dims(im, axis=0)
         im_resize_info = np.expand_dims(im_resize_info, axis=0)
         im_shape = np.expand_dims(im_shape, axis=0)
-        outputs = self.exe.run(
-            self.test_prog,
-            feed={
-                'image': im,
-                'im_info': im_resize_info,
-                'im_shape': im_shape
-            },
-            fetch_list=list(self.test_outputs.values()),
-            return_numpy=False)
+        outputs = self.exe.run(self.test_prog,
+                               feed={
+                                   'image': im,
+                                   'im_info': im_resize_info,
+                                   'im_shape': im_shape
+                               },
+                               fetch_list=list(self.test_outputs.values()),
+                               return_numpy=False,
+                               use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)

@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
         std::cout << "image file: " << image_path
                   << ", predict label: " << result.boxes[i].category
                   << ", label_id:" << result.boxes[i].category_id
-                  << ", score: " << result.boxes[i].score << ", box:("
+                  << ", score: " << result.boxes[i].score << ", box(xmin, ymin, w, h):("
                   << result.boxes[i].coordinate[0] << ", "
                   << result.boxes[i].coordinate[1] << ", "
                   << result.boxes[i].coordinate[2] << ", "
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < result.boxes.size(); ++i) {
       std::cout << ", predict label: " << result.boxes[i].category
                 << ", label_id:" << result.boxes[i].category_id
-                << ", score: " << result.boxes[i].score << ", box:("
+                << ", score: " << result.boxes[i].score << ", box(xmin, ymin, w, h):("
                 << result.boxes[i].coordinate[0] << ", "
                 << result.boxes[i].coordinate[1] << ", "
                 << result.boxes[i].coordinate[2] << ", "

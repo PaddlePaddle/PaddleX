@@ -41,7 +41,16 @@ def load_model(model_dir, fixed_input_shape=None):
     if 'model_name' in info['_init_params']:
         del info['_init_params']['model_name']
     model = getattr(paddlex.cv.models, info['Model'])(**info['_init_params'])
+
     model.fixed_input_shape = fixed_input_shape
+    if '_Attributes' in info:
+        if 'fixed_input_shape' in info['_Attributes']:
+            fixed_input_shape = info['_Attributes']['fixed_input_shape']
+            if fixed_input_shape is not None:
+                logging.info("Model already has fixed_input_shape with {}".
+                             format(fixed_input_shape))
+                model.fixed_input_shape = fixed_input_shape
+
     if status == "Normal" or \
             status == "Prune" or status == "fluid.save":
         startup_prog = fluid.Program()
@@ -88,8 +97,8 @@ def load_model(model_dir, fixed_input_shape=None):
                 model.model_type, info['Transforms'], info['BatchTransforms'])
             model.eval_transforms = copy.deepcopy(model.test_transforms)
         else:
-            model.test_transforms = build_transforms(
-                model.model_type, info['Transforms'], to_rgb)
+            model.test_transforms = build_transforms(model.model_type,
+                                                     info['Transforms'], to_rgb)
             model.eval_transforms = copy.deepcopy(model.test_transforms)
 
     if '_Attributes' in info:
@@ -107,20 +116,7 @@ def fix_input_shape(info, fixed_input_shape=None):
         resize = {'ResizeByShort': {}}
         padding = {'Padding': {}}
         if info['_Attributes']['model_type'] == 'classifier':
-            crop_size = 0
-            for transform in info['Transforms']:
-                if 'CenterCrop' in transform:
-                    crop_size = transform['CenterCrop']['crop_size']
-                    break
-            assert crop_size == fixed_input_shape[
-                0], "fixed_input_shape must == CenterCrop:crop_size:{}".format(
-                    crop_size)
-            assert crop_size == fixed_input_shape[
-                1], "fixed_input_shape must == CenterCrop:crop_size:{}".format(
-                    crop_size)
-            if crop_size == 0:
-                logging.warning(
-                    "fixed_input_shape must == input shape when trainning")
+            pass
         else:
             resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
             resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
