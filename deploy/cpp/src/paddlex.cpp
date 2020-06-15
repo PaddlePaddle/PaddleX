@@ -11,16 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+#include <algorithm>
+#include <omp.h>
 #include "include/paddlex/paddlex.h"
-
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
                              bool use_trt,
                              int gpu_id,
-                             std::string key) {
+                             std::string key,
+			     int batch_size) {
   // 读取配置文件
   if (!load_config(model_dir)) {
     std::cerr << "Parse file 'model.yml' failed!" << std::endl;
@@ -58,6 +59,7 @@ void Model::create_predictor(const std::string& model_dir,
         false /* use_calib_mode*/);
   }
   predictor_ = std::move(CreatePaddlePredictor(config));
+  inputs_batch_.assign(batch_size, ImageBlob());
 }
 
 bool Model::load_config(const std::string& model_dir) {
@@ -104,6 +106,21 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
   return true;
 }
 
+// use openmp
+bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch) {
+  int batch_size = inputs_batch_.size();
+  bool success = true;
+  //int i;
+  #pragma omp parallel for num_threads(batch_size)
+  for(int i = 0; i < input_im_batch.size(); ++i) {
+    cv::Mat im = input_im_batch[i].clone();
+    if(!transforms_.Run(&im, &blob_batch[i])){
+      success = false;
+    }
+  }
+  return success;
+}
+
 bool Model::predict(const cv::Mat& im, ClsResult* result) {
   inputs_.clear();
   if (type == "detector") {
@@ -144,6 +161,64 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   result->category_id = std::distance(std::begin(outputs_), ptr);
   result->score = *ptr;
   result->category = labels[result->category_id];
+}
+
+bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results) {
+  for(auto &inputs: inputs_batch_) {
+    inputs.clear();
+  }
+  if (type == "detector") {
+    std::cerr << "Loading model is a 'detector', DetResult should be passed to "
+                 "function predict()!"
+              << std::endl;
+    return false;
+  } else if (type == "segmenter") {
+    std::cerr << "Loading model is a 'segmenter', SegResult should be passed "
+                 "to function predict()!"
+              << std::endl;
+    return false;
+  }
+  // 处理输入图像
+  if (!preprocess(im_batch, inputs_batch_)) {
+    std::cerr << "Preprocess failed!" << std::endl;
+    return false;
+  }
+  // 使用加载的模型进行预测
+  int batch_size = im_batch.size();
+  auto in_tensor = predictor_->GetInputTensor("image");
+  int h = inputs_batch_[0].new_im_size_[0];
+  int w = inputs_batch_[0].new_im_size_[1];
+  in_tensor->Reshape({batch_size, 3, h, w});
+  std::vector<float> inputs_data(batch_size * 3 * h * w);
+  for(int i = 0; i <inputs_batch_.size(); ++i) {
+    std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
+  }
+  in_tensor->copy_from_cpu(inputs_data.data());
+  //in_tensor->copy_from_cpu(inputs_.im_data_.data());
+  predictor_->ZeroCopyRun();
+  // 取出模型的输出结果
+  auto output_names = predictor_->GetOutputNames();
+  auto output_tensor = predictor_->GetOutputTensor(output_names[0]);
+  std::vector<int> output_shape = output_tensor->shape();
+  int size = 1;
+  for (const auto& i : output_shape) {
+    size *= i;
+  }
+  outputs_.resize(size);
+  output_tensor->copy_to_cpu(outputs_.data());
+  // 对模型输出结果进行后处理
+  int single_batch_size = size / batch_size;
+  for(int i = 0; i < batch_size; ++i) {
+    auto start_ptr = std::begin(outputs_);
+    auto end_ptr = std::begin(outputs_);
+    std::advance(start_ptr, i * single_batch_size);
+    std::advance(end_ptr, (i + 1) * single_batch_size);
+    auto ptr = std::max_element(start_ptr, end_ptr);
+    results[i].category_id = std::distance(start_ptr, ptr);
+    results[i].score = *ptr;
+    results[i].category = labels[results[i].category_id];
+  }
+  return true;
 }
 
 bool Model::predict(const cv::Mat& im, DetResult* result) {
@@ -288,6 +363,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
     size *= i;
     result->label_map.shape.push_back(i);
   }
+
   result->label_map.data.resize(size);
   output_label_tensor->copy_to_cpu(result->label_map.data.data());
 
@@ -299,6 +375,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
     size *= i;
     result->score_map.shape.push_back(i);
   }
+
   result->score_map.data.resize(size);
   output_score_tensor->copy_to_cpu(result->score_map.data.data());
 
@@ -325,8 +402,8 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
       inputs_.im_size_before_resize_.pop_back();
       auto padding_w = before_shape[0];
       auto padding_h = before_shape[1];
-      mask_label = mask_label(cv::Rect(0, 0, padding_w, padding_h));
-      mask_score = mask_score(cv::Rect(0, 0, padding_w, padding_h));
+      mask_label = mask_label(cv::Rect(0, 0, padding_h, padding_w));
+      mask_score = mask_score(cv::Rect(0, 0, padding_h, padding_w));
     } else if (*iter == "resize") {
       auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
       inputs_.im_size_before_resize_.pop_back();
@@ -343,7 +420,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                  cv::Size(resize_h, resize_w),
                  0,
                  0,
-                 cv::INTER_NEAREST);
+                 cv::INTER_LINEAR); 
     }
     ++idx;
   }

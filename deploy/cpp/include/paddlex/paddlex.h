@@ -45,21 +45,27 @@ class Model {
             bool use_gpu = false,
             bool use_trt = false,
             int gpu_id = 0,
-            std::string key = "") {
-    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key);
+            std::string key = "",
+	    int batch_size = 1) {
+    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, batch_size);
   }
 
   void create_predictor(const std::string& model_dir,
                         bool use_gpu = false,
                         bool use_trt = false,
                         int gpu_id = 0,
-                        std::string key = "");
+                        std::string key = "",
+			int batch_size = 1);
 
   bool load_config(const std::string& model_dir);
 
   bool preprocess(const cv::Mat& input_im, ImageBlob* blob);
+  
+  bool preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch);
 
   bool predict(const cv::Mat& im, ClsResult* result);
+
+  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results);
 
   bool predict(const cv::Mat& im, DetResult* result);
 
@@ -74,6 +80,7 @@ class Model {
   std::map<int, std::string> labels;
   Transforms transforms_;
   ImageBlob inputs_;
+  std::vector<ImageBlob> inputs_batch_;
   std::vector<float> outputs_;
   std::unique_ptr<paddle::PaddlePredictor> predictor_;
 };
