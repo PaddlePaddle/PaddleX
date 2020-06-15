@@ -6,6 +6,7 @@
 [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)
 ![python version](https://img.shields.io/badge/python-3.6+-orange.svg)
 ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
+![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
 
 PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习全流程开发工具。具备**全流程打通**、**融合产业实践**、**易用易集成**三大特点。
 
