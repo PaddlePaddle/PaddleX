@@ -161,6 +161,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   result->category_id = std::distance(std::begin(outputs_), ptr);
   result->score = *ptr;
   result->category = labels[result->category_id];
+  return true;
 }
 
 bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results) {
@@ -322,6 +323,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
                          static_cast<int>(box->coordinate[3])};
     }
   }
+  return true;
 }
 
 bool Model::predict(const cv::Mat& im, SegResult* result) {
@@ -430,6 +432,147 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   result->score_map.data.assign(mask_score.begin<float>(),
                                 mask_score.end<float>());
   result->score_map.shape = {mask_score.rows, mask_score.cols};
+  return true;
+}
+
+bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result) {
+  for(auto &inputs: inputs_batch_) {
+    inputs.clear();
+  }
+  if (type == "classifier") {
+    std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
+                 "to function predict()!"
+              << std::endl;
+    return false;
+  } else if (type == "detector") {
+    std::cerr << "Loading model is a 'detector', DetResult should be passed to "
+                 "function predict()!"
+              << std::endl;
+    return false;
+  }
+
+  // 处理输入图像
+  if (!preprocess(im_batch, inputs_batch_)) {
+    std::cerr << "Preprocess failed!" << std::endl;
+    return false;
+  }
+
+  int batch_size = im_batch.size();
+  result.clear();
+  result.resize(batch_size);
+  int h = inputs_batch_[0].new_im_size_[0];
+  int w = inputs_batch_[0].new_im_size_[1];
+  auto im_tensor = predictor_->GetInputTensor("image");
+  im_tensor->Reshape({batch_size, 3, h, w});
+  std::vector<float> inputs_data(batch_size * 3 * h * w);
+  for(int i = 0; i <inputs_batch_.size(); ++i) {
+    std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
+  }
+  im_tensor->copy_from_cpu(inputs_data.data());
+  //im_tensor->copy_from_cpu(inputs_.im_data_.data());
+
+  // 使用加载的模型进行预测
+  predictor_->ZeroCopyRun();
+
+  // 获取预测置信度，经过argmax后的labelmap
+  auto output_names = predictor_->GetOutputNames();
+  auto output_label_tensor = predictor_->GetOutputTensor(output_names[0]);
+  std::vector<int> output_label_shape = output_label_tensor->shape();
+  int size = 1;
+  for (const auto& i : output_label_shape) {
+    size *= i;
+  }
+
+  std::vector<int64_t> output_labels(size, 0);
+  output_label_tensor->copy_to_cpu(output_labels.data());
+  auto output_labels_iter = output_labels.begin();
+
+  int single_batch_size = size / batch_size;
+  for(int i = 0; i < batch_size; ++i) {
+    result[i].label_map.data.resize(single_batch_size);
+    result[i].label_map.shape.push_back(1);
+    for(int j = 1; j < output_label_shape.size(); ++j) {
+      result[i].label_map.shape.push_back(output_label_shape[j]);
+    }
+    std::copy(output_labels_iter + i * single_batch_size, output_labels_iter + (i + 1) * single_batch_size, result[i].label_map.data.data());
+  }
+
+  // 获取预测置信度scoremap
+  auto output_score_tensor = predictor_->GetOutputTensor(output_names[1]);
+  std::vector<int> output_score_shape = output_score_tensor->shape();
+  size = 1;
+  for (const auto& i : output_score_shape) {
+    size *= i;
+  }
+
+  std::vector<float> output_scores(size, 0);
+  output_score_tensor->copy_to_cpu(output_scores.data());
+  auto output_scores_iter = output_scores.begin();
+
+  int single_batch_score_size = size / batch_size;
+  for(int i = 0; i < batch_size; ++i) {
+    result[i].score_map.data.resize(single_batch_score_size);
+    result[i].score_map.shape.push_back(1);
+    for(int j = 1; j < output_score_shape.size(); ++j) {
+      result[i].score_map.shape.push_back(output_score_shape[j]);
+    }
+    std::copy(output_scores_iter + i * single_batch_score_size, output_scores_iter + (i + 1) * single_batch_score_size, result[i].score_map.data.data());
+  }
+
+  // 解析输出结果到原图大小
+  for(int i = 0; i < batch_size; ++i) {
+    std::vector<uint8_t> label_map(result[i].label_map.data.begin(),
+                                   result[i].label_map.data.end());
+    cv::Mat mask_label(result[i].label_map.shape[1],
+                       result[i].label_map.shape[2],
+                       CV_8UC1,
+                       label_map.data());
+  
+    cv::Mat mask_score(result[i].score_map.shape[2],
+                       result[i].score_map.shape[3],
+                       CV_32FC1,
+                       result[i].score_map.data.data());
+    int idx = 1;
+    int len_postprocess = inputs_batch_[i].im_size_before_resize_.size();
+    for (std::vector<std::string>::reverse_iterator iter =
+             inputs_batch_[i].reshape_order_.rbegin();
+         iter != inputs_batch_[i].reshape_order_.rend();
+         ++iter) {
+      if (*iter == "padding") {
+        auto before_shape = inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
+        inputs_batch_[i].im_size_before_resize_.pop_back();
+        auto padding_w = before_shape[0];
+        auto padding_h = before_shape[1];
+        mask_label = mask_label(cv::Rect(0, 0, padding_h, padding_w));
+        mask_score = mask_score(cv::Rect(0, 0, padding_h, padding_w));
+      } else if (*iter == "resize") {
+        auto before_shape = inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
+        inputs_batch_[i].im_size_before_resize_.pop_back();
+        auto resize_w = before_shape[0];
+        auto resize_h = before_shape[1];
+        cv::resize(mask_label,
+                   mask_label,
+                   cv::Size(resize_h, resize_w),
+                   0,
+                   0,
+                   cv::INTER_NEAREST);
+        cv::resize(mask_score,
+                   mask_score,
+                   cv::Size(resize_h, resize_w),
+                   0,
+                   0,
+                   cv::INTER_LINEAR); 
+      }
+      ++idx;
+    }
+    result[i].label_map.data.assign(mask_label.begin<uint8_t>(),
+                                  mask_label.end<uint8_t>());
+    result[i].label_map.shape = {mask_label.rows, mask_label.cols};
+    result[i].score_map.data.assign(mask_score.begin<float>(),
+                                  mask_score.end<float>());
+    result[i].score_map.shape = {mask_score.rows, mask_score.cols};
+  }
+  return true;
 }
 
 }  // namespce of PaddleX

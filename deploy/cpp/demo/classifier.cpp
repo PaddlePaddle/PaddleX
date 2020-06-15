@@ -32,7 +32,7 @@ DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_string(key, "", "key of encryption");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
-DEFINE_int32(batch_size, 1, "Batch size when infering");
+DEFINE_int32(batch_size, 1, "Batch size of infering");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -53,8 +53,8 @@ int main(int argc, char** argv) {
 
   // 进行预测
   double total_running_time_s = 0.0;
-  double total_imreaad_time_s = 0.0;
-
+  double total_imread_time_s = 0.0;
+  int imgs = 1;
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {
@@ -63,31 +63,32 @@ int main(int argc, char** argv) {
     }
     // 多batch预测
     std::string image_path;
-    std::vector<std::string> image_path_vec;
+    std::vector<std::string> image_paths;
     while (getline(inf, image_path)) {
-      image_path_vec.push_back(image_path);
+      image_paths.push_back(image_path);
     }
-    for(int i = 0; i < image_path_vec.size(); i += FLAGS_batch_size) {
+    imgs = image_paths.size();
+    for(int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
       auto start = system_clock::now();
         // 读图像
-      int im_vec_size = std::min((int)image_path_vec.size(), i + FLAGS_batch_size);      
+      int im_vec_size = std::min((int)image_paths.size(), i + FLAGS_batch_size);      
       std::vector<cv::Mat> im_vec(im_vec_size - i);
       std::vector<PaddleX::ClsResult> results(im_vec_size - i, PaddleX::ClsResult());
       #pragma omp parallel for num_threads(im_vec_size - i)
       for(int j = i; j < im_vec_size; ++j){
-        im_vec[j - i] = std::move(cv::imread(image_path_vec[j], 1));
+        im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
       auto imread_end = system_clock::now();
       model.predict(im_vec, results);
 
       auto imread_duration = duration_cast<microseconds>(imread_end - start);
-      total_imreaad_time_s += double(imread_duration.count()) * microseconds::period::num / microseconds::period::den;
+      total_imread_time_s += double(imread_duration.count()) * microseconds::period::num / microseconds::period::den;
 
       auto end = system_clock::now();
       auto duration = duration_cast<microseconds>(end - start);
       total_running_time_s += double(duration.count()) * microseconds::period::num / microseconds::period::den;
       for(int j = i; j < im_vec_size; ++j) {
-            std::cout << "Path:" << image_path_vec[j]
+            std::cout << "Path:" << image_paths[j]
                       << ", predict label: " << results[j - i].category
                       << ", label_id:" << results[j - i].category_id
                       << ", score: " << results[j - i].score << std::endl;
@@ -105,11 +106,15 @@ int main(int argc, char** argv) {
               << ", label_id:" << result.category_id
               << ", score: " << result.score << std::endl;
   }
-  std::cout << "Total average running time: " 
+  std::cout << "Total running time: " 
 	    << total_running_time_s
-	    << " s, total average read img time: " 
-	    << total_imreaad_time_s
-	    << " s, batch_size = " 
+      << " s, average running time: "
+      << total_running_time_s / imgs 
+	    << " s/img, total read img time: " 
+	    << total_imread_time_s
+      << " s, average read time: "
+      << total_imread_time_s / imgs  
+	    << " s/img, batch_size = " 
 	    << FLAGS_batch_size 
 	    << std::endl;
   return 0;

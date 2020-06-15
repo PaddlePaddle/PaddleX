@@ -69,8 +69,12 @@ class Model {
 
   bool predict(const cv::Mat& im, DetResult* result);
 
+  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result);
+  
   bool predict(const cv::Mat& im, SegResult* result);
 
+  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result);
+  
   bool postprocess(SegResult* result);
 
   bool postprocess(DetResult* result);
