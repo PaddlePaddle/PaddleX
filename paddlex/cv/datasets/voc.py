@@ -123,13 +123,9 @@ class VOCDetection(Dataset):
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
-<<<<<<< HEAD
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
                     cname = obj.find(name_tag).text.strip()
-=======
-                    cname = obj.find('name').text.strip()
->>>>>>> e9b8c938bf48a74eba95458257b512cfcbdbcca3
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
                     diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:-1]
