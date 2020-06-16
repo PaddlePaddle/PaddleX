@@ -40,8 +40,8 @@
 |[FasterRCNN-ResNet101](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_1x.tar)| 212.5MB | 582.911 | 38.3 |
 |[FasterRCNN-ResNet50-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_fpn_1x.tar)| 167.7MB | 83.189 | 37.2 |
 |[FasterRCNN-ResNet50_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_vd_fpn_2x.tar)|167.8MB | 128.277 | 38.9 |
-|[FasterRCNN-ResNet101-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_1x.tar)| 244.2MB | 156.097 | 38.7 |
-|[FasterRCNN-ResNet101_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_vd_fpn_2x.tar) |244.3MB | 119.788 | 40.5 |
+|[FasterRCNN-ResNet101-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_1x.tar)| 244.2MB | 119.788 | 38.7 |
+|[FasterRCNN-ResNet101_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_vd_fpn_2x.tar) |244.3MB | 156.097 | 40.5 |
 |[FasterRCNN-HRNet_W18-FPN](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_hrnetv2p_w18_1x.tar) |115.5MB | 81.592 | 36 |
 |[YOLOv3-DarkNet53](https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar)|249.2MB | 42.672 | 38.9 |
 |[YOLOv3-MobileNetV1](https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v1.tar) |99.2MB | 15.442 | 29.3 |
