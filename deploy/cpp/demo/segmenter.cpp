@@ -83,7 +83,6 @@ int main(int argc, char** argv) {
       model.predict(im_vec, results);
       auto imread_duration = duration_cast<microseconds>(imread_end - start);
       total_imread_time_s += double(imread_duration.count()) * microseconds::period::num / microseconds::period::den;
-
       auto end = system_clock::now();
       auto duration = duration_cast<microseconds>(end - start);
       total_running_time_s += double(duration.count()) * microseconds::period::num / microseconds::period::den;

@@ -58,6 +58,7 @@ class Transform {
  public:
   virtual void Init(const YAML::Node& item) = 0;
   virtual bool Run(cv::Mat* im, ImageBlob* data) = 0;
+  virtual void SetPaddingSize(int max_h, int max_w) {}
 };
 
 class Normalize : public Transform {
@@ -169,11 +170,13 @@ class Padding : public Transform {
     }
   }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
-
+  virtual void SetPaddingSize(int max_h, int max_w);
  private:
   int coarsest_stride_ = -1;
   int width_ = 0;
   int height_ = 0;
+  int max_height_ = 0;
+  int max_width_ = 0;
 };
 
 class Transforms {
@@ -181,10 +184,12 @@ class Transforms {
   void Init(const YAML::Node& node, bool to_rgb = true);
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
   bool Run(cv::Mat* im, ImageBlob* data);
-
+  void SetPaddingSize(int max_h, int max_w);
  private:
   std::vector<std::shared_ptr<Transform>> transforms_;
   bool to_rgb_ = true;
+  int max_h_ = 0;
+  int max_w_ = 0;
 };
 
 }  // namespace PaddleX

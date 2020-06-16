@@ -95,11 +95,11 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
   if (width_ > 1 & height_ > 1) {
     padding_w = width_ - im->cols;
     padding_h = height_ - im->rows;
-  } else if (coarsest_stride_ > 1) {
+  } else if (coarsest_stride_ >= 1) {
     padding_h =
-        ceil(im->rows * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
+        ceil(max_height_ * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
     padding_w =
-        ceil(im->cols * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
+        ceil(max_width_ * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
   }
 
   if (padding_h < 0 || padding_w < 0) {
@@ -113,6 +113,11 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   return true;
+}
+
+void Padding::SetPaddingSize(int max_h, int max_w) {
+  max_height_ = max_h;
+  max_width_ = max_w;
 }
 
 bool ResizeByLong::Run(cv::Mat* im, ImageBlob* data) {
@@ -201,6 +206,7 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   for (int i = 0; i < transforms_.size(); ++i) {
+    transforms_[i]->SetPaddingSize(max_h_, max_w_);
     if (!transforms_[i]->Run(im, data)) {
       std::cerr << "Apply transforms to image failed!" << std::endl;
       return false;
@@ -219,4 +225,10 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   }
   return true;
 }
+
+void Transforms::SetPaddingSize(int max_h, int max_w) {
+  max_h_ = max_h;
+  max_w_ = max_w;
+}
+
 }  // namespace PaddleX
