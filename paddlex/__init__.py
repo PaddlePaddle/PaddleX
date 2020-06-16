@@ -48,6 +48,7 @@ if hub.version.hub_version < '1.6.2':
 env_info = get_environ_info()
 load_model = cv.models.load_model
 datasets = cv.datasets
+transforms = cv.transforms
 
 log_level = 2
 
