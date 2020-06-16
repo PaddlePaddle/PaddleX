@@ -18,6 +18,7 @@ except Exception:
     from collections import Sequence
 
 import random
+import os
 import os.path as osp
 import numpy as np
 
@@ -50,7 +51,7 @@ class Compose(DetTransform):
         ValueError: 数据长度不匹配。
     """
 
-    def __init__(self, transforms):
+    def __init__(self, transforms, vdl_save_dir=None):
         if not isinstance(transforms, list):
             raise TypeError('The transforms must be a list!')
         if len(transforms) < 1:
@@ -69,8 +70,24 @@ class Compose(DetTransform):
                     raise Exception(
                         "Elements in transforms should be defined in 'paddlex.det.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
                     )
+        self.images_writer = None
+                    
+    def set_vdl(self, vdl_save_dir=None):
+        # 对数据预处理结果在VisualDL中可视化 
+        self.images_writer = None
+        if vdl_save_dir is not None:
+            if not osp.isdir(vdl_save_dir):
+                if osp.exists(vdl_save_dir):
+                    os.remove(vdl_save_dir)
+                os.makedirs(vdl_save_dir)
+            from visualdl import LogWriter
+            vdl_images_dir = osp.join(vdl_save_dir, 'image_transforms')
+            self.images_writer = LogWriter(vdl_images_dir)
+            
+    def release_vdl(self):
+        self.images_writer = None
 
-    def __call__(self, im, im_info=None, label_info=None):
+    def __call__(self, im, im_info=None, label_info=None, step=0):
         """
         Args:
             im (str/np.ndarray): 图像路径/图像np.ndarray数据。
@@ -133,12 +150,21 @@ class Compose(DetTransform):
                 return (im, im_info)
             else:
                 return (im, im_info, label_info)
-
+            
+        if isinstance(im, str):
+            im_file = im
+        else:
+            im_file = str(step)
         outputs = decode_image(im, im_info, label_info)
         im = outputs[0]
         im_info = outputs[1]
         if len(outputs) == 3:
             label_info = outputs[2]
+        if self.images_writer is not None:
+            self.images_writer.add_image(tag='0. origin image',
+                                        img=im,
+                                        step=step)
+        op_id = 1
         for op in self.transforms:
             if im is None:
                 return None
@@ -151,6 +177,12 @@ class Compose(DetTransform):
                     outputs = (im, im_info, label_info)
                 else:
                     outputs = (im, im_info)
+            if self.images_writer is not None:
+                tag = str(op_id) + '. ' + op.__class__.__name__
+                self.images_writer.add_image(tag=tag,
+                                        img=im,
+                                        step=step)
+            op_id += 1
         return outputs
 
     def add_augmenters(self, augmenters):
@@ -621,6 +653,7 @@ class RandomDistort(DetTransform):
 
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label_info is None:
             return (im, im_info)
         else:

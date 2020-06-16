@@ -33,6 +33,18 @@ eval_dataset = pdx.datasets.SegDataset(
     label_list='optic_disc_seg/labels.txt',
     transforms=eval_transforms)
 
+# 可使用VisualDL查看数据预处理的中间结果
+# VisualDL启动方式: visualdl --logdir vdl_output --port 8001
+# 浏览器打开 https://0.0.0.0:8001即可
+# 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+train_transforms.vdl_save_dir = 'vdl_output'
+for step, data in enumerate(train_dataset.iterator()):
+    data.append(step)
+    train_transforms(*data)
+    if step == 5:
+        break
+train_transforms.vdl_save_dir = None
+
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标
 # VisualDL启动方式: visualdl --logdir output/deeplab/vdl_log --port 8001

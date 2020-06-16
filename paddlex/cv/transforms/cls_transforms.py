@@ -15,6 +15,7 @@
 from .ops import *
 from .imgaug_support import execute_imgaug
 import random
+import os
 import os.path as osp
 import numpy as np
 from PIL import Image, ImageEnhance
@@ -57,8 +58,24 @@ class Compose(ClsTransform):
                     raise Exception(
                         "Elements in transforms should be defined in 'paddlex.cls.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
                     )
+        self.images_writer = None
+                    
+    def set_vdl(self, vdl_save_dir=None):
+        # 对数据预处理结果在VisualDL中可视化 
+        self.images_writer = None
+        if vdl_save_dir is not None:
+            if not osp.isdir(vdl_save_dir):
+                if osp.exists(vdl_save_dir):
+                    os.remove(vdl_save_dir)
+                os.makedirs(vdl_save_dir)
+            from visualdl import LogWriter
+            vdl_images_dir = osp.join(vdl_save_dir, 'image_transforms')
+            self.images_writer = LogWriter(vdl_images_dir)
+            
+    def release_vdl(self):
+        self.images_writer = None
 
-    def __call__(self, im, label=None):
+    def __call__(self, im, label=None, step=0):
         """
         Args:
             im (str/np.ndarray): 图像路径/图像np.ndarray数据。
@@ -67,6 +84,7 @@ class Compose(ClsTransform):
             tuple: 根据网络所需字段所组成的tuple；
                 字段由transforms中的最后一个数据预处理操作决定。
         """
+        im_file = str(step)
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
@@ -74,10 +92,16 @@ class Compose(ClsTransform):
                     format(len(im.shape)))
         else:
             try:
+                im_file = im
                 im = cv2.imread(im).astype('float32')
             except:
                 raise TypeError('Can\'t read The image file {}!'.format(im))
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        if self.images_writer is not None:
+            self.images_writer.add_image(tag='0. origin image',
+                                        img=im,
+                                        step=step)
+        op_id = 1
         for op in self.transforms:
             if isinstance(op, ClsTransform):
                 outputs = op(im, label)
@@ -91,6 +115,12 @@ class Compose(ClsTransform):
                 outputs = (im, )
                 if label is not None:
                     outputs = (im, label)
+            if self.images_writer is not None:
+                tag = str(op_id) + '. ' + op.__class__.__name__
+                self.images_writer.add_image(tag=tag,
+                                        img=im,
+                                        step=step)
+            op_id += 1
         return outputs
 
     def add_augmenters(self, augmenters):
@@ -434,6 +464,7 @@ class RandomDistort(ClsTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label is None:
             return (im, )
         else:
