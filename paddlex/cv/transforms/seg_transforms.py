@@ -63,7 +63,7 @@ class Compose(SegTransform):
                         "Elements in transforms should be defined in 'paddlex.seg.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
                     )
        
-    def __call__(self, im, im_info=None, label=None, images_writer=None, step=0):
+    def __call__(self, im, im_info=None, label=None, vdl_writer=None, step=0):
         """
         Args:
             im (str/np.ndarray): 图像路径/图像np.ndarray数据。
@@ -72,6 +72,9 @@ class Compose(SegTransform):
                 图像在过resize前shape为(200, 300)， 过padding前shape为
                 (400, 600)
             label (str/np.ndarray): 标注图像路径/标注图像np.ndarray数据。
+            vdl_writer (visualdl.LogWriter): VisualDL存储器，日志信息将保存在其中。
+                当为None时，不对日志进行保存。默认为None。
+            step (int): 数据预处理的轮数，当vdl_writer不为None时有效。默认为0。
 
         Returns:
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
@@ -93,10 +96,10 @@ class Compose(SegTransform):
         if label is not None:
             if not isinstance(label, np.ndarray):
                 label = np.asarray(Image.open(label))
-        if images_writer is not None:
-            images_writer.add_image(tag='0. origin image',
-                                    img=im,
-                                    step=step)
+        if vdl_writer is not None:
+            vdl_writer.add_image(tag='0. origin image',
+                                 img=im,
+                                 step=step)
         op_id = 1
         for op in self.transforms:
             if isinstance(op, SegTransform):
@@ -112,11 +115,11 @@ class Compose(SegTransform):
                     outputs = (im, im_info, label)
                 else:
                     outputs = (im, im_info)
-            if images_writer is not None:
+            if vdl_writer is not None:
                 tag = str(op_id) + '. ' + op.__class__.__name__
-                images_writer.add_image(tag=tag,
-                                        img=im,
-                                        step=step)
+                vdl_writer.add_image(tag=tag,
+                                     img=im,
+                                     step=step)
             op_id += 1
         return outputs
 

@@ -19,6 +19,18 @@ from .det_transforms import DetTransform
 from .seg_transforms import SegTransform
 
 def visualize(dataset, index=0, steps=3, save_dir='vdl_output'):
+    '''对数据预处理/增强中间结果进行可视化。
+    可使用VisualDL查看中间结果：
+    1. VisualDL启动方式: visualdl --logdir vdl_output --port 8001
+    2. 浏览器打开 https://0.0.0.0:8001即可，
+        其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+    
+    Args:
+        dataset (paddlex.datasets): 数据集读取器。
+        index (int): 对数据集中的第index张图像进行可视化。默认为0
+        steps (int): 数据预处理/增强的次数。默认为3。
+        save_dir (str): 日志保存的路径。默认为'vdl_output'。
+    '''
     transforms = dataset.transforms
     if not osp.isdir(save_dir):
         if osp.exists(save_dir):
@@ -29,8 +41,8 @@ def visualize(dataset, index=0, steps=3, save_dir='vdl_output'):
             break
     from visualdl import LogWriter
     vdl_save_dir = osp.join(save_dir, 'image_transforms')
-    images_writer = LogWriter(vdl_save_dir)
-    data.append(images_writer)
+    vdl_writer = LogWriter(vdl_save_dir)
+    data.append(vdl_writer)
     for s in range(steps):
         if s != 0:
             data.pop()
