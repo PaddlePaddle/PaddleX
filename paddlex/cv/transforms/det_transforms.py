@@ -18,7 +18,6 @@ except Exception:
     from collections import Sequence
 
 import random
-import os
 import os.path as osp
 import numpy as np
 

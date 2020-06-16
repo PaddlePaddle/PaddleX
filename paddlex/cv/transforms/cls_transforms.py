@@ -15,7 +15,6 @@
 from .ops import *
 from .imgaug_support import execute_imgaug
 import random
-import os
 import os.path as osp
 import numpy as np
 from PIL import Image, ImageEnhance
