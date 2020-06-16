@@ -236,7 +236,6 @@ def cal_params_sensitivities(model, save_file, eval_dataset, batch_size=8):
 
             其中``weight_0``是卷积Kernel名；``sensitivities['weight_0']``是一个字典，key是裁剪率，value是敏感度。
     """
-    print('-----------', model.status)
     assert model.status == 'Normal', 'Only the model after training can calculate sensitivities data!'
     if os.path.exists(save_file):
         os.remove(save_file)
