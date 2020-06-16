@@ -57,6 +57,8 @@ sensitivities_data = {
     'https://bj.bcebos.com/paddlex/slim_prune/xception41.sensitivities',
     'Xception65':
     'https://bj.bcebos.com/paddlex/slim_prune/xception65.sensitivities',
+    'ShuffleNetV2':
+    'https://bj.bcebos.com/paddlex/slim_prune/shufflenetv2_sensitivities.data',
     'YOLOv3_MobileNetV1':
     'https://bj.bcebos.com/paddlex/slim_prune/yolov3_mobilenetv1.sensitivities',
     'YOLOv3_MobileNetV3_large':
