@@ -80,7 +80,7 @@ predict(self, img_file, transforms=None, topk=5)
 
 ## 其它分类器类
 
-PaddleX提供了共计22种分类器，所有分类器均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](../appendix/model_zoo.md)。
+PaddleX提供了共计22种分类器，所有分类器均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](https://paddlex.readthedocs.io/zh_CN/latest/appendix/model_zoo.html)。
 
 ### ResNet18
 ```python
