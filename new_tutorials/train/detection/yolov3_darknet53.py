@@ -11,8 +11,10 @@ pdx.utils.download_and_decompress(insect_dataset, path='./')
 
 # 定义训练和验证时的transforms
 # API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/det_transforms.html#composedyolotransforms
-train_transforms = transforms.ComposedYOLOv3Transforms(mode='train', shape=[608, 608])
-eval_transforms = transforms.ComposedYOLOv3Transforms(mode='eva', shape=[608, 608])
+train_transforms = transforms.ComposedYOLOv3Transforms(
+    mode='train', shape=[608, 608])
+eval_transforms = transforms.ComposedYOLOv3Transforms(
+    mode='eval', shape=[608, 608])
 
 # 定义训练和验证所用的数据集
 # API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/detection.html#vocdetection
