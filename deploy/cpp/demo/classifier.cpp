@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <omp.h>
 #include "include/paddlex/paddlex.h"
 
 using namespace std::chrono;

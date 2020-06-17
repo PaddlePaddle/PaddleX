@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <omp.h>
 
 #include "include/paddlex/paddlex.h"
 #include "include/paddlex/visualize.h"
@@ -90,8 +91,8 @@ int main(int argc, char** argv) {
       total_running_time_s += double(duration.count()) * microseconds::period::num / microseconds::period::den;
       //输出结果目标框
       for(int j = 0; j < im_vec_size - i; ++j) {
-        std::cout << "image file: " << image_paths[i + j] << std::endl;          
         for(int k = 0; k < results[j].boxes.size(); ++k) {
+          std::cout << "image file: " << image_paths[i + j] << ", ";// << std::endl;          
           std::cout << "predict label: " << results[j].boxes[k].category
                     << ", label_id:" << results[j].boxes[k].category_id
                     << ", score: " << results[j].boxes[k].score << ", box(xmin, ymin, w, h):("

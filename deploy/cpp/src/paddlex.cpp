@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <omp.h>
 #include "include/paddlex/paddlex.h"
-#include <fstream>
+#include <cstring>
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
@@ -103,7 +103,6 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
   cv::Mat im = input_im.clone();
   int max_h = im.rows;
   int max_w = im.cols;
-  transforms_.SetPaddingSize(max_h, max_w);
   if (!transforms_.Run(&im, blob)) {
     return false;
   }
@@ -116,11 +115,6 @@ bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<I
   bool success = true;
   int max_h = -1;
   int max_w = -1;
-  for(int i = 0; i < input_im_batch.size(); ++i) {
-    max_h = std::max(max_h, input_im_batch[i].rows);
-    max_w = std::max(max_w, input_im_batch[i].cols);
-  }
-  transforms_.SetPaddingSize(max_h, max_w);
   #pragma omp parallel for num_threads(batch_size)
   for(int i = 0; i < input_im_batch.size(); ++i) {
     cv::Mat im = input_im_batch[i].clone();
@@ -254,14 +248,9 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   im_tensor->Reshape({1, 3, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
-  std::ofstream fout("test_single.dat", std::ios::out);
   if (name == "YOLOv3") {
     auto im_size_tensor = predictor_->GetInputTensor("im_size");
     im_size_tensor->Reshape({1, 2});
-    for(int i = 0; i < inputs_.ori_im_size_.size(); ++i) {
-      fout << inputs_.ori_im_size_[i] << " ";
-    }
-    fout << std::endl;
     im_size_tensor->copy_from_cpu(inputs_.ori_im_size_.data());
   } else if (name == "FasterRCNN" || name == "MaskRCNN") {
     auto im_info_tensor = predictor_->GetInputTensor("im_info");
@@ -293,9 +282,6 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   if (size < 6) {
     std::cerr << "[WARNING] There's no object detected." << std::endl;
     return true;
-  }
-  for(int i = 0; i < output_box.size(); ++i) {
-    fout << output_box[i] << " ";
   }
   int num_boxes = size / 6;
   // 解析预测框box
@@ -353,12 +339,47 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     return false;
   }
 
+  int batch_size = im_batch.size();
   // 处理输入图像
   if (!preprocess(im_batch, inputs_batch_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  int batch_size = im_batch.size();
+  // 对RCNN类模型做批量padding
+  if (batch_size > 1) {
+    if (name == "FasterRCNN" || name == "MaskRCNN") {
+      int max_h = -1;
+      int max_w = -1;
+      for(int i = 0; i < inputs_batch_.size(); ++i) {
+        max_h = std::max(max_h, inputs_batch_[i].new_im_size_[0]);
+        max_w = std::max(max_w, inputs_batch_[i].new_im_size_[1]);
+        std::cout << "(" << inputs_batch_[i].new_im_size_[0] 
+                  << ", " << inputs_batch_[i].new_im_size_[1] 
+                  <<  ")" << std::endl;
+      }
+      #pragma omp parallel for num_threads(batch_size)
+      for(int i = 0; i < inputs_batch_.size(); ++i) {
+        int h = inputs_batch_[i].new_im_size_[0];
+        int w = inputs_batch_[i].new_im_size_[1];
+        int c = im_batch[i].channels();
+        if(max_h != h || max_w != w) {
+          std::vector<float> temp_buffer(c * max_h * max_w);
+          float *temp_ptr = temp_buffer.data();
+          float *ptr = inputs_batch_[i].im_data_.data();
+          for(int cur_channel = c - 1; cur_channel >= 0; --cur_channel) {
+            int ori_pos = cur_channel * h * w + (h - 1) * w;
+            int des_pos = cur_channel * max_h * max_w + (h - 1) * max_w;
+            for(int start_pos = ori_pos; start_pos >= cur_channel * h * w; start_pos -= w, des_pos -= max_w) {
+              memcpy(temp_ptr + des_pos, ptr + start_pos, w * sizeof(float));
+            }
+          }
+          inputs_batch_[i].im_data_.swap(temp_buffer);
+          inputs_batch_[i].new_im_size_[0] = max_h;
+          inputs_batch_[i].new_im_size_[1] = max_w; 
+        }
+      }
+    }
+  }
   int h = inputs_batch_[0].new_im_size_[0];
   int w = inputs_batch_[0].new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
@@ -368,7 +389,6 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
-  std::ofstream fout("test_batch.dat", std::ios::out);
   if (name == "YOLOv3") {
     auto im_size_tensor = predictor_->GetInputTensor("im_size");
     im_size_tensor->Reshape({batch_size, 2});
@@ -376,10 +396,6 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     for(int i = 0; i < inputs_batch_.size(); ++i){
       std::copy(inputs_batch_[i].ori_im_size_.begin(), inputs_batch_[i].ori_im_size_.end(), inputs_data_size.begin() + 2 * i);
     }
-    for(int i = 0; i < inputs_data_size.size(); ++i) {
-      fout << inputs_data_size[i] << " ";
-    }
-    fout << std::endl;
     im_size_tensor->copy_from_cpu(inputs_data_size.data());
   } else if (name == "FasterRCNN" || name == "MaskRCNN") {
     auto im_info_tensor = predictor_->GetInputTensor("im_info");
@@ -421,9 +437,6 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
   if (size < 6) {
     std::cerr << "[WARNING] There's no object detected." << std::endl;
     return true;
-  }
-  for(int i = 0; i < output_box.size(); ++i) {
-    fout << output_box[i] << " ";
   }
   auto lod_vector = output_box_tensor->lod();
   int num_boxes = size / 6;

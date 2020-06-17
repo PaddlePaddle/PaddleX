@@ -75,10 +75,6 @@ class Model {
 
   bool predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result);
   
-  bool postprocess(SegResult* result);
-
-  bool postprocess(DetResult* result);
-
   std::string type;
   std::string name;
   std::map<int, std::string> labels;
