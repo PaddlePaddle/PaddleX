@@ -45,8 +45,6 @@ class ImageBlob {
   std::vector<float> im_data_;
 
   void clear() {
-    ori_im_size_.clear();
-    new_im_size_.clear();
     im_size_before_resize_.clear();
     reshape_order_.clear();
     im_data_.clear();

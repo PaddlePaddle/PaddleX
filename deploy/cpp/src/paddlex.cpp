@@ -128,6 +128,7 @@ bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<I
 
 bool Model::predict(const cv::Mat& im, ClsResult* result) {
   inputs_.clear();
+  result->clear();
   if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
                  "function predict()!"
@@ -224,6 +225,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult>
 }
 
 bool Model::predict(const cv::Mat& im, DetResult* result) {
+  inputs_.clear();
   result->clear();
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
@@ -328,6 +330,9 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
 }
 
 bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result, int thread_num) {
+  for(auto &inputs: inputs_batch_) {
+    inputs.clear();
+  }
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
                  "to function predict()!"
