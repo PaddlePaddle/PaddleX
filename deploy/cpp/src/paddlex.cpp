@@ -111,7 +111,7 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
 
 // use openmp
 bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch) {
-  int batch_size = inputs_batch_.size();
+  int batch_size = input_im_batch.size();
   bool success = true;
   int max_h = -1;
   int max_w = -1;
