@@ -1,11 +1,12 @@
+一、Linux
 在 centos 7 上GCC 4.8.5 编译通过
 
 Step1: 编译
-    编译 cmake 的命令在 build.sh 中，请根据实际情况修改主要参数PADDLE_INCLUDE_DIR的路径
+    编译 cmake 的命令在 build.sh 中，请根据实际情况修改主要参数PADDLE_DIR的路径
     修改脚本设置好参数后，执行build脚本
     sh build.sh
 
-Step2: output
+Step2: 产出在output目录
     2.1 头文件
         include/model_code.h
         include/paddle_model_encrypt.h
@@ -17,3 +18,12 @@ Step2: output
 
     2.3 执行工具（使用-h参数查看）
         bin/paddle_encrypt_tool
+
+二、Windows
+在windows 10 Visual Studio 14 2015 上编译通过
+Step1: 编译
+    修改 build.bat 中 PADDLE_DIR 的路径
+    执行 build.bat 脚本
+
+Step2：打开 blend Visual Studio 2015，
+    选择 open project -> 找到 Step1 中生成的 paddle—model-protect.sln -> 选择 Release 和 x64 -> ALL BUILD -> 右键生成

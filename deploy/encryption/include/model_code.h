@@ -17,7 +17,8 @@ extern  "C" {
         CODE_FILES_EMPTY_WITH_DIR       = 107,
         CODE_MODEL_FILE_NOT_EXIST       = 108,
         CODE_PARAMS_FILE_NOT_EXIST      = 109,
-        CODE_MODEL_YML_FILE_NOT_EXIST   = 110
+        CODE_MODEL_YML_FILE_NOT_EXIST   = 110,
+        CODE_MKDIR_FAILED               = 111
     };
 
 

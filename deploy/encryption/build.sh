@@ -1,4 +1,4 @@
-PADDLE_INCLUDE_DIR=/path/to/Paddle/include
+PADDLE_DIR=/home/parallels/developers/paddleX-PR/paddle
 
 if [ ! -d "3rd" ]; then
   mkdir 3rd
@@ -13,5 +13,6 @@ cd ..
 rm -rf build output
 mkdir build && cd build
 cmake .. \
-    -DPADDLE_INCLUDE_DIR=${PADDLE_INCLUDE_DIR}
+    -DPADDLE_DIR=${PADDLE_DIR}
 make
+

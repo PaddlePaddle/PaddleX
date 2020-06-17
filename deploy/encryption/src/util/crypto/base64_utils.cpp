@@ -2,6 +2,7 @@
 #include <cassert>
 #include <limits>
 #include <stdexcept>
+#include <ctype.h>
 #include "base64_utils.h"
 
 namespace util {
@@ -65,7 +66,7 @@ std::string Base64Utils::decode(const std::string& data) {
 
         for (std::string::const_iterator i = data.begin(); i != last; ++i) {
             const int c = *i;
-            if (::std::isspace(c) || c == '=') {
+            if (isspace(c) || c == '=') {
                 continue;
             }
             if ((c > 127) || (c < 0) || (reverse_table[c] > 63)) {

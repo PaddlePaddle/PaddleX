@@ -1,8 +1,21 @@
+#pragma once
+
 #include <stdio.h>
-#include "paddle/paddle_inference_api.h"
+#include "paddle_inference_api.h"
 
 #ifndef PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
 #define PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
+
+#ifdef WIN32
+#ifdef PM_EXPORTS
+#define PDD_MODEL_API __declspec(dllexport)
+#else
+#define PDD_MODEL_API __declspec(dllimport)
+#endif
+#endif
+#ifdef linux
+#define PDD_MODEL_API __attribute__((visibility("default")))
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +29,7 @@ extern "C" {
  * @param param_file    参数文件路径
  * @return              error_code
  */
-int paddle_security_load_model(paddle::AnalysisConfig* config,
+PDD_MODEL_API int paddle_security_load_model(paddle::AnalysisConfig* config,
                                const char* key,
                                const char* model_file,
                                const char* param_file);
@@ -25,7 +38,7 @@ int paddle_security_load_model(paddle::AnalysisConfig* config,
  * @param file_path
  * @return
  */
-int paddle_check_file_encrypted(const char* file_path);
+PDD_MODEL_API int paddle_check_file_encrypted(const char* file_path);
 
 #ifdef __cplusplus
 }

@@ -2,11 +2,17 @@
 #include <cstring>
 #include "model_code.h"
 #include "paddle_model_encrypt.h"
-#include "paddle/paddle_inference_api.h"
+#include "paddle_inference_api.h"
 
+#ifdef linux
 #define RESET           "\033[0m"
 #define BOLD            "\033[1m"
 #define BOLDGREEN       "\033[1m\033[32m"
+#elif WIN32
+#define RESET           ""
+#define BOLD            ""
+#define BOLDGREEN       ""
+#endif
 
 void help() {
     std::cout << BOLD << "*** paddle_encrypt_tool Usage ***" << RESET << std::endl;
@@ -84,6 +90,10 @@ int main(int argc, char** argv) {
             break;
         default:help();
     }
+
+#ifdef WIN32
+    system("pause");
+#endif
 
     return 0;
 }
