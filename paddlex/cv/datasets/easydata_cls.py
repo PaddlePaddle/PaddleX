@@ -39,14 +39,14 @@ class EasyDataCls(ImageNet):
             线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
-    
+
     def __init__(self,
                  data_dir,
                  file_list,
                  label_list,
                  transforms=None,
                  num_workers='auto',
-                 buffer_size=100,
+                 buffer_size=8,
                  parallel_method='process',
                  shuffle=False):
         super(ImageNet, self).__init__(
@@ -58,7 +58,7 @@ class EasyDataCls(ImageNet):
         self.file_list = list()
         self.labels = list()
         self._epoch = 0
-        
+
         with open(label_list, encoding=get_encoding(label_list)) as f:
             for line in f:
                 item = line.strip()
@@ -73,8 +73,8 @@ class EasyDataCls(ImageNet):
                 if not osp.isfile(json_file):
                     continue
                 if not osp.exists(img_file):
-                    raise IOError(
-                        'The image file {} is not exist!'.format(img_file))
+                    raise IOError('The image file {} is not exist!'.format(
+                        img_file))
                 with open(json_file, mode='r', \
                           encoding=get_encoding(json_file)) as j:
                     json_info = json.load(j)
@@ -83,4 +83,3 @@ class EasyDataCls(ImageNet):
         self.num_samples = len(self.file_list)
         logging.info("{} samples in file {}".format(
             len(self.file_list), file_list))
-    
