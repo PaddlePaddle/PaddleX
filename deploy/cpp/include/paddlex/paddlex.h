@@ -61,19 +61,19 @@ class Model {
 
   bool preprocess(const cv::Mat& input_im, ImageBlob* blob);
   
-  bool preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch);
+  bool preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch, int thread_num = 1);
 
   bool predict(const cv::Mat& im, ClsResult* result);
 
-  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results);
+  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results, int thread_num = 1);
 
   bool predict(const cv::Mat& im, DetResult* result);
 
-  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result);
+  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result, int thread_num = 1);
   
   bool predict(const cv::Mat& im, SegResult* result);
 
-  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result);
+  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result, int thread_num = 1);
   
   std::string type;
   std::string name;

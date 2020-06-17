@@ -36,12 +36,14 @@ DEFINE_string(key, "", "key of encryption");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
-DEFINE_int32(batch_size, 1, "");
+DEFINE_int32(batch_size, 1, "Batch size of infering");
+DEFINE_double(threshold, 0.5, "The minimum scores of target boxes which are shown");
+DEFINE_int32(thread_num, omp_get_num_procs(), "Number of preprocessing threads");
 
 int main(int argc, char** argv) {
   // 解析命令行参数
   google::ParseCommandLineFlags(&argc, &argv, true);
-
+  
   if (FLAGS_model_dir == "") {
     std::cerr << "--model_dir need to be defined" << std::endl;
     return -1;
@@ -50,7 +52,7 @@ int main(int argc, char** argv) {
     std::cerr << "--image or --image_list need to be defined" << std::endl;
     return -1;
   }
-
+  std::cout << "Thread num: " << FLAGS_thread_num << std::endl;
   // 加载模型
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_use_gpu, FLAGS_use_trt, FLAGS_gpu_id, FLAGS_key, FLAGS_batch_size);
@@ -78,12 +80,13 @@ int main(int argc, char** argv) {
       int im_vec_size = std::min((int)image_paths.size(), i + FLAGS_batch_size);
       std::vector<cv::Mat> im_vec(im_vec_size - i);
       std::vector<PaddleX::DetResult> results(im_vec_size - i, PaddleX::DetResult());
-      #pragma omp parallel for num_threads(im_vec_size - i)
+      int thread_num = std::min(FLAGS_thread_num, im_vec_size - i);
+      #pragma omp parallel for num_threads(thread_num)
       for(int j = i; j < im_vec_size; ++j){
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
       auto imread_end = system_clock::now();
-      model.predict(im_vec, results);
+      model.predict(im_vec, results, thread_num);
       auto imread_duration = duration_cast<microseconds>(imread_end - start);
       total_imread_time_s += double(imread_duration.count()) * microseconds::period::num / microseconds::period::den;
       auto end = system_clock::now();
@@ -106,7 +109,7 @@ int main(int argc, char** argv) {
       // 可视化
       for(int j = 0; j < im_vec_size - i; ++j) {
         cv::Mat vis_img =
-            PaddleX::Visualize(im_vec[j], results[j], model.labels, colormap, 0.5);
+            PaddleX::Visualize(im_vec[j], results[j], model.labels, colormap, FLAGS_threshold);
         std::string save_path =
             PaddleX::generate_save_path(FLAGS_save_dir, image_paths[i + j]);
         cv::imwrite(save_path, vis_img);
@@ -130,7 +133,7 @@ int main(int argc, char** argv) {
 
     // 可视化
     cv::Mat vis_img =
-        PaddleX::Visualize(im, result, model.labels, colormap, 0.5);
+        PaddleX::Visualize(im, result, model.labels, colormap, FLAGS_threshold);
     std::string save_path =
         PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
     cv::imwrite(save_path, vis_img);

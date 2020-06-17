@@ -34,6 +34,7 @@ DEFINE_string(key, "", "key of encryption");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
+DEFINE_int32(thread_num, omp_get_num_procs(), "Number of preprocessing threads");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -75,12 +76,13 @@ int main(int argc, char** argv) {
       int im_vec_size = std::min((int)image_paths.size(), i + FLAGS_batch_size);      
       std::vector<cv::Mat> im_vec(im_vec_size - i);
       std::vector<PaddleX::ClsResult> results(im_vec_size - i, PaddleX::ClsResult());
-      #pragma omp parallel for num_threads(im_vec_size - i)
+      int thread_num = std::min(FLAGS_thread_num, im_vec_size - i);
+      #pragma omp parallel for num_threads(thread_num)
       for(int j = i; j < im_vec_size; ++j){
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
       auto imread_end = system_clock::now();
-      model.predict(im_vec, results);
+      model.predict(im_vec, results, thread_num);
 
       auto imread_duration = duration_cast<microseconds>(imread_end - start);
       total_imread_time_s += double(imread_duration.count()) * microseconds::period::num / microseconds::period::den;

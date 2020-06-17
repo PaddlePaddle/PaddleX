@@ -110,12 +110,13 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
 }
 
 // use openmp
-bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch) {
+bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch, int thread_num) {
   int batch_size = input_im_batch.size();
   bool success = true;
   int max_h = -1;
   int max_w = -1;
-  #pragma omp parallel for num_threads(batch_size)
+  thread_num = std::min(thread_num, batch_size);
+  #pragma omp parallel for num_threads(thread_num)
   for(int i = 0; i < input_im_batch.size(); ++i) {
     cv::Mat im = input_im_batch[i].clone();
     if(!transforms_.Run(&im, &blob_batch[i])){
@@ -164,7 +165,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   return true;
 }
 
-bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results) {
+bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results, int thread_num) {
   for(auto &inputs: inputs_batch_) {
     inputs.clear();
   }
@@ -180,7 +181,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult>
     return false;
   }
   // 处理输入图像
-  if (!preprocess(im_batch, inputs_batch_)) {
+  if (!preprocess(im_batch, inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
@@ -326,7 +327,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   return true;
 }
 
-bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result) {
+bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result, int thread_num) {
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
                  "to function predict()!"
@@ -341,7 +342,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
 
   int batch_size = im_batch.size();
   // 处理输入图像
-  if (!preprocess(im_batch, inputs_batch_)) {
+  if (!preprocess(im_batch, inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
@@ -357,7 +358,8 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
                   << ", " << inputs_batch_[i].new_im_size_[1] 
                   <<  ")" << std::endl;
       }
-      #pragma omp parallel for num_threads(batch_size)
+      thread_num = std::min(thread_num, batch_size);
+      #pragma omp parallel for num_threads(thread_num)
       for(int i = 0; i < batch_size; ++i) {
         int h = inputs_batch_[i].new_im_size_[0];
         int w = inputs_batch_[i].new_im_size_[1];
@@ -597,7 +599,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   return true;
 }
 
-bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result) {
+bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result, int thread_num) {
   for(auto &inputs: inputs_batch_) {
     inputs.clear();
   }
@@ -614,7 +616,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult>
   }
 
   // 处理输入图像
-  if (!preprocess(im_batch, inputs_batch_)) {
+  if (!preprocess(im_batch, inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
