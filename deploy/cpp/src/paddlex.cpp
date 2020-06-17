@@ -191,7 +191,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult>
   int w = inputs_batch_[0].new_im_size_[1];
   in_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
-  for(int i = 0; i <inputs_batch_.size(); ++i) {
+  for(int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
   }
   in_tensor->copy_from_cpu(inputs_data.data());
@@ -350,7 +350,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     if (name == "FasterRCNN" || name == "MaskRCNN") {
       int max_h = -1;
       int max_w = -1;
-      for(int i = 0; i < inputs_batch_.size(); ++i) {
+      for(int i = 0; i < batch_size; ++i) {
         max_h = std::max(max_h, inputs_batch_[i].new_im_size_[0]);
         max_w = std::max(max_w, inputs_batch_[i].new_im_size_[1]);
         std::cout << "(" << inputs_batch_[i].new_im_size_[0] 
@@ -358,7 +358,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
                   <<  ")" << std::endl;
       }
       #pragma omp parallel for num_threads(batch_size)
-      for(int i = 0; i < inputs_batch_.size(); ++i) {
+      for(int i = 0; i < batch_size; ++i) {
         int h = inputs_batch_[i].new_im_size_[0];
         int w = inputs_batch_[i].new_im_size_[1];
         int c = im_batch[i].channels();
@@ -385,7 +385,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
   auto im_tensor = predictor_->GetInputTensor("image");
   im_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
-  for(int i = 0; i < inputs_batch_.size(); ++i) {
+  for(int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
@@ -393,7 +393,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     auto im_size_tensor = predictor_->GetInputTensor("im_size");
     im_size_tensor->Reshape({batch_size, 2});
     std::vector<int> inputs_data_size(batch_size  * 2);
-    for(int i = 0; i < inputs_batch_.size(); ++i){
+    for(int i = 0; i < batch_size; ++i){
       std::copy(inputs_batch_[i].ori_im_size_.begin(), inputs_batch_[i].ori_im_size_.end(), inputs_data_size.begin() + 2 * i);
     }
     im_size_tensor->copy_from_cpu(inputs_data_size.data());
@@ -405,7 +405,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     
     std::vector<float> im_info(3 * batch_size);
     std::vector<float> im_shape(3 * batch_size);
-    for(int i = 0; i < inputs_batch_.size(); ++i) {
+    for(int i = 0; i < batch_size; ++i) {
       float ori_h = static_cast<float>(inputs_batch_[i].ori_im_size_[0]);
       float ori_w = static_cast<float>(inputs_batch_[i].ori_im_size_[1]);
       float new_h = static_cast<float>(inputs_batch_[i].new_im_size_[0]);
@@ -485,7 +485,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
       }
     }
   }
-  return true; 
+  return true;
 }
 
 bool Model::predict(const cv::Mat& im, SegResult* result) {
@@ -627,7 +627,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult>
   auto im_tensor = predictor_->GetInputTensor("image");
   im_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
-  for(int i = 0; i <inputs_batch_.size(); ++i) {
+  for(int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
