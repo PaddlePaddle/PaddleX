@@ -30,6 +30,10 @@ def export_onnx(model_dir, save_dir, fixed_input_shape):
 
 
 def export_onnx_model(model, save_dir):
+    if model.model_type == "detector" or model.__class__.__name__ == "FastSCNN":
+        logging.error(
+            "Only image classifier models and semantic segmentation models(except FastSCNN) are supported to export to ONNX"
+        )
     try:
         import x2paddle
         if x2paddle.__version__ < '0.7.4':
