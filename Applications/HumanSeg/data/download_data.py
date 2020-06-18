@@ -16,8 +16,6 @@ import sys
 import os
 
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
-TEST_PATH = os.path.join(LOCAL_PATH, "../../../", "test")
-sys.path.append(TEST_PATH)
 
 import paddlex as pdx
 

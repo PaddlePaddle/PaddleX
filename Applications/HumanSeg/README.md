@@ -18,10 +18,10 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 预训练模型
 HumanSeg开放了在大规模人像数据上训练的两个预训练模型，满足多种使用场景的需求
 
-| 模型类型 | Checkpoint | Inference Model | Quant Inference Model | 备注 |
+| 模型类型 | Checkpoint Parameter | Inference Model | Quant Inference Model | 备注 |
 | --- | --- | --- | ---| --- |
-| HumanSeg-server  | [humanseg_server_ckpt](https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_server_ckpt.zip) | [humanseg_server_inference](https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_server_inference.zip) | -- | 高精度模型，适用于服务端GPU且背景复杂的人像场景， 模型结构为Deeplabv3+/Xcetion65, 输入大小（512， 512） |
-| HumanSeg-mobile | [humanseg_mobile_ckpt](https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_ckpt.zip) | [humanseg_mobile_inference](https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_inference.zip) | [humanseg_mobile_quant](https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_quant.zip) | 轻量级模型, 适用于移动端或服务端CPU的前置摄像头场景，模型结构为HRNet_w18_samll_v1，输入大小（192， 192）  |
+| HumanSeg-server  | [humanseg_server_params](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_server.pdparams) | [humanseg_server_inference](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_server_inference.zip) | -- | 高精度模型，适用于服务端GPU且背景复杂的人像场景， 模型结构为Deeplabv3+/Xcetion65, 输入大小（512， 512） |
+| HumanSeg-mobile | [humanseg_mobile_params](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_mobile.pdparams) | [humanseg_mobile_inference](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_mobile_inference.zip) | [humanseg_mobile_quant](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_mobile_quant.zip) | 轻量级模型, 适用于移动端或服务端CPU的前置摄像头场景，模型结构为HRNet_w18_samll_v1，输入大小（192， 192）  |
 
 
 模型性能
@@ -32,11 +32,11 @@ HumanSeg开放了在大规模人像数据上训练的两个预训练模型，满
 |humanseg_mobile_inference | 5.8 M | 42.35ms |
 |humanseg_mobile_quant | 1.6M | 24.93ms |
 
-计算耗时运行环境： 小米，cpu：骁龙855， 内存：6GB， 图片大小：192*192)
+计算耗时运行环境： 小米，cpu：骁龙855， 内存：6GB， 图片大小：192*192
 
 
 **NOTE:**
-其中Checkpoint为模型权重，用于Fine-tuning场景。
+其中Checkpoint Parameter为模型权重，用于Fine-tuning场景。
 
 * Inference Model和Quant Inference Model为预测部署模型，包含`__model__`计算图结构、`__params__`模型参数和`model.yaml`基础的模型配置信息。
 
@@ -58,10 +58,10 @@ python data/download_data.py
 结合DIS（Dense Inverse Search-basedmethod）光流算法预测结果与分割结果，改善视频流人像分割
 ```bash
 # 通过电脑摄像头进行实时分割处理
-python video_infer.py --model_dir pretrain_weights/humanseg_lite_inference
+python video_infer.py --model_dir pretrain_weights/humanseg_mobile_inference
 
 # 对人像视频进行分割处理
-python video_infer.py --model_dir pretrain_weights/humanseg_lite_inference --video_path data/video_test.mp4
+python video_infer.py --model_dir pretrain_weights/humanseg_mobile_inference --video_path data/video_test.mp4
 ```
 
 视频分割结果如下：
@@ -71,13 +71,13 @@ python video_infer.py --model_dir pretrain_weights/humanseg_lite_inference --vid
 根据所选背景进行背景替换，背景可以是一张图片，也可以是一段视频。
 ```bash
 # 通过电脑摄像头进行实时背景替换处理, 也可通过'--background_video_path'传入背景视频
-python bg_replace.py --model_dir pretrain_weights/humanseg_lite_inference --background_image_path data/background.jpg
+python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --background_image_path data/background.jpg
 
 # 对人像视频进行背景替换处理, 也可通过'--background_video_path'传入背景视频
-python bg_replace.py --model_dir pretrain_weights/humanseg_lite_inference --video_path data/video_test.mp4 --background_image_path data/background.jpg
+python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --video_path data/video_test.mp4 --background_image_path data/background.jpg
 
 # 对单张图像进行背景替换
-python bg_replace.py --model_dir pretrain_weights/humanseg_lite_inference --image_path data/human_image.jpg --background_image_path data/background.jpg
+python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --image_path data/human_image.jpg --background_image_path data/background.jpg
 
 ```
 
@@ -100,14 +100,14 @@ python train.py --model_type HumanSegMobile \
 --data_dir data/mini_supervisely \
 --train_list data/mini_supervisely/train.txt \
 --val_list data/mini_supervisely/val.txt \
---pretrain_weights pretrain_weights/humanseg_mobile_ckpt \
+--pretrain_weights pretrain_weights/humanseg_mobile_params \
 --batch_size 8 \
 --learning_rate 0.001 \
 --num_epochs 10 \
 --image_shape 192 192
 ```
 其中参数含义如下：
-* `--model_type`: 模型类型，可选项为：HumanSegServer、HumanSegMobile和HumanSegLite
+* `--model_type`: 模型类型，可选项为：HumanSegServer和HumanSegMobile
 * `--save_dir`: 模型保存路径
 * `--data_dir`: 数据集路径
 * `--train_list`: 训练集列表路径

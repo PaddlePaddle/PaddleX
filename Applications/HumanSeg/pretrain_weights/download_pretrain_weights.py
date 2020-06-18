@@ -17,32 +17,24 @@ import sys
 import os
 
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
-TEST_PATH = os.path.join(LOCAL_PATH, "../../../", "test")
-sys.path.append(TEST_PATH)
 
 import paddlex as pdx
+import paddlehub as hub
 
 model_urls = {
-    "humanseg_server_ckpt":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_server_ckpt.zip",
-    "humanseg_server_inference":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_server_inference.zip",
-    "humanseg_mobile_ckpt":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_ckpt.zip",
-    "humanseg_mobile_inference":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_inference.zip",
-    "humanseg_mobile_quant":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_mobile_quant.zip",
-    "humanseg_lite_ckpt":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_lite_ckpt.zip",
-    "humanseg_lite_inference":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_lite_inference.zip",
-    "humanseg_lite_quant":
-    "https://paddleseg.bj.bcebos.com/humanseg/models/humanseg_lite_quant.zip",
+    "PaddleX_HumanSeg_Server_Params":
+    "https://bj.bcebos.com/paddlex/models/humanseg/humanseg_server_params.tar",
+    "PaddleX_HumanSeg_Server_Inference":
+    "https://bj.bcebos.com/paddlex/models/humanseg/humanseg_server_inference.tar",
+    "PaddleX_HumanSeg_Mobile_Params":
+    "https://bj.bcebos.com/paddlex/models/humanseg/humanseg_mobile_params.tar",
+    "PaddleX_HumanSeg_Mobile_Inference":
+    "https://bj.bcebos.com/paddlex/models/humanseg/humanseg_mobile_inference.tar",
+    "PaddleX_HumanSeg_Mobile_Quant":
+    "https://bj.bcebos.com/paddlex/models/humanseg/humanseg_mobile_quant.tar"
 }
 
 if __name__ == "__main__":
     for model_name, url in model_urls.items():
         pdx.utils.download_and_decompress(url=url, path=LOCAL_PATH)
-
     print("Pretrained Model download success!")
