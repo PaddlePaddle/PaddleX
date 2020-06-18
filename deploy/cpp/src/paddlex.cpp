@@ -101,8 +101,6 @@ bool Model::load_config(const std::string& model_dir) {
 
 bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
   cv::Mat im = input_im.clone();
-  int max_h = im.rows;
-  int max_w = im.cols;
   if (!transforms_.Run(&im, blob)) {
     return false;
   }
@@ -113,8 +111,6 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
 bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch, int thread_num) {
   int batch_size = input_im_batch.size();
   bool success = true;
-  int max_h = -1;
-  int max_w = -1;
   thread_num = std::min(thread_num, batch_size);
   #pragma omp parallel for num_threads(thread_num)
   for(int i = 0; i < input_im_batch.size(); ++i) {
