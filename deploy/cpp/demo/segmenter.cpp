@@ -116,16 +116,16 @@ int main(int argc, char** argv) {
     std::cout << "Visualized output saved as " << save_path << std::endl;
   }
   std::cout << "Total running time: " 
-	    << total_running_time_s
-      << " s, average running time: "
-      << total_running_time_s / imgs
-	    << " s/img, total read img time: " 
-	    << total_imread_time_s
-      << " s, average read img time: "
-      << total_imread_time_s / imgs
-	    << " s, batch_size = " 
-	    << FLAGS_batch_size 
-	    << std::endl;
+            << total_running_time_s
+            << " s, average running time: "
+            << total_running_time_s / imgs
+            << " s/img, total read img time: " 
+            << total_imread_time_s
+            << " s, average read img time: "
+            << total_imread_time_s / imgs
+            << " s, batch_size = " 
+            << FLAGS_batch_size
+            << std::endl;
 
   return 0;
 }
