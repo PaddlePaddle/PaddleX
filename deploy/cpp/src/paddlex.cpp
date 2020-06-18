@@ -354,9 +354,9 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
       for(int i = 0; i < batch_size; ++i) {
         max_h = std::max(max_h, inputs_batch_[i].new_im_size_[0]);
         max_w = std::max(max_w, inputs_batch_[i].new_im_size_[1]);
-        std::cout << "(" << inputs_batch_[i].new_im_size_[0] 
-                  << ", " << inputs_batch_[i].new_im_size_[1] 
-                  <<  ")" << std::endl;
+        //std::cout << "(" << inputs_batch_[i].new_im_size_[0] 
+        //          << ", " << inputs_batch_[i].new_im_size_[1] 
+        //          <<  ")" << std::endl;
       }
       thread_num = std::min(thread_num, batch_size);
       #pragma omp parallel for num_threads(thread_num)
