@@ -15,7 +15,7 @@
 import setuptools
 import sys
 
-long_description = "PaddlePaddle Entire Process Development Toolkit\n\n"
+long_description = "PaddlePaddle Entire Process Development Toolkit"
 
 setuptools.setup(
     name="paddlex",
