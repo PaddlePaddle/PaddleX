@@ -128,7 +128,6 @@ bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<I
 
 bool Model::predict(const cv::Mat& im, ClsResult* result) {
   inputs_.clear();
-  result->clear();
   if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
                  "function predict()!"
