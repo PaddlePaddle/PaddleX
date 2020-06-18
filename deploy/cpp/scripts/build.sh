@@ -1,5 +1,5 @@
 # 是否使用GPU(即是否使用 CUDA)
-WITH_GPU=ON
+WITH_GPU=OFF
 # 使用MKL or openblas
 WITH_MKL=ON
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
@@ -7,7 +7,7 @@ WITH_TENSORRT=OFF
 # TensorRT 的路径
 TENSORRT_DIR=/path/to/TensorRT/
 # Paddle 预测库路径
-PADDLE_DIR=/mnt/zhoushunjie/projects/fluid_inference
+PADDLE_DIR=/docker/jiangjiajun/PaddleDetection/deploy/cpp/fluid_inference
 # Paddle 的预测库是否使用静态库来编译
 # 使用TensorRT时，Paddle的预测库通常为动态库
 WITH_STATIC_LIB=OFF
@@ -42,4 +42,4 @@ cmake .. \
     -DCUDNN_LIB=${CUDNN_LIB} \
     -DENCRYPTION_DIR=${ENCRYPTION_DIR} \
     -DOPENCV_DIR=${OPENCV_DIR}
-make -j4
+make
