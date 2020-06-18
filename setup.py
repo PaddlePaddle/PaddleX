@@ -15,7 +15,7 @@
 import setuptools
 import sys
 
-long_description = "PaddleX. A end-to-end deeplearning model development toolkit base on PaddlePaddle\n\n"
+long_description = "PaddlePaddle Entire Process Development Toolkit\n\n"
 
 setuptools.setup(
     name="paddlex",
