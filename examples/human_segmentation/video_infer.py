@@ -19,7 +19,7 @@ import os.path as osp
 import cv2
 import numpy as np
 
-from utils.humanseg_postprocess import postprocess, threshold_mask
+from postprocess import postprocess, threshold_mask
 import paddlex as pdx
 import paddlex.utils.logging as logging
 from paddlex.seg import transforms

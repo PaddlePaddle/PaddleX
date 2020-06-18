@@ -13,11 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-# 选择使用0号卡
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-# 使用CPU
-#os.environ['CUDA_VISIBLE_DEVICES'] = ''
 import argparse
 
 import paddlex as pdx

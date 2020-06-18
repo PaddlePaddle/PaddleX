@@ -7,8 +7,6 @@
 **前置依赖**
 * paddlepaddle >= 1.8.0
 * python >= 3.5
-* cython
-* pycocotools
 
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
@@ -95,6 +93,10 @@ python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --im
 ## 训练
 使用下述命令基于与训练模型进行Fine-tuning，请确保选用的模型结构`model_type`与模型参数`pretrain_weights`匹配。
 ```bash
+# 指定GPU卡号（以0号卡为例）
+export CUDA_VISIBLE_DEVICES=0
+# 若不使用GPU，则将CUDA_VISIBLE_DEVICES指定为空
+# export CUDA_VISIBLE_DEVICES=
 python train.py --model_type HumanSegMobile \
 --save_dir output/ \
 --data_dir data/mini_supervisely \
@@ -177,7 +179,3 @@ python quant_offline.py --model_dir output/best_model \
 * `--quant_list`: 量化数据集列表路径，一般直接选择训练集或验证集
 * `--save_dir`: 量化模型保存路径
 * `--image_shape`: 网络输入图像大小（w, h）
-
-## AIStudio在线教程
-
-我们在AI Studio平台上提供了人像分割在线体验的教程，[点击体验](https://aistudio.baidu.com/aistudio/projectdetail/475345)
