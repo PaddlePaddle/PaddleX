@@ -21,7 +21,7 @@ from .imgaug_support import execute_imgaug
 from .cls_transforms import ClsTransform
 from .det_transforms import DetTransform
 from .seg_transforms import SegTransform
-import paddlex
+import paddlex as pdx
 from paddlex.cv.models.utils.visualize import get_color_map_list
 
 
@@ -164,10 +164,10 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
                 im = outputs[0]
                 vdl_im = im
                 if vdl_writer is not None:
-                    if isinstance(op, paddlex.cv.transforms.det_transforms.ResizeByShort):
+                    if isinstance(op, pdx.cv.transforms.det_transforms.ResizeByShort):
                         scale = outputs[1]['im_resize_info'][2]
                         bboxes = bboxes * scale
-                    elif isinstance(op, paddlex.cv.transforms.det_transforms.Resize):
+                    elif isinstance(op, pdx.cv.transforms.det_transforms.Resize):
                         h = outputs[1]['image_shape'][0]
                         w = outputs[1]['image_shape'][1]
                         target_size = op.target_size
@@ -183,7 +183,7 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
                         bboxes[:,3] = bboxes[:,3] * h_scale
                     else:
                         bboxes = outputs[2]['gt_bbox']
-                    if not isinstance(op, paddlex.cv.transforms.det_transforms.RandomHorizontalFlip):
+                    if not isinstance(op, pdx.cv.transforms.det_transforms.RandomHorizontalFlip):
                         for i in range(bboxes.shape[0]):
                             bbox = bboxes[i]
                             cname = labels[outputs[2]['gt_class'][i][0]-1]
@@ -194,7 +194,7 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
                                                                int(bbox[3]), 
                                                                cname, 
                                                                catid2color[outputs[2]['gt_class'][i][0]-1])
-                    if isinstance(op, paddlex.cv.transforms.det_transforms.Normalize):
+                    if isinstance(op, pdx.cv.transforms.det_transforms.Normalize):
                         vdl_im = im
             else:
                 im = execute_imgaug(op, im)
