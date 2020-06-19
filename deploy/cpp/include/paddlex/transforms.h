@@ -66,7 +66,7 @@ class Transform {
    * This method executes preprocessing operation on image matrix,
    * result will be returned at second parameter.
    * @param im: single image matrix to be preprocessed
-   * @param data: the raw data of single image matrix after preprocessed 
+   * @param data: the raw data of single image matrix after preprocessed
    * @return true if transform successfully
    * */
   virtual bool Run(cv::Mat* im, ImageBlob* data) = 0;
@@ -92,10 +92,10 @@ class Normalize : public Transform {
 
 /*
  * @brief
- * This class execute resize by short operation on image matrix. At first, it resizes 
+ * This class execute resize by short operation on image matrix. At first, it resizes
  * the short side of image matrix to specified length. Accordingly, the long side
  * will be resized in the same proportion. If new length of long side exceeds max
- * size, the long size will be resized to max size, and the short size will be 
+ * size, the long size will be resized to max size, and the short size will be
  * resized in the same proportion
  * */
 class ResizeByShort : public Transform {
@@ -214,6 +214,7 @@ class Padding : public Transform {
     }
   }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
+
  private:
   int coarsest_stride_ = -1;
   int width_ = 0;
@@ -229,6 +230,7 @@ class Transforms {
   void Init(const YAML::Node& node, bool to_rgb = true);
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
   bool Run(cv::Mat* im, ImageBlob* data);
+
  private:
   std::vector<std::shared_ptr<Transform>> transforms_;
   bool to_rgb_ = true;

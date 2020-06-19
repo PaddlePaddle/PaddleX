@@ -145,4 +145,4 @@ std::string generate_save_path(const std::string& save_dir,
   std::string image_name(file_path.substr(pos + 1));
   return save_dir + OS_PATH_SEP + image_name;
 }
-}  // namespace of PaddleX
+}  // namespace PaddleX

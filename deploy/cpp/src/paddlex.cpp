@@ -11,10 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include <algorithm>
 #include <omp.h>
-#include "include/paddlex/paddlex.h"
+#include <algorithm>
 #include <cstring>
+#include "include/paddlex/paddlex.h"
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
@@ -22,7 +22,7 @@ void Model::create_predictor(const std::string& model_dir,
                              bool use_trt,
                              int gpu_id,
                              std::string key,
-			     int batch_size) {
+                             int batch_size) {
   // 读取配置文件
   if (!load_config(model_dir)) {
     std::cerr << "Parse file 'model.yml' failed!" << std::endl;
@@ -32,13 +32,14 @@ void Model::create_predictor(const std::string& model_dir,
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
 #ifdef WITH_ENCRYPTION
-  if (key != ""){
+  if (key != "") {
     model_file = model_dir + OS_PATH_SEP + "__model__.encrypted";
     params_file = model_dir + OS_PATH_SEP + "__params__.encrypted";
-    paddle_security_load_model(&config, key.c_str(), model_file.c_str(), params_file.c_str());
+    paddle_security_load_model(
+        &config, key.c_str(), model_file.c_str(), params_file.c_str());
   }
 #endif
-  if (key == ""){
+  if (key == "") {
     config.SetModel(model_file, params_file);
   }
   if (use_gpu) {
@@ -70,11 +71,11 @@ bool Model::load_config(const std::string& model_dir) {
   name = config["Model"].as<std::string>();
   std::string version = config["version"].as<std::string>();
   if (version[0] == '0') {
-    std::cerr << "[Init] Version of the loaded model is lower than 1.0.0, deployment "
-              << "cannot be done, please refer to "
-              << "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/upgrade_version.md "
-              << "to transfer version."
-              << std::endl;
+    std::cerr << "[Init] Version of the loaded model is lower than 1.0.0, "
+              << "deployment cannot be done, please refer to "
+              << "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs"
+              << "/tutorials/deploy/upgrade_version.md "
+              << "to transfer version." << std::endl;
     return false;
   }
   bool to_rgb = true;
@@ -108,14 +109,16 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
 }
 
 // use openmp
-bool Model::preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch, int thread_num) {
+bool Model::preprocess(const std::vector<cv::Mat>& input_im_batch,
+                       std::vector<ImageBlob>* blob_batch,
+                       int thread_num) {
   int batch_size = input_im_batch.size();
   bool success = true;
   thread_num = std::min(thread_num, batch_size);
   #pragma omp parallel for num_threads(thread_num)
-  for(int i = 0; i < input_im_batch.size(); ++i) {
+  for (int i = 0; i < input_im_batch.size(); ++i) {
     cv::Mat im = input_im_batch[i].clone();
-    if(!transforms_.Run(&im, &blob_batch[i])){
+    if (!transforms_.Run(&im, &(*blob_batch)[i])) {
       success = false;
     }
   }
@@ -127,8 +130,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
                  "function predict()!"
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   }
   // 处理输入图像
@@ -161,23 +163,23 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   return true;
 }
 
-bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results, int thread_num) {
-  for(auto &inputs: inputs_batch_) {
+bool Model::predict(const std::vector<cv::Mat>& im_batch,
+                    std::vector<ClsResult>* results,
+                    int thread_num) {
+  for (auto& inputs : inputs_batch_) {
     inputs.clear();
   }
   if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
-                 "function predict()!"
-              << std::endl;
+                 "function predict()!" << std::endl;
     return false;
   } else if (type == "segmenter") {
     std::cerr << "Loading model is a 'segmenter', SegResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   }
   // 处理输入图像
-  if (!preprocess(im_batch, inputs_batch_, thread_num)) {
+  if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
@@ -188,11 +190,13 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult>
   int w = inputs_batch_[0].new_im_size_[1];
   in_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
-  for(int i = 0; i < batch_size; ++i) {
-    std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
+  for (int i = 0; i < batch_size; ++i) {
+    std::copy(inputs_batch_[i].im_data_.begin(),
+              inputs_batch_[i].im_data_.end(),
+              inputs_data.begin() + i * 3 * h * w);
   }
   in_tensor->copy_from_cpu(inputs_data.data());
-  //in_tensor->copy_from_cpu(inputs_.im_data_.data());
+  // in_tensor->copy_from_cpu(inputs_.im_data_.data());
   predictor_->ZeroCopyRun();
   // 取出模型的输出结果
   auto output_names = predictor_->GetOutputNames();
@@ -206,15 +210,15 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult>
   output_tensor->copy_to_cpu(outputs_.data());
   // 对模型输出结果进行后处理
   int single_batch_size = size / batch_size;
-  for(int i = 0; i < batch_size; ++i) {
+  for (int i = 0; i < batch_size; ++i) {
     auto start_ptr = std::begin(outputs_);
     auto end_ptr = std::begin(outputs_);
     std::advance(start_ptr, i * single_batch_size);
     std::advance(end_ptr, (i + 1) * single_batch_size);
     auto ptr = std::max_element(start_ptr, end_ptr);
-    results[i].category_id = std::distance(start_ptr, ptr);
-    results[i].score = *ptr;
-    results[i].category = labels[results[i].category_id];
+    (*results)[i].category_id = std::distance(start_ptr, ptr);
+    (*results)[i].score = *ptr;
+    (*results)[i].category = labels[(*results)[i].category_id];
   }
   return true;
 }
@@ -224,13 +228,11 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   result->clear();
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   } else if (type == "segmenter") {
     std::cerr << "Loading model is a 'segmenter', SegResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   }
 
@@ -324,25 +326,25 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   return true;
 }
 
-bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result, int thread_num) {
-  for(auto &inputs: inputs_batch_) {
+bool Model::predict(const std::vector<cv::Mat>& im_batch,
+                    std::vector<DetResult>* result,
+                    int thread_num) {
+  for (auto& inputs : inputs_batch_) {
     inputs.clear();
   }
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   } else if (type == "segmenter") {
     std::cerr << "Loading model is a 'segmenter', SegResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   }
 
   int batch_size = im_batch.size();
   // 处理输入图像
-  if (!preprocess(im_batch, inputs_batch_, thread_num)) {
+  if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
@@ -351,33 +353,34 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     if (name == "FasterRCNN" || name == "MaskRCNN") {
       int max_h = -1;
       int max_w = -1;
-      for(int i = 0; i < batch_size; ++i) {
+      for (int i = 0; i < batch_size; ++i) {
         max_h = std::max(max_h, inputs_batch_[i].new_im_size_[0]);
         max_w = std::max(max_w, inputs_batch_[i].new_im_size_[1]);
-        //std::cout << "(" << inputs_batch_[i].new_im_size_[0] 
-        //          << ", " << inputs_batch_[i].new_im_size_[1] 
+        // std::cout << "(" << inputs_batch_[i].new_im_size_[0]
+        //          << ", " << inputs_batch_[i].new_im_size_[1]
         //          <<  ")" << std::endl;
       }
       thread_num = std::min(thread_num, batch_size);
       #pragma omp parallel for num_threads(thread_num)
-      for(int i = 0; i < batch_size; ++i) {
+      for (int i = 0; i < batch_size; ++i) {
         int h = inputs_batch_[i].new_im_size_[0];
         int w = inputs_batch_[i].new_im_size_[1];
         int c = im_batch[i].channels();
-        if(max_h != h || max_w != w) {
+        if (max_h != h || max_w != w) {
           std::vector<float> temp_buffer(c * max_h * max_w);
-          float *temp_ptr = temp_buffer.data();
-          float *ptr = inputs_batch_[i].im_data_.data();
-          for(int cur_channel = c - 1; cur_channel >= 0; --cur_channel) {
+          float* temp_ptr = temp_buffer.data();
+          float* ptr = inputs_batch_[i].im_data_.data();
+          for (int cur_channel = c - 1; cur_channel >= 0; --cur_channel) {
             int ori_pos = cur_channel * h * w + (h - 1) * w;
             int des_pos = cur_channel * max_h * max_w + (h - 1) * max_w;
-            for(int start_pos = ori_pos; start_pos >= cur_channel * h * w; start_pos -= w, des_pos -= max_w) {
-              memcpy(temp_ptr + des_pos, ptr + start_pos, w * sizeof(float));
+            int last_pos = cur_channel * h * w;
+            for (; ori_pos >= last_pos; ori_pos -= w, des_pos -= max_w) {
+              memcpy(temp_ptr + des_pos, ptr + ori_pos, w * sizeof(float));
             }
           }
           inputs_batch_[i].im_data_.swap(temp_buffer);
           inputs_batch_[i].new_im_size_[0] = max_h;
-          inputs_batch_[i].new_im_size_[1] = max_w; 
+          inputs_batch_[i].new_im_size_[1] = max_w;
         }
       }
     }
@@ -387,16 +390,20 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
   auto im_tensor = predictor_->GetInputTensor("image");
   im_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
-  for(int i = 0; i < batch_size; ++i) {
-    std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
+  for (int i = 0; i < batch_size; ++i) {
+    std::copy(inputs_batch_[i].im_data_.begin(),
+              inputs_batch_[i].im_data_.end(),
+              inputs_data.begin() + i * 3 * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
   if (name == "YOLOv3") {
     auto im_size_tensor = predictor_->GetInputTensor("im_size");
     im_size_tensor->Reshape({batch_size, 2});
-    std::vector<int> inputs_data_size(batch_size  * 2);
-    for(int i = 0; i < batch_size; ++i){
-      std::copy(inputs_batch_[i].ori_im_size_.begin(), inputs_batch_[i].ori_im_size_.end(), inputs_data_size.begin() + 2 * i);
+    std::vector<int> inputs_data_size(batch_size * 2);
+    for (int i = 0; i < batch_size; ++i) {
+      std::copy(inputs_batch_[i].ori_im_size_.begin(),
+                inputs_batch_[i].ori_im_size_.end(),
+                inputs_data_size.begin() + 2 * i);
     }
     im_size_tensor->copy_from_cpu(inputs_data_size.data());
   } else if (name == "FasterRCNN" || name == "MaskRCNN") {
@@ -404,10 +411,10 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     auto im_shape_tensor = predictor_->GetInputTensor("im_shape");
     im_info_tensor->Reshape({batch_size, 3});
     im_shape_tensor->Reshape({batch_size, 3});
-    
+
     std::vector<float> im_info(3 * batch_size);
     std::vector<float> im_shape(3 * batch_size);
-    for(int i = 0; i < batch_size; ++i) {
+    for (int i = 0; i < batch_size; ++i) {
       float ori_h = static_cast<float>(inputs_batch_[i].ori_im_size_[0]);
       float ori_w = static_cast<float>(inputs_batch_[i].ori_im_size_[1]);
       float new_h = static_cast<float>(inputs_batch_[i].new_im_size_[0]);
@@ -444,9 +451,9 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
   int num_boxes = size / 6;
   // 解析预测框box
   for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
-    for(int j = lod_vector[0][i]; j < lod_vector[0][i + 1]; ++j) {
+    for (int j = lod_vector[0][i]; j < lod_vector[0][i + 1]; ++j) {
       Box box;
-      box.category_id = static_cast<int> (round(output_box[j * 6]));
+      box.category_id = static_cast<int>(round(output_box[j * 6]));
       box.category = labels[box.category_id];
       box.score = output_box[j * 6 + 1];
       float xmin = output_box[j * 6 + 2];
@@ -456,7 +463,7 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
       float w = xmax - xmin + 1;
       float h = ymax - ymin + 1;
       box.coordinate = {xmin, ymin, w, h};
-      result[i].boxes.push_back(std::move(box));
+      (*result)[i].boxes.push_back(std::move(box));
     }
   }
 
@@ -474,11 +481,13 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult>
     output_mask.resize(masks_size);
     output_mask_tensor->copy_to_cpu(output_mask.data());
     int mask_idx = 0;
-    for(int i = 0; i < lod_vector[0].size() - 1; ++i) {
-      result[i].mask_resolution = output_mask_shape[2];
-      for(int j = 0; j < result[i].boxes.size(); ++j) {
-        Box* box = &result[i].boxes[j];
-        auto begin_mask = output_mask.begin() + (mask_idx * classes + box->category_id) * mask_pixels;
+    for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
+      (*result)[i].mask_resolution = output_mask_shape[2];
+      for (int j = 0; j < (*result)[i].boxes.size(); ++j) {
+        Box* box = &(*result)[i].boxes[j];
+        int category_id = box->category_id;
+        auto begin_mask = output_mask.begin() +
+                          (mask_idx * classes + category_id) * mask_pixels;
         auto end_mask = begin_mask + mask_pixels;
         box->mask.data.assign(begin_mask, end_mask);
         box->mask.shape = {static_cast<int>(box->coordinate[2]),
@@ -495,13 +504,11 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   inputs_.clear();
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   } else if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
-                 "function predict()!"
-              << std::endl;
+                 "function predict()!" << std::endl;
     return false;
   }
 
@@ -586,7 +593,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                  cv::Size(resize_h, resize_w),
                  0,
                  0,
-                 cv::INTER_LINEAR); 
+                 cv::INTER_LINEAR);
     }
     ++idx;
   }
@@ -599,41 +606,43 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   return true;
 }
 
-bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result, int thread_num) {
-  for(auto &inputs: inputs_batch_) {
+bool Model::predict(const std::vector<cv::Mat>& im_batch,
+                    std::vector<SegResult>* result,
+                    int thread_num) {
+  for (auto& inputs : inputs_batch_) {
     inputs.clear();
   }
   if (type == "classifier") {
     std::cerr << "Loading model is a 'classifier', ClsResult should be passed "
-                 "to function predict()!"
-              << std::endl;
+                 "to function predict()!" << std::endl;
     return false;
   } else if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
-                 "function predict()!"
-              << std::endl;
+                 "function predict()!" << std::endl;
     return false;
   }
 
   // 处理输入图像
-  if (!preprocess(im_batch, inputs_batch_, thread_num)) {
+  if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
 
   int batch_size = im_batch.size();
-  result.clear();
-  result.resize(batch_size);
+  (*result).clear();
+  (*result).resize(batch_size);
   int h = inputs_batch_[0].new_im_size_[0];
   int w = inputs_batch_[0].new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
   im_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
-  for(int i = 0; i < batch_size; ++i) {
-    std::copy(inputs_batch_[i].im_data_.begin(), inputs_batch_[i].im_data_.end(), inputs_data.begin() + i * 3 * h * w);
+  for (int i = 0; i < batch_size; ++i) {
+    std::copy(inputs_batch_[i].im_data_.begin(),
+              inputs_batch_[i].im_data_.end(),
+              inputs_data.begin() + i * 3 * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
-  //im_tensor->copy_from_cpu(inputs_.im_data_.data());
+  // im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
   // 使用加载的模型进行预测
   predictor_->ZeroCopyRun();
@@ -652,13 +661,15 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult>
   auto output_labels_iter = output_labels.begin();
 
   int single_batch_size = size / batch_size;
-  for(int i = 0; i < batch_size; ++i) {
-    result[i].label_map.data.resize(single_batch_size);
-    result[i].label_map.shape.push_back(1);
-    for(int j = 1; j < output_label_shape.size(); ++j) {
-      result[i].label_map.shape.push_back(output_label_shape[j]);
+  for (int i = 0; i < batch_size; ++i) {
+    (*result)[i].label_map.data.resize(single_batch_size);
+    (*result)[i].label_map.shape.push_back(1);
+    for (int j = 1; j < output_label_shape.size(); ++j) {
+      (*result)[i].label_map.shape.push_back(output_label_shape[j]);
     }
-    std::copy(output_labels_iter + i * single_batch_size, output_labels_iter + (i + 1) * single_batch_size, result[i].label_map.data.data());
+    std::copy(output_labels_iter + i * single_batch_size,
+              output_labels_iter + (i + 1) * single_batch_size,
+              (*result)[i].label_map.data.data());
   }
 
   // 获取预测置信度scoremap
@@ -674,28 +685,30 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult>
   auto output_scores_iter = output_scores.begin();
 
   int single_batch_score_size = size / batch_size;
-  for(int i = 0; i < batch_size; ++i) {
-    result[i].score_map.data.resize(single_batch_score_size);
-    result[i].score_map.shape.push_back(1);
-    for(int j = 1; j < output_score_shape.size(); ++j) {
-      result[i].score_map.shape.push_back(output_score_shape[j]);
+  for (int i = 0; i < batch_size; ++i) {
+    (*result)[i].score_map.data.resize(single_batch_score_size);
+    (*result)[i].score_map.shape.push_back(1);
+    for (int j = 1; j < output_score_shape.size(); ++j) {
+      (*result)[i].score_map.shape.push_back(output_score_shape[j]);
     }
-    std::copy(output_scores_iter + i * single_batch_score_size, output_scores_iter + (i + 1) * single_batch_score_size, result[i].score_map.data.data());
+    std::copy(output_scores_iter + i * single_batch_score_size,
+              output_scores_iter + (i + 1) * single_batch_score_size,
+              (*result)[i].score_map.data.data());
   }
 
   // 解析输出结果到原图大小
-  for(int i = 0; i < batch_size; ++i) {
-    std::vector<uint8_t> label_map(result[i].label_map.data.begin(),
-                                   result[i].label_map.data.end());
-    cv::Mat mask_label(result[i].label_map.shape[1],
-                       result[i].label_map.shape[2],
+  for (int i = 0; i < batch_size; ++i) {
+    std::vector<uint8_t> label_map((*result)[i].label_map.data.begin(),
+                                   (*result)[i].label_map.data.end());
+    cv::Mat mask_label((*result)[i].label_map.shape[1],
+                       (*result)[i].label_map.shape[2],
                        CV_8UC1,
                        label_map.data());
-  
-    cv::Mat mask_score(result[i].score_map.shape[2],
-                       result[i].score_map.shape[3],
+
+    cv::Mat mask_score((*result)[i].score_map.shape[2],
+                       (*result)[i].score_map.shape[3],
                        CV_32FC1,
-                       result[i].score_map.data.data());
+                       (*result)[i].score_map.data.data());
     int idx = 1;
     int len_postprocess = inputs_batch_[i].im_size_before_resize_.size();
     for (std::vector<std::string>::reverse_iterator iter =
@@ -703,14 +716,16 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult>
          iter != inputs_batch_[i].reshape_order_.rend();
          ++iter) {
       if (*iter == "padding") {
-        auto before_shape = inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
+        auto before_shape =
+            inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
         inputs_batch_[i].im_size_before_resize_.pop_back();
         auto padding_w = before_shape[0];
         auto padding_h = before_shape[1];
         mask_label = mask_label(cv::Rect(0, 0, padding_h, padding_w));
         mask_score = mask_score(cv::Rect(0, 0, padding_h, padding_w));
       } else if (*iter == "resize") {
-        auto before_shape = inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
+        auto before_shape =
+            inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
         inputs_batch_[i].im_size_before_resize_.pop_back();
         auto resize_w = before_shape[0];
         auto resize_h = before_shape[1];
@@ -725,18 +740,18 @@ bool Model::predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult>
                    cv::Size(resize_h, resize_w),
                    0,
                    0,
-                   cv::INTER_LINEAR); 
+                   cv::INTER_LINEAR);
       }
       ++idx;
     }
-    result[i].label_map.data.assign(mask_label.begin<uint8_t>(),
-                                  mask_label.end<uint8_t>());
-    result[i].label_map.shape = {mask_label.rows, mask_label.cols};
-    result[i].score_map.data.assign(mask_score.begin<float>(),
-                                  mask_score.end<float>());
-    result[i].score_map.shape = {mask_score.rows, mask_score.cols};
+    (*result)[i].label_map.data.assign(mask_label.begin<uint8_t>(),
+                                       mask_label.end<uint8_t>());
+    (*result)[i].label_map.shape = {mask_label.rows, mask_label.cols};
+    (*result)[i].score_map.data.assign(mask_score.begin<float>(),
+                                       mask_score.end<float>());
+    (*result)[i].score_map.shape = {mask_score.rows, mask_score.cols};
   }
   return true;
 }
 
-}  // namespce of PaddleX
+}  // namespace PaddleX

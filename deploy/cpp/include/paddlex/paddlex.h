@@ -16,8 +16,11 @@
 
 #include <functional>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <numeric>
-
+#include <string>
+#include <vector>
 #include "yaml-cpp/yaml.h"
 
 #ifdef _WIN32
@@ -28,21 +31,21 @@
 
 #include "paddle_inference_api.h"  // NOLINT
 
-#include "config_parser.h"
-#include "results.h"
-#include "transforms.h"
+#include "config_parser.h"  // NOLINT
+#include "results.h"  // NOLINT
+#include "transforms.h"  // NOLINT
 
 #ifdef WITH_ENCRYPTION
-#include "paddle_model_decrypt.h"
-#include "model_code.h"
+#include "paddle_model_decrypt.h"  // NOLINT
+#include "model_code.h"  // NOLINT
 #endif
 
 namespace PaddleX {
 
 /*
  * @brief
- * This class encapsulates all necessary proccess steps of model infering, which 
- * include image matrix preprocessing, model predicting and results postprocessing. 
+ * This class encapsulates all necessary proccess steps of model infering, which
+ * include image matrix preprocessing, model predicting and results postprocessing.
  * The entire process of model infering can be simplified as below:
  * 1. preprocess image matrix (resize, padding, ......)
  * 2. model infer
@@ -63,11 +66,11 @@ class Model {
   /*
    * @brief
    * This method aims to initialize the model configuration
-   * 
+   *
    * @param model_dir: the directory which contains model.yml
    * @param use_gpu: use gpu or not when infering
    * @param use_trt: use Tensor RT or not when infering
-   * @param gpu_id: the id of gpu when infering with using gpu 
+   * @param gpu_id: the id of gpu when infering with using gpu
    * @param key: the key of encryption when using encrypted model
    * @param batch_size: batch size of infering
    * */
@@ -76,7 +79,7 @@ class Model {
             bool use_trt = false,
             int gpu_id = 0,
             std::string key = "",
-	          int batch_size = 1) {
+            int batch_size = 1) {
     create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, batch_size);
   }
 
@@ -85,11 +88,11 @@ class Model {
                         bool use_trt = false,
                         int gpu_id = 0,
                         std::string key = "",
-			                  int batch_size = 1);
- 
+                        int batch_size = 1);
+
   /*
-   * @brief 
-   * This method aims to load model configurations which include 
+   * @brief
+   * This method aims to load model configurations which include
    * transform steps and label list
    *
    * @param model_dir: the directory which contains model.yml
@@ -107,7 +110,7 @@ class Model {
    * @return true if preprocess image matrix successfully
    * */
   bool preprocess(const cv::Mat& input_im, ImageBlob* blob);
-  
+
   /*
    * @brief
    * This method aims to transform mutiple image matrixs, the result will be
@@ -115,15 +118,17 @@ class Model {
    *
    * @param input_im_batch: a batch of image matrixs to be transformed
    * @param blob_blob: raw data of a batch of image matrixs after transformed
-   * @param thread_num: the number of preprocessing threads, 
+   * @param thread_num: the number of preprocessing threads,
    *                    each thread run preprocess on single image matrix
    * @return true if preprocess a batch of image matrixs successfully
    * */
-  bool preprocess(const std::vector<cv::Mat> &input_im_batch, std::vector<ImageBlob> &blob_batch, int thread_num = 1);
+  bool preprocess(const std::vector<cv::Mat> &input_im_batch,
+                  std::vector<ImageBlob> *blob_batch,
+                  int thread_num = 1);
 
   /*
    * @brief
-   * This method aims to execute classification model prediction on single image matrix, 
+   * This method aims to execute classification model prediction on single image matrix,
    * the result will be returned at second parameter.
    *
    * @param im: single image matrix to be predicted
@@ -134,7 +139,7 @@ class Model {
 
   /*
    * @brief
-   * This method aims to execute classification model prediction on a batch of image matrixs, 
+   * This method aims to execute classification model prediction on a batch of image matrixs,
    * the result will be returned at second parameter.
    *
    * @param im: a batch of image matrixs to be predicted
@@ -143,7 +148,9 @@ class Model {
    *                    on single image matrix
    * @return true if predict successfully
    * */
-  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<ClsResult> &results, int thread_num = 1);
+  bool predict(const std::vector<cv::Mat> &im_batch,
+               std::vector<ClsResult> *results,
+               int thread_num = 1);
 
   /*
    * @brief
@@ -167,11 +174,13 @@ class Model {
    *                    on single image matrix
    * @return true if predict successfully
    * */
-  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<DetResult> &result, int thread_num = 1);
-  
+  bool predict(const std::vector<cv::Mat> &im_batch,
+               std::vector<DetResult> *result,
+               int thread_num = 1);
+
   /*
    * @brief
-   * This method aims to execute segmentation model prediction on single image matrix, 
+   * This method aims to execute segmentation model prediction on single image matrix,
    * the result will be returned at second parameter.
    *
    * @param im: single image matrix to be predicted
@@ -182,7 +191,7 @@ class Model {
 
   /*
    * @brief
-   * This method aims to execute segmentation model prediction on a batch of image matrix, 
+   * This method aims to execute segmentation model prediction on a batch of image matrix,
    * the result will be returned at second parameter.
    *
    * @param im: a batch of image matrix to be predicted
@@ -191,8 +200,10 @@ class Model {
    *                    on single image matrix
    * @return true if predict successfully
    * */
-  bool predict(const std::vector<cv::Mat> &im_batch, std::vector<SegResult> &result, int thread_num = 1);
- 
+  bool predict(const std::vector<cv::Mat> &im_batch,
+               std::vector<SegResult> *result,
+               int thread_num = 1);
+
   // model type, include 3 type: classifier, detector, segmenter
   std::string type;
   // model name, such as FasterRCNN, YOLOV3 and so on.
@@ -209,4 +220,4 @@ class Model {
   // a predictor which run the model predicting
   std::unique_ptr<paddle::PaddlePredictor> predictor_;
 };
-}  // namespce of PaddleX
+}  // namespace PaddleX

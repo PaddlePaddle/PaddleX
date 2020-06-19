@@ -47,7 +47,7 @@ namespace PaddleX {
  * @brief
  * Generate visualization colormap for each class
  *
- * @param number of class 
+ * @param number of class
  * @return color map, the size of vector is 3 * num_class
  * */
 std::vector<int> GenerateColorMap(int num_class);
@@ -94,4 +94,4 @@ cv::Mat Visualize(const cv::Mat& img,
  * */
 std::string generate_save_path(const std::string& save_dir,
                                const std::string& file_path);
-}  // namespce of PaddleX
+}  // namespace PaddleX
