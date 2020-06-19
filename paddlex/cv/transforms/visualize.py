@@ -206,7 +206,7 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
             if vdl_writer is not None:
                 tag = str(op_id) + '. ' + op.__class__.__name__ + '/' +  str(step)
                 if op is None:
-                    tag = str(op_id) + '. OriginalImangeWithBbox/' +  str(step)
+                    tag = str(op_id) + '. OriginalImangeWithGTBox/' +  str(step)
                 vdl_writer.add_image(tag=tag,
                                      img=vdl_im,
                                      step=0)
