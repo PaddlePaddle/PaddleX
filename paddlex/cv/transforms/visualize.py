@@ -85,6 +85,8 @@ def cls_compose(im, label=None, transforms=None, vdl_writer=None, step=0):
                 im = outputs[0]
                 if len(outputs) == 2:
                     label = outputs[1]
+                if isinstance(op, pdx.cv.transforms.cls_transforms.Normalize):
+                    continue
             else:
                 import imgaug.augmenters as iaa
                 if isinstance(op, iaa.Augmenter):
@@ -196,7 +198,7 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
                                                                cname, 
                                                                catid2color[outputs[2]['gt_class'][i][0]-1])
                     if isinstance(op, pdx.cv.transforms.det_transforms.Normalize):
-                        vdl_im = im
+                        continue
             else:
                 im = execute_imgaug(op, im)
                 if label_info is not None:
@@ -243,6 +245,8 @@ def seg_compose(im, im_info=None, label=None, transforms=None, vdl_writer=None, 
                 im_info = outputs[1]
             if len(outputs) == 3:
                 label = outputs[2]
+            if isinstance(op, pdx.cv.transforms.seg_transforms.Normalize):
+                continue
         else:
             im = execute_imgaug(op, im)
             if label is not None:
