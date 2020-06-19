@@ -17,6 +17,7 @@ import os.path as osp
 import cv2
 from PIL import Image
 import numpy as np
+import math
 from .imgaug_support import execute_imgaug
 from .cls_transforms import ClsTransform
 from .det_transforms import DetTransform
