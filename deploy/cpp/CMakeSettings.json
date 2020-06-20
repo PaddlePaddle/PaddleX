@@ -50,6 +50,11 @@
                     "name": "WITH_ENCRYPTION",
                     "value": "False",
                     "type": "BOOL"
+                },
+                {
+                    "name": "ENCRYPTION_DIR",
+                    "value": "",
+                    "type": "PATH"
                 }
             ]
         }
