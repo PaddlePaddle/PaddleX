@@ -45,7 +45,7 @@
                     "name": "WITH_GPU",
                     "value": "False",
                     "type": "BOOL"
-                }
+                },
                 {
                     "name": "WITH_ENCRYPTION",
                     "value": "False",
