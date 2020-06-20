@@ -22,6 +22,11 @@
                     "type": "PATH"
                 },
                 {
+                    "name": "CUDA_LIB",
+                    "value": "",
+                    "type": "PATH"
+                },
+                {
                     "name": "CMAKE_BUILD_TYPE",
                     "value": "Release",
                     "type": "STRING"
@@ -38,6 +43,11 @@
                 },
                 {
                     "name": "WITH_GPU",
+                    "value": "False",
+                    "type": "BOOL"
+                }
+                {
+                    "name": "WITH_ENCRYPTION",
                     "value": "False",
                     "type": "BOOL"
                 }
