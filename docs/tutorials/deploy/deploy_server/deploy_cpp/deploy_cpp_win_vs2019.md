@@ -72,11 +72,13 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 ![step2.2](../../images/vs2019_step3.png)
 
-3. 点击：`项目`->`PADDLEX_INFERENCE的CMake设置`
+3. 点击：`项目`->`CMake设置`
 
 ![step3](../../images/vs2019_step4.png)
 
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径
+
+![step3](../../images/vs2019_step5.png)
 
 依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量对齐，**使用9.0、10.0版本，不使用9.2、10.1等版本CUDA库**）：
 
@@ -95,13 +97,13 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
 
-![step4](../../images/vs2019_step5.png)
+![step4](../../images/vs2019_step6.png)
 
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
 
 5. 点击`生成`->`全部生成`
 
-![step6](../../images/vs2019_step6.png)
+![step6](../../images/vs2019_step7.png)
 
 
 ### Step5: 预测及可视化
