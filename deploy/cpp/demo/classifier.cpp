@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
       auto start = system_clock::now();
       // 读图像
       int im_vec_size =
-          std::min(static_cat<int>(image_paths.size()), i + FLAGS_batch_size);
+          std::min(static_cast<int>(image_paths.size()), i + FLAGS_batch_size);
       std::vector<cv::Mat> im_vec(im_vec_size - i);
       std::vector<PaddleX::ClsResult> results(im_vec_size - i,
                                               PaddleX::ClsResult());

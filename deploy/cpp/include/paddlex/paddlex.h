@@ -95,10 +95,10 @@ class Model {
    * This method aims to load model configurations which include
    * transform steps and label list
    *
-   * @param model_dir: the directory which contains model.yml
+   * @param yaml_file:  model configuration
    * @return true if load configuration successfully
    * */
-  bool load_config(const std::string& model_dir);
+  bool load_config(const std::string& yaml_file);
 
   /*
    * @brief

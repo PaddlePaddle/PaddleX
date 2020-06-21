@@ -23,22 +23,25 @@ void Model::create_predictor(const std::string& model_dir,
                              int gpu_id,
                              std::string key,
                              int batch_size) {
-  // 读取配置文件
-  if (!load_config(model_dir)) {
-    std::cerr << "Parse file 'model.yml' failed!" << std::endl;
-    exit(-1);
-  }
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
+  std::string yaml_file = model_dir + OS_PATH_SEP + "model.yml";
 #ifdef WITH_ENCRYPTION
   if (key != "") {
     model_file = model_dir + OS_PATH_SEP + "__model__.encrypted";
     params_file = model_dir + OS_PATH_SEP + "__params__.encrypted";
+    std::string yaml_file = model_dir + OS_PATH_SEP + "model.yml.encrypted";
     paddle_security_load_model(
         &config, key.c_str(), model_file.c_str(), params_file.c_str());
   }
 #endif
+  // 读取配置文件
+  if (!load_config(yaml_file)) {
+    std::cerr << "Parse file 'model.yml' failed!" << std::endl;
+    exit(-1);
+  }
+
   if (key == "") {
     config.SetModel(model_file, params_file);
   }
@@ -64,8 +67,8 @@ void Model::create_predictor(const std::string& model_dir,
   inputs_batch_.assign(batch_size, ImageBlob());
 }
 
-bool Model::load_config(const std::string& model_dir) {
-  std::string yaml_file = model_dir + OS_PATH_SEP + "model.yml";
+bool Model::load_config(const std::string& yaml_file) {
+  // std::string yaml_file = model_dir + OS_PATH_SEP + "model.yml";
   YAML::Node config = YAML::LoadFile(yaml_file);
   type = config["_Attributes"]["model_type"].as<std::string>();
   name = config["Model"].as<std::string>();
