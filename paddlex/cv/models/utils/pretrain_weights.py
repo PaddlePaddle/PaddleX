@@ -81,7 +81,7 @@ coco_pretrain = {
     'YOLOv3_MobileNetV1_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v1.tar',
     'YOLOv3_MobileNetV3_large_COCO':
-    'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v3.pdparams',
+    'https://bj.bcebos.com/paddlex/models/yolov3_mobilenet_v3.tar',
     'YOLOv3_ResNet34_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r34.tar',
     'YOLOv3_ResNet50_vd_COCO':
