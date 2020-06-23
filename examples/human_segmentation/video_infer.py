@@ -70,8 +70,8 @@ def video_infer(args):
     resize_h = args.image_shape[1]
     resize_w = args.image_shape[0]
 
-    test_transforms = transforms.Compose([transforms.Normalize()])
     model = pdx.load_model(args.model_dir)
+    test_transforms = transforms.Compose([transforms.Normalize()])
     if not args.video_path:
         cap = cv2.VideoCapture(0)
     else:
@@ -115,7 +115,7 @@ def video_infer(args):
                     interpolation=cv2.INTER_LINEAR)
                 image = im.astype('float32')
                 im_info = ('resize', im_shape[0:2])
-                pred = model.predict(image)
+                pred = model.predict(image, test_transforms)
                 score_map = pred['score_map']
                 cur_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
                 score_map = 255 * score_map[:, :, 1]
@@ -155,7 +155,7 @@ def video_infer(args):
                     interpolation=cv2.INTER_LINEAR)
                 image = im.astype('float32')
                 im_info = ('resize', im_shape[0:2])
-                pred = model.predict(image)
+                pred = model.predict(image, test_transforms)
                 score_map = pred['score_map']
                 cur_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
                 cur_gray = cv2.resize(cur_gray, (resize_w, resize_h))
