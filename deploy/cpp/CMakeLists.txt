@@ -104,7 +104,7 @@ if (WIN32)
   include_directories("${PADDLE_DIR}/paddle/include")
   link_directories("${PADDLE_DIR}/paddle/fluid/inference")
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
-  unset(OPENCV_DIR CACHE)
+  unset(OpenCV_DIR CACHE)
 else ()
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
   include_directories("${PADDLE_DIR}/paddle/include")
@@ -193,8 +193,13 @@ if(WITH_STATIC_LIB)
     set(DEPS
         ${PADDLE_DIR}/paddle/lib/libpaddle_fluid${CMAKE_STATIC_LIBRARY_SUFFIX})
 else()
-    set(DEPS
-        ${PADDLE_DIR}/paddle/lib/libpaddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+    if (NOT WIN32)
+      set(DEPS
+          ${PADDLE_DIR}/paddle/lib/libpaddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+    else()
+      set(DEPS
+          ${PADDLE_DIR}/paddle/lib/paddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif()
 endif()
 
 if (NOT WIN32)
@@ -248,7 +253,7 @@ if(WITH_ENCRYPTION)
   else()
       include_directories("${ENCRYPTION_DIR}/include")
       link_directories("${ENCRYPTION_DIR}/lib")
-      set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/pmodel-decrypt${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/pmodel-decrypt${CMAKE_SHARED_LIBRARY_SUFFIX})
   endif()
 endif()
 
@@ -282,6 +287,9 @@ if (WIN32 AND WITH_MKL)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./release/mkldnn.dll
+        # for encryption
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
     )
     add_custom_command(TARGET detector POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./mklml.dll
@@ -289,6 +297,8 @@ if (WIN32 AND WITH_MKL)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./mkldnn.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
     )
     add_custom_command(TARGET segmenter POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./mklml.dll
@@ -296,8 +306,9 @@ if (WIN32 AND WITH_MKL)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./mkldnn.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./release/mkldnn.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
     )
 
 endif()

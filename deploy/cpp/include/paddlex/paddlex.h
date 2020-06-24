@@ -95,10 +95,10 @@ class Model {
    * This method aims to load model configurations which include
    * transform steps and label list
    *
-   * @param yaml_file:  model configuration
+   * @param yaml_input:  model configuration string
    * @return true if load configuration successfully
    * */
-  bool load_config(const std::string& yaml_file);
+  bool load_config(const std::string& yaml_input);
 
   /*
    * @brief
