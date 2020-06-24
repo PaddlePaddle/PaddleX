@@ -253,7 +253,7 @@ if(WITH_ENCRYPTION)
   else()
       include_directories("${ENCRYPTION_DIR}/include")
       link_directories("${ENCRYPTION_DIR}/lib")
-      set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/pmodel-decrypt${CMAKE_SHARED_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/pmodel-decrypt${CMAKE_STATIC_LIBRARY_SUFFIX})
   endif()
 endif()
 
