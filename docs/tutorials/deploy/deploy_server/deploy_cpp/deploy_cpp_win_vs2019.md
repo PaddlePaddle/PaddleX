@@ -97,6 +97,10 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
 
+4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，解压到某目录\\path\\to\\paddlex-encryption。编译时需勾选WITH_EBNCRYPTION并且在ENCRTYPTION_DIR填入\\path\\to\\paddlex-encryption。
+
+![step_encryption](../../images/vs2019_step_encryption.png)
+
 ![step4](../../images/vs2019_step6.png)
 
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。

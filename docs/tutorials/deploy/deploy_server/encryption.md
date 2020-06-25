@@ -139,21 +139,21 @@ Windows:
 不使用`GPU`测试图片 `/path/to/xiaoduxiong.jpeg`  
 
 ```shell
-./paddlex_inference\detector.exe --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image=\\path\\to\\xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
 
 `样例二`:
 
-使用`GPU`预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
+使用`GPU`预测多个图片`\\path\\to\\image_list.txt`，image_list.txt内容的格式如下：
 ```
-/path/to/images/xiaoduxiong1.jpeg
-/path/to/images/xiaoduxiong2.jpeg
+\\path\\to\\images\\xiaoduxiong1.jpeg
+\\path\\to\\images\\xiaoduxiong2.jpeg
 ...
-/path/to/images/xiaoduxiongn.jpeg
+\\path\\to\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
-./paddlex_inference\detector.exe --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\models\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
