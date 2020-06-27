@@ -53,4 +53,4 @@ log_level = 2
 
 from . import interpret
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'

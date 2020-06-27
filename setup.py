@@ -15,11 +15,11 @@
 import setuptools
 import sys
 
-long_description = "PaddleX. A end-to-end deeplearning model development toolkit base on PaddlePaddle\n\n"
+long_description = "PaddlePaddle Entire Process Development Toolkit"
 
 setuptools.setup(
     name="paddlex",
-    version='1.0.6',
+    version='1.0.7',
     author="paddlex",
     author_email="paddlex@baidu.com",
     description=long_description,

@@ -45,7 +45,7 @@ class ImageNet(Dataset):
                  label_list,
                  transforms=None,
                  num_workers='auto',
-                 buffer_size=100,
+                 buffer_size=8,
                  parallel_method='process',
                  shuffle=False):
         super(ImageNet, self).__init__(
@@ -70,8 +70,8 @@ class ImageNet(Dataset):
                     continue
                 full_path = osp.join(data_dir, items[0])
                 if not osp.exists(full_path):
-                    raise IOError(
-                        'The image file {} is not exist!'.format(full_path))
+                    raise IOError('The image file {} is not exist!'.format(
+                        full_path))
                 self.file_list.append([full_path, int(items[1])])
         self.num_samples = len(self.file_list)
         logging.info("{} samples in file {}".format(
