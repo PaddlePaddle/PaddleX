@@ -95,11 +95,13 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
   if (width_ > 1 & height_ > 1) {
     padding_w = width_ - im->cols;
     padding_h = height_ - im->rows;
-  } else if (coarsest_stride_ > 1) {
+  } else if (coarsest_stride_ >= 1) {
+    int h = im->rows;
+    int w = im->cols;
     padding_h =
-        ceil(im->rows * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
+        ceil(h * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
     padding_w =
-        ceil(im->cols * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
+        ceil(w * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
   }
 
   if (padding_h < 0 || padding_w < 0) {
@@ -219,4 +221,5 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   }
   return true;
 }
+
 }  // namespace PaddleX

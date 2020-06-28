@@ -43,20 +43,55 @@
 
 namespace PaddleX {
 
-// Generate visualization colormap for each class
+/*
+ * @brief
+ * Generate visualization colormap for each class
+ *
+ * @param number of class
+ * @return color map, the size of vector is 3 * num_class
+ * */
 std::vector<int> GenerateColorMap(int num_class);
 
+
+/*
+ * @brief
+ * Visualize the detection result
+ *
+ * @param img: initial image matrix
+ * @param results: the detection result
+ * @param labels: label map
+ * @param colormap: visualization color map
+ * @return visualized image matrix
+ * */
 cv::Mat Visualize(const cv::Mat& img,
                      const DetResult& results,
                      const std::map<int, std::string>& labels,
                      const std::vector<int>& colormap,
                      float threshold = 0.5);
 
+/*
+ * @brief
+ * Visualize the segmentation result
+ *
+ * @param img: initial image matrix
+ * @param results: the detection result
+ * @param labels: label map
+ * @param colormap: visualization color map
+ * @return visualized image matrix
+ * */
 cv::Mat Visualize(const cv::Mat& img,
                      const SegResult& result,
                      const std::map<int, std::string>& labels,
                      const std::vector<int>& colormap);
 
+/*
+ * @brief
+ * generate save path for visualized image matrix
+ *
+ * @param save_dir: directory for saving visualized image matrix
+ * @param file_path: sourcen image file path
+ * @return path of saving visualized result
+ * */
 std::string generate_save_path(const std::string& save_dir,
                                const std::string& file_path);
-}  // namespce of PaddleX
+}  // namespace PaddleX
