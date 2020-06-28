@@ -108,6 +108,7 @@ def load_model(model_dir, fixed_input_shape=None):
 
     logging.info("Model[{}] loaded.".format(info['Model']))
     model.trainable = False
+    model.status = status
     return model
 
 
