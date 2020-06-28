@@ -61,23 +61,16 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 ### Step4: 使用Visual Studio 2019直接编译CMake
 
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-
 ![step2](../../images/vs2019_step1.png)
-
 2. 点击： `文件`->`打开`->`CMake`
 
 ![step2.1](../../images/vs2019_step2.png)
 
 选择项目代码所在路径，并打开`CMakeList.txt`：
-
 ![step2.2](../../images/vs2019_step3.png)
-
 3. 点击：`项目`->`CMake设置`
-
 ![step3](../../images/vs2019_step4.png)
-
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径
-
 ![step3](../../images/vs2019_step5.png)
 
 依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量对齐，**使用9.0、10.0版本，不使用9.2、10.1等版本CUDA库**）：
@@ -90,28 +83,18 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 **注意：**
 1. 使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
-
 2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
-
 3. Windows环境下编译会自动下载YAML，如果编译环境无法访问外网，可手动下载： [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
-
 yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
-
-4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，解压到某目录\\path\\to\\paddlex-encryption。编译时需勾选WITH_EBNCRYPTION并且在ENCRTYPTION_DIR填入\\path\\to\\paddlex-encryption。
-
+4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，解压到某目录\\\\path\\\\to\\\\paddlex-encryption。编译时需勾选WITH_EBNCRYPTION并且在ENCRTYPTION_DIR填入\\\\path\\\\to\\\\paddlex-encryption。
 ![step_encryption](../../images/vs2019_step_encryption.png)
-
 ![step4](../../images/vs2019_step6.png)
-
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
-
 5. 点击`生成`->`全部生成`
 
 ![step6](../../images/vs2019_step7.png)
 
-
 ### Step5: 预测及可视化
-
 
 **在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../deploy_python.html#inference)将模型导出为部署格式。**  
 
@@ -124,7 +107,7 @@ d:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 
-编译成功后，预测demo的入口程序为`paddlex_inference\detector.exe`，`paddlex_inference\classifer.exe`，`paddlex_inference\segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+编译成功后，预测demo的入口程序为`paddlex_inference\detector.exe`，`paddlex_inference\classifier.exe`，`paddlex_inference\segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -134,7 +117,9 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classfier无该参数 |
-
+| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
+| batch_size | 预测的批量大小，默认为1 |
+| thread_num | 预测的线程数，默认为cpu处理器个数 |
 
 ## 样例
 
@@ -161,6 +146,6 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 \\path\\to\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
-.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output
+.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output --batch_size=2 --thread_num=2
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。

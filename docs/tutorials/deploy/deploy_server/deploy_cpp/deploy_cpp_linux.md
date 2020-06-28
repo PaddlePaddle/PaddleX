@@ -119,7 +119,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 > **注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型（模型版本可查看model.yml文件中的version字段）暂时无法直接用于预测部署，参考[模型版本升级](../../upgrade_version.md)对模型版本进行升级。**  
 
-编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifer`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -130,6 +130,9 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 | use_trt  | 是否使用 TensorTr 预测, 支持值为0或1(默认值为0) |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，**classfier无该参数** |
+| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
+| batch_size | 预测的批量大小，默认为1 |
+| thread_num | 预测的线程数，默认为cpu处理器个数 |
 
 ## 样例
 
@@ -155,6 +158,6 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 /path/to/images/xiaoduxiongn.jpeg
 ```
 ```shell
-./build/demo/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output
+./build/demo/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output --batch_size=2 --thread_num=2
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
