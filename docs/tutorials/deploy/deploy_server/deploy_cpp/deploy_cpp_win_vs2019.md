@@ -40,7 +40,7 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 
 更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/windows_cpp_inference.html)
 
-解压后`D:\projects\fluid_inference*\`目录下主要包含的内容为：
+解压后`D:\projects\fluid_inference\`目录下主要包含的内容为：
 ```
 ├── \paddle\ # paddle核心库和头文件
 |
