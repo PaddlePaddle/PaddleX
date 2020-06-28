@@ -20,7 +20,7 @@ PaddleX提供一个轻量级的模型加密部署方案，通过PaddleX内置的
 
 ![](../images/encryption_process.png)
 
-下面是对提供的C/C++加解密库内部实现的中文描述，参考以下步骤可以实现 一套加解密库 来适应自己的场景并通过内存数据load到paddlepaddle中（c/c++预测服务）
+下面是对提供的C/C++加解密库内部实现的中文描述，参考以下步骤可以实现一套加解密库来适应自己的场景并通过内存数据加载到Paddle Inference预测库中
 
 > 1）考虑到加密的模型文件解密后需要从内存加载数据，使用conbine的模式生成模型文件和参数文件。
 >
@@ -34,7 +34,7 @@ PaddleX提供一个轻量级的模型加密部署方案，通过PaddleX内置的
 >
 > 6）在模型解密环节根据加密后的文件读取相关的加密数据到内存中，对内存数据使用AES算法进行解密，注意解密时需要采用与加密时一致的加密算法和加密的模式，以及密钥的数据和长度，否则会导致解密后数据错误。
 >
-> 7）集成模型预测的C/C++库，在具体使用paddlepaddle预测时一般涉及paddle::AnalysisConfig和paddle:Predictor，为了能够从内存数据中直接load解密后的模型明文数据（避免模型解密后创建临时文件），这里需要将AnalysisConfig的模型加载函数从SetModel替换为SetModelBuffer来实现从内存中加载模型数据。
+> 7）集成模型预测的C/C++库，在具体使用预测时一般涉及paddle::AnalysisConfig和paddle:Predictor，为了能够从内存数据中直接load解密后的模型明文数据（避免模型解密后创建临时文件），这里需要将AnalysisConfig的模型加载函数从SetModel替换为SetModelBuffer来实现从内存中加载模型数据。
 
 需要注意的是，在本方案中，密钥集成在上层预测服务的代码中。故模型的安全强度等同于代码抵御逆向调试的强度。为了保护密钥和模型的安全，开发者还需对自己的应用进行加固保护。常见的应用加固手段有：代码混淆，二进制文件加壳 等等，亦或将加密机制更改为AES白盒加密技术来保护密钥。这类技术领域内有大量商业和开源产品可供选择，此处不一一赘述。
 
@@ -80,7 +80,7 @@ Windows:
 .\paddlex-encryption\tool\paddlex_encrypt_tool.exe -model_dir D:\\projects\\paddlex_inference_model -save_dir D:\\projects\\paddlex_encrypted_model
 ```
 
-`-model_dir`用于指定inference模型路径（参考[导出inference模型](deploy_python.html#inference)将模型导出为inference格式模型），可使用[导出小度熊识别模型](deploy_python.html#inference)中导出的`inference_model`（**注意**：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](../upgrade_version.md)对模型版本进行升级。)。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
+`-model_dir`用于指定inference模型路径（参考[导出inference模型](deploy_python.html#inference)将模型导出为inference格式模型），可使用[导出小度熊识别模型](deploy_python.html#inference)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
 
 ![](../images/encrypt.png)
 
