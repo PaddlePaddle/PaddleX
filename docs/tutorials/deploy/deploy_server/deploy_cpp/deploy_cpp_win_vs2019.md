@@ -86,7 +86,7 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
 3. Windows环境下编译会自动下载YAML，如果编译环境无法访问外网，可手动下载： [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
-4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，解压到某目录\\\\path\\\\to\\\\paddlex-encryption。编译时需勾选WITH_EBNCRYPTION并且在ENCRTYPTION_DIR填入\\\\path\\\\to\\\\paddlex-encryption。
+4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，解压到D:/projects。解压后目录为D:/projects/paddlex-encryption。编译时需勾选WITH_EBNCRYPTION并且在ENCRTYPTION_DIR填入D:/projects/paddlex-encryption。
 ![step_encryption](../../images/vs2019_step_encryption.png)
 ![step4](../../images/vs2019_step6.png)
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
@@ -123,14 +123,14 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 ## 样例
 
-可使用[小度熊识别模型](../deploy_python.md)中导出的`inference_model`和测试图片进行预测。
+可使用[小度熊识别模型](../deploy_python.md)中导出的`inference_model`和测试图片进行预测, 导出到D:/projects，模型路径为D:/projects/inference_model。
 
 `样例一`：
 
-不使用`GPU`测试图片  `\\path\\to\\xiaoduxiong.jpeg`  
+不使用`GPU`测试图片  `D:\\images\\xiaoduxiong.jpeg`  
 
 ```shell
-.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
+.\\paddlex_inference\\detector.exe --model_dir=D:\\projects\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output
 
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
@@ -138,14 +138,14 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 `样例二`:
 
-使用`GPU`预测多个图片`\\path\\to\\image_list.txt`，image_list.txt内容的格式如下：
+使用`GPU`预测多个图片`D:\\images\\image_list.txt`，image_list.txt内容的格式如下：
 ```
-\\path\\to\\images\\xiaoduxiong1.jpeg
-\\path\\to\\images\\xiaoduxiong2.jpeg
+D:\\images\\xiaoduxiong1.jpeg
+D:\\images\\xiaoduxiong2.jpeg
 ...
-\\path\\to\\images\\xiaoduxiongn.jpeg
+D:\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
-.\\paddlex_inference\\detector.exe --model_dir=\\path\\to\\inference_model --image_list=\\path\\to\\images_list.txt --use_gpu=1 --save_dir=output --batch_size=2 --thread_num=2
+.\\paddlex_inference\\detector.exe --model_dir=D:\\projects\\inference_model --image_list=D:\\images\\image_list.txt --use_gpu=1 --save_dir=output --batch_size=2 --thread_num=2
 ```
 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
