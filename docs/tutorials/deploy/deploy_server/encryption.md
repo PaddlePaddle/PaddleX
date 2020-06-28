@@ -85,7 +85,7 @@ Windows:
 ## 2. PaddleX C++加密部署
 
 ### 2.1 Linux平台使用
-参考[Linux平台编译指南](deploy_cpp/deploy_cpp_linux.md)编译C++部署代码。编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifer`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+参考[Linux平台编译指南](deploy_cpp/deploy_cpp_linux.md)编译C++部署代码。编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -130,7 +130,7 @@ Windows:
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
 ### 2.2 Windows平台使用
-参考[Windows平台编译指南](deploy_cpp/deploy_cpp_win_vs2019.md)。需自行下载Windows版PaddleX加密工具压缩包，解压，在编译指南的编译流程基础上，在CMake设置中勾选WITH_ENCRYPTION，ENCRYPTION_DIR填写为加密工具包解压后的目录，再进行编译。参数与Linux版本预测部署一致。预测demo的入口程序为paddlex_inference\detector.exe，paddlex_inference\classifer.exe，paddlex_inference\segmenter.exe。
+参考[Windows平台编译指南](deploy_cpp/deploy_cpp_win_vs2019.md)。需自行下载Windows版PaddleX加密工具压缩包，解压，在编译指南的编译流程基础上，在CMake设置中勾选WITH_ENCRYPTION，ENCRYPTION_DIR填写为加密工具包解压后的目录，再进行编译。参数与Linux版本预测部署一致。预测demo的入口程序为paddlex_inference\detector.exe，paddlex_inference\classifier.exe，paddlex_inference\segmenter.exe。
 
 ## 样例
 
