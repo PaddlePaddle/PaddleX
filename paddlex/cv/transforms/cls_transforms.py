@@ -32,10 +32,8 @@ class ClsTransform:
 class Compose(ClsTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强算子。
-
     Raises:
         TypeError: 形参数据类型不满足需求。
         ValueError: 数据长度不匹配。
@@ -434,6 +432,7 @@ class RandomDistort(ClsTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label is None:
             return (im, )
         else:

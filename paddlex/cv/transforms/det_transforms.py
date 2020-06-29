@@ -41,10 +41,8 @@ class DetTransform:
 class Compose(DetTransform):
     """根据数据预处理/增强列表对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强列表。
-
     Raises:
         TypeError: 形参数据类型不满足需求。
         ValueError: 数据长度不匹配。
@@ -619,6 +617,7 @@ class RandomDistort(DetTransform):
 
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label_info is None:
             return (im, im_info)
         else:
@@ -823,7 +822,7 @@ class RandomExpand(DetTransform):
                 'gt_class' not in label_info:
             raise TypeError('Cannot do RandomExpand! ' + \
                             'Becasuse gt_bbox/gt_class is not in label_info!')
-        if np.random.uniform(0., 1.) < self.prob:
+        if np.random.uniform(0., 1.) > self.prob:
             return (im, im_info, label_info)
 
         if 'gt_class' in label_info and 0 in label_info['gt_class']:
