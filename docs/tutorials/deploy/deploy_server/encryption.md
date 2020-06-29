@@ -70,12 +70,14 @@ paddlex-encryption
 
 Linux:
 ```
-./paddlex-encryption/tool/paddlex_encrypt_tool -model_dir /path/to/paddlex_inference_model -save_dir /path/to/paddlex_encrypted_model
+# 假设模型在/root/projects下
+./paddlex-encryption/tool/paddlex_encrypt_tool -model_dir /root/projects/paddlex_inference_model -save_dir /root/projects/paddlex_encrypted_model
 ```
 
 Windows:
 ```
-./paddlex-encryption/tool/paddlex_encrypt_tool.exe -model_dir path\to\paddlex_inference_model -save_dir path/to/paddlex_encrypted_model
+# 假设模型在D:/projects下
+.\paddlex-encryption\tool\paddlex_encrypt_tool.exe -model_dir D:\\projects\\paddlex_inference_model -save_dir D:\\projects\\paddlex_encrypted_model
 ```
 
 `-model_dir`用于指定inference模型路径（参考[导出inference模型](deploy_python.html#inference)将模型导出为inference格式模型），可使用[导出小度熊识别模型](deploy_python.html#inference)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
@@ -97,6 +99,8 @@ Windows:
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classifier无该参数 |
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
+| batch_size | 预测的批量大小，默认为1 |
+| thread_num | 预测的线程数，默认为cpu处理器个数 |
 
 
 ## 样例
@@ -105,30 +109,30 @@ Windows:
 
 `样例一`：
 
-不使用`GPU`测试图片 `/path/to/xiaoduxiong.jpeg`  
+不使用`GPU`测试图片 `/root/projects/images/xiaoduxiong.jpeg`  
 
 ```shell
-./build/demo/detector --model_dir=/path/to/inference_model --image=/path/to/xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
+./build/demo/detector --model_dir=/root/projects/inference_model --image=/root/projects/xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
 
 `样例二`:
 
-使用`GPU`预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
+使用`GPU`预测多个图片`/root/projects/image_list.txt`，image_list.txt内容的格式如下：
 ```
-/path/to/images/xiaoduxiong1.jpeg
-/path/to/images/xiaoduxiong2.jpeg
+/root/projects/images/xiaoduxiong1.jpeg
+/root/projects/xiaoduxiong2.jpeg
 ...
-/path/to/images/xiaoduxiongn.jpeg
+/root/projects/xiaoduxiongn.jpeg
 ```
 ```shell
-./build/demo/detector --model_dir=/path/to/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
+./build/demo/detector --model_dir=/root/projects/models/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
 ### 2.2 Windows平台使用
-参考[Windows平台编译指南](deploy_cpp/deploy_cpp_win_vs2019.md)。参数与Linux版本预测部署一致。预测demo的入口程序为paddlex_inference\detector.exe，paddlex_inference\classifer.exe，paddlex_inference\segmenter.exe。
+参考[Windows平台编译指南](deploy_cpp/deploy_cpp_win_vs2019.md)。需自行下载Windows版PaddleX加密工具压缩包，解压，在编译指南的编译流程基础上，在CMake设置中勾选WITH_ENCRYPTION，ENCRYPTION_DIR填写为加密工具包解压后的目录，再进行编译。参数与Linux版本预测部署一致。预测demo的入口程序为paddlex_inference\detector.exe，paddlex_inference\classifier.exe，paddlex_inference\segmenter.exe。
 
 ## 样例
 
@@ -136,24 +140,24 @@ Windows:
 
 `样例一`：
 
-不使用`GPU`测试图片 `\path\to\xiaoduxiong.jpeg`  
+不使用`GPU`测试图片 `D:\\images\\xiaoduxiong.jpeg`  
 
 ```shell
-.\paddlex_inference\detector.exe --model_dir=\path\to\inference_model --image=\path\to\xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
+.\\paddlex_inference\\detector.exe --model_dir=D:\\projects\\inference_model --image=D:\\images\\xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
 
 
 `样例二`:
 
-使用`GPU`预测多个图片`\path\to\image_list.txt`，image_list.txt内容的格式如下：
+使用`GPU`预测多个图片`D:\\projects\\image_list.txt`，image_list.txt内容的格式如下：
 ```
-\\path\\to\\images\\xiaoduxiong1.jpeg
-\\path\\to\\images\\xiaoduxiong2.jpeg
+D:\\projects\\images\\xiaoduxiong1.jpeg
+D:\\projects\\images\\xiaoduxiong2.jpeg
 ...
-\\path\\to\\images\\xiaoduxiongn.jpeg
+D:\\projects\\images\\xiaoduxiongn.jpeg
 ```
 ```shell
-.\paddlex_inference\detector.exe --model_dir=\path\to\models\inference_model --image_list=\path\to\images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
+.\\paddlex_inference\\detector.exe --model_dir=D:\\projects\\inference_encrypted_model --image_list=D:\\projects\\images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
