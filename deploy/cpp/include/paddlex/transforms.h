@@ -114,6 +114,7 @@ class Resize : public Transform {
       std::vector<int> target_size = item["target_size"].as<std::vector<int>>();
       width_ = target_size[0];
       height_ = target_size[1];
+      interp_ = item["interp"].as<std::string>();
     }
     if (height_ <= 0 || width_ <= 0) {
       std::cerr << "[Resize] target_size should greater than 0" << std::endl;
