@@ -61,16 +61,20 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 ### Step4: 使用Visual Studio 2019直接编译CMake
 
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
+
 ![step2](../../images/vs2019_step1.png)
 2. 点击： `文件`->`打开`->`CMake`
 
 ![step2.1](../../images/vs2019_step2.png)
 
 选择项目代码所在路径，并打开`CMakeList.txt`：
+
 ![step2.2](../../images/vs2019_step3.png)
 3. 点击：`项目`->`CMake设置`
+
 ![step3](../../images/vs2019_step4.png)
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径
+
 ![step3](../../images/vs2019_step5.png)
 
 依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量对齐，**使用9.0、10.0版本，不使用9.2、10.1等版本CUDA库**）：
@@ -87,8 +91,11 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 3. Windows环境下编译会自动下载YAML，如果编译环境无法访问外网，可手动下载： [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
 4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，解压到D:/projects。解压后目录为D:/projects/paddlex-encryption。编译时需勾选WITH_EBNCRYPTION并且在ENCRTYPTION_DIR填入D:/projects/paddlex-encryption。
+
 ![step_encryption](../../images/vs2019_step_encryption.png)
+
 ![step4](../../images/vs2019_step6.png)
+
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
 5. 点击`生成`->`全部生成`
 
@@ -98,12 +105,10 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 **在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../deploy_python.html#inference)将模型导出为部署格式。**  
 
-**注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型（模型版本可查看model.yml文件中的version字段）暂时无法直接用于预测部署，参考[模型版本升级](../../upgrade_version.md)对模型版本进行升级。**
-
 上述`Visual Studio 2019`编译产出的可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
 ```
-d:
+D:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 

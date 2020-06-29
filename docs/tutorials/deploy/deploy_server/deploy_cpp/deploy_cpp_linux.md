@@ -116,8 +116,6 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 **在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../deploy_python.html#inference)将模型导出为部署格式。**  
 
-> **注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型（模型版本可查看model.yml文件中的version字段）暂时无法直接用于预测部署，参考[模型版本升级](../../upgrade_version.md)对模型版本进行升级。**  
-
 编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
