@@ -28,7 +28,10 @@
 
 namespace PaddleX {
 
-// Object for storing all preprocessed data
+/*
+ * @brief
+ * This class represents object for storing all preprocessed data
+ * */
 class ImageBlob {
  public:
   // Original image height and width
@@ -45,21 +48,34 @@ class ImageBlob {
   std::vector<float> im_data_;
 
   void clear() {
-    ori_im_size_.clear();
-    new_im_size_.clear();
     im_size_before_resize_.clear();
     reshape_order_.clear();
     im_data_.clear();
   }
 };
 
-// Abstraction of preprocessing opration class
+/*
+ * @brief
+ * Abstraction of preprocessing operation class
+ * */
 class Transform {
  public:
   virtual void Init(const YAML::Node& item) = 0;
+  /*
+   * @brief
+   * This method executes preprocessing operation on image matrix,
+   * result will be returned at second parameter.
+   * @param im: single image matrix to be preprocessed
+   * @param data: the raw data of single image matrix after preprocessed
+   * @return true if transform successfully
+   * */
   virtual bool Run(cv::Mat* im, ImageBlob* data) = 0;
 };
 
+/*
+ * @brief
+ * This class execute normalization operation on image matrix
+ * */
 class Normalize : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -74,6 +90,17 @@ class Normalize : public Transform {
   std::vector<float> std_;
 };
 
+/*
+ * @brief
+ * This class execute resize by short operation on image matrix. At first, it
+ * resizes
+ * the short side of image matrix to specified length. Accordingly, the long
+ * side
+ * will be resized in the same proportion. If new length of long side exceeds
+ * max
+ * size, the long size will be resized to max size, and the short size will be
+ * resized in the same proportion
+ * */
 class ResizeByShort : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -92,6 +119,14 @@ class ResizeByShort : public Transform {
   int max_size_;
 };
 
+/*
+ * @brief
+ * This class execute resize by long operation on image matrix. At first, it
+ * resizes
+ * the long side of image matrix to specified length. Accordingly, the short
+ * side
+ * will be resized in the same proportion.
+ * */
 class ResizeByLong : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -103,6 +138,12 @@ class ResizeByLong : public Transform {
   int long_size_;
 };
 
+/*
+ * @brief
+ * This class execute resize operation on image matrix. It resizes width and
+ * height
+ * to specified length.
+ * */
 class Resize : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -114,7 +155,6 @@ class Resize : public Transform {
       std::vector<int> target_size = item["target_size"].as<std::vector<int>>();
       width_ = target_size[0];
       height_ = target_size[1];
-      interp_ = item["interp"].as<std::string>();
     }
     if (height_ <= 0 || width_ <= 0) {
       std::cerr << "[Resize] target_size should greater than 0" << std::endl;
@@ -129,6 +169,11 @@ class Resize : public Transform {
   std::string interp_;
 };
 
+/*
+ * @brief
+ * This class execute center crop operation on image matrix. It crops the center
+ * of image matrix accroding to specified size.
+ * */
 class CenterCrop : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -148,6 +193,11 @@ class CenterCrop : public Transform {
   int width_;
 };
 
+/*
+ * @brief
+ * This class execute padding operation on image matrix. It makes border on edge
+ * of image matrix.
+ * */
 class Padding : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -176,7 +226,11 @@ class Padding : public Transform {
   int width_ = 0;
   int height_ = 0;
 };
-
+/*
+ * @brief
+ * This class is transform operations manager. It stores all neccessary
+ * transform operations and run them in correct order.
+ * */
 class Transforms {
  public:
   void Init(const YAML::Node& node, bool to_rgb = true);

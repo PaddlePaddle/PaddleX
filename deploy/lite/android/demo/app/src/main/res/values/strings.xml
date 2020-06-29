@@ -1,0 +1,16 @@
+<resources>
+<string name="app_name">PaddleX Demo</string>
+<!-- settings -->
+<string name="CHOOSE_PRE_INSTALLED_MODEL_KEY">CHOOSE_PRE_INSTALLED_MODEL_KEY</string>
+<string name="ENABLE_CUSTOM_SETTINGS_KEY">ENABLE_CUSTOM_SETTINGS_KEY</string>
+<string name="MODEL_PATH_KEY">MODEL_PATH_KEY</string>
+<string name="YAML_PATH_KEY">YAML_PATH_KEY</string>
+<string name="IMAGE_PATH_KEY">IMAGE_PATH_KEY</string>
+<string name="CPU_POWER_MODE_KEY">CPU_POWER_MODE_KEY</string>
+<string name="CPU_THREAD_NUM_KEY">CPU_THREAD_NUM_KEY</string>
+<string name="MODEL_PATH_DEFAULT">model/model.nb</string>
+<string name="YAML_PATH_DEFAULT">config/model.yml</string>
+<string name="IMAGE_PATH_DEFAULT">images/bocai.jpg</string>
+<string name="CPU_THREAD_NUM_DEFAULT">1</string>
+<string name="CPU_POWER_MODE_DEFAULT">LITE_POWER_HIGH</string>
+</resources>
