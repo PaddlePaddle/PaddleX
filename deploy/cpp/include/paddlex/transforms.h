@@ -141,10 +141,12 @@ class ResizeByLong : public Transform {
 class Resize : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
+    if (item["interp"].IsDefined()) {
+      interp_ = item["interp"].as<std::string>();
+    }
     if (item["target_size"].IsScalar()) {
       height_ = item["target_size"].as<int>();
       width_ = item["target_size"].as<int>();
-      interp_ = item["interp"].as<std::string>();
     } else if (item["target_size"].IsSequence()) {
       std::vector<int> target_size = item["target_size"].as<std::vector<int>>();
       width_ = target_size[0];
