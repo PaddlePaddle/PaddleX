@@ -106,7 +106,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 上述`Visual Studio 2019`编译产出的可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
 ```
-d:
+D:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 

@@ -27,11 +27,6 @@
                     "type": "PATH"
                 },
                 {
-                    "name": "CMAKE_BUILD_TYPE",
-                    "value": "Release",
-                    "type": "STRING"
-                },
-                {
                     "name": "WITH_STATIC_LIB",
                     "value": "True",
                     "type": "BOOL"

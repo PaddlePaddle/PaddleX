@@ -56,7 +56,6 @@ int main(int argc, char** argv) {
     std::cerr << "--image or --image_list need to be defined" << std::endl;
     return -1;
   }
-  std::cout << "Thread num: " << FLAGS_thread_num << std::endl;
   // 加载模型
   PaddleX::Model model;
   model.Init(FLAGS_model_dir,
@@ -132,9 +131,16 @@ int main(int argc, char** argv) {
       }
     }
   } else {
+    auto start = system_clock::now();
     PaddleX::DetResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
     model.predict(im, &result);
+    auto end = system_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+    total_running_time_s += static_cast<double>(duration.count()) *
+                            microseconds::period::num /
+                            microseconds::period::den;
+    // 输出结果目标框
     for (int i = 0; i < result.boxes.size(); ++i) {
       std::cout << "image file: " << FLAGS_image << std::endl;
       std::cout << ", predict label: " << result.boxes[i].category
