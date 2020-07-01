@@ -6,14 +6,14 @@
 #ifndef PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
 #define PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
 
-#ifdef WIN32
+#ifdef _WIN32
 #ifdef PM_EXPORTS
 #define PDD_MODEL_API __declspec(dllexport)
 #else
 #define PDD_MODEL_API __declspec(dllimport)
 #endif
 #endif
-#ifdef linux
+#ifdef __linux__
 #define PDD_MODEL_API __attribute__((visibility("default")))
 #endif
 

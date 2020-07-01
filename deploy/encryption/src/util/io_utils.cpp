@@ -1,8 +1,8 @@
-#ifdef linux
+#ifdef __linux__
 #include <unistd.h>
 #include <dirent.h>
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #include <io.h>
 #endif
@@ -141,7 +141,7 @@ int read_file_to_file(const char* src_path, const char* dst_path) {
 }
 
 int read_dir_files(const char* dir_path, std::vector<std::string>& files) {
-#ifdef linux
+#ifdef __linux__
     struct dirent* ptr;
     DIR* dir = NULL;
     dir = opendir(dir_path);
@@ -155,7 +155,7 @@ int read_dir_files(const char* dir_path, std::vector<std::string>& files) {
     }
     closedir(dir);
 #endif
-#ifdef WIN32
+#ifdef _WIN32
     intptr_t handle;
 	struct _finddata_t fileinfo;
 	
@@ -190,7 +190,7 @@ std::cout << files.size() << std::endl;
 }
 
 int dir_exist_or_mkdir(const char* dir) {
-#ifdef WIN32
+#ifdef _WIN32
     if (CreateDirectory(dir, NULL)) {
         // return CODE_OK;
     } else {
@@ -198,7 +198,7 @@ int dir_exist_or_mkdir(const char* dir) {
     }
     
 #endif
-#ifdef linux
+#ifdef __linux__
     if (access(dir, 0) != 0) {
         mkdir(dir, S_IRWXU | S_IRWXG | S_IRWXO);
     }

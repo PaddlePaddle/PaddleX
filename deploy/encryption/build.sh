@@ -1,4 +1,4 @@
-PADDLE_DIR=/home/parallels/developers/paddleX-PR/paddle
+PADDLE_DIR=/path/to/paddle
 
 if [ ! -d "3rd" ]; then
   mkdir 3rd
