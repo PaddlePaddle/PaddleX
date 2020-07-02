@@ -22,8 +22,7 @@ void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
                              bool use_trt,
                              int gpu_id,
-                             std::string key,
-                             int batch_size) {
+                             std::string key) {
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
@@ -76,7 +75,6 @@ void Model::create_predictor(const std::string& model_dir,
         false /* use_calib_mode*/);
   }
   predictor_ = std::move(CreatePaddlePredictor(config));
-  inputs_batch_.assign(batch_size, ImageBlob());
 }
 
 bool Model::load_config(const std::string& yaml_input) {
@@ -192,6 +190,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
                  "to function predict()!" << std::endl;
     return false;
   }
+  inputs_batch_.assign(im_batch.size(), ImageBlob());
   // 处理输入图像
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
@@ -356,6 +355,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     return false;
   }
 
+  inputs_batch_.assign(im_batch.size(), ImageBlob());
   int batch_size = im_batch.size();
   // 处理输入图像
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
@@ -637,6 +637,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   }
 
   // 处理输入图像
+  inputs_batch_.assign(im_batch.size(), ImageBlob());
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;

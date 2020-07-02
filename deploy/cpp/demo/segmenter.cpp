@@ -59,8 +59,7 @@ int main(int argc, char** argv) {
              FLAGS_use_gpu,
              FLAGS_use_trt,
              FLAGS_gpu_id,
-             FLAGS_key,
-             FLAGS_batch_size);
+             FLAGS_key);
 
   double total_running_time_s = 0.0;
   double total_imread_time_s = 0.0;
