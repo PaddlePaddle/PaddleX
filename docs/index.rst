@@ -16,24 +16,19 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
   | - 统一易用的全流程API，5步完成模型训练，10行代码实现Python/C++高性能部署。
   | - 提供以PaddleX为核心集成的跨平台可视化开发工具PaddleX-GUI，更低门槛快速体验飞桨深度学习全流程。
 
+
 .. toctree::
    :maxdepth: 2
    :caption: 文档目录:
 
    quick_start.md
    install.md
-   tutorials/index.rst
-   cv_solutions.md
-   apis/index.rst
-   paddlex_gui/index.rst
-   tuning_strategy/index.rst
-   update.md
+   data/index
+   train/index
+   deploy/index
+   examples/index
+   gui/index
+   apis/index
+   change_log.md
    FAQ.md
-   appendix/index.rst
-
-* PaddleX版本: v1.0.0
-* 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  
-* 项目GitHub: https://github.com/PaddlePaddle/PaddleX
-* 官方QQ用户群: 1045148026  
-* GitHub Issue反馈: http://www.github.com/PaddlePaddle/PaddleX/issues
-
+   appendix/index
