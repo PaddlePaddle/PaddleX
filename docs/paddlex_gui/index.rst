@@ -1,16 +1,9 @@
 PaddleX GUI使用文档
 =======================================
 
-PaddleX GUI是基于PaddleX开发实现的可视化模型训练套件，可以让开发者免去代码开发的步骤，通过点选式地操作就可以快速完成模型的训练开发。PaddleXGUI具有 **数据集可视化分析** 、**模型参数自动推荐** 、**跨平台使用** 三大特点。
+PaddleX GUI是应用PaddleX API 实现的图形化开发客户端产品，它使开发者可以通过点选、键入式的方式完成深度学习模型全流程开发，大幅度提升项目开发效率。
 
-数据集可视化分析
-  | PaddleX支持导入常见的图像分类、目标检测、实例分割和语义分割数据集，并对数据集的样本分布，标注结果进行可视化展示，数据集的情况一目了然！
-
-模型参数自动推荐
-  | 根据用户的电脑配置和数据集情况，自动推荐模型训练参数，免去用户查看文档，被各种参数所烦的忧心事！
-
-跨平台使用
-  | PaddleX GUI完全跨平台，支持Linux、Windows和Mac三大主流系统！
+飞桨团队期待各位开发者基于PaddleX，实现出各种符合自己产业实际需求的产品，并获得您宝贵的意见或开源项目贡献。
 
 
 .. toctree::
@@ -21,7 +14,7 @@ PaddleX GUI是基于PaddleX开发实现的可视化模型训练套件，可以�
    how_to_use.md
    xx.md
 
-* PaddleX GUI版本: v1.0
+* PaddleX GUI 最新版本: v1.0
 * 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  
 * 项目GitHub: https://github.com/PaddlePaddle/PaddleX/tree/develop  
 * 官方QQ用户群: 1045148026  
