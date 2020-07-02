@@ -1,10 +1,8 @@
 # PaddleX GUI使用文档
 
-PaddleX GUI是应用PaddleX API 实现的图形化开发客户端产品，它使开发者可以通过点选、键入式的方式完成深度学习模型全流程开发，大幅度提升项目开发效率。
 
-飞桨团队期待各位开发者基于PaddleX，实现出各种符合自己产业实际需求的产品，并获得您宝贵的意见或开源项目贡献。
 
-请前往 [PaddleX 官网](https://www.paddlepaddle.org.cn/paddlex) 下载试用PaddleX GUI。
+
 
 
 
