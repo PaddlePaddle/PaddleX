@@ -15,7 +15,7 @@ PaddleX GUI是应用PaddleX API 实现的图形化开发客户端产品，它使
    how_to_use.md
    xx.md
 
-#### <a name="1">安装推荐环境</a>
+### <a name="1">安装推荐环境</a>
 
 * **操作系统**：
   * Windows7/8/10（推荐Windows 10）；
