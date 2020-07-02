@@ -73,7 +73,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ### PaddleX GUI安装
 
 进入PaddleX官网 [下载使用](https://www.paddlepaddle.org.cn/paddle/paddlex)，PaddleX GUI 为绿色安装包，拥有Linux、Mac、Windows三个版本，开箱即用。
-Paddle GUI 的使用教程可参考[PaddleX GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/latest/paddlex_gui/index.html)
+Paddle GUI 的使用教程可参考[PaddleX GUI使用教程](https://paddlex.readthedocs.io/zh_CN/latest/paddlex_gui/index.html)
 
 ## 使用文档
 
