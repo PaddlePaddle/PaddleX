@@ -35,14 +35,11 @@ class SegTransform:
 class Compose(SegTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强算子。
-
     Raises:
         TypeError: transforms不是list对象
         ValueError: transforms元素个数小于1。
-
     """
 
     def __init__(self, transforms):
@@ -71,7 +68,6 @@ class Compose(SegTransform):
                 图像在过resize前shape为(200, 300)， 过padding前shape为
                 (400, 600)
             label (str/np.ndarray): 标注图像路径/标注图像np.ndarray数据。
-
         Returns:
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
@@ -116,7 +112,9 @@ class Compose(SegTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                logging.error(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -401,8 +399,7 @@ class ResizeByShort(SegTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale *
-                                          im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -1053,6 +1050,7 @@ class RandomDistort(SegTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label is None:
             return (im, im_info)
         else:
@@ -1113,25 +1111,35 @@ class ComposedSegTransforms(Compose):
 
         Args:
             mode(str): 图像处理所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
-            train_crop_size(list): 模型训练阶段，随机从原图crop的大小
+            min_max_size(list): 训练过程中，图像的最长边会随机resize至此区间（短边按比例相应resize)；预测阶段，图像最长边会resize至此区间中间值，即(min_size+max_size)/2。默认为[400, 600]
+            train_crop_size(list): 仅在mode为'train`时生效，训练过程中，随机从图像中裁剪出对应大小的子图（如若原图小于此大小，则会padding到此大小)，默认为[400, 600]
             mean(list): 图像均值
             std(list): 图像方差
+            random_horizontal_flip(bool): 数据增强方式，仅在mode为`train`时生效，表示训练过程是否随机水平翻转图像，默认为True
     """
 
     def __init__(self,
                  mode,
-                 train_crop_size=[769, 769],
+                 min_max_size=[400, 600],
+                 train_crop_size=[512, 512],
                  mean=[0.5, 0.5, 0.5],
-                 std=[0.5, 0.5, 0.5]):
+                 std=[0.5, 0.5, 0.5],
+                 random_horizontal_flip=True):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
             transforms = [
-                RandomHorizontalFlip(prob=0.5), ResizeStepScaling(),
+                ResizeRangeScaling(
+                    min_value=min(min_max_size), max_value=max(min_max_size)),
                 RandomPaddingCrop(crop_size=train_crop_size), Normalize(
                     mean=mean, std=std)
             ]
+            if random_horizontal_flip:
+                transforms.insert(0, RandomHorizontalFlip())
         else:
             # 验证/预测时的transforms
-            transforms = [Normalize(mean=mean, std=std)]
-
+            long_size = (min(min_max_size) + max(min_max_size)) // 2
+            transforms = [
+                ResizeByLong(long_size=long_size), Normalize(
+                    mean=mean, std=std)
+            ]
         super(ComposedSegTransforms, self).__init__(transforms)

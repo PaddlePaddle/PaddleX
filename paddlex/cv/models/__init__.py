@@ -43,5 +43,6 @@ from .mask_rcnn import MaskRCNN
 from .unet import UNet
 from .deeplabv3p import DeepLabv3p
 from .hrnet import HRNet
+from .fast_scnn import FastSCNN
 from .load_model import load_model
 from .slim import prune

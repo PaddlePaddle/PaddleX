@@ -200,7 +200,7 @@ ComposedSegTransforms.add_augmenters(augmenters)
 import paddlex as pdx
 from paddlex.seg import transforms
 train_transforms = transforms.ComposedSegTransforms(mode='train', train_crop_size=[512, 512])
-eval_transforms = transforms.ComposedYOLOTransforms(mode='eval')
+eval_transforms = transforms.ComposedSegTransforms(mode='eval')
 
 # 添加数据增强
 import imgaug.augmenters as iaa

@@ -48,9 +48,10 @@ if hub.version.hub_version < '1.6.2':
 env_info = get_environ_info()
 load_model = cv.models.load_model
 datasets = cv.datasets
+transforms = cv.transforms
 
 log_level = 2
 
 from . import interpret
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'

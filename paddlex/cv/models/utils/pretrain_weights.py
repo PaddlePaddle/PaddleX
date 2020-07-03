@@ -1,4 +1,5 @@
 import paddlex
+import paddlex.utils.logging as logging
 import paddlehub as hub
 import os
 import os.path as osp
@@ -75,16 +76,101 @@ image_pretrain = {
 }
 
 coco_pretrain = {
-    'UNet': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz'
+    'YOLOv3_DarkNet53_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar',
+    'YOLOv3_MobileNetV1_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v1.tar',
+    'YOLOv3_MobileNetV3_large_COCO':
+    'https://bj.bcebos.com/paddlex/models/yolov3_mobilenet_v3.tar',
+    'YOLOv3_ResNet34_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r34.tar',
+    'YOLOv3_ResNet50_vd_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r50vd_dcn.tar',
+    'FasterRCNN_ResNet50_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_fpn_2x.tar',
+    'FasterRCNN_ResNet50_vd_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_vd_fpn_2x.tar',
+    'FasterRCNN_ResNet101_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_fpn_2x.tar',
+    'FasterRCNN_ResNet101_vd_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_vd_fpn_2x.tar',
+    'FasterRCNN_HRNet_W18_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_hrnetv2p_w18_2x.tar',
+    'MaskRCNN_ResNet50_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar',
+    'MaskRCNN_ResNet50_vd_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar',
+    'MaskRCNN_ResNet101_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_fpn_1x.tar',
+    'MaskRCNN_ResNet101_vd_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar',
+    'UNet_COCO': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz',
+    'DeepLabv3p_MobileNetV2_x1.0_COCO':
+    'https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz',
+    'DeepLabv3p_Xception65_COCO':
+    'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz'
+}
+
+cityscapes_pretrain = {
+    'DeepLabv3p_MobileNetV2_x1.0_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/mobilenet_cityscapes.tgz',
+    'DeepLabv3p_Xception65_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/xception65_bn_cityscapes.tgz',
+    'HRNet_W18_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/hrnet_w18_bn_cityscapes.tgz',
+    'FastSCNN_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/fast_scnn_cityscape.tar'
 }
 
 
-def get_pretrain_weights(flag, model_type, backbone, save_dir):
+def get_pretrain_weights(flag, class_name, backbone, save_dir):
     if flag is None:
         return None
     elif osp.isdir(flag):
         return flag
+    elif osp.isfile(flag):
+        return flag
+    warning_info = "{} does not support to be finetuned with weights pretrained on the {} dataset, so pretrain_weights is forced to be set to {}"
+    if flag == 'COCO':
+        if class_name == "FasterRCNN" and backbone in ['ResNet18'] or \
+            class_name == "MaskRCNN" and backbone in ['ResNet18', 'HRNet_W18'] or \
+            class_name == 'DeepLabv3p' and backbone in ['Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']:
+            model_name = '{}_{}'.format(class_name, backbone)
+            logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
+            flag = 'IMAGENET'
+        elif class_name == 'HRNet':
+            logging.warning(warning_info.format(class_name, flag, 'IMAGENET'))
+            flag = 'IMAGENET'
+        elif class_name == 'FastSCNN':
+            logging.warning(
+                warning_info.format(class_name, flag, 'CITYSCAPES'))
+            flag = 'CITYSCAPES'
+    elif flag == 'CITYSCAPES':
+        model_name = '{}_{}'.format(class_name, backbone)
+        if class_name == 'UNet':
+            logging.warning(warning_info.format(class_name, flag, 'COCO'))
+            flag = 'COCO'
+        if class_name == 'HRNet' and backbone.split('_')[
+                -1] in ['W30', 'W32', 'W40', 'W48', 'W60', 'W64']:
+            logging.warning(warning_info.format(backbone, flag, 'IMAGENET'))
+            flag = 'IMAGENET'
+        if class_name == 'DeepLabv3p' and backbone in [
+                'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+        ]:
+            model_name = '{}_{}'.format(class_name, backbone)
+            logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
+            flag = 'IMAGENET'
     elif flag == 'IMAGENET':
+        if class_name == 'UNet':
+            logging.warning(warning_info.format(class_name, flag, 'COCO'))
+            flag = 'COCO'
+        elif class_name == 'FastSCNN':
+            logging.warning(
+                warning_info.format(class_name, flag, 'CITYSCAPES'))
+            flag = 'CITYSCAPES'
+
+    if flag == 'IMAGENET':
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
             new_save_dir = paddlex.pretrain_dir
@@ -96,7 +182,7 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
             backbone = 'MobileNetV3_small_x1_0_ssld'
         elif backbone == 'MobileNetV3_large_ssld':
             backbone = 'MobileNetV3_large_x1_0_ssld'
-        if model_type == 'detector':
+        if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN']:
             if backbone == 'ResNet50':
                 backbone = 'DetResNet50'
         assert backbone in image_pretrain, "There is not ImageNet pretrain weights for {}, you may try COCO.".format(
@@ -121,17 +207,20 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
                 raise Exception(
                     "Unexpected error, please make sure paddlehub >= 1.6.2")
         return osp.join(new_save_dir, backbone)
-    elif flag == 'COCO':
+    elif flag in ['COCO', 'CITYSCAPES']:
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
             new_save_dir = paddlex.pretrain_dir
-        url = coco_pretrain[backbone]
+        if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p']:
+            backbone = '{}_{}'.format(class_name, backbone)
+        backbone = "{}_{}".format(backbone, flag)
+        if flag == 'COCO':
+            url = coco_pretrain[backbone]
+        elif flag == 'CITYSCAPES':
+            url = cityscapes_pretrain[backbone]
         fname = osp.split(url)[-1].split('.')[0]
         #        paddlex.utils.download_and_decompress(url, path=new_save_dir)
         #        return osp.join(new_save_dir, fname)
-
-        assert backbone in coco_pretrain, "There is not COCO pretrain weights for {}, you may try ImageNet.".format(
-            backbone)
         try:
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
@@ -148,5 +237,5 @@ def get_pretrain_weights(flag, model_type, backbone, save_dir):
         return osp.join(new_save_dir, backbone)
     else:
         raise Exception(
-            "pretrain_weights need to be defined as directory path or `IMAGENET` or 'COCO' (download pretrain weights automatically)."
+            "pretrain_weights need to be defined as directory path or 'IMAGENET' or 'COCO' or 'Cityscapes' (download pretrain weights automatically)."
         )

@@ -41,10 +41,8 @@ class DetTransform:
 class Compose(DetTransform):
     """根据数据预处理/增强列表对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强列表。
-
     Raises:
         TypeError: 形参数据类型不满足需求。
         ValueError: 数据长度不匹配。
@@ -160,7 +158,9 @@ class Compose(DetTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                logging.error(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -220,15 +220,13 @@ class ResizeByShort(DetTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale *
-                                          im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im_resize_info = [resized_height, resized_width, scale]
         im = cv2.resize(
-            im, (resized_width, resized_height),
-            interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height), interpolation=cv2.INTER_LINEAR)
         im_info['im_resize_info'] = np.array(im_resize_info).astype(np.float32)
         if label_info is None:
             return (im, im_info)
@@ -268,8 +266,7 @@ class Padding(DetTransform):
                 if not isinstance(target_size, tuple) and not isinstance(
                         target_size, list):
                     raise TypeError(
-                        "Padding: Type of target_size must in (int|list|tuple)."
-                    )
+                        "Padding: Type of target_size must in (int|list|tuple).")
                 elif len(target_size) != 2:
                     raise ValueError(
                         "Padding: Length of target_size must equal 2.")
@@ -454,8 +451,7 @@ class RandomHorizontalFlip(DetTransform):
             ValueError: 数据长度不匹配。
         """
         if not isinstance(im, np.ndarray):
-            raise TypeError(
-                "RandomHorizontalFlip: image is not a numpy array.")
+            raise TypeError("RandomHorizontalFlip: image is not a numpy array.")
         if len(im.shape) != 3:
             raise ValueError(
                 "RandomHorizontalFlip: image is not 3-dimensional.")
@@ -621,6 +617,7 @@ class RandomDistort(DetTransform):
 
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label_info is None:
             return (im, im_info)
         else:
@@ -727,22 +724,38 @@ class MixupImage(DetTransform):
                             'Becasuse gt_bbox/gt_class/gt_score is not in label_info!')
         gt_bbox1 = label_info['gt_bbox']
         gt_bbox2 = im_info['mixup'][2]['gt_bbox']
-        gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
         gt_class1 = label_info['gt_class']
         gt_class2 = im_info['mixup'][2]['gt_class']
-        gt_class = np.concatenate((gt_class1, gt_class2), axis=0)
-
         gt_score1 = label_info['gt_score']
         gt_score2 = im_info['mixup'][2]['gt_score']
-        gt_score = np.concatenate(
-            (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
         if 'gt_poly' in label_info:
             gt_poly1 = label_info['gt_poly']
             gt_poly2 = im_info['mixup'][2]['gt_poly']
-            label_info['gt_poly'] = gt_poly1 + gt_poly2
         is_crowd1 = label_info['is_crowd']
         is_crowd2 = im_info['mixup'][2]['is_crowd']
-        is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
+
+        if 0 not in gt_class1 and 0 not in gt_class2:
+            gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
+            gt_class = np.concatenate((gt_class1, gt_class2), axis=0)
+            gt_score = np.concatenate(
+                (gt_score1 * factor, gt_score2 * (1. - factor)), axis=0)
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly1 + gt_poly2
+            is_crowd = np.concatenate((is_crowd1, is_crowd2), axis=0)
+        elif 0 in gt_class1:
+            gt_bbox = gt_bbox2
+            gt_class = gt_class2
+            gt_score = gt_score2 * (1. - factor)
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly2
+            is_crowd = is_crowd2
+        else:
+            gt_bbox = gt_bbox1
+            gt_class = gt_class1
+            gt_score = gt_score1 * factor
+            if 'gt_poly' in label_info:
+                label_info['gt_poly'] = gt_poly1
+            is_crowd = is_crowd1
         label_info['gt_bbox'] = gt_bbox
         label_info['gt_score'] = gt_score
         label_info['gt_class'] = gt_class
@@ -769,9 +782,7 @@ class RandomExpand(DetTransform):
         fill_value (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。
     """
 
-    def __init__(self,
-                 ratio=4.,
-                 prob=0.5,
+    def __init__(self, ratio=4., prob=0.5,
                  fill_value=[123.675, 116.28, 103.53]):
         super(RandomExpand, self).__init__()
         assert ratio > 1.01, "expand ratio must be larger than 1.01"
@@ -811,9 +822,11 @@ class RandomExpand(DetTransform):
                 'gt_class' not in label_info:
             raise TypeError('Cannot do RandomExpand! ' + \
                             'Becasuse gt_bbox/gt_class is not in label_info!')
-        if np.random.uniform(0., 1.) < self.prob:
+        if np.random.uniform(0., 1.) > self.prob:
             return (im, im_info, label_info)
 
+        if 'gt_class' in label_info and 0 in label_info['gt_class']:
+            return (im, im_info, label_info)
         image_shape = im_info['image_shape']
         height = int(image_shape[0])
         width = int(image_shape[1])
@@ -908,6 +921,8 @@ class RandomCrop(DetTransform):
                             'Becasuse gt_bbox/gt_class is not in label_info!')
 
         if len(label_info['gt_bbox']) == 0:
+            return (im, im_info, label_info)
+        if 'gt_class' in label_info and 0 in label_info['gt_class']:
             return (im, im_info, label_info)
 
         image_shape = im_info['image_shape']
@@ -1204,9 +1219,10 @@ class ArrangeYOLOv3(DetTransform):
             if gt_num > 0:
                 label_info['gt_class'][:gt_num, 0] = label_info[
                     'gt_class'][:gt_num, 0] - 1
-                gt_bbox[:gt_num, :] = label_info['gt_bbox'][:gt_num, :]
-                gt_class[:gt_num] = label_info['gt_class'][:gt_num, 0]
-                gt_score[:gt_num] = label_info['gt_score'][:gt_num, 0]
+                if -1 not in label_info['gt_class']:
+                    gt_bbox[:gt_num, :] = label_info['gt_bbox'][:gt_num, :]
+                    gt_class[:gt_num] = label_info['gt_class'][:gt_num, 0]
+                    gt_score[:gt_num] = label_info['gt_score'][:gt_num, 0]
             # parse [x1, y1, x2, y2] to [x, y, w, h]
             gt_bbox[:, 2:4] = gt_bbox[:, 2:4] - gt_bbox[:, :2]
             gt_bbox[:, :2] = gt_bbox[:, :2] + gt_bbox[:, 2:4] / 2.
@@ -1260,21 +1276,25 @@ class ComposedRCNNTransforms(Compose):
             min_max_size(list): 图像在缩放时，最小边和最大边的约束条件
             mean(list): 图像均值
             std(list): 图像方差
+            random_horizontal_flip(bool): 是否以0.5的概率使用随机水平翻转增强，该仅在mode为`train`时生效，默认为True
     """
 
     def __init__(self,
                  mode,
                  min_max_size=[800, 1333],
                  mean=[0.485, 0.456, 0.406],
-                 std=[0.229, 0.224, 0.225]):
+                 std=[0.229, 0.224, 0.225],
+                 random_horizontal_flip=True):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
             transforms = [
-                RandomHorizontalFlip(prob=0.5), Normalize(
+                Normalize(
                     mean=mean, std=std), ResizeByShort(
                         short_size=min_max_size[0], max_size=min_max_size[1]),
                 Padding(coarsest_stride=32)
             ]
+            if random_horizontal_flip:
+                transforms.insert(0, RandomHorizontalFlip())
         else:
             # 验证/预测时的transforms
             transforms = [
@@ -1304,9 +1324,14 @@ class ComposedYOLOv3Transforms(Compose):
         Args:
             mode(str): 图像处理流程所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
             shape(list): 输入模型中图像的大小，输入模型的图像会被Resize成此大小
-            mixup_epoch(int): 模型训练过程中，前mixup_epoch会使用mixup策略
+            mixup_epoch(int): 模型训练过程中，前mixup_epoch会使用mixup策略, 若设为-1，则表示不使用该策略
             mean(list): 图像均值
             std(list): 图像方差
+            random_distort(bool): 数据增强方式，参数仅在mode为`train`时生效，表示是否在训练过程中随机扰动图像，默认为True
+            random_expand(bool): 数据增强方式，参数仅在mode为`train`时生效，表示是否在训练过程中随机扩张图像，默认为True
+            random_crop(bool): 数据增强方式，参数仅在mode为`train`时生效，表示是否在训练过程中随机裁剪图像，默认为True
+            random_horizontal_flip(bool): 数据增强方式，参数仅在mode为`train`时生效，表示是否在训练过程中随机水平翻转图像，默认为True
+
     """
 
     def __init__(self,
@@ -1314,7 +1339,11 @@ class ComposedYOLOv3Transforms(Compose):
                  shape=[608, 608],
                  mixup_epoch=250,
                  mean=[0.485, 0.456, 0.406],
-                 std=[0.229, 0.224, 0.225]):
+                 std=[0.229, 0.224, 0.225],
+                 random_distort=True,
+                 random_expand=True,
+                 random_crop=True,
+                 random_horizontal_flip=True):
         width = shape
         if isinstance(shape, list):
             if shape[0] != shape[1]:
@@ -1329,12 +1358,18 @@ class ComposedYOLOv3Transforms(Compose):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
             transforms = [
-                MixupImage(mixup_epoch=mixup_epoch), RandomDistort(),
-                RandomExpand(), RandomCrop(), Resize(
-                    target_size=width,
-                    interp='RANDOM'), RandomHorizontalFlip(), Normalize(
+                MixupImage(mixup_epoch=mixup_epoch), Resize(
+                    target_size=width, interp='RANDOM'), Normalize(
                         mean=mean, std=std)
             ]
+            if random_horizontal_flip:
+                transforms.insert(1, RandomHorizontalFlip())
+            if random_crop:
+                transforms.insert(1, RandomCrop())
+            if random_expand:
+                transforms.insert(1, RandomExpand())
+            if random_distort:
+                transforms.insert(1, RandomDistort())
         else:
             # 验证/预测时的transforms
             transforms = [

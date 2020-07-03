@@ -32,10 +32,8 @@ class ClsTransform:
 class Compose(ClsTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强算子。
-
     Raises:
         TypeError: 形参数据类型不满足需求。
         ValueError: 数据长度不匹配。
@@ -70,8 +68,8 @@ class Compose(ClsTransform):
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
-                    "im should be 3-dimension, but now is {}-dimensions".
-                    format(len(im.shape)))
+                    "im should be 3-dimension, but now is {}-dimensions".format(
+                        len(im.shape)))
         else:
             try:
                 im = cv2.imread(im).astype('float32')
@@ -100,7 +98,9 @@ class Compose(ClsTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                logging.error(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -139,8 +139,8 @@ class RandomCrop(ClsTransform):
             tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
                    当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
         """
-        im = random_crop(im, self.crop_size, self.lower_scale,
-                         self.lower_ratio, self.upper_ratio)
+        im = random_crop(im, self.crop_size, self.lower_scale, self.lower_ratio,
+                         self.upper_ratio)
         if label is None:
             return (im, )
         else:
@@ -270,14 +270,12 @@ class ResizeByShort(ClsTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale *
-                                          im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im = cv2.resize(
-            im, (resized_width, resized_height),
-            interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height), interpolation=cv2.INTER_LINEAR)
 
         if label is None:
             return (im, )
@@ -434,6 +432,7 @@ class RandomDistort(ClsTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label is None:
             return (im, )
         else:
@@ -490,13 +489,15 @@ class ComposedClsTransforms(Compose):
             crop_size(int|list): 输入模型里的图像大小
             mean(list): 图像均值
             std(list): 图像方差
+            random_horizontal_flip(bool): 是否以0.5的概率使用随机水平翻转增强，该仅在mode为`train`时生效，默认为True
     """
 
     def __init__(self,
                  mode,
                  crop_size=[224, 224],
                  mean=[0.485, 0.456, 0.406],
-                 std=[0.229, 0.224, 0.225]):
+                 std=[0.229, 0.224, 0.225],
+                 random_horizontal_flip=True):
         width = crop_size
         if isinstance(crop_size, list):
             if crop_size[0] != crop_size[1]:
@@ -512,10 +513,11 @@ class ComposedClsTransforms(Compose):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
             transforms = [
-                RandomCrop(crop_size=width), RandomHorizontalFlip(prob=0.5),
-                Normalize(
+                RandomCrop(crop_size=width), Normalize(
                     mean=mean, std=std)
             ]
+            if random_horizontal_flip:
+                transforms.insert(0, RandomHorizontalFlip())
         else:
             # 验证/预测时的transforms
             transforms = [

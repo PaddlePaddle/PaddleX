@@ -27,7 +27,6 @@ from .model_utils.libs import sigmoid_to_softmax
 from .model_utils.loss import softmax_with_loss
 from .model_utils.loss import dice_loss
 from .model_utils.loss import bce_loss
-import paddlex.utils.logging as logging
 
 
 class UNet(object):
@@ -106,7 +105,8 @@ class UNet(object):
             name='weights',
             regularizer=fluid.regularizer.L2DecayRegularizer(
                 regularization_coeff=0.0),
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.33))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.33))
         with scope("conv0"):
             data = bn_relu(
                 conv(
@@ -140,8 +140,7 @@ class UNet(object):
             name='weights',
             regularizer=fluid.regularizer.L2DecayRegularizer(
                 regularization_coeff=0.0),
-            initializer=fluid.initializer.XavierInitializer(),
-        )
+            initializer=fluid.initializer.XavierInitializer(), )
         with scope("up"):
             if self.upsample_mode == 'bilinear':
                 short_cut_shape = fluid.layers.shape(short_cut)
@@ -197,7 +196,8 @@ class UNet(object):
             name='weights',
             regularizer=fluid.regularizer.L2DecayRegularizer(
                 regularization_coeff=0.0),
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.01))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.01))
         with scope("logit"):
             data = conv(
                 data,

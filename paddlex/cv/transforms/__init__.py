@@ -15,3 +15,5 @@
 from . import cls_transforms
 from . import det_transforms
 from . import seg_transforms
+from . import visualize
+visualize = visualize.visualize

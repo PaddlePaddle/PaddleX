@@ -100,7 +100,7 @@ class CocoDetection(VOCDetection):
             gt_score = np.ones((num_bbox, 1), dtype=np.float32)
             is_crowd = np.zeros((num_bbox, 1), dtype=np.int32)
             difficult = np.zeros((num_bbox, 1), dtype=np.int32)
-            gt_poly = None
+            gt_poly = [None] * num_bbox
 
             for i, box in enumerate(bboxes):
                 catid = box['category_id']
@@ -108,8 +108,6 @@ class CocoDetection(VOCDetection):
                 gt_bbox[i, :] = box['clean_bbox']
                 is_crowd[i][0] = box['iscrowd']
                 if 'segmentation' in box:
-                    if gt_poly is None:
-                        gt_poly = [None] * num_bbox
                     gt_poly[i] = box['segmentation']
 
             im_info = {
@@ -121,14 +119,12 @@ class CocoDetection(VOCDetection):
                 'gt_class': gt_class,
                 'gt_bbox': gt_bbox,
                 'gt_score': gt_score,
+                'gt_poly': gt_poly,
                 'difficult': difficult
             }
-            if gt_poly is not None:
-                label_info['gt_poly'] = gt_poly
 
             coco_rec = (im_info, label_info)
             self.file_list.append([im_fname, coco_rec])
-
         if not len(self.file_list) > 0:
             raise Exception('not found any coco record in %s' % (ann_file))
         logging.info("{} samples in file {}".format(

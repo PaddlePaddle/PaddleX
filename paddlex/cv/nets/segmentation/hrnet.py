@@ -27,7 +27,6 @@ from .model_utils.loss import softmax_with_loss
 from .model_utils.loss import dice_loss
 from .model_utils.loss import bce_loss
 import paddlex
-import paddlex.utils.logging as logging
 
 
 class HRNet(object):
@@ -83,7 +82,8 @@ class HRNet(object):
         st4[3] = fluid.layers.resize_bilinear(st4[3], out_shape=shape)
 
         out = fluid.layers.concat(st4, axis=1)
-        last_channels = sum(self.backbone.channels[self.backbone.width][-1])
+        last_channels = sum(self.backbone.channels[str(self.backbone.width)][
+            -1])
 
         out = self._conv_bn_layer(
             input=out,

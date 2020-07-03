@@ -11,7 +11,8 @@ pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 # 定义训练和验证时的transforms
 # API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/seg_transforms.html#composedsegtransforms
-train_transforms = transforms.ComposedSegTransforms(mode='train', train_crop_size=[769, 769])
+train_transforms = transforms.ComposedSegTransforms(
+    mode='train', train_crop_size=[769, 769])
 eval_transforms = transforms.ComposedSegTransforms(mode='eval')
 
 # 定义训练和验证所用的数据集
@@ -34,14 +35,14 @@ eval_dataset = pdx.datasets.SegDataset(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 
-# https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#hrnet
+# https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#fastscnn
 num_classes = len(train_dataset.labels)
-model = pdx.seg.HRNet(num_classes=num_classes)
+model = pdx.seg.FastSCNN(num_classes=num_classes)
 model.train(
     num_epochs=20,
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
     learning_rate=0.01,
-    save_dir='output/hrnet',
+    save_dir='output/fastscnn',
     use_vdl=True)

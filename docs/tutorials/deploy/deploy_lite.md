@@ -21,7 +21,7 @@ step 2: 将PaddleX模型导出为inference模型
 step 3: 将inference模型转换成PaddleLite模型
 
 ```
-python /path/to/PaddleX/deploy/lite/export_lite.py --model_dir /path/to/inference_model --save_file /path/to/onnx_model --place place/to/run
+python /path/to/PaddleX/deploy/lite/export_lite.py --model_dir /path/to/inference_model --save_file /path/to/lite_model --place place/to/run
 
 ```
 

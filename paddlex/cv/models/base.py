@@ -1,16 +1,16 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
 #
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import paddle.fluid as fluid
@@ -194,14 +194,37 @@ class BaseAPI:
                 if os.path.exists(pretrain_dir):
                     os.remove(pretrain_dir)
                 os.makedirs(pretrain_dir)
+            if pretrain_weights is not None and not os.path.exists(
+                    pretrain_weights):
+                if self.model_type == 'classifier':
+                    if pretrain_weights not in ['IMAGENET']:
+                        logging.warning(
+                            "Pretrain_weights for classifier should be defined as directory path or parameter file or 'IMAGENET' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            format(pretrain_weights))
+                        pretrain_weights = 'IMAGENET'
+                elif self.model_type == 'detector':
+                    if pretrain_weights not in ['IMAGENET', 'COCO']:
+                        logging.warning(
+                            "Pretrain_weights for detector should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            format(pretrain_weights))
+                        pretrain_weights = 'IMAGENET'
+                elif self.model_type == 'segmenter':
+                    if pretrain_weights not in [
+                            'IMAGENET', 'COCO', 'CITYSCAPES'
+                    ]:
+                        logging.warning(
+                            "Pretrain_weights for segmenter should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or 'CITYSCAPES', but it is {}, so we force to set it as 'IMAGENET'".
+                            format(pretrain_weights))
+                        pretrain_weights = 'IMAGENET'
             if hasattr(self, 'backbone'):
                 backbone = self.backbone
             else:
                 backbone = self.__class__.__name__
                 if backbone == "HRNet":
                     backbone = backbone + "_W{}".format(self.width)
+            class_name = self.__class__.__name__
             pretrain_weights = get_pretrain_weights(
-                pretrain_weights, self.model_type, backbone, pretrain_dir)
+                pretrain_weights, class_name, backbone, pretrain_dir)
         if startup_prog is None:
             startup_prog = fluid.default_startup_program()
         self.exe.run(startup_prog)
@@ -221,8 +244,8 @@ class BaseAPI:
             logging.info(
                 "Load pretrain weights from {}.".format(pretrain_weights),
                 use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(self.exe, self.train_prog,
-                                                      pretrain_weights, fuse_bn)
+            paddlex.utils.utils.load_pretrain_weights(
+                self.exe, self.train_prog, pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
             import paddleslim
@@ -326,7 +349,9 @@ class BaseAPI:
         logging.info("Model saved in {}.".format(save_dir))
 
     def export_inference_model(self, save_dir):
-        test_input_names = [var.name for var in list(self.test_inputs.values())]
+        test_input_names = [
+            var.name for var in list(self.test_inputs.values())
+        ]
         test_outputs = list(self.test_outputs.values())
         if self.__class__.__name__ == 'MaskRCNN':
             from paddlex.utils.save import save_mask_inference_model
@@ -363,7 +388,8 @@ class BaseAPI:
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info("Model for inference deploy saved in {}.".format(save_dir))
+        logging.info("Model for inference deploy saved in {}.".format(
+            save_dir))
 
     def train_loop(self,
                    num_epochs,
@@ -487,11 +513,13 @@ class BaseAPI:
                         eta = ((num_epochs - i) * total_num_steps - step - 1
                                ) * avg_step_time
                     if time_eval_one_epoch is not None:
-                        eval_eta = (total_eval_times - i // save_interval_epochs
-                                    ) * time_eval_one_epoch
+                        eval_eta = (
+                            total_eval_times - i // save_interval_epochs
+                        ) * time_eval_one_epoch
                     else:
-                        eval_eta = (total_eval_times - i // save_interval_epochs
-                                    ) * total_num_steps_eval * avg_step_time
+                        eval_eta = (
+                            total_eval_times - i // save_interval_epochs
+                        ) * total_num_steps_eval * avg_step_time
                     eta_str = seconds_to_hms(eta + eval_eta)
 
                     logging.info(
@@ -508,6 +536,7 @@ class BaseAPI:
             epoch_start_time = time.time()
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            self.completed_epochs += 1
             eval_epoch_start_time = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
@@ -521,7 +550,6 @@ class BaseAPI:
                         return_details=True)
                     logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                         i + 1, dict2str(self.eval_metrics)))
-                    self.completed_epochs += 1
                     # 保存最优模型
                     best_accuracy_key = list(self.eval_metrics.keys())[0]
                     current_accuracy = self.eval_metrics[best_accuracy_key]

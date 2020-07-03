@@ -13,7 +13,7 @@
 > 可以使用模型裁剪，参考文档[模型裁剪使用教程](slim/prune.md)，通过调整裁剪参数，可以控制模型裁剪后的大小，在实际实验中，如VOC检测数据，使用yolov3-mobilenet，原模型大小为XXM，裁剪后为XX M，精度基本保持不变
 
 ## 4. 如何配置训练时GPU的卡数
-> 通过在终端export环境变量，或在Python代码中设置，可参考文档[CPU/多卡GPU训练](gpu_configure.md)
+> 通过在终端export环境变量，或在Python代码中设置，可参考文档[CPU/多卡GPU训练](appendix/gpu_configure.md)
 
 ## 5. 想将之前训练的模型参数上继续训练
 > 在训练调用`train`接口时，将`pretrain_weights`设为之前的模型保存路径即可
@@ -52,7 +52,7 @@
 > 1. 用户自行训练时，如不确定迭代的轮数，可以将轮数设高一些，同时注意设置`save_interval_epochs`，这样模型迭代每间隔相应轮数就会在验证集上进行评估和保存，可以根据不同轮数模型在验证集上的评估指标，判断模型是否已经收敛，若模型已收敛，可以自行结束训练进程
 >
 ## 9. 只有CPU，没有GPU，如何提升训练速度
-> 当没有GPU时，可以根据自己的CPU配置，选择是否使用多CPU进行训练，具体配置方式可以参考文档[多卡CPU/GPU训练](gpu_configure.md)
+> 当没有GPU时，可以根据自己的CPU配置，选择是否使用多CPU进行训练，具体配置方式可以参考文档[多卡CPU/GPU训练](appendix/gpu_configure.md)
 >
 ## 10. 电脑不能联网，训练时因为下载预训练模型失败，如何解决
 > 可以预先通过其它方式准备好预训练模型，然后训练时自定义`pretrain_weights`即可，可参考文档[无联网模型训练](how_to_offline_run.md)
@@ -61,7 +61,7 @@
 > 1.可以按照9的方式来解决这个问题  
 > 2.每次训练前都设定`paddlex.pretrain_dir`路径，如设定`paddlex.pretrain_dir='/usrname/paddlex`，如此下载完的预训练模型会存放至`/usrname/paddlex`目录下，而已经下载在该目录的模型也不会再次重复下载
 
-## 12. 程序启动时提示"Failed to execute script PaddleX"，如何解决？
+## 12. PaddleX GUI启动时提示"Failed to execute script PaddleX"，如何解决？
 > 1. 请检查目标机器上PaddleX程序所在路径是否包含中文。目前暂不支持中文路径，请尝试将程序移动到英文目录。
 > 2. 如果您的系统是Windows 7或者Windows Server 2012时，原因是缺少MFPlat.DLL/MF.dll/MFReadWrite.dll等OpenCV依赖的DLL，请按如下方式安装桌面体验：通过“我的电脑”-->“属性”-->"管理"打开服务器管理器，点击右上角“管理”选择“添加角色和功能”。点击“服务器选择”-->“功能”，拖动滚动条到最下端，点开“用户界面和基础结构”，勾选“桌面体验”后点击“安装”，等安装完成尝试再次运行PaddleX。
 > 3. 请检查目标机器上是否有其他的PaddleX程序或者进程在运行中，如有请退出或者重启机器看是否解决
