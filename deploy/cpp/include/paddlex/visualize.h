@@ -22,9 +22,14 @@
 #include <io.h>
 #else  // Linux/Unix
 #include <dirent.h>
-#include <sys/io.h>
+// #include <sys/io.h>
+#ifdef __arm__  // for arm
+#include <aarch64-linux-gpu/sys/stat.h>
+#include <aarch64-linux-gpu/sys/types.h>
+#else
 #include <sys/stat.h>
 #include <sys/types.h>
+#endif
 #include <unistd.h>
 #endif
 #include <string>
