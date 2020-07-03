@@ -73,7 +73,7 @@ def cls_compose(im, label=None, transforms=None, vdl_writer=None, step=0):
                 raise TypeError('Can\'t read The image file {}!'.format(im))
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if vdl_writer is not None:
-            vdl_writer.add_image(tag='0. OriginalImange/' +  str(step),
+            vdl_writer.add_image(tag='0. OriginalImage/' +  str(step),
                                  img=im,
                                  step=0)
         op_id = 1
@@ -148,7 +148,7 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
         if len(outputs) == 3:
             label_info = outputs[2]
         if vdl_writer is not None:
-            vdl_writer.add_image(tag='0. OriginalImange/' +  str(step),
+            vdl_writer.add_image(tag='0. OriginalImage/' +  str(step),
                                  img=im,
                                  step=0)
         op_id = 1
@@ -209,7 +209,7 @@ def det_compose(im, im_info=None, label_info=None, transforms=None, vdl_writer=N
             if vdl_writer is not None:
                 tag = str(op_id) + '. ' + op.__class__.__name__ + '/' +  str(step)
                 if op is None:
-                    tag = str(op_id) + '. OriginalImangeWithGTBox/' +  str(step)
+                    tag = str(op_id) + '. OriginalImageWithGTBox/' +  str(step)
                 vdl_writer.add_image(tag=tag,
                                      img=vdl_im,
                                      step=0)
@@ -233,7 +233,7 @@ def seg_compose(im, im_info=None, label=None, transforms=None, vdl_writer=None, 
         if not isinstance(label, np.ndarray):
             label = np.asarray(Image.open(label))
     if vdl_writer is not None:
-        vdl_writer.add_image(tag='0. OriginalImange' + '/' +  str(step),
+        vdl_writer.add_image(tag='0. OriginalImage' + '/' +  str(step),
                              img=im,
                              step=0)
     op_id = 1
