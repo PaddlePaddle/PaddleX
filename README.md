@@ -98,7 +98,7 @@ Paddle GUI 的使用教程可参考[PaddleX GUI使用教程](https://paddlex.rea
 - PaddleX用户交流群: 1045148026 (手机QQ扫描如下二维码快速加入)  
 <img src="./docs/images/QQGroup.jpeg" width="195" height="300" alt="QQGroup" align="center" />
 
-## [FAQ](faq)
+## [FAQ](./docs/paddlex_gui/faq.md)
 
 ## 更新日志
 * 2020.05.20
