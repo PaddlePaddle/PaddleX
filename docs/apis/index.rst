@@ -1,4 +1,4 @@
-API接口说明
+PaddleX API说明文档
 ============================
 
 .. toctree::
@@ -10,3 +10,4 @@ API接口说明
    slim.md
    load_model.md
    visualize.md
+   deploy.md
