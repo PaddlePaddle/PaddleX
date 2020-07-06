@@ -10,4 +10,3 @@ API接口说明
    slim.md
    load_model.md
    visualize.md
-   deploy.md
