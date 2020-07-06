@@ -72,20 +72,23 @@ class Model {
    * @param use_trt: use Tensor RT or not when infering
    * @param gpu_id: the id of gpu when infering with using gpu
    * @param key: the key of encryption when using encrypted model
+   * @param use_ir_optim: use ir optimization when infering
    * */
   void Init(const std::string& model_dir,
             bool use_gpu = false,
             bool use_trt = false,
             int gpu_id = 0,
-            std::string key = "") {
-    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key);
+            std::string key = "",
+            bool use_ir_optim = true) {
+    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, use_ir_optim);
   }
 
   void create_predictor(const std::string& model_dir,
                         bool use_gpu = false,
                         bool use_trt = false,
                         int gpu_id = 0,
-                        std::string key = "");
+                        std::string key = "",
+                        bool use_ir_optim = true);
 
   /*
    * @brief

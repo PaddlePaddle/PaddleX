@@ -37,6 +37,7 @@ DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num,
              omp_get_num_procs(),
              "Number of preprocessing threads");
+DEFINE_bool(use_ir_optim, true, "use ir optimization");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -57,7 +58,8 @@ int main(int argc, char** argv) {
              FLAGS_use_gpu,
              FLAGS_use_trt,
              FLAGS_gpu_id,
-             FLAGS_key);
+             FLAGS_key,
+             FLAGS_use_ir_optim);
 
   // 进行预测
   double total_running_time_s = 0.0;
