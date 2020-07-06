@@ -85,13 +85,13 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         self._support_quantize_op_type = \
             list(set(QuantizationTransformPass._supported_quantizable_op_type +
                 AddQuantDequantPass._supported_quantizable_op_type))
-        
+
         # Check inputs
         assert executor is not None, "The executor cannot be None."
         assert batch_size > 0, "The batch_size should be greater than 0."
         assert algo in self._support_algo_type, \
             "The algo should be KL, abs_max or min_max."
-        
+
         self._executor = executor
         self._dataset = dataset
         self._batch_size = batch_size
@@ -154,20 +154,19 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         logging.info("Start to run batch!")
         for data in self._data_loader():
             start = time.time()
-            self._executor.run(
-                program=self._program,
-                feed=data,
-                fetch_list=self._fetch_list,
-                return_numpy=False)
+            with fluid.scope_guard(self._scope):
+                self._executor.run(program=self._program,
+                                   feed=data,
+                                   fetch_list=self._fetch_list,
+                                   return_numpy=False)
             if self._algo == "KL":
                 self._sample_data(batch_id)
             else:
                 self._sample_threshold()
             end = time.time()
-            logging.debug('[Run batch data] Batch={}/{}, time_each_batch={} s.'.format(
-                str(batch_id + 1),
-                str(batch_ct),
-                str(end-start)))
+            logging.debug(
+                '[Run batch data] Batch={}/{}, time_each_batch={} s.'.format(
+                    str(batch_id + 1), str(batch_ct), str(end - start)))
             batch_id += 1
             if self._batch_nums and batch_id >= self._batch_nums:
                 break
@@ -194,15 +193,16 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         Returns:
             None
         '''
-        feed_vars_names = [var.name for var in self._feed_list]
-        fluid.io.save_inference_model(
-            dirname=save_model_path,
-            feeded_var_names=feed_vars_names,
-            target_vars=self._fetch_list,
-            executor=self._executor,
-            params_filename='__params__',
-            main_program=self._program)
-        
+        with fluid.scope_guard(self._scope):
+            feed_vars_names = [var.name for var in self._feed_list]
+            fluid.io.save_inference_model(
+                dirname=save_model_path,
+                feeded_var_names=feed_vars_names,
+                target_vars=self._fetch_list,
+                executor=self._executor,
+                params_filename='__params__',
+                main_program=self._program)
+
     def _load_model_data(self):
         '''
         Set data loader.
@@ -212,7 +212,8 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         self._data_loader = fluid.io.DataLoader.from_generator(
             feed_list=feed_vars, capacity=3 * self._batch_size, iterable=True)
         self._data_loader.set_sample_list_generator(
-            self._dataset.generator(self._batch_size, drop_last=True),
+            self._dataset.generator(
+                self._batch_size, drop_last=True),
             places=self._place)
 
     def _calculate_kl_threshold(self):
@@ -235,10 +236,12 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                     weight_threshold.append(abs_max_value)
             self._quantized_var_kl_threshold[var_name] = weight_threshold
             end = time.time()
-            logging.debug('[Calculate weight] Weight_id={}/{}, time_each_weight={} s.'.format(
-                str(ct),
-                str(len(self._quantized_weight_var_name)),
-                str(end-start)))
+            logging.debug(
+                '[Calculate weight] Weight_id={}/{}, time_each_weight={} s.'.
+                format(
+                    str(ct),
+                    str(len(self._quantized_weight_var_name)), str(end -
+                                                                   start)))
             ct += 1
 
         ct = 1
@@ -257,10 +260,12 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                 self._quantized_var_kl_threshold[var_name] = \
                     self._get_kl_scaling_factor(np.abs(sampling_data))
                 end = time.time()
-                logging.debug('[Calculate activation] Activation_id={}/{}, time_each_activation={} s.'.format(
-                    str(ct),
-                    str(len(self._quantized_act_var_name)),
-                    str(end-start)))
+                logging.debug(
+                    '[Calculate activation] Activation_id={}/{}, time_each_activation={} s.'.
+                    format(
+                        str(ct),
+                        str(len(self._quantized_act_var_name)),
+                        str(end - start)))
                 ct += 1
         else:
             for var_name in self._quantized_act_var_name:
@@ -270,10 +275,10 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                 self._quantized_var_kl_threshold[var_name] = \
                     self._get_kl_scaling_factor(np.abs(self._sampling_data[var_name]))
                 end = time.time()
-                logging.debug('[Calculate activation] Activation_id={}/{}, time_each_activation={} s.'.format(
-                    str(ct),
-                    str(len(self._quantized_act_var_name)),
-                    str(end-start)))
+                logging.debug(
+                    '[Calculate activation] Activation_id={}/{}, time_each_activation={} s.'.
+                    format(
+                        str(ct),
+                        str(len(self._quantized_act_var_name)),
+                        str(end - start)))
                 ct += 1
-
-                

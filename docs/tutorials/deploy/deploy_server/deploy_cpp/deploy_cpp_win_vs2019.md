@@ -49,7 +49,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 ### Step3: 安装配置OpenCV
 
-1. 在OpenCV官网下载适用于Windows平台的3.4.6版本， [下载地址](https://sourceforge.net/projects/opencvlibrary/files/3.4.6/opencv-3.4.6-vc14_vc15.exe/download)  
+1. 在OpenCV官网下载适用于Windows平台的3.4.6版本， [下载地址](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
 2. 运行下载的可执行文件，将OpenCV解压至指定目录，例如`D:\projects\opencv`
 3. 配置环境变量，如下流程所示  
     - 我的电脑->属性->高级系统设置->环境变量

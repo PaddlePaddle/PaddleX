@@ -73,6 +73,7 @@ class BaseAPI:
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
+        self.scope = fluid.global_scope()
 
     def _get_single_card_bs(self, batch_size):
         if batch_size % len(self.places) == 0:
@@ -84,6 +85,10 @@ class BaseAPI:
                                 'place']))
 
     def build_program(self):
+        if hasattr(paddlex, 'model_built') and paddlex.model_built:
+            logging.error(
+                "Function model.train() only can be called once in your code.")
+        paddlex.model_built = True
         # 构建训练网络
         self.train_inputs, self.train_outputs = self.build_net(mode='train')
         self.train_prog = fluid.default_main_program()
@@ -155,7 +160,7 @@ class BaseAPI:
             outputs=self.test_outputs,
             batch_size=batch_size,
             batch_nums=batch_num,
-            scope=None,
+            scope=self.scope,
             algo='KL',
             quantizable_op_type=["conv2d", "depthwise_conv2d", "mul"],
             is_full_quantize=False,
@@ -244,8 +249,8 @@ class BaseAPI:
             logging.info(
                 "Load pretrain weights from {}.".format(pretrain_weights),
                 use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(
-                self.exe, self.train_prog, pretrain_weights, fuse_bn)
+            paddlex.utils.utils.load_pretrain_weights(self.exe, self.train_prog,
+                                                      pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
             import paddleslim
@@ -349,27 +354,26 @@ class BaseAPI:
         logging.info("Model saved in {}.".format(save_dir))
 
     def export_inference_model(self, save_dir):
-        test_input_names = [
-            var.name for var in list(self.test_inputs.values())
-        ]
+        test_input_names = [var.name for var in list(self.test_inputs.values())]
         test_outputs = list(self.test_outputs.values())
-        if self.__class__.__name__ == 'MaskRCNN':
-            from paddlex.utils.save import save_mask_inference_model
-            save_mask_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=self.test_prog)
-        else:
-            fluid.io.save_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=self.test_prog)
+        with fluid.scope_guard(self.scope):
+            if self.__class__.__name__ == 'MaskRCNN':
+                from paddlex.utils.save import save_mask_inference_model
+                save_mask_inference_model(
+                    dirname=save_dir,
+                    executor=self.exe,
+                    params_filename='__params__',
+                    feeded_var_names=test_input_names,
+                    target_vars=test_outputs,
+                    main_program=self.test_prog)
+            else:
+                fluid.io.save_inference_model(
+                    dirname=save_dir,
+                    executor=self.exe,
+                    params_filename='__params__',
+                    feeded_var_names=test_input_names,
+                    target_vars=test_outputs,
+                    main_program=self.test_prog)
         model_info = self.get_model_info()
         model_info['status'] = 'Infer'
 
@@ -388,8 +392,7 @@ class BaseAPI:
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info("Model for inference deploy saved in {}.".format(
-            save_dir))
+        logging.info("Model for inference deploy saved in {}.".format(save_dir))
 
     def train_loop(self,
                    num_epochs,
@@ -513,13 +516,11 @@ class BaseAPI:
                         eta = ((num_epochs - i) * total_num_steps - step - 1
                                ) * avg_step_time
                     if time_eval_one_epoch is not None:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * time_eval_one_epoch
+                        eval_eta = (total_eval_times - i // save_interval_epochs
+                                    ) * time_eval_one_epoch
                     else:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * total_num_steps_eval * avg_step_time
+                        eval_eta = (total_eval_times - i // save_interval_epochs
+                                    ) * total_num_steps_eval * avg_step_time
                     eta_str = seconds_to_hms(eta + eval_eta)
 
                     logging.info(
