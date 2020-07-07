@@ -6,6 +6,7 @@
    :maxdepth: 2
    :caption: 文档目录:
 
+   export_model.md
    server/index
    nvidia-jetson.md
    openvino/index

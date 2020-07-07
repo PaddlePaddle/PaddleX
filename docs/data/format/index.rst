@@ -1,4 +1,4 @@
-PaddleX数据格式说明
+数据格式说明
 =======================================
 
 
@@ -8,4 +8,5 @@ PaddleX数据格式说明
 
    classification.md
    detection.md
+   instance_segmentation.md
    segmentation.md

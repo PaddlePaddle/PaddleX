@@ -5,7 +5,7 @@ PaddleX目前集成了XX模型，涵盖视觉领域的图像分类、目标检�
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: 文档目录:
 
    classification.md
