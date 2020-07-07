@@ -26,9 +26,9 @@ PaddleX提供一个轻量级的模型加密部署方案，通过PaddleX内置的
 >
 > 2）项目集成OpenSSL，使用静态库的形式。
 >
-> 3）实现AES算法接口，借助OpenSSL提供的EVP接口，在EVP接口中指定算法类型，算法使用对称加解密算法中的AES，加解密模式使用AES-GCM， 密钥长度为256位，AES-GCM的实现可以参考官方提供的例子自己进行封装接口：https://wiki.openssl.org/index.php/EVP_Authenticated_Encryption_and_Decryption。
+> 3）实现AES算法接口，借助OpenSSL提供的EVP接口，在EVP接口中指定算法类型，算法使用对称加解密算法中的AES，加解密模式使用AES-GCM， 密钥长度为256位，AES-GCM的实现可以参考官方提供的例子自己进行封装接口：[AES-GCM实现](https://wiki.openssl.org/index.php/EVP_Authenticated_Encryption_and_Decryption)。
 >
-> 4）利用OpenSSL库实现SHA256摘要算法，这部分下面有用（可选）。关于SHA256的hash计算可以参考OpenSSL提供的example：https://wiki.openssl.org/index.php/EVP_Message_Digests
+> 4）利用OpenSSL库实现SHA256摘要算法，这部分下面有用（可选）。关于SHA256的hash计算可以参考OpenSSL提供的example：[OpenSSL 信息摘要例子](https://wiki.openssl.org/index.php/EVP_Message_Digests)
 >
 > 5）在模型加密环节直接对model文件和params文件的数据内容进行加密后保存到新的文件，为了新的文件能够被区分和可迭代，除了加密后的数据外还添加了头部信息，比如为了判断该文件类型使用固定的魔数作为文件的开头；为了便于后面需求迭代写入版本号以示区别；为了能够在解密时判断是否采用了相同的密钥将加密时的密钥进行SHA256计算后存储；这三部分构成了目前加密后文件的头部信息。加密后的文件包含头部信息 + 密文信息。
 >
@@ -101,6 +101,7 @@ Windows平台:
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
 | batch_size | 预测的批量大小，默认为1 |
 | thread_num | 预测的线程数，默认为cpu处理器个数 |
+| use_ir_optim | 是否使用图优化策略，支持值为0或1（默认值为1，图像分割默认值为0）|
 
 
 ### 样例

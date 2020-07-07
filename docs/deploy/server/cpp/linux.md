@@ -130,6 +130,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
 | batch_size | 预测的批量大小，默认为1 |
 | thread_num | 预测的线程数，默认为cpu处理器个数 |
+| use_ir_optim | 是否使用图优化策略，支持值为0或1（默认值为1，图像分割默认值为0）|
 
 ## 样例
 
