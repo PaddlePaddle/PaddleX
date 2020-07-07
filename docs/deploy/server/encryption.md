@@ -105,7 +105,7 @@ Windows平台:
 
 ### 样例
 
-可使用[导出小度熊识别模型](python.md#inference)中的测试图片进行预测。
+可使用[导出小度熊识别模型](python.html#inference)中的测试图片进行预测。
 
 #### 样例一：
 
@@ -136,7 +136,7 @@ Windows平台:
 
 ### 样例
 
-可使用[导出小度熊识别模型](python.md#inference)中的测试图片进行预测。
+可使用[导出小度熊识别模型](python.html#inference)中的测试图片进行预测。
 
 #### 样例一：
 
