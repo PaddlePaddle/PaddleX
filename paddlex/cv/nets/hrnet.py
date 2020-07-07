@@ -235,7 +235,10 @@ class HRNet(object):
                         name=name + '_layer_' + str(i + 1) + '_' + str(j + 1))
                     if self.feature_maps == "stage4":
                         y = fluid.layers.resize_bilinear(
-                            input=y, out_shape=[height, width])
+                            input=y,
+                            out_shape=[height, width],
+                            align_corners=False,
+                            align_mode=1)
                     else:
                         y = fluid.layers.resize_nearest(
                             input=y, scale=2**(j - i))
