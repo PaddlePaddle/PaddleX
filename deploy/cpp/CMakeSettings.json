@@ -22,9 +22,9 @@
                     "type": "PATH"
                 },
                 {
-                    "name": "CMAKE_BUILD_TYPE",
-                    "value": "Release",
-                    "type": "STRING"
+                    "name": "CUDA_LIB",
+                    "value": "",
+                    "type": "PATH"
                 },
                 {
                     "name": "WITH_STATIC_LIB",
@@ -40,6 +40,16 @@
                     "name": "WITH_GPU",
                     "value": "False",
                     "type": "BOOL"
+                },
+                {
+                    "name": "WITH_ENCRYPTION",
+                    "value": "False",
+                    "type": "BOOL"
+                },
+                {
+                    "name": "ENCRYPTION_DIR",
+                    "value": "",
+                    "type": "PATH"
                 }
             ]
         }

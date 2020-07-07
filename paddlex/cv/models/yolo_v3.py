@@ -318,10 +318,12 @@ class YOLOv3(BaseAPI):
             images = np.array([d[0] for d in data])
             im_sizes = np.array([d[1] for d in data])
             feed_data = {'image': images, 'im_size': im_sizes}
-            outputs = self.exe.run(self.test_prog,
-                                   feed=[feed_data],
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=False)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.test_prog,
+                    feed=[feed_data],
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -368,14 +370,7 @@ class YOLOv3(BaseAPI):
         return im, im_size
 
     @staticmethod
-    def _postprocess(results, test_outputs_keys, batch_size, num_classes,
-                     labels):
-        res = {
-            k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
-        }
-        res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [[]])
+    def _postprocess(res, batch_size, num_classes, labels):
         clsid2catid = dict({i: i for i in range(num_classes)})
         xywh_results = bbox2out([res], clsid2catid)
         preds = [[] for i in range(batch_size)]
@@ -411,15 +406,21 @@ class YOLOv3(BaseAPI):
         im, im_size = YOLOv3._preprocess(images, transforms, self.model_type,
                                          self.__class__.__name__)
 
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im,
-                                    'im_size': im_size},
-                              fetch_list=list(self.test_outputs.values()),
-                              return_numpy=False,
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im,
+                                        'im_size': im_size},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
 
-        preds = YOLOv3._postprocess(result,
-                                    list(self.test_outputs.keys()),
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(self.test_outputs.keys()), result)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(len(images))]).astype('int32'), [[]])
+        preds = YOLOv3._postprocess(res,
                                     len(images), self.num_classes, self.labels)
         return preds[0]
 
@@ -448,15 +449,21 @@ class YOLOv3(BaseAPI):
                                          self.model_type,
                                          self.__class__.__name__, thread_num)
 
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im,
-                                    'im_size': im_size},
-                              fetch_list=list(self.test_outputs.values()),
-                              return_numpy=False,
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im,
+                                        'im_size': im_size},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
 
-        preds = YOLOv3._postprocess(result,
-                                    list(self.test_outputs.keys()),
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(self.test_outputs.keys()), result)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(len(img_file_list))]).astype('int32'), [[]])
+        preds = YOLOv3._postprocess(res,
                                     len(img_file_list), self.num_classes,
                                     self.labels)
         return preds

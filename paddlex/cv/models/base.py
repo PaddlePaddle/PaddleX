@@ -74,6 +74,7 @@ class BaseAPI:
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
+        self.scope = fluid.global_scope()
 
     def _get_single_card_bs(self, batch_size):
         if batch_size % len(self.places) == 0:
@@ -85,6 +86,10 @@ class BaseAPI:
                                 'place']))
 
     def build_program(self):
+        if hasattr(paddlex, 'model_built') and paddlex.model_built:
+            logging.error(
+                "Function model.train() only can be called once in your code.")
+        paddlex.model_built = True
         # 构建训练网络
         self.train_inputs, self.train_outputs = self.build_net(mode='train')
         self.train_prog = fluid.default_main_program()
@@ -143,7 +148,7 @@ class BaseAPI:
             outputs=self.test_outputs,
             batch_size=batch_size,
             batch_nums=batch_num,
-            scope=None,
+            scope=self.scope,
             algo='KL',
             quantizable_op_type=["conv2d", "depthwise_conv2d", "mul"],
             is_full_quantize=False,
@@ -341,23 +346,24 @@ class BaseAPI:
             var.name for var in list(self.test_inputs.values())
         ]
         test_outputs = list(self.test_outputs.values())
-        if self.__class__.__name__ == 'MaskRCNN':
-            from paddlex.utils.save import save_mask_inference_model
-            save_mask_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=self.test_prog)
-        else:
-            fluid.io.save_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=self.test_prog)
+        with fluid.scope_guard(self.scope):
+            if self.__class__.__name__ == 'MaskRCNN':
+                from paddlex.utils.save import save_mask_inference_model
+                save_mask_inference_model(
+                    dirname=save_dir,
+                    executor=self.exe,
+                    params_filename='__params__',
+                    feeded_var_names=test_input_names,
+                    target_vars=test_outputs,
+                    main_program=self.test_prog)
+            else:
+                fluid.io.save_inference_model(
+                    dirname=save_dir,
+                    executor=self.exe,
+                    params_filename='__params__',
+                    feeded_var_names=test_input_names,
+                    target_vars=test_outputs,
+                    main_program=self.test_prog)
         model_info = self.get_model_info()
         model_info['status'] = 'Infer'
 

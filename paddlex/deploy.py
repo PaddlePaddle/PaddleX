@@ -205,7 +205,7 @@ class Predictor:
         """
         preprocessed_input = self.preprocess([image])
         model_pred = self.raw_predict(preprocessed_input)
-        im_shape = None if 'im_shape' in preprocessed_input else preprocessed_input[
+        im_shape = None if 'im_shape' not in preprocessed_input else preprocessed_input[
             'im_shape']
         results = self.postprocess(
             model_pred, topk=topk, batch_size=1, im_shape=im_shape)

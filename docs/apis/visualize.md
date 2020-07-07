@@ -167,3 +167,20 @@ NormLIME是利用一定数量的样本来出一个全局的解释。由于NormLI
 ### 使用示例
 > 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)。
 
+
+## 数据预处理/增强过程可视化
+```
+paddlex.transforms.visualize(dataset, 
+                             img_count=3, 
+                             save_dir='vdl_output')
+```
+对数据预处理/增强中间结果进行可视化。
+可使用VisualDL查看中间结果：
+1. VisualDL启动方式: visualdl --logdir vdl_output --port 8001
+2. 浏览器打开 https://0.0.0.0:8001即可，
+    其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+
+### 参数
+>* **dataset** (paddlex.datasets): 数据集读取器。
+>* **img_count** (int): 需要进行数据预处理/增强的图像数目。默认为3。
+>* **save_dir** (str): 日志保存的路径。默认为'vdl_output'。

@@ -330,9 +330,10 @@ class DeepLabv3p(BaseAPI):
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
         if not hasattr(self, 'parallel_test_prog'):
-            self.parallel_test_prog = fluid.CompiledProgram(
-                self.test_prog).with_data_parallel(
-                    share_vars_from=self.parallel_train_prog)
+            with fluid.scope_guard(self.scope):
+                self.parallel_test_prog = fluid.CompiledProgram(
+                    self.test_prog).with_data_parallel(
+                        share_vars_from=self.parallel_train_prog)
         logging.info(
             "Start to evaluating(total_samples={}, total_steps={})...".format(
                 eval_dataset.num_samples, total_steps))
@@ -356,10 +357,12 @@ class DeepLabv3p(BaseAPI):
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
             feed_data = {'image': images}
-            outputs = self.exe.run(self.parallel_test_prog,
-                                   feed=feed_data,
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=True)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.parallel_test_prog,
+                    feed=feed_data,
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=True)
             pred = outputs[0]
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
@@ -453,10 +456,11 @@ class DeepLabv3p(BaseAPI):
         im, im_info = DeepLabv3p._preprocess(
             images, transforms, self.model_type, self.__class__.__name__)
 
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()),
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
 
         preds = DeepLabv3p._postprocess(result, im_info)
         return preds[0]
@@ -483,10 +487,11 @@ class DeepLabv3p(BaseAPI):
             img_file_list, transforms, self.model_type,
             self.__class__.__name__, thread_num)
 
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()),
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
 
         preds = DeepLabv3p._postprocess(result, im_info)
         return preds

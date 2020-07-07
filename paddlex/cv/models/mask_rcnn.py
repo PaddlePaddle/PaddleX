@@ -289,10 +289,12 @@ class MaskRCNN(FasterRCNN):
                 'im_info': im_infos,
                 'im_shape': im_shapes,
             }
-            outputs = self.exe.run(self.test_prog,
-                                   feed=[feed_data],
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=False)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.test_prog,
+                    feed=[feed_data],
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths()),
@@ -385,15 +387,16 @@ class MaskRCNN(FasterRCNN):
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
             images, transforms, self.model_type, self.__class__.__name__)
 
-        result = self.exe.run(self.test_prog,
-                              feed={
-                                  'image': im,
-                                  'im_info': im_resize_info,
-                                  'im_shape': im_shape
-                              },
-                              fetch_list=list(self.test_outputs.values()),
-                              return_numpy=False,
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={
+                                      'image': im,
+                                      'im_info': im_resize_info,
+                                      'im_shape': im_shape
+                                  },
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
 
         preds = MaskRCNN._postprocess(result, im_shape,
                                       list(self.test_outputs.keys()),
@@ -428,15 +431,16 @@ class MaskRCNN(FasterRCNN):
             img_file_list, transforms, self.model_type,
             self.__class__.__name__, thread_num)
 
-        result = self.exe.run(self.test_prog,
-                              feed={
-                                  'image': im,
-                                  'im_info': im_resize_info,
-                                  'im_shape': im_shape
-                              },
-                              fetch_list=list(self.test_outputs.values()),
-                              return_numpy=False,
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={
+                                      'image': im,
+                                      'im_info': im_resize_info,
+                                      'im_shape': im_shape
+                                  },
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
 
         preds = MaskRCNN._postprocess(result, im_shape,
                                       list(self.test_outputs.keys()),

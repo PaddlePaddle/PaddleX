@@ -232,9 +232,10 @@ class BaseClassifier(BaseAPI):
         true_labels = list()
         pred_scores = list()
         if not hasattr(self, 'parallel_test_prog'):
-            self.parallel_test_prog = fluid.CompiledProgram(
-                self.test_prog).with_data_parallel(
-                    share_vars_from=self.parallel_train_prog)
+            with fluid.scope_guard(self.scope):
+                self.parallel_test_prog = fluid.CompiledProgram(
+                    self.test_prog).with_data_parallel(
+                        share_vars_from=self.parallel_train_prog)
         batch_size_each_gpu = self._get_single_card_bs(batch_size)
         logging.info(
             "Start to evaluating(total_samples={}, total_steps={})...".format(
@@ -248,9 +249,11 @@ class BaseClassifier(BaseAPI):
                 num_pad_samples = batch_size - num_samples
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
-            outputs = self.exe.run(self.parallel_test_prog,
-                                   feed={'image': images},
-                                   fetch_list=list(self.test_outputs.values()))
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.parallel_test_prog,
+                    feed={'image': images},
+                    fetch_list=list(self.test_outputs.values()))
             outputs = [outputs[0][:num_samples]]
             true_labels.extend(labels)
             pred_scores.extend(outputs[0].tolist())
@@ -325,10 +328,11 @@ class BaseClassifier(BaseAPI):
         im = BaseClassifier._preprocess(images, transforms, self.model_type,
                                         self.__class__.__name__)
 
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()),
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
 
         preds = BaseClassifier._postprocess(result, true_topk, self.labels)
 
@@ -362,10 +366,11 @@ class BaseClassifier(BaseAPI):
                                         self.model_type,
                                         self.__class__.__name__, thread_num)
 
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()),
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
 
         preds = BaseClassifier._postprocess(result, true_topk, self.labels)
 

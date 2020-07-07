@@ -16,6 +16,9 @@ from . import cls_transforms
 from . import det_transforms
 from . import seg_transforms
 
+from . import visualize
+visualize = visualize.visualize
+
 
 def build_transforms(model_type, transforms_info, to_rgb=True):
     if model_type == "classifier":

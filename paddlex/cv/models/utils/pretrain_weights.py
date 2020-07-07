@@ -83,7 +83,7 @@ coco_pretrain = {
     'YOLOv3_MobileNetV1_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v1.tar',
     'YOLOv3_MobileNetV3_large_COCO':
-    'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_mobilenet_v3.pdparams',
+    'https://bj.bcebos.com/paddlex/models/yolov3_mobilenet_v3.tar',
     'YOLOv3_ResNet34_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r34.tar',
     'YOLOv3_ResNet50_vd_COCO':
@@ -203,7 +203,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
                     backbone))
             elif isinstance(e, hub.ServerConnectionError):
                 raise Exception(
-                    "Cannot get reource for backbone {}, please check your internet connecgtion"
+                    "Cannot get reource for backbone {}, please check your internet connection"
                     .format(backbone))
             else:
                 raise Exception(
@@ -231,7 +231,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
                     backbone))
             elif isinstance(hub.ServerConnectionError):
                 raise Exception(
-                    "Cannot get reource for backbone {}, please check your internet connecgtion"
+                    "Cannot get reource for backbone {}, please check your internet connection"
                     .format(backbone))
             else:
                 raise Exception(
