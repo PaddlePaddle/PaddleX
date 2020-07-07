@@ -101,7 +101,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 ### Step5: 预测及可视化
 
-**在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../deploy_python.html#inference)将模型导出为部署格式。**  
+**在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../python.html#inference)将模型导出为部署格式。**  
 
 上述`Visual Studio 2019`编译产出的可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
@@ -126,7 +126,7 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 ## 样例
 
-可使用[小度熊识别模型](../deploy_python.md)中导出的`inference_model`和测试图片进行预测, 例如导出到D:\projects，模型路径为D:\projects\inference_model。
+可使用[小度熊识别模型](../python.md)中导出的`inference_model`和测试图片进行预测, 例如导出到D:\projects，模型路径为D:\projects\inference_model。
 
 ### 样例一：(使用未加密的模型对单张图像做预测)
 
