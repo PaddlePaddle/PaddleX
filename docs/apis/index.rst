@@ -5,8 +5,9 @@ API接口说明
    :maxdepth: 2
 
    transforms/index.rst
-   datasets/index.rst
+   datasets.md
    models/index.rst
    slim.md
    load_model.md
    visualize.md
+   interpret.md

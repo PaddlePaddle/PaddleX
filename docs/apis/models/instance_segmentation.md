@@ -1,6 +1,6 @@
-# 实例分割
+# Instance Segmentation
 
-## MaskRCNN类
+## MaskRCNN
 
 ```python
 paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512])
@@ -17,7 +17,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
 
-#### train 训练接口
+#### train
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=1, eval_dataset=None, save_interval_epochs=1, log_interval_steps=20, save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=1.0/800, warmup_steps=500, warmup_start_lr=1.0 / 2400, lr_decay_epochs=[8, 11], lr_decay_gamma=0.1, metric=None, use_vdl=False, early_stop=False, early_stop_patience=5, resume_checkpoint=None)
@@ -47,7 +47,7 @@ train(self, num_epochs, train_dataset, train_batch_size=1, eval_dataset=None, sa
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 > > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
-#### evaluate 评估接口
+#### evaluate
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_details=False)
@@ -67,7 +67,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'和'segm_mmap'或者’bbox_map‘和'segm_map'，分别表示预测框和分割区域平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，包含关键字：'bbox'，对应元素预测框结果列表，每个预测结果由图像id、预测框类别id、预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
 
-#### predict 预测接口
+#### predict
 
 ```python
 predict(self, img_file, transforms=None)

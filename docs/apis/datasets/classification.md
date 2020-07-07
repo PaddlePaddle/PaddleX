@@ -1,6 +1,6 @@
 # 图像分类数据集
 
-## ImageNet类
+## ImageNet
 ```
 paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_workers=‘auto’, buffer_size=100, parallel_method='thread', shuffle=False)
 ```
@@ -19,12 +19,12 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
-## EasyDataCls类
+## EasyDataCls
 ```
 paddlex.datasets.EasyDatasetCls(data_dir, file_list, label_list, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取EasyData平台标注图像分类数据集，并对样本进行相应的处理。EasyData图像分类任务数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)。 
+> 读取EasyData平台标注图像分类数据集，并对样本进行相应的处理。EasyData图像分类任务数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)。
 
 > **参数**
 
