@@ -22,7 +22,8 @@ void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
                              bool use_trt,
                              int gpu_id,
-                             std::string key) {
+                             std::string key,
+                             bool use_ir_optim) {
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
@@ -63,6 +64,8 @@ void Model::create_predictor(const std::string& model_dir,
   }
   config.SwitchUseFeedFetchOps(false);
   config.SwitchSpecifyInputNames(true);
+  // 开启图优化
+  config.SwitchIrOptim(use_ir_optim);
   // 开启内存优化
   config.EnableMemoryOptim();
   if (use_trt) {

@@ -39,6 +39,7 @@ DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num,
              omp_get_num_procs(),
              "Number of preprocessing threads");
+DEFINE_bool(use_ir_optim, false, "use ir optimization");
 
 int main(int argc, char** argv) {
   // 解析命令行参数
@@ -59,7 +60,8 @@ int main(int argc, char** argv) {
              FLAGS_use_gpu,
              FLAGS_use_trt,
              FLAGS_gpu_id,
-             FLAGS_key);
+             FLAGS_key,
+             FLAGS_use_ir_optim);
 
   double total_running_time_s = 0.0;
   double total_imread_time_s = 0.0;

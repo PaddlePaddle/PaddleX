@@ -106,8 +106,11 @@ class VOCDetection(Dataset):
                     ct = int(tree.find('id').text)
                     im_id = np.array([int(tree.find('id').text)])
                 pattern = re.compile('<object>', re.IGNORECASE)
-                obj_tag = pattern.findall(
-                    str(ET.tostringlist(tree.getroot())))[0][1:-1]
+                obj_match = pattern.findall(
+                    str(ET.tostringlist(tree.getroot())))
+                if len(obj_match) == 0:
+                    continue
+                obj_tag = obj_match[0][1:-1]
                 objs = tree.findall(obj_tag)
                 pattern = re.compile('<size>', re.IGNORECASE)
                 size_tag = pattern.findall(

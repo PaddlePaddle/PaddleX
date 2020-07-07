@@ -100,7 +100,7 @@ class LabelMe2COCO(X2COCO):
         image["height"] = json_info["imageHeight"]
         image["width"] = json_info["imageWidth"]
         image["id"] = image_id + 1
-        image["file_name"] = json_info["imagePath"].split("/")[-1]
+        image["file_name"] = osp.split(json_info["imagePath"])[-1]
         return image
     
     def generate_polygon_anns_field(self, height, width, 
