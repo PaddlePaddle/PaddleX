@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@ from __future__ import absolute_import
 import math
 import tqdm
 import numpy as np
+from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 import paddlex
@@ -253,7 +254,8 @@ class MaskRCNN(FasterRCNN):
                 预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、
                 预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(
+            transforms=eval_dataset.transforms, mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -274,8 +276,9 @@ class MaskRCNN(FasterRCNN):
 
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         results = list()
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -317,7 +320,8 @@ class MaskRCNN(FasterRCNN):
                     zip(['bbox_map', 'segm_map'],
                         [ap_stats[0][1], ap_stats[1][1]]))
             else:
-                metrics = OrderedDict(zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
+                metrics = OrderedDict(
+                    zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
         elif metric == 'COCO':
             if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
                                                                   np.ndarray):
@@ -331,55 +335,112 @@ class MaskRCNN(FasterRCNN):
             return metrics, eval_details
         return metrics
 
+    @staticmethod
+    def _postprocess(results, im_shape, test_outputs_keys, batch_size,
+                     num_classes, mask_head_resolution, labels):
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(test_outputs_keys), results)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(batch_size)]).astype('int32'), [])
+        res['im_shape'] = (np.array(im_shape), [])
+        clsid2catid = dict({i: i for i in range(num_classes)})
+        xywh_results = bbox2out([res], clsid2catid)
+        segm_results = mask2out([res], clsid2catid, mask_head_resolution)
+        preds = [[] for i in range(batch_size)]
+        import pycocotools.mask as mask_util
+        for index, xywh_res in enumerate(xywh_results):
+            image_id = xywh_res['image_id']
+            del xywh_res['image_id']
+            xywh_res['mask'] = mask_util.decode(segm_results[index][
+                'segmentation'])
+            xywh_res['category'] = labels[xywh_res['category_id']]
+            preds[image_id].append(xywh_res)
+
+        return preds
+
     def predict(self, img_file, transforms=None):
         """预测。
 
         Args:
-            img_file (str): 预测图像路径。
+            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
             transforms (paddlex.det.transforms): 数据预处理操作。
 
         Returns:
-            dict: 预测结果列表，每个预测结果由预测框类别标签、预测框类别名称、
+            lict: 预测结果列表，每个预测结果由预测框类别标签、预测框类别名称、
                   预测框坐标(坐标格式为[xmin, ymin, w, h]）、
                   原图大小的预测二值图（1表示预测框类别，0表示背景类）、
                   预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
-        if transforms is not None:
-            self.arrange_transforms(transforms=transforms, mode='test')
-            im, im_resize_info, im_shape = transforms(img_file)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
         else:
-            self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-            im, im_resize_info, im_shape = self.test_transforms(img_file)
-        im = np.expand_dims(im, axis=0)
-        im_resize_info = np.expand_dims(im_resize_info, axis=0)
-        im_shape = np.expand_dims(im_shape, axis=0)
-        outputs = self.exe.run(self.test_prog,
-                               feed={
-                                   'image': im,
-                                   'im_info': im_resize_info,
-                                   'im_shape': im_shape
-                               },
-                               fetch_list=list(self.test_outputs.values()),
-                               return_numpy=False,
-                               use_program_cache=True)
-        res = {
-            k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(self.test_outputs.keys()), outputs)
-        }
-        res['im_id'] = (np.array([[0]]).astype('int32'), [])
-        res['im_shape'] = (np.array(im_shape), [])
-        clsid2catid = dict({i: i for i in range(self.num_classes)})
-        xywh_results = bbox2out([res], clsid2catid)
-        segm_results = mask2out([res], clsid2catid, self.mask_head_resolution)
-        results = list()
-        import pycocotools.mask as mask_util
-        for index, xywh_res in enumerate(xywh_results):
-            del xywh_res['image_id']
-            xywh_res['mask'] = mask_util.decode(segm_results[index][
-                'segmentation'])
-            xywh_res['category'] = self.labels[xywh_res['category_id']]
-            results.append(xywh_res)
-        return results
+            raise Exception("img_file must be str/np.ndarray")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_resize_info, im_shape = FasterRCNN._preprocess(
+            images, transforms, self.model_type, self.__class__.__name__)
+
+        result = self.exe.run(self.test_prog,
+                              feed={
+                                  'image': im,
+                                  'im_info': im_resize_info,
+                                  'im_shape': im_shape
+                              },
+                              fetch_list=list(self.test_outputs.values()),
+                              return_numpy=False,
+                              use_program_cache=True)
+
+        preds = MaskRCNN._postprocess(result, im_shape,
+                                      list(self.test_outputs.keys()),
+                                      len(images), self.num_classes,
+                                      self.mask_head_resolution, self.labels)
+
+        return preds[0]
+
+    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+        """预测。
+
+        Args:
+            img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+            transforms (paddlex.det.transforms): 数据预处理操作。
+            thread_num (int): 并发执行各图像预处理时的线程数。
+        Returns:
+            dict: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、预测框类别名称、
+                  预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+                  原图大小的预测二值图（1表示预测框类别，0表示背景类）、
+                  预测框得分组成。
+        """
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+
+        if not isinstance(img_file_list, (list, tuple)):
+            raise Exception("im_file must be list/tuple")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_resize_info, im_shape = FasterRCNN._preprocess(
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, thread_num)
+
+        result = self.exe.run(self.test_prog,
+                              feed={
+                                  'image': im,
+                                  'im_info': im_resize_info,
+                                  'im_shape': im_shape
+                              },
+                              fetch_list=list(self.test_outputs.values()),
+                              return_numpy=False,
+                              use_program_cache=True)
+
+        preds = MaskRCNN._postprocess(result, im_shape,
+                                      list(self.test_outputs.keys()),
+                                      len(img_file_list), self.num_classes,
+                                      self.mask_head_resolution, self.labels)
+
+        return preds

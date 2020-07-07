@@ -30,13 +30,14 @@ void Model::create_predictor(const std::string& model_dir,
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
   std::string params_file = model_dir + OS_PATH_SEP + "__params__";
 #ifdef WITH_ENCRYPTION
-  if (key != ""){
+  if (key != "") {
     model_file = model_dir + OS_PATH_SEP + "__model__.encrypted";
     params_file = model_dir + OS_PATH_SEP + "__params__.encrypted";
-    paddle_security_load_model(&config, key.c_str(), model_file.c_str(), params_file.c_str());
+    paddle_security_load_model(
+      &config, key.c_str(), model_file.c_str(), params_file.c_str());
   }
 #endif
-  if (key == ""){
+  if (key == "") {
     config.SetModel(model_file, params_file);
   }
   if (use_gpu) {
@@ -67,9 +68,10 @@ bool Model::load_config(const std::string& model_dir) {
   name = config["Model"].as<std::string>();
   std::string version = config["version"].as<std::string>();
   if (version[0] == '0') {
-    std::cerr << "[Init] Version of the loaded model is lower than 1.0.0, deployment "
-              << "cannot be done, please refer to "
-              << "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/upgrade_version.md "
+    std::cerr << "[Init] Version of the loaded model is lower than 1.0.0,"
+              << " deployment cannot be done, please refer to "
+              << "https://github.com/PaddlePaddle/PaddleX/blob/develop/"
+              << "docs/tutorials/deploy/upgrade_version.md "
               << "to transfer version."
               << std::endl;
     return false;
@@ -332,18 +334,20 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
       inputs_.im_size_before_resize_.pop_back();
       auto resize_w = before_shape[0];
       auto resize_h = before_shape[1];
-      cv::resize(mask_label,
-                 mask_label,
-                 cv::Size(resize_h, resize_w),
-                 0,
-                 0,
-                 cv::INTER_NEAREST);
-      cv::resize(mask_score,
-                 mask_score,
-                 cv::Size(resize_h, resize_w),
-                 0,
-                 0,
-                 cv::INTER_NEAREST);
+      if (mask_label->rows != resize_h || mask_label->cols != resize_w) {
+        cv::resize(mask_label,
+                   mask_label,
+                   cv::Size(resize_h, resize_w),
+                   0,
+                   0,
+                   cv::INTER_NEAREST);
+        cv::resize(mask_score,
+                   mask_score,
+                   cv::Size(resize_h, resize_w),
+                   0,
+                   0,
+                   cv::INTER_NEAREST);
+      }
     }
     ++idx;
   }

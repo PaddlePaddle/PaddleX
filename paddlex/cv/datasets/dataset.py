@@ -212,7 +212,25 @@ def GenerateMiniBatch(batch_data):
         padding_im = np.zeros(
             (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
         padding_im[:, :im_h, :im_w] = data[0]
-        padding_batch.append((padding_im, ) + data[1:])
+        if len(data) > 1:
+            if isinstance(data[1], np.ndarray):
+                padding_label = np.zeros(
+                    (1, max_shape[1], max_shape[2])).astype('int64')
+                _, label_h, label_w = data[1].shape
+                padding_label[:, :label_h, :label_w] = data[1]
+                padding_batch.append((padding_im, padding_label))
+            elif len(data[1]) == 0 or isinstance(
+                    data[1][0],
+                    tuple) and data[1][0][0] in ['resize', 'padding']:
+                if len(data[1]) == 0 or 'padding' not in [
+                        data[1][i][0] for i in range(len(data[1]))
+                ]:
+                    data[1].append(('padding', [im_h, im_w]))
+                padding_batch.append((padding_im, ) + tuple(data[1:]))
+            else:
+                padding_batch.append((padding_im, ) + tuple(data[1:]))
+        else:
+            padding_batch.append((padding_im))
     return padding_batch
 
 
