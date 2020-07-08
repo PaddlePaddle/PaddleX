@@ -25,7 +25,7 @@ PaddleX支持图像分类、目标检测、实例分割和语义分割四大视�
 ```
 paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annotations ./annotations --save_dir ./converted_dataset_dir
 ```
-> `--from`表示数据标注来源，支持`labelme`、`jingling`和`easydata`（分别表示数据来源于LabelMe，精灵标注助手和EasyData）  
+> `--source`表示数据标注来源，支持`labelme`、`jingling`和`easydata`（分别表示数据来源于LabelMe，精灵标注助手和EasyData）  
 > `--to`表示数据需要转换成为的格式，支持`ImageNet`（图像分类）、`PascalVOC`（目标检测），`MSCOCO`（实例分割，也可用于目标检测）和`SEG`(语义分割)  
 > `--pics`指定原图所在的目录路径  
 > `--annotations`指定标注文件所在的目录路径
