@@ -146,6 +146,10 @@ def main():
             logging.error(
                 "The labelme dataset can not convert to the ImageNet dataset.",
                 exit=False)
+        if args.source == 'jingling' and args.to == 'PascalVOC':
+            logging.error(
+                "The jingling dataset can not convert to the PascalVOC dataset.",
+                exit=False)
         pdx.tools.convert.dataset_conversion(args.source, args.to, 
                                              args.pics, args.annotations, args.save_dir )
         
