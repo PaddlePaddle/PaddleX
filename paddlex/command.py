@@ -51,6 +51,36 @@ def arg_parser():
         default=False,
         help="export onnx model for deployment")
     parser.add_argument(
+        "--data_conversion",
+        "-dc",
+        action="store_true",
+        default=False,
+        help="convert the dataset to the standard format")
+    parser.add_argument(
+        "--from_ds",
+        "-fd",
+        type=_text_type,
+        default=None,
+        help="define dataset format before the conversion")
+    parser.add_argument(
+        "--to_ds",
+        "-td",
+        type=_text_type,
+        default=None,
+        help="define dataset format after the conversion")
+    parser.add_argument(
+        "--pics",
+        "-p",
+        type=_text_type,
+        default=None,
+        help="define pictures directory path")
+    parser.add_argument(
+        "--annotations",
+        "-a",
+        type=_text_type,
+        default=None,
+        help="define annotations directory path")
+    parser.add_argument(
         "--fixed_input_shape",
         "-fs",
         default=None,
@@ -105,6 +135,20 @@ def main():
                 "paddlex --export_inference --model_dir model_path --save_dir infer_model"
             )
         pdx.convertor.export_onnx_model(model, args.save_dir)
+        
+    if args.data_conversion:
+        assert args.from_ds is not None, "--from_ds should be defined while converting dataset"
+        assert args.to_ds is not None, "--to_ds should be defined to confirm the taregt dataset format"
+        assert args.pics is not None, "--pics should be defined to confirm the pictures path"
+        assert args.annotations is not None, "--annotations should be defined to confirm the annotations path"
+        assert args.save_dir is not None, "--save_dir should be defined to store taregt dataset"
+        if args.from_ds == 'labelme' and args.to_ds == 'ImageNet':
+            logging.error(
+                "The labelme dataset can not convert to the ImageNet dataset.",
+                exit=False)
+        pdx.tools.convert.dataset_conversion(args.from_ds, args.to_ds, 
+                                             args.pics, args.annotations, args.save_dir )
+        
 
 
 if __name__ == "__main__":
