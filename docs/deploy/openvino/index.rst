@@ -9,3 +9,5 @@ OpenVINO部署
    windows.md
    linux.md
    intel_movidius.md
+   python.md
+   export_openvino_model.md 
