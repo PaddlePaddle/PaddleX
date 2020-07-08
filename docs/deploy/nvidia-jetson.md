@@ -59,8 +59,6 @@ CUDNN_LIB=/usr/local/cuda/lib64
 
 # 是否加载加密后的模型
 WITH_ENCRYPTION=OFF
-# 加密工具的路径, 如果使用自带预编译版本可不修改
-sh $(pwd)/scripts/jetson_bootstrap.sh # 下载预编译版本的加密工具
 
 # OPENCV 路径, 如果使用自带预编译版本可不修改
 sh $(pwd)/scripts/jetson_bootstrap.sh  # 下载预编译版本的opencv
@@ -84,7 +82,7 @@ cmake .. \
     -DOPENCV_DIR=${OPENCV_DIR}
 make
 ```
-**注意：** linux环境下编译会自动下载OPENCV, PaddleX-Encryption和YAML，如果编译环境无法访问外网，可手动下载：
+**注意：** linux环境下编译会自动下载OPENCV和YAML，如果编译环境无法访问外网，可手动下载：
 
 - [opencv3_aarch.tgz](https://bj.bcebos.com/paddlex/deploy/tools/opencv3_aarch.tgz)
 - [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
