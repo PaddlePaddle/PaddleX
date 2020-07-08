@@ -34,7 +34,7 @@ std::string SystemUtils::random_str(int len) {
 }
 
 int SystemUtils::check_key_match(const char* key, const char* filepath) {
-    std::string aes_key_iv(key);
+    std::string aes_key_iv(key, key + constant::CONSTANT_AES_GCM_KEY_LEN);
     std::string sha256_aes_key_iv = util::crypto::SHA256Utils::sha256_string(aes_key_iv);
 
     unsigned char* data_pos = (unsigned char*) malloc(sizeof(unsigned char) * 64);

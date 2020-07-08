@@ -10,6 +10,8 @@ const static int MAGIC_NUMBER_LEN = 6;
 const static int VERSION_LEN = 1;
 const static int TAG_LEN = 128;
 
+const static int CONSTANT_AES_GCM_KEY_LEN = 32;
+
 }
 
 
