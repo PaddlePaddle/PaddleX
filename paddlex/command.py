@@ -57,14 +57,14 @@ def arg_parser():
         default=False,
         help="convert the dataset to the standard format")
     parser.add_argument(
-        "--from_ds",
-        "-fd",
+        "--source",
+        "-se",
         type=_text_type,
         default=None,
         help="define dataset format before the conversion")
     parser.add_argument(
-        "--to_ds",
-        "-td",
+        "--to",
+        "-to",
         type=_text_type,
         default=None,
         help="define dataset format after the conversion")
@@ -137,16 +137,16 @@ def main():
         pdx.convertor.export_onnx_model(model, args.save_dir)
         
     if args.data_conversion:
-        assert args.from_ds is not None, "--from_ds should be defined while converting dataset"
-        assert args.to_ds is not None, "--to_ds should be defined to confirm the taregt dataset format"
+        assert args.source is not None, "--source should be defined while converting dataset"
+        assert args.to is not None, "--to should be defined to confirm the taregt dataset format"
         assert args.pics is not None, "--pics should be defined to confirm the pictures path"
         assert args.annotations is not None, "--annotations should be defined to confirm the annotations path"
         assert args.save_dir is not None, "--save_dir should be defined to store taregt dataset"
-        if args.from_ds == 'labelme' and args.to_ds == 'ImageNet':
+        if args.source == 'labelme' and args.to == 'ImageNet':
             logging.error(
                 "The labelme dataset can not convert to the ImageNet dataset.",
                 exit=False)
-        pdx.tools.convert.dataset_conversion(args.from_ds, args.to_ds, 
+        pdx.tools.convert.dataset_conversion(args.source, args.to, 
                                              args.pics, args.annotations, args.save_dir )
         
 

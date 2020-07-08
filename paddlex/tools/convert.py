@@ -36,24 +36,24 @@ jingling2seg = JingLing2Seg().convert
 labelme2seg = LabelMe2Seg().convert
 easydata2seg = EasyData2Seg().convert
 
-def dataset_conversion(from_ds, to_ds, pics, anns, save_dir):
-    if from_ds == 'labelme' and to_ds == 'PascalVOC':
+def dataset_conversion(source, to, pics, anns, save_dir):
+    if source == 'labelme' and to == 'PascalVOC':
         labelme2voc(pics, anns, save_dir)
-    elif from_ds == 'labelme' and to_ds == 'MSCOCO':
+    elif source == 'labelme' and to == 'MSCOCO':
         labelme2coco(pics, anns, save_dir)
-    elif from_ds == 'labelme' and to_ds == 'SEG':
+    elif source == 'labelme' and to == 'SEG':
         labelme2seg(pics, anns, save_dir)
-    elif from_ds == 'jingling' and to_ds == 'ImageNet':
+    elif source == 'jingling' and to == 'ImageNet':
         jingling2imagenet(pics, anns, save_dir)
-    elif from_ds == 'jingling' and to_ds == 'MSCOCO':
+    elif source == 'jingling' and to == 'MSCOCO':
         jingling2coco(pics, anns, save_dir)
-    elif from_ds == 'jingling' and to_ds == 'SEG':
+    elif source == 'jingling' and to == 'SEG':
         jingling2seg(pics, anns, save_dir)
-    elif from_ds == 'easydata' and to_ds == 'ImageNet':
+    elif source == 'easydata' and to == 'ImageNet':
         easydata2imagenet(pics, anns, save_dir)
-    elif from_ds == 'easydata' and to_ds == 'PascalVOC':
+    elif source == 'easydata' and to == 'PascalVOC':
         easydata2voc(pics, anns, save_dir)
-    elif from_ds == 'easydata' and to_ds == 'MSCOCO':
+    elif source == 'easydata' and to == 'MSCOCO':
         easydata2coco(pics, anns, save_dir)
-    elif from_ds == 'easydata' and to_ds == 'SEG':
+    elif source == 'easydata' and to == 'SEG':
         easydata2seg(pics, anns, save_dir)
