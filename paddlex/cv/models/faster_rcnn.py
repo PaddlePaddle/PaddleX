@@ -409,14 +409,7 @@ class FasterRCNN(BaseAPI):
         return im, im_resize_info, im_shape
 
     @staticmethod
-    def _postprocess(results, test_outputs_keys, batch_size, num_classes,
-                     labels):
-        res = {
-            k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
-        }
-        res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [])
+    def _postprocess(res, batch_size, num_classes, labels):
         clsid2catid = dict({i: i for i in range(num_classes)})
         xywh_results = bbox2out([res], clsid2catid)
         preds = [[] for i in range(batch_size)]
@@ -463,8 +456,13 @@ class FasterRCNN(BaseAPI):
                                   return_numpy=False,
                                   use_program_cache=True)
 
-        preds = FasterRCNN._postprocess(result,
-                                        list(self.test_outputs.keys()),
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(test_outputs_keys), results)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(batch_size)]).astype('int32'), [])
+        preds = FasterRCNN._postprocess(res,
                                         len(images), self.num_classes,
                                         self.labels)
 
@@ -507,8 +505,13 @@ class FasterRCNN(BaseAPI):
                                   return_numpy=False,
                                   use_program_cache=True)
 
-        preds = FasterRCNN._postprocess(result,
-                                        list(self.test_outputs.keys()),
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(test_outputs_keys), results)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(batch_size)]).astype('int32'), [])
+        preds = FasterRCNN._postprocess(res,
                                         len(img_file_list), self.num_classes,
                                         self.labels)
 

@@ -155,23 +155,42 @@ class Predictor:
             res['im_info'] = im_info
         return res
 
-    def postprocess(self, results, topk=1, batch_size=1, im_shape=None):
+    def postprocess(self,
+                    results,
+                    topk=1,
+                    batch_size=1,
+                    im_shape=None,
+                    im_info=None):
+        def offset_to_lengths(lod):
+            offset = lod[0]
+            lengths = [
+                offset[i + 1] - offset[i] for i in range(len(offset) - 1)
+            ]
+            return [lengths]
+
         if self.model_type == "classifier":
             true_topk = min(self.num_classes, topk)
-            preds = BaseClassifier._postprocess(results, true_topk,
+            preds = BaseClassifier._postprocess([results[0][0]], true_topk,
                                                 self.labels)
         elif self.model_type == "detector":
+            res = {'bbox': (results[0][0], offset_to_lengths(results[0][1])), }
+            res['im_id'] = (np.array(
+                [[i] for i in range(batch_size)]).astype('int32'), [[]])
             if self.model_name == "YOLOv3":
-                preds = YOLOv3._postprocess(results, ['bbox'], batch_size,
-                                            self.num_classes, self.labels)
+                preds = YOLOv3._postprocess(res, batch_size, self.num_classes,
+                                            self.labels)
             elif self.model_name == "FasterRCNN":
-                preds = FasterRCNN._postprocess(results, ['bbox'], batch_size,
+                preds = FasterRCNN._postprocess(res, batch_size,
                                                 self.num_classes, self.labels)
             elif self.model_name == "MaskRCNN":
+                res['mask'] = (results[1][0], offset_to_lengths(results[1][1]))
+                res['im_shape'] = (im_shape, [])
                 preds = MaskRCNN._postprocess(
-                    results, ['bbox', 'mask'], batch_size, self.num_classes,
+                    res, batch_size, self.num_classes,
                     self.mask_head_resolution, self.labels)
-
+        elif self.model_type == "segmenter":
+            res = [results[0][0], results[1][0]]
+            preds = DeepLabv3p._postprocess(res, im_info)
         return preds
 
     def raw_predict(self, inputs):
@@ -191,7 +210,9 @@ class Predictor:
         output_results = list()
         for name in output_names:
             output_tensor = self.predictor.get_output_tensor(name)
-            output_results.append(output_tensor.copy_to_cpu())
+            output_tensor_lod = output_tensor.lod()
+            output_results.append(
+                [output_tensor.copy_to_cpu(), output_tensor_lod])
         return output_results
 
     def predict(self, image, topk=1):
@@ -207,8 +228,14 @@ class Predictor:
         model_pred = self.raw_predict(preprocessed_input)
         im_shape = None if 'im_shape' not in preprocessed_input else preprocessed_input[
             'im_shape']
+        im_info = None if 'im_info' not in preprocessed_input else preprocessed_input[
+            'im_info']
         results = self.postprocess(
-            model_pred, topk=topk, batch_size=1, im_shape=im_shape)
+            model_pred,
+            topk=topk,
+            batch_size=1,
+            im_shape=im_shape,
+            im_info=im_info)
 
         return results[0]
 
@@ -223,9 +250,15 @@ class Predictor:
         """
         preprocessed_input = self.preprocess(image_list)
         model_pred = self.raw_predict(preprocessed_input)
-        im_shape = None if 'im_shape' in preprocessed_input else preprocessed_input[
+        im_shape = None if 'im_shape' not in preprocessed_input else preprocessed_input[
             'im_shape']
+        im_info = None if 'im_info' not in preprocessed_input else preprocessed_input[
+            'im_info']
         results = self.postprocess(
-            model_pred, topk=topk, batch_size=1, im_shape=im_shape)
+            model_pred,
+            topk=topk,
+            batch_size=len(image_list),
+            im_shape=im_shape,
+            im_info=im_info)
 
         return results

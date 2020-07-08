@@ -338,15 +338,8 @@ class MaskRCNN(FasterRCNN):
         return metrics
 
     @staticmethod
-    def _postprocess(results, im_shape, test_outputs_keys, batch_size,
-                     num_classes, mask_head_resolution, labels):
-        res = {
-            k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
-        }
-        res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [])
-        res['im_shape'] = (np.array(im_shape), [])
+    def _postprocess(res, batch_size, num_classes, mask_head_resolution,
+                     labels):
         clsid2catid = dict({i: i for i in range(num_classes)})
         xywh_results = bbox2out([res], clsid2catid)
         segm_results = mask2out([res], clsid2catid, mask_head_resolution)
@@ -398,8 +391,14 @@ class MaskRCNN(FasterRCNN):
                                   return_numpy=False,
                                   use_program_cache=True)
 
-        preds = MaskRCNN._postprocess(result, im_shape,
-                                      list(self.test_outputs.keys()),
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(test_outputs_keys), results)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(batch_size)]).astype('int32'), [])
+        res['im_shape'] = (np.array(im_shape), [])
+        preds = MaskRCNN._postprocess(res,
                                       len(images), self.num_classes,
                                       self.mask_head_resolution, self.labels)
 
@@ -442,9 +441,14 @@ class MaskRCNN(FasterRCNN):
                                   return_numpy=False,
                                   use_program_cache=True)
 
-        preds = MaskRCNN._postprocess(result, im_shape,
-                                      list(self.test_outputs.keys()),
-                                      len(img_file_list), self.num_classes,
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(test_outputs_keys), results)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(batch_size)]).astype('int32'), [])
+        res['im_shape'] = (np.array(im_shape), [])
+        preds = MaskRCNN._postprocess(res,
+                                      len(images), self.num_classes,
                                       self.mask_head_resolution, self.labels)
-
         return preds
