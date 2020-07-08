@@ -31,11 +31,38 @@ using namespace InferenceEngine;
 
 namespace PaddleX {
 
+/*
+ * @brief
+ * This class represents object for storing all preprocessed data
+ * */
+class ImageBlob {
+ public:
+  // Original image height and width
+  std::vector<int> ori_im_size_ = std::vector<int>(2);
+  // Newest image height and width after process
+  std::vector<int> new_im_size_ = std::vector<int>(2);
+  // Image height and width before resize
+  std::vector<std::vector<int>> im_size_before_resize_;
+  // Reshape order
+  std::vector<std::string> reshape_order_;
+  // Resize scale
+  float scale = 1.0;
+  // Buffer for image data after preprocessing
+  Blob::Ptr blob;
+
+  void clear() {
+    im_size_before_resize_.clear();
+    reshape_order_.clear();
+  }
+};
+
+
+
 // Abstraction of preprocessing opration class
 class Transform {
  public:
   virtual void Init(const YAML::Node& item) = 0;
-  virtual bool Run(cv::Mat* im) = 0;
+  virtual bool Run(cv::Mat* im, ImageBlob* data) = 0;
 };
 
 class Normalize : public Transform {
@@ -45,7 +72,7 @@ class Normalize : public Transform {
     std_ = item["std"].as<std::vector<float>>();
   }
 
-  virtual bool Run(cv::Mat* im);
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
   std::vector<float> mean_;
@@ -62,12 +89,61 @@ class ResizeByShort : public Transform {
       max_size_ = -1;
     }
   };
-  virtual bool Run(cv::Mat* im);
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
   float GenerateScale(const cv::Mat& im);
   int short_size_;
   int max_size_;
+};
+
+/*
+ * @brief
+ * This class execute resize by long operation on image matrix. At first, it resizes
+ * the long side of image matrix to specified length. Accordingly, the short side
+ * will be resized in the same proportion.
+ * */
+class ResizeByLong : public Transform {
+ public:
+  virtual void Init(const YAML::Node& item) {
+    long_size_ = item["long_size"].as<int>();
+  }
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
+
+ private:
+  int long_size_;
+};
+
+/*
+ * @brief
+ * This class execute resize operation on image matrix. It resizes width and height
+ * to specified length.
+ * */
+class Resize : public Transform {
+ public:
+  virtual void Init(const YAML::Node& item) {
+    if (item["interp"].IsDefined()) {
+      interp_ = item["interp"].as<std::string>();
+    }
+    if (item["target_size"].IsScalar()) {
+      height_ = item["target_size"].as<int>();
+      width_ = item["target_size"].as<int>();
+    } else if (item["target_size"].IsSequence()) {
+      std::vector<int> target_size = item["target_size"].as<std::vector<int>>();
+      width_ = target_size[0];
+      height_ = target_size[1];
+    }
+    if (height_ <= 0 || width_ <= 0) {
+      std::cerr << "[Resize] target_size should greater than 0" << std::endl;
+      exit(-1);
+    }
+  }
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
+
+ private:
+  int height_;
+  int width_;
+  std::string interp_;
 };
 
 
@@ -83,18 +159,53 @@ class CenterCrop : public Transform {
       height_ = crop_size[1];
     }
   }
-  virtual bool Run(cv::Mat* im);
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
   int height_;
   int width_;
 };
 
+
+/*
+ * @brief
+ * This class execute padding operation on image matrix. It makes border on edge
+ * of image matrix.
+ * */
+class Padding : public Transform {
+ public:
+  virtual void Init(const YAML::Node& item) {
+    if (item["coarsest_stride"].IsDefined()) {
+      coarsest_stride_ = item["coarsest_stride"].as<int>();
+      if (coarsest_stride_ < 1) {
+        std::cerr << "[Padding] coarest_stride should greater than 0"
+                  << std::endl;
+        exit(-1);
+      }
+    }
+    if (item["target_size"].IsDefined()) {
+      if (item["target_size"].IsScalar()) {
+        width_ = item["target_size"].as<int>();
+        height_ = item["target_size"].as<int>();
+      } else if (item["target_size"].IsSequence()) {
+        width_ = item["target_size"].as<std::vector<int>>()[0];
+        height_ = item["target_size"].as<std::vector<int>>()[1];
+      }
+    }
+  }
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
+
+ private:
+  int coarsest_stride_ = -1;
+  int width_ = 0;
+  int height_ = 0;
+};
+
 class Transforms {
  public:
   void Init(const YAML::Node& node, bool to_rgb = true);
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
-  bool Run(cv::Mat* im, Blob::Ptr blob);
+  bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
   std::vector<std::shared_ptr<Transform>> transforms_;
