@@ -11,14 +11,14 @@ pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.Resize(target_size=512),
-    transforms.RandomPaddingCrop(crop_size=500),
-    transforms.Normalize()
+    transforms.RandomHorizontalFlip(), transforms.ResizeRangeScaling(),
+    transforms.RandomPaddingCrop(crop_size=512), transforms.Normalize()
 ])
 
-eval_transforms = transforms.Compose(
-    [transforms.Resize(512), transforms.Normalize()])
+eval_transforms = transforms.Compose([
+    transforms.ResizeByLong(long_size=512), transforms.Padding(target_size=512),
+    transforms.Normalize()
+])
 
 # 定义训练和验证所用的数据集
 train_dataset = pdx.datasets.SegDataset(
@@ -35,16 +35,16 @@ eval_dataset = pdx.datasets.SegDataset(
 
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标
-# VisualDL启动方式: visualdl --logdir output/deeplab/vdl_log --port 8001
+# VisualDL启动方式: visualdl --logdir output/unet/vdl_log --port 8001
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 num_classes = len(train_dataset.labels)
-model = pdx.seg.DeepLabv3p(num_classes=num_classes)
+model = pdx.seg.UNet(num_classes=num_classes)
 model.train(
-    num_epochs=40,
+    num_epochs=20,
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
     learning_rate=0.01,
-    save_dir='output/deeplab',
+    save_dir='output/unet',
     use_vdl=True)

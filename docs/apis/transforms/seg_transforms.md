@@ -11,64 +11,6 @@ paddlex.seg.transforms.Compose(transforms)
 ### 参数
 * **transforms** (list): 数据预处理/数据增强列表。
 
-## ComposedSegTransforms
-```python
-paddlex.det.transforms.ComposedSegTransforms(mode, train_crop_shape=[769, 769], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-```
-语义分割DeepLab和UNet模型中已经组合好的数据处理流程，开发者可以直接使用ComposedSegTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomHorizontalFlip](#RandomHorizontalFlip)、[ResizeStepScaling](#ResizeStepScaling)、[RandomPaddingCrop](#RandomPaddingCrop)3种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
-ComposedSegTransforms共包括以下几个步骤：
- > 训练阶段：
-> > 1. 随机对图像以0.5的概率水平翻转
-> > 2. 按不同的比例随机Resize原图
-> > 3. 从原图中随机crop出大小为train_crop_size大小的子图，如若crop出来的图小于train_crop_size，则会将图padding到对应大小
-> > 4. 图像归一化
- > 预测阶段：
-> > 1. 图像归一化
-
-### 参数
-* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
-* **train_crop_size** (list): 训练过程中随机Crop和Resize后（验证或预测过程中不需配置该参数，自动使用原图大小），输入到模型中图像的大小（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)， 默认[769, 769]
-* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
-
-### 添加数据增强方式
-```python
-ComposedSegTransforms.add_augmenters(augmenters)
-```
-> **参数**
-> * **augmenters**(list): 数据增强方式列表
-
-#### 使用示例
-```
-import paddlex as pdx
-from paddlex.seg import transforms
-train_transforms = transforms.ComposedSegTransforms(mode='train', train_crop_size=[512, 512])
-eval_transforms = transforms.ComposedSegTransforms(mode='eval')
-
-# 添加数据增强
-import imgaug.augmenters as iaa
-train_transforms.add_augmenters([
-			transforms.RandomDistort(),
-			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
-])
-```
-上面代码等价于
-```
-import paddlex as pdx
-from paddlex.det import transforms
-train_transforms = transforms.Composed([
-		transforms.RandomDistort(),
-		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
-		# 上面2行为通过add_augmenters额外添加的数据增强方式
-        transforms.RandomHorizontalFlip(prob=0.5),
-        transforms.ResizeStepScaling(),
-        transforms.PaddingCrop(crop_size=[512, 512]),
-        transforms.Normalize()
-])
-eval_transforms = transforms.Composed([
-        transforms.Normalize()
-])
-```
 
 ## RandomHorizontalFlip
 ```python
@@ -224,3 +166,65 @@ paddlex.seg.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, 
 * **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
 * **hue_range** (int): 色调因子的范围。默认为18。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+
+## ComposedSegTransforms
+```python
+paddlex.det.transforms.ComposedSegTransforms(mode, min_max_size=[400, 600], train_crop_shape=[769, 769], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
+```
+语义分割DeepLab和UNet模型中已经组合好的数据处理流程，开发者可以直接使用ComposedSegTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomHorizontalFlip](#RandomHorizontalFlip)、[ResizeStepScaling](#ResizeStepScaling)、[RandomPaddingCrop](#RandomPaddingCrop)3种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
+ComposedSegTransforms共包括以下几个步骤：
+ > 训练阶段：
+> > 1. 随机对图像以0.5的概率水平翻转，若random_horizontal_flip为False，则跳过此步骤
+> > 2. 按不同的比例随机Resize原图, 处理方式参考[paddlex.seg.transforms.ResizeRangeScaling](#resizerangescaling)。若min_max_size为None，则跳过此步骤
+> > 3. 从原图中随机crop出大小为train_crop_size大小的子图，如若crop出来的图小于train_crop_size，则会将图padding到对应大小
+> > 4. 图像归一化
+ > 预测阶段：
+> > 1. 将图像的最长边resize至(min_max_size[0] + min_max_size[1])//2, 短边按比例resize。若min_max_size为None，则跳过此步骤
+> > 1. 图像归一化
+
+### 参数
+* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
+* **min_max_size**(list): 用于对图像进行resize，具体作用参见上述步骤。
+* **train_crop_size** (list): 训练过程中随机裁剪原图用于训练，具体作用参见上述步骤。此参数仅在mode为`train`时生效。
+* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
+* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
+* **random_horizontal_flip**(bool): 数据增强，是否随机水平翻转图像，此参数仅在mode为`train`时生效。
+
+### 添加数据增强方式
+```python
+ComposedSegTransforms.add_augmenters(augmenters)
+```
+> **参数**
+> * **augmenters**(list): 数据增强方式列表
+
+#### 使用示例
+```
+import paddlex as pdx
+from paddlex.seg import transforms
+train_transforms = transforms.ComposedSegTransforms(mode='train', train_crop_size=[512, 512])
+eval_transforms = transforms.ComposedSegTransforms(mode='eval')
+
+# 添加数据增强
+import imgaug.augmenters as iaa
+train_transforms.add_augmenters([
+			transforms.RandomDistort(),
+			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
+])
+```
+上面代码等价于
+```
+import paddlex as pdx
+from paddlex.det import transforms
+train_transforms = transforms.Composed([
+		transforms.RandomDistort(),
+		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
+		# 上面2行为通过add_augmenters额外添加的数据增强方式
+        transforms.RandomHorizontalFlip(prob=0.5),
+        transforms.ResizeStepScaling(),
+        transforms.PaddingCrop(crop_size=[512, 512]),
+        transforms.Normalize()
+])
+eval_transforms = transforms.Composed([
+        transforms.Normalize()
+])
+```

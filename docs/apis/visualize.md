@@ -10,7 +10,7 @@ paddlex.det.visualize(image, result, threshold=0.5, save_dir='./')
 将目标检测/实例分割模型预测得到的Box框和Mask在原图上进行可视化。
 
 ### 参数
-> * **image** (str): 原图文件路径。  
+> * **image** (str|np.ndarray): 原图文件路径或numpy数组(HWC排列，BGR格式)。  
 > * **result** (str): 模型预测结果。
 > * **threshold**(float): score阈值，将Box置信度低于该阈值的框过滤不进行可视化。默认0.5
 > * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。
@@ -32,7 +32,7 @@ paddlex.seg.visualize(image, result, weight=0.6, save_dir='./')
 将语义分割模型预测得到的Mask在原图上进行可视化。
 
 ### 参数
-> * **image** (str): 原图文件路径。  
+> * **image** (str|np.ndarray): 原图文件路径或numpy数组(HWC排列，BGR格式)。  
 > * **result** (str): 模型预测结果。
 > * **weight**(float): mask可视化结果与原图权重因子，weight表示原图的权重。默认0.6。
 > * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。

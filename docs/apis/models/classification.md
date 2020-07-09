@@ -69,7 +69,7 @@ predict(self, img_file, transforms=None, topk=5)
 
 > **参数**
 >
-> > - **img_file** (str): 预测图像路径。
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.cls.transforms): 数据预处理操作。
 > > - **topk** (int): 预测时前k个最大值。
 

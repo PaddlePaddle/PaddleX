@@ -25,19 +25,19 @@ tar xzvf vegetables_cls.tar.gz
 <a name="定义训练验证图像处理流程transforms"></a>
 **3. 定义训练/验证图像处理流程transforms**  
 
-使用PaddleX内置的分类模型训练图像处理流程`ComposedClsTransforms`，点击查看[API文档说明](apis/transforms/classification.html#composedclstransforms)。`ComposedClsTransforms`内置`RandomHorizontalFlip`图像增强，用户也可通过`add_augmenters`函数，为训练过程添加更多数据增强操作，目前分类过程支持多程数据增强操作，详情查阅[数据增强文档](apis/transforms/data_augmentations.md)
+由于训练时数据增强操作的加入，因此模型在训练和验证过程中，数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#RandomCrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#RandomHorizontalFlip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
 ```
 from paddlex.cls import transforms
-train_transforms = transforms.ComposedClsTransforms(
-                            mode='train',
-                            crop_size=[224, 224])
-eval_transforms = transforms.ComposedClsTransforms(
-                            mode='eval',
-                            crop_size=[224, 224])
-```
-通过`add_augmenters`添加更多训练过程中的数据增强操作，例如
-```
-train_transforms.add_augmenters([transforms.RandomDistort()])
+train_transforms = transforms.Compose([
+    transforms.RandomCrop(crop_size=224),
+    transforms.RandomHorizontalFlip(),
+    transforms.Normalize()
+])
+eval_transforms = transforms.Compose([
+    transforms.ResizeByShort(short_size=256),
+    transforms.CenterCrop(crop_size=224),
+    transforms.Normalize()
+])
 ```
 
 <a name="定义dataset加载图像分类数据集"></a>

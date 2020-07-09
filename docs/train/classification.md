@@ -6,18 +6,21 @@ PaddleX共提供了20+的图像分类模型，包括基于大规模数据训练�
 
 | 模型               | Top1精度 | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
 | :----------------  | :------- | :------- | :---------  | :---------  |     |
-| ResNet50_vd_ssld   |  97.5%   |   22M    | 10ms        |   200ms     |    |
-| ResNet101_vd_ssld  |   |    |       |     |     |
 | MobileNetV3_small_ssld |    |    |     |   |     |
-| MobileNetV3_large_ssld |    |   |     |   |    |
 | MobileNetV2        |   |    |    |   |     |
 | ShuffleNetV2     |   |    |    |   |     |
 | AlexNet |    |      |      |    |     |
+| ResNet50_vd_ssld   |  97.5%   |   22M    | 10ms        |   200ms     |    |
+
+更多图像分类模型，可查阅PaddleX模型库和API使用文档。
+
+在选取分类模型时，一般模型大小越大，表示模型的拟合能力越强，但并非越大训练效果越佳。需要用户根据自己的数据集来评估，一般数据样本较少时，MobileNetV3_small_ssld已经可以满足大部分需求。
 
 
-将对应模型的训练代码保存到本地后，即可直接训练，训练代码会自动下载训练数据开始训练，如保存为`resnet50_vd_ssld.py`，如下命令即可开始训练
+
+点击上述表格模型名，将对应模型的训练代码保存到本地后，即可直接训练，训练代码会自动下载训练数据开始训练，如保存为`mobilenetv3_small_ssld.py`，如下命令即可开始训练
 ```
-python resnet50_vd_ssld.py
+python mobilenetv3_small_ssld.py
 ```
 
 - 针对自己的机器环境和数据，调整训练参数？先了解下PaddleX中训练参数。[——>>传送门]()
