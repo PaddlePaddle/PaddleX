@@ -111,8 +111,7 @@ class Predictor:
         """ 对图像做预处理
 
             Args:
-                image(str|np.ndarray): 图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-                    或者是对数（元）组中的图像同时进行预测，数组中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
+                image(list|tuple): 数组中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
                     且类型为float32且为BGR格式的数组。
         """
         res = dict()
@@ -161,6 +160,16 @@ class Predictor:
                     batch_size=1,
                     im_shape=None,
                     im_info=None):
+        """ 对预测结果做后处理
+
+            Args:
+                results (list): 预测结果
+                topk (int): 分类预测时前k个最大值
+                batch_size (int): 预测时图像批量大小
+                im_shape (list): MaskRCNN的图像输入大小
+                im_info (list)：RCNN系列和分割网络的原图大小
+        """
+
         def offset_to_lengths(lod):
             offset = lod[0]
             lengths = [
@@ -219,9 +228,7 @@ class Predictor:
         """ 图片预测
 
             Args:
-                image(str|np.ndarray|list|tuple): 图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-                    或者是对数（元）组中的图像同时进行预测，数组中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
-                    且类型为float32且为BGR格式的数组。
+                image(str|np.ndarray): 图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
                 topk(int): 分类预测时使用，表示预测前topk的结果
         """
         preprocessed_input = self.preprocess([image])
@@ -243,9 +250,10 @@ class Predictor:
         """ 图片预测
 
             Args:
-                image(str|np.ndarray|list|tuple): 图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-                    或者是对数（元）组中的图像同时进行预测，数组中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
-                    且类型为float32且为BGR格式的数组。
+                image_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                    也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+                thread_num (int): 并发执行各图像预处理时的线程数。
+
                 topk(int): 分类预测时使用，表示预测前topk的结果
         """
         preprocessed_input = self.preprocess(image_list)
