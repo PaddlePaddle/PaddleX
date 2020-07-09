@@ -10,7 +10,7 @@ PaddleX支持图像分类、目标检测、实例分割和语义分割四大视�
 | 标注工具    | 图像分类 | 目标检测 | 实例分割 | 语义分割 | 安装                                             |
 | :---------  | :------- | :------ | :------  | :------- | :----------------------------------------------- |
 | Labelme     | -        | √        | √        | √        | pip install labelme （本地数据标注）                              |
-| 精灵标注    | √        | √        | √        | √        | [官网下载](http://www.jinglingbiaozhu.com/) （本地数据标注）     |
+| 精灵标注    | √        | -        | √        | √        | [官网下载](http://www.jinglingbiaozhu.com/) （本地数据标注）     |
 | EasyData    | √        | √        | √        | √        | [Web页面标注](https://ai.baidu.com/easydata/) （需上传数据进行标注)   |
 
 数据标注完成后，参照如下流程，将标注数据转为可用PaddleX模型训练的数据组织格式。
@@ -23,9 +23,10 @@ PaddleX支持图像分类、目标检测、实例分割和语义分割四大视�
 > 2. 将所有的标注json文件放在同一个目录下，如`annotations`目录  
 > 3. 使用如下命令进行转换
 ```
-paddlex --data_conversion --from labelme --to PascalVOC --pics ./pics --annotations ./annotations --save_dir ./converted_dataset_dir
+paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annotations ./annotations --save_dir ./converted_dataset_dir
 ```
-> `--from`表示数据标注来源，支持`labelme`、`jingling`和`easydata`（分别表示数据来源于LabelMe，精灵标注助手和EasyData）  
-> `--to`表示数据需要转换成为的格式，支持`PascalVOC`（目标检测），`MSCOCO`（实例分割，也可用于目标检测）和`SEG`(语义分割)  
+> `--source`表示数据标注来源，支持`labelme`、`jingling`和`easydata`（分别表示数据来源于LabelMe，精灵标注助手和EasyData）  
+> `--to`表示数据需要转换成为的格式，支持`ImageNet`（图像分类）、`PascalVOC`（目标检测），`MSCOCO`（实例分割，也可用于目标检测）和`SEG`(语义分割)  
 > `--pics`指定原图所在的目录路径  
 > `--annotations`指定标注文件所在的目录路径
+> 【备注】由于标注精灵可以标注PascalVOC格式的数据集，所以此处不再支持标注精灵到PascalVOC格式数据集的转换
