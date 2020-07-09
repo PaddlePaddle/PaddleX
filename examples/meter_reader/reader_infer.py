@@ -188,9 +188,9 @@ class MeterReader:
                 thread_num=seg_thread_num)
             if use_erode:
                 kernel = np.ones((erode_kernel, erode_kernel), np.uint8)
-                for i in range(len(seg_results)):
-                    results[i]['label_map'] = cv2.erode(
-                        seg_results[i]['label_map'], kernel)
+                for i in range(len(result)):
+                    result[i]['label_map'] = cv2.erode(
+                        result[i]['label_map'], kernel)
             seg_results.extend(result)
 
         results = list()
@@ -322,7 +322,7 @@ def infer(args):
                 continue
             im_file = osp.join(args.image_dir, im_file)
             image_lists.append(im_file)
-
+    
     meter_reader = MeterReader(args.detector_dir, args.segmenter_dir)
     if len(image_lists) > 0:
         for im_file in image_lists:

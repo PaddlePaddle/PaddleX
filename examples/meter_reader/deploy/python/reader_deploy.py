@@ -189,8 +189,8 @@ class MeterReader:
             if use_erode:
                 kernel = np.ones((erode_kernel, erode_kernel), np.uint8)
                 for i in range(len(seg_results)):
-                    results[i]['label_map'] = cv2.erode(
-                        seg_results[i]['label_map'], kernel)
+                    result[i]['label_map'] = cv2.erode(
+                        result[i]['label_map'], kernel)
             seg_results.extend(result)
 
         results = list()

@@ -6,7 +6,7 @@ import paddlex as pdx
 from paddlex.seg import transforms
 
 # 下载和解压表盘分割数据集
-meter_seg_dataset = 'https://bj.bcebos.com/paddlex/datasets/meter_seg.tar.gz'
+meter_seg_dataset = 'https://bj.bcebos.com/paddlex/meterreader/datasets/meter_seg.tar.gz'
 pdx.utils.download_and_decompress(meter_seg_dataset, path='./')
 
 # 定义训练和验证时的transforms
@@ -43,8 +43,7 @@ eval_dataset = pdx.datasets.SegDataset(
 # API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#deeplabv3p
 model = pdx.seg.DeepLabv3p(
     num_classes=len(train_dataset.labels),
-    backbone='Xception65',
-    aspp_with_sep_conv=False)
+    backbone='Xception65')
 model.train(
     num_epochs=20,
     train_dataset=train_dataset,
