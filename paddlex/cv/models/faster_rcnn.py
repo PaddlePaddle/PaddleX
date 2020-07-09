@@ -312,8 +312,11 @@ class FasterRCNN(BaseAPI):
                 eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
                 预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=eval_dataset.transforms,
+            mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
