@@ -28,7 +28,7 @@ PaddleX提供一个轻量级的模型加密部署方案，通过PaddleX内置的
 >
 > 3）实现AES算法接口，借助OpenSSL提供的EVP接口，在EVP接口中指定算法类型，算法使用对称加解密算法中的AES，加解密模式使用AES-GCM， 密钥长度为256位，AES-GCM的实现可以参考官方提供的例子自己进行封装接口：[AES-GCM实现](https://wiki.openssl.org/index.php/EVP_Authenticated_Encryption_and_Decryption)。
 >
-> 4）利用OpenSSL库实现SHA256摘要算法，这部分下面有用（可选）。关于SHA256的hash计算可以参考OpenSSL提供的example：[OpenSSL 信息摘要例子](https://wiki.openssl.org/index.php/EVP_Message_Digests)
+> 4）利用OpenSSL库实现SHA256摘要算法，这部分下面有用（可选）。关于SHA256的hash计算可以参考OpenSSL提供的example：[OpenSSL 信息摘要例子](https://wiki.openssl.org/index.php/EVP_Message_Digests)。
 >
 > 5）在模型加密环节直接对model文件和params文件的数据内容进行加密后保存到新的文件，为了新的文件能够被区分和可迭代，除了加密后的数据外还添加了头部信息，比如为了判断该文件类型使用固定的魔数作为文件的开头；为了便于后面需求迭代写入版本号以示区别；为了能够在解密时判断是否采用了相同的密钥将加密时的密钥进行SHA256计算后存储；这三部分构成了目前加密后文件的头部信息。加密后的文件包含头部信息 + 密文信息。
 >
@@ -80,7 +80,7 @@ Windows平台:
 .\paddlex-encryption\tool\paddlex_encrypt_tool.exe -model_dir D:\projects\paddlex_inference_model -save_dir D:\projects\paddlex_encrypted_model
 ```
 
-`-model_dir`用于指定inference模型路径（参考[导出inference模型](python.html#inference)将模型导出为inference格式模型），可使用[导出小度熊识别模型](python.html#inference)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
+`-model_dir`用于指定inference模型路径（参考[导出inference模型](../export_model.md)将模型导出为inference格式模型），可使用[导出小度熊识别模型](../export_model.md)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
 
 ![](../images/encrypt.png)
 
@@ -106,7 +106,7 @@ Windows平台:
 
 ### 样例
 
-可使用[导出小度熊识别模型](python.html#inference)中的测试图片进行预测。
+可使用[导出小度熊识别模型](../export_model.md)中的测试图片进行预测。
 
 #### 样例一：
 
@@ -137,7 +137,7 @@ Windows平台:
 
 ### 样例
 
-可使用[导出小度熊识别模型](python.html#inference)中的测试图片进行预测。
+可使用[导出小度熊识别模型](../export_model.md)中的测试图片进行预测。
 
 #### 样例一：
 
