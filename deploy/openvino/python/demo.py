@@ -49,7 +49,7 @@ def arg_parser():
 
 
     parser.add_argument(
-        "--cfg_dir",
+        "--cfg_file",
         "-c",
         type=str,
         default=None,
@@ -63,7 +63,7 @@ def main():
     parser = arg_parser()
     args = parser.parse_args()
     model_xml = args.model_dir
-    model_yaml = args.cfg_dir
+    model_yaml = args.cfg_file
 
     #model init
     if("CPU" not in args.device):
