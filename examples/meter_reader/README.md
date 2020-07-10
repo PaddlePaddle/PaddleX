@@ -28,13 +28,13 @@
 
 | 表计测试图片                                                 | 表计检测数据集                                               | 指针和刻度分割数据集                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [meter_test](https://bj.bcebos.com/paddlex/meterreader/datasets/meter_test.tar.gz) | [meter_det](https://bj.bcebos.com/paddlex/meterreader/datasets/meter_det.tar.gz) | [meter_seg](https://bj.bcebos.com/paddlex/meterreader/datasets/meter_seg.tar.gz) |
+| [meter_test](https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_test.tar.gz) | [meter_det](https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_det.tar.gz) | [meter_seg](https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz) |
 
 本案例开放了预先训练好的检测模型和语义分割模型，可以使用这些模型快速体验表计读数全流程，也可以直接将这些模型部署在服务器端或jetson嵌入式设备上进行推理预测。
 
 | 表计检测模型                                                 | 指针和刻度分割模型                                           |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [meter_det_inference_model](https://bj.bcebos.com/paddlex/meterreader/models/meter_det_inference_model.tar.gz) | [meter_seg_inference_model](https://bj.bcebos.com/paddlex/meterreader/models/meter_seg_inference_model.tar.gz) |
+| [meter_det_inference_model](https://bj.bcebos.com/paddlex/examples/meter_reader/models/meter_det_inference_model.tar.gz) | [meter_seg_inference_model](https://bj.bcebos.com/paddlex/examples/meter_reader/models/meter_seg_inference_model.tar.gz) |
 
 
 ## <h2 id="3">快速体验表盘读数</h2>
@@ -77,6 +77,7 @@ cd PaddleX/examples/meter_reader/
 | seg_batch_size | 分割的批量大小，默认为2 |
 | seg_thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
 | use_camera | 是否使用摄像头采集图片，默认为False |
+| camera_id | 摄像头设备ID，默认值为0 |
 | use_erode | 是否使用图像腐蚀对分割预测图进行细分，默认为False |
 | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
 
@@ -122,7 +123,7 @@ python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-2. 将`PaddleX\examples\meter_reader\deploy\cpp`下的`meter`文件夹和`CMakeList.txt`拷贝至`PaddleX\deploy\cpp`目录下，拷贝之前可以将`PaddleX\deploy\cpp`下原本的`CMakeList.txt`做好备份。
+2. 将`PaddleX\examples\meter_reader\deploy\cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX\deploy\cpp`目录下，拷贝之前可以将`PaddleX\deploy\cpp`下原本的`CMakeList.txt`做好备份。
 
 3. 按照[Windows平台部署](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/deploy_cpp/deploy_cpp_win_vs2019.md)中的Step2至Step4完成C++预测代码的编译。
 
@@ -132,7 +133,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
    cd PaddleX\deploy\cpp\out\build\x64-Release
    ```
 
-   预测程序为paddle_inference\meter.exe，其主要命令参数说明如下：
+   预测程序为paddle_inference\meter_reader.exe，其主要命令参数说明如下：
 
    | 参数    | 说明   |
    | ---- | ---- |
@@ -151,7 +152,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
    | camera_id | 摄像头设备ID，默认值为0 |
    | use_erode | 是否使用图像腐蚀对分割预测图进行去噪，支持值为0或1(默认值为1) |
    | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
-
+   | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
 
 5. 推理预测：
 
@@ -160,19 +161,19 @@ git clone https://github.com/PaddlePaddle/PaddleX
   * 使用未加密的模型对单张图片做预测
 
   ```shell
-  .\paddlex_inference\meter.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image=\path\to\meter_test\20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
+  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image=\path\to\meter_test\20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用未加密的模型对图像列表做预测
 
   ```shell
-  .\paddlex_inference\meter.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image_list=\path\to\meter_test\image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
+  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image_list=\path\to\meter_test\image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用未加密的模型开启摄像头做预测
 
   ```shell
-  .\paddlex_inference\meter.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
+  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用加密后的模型对单张图片做预测
@@ -180,7 +181,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
   如果未对模型进行加密，请参考[加密PaddleX模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/encryption.html#paddlex)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
 
   ```shell
-  .\paddlex_inference\meter.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
+  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
   ```
 
 ### Linux系统的jeton嵌入式设备安全部署
@@ -193,12 +194,12 @@ git clone https://github.com/PaddlePaddle/PaddleX
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-2. 将`PaddleX/examples/meter_readerdeploy/cpp`下的`meter`文件夹和`CMakeList.txt`拷贝至`PaddleX/deploy/cpp`目录下，拷贝之前可以将`PaddleX/deploy/cpp`下原本的`CMakeList.txt`做好备份。
+2. 将`PaddleX/examples/meter_reader/deploy/cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX/deploy/cpp`目录下，拷贝之前可以将`PaddleX/deploy/cpp`下原本的`CMakeList.txt`做好备份。
 
 3. 按照[Nvidia-Jetson开发板部署]()中的Step2至Step3完成C++预测代码的编译。
 
-4. 编译成功后，可执行程为`build/meter/detector`，其主要命令参数说明如下：
-	
+4. 编译成功后，可执行程为`build/meter_reader/meter_reader`，其主要命令参数说明如下：
+
   | 参数    | 说明   |
   | ---- | ---- |
   |  det_model_dir    | 表计检测模型路径     |
@@ -216,6 +217,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
   | camera_id | 摄像头设备ID，默认值为0 |
   | use_erode | 是否使用图像腐蚀对分割预测图进行细分，支持值为0或1(默认值为1) |
   | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
+  | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
 
 5. 推理预测：
 
@@ -224,19 +226,19 @@ git clone https://github.com/PaddlePaddle/PaddleX
   * 使用未加密的模型对单张图片做预测
 
   ```shell
-  ./build/meter/meter --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image=/path/to/meter_test/20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
+  ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image=/path/to/meter_test/20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用未加密的模型对图像列表做预测
 
   ```shell
-  ./build/meter/meter --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image_list=/path/to/image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
+  ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image_list=/path/to/image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用未加密的模型开启摄像头做预测
 
   ```shell
-  ./build/meter/meter --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
+  ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用加密后的模型对单张图片做预测
@@ -244,7 +246,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
   如果未对模型进行加密，请参考[加密PaddleX模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/encryption.html#paddlex)对模型进行加密。例如加密后的检测模型所在目录为`/path/to/encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`/path/to/encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
 
   ```shell
-  ./build/meter/meter --det_model_dir=/path/to/encrypted_det_inference_model --seg_model_dir=/path/to/encrypted_seg_inference_model --image=/path/to/test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
+  ./build/meter_reader/meter_reader --det_model_dir=/path/to/encrypted_det_inference_model --seg_model_dir=/path/to/encrypted_seg_inference_model --image=/path/to/test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
   ```
 
 

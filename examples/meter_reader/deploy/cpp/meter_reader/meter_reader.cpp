@@ -26,8 +26,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
-#include "meter/global.h"
-#include "meter/readvalue.h"
+#include "meter_reader/global.h"
+#include "meter_reader/postprocess.h"
 #include "include/paddlex/paddlex.h"
 #include "include/paddlex/visualize.h"
 
@@ -51,16 +51,31 @@ DEFINE_string(seg_key, "", "Segmenter model key of encryption");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
+DEFINE_double(score_threshold, 0.5, "Detected bbox whose score is lower than this threshlod is filtered");
 
 void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
              PaddleX::Model *seg_model, const std::string save_dir,
              const std::string image_path, const bool use_erode,
              const int erode_kernel, const int thread_num,
-             const int seg_batch_size) {
+             const int seg_batch_size, const double threshold) {
   PaddleX::DetResult det_result;
   det_model->predict(input_image, &det_result);
 
-  int meter_num = det_result.boxes.size();
+  PaddleX::DetResult filter_result;
+  int num_bboxes = det_result.boxes.size();
+  for (int i = 0; i < num_bboxes; ++i) {
+    double score = det_result.boxes[i].score;
+    if (score > threshold || score == threshold) {
+      PaddleX::Box box;
+      box.category_id = det_result.boxes[i].category_id;
+      box.category = det_result.boxes[i].category;
+      box.score = det_result.boxes[i].score;
+      box.coordinate = det_result.boxes[i].coordinate;
+      filter_result.boxes.push_back(std::move(box));
+    }
+  }
+
+  int meter_num = filter_result.boxes.size();
   if (!meter_num) {
       std::cout << "Don't find any meter." << std::endl;
       return;
@@ -74,10 +89,10 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
     int batch_thread_num = std::min(thread_num, im_vec_size - i);
     #pragma omp parallel for num_threads(batch_thread_num)
     for (int j = i; j < im_vec_size; ++j) {
-      int left = static_cast<int>(det_result.boxes[j].coordinate[0]);
-      int top = static_cast<int>(det_result.boxes[j].coordinate[1]);
-      int width = static_cast<int>(det_result.boxes[j].coordinate[2]);
-      int height = static_cast<int>(det_result.boxes[j].coordinate[3]);
+      int left = static_cast<int>(filter_result.boxes[j].coordinate[0]);
+      int top = static_cast<int>(filter_result.boxes[j].coordinate[1]);
+      int width = static_cast<int>(filter_result.boxes[j].coordinate[2]);
+      int height = static_cast<int>(filter_result.boxes[j].coordinate[3]);
       int right = left + width - 1;
       int bottom = top + height - 1;
 
@@ -142,10 +157,10 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
               << " -- result: " << result
               << " --" << std::endl;
 
-    int lx = static_cast<int>(det_result.boxes[i].coordinate[0]);
-    int ly = static_cast<int>(det_result.boxes[i].coordinate[1]);
-    int w = static_cast<int>(det_result.boxes[i].coordinate[2]);
-    int h = static_cast<int>(det_result.boxes[i].coordinate[3]);
+    int lx = static_cast<int>(filter_result.boxes[i].coordinate[0]);
+    int ly = static_cast<int>(filter_result.boxes[i].coordinate[1]);
+    int w = static_cast<int>(filter_result.boxes[i].coordinate[2]);
+    int h = static_cast<int>(filter_result.boxes[i].coordinate[3]);
 
     cv::Rect bounding_box = cv::Rect(lx, ly, w, h) &
         cv::Rect(0, 0, output_image.cols, output_image.rows);
@@ -223,7 +238,8 @@ int main(int argc, char **argv) {
       std::string ext_name = ".jpg";
       predict(im, &det_model, &seg_model, FLAGS_save_dir,
               std::to_string(imgs) + ext_name, FLAGS_use_erode,
-              FLAGS_erode_kernel, FLAGS_thread_num, FLAGS_seg_batch_size);
+              FLAGS_erode_kernel, FLAGS_thread_num,
+              FLAGS_seg_batch_size, FLAGS_score_threshold);
       imgs++;
       auto imread_duration = duration_cast<microseconds>(imread_end - start);
       total_imread_time_s += static_cast<double>(imread_duration.count()) *
@@ -254,7 +270,8 @@ int main(int argc, char **argv) {
 
         predict(im, &det_model, &seg_model, FLAGS_save_dir,
                 image_path, FLAGS_use_erode, FLAGS_erode_kernel,
-                FLAGS_thread_num, FLAGS_seg_batch_size);
+                FLAGS_thread_num, FLAGS_seg_batch_size,
+                FLAGS_score_threshold);
 
         auto imread_duration = duration_cast<microseconds>(imread_end - start);
         total_imread_time_s += static_cast<double>(imread_duration.count()) *
@@ -274,7 +291,8 @@ int main(int argc, char **argv) {
 
       predict(im, &det_model, &seg_model, FLAGS_save_dir,
               FLAGS_image, FLAGS_use_erode, FLAGS_erode_kernel,
-              FLAGS_thread_num, FLAGS_seg_batch_size);
+              FLAGS_thread_num, FLAGS_seg_batch_size,
+              FLAGS_score_threshold);
 
       auto imread_duration = duration_cast<microseconds>(imread_end - start);
       total_imread_time_s += static_cast<double>(imread_duration.count()) *

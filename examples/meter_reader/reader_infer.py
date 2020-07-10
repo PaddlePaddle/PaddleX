@@ -71,6 +71,12 @@ def parse_args():
         help='Whether use camera or not',
         action='store_true')
     parser.add_argument(
+        '--camera_id',
+        dest='camera_id',
+        type=int,
+        help='The camera id',
+        default=0)
+    parser.add_argument(
         '--use_erode',
         dest='use_erode',
         help='Whether erode the predicted lable map',
@@ -189,8 +195,8 @@ class MeterReader:
             if use_erode:
                 kernel = np.ones((erode_kernel, erode_kernel), np.uint8)
                 for i in range(len(result)):
-                    result[i]['label_map'] = cv2.erode(
-                        result[i]['label_map'], kernel)
+                    result[i]['label_map'] = cv2.erode(result[i]['label_map'],
+                                                       kernel)
             seg_results.extend(result)
 
         results = list()
@@ -322,7 +328,7 @@ def infer(args):
                 continue
             im_file = osp.join(args.image_dir, im_file)
             image_lists.append(im_file)
-    
+
     meter_reader = MeterReader(args.detector_dir, args.segmenter_dir)
     if len(image_lists) > 0:
         for im_file in image_lists:
@@ -330,7 +336,7 @@ def infer(args):
                                  args.erode_kernel, args.score_threshold,
                                  args.seg_batch_size, args.seg_thread_num)
     elif args.with_camera:
-        cap_video = cv2.VideoCapture(0)
+        cap_video = cv2.VideoCapture(args.camera_id)
         if not cap_video.isOpened():
             raise Exception(
                 "Error opening video stream, please make sure the camera is working"

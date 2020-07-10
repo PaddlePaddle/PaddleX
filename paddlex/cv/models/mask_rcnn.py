@@ -22,6 +22,7 @@ import paddlex.utils.logging as logging
 import paddlex
 import copy
 import os.path as osp
+from paddlex.cv.transforms import arrange_transforms
 from collections import OrderedDict
 from .faster_rcnn import FasterRCNN
 from .utils.detection_eval import eval_results, bbox2out, mask2out
@@ -396,10 +397,10 @@ class MaskRCNN(FasterRCNN):
 
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
+            for k, v in zip(lists(self.test_outputs.keys()), result)
         }
         res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [])
+            [[i] for i in range(len(images))]).astype('int32'), [])
         res['im_shape'] = (np.array(im_shape), [])
         preds = MaskRCNN._postprocess(res,
                                       len(images), self.num_classes,
@@ -446,12 +447,12 @@ class MaskRCNN(FasterRCNN):
 
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
+            for k, v in zip(list(self.test_outputs.keys()), result)
         }
         res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [])
+            [[i] for i in range(len(img_file_list))]).astype('int32'), [])
         res['im_shape'] = (np.array(im_shape), [])
         preds = MaskRCNN._postprocess(res,
-                                      len(images), self.num_classes,
+                                      len(img_file_list), self.num_classes,
                                       self.mask_head_resolution, self.labels)
         return preds

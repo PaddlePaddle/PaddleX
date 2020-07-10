@@ -144,7 +144,7 @@ class Predictor:
                 res['im_info'] = im_resize_info
                 res['im_shape'] = im_shape
         elif self.model_type == "segmenter":
-            im, im_imfo = DeepLabv3p._preprocess(
+            im, im_info = DeepLabv3p._preprocess(
                 image,
                 self.transforms,
                 self.model_type,

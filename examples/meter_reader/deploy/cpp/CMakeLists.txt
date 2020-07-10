@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(PaddleX CXX C)
 
-option(WITH_MKL        "Compile meter with MKL/OpenBlas support,defaultuseMKL."          ON)
-option(WITH_GPU        "Compile meter with GPU/CPU, default use CPU."                    ON)
-option(WITH_STATIC_LIB "Compile meter with static/shared library, default use static."   OFF)
-option(WITH_TENSORRT "Compile meter with TensorRT."   OFF)
-option(WITH_ENCRYPTION "Compile meter with encryption tool."   OFF)
+option(WITH_MKL        "Compile meter_reader with MKL/OpenBlas support,defaultuseMKL."          ON)
+option(WITH_GPU        "Compile meter_reader with GPU/CPU, default use CPU."                    ON)
+option(WITH_STATIC_LIB "Compile meter_reader with static/shared library, default use static."   OFF)
+option(WITH_TENSORRT "Compile meter_reader with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile meter_reader with encryption tool."   OFF)
 
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
@@ -16,7 +16,7 @@ SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/meter)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/meter_reader)
 else()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
@@ -275,12 +275,12 @@ add_library(paddlex_inference SHARED src/visualize src/transforms.cpp src/paddle
 ADD_DEPENDENCIES(paddlex_inference ext-yaml-cpp)
 target_link_libraries(paddlex_inference ${DEPS})
 
-add_executable(meter meter/meter.cpp meter/global.cpp meter/readvalue.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
-ADD_DEPENDENCIES(meter ext-yaml-cpp)
-target_link_libraries(meter ${DEPS})
+add_executable(meter_reader meter_reader/meter_reader.cpp meter_reader/global.cpp meter_reader/postprocess.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
+ADD_DEPENDENCIES(meter_reader ext-yaml-cpp)
+target_link_libraries(meter_reader ${DEPS})
 
 if (WIN32 AND WITH_MKL)
-    add_custom_command(TARGET meter POST_BUILD
+    add_custom_command(TARGET meter_reader POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./libiomp5md.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./mkldnn.dll
@@ -290,7 +290,7 @@ if (WIN32 AND WITH_MKL)
     )
     # for encryption
     if (EXISTS "${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll")
-        add_custom_command(TARGET meter POST_BUILD
+        add_custom_command(TARGET meter_reader POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
         )

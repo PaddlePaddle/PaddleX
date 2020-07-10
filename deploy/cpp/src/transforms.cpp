@@ -152,10 +152,8 @@ bool Resize::Run(cv::Mat* im, ImageBlob* data) {
   data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
 
-  if (im->rows != height_ || im->cols != width_) {
-    cv::resize(
-        *im, *im, cv::Size(width_, height_), 0, 0, interpolations[interp_]);
-  }
+  cv::resize(
+      *im, *im, cv::Size(width_, height_), 0, 0, interpolations[interp_]);
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   return true;

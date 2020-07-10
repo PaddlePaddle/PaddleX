@@ -23,7 +23,7 @@ import paddlex
 import os.path as osp
 import copy
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.cv.datasets import GenerateMiniBatch
+from paddlex.cv.datasets import generate_minibatch
 from .base import BaseAPI
 from collections import OrderedDict
 from .utils.detection_eval import eval_results, bbox2out
@@ -108,24 +108,6 @@ class FasterRCNN(BaseAPI):
                 feature_maps=4,
                 freeze_at=2)
         return backbone
-
-    def _generate_mini_batch(self, batch_data):
-        if len(batch_data) == 1:
-            return batch_data
-        width = [data[0].shape[2] for data in batch_data]
-        height = [data[0].shape[1] for data in batch_data]
-        if len(set(width)) == 1 and len(set(height)) == 1:
-            return batch_data
-        max_shape = np.array([data[0].shape for data in batch_data]).max(
-            axis=0)
-        padding_batch = []
-        for data in batch_data:
-            im_c, im_h, im_w = data[0].shape[:]
-            padding_im = np.zeros(
-                (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
-            padding_im[:, :im_h, :im_w] = data[0]
-            padding_batch.append((padding_im, ) + data[1:])
-        return padding_batch
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
@@ -404,7 +386,7 @@ class FasterRCNN(BaseAPI):
         batch_data = pool.map(transforms, images)
         pool.close()
         pool.join()
-        padding_batch = GenerateMiniBatch(batch_data)
+        padding_batch = generate_minibatch(batch_data)
         im = np.array([data[0] for data in padding_batch])
         im_resize_info = np.array([data[1] for data in padding_batch])
         im_shape = np.array([data[2] for data in padding_batch])
@@ -461,10 +443,10 @@ class FasterRCNN(BaseAPI):
 
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
+            for k, v in zip(list(self.test_outputs.keys()), result)
         }
         res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [])
+            [[i] for i in range(len(images))]).astype('int32'), [])
         preds = FasterRCNN._postprocess(res,
                                         len(images), self.num_classes,
                                         self.labels)
@@ -510,10 +492,10 @@ class FasterRCNN(BaseAPI):
 
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(test_outputs_keys), results)
+            for k, v in zip(list(self.test_outputs.keys()), result)
         }
         res['im_id'] = (np.array(
-            [[i] for i in range(batch_size)]).astype('int32'), [])
+            [[i] for i in range(len(img_file_list))]).astype('int32'), [])
         preds = FasterRCNN._postprocess(res,
                                         len(img_file_list), self.num_classes,
                                         self.labels)

@@ -23,7 +23,7 @@ import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.cv.datasets import GenerateMiniBatch
+from paddlex.cv.datasets import generate_minibatch
 from collections import OrderedDict
 from .base import BaseAPI
 
@@ -289,7 +289,7 @@ class BaseClassifier(BaseAPI):
         batch_data = pool.map(transforms, images)
         pool.close()
         pool.join()
-        padding_batch = GenerateMiniBatch(batch_data)
+        padding_batch = generate_minibatch(batch_data)
         im = np.array([data[0] for data in padding_batch])
 
         return im

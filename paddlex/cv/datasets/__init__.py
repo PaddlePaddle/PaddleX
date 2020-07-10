@@ -19,4 +19,4 @@ from .seg_dataset import SegDataset
 from .easydata_cls import EasyDataCls
 from .easydata_det import EasyDataDet
 from .easydata_seg import EasyDataSeg
-from .dataset import GenerateMiniBatch
+from .dataset import generate_minibatch

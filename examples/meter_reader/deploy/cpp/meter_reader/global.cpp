@@ -21,7 +21,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
-#include "meter/global.h"
+#include "meter_reader/global.h"
 
 std::vector<int> IMAGE_SHAPE = {1920, 1080};
 std::vector<int> RESULT_SHAPE = {1280, 720};

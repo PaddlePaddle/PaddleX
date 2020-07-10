@@ -24,8 +24,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
-#include "meter/global.h"
-#include "meter/readvalue.h"
+#include "meter_reader/global.h"
+#include "meter_reader/postprocess.h"
 
 using namespace std::chrono;  // NOLINT
 

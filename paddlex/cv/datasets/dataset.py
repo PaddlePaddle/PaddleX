@@ -114,7 +114,7 @@ def multithread_reader(mapper,
         while not isinstance(sample, EndSignal):
             batch_data.append(sample)
             if len(batch_data) == batch_size:
-                batch_data = GenerateMiniBatch(batch_data)
+                batch_data = generate_minibatch(batch_data)
                 yield batch_data
                 batch_data = []
             sample = out_queue.get()
@@ -126,11 +126,11 @@ def multithread_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = GenerateMiniBatch(batch_data)
+                    batch_data = generate_minibatch(batch_data)
                     yield batch_data
                     batch_data = []
         if not drop_last and len(batch_data) != 0:
-            batch_data = GenerateMiniBatch(batch_data)
+            batch_data = generate_minibatch(batch_data)
             yield batch_data
             batch_data = []
 
@@ -187,49 +187,62 @@ def multiprocess_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = GenerateMiniBatch(batch_data)
+                    batch_data = generate_minibatch(batch_data)
                     yield batch_data
                     batch_data = []
         if len(batch_data) != 0 and not drop_last:
-            batch_data = GenerateMiniBatch(batch_data)
+            batch_data = generate_minibatch(batch_data)
             yield batch_data
             batch_data = []
 
     return queue_reader
 
 
-def GenerateMiniBatch(batch_data):
+def generate_minibatch(batch_data, label_padding_value=255):
+    # if batch_size is 1, do not pad the image
     if len(batch_data) == 1:
         return batch_data
     width = [data[0].shape[2] for data in batch_data]
     height = [data[0].shape[1] for data in batch_data]
+    # if the sizes of images in a mini-batch are equal,
+    # do not pad the image
     if len(set(width)) == 1 and len(set(height)) == 1:
         return batch_data
     max_shape = np.array([data[0].shape for data in batch_data]).max(axis=0)
     padding_batch = []
     for data in batch_data:
+        # pad the image to a same size
         im_c, im_h, im_w = data[0].shape[:]
         padding_im = np.zeros(
             (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
         padding_im[:, :im_h, :im_w] = data[0]
         if len(data) > 1:
             if isinstance(data[1], np.ndarray):
+                # padding the image and label of segmentation
+                # during the training  and evaluating phase
                 padding_label = np.zeros(
-                    (1, max_shape[1], max_shape[2])).astype('int64')
+                    (1, max_shape[1], max_shape[2]
+                     )).astype('int64') + label_padding_value
                 _, label_h, label_w = data[1].shape
                 padding_label[:, :label_h, :label_w] = data[1]
                 padding_batch.append((padding_im, padding_label))
             elif len(data[1]) == 0 or isinstance(
                     data[1][0],
                     tuple) and data[1][0][0] in ['resize', 'padding']:
+                # padding the image and insert 'padding' into `im_info`
+                # of segmentation during the infering phase
                 if len(data[1]) == 0 or 'padding' not in [
                         data[1][i][0] for i in range(len(data[1]))
                 ]:
                     data[1].append(('padding', [im_h, im_w]))
                 padding_batch.append((padding_im, ) + tuple(data[1:]))
             else:
+                # padding the image of detection, or
+                # padding the image of classification during the trainging
+                # and evaluating phase
                 padding_batch.append((padding_im, ) + tuple(data[1:]))
         else:
+            # padding the image of classification during the infering phase
             padding_batch.append((padding_im))
     return padding_batch
 

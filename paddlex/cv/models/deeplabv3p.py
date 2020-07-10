@@ -23,7 +23,7 @@ import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.cv.datasets import GenerateMiniBatch
+from paddlex.cv.datasets import generate_minibatch
 from collections import OrderedDict
 from .base import BaseAPI
 from .utils.seg_eval import ConfusionMatrix
@@ -340,16 +340,7 @@ class DeepLabv3p(BaseAPI):
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
-
-            _, _, im_h, im_w = images.shape
-            labels = list()
-            for d in data:
-                padding_label = np.zeros(
-                    (1, im_h, im_w)).astype('int64') + self.ignore_index
-                _, label_h, label_w = d[1].shape
-                padding_label[:, :label_h, :label_w] = d[1]
-                labels.append(padding_label)
-            labels = np.array(labels)
+            labels = np.array([d[1] for d in data])
 
             num_samples = images.shape[0]
             if num_samples < batch_size:
@@ -398,7 +389,7 @@ class DeepLabv3p(BaseAPI):
         batch_data = pool.map(transforms, images)
         pool.close()
         pool.join()
-        padding_batch = GenerateMiniBatch(batch_data)
+        padding_batch = generate_minibatch(batch_data)
         im = np.array(
             [data[0] for data in padding_batch],
             dtype=padding_batch[0][0].dtype)

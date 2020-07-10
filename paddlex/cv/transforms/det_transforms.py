@@ -108,10 +108,11 @@ class Compose(DetTransform):
                 im = im_file
             else:
                 try:
-                    im = cv2.imread(im_file).astype('float32')
+                    im = cv2.imread(im_file)
                 except:
                     raise TypeError('Can\'t read The image file {}!'.format(
                         im_file))
+            im = im.astype('float32')
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(

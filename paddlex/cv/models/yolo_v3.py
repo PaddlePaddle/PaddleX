@@ -23,7 +23,7 @@ import paddlex.utils.logging as logging
 import paddlex
 import copy
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.cv.datasets import GenerateMiniBatch
+from paddlex.cv.datasets import generate_minibatch
 from .base import BaseAPI
 from collections import OrderedDict
 from .utils.detection_eval import eval_results, bbox2out
@@ -364,7 +364,7 @@ class YOLOv3(BaseAPI):
         batch_data = pool.map(transforms, images)
         pool.close()
         pool.join()
-        padding_batch = GenerateMiniBatch(batch_data)
+        padding_batch = generate_minibatch(batch_data)
         im = np.array(
             [data[0] for data in padding_batch],
             dtype=padding_batch[0][0].dtype)

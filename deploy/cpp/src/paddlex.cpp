@@ -599,20 +599,18 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
       inputs_.im_size_before_resize_.pop_back();
       auto resize_w = before_shape[0];
       auto resize_h = before_shape[1];
-      if (mask_label->rows != resize_h || mask_label->cols != resize_w) {
-        cv::resize(mask_label,
-                   mask_label,
-                   cv::Size(resize_h, resize_w),
-                   0,
-                   0,
-                   cv::INTER_NEAREST);
-        cv::resize(mask_score,
-                   mask_score,
-                   cv::Size(resize_h, resize_w),
-                   0,
-                   0,
-                   cv::INTER_NEAREST);
-      }
+      cv::resize(mask_label,
+                 mask_label,
+                 cv::Size(resize_h, resize_w),
+                 0,
+                 0,
+                 cv::INTER_NEAREST);
+      cv::resize(mask_score,
+                 mask_score,
+                 cv::Size(resize_h, resize_w),
+                 0,
+                 0,
+                 cv::INTER_LINEAR);
     }
     ++idx;
   }
