@@ -2,10 +2,16 @@
 
 本案例基于PaddleX实现对传统机械式指针表计的检测与自动读数功能，开放表计数据和预训练模型，并提供在windows系统的服务器端以及linux系统的jetson嵌入式设备上的部署指南。
 
-[toc]
+## 目录
+
+* [读数流程](#1)
+* [表计数据和预训练模型](#2)
+* [快速体验表盘读数](#3)
+* [推理部署](#4)
+* [模型训练](#5)
 
 
-## 读数流程
+## <h2 id="1">读数流程</h2>
 
 表计读数共分为三个步骤完成：第一步使用目标检测模型检测出图像中的表具，第二步使用语义分割模型将各表具的指针和刻度分割出来，第三步根据指针的相对位置和预知的量程计算出各表计的读数。
 
@@ -16,8 +22,7 @@
 * 读数计算后处理：首先，对语义分割的预测类别图进行图像腐蚀操作，以达到刻度细分的目的。然后把环形的表盘展开为矩形图像，根据图像中类别信息生成一维的刻度数组和一维的指针数组。接着计算刻度数组的均值，用均值对刻度数组进行二值化操作。最后定位出指针相对刻度的位置，根据刻度的根数判断表盘的类型以此获取表盘的量程，将指针相对位置与量程做乘积得到表盘的读数。
 
 
-
-## 表计数据和预训练模型
+## <h2 id="2">表计数据和预训练模型</h2>
 
 本案例开放了表计测试图片，用于体验表计读数的预测推理全流程。还开放了表计检测数据集、指针和刻度分割数据集，用户可以使用这些数据集重新训练模型。
 
@@ -32,7 +37,7 @@
 | [meter_det_inference_model](https://bj.bcebos.com/paddlex/meterreader/models/meter_det_inference_model.tar.gz) | [meter_seg_inference_model](https://bj.bcebos.com/paddlex/meterreader/models/meter_seg_inference_model.tar.gz) |
 
 
-## 快速体验表盘读数
+## <h2 id="3">快速体验表盘读数</h2>
 
 可以使用本案例提供的预训练模型快速体验表计读数的自动预测全流程。如果不需要预训练模型，可以跳转至小节`模型训练` 重新训练模型。
 
@@ -105,7 +110,7 @@ python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_
 python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --save_dir ./output --use_erode --use_camera
 ```
 
-## 推理部署
+## <h2 id="4">推理部署</h2>
 
 ### Windows系统的服务器端安全部署
 
@@ -128,7 +133,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
    ```
 
    预测程序为paddle_inference\meter.exe，其主要命令参数说明如下：
-   
+
    | 参数    | 说明   |
    | ---- | ---- |
    |  det_model_dir    | 表计检测模型路径     |
@@ -150,30 +155,30 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
 5. 推理预测：
 
-  用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[导出inference模型]()将模型导出为inference格式。
+  用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[导出inference模型](https://paddlex.readthedocs.io/zh_CN/latest/tutorials/deploy/deploy_server/deploy_python.html#inference)将模型导出为inference格式。
 
   * 使用未加密的模型对单张图片做预测
-  
+
   ```shell
   .\paddlex_inference\meter.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image=\path\to\meter_test\20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
   ```
-  
+
   * 使用未加密的模型对图像列表做预测
-  
+
   ```shell
   .\paddlex_inference\meter.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image_list=\path\to\meter_test\image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
   ```
-  
+
   * 使用未加密的模型开启摄像头做预测
-  
+
   ```shell
   .\paddlex_inference\meter.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
-  
+
   * 使用加密后的模型对单张图片做预测
-  
+
   如果未对模型进行加密，请参考[加密PaddleX模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/encryption.html#paddlex)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
-  
+
   ```shell
   .\paddlex_inference\meter.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
   ```
@@ -193,7 +198,8 @@ git clone https://github.com/PaddlePaddle/PaddleX
 3. 按照[Nvidia-Jetson开发板部署]()中的Step2至Step3完成C++预测代码的编译。
 
 4. 编译成功后，可执行程为`build/meter/detector`，其主要命令参数说明如下：
-	| 参数    | 说明   |
+	
+  | 参数    | 说明   |
   | ---- | ---- |
   |  det_model_dir    | 表计检测模型路径     |
   |	seg_model_dir		 | 指针和刻度分割模型路径|
@@ -210,36 +216,60 @@ git clone https://github.com/PaddlePaddle/PaddleX
   | camera_id | 摄像头设备ID，默认值为0 |
   | use_erode | 是否使用图像腐蚀对分割预测图进行细分，支持值为0或1(默认值为1) |
   | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
-  
+
 5. 推理预测：
 
   用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[导出inference模型]()将模型导出为inference格式。
 
   * 使用未加密的模型对单张图片做预测
-  
+
   ```shell
   ./build/meter/meter --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image=/path/to/meter_test/20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
   ```
-  
+
   * 使用未加密的模型对图像列表做预测
-  
+
   ```shell
   ./build/meter/meter --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image_list=/path/to/image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
   ```
-  
+
   * 使用未加密的模型开启摄像头做预测
-  
+
   ```shell
   ./build/meter/meter --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用加密后的模型对单张图片做预测
-  
+
   如果未对模型进行加密，请参考[加密PaddleX模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/encryption.html#paddlex)对模型进行加密。例如加密后的检测模型所在目录为`/path/to/encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`/path/to/encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
-  
+
   ```shell
   ./build/meter/meter --det_model_dir=/path/to/encrypted_det_inference_model --seg_model_dir=/path/to/encrypted_seg_inference_model --image=/path/to/test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
   ```
-## 模型训练
 
-表盘检测的训练代码为`PaddleX/examples/meter_reader/train_detection.py`，指针和刻度分割的训练代码为`PaddleX/examples/meter_reader/train_segmentation.py`，运行这些脚本可以训练本案例的检测模型和分割模型。如果不需要本案例的数据和模型参数，可更换数据，选择合适的模型并调整训练参数。
+
+## <h2 id="5">模型训练</h2>
+
+
+#### 前置依赖
+
+* Paddle paddle >= 1.8.0
+* Python >= 3.5
+* PaddleX >= 1.0.0
+
+安装的相关问题参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/latest/install.html)
+
+#### 训练
+
+* 表盘检测的训练
+```
+python3 /path/to/PaddleX/examples/meter_reader/train_detection.py
+```
+* 指针和刻度分割的训练
+
+```
+python3 /path/to/PaddleX/examples/meter_reader/train_segmentation.py
+
+```
+
+运行以上脚本可以训练本案例的检测模型和分割模型。如果不需要本案例的数据和模型参数，可更换数据，选择合适的模型并调整训练参数。

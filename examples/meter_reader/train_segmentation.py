@@ -24,14 +24,14 @@ eval_transforms = transforms.Compose([
 # API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/semantic_segmentation.html#segdataset
 train_dataset = pdx.datasets.SegDataset(
     data_dir='meter_seg/',
-    file_list='meter_paddleseg_414/train.txt',
-    label_list='meter_paddleseg_414/labels.txt',
+    file_list='meter_seg/train.txt',
+    label_list='meter_seg/labels.txt',
     transforms=train_transforms,
     shuffle=True)
 eval_dataset = pdx.datasets.SegDataset(
-    data_dir='meter_paddleseg_414/',
-    file_list='meter_paddleseg_414/val.txt',
-    label_list='meter_paddleseg_414/labels.txt',
+    data_dir='meter_seg/',
+    file_list='meter_seg/val.txt',
+    label_list='meter_seg/labels.txt',
     transforms=eval_transforms)
 
 # 初始化模型，并进行训练
