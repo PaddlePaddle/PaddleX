@@ -2,11 +2,21 @@
 
 本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读PaddleX的**使用教程**来了解更多模型任务的训练使用方式。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/439860)
 
-PaddleX的模型训练都分为以下几个步骤
-> 1.<a href="#定义训练验证图像处理流程transforms">定义训练/验证图像处理流程transforms</a>  
-> 2.<a href="#定义dataset加载图像分类数据集">定义dataset加载数据集</a>  
-> 3.<a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a>  
-> 4.<a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>  
+PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练代码开发！
+
+| 步骤 |                  |说明             |
+| :--- | :--------------- | :-------------- |
+| 第1步| <a href=#定义训练验证图像处理流程transforms>定义transforms</a>  | 用于定义模型训练、验证、预测过程中，<br>输入图像的预处理和数据增强操作 |
+| 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
+| 第3步| <a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
+
+> **注意**：不同模型的transforms、datasets和训练参数都有较大差异，更多模型训练，可直接根据文档教程获取更多模型的训练代码。[模型训练教程](train/index.html)
+
+PaddleX的其它用法
+
+- <a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>
+- [使用VisualDL查看训练过程中的指标变化]()
+
 
 <a name="安装PaddleX"></a>
 **1. 安装PaddleX**  
