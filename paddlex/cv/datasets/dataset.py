@@ -46,7 +46,7 @@ def is_valid(sample):
                 return False
             elif isinstance(s, np.ndarray) and s.size == 0:
                 return False
-            elif isinstance(s, collections.Sequence) and len(s) == 0:
+            elif isinstance(s, collections.abc.Sequence) and len(s) == 0:
                 return False
     return True
 
