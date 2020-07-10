@@ -22,6 +22,7 @@ import numpy as np
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -92,6 +93,8 @@ class VOCDetection(Dataset):
                     break
                 img_file, xml_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                xml_file = path_normalization(xml_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(xml_file):
@@ -106,8 +109,11 @@ class VOCDetection(Dataset):
                     ct = int(tree.find('id').text)
                     im_id = np.array([int(tree.find('id').text)])
                 pattern = re.compile('<object>', re.IGNORECASE)
-                obj_tag = pattern.findall(
-                    str(ET.tostringlist(tree.getroot())))[0][1:-1]
+                obj_match = pattern.findall(
+                    str(ET.tostringlist(tree.getroot())))
+                if len(obj_match) == 0:
+                    continue
+                obj_tag = obj_match[0][1:-1]
                 objs = tree.findall(obj_tag)
                 pattern = re.compile('<size>', re.IGNORECASE)
                 size_tag = pattern.findall(
