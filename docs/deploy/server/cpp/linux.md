@@ -17,18 +17,18 @@
 **说明**：其中`C++`预测代码在`/root/projects/PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
 
 
-### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
+### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
 
 PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.8版本，以下提供了多个不同版本的Paddle预测库:
 
 |  版本说明   | 预测库(1.8.2版本)  |
 |  ----  | ----  |
-| ubuntu14.04_cpu_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-avx-mkl/fluid_inference.tgz) |
-| ubuntu14.04_cpu_avx_openblas  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-avx-openblas/fluid_inference.tgz) |
-| ubuntu14.04_cpu_noavx_openblas  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-noavx-openblas/fluid_inference.tgz) |
-| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
-| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz ) |
-| ubuntu14.04_cuda10.1_cudnn7.6_avx_mkl_trt6  | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda10.1-cudnn7.6-avx-mkl-trt6%2Ffluid_inference.tgz) |
+| ubuntu14.04_cpu_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cpu_avx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-avx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cpu_noavx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-noavx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz ) |
+| ubuntu14.04_cuda10.1_cudnn7.6_avx_mkl_trt6  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda10.1-cudnn7.6-avx-mkl-trt6%2Ffluid_inference.tgz) |
 
 更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html)
 
@@ -114,7 +114,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 ### Step4: 预测及可视化
 
-**在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../python.html#inference)将模型导出为部署格式。**  
+**在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../../export_model.md)将模型导出为部署格式。**  
 
 编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
@@ -134,7 +134,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 ## 样例
 
-可使用[小度熊识别模型](../python.html#inference)中导出的`inference_model`和测试图片进行预测，导出到/root/projects，模型路径为/root/projects/inference_model。
+可使用[小度熊识别模型](../../export_model.md)中导出的`inference_model`和测试图片进行预测，导出到/root/projects，模型路径为/root/projects/inference_model。
 
 `样例一`：
 

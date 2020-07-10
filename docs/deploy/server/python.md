@@ -1,23 +1,8 @@
 # Python部署
 PaddleX已经集成了基于Python的高性能预测接口，在安装PaddleX后，可参照如下代码示例，进行预测。相关的接口文档可参考[paddlex.deploy](../../../apis/deploy.md)
 
-## 导出inference模型
-
-在服务端部署的模型需要首先将模型导出为inference格式模型，导出的模型将包括`__model__`、`__params__`和`model.yml`三个文名，分别为模型的网络结构，模型权重和模型的配置文件（包括数据预处理参数等等）。在安装完PaddleX后，在命令行终端使用如下命令导出模型到当前目录`inferece_model`下。
-> 可直接下载小度熊分拣模型测试本文档的流程[xiaoduxiong_epoch_12.tar.gz](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)
-
-```
-paddlex --export_inference --model_dir=./xiaoduxiong_epoch_12 --save_dir=./inference_model
-```
-
-使用TensorRT预测时，需指定模型的图像输入shape:[w,h]。
-**注**：
-- 分类模型请保持于训练时输入的shape一致。
-- 指定[w,h]时，w和h中间逗号隔开，不允许存在空格等其他字符
-
-```
-paddlex --export_inference --model_dir=./xiaoduxiong_epoch_12 --save_dir=./inference_model --fixed_input_shape=[640,960]
-```
+## 导出预测模型
+可参考[模型导出](../export_model.md)将模型导出为inference格式的模型。
 
 ## 预测部署
 **注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](../upgrade_version.md)对模型版本进行升级。**
