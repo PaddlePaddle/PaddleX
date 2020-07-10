@@ -116,14 +116,14 @@ pdx.slim.visualize(model, 'mobilenetv2.sensitivities', save_dir='./')
 
 ## LIME可解释性结果可视化
 ```
-paddlex.interpret.lime(img_file, 
-                       model, 
-                       num_samples=3000, 
+paddlex.interpret.lime(img_file,
+                       model,
+                       num_samples=3000,
                        batch_size=50,
                        save_dir='./')
 ```
 使用LIME算法将模型预测结果的可解释性可视化。  
-LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME的思想是以输入样本为中心，在其附近的空间中进行随机采样，每个采样通过原模型得到新的输出，这样得到一系列的输入和对应的输出，LIME用一个简单的、可解释的模型（比如线性回归模型）来拟合这个映射关系，得到每个输入维度的权重，以此来解释模型。    
+LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME的思想是以输入样本为中心，在其附近的空间中进行随机采样，每个采样通过原模型得到新的输出，这样得到一系列的输入和对应的输出，LIME用一个简单的、可解释的模型（比如线性回归模型）来拟合这个映射关系，得到每个输入维度的权重，以此来解释模型。  
 
 **注意：** 可解释性结果可视化目前只支持分类模型。
 
@@ -132,7 +132,7 @@ LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME
 >* **model** (paddlex.cv.models): paddlex中的模型。
 >* **num_samples** (int): LIME用于学习线性模型的采样数，默认为3000。
 >* **batch_size** (int): 预测数据batch大小，默认为50。
->* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。 
+>* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。
 
 
 ### 使用示例
@@ -141,10 +141,10 @@ LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME
 
 ## NormLIME可解释性结果可视化
 ```
-paddlex.interpret.normlime(img_file, 
-                           model, 
+paddlex.interpret.normlime(img_file,
+                           model,
                            dataset=None,
-                           num_samples=3000, 
+                           num_samples=3000,
                            batch_size=50,
                            save_dir='./',
                            normlime_weights_file=None)
@@ -167,3 +167,20 @@ NormLIME是利用一定数量的样本来出一个全局的解释。由于NormLI
 ### 使用示例
 > 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)。
 
+
+## 数据预处理/增强过程可视化
+```
+paddlex.transforms.visualize(dataset,
+                             img_count=3,
+                             save_dir='vdl_output')
+```
+对数据预处理/增强中间结果进行可视化。
+可使用VisualDL查看中间结果：
+1. VisualDL启动方式: visualdl --logdir vdl_output --port 8001
+2. 浏览器打开 https://0.0.0.0:8001即可，
+    其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+
+### 参数
+>* **dataset** (paddlex.datasets): 数据集读取器。
+>* **img_count** (int): 需要进行数据预处理/增强的图像数目。默认为3。
+>* **save_dir** (str): 日志保存的路径。默认为'vdl_output'。

@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class SegDataset(Dataset):
     Args:
         data_dir (str): 数据集所在的目录路径。
         file_list (str): 描述数据集图片文件和对应标注文件的文件路径（文本内每行路径为相对data_dir的相对路）。
-        label_list (str): 描述数据集包含的类别信息文件路径。
+        label_list (str): 描述数据集包含的类别信息文件路径。默认值为None。
         transforms (list): 数据集中每个样本的预处理/增强算子。
         num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为4。
         buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
@@ -40,7 +40,7 @@ class SegDataset(Dataset):
     def __init__(self,
                  data_dir,
                  file_list,
-                 label_list,
+                 label_list=None,
                  transforms=None,
                  num_workers='auto',
                  buffer_size=100,
@@ -56,10 +56,11 @@ class SegDataset(Dataset):
         self.labels = list()
         self._epoch = 0
 
-        with open(label_list, encoding=get_encoding(label_list)) as f:
-            for line in f:
-                item = line.strip()
-                self.labels.append(item)
+        if label_list is not None:
+            with open(label_list, encoding=get_encoding(label_list)) as f:
+                for line in f:
+                    item = line.strip()
+                    self.labels.append(item)
 
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
@@ -69,8 +70,8 @@ class SegDataset(Dataset):
                 full_path_im = osp.join(data_dir, items[0])
                 full_path_label = osp.join(data_dir, items[1])
                 if not osp.exists(full_path_im):
-                    raise IOError(
-                        'The image file {} is not exist!'.format(full_path_im))
+                    raise IOError('The image file {} is not exist!'.format(
+                        full_path_im))
                 if not osp.exists(full_path_label):
                     raise IOError('The image file {} is not exist!'.format(
                         full_path_label))

@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -324,9 +324,10 @@ class DeepLabv3p(BaseAPI):
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
         if not hasattr(self, 'parallel_test_prog'):
-            self.parallel_test_prog = fluid.CompiledProgram(
-                self.test_prog).with_data_parallel(
-                    share_vars_from=self.parallel_train_prog)
+            with fluid.scope_guard(self.scope):
+                self.parallel_test_prog = fluid.CompiledProgram(
+                    self.test_prog).with_data_parallel(
+                        share_vars_from=self.parallel_train_prog)
         logging.info(
             "Start to evaluating(total_samples={}, total_steps={})...".format(
                 eval_dataset.num_samples, total_steps))
@@ -350,10 +351,12 @@ class DeepLabv3p(BaseAPI):
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
             feed_data = {'image': images}
-            outputs = self.exe.run(self.parallel_test_prog,
-                                   feed=feed_data,
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=True)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.parallel_test_prog,
+                    feed=feed_data,
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=True)
             pred = outputs[0]
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
@@ -399,10 +402,11 @@ class DeepLabv3p(BaseAPI):
                 transforms=self.test_transforms, mode='test')
             im, im_info = self.test_transforms(im_file)
         im = np.expand_dims(im, axis=0)
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()),
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
         pred = result[0]
         pred = np.squeeze(pred).astype('uint8')
         logit = result[1]

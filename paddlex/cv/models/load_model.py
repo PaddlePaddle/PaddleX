@@ -24,6 +24,7 @@ import paddlex.utils.logging as logging
 
 
 def load_model(model_dir, fixed_input_shape=None):
+    model_scope = fluid.Scope()
     if not osp.exists(osp.join(model_dir, "model.yml")):
         raise Exception("There's not model.yml in {}".format(model_dir))
     with open(osp.join(model_dir, "model.yml")) as f:
@@ -51,38 +52,40 @@ def load_model(model_dir, fixed_input_shape=None):
                              format(fixed_input_shape))
                 model.fixed_input_shape = fixed_input_shape
 
-    if status == "Normal" or \
-            status == "Prune" or status == "fluid.save":
-        startup_prog = fluid.Program()
-        model.test_prog = fluid.Program()
-        with fluid.program_guard(model.test_prog, startup_prog):
-            with fluid.unique_name.guard():
-                model.test_inputs, model.test_outputs = model.build_net(
-                    mode='test')
-        model.test_prog = model.test_prog.clone(for_test=True)
-        model.exe.run(startup_prog)
-        if status == "Prune":
-            from .slim.prune import update_program
-            model.test_prog = update_program(model.test_prog, model_dir,
-                                             model.places[0])
-        import pickle
-        with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
-            load_dict = pickle.load(f)
-        fluid.io.set_program_state(model.test_prog, load_dict)
+    with fluid.scope_guard(model_scope):
+        if status == "Normal" or \
+                status == "Prune" or status == "fluid.save":
+            startup_prog = fluid.Program()
+            model.test_prog = fluid.Program()
+            with fluid.program_guard(model.test_prog, startup_prog):
+                with fluid.unique_name.guard():
+                    model.test_inputs, model.test_outputs = model.build_net(
+                        mode='test')
+            model.test_prog = model.test_prog.clone(for_test=True)
+            model.exe.run(startup_prog)
+            if status == "Prune":
+                from .slim.prune import update_program
+                model.test_prog = update_program(model.test_prog, model_dir,
+                                                 model.places[0])
+            import pickle
+            with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
+                load_dict = pickle.load(f)
+            fluid.io.set_program_state(model.test_prog, load_dict)
 
-    elif status == "Infer" or \
-            status == "Quant" or status == "fluid.save_inference_model":
-        [prog, input_names, outputs] = fluid.io.load_inference_model(
-            model_dir, model.exe, params_filename='__params__')
-        model.test_prog = prog
-        test_outputs_info = info['_ModelInputsOutputs']['test_outputs']
-        model.test_inputs = OrderedDict()
-        model.test_outputs = OrderedDict()
-        for name in input_names:
-            model.test_inputs[name] = model.test_prog.global_block().var(name)
-        for i, out in enumerate(outputs):
-            var_desc = test_outputs_info[i]
-            model.test_outputs[var_desc[0]] = out
+        elif status == "Infer" or \
+                status == "Quant" or status == "fluid.save_inference_model":
+            [prog, input_names, outputs] = fluid.io.load_inference_model(
+                model_dir, model.exe, params_filename='__params__')
+            model.test_prog = prog
+            test_outputs_info = info['_ModelInputsOutputs']['test_outputs']
+            model.test_inputs = OrderedDict()
+            model.test_outputs = OrderedDict()
+            for name in input_names:
+                model.test_inputs[name] = model.test_prog.global_block().var(
+                    name)
+            for i, out in enumerate(outputs):
+                var_desc = test_outputs_info[i]
+                model.test_outputs[var_desc[0]] = out
     if 'Transforms' in info:
         transforms_mode = info.get('TransformsMode', 'RGB')
         # 固定模型的输入shape
@@ -97,8 +100,8 @@ def load_model(model_dir, fixed_input_shape=None):
                 model.model_type, info['Transforms'], info['BatchTransforms'])
             model.eval_transforms = copy.deepcopy(model.test_transforms)
         else:
-            model.test_transforms = build_transforms(model.model_type,
-                                                     info['Transforms'], to_rgb)
+            model.test_transforms = build_transforms(
+                model.model_type, info['Transforms'], to_rgb)
             model.eval_transforms = copy.deepcopy(model.test_transforms)
 
     if '_Attributes' in info:
@@ -107,6 +110,7 @@ def load_model(model_dir, fixed_input_shape=None):
                 model.__dict__[k] = v
 
     logging.info("Model[{}] loaded.".format(info['Model']))
+    model.scope = model_scope
     model.trainable = False
     model.status = status
     return model

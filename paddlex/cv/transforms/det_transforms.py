@@ -41,10 +41,8 @@ class DetTransform:
 class Compose(DetTransform):
     """根据数据预处理/增强列表对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强列表。
-
     Raises:
         TypeError: 形参数据类型不满足需求。
         ValueError: 数据长度不匹配。
@@ -222,13 +220,15 @@ class ResizeByShort(DetTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im_resize_info = [resized_height, resized_width, scale]
         im = cv2.resize(
-            im, (resized_width, resized_height), interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height),
+            interpolation=cv2.INTER_LINEAR)
         im_info['im_resize_info'] = np.array(im_resize_info).astype(np.float32)
         if label_info is None:
             return (im, im_info)
@@ -268,7 +268,8 @@ class Padding(DetTransform):
                 if not isinstance(target_size, tuple) and not isinstance(
                         target_size, list):
                     raise TypeError(
-                        "Padding: Type of target_size must in (int|list|tuple).")
+                        "Padding: Type of target_size must in (int|list|tuple)."
+                    )
                 elif len(target_size) != 2:
                     raise ValueError(
                         "Padding: Length of target_size must equal 2.")
@@ -453,7 +454,8 @@ class RandomHorizontalFlip(DetTransform):
             ValueError: 数据长度不匹配。
         """
         if not isinstance(im, np.ndarray):
-            raise TypeError("RandomHorizontalFlip: image is not a numpy array.")
+            raise TypeError(
+                "RandomHorizontalFlip: image is not a numpy array.")
         if len(im.shape) != 3:
             raise ValueError(
                 "RandomHorizontalFlip: image is not 3-dimensional.")
@@ -619,6 +621,7 @@ class RandomDistort(DetTransform):
 
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label_info is None:
             return (im, im_info)
         else:
@@ -783,7 +786,9 @@ class RandomExpand(DetTransform):
         fill_value (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。
     """
 
-    def __init__(self, ratio=4., prob=0.5,
+    def __init__(self,
+                 ratio=4.,
+                 prob=0.5,
                  fill_value=[123.675, 116.28, 103.53]):
         super(RandomExpand, self).__init__()
         assert ratio > 1.01, "expand ratio must be larger than 1.01"
@@ -823,7 +828,7 @@ class RandomExpand(DetTransform):
                 'gt_class' not in label_info:
             raise TypeError('Cannot do RandomExpand! ' + \
                             'Becasuse gt_bbox/gt_class is not in label_info!')
-        if np.random.uniform(0., 1.) < self.prob:
+        if np.random.uniform(0., 1.) > self.prob:
             return (im, im_info, label_info)
 
         if 'gt_class' in label_info and 0 in label_info['gt_class']:

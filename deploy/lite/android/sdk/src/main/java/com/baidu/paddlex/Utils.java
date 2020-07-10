@@ -16,6 +16,9 @@ package com.baidu.paddlex;
 
 import android.content.Context;
 import android.os.Environment;
+
+import org.opencv.android.OpenCVLoader;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -64,7 +67,6 @@ public class Utils {
             if (!new File(dstDir).exists()) {
                 new File(dstDir).mkdirs();
             }
-
             for (String fileName : appCtx.getAssets().list(srcDir)) {
                 String srcSubPath = srcDir + File.separator + fileName;
                 String dstSubPath = dstDir + File.separator + fileName;
@@ -85,7 +87,7 @@ public class Utils {
             return null;
         }
         try {
-            String fileName = srcDir.substring(srcDir.lastIndexOf("/")+1);
+            String fileName = srcDir.substring(srcDir.lastIndexOf("/") + 1);
             return fileName;
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,4 +121,12 @@ public class Utils {
         String hardware = android.os.Build.HARDWARE;
         return hardware.equalsIgnoreCase("kirin810") || hardware.equalsIgnoreCase("kirin990");
     }
+
+    public static boolean initialOpencv() {
+        if (!OpenCVLoader.initDebug()) {
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -44,19 +44,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.baidu.paddlex.Predictor;
+import com.baidu.paddlex.Utils;
 import com.baidu.paddlex.config.ConfigParser;
+import com.baidu.paddlex.postprocess.ClsResult;
 import com.baidu.paddlex.postprocess.DetResult;
 import com.baidu.paddlex.postprocess.SegResult;
 import com.baidu.paddlex.visual.Visualize;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final int OPEN_GALLERY_REQUEST_CODE = 0;
     public static final int TAKE_PHOTO_REQUEST_CODE = 1;
     public static final int REQUEST_LOAD_MODEL = 0;
@@ -73,12 +76,14 @@ public class MainActivity extends AppCompatActivity {
     protected Handler sender = null; // send command to worker thread
     protected HandlerThread worker = null; // worker thread to load&run model
 
-
     protected TextView tvInputSetting;
     protected ImageView ivInputImage;
     protected TextView tvOutputResult;
     protected TextView tvInferenceTime;
     private Button predictButton;
+    protected String testImagePathFromAsset;
+    protected String testYamlPathFromAsset;
+    protected String testModelPathFromAsset;
 
     // Predictor
     protected Predictor predictor = new Predictor();
@@ -86,10 +91,11 @@ public class MainActivity extends AppCompatActivity {
     protected ConfigParser configParser = new ConfigParser();
     // Visualize
     protected Visualize visualize = new Visualize();
-    // image to predict
-    protected Bitmap predictImage;
+    // Predict Mat of Opencv
+    protected Mat predictMat;
 
-    protected String testImagePathFromAsset;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
         worker = new HandlerThread("Predictor Worker");
         worker.start();
         sender = new Handler(worker.getLooper()) {
@@ -156,12 +161,11 @@ public class MainActivity extends AppCompatActivity {
         tvOutputResult = findViewById(R.id.tv_output_result);
         tvInputSetting.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvOutputResult.setMovementMethod(ScrollingMovementMethod.getInstance());
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String image_path = sharedPreferences.getString(getString(R.string.IMAGE_PATH_KEY),
                 getString(R.string.IMAGE_PATH_DEFAULT));
+        Utils.initialOpencv();
         loadTestImageFromAsset(image_path);
-
         predictButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onLoadModel() {
-        return predictor.init(MainActivity.this, configParser);
+        return predictor.init(configParser);
     }
 
     public boolean onRunModel() {
@@ -195,9 +199,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLoadModelSuccessed() {
-        // load test image from file_paths and run model
-        if (predictImage != null && predictor.isLoaded()) {
-            predictor.setInputImage(predictImage);
+        if (predictMat != null && predictor.isLoaded()) {
+            int w = predictMat.width();
+            int h = predictMat.height();
+            int c = predictMat.channels();
+            predictor.setInputMat(predictMat);
             runModel();
         }
     }
@@ -205,40 +211,41 @@ public class MainActivity extends AppCompatActivity {
     public void onRunModelSuccessed() {
         // obtain results and update UI
         tvInferenceTime.setText("Inference time: " + predictor.getInferenceTime() + " ms");
-        Bitmap outputImage;
+
         if (configParser.getModelType().equalsIgnoreCase("segmenter")) {
             SegResult segResult = predictor.getSegResult();
-
-            outputImage = visualize.draw(segResult, predictor.getInputImage(), predictor.getImageBlob());
+            Mat maskMat = visualize.draw(segResult, predictMat.clone(), predictor.getImageBlob(), 1);
+            Imgproc.cvtColor(maskMat, maskMat, Imgproc.COLOR_BGRA2RGBA);
+            Bitmap outputImage = Bitmap.createBitmap(maskMat.width(), maskMat.height(), Bitmap.Config.ARGB_8888);
+            org.opencv.android.Utils.matToBitmap(maskMat, outputImage);
             if (outputImage != null) {
                 ivInputImage.setImageBitmap(outputImage);
             }
         } else if (configParser.getModelType().equalsIgnoreCase("detector")) {
             DetResult detResult = predictor.getDetResult();
-            outputImage = visualize.draw(detResult, predictor.getInputImage());
+            Mat roiMat  = visualize.draw(detResult,  predictMat.clone());
+            Imgproc.cvtColor(roiMat, roiMat, Imgproc.COLOR_BGR2RGB);
+            Bitmap outputImage = Bitmap.createBitmap(roiMat.width(),roiMat.height(), Bitmap.Config.ARGB_8888);
+            org.opencv.android.Utils.matToBitmap(roiMat,outputImage);
             if (outputImage != null) {
                 ivInputImage.setImageBitmap(outputImage);
             }
         } else if (configParser.getModelType().equalsIgnoreCase("classifier")) {
-                ivInputImage.setImageBitmap( predictor.getInputImage());
+            ClsResult clsResult = predictor.getClsResult();
+            if (configParser.getLabeList().size() > 0) {
+                String outputResult = "Top1: " + clsResult.getCategory() + " - " + String.format("%.3f", clsResult.getScore());
+                tvOutputResult.setText(outputResult);
+                tvOutputResult.scrollTo(0, 0);
+            }
         }
-        tvOutputResult.setText(predictor.getOutputResult());
-        tvOutputResult.scrollTo(0, 0);
+    }
+
+    public void onMatChanged(Mat mat) {
+        this.predictMat = mat.clone();
     }
 
     public void onImageChanged(Bitmap image) {
-        // rerun model if users pick test image from gallery or camera
-        predictImage = image;
-        ivInputImage.setImageBitmap(predictImage);
         ivInputImage.setImageBitmap(image);
-        tvOutputResult.setText("");
-        tvInferenceTime.setText("Inference time: -- ms");
-
-    }
-
-    public void onImageChanged(String path) {
-        predictImage = BitmapFactory.decodeFile(path);
-        ivInputImage.setImageBitmap(predictImage);
         tvOutputResult.setText("");
         tvInferenceTime.setText("Inference time: -- ms");
     }
@@ -299,18 +306,26 @@ public class MainActivity extends AppCompatActivity {
                         ContentResolver resolver = getContentResolver();
                         Uri uri = data.getData();
                         Bitmap image = MediaStore.Images.Media.getBitmap(resolver, uri);
-                        image =  image.copy(Bitmap.Config.RGB_565, true);
                         String[] proj = {MediaStore.Images.Media.DATA};
                         Cursor cursor = managedQuery(uri, proj, null, null, null);
                         cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(proj[0]);
+                        String imgDecodableString = cursor.getString(columnIndex);
+                        File file = new File(imgDecodableString);
+                        Mat mat = Imgcodecs.imread(file.getAbsolutePath(),Imgcodecs.IMREAD_COLOR);
                         onImageChanged(image);
+                        onMatChanged(mat);
                     } catch (IOException e) {
                         Log.e(TAG, e.toString());
                     }
                     break;
                 case TAKE_PHOTO_REQUEST_CODE:
                     Bitmap image = (Bitmap) data.getParcelableExtra("data");
+                    Mat mat = new Mat();
+                    org.opencv.android.Utils.bitmapToMat(image, mat);
+                    Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGBA2BGR);
                     onImageChanged(image);
+                    onMatChanged(mat);
                     break;
                 default:
                     break;
@@ -360,28 +375,39 @@ public class MainActivity extends AppCompatActivity {
 
         boolean settingsChanged = false;
         boolean testImageChanged = false;
-        String model_path = sharedPreferences.getString(getString(R.string.MODEL_PATH_KEY),
+        String modelPath = sharedPreferences.getString(getString(R.string.MODEL_PATH_KEY),
                 getString(R.string.MODEL_PATH_DEFAULT));
-        settingsChanged |= model_path != configParser.getModelPath();
-        String yaml_path = sharedPreferences.getString(getString(R.string.YAML_PATH_KEY),
+        settingsChanged |= !modelPath.equalsIgnoreCase(testModelPathFromAsset);
+        String yamlPath = sharedPreferences.getString(getString(R.string.YAML_PATH_KEY),
                 getString(R.string.YAML_PATH_DEFAULT));
-
-        settingsChanged |= yaml_path != configParser.getYamlPath();
-        int cpu_thread_num = Integer.parseInt(sharedPreferences.getString(getString(R.string.CPU_THREAD_NUM_KEY),
+        settingsChanged |= !yamlPath.equalsIgnoreCase(testYamlPathFromAsset);
+        int cpuThreadNum = Integer.parseInt(sharedPreferences.getString(getString(R.string.CPU_THREAD_NUM_KEY),
                 getString(R.string.CPU_THREAD_NUM_DEFAULT)));
-        settingsChanged |= cpu_thread_num != configParser.getCpuThreadNum();
-        String cpu_power_mode = sharedPreferences.getString(getString(R.string.CPU_POWER_MODE_KEY),
-                        getString(R.string.CPU_POWER_MODE_DEFAULT));
-        settingsChanged |= !cpu_power_mode.equalsIgnoreCase(configParser.getCpuPowerMode());
-
-        String image_path = sharedPreferences.getString(getString(R.string.IMAGE_PATH_KEY),
+        settingsChanged |= cpuThreadNum != configParser.getCpuThreadNum();
+        String cpuPowerMode = sharedPreferences.getString(getString(R.string.CPU_POWER_MODE_KEY),
+                getString(R.string.CPU_POWER_MODE_DEFAULT));
+        settingsChanged |= !cpuPowerMode.equalsIgnoreCase(configParser.getCpuPowerMode());
+        String imagePath = sharedPreferences.getString(getString(R.string.IMAGE_PATH_KEY),
                 getString(R.string.IMAGE_PATH_DEFAULT));
+        testImageChanged |= !imagePath.equalsIgnoreCase(testImagePathFromAsset);
 
-        testImageChanged |= !image_path.equalsIgnoreCase(testImagePathFromAsset);
-        visualize.init(configParser.getNumClasses());
+        testYamlPathFromAsset = yamlPath;
+        testModelPathFromAsset = modelPath;
         if (settingsChanged) {
             try {
-                configParser.init(MainActivity.this, model_path, yaml_path, cpu_thread_num, cpu_power_mode);
+                String realModelPath = modelPath;
+                if (!modelPath.substring(0, 1).equals("/")) {
+                    String modelFileName = Utils.getFileNameFromString(modelPath);
+                    realModelPath = this.getCacheDir() + File.separator + modelFileName;
+                    Utils.copyFileFromAssets(this, modelPath, realModelPath);
+                }
+                String realYamlPath = yamlPath;
+                if (!yamlPath.substring(0, 1).equals("/")) {
+                    String yamlFileName = Utils.getFileNameFromString(yamlPath);
+                    realYamlPath = this.getCacheDir() + File.separator + yamlFileName;
+                    Utils.copyFileFromAssets(this, yamlPath, realYamlPath);
+                }
+                configParser.init(realModelPath, realYamlPath, cpuThreadNum, cpuPowerMode);
                 visualize.init(configParser.getNumClasses());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -396,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (testImageChanged){
-            loadTestImageFromAsset(image_path);
+            loadTestImageFromAsset(imagePath);
         }
     }
 
@@ -406,23 +432,27 @@ public class MainActivity extends AppCompatActivity {
         }
         // read test image file from custom file_paths if the first character of mode file_paths is '/', otherwise read test
         // image file from assets
-        try {
-            if (!imagePath.substring(0, 1).equals("/")) {
-                InputStream imageStream = null;
-                imageStream = getAssets().open(imagePath);
-
-                predictImage = BitmapFactory.decodeStream(imageStream);
-            } else {
-                if (!new File(imagePath).exists()) {
-                    return;
-                }
-                predictImage = BitmapFactory.decodeFile(imagePath);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         testImagePathFromAsset = imagePath;
-        onImageChanged(predictImage);
+        if (!imagePath.substring(0, 1).equals("/")) {
+            InputStream imageStream = null;
+            try {
+                imageStream = getAssets().open(imagePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            onImageChanged(BitmapFactory.decodeStream(imageStream));
+            String realPath;
+            String imageFileName = Utils.getFileNameFromString(imagePath);
+            realPath = this.getCacheDir() + File.separator + imageFileName;
+            Utils.copyFileFromAssets(this, imagePath, realPath);
+            onMatChanged(Imgcodecs.imread(realPath, Imgcodecs.IMREAD_COLOR));
+        } else {
+            if (!new File(imagePath).exists()) {
+                return;
+            }
+            onMatChanged(Imgcodecs.imread(imagePath, Imgcodecs.IMREAD_COLOR));
+            onImageChanged( BitmapFactory.decodeFile(imagePath));
+        }
     }
 
     @Override
@@ -433,5 +463,4 @@ public class MainActivity extends AppCompatActivity {
         worker.quit();
         super.onDestroy();
     }
-
 }

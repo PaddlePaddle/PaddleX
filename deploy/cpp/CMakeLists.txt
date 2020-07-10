@@ -73,7 +73,11 @@ endif()
 if(EXISTS "${PADDLE_DIR}/third_party/install/snappystream/include")
     include_directories("${PADDLE_DIR}/third_party/install/snappystream/include")
 endif()
-include_directories("${PADDLE_DIR}/third_party/install/zlib/include")
+# zlib does not exist in 1.8.1
+if (EXISTS "${PADDLE_DIR}/third_party/install/zlib/include")
+    include_directories("${PADDLE_DIR}/third_party/install/zlib/include")
+endif()
+
 include_directories("${PADDLE_DIR}/third_party/boost")
 include_directories("${PADDLE_DIR}/third_party/eigen3")
 
@@ -84,7 +88,10 @@ if(EXISTS "${PADDLE_DIR}/third_party/install/snappystream/lib")
     link_directories("${PADDLE_DIR}/third_party/install/snappystream/lib")
 endif()
 
-link_directories("${PADDLE_DIR}/third_party/install/zlib/lib")
+if (EXISTS "${PADDLE_DIR}/third_party/install/zlib/lib")
+    link_directories("${PADDLE_DIR}/third_party/install/zlib/lib")
+endif()
+
 link_directories("${PADDLE_DIR}/third_party/install/protobuf/lib")
 link_directories("${PADDLE_DIR}/third_party/install/glog/lib")
 link_directories("${PADDLE_DIR}/third_party/install/gflags/lib")
@@ -107,6 +114,14 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 if (WIN32)
     add_definitions("/DGOOGLE_GLOG_DLL_DECL=")
+    find_package(OpenMP REQUIRED)
+    if (OPENMP_FOUND)
+        message("OPENMP FOUND")
+        set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} ${OpenMP_C_FLAGS}")
+        set(CMAKE_C_FLAGS_RELEASE  "${CMAKE_C_FLAGS_RELEASE} ${OpenMP_C_FLAGS}")
+        set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_RELEASE   "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+    endif()
     set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} /bigobj /MTd")
     set(CMAKE_C_FLAGS_RELEASE  "${CMAKE_C_FLAGS_RELEASE} /bigobj /MT")
     set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} /bigobj /MTd")
@@ -186,8 +201,13 @@ if(WITH_STATIC_LIB)
     set(DEPS
         ${PADDLE_DIR}/paddle/lib/libpaddle_fluid${CMAKE_STATIC_LIBRARY_SUFFIX})
 else()
-    set(DEPS
-        ${PADDLE_DIR}/paddle/lib/libpaddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+    if (NOT WIN32)
+      set(DEPS
+          ${PADDLE_DIR}/paddle/lib/libpaddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+    else()
+      set(DEPS
+          ${PADDLE_DIR}/paddle/lib/paddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif()
 endif()
 
 if (NOT WIN32)
@@ -204,13 +224,16 @@ if (NOT WIN32)
 else()
     set(DEPS ${DEPS}
         ${MATH_LIB} ${MKLDNN_LIB}
-        glog gflags_static libprotobuf zlibstatic xxhash libyaml-cppmt)
+        glog gflags_static libprotobuf xxhash libyaml-cppmt)
 
+    if (EXISTS "${PADDLE_DIR}/third_party/install/zlib/lib")
+      set(DEPS ${DEPS} zlibstatic)
+    endif()
     set(DEPS ${DEPS} libcmt shlwapi)
     if (EXISTS "${PADDLE_DIR}/third_party/install/snappy/lib")
         set(DEPS ${DEPS} snappy)
     endif()
-    if(EXISTS "${PADDLE_DIR}/third_party/install/snappystream/lib")
+    if (EXISTS "${PADDLE_DIR}/third_party/install/snappystream/lib")
         set(DEPS ${DEPS} snappystream)
     endif()
 endif(NOT WIN32)
@@ -236,7 +259,9 @@ if(WITH_ENCRYPTION)
       link_directories("${ENCRYPTION_DIR}/lib")
       set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/libpmodel-decrypt${CMAKE_SHARED_LIBRARY_SUFFIX})
   else()
-    message(FATAL_ERROR "Encryption Tool don't support WINDOWS")
+      include_directories("${ENCRYPTION_DIR}/include")
+      link_directories("${ENCRYPTION_DIR}/lib")
+      set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/pmodel-decrypt${CMAKE_STATIC_LIBRARY_SUFFIX})
   endif()
 endif()
 
@@ -284,10 +309,23 @@ if (WIN32 AND WITH_MKL)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./mkldnn.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./release/mkldnn.dll
     )
-
+    # for encryption
+    if (EXISTS "${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll")
+        add_custom_command(TARGET classifier POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
+        )
+        add_custom_command(TARGET detector POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
+        )
+        add_custom_command(TARGET segmenter POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
+        )
+    endif()
 endif()
 
 file(COPY  "${CMAKE_SOURCE_DIR}/include/paddlex/visualize.h"

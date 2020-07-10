@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -286,7 +286,8 @@ class YOLOv3(BaseAPI):
                 eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
                 预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(
+            transforms=eval_dataset.transforms, mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -306,17 +307,20 @@ class YOLOv3(BaseAPI):
 
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
             im_sizes = np.array([d[1] for d in data])
             feed_data = {'image': images, 'im_size': im_sizes}
-            outputs = self.exe.run(self.test_prog,
-                                   feed=[feed_data],
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=False)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.test_prog,
+                    feed=[feed_data],
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths())
@@ -366,12 +370,13 @@ class YOLOv3(BaseAPI):
             im, im_size = self.test_transforms(img_file)
         im = np.expand_dims(im, axis=0)
         im_size = np.expand_dims(im_size, axis=0)
-        outputs = self.exe.run(self.test_prog,
-                               feed={'image': im,
-                                     'im_size': im_size},
-                               fetch_list=list(self.test_outputs.values()),
-                               return_numpy=False,
-                               use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            outputs = self.exe.run(self.test_prog,
+                                   feed={'image': im,
+                                         'im_size': im_size},
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False,
+                                   use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)

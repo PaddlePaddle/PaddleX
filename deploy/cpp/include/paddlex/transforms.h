@@ -92,12 +92,9 @@ class Normalize : public Transform {
 
 /*
  * @brief
- * This class execute resize by short operation on image matrix. At first, it
- * resizes
- * the short side of image matrix to specified length. Accordingly, the long
- * side
- * will be resized in the same proportion. If new length of long side exceeds
- * max
+ * This class execute resize by short operation on image matrix. At first, it resizes
+ * the short side of image matrix to specified length. Accordingly, the long side
+ * will be resized in the same proportion. If new length of long side exceeds max
  * size, the long size will be resized to max size, and the short size will be
  * resized in the same proportion
  * */
@@ -121,10 +118,8 @@ class ResizeByShort : public Transform {
 
 /*
  * @brief
- * This class execute resize by long operation on image matrix. At first, it
- * resizes
- * the long side of image matrix to specified length. Accordingly, the short
- * side
+ * This class execute resize by long operation on image matrix. At first, it resizes
+ * the long side of image matrix to specified length. Accordingly, the short side
  * will be resized in the same proportion.
  * */
 class ResizeByLong : public Transform {
@@ -140,17 +135,18 @@ class ResizeByLong : public Transform {
 
 /*
  * @brief
- * This class execute resize operation on image matrix. It resizes width and
- * height
+ * This class execute resize operation on image matrix. It resizes width and height
  * to specified length.
  * */
 class Resize : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
+    if (item["interp"].IsDefined()) {
+      interp_ = item["interp"].as<std::string>();
+    }
     if (item["target_size"].IsScalar()) {
       height_ = item["target_size"].as<int>();
       width_ = item["target_size"].as<int>();
-      interp_ = item["interp"].as<std::string>();
     } else if (item["target_size"].IsSequence()) {
       std::vector<int> target_size = item["target_size"].as<std::vector<int>>();
       width_ = target_size[0];

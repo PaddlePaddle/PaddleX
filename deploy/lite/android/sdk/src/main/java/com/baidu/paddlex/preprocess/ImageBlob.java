@@ -18,24 +18,69 @@ import java.util.LinkedHashMap;
 
 public class ImageBlob {
     // Original image height and width
-    public long[] ori_im_size_ = new long[]{1, 3, -1, -1};
+    private long[] oriImageSize = new long[]{1, 3, -1, -1};
     // Newest image height and width after process
-
-    public long[] new_im_size_ = new long[]{1, 3, -1, -1};
-
+    private long[] newImageSize = new long[]{1, 3, -1, -1};
     // Reshape order, Image height and width before resize
-    public LinkedHashMap<String, int[]> reshape_info_ = new LinkedHashMap<String, int[]>();
-
+    private LinkedHashMap<String, int[]> reshapeInfo = new LinkedHashMap<String, int[]>();
     // Resize scale
-    public float scale = 1;
-
+    private float scale = 1;
     // Buffer for image data after preprocessing
-    public float[] im_data_;
+    private float[] imageData;
 
     public void clear() {
-        ori_im_size_ = null;
-        new_im_size_ = null;
-        reshape_info_.clear();
-        im_data_ = null;
+        oriImageSize = new long[]{1, 3, -1, -1};
+        newImageSize = new long[]{1, 3, -1, -1};
+        reshapeInfo.clear();
+        imageData = null;
     }
-};
+
+    public long[] getOriImageSize() {
+        return oriImageSize;
+    }
+
+    public void setOriImageSize(long[] oriImageSize) {
+        this.oriImageSize = oriImageSize;
+    }
+
+    public void setOriImageSize(long dim, int idx) {
+        this.oriImageSize[idx] = dim;
+    }
+
+    public long[] getNewImageSize() {
+        return newImageSize;
+    }
+
+    public void setNewImageSize(long[] newImageSize) {
+        this.newImageSize = newImageSize;
+    }
+
+    public void setNewImageSize(long dim, int idx) {
+        this.newImageSize[idx] = dim;
+    }
+
+
+    public LinkedHashMap<String, int[]> getReshapeInfo() {
+        return reshapeInfo;
+    }
+
+    public void setReshapeInfo(LinkedHashMap<String, int[]> reshapeInfo) {
+        this.reshapeInfo = reshapeInfo;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    public float[] getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(float[] imageData) {
+        this.imageData = imageData;
+    }
+}

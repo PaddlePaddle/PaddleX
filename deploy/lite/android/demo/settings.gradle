@@ -1,1 +1,1 @@
-include ':app', ':paddlex'
+include ':app'

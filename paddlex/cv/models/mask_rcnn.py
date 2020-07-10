@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -253,7 +253,8 @@ class MaskRCNN(FasterRCNN):
                 预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、
                 预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(
+            transforms=eval_dataset.transforms, mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -274,8 +275,9 @@ class MaskRCNN(FasterRCNN):
 
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         results = list()
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -286,10 +288,12 @@ class MaskRCNN(FasterRCNN):
                 'im_info': im_infos,
                 'im_shape': im_shapes,
             }
-            outputs = self.exe.run(self.test_prog,
-                                   feed=[feed_data],
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=False)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.test_prog,
+                    feed=[feed_data],
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths()),
@@ -317,7 +321,8 @@ class MaskRCNN(FasterRCNN):
                     zip(['bbox_map', 'segm_map'],
                         [ap_stats[0][1], ap_stats[1][1]]))
             else:
-                metrics = OrderedDict(zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
+                metrics = OrderedDict(
+                    zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
         elif metric == 'COCO':
             if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
                                                                   np.ndarray):
@@ -356,15 +361,16 @@ class MaskRCNN(FasterRCNN):
         im = np.expand_dims(im, axis=0)
         im_resize_info = np.expand_dims(im_resize_info, axis=0)
         im_shape = np.expand_dims(im_shape, axis=0)
-        outputs = self.exe.run(self.test_prog,
-                               feed={
-                                   'image': im,
-                                   'im_info': im_resize_info,
-                                   'im_shape': im_shape
-                               },
-                               fetch_list=list(self.test_outputs.values()),
-                               return_numpy=False,
-                               use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            outputs = self.exe.run(self.test_prog,
+                                   feed={
+                                       'image': im,
+                                       'im_info': im_resize_info,
+                                       'im_shape': im_shape
+                                   },
+                                   fetch_list=list(self.test_outputs.values()),
+                                   return_numpy=False,
+                                   use_program_cache=True)
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
             for k, v in zip(list(self.test_outputs.keys()), outputs)

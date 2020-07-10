@@ -14,10 +14,13 @@
 
 package com.baidu.paddlex.config;
 
-import org.yaml.snakeyaml.Yaml;
-
 import android.content.Context;
 import android.content.res.AssetManager;
+
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,7 +32,6 @@ public class ConfigParser {
     protected List<String> labeList = new ArrayList<>();
     protected int numClasses = 0;
     protected String modelType = "";
-
     protected String transformsMode = "RGB";
     protected List transformsList = new ArrayList();
     protected String modelPath = "";
@@ -37,28 +39,24 @@ public class ConfigParser {
     protected String cpuPowerMode = "";
     protected String yamlPath = "";
 
-    public void init(Context appCtx, String modelPath, String yamlPath, int cpuThreadNum,
+    public void init(String modelPath, String yamlPath, int cpuThreadNum,
                      String cpuPowerMode) throws IOException {
 
         this.modelPath = modelPath;
         this.cpuThreadNum = cpuThreadNum;
         this.cpuPowerMode = cpuPowerMode;
         this.yamlPath = yamlPath;
-        AssetManager ass = appCtx.getAssets();
-        InputStream ymlStream = ass.open(yamlPath);
+        InputStream ymlStream = new FileInputStream(new File(yamlPath));
         Yaml yml = new Yaml();
-
         HashMap yml_map = (HashMap) yml.load(ymlStream);
         model = (String) yml_map.get("Model");
         if (yml_map.containsKey("TransformsMode")) {
             transformsMode = (String) yml_map.get("TransformsMode");
         }
-
         HashMap _Attributes = (HashMap) yml_map.get("_Attributes");
         // parser label_list
         labeList = (List<String>) _Attributes.get("labels");
         numClasses = (int) _Attributes.get("num_classes");
-
         // parser model_type(classifier, segmenter, detector)
         modelType = (String) _Attributes.get("model_type");
         // parser Transforms
@@ -81,6 +79,7 @@ public class ConfigParser {
                 ", yamlPath='" + yamlPath + '\'' +
                 '}';
     }
+
     public int getNumClasses() {
         return numClasses;
     }

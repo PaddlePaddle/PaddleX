@@ -35,14 +35,11 @@ class SegTransform:
 class Compose(SegTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强算子。
-
     Raises:
         TypeError: transforms不是list对象
         ValueError: transforms元素个数小于1。
-
     """
 
     def __init__(self, transforms):
@@ -71,7 +68,6 @@ class Compose(SegTransform):
                 图像在过resize前shape为(200, 300)， 过padding前shape为
                 (400, 600)
             label (str/np.ndarray): 标注图像路径/标注图像np.ndarray数据。
-
         Returns:
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
@@ -403,7 +399,8 @@ class ResizeByShort(SegTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -1054,6 +1051,7 @@ class RandomDistort(SegTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label is None:
             return (im, im_info)
         else:

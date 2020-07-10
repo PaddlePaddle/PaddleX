@@ -15,17 +15,17 @@
 package com.baidu.paddlex.postprocess;
 
 public class ClsResult extends Result {
+    static String type = "cls";
     protected int categoryId;
     protected String category;
     protected float score;
-    static String type = "cls";
 
     public int getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int category_id) {
-        this.categoryId = category_id;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getCategory() {

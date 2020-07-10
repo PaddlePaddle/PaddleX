@@ -15,9 +15,21 @@
 package com.baidu.paddlex.postprocess;
 
 public class SegResult extends Result {
+    static String type = "seg";
     protected Mask mask = new Mask();
 
-    static String type = "seg";
+    public Mask getMask() {
+        return mask;
+    }
+
+    public void setMask(Mask mask) {
+        this.mask = mask;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
 
     public class Mask {
         protected float[] scoreData;
@@ -56,17 +68,5 @@ public class SegResult extends Result {
         public void setScoreShape(long[] scoreShape) {
             this.scoreShape = scoreShape;
         }
-    }
-
-    public Mask getMask() {
-        return mask;
-    }
-
-    public void setMask(Mask mask) {
-        this.mask = mask;
-    }
-    @Override
-    public String getType() {
-        return type;
     }
 }

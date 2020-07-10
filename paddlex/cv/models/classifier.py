@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,7 +54,8 @@ class BaseClassifier(BaseAPI):
             input_shape = [
                 None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
             ]
-            image = fluid.data(dtype='float32', shape=input_shape, name='image')
+            image = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
         else:
             image = fluid.data(
                 dtype='float32', shape=[None, 3, None, None], name='image')
@@ -219,7 +220,8 @@ class BaseClassifier(BaseAPI):
           tuple (metrics, eval_details): 当return_details为True时，增加返回dict，
               包含关键字：'true_labels'、'pred_scores'，分别代表真实类别id、每个类别的预测得分。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        self.arrange_transforms(
+            transforms=eval_dataset.transforms, mode='eval')
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
         k = min(5, self.num_classes)
@@ -227,12 +229,14 @@ class BaseClassifier(BaseAPI):
         true_labels = list()
         pred_scores = list()
         if not hasattr(self, 'parallel_test_prog'):
-            self.parallel_test_prog = fluid.CompiledProgram(
-                self.test_prog).with_data_parallel(
-                    share_vars_from=self.parallel_train_prog)
+            with fluid.scope_guard(self.scope):
+                self.parallel_test_prog = fluid.CompiledProgram(
+                    self.test_prog).with_data_parallel(
+                        share_vars_from=self.parallel_train_prog)
         batch_size_each_gpu = self._get_single_card_bs(batch_size)
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -242,9 +246,11 @@ class BaseClassifier(BaseAPI):
                 num_pad_samples = batch_size - num_samples
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
-            outputs = self.exe.run(self.parallel_test_prog,
-                                   feed={'image': images},
-                                   fetch_list=list(self.test_outputs.values()))
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.parallel_test_prog,
+                    feed={'image': images},
+                    fetch_list=list(self.test_outputs.values()))
             outputs = [outputs[0][:num_samples]]
             true_labels.extend(labels)
             pred_scores.extend(outputs[0].tolist())
@@ -286,10 +292,11 @@ class BaseClassifier(BaseAPI):
             self.arrange_transforms(
                 transforms=self.test_transforms, mode='test')
             im = self.test_transforms(img_file)
-        result = self.exe.run(self.test_prog,
-                              feed={'image': im},
-                              fetch_list=list(self.test_outputs.values()),
-                              use_program_cache=True)
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
         pred_label = np.argsort(result[0][0])[::-1][:true_topk]
         res = [{
             'category_id': l,

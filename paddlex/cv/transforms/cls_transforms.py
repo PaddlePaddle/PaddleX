@@ -32,10 +32,8 @@ class ClsTransform:
 class Compose(ClsTransform):
     """根据数据预处理/增强算子对输入数据进行操作。
        所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
-
     Args:
         transforms (list): 数据预处理/增强算子。
-
     Raises:
         TypeError: 形参数据类型不满足需求。
         ValueError: 数据长度不匹配。
@@ -70,8 +68,8 @@ class Compose(ClsTransform):
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
-                    "im should be 3-dimension, but now is {}-dimensions".format(
-                        len(im.shape)))
+                    "im should be 3-dimension, but now is {}-dimensions".
+                    format(len(im.shape)))
         else:
             try:
                 im = cv2.imread(im).astype('float32')
@@ -141,8 +139,8 @@ class RandomCrop(ClsTransform):
             tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
                    当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
         """
-        im = random_crop(im, self.crop_size, self.lower_scale, self.lower_ratio,
-                         self.upper_ratio)
+        im = random_crop(im, self.crop_size, self.lower_scale,
+                         self.lower_ratio, self.upper_ratio)
         if label is None:
             return (im, )
         else:
@@ -272,12 +270,14 @@ class ResizeByShort(ClsTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im = cv2.resize(
-            im, (resized_width, resized_height), interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height),
+            interpolation=cv2.INTER_LINEAR)
 
         if label is None:
             return (im, )
@@ -434,6 +434,7 @@ class RandomDistort(ClsTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
         if label is None:
             return (im, )
         else:
