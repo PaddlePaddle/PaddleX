@@ -14,6 +14,7 @@
 
 from __future__ import absolute_import
 import os.path as osp
+import platform
 import random
 import copy
 import paddlex.utils.logging as logging
