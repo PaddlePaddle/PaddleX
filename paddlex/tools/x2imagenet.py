@@ -22,9 +22,8 @@ import shutil
 import numpy as np
 from .base import MyEncoder, is_pic, get_encoding
 
-class EasyData2ImageNet(object):
-    """将使用EasyData标注的分类数据集转换为COCO数据集。
-    """
+
+class X2ImageNet(object):
     def __init__(self):
         pass
     
@@ -46,8 +45,8 @@ class EasyData2ImageNet(object):
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
-                json_info = json.load(j)
-                for output in json_info['labels']:
+                json_info = self.get_json_info(j)
+                for output in json_info:
                     cls_name = output['name']
                     new_image_dir = osp.join(dataset_save_dir, cls_name)
                     if not osp.exists(new_image_dir):
@@ -56,3 +55,27 @@ class EasyData2ImageNet(object):
                         shutil.copyfile(
                                     osp.join(image_dir, img_name),
                                     osp.join(new_image_dir, img_name))
+    
+
+class EasyData2ImageNet(X2ImageNet):
+    """将使用EasyData标注的分类数据集转换为ImageNet数据集。
+    """
+    def __init__(self):
+        super(EasyData2ImageNet, self).__init__()
+    
+    def get_json_info(self, json_file):
+        json_info = json.load(json_file)
+        json_info = json_info['labels']
+        return json_info
+                        
+class JingLing2ImageNet(X2ImageNet):
+    """将使用标注精灵标注的分类数据集转换为ImageNet数据集。
+    """
+    def __init__(self):
+        super(X2ImageNet, self).__init__()
+    
+    def get_json_info(self, json_file):
+        json_info = json.load(json_file)
+        json_info = json_info['outputs']['object']
+        return json_info
+    

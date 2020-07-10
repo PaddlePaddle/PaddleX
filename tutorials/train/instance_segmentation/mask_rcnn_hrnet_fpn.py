@@ -11,16 +11,16 @@ pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize(),
-    transforms.ResizeByShort(short_size=800, max_size=1333),
-    transforms.Padding(coarsest_stride=32)
+    transforms.RandomHorizontalFlip(), transforms.Normalize(),
+    transforms.ResizeByShort(
+        short_size=800, max_size=1333), transforms.Padding(coarsest_stride=32)
 ])
 
 eval_transforms = transforms.Compose([
     transforms.Normalize(),
-    transforms.ResizeByShort(short_size=800, max_size=1333),
-    transforms.Padding(coarsest_stride=32)
+    transforms.ResizeByShort(
+        short_size=800, max_size=1333),
+    transforms.Padding(coarsest_stride=32),
 ])
 
 # 定义训练和验证所用的数据集
@@ -41,7 +41,7 @@ eval_dataset = pdx.datasets.CocoDetection(
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 # num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
 num_classes = len(train_dataset.labels) + 1
-model = pdx.det.MaskRCNN(num_classes=num_classes)
+model = pdx.det.MaskRCNN(num_classes=num_classes, backbone='HRNet_W18')
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,
@@ -50,5 +50,5 @@ model.train(
     learning_rate=0.00125,
     warmup_steps=10,
     lr_decay_epochs=[8, 11],
-    save_dir='output/mask_rcnn_r50_fpn',
+    save_dir='output/mask_rcnn_hrnet_fpn',
     use_vdl=True)
