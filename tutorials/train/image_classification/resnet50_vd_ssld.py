@@ -1,7 +1,4 @@
 import os
-# 选择使用0号卡
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 from paddlex.cls import transforms
 import paddlex as pdx
 
@@ -11,14 +8,12 @@ pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224),
-    transforms.RandomHorizontalFlip(),
+    transforms.RandomCrop(crop_size=224), transforms.RandomHorizontalFlip(),
     transforms.Normalize()
 ])
 eval_transforms = transforms.Compose([
     transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224),
-    transforms.Normalize()
+    transforms.CenterCrop(crop_size=224), transforms.Normalize()
 ])
 
 # 定义训练和验证所用的数据集
@@ -39,7 +34,7 @@ eval_dataset = pdx.datasets.ImageNet(
 # VisualDL启动方式: visualdl --logdir output/mobilenetv2/vdl_log --port 8001
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
-model = pdx.cls.MobileNetV2(num_classes=len(train_dataset.labels))
+model = pdx.cls.ResNet50_vd_ssld(num_classes=len(train_dataset.labels))
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
@@ -47,5 +42,5 @@ model.train(
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.025,
-    save_dir='output/mobilenetv2',
+    save_dir='output/resnet50_vd_ssld',
     use_vdl=True)

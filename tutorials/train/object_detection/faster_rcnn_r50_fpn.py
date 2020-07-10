@@ -1,7 +1,4 @@
 import os
-# 选择使用0号卡
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 from paddlex.det import transforms
 import paddlex as pdx
 
@@ -11,18 +8,17 @@ pdx.utils.download_and_decompress(insect_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize(),
-    transforms.ResizeByShort(short_size=800, max_size=1333),
-    transforms.Padding(coarsest_stride=32)
+    transforms.RandomHorizontalFlip(), transforms.Normalize(),
+    transforms.ResizeByShort(
+        short_size=800, max_size=1333), transforms.Padding(coarsest_stride=32)
 ])
 
 eval_transforms = transforms.Compose([
     transforms.Normalize(),
-    transforms.ResizeByShort(short_size=800, max_size=1333),
+    transforms.ResizeByShort(
+        short_size=800, max_size=1333),
     transforms.Padding(coarsest_stride=32),
 ])
-
 # 定义训练和验证所用的数据集
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
@@ -43,7 +39,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 # num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
 num_classes = len(train_dataset.labels) + 1
-model = pdx.det.FasterRCNN(num_classes=num_classes)
+model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='ResNet50_vd')
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,
