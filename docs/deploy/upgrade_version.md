@@ -9,6 +9,6 @@
 ## 版本转换
 
 ```
-paddlex --export_inference --model_dir=/path/to/low_version_model --save_dir=SSpath/to/high_version_model
+paddlex --export_inference --model_dir=/path/to/low_version_model --save_dir=/path/to/high_version_model
 ```
 `--model_dir`为版本号小于1.0.0的模型路径，可以是PaddleX训练过程保存的模型，也可以是导出为inference格式的模型。`--save_dir`为转换为高版本的模型，后续可用于多端部署。
