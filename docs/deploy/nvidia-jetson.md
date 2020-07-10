@@ -17,13 +17,13 @@
 **说明**：其中`C++`预测代码在`/root/projects/PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
 
 
-### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
+### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
 
 目前PaddlePaddle为Nvidia-Jetson 提供了一个基于1.6.2版本的C++ 预测库。
 
 |  版本说明   | 预测库(1.6.2版本)  |
 |  ----  | ----  |
-| nv-jetson-cuda10-cudnn7.5-trt5 | [fluid_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/1.7.1-nv-jetson-cuda10-cudnn7.5-trt5/fluid_inference.tar.gz) |
+| nv-jetson-cuda10-cudnn7.5-trt5 | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.7.1-nv-jetson-cuda10-cudnn7.5-trt5/fluid_inference.tar.gz) |
 
 下载并解压后`/root/projects/fluid_inference`目录包含内容为：
 ```

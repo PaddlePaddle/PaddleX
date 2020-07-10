@@ -24,17 +24,17 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 **说明**：其中`C++`预测代码在`PaddleX\deploy\cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
 
 
-### Step2: 下载PaddlePaddle C++ 预测库 fluid_inference
+### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
 
 PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX依赖于Paddle 1.8，基于Paddle 1.8的Paddle预测库下载链接如下所示:
 
 |  版本说明   | 预测库(1.8.2版本)  | 编译器 | 构建工具| cuDNN | CUDA |
 |  ----  |  ----  |  ----  |  ----  | ---- | ---- |
-| cpu_avx_mkl  | [fluid_inference.zip](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/mkl/cpu/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 |
-| cpu_avx_openblas  | [fluid_inference.zip](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/open/cpu/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 |
-| cuda9.0_cudnn7_avx_mkl  | [fluid_inference.zip](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/mkl/post97/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 | 7.4.1 | 9.0 |
-| cuda9.0_cudnn7_avx_openblas  | [fluid_inference.zip](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/open/post97/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 | 7.4.1 | 9.0 |
-| cuda10.0_cudnn7_avx_mkl  | [fluid_inference.zip](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/mkl/post107/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 | 7.5.0 | 9.0 |
+| cpu_avx_mkl  | [paddle_inference](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/mkl/cpu/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 |
+| cpu_avx_openblas  | [paddle_inference](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/open/cpu/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 |
+| cuda9.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/mkl/post97/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 | 7.4.1 | 9.0 |
+| cuda9.0_cudnn7_avx_openblas  | [paddle_inference](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/open/post97/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 | 7.4.1 | 9.0 |
+| cuda10.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-wheel.bj.bcebos.com/1.8.2/win-infer/mkl/post107/fluid_inference_install_dir.zip) | MSVC 2015 update 3 | CMake v3.16.0 | 7.5.0 | 9.0 |
 
 请根据实际情况选择下载，如若以上版本不满足您的需求，请至[C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/windows_cpp_inference.html)选择符合的版本。
 
