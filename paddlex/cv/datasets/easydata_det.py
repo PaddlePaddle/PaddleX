@@ -14,13 +14,13 @@
 
 from __future__ import absolute_import
 import os.path as osp
-import platform
 import random
 import copy
 import json
 import cv2
 import numpy as np
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .voc import VOCDetection
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -84,18 +84,12 @@ class EasyDataDet(VOCDetection):
         from pycocotools.mask import decode
         ct = 0
         ann_ct = 0
-        win_sep = "\\"
-        other_sep = "/"
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
-                if platform.system() == "Windows":
-                    img_file = win_sep.join(img_file.split(other_sep))
-                    json_file = win_sep.join(json_file.split(other_sep))
-                else:
-                    img_file = other_sep.join(img_file.split(win_sep))
-                    json_file = other_sep.join(json_file.split(win_sep))
+                img_file = path_normalization(img_file)
+                json_file = path_normalization(json_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(json_file):

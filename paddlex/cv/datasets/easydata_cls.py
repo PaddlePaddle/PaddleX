@@ -14,11 +14,11 @@
 
 from __future__ import absolute_import
 import os.path as osp
-import platform
 import random
 import copy
 import json
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .imagenet import ImageNet
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -65,18 +65,12 @@ class EasyDataCls(ImageNet):
                 item = line.strip()
                 self.labels.append(item)
         logging.info("Starting to read file list from dataset...")
-        win_sep = "\\"
-        other_sep = "/"
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
-                if platform.system() == "Windows":
-                    img_file = win_sep.join(img_file.split(other_sep))
-                    json_file = win_sep.join(json_file.split(other_sep))
-                else:
-                    img_file = other_sep.join(img_file.split(win_sep))
-                    json_file = other_sep.join(json_file.split(win_sep))
+                img_file = path_normalization(img_file)
+                json_file = path_normalization(json_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(json_file):

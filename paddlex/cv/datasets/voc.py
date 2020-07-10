@@ -16,13 +16,13 @@ from __future__ import absolute_import
 import copy
 import os
 import os.path as osp
-import platform
 import random
 import re
 import numpy as np
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -86,8 +86,6 @@ class VOCDetection(Dataset):
             })
         ct = 0
         ann_ct = 0
-        win_sep = "\\"
-        other_sep = "/"
         with open(file_list, 'r', encoding=get_encoding(file_list)) as fr:
             while True:
                 line = fr.readline()
@@ -95,12 +93,8 @@ class VOCDetection(Dataset):
                     break
                 img_file, xml_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
-                if platform.system() == "Windows":
-                    img_file = win_sep.join(img_file.split(other_sep))
-                    xml_file = win_sep.join(xml_file.split(other_sep))
-                else:
-                    img_file = other_sep.join(img_file.split(win_sep))
-                    xml_file = other_sep.join(xml_file.split(win_sep))
+                img_file = path_normalization(img_file)
+                xml_file = path_normalization(xml_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(xml_file):

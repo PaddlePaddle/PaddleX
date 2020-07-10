@@ -20,6 +20,7 @@ import numpy as np
 import six
 import yaml
 import math
+import platform
 from . import logging
 
 
@@ -49,6 +50,14 @@ def get_environ_info():
                 info['num'] = fluid.core.get_cuda_device_count()
     return info
 
+def path_normalization(path):
+    win_sep = "\\"
+    other_sep = "/"
+    if platform.system() == "Windows":
+        path = win_sep.join(path.split(other_sep))
+    else:
+        path = other_sep.join(path.split(win_sep))
+    return path
 
 def parse_param_file(param_file, return_shape=True):
     from paddle.fluid.proto.framework_pb2 import VarType

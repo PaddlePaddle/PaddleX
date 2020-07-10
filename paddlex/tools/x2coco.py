@@ -23,6 +23,7 @@ import shutil
 import numpy as np
 import PIL.ImageDraw
 from .base import MyEncoder, is_pic, get_encoding
+from paddlex.utils import path_normalization
         
         
 class X2COCO(object):
@@ -101,12 +102,7 @@ class LabelMe2COCO(X2COCO):
         image["height"] = json_info["imageHeight"]
         image["width"] = json_info["imageWidth"]
         image["id"] = image_id + 1
-        win_sep = "\\"
-        other_sep = "/"
-        if platform.system() == "Windows":
-            json_info["imagePath"] = win_sep.join(json_info["imagePath"].split(other_sep))
-        else:
-            json_info["imagePath"] = other_sep.join(json_info["imagePath"].split(win_sep))
+        json_info["imagePath"] = path_normalization(json_info["imagePath"])
         image["file_name"] = osp.split(json_info["imagePath"])[-1]
         return image
     
@@ -194,12 +190,7 @@ class EasyData2COCO(X2COCO):
         image["height"] = img.shape[0]
         image["width"] = img.shape[1]
         image["id"] = image_id + 1
-        win_sep = "\\"
-        other_sep = "/"
-        if platform.system() == "Windows":
-            img_path = win_sep.join(img_path.split(other_sep))
-        else:
-            img_path = other_sep.join(img_path.split(win_sep))
+        img_path = path_normalization(img_path)
         image["file_name"] = osp.split(img_path)[-1]
         return image
     

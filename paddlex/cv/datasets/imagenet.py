@@ -14,10 +14,10 @@
 
 from __future__ import absolute_import
 import os.path as osp
-import platform
 import random
 import copy
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -64,15 +64,10 @@ class ImageNet(Dataset):
                 item = line.strip()
                 self.labels.append(item)
         logging.info("Starting to read file list from dataset...")
-        win_sep = "\\"
-        other_sep = "/"
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
-                if platform.system() == "Windows":
-                    items[0] = win_sep.join(items[0].split(other_sep))
-                else:
-                    items[0] = other_sep.join(items[0].split(win_sep))
+                items[0] = path_normalization(items[0])
                 if not is_pic(items[0]):
                     continue
                 full_path = osp.join(data_dir, items[0])
