@@ -18,7 +18,6 @@ import cv2
 import json
 import os
 import os.path as osp
-import platform
 import shutil
 import numpy as np
 import PIL.ImageDraw
