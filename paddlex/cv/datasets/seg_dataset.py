@@ -61,10 +61,17 @@ class SegDataset(Dataset):
                 for line in f:
                     item = line.strip()
                     self.labels.append(item)
-
+        win_sep = "\\"
+        other_sep = "/"
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                if platform.system() == "Windows":
+                    items[0] = win_sep.join(items[0].split(other_sep))
+                    items[1] = win_sep.join(items[1].split(other_sep))
+                else:
+                    items[0] = other_sep.join(items[0].split(win_sep))
+                    items[1] = other_sep.join(items[1].split(win_sep))
                 if not is_pic(items[0]):
                     continue
                 full_path_im = osp.join(data_dir, items[0])

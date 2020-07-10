@@ -18,6 +18,7 @@ import cv2
 import json
 import os
 import os.path as osp
+import platform
 import shutil
 import numpy as np
 import PIL.ImageDraw
@@ -100,6 +101,12 @@ class LabelMe2COCO(X2COCO):
         image["height"] = json_info["imageHeight"]
         image["width"] = json_info["imageWidth"]
         image["id"] = image_id + 1
+        win_sep = "\\"
+        other_sep = "/"
+        if platform.system() == "Windows":
+            json_info["imagePath"] = win_sep.join(json_info["imagePath"].split(other_sep))
+        else:
+            json_info["imagePath"] = other_sep.join(json_info["imagePath"].split(win_sep))
         image["file_name"] = osp.split(json_info["imagePath"])[-1]
         return image
     
@@ -187,6 +194,12 @@ class EasyData2COCO(X2COCO):
         image["height"] = img.shape[0]
         image["width"] = img.shape[1]
         image["id"] = image_id + 1
+        win_sep = "\\"
+        other_sep = "/"
+        if platform.system() == "Windows":
+            img_path = win_sep.join(img_path.split(other_sep))
+        else:
+            img_path = other_sep.join(img_path.split(win_sep))
         image["file_name"] = osp.split(img_path)[-1]
         return image
     
@@ -268,6 +281,12 @@ class JingLing2COCO(X2COCO):
         image["height"] = json_info["size"]["height"]
         image["width"] = json_info["size"]["width"]
         image["id"] = image_id + 1
+        win_sep = "\\"
+        other_sep = "/"
+        if platform.system() == "Windows":
+            json_info["path"] = win_sep.join(json_info["path"].split(other_sep))
+        else:
+            json_info["path"] = other_sep.join(json_info["path"].split(win_sep))
         image["file_name"] = osp.split(json_info["path"])[-1]
         return image
     

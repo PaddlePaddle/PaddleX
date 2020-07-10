@@ -16,6 +16,7 @@ from __future__ import absolute_import
 import copy
 import os
 import os.path as osp
+import platform
 import random
 import re
 import numpy as np
@@ -85,6 +86,8 @@ class VOCDetection(Dataset):
             })
         ct = 0
         ann_ct = 0
+        win_sep = "\\"
+        other_sep = "/"
         with open(file_list, 'r', encoding=get_encoding(file_list)) as fr:
             while True:
                 line = fr.readline()
@@ -92,6 +95,12 @@ class VOCDetection(Dataset):
                     break
                 img_file, xml_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                if platform.system() == "Windows":
+                    img_file = win_sep.join(img_file.split(other_sep))
+                    xml_file = win_sep.join(xml_file.split(other_sep))
+                else:
+                    img_file = other_sep.join(img_file.split(win_sep))
+                    xml_file = other_sep.join(xml_file.split(win_sep))
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(xml_file):
@@ -106,8 +115,11 @@ class VOCDetection(Dataset):
                     ct = int(tree.find('id').text)
                     im_id = np.array([int(tree.find('id').text)])
                 pattern = re.compile('<object>', re.IGNORECASE)
-                obj_tag = pattern.findall(
-                    str(ET.tostringlist(tree.getroot())))[0][1:-1]
+                obj_match = pattern.findall(
+                    str(ET.tostringlist(tree.getroot())))
+                if len(obj_match) == 0:
+                    continue
+                obj_tag = obj_match[0][1:-1]
                 objs = tree.findall(obj_tag)
                 pattern = re.compile('<size>', re.IGNORECASE)
                 size_tag = pattern.findall(
