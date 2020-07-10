@@ -1,6 +1,7 @@
-# 模型压缩-slim
+# 模型压缩
 
-## 计算参数敏感度
+## paddlex.slim.cal_params_sensitivities
+> **计算参数敏感度**  
 ```
 paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size=8)
 ```
@@ -18,7 +19,8 @@ paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size
 * **batch_size** (int): 评估时的batch_size大小。
 
 
-## 导出量化模型
+## paddlex.slim.export_quant_model
+> **导出量化模型**  
 ```
 paddlex.slim.export_quant_model(model, test_dataset, batch_size=2, batch_num=10, save_dir='./quant_model', cache_dir='./temp')
 ```
