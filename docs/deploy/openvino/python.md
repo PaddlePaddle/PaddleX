@@ -19,7 +19,7 @@
 | --img  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台, 默认值为"CPU" |
-| --cfg_dir | PaddleX model 的.yml配置文件 |
+| --cfg_file | PaddleX model 的.yml配置文件 |
   
 ### 样例
 `样例一`：  
@@ -28,7 +28,7 @@
 ```
 cd /root/projects/python  
 
-python demo.py --model_dir /path/to/openvino_model --img /path/to/test_img.jpeg --cfg_dir /path/to/PadlleX_model.yml
+python demo.py --model_dir /path/to/openvino_model --img /path/to/test_img.jpeg --cfg_file /path/to/PadlleX_model.yml
 ```  
 
 样例二`:
@@ -45,7 +45,7 @@ python demo.py --model_dir /path/to/openvino_model --img /path/to/test_img.jpeg 
 ```
 cd /root/projects/python  
 
-python demo.py --model_dir /path/to/models/openvino_model --image_list /root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml
+python demo.py --model_dir /path/to/models/openvino_model --image_list /root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml
 ```
 
 

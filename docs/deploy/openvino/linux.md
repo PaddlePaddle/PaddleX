@@ -70,7 +70,7 @@ OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
 | --image  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台, 默认值为"CPU" |
-| --cfg_dir | PaddleX model 的.yml配置文件 |
+| --cfg_file | PaddleX model 的.yml配置文件 |
 | --save_dir | 分割模型预测时保存可视化图片，仅支持分割模型，默认值为空 |
 
 
@@ -80,7 +80,7 @@ OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
 测试图片 `/path/to/test_img.jpeg`  
 
 ```shell
-./build/segmenter --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_dir=/path/to/PadlleX_model.yml --save_dir=/path/to/save/visualize_img
+./build/segmenter --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml --save_dir=/path/to/save/visualize_img
 
 ```
 
@@ -96,5 +96,5 @@ OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
 ```
 
 ```shell
-./build/classifier --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml
+./build/classifier --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml
 ```
