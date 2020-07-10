@@ -271,12 +271,7 @@ class JingLing2COCO(X2COCO):
         image["height"] = json_info["size"]["height"]
         image["width"] = json_info["size"]["width"]
         image["id"] = image_id + 1
-        win_sep = "\\"
-        other_sep = "/"
-        if platform.system() == "Windows":
-            json_info["path"] = win_sep.join(json_info["path"].split(other_sep))
-        else:
-            json_info["path"] = other_sep.join(json_info["path"].split(win_sep))
+        json_info["path"] = path_normalization(json_info["path"])
         image["file_name"] = osp.split(json_info["path"])[-1]
         return image
     
