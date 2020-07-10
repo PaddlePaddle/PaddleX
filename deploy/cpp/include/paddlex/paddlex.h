@@ -72,15 +72,15 @@ class Model {
    * @param use_trt: use Tensor RT or not when infering
    * @param gpu_id: the id of gpu when infering with using gpu
    * @param key: the key of encryption when using encrypted model
-   * @param batch_size: batch size of infering
+   * @param use_ir_optim: use ir optimization when infering
    * */
   void Init(const std::string& model_dir,
             bool use_gpu = false,
             bool use_trt = false,
             int gpu_id = 0,
             std::string key = "",
-            int batch_size = 1) {
-    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, batch_size);
+            bool use_ir_optim = true) {
+    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, use_ir_optim);
   }
 
   void create_predictor(const std::string& model_dir,
@@ -88,7 +88,7 @@ class Model {
                         bool use_trt = false,
                         int gpu_id = 0,
                         std::string key = "",
-                        int batch_size = 1);
+                        bool use_ir_optim = true);
 
   /*
    * @brief

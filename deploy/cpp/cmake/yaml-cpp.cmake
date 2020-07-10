@@ -1,5 +1,3 @@
-find_package(Git REQUIRED)
-
 include(ExternalProject)
 
 message("${CMAKE_BUILD_TYPE}")
