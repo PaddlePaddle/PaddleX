@@ -12,7 +12,7 @@ PaddleX的安卓端部署由PaddleLite实现，部署的流程如下，首先将
 ## step 1. 将PaddleX模型导出为inference模型
 
 参考[导出inference模型](../export_model.html)将模型导出为inference格式模型。
-**注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](./upgrade_version.md)对模型版本进行升级。**
+**注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](../upgrade_version.md)对模型版本进行升级。**
 
 ## step 2. 将inference模型优化为PaddleLite模型
 
@@ -79,7 +79,7 @@ PaddleX Android SDK是PaddleX基于Paddle-Lite开发的安卓端AI推理工具�
 - Paddle-Lite接口层，以Java接口封装了底层c++推理库。
 - PaddleX业务层，封装了PaddleX导出模型的预处理，推理和后处理，以及可视化，支持PaddleX导出的检测、分割、分类模型。
 
-<img width="600" src="../images/paddlex_android_sdk_framework.jpg"/>
+![架构](../images/paddlex_android_sdk_framework.jpg)
 
 #### 3.3.1 SDK安装
 

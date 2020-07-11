@@ -8,3 +8,4 @@
 
    quant.md
    prune.md
+   tutorials/index
