@@ -40,18 +40,17 @@ PaddleX提供了部分公开数据集上训练好的模型，用户可以直接�
 
 | 类型 |     模型(点击下载)     |     数据集    |     大小     |     指标    |    指标数值    |
 |:--- | :----------  | :-----------  | :----------  | :---------- | :------------- |
-| 图像分类 | [MobileNetV3_small_ssld]() | ImageNet | xxMB | Accuracy  |             |
-| 图像分类 | [ResNet50_vd_ssld]()  | ImageNet  | xxMB  | Accuracy  |              |
-| 目标检测 | [FasterRCNN-ResNet50-FPN]() | MSCOCO | xxMB     |    Box MAP  |                |
-| 目标检测 | [YOLOv3-MobileNetV1]()    | MSCOCO | xxMB      | Box MAP    |                 |
-| 目标检测 | [YOLOv3-DarkNet53]()      | MSCOCO | xxMB      | Box MAP    |                 |
-| 实例分割 | [MaskRCNN-ResNet50-FPN]()  | MSCOCO | xxMB     | Box MAP/Seg MAP |            |
+| 图像分类 | [MobileNetV3_small_ssld](https://bj.bcebos.com/paddlex/models/mobilenetv3_small_ssld_imagenet.tar.gz) | ImageNet | 13MB | Accuracy  |     71.3%        |
+| 图像分类 | [ResNet50_vd_ssld](https://bj.bcebos.com/paddlex/models/resnet50_vd_ssld_imagenet.tar.gz)  | ImageNet  | 110MB  | Accuracy  |   82.4%       |
+| 目标检测 | [FasterRCNN-ResNet50-FPN](https://bj.bcebos.com/paddlex/models/faster_r50_fpn_coco.tar.gz) | MSCOCO | 179MB     |    Box MAP  |       37.7%     |
+| 目标检测 | [YOLOv3-MobileNetV1](https://bj.bcebos.com/paddlex/models/yolov3_mobilenetv1_coco.tar.gz)    | MSCOCO | 106MB      | Box MAP    |      29.3%      |
+| 目标检测 | [YOLOv3-DarkNet53](https://bj.bcebos.com/paddlex/models/yolov3_darknet53_coco.tar.gz)      | MSCOCO | 266MMB      | Box MAP    |      34.8%      |
+| 目标检测 | [YOLOv3-MobileNetV3](https://bj.bcebos.com/paddlex/models/yolov3_mobilenetv3_coco.tar.gz)      | MSCOCO | 101MB      | Box MAP    |      31.6%      |
+| 实例分割 | [MaskRCNN-ResNet50-FPN](https://bj.bcebos.com/paddlex/models/mask_r50_fpn_coco.tar.gz)  | MSCOCO | 193MB     | Box MAP/Seg MAP |   38.7% / 34.7%     |
 | 语义分割 | [DeepLabv3p-Xception65]()  | 人像分割 | xxMB     | mIoU        |      -          |
 | 语义分割 | [HRNet_w18_small]()           | 人像分割   | xxMB   | mIou       |        -           |
 
 PaddleX的`load_model`接口可以满足用户一般的模型调研需求，如若为更高性能的预测部署，可以参考如下文档
 
-- [服务端Python部署]()  
-- [服务端C++部署]()
-
-
+- [服务端Python部署](../deploy/server/python.md)  
+- [服务端C++部署](../deploy/server/cpp/index.html)
