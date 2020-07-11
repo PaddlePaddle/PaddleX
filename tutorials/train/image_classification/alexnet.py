@@ -1,4 +1,3 @@
-import os
 from paddlex.cls import transforms
 import paddlex as pdx
 

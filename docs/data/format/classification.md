@@ -24,10 +24,13 @@ MyDataset/ # 图像分类数据集根目录
 ## 划分训练集验证集
 
 **为了用于训练，我们需要在`MyDataset`目录下准备`train_list.txt`, `val_list.txt`和`labels.txt`三个文件**，分别用于表示训练集列表，验证集列表和类别标签列表。[点击下载图像分类示例数据集](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
+
+<!--
 > 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中split指标训练集的比例，剩余的比例用于验证集。
 > ```
 > paddlex --split_dataset --from ImageNet --split 0.8 --save_dir ./splited_dataset_dir
 > ```
+-->
 
 **labels.txt**  
 
@@ -60,8 +63,14 @@ val_list列出用于验证时的图片集成，与其对应的类别id，格式�
 ```
 import paddlex as pdx
 from paddlex.cls import transforms
-train_transforms = transforms.ComposedClsTransforms(mode='train', crop_size=[224, 224])
-eval_transforms = transforms.ComposedClsTransforms(mode='eval', crop_size=[224, 224])
+train_transforms = transforms.Compose([
+    transforms.RandomCrop(crop_size=224), transforms.RandomHorizontalFlip(),
+    transforms.Normalize()
+])
+eval_transforms = transforms.Compose([
+    transforms.ResizeByShort(short_size=256),
+    transforms.CenterCrop(crop_size=224), transforms.Normalize()
+])
 train_dataset = pdx.datasets.ImageNet(
                     data_dir='./MyDataset',
                     file_list='./MyDataset/train_list.txt',

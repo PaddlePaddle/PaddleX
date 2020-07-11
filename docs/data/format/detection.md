@@ -21,10 +21,13 @@ MyDataset/ # 目标检测数据集根目录
 ## 划分训练集验证集
 
 **为了用于训练，我们需要在`MyDataset`目录下准备`train_list.txt`, `val_list.txt`和`labels.txt`三个文件**，分别用于表示训练集列表，验证集列表和类别标签列表。[点击下载目标检测示例数据集](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)
+
+<!--
 > 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中split指标训练集的比例，剩余的比例用于验证集。
 > ```
 > paddlex --split_dataset --from PascalVOC --pics ./JPEGImages --annotations ./Annotations --split 0.8 --save_dir ./splited_dataset_dir
 > ```
+-->
 
 **labels.txt**  
 
@@ -56,8 +59,18 @@ val_list列出用于验证时的图片集成，与其对应的标注文件，格
 import paddlex as pdx
 from paddlex.det import transforms
 
-train_transforms = transforms.ComposedYOLOv3Transforms(mode='train', shape=[608, 608])
-eval_transforms = transforms.ComposedYOLOv3Transforms(mode='eval', shape=[608, 608])
+train_transforms = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.Normalize(),
+    transforms.ResizeByShort(short_size=800, max_size=1333),
+    transforms.Padding(coarsest_stride=32)
+])
+
+eval_transforms = transforms.Compose([
+    transforms.Normalize(),
+    transforms.ResizeByShort(short_size=800, max_size=1333),
+    transforms.Padding(coarsest_stride=32),
+])
 
 train_dataset = pdx.datasets.VOCDetection(
                         data_dir='./MyDataset',
