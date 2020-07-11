@@ -15,11 +15,17 @@
 import numpy as np
 import cv2
 import copy
+import paddle.fluid as fluid
+from paddlex.cv.transforms import arrange_transforms
 
 
 def interpretation_predict(model, images):
     images = images.astype('float32')
-    model.arrange_transforms(transforms=model.test_transforms, mode='test')
+    arrange_transforms(
+        model.model_type,
+        model.__class__.__name__,
+        transforms=model.test_transforms,
+        mode='test')
     tmp_transforms = copy.deepcopy(model.test_transforms.transforms)
     model.test_transforms.transforms = model.test_transforms.transforms[-2:]
 
@@ -29,9 +35,11 @@ def interpretation_predict(model, images):
         new_imgs.append(model.test_transforms(images[i])[0])
 
     new_imgs = np.array(new_imgs)
-    out = model.exe.run(model.test_prog,
-                        feed={'image': new_imgs},
-                        fetch_list=list(model.interpretation_feats.values()))
+    with fluid.scope_guard(model.scope):
+        out = model.exe.run(
+            model.test_prog,
+            feed={'image': new_imgs},
+            fetch_list=list(model.interpretation_feats.values()))
 
     model.test_transforms.transforms = tmp_transforms
 

@@ -8,20 +8,18 @@ pdx.utils.download_and_decompress(insect_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.MixupImage(mixup_epoch=250),
+    transforms.MixupImage(mixup_epoch=250), 
     transforms.RandomDistort(),
-    transforms.RandomExpand(),
-    transforms.RandomCrop(),
-    transforms.Resize(
-        target_size=608, interp='RANDOM'),
+    transforms.RandomExpand(), 
+    transforms.RandomCrop(), 
+    transforms.Resize(target_size=608, interp='RANDOM'), 
     transforms.RandomHorizontalFlip(),
-    transforms.Normalize(),
+    transforms.Normalize()
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.Resize(
-        target_size=608, interp='CUBIC'),
-    transforms.Normalize(),
+    transforms.Resize(target_size=608, interp='CUBIC'), 
+    transforms.Normalize()
 ])
 
 # 定义训练和验证所用的数据集

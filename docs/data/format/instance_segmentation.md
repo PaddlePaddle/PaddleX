@@ -17,10 +17,13 @@ MyDataset/ # 实例分割数据集根目录
 ## 划分训练集验证集
 
 在PaddleX中，为了区分训练集和验证集，在`MyDataset`同级目录，使用不同的json表示数据的划分，例如`train.json`和`val.json`。[点击下载实例分割示例数据集](https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz)。
+
+<!--
 > 注：也可使用PaddleX自带工具，对数据集进行随机划分，在数据按照上述示例组织结构后，使用如下命令，即可快速完成数据集随机划分，其中split指定训练集的比例，剩余比例用于验证集。
 > ```
 > paddlex --split_dataset --from MSCOCO --pics ./JPEGImages --annotations ./annotations.json --split 0.8 --save_dir ./splited_dataset_dir
 > ```
+-->
 
 MSCOCO数据的标注文件采用json格式，用户可使用Labelme, 精灵标注助手或EasyData等标注工具进行标注，参见[数据标注工具](../annotations.md)
 
@@ -30,8 +33,18 @@ MSCOCO数据的标注文件采用json格式，用户可使用Labelme, 精灵标�
 import paddlex as pdx
 from paddlex.det import transforms
 
-train_transforms = transforms.ComposedRCNNTransforms(mode='train', min_max_size=[800, 1333])
-eval_transforms = transforms.ComposedRCNNTransforms(mode='eval', min_max_size=[800, 1333])
+train_transforms = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.Normalize(),
+    transforms.ResizeByShort(short_size=800, max_size=1333),
+    transforms.Padding(coarsest_stride=32)
+])
+
+eval_transforms = transforms.Compose([
+    transforms.Normalize(),
+    transforms.ResizeByShort(short_size=800, max_size=1333),
+    transforms.Padding(coarsest_stride=32),
+])
 
 train_dataset = pdx.dataset.CocoDetection(
                     data_dir='./MyDataset/JPEGImages',

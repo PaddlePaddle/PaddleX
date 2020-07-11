@@ -11,15 +11,15 @@ pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(), transforms.Normalize(),
-    transforms.ResizeByShort(
-        short_size=800, max_size=1333), transforms.Padding(coarsest_stride=32)
+    transforms.RandomHorizontalFlip(), 
+    transforms.Normalize(),
+    transforms.ResizeByShort(short_size=800, max_size=1333), 
+    transforms.Padding(coarsest_stride=32)
 ])
 
 eval_transforms = transforms.Compose([
     transforms.Normalize(),
-    transforms.ResizeByShort(
-        short_size=800, max_size=1333),
+    transforms.ResizeByShort(short_size=800, max_size=1333),
     transforms.Padding(coarsest_stride=32),
 ])
 

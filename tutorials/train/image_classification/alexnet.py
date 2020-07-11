@@ -1,4 +1,3 @@
-import os
 from paddlex.cls import transforms
 import paddlex as pdx
 
@@ -8,12 +7,14 @@ pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224), transforms.RandomHorizontalFlip(),
+    transforms.RandomCrop(crop_size=224), 
+    transforms.RandomHorizontalFlip(),
     transforms.Normalize()
 ])
 eval_transforms = transforms.Compose([
     transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224), transforms.Normalize()
+    transforms.CenterCrop(crop_size=224), 
+    transforms.Normalize()
 ])
 
 # 定义训练和验证所用的数据集

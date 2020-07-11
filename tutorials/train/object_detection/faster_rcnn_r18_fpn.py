@@ -39,7 +39,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 # num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
 num_classes = len(train_dataset.labels) + 1
-model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='ResNet50')
+model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='ResNet18')
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,

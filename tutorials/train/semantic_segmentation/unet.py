@@ -11,8 +11,10 @@ pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 # 定义训练和验证时的transforms
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(), transforms.ResizeRangeScaling(),
-    transforms.RandomPaddingCrop(crop_size=512), transforms.Normalize()
+    transforms.RandomHorizontalFlip(), 
+    transforms.ResizeRangeScaling(),
+    transforms.RandomPaddingCrop(crop_size=512), 
+    transforms.Normalize()
 ])
 
 eval_transforms = transforms.Compose([
