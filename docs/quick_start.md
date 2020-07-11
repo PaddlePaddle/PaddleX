@@ -121,4 +121,4 @@ Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'cate
 - 1.[目标检测模型训练](tutorials/train/detection.md)
 - 2.[语义分割模型训练](tutorials/train/segmentation.md)
 - 3.[实例分割模型训练](tutorials/train/instance_segmentation.md)
-- 3.[模型太大，想要更小的模型，试试模型裁剪吧!](tutorials/compress/classification.md)
+- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](tutorials/compress/classification.md)
