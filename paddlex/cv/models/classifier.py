@@ -17,10 +17,13 @@ import numpy as np
 import time
 import math
 import tqdm
+from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
 import paddlex
+from paddlex.cv.transforms import arrange_transforms
+from paddlex.cv.datasets import generate_minibatch
 from collections import OrderedDict
 from .base import BaseAPI
 
@@ -54,7 +57,8 @@ class BaseClassifier(BaseAPI):
             input_shape = [
                 None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
             ]
-            image = fluid.data(dtype='float32', shape=input_shape, name='image')
+            image = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
         else:
             image = fluid.data(
                 dtype='float32', shape=[None, 3, None, None], name='image')
@@ -219,7 +223,11 @@ class BaseClassifier(BaseAPI):
           tuple (metrics, eval_details): 当return_details为True时，增加返回dict，
               包含关键字：'true_labels'、'pred_scores'，分别代表真实类别id、每个类别的预测得分。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=eval_dataset.transforms,
+            mode='eval')
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
         k = min(5, self.num_classes)
@@ -232,8 +240,9 @@ class BaseClassifier(BaseAPI):
                     self.test_prog).with_data_parallel(
                         share_vars_from=self.parallel_train_prog)
         batch_size_each_gpu = self._get_single_card_bs(batch_size)
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -269,38 +278,106 @@ class BaseClassifier(BaseAPI):
             return metrics, eval_details
         return metrics
 
+    @staticmethod
+    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+        arrange_transforms(
+            model_type=model_type,
+            class_name=class_name,
+            transforms=transforms,
+            mode='test')
+        pool = ThreadPool(thread_num)
+        batch_data = pool.map(transforms, images)
+        pool.close()
+        pool.join()
+        padding_batch = generate_minibatch(batch_data)
+        im = np.array([data[0] for data in padding_batch])
+
+        return im
+
+    @staticmethod
+    def _postprocess(results, true_topk, labels):
+        preds = list()
+        for i, pred in enumerate(results[0]):
+            pred_label = np.argsort(pred)[::-1][:true_topk]
+            preds.append([{
+                'category_id': l,
+                'category': labels[l],
+                'score': results[0][i][l]
+            } for l in pred_label])
+
+        return preds
+
     def predict(self, img_file, transforms=None, topk=1):
         """预测。
         Args:
-            img_file (str): 预测图像路径。
+            img_file (str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
             transforms (paddlex.cls.transforms): 数据预处理操作。
             topk (int): 预测时前k个最大值。
         Returns:
             list: 其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，
             分别对应预测类别id、预测类别标签、预测得分。
         """
+
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
         true_topk = min(self.num_classes, topk)
-        if transforms is not None:
-            self.arrange_transforms(transforms=transforms, mode='test')
-            im = transforms(img_file)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
         else:
-            self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-            im = self.test_transforms(img_file)
+            raise Exception("img_file must be str/np.ndarray")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im = BaseClassifier._preprocess(images, transforms, self.model_type,
+                                        self.__class__.__name__)
+
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
                                   feed={'image': im},
                                   fetch_list=list(self.test_outputs.values()),
                                   use_program_cache=True)
-        pred_label = np.argsort(result[0][0])[::-1][:true_topk]
-        res = [{
-            'category_id': l,
-            'category': self.labels[l],
-            'score': result[0][0][l]
-        } for l in pred_label]
-        return res
+
+        preds = BaseClassifier._postprocess(result, true_topk, self.labels)
+
+        return preds[0]
+
+    def batch_predict(self,
+                      img_file_list,
+                      transforms=None,
+                      topk=1,
+                      thread_num=2):
+        """预测。
+        Args:
+            img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+            transforms (paddlex.cls.transforms): 数据预处理操作。
+            topk (int): 预测时前k个最大值。
+            thread_num (int): 并发执行各图像预处理时的线程数。
+        Returns:
+            list: 每个元素都为列表，表示各图像的预测结果。在各图像的预测列表中，其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，
+            分别对应预测类别id、预测类别标签、预测得分。
+        """
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+        true_topk = min(self.num_classes, topk)
+        if not isinstance(img_file_list, (list, tuple)):
+            raise Exception("im_file must be list/tuple")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im = BaseClassifier._preprocess(img_file_list, transforms,
+                                        self.model_type,
+                                        self.__class__.__name__, thread_num)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
+
+        preds = BaseClassifier._postprocess(result, true_topk, self.labels)
+
+        return preds
 
 
 class ResNet18(BaseClassifier):

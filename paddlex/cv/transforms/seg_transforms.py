@@ -81,9 +81,10 @@ class Compose(SegTransform):
                     format(len(im.shape)))
         else:
             try:
-                im = cv2.imread(im).astype('float32')
+                im = cv2.imread(im)
             except:
                 raise ValueError('Can\'t read The image file {}!'.format(im))
+        im = im.astype('float32')
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if label is not None:
@@ -399,7 +400,8 @@ class ResizeByShort(SegTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))

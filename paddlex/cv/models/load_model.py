@@ -21,6 +21,7 @@ import paddle.fluid as fluid
 from paddle.fluid.framework import Parameter
 import paddlex
 import paddlex.utils.logging as logging
+from paddlex.cv.transforms import build_transforms, build_transforms_v1
 
 
 def load_model(model_dir, fixed_input_shape=None):
@@ -100,8 +101,8 @@ def load_model(model_dir, fixed_input_shape=None):
                 model.model_type, info['Transforms'], info['BatchTransforms'])
             model.eval_transforms = copy.deepcopy(model.test_transforms)
         else:
-            model.test_transforms = build_transforms(model.model_type,
-                                                     info['Transforms'], to_rgb)
+            model.test_transforms = build_transforms(
+                model.model_type, info['Transforms'], to_rgb)
             model.eval_transforms = copy.deepcopy(model.test_transforms)
 
     if '_Attributes' in info:
@@ -128,67 +129,3 @@ def fix_input_shape(info, fixed_input_shape=None):
             padding['Padding']['target_size'] = list(fixed_input_shape)
             info['Transforms'].append(resize)
             info['Transforms'].append(padding)
-
-
-def build_transforms(model_type, transforms_info, to_rgb=True):
-    if model_type == "classifier":
-        import paddlex.cv.transforms.cls_transforms as T
-    elif model_type == "detector":
-        import paddlex.cv.transforms.det_transforms as T
-    elif model_type == "segmenter":
-        import paddlex.cv.transforms.seg_transforms as T
-    transforms = list()
-    for op_info in transforms_info:
-        op_name = list(op_info.keys())[0]
-        op_attr = op_info[op_name]
-        if not hasattr(T, op_name):
-            raise Exception(
-                "There's no operator named '{}' in transforms of {}".format(
-                    op_name, model_type))
-        transforms.append(getattr(T, op_name)(**op_attr))
-    eval_transforms = T.Compose(transforms)
-    eval_transforms.to_rgb = to_rgb
-    return eval_transforms
-
-
-def build_transforms_v1(model_type, transforms_info, batch_transforms_info):
-    """ 老版本模型加载，仅支持PaddleX前端导出的模型
-    """
-    logging.debug("Use build_transforms_v1 to reconstruct transforms")
-    if model_type == "classifier":
-        import paddlex.cv.transforms.cls_transforms as T
-    elif model_type == "detector":
-        import paddlex.cv.transforms.det_transforms as T
-    elif model_type == "segmenter":
-        import paddlex.cv.transforms.seg_transforms as T
-    transforms = list()
-    for op_info in transforms_info:
-        op_name = op_info[0]
-        op_attr = op_info[1]
-        if op_name == 'DecodeImage':
-            continue
-        if op_name == 'Permute':
-            continue
-        if op_name == 'ResizeByShort':
-            op_attr_new = dict()
-            if 'short_size' in op_attr:
-                op_attr_new['short_size'] = op_attr['short_size']
-            else:
-                op_attr_new['short_size'] = op_attr['target_size']
-            op_attr_new['max_size'] = op_attr.get('max_size', -1)
-            op_attr = op_attr_new
-        if op_name.startswith('Arrange'):
-            continue
-        if not hasattr(T, op_name):
-            raise Exception(
-                "There's no operator named '{}' in transforms of {}".format(
-                    op_name, model_type))
-        transforms.append(getattr(T, op_name)(**op_attr))
-    if model_type == "detector" and len(batch_transforms_info) > 0:
-        op_name = batch_transforms_info[0][0]
-        op_attr = batch_transforms_info[0][1]
-        assert op_name == "PaddingMiniBatch", "Only PaddingMiniBatch transform is supported for batch transform"
-        padding = T.Padding(coarsest_stride=op_attr['coarsest_stride'])
-        transforms.append(padding)
-    eval_transforms = T.Compose(transforms)
-    return eval_transforms
