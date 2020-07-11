@@ -1,16 +1,8 @@
-# HumanSeg人像分割模型
+# 人像分割模型
 
 本教程基于PaddleX核心分割模型实现人像分割，开放预训练模型和测试数据、支持视频流人像分割、提供模型Fine-tune到Paddle-Lite移动端部署的全流程应用指南。
 
-## 目录
-
-* [预训练模型和测试数据](#1)
-* [快速体验视频流人像分割](#2)
-* [模型Fine-tune](#3)
-* [Paddle-Lite移动端部署](#4)
-
-
-## <h2 id="1">预训练模型和测试数据</h2>
+## 预训练模型和测试数据
 
 #### 预训练模型
 
@@ -47,7 +39,7 @@ python pretrain_weights/download_pretrain_weights.py
 python data/download_data.py
 ```
 
-## <h2 id="2">快速体验视频流人像分割</h2>
+## 快速体验视频流人像分割
 
 #### 前置依赖
 
@@ -100,12 +92,10 @@ python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --im
 <img src="https://paddleseg.bj.bcebos.com/humanseg/data/video_test.gif" width="20%" height="20%"><img src="https://paddleseg.bj.bcebos.com/humanseg/data/bg_replace.gif" width="20%" height="20%">
 
 **注意**:
-
 * 视频分割处理时间需要几分钟，请耐心等待。
-
 * 提供的模型适用于手机摄像头竖屏拍摄场景，宽屏效果会略差一些。
 
-## <h2 id="3">模型Fine-tune</h2>
+## 模型Fine-tune
 
 #### 前置依赖
 
@@ -212,4 +202,4 @@ python quant_offline.py --model_dir output/best_model \
 * `--save_dir`: 量化模型保存路径
 * `--image_shape`: 网络输入图像大小（w, h）
 
-## <h2 id="4">Paddle-Lite移动端部署</h2>
+## Paddle-Lite移动端部署
