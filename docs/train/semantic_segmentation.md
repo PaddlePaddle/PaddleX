@@ -4,18 +4,18 @@
 
 PaddleX目前提供了DeepLabv3p、UNet、HRNet和FastSCNN四种语义分割结构,多种backbone模型，可满足开发者不同场景和性能的需求。
 
-- **mIOU**: 模型在COCO数据集上的测试精度
+- **mIOU**: 模型在CityScape数据集上的测试精度
 - **预测速度**：单张图片的预测用时（不包括预处理和后处理)
 - "-"表示指标暂未更新
 
-| 模型(点击获取代码)               | Box MMAP | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
+| 模型(点击获取代码)               | mIOU | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
 | :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
-| [DeepLabv3p-MobileNetV2-x0.25](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/image_classification/yolov3_mobilenetv1.py) |  29.3%  |  99.2MB  |  15.442ms   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
-| [DeepLabv3p-MobileNetV2-x1.0](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/image_classification/yolov3_mobilenetv1.py) |  29.3%  |  99.2MB  |  15.442ms   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
-| [DeepLabv3p-Xception65](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/image_classification/yolov3_mobilenetv3.py)        | 31.6%  | 100.7MB   |  143.322ms  | -  |  模型小，移动端上预测速度有优势   |
-| [UNet](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/image_classification/yolov3_darknet53.py)     | 38.9  | 249.2MB   | 42.672ms   | -  |  模型较大，预测速度快，适用于服务端   |
-| [HRNet](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/image_classification/faster_r50_fpn.py)   |  37.2%   |   136.0MB    |  197.715ms       |   -    | 模型精度高，适用于服务端部署   |
-| [FastSCNN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/image_classification/faster_r18_fpn.py)   |  -   |   -    |  -       |   -    | 模型精度高，适用于服务端部署   |
+| [DeepLabv3p-MobileNetV2-x0.25](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2_x0.25.py) |  -  |  2.9MB  |  -   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
+| [DeepLabv3p-MobileNetV2-x1.0](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2.py) |  69.8%  |  11MB  |  -   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
+| [DeepLabv3p-Xception65](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/semantic_segmentation/deeplabv3p_xception65.pyy)        | 79.3%  | 158MB   |  -  | -  |  模型大，精度高，适用于服务端   |
+| [UNet](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/semantic_segmentation/unet.py)     | -  | 52MB   | -   | -  |  模型较大，精度高，适用于服务端   |
+| [HRNet](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/semantic_segmentation/hrnet.py)   |  79.4%   |   37MB    |  -       |   -    | 模型较小，模型精度高，适用于服务端部署   |
+| [FastSCNN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/semantic_segmentation/fast_scnn.py)   |  -   |   4.5MB    |  -       |   -    | 模型小，预测速度快，适用于低性能或移动端设备   |
 
 
 ## 开始训练
@@ -31,4 +31,4 @@ PaddleX目前提供了DeepLabv3p、UNet、HRNet和FastSCNN四种语义分割结�
 
 - 【**重要**】针对自己的机器环境和数据，调整训练参数？先了解下PaddleX中训练参数作用。[——>>传送门](../appendix/parameters.md)
 - 【**有用**】没有机器资源？使用AIStudio免费的GPU资源在线训练模型。[——>>传送门](https://aistudio.baidu.com/aistudio/projectdetail/450925)
-- 【**拓展**】更多图像分类模型，查阅[PaddleX模型库](../appendix/model_zoo.md)和[API使用文档](../apis/models/index.html)。
+- 【**拓展**】更多语义分割模型，查阅[PaddleX模型库](../appendix/model_zoo.md)和[API使用文档](../apis/models/index.html)。
