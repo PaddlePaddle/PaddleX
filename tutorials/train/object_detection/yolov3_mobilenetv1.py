@@ -12,15 +12,13 @@ train_transforms = transforms.Compose([
     transforms.RandomDistort(),
     transforms.RandomExpand(),
     transforms.RandomCrop(),
-    transforms.Resize(
-        target_size=608, interp='RANDOM'),
+    transforms.Resize(target_size=608, interp='RANDOM'),
     transforms.RandomHorizontalFlip(),
     transforms.Normalize(),
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.Resize(
-        target_size=608, interp='CUBIC'),
+    transforms.Resize(target_size=608, interp='CUBIC'),
     transforms.Normalize(),
 ])
 
