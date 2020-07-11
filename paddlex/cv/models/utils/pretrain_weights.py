@@ -144,8 +144,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             logging.warning(warning_info.format(class_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'
         elif class_name == 'FastSCNN':
-            logging.warning(
-                warning_info.format(class_name, flag, 'CITYSCAPES'))
+            logging.warning(warning_info.format(class_name, flag, 'CITYSCAPES'))
             flag = 'CITYSCAPES'
     elif flag == 'CITYSCAPES':
         model_name = '{}_{}'.format(class_name, backbone)
@@ -168,8 +167,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             logging.warning(warning_info.format(class_name, flag, 'COCO'))
             flag = 'COCO'
         elif class_name == 'FastSCNN':
-            logging.warning(
-                warning_info.format(class_name, flag, 'CITYSCAPES'))
+            logging.warning(warning_info.format(class_name, flag, 'CITYSCAPES'))
             flag = 'CITYSCAPES'
 
     if flag == 'IMAGENET':
@@ -196,8 +194,14 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         #            paddlex.utils.download_and_decompress(url, path=new_save_dir)
         #            return osp.join(new_save_dir, fname)
         try:
+            logging.info(
+                "Connecting PaddleHub server to get pretrain weights...")
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
+            logging.error(
+                "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
+                format(image_pretrain[backbone]),
+                exit=False)
             if isinstance(e, hub.ResourceNotFoundError):
                 raise Exception("Resource for backbone {} not found".format(
                     backbone))
@@ -224,8 +228,14 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         #        paddlex.utils.download_and_decompress(url, path=new_save_dir)
         #        return osp.join(new_save_dir, fname)
         try:
+            logging.info(
+                "Connecting PaddleHub server to get pretrain weights...")
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
+            logging.error(
+                "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
+                format(url),
+                exit=False)
             if isinstance(hub.ResourceNotFoundError):
                 raise Exception("Resource for backbone {} not found".format(
                     backbone))
@@ -238,6 +248,5 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
                     "Unexpected error, please make sure paddlehub >= 1.6.2")
         return osp.join(new_save_dir, backbone)
     else:
-        raise Exception(
-            "pretrain_weights need to be defined as directory path or 'IMAGENET' or 'COCO' or 'Cityscapes' (download pretrain weights automatically)."
-        )
+        logging.error("Path of retrain weights '{}' is not exists!".format(
+            flag))

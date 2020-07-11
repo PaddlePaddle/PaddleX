@@ -26,6 +26,8 @@ from paddlex.cv.transforms import build_transforms, build_transforms_v1
 
 def load_model(model_dir, fixed_input_shape=None):
     model_scope = fluid.Scope()
+    if not osp.exists(model_dir):
+        logging.error("model_dir '{}' is not exists!".format(model_dir))
     if not osp.exists(osp.join(model_dir, "model.yml")):
         raise Exception("There's not model.yml in {}".format(model_dir))
     with open(osp.join(model_dir, "model.yml")) as f:
@@ -101,8 +103,8 @@ def load_model(model_dir, fixed_input_shape=None):
                 model.model_type, info['Transforms'], info['BatchTransforms'])
             model.eval_transforms = copy.deepcopy(model.test_transforms)
         else:
-            model.test_transforms = build_transforms(
-                model.model_type, info['Transforms'], to_rgb)
+            model.test_transforms = build_transforms(model.model_type,
+                                                     info['Transforms'], to_rgb)
             model.eval_transforms = copy.deepcopy(model.test_transforms)
 
     if '_Attributes' in info:
