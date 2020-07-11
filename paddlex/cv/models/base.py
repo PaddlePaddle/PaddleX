@@ -192,22 +192,31 @@ class BaseAPI:
                 if self.model_type == 'classifier':
                     if pretrain_weights not in ['IMAGENET']:
                         logging.warning(
-                            "Pretrain_weights for classifier should be defined as directory path or parameter file or 'IMAGENET' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
                 elif self.model_type == 'detector':
                     if pretrain_weights not in ['IMAGENET', 'COCO']:
                         logging.warning(
-                            "Pretrain_weights for detector should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
                 elif self.model_type == 'segmenter':
                     if pretrain_weights not in [
                             'IMAGENET', 'COCO', 'CITYSCAPES'
                     ]:
                         logging.warning(
-                            "Pretrain_weights for segmenter should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or 'CITYSCAPES', but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
             if hasattr(self, 'backbone'):
                 backbone = self.backbone
@@ -237,8 +246,8 @@ class BaseAPI:
             logging.info(
                 "Load pretrain weights from {}.".format(pretrain_weights),
                 use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(
-                self.exe, self.train_prog, pretrain_weights, fuse_bn)
+            paddlex.utils.utils.load_pretrain_weights(self.exe, self.train_prog,
+                                                      pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
             import paddleslim
@@ -342,9 +351,7 @@ class BaseAPI:
         logging.info("Model saved in {}.".format(save_dir))
 
     def export_inference_model(self, save_dir):
-        test_input_names = [
-            var.name for var in list(self.test_inputs.values())
-        ]
+        test_input_names = [var.name for var in list(self.test_inputs.values())]
         test_outputs = list(self.test_outputs.values())
         with fluid.scope_guard(self.scope):
             if self.__class__.__name__ == 'MaskRCNN':
@@ -382,8 +389,7 @@ class BaseAPI:
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info("Model for inference deploy saved in {}.".format(
-            save_dir))
+        logging.info("Model for inference deploy saved in {}.".format(save_dir))
 
     def train_loop(self,
                    num_epochs,
@@ -510,13 +516,11 @@ class BaseAPI:
                         eta = ((num_epochs - i) * total_num_steps - step - 1
                                ) * avg_step_time
                     if time_eval_one_epoch is not None:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * time_eval_one_epoch
+                        eval_eta = (total_eval_times - i // save_interval_epochs
+                                    ) * time_eval_one_epoch
                     else:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * total_num_steps_eval * avg_step_time
+                        eval_eta = (total_eval_times - i // save_interval_epochs
+                                    ) * total_num_steps_eval * avg_step_time
                     eta_str = seconds_to_hms(eta + eval_eta)
 
                     logging.info(
