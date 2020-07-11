@@ -17,6 +17,7 @@ import os.path as osp
 import random
 import copy
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import get_encoding
 from .dataset import is_pic
@@ -61,10 +62,11 @@ class SegDataset(Dataset):
                 for line in f:
                     item = line.strip()
                     self.labels.append(item)
-
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                items[0] = path_normalization(items[0])
+                items[1] = path_normalization(items[1])
                 if not is_pic(items[0]):
                     continue
                 full_path_im = osp.join(data_dir, items[0])

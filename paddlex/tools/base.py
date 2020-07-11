@@ -40,4 +40,5 @@ def get_encoding(path):
     f = open(path, 'rb')
     data = f.read()
     file_encoding = chardet.detect(data).get('encoding')
+    f.close()
     return file_encoding

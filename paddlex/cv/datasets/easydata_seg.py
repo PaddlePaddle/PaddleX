@@ -20,6 +20,7 @@ import json
 import cv2
 import numpy as np
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import get_encoding
 from .dataset import is_pic
@@ -71,6 +72,8 @@ class EasyDataSeg(Dataset):
             for line in f:
                 img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                json_file = path_normalization(json_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(json_file):

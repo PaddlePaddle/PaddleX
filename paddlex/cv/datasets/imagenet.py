@@ -17,6 +17,7 @@ import os.path as osp
 import random
 import copy
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -66,6 +67,7 @@ class ImageNet(Dataset):
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                items[0] = path_normalization(items[0])
                 if not is_pic(items[0]):
                     continue
                 full_path = osp.join(data_dir, items[0])

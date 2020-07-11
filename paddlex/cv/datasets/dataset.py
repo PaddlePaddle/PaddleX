@@ -46,7 +46,7 @@ def is_valid(sample):
                 return False
             elif isinstance(s, np.ndarray) and s.size == 0:
                 return False
-            elif isinstance(s, collections.Sequence) and len(s) == 0:
+            elif isinstance(s, collections.abc.Sequence) and len(s) == 0:
                 return False
     return True
 
@@ -55,6 +55,7 @@ def get_encoding(path):
     f = open(path, 'rb')
     data = f.read()
     file_encoding = chardet.detect(data).get('encoding')
+    f.close()
     return file_encoding
 
 

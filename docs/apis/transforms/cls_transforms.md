@@ -1,19 +1,59 @@
-# 图像分类-cls.transforms
+# paddlex.cls.transforms
 
 对图像分类任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
 
-## Compose类
+## Compose
 ```python
 paddlex.cls.transforms.Compose(transforms)
 ```
 
 根据数据预处理/增强算子对输入数据进行操作。  [使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/classification/mobilenetv2.py#L13)
 
+> **参数**
+> * **transforms** (list): 数据预处理/数据增强列表。
+
+## Normalize
+```python
+paddlex.cls.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+```
+
+对图像进行标准化。  
+1. 对图像进行归一化到区间[0.0, 1.0]。  
+2. 对图像进行减均值除以标准差操作。
+
 ### 参数
-* **transforms** (list): 数据预处理/数据增强列表。
+* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
+* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
 
+## ResizeByShort
+```python
+paddlex.cls.transforms.ResizeByShort(short_size=256, max_size=-1)
+```
 
-## RandomCrop类
+根据图像的短边调整图像大小（resize）。  
+1. 获取图像的长边和短边长度。  
+2. 根据短边与short_size的比例，计算长边的目标长度，此时高、宽的resize比例为short_size/原图短边长度。  
+3. 如果max_size>0，调整resize比例：
+   如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
+4. 根据调整大小的比例对图像进行resize。
+
+### 参数
+* **short_size** (int): 调整大小后的图像目标短边长度。默认为256。
+* **max_size** (int): 长边目标长度的最大限制。默认为-1。
+
+## CenterCrop
+```python
+paddlex.cls.transforms.CenterCrop(crop_size=224)
+```
+
+以图像中心点扩散裁剪长宽为`crop_size`的正方形  
+1. 计算剪裁的起始点。  
+2. 剪裁图像。
+
+### 参数
+* **crop_size** (int): 裁剪的目标边长。默认为224。
+
+## RandomCrop
 ```python
 paddlex.cls.transforms.RandomCrop(crop_size=224, lower_scale=0.08, lower_ratio=3. / 4, upper_ratio=4. / 3)
 ```
@@ -30,7 +70,7 @@ paddlex.cls.transforms.RandomCrop(crop_size=224, lower_scale=0.08, lower_ratio=3
 * **lower_ratio** (float): 宽变换比例的最小限制。默认为3. / 4。
 * **upper_ratio** (float): 宽变换比例的最小限制。默认为4. / 3。
 
-## RandomHorizontalFlip类
+## RandomHorizontalFlip
 ```python
 paddlex.cls.transforms.RandomHorizontalFlip(prob=0.5)
 ```
@@ -40,7 +80,7 @@ paddlex.cls.transforms.RandomHorizontalFlip(prob=0.5)
 ### 参数
 * **prob** (float): 随机水平翻转的概率。默认为0.5。
 
-## RandomVerticalFlip类
+## RandomVerticalFlip
 ```python
 paddlex.cls.transforms.RandomVerticalFlip(prob=0.5)
 ```
@@ -50,48 +90,7 @@ paddlex.cls.transforms.RandomVerticalFlip(prob=0.5)
 ### 参数
 * **prob** (float): 随机垂直翻转的概率。默认为0.5。
 
-## Normalize类
-```python
-paddlex.cls.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-```
-
-对图像进行标准化。  
-1. 对图像进行归一化到区间[0.0, 1.0]。  
-2. 对图像进行减均值除以标准差操作。
-
-### 参数
-* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
-
-## ResizeByShort类
-```python
-paddlex.cls.transforms.ResizeByShort(short_size=256, max_size=-1)
-```
-
-根据图像的短边调整图像大小（resize）。  
-1. 获取图像的长边和短边长度。  
-2. 根据短边与short_size的比例，计算长边的目标长度，此时高、宽的resize比例为short_size/原图短边长度。  
-3. 如果max_size>0，调整resize比例：
-   如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
-4. 根据调整大小的比例对图像进行resize。
-
-### 参数
-* **short_size** (int): 调整大小后的图像目标短边长度。默认为256。
-* **max_size** (int): 长边目标长度的最大限制。默认为-1。
-
-## CenterCrop类
-```python
-paddlex.cls.transforms.CenterCrop(crop_size=224)
-```
-
-以图像中心点扩散裁剪长宽为`crop_size`的正方形  
-1. 计算剪裁的起始点。  
-2. 剪裁图像。
-
-### 参数
-* **crop_size** (int): 裁剪的目标边长。默认为224。
-
-## RandomRotate类
+## RandomRotate
 ```python
 paddlex.cls.transforms.RandomRotate(rotate_range=30, prob=0.5)
 ```
@@ -102,7 +101,7 @@ paddlex.cls.transforms.RandomRotate(rotate_range=30, prob=0.5)
 * **rotate_range** (int): 旋转度数的范围。默认为30。
 * **prob** (float): 随机旋转的概率。默认为0.5。
 
-## RandomDistort类
+## RandomDistort
 ```python
 paddlex.cls.transforms.RandomDistort(brightness_range=0.9, brightness_prob=0.5, contrast_range=0.9, contrast_prob=0.5, saturation_range=0.9, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
@@ -123,15 +122,15 @@ paddlex.cls.transforms.RandomDistort(brightness_range=0.9, brightness_prob=0.5, 
 * **hue_range** (int): 色调因子的范围。默认为18。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
 
-## ComposedClsTransforms类
+## ComposedClsTransforms
 ```python
-paddlex.cls.transforms.ComposedClsTransforms(mode, crop_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.cls.transforms.ComposedClsTransforms(mode, crop_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
 ```
 分类模型中已经组合好的数据处理流程，开发者可以直接使用ComposedClsTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomCrop](#RandomCrop)和[RandomHorizontalFlip](#RandomHorizontalFlip)两种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
 ComposedClsTransforms共包括以下几个步骤：
 > 训练阶段：
 > > 1. 随机从图像中crop一块子图，并resize成crop_size大小
-> > 2. 将1的输出按0.5的概率随机进行水平翻转
+> > 2. 将1的输出按0.5的概率随机进行水平翻转, 若random_horizontal_flip为False，则跳过此步骤
 > > 3. 将图像进行归一化
 > 验证/预测阶段：
 > > 1. 将图像按比例Resize，使得最小边长度为crop_size[0] * 1.14
@@ -143,6 +142,7 @@ ComposedClsTransforms共包括以下几个步骤：
 * **crop_size** (int|list): 输入到模型里的图像大小，默认为[224, 224]（与原图大小无关，根据上述几个步骤，会将原图处理成该图大小输入给模型训练)
 * **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
 * **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
+* **random_horizontal_flip**(bool): 数据增强，是否以0，5的概率使用随机水平翻转增强，仅在model为'train'时生效，默认为True。底层实现采用[paddlex.cls.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
 ### 添加数据增强方式
 ```python
