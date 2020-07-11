@@ -1,19 +1,20 @@
-## 模型量化
+# 模型压缩
+为了更好地满足端侧部署场景下，低内存带宽、低功耗、低计算资源占用以及低模型存储等需求，PaddleX通过集成PaddleSlim实现模型量化和裁剪，可提升PaddleLite端侧部署性能。
 
+## 模型量化
 ### 原理介绍
-为了满足低内存带宽、低功耗、低计算资源占用以及低模型存储等需求，定点量化被提出。为此我们提供了训练后量化，该量化使用KL散度确定量化比例因子，将FP32模型转成INT8模型，且不需要重新训练，可以快速得到量化模型。
+定点量化使用更少的比特数（如8-bit、3-bit、2-bit等）表示神经网络的权重和激活值，从而加速模型推理速度。PaddleX提供了训练后量化技术，其原理可参见[训练后量化原理](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#id14)，该量化使用KL散度确定量化比例因子，将FP32模型转成INT8模型，且不需要重新训练，可以快速得到量化模型。
 
 ### 使用PaddleX量化模型
-PaddleX提供了`export_quant_model`接口，让用户以接口的形式完成模型以post_quantization方式量化并导出。点击查看[量化接口使用文档](../apis/slim.md)。
+PaddleX提供了`export_quant_model`接口，让用户以接口的形式完成模型以post_quantization方式量化并导出。点击查看[量化接口使用文档](../../apis/slim.md)。
 
 ### 量化性能对比
 模型量化后的性能对比指标请查阅[PaddleSlim模型库](https://paddlepaddle.github.io/PaddleSlim/model_zoo.html)
 
-
 ## 模型裁剪
 ### 原理介绍
 
-模型裁剪用于减小模型的计算量和体积，可以加快模型部署后的预测速度，是一种减小模型大小和降低模型计算复杂度的常用方式，通过裁剪卷积层中Kernel输出通道的大小及其关联层参数大小来实现，其关联裁剪的原理可参见[PaddleSlim相关文档](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#id16)。**一般而言，在同等模型精度前提下，数据复杂度越低，模型可以被裁剪的比例就越高**。
+模型裁剪通过裁剪卷积层中Kernel输出通道的大小及其关联层参数大小，来减小模型大小和降低模型计算复杂度，可以加快模型部署后的预测速度，其关联裁剪的原理可参见[PaddleSlim相关文档](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#id16)。**一般而言，在同等模型精度前提下，数据复杂度越低，模型可以被裁剪的比例就越高**。
 
 ### 裁剪方法
 PaddleX提供了两种方式:
@@ -34,10 +35,10 @@ PaddleX提供了两种方式:
 > 注：各模型内置的裁剪方案分别依据的数据集为： 图像分类——ImageNet数据集、目标检测——PascalVOC数据集、语义分割——CityScape数据集
 
 ### 裁剪实验
-基于上述两种方案，我们在PaddleX上使用样例数据进行了实验，在Tesla P40上实验指标如下所示，
+基于上述两种方案，我们在PaddleX上使用样例数据进行了实验，在Tesla P40上实验指标如下所示，使用方法见[使用教程-模型压缩](../../../../tutorials/compress/README.md)
 
 #### 图像分类
-实验背景：使用MobileNetV2模型，数据集为蔬菜分类示例数据，见[使用教程-模型压缩-图像分类](../../../../tutorials/compress/classification.md)
+实验背景：使用MobileNetV2模型，数据集为蔬菜分类示例数据
 
 | 模型 | 裁剪情况 | 模型大小 | Top1准确率(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- |:----------|
@@ -46,8 +47,7 @@ PaddleX提供了两种方式:
 |MobileNetV2 | 方案二(eval_metric_loss=0.10) | 6.0M | 99.58 |5.42ms |29.06ms |
 
 #### 目标检测
-实验背景：使用YOLOv3-MobileNetV1模型，数据集为昆虫检测示例数据，见[使用教程-模型压缩-目标检测](../../../../tutorials/compress/detection.md)
-
+实验背景：使用YOLOv3-MobileNetV1模型，数据集为昆虫检测示例数据
 
 | 模型 | 裁剪情况 | 模型大小 | MAP(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|
@@ -56,7 +56,7 @@ PaddleX提供了两种方式:
 |YOLOv3-MobileNetV1 | 方案二(eval_metric_loss=0.05) | 29M | 50.27| 9.43ms |360.46ms |
 
 #### 语义分割
-实验背景：使用UNet模型，数据集为视盘分割示例数据, 见[使用教程-模型压缩-语义分割](../../../../tutorials/compress/segmentation.md)
+实验背景：使用UNet模型，数据集为视盘分割示例数据
 
 | 模型 | 裁剪情况 | 模型大小 | mIOU(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|
