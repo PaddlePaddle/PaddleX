@@ -167,6 +167,7 @@ paddlex.seg.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, 
 * **hue_range** (int): 色调因子的范围。默认为18。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
 
+<!--
 ## ComposedSegTransforms
 ```python
 paddlex.det.transforms.ComposedSegTransforms(mode, min_max_size=[400, 600], train_crop_shape=[769, 769], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
@@ -228,3 +229,4 @@ eval_transforms = transforms.Composed([
         transforms.Normalize()
 ])
 ```
+-->
