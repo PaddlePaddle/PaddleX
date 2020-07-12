@@ -1,4 +1,8 @@
+# 环境变量配置，用于控制是否使用GPU
+# 说明文档：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html#gpu
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
 from paddlex.cls import transforms
 import paddlex as pdx
 
@@ -7,6 +11,7 @@ veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
 pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义训练和验证时的transforms
+# API说明https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/cls_transforms.html
 train_transforms = transforms.Compose([
     transforms.RandomCrop(crop_size=224), 
     transforms.RandomHorizontalFlip(),
@@ -19,6 +24,7 @@ eval_transforms = transforms.Compose([
 ])
 
 # 定义训练和验证所用的数据集
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-imagenet
 train_dataset = pdx.datasets.ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/train_list.txt',
@@ -37,6 +43,9 @@ eval_dataset = pdx.datasets.ImageNet(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 model = pdx.cls.MobileNetV3_small_ssld(num_classes=len(train_dataset.labels))
+
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-imagenet
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,

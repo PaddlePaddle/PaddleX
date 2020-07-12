@@ -1,6 +1,8 @@
 # 10分钟快速上手使用
 
-本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读PaddleX的**使用教程**来了解更多模型任务的训练使用方式。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/439860)
+本文档在一个小数据集上展示了如何通过PaddleX进行训练。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/450220)。  
+
+本示例代码源于Github [tutorials/train/classification/mobilenetv3_small_ssld.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small_ssld.py)，用户可自行下载至本地运行。  
 
 PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练代码开发！
 
@@ -35,7 +37,7 @@ tar xzvf vegetables_cls.tar.gz
 <a name="定义训练验证图像处理流程transforms"></a>
 **3. 定义训练/验证图像处理流程transforms**  
 
-由于训练时数据增强操作的加入，因此模型在训练和验证过程中，数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#RandomCrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#RandomHorizontalFlip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
+由于训练时数据增强操作的加入，因此模型在训练和验证过程中，数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#randomcrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
 ```
 from paddlex.cls import transforms
 train_transforms = transforms.Compose([
@@ -54,7 +56,7 @@ eval_transforms = transforms.Compose([
 **4. 定义`dataset`加载图像分类数据集**  
 
 定义数据集，`pdx.datasets.ImageNet`表示读取ImageNet格式的分类数据集
-- [paddlex.datasets.ImageNet接口说明](apis/datasets/classification.md)
+- [paddlex.datasets.ImageNet接口说明](apis/datasets.md)
 - [ImageNet数据格式说明](data/format/classification.md)
 
 ```
@@ -118,7 +120,7 @@ Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'cate
 
 <a name="更多使用教程"></a>
 **更多使用教程**
-- 1.[目标检测模型训练](tutorials/train/detection.md)
-- 2.[语义分割模型训练](tutorials/train/segmentation.md)
-- 3.[实例分割模型训练](tutorials/train/instance_segmentation.md)
-- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](tutorials/compress/classification.md)
+- 1.[目标检测模型训练](train/object_detection.md)
+- 2.[语义分割模型训练](train/semantic_segmentation.md)
+- 3.[实例分割模型训练](train/instance_segmentation.md)
+- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress)

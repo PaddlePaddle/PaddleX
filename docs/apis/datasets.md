@@ -7,7 +7,7 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 ```
 读取ImageNet格式的分类数据集，并对样本进行相应的处理。ImageNet数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
-示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/classification/mobilenetv2.py#L25)
+示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py)
 
 > **参数**
 
@@ -20,15 +20,15 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
-## paddlex.datasets.PascalVOC
+## paddlex.datasets.VOCDetection
 > **用于目标检测模型**  
 ```
-paddlex.datasets.PascalVOC(data_dir, file_list, label_list, transforms=None, num_workers=‘auto’, buffer_size=100, parallel_method='thread', shuffle=False)
+paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, num_workers=‘auto’, buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
 > 读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_darknet53.py#L29)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_darknet53.py)
 
 > **参数**
 
@@ -41,15 +41,15 @@ paddlex.datasets.PascalVOC(data_dir, file_list, label_list, transforms=None, num
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
-## paddlex.datasets.MSCOCO
+## paddlex.datasets.CocoDetection
 > **用于实例分割/目标检测模型**  
 ```
-paddlex.datasets.MSCOCO(data_dir, ann_file, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
+paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
 > 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/mask_rcnn_r50_fpn.py#L27)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py)
 
 > **参数**
 
@@ -69,7 +69,7 @@ paddlex.datasets.SegDataset(data_dir, file_list, label_list, transforms=None, nu
 
 > 读取语义分割任务数据集，并对样本进行相应的处理。语义分割任务数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/unet.py#L27)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/unet.py)
 
 > **参数**
 

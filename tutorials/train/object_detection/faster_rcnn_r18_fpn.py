@@ -1,4 +1,8 @@
+# 环境变量配置，用于控制是否使用GPU
+# 说明文档：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html#gpu
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
 from paddlex.det import transforms
 import paddlex as pdx
 
@@ -7,6 +11,7 @@ insect_dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(insect_dataset, path='./')
 
 # 定义训练和验证时的transforms
+# API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/det_transforms.html
 train_transforms = transforms.Compose([
     transforms.RandomHorizontalFlip(), 
     transforms.Normalize(),
@@ -19,7 +24,9 @@ eval_transforms = transforms.Compose([
     transforms.ResizeByShort(short_size=800, max_size=1333),
     transforms.Padding(coarsest_stride=32),
 ])
+
 # 定义训练和验证所用的数据集
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-vocdetection
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -39,7 +46,12 @@ eval_dataset = pdx.datasets.VOCDetection(
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 # num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
 num_classes = len(train_dataset.labels) + 1
+
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn
 model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='ResNet18')
+
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#id1
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,
