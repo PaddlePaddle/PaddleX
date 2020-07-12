@@ -6,5 +6,6 @@
    :maxdepth: 2
    :caption: 文档目录:
 
-   prune.md
    quant.md
+   prune.md
+   tutorials/index
