@@ -48,21 +48,20 @@ PaddleX提供两种开发模式，满足不同场景和用户需求：
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
-安装的相关问题参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/latest/install.html)
+安装的相关问题参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/develop/install.html)
 
 ### PaddleX-GUI安装
 
 进入PaddleX官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载绿色安装包，开箱即用。
-Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/latest/paddlex_gui/index.html)
+Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/develop/paddlex_gui/index.html)
 
 ## 使用文档
 
-推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/latest/index.html)，快速查阅读使用教程和API文档说明。
+推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/develop/index.html)，快速查阅读使用教程和API文档说明。
 
-- [10分钟快速上手使用](https://paddlex.readthedocs.io/zh_CN/latest/quick_start.html)
-- [PaddleX全流程开发教程](https://paddlex.readthedocs.io/zh_CN/latest/tutorials/index.html)
-- [PaddleX视觉方案介绍](https://paddlex.readthedocs.io/zh_CN/latest/cv_solutions.html)
-- [PaddleX API参考文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/index.html)
+- [10分钟快速上手使用](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
+- [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
+- [PaddleX API参考文档](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
 
 ## 在线教程
 
@@ -81,10 +80,11 @@ Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddle
 ## FAQ
 
 ## 更新日志
-* 2020.05.20
+> [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
 
-  **`v1.0.0`**
-  * 正式版本发布。
+- 2020.07.12 v1.0.8
+- 2020.05.20 v1.0.0
+- 2020.05.17 v0.1.8
 
 ## 贡献代码
 
