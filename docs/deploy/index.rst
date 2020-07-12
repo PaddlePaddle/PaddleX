@@ -9,5 +9,4 @@
    export_model.md
    server/index
    nvidia-jetson.md
-   openvino/index
    paddlelite/index

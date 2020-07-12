@@ -3,25 +3,63 @@
 PaddleX可以使用`load_model`接口加载模型（包括训练过程中保存的模型，导出的部署模型，量化模型以及裁剪的模型）进行预测，同时PaddleX中也内置了一系列的可视化工具函数，帮助用户方便地检查模型的效果。
 
 ## 图像分类
+
+> [点击下载](https://bj.bcebos.com/paddlex/models/mobilenetv3_small_ssld_imagenet.tar.gz)如下示例代码中模型  
 ```
 import paddlex as pdx
-model = pdx.load_model('./mobilenetv2')
-result = model.predict('./mobilenetv2/test.jpg')
+test_jpg = 'mobilenetv3_small_ssld_imagenet/test.jpg'
+model = pdx.load_model('mobilenetv3_small_ssld_imagenet')
+result = model.predict(test_jpg)
 print("Predict Result: ", result)
 ```
+结果输入如下
+```
+Predict Result: [{'category_id': 21, 'category': 'killer_whale', 'score': 0.8262267}]
+```
+测试图片如下
 
 
-## 目标检测和实例分割
+- 分类模型predict接口[说明文档](../apis/models/classification.html#predict)
+
+
+## 目标检测
+
+> [点击下载](https://bj.bcebos.com/paddlex/models/yolov3_mobilenetv1_coco.tar.gz)如下示例代码中模型  
 ```
 import paddlex as pdx
-test_jpg = './xiaoduxiong_epoch_12/test.jpg'
-model = pdx.load_model('./xiaoduxiong_epoch_12')
-result = model.predict(test_jpg)
-pdx.det.visualize(test_jpg, result, thresh=0.5, save_dir='./')
-```
-在上述示例代码中，通过调用`paddlex.det.visualize`可以对目标检测/实例分割的预测结果进行可视化，可视化的结果保存在`save_dir`下。
-> 注意：目标检测和实例分割模型在调用`predict`接口得到的结果需用户自行过滤低置信度结果，在`paddlex.det.visualize`接口中，我们提供了`thresh`用于过滤，置信度低于此值的结果将被过滤，不会可视化。
+test_jpg = 'yolov3_mobilenetv1_coco/test.jpg'
+model = pdx.load_model('yolov3_mobilenetv1_coco')
 
+# predict接口并未过滤低置信度识别结果，用户根据需求按score值进行过滤
+result = model.predict(test_jpg)
+
+# 可视化结果存储在./visualized_test.jpg, 见下图
+pdx.det.visualize(test_jpg, result, threshold=0.3, save_dir='./')
+```
+- YOLOv3模型predict接口[说明文档](../apis/models/detection.html#predict)
+- 可视化pdx.det.visualize接口[说明文档](../apis/visualize.html#paddlex-det-visualize)
+> 注意：目标检测和实例分割模型在调用`predict`接口得到的结果需用户自行过滤低置信度结果，在`paddlex.det.visualize`接口中，我们提供了`threshold`用于过滤，置信度低于此值的结果将被过滤，不会可视化。
+![](./images/yolo_predict.jpg)
+
+## 实例分割
+
+> [点击下载](https://bj.bcebos.com/paddlex/models/mask_r50_fpn_coco.tar.gz)如下示例代码中模型  
+```
+import paddlex as pdx
+test_jpg = 'mask_r50_fpn_coco/test.jpg'
+model = pdx.load_model('mask_r50_fpn_coco')
+
+# predict接口并未过滤低置信度识别结果，用户根据需求按score值进行过滤
+result = model.predict(test_jpg)
+
+# 可视化结果存储在./visualized_test.jpg, 见下图
+pdx.det.visualize(test_jpg, result, threshold=0.5, save_dir='./')
+```
+- MaskRCNN模型predict接口[说明文档](../apis/models/instance_segmentation.html#predict)
+- 可视化pdx.det.visualize接口[说明文档](../apis/visualize.html#paddlex-det-visualize)
+
+> 注意：目标检测和实例分割模型在调用`predict`接口得到的结果需用户自行过滤低置信度结果，在`paddlex.det.visualize`接口中，我们提供了`threshold`用于过滤，置信度低于此值的结果将被过滤，不会可视化。
+![](./images/mask_predict.jpg)
 
 ## 语义分割
 ```
@@ -31,6 +69,7 @@ model = pdx.load_model('./deeplabv3p_mobilenetv2_coco')
 result = model.predict(test_jpg)
 pdx.seg.visualize(test_jpg, result, weight=0.0, save_dir='./')
 ```
+
 在上述示例代码中，通过调用`paddlex.seg.visualize`可以对语义分割的预测结果进行可视化，可视化的结果保存在`save_dir`下。其中`weight`参数用于调整预测结果和原图结果融合展现时的权重，0.0时只展示预测结果mask的可视化，1.0时只展示原图可视化。
 
 
@@ -47,8 +86,8 @@ PaddleX提供了部分公开数据集上训练好的模型，用户可以直接�
 | 目标检测 | [YOLOv3-DarkNet53](https://bj.bcebos.com/paddlex/models/yolov3_darknet53_coco.tar.gz)      | MSCOCO | 266MMB      | Box MAP    |      34.8%      |
 | 目标检测 | [YOLOv3-MobileNetV3](https://bj.bcebos.com/paddlex/models/yolov3_mobilenetv3_coco.tar.gz)      | MSCOCO | 101MB      | Box MAP    |      31.6%      |
 | 实例分割 | [MaskRCNN-ResNet50-FPN](https://bj.bcebos.com/paddlex/models/mask_r50_fpn_coco.tar.gz)  | MSCOCO | 193MB     | Box MAP/Seg MAP |   38.7% / 34.7%     |
-| 语义分割 | [DeepLabv3p-Xception65]()  | 人像分割 | xxMB     | mIoU        |      -          |
-| 语义分割 | [HRNet_w18_small]()           | 人像分割   | xxMB   | mIou       |        -           |
+| 语义分割 | DeepLabv3p-Xception65  | 人像分割 | -     | mIoU        |      -          |
+| 语义分割 | HRNet_w18_small           | 人像分割   | -   | mIou       |        -           |
 
 PaddleX的`load_model`接口可以满足用户一般的模型调研需求，如若为更高性能的预测部署，可以参考如下文档
 
