@@ -1,4 +1,4 @@
-# MeterReader表计读数
+# MeterReader工业表计读数
 
 本案例基于PaddleX实现对传统机械式指针表计的检测与自动读数功能，开放表计数据和预训练模型，并提供在windows系统的服务器端以及linux系统的jetson嵌入式设备上的部署指南。
 
@@ -16,7 +16,7 @@
 表计读数共分为三个步骤完成：
 
 * 第一步，使用目标检测模型检测出图像中的表计
-* 第二步，使用语义分割模型将各表具的指针和刻度分割出来
+* 第二步，使用语义分割模型将各表计的指针和刻度分割出来
 * 第三步，根据指针的相对位置和预知的量程计算出各表计的读数。
 
 ![MeterReader_Architecture](image/MeterReader_Architecture.jpg)
@@ -51,7 +51,7 @@
 * Python >= 3.5
 * PaddleX >= 1.0.0
 
-安装的相关问题参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/latest/install.html)
+安装的相关问题参考[PaddleX安装](../../docs/install.md)
 
 #### 测试表计读数
 
@@ -129,7 +129,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
 2. 将`PaddleX\examples\meter_reader\deploy\cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX\deploy\cpp`目录下，拷贝之前可以将`PaddleX\deploy\cpp`下原本的`CMakeList.txt`做好备份。
 
-3. 按照[Windows平台部署](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/deploy_cpp/deploy_cpp_win_vs2019.md)中的Step2至Step4完成C++预测代码的编译。
+3. 按照[Windows平台部署](../../docs/deploy/server/cpp/windows.md)中的Step2至Step4完成C++预测代码的编译。
 
 4. 编译成功后，可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
 
@@ -182,7 +182,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
   * 使用加密后的模型对单张图片做预测
 
-  如果未对模型进行加密，请参考[加密PaddleX模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/encryption.html#paddlex)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
+  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
 
   ```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
@@ -225,7 +225,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
 5. 推理预测：
 
-  用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[导出inference模型]()将模型导出为inference格式。
+  用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[部署模型导出](../../docs/deploy/export_model.md)将模型导出为inference格式。
 
   * 使用未加密的模型对单张图片做预测
 
@@ -247,7 +247,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
   * 使用加密后的模型对单张图片做预测
 
-  如果未对模型进行加密，请参考[加密PaddleX模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/deploy/deploy_server/encryption.html#paddlex)对模型进行加密。例如加密后的检测模型所在目录为`/path/to/encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`/path/to/encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
+  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`/path/to/encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`/path/to/encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
 
   ```shell
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/encrypted_det_inference_model --seg_model_dir=/path/to/encrypted_seg_inference_model --image=/path/to/test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
@@ -263,7 +263,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
 * Python >= 3.5
 * PaddleX >= 1.0.0
 
-安装的相关问题参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/latest/install.html)
+安装的相关问题参考[PaddleX安装](../../docs/install.md)
 
 #### 训练
 

@@ -10,9 +10,9 @@ PaddleX目前提供了MaskRCNN实例分割模型结构,多种backbone模型，�
 
 | 模型(点击获取代码)               | Box MMAP/Seg MMAP | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
 | :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
-| [MaskRCNN-ResNet50-FPN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/instance_segmentation/mask_r50_fpn.py)   |  36.5%/32.2%   |   170.0MB    |  160.185ms       |   -    | 模型精度高，适用于服务端部署   |
+| [MaskRCNN-ResNet50-FPN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/instance_segmentation/mask_r50_fpn.py)   |  38.7%/34.7%   |   177.7MB    |  160.185ms       |   -    | 模型精度高，适用于服务端部署   |
 | [MaskRCNN-ResNet18-FPN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/instance_segmentation/mask_r18_fpn.py)   |  -/-   |   120.0MB    |  -       |   -    | 模型精度高，适用于服务端部署   |
-| [MaskRCNN-HRNet-FPN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/instance_segmentation/mask_hrnet_fpn.py)   |  -/-   |   116.MB    |  -       |   -    | 模型精度高，预测速度快，适用于服务端部署   |
+| [MaskRCNN-HRNet-FPN](https://github.com/PaddlePaddle/PaddleX/blob/doc/tutorials/train/instance_segmentation/mask_hrnet_fpn.py)   |  38.7%/34.7%   |   120.7MB    |  -       |   -    | 模型精度高，预测速度快，适用于服务端部署   |
 
 
 ## 开始训练

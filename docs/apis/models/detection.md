@@ -95,6 +95,25 @@ predict(self, img_file, transforms=None)
 > > - **list**: 预测结果列表，列表中每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
 
 
+### batch_predict
+
+```python
+batch_predict(self, img_file_list, transforms=None)
+```
+
+> YOLOv3模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`YOLOv3.test_transforms`和`YOLOv3.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义`test_transforms`传入给`predict`接口
+
+> **参数**
+>
+> > - **img_file_list** (str|np.ndarray): 对列表（或元组）中的图像同时进行预测，列表中的元素是预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
+>
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
+
+
+
 ## paddlex.det.FasterRCNN
 
 ```python
@@ -178,3 +197,21 @@ predict(self, img_file, transforms=None)
 > **返回值**
 >
 > > - **list**: 预测结果列表，列表中每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
+
+
+### batch_predict
+
+```python
+batch_predict(self, img_file_list, transforms=None)
+```
+
+> FasterRCNN模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`FasterRCNN.test_transforms`和`FasterRCNN.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
+
+> **参数**
+>
+> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素是预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
+>
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
