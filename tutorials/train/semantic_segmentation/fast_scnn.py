@@ -1,5 +1,6 @@
+# 环境变量配置，用于控制是否使用GPU
+# 说明文档：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html#gpu
 import os
-# 选择使用0号卡
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 import paddlex as pdx
@@ -10,7 +11,7 @@ optic_dataset = 'https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz'
 pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/seg_transforms.html#composedsegtransforms
+# API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/seg_transforms.html
 train_transforms = transforms.Compose([
     transforms.RandomHorizontalFlip(), 
     transforms.ResizeRangeScaling(),
@@ -25,7 +26,7 @@ eval_transforms = transforms.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/semantic_segmentation.html#segdataset
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-segdataset
 train_dataset = pdx.datasets.SegDataset(
     data_dir='optic_disc_seg',
     file_list='optic_disc_seg/train_list.txt',
@@ -44,9 +45,13 @@ eval_dataset = pdx.datasets.SegDataset(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 
-# https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#fastscnn
 num_classes = len(train_dataset.labels)
+
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-fastscnn
 model = pdx.seg.FastSCNN(num_classes=num_classes)
+
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#train
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=20,
     train_dataset=train_dataset,

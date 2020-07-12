@@ -1,5 +1,6 @@
+# 环境变量配置，用于控制是否使用GPU
+# 说明文档：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html#gpu
 import os
-# 选择使用0号卡
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 from paddlex.det import transforms
@@ -10,6 +11,7 @@ xiaoduxiong_dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_de
 pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 
 # 定义训练和验证时的transforms
+# API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/det_transforms.html
 train_transforms = transforms.Compose([
     transforms.RandomHorizontalFlip(), 
     transforms.Normalize(),
@@ -24,6 +26,7 @@ eval_transforms = transforms.Compose([
 ])
 
 # 定义训练和验证所用的数据集
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-cocodetection
 train_dataset = pdx.datasets.CocoDetection(
     data_dir='xiaoduxiong_ins_det/JPEGImages',
     ann_file='xiaoduxiong_ins_det/train.json',
@@ -41,7 +44,12 @@ eval_dataset = pdx.datasets.CocoDetection(
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 # num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
 num_classes = len(train_dataset.labels) + 1
+
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/instance_segmentation.html#maskrcnn
 model = pdx.det.MaskRCNN(num_classes=num_classes, backbone='ResNet18')
+
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/instance_segmentation.html#train
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,
