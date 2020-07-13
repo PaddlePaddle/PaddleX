@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
       // 可视化
       for (int j = 0; j < im_vec_size - i; ++j) {
         cv::Mat vis_img = PaddleX::Visualize(
-            im_vec[j], results[j], model.labels, colormap, FLAGS_threshold);
+            im_vec[j], results[j], model.labels, FLAGS_threshold);
         std::string save_path =
             PaddleX::generate_save_path(FLAGS_save_dir, image_paths[i + j]);
         cv::imwrite(save_path, vis_img);
@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
 
     // 可视化
     cv::Mat vis_img =
-        PaddleX::Visualize(im, result, model.labels, colormap, FLAGS_threshold);
+        PaddleX::Visualize(im, result, model.labels, FLAGS_threshold);
     std::string save_path =
         PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
     cv::imwrite(save_path, vis_img);
