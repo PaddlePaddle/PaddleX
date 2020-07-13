@@ -110,8 +110,9 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
               << ", but they should be greater than 0." << std::endl;
     return false;
   }
+  cv::Scalar value = cv::Scalar(im_value_[0], im_value_[1], im_value_[2]);
   cv::copyMakeBorder(
-      *im, *im, 0, padding_h, 0, padding_w, cv::BORDER_CONSTANT, cv::Scalar(0));
+      *im, *im, 0, padding_h, 0, padding_w, cv::BORDER_CONSTANT, value);
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   return true;

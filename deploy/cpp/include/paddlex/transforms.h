@@ -214,6 +214,12 @@ class Padding : public Transform {
         height_ = item["target_size"].as<std::vector<int>>()[1];
       }
     }
+    if (item["im_padding_value"].IsDefined()) {
+      im_value_ = item["im_padding_value"].as<std::vector<float>>();
+    }
+    else {
+      im_value_ = {0, 0, 0};
+    }
   }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
@@ -221,6 +227,7 @@ class Padding : public Transform {
   int coarsest_stride_ = -1;
   int width_ = 0;
   int height_ = 0;
+  std::vector<float> im_value_;
 };
 /*
  * @brief
