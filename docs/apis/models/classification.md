@@ -78,6 +78,26 @@ predict(self, img_file, transforms=None, topk=5)
 > > - **list**: 其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，
 > >       分别对应预测类别id、预测类别标签、预测得分。
 
+### batch_predict
+
+```python
+batch_predict(self, img_file_list, transforms=None, topk=5, thread_num=2)
+```
+
+> 分类模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`ResNet50.test_transforms`和`ResNet50.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
+
+> **参数**
+>
+> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.cls.transforms): 数据预处理操作。
+> > - **topk** (int): 预测时前k个最大值。
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
+
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测列表中，其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，分别对应预测类别id、预测类别标签、预测得分。
+
+
 ## 其它分类模型
 
 PaddleX提供了共计22种分类模型，所有分类模型均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](https://paddlex.readthedocs.io/zh_CN/latest/appendix/model_zoo.html)。
@@ -106,3 +126,4 @@ PaddleX提供了共计22种分类模型，所有分类模型均提供同`ResNet5
 | DenseNet161       | paddlex.cls.DenseNet161(num_classes=1000) |
 | DenseNet201       | paddlex.cls.DenseNet201(num_classes=1000) |
 | HRNet_W18       | paddlex.cls.HRNet_W18(num_classes=1000) |
+| AlexNet         | paddlex.cls.AlexNet(num_classes=1000) |

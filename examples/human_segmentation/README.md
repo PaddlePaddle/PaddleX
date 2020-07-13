@@ -18,10 +18,10 @@
 
 | 模型类型 | Checkpoint Parameter | Inference Model | Quant Inference Model | 备注 |
 | --- | --- | --- | ---| --- |
-| HumanSeg-server  | [humanseg_server_params](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_server.pdparams) | [humanseg_server_inference](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_server_inference.zip) | -- | 高精度模型，适用于服务端GPU且背景复杂的人像场景， 模型结构为Deeplabv3+/Xcetion65, 输入大小（512， 512） |
-| HumanSeg-mobile | [humanseg_mobile_params](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_mobile.pdparams) | [humanseg_mobile_inference](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_mobile_inference.zip) | [humanseg_mobile_quant](https://paddlex.bj.bcebos.com/humanseg/models/humanseg_mobile_quant.zip) | 轻量级模型, 适用于移动端或服务端CPU的前置摄像头场景，模型结构为HRNet_w18_small_v1，输入大小（192， 192）  |
+| HumanSeg-server  | [humanseg_server_params](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_server_params.tar) | [humanseg_server_inference](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_server_inference.tar) | -- | 高精度模型，适用于服务端GPU且背景复杂的人像场景， 模型结构为Deeplabv3+/Xcetion65, 输入大小（512， 512） |
+| HumanSeg-mobile | [humanseg_mobile_params](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_mobile_params.tar) | [humanseg_mobile_inference](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_mobile_inference.tar) | [humanseg_mobile_quant](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_mobile_quant.tar) | 轻量级模型, 适用于移动端或服务端CPU的前置摄像头场景，模型结构为HRNet_w18_small_v1，输入大小（192， 192）  |
 
-> * Checkpoint Parameter为模型权重，用于Fine-tuning场景。
+> * Checkpoint Parameter为模型权重，用于Fine-tuning场景，包含`__params__`模型参数和`model.yaml`基础的模型配置信息。
 > * Inference Model和Quant Inference Model为预测部署模型，包含`__model__`计算图结构、`__params__`模型参数和`model.yaml`基础的模型配置信息。
 > * 其中Inference Model适用于服务端的CPU和GPU预测部署，Qunat Inference Model为量化版本，适用于通过Paddle Lite进行移动端等端侧设备部署。
 

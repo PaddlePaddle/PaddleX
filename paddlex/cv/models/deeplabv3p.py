@@ -462,6 +462,7 @@ class DeepLabv3p(BaseAPI):
             img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
                 也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
             transforms(paddlex.cv.transforms): 数据预处理操作。
+            thread_num (int): 并发执行各图像预处理时的线程数。
 
         Returns:
             list: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
