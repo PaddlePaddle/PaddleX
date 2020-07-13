@@ -8,6 +8,5 @@ API接口说明
    datasets.md
    models/index.rst
    slim.md
-   load_model.md
    visualize.md
    interpret.md
