@@ -62,8 +62,6 @@ int main(int argc, char** argv) {
              FLAGS_use_ir_optim);
 
   // 进行预测
-  double total_running_time_s = 0.0;
-  double total_imread_time_s = 0.0;
   int imgs = 1;
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
@@ -79,7 +77,6 @@ int main(int argc, char** argv) {
     }
     imgs = image_paths.size();
     for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
-      auto start = system_clock::now();
       // 读图像
       int im_vec_size =
           std::min(static_cast<int>(image_paths.size()), i + FLAGS_batch_size);
@@ -91,19 +88,7 @@ int main(int argc, char** argv) {
       for (int j = i; j < im_vec_size; ++j) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
-      auto imread_end = system_clock::now();
       model.predict(im_vec, &results, thread_num);
-
-      auto imread_duration = duration_cast<microseconds>(imread_end - start);
-      total_imread_time_s += static_cast<double>(imread_duration.count()) *
-                             microseconds::period::num /
-                             microseconds::period::den;
-
-      auto end = system_clock::now();
-      auto duration = duration_cast<microseconds>(end - start);
-      total_running_time_s += static_cast<double>(duration.count()) *
-                              microseconds::period::num /
-                              microseconds::period::den;
       for (int j = i; j < im_vec_size; ++j) {
         std::cout << "Path:" << image_paths[j]
                   << ", predict label: " << results[j - i].category
@@ -112,23 +97,12 @@ int main(int argc, char** argv) {
       }
     }
   } else {
-    auto start = system_clock::now();
     PaddleX::ClsResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
     model.predict(im, &result);
-    auto end = system_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    total_running_time_s += static_cast<double>(duration.count()) *
-                            microseconds::period::num /
-                            microseconds::period::den;
     std::cout << "Predict label: " << result.category
               << ", label_id:" << result.category_id
               << ", score: " << result.score << std::endl;
   }
-  std::cout << "Total running time: " << total_running_time_s
-            << " s, average running time: " << total_running_time_s / imgs
-            << " s/img, total read img time: " << total_imread_time_s
-            << " s, average read time: " << total_imread_time_s / imgs
-            << " s/img, batch_size = " << FLAGS_batch_size << std::endl;
   return 0;
 }
