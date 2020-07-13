@@ -1,7 +1,7 @@
 # PaddleX模型库
 
 ## 图像分类模型
-> 表中模型相关指标均为在ImageNet数据集上使用PaddlePaddle Python预测接口测试得到（测试GPU型号为Nvidia Tesla P40），预测速度为每张图片预测用时（不包括预处理和后处理）,表中符号`-`表示相关指标暂未测试。
+> 表中模型相关指标均为在ImageNet数据集上使用PaddlePaddle Python预测接口测试得到（测试GPU型号为Nvidia Tesla P40），预测速度为每张图片预测用时（不包括预处理和后处理），表中符号`-`表示相关指标暂未测试。
 
 
 | 模型  | 模型大小 | 预测速度（毫秒） | Top1准确率（%） | Top5准确率（%） |
@@ -28,10 +28,11 @@
 | [DenseNet201](https://paddle-imagenet-models-name.bj.bcebos.com/DenseNet201_pretrained.tar)|  84.1MB   | 25.26089       | 77.6     | 93.7     |
 | [ShuffleNetV2](https://paddle-imagenet-models-name.bj.bcebos.com/ShuffleNetV2_pretrained.tar) | 10.2MB   | 15.40138        | 68.8     | 88.5     |
 | [HRNet_W18](https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W18_C_pretrained.tar) | 21.29MB |45.25514  | 76.9 | 93.4 |
+| [AlexNet](https://paddle-imagenet-models-name.bj.bcebos.com/AlexNet_pretrained.tar) | 244.4MB | - | 56.7 | 79.2 |
 
 ## 目标检测模型
 
-> 表中模型相关指标均为在MSCOCO数据集上使用PaddlePaddle Python预测接口测试得到（测试GPU型号为Nvidia Tesla V100测试得到）,表中符号`-`表示相关指标暂未测试。
+> 表中模型相关指标均为在MSCOCO数据集上使用PaddlePaddle Python预测接口测试得到（测试GPU型号为Nvidia Tesla V100测试得到），表中符号`-`表示相关指标暂未测试。
 
 | 模型    | 模型大小    | 预测时间(毫秒) | BoxAP（%） |
 |:-------|:-----------|:-------------|:----------|
@@ -50,12 +51,34 @@
 
 ## 实例分割模型
 
-> 表中模型相关指标均为在MSCOCO数据集上测试得到。
+> 预测时间是在一张Nvidia Tesla V100的GPU上通过'evaluate()'接口测试MSCOCO验证集得到，包括数据加载、网络前向执行和后处理, batch size是1，表中符号`-`表示相关指标暂未测试。
+
+| 模型    | 模型大小    | 预测时间(毫秒) | BoxAP (%) | MaskAP (%)  |
+|:-------|:-----------|:-------------|:----------|:----------|
+|[MaskRCNN-ResNet50](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_2x.tar) | 143.9MB | 87 | 38.2  | 33.4 |
+|[MaskRCNN-ResNet50-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar)| 177.7MB | 63.9 | 38.7 | 34.7 |
+|[MaskRCNN-ResNet50_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar) | 177.7MB | 63.1 | 39.8 || 35.4 |
+|[MaskRCNN-ResNet101-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_fpn_1x.tar) | 253.6MB | 77 | 39.5 | 35.2 |
+|[MaskRCNN-ResNet101_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar) | 253.7MB | 76.4 | 41.4 | 36.8 |
+|[MaskRCNN-HRNet_W18-FPN](https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_hrnetv2p_w18_2x.tar) | 120.7MB | - | 38.7 | 34.7 |
+
+
+## 语义分割模型
+
+> 以下指标均在MSCOCO验证集上测试得到，表中符号`-`表示相关指标暂未测试。
 
 | 模型    | 模型大小    | 预测时间(毫秒) | mIoU（%） |
 |:-------|:-----------|:-------------|:----------|
-|DeepLabv3+-MobileNetV2_x1.0|-| - | - |
-|DeepLabv3+-Xception41|-| - | - |
-|DeepLabv3+-Xception65|-| - | - |
-|UNet|-| - | - |
-|HRNet_w18|-| - | - |
+|[DeepLabv3_MobileNetV2_x1.0](https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz)| 14.7MB | - | - |
+|[DeepLabv3_Xception65](https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz)| 329.3MB | - | - |
+|[UNet](https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz) | 107.3MB | - | - |
+
+
+> 以下指标均在Cityscapes验证集上测试得到，表中符号`-`表示相关指标暂未测试。
+
+| 模型    | 模型大小    | 预测时间(毫秒) | mIoU（%） |
+|:-------|:-----------|:-------------|:----------|
+| [DeepLabv3_MobileNetv2_x1.0](https://paddleseg.bj.bcebos.com/models/mobilenet_cityscapes.tgz) | 14.7MB | - | 69.8 |
+| [DeepLabv3_Xception65](https://paddleseg.bj.bcebos.com/models/xception65_bn_cityscapes.tgz) | 329.3MB | - | 79.3 |
+| [HRNet_W18](https://paddleseg.bj.bcebos.com/models/hrnet_w18_bn_cityscapes.tgz) | 77.3MB |  | 79.36 |
+| [Fast-SCNN](https://paddleseg.bj.bcebos.com/models/fast_scnn_cityscape.tar) | 9.8MB |  | 69.64 |

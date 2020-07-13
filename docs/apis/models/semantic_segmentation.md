@@ -76,7 +76,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, return_details=False):
 ### predict
 
 ```
-predict(self, im_file, transforms=None):
+predict(self, img_file, transforms=None):
 ```
 
 > DeepLabv3p模型预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
@@ -85,10 +85,30 @@ predict(self, im_file, transforms=None):
 > >
 > > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
-
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
 > **返回值**
 > >
 > > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+
+### batch_predict
+
+```
+batch_predict(self, img_file_list, transforms=None):
+```
+
+> DeepLabv3p模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
+
+> **参数**
+> >
+> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+
+> **返回值**
+> >
+> > - **dict**: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+
 
 ## paddlex.seg.UNet
 
@@ -110,6 +130,7 @@ paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, us
 > - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
+> - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
 
 ## paddlex.seg.HRNet
 
@@ -131,6 +152,7 @@ paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=Fal
 > - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
+> - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
 
 ## paddlex.seg.FastSCNN
 
@@ -152,3 +174,4 @@ paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, cla
 > - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
+> - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
