@@ -35,6 +35,21 @@
 |humanseg_mobile_quant | 1.6M | 24.93ms |
 
 执行以下脚本下载全部的预训练模型：
+
+* 下载PaddleX源码：
+
+```bash
+git clone https://github.com/PaddlePaddle/PaddleX
+```
+
+* 下载预训练模型的代码位于`PaddleX/examples/human_segmentation`，进入该目录：
+
+```bash
+cd PaddleX/examples/human_segmentation
+```
+
+* 执行下载
+
 ```bash
 python pretrain_weights/download_pretrain_weights.py
 ```
@@ -42,6 +57,8 @@ python pretrain_weights/download_pretrain_weights.py
 #### 测试数据
 
 [supervise.ly](https://supervise.ly/)发布了人像分割数据集**Supervisely Persons**, 本案例从中随机抽取一小部分数据并转化成PaddleX可直接加载的数据格式，运行以下代码可下载该数据、以及手机前置摄像头拍摄的人像测试视频`video_test.mp4`.
+
+* 下载测试数据的代码位于`PaddleX/xamples/human_segmentation`，进入该目录并执行下载：
 
 ```bash
 python data/download_data.py
@@ -57,9 +74,21 @@ python data/download_data.py
 
 安装的相关问题参考[PaddleX安装](../../docs/install.md)
 
+* 下载PaddleX源码：
+
+```bash
+git clone https://github.com/PaddlePaddle/PaddleX
+```
+
+* 视频流人像分割和背景替换的执行文件均位于`PaddleX/examples/human_segmentation`，进入该目录：
+
+```bash
+cd PaddleX/examples/human_segmentation
+```
+
 ### 光流跟踪辅助的视频流人像分割
 
-本案例将DIS（Dense Inverse Search-basedmethod）光流跟踪算法的预测结果与PaddleX的分割结果进行融合，以此改善视频流人像分割的效果。运行以下代码进行体验：
+本案例将DIS（Dense Inverse Search-basedmethod）光流跟踪算法的预测结果与PaddleX的分割结果进行融合，以此改善视频流人像分割的效果。运行以下代码进行体验，以下代码位于`PaddleX/xamples/human_segmentation`：
 
 * 通过电脑摄像头进行实时分割处理
 
@@ -78,7 +107,7 @@ python video_infer.py --model_dir pretrain_weights/humanseg_mobile_inference --v
 
 ### 人像背景替换
 
-本案例还实现了人像背景替换功能，根据所选背景对人像的背景画面进行替换，背景可以是一张图片，也可以是一段视频。
+本案例还实现了人像背景替换功能，根据所选背景对人像的背景画面进行替换，背景可以是一张图片，也可以是一段视频。人像背景替换的代码位于`PaddleX/xamples/human_segmentation`，进入该目录并执行：
 
 * 通过电脑摄像头进行实时背景替换处理, 通过'--background_video_path'传入背景视频
 ```bash
@@ -114,6 +143,18 @@ python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --im
 * PaddleX >= 1.0.0
 
 安装的相关问题参考[PaddleX安装](../../docs/install.md)
+
+* 下载PaddleX源码：
+
+```bash
+git clone https://github.com/PaddlePaddle/PaddleX
+```
+
+* 人像分割训练、评估、预测、模型导出、离线量化的执行文件均位于`PaddleX/examples/human_segmentation`，进入该目录：
+
+```bash
+cd PaddleX/examples/human_segmentation
+```
 
 ### 模型训练
 
@@ -213,3 +254,62 @@ python quant_offline.py --model_dir output/best_model \
 * `--image_shape`: 网络输入图像大小（w, h）
 
 ## <h2 id="4">Paddle-Lite移动端部署</h2>
+
+本案例将人像分割模型在移动端进行部署，部署流程展示如下，通用的移动端部署流程参见[PaddleLite移动端部署](../../docs/deploy/paddlelite/android.md)。
+
+### 1. 将PaddleX模型导出为inference模型
+
+本案例使用humanseg_mobile_quant预训练模型，该模型已经是inference模型，不需要再执行模型导出步骤。如果不使用预训练模型，则执行上一章节`模型训练`中的`模型导出`将自己训练的模型导出为inference格式。
+
+### 2. 将inference模型优化为PaddleLite模型
+
+下载并解压 [模型优化工具opt](https://bj.bcebos.com/paddlex/deploy/lite/model_optimize_tool_11cbd50e.tar.gz)，进入模型优化工具opt所在路径后，执行以下命令：
+
+``` bash
+./opt --model_file=<model_path> \
+      --param_file=<param_path> \
+      --valid_targets=arm \
+      --optimize_out_type=naive_buffer \
+      --optimize_out=model_output_name
+```
+
+|  参数   | 说明  |
+|  ----  | ----  |
+| --model_file  | 导出inference模型中包含的网络结构文件：`__model__`所在的路径|
+| --param_file  | 导出inference模型中包含的参数文件：`__params__`所在的路径|
+| --valid_targets  |指定模型可执行的backend，这里请指定为`arm`|
+| --optimize_out_type | 输出模型类型，目前支持两种类型：protobuf和naive_buffer，其中naive_buffer是一种更轻量级的序列化/反序列化，这里请指定为`naive_buffer`|
+| --optimize_out | 输出模型的名称 |
+
+更详细的使用方法和参数含义请参考: [使用opt转化模型](https://paddle-lite.readthedocs.io/zh/latest/user_guides/opt/opt_bin.html)
+
+### 3. 移动端预测
+
+PaddleX提供了基于PaddleX Android SDK的安卓demo，可供用户体验图像分类、目标检测、实例分割和语义分割，该demo位于`PaddleX/deploy/lite/android/demo`，用户将模型、配置文件和测试图片拷贝至该demo下进行预测。
+
+#### 3.1 前置依赖
+
+* Android Studio 3.4
+* Android手机或开发板
+
+#### 3.2 拷贝模型、配置文件和测试图片
+
+* 将Lite模型（.nb文件）拷贝到`PaddleX/deploy/lite/android/demo/app/src/main/assets/model/`目录下, 根据.nb文件的名字，修改文件`PaddleX/deploy/lite/android/demo/app/src/main/res/values/strings.xml`中的`MODEL_PATH_DEFAULT`；
+
+* 将配置文件（.yml文件）拷贝到`PaddleX/deploy/lite/android/demo/app/src/main/assets/config/`目录下，根据.yml文件的名字，修改文件`PaddleX/deploy/lite/android/demo/app/src/main/res/values/strings.xml`中的`YAML_PATH_DEFAULT`；
+
+* 将测试图片拷贝到`PaddleX/deploy/lite/android/demo/app/src/main/assets/images/`目录下，根据图片文件的名字，修改文件`PaddleX/deploy/lite/android/demo/app/src/main/res/values/strings.xml`中的`IMAGE_PATH_DEFAULT`。
+
+#### 3.3 导入工程并运行
+
+* 打开Android Studio，在"Welcome to Android Studio"窗口点击"Open an existing Android Studio project"，在弹出的路径选择窗口中进入`PaddleX/deploy/lite/android/demo`目录，然后点击右下角的"Open"按钮，导入工程；
+
+* 通过USB连接Android手机或开发板；
+
+* 工程编译完成后，点击菜单栏的Run->Run 'App'按钮，在弹出的"Select Deployment Target"窗口选择已经连接的Android设备，然后点击"OK"按钮；
+
+* 运行成功后，Android设备将加载一个名为PaddleX Demo的App，默认会加载一个测试图片，同时还支持拍照和从图库选择照片进行预测。
+
+测试图片及其分割结果如下所示：
+
+![](./data/beauty.png)
