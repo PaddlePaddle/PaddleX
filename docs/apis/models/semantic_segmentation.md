@@ -85,7 +85,7 @@ predict(self, img_file, transforms=None):
 > >
 > > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
-
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
 > **返回值**
 > >
 > > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。

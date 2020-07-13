@@ -129,6 +129,8 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 
 可使用[小度熊识别模型](../../export_model.md)中导出的`inference_model`和测试图片进行预测, 例如导出到D:\projects，模型路径为D:\projects\inference_model。
 
+> 关于预测速度的说明：Paddle在部署预测时，由于涉及到内存显存初始化等原因，在模型加载后刚开始预测速度会较慢，一般在模型运行20~50后（即预测20~30张图片）预测速度才会稳定。
+
 ### 样例一：(使用未加密的模型对单张图像做预测)
 
 不使用`GPU`测试图片  `D:\images\xiaoduxiong.jpeg`  

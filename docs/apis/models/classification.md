@@ -81,7 +81,7 @@ predict(self, img_file, transforms=None, topk=5)
 ### batch_predict
 
 ```python
-batch_predict(self, img_file_list, transforms=None, topk=5)
+batch_predict(self, img_file_list, transforms=None, topk=5, thread_num=2)
 ```
 
 > 分类模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`ResNet50.test_transforms`和`ResNet50.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
@@ -91,6 +91,7 @@ batch_predict(self, img_file_list, transforms=None, topk=5)
 > > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.cls.transforms): 数据预处理操作。
 > > - **topk** (int): 预测时前k个最大值。
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
 
 > **返回值**
 >

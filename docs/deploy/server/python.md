@@ -1,19 +1,30 @@
 # Python部署
-PaddleX已经集成了基于Python的高性能预测接口，在安装PaddleX后，可参照如下代码示例，进行预测。相关的接口文档可参考[paddlex.deploy](../../../apis/deploy.md)
+PaddleX已经集成了基于Python的高性能预测接口，在安装PaddleX后，可参照如下代码示例，进行预测。相关的接口文档可参考[paddlex.deploy](../../apis/deploy.md)
 
 ## 导出预测模型
 可参考[模型导出](../export_model.md)将模型导出为inference格式的模型。
 
 ## 预测部署
-**注意：由于PaddleX代码的持续更新，版本低于1.0.0的模型暂时无法直接用于预测部署，参考[模型版本升级](../upgrade_version.md)对模型版本进行升级。**
-
 > 点击下载测试图片 [xiaoduxiong_test_image.tar.gz](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_test_image.tar.gz)
+
+* 单张图片预测
 
 ```
 import paddlex as pdx
 predictor = pdx.deploy.Predictor('./inference_model')
 result = predictor.predict(image='xiaoduxiong_test_image/JPEGImages/WeChatIMG110.jpeg')
 ```
+* 批量图片预测
+
+```
+import paddlex as pdx
+predictor = pdx.deploy.Predictor('./inference_model')
+image_list = ['xiaoduxiong_test_image/JPEGImages/WeChatIMG110.jpeg',
+    'xiaoduxiong_test_image/JPEGImages/WeChatIMG111.jpeg']
+result = predictor.predict(image_list=image_list)
+```
+
+> 关于预测速度的说明：采用Paddle的Predictor进行预测时，由于涉及到内存显存初始化等原因，在模型加载后刚开始预测速度会较慢，一般在模型运行20~50后（即预测20~30张图片）预测速度才会稳定。
 
 ## 预测性能对比
 ### 测试环境

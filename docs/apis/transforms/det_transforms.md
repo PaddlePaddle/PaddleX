@@ -168,6 +168,7 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
 * **allow_no_crop** (bool): 是否允许未进行裁剪。默认值为True。
 * **cover_all_box** (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
 
+<!--
 ## ComposedRCNNTransforms
 ```python
 paddlex.det.transforms.ComposedRCNNTransforms(mode, min_max_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
@@ -302,3 +303,4 @@ eval_transforms = transforms.Composed([
 		transforms.Normalize()
 ])
 ```
+-->

@@ -22,9 +22,9 @@ PaddleX提供了两种裁剪训练方式，
 # 训练模型
 python classification/mobilenetv2.py
 # 计算模型参数敏感度
-python classification/cal_sensitivities_file.py --model_dir=output/mobilenetv2/epoch_10 --save_file=./sensitivities.data
+python classification/cal_sensitivities_file.py --model_dir=output/mobilenetv2/best_model --save_file=./sensitivities.data
 # 裁剪训练
-python classification/mobilenetv2.py  --model_dir=output/mobilenetv2/epoch_10 --sensitivities_file=./sensitivities.data --eval_metric_loss=0.05
+python classification/mobilenetv2.py  --model_dir=output/mobilenetv2/best_model --sensitivities_file=./sensitivities.data --eval_metric_loss=0.05
 ```
 2. 第2种方法，使用PaddleX预先计算好的参数敏感度文件
 ```
