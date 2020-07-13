@@ -88,6 +88,8 @@ coco_pretrain = {
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r34.tar',
     'YOLOv3_ResNet50_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r50vd_dcn.tar',
+    'FasterRCNN_ResNet18_COCO':
+    'https://bj.bcebos.com/paddlex/pretrained_weights/faster_rcnn_r18_fpn_1x.tar',
     'FasterRCNN_ResNet50_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_fpn_2x.tar',
     'FasterRCNN_ResNet50_vd_COCO':
@@ -98,6 +100,8 @@ coco_pretrain = {
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_vd_fpn_2x.tar',
     'FasterRCNN_HRNet_W18_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_hrnetv2p_w18_2x.tar',
+    'MaskRCNN_ResNet18_COCO':
+    'https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_r18_fpn_1x.tar',
     'MaskRCNN_ResNet50_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar',
     'MaskRCNN_ResNet50_vd_COCO':
@@ -136,9 +140,10 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         return flag
     warning_info = "{} does not support to be finetuned with weights pretrained on the {} dataset, so pretrain_weights is forced to be set to {}"
     if flag == 'COCO':
-        if class_name == "FasterRCNN" and backbone in ['ResNet18'] or \
-            class_name == "MaskRCNN" and backbone in ['ResNet18'] or \
-            class_name == 'DeepLabv3p' and backbone in ['Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']:
+        if class_name == 'DeepLabv3p' and backbone in [
+                'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+        ]:
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'

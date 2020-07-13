@@ -36,6 +36,7 @@
 
 | 模型    | 模型大小    | 预测时间(毫秒) | BoxAP（%） |
 |:-------|:-----------|:-------------|:----------|
+|[FasterRCNN-ResNet18-FPN](https://bj.bcebos.com/paddlex/pretrained_weights/faster_rcnn_r18_fpn_1x.tar) | 173.2M | - | 32.6 |
 |[FasterRCNN-ResNet50](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_1x.tar)|136.0MB| 197.715 | 35.2 |
 |[FasterRCNN-ResNet50_vd](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_vd_1x.tar)| 136.1MB | 475.700 | 36.4 |
 |[FasterRCNN-ResNet101](https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_1x.tar)| 212.5MB | 582.911 | 38.3 |
@@ -55,6 +56,7 @@
 
 | 模型    | 模型大小    | 预测时间(毫秒) | BoxAP (%) | MaskAP (%)  |
 |:-------|:-----------|:-------------|:----------|:----------|
+|[MaskRCNN-ResNet18-FPN](https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_r18_fpn_1x.tar) | 189.1MB | - | 33.6 | 30.5 |
 |[MaskRCNN-ResNet50](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_2x.tar) | 143.9MB | 87 | 38.2  | 33.4 |
 |[MaskRCNN-ResNet50-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar)| 177.7MB | 63.9 | 38.7 | 34.7 |
 |[MaskRCNN-ResNet50_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar) | 177.7MB | 63.1 | 39.8 || 35.4 |
