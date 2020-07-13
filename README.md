@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/images/paddlex.png" width="360" height ="60" alt="PaddleX" align="middle" />
+  <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
@@ -68,7 +68,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ### PaddleX-GUI安装
 
 进入PaddleX官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载绿色安装包，开箱即用。
-Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddlex.readthedocs.io/zh_CN/develop/paddlex_gui/index.html)
+Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](./docs/gui/how_to_use.md)
 
 ## 使用文档
 
@@ -90,9 +90,9 @@ Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](https://paddle
 
 - 项目官网: https://www.paddlepaddle.org.cn/paddle/paddlex
 - PaddleX用户交流群: 1045148026 (手机QQ扫描如下二维码快速加入)  
-<img src="./docs/images/QQGroup.jpeg" width="195" height="300" alt="QQGroup" align="center" />
+<img src="./docs/gui/images/QR.jpg" width="250" height="300" alt="QQGroup" align="center" />
 
-## FAQ
+## [FAQ](.docs/gui/faq.md)
 
 ## 更新日志
 > [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
