@@ -59,7 +59,7 @@
 |[MaskRCNN-ResNet18-FPN](https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_r18_fpn_1x.tar) | 189.1MB | - | 33.6 | 30.5 |
 |[MaskRCNN-ResNet50](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_2x.tar) | 143.9MB | 87 | 38.2  | 33.4 |
 |[MaskRCNN-ResNet50-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar)| 177.7MB | 63.9 | 38.7 | 34.7 |
-|[MaskRCNN-ResNet50_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar) | 177.7MB | 63.1 | 39.8 || 35.4 |
+|[MaskRCNN-ResNet50_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_vd_fpn_2x.tar) | 177.7MB | 63.1 | 39.8 | 35.4 |
 |[MaskRCNN-ResNet101-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_fpn_1x.tar) | 253.6MB | 77 | 39.5 | 35.2 |
 |[MaskRCNN-ResNet101_vd-FPN](https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar) | 253.7MB | 76.4 | 41.4 | 36.8 |
 |[MaskRCNN-HRNet_W18-FPN](https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_hrnetv2p_w18_2x.tar) | 120.7MB | - | 38.7 | 34.7 |

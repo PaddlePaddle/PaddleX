@@ -10,7 +10,7 @@
 > - 集成X2Paddle，PaddleX所有分类模型和语义分割模型支持导出为ONNX协议
 - 模型部署更新
 > - 模型加密增加支持Windows平台
-> - 新增Jetson、PaddleLite模型部署预测方案
+> - 新增Jetson、Paddle Lite模型部署预测方案
 > - C++部署代码新增batch批预测，并采用OpenMP对预处理进行并行加速
 - 新增2个PaddleX产业案例
 > - [人像分割案例]()

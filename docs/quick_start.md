@@ -37,7 +37,7 @@ tar xzvf vegetables_cls.tar.gz
 <a name="定义训练验证图像处理流程transforms"></a>
 **3. 定义训练/验证图像处理流程transforms**  
 
-由于训练时数据增强操作的加入，因此模型在训练和验证过程中，数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#randomcrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
+因为训练时加入了数据增强操作，因此在训练和验证过程中，模型的数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#randomcrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
 ```
 from paddlex.cls import transforms
 train_transforms = transforms.Compose([
@@ -93,13 +93,13 @@ model.train(num_epochs=20,
 <a name="训练过程使用VisualDL查看训练指标变化"></a>
 **6. 训练过程使用VisualDL查看训练指标变化**  
 
-模型在训练过程中，训练指标和在验证集上的指标，均会以标准输出流形式，输出到命令终端。在用户设定`use_vdl=True`的前提下，也会使用VisualDL格式打点到`save_dir`目录下的`vdl_log`文件夹，用户可都终端通过如下命令启动visualdl，查看可视化的指标变化趋势。
+训练过程中，模型在训练集和验证集上的指标均会以标准输出流形式输出到命令终端。当用户设定`use_vdl=True`时，也会使用VisualDL格式将指标打点到`save_dir`目录下的`vdl_log`文件夹，在终端运行如下命令启动visualdl并查看可视化的指标变化情况。
 ```
 visualdl --logdir output/mobilenetv3_small_ssld --port 8001
 ```
 服务启动后，通过浏览器打开https://0.0.0.0:8001或https://localhost:8001即可。
 
-> 如果您使用的是AIStudio平台进行训练，不能通过此方式启动visualdl，请参考AIStudio VisualDL启动教程使用
+如果您使用的是AIStudio平台进行训练，不能通过此方式启动visualdl，请参考AIStudio VisualDL启动教程使用
 
 <a name="加载训练保存的模型预测"></a>
 **7. 加载训练保存的模型预测**  

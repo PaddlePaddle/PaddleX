@@ -4,7 +4,7 @@
 
 ## pip安装
 
-> 注意其中pycocotools在Windows安装较为特殊，可参考下面的Windows安装命令  
+注意其中pycocotools在Windows安装较为特殊，可参考下面的Windows安装命令  
 
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
@@ -28,15 +28,17 @@ python setup.py install
 
 ## pycocotools安装问题
 
-> PaddleX依赖pycocotools包，如安装pycocotools失败，可参照如下方式安装pycocotools
+PaddleX依赖pycocotools包，如安装pycocotools失败，可参照如下方式安装pycocotools
 
-> Windows安装时可能会提示缺少`Microsoft Visual C++ 2015 build tools`，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
+* Windows安装时可能会提示缺少`Microsoft Visual C++ 2015 build tools`，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
+
 ```
 pip install cython
 pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 ```
 
-> Linux/Mac系统下，直接使用pip安装如下两个依赖即可
+* Linux/Mac系统下，直接使用pip安装如下两个依赖即可
+
 ```
 pip install cython  
 pip install pycocotools
