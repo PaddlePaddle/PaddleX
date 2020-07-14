@@ -1,6 +1,6 @@
 # 人像分割模型
 
-本教程基于PaddleX核心分割模型实现人像分割，开放预训练模型和测试数据、支持视频流人像分割、提供模型Fine-tune到Paddle-Lite移动端部署的全流程应用指南。
+本教程基于PaddleX核心分割模型实现人像分割，开放预训练模型和测试数据、支持视频流人像分割、提供模型Fine-tune到Paddle Lite移动端部署的全流程应用指南。
 
 ## 预训练模型和测试数据
 
@@ -243,15 +243,15 @@ python quant_offline.py --model_dir output/best_model \
 * `--save_dir`: 量化模型保存路径
 * `--image_shape`: 网络输入图像大小（w, h）
 
-## Paddle-Lite移动端部署
+## Paddle Lite移动端部署
 
-本案例将人像分割模型在移动端进行部署，部署流程展示如下，通用的移动端部署流程参见[PaddleLite移动端部署](../../docs/deploy/paddlelite/android.md)。
+本案例将人像分割模型在移动端进行部署，部署流程展示如下，通用的移动端部署流程参见[Paddle Lite移动端部署](../../docs/deploy/paddlelite/android.md)。
 
 ### 1. 将PaddleX模型导出为inference模型
 
 本案例使用humanseg_mobile_quant预训练模型，该模型已经是inference模型，不需要再执行模型导出步骤。如果不使用预训练模型，则执行上一章节`模型训练`中的`模型导出`将自己训练的模型导出为inference格式。
 
-### 2. 将inference模型优化为PaddleLite模型
+### 2. 将inference模型优化为Paddle Lite模型
 
 下载并解压 [模型优化工具opt](https://bj.bcebos.com/paddlex/deploy/lite/model_optimize_tool_11cbd50e.tar.gz)，进入模型优化工具opt所在路径后，执行以下命令：
 

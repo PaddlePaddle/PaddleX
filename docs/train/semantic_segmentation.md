@@ -20,11 +20,10 @@ PaddleX目前提供了DeepLabv3p、UNet、HRNet和FastSCNN四种语义分割结�
 
 ## 开始训练
 
-> 代码保存到本地后，即可直接训练，**训练代码会自动下载训练数据开始训练**
-> > 如保存为`deeplabv3p_mobilenetv2_x0.25.py`，如下命令即可开始训练
-> > ```
-> > python deeplabv3p_mobilenetv2_x0.25.py
-> > ```
+将代码保存到本地后运行（代码下载链接位于上面的表格中），**代码会自动下载训练数据并开始训练**。如保存为`deeplabv3p_mobilenetv2_x0.25.py`，执行如下命令即可开始训练：
+```
+python deeplabv3p_mobilenetv2_x0.25.py
+```
 
 
 ## 相关文档

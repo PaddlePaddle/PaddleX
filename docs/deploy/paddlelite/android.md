@@ -1,12 +1,12 @@
 # Android平台
 
-PaddleX的安卓端部署由PaddleLite实现，部署的流程如下，首先将训练好的模型导出为inference model，然后对模型进行优化，最后使用PaddleLite的预测库进行部署，PaddleLite的详细介绍和使用可参考：[PaddleLite文档](https://paddle-lite.readthedocs.io/zh/latest/)
+PaddleX的安卓端部署由Paddle Lite实现，部署的流程如下，首先将训练好的模型导出为inference model，然后对模型进行优化，最后使用Paddle Lite的预测库进行部署，Paddle Lite的详细介绍和使用可参考：[Paddle Lite文档](https://paddle-lite.readthedocs.io/zh/latest/)
 
-> PaddleX --> Inference Model --> PaddleLite Opt --> PaddleLite Inference
+> PaddleX --> Inference Model --> Paddle Lite Opt --> Paddle Lite Inference
 
 文章简介：
 - 1.介绍如何将PaddleX导出为inference model
-- 2.使用PaddleLite的OPT模块对模型进行优化
+- 2.使用Paddle Lite的OPT模块对模型进行优化
 - 3.介绍基于PaddleX Android SDK的安卓demo，以及如何快速部署训练好的模型
 - 4.介绍PaddleX Android SDK和二次开发
 
@@ -14,11 +14,11 @@ PaddleX的安卓端部署由PaddleLite实现，部署的流程如下，首先将
 
 参考[导出inference模型](../export_model.md)将模型导出为inference格式模型。
 
-## 2. 将inference模型优化为PaddleLite模型
+## 2. 将inference模型优化为Paddle Lite模型
 
-目前提供了两种方法将Paddle模型优化为PaddleLite模型:
+目前提供了两种方法将Paddle模型优化为Paddle Lite模型:
 
-- 1.python脚本优化模型，简单上手，目前支持最新的PaddleLite 2.6.1版本
+- 1.python脚本优化模型，简单上手，目前支持最新的Paddle Lite 2.6.1版本
 - 2.bin文件优化模型(linux)，支持develop版本(Commit Id:11cbd50e)，适用于部署`DeepLab模型`和`Unet模型`的用户。
 
 ### 2.1 使用python脚本优化模型
@@ -87,11 +87,11 @@ PaddleX提供了一个基于Mobilenetv2模型和PaddleX Android SDK的安卓demo
 
 ## 4. PaddleX Android SDK和二次开发
 
-PaddleX Android SDK是PaddleX基于Paddle-Lite开发的安卓端AI推理工具，以PaddleX导出的Yaml配置文件为接口，针对不同的模型实现图片的预处理，后处理，并进行可视化，开发者可集成到业务中。
-该SDK自底向上主要包括：Paddle-Lite推理引擎层，Paddle-Lite接口层以及PaddleX业务层。
+PaddleX Android SDK是PaddleX基于Paddle Lite开发的安卓端AI推理工具，以PaddleX导出的Yaml配置文件为接口，针对不同的模型实现图片的预处理，后处理，并进行可视化，开发者可集成到业务中。
+该SDK自底向上主要包括：Paddle Lite推理引擎层，Paddle Lite接口层以及PaddleX业务层。
 
-- Paddle-Lite推理引擎层，是在Android上编译好的二进制包，只涉及到Kernel 的执行，且可以单独部署，以支持极致的轻量级部署。
-- Paddle-Lite接口层，以Java接口封装了底层c++推理库。
+- Paddle Lite推理引擎层，是在Android上编译好的二进制包，只涉及到Kernel 的执行，且可以单独部署，以支持极致的轻量级部署。
+- Paddle Lite接口层，以Java接口封装了底层c++推理库。
 - PaddleX业务层，封装了PaddleX导出模型的预处理，推理和后处理，以及可视化，支持PaddleX导出的检测、分割、分类模型。
 
 ![架构](../images/paddlex_android_sdk_framework.jpg)
