@@ -179,7 +179,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
   ```
 
-### Linux系统的jeton嵌入式设备安全部署
+### Linux系统的jetson嵌入式设备安全部署
 
 #### c++部署
 
