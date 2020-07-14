@@ -6,7 +6,7 @@ from paddlex.det import transforms
 import paddlex as pdx
 
 # 下载和解压表计检测数据集
-meter_det_dataset = 'https://bj.bcebos.com/paddlex/meterreader/datasets/meter_det.tar.gz'
+meter_det_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_det.tar.gz'
 pdx.utils.download_and_decompress(meter_det_dataset, path='./')
 
 # 定义训练和验证时的transforms
