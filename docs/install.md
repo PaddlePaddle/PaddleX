@@ -31,6 +31,7 @@ python setup.py install
 PaddleX依赖pycocotools包，如安装pycocotools失败，可参照如下方式安装pycocotools
 
 * Windows安装时可能会提示`Microsoft Visual C++ 14.0 is required`，从而导致安装出错，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
+> 注意：安装完后，需要重新打开新的终端命令窗口
 
 ```
 pip install cython
