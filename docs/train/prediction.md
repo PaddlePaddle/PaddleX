@@ -77,7 +77,8 @@ import paddlex as pdx
 test_jpg = './deeplabv3p_mobilenetv2_voc/test.jpg'
 model = pdx.load_model('./deeplabv3p_mobilenetv2_voc')
 result = model.predict(test_jpg)
-pdx.seg.visualize(test_jpg, result, weight=0.6, save_dir='./')
+# 可视化结果存储在./visualized_test.jpg，见下图右(左图为原图)
+pdx.seg.visualize(test_jpg, result, weight=0.0, save_dir='./')
 ```
 
 在上述示例代码中，通过调用`paddlex.seg.visualize`可以对语义分割的预测结果进行可视化，可视化的结果保存在`save_dir`下，见下图。其中`weight`参数用于调整预测结果和原图结果融合展现时的权重，0.0时只展示预测结果mask的可视化，1.0时只展示原图可视化。
