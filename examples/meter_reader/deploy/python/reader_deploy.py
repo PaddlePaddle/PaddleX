@@ -335,7 +335,7 @@ def infer(args):
             meter_reader.predict(im_file, args.save_dir, args.use_erode,
                                  args.erode_kernel, args.score_threshold,
                                  args.seg_batch_size, args.seg_thread_num)
-    elif args.with_camera:
+    elif args.use_camera:
         cap_video = cv2.VideoCapture(args.camera_id)
         if not cap_video.isOpened():
             raise Exception(
