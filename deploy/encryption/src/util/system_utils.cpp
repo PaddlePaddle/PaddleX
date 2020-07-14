@@ -41,13 +41,14 @@ int SystemUtils::check_key_match(const char* key, const char* filepath) {
     int ret =
         ioutil::read_with_pos_and_length(filepath, data_pos, constant::MAGIC_NUMBER_LEN + constant::VERSION_LEN, 64);
     if (ret != CODE_OK) {
+	free(data_pos);
         LOGD("[M]read file failed when check key");
         return ret;
     }
     std::string check_str((char*) data_pos, 64);
     free(data_pos);
 
-    if (strcmp(sha256_aes_key_iv.c_str(), check_str.c_str()) != 0) {
+    if (strncmp(sha256_aes_key_iv.c_str(), check_str.c_str(), 64) != 0) {
         return CODE_KEY_NOT_MATCH;
     }
     return CODE_OK;
@@ -62,13 +63,14 @@ int SystemUtils::check_file_encrypted(const char* filepath) {
     size_t read_len = constant::MAGIC_NUMBER_LEN + constant::VERSION_LEN;
     unsigned char* data_pos = (unsigned char*) malloc(sizeof(unsigned char) * read_len);
     if (ioutil::read_with_pos_and_length(filepath, data_pos, 0, read_len) != CODE_OK) {
+	free(data_pos);
         LOGD("check file failed when read %s(file)", filepath);
         return CODE_OPEN_FAILED;
     }
 
     std::string tag(constant::MAGIC_NUMBER);
     tag.append(constant::VERSION);
-    int ret_cmp = strcmp(tag.c_str(), (const char*) data_pos) == 0 ? 0 : 1;
+    int ret_cmp = strncmp(tag.c_str(), (const char*) data_pos, read_len) == 0 ? 0 : 1;
     free(data_pos);
     return ret_cmp;
 }
