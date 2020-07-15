@@ -241,7 +241,7 @@ class HRNet(object):
                             align_mode=1)
                     else:
                         y = fluid.layers.resize_nearest(
-                            input=y, scale=2**(j - i))
+                            input=y, scale=2**(j - i), align_corners=False)
                     residual = fluid.layers.elementwise_add(
                         x=residual, y=y, act=None)
                 elif j < i:

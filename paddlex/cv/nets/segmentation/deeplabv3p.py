@@ -151,8 +151,8 @@ class DeepLabv3p(object):
                         padding=0,
                         param_attr=param_attr))
                 input_shape = fluid.layers.shape(input)
-                image_avg = fluid.layers.resize_bilinear(image_avg,
-                                                         input_shape[2:])
+                image_avg = fluid.layers.resize_bilinear(
+                    image_avg, input_shape[2:], align_corners=False)
 
             with scope("aspp0"):
                 aspp0 = bn_relu(
@@ -260,7 +260,9 @@ class DeepLabv3p(object):
 
                 decode_shortcut_shape = fluid.layers.shape(decode_shortcut)
                 encode_data = fluid.layers.resize_bilinear(
-                    encode_data, decode_shortcut_shape[2:])
+                    encode_data,
+                    decode_shortcut_shape[2:],
+                    align_corners=False)
                 encode_data = fluid.layers.concat(
                     [encode_data, decode_shortcut], axis=1)
             if self.decoder_use_sep_conv:
@@ -362,7 +364,8 @@ class DeepLabv3p(object):
                     bias_attr=True,
                     param_attr=param_attr)
             image_shape = fluid.layers.shape(image)
-            logit = fluid.layers.resize_bilinear(logit, image_shape[2:])
+            logit = fluid.layers.resize_bilinear(
+                logit, image_shape[2:], align_corners=False)
 
         if self.num_classes == 1:
             out = sigmoid_to_softmax(logit)

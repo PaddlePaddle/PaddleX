@@ -144,7 +144,8 @@ class UNet(object):
         with scope("up"):
             if self.upsample_mode == 'bilinear':
                 short_cut_shape = fluid.layers.shape(short_cut)
-                data = fluid.layers.resize_bilinear(data, short_cut_shape[2:])
+                data = fluid.layers.resize_bilinear(
+                    data, short_cut_shape[2:], align_corners=False)
             else:
                 data = deconv(
                     data,

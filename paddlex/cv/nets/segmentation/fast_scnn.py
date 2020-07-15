@@ -86,26 +86,27 @@ class FastSCNN(object):
                                      64, 128, 128)
         with scope('classifier'):
             logit = self._classifier(x, 128)
-            logit = fluid.layers.resize_bilinear(logit, size, align_mode=0)
+            logit = fluid.layers.resize_bilinear(
+                logit, size, align_corners=False, align_mode=1)
 
         if len(self.multi_loss_weight) == 3:
             with scope('aux_layer_higher'):
                 higher_logit = self._aux_layer(higher_res_features,
                                                self.num_classes)
                 higher_logit = fluid.layers.resize_bilinear(
-                    higher_logit, size, align_mode=0)
+                    higher_logit, size, align_corners=False, align_mode=1)
             with scope('aux_layer_lower'):
                 lower_logit = self._aux_layer(lower_res_feature,
                                               self.num_classes)
                 lower_logit = fluid.layers.resize_bilinear(
-                    lower_logit, size, align_mode=0)
+                    lower_logit, size, align_corners=False, align_mode=1)
             logit = (logit, higher_logit, lower_logit)
         elif len(self.multi_loss_weight) == 2:
             with scope('aux_layer_higher'):
                 higher_logit = self._aux_layer(higher_res_features,
                                                self.num_classes)
                 higher_logit = fluid.layers.resize_bilinear(
-                    higher_logit, size, align_mode=0)
+                    higher_logit, size, align_corners=False, align_mode=1)
             logit = (logit, higher_logit)
         else:
             logit = (logit, )
@@ -317,7 +318,8 @@ class FastSCNN(object):
                     data_bn,
                     out_shape=fluid.layers.shape(input)[2:],
                     name=psp_name + '_interp',
-                    align_mode=0)
+                    align_corners=False,
+                    align_mode=1)
             cat_layers.append(interp)
         cat_layers = [input] + cat_layers
         out = fluid.layers.concat(cat_layers, axis=1, name='psp_cat')
@@ -342,7 +344,7 @@ class FastSCNN(object):
         w = shape[-1]
         h = shape[-2]
         lower_res_feature = fluid.layers.resize_bilinear(
-            lower_res_feature, [h, w], align_mode=0)
+            lower_res_feature, [h, w], align_corners=False, align_mode=1)
 
         with scope('dwconv'):
             lower_res_feature = relu(

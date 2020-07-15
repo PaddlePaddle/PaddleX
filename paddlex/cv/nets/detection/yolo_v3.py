@@ -153,7 +153,7 @@ class YOLOv3:
 
     def _upsample(self, input, scale=2, name=None):
         out = fluid.layers.resize_nearest(
-            input=input, scale=float(scale), name=name)
+            input=input, scale=float(scale), name=name, align_corners=False)
         return out
 
     def _detection_block(self, input, channel, name=None):
@@ -242,7 +242,7 @@ class YOLOv3:
             nms_top_k=self.nms_topk,
             keep_top_k=self.nms_keep_topk,
             nms_threshold=self.nms_iou_threshold,
-            normalized=False,
+            normalized=True,
             nms_eta=1.0,
             background_label=-1)
         return pred
