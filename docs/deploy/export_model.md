@@ -2,6 +2,8 @@
 
 在服务端部署模型时需要将训练过程中保存的模型导出为inference格式模型，导出的inference格式模型包括`__model__`、`__params__`和`model.yml`三个文件，分别表示模型的网络结构、模型权重和模型的配置文件（包括数据预处理参数等）。
 
+> **检查你的模型文件夹**，如果里面是`model.pdparams`， `model.pdmodel`和`model.yml`3个文件时，那么就需要按照上面流程进行模型导出
+
 在安装完PaddleX后，在命令行终端使用如下命令将模型导出。可直接下载小度熊分拣模型来测试本文档的流程[xiaoduxiong_epoch_12.tar.gz](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)。
 
 ```
