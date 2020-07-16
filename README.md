@@ -45,12 +45,13 @@
 
 **PaddleX提供两种开发模式，满足用户的不同需求：**
 
-1. **Python开发模式：** 通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。
-**前置依赖**
-* paddlepaddle >= 1.8.0
-* python >= 3.5
-* cython
-* pycocotools
+1. **Python开发模式：** 通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
+
+  **前置依赖**
+> - paddlepaddle >= 1.8.0
+> - python >= 3.5
+> - cython
+> - pycocotools
 
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
@@ -60,18 +61,18 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 2.  **Padlde GUI模式：** 无代码开发的可视化客户端，应用Paddle API实现，使开发者快速进行产业项目验证，并为用户开发自有深度学习软件/应用提供参照。
 
-您可前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载Paddle X GUI一键绿色安装包。
+- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载Paddle X GUI一键绿色安装包。
 
-您可前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
+- 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
 
 ## 完整使用文档及API说明
 
-[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/develop/index.html)。
+- [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)
 
-- [10分钟快速上手使用](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
+- [10分钟快速上手系列教程](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
 - [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
-- [PaddleX API参考文档](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
+- [PaddleX API接口说明](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
 
 ## 在线项目示例
 
