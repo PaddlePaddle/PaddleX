@@ -90,6 +90,7 @@ class Compose(SegTransform):
         if label is not None:
             if not isinstance(label, np.ndarray):
                 label = np.asarray(Image.open(label))
+                origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
                 outputs = op(im, im_info, label)
@@ -104,6 +105,10 @@ class Compose(SegTransform):
                     outputs = (im, im_info, label)
                 else:
                     outputs = (im, im_info)
+        if type(self.transforms[-1]).__name__ == 'ArrangeSegmenter':
+            if self.transforms[-1].mode == 'eval':
+                if label is not None:
+                    outputs = (im, im_info, origin_label)
         return outputs
 
     def add_augmenters(self, augmenters):
@@ -1092,9 +1097,12 @@ class ArrangeSegmenter(SegTransform):
                 'quant'时，返回的tuple为(im,)，为图像np.ndarray数据。
         """
         im = permute(im, False)
-        if self.mode == 'train' or self.mode == 'eval':
+        if self.mode == 'train':
             label = label[np.newaxis, :, :]
             return (im, label)
+        if self.mode == 'eval':
+            label = label[np.newaxis, :, :]
+            return (im, im_info, label)
         elif self.mode == 'test':
             return (im, im_info)
         else:
