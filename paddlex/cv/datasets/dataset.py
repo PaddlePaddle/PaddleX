@@ -228,8 +228,7 @@ def generate_minibatch(batch_data, label_padding_value=255):
             
         elif len(data) > 1:
             if isinstance(data[1], np.ndarray) and len(data[1].shape) > 1:
-                # padding the image and label of segmentation
-                # during the training  and evaluating phase
+                # padding the image and label of segmentation during the training
                 # the data[1] of segmentation is a image array,
                 # so len(data[1].shape) > 1
                 padding_label = np.zeros(

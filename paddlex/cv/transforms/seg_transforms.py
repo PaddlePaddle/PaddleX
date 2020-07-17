@@ -90,7 +90,7 @@ class Compose(SegTransform):
         if label is not None:
             if not isinstance(label, np.ndarray):
                 label = np.asarray(Image.open(label))
-                origin_label = label.copy()
+            origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
                 outputs = op(im, im_info, label)
@@ -105,7 +105,7 @@ class Compose(SegTransform):
                     outputs = (im, im_info, label)
                 else:
                     outputs = (im, im_info)
-        if type(self.transforms[-1]).__name__ == 'ArrangeSegmenter':
+        if self.transforms[-1].__class__.__name__ == 'ArrangeSegmenter':
             if self.transforms[-1].mode == 'eval':
                 if label is not None:
                     outputs = (im, im_info, origin_label)

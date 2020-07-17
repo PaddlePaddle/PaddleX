@@ -360,7 +360,7 @@ class DeepLabv3p(BaseAPI):
                 pred = pred[0:num_samples]
 
             for i in range(num_samples):
-                one_pred = pred[i].astype('int64')
+                one_pred = pred[i].astype('uint8')
                 one_label = labels[i]
                 for info in im_info[i][::-1]:
                     if info[0] == 'resize':
@@ -372,6 +372,7 @@ class DeepLabv3p(BaseAPI):
                     else:
                         raise Exception("Unexpected info '{}' in im_info".format(
                             info[0]))
+                one_pred = one_pred.astype('int64')
                 one_pred = one_pred[np.newaxis, :, :, np.newaxis]
                 one_label = one_label[np.newaxis, np.newaxis, :, :]
                 mask = one_label != self.ignore_index
