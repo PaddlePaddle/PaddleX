@@ -31,6 +31,7 @@ pdx.tools.easydata2seg(image_dir, json_dir, dataset_save_dir)
 ```python
 pdx.tools.labelme2coco(image_dir, json_dir, dataset_save_dir)
 ```
+【注意】图像名与json文件名必须一一对应才可以正确转换。
 ### labelme2seg
 ```python
 pdx.tools.labelme2seg(image_dir, json_dir, dataset_save_dir)

@@ -26,3 +26,5 @@ pdx.tools.labelme2voc(image_dir='labelme_imgs',
 | easydata2coco | EasyData数据集转换为COCO数据集  |
 | easydata2seg | EasyData数据集转换为Seg数据集  |
 | jingling2seg | 标注精灵数据集转换为Seg数据集  |
+
+【注意】使用labelme2coco时，图像名与json文件名必须一一对应才可以正确转换。
