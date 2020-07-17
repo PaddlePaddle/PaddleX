@@ -36,5 +36,6 @@ paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annota
 | --pics | 指定原图所在的目录路径  |
 | --annotations | 指定标注文件所在的目录路径 |
 
-**注意**：1. 精灵标注的目标检测数据可以在工具内部导出为PascalVOC格式，因此paddlex未提供精灵标注数据到PascalVOC格式的转换
-         2. 在将LabelMe数据集转换为COCO数据集时，LabelMe的图像文件名和json文件名需要一一对应，才可正确转换
+**注意**：  
+1. 精灵标注的目标检测数据可以在工具内部导出为PascalVOC格式，因此paddlex未提供精灵标注数据到PascalVOC格式的转换  
+2. 在将LabelMe数据集转换为COCO数据集时，LabelMe的图像文件名和json文件名需要一一对应，才可正确转换
