@@ -1,4 +1,4 @@
-# 数据增强与imgaug支持说明
+# 数据增强与imgaug支持
 
 数据增强操作可用于在模型训练时，增加训练样本的多样性，从而提升模型的泛化能力。
 
@@ -19,11 +19,11 @@ PaddleX目前已适配imgaug图像增强库，用户可以直接在PaddleX构造
 import paddlex as pdx
 from paddlex.cls import transforms
 import imgaug.augmenters as iaa
-train_transforms = transforms.ComposedClsTransforms(mode='train', crop_size=[224, 224])
-train_transforms.add_augmenters([
+train_transforms = transforms.Compose([
     # 随机在[0.0 3.0]中选值对图像进行模糊
     iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
-    transforms.RandomCrop(crop_size=224)
+    transforms.RandomCrop(crop_size=224),
+    transforms.Normalize()
 ])
 ```
 除了上述用法，`Compose`接口中也支持imgaug的`Someof`、`Sometimes`、`Sequential`、`Oneof`等操作，开发者可以通过这些方法随意组合出增强流程。由于imgaug对于标注信息(目标检测框和实例分割mask)与PaddleX模型训练逻辑有部分差异，**目前在检测和分割中，只支持pixel-level的增强方法,（即在增强时，不对图像的大小和方向做改变） 其它方法仍在适配中**，详情可见下表，
@@ -58,9 +58,9 @@ from paddlex.cls import transforms
 img_augmenters = iaa.Sometimes(0.6, [
     iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
 ])
-train_transforms = transforms.ComposedClsTransforms(mode='train', crop_size=[224, 224])
-train_transforms.add_augmenters([
+train_transforms = transforms.Compose([
     img_augmenters,
-    transforms.RandomCrop(crop_size=224)
+    transforms.RandomCrop(crop_size=224),
+    transforms.Normalize()
 ])
 ```

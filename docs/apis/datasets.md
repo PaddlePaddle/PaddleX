@@ -5,7 +5,7 @@
 ```
 paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_workers=‘auto’, buffer_size=100, parallel_method='thread', shuffle=False)
 ```
-读取ImageNet格式的分类数据集，并对样本进行相应的处理。ImageNet数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
+读取ImageNet格式的分类数据集，并对样本进行相应的处理。ImageNet数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/classification/mobilenetv2.py#L25)
 
@@ -26,7 +26,7 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 paddlex.datasets.PascalVOC(data_dir, file_list, label_list, transforms=None, num_workers=‘auto’, buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
+> 读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
 > 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_darknet53.py#L29)
 
@@ -47,7 +47,7 @@ paddlex.datasets.PascalVOC(data_dir, file_list, label_list, transforms=None, num
 paddlex.datasets.MSCOCO(data_dir, ann_file, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
+> 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
 > 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/mask_rcnn_r50_fpn.py#L27)
 
@@ -67,7 +67,7 @@ paddlex.datasets.MSCOCO(data_dir, ann_file, transforms=None, num_workers='auto',
 paddlex.datasets.SegDataset(data_dir, file_list, label_list, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取语义分割任务数据集，并对样本进行相应的处理。语义分割任务数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
+> 读取语义分割任务数据集，并对样本进行相应的处理。语义分割任务数据集格式的介绍可查看文档:[数据集格式说明](../data/format/index.html)  
 
 > 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/unet.py#L27)
 
@@ -88,7 +88,7 @@ paddlex.datasets.SegDataset(data_dir, file_list, label_list, transforms=None, nu
 paddlex.datasets.EasyDataCls(data_dir, file_list, label_list, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取EasyData平台标注图像分类数据集，并对样本进行相应的处理。EasyData图像分类任务数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)。
+> 读取EasyData平台标注图像分类数据集，并对样本进行相应的处理。
 
 > **参数**
 
@@ -107,7 +107,7 @@ paddlex.datasets.EasyDataCls(data_dir, file_list, label_list, transforms=None, n
 paddlex.datasets.EasyDataDet(data_dir, file_list, label_list, transforms=None, num_workers=‘auto’, buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取EasyData目标检测格式数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。EasyData目标检测或实例分割任务数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
+> 读取EasyData目标检测/实例分割格式数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。
 
 
 > **参数**
@@ -127,7 +127,7 @@ paddlex.datasets.EasyDataDet(data_dir, file_list, label_list, transforms=None, n
 paddlex.datasets.EasyDataSeg(data_dir, file_list, label_list, transforms=None, num_workers='auto', buffer_size=100, parallel_method='thread', shuffle=False)
 ```
 
-> 读取EasyData语义分割任务数据集，并对样本进行相应的处理。EasyData语义分割任务数据集格式的介绍可查看文档:[数据集格式说明](../datasets.md)  
+> 读取EasyData语义分割任务数据集，并对样本进行相应的处理。
 
 
 > **参数**

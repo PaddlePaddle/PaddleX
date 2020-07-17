@@ -83,7 +83,7 @@ predict(self, im_file, transforms=None):
 
 > **参数**
 > >
-> > - **img_file** (str): 预测图像路径。
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
 
 > **返回值**

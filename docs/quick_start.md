@@ -2,11 +2,21 @@
 
 本文档在一个小数据集上展示了如何通过PaddleX进行训练，您可以阅读PaddleX的**使用教程**来了解更多模型任务的训练使用方式。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/439860)
 
-PaddleX的模型训练都分为以下几个步骤
-> 1.<a href="#定义训练验证图像处理流程transforms">定义训练/验证图像处理流程transforms</a>  
-> 2.<a href="#定义dataset加载图像分类数据集">定义dataset加载数据集</a>  
-> 3.<a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a>  
-> 4.<a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>  
+PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练代码开发！
+
+| 步骤 |                  |说明             |
+| :--- | :--------------- | :-------------- |
+| 第1步| <a href=#定义训练验证图像处理流程transforms>定义transforms</a>  | 用于定义模型训练、验证、预测过程中，<br>输入图像的预处理和数据增强操作 |
+| 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
+| 第3步| <a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
+
+> **注意**：不同模型的transforms、datasets和训练参数都有较大差异，更多模型训练，可直接根据文档教程获取更多模型的训练代码。[模型训练教程](train/index.html)
+
+PaddleX的其它用法
+
+- <a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>
+- [使用VisualDL查看训练过程中的指标变化]()
+
 
 <a name="安装PaddleX"></a>
 **1. 安装PaddleX**  
@@ -25,19 +35,19 @@ tar xzvf vegetables_cls.tar.gz
 <a name="定义训练验证图像处理流程transforms"></a>
 **3. 定义训练/验证图像处理流程transforms**  
 
-使用PaddleX内置的分类模型训练图像处理流程`ComposedClsTransforms`，点击查看[API文档说明](apis/transforms/classification.html#composedclstransforms)。`ComposedClsTransforms`内置`RandomHorizontalFlip`图像增强，用户也可通过`add_augmenters`函数，为训练过程添加更多数据增强操作，目前分类过程支持多程数据增强操作，详情查阅[数据增强文档](apis/transforms/data_augmentations.md)
+由于训练时数据增强操作的加入，因此模型在训练和验证过程中，数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#RandomCrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#RandomHorizontalFlip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
 ```
 from paddlex.cls import transforms
-train_transforms = transforms.ComposedClsTransforms(
-                            mode='train',
-                            crop_size=[224, 224])
-eval_transforms = transforms.ComposedClsTransforms(
-                            mode='eval',
-                            crop_size=[224, 224])
-```
-通过`add_augmenters`添加更多训练过程中的数据增强操作，例如
-```
-train_transforms.add_augmenters([transforms.RandomDistort()])
+train_transforms = transforms.Compose([
+    transforms.RandomCrop(crop_size=224),
+    transforms.RandomHorizontalFlip(),
+    transforms.Normalize()
+])
+eval_transforms = transforms.Compose([
+    transforms.ResizeByShort(short_size=256),
+    transforms.CenterCrop(crop_size=224),
+    transforms.Normalize()
+])
 ```
 
 <a name="定义dataset加载图像分类数据集"></a>
