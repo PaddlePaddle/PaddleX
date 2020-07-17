@@ -1,6 +1,6 @@
-# 目标检测
+# Object Detection
 
-## YOLOv3类
+## paddlex.det.YOLOv3
 
 ```python
 paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor_masks=None, ignore_threshold=0.7, nms_score_threshold=0.01, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=0.45, label_smooth=False, train_random_shapes=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608])
@@ -25,7 +25,7 @@ paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor_
 > > - **label_smooth** (bool): 是否使用label smooth。默认值为False。
 > > - **train_random_shapes** (list|tuple): 训练时从列表中随机选择图像大小。默认值为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
 
-### train 训练接口
+### train
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=8, eval_dataset=None, save_interval_epochs=20, log_interval_steps=2, save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=1.0/8000, warmup_steps=1000, warmup_start_lr=0.0, lr_decay_epochs=[213, 240], lr_decay_gamma=0.1, metric=None, use_vdl=False, sensitivities_file=None, eval_metric_loss=0.05, early_stop=False, early_stop_patience=5, resume_checkpoint=None)
@@ -57,7 +57,7 @@ train(self, num_epochs, train_dataset, train_batch_size=8, eval_dataset=None, sa
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 > > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
-### evaluate 评估接口
+### evaluate
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_details=False)
@@ -77,7 +77,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当`return_details`为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，分别表示平均准确率平均值在各个阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
 
-### predict 预测接口
+### predict
 
 ```python
 predict(self, img_file, transforms=None)
@@ -87,7 +87,7 @@ predict(self, img_file, transforms=None)
 
 > **参数**
 >
-> > - **img_file** (str): 预测图像路径。
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.det.transforms): 数据预处理操作。
 >
 > **返回值**
@@ -95,7 +95,27 @@ predict(self, img_file, transforms=None)
 > > - **list**: 预测结果列表，列表中每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
 
 
-## FasterRCNN类
+### batch_predict
+
+```python
+batch_predict(self, img_file_list, transforms=None, thread_num=2)
+```
+
+> YOLOv3模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`YOLOv3.test_transforms`和`YOLOv3.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义`test_transforms`传入给`predict`接口
+
+> **参数**
+>
+> > - **img_file_list** (str|np.ndarray): 对列表（或元组）中的图像同时进行预测，列表中的元素是预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
+>
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
+
+
+
+## paddlex.det.FasterRCNN
 
 ```python
 paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512])
@@ -112,7 +132,7 @@ paddlex.det.FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspec
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
 
-### train 训练接口
+### train
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, save_interval_epochs=1, log_interval_steps=2,save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=0.0025, warmup_steps=500, warmup_start_lr=1.0/1200, lr_decay_epochs=[8, 11], lr_decay_gamma=0.1, metric=None, use_vdl=False, early_stop=False, early_stop_patience=5, resume_checkpoint=None)
@@ -142,7 +162,7 @@ train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, sa
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 > > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
-### evaluate 接口
+### evaluate
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_details=False)
@@ -162,7 +182,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当`return_details`为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，分别表示平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
 
-### predict 预测接口
+### predict
 
 ```python
 predict(self, img_file, transforms=None)
@@ -172,9 +192,28 @@ predict(self, img_file, transforms=None)
 
 > **参数**
 >
-> > - **img_file** (str): 预测图像路径。
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.det.transforms): 数据预处理操作。
 >
 > **返回值**
 >
 > > - **list**: 预测结果列表，列表中每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。
+
+
+### batch_predict
+
+```python
+batch_predict(self, img_file_list, transforms=None, thread_num=2)
+```
+
+> FasterRCNN模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`FasterRCNN.test_transforms`和`FasterRCNN.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
+
+> **参数**
+>
+> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素是预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
+>
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，key包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。

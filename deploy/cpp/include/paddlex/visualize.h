@@ -65,13 +65,12 @@ std::vector<int> GenerateColorMap(int num_class);
  * @param img: initial image matrix
  * @param results: the detection result
  * @param labels: label map
- * @param colormap: visualization color map
+ * @param threshold: minimum confidence to display
  * @return visualized image matrix
  * */
 cv::Mat Visualize(const cv::Mat& img,
                      const DetResult& results,
                      const std::map<int, std::string>& labels,
-                     const std::vector<int>& colormap,
                      float threshold = 0.5);
 
 /*
@@ -81,13 +80,11 @@ cv::Mat Visualize(const cv::Mat& img,
  * @param img: initial image matrix
  * @param results: the detection result
  * @param labels: label map
- * @param colormap: visualization color map
  * @return visualized image matrix
  * */
 cv::Mat Visualize(const cv::Mat& img,
                      const SegResult& result,
-                     const std::map<int, std::string>& labels,
-                     const std::vector<int>& colormap);
+                     const std::map<int, std::string>& labels);
 
 /*
  * @brief

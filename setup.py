@@ -19,7 +19,7 @@ long_description = "PaddlePaddle Entire Process Development Toolkit"
 
 setuptools.setup(
     name="paddlex",
-    version='1.0.7',
+    version='1.1.0',
     author="paddlex",
     author_email="paddlex@baidu.com",
     description=long_description,

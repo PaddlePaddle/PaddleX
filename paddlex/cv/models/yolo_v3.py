@@ -17,13 +17,16 @@ import math
 import tqdm
 import os.path as osp
 import numpy as np
+from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 import paddlex
+import copy
+from paddlex.cv.transforms import arrange_transforms
+from paddlex.cv.datasets import generate_minibatch
 from .base import BaseAPI
 from collections import OrderedDict
 from .utils.detection_eval import eval_results, bbox2out
-import copy
 
 
 class YOLOv3(BaseAPI):
@@ -286,7 +289,11 @@ class YOLOv3(BaseAPI):
                 eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
                 预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=eval_dataset.transforms,
+            mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -306,8 +313,9 @@ class YOLOv3(BaseAPI):
 
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
@@ -345,11 +353,43 @@ class YOLOv3(BaseAPI):
             return evaluate_metrics, eval_details
         return evaluate_metrics
 
+    @staticmethod
+    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+        arrange_transforms(
+            model_type=model_type,
+            class_name=class_name,
+            transforms=transforms,
+            mode='test')
+        pool = ThreadPool(thread_num)
+        batch_data = pool.map(transforms, images)
+        pool.close()
+        pool.join()
+        padding_batch = generate_minibatch(batch_data)
+        im = np.array(
+            [data[0] for data in padding_batch],
+            dtype=padding_batch[0][0].dtype)
+        im_size = np.array([data[1] for data in padding_batch], dtype=np.int32)
+
+        return im, im_size
+
+    @staticmethod
+    def _postprocess(res, batch_size, num_classes, labels):
+        clsid2catid = dict({i: i for i in range(num_classes)})
+        xywh_results = bbox2out([res], clsid2catid)
+        preds = [[] for i in range(batch_size)]
+        for xywh_res in xywh_results:
+            image_id = xywh_res['image_id']
+            del xywh_res['image_id']
+            xywh_res['category'] = labels[xywh_res['category_id']]
+            preds[image_id].append(xywh_res)
+
+        return preds
+
     def predict(self, img_file, transforms=None):
         """预测。
 
         Args:
-            img_file (str): 预测图像路径。
+            img_file (str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
             transforms (paddlex.det.transforms): 数据预处理操作。
 
         Returns:
@@ -359,32 +399,74 @@ class YOLOv3(BaseAPI):
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
-        if transforms is not None:
-            self.arrange_transforms(transforms=transforms, mode='test')
-            im, im_size = transforms(img_file)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
         else:
-            self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-            im, im_size = self.test_transforms(img_file)
-        im = np.expand_dims(im, axis=0)
-        im_size = np.expand_dims(im_size, axis=0)
+            raise Exception("img_file must be str/np.ndarray")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_size = YOLOv3._preprocess(images, transforms, self.model_type,
+                                         self.__class__.__name__)
+
         with fluid.scope_guard(self.scope):
-            outputs = self.exe.run(self.test_prog,
-                                   feed={'image': im,
-                                         'im_size': im_size},
-                                   fetch_list=list(self.test_outputs.values()),
-                                   return_numpy=False,
-                                   use_program_cache=True)
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im,
+                                        'im_size': im_size},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
+
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(self.test_outputs.keys()), outputs)
+            for k, v in zip(list(self.test_outputs.keys()), result)
         }
-        res['im_id'] = (np.array([[0]]).astype('int32'), [])
-        clsid2catid = dict({i: i for i in range(self.num_classes)})
-        xywh_results = bbox2out([res], clsid2catid)
-        results = list()
-        for xywh_res in xywh_results:
-            del xywh_res['image_id']
-            xywh_res['category'] = self.labels[xywh_res['category_id']]
-            results.append(xywh_res)
-        return results
+        res['im_id'] = (np.array(
+            [[i] for i in range(len(images))]).astype('int32'), [[]])
+        preds = YOLOv3._postprocess(res,
+                                    len(images), self.num_classes, self.labels)
+        return preds[0]
+
+    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+        """预测。
+
+        Args:
+            img_file_list (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
+                且类型为float32且为BGR格式的数组。
+            transforms (paddlex.det.transforms): 数据预处理操作。
+            thread_num (int): 并发执行各图像预处理时的线程数。
+        Returns:
+            list: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、
+              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+              预测框得分组成。
+        """
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+
+        if not isinstance(img_file_list, (list, tuple)):
+            raise Exception("im_file must be list/tuple")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_size = YOLOv3._preprocess(img_file_list, transforms,
+                                         self.model_type,
+                                         self.__class__.__name__, thread_num)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im,
+                                        'im_size': im_size},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
+
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(self.test_outputs.keys()), result)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(len(img_file_list))]).astype('int32'), [[]])
+        preds = YOLOv3._postprocess(res,
+                                    len(img_file_list), self.num_classes,
+                                    self.labels)
+        return preds

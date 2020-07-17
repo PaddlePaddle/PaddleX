@@ -1,6 +1,6 @@
-# 实例分割
+# Instance Segmentation
 
-## MaskRCNN类
+## MaskRCNN
 
 ```python
 paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512])
@@ -17,7 +17,7 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
 
-#### train 训练接口
+#### train
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=1, eval_dataset=None, save_interval_epochs=1, log_interval_steps=20, save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=1.0/800, warmup_steps=500, warmup_start_lr=1.0 / 2400, lr_decay_epochs=[8, 11], lr_decay_gamma=0.1, metric=None, use_vdl=False, early_stop=False, early_stop_patience=5, resume_checkpoint=None)
@@ -47,7 +47,7 @@ train(self, num_epochs, train_dataset, train_batch_size=1, eval_dataset=None, sa
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 > > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
-#### evaluate 评估接口
+#### evaluate
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_details=False)
@@ -67,7 +67,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'和'segm_mmap'或者’bbox_map‘和'segm_map'，分别表示预测框和分割区域平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，包含关键字：'bbox'，对应元素预测框结果列表，每个预测结果由图像id、预测框类别id、预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
 
-#### predict 预测接口
+#### predict
 
 ```python
 predict(self, img_file, transforms=None)
@@ -77,9 +77,28 @@ predict(self, img_file, transforms=None)
 
 > **参数**
 >
-> > - **img_file** (str): 预测图像路径。
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.det.transforms): 数据预处理操作。
 >
 > **返回值**
 >
 > > - **list**: 预测结果列表，列表中每个元素均为一个dict，key'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。
+
+
+#### batch_predict
+
+```python
+batch_predict(self, img_file_list, transforms=None, thread_num=2)
+```
+
+> MaskRCNN模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在FasterRCNN.test_transforms和FasterRCNN.eval_transforms中。如未在训练时定义eval_dataset，那在调用预测predict接口时，用户需要再重新定义test_transforms传入给predict接口。
+
+> **参数**
+>
+> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
+>
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，key'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。

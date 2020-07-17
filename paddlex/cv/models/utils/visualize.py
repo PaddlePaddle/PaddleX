@@ -1,11 +1,11 @@
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ def visualize_detection(image, result, threshold=0.5, save_dir='./'):
     """
 
     if isinstance(image, np.ndarray):
-        image_name = str(int(time.time())) + '.jpg'
+        image_name = str(int(time.time() * 1000)) + '.jpg'
     else:
         image_name = os.path.split(image)[-1]
         image = cv2.imread(image)
@@ -64,7 +64,7 @@ def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
 
     if isinstance(image, np.ndarray):
         im = image
-        image_name = str(int(time.time())) + '.jpg'
+        image_name = str(int(time.time() * 1000)) + '.jpg'
     else:
         image_name = os.path.split(image)[-1]
         im = cv2.imread(image)
@@ -145,8 +145,8 @@ def draw_bbox_mask(image, results, threshold=0.5):
         assert brightness_factor >= -1.0 and brightness_factor <= 1.0
         color = mplc.to_rgb(color)
         polygon_color = colorsys.rgb_to_hls(*mplc.to_rgb(color))
-        modified_lightness = polygon_color[1] + (
-            brightness_factor * polygon_color[1])
+        modified_lightness = polygon_color[1] + (brightness_factor *
+                                                 polygon_color[1])
         modified_lightness = 0.0 if modified_lightness < 0.0 else modified_lightness
         modified_lightness = 1.0 if modified_lightness > 1.0 else modified_lightness
         modified_color = colorsys.hls_to_rgb(
@@ -161,8 +161,7 @@ def draw_bbox_mask(image, results, threshold=0.5):
     dpi = fig.get_dpi()
     fig.set_size_inches(
         (width * scale + 1e-2) / dpi,
-        (height * scale + 1e-2) / dpi,
-    )
+        (height * scale + 1e-2) / dpi, )
     canvas = FigureCanvasAgg(fig)
     ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
     ax.axis("off")
@@ -208,8 +207,7 @@ def draw_bbox_mask(image, results, threshold=0.5):
                 edgecolor=color,
                 linewidth=linewidth * scale,
                 alpha=0.8,
-                linestyle="-",
-            ))
+                linestyle="-", ))
 
         # draw mask
         if 'mask' in dt:
@@ -232,23 +230,22 @@ def draw_bbox_mask(image, results, threshold=0.5):
                         fill=True,
                         facecolor=mplc.to_rgb(color) + (alpha, ),
                         edgecolor=edge_color,
-                        linewidth=max(default_font_size // 15 * scale, 1),
-                    )
+                        linewidth=max(default_font_size // 15 * scale, 1), )
                     ax.add_patch(polygon)
 
         # draw label
         text_pos = (xmin, ymin)
         horiz_align = "left"
         instance_area = w * h
-        if (instance_area < _SMALL_OBJECT_AREA_THRESH * scale
-                or h < 40 * scale):
+        if (instance_area < _SMALL_OBJECT_AREA_THRESH * scale or
+                h < 40 * scale):
             if ymin >= height - 5:
                 text_pos = (xmin, ymin)
             else:
                 text_pos = (xmin, ymax)
         height_ratio = h / np.sqrt(height * width)
-        font_size = (np.clip((height_ratio - 0.02) / 0.08 + 1, 1.2, 2) * 0.5 *
-                     default_font_size)
+        font_size = (np.clip((height_ratio - 0.02) / 0.08 + 1, 1.2,
+                             2) * 0.5 * default_font_size)
         text = "{} {:.2f}".format(cname, score)
         color = np.maximum(list(mplc.to_rgb(color)), 0.2)
         color[np.argmax(color)] = max(0.8, np.max(color))
@@ -269,8 +266,7 @@ def draw_bbox_mask(image, results, threshold=0.5):
             horizontalalignment=horiz_align,
             color=color,
             zorder=10,
-            rotation=0,
-        )
+            rotation=0, )
 
     s, (width, height) = canvas.print_to_buffer()
     buffer = np.frombuffer(s, dtype="uint8")
@@ -408,8 +404,8 @@ def draw_pr_curve(eval_details_file=None,
             plt.plot(x, sr_array, color=color, label=nm, linewidth=1)
         plt.legend(loc="lower left", fontsize=5)
         plt.savefig(
-            os.path.join(save_dir, "./{}_pr_curve(iou-{}).png".format(
-                style, iou_thresh)),
+            os.path.join(save_dir,
+                         "./{}_pr_curve(iou-{}).png".format(style, iou_thresh)),
             dpi=800)
         plt.close()
 

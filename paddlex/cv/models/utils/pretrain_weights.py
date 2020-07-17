@@ -65,6 +65,8 @@ image_pretrain = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W32_C_pretrained.tar',
     'HRNet_W40':
     'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W40_C_pretrained.tar',
+    'HRNet_W44':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W44_C_pretrained.tar',
     'HRNet_W48':
     'https://paddle-imagenet-models-name.bj.bcebos.com/HRNet_W48_C_pretrained.tar',
     'HRNet_W60':
@@ -86,6 +88,8 @@ coco_pretrain = {
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r34.tar',
     'YOLOv3_ResNet50_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_r50vd_dcn.tar',
+    'FasterRCNN_ResNet18_COCO':
+    'https://bj.bcebos.com/paddlex/pretrained_weights/faster_rcnn_r18_fpn_1x.tar',
     'FasterRCNN_ResNet50_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r50_fpn_2x.tar',
     'FasterRCNN_ResNet50_vd_COCO':
@@ -96,6 +100,8 @@ coco_pretrain = {
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_r101_vd_fpn_2x.tar',
     'FasterRCNN_HRNet_W18_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/faster_rcnn_hrnetv2p_w18_2x.tar',
+    'MaskRCNN_ResNet18_COCO':
+    'https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_r18_fpn_1x.tar',
     'MaskRCNN_ResNet50_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r50_fpn_2x.tar',
     'MaskRCNN_ResNet50_vd_COCO':
@@ -104,6 +110,8 @@ coco_pretrain = {
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_fpn_1x.tar',
     'MaskRCNN_ResNet101_vd_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/mask_rcnn_r101_vd_fpn_1x.tar',
+    'MaskRCNN_HRNet_W18_COCO':
+    'https://bj.bcebos.com/paddlex/pretrained_weights/mask_rcnn_hrnetv2p_w18_2x.tar',
     'UNet_COCO': 'https://paddleseg.bj.bcebos.com/models/unet_coco_v3.tgz',
     'DeepLabv3p_MobileNetV2_x1.0_COCO':
     'https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz',
@@ -132,9 +140,10 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         return flag
     warning_info = "{} does not support to be finetuned with weights pretrained on the {} dataset, so pretrain_weights is forced to be set to {}"
     if flag == 'COCO':
-        if class_name == "FasterRCNN" and backbone in ['ResNet18'] or \
-            class_name == "MaskRCNN" and backbone in ['ResNet18', 'HRNet_W18'] or \
-            class_name == 'DeepLabv3p' and backbone in ['Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']:
+        if class_name == 'DeepLabv3p' and backbone in [
+                'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+        ]:
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
             flag = 'IMAGENET'
@@ -194,14 +203,20 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         #            paddlex.utils.download_and_decompress(url, path=new_save_dir)
         #            return osp.join(new_save_dir, fname)
         try:
+            logging.info(
+                "Connecting PaddleHub server to get pretrain weights...")
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
+            logging.error(
+                "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
+                format(image_pretrain[backbone]),
+                exit=False)
             if isinstance(e, hub.ResourceNotFoundError):
                 raise Exception("Resource for backbone {} not found".format(
                     backbone))
             elif isinstance(e, hub.ServerConnectionError):
                 raise Exception(
-                    "Cannot get reource for backbone {}, please check your internet connecgtion"
+                    "Cannot get reource for backbone {}, please check your internet connection"
                     .format(backbone))
             else:
                 raise Exception(
@@ -222,20 +237,25 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         #        paddlex.utils.download_and_decompress(url, path=new_save_dir)
         #        return osp.join(new_save_dir, fname)
         try:
+            logging.info(
+                "Connecting PaddleHub server to get pretrain weights...")
             hub.download(backbone, save_path=new_save_dir)
         except Exception as e:
+            logging.error(
+                "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
+                format(url),
+                exit=False)
             if isinstance(hub.ResourceNotFoundError):
                 raise Exception("Resource for backbone {} not found".format(
                     backbone))
             elif isinstance(hub.ServerConnectionError):
                 raise Exception(
-                    "Cannot get reource for backbone {}, please check your internet connecgtion"
+                    "Cannot get reource for backbone {}, please check your internet connection"
                     .format(backbone))
             else:
                 raise Exception(
                     "Unexpected error, please make sure paddlehub >= 1.6.2")
         return osp.join(new_save_dir, backbone)
     else:
-        raise Exception(
-            "pretrain_weights need to be defined as directory path or 'IMAGENET' or 'COCO' or 'Cityscapes' (download pretrain weights automatically)."
-        )
+        logging.error("Path of retrain weights '{}' is not exists!".format(
+            flag))

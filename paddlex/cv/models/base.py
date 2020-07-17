@@ -26,6 +26,7 @@ import functools
 import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
 from paddlex.utils.utils import EarlyStop
+from paddlex.cv.transforms import arrange_transforms
 import paddlex
 from collections import OrderedDict
 from os import path as osp
@@ -102,23 +103,6 @@ class BaseAPI:
                     mode='test')
         self.test_prog = self.test_prog.clone(for_test=True)
 
-    def arrange_transforms(self, transforms, mode='train'):
-        # 给transforms添加arrange操作
-        if self.model_type == 'classifier':
-            arrange_transform = paddlex.cls.transforms.ArrangeClassifier
-        elif self.model_type == 'segmenter':
-            arrange_transform = paddlex.seg.transforms.ArrangeSegmenter
-        elif self.model_type == 'detector':
-            arrange_name = 'Arrange{}'.format(self.__class__.__name__)
-            arrange_transform = getattr(paddlex.det.transforms, arrange_name)
-        else:
-            raise Exception("Unrecognized model type: {}".format(
-                self.model_type))
-        if type(transforms.transforms[-1]).__name__.startswith('Arrange'):
-            transforms.transforms[-1] = arrange_transform(mode=mode)
-        else:
-            transforms.transforms.append(arrange_transform(mode=mode))
-
     def build_train_data_loader(self, dataset, batch_size):
         # 初始化data_loader
         if self.train_data_loader is None:
@@ -140,7 +124,11 @@ class BaseAPI:
                            batch_size=1,
                            batch_num=10,
                            cache_dir="./temp"):
-        self.arrange_transforms(transforms=dataset.transforms, mode='quant')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=dataset.transforms,
+            mode='quant')
         dataset.num_samples = batch_size * batch_num
         try:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
@@ -204,22 +192,31 @@ class BaseAPI:
                 if self.model_type == 'classifier':
                     if pretrain_weights not in ['IMAGENET']:
                         logging.warning(
-                            "Pretrain_weights for classifier should be defined as directory path or parameter file or 'IMAGENET' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
                 elif self.model_type == 'detector':
                     if pretrain_weights not in ['IMAGENET', 'COCO']:
                         logging.warning(
-                            "Pretrain_weights for detector should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
                 elif self.model_type == 'segmenter':
                     if pretrain_weights not in [
                             'IMAGENET', 'COCO', 'CITYSCAPES'
                     ]:
                         logging.warning(
-                            "Pretrain_weights for segmenter should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or 'CITYSCAPES', but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
             if hasattr(self, 'backbone'):
                 backbone = self.backbone
@@ -416,8 +413,11 @@ class BaseAPI:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
         # 给transform添加arrange操作
-        self.arrange_transforms(
-            transforms=train_dataset.transforms, mode='train')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=train_dataset.transforms,
+            mode='train')
         # 构建train_data_loader
         self.build_train_data_loader(
             dataset=train_dataset, batch_size=train_batch_size)

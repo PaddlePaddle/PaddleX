@@ -20,6 +20,7 @@ import numpy as np
 import six
 import yaml
 import math
+import platform
 from . import logging
 
 
@@ -49,18 +50,26 @@ def get_environ_info():
                 info['num'] = fluid.core.get_cuda_device_count()
     return info
 
+def path_normalization(path):
+    win_sep = "\\"
+    other_sep = "/"
+    if platform.system() == "Windows":
+        path = win_sep.join(path.split(other_sep))
+    else:
+        path = other_sep.join(path.split(win_sep))
+    return path
 
 def parse_param_file(param_file, return_shape=True):
     from paddle.fluid.proto.framework_pb2 import VarType
     f = open(param_file, 'rb')
-    version = np.fromstring(f.read(4), dtype='int32')
-    lod_level = np.fromstring(f.read(8), dtype='int64')
+    version = np.frombuffer(f.read(4), dtype='int32')
+    lod_level = np.frombuffer(f.read(8), dtype='int64')
     for i in range(int(lod_level)):
-        _size = np.fromstring(f.read(8), dtype='int64')
+        _size = np.frombuffer(f.read(8), dtype='int64')
         _ = f.read(_size)
-    version = np.fromstring(f.read(4), dtype='int32')
+    version = np.frombuffer(f.read(4), dtype='int32')
     tensor_desc = VarType.TensorDesc()
-    tensor_desc_size = np.fromstring(f.read(4), dtype='int32')
+    tensor_desc_size = np.frombuffer(f.read(4), dtype='int32')
     tensor_desc.ParseFromString(f.read(int(tensor_desc_size)))
     tensor_shape = tuple(tensor_desc.dims)
     if return_shape:
