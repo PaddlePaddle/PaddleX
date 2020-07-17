@@ -96,12 +96,13 @@ class LabelMe2COCO(X2COCO):
     def __init__(self):
         super(LabelMe2COCO, self).__init__()
         
-    def generate_images_field(self, json_info, image_id):
+    def generate_images_field(self, json_info, image_file, image_id):
         image = {}
         image["height"] = json_info["imageHeight"]
         image["width"] = json_info["imageWidth"]
         image["id"] = image_id + 1
-        json_info["imagePath"] = path_normalization(json_info["imagePath"])
+        json_img_path = path_normalization(json_info["imagePath"])
+        json_info["imagePath"] = osp.join(osp.split(json_img_path)[0], image_file)
         image["file_name"] = osp.split(json_info["imagePath"])[-1]
         return image
     
@@ -152,7 +153,7 @@ class LabelMe2COCO(X2COCO):
             with open(json_file, mode='r', \
                               encoding=get_encoding(json_file)) as j:
                 json_info = json.load(j)
-                img_info = self.generate_images_field(json_info, image_id)
+                img_info = self.generate_images_field(json_info, img_file, image_id)
                 self.images_list.append(img_info)
                 for shapes in json_info["shapes"]:
                     object_id = object_id + 1
@@ -361,5 +362,3 @@ class JingLing2COCO(X2COCO):
                         self.annotations_list.append(
                             self.generate_rectangle_anns_field(points, label, image_id,
                                                   object_id, label_to_num))
-                        
-                        
