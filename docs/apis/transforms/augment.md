@@ -30,7 +30,7 @@ train_transforms = transforms.Compose([
 
 | 增强方法 | 图像分类 | 目标检测<br> 实例分割 | 语义分割 | 备注 |
 | :------  | :------- | :-------------------- | :------- | :--- |
-| [imgaug.augmenters.arithmetic](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_arithmetic.html) |√ |√ |√ | Cutout, DropoutJpegCompression等|
+| [imgaug.augmenters.arithmetic](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_arithmetic.html) |√ |√ |√ | Cutout, Dropout, JpegCompression等|
 | [imgaug.augmenters.artistic](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_artistic.html) |√ |√ |√ | 图像卡通化|
 | [imgaug.augmenters.blur](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_blur.html) |√ |√ |√ | GaussianBlur, AverageBlur等|
 | [imgaug.augmenters.collections](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_collections.html) |√ | | |提供了RandAugment方法 |

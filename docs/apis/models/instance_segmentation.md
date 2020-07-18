@@ -73,7 +73,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 predict(self, img_file, transforms=None)
 ```
 
-> MaskRCNN模型预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在FasterRCNN.test_transforms和FasterRCNN.eval_transforms中。如未在训练时定义eval_dataset，那在调用预测predict接口时，用户需要再重新定义test_transforms传入给predict接口。
+> MaskRCNN模型预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`FasterRCNN.test_transforms`和`FasterRCNN.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
 
 > **参数**
 >
@@ -91,7 +91,7 @@ predict(self, img_file, transforms=None)
 batch_predict(self, img_file_list, transforms=None, thread_num=2)
 ```
 
-> MaskRCNN模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在FasterRCNN.test_transforms和FasterRCNN.eval_transforms中。如未在训练时定义eval_dataset，那在调用预测predict接口时，用户需要再重新定义test_transforms传入给predict接口。
+> MaskRCNN模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`FasterRCNN.test_transforms`和`FasterRCNN.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`batch_predict`接口时，用户需要再重新定义test_transforms传入给`batch_predict`接口。
 
 > **参数**
 >

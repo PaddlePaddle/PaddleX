@@ -53,6 +53,6 @@ NormLIME是利用一定数量的样本来出一个全局的解释。由于NormLI
 >* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。
 >* **normlime_weights_file** (str): NormLIME初始化文件名，若不存在，则计算一次，保存于该路径；若存在，则直接载入。
 
-**注意：** dataset`读取的是一个数据集，该数据集不宜过大，否则计算时间会较长，但应包含所有类别的数据。NormLIME可解释性结果可视化目前只支持分类模型。
+**注意：** `dataset`读取的是一个数据集，该数据集不宜过大，否则计算时间会较长，但应包含所有类别的数据。NormLIME可解释性结果可视化目前只支持分类模型。
 ### 使用示例
 > 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)。
