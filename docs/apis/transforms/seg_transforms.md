@@ -7,7 +7,7 @@
 ```python
 paddlex.seg.transforms.Compose(transforms)
 ```
-根据数据预处理/数据增强列表对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/segmentation/unet.py#L13)
+根据数据预处理/数据增强列表对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/fast_scnn.py#L15)
 ### 参数
 * **transforms** (list): 数据预处理/数据增强列表。
 
