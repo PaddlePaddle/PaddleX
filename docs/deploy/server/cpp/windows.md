@@ -59,25 +59,17 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 ### Step4: 使用Visual Studio 2019直接编译CMake
 
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-
 ![](../../images/vs2019_step1.png)
-
 2. 点击： `文件`->`打开`->`CMake`
 
 ![](../../images/vs2019_step2.png)
 
 选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\cpp`），并打开`CMakeList.txt`：
-
 ![](../../images/vs2019_step3.png)
-
 3. 点击：`项目`->`CMake设置`
-
 ![](../../images/vs2019_step4.png)
-
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径
-
 ![](../../images/vs2019_step5.png)
-
 依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量与Paddle预测库的对齐，例如Paddle预测库是**使用9.0、10.0版本**编译的，则编译PaddleX预测代码时**不使用9.2、10.1等版本**CUDA库）：
 
 |  参数名   | 含义  |
