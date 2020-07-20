@@ -12,7 +12,7 @@ paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, use_mkl=False, use_
 
 **参数**
 
-> * **model_dir** (str): 训练过程中保存的模型路径, 注意需要使用导出的inference模型。
+> * **model_dir** (str): 导出为inference格式的模型路径。
 > * **use_gpu** (bool): 是否使用GPU进行预测。
 > * **gpu_id** (int): 使用的GPU序列号。
 > * **use_mkl** (bool): 是否使用mkldnn加速库。

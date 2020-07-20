@@ -18,7 +18,7 @@
 
 ### 全流程打通
 
-- **数据准备**：兼容ImageNet、VOC、COCO等常用数据协议, 同时与Labelme、精灵标注助手、EasyData智能数据服务平台](https://ai.baidu.com/easydata/)等无缝衔接，全方位助力开发者更快完成数据准备工作。
+- **数据准备**：兼容ImageNet、VOC、COCO等常用数据协议, 同时与Labelme、精灵标注助手、[EasyData智能数据服务平台](https://ai.baidu.com/easydata/)等无缝衔接，全方位助力开发者更快完成数据准备工作。
 
 - **数据预处理及增强**：提供极简的图像预处理和增强方法--Transforms，适配imgaug图像增强库，支持上百种数据增强策略，是开发者快速缓解小样本数据训练的问题。
 
@@ -43,45 +43,42 @@
 
 ## 安装
 
-PaddleX提供两种开发模式，满足不同场景和用户需求：
+**PaddleX提供两种开发模式，满足用户的不同需求：**
 
-- **Python开发模式：** 通过Python API方式完成全流程使用或集成，该模型提供全面、灵活、开放的深度学习功能，有更高的定制化空间。
+1. **Python开发模式：** 通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
-- **Padlde-GUI模式：** PaddleX-GUI支持`Python开发模式`下的常用功能，以更低门槛的方式快速完成产业验证的模型训练。
-
-开发者可根据自身需要按需选择不同的模式进行安装使用。
-
-
-### Python开发模式安装
-
-**前置依赖**
-* paddlepaddle >= 1.8.0
-* python >= 3.5
-* cython
-* pycocotools
+  **前置依赖**
+> - paddlepaddle >= 1.8.0
+> - python >= 3.5
+> - cython
+> - pycocotools
 
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
-安装的相关问题参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/develop/install.html)
+详细安装方法请参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/develop/install.html)
 
-### PaddleX-GUI安装
 
-进入PaddleX官网[下载使用](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载绿色安装包，开箱即用。
-Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](./docs/gui/how_to_use.md)
+2.  **Padlde GUI模式：** 无代码开发的可视化客户端，应用Paddle API实现，使开发者快速进行产业项目验证，并为用户开发自有深度学习软件/应用提供参照。
 
-## 使用文档
+- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载Paddle X GUI一键绿色安装包。
 
-推荐访问[PaddleX在线使用文档](https://paddlex.readthedocs.io/zh_CN/develop/index.html)，快速查阅读使用教程和API文档说明。
+- 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
-- [10分钟快速上手使用](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
+
+## 完整使用文档及API说明
+
+- [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)
+
+- [10分钟快速上手系列教程](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
 - [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
-- [PaddleX API参考文档](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
+- [PaddleX API接口说明](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
 
-## 在线教程
+## 在线项目示例
 
-基于AIStudio平台，快速在线体验PaddleX的Python开发模式教程。
+为了使开发者更快掌握PaddleX API，我们创建了一系列完整的示例教程，您可通过AIStudio一站式开发平台，快速在线运行PaddleX的项目。
 
+- [PaddleX快速上手CV模型训练](https://aistudio.baidu.com/aistudio/projectdetail/450925)
 - [PaddleX快速上手——MobileNetV3-ssld 化妆品分类](https://aistudio.baidu.com/aistudio/projectdetail/450220)
 - [PaddleX快速上手——Faster-RCNN AI识虫](https://aistudio.baidu.com/aistudio/projectdetail/439888)
 - [PaddleX快速上手——DeepLabv3+ 视盘分割](https://aistudio.baidu.com/aistudio/projectdetail/440197)
@@ -97,6 +94,7 @@ Paddle-GUI的使用教程可参考[PaddleX-GUI模式使用教程](./docs/gui/how
 ## 更新日志
 > [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
 
+- 2020.07.13 v1.1.0
 - 2020.07.12 v1.0.8
 - 2020.05.20 v1.0.0
 - 2020.05.17 v0.1.8

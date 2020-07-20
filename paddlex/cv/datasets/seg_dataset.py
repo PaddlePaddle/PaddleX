@@ -31,7 +31,7 @@ class SegDataset(Dataset):
         file_list (str): 描述数据集图片文件和对应标注文件的文件路径（文本内每行路径为相对data_dir的相对路）。
         label_list (str): 描述数据集包含的类别信息文件路径。默认值为None。
         transforms (list): 数据集中每个样本的预处理/增强算子。
-        num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为4。
+        num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。
         buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
         parallel_method (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'
             线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。

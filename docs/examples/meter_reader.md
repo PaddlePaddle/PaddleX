@@ -191,7 +191,7 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
 2. 将`PaddleX/examples/meter_reader/deploy/cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX/deploy/cpp`目录下，拷贝之前可以将`PaddleX/deploy/cpp`下原本的`CMakeList.txt`做好备份。
 
-3. 按照[Nvidia-Jetson开发板部署]()中的Step2至Step3完成C++预测代码的编译。
+3. 按照[Nvidia Jetson开发板部署](../deploy/nvidia-jetson.md)中的Step2至Step3完成C++预测代码的编译。
 
 4. 编译成功后，可执行程为`build/meter_reader/meter_reader`，其主要命令参数说明如下：
 

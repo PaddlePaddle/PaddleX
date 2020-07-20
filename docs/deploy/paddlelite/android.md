@@ -1,6 +1,6 @@
 # Android平台
 
-PaddleX的安卓端部署由Paddle Lite实现，部署的流程如下，首先将训练好的模型导出为inference model，然后对模型进行优化，最后使用Paddle Lite的预测库进行部署，Paddle Lite的详细介绍和使用可参考：[Paddle Lite文档](https://paddle-lite.readthedocs.io/zh/latest/)
+PaddleX的安卓端部署基于Paddle Lite实现，部署的流程如下，首先将训练好的模型导出为inference model，然后对模型进行优化，最后使用Paddle Lite预测库进行部署，Paddle Lite的详细介绍和使用可参考：[Paddle Lite文档](https://paddle-lite.readthedocs.io/zh/latest/)
 
 > PaddleX --> Inference Model --> Paddle Lite Opt --> Paddle Lite Inference
 
@@ -18,8 +18,8 @@ PaddleX的安卓端部署由Paddle Lite实现，部署的流程如下，首先�
 
 目前提供了两种方法将Paddle模型优化为Paddle Lite模型:
 
-- 1.python脚本优化模型，简单上手，目前支持最新的Paddle Lite 2.6.1版本
-- 2.bin文件优化模型(linux)，支持develop版本(Commit Id:11cbd50e)，适用于部署`DeepLab模型`和`Unet模型`的用户。
+- 1. python脚本优化模型，简单上手，目前支持最新的Paddle Lite 2.6.1版本
+- 2. bin文件优化模型(linux)，支持develop版本(Commit Id:11cbd50e)，**部署语义分割`DeepLab模型`和`Unet模型`时只能采用bin文件优化方式**。
 
 ### 2.1 使用python脚本优化模型
 
@@ -33,7 +33,7 @@ python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/
 |  ----  | ----  |
 | --model_dir  | 预测模型所在路径，包含"\_\_model\_\_", "\_\_params\_\_", "model.yml"文件 |
 | --save_file  | 模型输出的名称，假设为/path/to/lite_model_name, 则输出为路径为/path/to/lite_model_name.nb |
-| --place | 运行的平台，可选：arm\|opencl\|x86\|npu\|xpu\|rknpu\|apu，安卓部署请选择`arm`|
+| --place | 运行的平台，可选：arm\|opencl\|x86\|npu\|xpu\|rknpu\|apu，安卓部署请选择arm|
 
 ### 2.3 使用bin文件优化模型(linux)
 
@@ -58,7 +58,7 @@ python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/
 
 ## 3. 移动端（Android）Demo
 
-PaddleX提供了一个基于Mobilenetv2模型和PaddleX Android SDK的安卓demo，可供用户体验，该demo位于`/PaddleX/deploy/lite/android/demo`，可直接导入Android Studio后运行，并支持用户替换其他PaddleX导出的检测或分割模型进行预测。
+PaddleX提供了基于PaddleX Android SDK的安卓demo，位于`/PaddleX/deploy/lite/android/demo`，该demo已预置了MobilenetV2的模型参数，用户可直接将该demo导入Android Studio后运行体验，同时也支持用户将预置的Mobilenetv2模型参数替换成其他PaddleX导出的检测或分割模型进行预测。
 
 ### 3.1 要求
 
@@ -83,14 +83,14 @@ PaddleX提供了一个基于Mobilenetv2模型和PaddleX Android SDK的安卓demo
 - 将.nb文件拷贝到`/src/main/assets/model/`目录下, 根据.nb文件的名字，修改文件`/src/main/res/values/strings.xml`中的`MODEL_PATH_DEFAULT`；
 - 将.yml文件拷贝到`/src/main/assets/config/`目录下，根据.yml文件的名字，修改文件`/src/main/res/values/strings.xml`中的`YAML_PATH_DEFAULT`；
 - 可根据需要替换测试图片，将图片拷贝到`/src/main/assets/images/`目录下，根据图片文件的名字，修改文件`/src/main/res/values/strings.xml`中的`IMAGE_PATH_DEFAULT`；
-- 点击菜单栏的Run->Run 'App'按钮，在弹出的"Select Deployment Target"窗口选择已经连接的Android设备，然后点击"OK"按钮；
+- 将工程导入后，点击菜单栏的Run->Run 'App'按钮，在弹出的"Select Deployment Target"窗口选择已经连接的Android设备，然后点击"OK"按钮。
 
 ## 4. PaddleX Android SDK和二次开发
 
 PaddleX Android SDK是PaddleX基于Paddle Lite开发的安卓端AI推理工具，以PaddleX导出的Yaml配置文件为接口，针对不同的模型实现图片的预处理，后处理，并进行可视化，开发者可集成到业务中。
 该SDK自底向上主要包括：Paddle Lite推理引擎层，Paddle Lite接口层以及PaddleX业务层。
 
-- Paddle Lite推理引擎层，是在Android上编译好的二进制包，只涉及到Kernel 的执行，且可以单独部署，以支持极致的轻量级部署。
+- Paddle Lite推理引擎层，是在Android上编译好的二进制包，只涉及到Kernel 的执行，且可以单独部署，以支持极致轻量级部署。
 - Paddle Lite接口层，以Java接口封装了底层c++推理库。
 - PaddleX业务层，封装了PaddleX导出模型的预处理，推理和后处理，以及可视化，支持PaddleX导出的检测、分割、分类模型。
 
@@ -177,8 +177,8 @@ com.baidu.paddlex.postprocess.DetResult.Box
 ##### Fields
 > * **categoryId** (int): 类别ID。
 > * **category** (String): 类别名称。
-> * **score** (float): 预测置信度。
-> * **coordinate** (float[4]): 预测框值:{xmin, ymin, xmax, ymax}。
+> * **score** (float): 预测框的置信度。
+> * **coordinate** (float[4]): 预测框的坐标值{xmin, ymin, xmax, ymax}。
 
 ```java
 com.baidu.paddlex.postprocess.SegResult
@@ -195,9 +195,9 @@ com.baidu.paddlex.postprocess.SegResult.Mask
 ```
 ##### Fields
 > * **scoreData** (float[]): 模型预测在各个类别的置信度，长度为: 1 * numClass *  H * W
-> * **scoreShape** (long[4]): scoreData的shape信息，[1,numClass,H,W]
+> * **scoreShape** (long[4]): scoreData的shape信息，[1, numClass, H, W]
 > * **labelData** (long[]): 模型预测置信度最高的label，长度为: 1 * H * W * 1
-> * **labelShape** (long[4]): labelData的shape信息，[1,H,W,1]
+> * **labelShape** (long[4]): labelData的shape信息，[1, H, W, 1]
 
 ### 4.4 SDK二次开发
 

@@ -2,12 +2,12 @@
 
 PaddleX所有训练接口中，内置的参数均为根据单GPU卡相应batch_size下的较优参数，用户在自己的数据上训练模型，涉及到参数调整时，如无太多参数调优经验，则可参考如下方式
 
-## 1.Epoch数的调整
-Epoch数是模型训练过程，迭代的轮数，用户可以设置较大的数值，根据模型迭代过程在验证集上的指标表现，来判断模型是否收敛，进而提前终止训练。此外也可以使用`train`接口中的`early_stop`策略，模型在训练过程会自动判断模型是否收敛自动中止。
+## 1.num_epochs的调整
+num_epochs是模型训练迭代的总轮数(模型对训练集全部样本过一遍即为一个epoch)，用户可以设置较大的数值，根据模型迭代过程在验证集上的指标表现，来判断模型是否收敛，进而提前终止训练。此外也可以使用`train`接口中的`early_stop`策略，模型在训练过程会自动判断模型是否收敛自动中止。
 
 ## 2.batch_size和learning_rate
 
-> - Batch Size指模型在训练过程中，一次性处理的样本数量
+> - Batch Size指模型在训练过程中，前向计算一次(即为一个step)所用到的样本数量
 > - 如若使用多卡训练， batch_size会均分到各张卡上（因此需要让batch size整除卡数）
 > - Batch Size跟机器的显存/内存高度相关，`batch_size`越高，所消耗的显存/内存就越高
 > - PaddleX在各个`train`接口中均配置了默认的batch size(默认针对单GPU卡)，如若训练时提示GPU显存不足，则相应调低BatchSize，如若GPU显存高或使用多张GPU卡时，可相应调高BatchSize。
@@ -15,9 +15,9 @@ Epoch数是模型训练过程，迭代的轮数，用户可以设置较大的数
 
 ## 3.warmup_steps和warmup_start_lr
 
-在训练模型时，一般都会使用预训练模型，例如检测模型在训练时使用backbone在ImageNet数据集上的预训练权重。但由于在自行训练时，自己的数据与ImageNet数据集存在较大的差异，可能会一开始由于梯度过大使得训练出现问题，因此可以在刚开始训练时，让学习率以一个较小的值，慢慢增长到设定的学习率。因此`warmup_steps`和`warmup_start_lr`就是这个作用，模型开始训练时，学习率会从`warmup_start_lr`开始，在`warmup_steps`个batch数据迭代后线性增长到设定的学习率。
+在训练模型时，一般都会使用预训练模型，例如检测模型在训练时使用backbone在ImageNet数据集上的预训练权重。但由于在自行训练时，自己的数据与ImageNet数据集存在较大的差异，可能会一开始由于梯度过大使得训练出现问题，这种情况下可以在刚开始训练时，让学习率以一个较小的值，慢慢增长到设定的学习率。`warmup_steps`和`warmup_start_lr`就是起到这个作用，模型开始训练时，学习率会从`warmup_start_lr`开始，在`warmup_steps`个batch数据迭代后线性增长到设定的学习率。
 
-> 例如YOLOv3的train接口，默认`train_batch_size`为8，`learning_rate`为0.000125, `warmup_steps`为1000， `warmup_start_lr`为0.0；在此参数配置下表示，模型在启动训练后，在前1000个step(每个step表示一个batch的数据，也就是8个样本)内，学习率会从0.0开始线性增长到设定的0.000125。
+> 例如YOLOv3的train接口，默认`train_batch_size`为8，`learning_rate`为0.000125, `warmup_steps`为1000， `warmup_start_lr`为0.0；在此参数配置下表示，模型在启动训练后，在前1000个step(每个step使用一个batch的数据，即8个样本)内，学习率会从0.0开始线性增长到设定的0.000125。
 
 ## 4.lr_decay_epochs和lr_decay_gamma
 
@@ -46,7 +46,7 @@ num_steps_each_eposh = num_samples_in_train_dataset // train_batch_size
 在`import paddlex`前配置环境变量，代码如下
 ```
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 使用第1张GPU卡进行训练
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 使用0号GPU卡进行训练
 # 注意paddle或paddlex都需要在设置环境变量后再import
 import paddlex as pdx
 ```
@@ -59,7 +59,7 @@ import paddlex as pdx
 
 ```
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,3' # 使用第1、2、4张GPU卡进行训练
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,3' # 同时使用第0、1、3号GPU卡进行训练
 import paddlex as pdx
 ```
 
@@ -67,7 +67,7 @@ import paddlex as pdx
 ## 相关模型接口
 
 - 图像分类模型 [train接口](../apis/models/classification.html#train)
-- FasterRCNN [train接口](../apis/models/detection.html#id1)
-- YOLOv3 [train接口](../apis/models/detection.html#train)
-- MaskRCNN [train接口](../apis/models/instance_segmentation.html#train)
-- DeepLabv3p [train接口](../apis/models/semantic_segmentation.html#train)
+- 目标检测FasterRCNN [train接口](../apis/models/detection.html#id1)
+- 目标检测YOLOv3 [train接口](../apis/models/detection.html#train)
+- 实例分割MaskRCNN [train接口](../apis/models/instance_segmentation.html#train)
+- 语义分割 [train接口](../apis/models/semantic_segmentation.html#train)

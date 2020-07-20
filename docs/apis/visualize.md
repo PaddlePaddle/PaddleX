@@ -101,15 +101,16 @@ pdx.det.draw_pr_curve(gt=gt, pred_bbox=bbox, save_dir='./insect')
 
 
 ## paddlex.slim.visualzie
-> **模型裁剪比例可视化分析**  
+> **模型剪裁比例可视化分析**  
 ```
-paddlex.slim.visualize(model, sensitivities_file)
+paddlex.slim.visualize(model, sensitivities_file, save_dir='./')
 ```
-利用此接口，可以分析在不同的`eval_metric_loss`参数下，模型被裁剪的比例情况。可视化结果纵轴为eval_metric_loss参数值，横轴为对应的模型被裁剪的比例。
+利用此接口，可以分析在不同的`eval_metric_loss`参数下，模型被剪裁的比例情况。可视化结果纵轴为eval_metric_loss参数值，横轴为对应的模型被剪裁的比例。`eval_metric_loss`即卷积的敏感度，是指按照剪裁率将模型剪裁后模型精度的损失。
 
 ### 参数
 >* **model** (paddlex.cv.models): 使用PaddleX加载的模型。
 >* **sensitivities_file** (str): 模型各参数在验证集上计算得到的参数敏感度信息文件。
+>* **save_dir**(str): 可视化结果保存路径，默认为当前目录
 
 ### 使用示例
 > 点击下载示例中的[模型](https://bj.bcebos.com/paddlex/models/vegetables_mobilenet.tar.gz)和[sensitivities_file](https://bj.bcebos.com/paddlex/slim_prune/mobilenetv2.sensitivities)

@@ -1,10 +1,10 @@
-# Nvidia-Jetson开发板
+# Nvidia Jetson开发板
 
 ## 说明
-本文档在 `Linux`平台使用`GCC 4.8.5` 和 `GCC 4.9.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [NVIDIA Jetson嵌入式硬件预测库源码编译](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
+本文档在 `Linux`平台使用`GCC 7.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [Nvidia Jetson嵌入式硬件预测库源码编译](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
 
 ## 前置条件
-* G++ 4.8.2 ~ 4.9.4
+* G++ 7.4
 * CUDA 9.0 / CUDA 10.0, CUDNN 7+ （仅在使用GPU版本的预测库时需要）
 * CMake 3.0+
 
@@ -19,7 +19,7 @@
 
 ### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
 
-目前PaddlePaddle为Nvidia-Jetson 提供了一个基于1.6.2版本的C++ 预测库。
+目前PaddlePaddle为Nvidia Jetson提供了一个基于1.6.2版本的C++ 预测库。
 
 |  版本说明   | 预测库(1.6.2版本)  |
 |  ----  | ----  |
