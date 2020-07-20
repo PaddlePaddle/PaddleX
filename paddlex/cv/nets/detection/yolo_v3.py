@@ -242,7 +242,7 @@ class YOLOv3:
             nms_top_k=self.nms_topk,
             keep_top_k=self.nms_keep_topk,
             nms_threshold=self.nms_iou_threshold,
-            normalized=True,
+            normalized=False,
             nms_eta=1.0,
             background_label=-1)
         return pred
