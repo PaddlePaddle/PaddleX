@@ -34,7 +34,7 @@ MyDataset/ # 语义分割数据集根目录
 
 labels.txt用于列出所有类别，类别对应行号表示模型训练过程中类别的id(行号从0开始计数)，例如labels.txt为以下内容
 ```
-backgrond
+background
 human
 car
 ```
