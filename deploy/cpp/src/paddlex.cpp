@@ -225,6 +225,8 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   outputs_.resize(size);
   output_tensor->copy_to_cpu(outputs_.data());
   // 对模型输出结果进行后处理
+  (*results).clear();
+  (*results).resize(batch_size);
   int single_batch_size = size / batch_size;
   for (int i = 0; i < batch_size; ++i) {
     auto start_ptr = std::begin(outputs_);
@@ -343,7 +345,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
 }
 
 bool Model::predict(const std::vector<cv::Mat>& im_batch,
-                    std::vector<DetResult>* result,
+                    std::vector<DetResult>* results,
                     int thread_num) {
   for (auto& inputs : inputs_batch_) {
     inputs.clear();
@@ -467,6 +469,8 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   auto lod_vector = output_box_tensor->lod();
   int num_boxes = size / 6;
   // 解析预测框box
+  (*results).clear();
+  (*results).resize(batch_size);
   for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
     for (int j = lod_vector[0][i]; j < lod_vector[0][i + 1]; ++j) {
       Box box;
@@ -480,7 +484,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
       float w = xmax - xmin + 1;
       float h = ymax - ymin + 1;
       box.coordinate = {xmin, ymin, w, h};
-      (*result)[i].boxes.push_back(std::move(box));
+      (*results)[i].boxes.push_back(std::move(box));
     }
   }
 
@@ -499,9 +503,9 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     output_mask_tensor->copy_to_cpu(output_mask.data());
     int mask_idx = 0;
     for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
-      (*result)[i].mask_resolution = output_mask_shape[2];
-      for (int j = 0; j < (*result)[i].boxes.size(); ++j) {
-        Box* box = &(*result)[i].boxes[j];
+      (*results)[i].mask_resolution = output_mask_shape[2];
+      for (int j = 0; j < (*results)[i].boxes.size(); ++j) {
+        Box* box = &(*results)[i].boxes[j];
         int category_id = box->category_id;
         auto begin_mask = output_mask.begin() +
                           (mask_idx * classes + category_id) * mask_pixels;
@@ -624,7 +628,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
 }
 
 bool Model::predict(const std::vector<cv::Mat>& im_batch,
-                    std::vector<SegResult>* result,
+                    std::vector<SegResult>* results,
                     int thread_num) {
   for (auto& inputs : inputs_batch_) {
     inputs.clear();
@@ -647,8 +651,8 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   }
 
   int batch_size = im_batch.size();
-  (*result).clear();
-  (*result).resize(batch_size);
+  (*results).clear();
+  (*results).resize(batch_size);
   int h = inputs_batch_[0].new_im_size_[0];
   int w = inputs_batch_[0].new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
@@ -680,14 +684,14 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
 
   int single_batch_size = size / batch_size;
   for (int i = 0; i < batch_size; ++i) {
-    (*result)[i].label_map.data.resize(single_batch_size);
-    (*result)[i].label_map.shape.push_back(1);
+    (*results)[i].label_map.data.resize(single_batch_size);
+    (*results)[i].label_map.shape.push_back(1);
     for (int j = 1; j < output_label_shape.size(); ++j) {
-      (*result)[i].label_map.shape.push_back(output_label_shape[j]);
+      (*results)[i].label_map.shape.push_back(output_label_shape[j]);
     }
     std::copy(output_labels_iter + i * single_batch_size,
               output_labels_iter + (i + 1) * single_batch_size,
-              (*result)[i].label_map.data.data());
+              (*results)[i].label_map.data.data());
   }
 
   // 获取预测置信度scoremap
@@ -704,29 +708,29 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
 
   int single_batch_score_size = size / batch_size;
   for (int i = 0; i < batch_size; ++i) {
-    (*result)[i].score_map.data.resize(single_batch_score_size);
-    (*result)[i].score_map.shape.push_back(1);
+    (*results)[i].score_map.data.resize(single_batch_score_size);
+    (*results)[i].score_map.shape.push_back(1);
     for (int j = 1; j < output_score_shape.size(); ++j) {
-      (*result)[i].score_map.shape.push_back(output_score_shape[j]);
+      (*results)[i].score_map.shape.push_back(output_score_shape[j]);
     }
     std::copy(output_scores_iter + i * single_batch_score_size,
               output_scores_iter + (i + 1) * single_batch_score_size,
-              (*result)[i].score_map.data.data());
+              (*results)[i].score_map.data.data());
   }
 
   // 解析输出结果到原图大小
   for (int i = 0; i < batch_size; ++i) {
-    std::vector<uint8_t> label_map((*result)[i].label_map.data.begin(),
-                                   (*result)[i].label_map.data.end());
-    cv::Mat mask_label((*result)[i].label_map.shape[1],
-                       (*result)[i].label_map.shape[2],
+    std::vector<uint8_t> label_map((*results)[i].label_map.data.begin(),
+                                   (*results)[i].label_map.data.end());
+    cv::Mat mask_label((*results)[i].label_map.shape[1],
+                       (*results)[i].label_map.shape[2],
                        CV_8UC1,
                        label_map.data());
 
-    cv::Mat mask_score((*result)[i].score_map.shape[2],
-                       (*result)[i].score_map.shape[3],
+    cv::Mat mask_score((*results)[i].score_map.shape[2],
+                       (*results)[i].score_map.shape[3],
                        CV_32FC1,
-                       (*result)[i].score_map.data.data());
+                       (*results)[i].score_map.data.data());
     int idx = 1;
     int len_postprocess = inputs_batch_[i].im_size_before_resize_.size();
     for (std::vector<std::string>::reverse_iterator iter =
@@ -762,12 +766,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
       }
       ++idx;
     }
-    (*result)[i].label_map.data.assign(mask_label.begin<uint8_t>(),
+    (*results)[i].label_map.data.assign(mask_label.begin<uint8_t>(),
                                        mask_label.end<uint8_t>());
-    (*result)[i].label_map.shape = {mask_label.rows, mask_label.cols};
-    (*result)[i].score_map.data.assign(mask_score.begin<float>(),
+    (*results)[i].label_map.shape = {mask_label.rows, mask_label.cols};
+    (*results)[i].score_map.data.assign(mask_score.begin<float>(),
                                        mask_score.end<float>());
-    (*result)[i].score_map.shape = {mask_score.rows, mask_score.cols};
+    (*results)[i].score_map.shape = {mask_score.rows, mask_score.cols};
   }
   return true;
 }
