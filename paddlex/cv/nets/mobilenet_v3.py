@@ -31,6 +31,7 @@ class MobileNetV3():
         with_extra_blocks (bool): if extra blocks should be added.
         extra_block_filters (list): number of filter for each extra block.
     """
+
     def __init__(self,
                  scale=1.0,
                  model_name='small',
@@ -113,29 +114,36 @@ class MobileNetV3():
         lr_idx = self.curr_stage // self.lr_interval
         lr_idx = min(lr_idx, len(self.lr_mult_list) - 1)
         lr_mult = self.lr_mult_list[lr_idx]
-        conv_param_attr = ParamAttr(name=name + '_weights',
-                                    learning_rate=lr_mult,
-                                    regularizer=L2Decay(self.conv_decay))
-        conv = fluid.layers.conv2d(input=input,
-                                   num_filters=num_filters,
-                                   filter_size=filter_size,
-                                   stride=stride,
-                                   padding=padding,
-                                   groups=num_groups,
-                                   act=None,
-                                   use_cudnn=use_cudnn,
-                                   param_attr=conv_param_attr,
-                                   bias_attr=False)
+        if self.num_classes:
+            regularizer = None
+        else:
+            regularizer = L2Decay(self.conv_decay)
+        conv_param_attr = ParamAttr(
+            name=name + '_weights',
+            learning_rate=lr_mult,
+            regularizer=regularizer)
+        conv = fluid.layers.conv2d(
+            input=input,
+            num_filters=num_filters,
+            filter_size=filter_size,
+            stride=stride,
+            padding=padding,
+            groups=num_groups,
+            act=None,
+            use_cudnn=use_cudnn,
+            param_attr=conv_param_attr,
+            bias_attr=False)
         bn_name = name + '_bn'
-        bn_param_attr = ParamAttr(name=bn_name + "_scale",
-                                  regularizer=L2Decay(self.norm_decay))
-        bn_bias_attr = ParamAttr(name=bn_name + "_offset",
-                                 regularizer=L2Decay(self.norm_decay))
-        bn = fluid.layers.batch_norm(input=conv,
-                                     param_attr=bn_param_attr,
-                                     bias_attr=bn_bias_attr,
-                                     moving_mean_name=bn_name + '_mean',
-                                     moving_variance_name=bn_name + '_variance')
+        bn_param_attr = ParamAttr(
+            name=bn_name + "_scale", regularizer=L2Decay(self.norm_decay))
+        bn_bias_attr = ParamAttr(
+            name=bn_name + "_offset", regularizer=L2Decay(self.norm_decay))
+        bn = fluid.layers.batch_norm(
+            input=conv,
+            param_attr=bn_param_attr,
+            bias_attr=bn_bias_attr,
+            moving_mean_name=bn_name + '_mean',
+            moving_variance_name=bn_name + '_variance')
         if if_act:
             if act == 'relu':
                 bn = fluid.layers.relu(bn)
@@ -152,12 +160,10 @@ class MobileNetV3():
         lr_idx = self.curr_stage // self.lr_interval
         lr_idx = min(lr_idx, len(self.lr_mult_list) - 1)
         lr_mult = self.lr_mult_list[lr_idx]
-        
+
         num_mid_filter = int(num_out_filter // ratio)
-        pool = fluid.layers.pool2d(input=input,
-                                   pool_type='avg',
-                                   global_pooling=True,
-                                   use_cudnn=False)
+        pool = fluid.layers.pool2d(
+            input=input, pool_type='avg', global_pooling=True, use_cudnn=False)
         conv1 = fluid.layers.conv2d(
             input=pool,
             filter_size=1,
@@ -191,43 +197,46 @@ class MobileNetV3():
                        use_se=False,
                        name=None):
         input_data = input
-        conv0 = self._conv_bn_layer(input=input,
-                                    filter_size=1,
-                                    num_filters=num_mid_filter,
-                                    stride=1,
-                                    padding=0,
-                                    if_act=True,
-                                    act=act,
-                                    name=name + '_expand')
+        conv0 = self._conv_bn_layer(
+            input=input,
+            filter_size=1,
+            num_filters=num_mid_filter,
+            stride=1,
+            padding=0,
+            if_act=True,
+            act=act,
+            name=name + '_expand')
         if self.block_stride == 16 and stride == 2:
             self.end_points.append(conv0)
-        conv1 = self._conv_bn_layer(input=conv0,
-                                    filter_size=filter_size,
-                                    num_filters=num_mid_filter,
-                                    stride=stride,
-                                    padding=int((filter_size - 1) // 2),
-                                    if_act=True,
-                                    act=act,
-                                    num_groups=num_mid_filter,
-                                    use_cudnn=False,
-                                    name=name + '_depthwise')
+        conv1 = self._conv_bn_layer(
+            input=conv0,
+            filter_size=filter_size,
+            num_filters=num_mid_filter,
+            stride=stride,
+            padding=int((filter_size - 1) // 2),
+            if_act=True,
+            act=act,
+            num_groups=num_mid_filter,
+            use_cudnn=False,
+            name=name + '_depthwise')
 
         if use_se:
-            conv1 = self._se_block(input=conv1,
-                                   num_out_filter=num_mid_filter,
-                                   name=name + '_se')
+            conv1 = self._se_block(
+                input=conv1, num_out_filter=num_mid_filter, name=name + '_se')
 
-        conv2 = self._conv_bn_layer(input=conv1,
-                                    filter_size=1,
-                                    num_filters=num_out_filter,
-                                    stride=1,
-                                    padding=0,
-                                    if_act=False,
-                                    name=name + '_linear')
+        conv2 = self._conv_bn_layer(
+            input=conv1,
+            filter_size=1,
+            num_filters=num_out_filter,
+            stride=1,
+            padding=0,
+            if_act=False,
+            name=name + '_linear')
         if num_in_filter != num_out_filter or stride != 1:
             return conv2
         else:
-            return fluid.layers.elementwise_add(x=input_data, y=conv2, act=None)
+            return fluid.layers.elementwise_add(
+                x=input_data, y=conv2, act=None)
 
     def _extra_block_dw(self,
                         input,
@@ -235,29 +244,32 @@ class MobileNetV3():
                         num_filters2,
                         stride,
                         name=None):
-        pointwise_conv = self._conv_bn_layer(input=input,
-                                             filter_size=1,
-                                             num_filters=int(num_filters1),
-                                             stride=1,
-                                             padding="SAME",
-                                             act='relu6',
-                                             name=name + "_extra1")
-        depthwise_conv = self._conv_bn_layer(input=pointwise_conv,
-                                             filter_size=3,
-                                             num_filters=int(num_filters2),
-                                             stride=stride,
-                                             padding="SAME",
-                                             num_groups=int(num_filters1),
-                                             act='relu6',
-                                             use_cudnn=False,
-                                             name=name + "_extra2_dw")
-        normal_conv = self._conv_bn_layer(input=depthwise_conv,
-                                          filter_size=1,
-                                          num_filters=int(num_filters2),
-                                          stride=1,
-                                          padding="SAME",
-                                          act='relu6',
-                                          name=name + "_extra2_sep")
+        pointwise_conv = self._conv_bn_layer(
+            input=input,
+            filter_size=1,
+            num_filters=int(num_filters1),
+            stride=1,
+            padding="SAME",
+            act='relu6',
+            name=name + "_extra1")
+        depthwise_conv = self._conv_bn_layer(
+            input=pointwise_conv,
+            filter_size=3,
+            num_filters=int(num_filters2),
+            stride=stride,
+            padding="SAME",
+            num_groups=int(num_filters1),
+            act='relu6',
+            use_cudnn=False,
+            name=name + "_extra2_dw")
+        normal_conv = self._conv_bn_layer(
+            input=depthwise_conv,
+            filter_size=1,
+            num_filters=int(num_filters2),
+            stride=1,
+            padding="SAME",
+            act='relu6',
+            name=name + "_extra2_sep")
         return normal_conv
 
     def __call__(self, input):
@@ -282,36 +294,39 @@ class MobileNetV3():
             self.block_stride *= layer_cfg[5]
             if layer_cfg[5] == 2:
                 blocks.append(conv)
-            conv = self._residual_unit(input=conv,
-                                       num_in_filter=inplanes,
-                                       num_mid_filter=int(scale * layer_cfg[1]),
-                                       num_out_filter=int(scale * layer_cfg[2]),
-                                       act=layer_cfg[4],
-                                       stride=layer_cfg[5],
-                                       filter_size=layer_cfg[0],
-                                       use_se=layer_cfg[3],
-                                       name='conv' + str(i + 2))
-            
+            conv = self._residual_unit(
+                input=conv,
+                num_in_filter=inplanes,
+                num_mid_filter=int(scale * layer_cfg[1]),
+                num_out_filter=int(scale * layer_cfg[2]),
+                act=layer_cfg[4],
+                stride=layer_cfg[5],
+                filter_size=layer_cfg[0],
+                use_se=layer_cfg[3],
+                name='conv' + str(i + 2))
+
             inplanes = int(scale * layer_cfg[2])
             i += 1
             self.curr_stage = i
         blocks.append(conv)
 
         if self.num_classes:
-            conv = self._conv_bn_layer(input=conv,
-                                       filter_size=1,
-                                       num_filters=int(scale * self.cls_ch_squeeze),
-                                       stride=1,
-                                       padding=0,
-                                       num_groups=1,
-                                       if_act=True,
-                                       act='hard_swish',
-                                       name='conv_last')
-            
-            conv = fluid.layers.pool2d(input=conv,
-                                       pool_type='avg',
-                                       global_pooling=True,
-                                       use_cudnn=False)
+            conv = self._conv_bn_layer(
+                input=conv,
+                filter_size=1,
+                num_filters=int(scale * self.cls_ch_squeeze),
+                stride=1,
+                padding=0,
+                num_groups=1,
+                if_act=True,
+                act='hard_swish',
+                name='conv_last')
+
+            conv = fluid.layers.pool2d(
+                input=conv,
+                pool_type='avg',
+                global_pooling=True,
+                use_cudnn=False)
             conv = fluid.layers.conv2d(
                 input=conv,
                 num_filters=self.cls_ch_expand,
@@ -326,22 +341,23 @@ class MobileNetV3():
             out = fluid.layers.fc(input=drop,
                                   size=self.num_classes,
                                   param_attr=ParamAttr(name='fc_weights'),
-                                  bias_attr=ParamAttr(name='fc_offset'))            
+                                  bias_attr=ParamAttr(name='fc_offset'))
             return out
 
         if not self.with_extra_blocks:
             return blocks
 
         # extra block
-        conv_extra = self._conv_bn_layer(conv,
-                                         filter_size=1,
-                                         num_filters=int(scale * cfg[-1][1]),
-                                         stride=1,
-                                         padding="SAME",
-                                         num_groups=1,
-                                         if_act=True,
-                                         act='hard_swish',
-                                         name='conv' + str(i + 2))
+        conv_extra = self._conv_bn_layer(
+            conv,
+            filter_size=1,
+            num_filters=int(scale * cfg[-1][1]),
+            stride=1,
+            padding="SAME",
+            num_groups=1,
+            if_act=True,
+            act='hard_swish',
+            name='conv' + str(i + 2))
         self.end_points.append(conv_extra)
         i += 1
         for block_filter in self.extra_block_filters:

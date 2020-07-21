@@ -14,5 +14,7 @@
 
 from .unet import UNet
 from .deeplabv3p import DeepLabv3p
+from .hrnet import HRNet
+from .fast_scnn import FastSCNN
 from .model_utils import libs
 from .model_utils import loss

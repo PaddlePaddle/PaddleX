@@ -20,6 +20,7 @@ import numpy as np
 import six
 import yaml
 import math
+import platform
 from . import logging
 
 
@@ -31,18 +32,7 @@ def seconds_to_hms(seconds):
     return hms_str
 
 
-def setting_environ_flags():
-    if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
-        os.environ['FLAGS_eager_delete_tensor_gb'] = '0.0'
-    if 'FLAGS_allocator_strategy' not in os.environ:
-        os.environ['FLAGS_allocator_strategy'] = 'auto_growth'
-    if "CUDA_VISIBLE_DEVICES" in os.environ:
-        if os.environ["CUDA_VISIBLE_DEVICES"].count("-1") > 0:
-            os.environ["CUDA_VISIBLE_DEVICES"] = ""
-
-
 def get_environ_info():
-    setting_environ_flags()
     import paddle.fluid as fluid
     info = dict()
     info['place'] = 'cpu'
@@ -60,26 +50,34 @@ def get_environ_info():
                 info['num'] = fluid.core.get_cuda_device_count()
     return info
 
+def path_normalization(path):
+    win_sep = "\\"
+    other_sep = "/"
+    if platform.system() == "Windows":
+        path = win_sep.join(path.split(other_sep))
+    else:
+        path = other_sep.join(path.split(win_sep))
+    return path
 
 def parse_param_file(param_file, return_shape=True):
     from paddle.fluid.proto.framework_pb2 import VarType
     f = open(param_file, 'rb')
-    version = np.fromstring(f.read(4), dtype='int32')
-    lod_level = np.fromstring(f.read(8), dtype='int64')
+    version = np.frombuffer(f.read(4), dtype='int32')
+    lod_level = np.frombuffer(f.read(8), dtype='int64')
     for i in range(int(lod_level)):
-        _size = np.fromstring(f.read(8), dtype='int64')
+        _size = np.frombuffer(f.read(8), dtype='int64')
         _ = f.read(_size)
-    version = np.fromstring(f.read(4), dtype='int32')
+    version = np.frombuffer(f.read(4), dtype='int32')
     tensor_desc = VarType.TensorDesc()
-    tensor_desc_size = np.fromstring(f.read(4), dtype='int32')
+    tensor_desc_size = np.frombuffer(f.read(4), dtype='int32')
     tensor_desc.ParseFromString(f.read(int(tensor_desc_size)))
     tensor_shape = tuple(tensor_desc.dims)
     if return_shape:
         f.close()
         return tuple(tensor_desc.dims)
     if tensor_desc.data_type != 5:
-        raise Exception(
-            "Unexpected data type while parse {}".format(param_file))
+        raise Exception("Unexpected data type while parse {}".format(
+            param_file))
     data_size = 4
     for i in range(len(tensor_shape)):
         data_size *= tensor_shape[i]
@@ -150,7 +148,12 @@ def load_pdparams(exe, main_prog, model_dir):
 
     vars_to_load = list()
     import pickle
-    with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
+
+    if osp.isfile(model_dir):
+        params_file = model_dir
+    else:
+        params_file = osp.join(model_dir, 'model.pdparams')
+    with open(params_file, 'rb') as f:
         params_dict = pickle.load(f) if six.PY2 else pickle.load(
             f, encoding='latin1')
     unused_vars = list()
@@ -181,20 +184,97 @@ def load_pdparams(exe, main_prog, model_dir):
             len(vars_to_load), model_dir))
 
 
-def load_pretrain_weights(exe, main_prog, weights_dir, fuse_bn=False):
+def is_persistable(var):
+    import paddle.fluid as fluid
+    from paddle.fluid.proto.framework_pb2 import VarType
+
+    if var.desc.type() == fluid.core.VarDesc.VarType.FEED_MINIBATCH or \
+        var.desc.type() == fluid.core.VarDesc.VarType.FETCH_LIST or \
+        var.desc.type() == fluid.core.VarDesc.VarType.READER:
+        return False
+    return var.persistable
+
+
+def is_belong_to_optimizer(var):
+    import paddle.fluid as fluid
+    from paddle.fluid.proto.framework_pb2 import VarType
+
+    if not (isinstance(var, fluid.framework.Parameter) or
+            var.desc.need_check_feed()):
+        return is_persistable(var)
+    return False
+
+
+def load_pdopt(exe, main_prog, model_dir):
+    import paddle.fluid as fluid
+
+    optimizer_var_list = list()
+    vars_to_load = list()
+    import pickle
+    with open(osp.join(model_dir, 'model.pdopt'), 'rb') as f:
+        opt_dict = pickle.load(f) if six.PY2 else pickle.load(
+            f, encoding='latin1')
+    optimizer_var_list = list(
+        filter(is_belong_to_optimizer, main_prog.list_vars()))
+    exception_message = "the training process can not be resumed due to optimizer set now and last time is different. Recommend to use `pretrain_weights` instead of `resume_checkpoint`"
+    if len(optimizer_var_list) > 0:
+        for var in optimizer_var_list:
+            if var.name not in opt_dict:
+                raise Exception("{} is not in saved paddlex optimizer, {}".
+                                format(var.name, exception_message))
+            if var.shape != opt_dict[var.name].shape:
+                raise Exception(
+                    "Shape of optimizer variable {} doesn't match.(Last: {}, Now: {}), {}"
+                    .format(var.name, opt_dict[var.name].shape,
+                            var.shape), exception_message)
+        optimizer_varname_list = [var.name for var in optimizer_var_list]
+        for k, v in opt_dict.items():
+            if k not in optimizer_varname_list:
+                raise Exception(
+                    "{} in saved paddlex optimizer is not in the model, {}".
+                    format(k, exception_message))
+        fluid.io.set_program_state(main_prog, opt_dict)
+
+    if len(optimizer_var_list) == 0:
+        raise Exception(
+            "There is no optimizer parameters in the model, please set the optimizer!"
+        )
+    else:
+        logging.info("There are {} optimizer parameters in {} are loaded.".
+                     format(len(optimizer_var_list), model_dir))
+
+
+def load_pretrain_weights(exe,
+                          main_prog,
+                          weights_dir,
+                          fuse_bn=False,
+                          resume=False):
     if not osp.exists(weights_dir):
         raise Exception("Path {} not exists.".format(weights_dir))
+    if osp.isfile(weights_dir):
+        if not weights_dir.endswith('.pdparams'):
+            raise Exception("File {} is not a paddle parameter file".format(
+                weights_dir))
+        load_pdparams(exe, main_prog, weights_dir)
+        return
     if osp.exists(osp.join(weights_dir, "model.pdparams")):
-        return load_pdparams(exe, main_prog, weights_dir)
+        load_pdparams(exe, main_prog, weights_dir)
+        if resume:
+            if osp.exists(osp.join(weights_dir, "model.pdopt")):
+                load_pdopt(exe, main_prog, weights_dir)
+            else:
+                raise Exception(
+                    "Optimizer file {} does not exist. Stop resumming training. Recommend to use `pretrain_weights` instead of `resume_checkpoint`"
+                    .format(osp.join(weights_dir, "model.pdopt")))
+        return
     import paddle.fluid as fluid
     vars_to_load = list()
     for var in main_prog.list_vars():
         if not isinstance(var, fluid.framework.Parameter):
             continue
         if not osp.exists(osp.join(weights_dir, var.name)):
-            logging.debug(
-                "[SKIP] Pretrained weight {}/{} doesn't exist".format(
-                    weights_dir, var.name))
+            logging.debug("[SKIP] Pretrained weight {}/{} doesn't exist".
+                          format(weights_dir, var.name))
             continue
         pretrained_shape = parse_param_file(osp.join(weights_dir, var.name))
         actual_shape = tuple(var.shape)
@@ -206,11 +286,9 @@ def load_pretrain_weights(exe, main_prog, weights_dir, fuse_bn=False):
         vars_to_load.append(var)
         logging.debug("Weight {} will be load".format(var.name))
 
-    fluid.io.load_vars(
-        executor=exe,
-        dirname=weights_dir,
-        main_program=main_prog,
-        vars=vars_to_load)
+    params_dict = fluid.io.load_program_state(
+        weights_dir, var_list=vars_to_load)
+    fluid.io.set_program_state(main_prog, params_dict)
     if len(vars_to_load) == 0:
         logging.warning(
             "There is no pretrain weights loaded, maybe you should check you pretrain model!"
@@ -220,3 +298,77 @@ def load_pretrain_weights(exe, main_prog, weights_dir, fuse_bn=False):
             len(vars_to_load), weights_dir))
     if fuse_bn:
         fuse_bn_weights(exe, main_prog, weights_dir)
+    if resume:
+        exception_message = "the training process can not be resumed due to optimizer set now and last time is different. Recommend to use `pretrain_weights` instead of `resume_checkpoint`"
+        optimizer_var_list = list(
+            filter(is_belong_to_optimizer, main_prog.list_vars()))
+        if len(optimizer_var_list) > 0:
+            for var in optimizer_var_list:
+                if not osp.exists(osp.join(weights_dir, var.name)):
+                    raise Exception(
+                        "Optimizer parameter {} doesn't exist, {}".format(
+                            osp.join(weights_dir, var.name),
+                            exception_message))
+                pretrained_shape = parse_param_file(
+                    osp.join(weights_dir, var.name))
+                actual_shape = tuple(var.shape)
+                if pretrained_shape != actual_shape:
+                    raise Exception(
+                        "Shape of optimizer variable {} doesn't match.(Last: {}, Now: {}), {}"
+                        .format(var.name, pretrained_shape,
+                                actual_shape), exception_message)
+            optimizer_varname_list = [var.name for var in optimizer_var_list]
+            if os.exists(osp.join(weights_dir, 'learning_rate')
+                         ) and 'learning_rate' not in optimizer_varname_list:
+                raise Exception(
+                    "Optimizer parameter {}/learning_rate is not in the model, {}"
+                    .format(weights_dir, exception_message))
+            fluid.io.load_vars(
+                executor=exe,
+                dirname=weights_dir,
+                main_program=main_prog,
+                vars=optimizer_var_list)
+
+        if len(optimizer_var_list) == 0:
+            raise Exception(
+                "There is no optimizer parameters in the model, please set the optimizer!"
+            )
+        else:
+            logging.info("There are {} optimizer parameters in {} are loaded.".
+                         format(len(optimizer_var_list), weights_dir))
+
+
+class EarlyStop:
+    def __init__(self, patience, thresh):
+        self.patience = patience
+        self.counter = 0
+        self.score = None
+        self.max = 0
+        self.thresh = thresh
+        if patience < 1:
+            raise Exception("Argument patience should be a positive integer.")
+
+    def __call__(self, current_score):
+        if self.score is None:
+            self.score = current_score
+            return False
+        elif current_score > self.max:
+            self.counter = 0
+            self.score = current_score
+            self.max = current_score
+            return False
+        else:
+            if (abs(self.score - current_score) < self.thresh or
+                    current_score < self.score):
+                self.counter += 1
+                self.score = current_score
+                logging.debug("EarlyStopping: %i / %i" %
+                              (self.counter, self.patience))
+                if self.counter >= self.patience:
+                    logging.info("EarlyStopping: Stop training")
+                    return True
+                return False
+            else:
+                self.counter = 0
+                self.score = current_score
+                return False

@@ -24,7 +24,6 @@ from paddle.fluid.regularizer import L2Decay
 class MobileNetV1(object):
     """
     MobileNet v1, see https://arxiv.org/abs/1704.04861
-
     Args:
         norm_type (str): normalization type, 'bn' and 'sync_bn' are supported
         norm_decay (float): weight decay for normalization layer weights
@@ -80,10 +79,14 @@ class MobileNetV1(object):
 
         bn_name = name + "_bn"
         norm_decay = self.norm_decay
+        if self.num_classes:
+            regularizer = None
+        else:
+            regularizer = L2Decay(norm_decay)
         bn_param_attr = ParamAttr(
-            regularizer=L2Decay(norm_decay), name=bn_name + '_scale')
+            regularizer=regularizer, name=bn_name + '_scale')
         bn_bias_attr = ParamAttr(
-            regularizer=L2Decay(norm_decay), name=bn_name + '_offset')
+            regularizer=regularizer, name=bn_name + '_offset')
         return fluid.layers.batch_norm(
             input=conv,
             act=act,
@@ -190,12 +193,12 @@ class MobileNetV1(object):
         if self.num_classes:
             out = fluid.layers.pool2d(
                 input=out, pool_type='avg', global_pooling=True)
-            output = fluid.layers.fc(
-                input=out,
-                size=self.num_classes,
-                param_attr=ParamAttr(
-                    initializer=fluid.initializer.MSRA(), name="fc7_weights"),
-                bias_attr=ParamAttr(name="fc7_offset"))
+            output = fluid.layers.fc(input=out,
+                                     size=self.num_classes,
+                                     param_attr=ParamAttr(
+                                         initializer=fluid.initializer.MSRA(),
+                                         name="fc7_weights"),
+                                     bias_attr=ParamAttr(name="fc7_offset"))
             return output
 
         if not self.with_extra_blocks:

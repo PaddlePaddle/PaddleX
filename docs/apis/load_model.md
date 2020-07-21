@@ -1,8 +1,9 @@
-# 模型加载-load_model
+# 模型加载
 
 PaddleX提供了统一的模型加载接口，支持加载PaddleX保存的模型，并在验证集上进行评估或对测试图片进行预测
 
-## 函数接口
+## paddlex.load_model
+> **加载PaddleX保存的模型**  
 
 ```
 paddlex.load_model(model_dir)
@@ -34,7 +35,7 @@ pred_result = model.predict('./xiaoduxiong_ins_det/JPEGImages/WechatIMG114.jpeg'
 
 # 在验证集上进行评估
 eval_reader = pdx.cv.datasets.CocoDetection(data_dir=data_dir,
-                                            ann_file=ann_file
+                                            ann_file=ann_file,
                                             transforms=model.eval_transforms)
 eval_result = model.evaluate(eval_reader, batch_size=1)
 ```

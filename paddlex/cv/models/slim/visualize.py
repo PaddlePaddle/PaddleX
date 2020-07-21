@@ -15,9 +15,6 @@
 import os.path as osp
 import tqdm
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 from .prune import cal_model_size
 from paddleslim.prune import load_sensitivities
 
@@ -30,6 +27,9 @@ def visualize(model, sensitivities_file, save_dir='./'):
         model (paddlex.cv.models): paddlex中的模型。
         sensitivities_file (str): 敏感度文件存储路径。
     """
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
     program = model.test_prog
     place = model.places[0]
     fig = plt.figure()
@@ -50,15 +50,21 @@ def visualize(model, sensitivities_file, save_dir='./'):
         min(np.array(x)) - 0.01,
         max(np.array(x)) + 0.01, 0.05)
     my_y_ticks = np.arange(0.05, 1, 0.05)
-    plt.xticks(my_x_ticks, fontsize=3)
-    plt.yticks(my_y_ticks, fontsize=3)
+    plt.xticks(my_x_ticks, rotation=15, fontsize=8)
+    plt.yticks(my_y_ticks, fontsize=8)
     for a, b in zip(x, y):
         plt.text(
             a,
-            b, (float('%0.4f' % a), float('%0.3f' % b)),
+            b, (float('%0.3f' % a), float('%0.3f' % b)),
             ha='center',
             va='bottom',
-            fontsize=3)
+            fontsize=8)
+    plt.rcParams['savefig.dpi'] = 120
+    plt.rcParams['figure.dpi'] = 150
     suffix = osp.splitext(sensitivities_file)[-1]
-    plt.savefig('sensitivities.png', dpi=800)
+    plt.savefig(osp.join(save_dir, 'sensitivities.png'))
     plt.close()
+    import pickle
+    coor = dict(zip(x, y))
+    output = open(osp.join(save_dir, 'sensitivities_xy.pkl'), 'wb')
+    pickle.dump(coor, output)

@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,5 +36,7 @@ DenseNet121 = cv.models.DenseNet121
 DenseNet161 = cv.models.DenseNet161
 DenseNet201 = cv.models.DenseNet201
 ShuffleNetV2 = cv.models.ShuffleNetV2
+HRNet_W18 = cv.models.HRNet_W18
+AlexNet = cv.models.AlexNet
 
 transforms = cv.transforms.cls_transforms

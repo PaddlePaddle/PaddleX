@@ -1,26 +1,28 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
 #
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import math
 import tqdm
 import numpy as np
+from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 import paddlex
 import copy
 import os.path as osp
+from paddlex.cv.transforms import arrange_transforms
 from collections import OrderedDict
 from .faster_rcnn import FasterRCNN
 from .utils.detection_eval import eval_results, bbox2out, mask2out
@@ -32,7 +34,7 @@ class MaskRCNN(FasterRCNN):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50vd', 'ResNet101', 'ResNet101vd']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
@@ -46,7 +48,8 @@ class MaskRCNN(FasterRCNN):
                  anchor_sizes=[32, 64, 128, 256, 512]):
         self.init_params = locals()
         backbones = [
-            'ResNet18', 'ResNet50', 'ResNet50vd', 'ResNet101', 'ResNet101vd'
+            'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
+            'HRNet_W18'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -60,6 +63,7 @@ class MaskRCNN(FasterRCNN):
             self.mask_head_resolution = 28
         else:
             self.mask_head_resolution = 14
+        self.fixed_input_shape = None
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
@@ -73,19 +77,20 @@ class MaskRCNN(FasterRCNN):
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
             num_convs=num_convs,
-            mask_head_resolution=self.mask_head_resolution)
+            mask_head_resolution=self.mask_head_resolution,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
             loss = model_out['loss']
             self.optimizer.minimize(loss)
-            outputs = OrderedDict([('loss', model_out['loss']),
-                                   ('loss_cls', model_out['loss_cls']),
-                                   ('loss_bbox', model_out['loss_bbox']),
-                                   ('loss_mask', model_out['loss_mask']),
-                                   ('loss_rpn_cls', model_out['loss_rpn_cls']),
-                                   ('loss_rpn_bbox',
-                                    model_out['loss_rpn_bbox'])])
+            outputs = OrderedDict(
+                [('loss', model_out['loss']),
+                 ('loss_cls', model_out['loss_cls']),
+                 ('loss_bbox', model_out['loss_bbox']),
+                 ('loss_mask', model_out['loss_mask']),
+                 ('loss_rpn_cls', model_out['loss_rpn_cls']), (
+                     'loss_rpn_bbox', model_out['loss_rpn_bbox'])])
         else:
             outputs = model.build_net(inputs)
         return inputs, outputs
@@ -94,8 +99,16 @@ class MaskRCNN(FasterRCNN):
                           lr_decay_epochs, lr_decay_gamma,
                           num_steps_each_epoch):
         if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
-            raise Exception("warmup_step should less than {}".format(
-                lr_decay_epochs[0] * num_steps_each_epoch))
+            logging.error(
+                "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
+                exit=False)
+            logging.error(
+                "See this doc for more information: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
+                exit=False)
+            logging.error(
+                "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
+                format(lr_decay_epochs[0] * num_steps_each_epoch, warmup_steps
+                       // num_steps_each_epoch))
         boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
         values = [(lr_decay_gamma**i) * learning_rate
                   for i in range(len(lr_decay_epochs) + 1)]
@@ -128,7 +141,10 @@ class MaskRCNN(FasterRCNN):
               lr_decay_epochs=[8, 11],
               lr_decay_gamma=0.1,
               metric=None,
-              use_vdl=False):
+              use_vdl=False,
+              early_stop=False,
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -141,7 +157,8 @@ class MaskRCNN(FasterRCNN):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为20。
             save_dir (str): 模型保存路径。默认值为'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，
+                则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为None。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：
                 fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
             learning_rate (float): 默认优化器的学习率。默认为1.0/800。
@@ -151,17 +168,23 @@ class MaskRCNN(FasterRCNN):
             lr_decay_gamma (float): 默认优化器的学习率衰减率。默认为0.1。
             metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认值为False。
+            early_stop (bool): 是否使用提前终止训练策略。默认值为False。
+            early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
+                连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
             ValueError: 模型从inference model进行加载。
         """
         if metric is None:
-            if isinstance(train_dataset, paddlex.datasets.CocoDetection):
+            if isinstance(train_dataset, paddlex.datasets.CocoDetection) or \
+                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
                 metric = 'COCO'
             else:
                 raise Exception(
-                    "train_dataset should be datasets.COCODetection.")
+                    "train_dataset should be datasets.COCODetection or datasets.EasyDataDet."
+                )
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
         self.metric = metric
         if not self.trainable:
@@ -183,13 +206,16 @@ class MaskRCNN(FasterRCNN):
         # 构建训练、验证、测试网络
         self.build_program()
         fuse_bn = True
-        if self.with_fpn and self.backbone in ['ResNet18', 'ResNet50']:
+        if self.with_fpn and self.backbone in [
+                'ResNet18', 'ResNet50', 'HRNet_W18'
+        ]:
             fuse_bn = False
         self.net_initialize(
             startup_prog=fluid.default_startup_program(),
             pretrain_weights=pretrain_weights,
             fuse_bn=fuse_bn,
-            save_dir=save_dir)
+            save_dir=save_dir,
+            resume_checkpoint=resume_checkpoint)
         # 训练
         self.train_loop(
             num_epochs=num_epochs,
@@ -199,7 +225,9 @@ class MaskRCNN(FasterRCNN):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self,
                  eval_dataset,
@@ -211,7 +239,7 @@ class MaskRCNN(FasterRCNN):
 
         Args:
             eval_dataset (paddlex.datasets): 验证数据读取器。
-            batch_size (int): 验证数据批大小。默认为1。
+            batch_size (int): 验证数据批大小。默认为1。当前只支持设置为1。
             epoch_id (int): 当前评估模型所在的训练轮数。
             metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认为None，
                 根据用户传入的Dataset自动选择，如为VOCDetection，则metric为'VOC';
@@ -227,8 +255,11 @@ class MaskRCNN(FasterRCNN):
                 预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、
                 预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=eval_dataset.transforms,
+            mode='eval')
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -239,14 +270,18 @@ class MaskRCNN(FasterRCNN):
                     raise Exception(
                         "eval_dataset should be datasets.COCODetection.")
         assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
+        if batch_size > 1:
+            batch_size = 1
+            logging.warning(
+                "Mask RCNN supports batch_size=1 only during evaluating, so batch_size is forced to be set to 1."
+            )
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
 
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         results = list()
-        logging.info(
-            "Start to evaluating(total_samples={}, total_steps={})...".format(
-                eval_dataset.num_samples, total_steps))
+        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
+                     format(eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -257,11 +292,12 @@ class MaskRCNN(FasterRCNN):
                 'im_info': im_infos,
                 'im_shape': im_shapes,
             }
-            outputs = self.exe.run(
-                self.test_prog,
-                feed=[feed_data],
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=False)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.test_prog,
+                    feed=[feed_data],
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=False)
             res = {
                 'bbox': (np.array(outputs[0]),
                          outputs[0].recursive_sequence_lengths()),
@@ -273,8 +309,8 @@ class MaskRCNN(FasterRCNN):
             res['im_shape'] = (im_shapes, [])
             res['im_id'] = (np.array(res_im_id), [])
             results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(
-                epoch_id, step + 1, total_steps))
+            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
+                                                               1, total_steps))
 
         ap_stats, eval_details = eval_results(
             results,
@@ -283,17 +319,16 @@ class MaskRCNN(FasterRCNN):
             with_background=True,
             resolution=self.mask_head_resolution)
         if metric == 'VOC':
-            if isinstance(ap_stats[0], np.ndarray) and isinstance(
-                    ap_stats[1], np.ndarray):
+            if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
+                                                                  np.ndarray):
                 metrics = OrderedDict(
                     zip(['bbox_map', 'segm_map'],
                         [ap_stats[0][1], ap_stats[1][1]]))
             else:
-                metrics = OrderedDict(
-                    zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
+                metrics = OrderedDict(zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
         elif metric == 'COCO':
-            if isinstance(ap_stats[0], np.ndarray) and isinstance(
-                    ap_stats[1], np.ndarray):
+            if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
+                                                                  np.ndarray):
                 metrics = OrderedDict(
                     zip(['bbox_mmap', 'segm_mmap'],
                         [ap_stats[0][0], ap_stats[1][0]]))
@@ -304,53 +339,118 @@ class MaskRCNN(FasterRCNN):
             return metrics, eval_details
         return metrics
 
+    @staticmethod
+    def _postprocess(res, batch_size, num_classes, mask_head_resolution,
+                     labels):
+        clsid2catid = dict({i: i for i in range(num_classes)})
+        xywh_results = bbox2out([res], clsid2catid)
+        segm_results = mask2out([res], clsid2catid, mask_head_resolution)
+        preds = [[] for i in range(batch_size)]
+        import pycocotools.mask as mask_util
+        for index, xywh_res in enumerate(xywh_results):
+            image_id = xywh_res['image_id']
+            del xywh_res['image_id']
+            xywh_res['mask'] = mask_util.decode(segm_results[index][
+                'segmentation'])
+            xywh_res['category'] = labels[xywh_res['category_id']]
+            preds[image_id].append(xywh_res)
+
+        return preds
+
     def predict(self, img_file, transforms=None):
         """预测。
 
         Args:
-            img_file (str): 预测图像路径。
+            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
             transforms (paddlex.det.transforms): 数据预处理操作。
 
         Returns:
-            dict: 预测结果列表，每个预测结果由预测框类别标签、预测框类别名称、预测框坐标、预测框内的二值图、
-                预测框得分组成。
+            lict: 预测结果列表，每个预测结果由预测框类别标签、预测框类别名称、
+                  预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+                  原图大小的预测二值图（1表示预测框类别，0表示背景类）、
+                  预测框得分组成。
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
-        if transforms is not None:
-            self.arrange_transforms(transforms=transforms, mode='test')
-            im, im_resize_info, im_shape = transforms(img_file)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
         else:
-            self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-            im, im_resize_info, im_shape = self.test_transforms(img_file)
-        im = np.expand_dims(im, axis=0)
-        im_resize_info = np.expand_dims(im_resize_info, axis=0)
-        im_shape = np.expand_dims(im_shape, axis=0)
-        outputs = self.exe.run(
-            self.test_prog,
-            feed={
-                'image': im,
-                'im_info': im_resize_info,
-                'im_shape': im_shape
-            },
-            fetch_list=list(self.test_outputs.values()),
-            return_numpy=False)
+            raise Exception("img_file must be str/np.ndarray")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_resize_info, im_shape = FasterRCNN._preprocess(
+            images, transforms, self.model_type, self.__class__.__name__)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={
+                                      'image': im,
+                                      'im_info': im_resize_info,
+                                      'im_shape': im_shape
+                                  },
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
+
         res = {
             k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(self.test_outputs.keys()), outputs)
+            for k, v in zip(list(self.test_outputs.keys()), result)
         }
-        res['im_id'] = (np.array([[0]]).astype('int32'), [])
+        res['im_id'] = (np.array(
+            [[i] for i in range(len(images))]).astype('int32'), [])
         res['im_shape'] = (np.array(im_shape), [])
-        clsid2catid = dict({i: i for i in range(self.num_classes)})
-        xywh_results = bbox2out([res], clsid2catid)
-        segm_results = mask2out([res], clsid2catid, self.mask_head_resolution)
-        results = list()
-        import pycocotools.mask as mask_util
-        for index, xywh_res in enumerate(xywh_results):
-            del xywh_res['image_id']
-            xywh_res['mask'] = mask_util.decode(
-                segm_results[index]['segmentation'])
-            xywh_res['category'] = self.labels[xywh_res['category_id']]
-            results.append(xywh_res)
-        return results
+        preds = MaskRCNN._postprocess(res,
+                                      len(images), self.num_classes,
+                                      self.mask_head_resolution, self.labels)
+
+        return preds[0]
+
+    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+        """预测。
+
+        Args:
+            img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+            transforms (paddlex.det.transforms): 数据预处理操作。
+            thread_num (int): 并发执行各图像预处理时的线程数。
+        Returns:
+            dict: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、预测框类别名称、
+                  预测框坐标(坐标格式为[xmin, ymin, w, h]）、
+                  原图大小的预测二值图（1表示预测框类别，0表示背景类）、
+                  预测框得分组成。
+        """
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+
+        if not isinstance(img_file_list, (list, tuple)):
+            raise Exception("im_file must be list/tuple")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_resize_info, im_shape = FasterRCNN._preprocess(
+            img_file_list, transforms, self.model_type, self.__class__.__name__,
+            thread_num)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={
+                                      'image': im,
+                                      'im_info': im_resize_info,
+                                      'im_shape': im_shape
+                                  },
+                                  fetch_list=list(self.test_outputs.values()),
+                                  return_numpy=False,
+                                  use_program_cache=True)
+
+        res = {
+            k: (np.array(v), v.recursive_sequence_lengths())
+            for k, v in zip(list(self.test_outputs.keys()), result)
+        }
+        res['im_id'] = (np.array(
+            [[i] for i in range(len(img_file_list))]).astype('int32'), [])
+        res['im_shape'] = (np.array(im_shape), [])
+        preds = MaskRCNN._postprocess(res,
+                                      len(img_file_list), self.num_classes,
+                                      self.mask_head_resolution, self.labels)
+        return preds

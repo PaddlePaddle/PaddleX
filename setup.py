@@ -15,11 +15,11 @@
 import setuptools
 import sys
 
-long_description = "PaddleX. A end-to-end deeplearning model development toolkit base on PaddlePaddle\n\n"
+long_description = "PaddlePaddle Entire Process Development Toolkit"
 
 setuptools.setup(
     name="paddlex",
-    version='0.1.5',
+    version='1.1.1',
     author="paddlex",
     author_email="paddlex@baidu.com",
     description=long_description,
@@ -27,10 +27,11 @@ setuptools.setup(
     long_description_content_type="text/plain",
     url="https://github.com/PaddlePaddle/PaddleX",
     packages=setuptools.find_packages(),
-    setup_requires=['cython', 'numpy', 'sklearn'],
+    setup_requires=['cython', 'numpy'],
     install_requires=[
-        'pycocotools', 'pyyaml', 'colorama', 'tqdm', 'visualdl==1.3.0',
-        'paddleslim==1.0.1', 'paddlehub>=1.6.2'
+        "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
+        'paddleslim==1.0.1', 'visualdl>=2.0.0b', 'paddlehub>=1.6.2',
+        'shapely>=1.7.0'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -38,6 +39,4 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     license='Apache 2.0',
-    entry_points={'console_scripts': [
-        'paddlex=paddlex.command:main',
-    ]})
+    entry_points={'console_scripts': ['paddlex=paddlex.command:main', ]})

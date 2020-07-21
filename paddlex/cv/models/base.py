@@ -1,20 +1,21 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
 #
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import paddle.fluid as fluid
 import os
+import sys
 import numpy as np
 import time
 import math
@@ -24,6 +25,8 @@ import json
 import functools
 import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
+from paddlex.utils.utils import EarlyStop
+from paddlex.cv.transforms import arrange_transforms
 import paddlex
 from collections import OrderedDict
 from os import path as osp
@@ -69,17 +72,24 @@ class BaseAPI:
         self.sync_bn = False
         # 当前模型状态
         self.status = 'Normal'
+        # 已完成迭代轮数，为恢复训练时的起始轮数
+        self.completed_epochs = 0
+        self.scope = fluid.global_scope()
 
     def _get_single_card_bs(self, batch_size):
         if batch_size % len(self.places) == 0:
             return int(batch_size // len(self.places))
         else:
             raise Exception("Please support correct batch_size, \
-                            which can be divided by available cards({}) in {}".
-                            format(paddlex.env_info['num'],
-                                   paddlex.env_info['place']))
+                            which can be divided by available cards({}) in {}"
+                            .format(paddlex.env_info['num'], paddlex.env_info[
+                                'place']))
 
     def build_program(self):
+        if hasattr(paddlex, 'model_built') and paddlex.model_built:
+            logging.error(
+                "Function model.train() only can be called once in your code.")
+        paddlex.model_built = True
         # 构建训练网络
         self.train_inputs, self.train_outputs = self.build_net(mode='train')
         self.train_prog = fluid.default_main_program()
@@ -92,23 +102,6 @@ class BaseAPI:
                 self.test_inputs, self.test_outputs = self.build_net(
                     mode='test')
         self.test_prog = self.test_prog.clone(for_test=True)
-
-    def arrange_transforms(self, transforms, mode='train'):
-        # 给transforms添加arrange操作
-        if self.model_type == 'classifier':
-            arrange_transform = paddlex.cls.transforms.ArrangeClassifier
-        elif self.model_type == 'segmenter':
-            arrange_transform = paddlex.seg.transforms.ArrangeSegmenter
-        elif self.model_type == 'detector':
-            arrange_name = 'Arrange{}'.format(self.__class__.__name__)
-            arrange_transform = getattr(paddlex.det.transforms, arrange_name)
-        else:
-            raise Exception("Unrecognized model type: {}".format(
-                self.model_type))
-        if type(transforms.transforms[-1]).__name__.startswith('Arrange'):
-            transforms.transforms[-1] = arrange_transform(mode=mode)
-        else:
-            transforms.transforms.append(arrange_transform(mode=mode))
 
     def build_train_data_loader(self, dataset, batch_size):
         # 初始化data_loader
@@ -131,13 +124,18 @@ class BaseAPI:
                            batch_size=1,
                            batch_num=10,
                            cache_dir="./temp"):
-        self.arrange_transforms(transforms=dataset.transforms, mode='quant')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=dataset.transforms,
+            mode='quant')
         dataset.num_samples = batch_size * batch_num
         try:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
+            PaddleXPostTrainingQuantization._collect_target_varnames
         except:
             raise Exception(
-                "Model Quantization is not available, try to upgrade your paddlepaddle>=1.7.0"
+                "Model Quantization is not available, try to upgrade your paddlepaddle>=1.8.0"
             )
         is_use_cache_file = True
         if cache_dir is None:
@@ -150,7 +148,7 @@ class BaseAPI:
             outputs=self.test_outputs,
             batch_size=batch_size,
             batch_nums=batch_num,
-            scope=None,
+            scope=self.scope,
             algo='KL',
             quantizable_op_type=["conv2d", "depthwise_conv2d", "mul"],
             is_full_quantize=False,
@@ -181,35 +179,96 @@ class BaseAPI:
                        fuse_bn=False,
                        save_dir='.',
                        sensitivities_file=None,
-                       eval_metric_loss=0.05):
-        pretrain_dir = osp.join(save_dir, 'pretrain')
-        if not os.path.isdir(pretrain_dir):
-            if os.path.exists(pretrain_dir):
-                os.remove(pretrain_dir)
-            os.makedirs(pretrain_dir)
-        if hasattr(self, 'backbone'):
-            backbone = self.backbone
-        else:
-            backbone = self.__class__.__name__
-        pretrain_weights = get_pretrain_weights(
-            pretrain_weights, self.model_type, backbone, pretrain_dir)
+                       eval_metric_loss=0.05,
+                       resume_checkpoint=None):
+        if not resume_checkpoint:
+            pretrain_dir = osp.join(save_dir, 'pretrain')
+            if not os.path.isdir(pretrain_dir):
+                if os.path.exists(pretrain_dir):
+                    os.remove(pretrain_dir)
+                os.makedirs(pretrain_dir)
+            if pretrain_weights is not None and not os.path.exists(
+                    pretrain_weights):
+                if self.model_type == 'classifier':
+                    if pretrain_weights not in ['IMAGENET']:
+                        logging.warning(
+                            "Path of pretrain_weights('{}') is not exists!".
+                            format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
+                        pretrain_weights = 'IMAGENET'
+                elif self.model_type == 'detector':
+                    if pretrain_weights not in ['IMAGENET', 'COCO']:
+                        logging.warning(
+                            "Path of pretrain_weights('{}') is not exists!".
+                            format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
+                        pretrain_weights = 'IMAGENET'
+                elif self.model_type == 'segmenter':
+                    if pretrain_weights not in [
+                            'IMAGENET', 'COCO', 'CITYSCAPES'
+                    ]:
+                        logging.warning(
+                            "Path of pretrain_weights('{}') is not exists!".
+                            format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
+                        pretrain_weights = 'IMAGENET'
+            if hasattr(self, 'backbone'):
+                backbone = self.backbone
+            else:
+                backbone = self.__class__.__name__
+                if backbone == "HRNet":
+                    backbone = backbone + "_W{}".format(self.width)
+            class_name = self.__class__.__name__
+            pretrain_weights = get_pretrain_weights(
+                pretrain_weights, class_name, backbone, pretrain_dir)
         if startup_prog is None:
             startup_prog = fluid.default_startup_program()
         self.exe.run(startup_prog)
-        if pretrain_weights is not None:
+        if resume_checkpoint:
             logging.info(
-                "Load pretrain weights from {}.".format(pretrain_weights))
+                "Resume checkpoint from {}.".format(resume_checkpoint),
+                use_color=True)
             paddlex.utils.utils.load_pretrain_weights(
-                self.exe, self.train_prog, pretrain_weights, fuse_bn)
+                self.exe, self.train_prog, resume_checkpoint, resume=True)
+            if not osp.exists(osp.join(resume_checkpoint, "model.yml")):
+                raise Exception("There's not model.yml in {}".format(
+                    resume_checkpoint))
+            with open(osp.join(resume_checkpoint, "model.yml")) as f:
+                info = yaml.load(f.read(), Loader=yaml.Loader)
+                self.completed_epochs = info['completed_epochs']
+        elif pretrain_weights is not None:
+            logging.info(
+                "Load pretrain weights from {}.".format(pretrain_weights),
+                use_color=True)
+            paddlex.utils.utils.load_pretrain_weights(self.exe, self.train_prog,
+                                                      pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
+            import paddleslim
             from .slim.prune_config import get_sensitivities
             sensitivities_file = get_sensitivities(sensitivities_file, self,
                                                    save_dir)
             from .slim.prune import get_params_ratios, prune_program
+            logging.info(
+                "Start to prune program with eval_metric_loss = {}".format(
+                    eval_metric_loss),
+                use_color=True)
+            origin_flops = paddleslim.analysis.flops(self.test_prog)
             prune_params_ratios = get_params_ratios(
                 sensitivities_file, eval_metric_loss=eval_metric_loss)
             prune_program(self, prune_params_ratios)
+            current_flops = paddleslim.analysis.flops(self.test_prog)
+            remaining_ratio = current_flops / origin_flops
+            logging.info(
+                "Finish prune program, before FLOPs:{}, after prune FLOPs:{}, remaining ratio:{}"
+                .format(origin_flops, current_flops, remaining_ratio),
+                use_color=True)
             self.status = 'Prune'
 
     def get_model_info(self):
@@ -221,10 +280,14 @@ class BaseAPI:
             del self.init_params['self']
         if '__class__' in self.init_params:
             del self.init_params['__class__']
+        if 'model_name' in self.init_params:
+            del self.init_params['model_name']
+
         info['_init_params'] = self.init_params
 
         info['_Attributes']['num_classes'] = self.num_classes
         info['_Attributes']['labels'] = self.labels
+        info['_Attributes']['fixed_input_shape'] = self.fixed_input_shape
         try:
             primary_metric_key = list(self.eval_metrics.keys())[0]
             primary_metric_value = float(self.eval_metrics[primary_metric_key])
@@ -234,19 +297,20 @@ class BaseAPI:
         except:
             pass
 
-        if hasattr(self.test_transforms, 'to_rgb'):
-            if self.test_transforms.to_rgb:
-                info['TransformsMode'] = 'RGB'
-            else:
-                info['TransformsMode'] = 'BGR'
-
         if hasattr(self, 'test_transforms'):
+            if hasattr(self.test_transforms, 'to_rgb'):
+                if self.test_transforms.to_rgb:
+                    info['TransformsMode'] = 'RGB'
+                else:
+                    info['TransformsMode'] = 'BGR'
+
             if self.test_transforms is not None:
                 info['Transforms'] = list()
                 for op in self.test_transforms.transforms:
                     name = op.__class__.__name__
                     attr = op.__dict__
                     info['Transforms'].append({name: attr})
+        info['completed_epochs'] = self.completed_epochs
         return info
 
     def save_model(self, save_dir):
@@ -254,7 +318,10 @@ class BaseAPI:
             if osp.exists(save_dir):
                 os.remove(save_dir)
             os.makedirs(save_dir)
-        fluid.save(self.train_prog, osp.join(save_dir, 'model'))
+        if self.train_prog is not None:
+            fluid.save(self.train_prog, osp.join(save_dir, 'model'))
+        else:
+            fluid.save(self.test_prog, osp.join(save_dir, 'model'))
         model_info = self.get_model_info()
         model_info['status'] = self.status
         with open(
@@ -284,27 +351,26 @@ class BaseAPI:
         logging.info("Model saved in {}.".format(save_dir))
 
     def export_inference_model(self, save_dir):
-        test_input_names = [
-            var.name for var in list(self.test_inputs.values())
-        ]
+        test_input_names = [var.name for var in list(self.test_inputs.values())]
         test_outputs = list(self.test_outputs.values())
-        if self.__class__.__name__ == 'MaskRCNN':
-            from paddlex.utils.save import save_mask_inference_model
-            save_mask_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=self.test_prog)
-        else:
-            fluid.io.save_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=self.test_prog)
+        with fluid.scope_guard(self.scope):
+            if self.__class__.__name__ == 'MaskRCNN':
+                from paddlex.utils.save import save_mask_inference_model
+                save_mask_inference_model(
+                    dirname=save_dir,
+                    executor=self.exe,
+                    params_filename='__params__',
+                    feeded_var_names=test_input_names,
+                    target_vars=test_outputs,
+                    main_program=self.test_prog)
+            else:
+                fluid.io.save_inference_model(
+                    dirname=save_dir,
+                    executor=self.exe,
+                    params_filename='__params__',
+                    feeded_var_names=test_input_names,
+                    target_vars=test_outputs,
+                    main_program=self.test_prog)
         model_info = self.get_model_info()
         model_info['status'] = 'Infer'
 
@@ -316,15 +382,14 @@ class BaseAPI:
         model_info['_ModelInputsOutputs']['test_outputs'] = [
             [k, v.name] for k, v in self.test_outputs.items()
         ]
-
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info(
-            "Model for inference deploy saved in {}.".format(save_dir))
+        logging.info("Model for inference deploy saved in {}.".format(save_dir))
 
     def train_loop(self,
                    num_epochs,
@@ -334,7 +399,12 @@ class BaseAPI:
                    save_interval_epochs=1,
                    log_interval_steps=10,
                    save_dir='output',
-                   use_vdl=False):
+                   use_vdl=False,
+                   early_stop=False,
+                   early_stop_patience=5):
+        if train_dataset.num_samples < train_batch_size:
+            raise Exception(
+                'The amount of training datset must be larger than batch size.')
         if not osp.isdir(save_dir):
             if osp.exists(save_dir):
                 os.remove(save_dir)
@@ -343,8 +413,11 @@ class BaseAPI:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
         # 给transform添加arrange操作
-        self.arrange_transforms(
-            transforms=train_dataset.transforms, mode='train')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=train_dataset.transforms,
+            mode='train')
         # 构建train_data_loader
         self.build_train_data_loader(
             dataset=train_dataset, batch_size=train_batch_size)
@@ -372,8 +445,8 @@ class BaseAPI:
                     build_strategy=build_strategy,
                     exec_strategy=exec_strategy)
 
-        total_num_steps = math.floor(
-            train_dataset.num_samples / train_batch_size)
+        total_num_steps = math.floor(train_dataset.num_samples /
+                                     train_batch_size)
         num_steps = 0
         time_stat = list()
         time_train_one_epoch = None
@@ -387,19 +460,21 @@ class BaseAPI:
         if self.model_type == 'detector':
             eval_batch_size = self._get_single_card_bs(train_batch_size)
         if eval_dataset is not None:
-            total_num_steps_eval = math.ceil(
-                eval_dataset.num_samples / eval_batch_size)
+            total_num_steps_eval = math.ceil(eval_dataset.num_samples /
+                                             eval_batch_size)
 
         if use_vdl:
             # VisualDL component
-            log_writer = LogWriter(vdl_logdir, sync_cycle=20)
-            train_step_component = OrderedDict()
-            eval_component = OrderedDict()
+            log_writer = LogWriter(vdl_logdir)
 
+        thresh = 0.0001
+        if early_stop:
+            earlystop = EarlyStop(early_stop_patience, thresh)
         best_accuracy_key = ""
         best_accuracy = -1.0
-        best_model_epoch = 1
-        for i in range(num_epochs):
+        best_model_epoch = -1
+        start_epoch = self.completed_epochs
+        for i in range(start_epoch, num_epochs):
             records = list()
             step_start_time = time.time()
             epoch_start_time = time.time()
@@ -428,13 +503,9 @@ class BaseAPI:
 
                     if use_vdl:
                         for k, v in step_metrics.items():
-                            if k not in train_step_component.keys():
-                                with log_writer.mode('Each_Step_while_Training'
-                                                     ) as step_logger:
-                                    train_step_component[
-                                        k] = step_logger.scalar(
-                                            'Training: {}'.format(k))
-                            train_step_component[k].add_record(num_steps, v)
+                            log_writer.add_scalar(
+                                'Metrics/Training(Step): {}'.format(k), v,
+                                num_steps)
 
                     # 估算剩余时间
                     avg_step_time = np.mean(time_stat)
@@ -442,36 +513,37 @@ class BaseAPI:
                         eta = (num_epochs - i - 1) * time_train_one_epoch + (
                             total_num_steps - step - 1) * avg_step_time
                     else:
-                        eta = ((num_epochs - i) * total_num_steps - step -
-                               1) * avg_step_time
+                        eta = ((num_epochs - i) * total_num_steps - step - 1
+                               ) * avg_step_time
                     if time_eval_one_epoch is not None:
-                        eval_eta = (total_eval_times - i //
-                                    save_interval_epochs) * time_eval_one_epoch
+                        eval_eta = (total_eval_times - i // save_interval_epochs
+                                    ) * time_eval_one_epoch
                     else:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * total_num_steps_eval * avg_step_time
+                        eval_eta = (total_eval_times - i // save_interval_epochs
+                                    ) * total_num_steps_eval * avg_step_time
                     eta_str = seconds_to_hms(eta + eval_eta)
 
                     logging.info(
                         "[TRAIN] Epoch={}/{}, Step={}/{}, {}, time_each_step={}s, eta={}"
                         .format(i + 1, num_epochs, step + 1, total_num_steps,
-                                dict2str(step_metrics), round(
-                                    avg_step_time, 2), eta_str))
+                                dict2str(step_metrics),
+                                round(avg_step_time, 2), eta_str))
             train_metrics = OrderedDict(
-                zip(list(self.train_outputs.keys()), np.mean(records, axis=0)))
+                zip(list(self.train_outputs.keys()), np.mean(
+                    records, axis=0)))
             logging.info('[TRAIN] Epoch {} finished, {} .'.format(
                 i + 1, dict2str(train_metrics)))
             time_train_one_epoch = time.time() - epoch_start_time
             epoch_start_time = time.time()
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            self.completed_epochs += 1
             eval_epoch_start_time = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
                 if not osp.isdir(current_save_dir):
                     os.makedirs(current_save_dir)
-                if eval_dataset is not None:
+                if eval_dataset is not None and eval_dataset.num_samples > 0:
                     self.eval_metrics, self.eval_details = self.evaluate(
                         eval_dataset=eval_dataset,
                         batch_size=eval_batch_size,
@@ -494,16 +566,16 @@ class BaseAPI:
                             if isinstance(v, np.ndarray):
                                 if v.size > 1:
                                     continue
-                            if k not in eval_component:
-                                with log_writer.mode('Each_Epoch_on_Eval_Data'
-                                                     ) as eval_logger:
-                                    eval_component[k] = eval_logger.scalar(
-                                        'Evaluation: {}'.format(k))
-                            eval_component[k].add_record(i + 1, v)
+                            log_writer.add_scalar(
+                                "Metrics/Eval(Epoch): {}".format(k), v, i + 1)
                 self.save_model(save_dir=current_save_dir)
                 time_eval_one_epoch = time.time() - eval_epoch_start_time
                 eval_epoch_start_time = time.time()
-                logging.info(
-                    'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
-                    .format(best_model_epoch, best_accuracy_key,
-                            best_accuracy))
+                if best_model_epoch > 0:
+                    logging.info(
+                        'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
+                        .format(best_model_epoch, best_accuracy_key,
+                                best_accuracy))
+                if eval_dataset is not None and early_stop:
+                    if earlystop(current_accuracy):
+                        break

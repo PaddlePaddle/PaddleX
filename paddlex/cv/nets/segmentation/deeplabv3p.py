@@ -28,7 +28,6 @@ from .model_utils.libs import sigmoid_to_softmax
 from .model_utils.loss import softmax_with_loss
 from .model_utils.loss import dice_loss
 from .model_utils.loss import bce_loss
-import paddlex.utils.logging as logging
 from paddlex.cv.nets.xception import Xception
 from paddlex.cv.nets.mobilenet_v2 import MobileNetV2
 
@@ -61,6 +60,7 @@ class DeepLabv3p(object):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。
+        fixed_input_shape (list): 长度为2，维度为1的list，如:[640,720]，用来固定模型输入:'image'的shape，默认为None。
 
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
@@ -81,7 +81,8 @@ class DeepLabv3p(object):
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255):
+                 ignore_index=255,
+                 fixed_input_shape=None):
         # dice_loss或bce_loss只适用两类分割中
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise ValueError(
@@ -115,6 +116,7 @@ class DeepLabv3p(object):
         self.decoder_use_sep_conv = decoder_use_sep_conv
         self.encoder_with_aspp = encoder_with_aspp
         self.enable_decoder = enable_decoder
+        self.fixed_input_shape = fixed_input_shape
 
     def _encoder(self, input):
         # 编码器配置，采用ASPP架构，pooling + 1x1_conv + 三个不同尺度的空洞卷积并行, concat后1x1conv
@@ -132,7 +134,8 @@ class DeepLabv3p(object):
         param_attr = fluid.ParamAttr(
             name=name_scope + 'weights',
             regularizer=None,
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.06))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.06))
         with scope('encoder'):
             channel = 256
             with scope("image_pool"):
@@ -148,8 +151,8 @@ class DeepLabv3p(object):
                         padding=0,
                         param_attr=param_attr))
                 input_shape = fluid.layers.shape(input)
-                image_avg = fluid.layers.resize_bilinear(
-                    image_avg, input_shape[2:])
+                image_avg = fluid.layers.resize_bilinear(image_avg,
+                                                         input_shape[2:])
 
             with scope("aspp0"):
                 aspp0 = bn_relu(
@@ -241,7 +244,8 @@ class DeepLabv3p(object):
         param_attr = fluid.ParamAttr(
             name=name_scope + 'weights',
             regularizer=None,
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.06))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.06))
         with scope('decoder'):
             with scope('concat'):
                 decode_shortcut = bn_relu(
@@ -310,12 +314,17 @@ class DeepLabv3p(object):
 
     def generate_inputs(self):
         inputs = OrderedDict()
-        inputs['image'] = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+
+        if self.fixed_input_shape is not None:
+            input_shape = [
+                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+            ]
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if self.mode == 'train':
-            inputs['label'] = fluid.data(
-                dtype='int32', shape=[None, 1, None, None], name='label')
-        elif self.mode == 'eval':
             inputs['label'] = fluid.data(
                 dtype='int32', shape=[None, 1, None, None], name='label')
         return inputs
@@ -340,7 +349,8 @@ class DeepLabv3p(object):
             name=name_scope + 'weights',
             regularizer=fluid.regularizer.L2DecayRegularizer(
                 regularization_coeff=0.0),
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.01))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.01))
         with scope('logit'):
             with fluid.name_scope('last_conv'):
                 logit = conv(

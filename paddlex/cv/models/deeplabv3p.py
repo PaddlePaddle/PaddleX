@@ -1,16 +1,16 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
 #
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from __future__ import absolute_import
 import os.path as osp
@@ -18,9 +18,12 @@ import numpy as np
 import tqdm
 import math
 import cv2
+from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 import paddlex
+from paddlex.cv.transforms import arrange_transforms
+from paddlex.cv.datasets import generate_minibatch
 from collections import OrderedDict
 from .base import BaseAPI
 from .utils.seg_eval import ConfusionMatrix
@@ -48,7 +51,6 @@ class DeepLabv3p(BaseAPI):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None时，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。默认255。
-
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: backbone取值不在['Xception65', 'Xception41', 'MobileNetV2_x0.25',
@@ -118,6 +120,7 @@ class DeepLabv3p(BaseAPI):
         self.enable_decoder = enable_decoder
         self.labels = None
         self.sync_bn = True
+        self.fixed_input_shape = None
 
     def _get_backbone(self, backbone):
         def mobilenetv2(backbone):
@@ -182,18 +185,14 @@ class DeepLabv3p(BaseAPI):
             use_bce_loss=self.use_bce_loss,
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
-            ignore_index=self.ignore_index)
+            ignore_index=self.ignore_index,
+            fixed_input_shape=self.fixed_input_shape)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()
         if mode == 'train':
             self.optimizer.minimize(model_out)
             outputs['loss'] = model_out
-        elif mode == 'eval':
-            outputs['loss'] = model_out[0]
-            outputs['pred'] = model_out[1]
-            outputs['label'] = model_out[2]
-            outputs['mask'] = model_out[3]
         else:
             outputs['pred'] = model_out[0]
             outputs['logit'] = model_out[1]
@@ -231,7 +230,10 @@ class DeepLabv3p(BaseAPI):
               lr_decay_power=0.9,
               use_vdl=False,
               sensitivities_file=None,
-              eval_metric_loss=0.05):
+              eval_metric_loss=0.05,
+              early_stop=False,
+              early_stop_patience=5,
+              resume_checkpoint=None):
         """训练。
 
         Args:
@@ -243,15 +245,21 @@ class DeepLabv3p(BaseAPI):
             log_interval_steps (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
             save_dir (str): 模型保存路径。默认'output'。
             pretrain_weights (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，
-                则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认'IMAGENET。
+                则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，
+                则自动下载在COCO数据集上预训练的模型权重；若为字符串'CITYSCAPES'，
+                则自动下载在CITYSCAPES数据集上预训练的模型权重；若为None，则不使用预训练模型。默认'IMAGENET。
             optimizer (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认的优化器：使用
                 fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
             learning_rate (float): 默认优化器的初始学习率。默认0.01。
             lr_decay_power (float): 默认优化器学习率衰减指数。默认0.9。
             use_vdl (bool): 是否使用VisualDL进行可视化。默认False。
             sensitivities_file (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，
-                则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
+                则自动下载在Cityscapes图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
             eval_metric_loss (float): 可容忍的精度损失。默认为0.05。
+            early_stop (bool): 是否使用提前终止训练策略。默认值为False。
+            early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
+                连续下降或持平，则终止训练。默认值为5。
+            resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
         Raises:
             ValueError: 模型从inference model进行加载。
@@ -278,7 +286,8 @@ class DeepLabv3p(BaseAPI):
             pretrain_weights=pretrain_weights,
             save_dir=save_dir,
             sensitivities_file=sensitivities_file,
-            eval_metric_loss=eval_metric_loss)
+            eval_metric_loss=eval_metric_loss,
+            resume_checkpoint=resume_checkpoint)
         # 训练
         self.train_loop(
             num_epochs=num_epochs,
@@ -288,7 +297,9 @@ class DeepLabv3p(BaseAPI):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self,
                  eval_dataset,
@@ -309,42 +320,64 @@ class DeepLabv3p(BaseAPI):
             tuple (metrics, eval_details)：当return_details为True时，增加返回dict (eval_details)，
                 包含关键字：'confusion_matrix'，表示评估的混淆矩阵。
         """
-        self.arrange_transforms(
-            transforms=eval_dataset.transforms, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=eval_dataset.transforms,
+            mode='eval')
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         conf_mat = ConfusionMatrix(self.num_classes, streaming=True)
         data_generator = eval_dataset.generator(
             batch_size=batch_size, drop_last=False)
         if not hasattr(self, 'parallel_test_prog'):
-            self.parallel_test_prog = fluid.CompiledProgram(
-                self.test_prog).with_data_parallel(
-                    share_vars_from=self.parallel_train_prog)
+            with fluid.scope_guard(self.scope):
+                self.parallel_test_prog = fluid.CompiledProgram(
+                    self.test_prog).with_data_parallel(
+                        share_vars_from=self.parallel_train_prog)
         logging.info(
             "Start to evaluating(total_samples={}, total_steps={})...".format(
                 eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
-            labels = np.array([d[1] for d in data])
+            im_info = [d[1] for d in data]
+            labels = [d[2] for d in data]
+
             num_samples = images.shape[0]
             if num_samples < batch_size:
                 num_pad_samples = batch_size - num_samples
                 pad_images = np.tile(images[0:1], (num_pad_samples, 1, 1, 1))
                 images = np.concatenate([images, pad_images])
             feed_data = {'image': images}
-            outputs = self.exe.run(
-                self.parallel_test_prog,
-                feed=feed_data,
-                fetch_list=list(self.test_outputs.values()),
-                return_numpy=True)
+            with fluid.scope_guard(self.scope):
+                outputs = self.exe.run(
+                    self.parallel_test_prog,
+                    feed=feed_data,
+                    fetch_list=list(self.test_outputs.values()),
+                    return_numpy=True)
             pred = outputs[0]
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
 
-            mask = labels != self.ignore_index
-            conf_mat.calculate(pred=pred, label=labels, ignore=mask)
+            for i in range(num_samples):
+                one_pred = pred[i].astype('uint8')
+                one_label = labels[i]
+                for info in im_info[i][::-1]:
+                    if info[0] == 'resize':
+                        w, h = info[1][1], info[1][0]
+                        one_pred = cv2.resize(one_pred, (w, h), cv2.INTER_NEAREST)
+                    elif info[0] == 'padding':
+                        w, h = info[1][1], info[1][0]
+                        one_pred = one_pred[0:h, 0:w]
+                    else:
+                        raise Exception("Unexpected info '{}' in im_info".format(
+                            info[0]))
+                one_pred = one_pred.astype('int64')
+                one_pred = one_pred[np.newaxis, :, :, np.newaxis]
+                one_label = one_label[np.newaxis, np.newaxis, :, :]
+                mask = one_label != self.ignore_index
+                conf_mat.calculate(pred=one_pred, label=one_label, ignore=mask)
             _, iou = conf_mat.mean_iou()
-
             logging.debug("[EVAL] Epoch={}, Step={}/{}, iou={}".format(
                 epoch_id, step + 1, total_steps, iou))
 
@@ -353,8 +386,7 @@ class DeepLabv3p(BaseAPI):
 
         metrics = OrderedDict(
             zip(['miou', 'category_iou', 'macc', 'category_acc', 'kappa'],
-                [miou, category_iou, macc, category_acc,
-                 conf_mat.kappa()]))
+                [miou, category_iou, macc, category_acc, conf_mat.kappa()]))
         if return_details:
             eval_details = {
                 'confusion_matrix': conf_mat.confusion_matrix.tolist()
@@ -362,10 +394,56 @@ class DeepLabv3p(BaseAPI):
             return metrics, eval_details
         return metrics
 
-    def predict(self, im_file, transforms=None):
+    @staticmethod
+    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+        arrange_transforms(
+            model_type=model_type,
+            class_name=class_name,
+            transforms=transforms,
+            mode='test')
+        pool = ThreadPool(thread_num)
+        batch_data = pool.map(transforms, images)
+        pool.close()
+        pool.join()
+        padding_batch = generate_minibatch(batch_data)
+        im = np.array(
+            [data[0] for data in padding_batch],
+            dtype=padding_batch[0][0].dtype)
+        im_info = [data[1] for data in padding_batch]
+        return im, im_info
+
+    @staticmethod
+    def _postprocess(results, im_info):
+        pred_list = list()
+        logit_list = list()
+        for i, (pred, logit) in enumerate(zip(results[0], results[1])):
+            pred = pred.astype('uint8')
+            pred = np.squeeze(pred).astype('uint8')
+            logit = np.transpose(logit, (1, 2, 0))
+            for info in im_info[i][::-1]:
+                if info[0] == 'resize':
+                    w, h = info[1][1], info[1][0]
+                    pred = cv2.resize(pred, (w, h), cv2.INTER_NEAREST)
+                    logit = cv2.resize(logit, (w, h), cv2.INTER_LINEAR)
+                elif info[0] == 'padding':
+                    w, h = info[1][1], info[1][0]
+                    pred = pred[0:h, 0:w]
+                    logit = logit[0:h, 0:w, :]
+                else:
+                    raise Exception("Unexpected info '{}' in im_info".format(
+                        info[0]))
+            pred_list.append(pred)
+            logit_list.append(logit)
+
+        preds = list()
+        for pred, logit in zip(pred_list, logit_list):
+            preds.append({'label_map': pred, 'score_map': logit})
+        return preds
+
+    def predict(self, img_file, transforms=None):
         """预测。
         Args:
-            img_file(str): 预测图像路径。
+            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
             transforms(paddlex.cv.transforms): 数据预处理操作。
 
         Returns:
@@ -375,27 +453,53 @@ class DeepLabv3p(BaseAPI):
 
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
-        if transforms is not None:
-            self.arrange_transforms(transforms=transforms, mode='test')
-            im, im_info = transforms(im_file)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
         else:
-            self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-            im, im_info = self.test_transforms(im_file)
-        im = np.expand_dims(im, axis=0)
-        result = self.exe.run(
-            self.test_prog,
-            feed={'image': im},
-            fetch_list=list(self.test_outputs.values()))
-        pred = result[0]
-        pred = np.squeeze(pred).astype('uint8')
-        keys = list(im_info.keys())
-        for k in keys[::-1]:
-            if k == 'shape_before_resize':
-                h, w = im_info[k][0], im_info[k][1]
-                pred = cv2.resize(pred, (w, h), cv2.INTER_NEAREST)
-            elif k == 'shape_before_padding':
-                h, w = im_info[k][0], im_info[k][1]
-                pred = pred[0:h, 0:w]
+            raise Exception("img_file must be str/np.ndarray")
 
-        return {'label_map': pred, 'score_map': result[1]}
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_info = DeepLabv3p._preprocess(
+            images, transforms, self.model_type, self.__class__.__name__)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
+
+        preds = DeepLabv3p._postprocess(result, im_info)
+        return preds[0]
+
+    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+        """预测。
+        Args:
+            img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+            transforms(paddlex.cv.transforms): 数据预处理操作。
+            thread_num (int): 并发执行各图像预处理时的线程数。
+
+        Returns:
+            list: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
+                像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)
+        """
+
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+        if not isinstance(img_file_list, (list, tuple)):
+            raise Exception("im_file must be list/tuple")
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_info = DeepLabv3p._preprocess(
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, thread_num)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
+
+        preds = DeepLabv3p._postprocess(result, im_info)
+        return preds

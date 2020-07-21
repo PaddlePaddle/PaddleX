@@ -1,4 +1,4 @@
-接口说明
+API接口说明
 ============================
 
 .. toctree::
@@ -6,7 +6,7 @@
 
    transforms/index.rst
    datasets.md
-   models.md
+   models/index.rst
    slim.md
-   load_model.md
    visualize.md
+   interpret.md

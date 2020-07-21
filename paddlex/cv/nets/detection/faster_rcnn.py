@@ -21,7 +21,7 @@ import copy
 
 from paddle import fluid
 
-from .fpn import FPN
+from .fpn import (FPN, HRFPN)
 from .rpn_head import (RPNHead, FPNRPNHead)
 from .roi_extractor import (RoIAlign, FPNRoIAlign)
 from .bbox_head import (BBoxHead, TwoFCHead)
@@ -76,12 +76,18 @@ class FasterRCNN(object):
             fg_thresh=.5,
             bg_thresh_hi=.5,
             bg_thresh_lo=0.,
-            bbox_reg_weights=[0.1, 0.1, 0.2, 0.2]):
+            bbox_reg_weights=[0.1, 0.1, 0.2, 0.2],
+            fixed_input_shape=None):
         super(FasterRCNN, self).__init__()
         self.backbone = backbone
         self.mode = mode
         if with_fpn and fpn is None:
-            fpn = FPN()
+            if self.backbone.__class__.__name__.startswith('HRNet'):
+                fpn = HRFPN()
+                fpn.min_level = 2
+                fpn.max_level = 6
+            else:
+                fpn = FPN()
         self.fpn = fpn
         self.num_classes = num_classes
         if rpn_head is None:
@@ -148,6 +154,7 @@ class FasterRCNN(object):
         self.bg_thresh_lo = bg_thresh_lo
         self.bbox_reg_weights = bbox_reg_weights
         self.rpn_only = rpn_only
+        self.fixed_input_shape = fixed_input_shape
 
     def build_net(self, inputs):
         im = inputs['image']
@@ -219,8 +226,16 @@ class FasterRCNN(object):
 
     def generate_inputs(self):
         inputs = OrderedDict()
-        inputs['image'] = fluid.data(
-            dtype='float32', shape=[None, 3, None, None], name='image')
+
+        if self.fixed_input_shape is not None:
+            input_shape = [
+                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+            ]
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=input_shape, name='image')
+        else:
+            inputs['image'] = fluid.data(
+                dtype='float32', shape=[None, 3, None, None], name='image')
         if self.mode == 'train':
             inputs['im_info'] = fluid.data(
                 dtype='float32', shape=[None, 3], name='im_info')

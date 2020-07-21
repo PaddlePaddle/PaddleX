@@ -14,12 +14,15 @@
 
 from __future__ import absolute_import
 import copy
+import os
 import os.path as osp
 import random
+import re
 import numpy as np
+from collections import OrderedDict
 import xml.etree.ElementTree as ET
-from pycocotools.coco import COCO
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -38,7 +41,7 @@ class VOCDetection(Dataset):
             一半。
         buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
         parallel_method (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'
-            线程和'process'进程两种方式。默认为'thread'（Windows和Mac下会强制使用thread，该参数无效）。
+            线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
 
@@ -51,6 +54,7 @@ class VOCDetection(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
+        from pycocotools.coco import COCO
         super(VOCDetection, self).__init__(
             transforms=transforms,
             num_workers=num_workers,
@@ -66,7 +70,7 @@ class VOCDetection(Dataset):
         annotations['categories'] = []
         annotations['annotations'] = []
 
-        cname2cid = {}
+        cname2cid = OrderedDict()
         label_id = 1
         with open(label_list, 'r', encoding=get_encoding(label_list)) as fr:
             for line in fr.readlines():
@@ -89,63 +93,100 @@ class VOCDetection(Dataset):
                     break
                 img_file, xml_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                xml_file = path_normalization(xml_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(xml_file):
                     continue
                 if not osp.exists(img_file):
-                    raise IOError(
-                        'The image file {} is not exist!'.format(img_file))
+                    raise IOError('The image file {} is not exist!'.format(
+                        img_file))
                 tree = ET.parse(xml_file)
                 if tree.find('id') is None:
                     im_id = np.array([ct])
                 else:
                     ct = int(tree.find('id').text)
                     im_id = np.array([int(tree.find('id').text)])
-
-                objs = tree.findall('object')
-                im_w = float(tree.find('size').find('width').text)
-                im_h = float(tree.find('size').find('height').text)
+                pattern = re.compile('<object>', re.IGNORECASE)
+                obj_match = pattern.findall(
+                    str(ET.tostringlist(tree.getroot())))
+                if len(obj_match) == 0:
+                    continue
+                obj_tag = obj_match[0][1:-1]
+                objs = tree.findall(obj_tag)
+                pattern = re.compile('<size>', re.IGNORECASE)
+                size_tag = pattern.findall(
+                    str(ET.tostringlist(tree.getroot())))[0][1:-1]
+                size_element = tree.find(size_tag)
+                pattern = re.compile('<width>', re.IGNORECASE)
+                width_tag = pattern.findall(
+                    str(ET.tostringlist(size_element)))[0][1:-1]
+                im_w = float(size_element.find(width_tag).text)
+                pattern = re.compile('<height>', re.IGNORECASE)
+                height_tag = pattern.findall(
+                    str(ET.tostringlist(size_element)))[0][1:-1]
+                im_h = float(size_element.find(height_tag).text)
                 gt_bbox = np.zeros((len(objs), 4), dtype=np.float32)
                 gt_class = np.zeros((len(objs), 1), dtype=np.int32)
                 gt_score = np.ones((len(objs), 1), dtype=np.float32)
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
-                    cname = obj.find('name').text
+                    pattern = re.compile('<name>', re.IGNORECASE)
+                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
+                        1:-1]
+                    cname = obj.find(name_tag).text.strip()
                     gt_class[i][0] = cname2cid[cname]
-                    _difficult = int(obj.find('difficult').text)
-                    x1 = float(obj.find('bndbox').find('xmin').text)
-                    y1 = float(obj.find('bndbox').find('ymin').text)
-                    x2 = float(obj.find('bndbox').find('xmax').text)
-                    y2 = float(obj.find('bndbox').find('ymax').text)
+                    pattern = re.compile('<difficult>', re.IGNORECASE)
+                    diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
+                        1:-1]
+                    try:
+                        _difficult = int(obj.find(diff_tag).text)
+                    except Exception:
+                        _difficult = 0
+                    pattern = re.compile('<bndbox>', re.IGNORECASE)
+                    box_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:
+                                                                            -1]
+                    box_element = obj.find(box_tag)
+                    pattern = re.compile('<xmin>', re.IGNORECASE)
+                    xmin_tag = pattern.findall(
+                        str(ET.tostringlist(box_element)))[0][1:-1]
+                    x1 = float(box_element.find(xmin_tag).text)
+                    pattern = re.compile('<ymin>', re.IGNORECASE)
+                    ymin_tag = pattern.findall(
+                        str(ET.tostringlist(box_element)))[0][1:-1]
+                    y1 = float(box_element.find(ymin_tag).text)
+                    pattern = re.compile('<xmax>', re.IGNORECASE)
+                    xmax_tag = pattern.findall(
+                        str(ET.tostringlist(box_element)))[0][1:-1]
+                    x2 = float(box_element.find(xmax_tag).text)
+                    pattern = re.compile('<ymax>', re.IGNORECASE)
+                    ymax_tag = pattern.findall(
+                        str(ET.tostringlist(box_element)))[0][1:-1]
+                    y2 = float(box_element.find(ymax_tag).text)
                     x1 = max(0, x1)
                     y1 = max(0, y1)
-                    x2 = min(im_w - 1, x2)
-                    y2 = min(im_h - 1, y2)
+                    if im_w > 0.5 and im_h > 0.5:
+                        x2 = min(im_w - 1, x2)
+                        y2 = min(im_h - 1, y2)
                     gt_bbox[i] = [x1, y1, x2, y2]
                     is_crowd[i][0] = 0
                     difficult[i][0] = _difficult
                     annotations['annotations'].append({
-                        'iscrowd':
-                        0,
-                        'image_id':
-                        int(im_id[0]),
+                        'iscrowd': 0,
+                        'image_id': int(im_id[0]),
                         'bbox': [x1, y1, x2 - x1 + 1, y2 - y1 + 1],
-                        'area':
-                        float((x2 - x1 + 1) * (y2 - y1 + 1)),
-                        'category_id':
-                        cname2cid[cname],
-                        'id':
-                        ann_ct,
-                        'difficult':
-                        _difficult
+                        'area': float((x2 - x1 + 1) * (y2 - y1 + 1)),
+                        'category_id': cname2cid[cname],
+                        'id': ann_ct,
+                        'difficult': _difficult
                     })
                     ann_ct += 1
 
                 im_info = {
                     'im_id': im_id,
-                    'origin_shape': np.array([im_h, im_w]).astype('int32'),
+                    'image_shape': np.array([im_h, im_w]).astype('int32'),
                 }
                 label_info = {
                     'is_crowd': is_crowd,
@@ -160,14 +201,10 @@ class VOCDetection(Dataset):
                     self.file_list.append([img_file, voc_rec])
                     ct += 1
                     annotations['images'].append({
-                        'height':
-                        im_h,
-                        'width':
-                        im_w,
-                        'id':
-                        int(im_id[0]),
-                        'file_name':
-                        osp.split(img_file)[1]
+                        'height': im_h,
+                        'width': im_w,
+                        'id': int(im_id[0]),
+                        'file_name': osp.split(img_file)[1]
                     })
 
         if not len(self.file_list) > 0:
@@ -178,6 +215,44 @@ class VOCDetection(Dataset):
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
+
+    def add_negative_samples(self, image_dir):
+        import cv2
+        if not osp.exists(image_dir):
+            raise Exception("{} background images directory does not exist.".
+                            format(image_dir))
+        image_list = os.listdir(image_dir)
+        max_img_id = max(self.coco_gt.getImgIds())
+        for image in image_list:
+            if not is_pic(image):
+                continue
+            # False ground truth
+            gt_bbox = np.array([[0, 0, 1e-05, 1e-05]], dtype=np.float32)
+            gt_class = np.array([[0]], dtype=np.int32)
+            gt_score = np.ones((1, 1), dtype=np.float32)
+            is_crowd = np.array([[0]], dtype=np.int32)
+            difficult = np.zeros((1, 1), dtype=np.int32)
+            gt_poly = [[[0, 0, 0, 1e-05, 1e-05, 1e-05, 1e-05, 0]]]
+
+            max_img_id += 1
+            im_fname = osp.join(image_dir, image)
+            img_data = cv2.imread(im_fname)
+            im_h, im_w, im_c = img_data.shape
+            im_info = {
+                'im_id': np.array([max_img_id]).astype('int32'),
+                'image_shape': np.array([im_h, im_w]).astype('int32'),
+            }
+            label_info = {
+                'is_crowd': is_crowd,
+                'gt_class': gt_class,
+                'gt_bbox': gt_bbox,
+                'gt_score': gt_score,
+                'difficult': difficult,
+                'gt_poly': gt_poly
+            }
+            coco_rec = (im_info, label_info)
+            self.file_list.append([im_fname, coco_rec])
+        self.num_samples = len(self.file_list)
 
     def iterator(self):
         self._epoch += 1
@@ -198,8 +273,7 @@ class VOCDetection(Dataset):
             else:
                 mix_pos = 0
             im_info['mixup'] = [
-                files[mix_pos][0],
-                copy.deepcopy(files[mix_pos][1][0]),
+                files[mix_pos][0], copy.deepcopy(files[mix_pos][1][0]),
                 copy.deepcopy(files[mix_pos][1][1])
             ]
             self._pos += 1

@@ -34,11 +34,15 @@ from .classifier import DenseNet121
 from .classifier import DenseNet161
 from .classifier import DenseNet201
 from .classifier import ShuffleNetV2
+from .classifier import HRNet_W18
+from .classifier import AlexNet
 from .base import BaseAPI
 from .yolo_v3 import YOLOv3
 from .faster_rcnn import FasterRCNN
 from .mask_rcnn import MaskRCNN
 from .unet import UNet
 from .deeplabv3p import DeepLabv3p
+from .hrnet import HRNet
+from .fast_scnn import FastSCNN
 from .load_model import load_model
 from .slim import prune
