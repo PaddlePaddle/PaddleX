@@ -340,7 +340,8 @@ class DeepLabv3p(BaseAPI):
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
-            labels = np.array([d[1] for d in data])
+            im_info = [d[1] for d in data]
+            labels = [d[2] for d in data]
 
             num_samples = images.shape[0]
             if num_samples < batch_size:
@@ -358,10 +359,25 @@ class DeepLabv3p(BaseAPI):
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
 
-            mask = labels != self.ignore_index
-            conf_mat.calculate(pred=pred, label=labels, ignore=mask)
+            for i in range(num_samples):
+                one_pred = pred[i].astype('uint8')
+                one_label = labels[i]
+                for info in im_info[i][::-1]:
+                    if info[0] == 'resize':
+                        w, h = info[1][1], info[1][0]
+                        one_pred = cv2.resize(one_pred, (w, h), cv2.INTER_NEAREST)
+                    elif info[0] == 'padding':
+                        w, h = info[1][1], info[1][0]
+                        one_pred = one_pred[0:h, 0:w]
+                    else:
+                        raise Exception("Unexpected info '{}' in im_info".format(
+                            info[0]))
+                one_pred = one_pred.astype('int64')
+                one_pred = one_pred[np.newaxis, :, :, np.newaxis]
+                one_label = one_label[np.newaxis, np.newaxis, :, :]
+                mask = one_label != self.ignore_index
+                conf_mat.calculate(pred=one_pred, label=one_label, ignore=mask)
             _, iou = conf_mat.mean_iou()
-
             logging.debug("[EVAL] Epoch={}, Step={}/{}, iou={}".format(
                 epoch_id, step + 1, total_steps, iou))
 
