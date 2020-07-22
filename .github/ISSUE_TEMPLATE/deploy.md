@@ -1,5 +1,5 @@
 ---
-name: 模型部署
+name: 3. 模型部署
 about: 模型部署相关问题，包括C++、Python、Paddle Lite等
 ---
 
