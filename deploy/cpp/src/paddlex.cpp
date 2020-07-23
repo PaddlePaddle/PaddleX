@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <omp.h>
+#include <thread>
 #include <algorithm>
 #include <fstream>
 #include <cstring>
@@ -123,6 +124,12 @@ bool Model::preprocess(const cv::Mat& input_im, ImageBlob* blob) {
   return true;
 }
 
+void thread_func(Model* model, const std::vector<cv::Mat>& input_im_batch, std::vector<ImageBlob>* blob_batch, const std::vector<int>& indexes) {
+  for (size_t i = 0; i < indexes.size(); ++i) {
+    cv::Mat im = input_im_batch[indexes[i]].clone();
+    model->transforms_.Run(&im, &(*blob_batch)[indexes[i]]);
+  }
+}
 // use openmp
 bool Model::preprocess(const std::vector<cv::Mat>& input_im_batch,
                        std::vector<ImageBlob>* blob_batch,
@@ -130,12 +137,25 @@ bool Model::preprocess(const std::vector<cv::Mat>& input_im_batch,
   int batch_size = input_im_batch.size();
   bool success = true;
   thread_num = std::min(thread_num, batch_size);
-  #pragma omp parallel for num_threads(thread_num)
+  std::vector<std::vector<int>> thread_indexes = std::vector<std::vector<int>>(thread_num);
   for (int i = 0; i < input_im_batch.size(); ++i) {
-    cv::Mat im = input_im_batch[i].clone();
-    if (!transforms_.Run(&im, &(*blob_batch)[i])) {
-      success = false;
-    }
+    int index = i % thread_num;
+    thread_indexes[index].push_back(i);
+  }
+  std::Thread threads[thread_num];
+  for (int i = 0; i < thread_num; ++i) {
+    threads[i] = std::Thread(thread_func, this, input_im_batch, blob_batch, thread_indexes[i]);
+  }
+  for (int i = 0; i < thread_num; ++i) {
+    threads[i].join();
+  }
+//  #pragma omp parallel for num_threads(thread_num)
+//  for (int i = 0; i < input_im_batch.size(); ++i) {
+//    cv::Mat im = input_im_batch[i].clone();
+//    transforms_.Run(&im, &(*blob_batch)[i]);
+//    if (!transforms_.Run(&im, &(*blob_batch)[i])) {
+//      success = false;
+//    }
   }
   return success;
 }
@@ -181,6 +201,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
 bool Model::predict(const std::vector<cv::Mat>& im_batch,
                     std::vector<ClsResult>* results,
                     int thread_num) {
+  clock_t time1 = clock();
   for (auto& inputs : inputs_batch_) {
     inputs.clear();
   }
@@ -194,23 +215,27 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     return false;
   }
   inputs_batch_.assign(im_batch.size(), ImageBlob());
+  clock_t time2 = clock();
   // 处理输入图像
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
+  clock_t time3 = clock();
   // 使用加载的模型进行预测
-  int batch_size = im_batch.size();
-  auto in_tensor = predictor_->GetInputTensor("image");
-  int h = inputs_batch_[0].new_im_size_[0];
-  int w = inputs_batch_[0].new_im_size_[1];
-  in_tensor->Reshape({batch_size, 3, h, w});
   std::vector<float> inputs_data(batch_size * 3 * h * w);
   for (int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(),
               inputs_batch_[i].im_data_.end(),
               inputs_data.begin() + i * 3 * h * w);
   }
+  clock_t time4 = clock();
+
+  auto in_tensor = predictor_->GetInputTensor("image");
+  int batch_size = im_batch.size();
+  int h = inputs_batch_[0].new_im_size_[0];
+  int w = inputs_batch_[0].new_im_size_[1];
+  in_tensor->Reshape({batch_size, 3, h, w});
   in_tensor->copy_from_cpu(inputs_data.data());
   // in_tensor->copy_from_cpu(inputs_.im_data_.data());
   predictor_->ZeroCopyRun();
@@ -236,6 +261,13 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     (*results)[i].score = *ptr;
     (*results)[i].category = labels[(*results)[i].category_id];
   }
+  clock_t time5 = clock();
+  std::cout << "Time Analysis: "
+            << "Init " << (double)(time2 - time1)/CLOCKS_PER_SEC << " "
+            << "Preprocess " << (double)(time3 - time2)/CLOCKS_PER_SEC << " "
+            << "Memory Copy " << (double)(time4 - time3)/CLOCKS_PER_SEC << " "
+            << "Postprocess " << (double)(time5 - time4)/CLOCKS_PER_SEC << std::endl;
+
   return true;
 }
 

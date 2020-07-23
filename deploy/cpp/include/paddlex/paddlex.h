@@ -111,6 +111,7 @@ class Model {
    * */
   bool preprocess(const cv::Mat& input_im, ImageBlob* blob);
 
+
   /*
    * @brief
    * This method aims to transform mutiple image matrixs, the result will be

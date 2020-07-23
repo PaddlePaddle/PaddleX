@@ -13,28 +13,25 @@ pdx.utils.download_and_decompress(veg_dataset, path='./')
 # 定义训练和验证时的transforms
 # API说明https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/cls_transforms.html
 train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224), 
     transforms.RandomHorizontalFlip(),
     transforms.Normalize()
 ])
 eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224), 
     transforms.Normalize()
 ])
 
 # 定义训练和验证所用的数据集
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-imagenet
 train_dataset = pdx.datasets.ImageNet(
-    data_dir='vegetables_cls',
-    file_list='vegetables_cls/train_list.txt',
-    label_list='vegetables_cls/labels.txt',
+    data_dir='imgs',
+    file_list='imgs/train_list.txt',
+    label_list='imgs/labels.txt',
     transforms=train_transforms,
     shuffle=True)
 eval_dataset = pdx.datasets.ImageNet(
-    data_dir='vegetables_cls',
-    file_list='vegetables_cls/val_list.txt',
-    label_list='vegetables_cls/labels.txt',
+    data_dir='imgs',
+    file_list='imgs/train_list.txt',
+    label_list='imgs/labels.txt',
     transforms=eval_transforms)
 
 # 初始化模型，并进行训练
@@ -42,7 +39,7 @@ eval_dataset = pdx.datasets.ImageNet(
 # VisualDL启动方式: visualdl --logdir output/mobilenetv2/vdl_log --port 8001
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
-model = pdx.cls.ResNet50_vd_ssld(num_classes=len(train_dataset.labels))
+model = pdx.cls.ResNet18(num_classes=len(train_dataset.labels))
 
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/classification.html#train
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html

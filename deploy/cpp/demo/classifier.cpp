@@ -16,15 +16,13 @@
 #include <omp.h>
 
 #include <algorithm>
-#include <chrono>  // NOLINT
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <utility>
 #include "include/paddlex/paddlex.h"
-
-using namespace std::chrono;  // NOLINT
 
 DEFINE_string(model_dir, "", "Path of inference model");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
@@ -88,13 +86,18 @@ int main(int argc, char** argv) {
       for (int j = i; j < im_vec_size; ++j) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
+
+      std::clock_t start = clock();
       model.predict(im_vec, &results, thread_num);
-      for (int j = i; j < im_vec_size; ++j) {
-        std::cout << "Path:" << image_paths[j]
-                  << ", predict label: " << results[j - i].category
-                  << ", label_id:" << results[j - i].category_id
-                  << ", score: " << results[j - i].score << std::endl;
-      }
+      std::clock_t end = clock();
+      std::cout << "Time cost: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << std::endl;
+
+//      for (int j = i; j < im_vec_size; ++j) {
+//        std::cout << "Path:" << image_paths[j]
+//                  << ", predict label: " << results[j - i].category
+//                  << ", label_id:" << results[j - i].category_id
+//                  << ", score: " << results[j - i].score << std::endl;
+//      }
     }
   } else {
     PaddleX::ClsResult result;
