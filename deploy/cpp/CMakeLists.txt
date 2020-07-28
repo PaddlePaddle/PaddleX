@@ -50,7 +50,9 @@ endmacro()
 
 
 if (WITH_ENCRYPTION)
-add_definitions( -DWITH_ENCRYPTION=${WITH_ENCRYPTION})
+  if (NOT (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64"))
+    add_definitions( -DWITH_ENCRYPTION=${WITH_ENCRYPTION})
+  endif()
 endif()
 
 if (WITH_MKL)
@@ -268,9 +270,11 @@ endif()
 
 if(WITH_ENCRYPTION)
   if(NOT WIN32)
+    if (NOT (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64"))
       include_directories("${ENCRYPTION_DIR}/include")
       link_directories("${ENCRYPTION_DIR}/lib")
       set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/libpmodel-decrypt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif()
   else()
       include_directories("${ENCRYPTION_DIR}/include")
       link_directories("${ENCRYPTION_DIR}/lib")
@@ -335,7 +339,6 @@ if (WIN32 AND WITH_MKL)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./release/mkldnn.dll
     )
     add_custom_command(TARGET video_classifier POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
@@ -357,7 +360,6 @@ if (WIN32 AND WITH_MKL)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./release/mkldnn.dll
     )
     # for encryption
     if (EXISTS "${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll")

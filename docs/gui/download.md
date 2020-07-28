@@ -1,10 +1,10 @@
-## <a name="2">PaddleX GUI安装</a>
+## PaddleX GUI安装
 
  PaddleX GUI是提升项目开发效率的核心模块，开发者可快速完成深度学习模型全流程开发。我们诚挚地邀请您前往 [官网](https://www.paddlepaddle.org.cn/paddle/paddleX)下载试用PaddleX GUI可视化前端，并获得您宝贵的意见或开源项目贡献。
 
 
 
-#### <a name="1">安装推荐环境</a>
+### 安装推荐环境
 
 * **操作系统**：
   * Windows7/8/10（推荐Windows 10）；
