@@ -18,6 +18,8 @@ import numpy as np
 import yaml
 import paddlex
 import paddle.fluid as fluid
+from paddlex.cv.transforms import build_transforms
+from paddlex.cv.models import BaseClassifier, YOLOv3, FasterRCNN, MaskRCNN, DeepLabv3p
 
 
 class Predictor:
@@ -68,8 +70,8 @@ class Predictor:
             to_rgb = True
         else:
             to_rgb = False
-        self.transforms = self.build_transforms(self.info['Transforms'],
-                                                to_rgb)
+        self.transforms = build_transforms(self.model_type,
+                                           self.info['Transforms'], to_rgb)
         self.predictor = self.create_predictor(
             use_gpu, gpu_id, use_mkl, use_trt, use_glog, memory_optimize)
 
@@ -105,76 +107,100 @@ class Predictor:
         predictor = fluid.core.create_paddle_predictor(config)
         return predictor
 
-    def build_transforms(self, transforms_info, to_rgb=True):
-        if self.model_type == "classifier":
-            from paddlex.cls import transforms
-        elif self.model_type == "detector":
-            from paddlex.det import transforms
-        elif self.model_type == "segmenter":
-            from paddlex.seg import transforms
-        op_list = list()
-        for op_info in transforms_info:
-            op_name = list(op_info.keys())[0]
-            op_attr = op_info[op_name]
-            if not hasattr(transforms, op_name):
-                raise Exception(
-                    "There's no operator named '{}' in transforms of {}".
-                    format(op_name, self.model_type))
-            op_list.append(getattr(transforms, op_name)(**op_attr))
-        eval_transforms = transforms.Compose(op_list)
-        if hasattr(eval_transforms, 'to_rgb'):
-            eval_transforms.to_rgb = to_rgb
-        self.arrange_transforms(eval_transforms)
-        return eval_transforms
-
-    def arrange_transforms(self, transforms):
-        if self.model_type == 'classifier':
-            arrange_transform = paddlex.cls.transforms.ArrangeClassifier
-        elif self.model_type == 'segmenter':
-            arrange_transform = paddlex.seg.transforms.ArrangeSegmenter
-        elif self.model_type == 'detector':
-            arrange_name = 'Arrange{}'.format(self.model_name)
-            arrange_transform = getattr(paddlex.det.transforms, arrange_name)
-        else:
-            raise Exception("Unrecognized model type: {}".format(
-                self.model_type))
-        if type(transforms.transforms[-1]).__name__.startswith('Arrange'):
-            transforms.transforms[-1] = arrange_transform(mode='test')
-        else:
-            transforms.transforms.append(arrange_transform(mode='test'))
-
-    def preprocess(self, image):
+    def preprocess(self, image, thread_num=1):
         """ 对图像做预处理
 
             Args:
-                image(str|np.ndarray): 图片路径或np.ndarray，如为后者，要求是BGR格式
+                image(list|tuple): 数组中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
+                    且类型为float32且为BGR格式的数组。
         """
         res = dict()
         if self.model_type == "classifier":
-            im, = self.transforms(image)
-            im = np.expand_dims(im, axis=0).copy()
+            im = BaseClassifier._preprocess(
+                image,
+                self.transforms,
+                self.model_type,
+                self.model_name,
+                thread_num=thread_num)
             res['image'] = im
         elif self.model_type == "detector":
             if self.model_name == "YOLOv3":
-                im, im_shape = self.transforms(image)
-                im = np.expand_dims(im, axis=0).copy()
-                im_shape = np.expand_dims(im_shape, axis=0).copy()
+                im, im_size = YOLOv3._preprocess(
+                    image,
+                    self.transforms,
+                    self.model_type,
+                    self.model_name,
+                    thread_num=thread_num)
                 res['image'] = im
-                res['im_size'] = im_shape
+                res['im_size'] = im_size
             if self.model_name.count('RCNN') > 0:
-                im, im_resize_info, im_shape = self.transforms(image)
-                im = np.expand_dims(im, axis=0).copy()
-                im_resize_info = np.expand_dims(im_resize_info, axis=0).copy()
-                im_shape = np.expand_dims(im_shape, axis=0).copy()
+                im, im_resize_info, im_shape = FasterRCNN._preprocess(
+                    image,
+                    self.transforms,
+                    self.model_type,
+                    self.model_name,
+                    thread_num=thread_num)
                 res['image'] = im
                 res['im_info'] = im_resize_info
                 res['im_shape'] = im_shape
         elif self.model_type == "segmenter":
-            im, im_info = self.transforms(image)
-            im = np.expand_dims(im, axis=0).copy()
+            im, im_info = DeepLabv3p._preprocess(
+                image,
+                self.transforms,
+                self.model_type,
+                self.model_name,
+                thread_num=thread_num)
             res['image'] = im
             res['im_info'] = im_info
         return res
+
+    def postprocess(self,
+                    results,
+                    topk=1,
+                    batch_size=1,
+                    im_shape=None,
+                    im_info=None):
+        """ 对预测结果做后处理
+
+            Args:
+                results (list): 预测结果
+                topk (int): 分类预测时前k个最大值
+                batch_size (int): 预测时图像批量大小
+                im_shape (list): MaskRCNN的图像输入大小
+                im_info (list)：RCNN系列和分割网络的原图大小
+        """
+
+        def offset_to_lengths(lod):
+            offset = lod[0]
+            lengths = [
+                offset[i + 1] - offset[i] for i in range(len(offset) - 1)
+            ]
+            return [lengths]
+
+        if self.model_type == "classifier":
+            true_topk = min(self.num_classes, topk)
+            preds = BaseClassifier._postprocess([results[0][0]], true_topk,
+                                                self.labels)
+        elif self.model_type == "detector":
+            res = {'bbox': (results[0][0], offset_to_lengths(results[0][1])), }
+            res['im_id'] = (np.array(
+                [[i] for i in range(batch_size)]).astype('int32'), [[]])
+            if self.model_name == "YOLOv3":
+                preds = YOLOv3._postprocess(res, batch_size, self.num_classes,
+                                            self.labels)
+            elif self.model_name == "FasterRCNN":
+                preds = FasterRCNN._postprocess(res, batch_size,
+                                                self.num_classes, self.labels)
+            elif self.model_name == "MaskRCNN":
+                res['mask'] = (results[1][0], offset_to_lengths(results[1][1]))
+                res['im_shape'] = (im_shape, [])
+                preds = MaskRCNN._postprocess(
+                    res, batch_size, self.num_classes,
+                    self.mask_head_resolution, self.labels)
+        elif self.model_type == "segmenter":
+            res = [results[0][0], results[1][0]]
+            preds = DeepLabv3p._postprocess(res, im_info)
+        return preds
 
     def raw_predict(self, inputs):
         """ 接受预处理过后的数据进行预测
@@ -193,82 +219,54 @@ class Predictor:
         output_results = list()
         for name in output_names:
             output_tensor = self.predictor.get_output_tensor(name)
-            output_results.append(output_tensor.copy_to_cpu())
+            output_tensor_lod = output_tensor.lod()
+            output_results.append(
+                [output_tensor.copy_to_cpu(), output_tensor_lod])
         return output_results
 
-    def classifier_postprocess(self, preds, topk=1):
-        """ 对分类模型的预测结果做后处理
-        """
-        true_topk = min(self.num_classes, topk)
-        pred_label = np.argsort(preds[0][0])[::-1][:true_topk]
-        result = [{
-            'category_id': l,
-            'category': self.labels[l],
-            'score': preds[0][0, l],
-        } for l in pred_label]
-        return result
-
-    def segmenter_postprocess(self, preds, preprocessed_inputs):
-        """ 对语义分割结果做后处理
-        """
-        label_map = np.squeeze(preds[0]).astype('uint8')
-        score_map = np.squeeze(preds[1])
-        score_map = np.transpose(score_map, (1, 2, 0))
-        im_info = preprocessed_inputs['im_info']
-        for info in im_info[::-1]:
-            if info[0] == 'resize':
-                w, h = info[1][1], info[1][0]
-                label_map = cv2.resize(label_map, (w, h), cv2.INTER_NEAREST)
-                score_map = cv2.resize(score_map, (w, h), cv2.INTER_LINEAR)
-            elif info[0] == 'padding':
-                w, h = info[1][1], info[1][0]
-                label_map = label_map[0:h, 0:w]
-                score_map = score_map[0:h, 0:w, :]
-            else:
-                raise Exception("Unexpected info '{}' in im_info".format(info[
-                    0]))
-        return {'label_map': label_map, 'score_map': score_map}
-
-    def detector_postprocess(self, preds, preprocessed_inputs):
-        """ 对目标检测和实例分割结果做后处理
-        """
-        bboxes = {'bbox': (np.array(preds[0]), [[len(preds[0])]])}
-        bboxes['im_id'] = (np.array([[0]]).astype('int32'), [])
-        clsid2catid = dict({i: i for i in range(self.num_classes)})
-        xywh_results = paddlex.cv.models.utils.detection_eval.bbox2out(
-            [bboxes], clsid2catid)
-        results = list()
-        for xywh_res in xywh_results:
-            del xywh_res['image_id']
-            xywh_res['category'] = self.labels[xywh_res['category_id']]
-            results.append(xywh_res)
-        if len(preds) > 1:
-            im_shape = preprocessed_inputs['im_shape']
-            bboxes['im_shape'] = (im_shape, [])
-            bboxes['mask'] = (np.array(preds[1]), [[len(preds[1])]])
-            segm_results = paddlex.cv.models.utils.detection_eval.mask2out(
-                [bboxes], clsid2catid, self.mask_head_resolution)
-            import pycocotools.mask as mask_util
-            for i in range(len(results)):
-                results[i]['mask'] = mask_util.decode(segm_results[i][
-                    'segmentation'])
-        return results
-
-    def predict(self, image, topk=1, threshold=0.5):
+    def predict(self, image, topk=1):
         """ 图片预测
 
             Args:
-                image(str|np.ndarray): 图片路径或np.ndarray格式，如果后者，要求为BGR输入格式
+                image(str|np.ndarray): 图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
                 topk(int): 分类预测时使用，表示预测前topk的结果
         """
-        preprocessed_input = self.preprocess(image)
+        preprocessed_input = self.preprocess([image])
         model_pred = self.raw_predict(preprocessed_input)
+        im_shape = None if 'im_shape' not in preprocessed_input else preprocessed_input[
+            'im_shape']
+        im_info = None if 'im_info' not in preprocessed_input else preprocessed_input[
+            'im_info']
+        results = self.postprocess(
+            model_pred,
+            topk=topk,
+            batch_size=1,
+            im_shape=im_shape,
+            im_info=im_info)
 
-        if self.model_type == "classifier":
-            results = self.classifier_postprocess(model_pred, topk)
-        elif self.model_type == "detector":
-            results = self.detector_postprocess(model_pred, preprocessed_input)
-        elif self.model_type == "segmenter":
-            results = self.segmenter_postprocess(model_pred,
-                                                 preprocessed_input)
+        return results[0]
+
+    def batch_predict(self, image_list, topk=1, thread_num=2):
+        """ 图片预测
+
+            Args:
+                image_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                    也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+                thread_num (int): 并发执行各图像预处理时的线程数。
+
+                topk(int): 分类预测时使用，表示预测前topk的结果
+        """
+        preprocessed_input = self.preprocess(image_list)
+        model_pred = self.raw_predict(preprocessed_input)
+        im_shape = None if 'im_shape' not in preprocessed_input else preprocessed_input[
+            'im_shape']
+        im_info = None if 'im_info' not in preprocessed_input else preprocessed_input[
+            'im_info']
+        results = self.postprocess(
+            model_pred,
+            topk=topk,
+            batch_size=len(image_list),
+            im_shape=im_shape,
+            im_info=im_info)
+
         return results

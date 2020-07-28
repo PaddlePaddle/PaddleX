@@ -1,18 +1,31 @@
-# 检测和实例分割-det.transforms
+# paddlex.det.transforms
 
-对目标检测任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
+对目标检测/实例分割任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
 
-## Compose类
+## Compose
 ```python
 paddlex.det.transforms.Compose(transforms)
 ```
 
-根据数据预处理/增强算子对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/detection/yolov3_mobilenetv1.py#L13)
+根据数据预处理/增强算子对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py#L15)
 
 ### 参数
 * **transforms** (list): 数据预处理/数据增强列表。
 
-## ResizeByShort类
+## Normalize
+```python
+paddlex.det.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+```
+
+对图像进行标准化。  
+1. 归一化图像到到区间[0.0, 1.0]。  
+2. 对图像进行减均值除以标准差操作。
+
+### 参数
+* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
+* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+
+## ResizeByShort
 ```python
 paddlex.det.transforms.ResizeByShort(short_size=800, max_size=1333)
 ```
@@ -28,7 +41,7 @@ paddlex.det.transforms.ResizeByShort(short_size=800, max_size=1333)
 * **short_size** (int): 短边目标长度。默认为800。
 * **max_size** (int): 长边目标长度的最大限制。默认为1333。
 
-## Padding类
+## Padding
 ```python
 paddlex.det.transforms.Padding(coarsest_stride=1)
 ```
@@ -41,7 +54,7 @@ paddlex.det.transforms.Padding(coarsest_stride=1)
 ### 参数
 * **coarsest_stride** (int): 填充后的图像长、宽为该参数的倍数，默认为1。
 
-## Resize类
+## Resize
 ```python
 paddlex.det.transforms.Resize(target_size=608, interp='LINEAR')
 ```
@@ -55,7 +68,7 @@ paddlex.det.transforms.Resize(target_size=608, interp='LINEAR')
 * **target_size** (int/list/tuple): 短边目标长度。默认为608。
 * **interp** (str): resize的插值方式，与opencv的插值方式对应，取值范围为['NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM']。默认为"LINEAR"。
 
-## RandomHorizontalFlip类
+## RandomHorizontalFlip
 ```python
 paddlex.det.transforms.RandomHorizontalFlip(prob=0.5)
 ```
@@ -65,20 +78,7 @@ paddlex.det.transforms.RandomHorizontalFlip(prob=0.5)
 ### 参数
 * **prob** (float): 随机水平翻转的概率。默认为0.5。
 
-## Normalize类
-```python
-paddlex.det.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-```
-
-对图像进行标准化。  
-1. 归一化图像到到区间[0.0, 1.0]。  
-2. 对图像进行减均值除以标准差操作。
-
-### 参数
-* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
-
-## RandomDistort类
+## RandomDistort
 ```python
 paddlex.det.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
@@ -99,7 +99,7 @@ paddlex.det.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, 
 * **hue_range** (int): 色调因子的范围。默认为18。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
 
-## MixupImage类
+## MixupImage
 ```python
 paddlex.det.transforms.MixupImage(alpha=1.5, beta=1.5, mixup_epoch=-1)
 ```
@@ -141,7 +141,7 @@ paddlex.det.transforms.RandomExpand(ratio=4., prob=0.5, fill_value=[123.675, 116
 
 【注意】该数据增强必须在数据增强Resize、ResizeByShort之前使用。
 
-## RandomCrop类
+## RandomCrop
 ```python
 paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3, .5, .7, .9], scaling=[.3, 1.], num_attempts=50, allow_no_crop=True, cover_all_box=False)
 ```
@@ -168,14 +168,15 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
 * **allow_no_crop** (bool): 是否允许未进行裁剪。默认值为True。
 * **cover_all_box** (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
 
-## ComposedRCNNTransforms类
+<!--
+## ComposedRCNNTransforms
 ```python
-paddlex.det.transforms.ComposedRCNNTransforms(mode, min_max_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.det.transforms.ComposedRCNNTransforms(mode, min_max_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
 ```
 目标检测FasterRCNN和实例分割MaskRCNN模型中已经组合好的数据处理流程，开发者可以直接使用ComposedRCNNTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomHorizontalFlip](#RandomHorizontalFlip)数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
 ComposedRCNNTransforms共包括以下几个步骤：
 > 训练阶段：
-> > 1. 随机以0.5的概率将图像水平翻转
+> > 1. 随机以0.5的概率将图像水平翻转, 若random_horizontal_flip为False，则跳过此步骤
 > > 2. 将图像进行归一化
 > > 3. 图像采用[ResizeByShort](#ResizeByShort)方式，根据min_max_size参数，进行缩入
 > > 4. 使用[Padding](#Padding)将图像的长和宽分别Padding成32的倍数
@@ -189,6 +190,7 @@ ComposedRCNNTransforms共包括以下几个步骤：
 * **min_max_size** (list): 输入模型中图像的最短边长度和最长边长度，参考[ResizeByShort](#ResizeByShort)（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)，默认[800, 1333]
 * **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
 * **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
+* **random_horizontal_flip**(bool): 数据增强，是否以0.5的概率使用随机水平翻转增强，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
 ### 添加数据增强方式
 ```python
@@ -232,19 +234,19 @@ eval_transforms = transforms.Composed([
 ```
 
 
-## ComposedYOLOv3Transforms类
+## ComposedYOLOv3Transforms
 ```python
-paddlex.det.transforms.ComposedYOLOv3Transforms(mode, shape=[608, 608], mixup_epoch=250, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.det.transforms.ComposedYOLOv3Transforms(mode, shape=[608, 608], mixup_epoch=250, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_distort=True, random_expand=True, random_crop=True, random_horizontal_flip=True)
 ```
 目标检测YOLOv3模型中已经组合好的数据处理流程，开发者可以直接使用ComposedYOLOv3Transforms，简化手动组合transforms的过程, 该类中已经包含了[MixupImage](#MixupImage)、[RandomDistort](#RandomDistort)、[RandomExpand](#RandomExpand)、[RandomCrop](#RandomCrop)、[RandomHorizontalFlip](#RandomHorizontalFlip)5种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
 ComposedYOLOv3Transforms共包括以下几个步骤：
 > 训练阶段：
-> > 1. 在前mixup_epoch轮迭代中，使用MixupImage策略
-> > 2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调
-> > 3. 随机扩充图像
-> > 4. 随机裁剪图像
+> > 1. 在前mixup_epoch轮迭代中，使用MixupImage策略，若mixup_epoch为-1，则跳过此步骤
+> > 2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调，若random_distort为False，则跳过此步骤
+> > 3. 随机扩充图像，若random_expand为False， 则跳过此步骤
+> > 4. 随机裁剪图像，若random_crop为False， 则跳过此步骤
 > > 5. 将4步骤的输出图像Resize成shape参数的大小
-> > 6. 随机0.5的概率水平翻转图像
+> > 6. 随机0.5的概率水平翻转图像，若random_horizontal_flip为False，则跳过此步骤
 > > 7. 图像归一化
 > 验证/预测阶段：
 > > 1. 将图像Resize成shape参数大小
@@ -253,9 +255,13 @@ ComposedYOLOv3Transforms共包括以下几个步骤：
 ### 参数
 * **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
 * **shape** (list): 输入模型中图像的大小（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)， 默认[608, 608]
-* **mixup_epoch**(int): 模型训练过程中，在前mixup_epoch轮迭代中，使用mixup策略，如果为-1，则不使用mixup策略， 默认250。
+* **mixup_epoch**(int): 模型训练过程中，在前mixup_epoch轮迭代中，使用mixup策略，如果为-1，则不使用mixup策略， 默认250。底层实现采用[paddlex.det.transforms.MixupImage](#mixupimage)
 * **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
 * **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
+* **random_distort**(bool): 数据增强，是否在训练过程中随机扰动图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomDistort](#randomdistort)
+* **random_expand**(bool): 数据增强，是否在训练过程随机扩张图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomExpand](#randomexpand)
+* **random_crop**(bool): 数据增强，是否在训练过程中随机裁剪图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomCrop](#randomcrop)
+* **random_horizontal_flip**(bool): 数据增强，是否在训练过程中随机水平翻转图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
 ### 添加数据增强方式
 ```python
@@ -297,3 +303,4 @@ eval_transforms = transforms.Composed([
 		transforms.Normalize()
 ])
 ```
+-->

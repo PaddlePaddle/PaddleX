@@ -67,8 +67,7 @@ sensitivities_data = {
     'https://bj.bcebos.com/paddlex/slim_prune/yolov3_darknet53.sensitivities',
     'YOLOv3_ResNet34':
     'https://bj.bcebos.com/paddlex/slim_prune/yolov3_resnet34.sensitivities',
-    'UNet':
-    'https://bj.bcebos.com/paddlex/slim_prune/unet.sensitivities',
+    'UNet': 'https://bj.bcebos.com/paddlex/slim_prune/unet.sensitivities',
     'DeepLabv3p_MobileNetV2_x0.25':
     'https://bj.bcebos.com/paddlex/slim_prune/deeplab_mobilenetv2_x0.25_no_aspp_decoder.sensitivities',
     'DeepLabv3p_MobileNetV2_x0.5':
@@ -103,8 +102,8 @@ def get_sensitivities(flag, model, save_dir):
         model_type = model_name + '_' + model.backbone
     if model_type.startswith('DeepLabv3p_Xception'):
         model_type = model_type + '_' + 'aspp' + '_' + 'decoder'
-    elif hasattr(model, 'encoder_with_aspp') or hasattr(
-            model, 'enable_decoder'):
+    elif hasattr(model, 'encoder_with_aspp') or hasattr(model,
+                                                        'enable_decoder'):
         model_type = model_type + '_' + 'aspp' + '_' + 'decoder'
     if osp.isfile(flag):
         return flag
@@ -116,7 +115,6 @@ def get_sensitivities(flag, model, save_dir):
         paddlex.utils.download(url, path=save_dir)
         return osp.join(save_dir, fname)
 
-
 #        try:
 #            hub.download(fname, save_path=save_dir)
 #        except Exception as e:
@@ -126,7 +124,7 @@ def get_sensitivities(flag, model, save_dir):
 #                        model_type, fname))
 #            elif isinstance(e, hub.ServerConnectionError):
 #                raise Exception(
-#                    "Cannot get reource for model {}(key='{}'), please check your internet connecgtion"
+#                    "Cannot get reource for model {}(key='{}'), please check your internet connection"
 #                    .format(model_type, fname))
 #            else:
 #                raise Exception(
@@ -162,27 +160,29 @@ def get_prune_params(model):
         if model_type == 'AlexNet':
             prune_names.remove('conv5_weights')
         if model_type == 'ShuffleNetV2':
-            not_prune_names = ['stage_2_1_conv5_weights',
-                        'stage_2_1_conv3_weights',
-                        'stage_2_2_conv3_weights',
-                        'stage_2_3_conv3_weights',
-                        'stage_2_4_conv3_weights',
-                        'stage_3_1_conv5_weights',
-                        'stage_3_1_conv3_weights',
-                        'stage_3_2_conv3_weights',
-                        'stage_3_3_conv3_weights',
-                        'stage_3_4_conv3_weights',
-                        'stage_3_5_conv3_weights',
-                        'stage_3_6_conv3_weights',
-                        'stage_3_7_conv3_weights',
-                        'stage_3_8_conv3_weights',
-                        'stage_4_1_conv5_weights',
-                        'stage_4_1_conv3_weights',
-                        'stage_4_2_conv3_weights',
-                        'stage_4_3_conv3_weights',
-                        'stage_4_4_conv3_weights',]
+            not_prune_names = [
+                'stage_2_1_conv5_weights',
+                'stage_2_1_conv3_weights',
+                'stage_2_2_conv3_weights',
+                'stage_2_3_conv3_weights',
+                'stage_2_4_conv3_weights',
+                'stage_3_1_conv5_weights',
+                'stage_3_1_conv3_weights',
+                'stage_3_2_conv3_weights',
+                'stage_3_3_conv3_weights',
+                'stage_3_4_conv3_weights',
+                'stage_3_5_conv3_weights',
+                'stage_3_6_conv3_weights',
+                'stage_3_7_conv3_weights',
+                'stage_3_8_conv3_weights',
+                'stage_4_1_conv5_weights',
+                'stage_4_1_conv3_weights',
+                'stage_4_2_conv3_weights',
+                'stage_4_3_conv3_weights',
+                'stage_4_4_conv3_weights',
+            ]
             for name in not_prune_names:
-                 prune_names.remove(name)
+                prune_names.remove(name)
     elif model_type == "MobileNetV1":
         prune_names.append("conv1_weights")
         for param in program.global_block().all_parameters():

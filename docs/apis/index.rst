@@ -1,13 +1,12 @@
-PaddleX API说明文档
+API接口说明
 ============================
 
 .. toctree::
    :maxdepth: 2
 
    transforms/index.rst
-   datasets/index.rst
+   datasets.md
    models/index.rst
    slim.md
-   load_model.md
    visualize.md
-   deploy.md
+   interpret.md

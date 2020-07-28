@@ -1,6 +1,6 @@
-# 图像分类
+# Image Classification
 
-## ResNet50类
+## paddlex.cls.ResNet50
 
 ```python
 paddlex.cls.ResNet50(num_classes=1000)
@@ -12,7 +12,7 @@ paddlex.cls.ResNet50(num_classes=1000)
 
 > - **num_classes** (int): 类别数。默认为1000。  
 
-### train 训练接口
+### train
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, save_interval_epochs=1, log_interval_steps=2, save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=0.025, warmup_steps=0, warmup_start_lr=0.0, lr_decay_epochs=[30, 60, 90], lr_decay_gamma=0.1, use_vdl=False, sensitivities_file=None, eval_metric_loss=0.05, early_stop=False, early_stop_patience=5, resume_checkpoint=None)
@@ -41,7 +41,7 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, s
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
 > > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
 
-### evaluate 评估接口
+### evaluate
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, return_details=False)
@@ -59,7 +59,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, return_details=False)
 > > - **dict**: 当return_details为False时，返回dict, 包含关键字：'acc1'、'acc5'，分别表示最大值的accuracy、前5个最大值的accuracy。
 > > - **tuple** (metrics, eval_details): 当`return_details`为True时，增加返回dict，包含关键字：'true_labels'、'pred_scores'，分别代表真实类别id、每个类别的预测得分。
 
-### predict 预测接口
+### predict
 
 ```python
 predict(self, img_file, transforms=None, topk=5)
@@ -69,7 +69,7 @@ predict(self, img_file, transforms=None, topk=5)
 
 > **参数**
 >
-> > - **img_file** (str): 预测图像路径。
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
 > > - **transforms** (paddlex.cls.transforms): 数据预处理操作。
 > > - **topk** (int): 预测时前k个最大值。
 
@@ -78,117 +78,52 @@ predict(self, img_file, transforms=None, topk=5)
 > > - **list**: 其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，
 > >       分别对应预测类别id、预测类别标签、预测得分。
 
-## 其它分类器类
+### batch_predict
 
-PaddleX提供了共计22种分类器，所有分类器均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](https://paddlex.readthedocs.io/zh_CN/latest/appendix/model_zoo.html)。
-
-### ResNet18
 ```python
-paddlex.cls.ResNet18(num_classes=1000)
+batch_predict(self, img_file_list, transforms=None, topk=5, thread_num=2)
 ```
 
-### ResNet34
-```python
-paddlex.cls.ResNet34(num_classes=1000)
-```
+> 分类模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`ResNet50.test_transforms`和`ResNet50.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`batch_predict`接口时，用户需要再重新定义test_transforms传入给`batch_predict`接口。
+
+> **参数**
+>
+> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **transforms** (paddlex.cls.transforms): 数据预处理操作。
+> > - **topk** (int): 预测时前k个最大值。
+> > - **thread_num** (int): 并发执行各图像预处理时的线程数。
+
+> **返回值**
+>
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测列表中，其中元素均为字典。字典的关键字为'category_id'、'category'、'score'，分别对应预测类别id、预测类别标签、预测得分。
 
 
-### ResNet50
-```python
-paddlex.cls.ResNet50(num_classes=1000)
-```
+## 其它分类模型
 
-### ResNet50_vd
-```python
-paddlex.cls.ResNet50_vd(num_classes=1000)
-```
+PaddleX提供了共计22种分类模型，所有分类模型均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](https://paddlex.readthedocs.io/zh_CN/latest/appendix/model_zoo.html)。
 
-### ResNet50_vd_ssld
-```python
-paddlex.cls.ResNet50_vd_ssld(num_classes=1000)
-```
-
-### ResNet101
-```python
-paddlex.cls.ResNet101(num_classes=1000)
-```
-
-### ResNet101_vd
-```python
-paddlex.cls.ResNet101_vdnum_classes=1000)
-```
-
-### ResNet101_vd_ssld
-```python
-paddlex.cls.ResNet101_vd_ssld(num_classes=1000)
-```
-
-### DarkNet53
-```python
-paddlex.cls.DarkNet53(num_classes=1000)
-```
-
-### MobileNetV1
-```python
-paddlex.cls.MobileNetV1(num_classes=1000)
-```
-
-### MobileNetV2
-```python
-paddlex.cls.MobileNetV2(num_classes=1000)
-```
-
-### MobileNetV3_small
-```python
-paddlex.cls.MobileNetV3_small(num_classes=1000)
-```
-
-### MobileNetV3_small_ssld
-```python
-paddlex.cls.MobileNetV3_small_ssld(num_classes=1000)
-```
-
-### MobileNetV3_large
-```python
-paddlex.cls.MobileNetV3_large(num_classes=1000)
-```
-
-### MobileNetV3_large_ssld
-```python
-paddlex.cls.MobileNetV3_large_ssld(num_classes=1000)
-```
-
-### Xception65
-```python
-paddlex.cls.Xception65(num_classes=1000)
-```
-
-### Xception71
-```python
-paddlex.cls.Xception71(num_classes=1000)
-```
-
-### ShuffleNetV2
-```python
-paddlex.cls.ShuffleNetV2(num_classes=1000)
-```
-
-### DenseNet121
-```python
-paddlex.cls.DenseNet121(num_classes=1000)
-```
-
-### DenseNet161
-```python
-paddlex.cls.DenseNet161(num_classes=1000)
-```
-
-### DenseNet201
-```python
-paddlex.cls.DenseNet201(num_classes=1000)
-```
-
-### HRNet_W18
-```python
-paddlex.cls.HRNet_W18(num_classes=1000)
-```
+| 模型              | 接口                    |
+| :---------------- | :---------------------- |
+| ResNet18          | paddlex.cls.ResNet18(num_classes=1000) |
+| ResNet34          | paddlex.cls.ResNet34(num_classes=1000) |
+| ResNet50          | paddlex.cls.ResNet50(num_classes=1000) |
+| ResNet50_vd       | paddlex.cls.ResNet50_vd(num_classes=1000) |
+| ResNet50_vd_ssld    | paddlex.cls.ResNet50_vd_ssld(num_classes=1000) |
+| ResNet101          | paddlex.cls.ResNet101(num_classes=1000) |
+| ResNet101_vd        | paddlex.cls.ResNet101_vd(num_classes=1000) |
+| ResNet101_vd_ssld      | paddlex.cls.ResNet101_vd_ssld(num_classes=1000) |
+| DarkNet53      | paddlex.cls.DarkNet53(num_classes=1000) |
+| MoibileNetV1         | paddlex.cls.MobileNetV1(num_classes=1000) |
+| MobileNetV2       | paddlex.cls.MobileNetV2(num_classes=1000) |
+| MobileNetV3_small       | paddlex.cls.MobileNetV3_small(num_classes=1000) |
+| MobileNetV3_small_ssld  | paddlex.cls.MobileNetV3_small_ssld(num_classes=1000) |
+| MobileNetV3_large   | paddlex.cls.MobileNetV3_large(num_classes=1000) |
+| MobileNetV3_large_ssld | paddlex.cls.MobileNetV3_large_ssld(num_classes=1000) |
+| Xception65     | paddlex.cls.Xception65(num_classes=1000) |
+| Xception71     | paddlex.cls.Xception71(num_classes=1000) |
+| ShuffleNetV2     | paddlex.cls.ShuffleNetV2(num_classes=1000) |
+| DenseNet121      | paddlex.cls.DenseNet121(num_classes=1000) |
+| DenseNet161       | paddlex.cls.DenseNet161(num_classes=1000) |
+| DenseNet201       | paddlex.cls.DenseNet201(num_classes=1000) |
+| HRNet_W18       | paddlex.cls.HRNet_W18(num_classes=1000) |
+| AlexNet         | paddlex.cls.AlexNet(num_classes=1000) |

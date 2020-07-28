@@ -81,14 +81,16 @@ class Compose(SegTransform):
                     format(len(im.shape)))
         else:
             try:
-                im = cv2.imread(im).astype('float32')
+                im = cv2.imread(im)
             except:
                 raise ValueError('Can\'t read The image file {}!'.format(im))
+        im = im.astype('float32')
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if label is not None:
             if not isinstance(label, np.ndarray):
                 label = np.asarray(Image.open(label))
+            origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
                 outputs = op(im, im_info, label)
@@ -103,6 +105,10 @@ class Compose(SegTransform):
                     outputs = (im, im_info, label)
                 else:
                     outputs = (im, im_info)
+        if self.transforms[-1].__class__.__name__ == 'ArrangeSegmenter':
+            if self.transforms[-1].mode == 'eval':
+                if label is not None:
+                    outputs = (im, im_info, origin_label)
         return outputs
 
     def add_augmenters(self, augmenters):
@@ -399,7 +405,8 @@ class ResizeByShort(SegTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -1090,9 +1097,12 @@ class ArrangeSegmenter(SegTransform):
                 'quant'时，返回的tuple为(im,)，为图像np.ndarray数据。
         """
         im = permute(im, False)
-        if self.mode == 'train' or self.mode == 'eval':
+        if self.mode == 'train':
             label = label[np.newaxis, :, :]
             return (im, label)
+        if self.mode == 'eval':
+            label = label[np.newaxis, :, :]
+            return (im, im_info, label)
         elif self.mode == 'test':
             return (im, im_info)
         else:
@@ -1102,20 +1112,21 @@ class ArrangeSegmenter(SegTransform):
 class ComposedSegTransforms(Compose):
     """ 语义分割模型(UNet/DeepLabv3p)的图像处理流程，具体如下
         训练阶段：
-        1. 随机对图像以0.5的概率水平翻转
-        2. 按不同的比例随机Resize原图
+        1. 随机对图像以0.5的概率水平翻转，若random_horizontal_flip为False，则跳过此步骤
+        2. 按不同的比例随机Resize原图, 处理方式参考[paddlex.seg.transforms.ResizeRangeScaling](#resizerangescaling)。若min_max_size为None，则跳过此步骤
         3. 从原图中随机crop出大小为train_crop_size大小的子图，如若crop出来的图小于train_crop_size，则会将图padding到对应大小
         4. 图像归一化
-        预测阶段：
-        1. 图像归一化
+       预测阶段：
+        1. 将图像的最长边resize至(min_max_size[0] + min_max_size[1])//2, 短边按比例resize。若min_max_size为None，则跳过此步骤
+        2. 图像归一化
 
         Args:
-            mode(str): 图像处理所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
-            min_max_size(list): 训练过程中，图像的最长边会随机resize至此区间（短边按比例相应resize)；预测阶段，图像最长边会resize至此区间中间值，即(min_size+max_size)/2。默认为[400, 600]
-            train_crop_size(list): 仅在mode为'train`时生效，训练过程中，随机从图像中裁剪出对应大小的子图（如若原图小于此大小，则会padding到此大小)，默认为[400, 600]
-            mean(list): 图像均值
-            std(list): 图像方差
-            random_horizontal_flip(bool): 数据增强方式，仅在mode为`train`时生效，表示训练过程是否随机水平翻转图像，默认为True
+            mode(str): Transforms所处的阶段，包括`train', 'eval'或'test'
+            min_max_size(list): 用于对图像进行resize，具体作用参见上述步骤。
+            train_crop_size(list): 训练过程中随机裁剪原图用于训练，具体作用参见上述步骤。此参数仅在mode为`train`时生效。
+            mean(list): 图像均值, 默认为[0.485, 0.456, 0.406]。
+            std(list): 图像方差，默认为[0.229, 0.224, 0.225]。
+            random_horizontal_flip(bool): 数据增强，是否随机水平翻转图像，此参数仅在mode为`train`时生效。
     """
 
     def __init__(self,
@@ -1127,19 +1138,29 @@ class ComposedSegTransforms(Compose):
                  random_horizontal_flip=True):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
-            transforms = [
-                ResizeRangeScaling(
-                    min_value=min(min_max_size), max_value=max(min_max_size)),
-                RandomPaddingCrop(crop_size=train_crop_size), Normalize(
-                    mean=mean, std=std)
-            ]
+            if min_max_size is None:
+                transforms = [
+                    RandomPaddingCrop(crop_size=train_crop_size), Normalize(
+                        mean=mean, std=std)
+                ]
+            else:
+                transforms = [
+                    ResizeRangeScaling(
+                        min_value=min(min_max_size),
+                        max_value=max(min_max_size)),
+                    RandomPaddingCrop(crop_size=train_crop_size), Normalize(
+                        mean=mean, std=std)
+                ]
             if random_horizontal_flip:
                 transforms.insert(0, RandomHorizontalFlip())
         else:
             # 验证/预测时的transforms
-            long_size = (min(min_max_size) + max(min_max_size)) // 2
-            transforms = [
-                ResizeByLong(long_size=long_size), Normalize(
-                    mean=mean, std=std)
-            ]
+            if min_max_size is None:
+                transforms = [Normalize(mean=mean, std=std)]
+            else:
+                long_size = (min(min_max_size) + max(min_max_size)) // 2
+                transforms = [
+                    ResizeByLong(long_size=long_size), Normalize(
+                        mean=mean, std=std)
+                ]
         super(ComposedSegTransforms, self).__init__(transforms)

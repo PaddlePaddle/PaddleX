@@ -1,8 +1,3 @@
-import os
-# 选择使用0号卡
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-import os.path as osp
 import paddlex as pdx
 
 # 下载和解压Imagenet果蔬分类数据集
@@ -18,6 +13,4 @@ model = pdx.load_model('mini_imagenet_veg_mobilenetv2')
 
 # 可解释性可视化
 pdx.interpret.lime(
-         'mini_imagenet_veg/mushroom/n07734744_1106.JPEG', 
-          model,
-          save_dir='./')
+    'mini_imagenet_veg/mushroom/n07734744_1106.JPEG', model, save_dir='./')

@@ -22,6 +22,7 @@ import numpy as np
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -92,6 +93,8 @@ class VOCDetection(Dataset):
                     break
                 img_file, xml_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                xml_file = path_normalization(xml_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(xml_file):

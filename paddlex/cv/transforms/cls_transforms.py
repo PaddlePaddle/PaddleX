@@ -68,13 +68,14 @@ class Compose(ClsTransform):
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
-                    "im should be 3-dimension, but now is {}-dimensions".format(
-                        len(im.shape)))
+                    "im should be 3-dimension, but now is {}-dimensions".
+                    format(len(im.shape)))
         else:
             try:
-                im = cv2.imread(im).astype('float32')
+                im = cv2.imread(im)
             except:
                 raise TypeError('Can\'t read The image file {}!'.format(im))
+        im = im.astype('float32')
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         for op in self.transforms:
             if isinstance(op, ClsTransform):
@@ -139,8 +140,8 @@ class RandomCrop(ClsTransform):
             tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
                    当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
         """
-        im = random_crop(im, self.crop_size, self.lower_scale, self.lower_ratio,
-                         self.upper_ratio)
+        im = random_crop(im, self.crop_size, self.lower_scale,
+                         self.lower_ratio, self.upper_ratio)
         if label is None:
             return (im, )
         else:
@@ -270,12 +271,14 @@ class ResizeByShort(ClsTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im = cv2.resize(
-            im, (resized_width, resized_height), interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height),
+            interpolation=cv2.INTER_LINEAR)
 
         if label is None:
             return (im, )

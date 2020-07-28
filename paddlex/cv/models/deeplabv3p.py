@@ -18,9 +18,12 @@ import numpy as np
 import tqdm
 import math
 import cv2
+from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
 import paddlex.utils.logging as logging
 import paddlex
+from paddlex.cv.transforms import arrange_transforms
+from paddlex.cv.datasets import generate_minibatch
 from collections import OrderedDict
 from .base import BaseAPI
 from .utils.seg_eval import ConfusionMatrix
@@ -317,7 +320,11 @@ class DeepLabv3p(BaseAPI):
             tuple (metrics, eval_details)：当return_details为True时，增加返回dict (eval_details)，
                 包含关键字：'confusion_matrix'，表示评估的混淆矩阵。
         """
-        self.arrange_transforms(transforms=eval_dataset.transforms, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=eval_dataset.transforms,
+            mode='eval')
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         conf_mat = ConfusionMatrix(self.num_classes, streaming=True)
         data_generator = eval_dataset.generator(
@@ -327,21 +334,14 @@ class DeepLabv3p(BaseAPI):
                 self.parallel_test_prog = fluid.CompiledProgram(
                     self.test_prog).with_data_parallel(
                         share_vars_from=self.parallel_train_prog)
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data])
-
-            _, _, im_h, im_w = images.shape
-            labels = list()
-            for d in data:
-                padding_label = np.zeros(
-                    (1, im_h, im_w)).astype('int64') + self.ignore_index
-                _, label_h, label_w = d[1].shape
-                padding_label[:, :label_h, :label_w] = d[1]
-                labels.append(padding_label)
-            labels = np.array(labels)
+            im_info = [d[1] for d in data]
+            labels = [d[2] for d in data]
 
             num_samples = images.shape[0]
             if num_samples < batch_size:
@@ -359,10 +359,25 @@ class DeepLabv3p(BaseAPI):
             if num_samples < batch_size:
                 pred = pred[0:num_samples]
 
-            mask = labels != self.ignore_index
-            conf_mat.calculate(pred=pred, label=labels, ignore=mask)
+            for i in range(num_samples):
+                one_pred = pred[i].astype('uint8')
+                one_label = labels[i]
+                for info in im_info[i][::-1]:
+                    if info[0] == 'resize':
+                        w, h = info[1][1], info[1][0]
+                        one_pred = cv2.resize(one_pred, (w, h), cv2.INTER_NEAREST)
+                    elif info[0] == 'padding':
+                        w, h = info[1][1], info[1][0]
+                        one_pred = one_pred[0:h, 0:w]
+                    else:
+                        raise Exception("Unexpected info '{}' in im_info".format(
+                            info[0]))
+                one_pred = one_pred.astype('int64')
+                one_pred = one_pred[np.newaxis, :, :, np.newaxis]
+                one_label = one_label[np.newaxis, np.newaxis, :, :]
+                mask = one_label != self.ignore_index
+                conf_mat.calculate(pred=one_pred, label=one_label, ignore=mask)
             _, iou = conf_mat.mean_iou()
-
             logging.debug("[EVAL] Epoch={}, Step={}/{}, iou={}".format(
                 epoch_id, step + 1, total_steps, iou))
 
@@ -379,10 +394,56 @@ class DeepLabv3p(BaseAPI):
             return metrics, eval_details
         return metrics
 
-    def predict(self, im_file, transforms=None):
+    @staticmethod
+    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+        arrange_transforms(
+            model_type=model_type,
+            class_name=class_name,
+            transforms=transforms,
+            mode='test')
+        pool = ThreadPool(thread_num)
+        batch_data = pool.map(transforms, images)
+        pool.close()
+        pool.join()
+        padding_batch = generate_minibatch(batch_data)
+        im = np.array(
+            [data[0] for data in padding_batch],
+            dtype=padding_batch[0][0].dtype)
+        im_info = [data[1] for data in padding_batch]
+        return im, im_info
+
+    @staticmethod
+    def _postprocess(results, im_info):
+        pred_list = list()
+        logit_list = list()
+        for i, (pred, logit) in enumerate(zip(results[0], results[1])):
+            pred = pred.astype('uint8')
+            pred = np.squeeze(pred).astype('uint8')
+            logit = np.transpose(logit, (1, 2, 0))
+            for info in im_info[i][::-1]:
+                if info[0] == 'resize':
+                    w, h = info[1][1], info[1][0]
+                    pred = cv2.resize(pred, (w, h), cv2.INTER_NEAREST)
+                    logit = cv2.resize(logit, (w, h), cv2.INTER_LINEAR)
+                elif info[0] == 'padding':
+                    w, h = info[1][1], info[1][0]
+                    pred = pred[0:h, 0:w]
+                    logit = logit[0:h, 0:w, :]
+                else:
+                    raise Exception("Unexpected info '{}' in im_info".format(
+                        info[0]))
+            pred_list.append(pred)
+            logit_list.append(logit)
+
+        preds = list()
+        for pred, logit in zip(pred_list, logit_list):
+            preds.append({'label_map': pred, 'score_map': logit})
+        return preds
+
+    def predict(self, img_file, transforms=None):
         """预测。
         Args:
-            img_file(str): 预测图像路径。
+            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
             transforms(paddlex.cv.transforms): 数据预处理操作。
 
         Returns:
@@ -392,34 +453,53 @@ class DeepLabv3p(BaseAPI):
 
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
-        if transforms is not None:
-            self.arrange_transforms(transforms=transforms, mode='test')
-            im, im_info = transforms(im_file)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
         else:
-            self.arrange_transforms(
-                transforms=self.test_transforms, mode='test')
-            im, im_info = self.test_transforms(im_file)
-        im = np.expand_dims(im, axis=0)
+            raise Exception("img_file must be str/np.ndarray")
+
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_info = DeepLabv3p._preprocess(
+            images, transforms, self.model_type, self.__class__.__name__)
+
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
                                   feed={'image': im},
                                   fetch_list=list(self.test_outputs.values()),
                                   use_program_cache=True)
-        pred = result[0]
-        pred = np.squeeze(pred).astype('uint8')
-        logit = result[1]
-        logit = np.squeeze(logit)
-        logit = np.transpose(logit, (1, 2, 0))
-        for info in im_info[::-1]:
-            if info[0] == 'resize':
-                w, h = info[1][1], info[1][0]
-                pred = cv2.resize(pred, (w, h), cv2.INTER_NEAREST)
-                logit = cv2.resize(logit, (w, h), cv2.INTER_LINEAR)
-            elif info[0] == 'padding':
-                w, h = info[1][1], info[1][0]
-                pred = pred[0:h, 0:w]
-                logit = logit[0:h, 0:w, :]
-            else:
-                raise Exception("Unexpected info '{}' in im_info".format(info[
-                    0]))
-        return {'label_map': pred, 'score_map': logit}
+
+        preds = DeepLabv3p._postprocess(result, im_info)
+        return preds[0]
+
+    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+        """预测。
+        Args:
+            img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
+                也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
+            transforms(paddlex.cv.transforms): 数据预处理操作。
+            thread_num (int): 并发执行各图像预处理时的线程数。
+
+        Returns:
+            list: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
+                像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)
+        """
+
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+        if not isinstance(img_file_list, (list, tuple)):
+            raise Exception("im_file must be list/tuple")
+        if transforms is None:
+            transforms = self.test_transforms
+        im, im_info = DeepLabv3p._preprocess(
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, thread_num)
+
+        with fluid.scope_guard(self.scope):
+            result = self.exe.run(self.test_prog,
+                                  feed={'image': im},
+                                  fetch_list=list(self.test_outputs.values()),
+                                  use_program_cache=True)
+
+        preds = DeepLabv3p._postprocess(result, im_info)
+        return preds

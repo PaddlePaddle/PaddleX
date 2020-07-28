@@ -175,7 +175,7 @@ class Model {
    * @return true if predict successfully
    * */
   bool predict(const std::vector<cv::Mat> &im_batch,
-               std::vector<DetResult> *result,
+               std::vector<DetResult> *results,
                int thread_num = 1);
 
   /*
@@ -201,7 +201,7 @@ class Model {
    * @return true if predict successfully
    * */
   bool predict(const std::vector<cv::Mat> &im_batch,
-               std::vector<SegResult> *result,
+               std::vector<SegResult> *results,
                int thread_num = 1);
 
   // model type, include 3 type: classifier, detector, segmenter

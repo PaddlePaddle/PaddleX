@@ -17,6 +17,7 @@ from . import logging
 from . import utils
 from . import save
 from .utils import seconds_to_hms
+from .utils import path_normalization
 from .download import download
 from .download import decompress
 from .download import download_and_decompress
