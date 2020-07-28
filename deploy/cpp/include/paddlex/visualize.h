@@ -23,7 +23,7 @@
 #else  // Linux/Unix
 #include <dirent.h>
 // #include <sys/io.h>
-#ifdef __arm__  // for arm
+#if defined(__arm__) || defined(__aarch64__)  // for arm
 #include <aarch64-linux-gpu/sys/stat.h>
 #include <aarch64-linux-gpu/sys/types.h>
 #else

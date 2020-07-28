@@ -14,14 +14,7 @@ WITH_STATIC_LIB=OFF
 # CUDA 的 lib 路径
 CUDA_LIB=/usr/local/cuda/lib64
 # CUDNN 的 lib 路径
-CUDNN_LIB=/usr/local/cuda/lib64
-
-# 是否加载加密后的模型
-WITH_ENCRYPTION=OFF
-
-# OPENCV 路径, 如果使用自带预编译版本可不修改
-sh $(pwd)/scripts/jetson_bootstrap.sh  # 下载预编译版本的opencv
-OPENCV_DIR=$(pwd)/deps/opencv3
+CUDNN_LIB=/usr/lib/aarch64-linux-gnu
 
 # 以下无需改动
 rm -rf build
@@ -31,12 +24,9 @@ cmake .. \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
-    -DWITH_ENCRYPTION=${WITH_ENCRYPTION} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
-    -DCUDNN_LIB=${CUDNN_LIB} \
-    -DENCRYPTION_DIR=${ENCRYPTION_DIR} \
-    -DOPENCV_DIR=${OPENCV_DIR}
+    -DCUDNN_LIB=${CUDNN_LIB}
 make
