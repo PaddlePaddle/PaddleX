@@ -213,8 +213,6 @@ git clone https://github.com/PaddlePaddle/PaddleX
   | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
   | gpu_id	| GPU 设备ID, 默认值为0 |
   | save_dir	| 保存可视化结果的路径, 默认值为"output"|
-  | det_key	| 检测模型加密过程中产生的密钥信息，默认值为""表示加载的是未加密的检测模型 |
-  | seg_key	| 分割模型加密过程中产生的密钥信息，默认值为""表示加载的是未加密的分割模型 |
   | seg_batch_size | 分割的批量大小，默认为2 |
   | thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
   | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
@@ -244,15 +242,6 @@ git clone https://github.com/PaddlePaddle/PaddleX
   ```shell
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
-
-  * 使用加密后的模型对单张图片做预测
-
-  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`/path/to/encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`/path/to/encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
-
-  ```shell
-  ./build/meter_reader/meter_reader --det_model_dir=/path/to/encrypted_det_inference_model --seg_model_dir=/path/to/encrypted_seg_inference_model --image=/path/to/test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
-  ```
-
 
 ## <h2 id="5">模型训练</h2>
 
