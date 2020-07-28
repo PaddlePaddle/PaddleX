@@ -16,9 +16,6 @@ CUDA_LIB=/usr/local/cuda/lib64
 # CUDNN 的 lib 路径
 CUDNN_LIB=/usr/lib/aarch64-linux-gnu
 
-# 是否加载加密后的模型(jetson版本预测库暂不支持模型加密)
-WITH_ENCRYPTION=OFF
-
 # 以下无需改动
 rm -rf build
 mkdir -p build
@@ -27,11 +24,9 @@ cmake .. \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
-    -DWITH_ENCRYPTION=${WITH_ENCRYPTION} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
-    -DCUDNN_LIB=${CUDNN_LIB} \
-    -DENCRYPTION_DIR=${ENCRYPTION_DIR} \
+    -DCUDNN_LIB=${CUDNN_LIB}
 make
