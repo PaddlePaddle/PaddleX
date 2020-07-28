@@ -61,8 +61,10 @@ if (NOT DEFINED PADDLE_DIR OR ${PADDLE_DIR} STREQUAL "")
     message(FATAL_ERROR "please set PADDLE_DIR with -DPADDLE_DIR=/path/paddle_influence_dir")
 endif()
 
-if (NOT DEFINED OPENCV_DIR OR ${OPENCV_DIR} STREQUAL "")
+if (${CMAKE_SYSTEM_PROCESSOR} NOT STREQUAL "aarch64")
+  if (NOT DEFINED OPENCV_DIR OR ${OPENCV_DIR} STREQUAL "")
     message(FATAL_ERROR "please set OPENCV_DIR with -DOPENCV_DIR=/path/opencv")
+  endif()
 endif()
 
 include_directories("${CMAKE_SOURCE_DIR}/")
