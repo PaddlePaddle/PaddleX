@@ -14,14 +14,10 @@ WITH_STATIC_LIB=OFF
 # CUDA 的 lib 路径
 CUDA_LIB=/usr/local/cuda/lib64
 # CUDNN 的 lib 路径
-CUDNN_LIB=/usr/local/cuda/lib64
+CUDNN_LIB=/usr/lib/aarch64-linux-gnu
 
-# 是否加载加密后的模型
+# 是否加载加密后的模型(jetson版本预测库暂不支持模型加密)
 WITH_ENCRYPTION=OFF
-
-# OPENCV 路径, 如果使用自带预编译版本可不修改
-sh $(pwd)/scripts/jetson_bootstrap.sh  # 下载预编译版本的opencv
-OPENCV_DIR=$(pwd)/deps/opencv3
 
 # 以下无需改动
 rm -rf build
@@ -38,5 +34,4 @@ cmake .. \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
     -DENCRYPTION_DIR=${ENCRYPTION_DIR} \
-    -DOPENCV_DIR=${OPENCV_DIR}
 make

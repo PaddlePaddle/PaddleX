@@ -17,7 +17,6 @@ SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(ENCRYPTION_DIR"" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 
-
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -111,10 +110,17 @@ if (WIN32)
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
   unset(OpenCV_DIR CACHE)
 else ()
-  find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
+  if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") # x86_64 aarch64
+    set(OpenCV_INCLUDE_DIRS "/usr/include/opencv4")
+    file(GLOB OpenCV_LIBS /usr/lib/aarch64-linux-gnu/libopencv_*${CMAKE_SHARED_LIBRARY_SUFFIX})
+    message("OpenCV libs: ${OpenCV_LIBS}")
+  else()
+    find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
+  endif()
   include_directories("${PADDLE_DIR}/paddle/include")
   link_directories("${PADDLE_DIR}/paddle/lib")
 endif ()
+
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 if (WIN32)
@@ -276,6 +282,7 @@ if (NOT WIN32)
 endif()
 
 set(DEPS ${DEPS} ${OpenCV_LIBS})
+
 add_library(paddlex_inference SHARED src/visualize src/transforms.cpp src/paddlex.cpp)
 ADD_DEPENDENCIES(paddlex_inference ext-yaml-cpp)
 target_link_libraries(paddlex_inference ${DEPS})
