@@ -7,7 +7,6 @@ if [ ! -d "./paddlex-encryption" ]; then
 fi
 
 # download pre-compiled opencv lib
-#OPENCV_URL=https://paddleseg.bj.bcebos.com/deploy/docker/opencv3gcc4.8.tar.bz2
 OPENCV_URL=https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2
 if [ ! -d "./deps/opencv3.4.6gcc4.8ffmpeg/" ]; then
     mkdir -p deps

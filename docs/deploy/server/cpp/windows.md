@@ -127,7 +127,7 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
 | save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，classifier无该参数 |
+| save_dir | 保存可视化结果的路径, 默认值为"output" |
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
 
 **注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
@@ -180,7 +180,7 @@ D:\images\xiaoduxiongn.jpeg
 ```shell
 .\paddlex_inference\video_detector.exe --model_dir=D:\projects\inference_model --use_camera=1 --use_gpu=1 --save_dir=output
 ```
-当`save_result`设置为1时，`可视化预测结果`会以视频文件的格式保存在`save_dir`参数设置的目录下。如果系统有GUI，通过将`show_result`设置为1在屏幕上观看可视化预测结果。
+当`save_result`设置为1时，`可视化预测结果`会以视频文件的格式保存在`save_dir`参数设置的目录下。
 
 ### 样例五：(使用未加密的模型对视频文件做预测)
 
