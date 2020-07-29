@@ -13,3 +13,4 @@ PaddleX集成了PaddleClas、PaddleDetection和PaddleSeg三大CV工具套件中�
    instance_segmentation.md
    semantic_segmentation.md
    prediction.md
+   visualdl.md
