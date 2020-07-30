@@ -9,7 +9,11 @@
 
 
 # 模型部署
-## 1 模型转换
+
+## 1 部署模型准备
+部署模型的格式均为目录下包含`__model__`，`__params__`和`model.yml`三个文件，如若不然，则参照[部署模型导出文档](./export_model.md)进行导出。
+
+## 2 模型转换
 首先，我们将`PaddleX`的`Inference Model`转换成`PaddleHub`的预训练模型，使用命令`hub convert`即可一键转换，对此命令的说明如下：
 
 ```shell
@@ -39,7 +43,7 @@ $ The converted module is stored in `MobileNetV3_small_ssld_hub_1596077881.86850
 ```
 等待生成成功的提示后，我们就在输出目录中得到了一个`PaddleHub`的一个预训练模型。
 
-## 2 模型安装
+## 3 模型安装
 在模型转换一步中，我们得到了一个`.tar.gz`格式的预训练模型压缩包，在进行部署之前需要先安装到本机，使用命令`hub install`即可一键安装，对此命令的说明如下：
 ```shell
 $ hub install ${MODULE}
@@ -55,7 +59,7 @@ hub install MobileNetV3_small_ssld_hub_1596077881.868501/mobilenetv3_small_ssld_
 $ Successfully installed mobilenetv3_small_ssld_imagenet_hub
 ```
 
-## 3 模型部署
+## 4 模型部署
 下面，我们只需要使用`hub serving`命令即可完成模型的一键部署，对此命令的说明如下：
 ```shell
 $ hub serving start --modules/-m [Module1==Version1, Module2==Version2, ...] \
@@ -101,7 +105,7 @@ $ hub serving start -m mobilenetv3_small_ssld_imagenet_hub
 |modules_info|PaddleHub Serving预安装模型，以字典列表形式列出，key为模型名称。其中:<br>`init_args`为模型加载时输入的参数，等同于`paddlehub.Module(**init_args)`<br>`predict_args`为模型预测时输入的参数，以`mobilenetv3_small_ssld_imagenet_hub`为例，等同于`mobilenetv3_small_ssld_imagenet_hub.batch_predict(**predict_args)`
 |port|服务端口，默认为8866|
 
-## 4 测试
+## 5 测试
 在第二步模型安装的同时，会生成一个客户端请求示例，存放在模型安装目录，默认为`${HUB_HOME}/.paddlehub/modules`，对于此例，我们可以在`~/.paddlehub/modules/mobilenetv3_small_ssld_imagenet_hub`找到此客户端示例`serving_client_demo.py`，代码如下：
 
 ```python
