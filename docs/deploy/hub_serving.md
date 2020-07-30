@@ -4,6 +4,8 @@
 
 关于`PaddleHub-Serving`的更多信息，可参照[PaddleHub-Serving](https://github.com/PaddlePaddle/PaddleHub/blob/develop/docs/tutorial/serving.md)。
 
+**注意：使用此方式部署，需确保自己Python环境中PaddleHub的版本高于1.8.0, 可在命令终端输入`pip show paddlehub`确认版本信息。**
+
 
 下面，我们按照步骤，实现将一个图像分类模型[MobileNetV3_small_ssld](https://bj.bcebos.com/paddlex/models/mobilenetv3_small_ssld_imagenet.tar.gz)转换成`PaddleHub`的预训练模型，并利用`PaddleHub-Serving`实现一键部署。
 
