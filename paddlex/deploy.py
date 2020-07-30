@@ -28,6 +28,7 @@ class Predictor:
                  use_gpu=True,
                  gpu_id=0,
                  use_mkl=False,
+                 mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
                  memory_optimize=True):
@@ -38,6 +39,7 @@ class Predictor:
                 use_gpu: 是否使用gpu，默认True
                 gpu_id: 使用gpu的id，默认0
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
+                mkl_thread_num: mkldnn计算线程数，默认为4
                 use_trt: 是否使用TensorRT，默认False
                 use_glog: 是否启用glog日志, 默认False
                 memory_optimize: 是否启动内存优化，默认True
@@ -72,13 +74,15 @@ class Predictor:
             to_rgb = False
         self.transforms = build_transforms(self.model_type,
                                            self.info['Transforms'], to_rgb)
-        self.predictor = self.create_predictor(
-            use_gpu, gpu_id, use_mkl, use_trt, use_glog, memory_optimize)
+        self.predictor = self.create_predictor(use_gpu, gpu_id, use_mkl,
+                                               mkl_thread_num, use_trt,
+                                               use_glog, memory_optimize)
 
     def create_predictor(self,
                          use_gpu=True,
                          gpu_id=0,
                          use_mkl=False,
+                         mkl_thread_num=4,
                          use_trt=False,
                          use_glog=False,
                          memory_optimize=True):
@@ -93,6 +97,7 @@ class Predictor:
             config.disable_gpu()
         if use_mkl:
             config.enable_mkldnn()
+            config.set_cpu_math_library_num_threads(mkl_thread_num)
         if use_glog:
             config.enable_glog_info()
         else:
