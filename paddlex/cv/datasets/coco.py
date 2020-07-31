@@ -15,6 +15,8 @@
 from __future__ import absolute_import
 import copy
 import os.path as osp
+import six
+import sys
 import random
 import numpy as np
 import paddlex.utils.logging as logging
@@ -47,6 +49,12 @@ class CocoDetection(VOCDetection):
                  parallel_method='process',
                  shuffle=False):
         from pycocotools.coco import COCO
+
+        try:
+            import shapely.ops
+            from shapely.geometry import Polygon, MultiPolygon, GeometryCollection
+        except:
+            six.reraise(*sys.exc_info())
 
         super(VOCDetection, self).__init__(
             transforms=transforms,

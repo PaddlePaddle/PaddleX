@@ -13,16 +13,14 @@ pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 # 定义训练和验证时的transforms
 # API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/det_transforms.html
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(), 
-    transforms.Normalize(),
-    transforms.ResizeByShort(short_size=800, max_size=1333), 
-    transforms.Padding(coarsest_stride=32)
+    transforms.RandomHorizontalFlip(), transforms.Normalize(),
+    transforms.ResizeByShort(
+        short_size=800, max_size=1333), transforms.Padding(coarsest_stride=32)
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.Normalize(), 
-    transforms.ResizeByShort(short_size=800, max_size=1333), 
-    transforms.Padding(coarsest_stride=32)
+    transforms.Normalize(), transforms.ResizeByShort(
+        short_size=800, max_size=1333), transforms.Padding(coarsest_stride=32)
 ])
 
 # 定义训练和验证所用的数据集
@@ -38,10 +36,7 @@ eval_dataset = pdx.datasets.CocoDetection(
     transforms=eval_transforms)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标
-# VisualDL启动方式: visualdl --logdir output/mask_rcnn_r50_fpn/vdl_log --port 8001
-# 浏览器打开 https://0.0.0.0:8001即可
-# 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+# 可使用VisualDL查看训练指标，参考https://paddlex.readthedocs.io/zh_CN/develop/train/visualdl.html
 # num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
 num_classes = len(train_dataset.labels) + 1
 

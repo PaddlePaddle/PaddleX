@@ -148,8 +148,6 @@ git clone https://github.com/PaddlePaddle/PaddleX
    | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
    | gpu_id	| GPU 设备ID, 默认值为0 |
    | save_dir	| 保存可视化结果的路径, 默认值为"output"|
-   | det_key	| 检测模型加密过程中产生的密钥信息，默认值为""表示加载的是未加密的检测模型 |
-   | seg_key	| 分割模型加密过程中产生的密钥信息，默认值为""表示加载的是未加密的分割模型 |
    | seg_batch_size | 分割的批量大小，默认为2 |
    | thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
    | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
@@ -163,12 +161,19 @@ git clone https://github.com/PaddlePaddle/PaddleX
   用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[导出inference模型](https://paddlex.readthedocs.io/zh_CN/latest/tutorials/deploy/deploy_server/deploy_python.html#inference)将模型导出为inference格式。
 
   * 使用未加密的模型对单张图片做预测
-
   ```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image=\path\to\meter_test\20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
   * 使用未加密的模型对图像列表做预测
+
+  图像列表image_list.txt内容的格式如下，因绝对路径不同，暂未提供该文件，用户可根据实际情况自行生成：
+  ```
+  \path\to\images\1.jpg
+  \path\to\images\2.jpg
+  ...
+  \path\to\images\n.jpg
+  ```
 
   ```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image_list=\path\to\meter_test\image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
@@ -180,12 +185,12 @@ git clone https://github.com/PaddlePaddle/PaddleX
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
-  * 使用加密后的模型对单张图片做预测
+  * 使用加密后的模型对单张图片做预测  
 
-  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
+  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`  
 
-  ```shell
-  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=
+  ```shell  
+  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=  
   ```
 
 ### Linux系统的jetson嵌入式设备安全部署
@@ -232,6 +237,13 @@ git clone https://github.com/PaddlePaddle/PaddleX
   ```
 
   * 使用未加密的模型对图像列表做预测
+  图像列表image_list.txt内容的格式如下，因绝对路径不同，暂未提供该文件，用户可根据实际情况自行生成：
+  ```
+  \path\to\images\1.jpg
+  \path\to\images\2.jpg
+  ...
+  \path\to\images\n.jpg
+  ```
 
   ```shell
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image_list=/path/to/image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output

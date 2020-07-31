@@ -1,11 +1,11 @@
 # Nvidia Jetson开发板
 
 ## 说明
-本文档在用Jetpack 4.4刷机的`Linux`平台上使用`GCC 7.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [Nvidia Jetson嵌入式硬件预测库源码编译](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
+本文档在基于Nvidia Jetpack 4.4的`Linux`平台上使用`GCC 7.4`测试过，如需使用不同G++版本，则需要重新编译Paddle预测库，请参考: [NVIDIA Jetson嵌入式硬件预测库源码编译](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
 
 ## 前置条件
 * G++ 7.4
-* CUDA 9.0 / CUDA 10.0, CUDNN 7+ （仅在使用GPU版本的预测库时需要）
+* CUDA 10.0 / CUDNN 8 （仅在使用GPU版本的预测库时需要）
 * CMake 3.0+
 
 请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
