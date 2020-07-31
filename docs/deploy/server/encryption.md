@@ -51,7 +51,7 @@ paddlex-encryption
 |
 ├── lib # libpmodel-encrypt.so和libpmodel-decrypt.so动态库
 |
-└── tool # paddlex_encrypt_tool
+└── tool # paddle_encrypt_tool
 ```
 
 Windows加密工具包含内容为：
@@ -61,7 +61,7 @@ paddlex-encryption
 |
 ├── lib # pmodel-encrypt.dll和pmodel-decrypt.dll动态库 pmodel-encrypt.lib和pmodel-encrypt.lib静态库
 |
-└── tool # paddlex_encrypt_tool.exe 模型加密工具
+└── tool # paddle_encrypt_tool.exe 模型加密工具
 ```
 ### 1.3 加密PaddleX模型
 
@@ -71,13 +71,13 @@ paddlex-encryption
 Linux平台:
 ```
 # 假设模型在/root/projects下
-./paddlex-encryption/tool/paddlex_encrypt_tool -model_dir /root/projects/paddlex_inference_model -save_dir /root/projects/paddlex_encrypted_model
+./paddlex-encryption/tool/paddle_encrypt_tool -model_dir /root/projects/paddlex_inference_model -save_dir /root/projects/paddlex_encrypted_model
 ```
 
 Windows平台:
 ```
 # 假设模型在D:/projects下
-.\paddlex-encryption\tool\paddlex_encrypt_tool.exe -model_dir D:\projects\paddlex_inference_model -save_dir D:\projects\paddlex_encrypted_model
+.\paddlex-encryption\tool\paddle_encrypt_tool.exe -model_dir D:\projects\paddlex_inference_model -save_dir D:\projects\paddlex_encrypted_model
 ```
 
 `-model_dir`用于指定inference模型路径（参考[导出inference模型](../export_model.md)将模型导出为inference格式模型），可使用[导出小度熊识别模型](../export_model.md)中导出的`inference_model`。加密完成后，加密过的模型会保存至指定的`-save_dir`下，包含`__model__.encrypted`、`__params__.encrypted`和`model.yml`三个文件，同时生成密钥信息，命令输出如下图所示，密钥为`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`
