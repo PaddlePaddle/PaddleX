@@ -122,7 +122,7 @@ paddlex.det.transforms.MixupImage(alpha=1.5, beta=1.5, mixup_epoch=-1)
 * **beta** (float): 随机beta分布的上限。默认为1.5。
 * **mixup_epoch** (int): 在前mixup_epoch轮使用mixup增强操作；当该参数为-1时，该策略不会生效。默认为-1。
 
-## RandomExpand类
+## RandomExpand
 ```python
 paddlex.det.transforms.RandomExpand(ratio=4., prob=0.5, fill_value=[123.675, 116.28, 103.53])
 ```
