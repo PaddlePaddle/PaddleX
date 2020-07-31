@@ -37,7 +37,7 @@ tar xzvf vegetables_cls.tar.gz
 <a name="定义训练验证图像处理流程transforms"></a>
 **3. 定义训练/验证图像处理流程transforms**  
 
-因为训练时加入了数据增强操作，因此在训练和验证过程中，模型的数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#randomcrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
+因为训练时加入了数据增强操作，因此在训练和验证过程中，模型的数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.md#randomcrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.md#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
 ```
 from paddlex.cls import transforms
 train_transforms = transforms.Compose([
@@ -106,7 +106,7 @@ visualdl --logdir output/mobilenetv3_small_ssld --port 8001
 
 模型在训练过程中，会每间隔一定轮数保存一次模型，在验证集上评估效果最好的一轮会保存在`save_dir`目录下的`best_model`文件夹。通过如下方式可加载模型，进行预测。
 - [load_model接口说明](apis/load_model.md)
-- [分类模型predict接口说明](apis/models/classification.html#predict)
+- [分类模型predict接口说明](apis/models/classification.md#predict)
 ```
 import paddlex as pdx
 model = pdx.load_model('output/mobilenetv3_small_ssld/best_model')
