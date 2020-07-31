@@ -10,7 +10,7 @@ LIME全称Local interpretable model-agnostic explanations，表示一种与模�
 4. 将`X`转换为超像素特征`F`，用一个简单的、可解释的模型`Model`（这里使用岭回归）来拟合`F`和`Y`的映射关系。  
 5. `Model`将得到`F`每个输入维度的权重（每个维度代表一个超像素），以此来解释模型。  
 
-LIME的使用方式可参见[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/lime.py)和[api介绍](../apis/visualize.md#lime)。在使用时，参数中的`num_samples`设置尤为重要，其表示上述步骤2中的随机采样的个数，若设置过小会影响可解释性结果的稳定性，若设置过大则将在上述步骤3耗费较长时间；参数`batch_size`则表示在计算上述步骤3时，若设置过小将在上述步骤3耗费较长时间，而上限则根据机器配置决定。  
+LIME的使用方式可参见[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/lime.py)和[api介绍](../apis/interpret.md#lime)。在使用时，参数中的`num_samples`设置尤为重要，其表示上述步骤2中的随机采样的个数，若设置过小会影响可解释性结果的稳定性，若设置过大则将在上述步骤3耗费较长时间；参数`batch_size`则表示在计算上述步骤3时，若设置过小将在上述步骤3耗费较长时间，而上限则根据机器配置决定。  
 
 最终LIME可解释性算法的可视化结果如下所示：  
 ![](images/lime.png)  
@@ -35,7 +35,7 @@ NormLIME是在LIME上的改进，LIME的解释是局部性的，是针对当前�
 5. 对每张构造的图像使用预测模型预测label。  
 6. 根据normlime的权重信息，每个超像素可获不同的权重，选取最高的权重为最终的权重，以此来解释模型。  
 
-NormLIME的使用方式可参见[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)和[api介绍](../apis/visualize.md#normlime)。在使用时，参数中的`num_samples`设置尤为重要，其表示上述步骤2中的随机采样的个数，若设置过小会影响可解释性结果的稳定性，若设置过大则将在上述步骤3耗费较长时间；参数`batch_size`则表示在计算上述步骤3时，预测的batch size，若设置过小将在上述步骤3耗费较长时间，而上限则根据机器配置决定；而`dataset`则是由测试集或验证集构造的数据。  
+NormLIME的使用方式可参见[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)和[api介绍](../apis/interpret.md#normlime)。在使用时，参数中的`num_samples`设置尤为重要，其表示上述步骤2中的随机采样的个数，若设置过小会影响可解释性结果的稳定性，若设置过大则将在上述步骤3耗费较长时间；参数`batch_size`则表示在计算上述步骤3时，预测的batch size，若设置过小将在上述步骤3耗费较长时间，而上限则根据机器配置决定；而`dataset`则是由测试集或验证集构造的数据。  
 
 最终NormLIME可解释性算法的可视化结果如下所示：  
 ![](images/normlime.png)  
