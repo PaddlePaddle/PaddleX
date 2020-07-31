@@ -66,8 +66,8 @@ import paddlex as pdx
 
 ## 相关模型接口
 
-- 图像分类模型 [train接口](../apis/models/classification.html#train)
-- 目标检测FasterRCNN [train接口](../apis/models/detection.html#id1)
-- 目标检测YOLOv3 [train接口](../apis/models/detection.html#train)
-- 实例分割MaskRCNN [train接口](../apis/models/instance_segmentation.html#train)
-- 语义分割 [train接口](../apis/models/semantic_segmentation.html#train)
+- 图像分类模型 [train接口](../apis/models/classification.md#train)
+- 目标检测FasterRCNN [train接口](../apis/models/detection.md#train-1)
+- 目标检测YOLOv3 [train接口](../apis/models/detection.md#train)
+- 实例分割MaskRCNN [train接口](../apis/models/instance_segmentation.md#train)
+- 语义分割 [train接口](../apis/models/semantic_segmentation.md#train)
