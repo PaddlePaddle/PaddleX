@@ -34,4 +34,4 @@
 **如果您有任何问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的问题和需求**
 
 ![](/images/QR.jpg)
-<img src=".//images/QR.jpg" width="250" height="300" alt="QQGroup" align="middle" />
+<img src=".//images/QR.jpg" width="250" height="300" alt="QQGroup" align="center" />
