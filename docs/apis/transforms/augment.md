@@ -8,7 +8,7 @@ PaddleX对于图像分类、目标检测、实例分割和语义分割内置了�
 
 | 任务类型 | 增强方法     |
 | :------- | :------------|
-| 图像分类 | [RandomCrop](cls_transforms.md#randomcrop)、[RandomHorizontalFlip](cls_transforms.md#randomhorizontalflip)、[RandomVerticalFlip](cls_transforms.md#randomverticalflip)、 <br> [RandomRotate](cls_transforms.md#randomratate)、 [RandomDistort](cls_transforms.md#randomdistort) |
+| 图像分类 | [RandomCrop](cls_transforms.md#randomcrop)、[RandomHorizontalFlip](cls_transforms.md#randomhorizontalflip)、[RandomVerticalFlip](cls_transforms.md#randomverticalflip)、 <br> [RandomRotate](cls_transforms.md#randomrotate)、 [RandomDistort](cls_transforms.md#randomdistort) |
 |目标检测<br>实例分割| [RandomHorizontalFlip](det_transforms.md#randomhorizontalflip)、[RandomDistort](det_transforms.md#randomdistort)、[RandomCrop](det_transforms.html#randomcrop)、<br> [MixupImage](det_transforms.md#mixupimage)(仅支持YOLOv3模型)、[RandomExpand](det_transforms.md#randomexpand) |
 |语义分割  | [RandomHorizontalFlip](seg_transforms.md#randomhorizontalflip)、[RandomVerticalFlip](seg_transforms.md#randomverticalflip)、[RandomRangeScaling](seg_transforms.md#randomrangescaling)、<br> [RandomStepScaling](seg_transforms.md#randomstepscaling)、[RandomPaddingCrop](seg_transforms.md#randompaddingcrop)、 [RandomBlur](seg_transforms.md#randomblur)、<br> [RandomRotate](seg_transforms.md#randomrotate)、[RandomScaleAspect](seg_transforms.md#randomscaleaspect)、[RandomDistort](seg_transforms.md#randomdistort) |
 
