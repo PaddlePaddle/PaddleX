@@ -150,7 +150,7 @@ D:\images\xiaoduxiongn.jpeg
 
 ### 样例三：(使用加密后的模型对单张图片进行预测)
 
-如果未对模型进行加密，请参考[加密PaddleX模型](../encryption.html#paddlex)对模型进行加密。例如加密后的模型所在目录为`D:\projects\encrypted_inference_model`。
+如果未对模型进行加密，请参考[加密PaddleX模型](../encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的模型所在目录为`D:\projects\encrypted_inference_model`。
 
 ```
 .\paddlex_inference\detector.exe --model_dir=D:\projects\encrypted_inference_model --image=D:\images\xiaoduxiong.jpeg --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
