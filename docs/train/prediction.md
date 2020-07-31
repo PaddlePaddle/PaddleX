@@ -43,7 +43,7 @@ result = model.predict(test_jpg)
 pdx.det.visualize(test_jpg, result, threshold=0.3, save_dir='./')
 ```
 - YOLOv3模型predict接口[说明文档](../apis/models/detection.md#predict)
-- 可视化pdx.det.visualize接口[说明文档](../apis/visualize.md#paddlex-det-visualize)
+- 可视化pdx.det.visualize接口[说明文档](../apis/visualize.md#paddlex.det.visualize)
 > 注意：目标检测和实例分割模型在调用`predict`接口得到的结果需用户自行过滤低置信度结果，在`paddlex.det.visualize`接口中，我们提供了`threshold`用于过滤，置信度低于此值的结果将被过滤，不会可视化。
 ![](./images/yolo_predict.jpg)
 
