@@ -185,6 +185,14 @@ git clone https://github.com/PaddlePaddle/PaddleX
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
+  * 使用加密后的模型对单张图片做预测  
+
+  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`  
+
+  ```shell  
+  .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=  
+  ```
+
 ### Linux系统的jetson嵌入式设备安全部署
 
 #### c++部署
