@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
     // 可视化
     cv::Mat vis_img = PaddleX::Visualize(frame, result, model.labels);
     if (FLAGS_show_result || FLAGS_use_camera) {
-      cv::imshow("human_seg", vis_img);
+      cv::imshow("video_segmenter", vis_img);
     }
     if (FLAGS_save_result) {
       video_out.write(vis_img);

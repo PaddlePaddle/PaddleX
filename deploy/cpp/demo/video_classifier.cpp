@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
                 cv::Scalar(255, 255, 255),
                 thickness);
     if (FLAGS_show_result || FLAGS_use_camera) {
-      cv::imshow("human_seg", vis_img);
+      cv::imshow("video_classifier", vis_img);
     }
     if (FLAGS_save_result) {
       video_out.write(vis_img);
