@@ -25,7 +25,7 @@ MyDataset/ # 实例分割数据集根目录
 > ```
 -->
 
-MSCOCO数据的标注文件采用json格式，用户可使用Labelme, 精灵标注助手或EasyData等标注工具进行标注，参见[数据标注工具](../annotations.md)
+MSCOCO数据的标注文件采用json格式，用户可使用Labelme, 精灵标注助手或EasyData等标注工具进行标注，参见[数据标注工具](../annotation.md)
 
 ## PaddleX加载数据集
 示例代码如下，

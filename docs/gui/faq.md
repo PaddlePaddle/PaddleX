@@ -33,4 +33,4 @@
 
 **如果您有任何问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的问题和需求**
 
-![](/Users/lvxueying/Documents/LaraPaddleX/docs/paddlex_gui/images/QR.jpg)
+![](./images/QR.jpg)
