@@ -1,6 +1,11 @@
+
+
+
 <p align="center">
   <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
+
+
 <p align= "center"> PaddleX -- 飞桨全流程开发套件，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
@@ -84,15 +89,13 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 （continue to be updated）
 
-##### 工业巡检：
+* 工业巡检：
+  * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 
-* [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
+* 工业质检：
+  * 电池隔膜缺陷检测(Comming Soon)
 
-##### 工业质检：
-
-* 电池隔膜缺陷检测(Comming Soon)
-
-##### [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
+* [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
 
 
 
