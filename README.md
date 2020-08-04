@@ -84,15 +84,15 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 （continue to be updated）
 
-#### 工业巡检：
+##### 工业巡检：
 
 * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 
-#### 工业质检：
+##### 工业质检：
 
 * 电池隔膜缺陷检测(Comming Soon)
 
-#### [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
+##### [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
 
 
 
