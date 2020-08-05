@@ -48,7 +48,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
-- https://aistudio.baidu.com/aistudio/projectdetail/440197)
+- https://aistudio.baidu.com/aistudio/projectdetail/440197
 
   
 
@@ -93,7 +93,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
   * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 
 * 工业质检：
-  * 电池隔膜缺陷检测(Comming Soon)
+  * 电池隔膜缺陷检测(Coming Soon)
 
 * [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
 
