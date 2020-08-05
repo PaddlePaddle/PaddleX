@@ -14,5 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .convert import *
-from .split import *
+
+def dataset_split(dataset_dir, dataset_form, val_value, test_value, save_dir):
+    print(dataset_dir, dataset_form, val_value, test_value, save_dir)
+    print(12345)
