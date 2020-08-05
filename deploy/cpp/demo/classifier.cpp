@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // 加载模型
+  // Load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
              FLAGS_gpu_id,
              FLAGS_key);
 
-  // 进行预测
+  // Predict
   int imgs = 1;
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
       std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
       return -1;
     }
-    // 多batch预测
+    // Mini-batch predict
     std::string image_path;
     std::vector<std::string> image_paths;
     while (getline(inf, image_path)) {
@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
     }
     imgs = image_paths.size();
     for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
-      // 读图像
+      // Read image
       int im_vec_size =
           std::min(static_cast<int>(image_paths.size()), i + FLAGS_batch_size);
       std::vector<cv::Mat> im_vec(im_vec_size - i);

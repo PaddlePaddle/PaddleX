@@ -45,7 +45,7 @@ DEFINE_int32(thread_num,
              "Number of preprocessing threads");
 
 int main(int argc, char** argv) {
-  // 解析命令行参数
+  // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   if (FLAGS_model_dir == "") {
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     std::cerr << "--image or --image_list need to be defined" << std::endl;
     return -1;
   }
-  // 加载模型
+  // Load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
              FLAGS_key);
   int imgs = 1;
   std::string save_dir = "output";
-  // 进行预测
+  // Predict
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {
@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
       model.predict(im_vec, &results, thread_num);
-      // 输出结果目标框
+      // Output predicted bounding boxes
       for (int j = 0; j < im_vec_size - i; ++j) {
         for (int k = 0; k < results[j].boxes.size(); ++k) {
           std::cout << "image file: " << image_paths[i + j] << ", ";
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
                     << results[j].boxes[k].coordinate[3] << ")" << std::endl;
         }
       }
-      // 可视化
+      // Visualize results
       for (int j = 0; j < im_vec_size - i; ++j) {
         cv::Mat vis_img = PaddleX::Visualize(
             im_vec[j], results[j], model.labels, FLAGS_threshold);
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
     PaddleX::DetResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
     model.predict(im, &result);
-    // 输出结果目标框
+    // Output predicted bounding boxes
     for (int i = 0; i < result.boxes.size(); ++i) {
       std::cout << "image file: " << FLAGS_image << std::endl;
       std::cout << ", predict label: " << result.boxes[i].category
@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
                 << result.boxes[i].coordinate[3] << ")" << std::endl;
     }
 
-    // 可视化
+    // Visualize results
     cv::Mat vis_img =
         PaddleX::Visualize(im, result, model.labels, FLAGS_threshold);
     std::string save_path =

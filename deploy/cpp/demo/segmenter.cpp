@@ -41,7 +41,7 @@ DEFINE_int32(thread_num,
              "Number of preprocessing threads");
 
 int main(int argc, char** argv) {
-  // 解析命令行参数
+  // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   if (FLAGS_model_dir == "") {
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // 加载模型
+  // Load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
              FLAGS_gpu_id,
              FLAGS_key);
   int imgs = 1;
-  // 进行预测
+  // Predict
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
       model.predict(im_vec, &results, thread_num);
-      // 可视化
+      // Visualize results
       for (int j = 0; j < im_vec_size - i; ++j) {
         cv::Mat vis_img =
             PaddleX::Visualize(im_vec[j], results[j], model.labels);
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
     PaddleX::SegResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
     model.predict(im, &result);
-    // 可视化
+    // Visualize results
     cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels);
     std::string save_path =
         PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);

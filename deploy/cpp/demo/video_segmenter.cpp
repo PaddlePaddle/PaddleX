@@ -45,7 +45,7 @@ DEFINE_bool(save_result, true, "save the result of each frame to a video");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
 
 int main(int argc, char** argv) {
-  // 解析命令行参数
+  // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   if (FLAGS_model_dir == "") {
@@ -57,14 +57,14 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // 加载模型
+  // Load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
              FLAGS_use_trt,
              FLAGS_gpu_id,
              FLAGS_key);
-  // 打开视频流
+  // Open video
   cv::VideoCapture capture;
   if (FLAGS_use_camera) {
     capture.open(FLAGS_camera_id);
@@ -85,11 +85,11 @@ int main(int argc, char** argv) {
   }
 
 
-  // 创建VideoWriter
+  // Create a VideoWriter
   cv::VideoWriter video_out;
   std::string video_out_path;
   if (FLAGS_save_result) {
-    // 获取视频流信息: 分辨率, 帧率
+    // Get video information: resolution, fps
     int video_width = static_cast<int>(capture.get(CV_CAP_PROP_FRAME_WIDTH));
     int video_height = static_cast<int>(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
     int video_fps = static_cast<int>(capture.get(CV_CAP_PROP_FPS));
@@ -126,16 +126,16 @@ int main(int argc, char** argv) {
   while (capture.read(frame)) {
     if (FLAGS_show_result || FLAGS_use_camera) {
      key = cv::waitKey(1);
-     // 按下ESC退出整个程序，保存视频文件到磁盘
+     // When pressing `ESC`, then exit program and result video is saved
      if (key == 27) {
        break;
      }
     } else if (frame.empty()) {
       break;
     }
-    // 开始预测
+    // Begin to predict
     model.predict(frame, &result);
-    // 可视化
+    // Visualize results
     cv::Mat vis_img = PaddleX::Visualize(frame, result, model.labels);
     if (FLAGS_show_result || FLAGS_use_camera) {
       cv::imshow("video_segmenter", vis_img);
