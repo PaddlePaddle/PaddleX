@@ -188,7 +188,7 @@ def main():
         val_value = float(args.val_value)
         test_value = float(args.test_value
                            if args.test_value is not None else 0)
-        save_dir = args.save_dir if args.save_dir is not None else "./"
+        save_dir = dataset_dir
 
         if not dataset_form in ["coco", "imagenet", "voc", "seg"]:
             logging.error(
@@ -198,8 +198,7 @@ def main():
             logging.error("The path of dataset to be splited doesn't exist.")
         if val_value <= 0 or val_value >= 1 or test_value < 0 or test_value >= 1 or val_value + test_value >= 1:
             logging.error("The value of split is not correct.")
-        if not osp.exists(save_dir):
-            logging.error("The path of saved split information doesn't exist.")
+
         pdx.tools.split.dataset_split(dataset_dir, dataset_form, val_value,
                                       test_value, save_dir)
 

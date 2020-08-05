@@ -21,7 +21,6 @@ from .dataset_split.seg_split import split_seg_dataset
 
 
 def dataset_split(dataset_dir, dataset_form, val_value, test_value, save_dir):
-    print(dataset_dir, dataset_form, val_value, test_value, save_dir)
     if dataset_form == "coco":
         train_num, val_num, test_num = split_coco_dataset(
             dataset_dir, val_value, test_value, save_dir)
