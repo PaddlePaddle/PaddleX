@@ -16,19 +16,19 @@ import os.path as osp
 import random
 import json
 from .utils import MyEncoder
+import paddlex.utils.logging as logging
 
 
 def split_coco_dataset(dataset_dir, val_percent, test_percent, save_dir):
     if not osp.exists(osp.join(dataset_dir, "annotations.json")):
-        raise ValueError("\'annotations.json\' is not found in {}!".format(
+        logging.error("\'annotations.json\' is not found in {}!".format(
             dataset_dir))
     try:
         from pycocotools.coco import COCO
     except:
-        print(
+        logging.error(
             "pycococotools is not installed, follow this doc install pycocotools: https://paddlex.readthedocs.io/zh_CN/develop/install.html#pycocotools"
         )
-        return
 
     annotation_file = osp.join(dataset_dir, "annotations.json")
     coco = COCO(annotation_file)

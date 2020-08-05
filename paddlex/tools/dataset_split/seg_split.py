@@ -15,14 +15,14 @@
 import os.path as osp
 import random
 from .utils import list_files, is_pic, replace_ext, read_seg_ann
+import paddlex.utils.logging as logging
 
 
 def split_seg_dataset(dataset_dir, val_percent, test_percent, save_dir):
     if not osp.exists(osp.join(dataset_dir, "JPEGImages")):
-        raise ValueError("\'JPEGImages\' is not found in {}!".format(
-            dataset_dir))
+        logging.error("\'JPEGImages\' is not found in {}!".format(dataset_dir))
     if not osp.exists(osp.join(dataset_dir, "Annotations")):
-        raise ValueError("\'Annotations\' is not found in {}!".format(
+        logging.error("\'Annotations\' is not found in {}!".format(
             dataset_dir))
 
     all_image_files = list_files(osp.join(dataset_dir, "JPEGImages"))

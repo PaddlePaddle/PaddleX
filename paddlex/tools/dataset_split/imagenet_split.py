@@ -15,6 +15,7 @@
 import os.path as osp
 import random
 from .utils import list_files, is_pic
+import paddlex.utils.logging as logging
 
 
 def split_imagenet_dataset(dataset_dir, val_percent, test_percent, save_dir):

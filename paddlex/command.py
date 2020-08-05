@@ -93,7 +93,10 @@ def arg_parser():
         default=False,
         help="split dataset with the split value")
     parser.add_argument(
-        "--form", "-f", default=None, help="define dataset format")
+        "--form",
+        "-f",
+        default=None,
+        help="define dataset format(ImageNet/COCO/VOC/Seg)")
     parser.add_argument(
         "--dataset_dir",
         "-dd",
@@ -104,12 +107,12 @@ def arg_parser():
         "--val_value",
         "-vv",
         default=None,
-        help="define the value of validation dataset")
+        help="define the value of validation dataset(E.g 0.2)")
     parser.add_argument(
         "--test_value",
         "-tv",
         default=None,
-        help="define the value of test dataset")
+        help="define the value of test dataset(E.g 0.1)")
     return parser
 
 
