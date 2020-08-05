@@ -200,10 +200,8 @@ def main():
             logging.error("The value of split is not correct.")
         if not osp.exists(save_dir):
             logging.error("The path of saved split information doesn't exist.")
-        print(11111111111111)
         pdx.tools.split.dataset_split(dataset_dir, dataset_form, val_value,
                                       test_value, save_dir)
-        print(222222222)
 
 
 if __name__ == "__main__":

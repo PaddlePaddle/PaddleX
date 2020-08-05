@@ -14,7 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .dataset_split.coco_split import split_coco_dataset
+from .dataset_split.voc_split import split_voc_dataset
+from .dataset_split.imagenet_split import split_imagenet_dataset
+from .dataset_split.seg_split import split_seg_dataset
+
 
 def dataset_split(dataset_dir, dataset_form, val_value, test_value, save_dir):
     print(dataset_dir, dataset_form, val_value, test_value, save_dir)
-    print(12345)
+    if dataset_form == "coco":
+        train_num, val_num, test_num = split_coco_dataset(
+            dataset_dir, val_value, test_value, save_dir)
+    elif dataset_form == "voc":
+        train_num, val_num, test_num = split_voc_dataset(
+            dataset_dir, val_value, test_value, save_dir)
+    elif dataset_form == "seg":
+        train_num, val_num, test_num = split_seg_dataset(
+            dataset_dir, val_value, test_value, save_dir)
+    elif dataset_form == "imagenet":
+        train_num, val_num, test_num = split_imagenet_dataset(
+            dataset_dir, val_value, test_value, save_dir)
+    print("Dataset Split Done.")
+    print("Train samples: {}".format(train_num))
+    print("Eval samples: {}".format(val_num))
+    print("Test samples: {}".format(test_num))
+    print("Split file saved in {}".format(save_dir))
