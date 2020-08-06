@@ -38,4 +38,4 @@ def dataset_split(dataset_dir, dataset_format, val_value, test_value,
     print("Train samples: {}".format(train_num))
     print("Eval samples: {}".format(val_num))
     print("Test samples: {}".format(test_num))
-    print("Split file saved in {}".format(save_dir))
+    print("Split files saved in {}".format(save_dir))
