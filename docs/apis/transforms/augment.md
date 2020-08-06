@@ -14,7 +14,7 @@ PaddleX对于图像分类、目标检测、实例分割和语义分割内置了�
 
 ## imgaug增强库的支持
 
-PaddleX目前已适配imgaug图像增强库，用户可以直接在PaddleX构造`transforms`时，调用imgaug的方法，如下示例
+PaddleX目前已适配imgaug图像增强库，用户可以直接在PaddleX构造`transforms`时，调用imgaug的方法，如下示例，
 ```
 import paddlex as pdx
 from paddlex.cls import transforms
