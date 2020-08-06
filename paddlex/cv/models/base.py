@@ -94,8 +94,6 @@ class BaseAPI:
         self.train_inputs, self.train_outputs = self.build_net(mode='train')
         self.train_prog = fluid.default_main_program()
         startup_prog = fluid.default_startup_program()
-        self.train_prog.random_seed = 1000
-        startup_prog.random_seed = 1000
 
         # 构建预测网络
         self.test_prog = fluid.Program()

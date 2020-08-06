@@ -50,7 +50,7 @@ def DropBlock(input, block_size, keep_prob, is_test):
 
     input_shape_tmp = fluid.layers.cast(input_shape, dtype="int64")
     random_matrix = fluid.layers.uniform_random(
-        input_shape_tmp, dtype='float32', min=0.0, max=1.0, seed=1000)
+        input_shape_tmp, dtype='float32', min=0.0, max=1.0)
     one_zero_m = fluid.layers.less_than(random_matrix, p)
     one_zero_m.stop_gradient = True
     one_zero_m = fluid.layers.cast(one_zero_m, dtype="float32")
