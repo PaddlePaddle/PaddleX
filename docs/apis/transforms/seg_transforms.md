@@ -25,7 +25,7 @@ paddlex.seg.transforms.RandomHorizontalFlip(prob=0.5)
 ```python
 paddlex.seg.transforms.RandomVerticalFlip(prob=0.1)
 ```
-以一定的概率对图像进行垂直翻转,模型训练时的数据增强操作。
+以一定的概率对图像进行垂直翻转，模型训练时的数据增强操作。
 ### 参数
 * **prob**  (float): 随机垂直翻转的概率。默认值为0.1。
 
@@ -59,7 +59,7 @@ paddlex.seg.transforms.ResizeByLong(long_size)
 ```python
 paddlex.seg.transforms.ResizeRangeScaling(min_value=400, max_value=600)
 ```
-对图像长边随机resize到指定范围内，短边按比例进行缩放,模型训练时的数据增强操作。
+对图像长边随机resize到指定范围内，短边按比例进行缩放，模型训练时的数据增强操作。
 ### 参数
 * **min_value** (int): 图像长边resize后的最小值。默认值400。
 * **max_value** (int): 图像长边resize后的最大值。默认值600。
@@ -124,7 +124,7 @@ paddlex.seg.transforms.RandomBlur(prob=0.1)
 ```python
 paddlex.seg.transforms.RandomRotate(rotate_range=15, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
 ```
-对图像进行随机旋转, 模型训练时的数据增强操作。
+对图像进行随机旋转，模型训练时的数据增强操作。
 
 在旋转区间[-rotate_range, rotate_range]内，对图像进行随机旋转，当存在标注图像时，同步进行，
 并对旋转后的图像和标注图像进行相应的padding。
@@ -138,7 +138,7 @@ paddlex.seg.transforms.RandomRotate(rotate_range=15, im_padding_value=[127.5, 12
 ```python
 paddlex.seg.transforms.RandomScaleAspect(min_scale=0.5, aspect_ratio=0.33)
 ```
-裁剪并resize回原始尺寸的图像和标注图像,模型训练时的数据增强操作。
+裁剪并resize回原始尺寸的图像和标注图像，模型训练时的数据增强操作。
 
 按照一定的面积比和宽高比对图像进行裁剪，并reszie回原始图像的图像，当存在标注图时，同步进行。
 ### 参数
