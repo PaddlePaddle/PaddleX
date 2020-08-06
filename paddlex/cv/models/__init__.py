@@ -38,6 +38,7 @@ from .classifier import HRNet_W18
 from .classifier import AlexNet
 from .base import BaseAPI
 from .yolo_v3 import YOLOv3
+from .ppyolo import PPYOLO
 from .faster_rcnn import FasterRCNN
 from .mask_rcnn import MaskRCNN
 from .unet import UNet

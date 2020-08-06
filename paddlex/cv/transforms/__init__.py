@@ -91,7 +91,10 @@ def arrange_transforms(model_type, class_name, transforms, mode='train'):
     elif model_type == 'segmenter':
         arrange_transform = seg_transforms.ArrangeSegmenter
     elif model_type == 'detector':
-        arrange_name = 'Arrange{}'.format(class_name)
+        if class_name == "PPYOLO":
+            arrange_name = 'ArrangeYOLOv3'
+        else:
+            arrange_name = 'Arrange{}'.format(class_name)
         arrange_transform = getattr(det_transforms, arrange_name)
     else:
         raise Exception("Unrecognized model type: {}".format(self.model_type))
