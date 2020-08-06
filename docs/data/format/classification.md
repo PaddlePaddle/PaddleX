@@ -25,12 +25,12 @@ MyDataset/ # 图像分类数据集根目录
 
 **为了用于训练，我们需要在`MyDataset`目录下准备`train_list.txt`, `val_list.txt`和`labels.txt`三个文件**，分别用于表示训练集列表，验证集列表和类别标签列表。[点击下载图像分类示例数据集](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
 
-<!--
+
 > 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中split指标训练集的比例，剩余的比例用于验证集。
 > ```
 > paddlex --split_dataset --from ImageNet --split 0.8 --save_dir ./splited_dataset_dir
 > ```
--->
+
 
 **labels.txt**  
 
