@@ -28,7 +28,7 @@ MyDataset/ # 图像分类数据集根目录
 
 > 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中split指标训练集的比例，剩余的比例用于验证集。
 > ```
-> paddlex --split_dataset --from ImageNet --split 0.8 --save_dir ./splited_dataset_dir
+> paddlex --split_dataset --form ImageNet --dataset_dir MyDataset --val_value 0.2 --val_value 0.1
 > ```
 
 
