@@ -183,7 +183,7 @@ def main():
 
     if args.split_dataset:
         assert args.dataset_dir is not None, "--dataset_dir should be defined while spliting dataset"
-        assert args.form is not None, "--form should be defined while spliting dataset"
+        assert args.format is not None, "--form should be defined while spliting dataset"
         assert args.val_value is not None, "--val_value should be defined while spliting dataset"
 
         dataset_dir = args.dataset_dir
