@@ -30,6 +30,25 @@ image_list = ['xiaoduxiong_test_image/JPEGImages/WeChatIMG110.jpeg',
 result = predictor.predict(image_list=image_list)
 ```
 
+* 视频流预测
+```
+import cv2
+import paddlex as pdx
+predictor = pdx.deploy.Predictor('./inference_model')
+cap = cv2.VideoCapture(0)
+while cap.isOpened():
+    ret, frame = cap.read()
+    if ret:
+        result = predictor.predict(frame)
+        vis_img = pdx.det.visualize(frame, result, threshold=0.6, save_dir=None)
+        cv2.imshow('Xiaoduxiong', vis_img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    else:
+        break
+cap.release()
+```
+
 > 关于预测速度的说明：加载模型后前几张图片的预测速度会较慢，这是因为运行启动时涉及到内存显存初始化等步骤，通常在预测20-30张图片后模型的预测速度达到稳定。
 
 ## 预测性能对比

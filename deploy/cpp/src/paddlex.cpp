@@ -65,7 +65,11 @@ void Model::create_predictor(const std::string& model_dir,
   config.SwitchUseFeedFetchOps(false);
   config.SwitchSpecifyInputNames(true);
   // 开启图优化
+#if defined(__arm__) || defined(__aarch64__)
+  config.SwitchIrOptim(false);
+#else
   config.SwitchIrOptim(use_ir_optim);
+#endif
   // 开启内存优化
   config.EnableMemoryOptim();
   if (use_trt) {

@@ -101,7 +101,7 @@ D:
 cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 ```
 
-编译成功后，预测demo的入口程序为`paddlex_inference\detector.exe`，`paddlex_inference\classifier.exe`，`paddlex_inference\segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+* 编译成功后，图片预测demo的入口程序为`paddlex_inference\detector.exe`，`paddlex_inference\classifier.exe`，`paddlex_inference\segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -114,7 +114,24 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
 | batch_size | 预测的批量大小，默认为1 |
 | thread_num | 预测的线程数，默认为cpu处理器个数 |
-| use_ir_optim | 是否使用图优化策略，支持值为0或1（默认值为1，图像分割默认值为0）|
+
+* 编译成功后，视频预测demo的入口程序为`paddlex_inference\video_detector.exe`，`paddlex_inference\video_classifier.exe`，`paddlex_inference\video_segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+
+|  参数   | 说明  |
+|  ----  | ----  |
+| model_dir  | 导出的预测模型所在路径 |
+| use_camera | 是否使用摄像头预测，支持值为0或1(默认值为0) |
+| camera_id | 摄像头设备ID，默认值为0 |
+| video_path | 视频文件的路径 |
+| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
+| gpu_id  | GPU 设备ID, 默认值为0 |
+| show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
+| save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
+| save_dir | 保存可视化结果的路径, 默认值为"output" |
+| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
+
+**注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
+
 
 ## 样例
 
@@ -157,3 +174,18 @@ D:\images\xiaoduxiongn.jpeg
 ```
 
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件可视化预测结果会保存在`save_dir`参数设置的目录下。
+
+### 样例四：(使用未加密的模型开启摄像头预测)
+
+```shell
+.\paddlex_inference\video_detector.exe --model_dir=D:\projects\inference_model --use_camera=1 --use_gpu=1 --save_dir=output
+```
+当`save_result`设置为1时，`可视化预测结果`会以视频文件的格式保存在`save_dir`参数设置的目录下。
+
+### 样例五：(使用未加密的模型对视频文件做预测)
+
+
+```shell
+.\paddlex_inference\video_detector.exe --model_dir=D:\projects\inference_model --video_path=D:\projects\video_test.mp4 --use_gpu=1 --show_result=1 --save_dir=output
+```
+当`save_result`设置为1时，`可视化预测结果`会以视频文件的格式保存在`save_dir`参数设置的目录下。如果系统有GUI，通过将`show_result`设置为1在屏幕上观看可视化预测结果。

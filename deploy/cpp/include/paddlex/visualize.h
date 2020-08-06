@@ -24,8 +24,8 @@
 #include <dirent.h>
 // #include <sys/io.h>
 #if defined(__arm__) || defined(__aarch64__)  // for arm
-#include <aarch64-linux-gpu/sys/stat.h>
-#include <aarch64-linux-gpu/sys/types.h>
+#include <aarch64-linux-gnu/sys/stat.h>
+#include <aarch64-linux-gnu/sys/types.h>
 #else
 #include <sys/stat.h>
 #include <sys/types.h>
