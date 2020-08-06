@@ -16,7 +16,7 @@ paddlex.seg.transforms.Compose(transforms)
 ```python
 paddlex.seg.transforms.RandomHorizontalFlip(prob=0.5)
 ```
-以一定的概率对图像进行水平翻转,模型训练时的数据增强操作。
+以一定的概率对图像进行水平翻转，模型训练时的数据增强操作。
 ### 参数
 * **prob** (float): 随机水平翻转的概率。默认值为0.5。
 
