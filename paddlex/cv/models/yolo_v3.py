@@ -19,6 +19,8 @@ import os.path as osp
 import numpy as np
 from multiprocessing.pool import ThreadPool
 import paddle.fluid as fluid
+from paddle.fluid.layers.learning_rate_scheduler import _decay_step_counter
+from paddle.fluid.optimizer import ExponentialMovingAverage
 import paddlex.utils.logging as logging
 import paddlex
 import copy
@@ -27,6 +29,10 @@ from paddlex.cv.datasets import generate_minibatch
 from .base import BaseAPI
 from collections import OrderedDict
 from .utils.detection_eval import eval_results, bbox2out
+
+import random
+random.seed(0)
+np.random.seed(0)
 
 
 class YOLOv3(BaseAPI):
@@ -50,24 +56,37 @@ class YOLOv3(BaseAPI):
         train_random_shapes (list|tuple): 训练时从列表中随机选择图像大小。默认值为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
     """
 
-    def __init__(self,
-                 num_classes=80,
-                 backbone='MobileNetV1',
-                 anchors=None,
-                 anchor_masks=None,
-                 ignore_threshold=0.7,
-                 nms_score_threshold=0.01,
-                 nms_topk=1000,
-                 nms_keep_topk=100,
-                 nms_iou_threshold=0.45,
-                 label_smooth=False,
-                 train_random_shapes=[
-                     320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ]):
+    def __init__(
+            self,
+            num_classes=80,
+            backbone='MobileNetV1',
+            with_dcn_v2=False,
+            # YOLO Head
+            anchors=None,
+            anchor_masks=None,
+            use_coord_conv=False,
+            use_iou_aware=False,
+            use_spp=False,
+            use_drop_block=False,
+            scale_x_y=1.0,
+            # YOLOv3 Loss
+            ignore_threshold=0.7,
+            label_smooth=False,
+            use_iou_loss=False,
+            # NMS
+            use_matrix_nms=False,
+            nms_score_threshold=0.01,
+            nms_topk=1000,
+            nms_keep_topk=100,
+            nms_iou_threshold=0.45,
+            train_random_shapes=[
+                320, 352, 384, 416, 448, 480, 512, 544, 576, 608
+            ]):
         self.init_params = locals()
         super(YOLOv3, self).__init__('detector')
         backbones = [
-            'DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large'
+            'DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large',
+            'ResNet50_vd'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -75,6 +94,11 @@ class YOLOv3(BaseAPI):
         self.num_classes = num_classes
         self.anchors = anchors
         self.anchor_masks = anchor_masks
+        if anchors is None:
+            self.anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+                            [59, 119], [116, 90], [156, 198], [373, 326]]
+        if anchor_masks is None:
+            self.anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
         self.ignore_threshold = ignore_threshold
         self.nms_score_threshold = nms_score_threshold
         self.nms_topk = nms_topk
@@ -84,6 +108,20 @@ class YOLOv3(BaseAPI):
         self.sync_bn = True
         self.train_random_shapes = train_random_shapes
         self.fixed_input_shape = None
+        self.use_fine_grained_loss = False
+        if use_coord_conv or use_iou_aware or use_spp or use_drop_block or use_iou_loss:
+            self.use_fine_grained_loss = True
+        self.use_coord_conv = use_coord_conv
+        self.use_iou_aware = use_iou_aware
+        self.use_spp = use_spp
+        self.use_drop_block = use_drop_block
+        self.use_iou_loss = use_iou_loss
+        self.scale_x_y = scale_x_y
+        self.max_height = 608
+        self.max_width = 608
+        self.use_matrix_nms = use_matrix_nms
+        self.use_ema = False
+        self.with_dcn_v2 = with_dcn_v2
 
     def _get_backbone(self, backbone_name):
         if backbone_name == 'DarkNet53':
@@ -102,6 +140,16 @@ class YOLOv3(BaseAPI):
             model_name = backbone_name.split('_')[1]
             backbone = paddlex.cv.nets.MobileNetV3(
                 norm_type='sync_bn', model_name=model_name)
+        elif backbone_name == 'ResNet50_vd':
+            backbone = paddlex.cv.nets.ResNet(
+                norm_type='sync_bn',
+                layers=50,
+                freeze_norm=False,
+                norm_decay=0.,
+                feature_maps=[3, 4, 5],
+                freeze_at=0,
+                variant='d',
+                dcn_v2_stages=[5] if self.with_dcn_v2 else [])
         return backbone
 
     def build_net(self, mode='train'):
@@ -117,14 +165,31 @@ class YOLOv3(BaseAPI):
             nms_topk=self.nms_topk,
             nms_keep_topk=self.nms_keep_topk,
             nms_iou_threshold=self.nms_iou_threshold,
-            train_random_shapes=self.train_random_shapes,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            coord_conv=self.use_coord_conv,
+            iou_aware=self.use_iou_aware,
+            scale_x_y=self.scale_x_y,
+            spp=self.use_spp,
+            drop_block=self.use_drop_block,
+            use_matrix_nms=self.use_matrix_nms,
+            use_fine_grained_loss=self.use_fine_grained_loss,
+            use_iou_loss=self.use_iou_loss,
+            batch_size=self.batch_size_per_gpu
+            if hasattr(self, 'batch_size_per_gpu') else 8)
+        if mode == 'train' and self.use_iou_loss or self.use_iou_aware:
+            model.max_height = self.max_height
+            model.max_width = self.max_width
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
-        outputs = OrderedDict([('bbox', model_out)])
+        outputs = OrderedDict([('bbox', model_out[0])])
         if mode == 'train':
             self.optimizer.minimize(model_out)
             outputs = OrderedDict([('loss', model_out)])
+            if self.use_ema:
+                global_steps = _decay_step_counter()
+                self.ema = ExponentialMovingAverage(
+                    self.ema_decay, thres_steps=global_steps)
+                self.ema.update()
         return inputs, outputs
 
     def default_optimizer(self, learning_rate, warmup_steps, warmup_start_lr,
@@ -172,6 +237,8 @@ class YOLOv3(BaseAPI):
               warmup_start_lr=0.0,
               lr_decay_epochs=[213, 240],
               lr_decay_gamma=0.1,
+              use_ema=False,
+              ema_decay=0.9998,
               metric=None,
               use_vdl=False,
               sensitivities_file=None,
@@ -242,6 +309,46 @@ class YOLOv3(BaseAPI):
                 lr_decay_gamma=lr_decay_gamma,
                 num_steps_each_epoch=num_steps_each_epoch)
         self.optimizer = optimizer
+        self.use_ema = use_ema
+        self.ema_decay = ema_decay
+
+        self.batch_size_per_gpu = int(train_batch_size /
+                                      paddlex.env_info['num'])
+        if self.use_fine_grained_loss:
+            for transform in train_dataset.transforms.transforms:
+                if isinstance(transform, paddlex.det.transforms.Resize):
+                    self.max_height = transform.target_size
+                    self.max_width = transform.target_size
+                    break
+        if train_dataset.transforms.batch_transforms is None:
+            train_dataset.transforms.batch_transforms = list()
+        define_random_shape = False
+        for bt in train_dataset.transforms.batch_transforms:
+            if isinstance(bt, paddlex.det.transforms.BatchRandomShape):
+                define_random_shape = True
+        if not define_random_shape:
+            if isinstance(self.train_random_shapes,
+                          (list, tuple)) and len(self.train_random_shapes) > 0:
+                train_dataset.transforms.batch_transforms.append(
+                    paddlex.det.transforms.BatchRandomShape(
+                        random_shapes=self.train_random_shapes))
+                if self.use_fine_grained_loss:
+                    self.max_height = max(self.max_height,
+                                          max(self.train_random_shapes))
+                    self.max_width = max(self.max_width,
+                                         max(self.train_random_shapes))
+        if self.use_fine_grained_loss:
+            define_generate_target = False
+            for bt in train_dataset.transforms.batch_transforms:
+                if isinstance(bt, paddlex.det.transforms.GenerateYoloTarget):
+                    define_generate_target = True
+            if not define_generate_target:
+                train_dataset.transforms.batch_transforms.append(
+                    paddlex.det.transforms.GenerateYoloTarget(
+                        anchors=self.anchors,
+                        anchor_masks=self.anchor_masks,
+                        num_classes=self.num_classes,
+                        downsample_ratios=[32, 16, 8]))
         # 构建训练、验证、预测网络
         self.build_program()
         # 初始化网络权重
