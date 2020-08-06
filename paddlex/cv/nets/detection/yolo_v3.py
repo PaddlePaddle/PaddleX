@@ -496,15 +496,14 @@ class YOLOv3:
             gt_label = inputs['gt_label']
             gt_score = inputs['gt_score']
             im_size = inputs['im_size']
-            #num_boxes = fluid.layers.shape(gt_box)[1]
-            #im_size_wh = fluid.layers.reverse(im_size, axis=1)
-            #whwh = fluid.layers.concat([im_size_wh, im_size_wh], axis=1)
-            #whwh = fluid.layers.unsqueeze(whwh, axes=[1])
-            #whwh = fluid.layers.expand(whwh, expand_times=[1, num_boxes, 1])
-            #whwh = fluid.layers.cast(whwh, dtype='float32')
-            #whwh.stop_gradient = True
-            #normalized_box = fluid.layers.elementwise_div(gt_box, whwh)
-            normalized_box = gt_box
+            num_boxes = fluid.layers.shape(gt_box)[1]
+            im_size_wh = fluid.layers.reverse(im_size, axis=1)
+            whwh = fluid.layers.concat([im_size_wh, im_size_wh], axis=1)
+            whwh = fluid.layers.unsqueeze(whwh, axes=[1])
+            whwh = fluid.layers.expand(whwh, expand_times=[1, num_boxes, 1])
+            whwh = fluid.layers.cast(whwh, dtype='float32')
+            whwh.stop_gradient = True
+            normalized_box = fluid.layers.elementwise_div(gt_box, whwh)
 
             targets = []
             if self.use_fine_grained_loss:

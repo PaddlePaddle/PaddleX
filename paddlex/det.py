@@ -17,6 +17,7 @@ from . import cv
 
 FasterRCNN = cv.models.FasterRCNN
 YOLOv3 = cv.models.YOLOv3
+PPYOLO = cv.models.PPYOLO
 MaskRCNN = cv.models.MaskRCNN
 transforms = cv.transforms.det_transforms
 visualize = cv.models.utils.visualize.visualize_detection

@@ -43,17 +43,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 num_classes = len(train_dataset.labels)
 
 # API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-yolov3
-model = pdx.det.YOLOv3(
-    num_classes=num_classes,
-    backbone='ResNet50_vd',
-    with_dcn_v2=True,
-    use_coord_conv=True,
-    use_iou_aware=True,
-    use_spp=True,
-    use_drop_block=True,
-    scale_x_y=1.05,
-    use_iou_loss=True,
-    use_matrix_nms=True)
+model = pdx.det.PPYOLO(num_classes=num_classes)
 
 # API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#train
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
@@ -64,6 +54,5 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
-    use_ema=True,
     save_dir='output/ppyolo',
     use_vdl=True)
