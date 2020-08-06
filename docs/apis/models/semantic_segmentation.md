@@ -69,7 +69,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, return_details=False):
 > **返回值**
 > >
 > > - **dict**: 当`return_details`为False时，返回dict。包含关键字：'miou'、'category_iou'、'macc'、
-> >   'category_acc'和'kappa'，分别表示平均iou、各类别iou、平均准确率、各类别准确率和kappa系数。
+> >   'category_acc'和'kappa'，分别表示平均IoU、各类别IoU、平均准确率、各类别准确率和kappa系数。
 > > - **tuple** (metrics, eval_details)：当`return_details`为True时，增加返回dict (eval_details)，
 > >   包含关键字：'confusion_matrix'，表示评估的混淆矩阵。
 
