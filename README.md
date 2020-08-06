@@ -54,7 +54,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 ## 产品模块说明
 
-- **数据准备**：兼容ImageNet、VOC、COCO等常用数据协议, 同时与Labelme、精灵标注助手、[EasyData智能数据服务平台](https://ai.baidu.com/easydata/)等无缝衔接，全方位助力开发者更快完成数据准备工作。
+- **数据准备**：兼容ImageNet、VOC、COCO等常用数据协议，同时与Labelme、精灵标注助手、[EasyData智能数据服务平台](https://ai.baidu.com/easydata/)等无缝衔接，全方位助力开发者更快完成数据准备工作。
 
 - **数据预处理及增强**：提供极简的图像预处理和增强方法--Transforms，适配imgaug图像增强库，支持**上百种数据增强策略**，是开发者快速缓解小样本数据训练的问题。
 
