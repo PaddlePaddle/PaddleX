@@ -40,7 +40,7 @@ predict(image, topk=1)
 > **参数**
 >
 > > * **image** (str|np.ndarray): 待预测的图片路径或numpy数组(HWC排列，BGR格式)。
-> > * **topk** (int): 图像分类时使用的参数，表示预测前topk个可能的分类
+> > * **topk** (int): 图像分类时使用的参数，表示预测前topk个可能的分类。
 
 ### batch_predict 接口
 ```

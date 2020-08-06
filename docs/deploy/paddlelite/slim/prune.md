@@ -49,7 +49,7 @@ PaddleX提供了两种方式:
 ### 语义分割
 实验背景：使用UNet模型，数据集为视盘分割示例数据，剪裁训练代码见[tutorials/compress/segmentation](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/segmentation)
 
-| 模型 | 剪裁情况 | 模型大小 | mIOU(%) |GPU预测速度 | CPU预测速度 |
+| 模型 | 剪裁情况 | 模型大小 | mIoU(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|
 |UNet | 无剪裁（原模型）| 77M | 91.22 |33.28ms |9523.55ms |
 |UNet | 方案一(eval_metric_loss=0.10) |26M | 90.37 |21.04ms |3936.20ms |

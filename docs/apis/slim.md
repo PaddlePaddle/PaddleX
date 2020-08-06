@@ -26,16 +26,16 @@ paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size
 ```
 paddlex.slim.export_quant_model(model, test_dataset, batch_size=2, batch_num=10, save_dir='./quant_model', cache_dir='./temp')
 ```
-导出量化模型，该接口实现了Post Quantization量化方式，需要传入测试数据集，并设定`batch_size`和`batch_num`。量化过程中会以数量为`batch_size` X `batch_num`的样本数据的计算结果为统计信息完成模型的量化。
+导出量化模型，该接口实现了Post Quantization量化方式，需要传入测试数据集，并设定`batch_size`和`batch_num`。量化过程中会以数量为`batch_size` * `batch_num`的样本数据的计算结果为统计信息完成模型的量化。
 
 **参数**
 
 * **model**(paddlex.cls.models/paddlex.det.models/paddlex.seg.models): paddlex加载的模型。
-* **test_dataset**(paddlex.dataset): 测试数据集
-* **batch_size**(int): 进行前向计算时的批数据大小
-* **batch_num**(int): 进行向前计算时批数据数量
-* **save_dir**(str): 量化后模型的保存目录
-* **cache_dir**(str): 量化过程中的统计数据临时存储目录
+* **test_dataset**(paddlex.dataset): 测试数据集。
+* **batch_size**(int): 进行前向计算时的批数据大小。
+* **batch_num**(int): 进行向前计算时批数据数量。
+* **save_dir**(str): 量化后模型的保存目录。
+* **cache_dir**(str): 量化过程中的统计数据临时存储目录。
 
 
 **使用示例**

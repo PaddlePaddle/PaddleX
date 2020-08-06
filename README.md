@@ -30,7 +30,7 @@
 
   **前置依赖**
 > - paddlepaddle >= 1.8.0
-> - python >= 3.5
+> - python >= 3.6
 > - cython
 > - pycocotools
 
@@ -48,13 +48,13 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
-- https://aistudio.baidu.com/aistudio/projectdetail/440197)
+- https://aistudio.baidu.com/aistudio/projectdetail/440197
 
   
 
 ## 产品模块说明
 
-- **数据准备**：兼容ImageNet、VOC、COCO等常用数据协议, 同时与Labelme、精灵标注助手、[EasyData智能数据服务平台](https://ai.baidu.com/easydata/)等无缝衔接，全方位助力开发者更快完成数据准备工作。
+- **数据准备**：兼容ImageNet、VOC、COCO等常用数据协议，同时与Labelme、精灵标注助手、[EasyData智能数据服务平台](https://ai.baidu.com/easydata/)等无缝衔接，全方位助力开发者更快完成数据准备工作。
 
 - **数据预处理及增强**：提供极简的图像预处理和增强方法--Transforms，适配imgaug图像增强库，支持**上百种数据增强策略**，是开发者快速缓解小样本数据训练的问题。
 
@@ -93,7 +93,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
   * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 
 * 工业质检：
-  * 电池隔膜缺陷检测(Comming Soon)
+  * 电池隔膜缺陷检测(Coming Soon)
 
 * [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
 
@@ -105,8 +105,8 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 ## 交流与反馈
 
-- 项目官网: https://www.paddlepaddle.org.cn/paddle/paddlex
-- PaddleX用户交流群: 1045148026 (手机QQ扫描如下二维码快速加入)  
+- 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
+- PaddleX用户交流群：1045148026 (手机QQ扫描如下二维码快速加入)  
   ![](./docs/gui/images/QR.jpg)
 
 
@@ -124,4 +124,4 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 ## 贡献代码
 
-我们非常欢迎您为PaddleX贡献代码或者提供使用建议。如果您可以修复某个issue或者增加一个新功能，欢迎给我们提交Pull Requests.
+我们非常欢迎您为PaddleX贡献代码或者提供使用建议。如果您可以修复某个issue或者增加一个新功能，欢迎给我们提交Pull Requests。

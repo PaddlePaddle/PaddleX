@@ -21,7 +21,7 @@ paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor_
 > > - **nms_score_threshold** (float): 检测框的置信度得分阈值，置信度得分低于阈值的框应该被忽略。默认为0.01。
 > > - **nms_topk** (int): 进行NMS时，根据置信度保留的最大检测框数。默认为1000。
 > > - **nms_keep_topk** (int): 进行NMS后，每个图像要保留的总检测框数。默认为100。
-> > - **nms_iou_threshold** (float): 进行NMS时，用于剔除检测框IOU的阈值。默认为0.45。
+> > - **nms_iou_threshold** (float): 进行NMS时，用于剔除检测框IoU的阈值。默认为0.45。
 > > - **label_smooth** (bool): 是否使用label smooth。默认值为False。
 > > - **train_random_shapes** (list|tuple): 训练时从列表中随机选择图像大小。默认值为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
 

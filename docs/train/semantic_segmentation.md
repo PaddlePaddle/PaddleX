@@ -4,11 +4,11 @@
 
 PaddleX目前提供了DeepLabv3p、UNet、HRNet和FastSCNN四种语义分割结构,多种backbone模型，可满足开发者不同场景和性能的需求。
 
-- **mIOU**: 模型在CityScape数据集上的测试精度
+- **mIoU**: 模型在CityScape数据集上的测试精度
 - **预测速度**：单张图片的预测用时（不包括预处理和后处理)
 - "-"表示指标暂未更新
 
-| 模型(点击获取代码)               | mIOU | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
+| 模型(点击获取代码)               | mIoU | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
 | :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
 | [DeepLabv3p-MobileNetV2-x0.25](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2_x0.25.py) |  -  |  2.9MB  |  -   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
 | [DeepLabv3p-MobileNetV2-x1.0](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2.py) |  69.8%  |  11MB  |  -   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
