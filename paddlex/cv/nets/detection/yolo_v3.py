@@ -483,7 +483,6 @@ class YOLOv3:
         return inputs
 
     def build_net(self, inputs):
-        import numpy as np
         image = inputs['image']
         feats = self.backbone(image)
         if isinstance(feats, OrderedDict):
