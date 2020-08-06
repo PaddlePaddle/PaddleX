@@ -93,7 +93,7 @@ def arg_parser():
         default=False,
         help="split dataset with the split value")
     parser.add_argument(
-        "--form",
+        "--format",
         "-f",
         default=None,
         help="define dataset format(ImageNet/COCO/VOC/Seg)")
@@ -187,22 +187,22 @@ def main():
         assert args.val_value is not None, "--val_value should be defined while spliting dataset"
 
         dataset_dir = args.dataset_dir
-        dataset_form = args.form.lower()
+        dataset_format = args.format.lower()
         val_value = float(args.val_value)
         test_value = float(args.test_value
                            if args.test_value is not None else 0)
         save_dir = dataset_dir
 
-        if not dataset_form in ["coco", "imagenet", "voc", "seg"]:
+        if not dataset_format in ["coco", "imagenet", "voc", "seg"]:
             logging.error(
-                "The dataset form is not correct defined.(support COCO/ImageNet/VOC/Seg)"
+                "The dataset format is not correct defined.(support COCO/ImageNet/VOC/Seg)"
             )
         if not osp.exists(dataset_dir):
             logging.error("The path of dataset to be splited doesn't exist.")
         if val_value <= 0 or val_value >= 1 or test_value < 0 or test_value >= 1 or val_value + test_value >= 1:
             logging.error("The value of split is not correct.")
 
-        pdx.tools.split.dataset_split(dataset_dir, dataset_form, val_value,
+        pdx.tools.split.dataset_split(dataset_dir, dataset_format, val_value,
                                       test_value, save_dir)
 
 
