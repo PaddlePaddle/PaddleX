@@ -30,7 +30,7 @@
 
   **前置依赖**
 > - paddlepaddle >= 1.8.0
-> - python >= 3.5
+> - python >= 3.6
 > - cython
 > - pycocotools
 
