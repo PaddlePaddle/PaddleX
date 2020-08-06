@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -404,8 +404,9 @@ def draw_pr_curve(eval_details_file=None,
             plt.plot(x, sr_array, color=color, label=nm, linewidth=1)
         plt.legend(loc="lower left", fontsize=5)
         plt.savefig(
-            os.path.join(save_dir,
-                         "./{}_pr_curve(iou-{}).png".format(style, iou_thresh)),
+            os.path.join(
+                save_dir,
+                "./{}_pr_curve(iou-{}).png".format(style, iou_thresh)),
             dpi=800)
         plt.close()
 

@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -218,14 +218,13 @@ def generate_minibatch(batch_data, label_padding_value=255):
             (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
         padding_im[:, :im_h, :im_w] = data[0]
         if len(data) > 2:
-           # padding the image, label and insert 'padding' into `im_info` of segmentation during evaluating phase.
+            # padding the image, label and insert 'padding' into `im_info` of segmentation during evaluating phase.
             if len(data[1]) == 0 or 'padding' not in [
                     data[1][i][0] for i in range(len(data[1]))
             ]:
                 data[1].append(('padding', [im_h, im_w]))
             padding_batch.append((padding_im, data[1], data[2]))
 
-            
         elif len(data) > 1:
             if isinstance(data[1], np.ndarray) and len(data[1].shape) > 1:
                 # padding the image and label of segmentation during the training
