@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,8 +24,9 @@ def softmax_with_loss(logit,
                       ignore_index=255):
     ignore_mask = fluid.layers.cast(ignore_mask, 'float32')
     label = fluid.layers.elementwise_min(
-        label, fluid.layers.assign(
-            np.array([num_classes - 1], dtype=np.int32)))
+        label,
+        fluid.layers.assign(np.array(
+            [num_classes - 1], dtype=np.int32)))
     logit = fluid.layers.transpose(logit, [0, 2, 3, 1])
     logit = fluid.layers.reshape(logit, [-1, num_classes])
     label = fluid.layers.reshape(label, [-1, 1])
@@ -60,8 +61,8 @@ def softmax_with_loss(logit,
                 'Expect weight is a list, string or Variable, but receive {}'.
                 format(type(weight)))
         weight = fluid.layers.reshape(weight, [1, num_classes])
-        weighted_label_one_hot = fluid.layers.elementwise_mul(
-            label_one_hot, weight)
+        weighted_label_one_hot = fluid.layers.elementwise_mul(label_one_hot,
+                                                              weight)
         probs = fluid.layers.softmax(logit)
         loss = fluid.layers.cross_entropy(
             probs,

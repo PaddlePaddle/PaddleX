@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ def get_environ_info():
                 info['num'] = fluid.core.get_cuda_device_count()
     return info
 
+
 def path_normalization(path):
     win_sep = "\\"
     other_sep = "/"
@@ -58,6 +59,7 @@ def path_normalization(path):
     else:
         path = other_sep.join(path.split(win_sep))
     return path
+
 
 def parse_param_file(param_file, return_shape=True):
     from paddle.fluid.proto.framework_pb2 import VarType

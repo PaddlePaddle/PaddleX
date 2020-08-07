@@ -1,5 +1,5 @@
 # coding: utf8
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -148,7 +148,8 @@ def separate_conv(input,
         name=name_scope + 'weights',
         regularizer=fluid.regularizer.L2DecayRegularizer(
             regularization_coeff=0.0),
-        initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.33))
+        initializer=fluid.initializer.TruncatedNormal(
+            loc=0.0, scale=0.33))
     with scope('depthwise'):
         input = conv(
             input,
@@ -166,7 +167,8 @@ def separate_conv(input,
     param_attr = fluid.ParamAttr(
         name=name_scope + 'weights',
         regularizer=None,
-        initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.06))
+        initializer=fluid.initializer.TruncatedNormal(
+            loc=0.0, scale=0.06))
     with scope('pointwise'):
         input = conv(
             input, channel, 1, 1, groups=1, padding=0, param_attr=param_attr)

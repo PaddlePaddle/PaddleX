@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -280,8 +280,9 @@ class MaskRCNN(FasterRCNN):
 
         total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
         results = list()
-        logging.info("Start to evaluating(total_samples={}, total_steps={})...".
-                     format(eval_dataset.num_samples, total_steps))
+        logging.info(
+            "Start to evaluating(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples, total_steps))
         for step, data in tqdm.tqdm(
                 enumerate(data_generator()), total=total_steps):
             images = np.array([d[0] for d in data]).astype('float32')
@@ -325,7 +326,8 @@ class MaskRCNN(FasterRCNN):
                     zip(['bbox_map', 'segm_map'],
                         [ap_stats[0][1], ap_stats[1][1]]))
             else:
-                metrics = OrderedDict(zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
+                metrics = OrderedDict(
+                    zip(['bbox_map', 'segm_map'], [0.0, 0.0]))
         elif metric == 'COCO':
             if isinstance(ap_stats[0], np.ndarray) and isinstance(ap_stats[1],
                                                                   np.ndarray):
@@ -429,8 +431,8 @@ class MaskRCNN(FasterRCNN):
         if transforms is None:
             transforms = self.test_transforms
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            img_file_list, transforms, self.model_type, self.__class__.__name__,
-            thread_num)
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, thread_num)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

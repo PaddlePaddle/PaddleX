@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,8 +29,9 @@ def log(level=2, message="", use_color=False):
     current_time = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
     if paddlex.log_level >= level:
         if use_color:
-            print("\033[1;31;40m{} [{}]\t{}\033[0m".format(current_time, levels[
-                level], message).encode("utf-8").decode("latin1"))
+            print("\033[1;31;40m{} [{}]\t{}\033[0m".format(
+                current_time, levels[level], message).encode("utf-8").decode(
+                    "latin1"))
         else:
             print("{} [{}]\t{}".format(current_time, levels[level], message)
                   .encode("utf-8").decode("latin1"))

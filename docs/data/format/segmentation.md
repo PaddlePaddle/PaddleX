@@ -23,12 +23,10 @@ MyDataset/ # 语义分割数据集根目录
 
 **为了用于训练，我们需要在`MyDataset`目录下准备`train_list.txt`, `val_list.txt`和`labels.txt`三个文件**，分别用于表示训练集列表，验证集列表和类别标签列表。[点击下载语义分割示例数据集](https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz)
 
-<!--
-> 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中split指标训练集的比例，剩余的比例用于验证集。
+> 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中val_value表示验证集的比例，test_value表示测试集的比例（可以为0），剩余的比例用于训练集。
 > ```
-> paddlex --split_dataset --from Seg --pics ./JPEGImages --annotations ./Annotations --split 0.8 --save_dir ./splited_dataset_dir
+> paddlex --split_dataset --format Seg --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
 > ```
--->
 
 **labels.txt**  
 

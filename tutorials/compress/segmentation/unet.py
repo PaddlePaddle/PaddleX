@@ -1,4 +1,4 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 #Licensed under the Apache License, Version 2.0 (the "License");
 #you may not use this file except in compliance with the License.
@@ -28,15 +28,12 @@ def train(model_dir, sensitivities_file, eval_metric_loss):
 
     # 定义训练和验证时的transforms
     train_transforms = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.ResizeRangeScaling(),
-        transforms.RandomPaddingCrop(crop_size=512),
-        transforms.Normalize()
+        transforms.RandomHorizontalFlip(), transforms.ResizeRangeScaling(),
+        transforms.RandomPaddingCrop(crop_size=512), transforms.Normalize()
     ])
     eval_transforms = transforms.Compose([
         transforms.ResizeByLong(long_size=512),
-        transforms.Padding(target_size=512),
-        transforms.Normalize()
+        transforms.Padding(target_size=512), transforms.Normalize()
     ])
 
     # 定义训练和验证所用的数据集
