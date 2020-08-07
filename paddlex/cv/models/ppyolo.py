@@ -37,11 +37,19 @@ class PPYOLO(BaseAPI):
     Args:
         num_classes (int): 类别数。默认为80。
         backbone (str): PPYOLO的backbone网络，取值范围为['ResNet50_vd']。默认为'ResNet50_vd'。
+        with_dcn_v2 (bool): Backbone是否使用DCNv2结构。默认为True。
         anchors (list|tuple): anchor框的宽度和高度，为None时表示使用默认值
                     [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                     [59, 119], [116, 90], [156, 198], [373, 326]]。
         anchor_masks (list|tuple): 在计算PPYOLO损失时，使用anchor的mask索引，为None时表示使用默认值
                     [[6, 7, 8], [3, 4, 5], [0, 1, 2]]。
+        use_coord_conv (bool): 是否使用CoordConv。默认值为True。
+        use_iou_aware (bool): 是否使用IoU Aware分支。默认值为True。
+        use_spp (bool): 是否使用Spatial Pyramid Pooling结构。默认值为True。
+        use_drop_block (bool): 是否使用Drop Block。默认值为True。
+        scale_x_y (float): 调整中心点位置时的系数因子。默认值为1.05。
+        use_iou_loss (bool): 是否使用IoU loss。默认值为True。
+        use_matrix_nms (bool): 是否使用Matrix NMS。默认值为True。
         ignore_threshold (float): 在计算PPYOLO损失时，IoU大于`ignore_threshold`的预测框的置信度被忽略。默认为0.7。
         nms_score_threshold (float): 检测框的置信度得分阈值，置信度得分低于阈值的框应该被忽略。默认为0.01。
         nms_topk (int): 进行NMS时，根据置信度保留的最大检测框数。默认为1000。
@@ -54,7 +62,7 @@ class PPYOLO(BaseAPI):
     def __init__(
             self,
             num_classes=80,
-            backbone='ResNet50_vd',
+            backbone='ResNet50_vd_ssld',
             with_dcn_v2=True,
             # YOLO Head
             anchors=None,
@@ -79,7 +87,7 @@ class PPYOLO(BaseAPI):
             ]):
         self.init_params = locals()
         super(PPYOLO, self).__init__('detector')
-        backbones = ['ResNet50_vd']
+        backbones = ['ResNet50_vd_ssld']
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
         self.backbone = backbone
@@ -116,7 +124,7 @@ class PPYOLO(BaseAPI):
         self.with_dcn_v2 = with_dcn_v2
 
     def _get_backbone(self, backbone_name):
-        if backbone_name == 'ResNet50_vd':
+        if backbone_name.startswith('ResNet50_vd'):
             backbone = paddlex.cv.nets.ResNet(
                 norm_type='sync_bn',
                 layers=50,
@@ -252,6 +260,8 @@ class PPYOLO(BaseAPI):
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
             resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
+            use_ema (bool): 是否使用指数衰减计算参数的滑动平均值。默认值为True。
+            ema_decay (float): 指数衰减率。默认值为0.9998。
 
         Raises:
             ValueError: 评估类型不在指定列表中。

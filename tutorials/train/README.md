@@ -12,6 +12,7 @@
 |object_detection/faster_rcnn_hrnet_fpn.py | 目标检测FasterRCNN | 昆虫检测 |
 |object_detection/faster_rcnn_r18_fpn.py | 目标检测FasterRCNN | 昆虫检测 |
 |object_detection/faster_rcnn_r50_fpn.py | 目标检测FasterRCNN | 昆虫检测 |
+|object_detection/ppyolo.py | 目标检测PPYOLO | 昆虫检测 |
 |object_detection/yolov3_darknet53.py | 目标检测YOLOv3 | 昆虫检测 |
 |object_detection/yolov3_mobilenetv1.py | 目标检测YOLOv3 | 昆虫检测 |
 |object_detection/yolov3_mobilenetv3.py | 目标检测YOLOv3 | 昆虫检测 |
