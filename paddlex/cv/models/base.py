@@ -548,6 +548,8 @@ class BaseAPI:
                 current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
                 if not osp.isdir(current_save_dir):
                     os.makedirs(current_save_dir)
+                if hasattr(self, 'use_ema'):
+                    self.exe.run(self.ema.apply_program)
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
                     self.eval_metrics, self.eval_details = self.evaluate(
                         eval_dataset=eval_dataset,
@@ -574,6 +576,8 @@ class BaseAPI:
                             log_writer.add_scalar(
                                 "Metrics/Eval(Epoch): {}".format(k), v, i + 1)
                 self.save_model(save_dir=current_save_dir)
+                if hasattr(self, 'use_ema'):
+                    self.exe.run(self.ema.restore_program)
                 time_eval_one_epoch = time.time() - eval_epoch_start_time
                 eval_epoch_start_time = time.time()
                 if best_model_epoch > 0:

@@ -115,7 +115,7 @@ def multithread_reader(mapper,
         while not isinstance(sample, EndSignal):
             batch_data.append(sample)
             if len(batch_data) == batch_size:
-                batch_data = generate_minibatch(batch_data)
+                batch_data = generate_minibatch(batch_data, mapper=mapper)
                 yield batch_data
                 batch_data = []
             sample = out_queue.get()
@@ -127,11 +127,11 @@ def multithread_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = generate_minibatch(batch_data)
+                    batch_data = generate_minibatch(batch_data, mapper=mapper)
                     yield batch_data
                     batch_data = []
         if not drop_last and len(batch_data) != 0:
-            batch_data = generate_minibatch(batch_data)
+            batch_data = generate_minibatch(batch_data, mapper=mapper)
             yield batch_data
             batch_data = []
 
@@ -188,18 +188,21 @@ def multiprocess_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = generate_minibatch(batch_data)
+                    batch_data = generate_minibatch(batch_data, mapper=mapper)
                     yield batch_data
                     batch_data = []
         if len(batch_data) != 0 and not drop_last:
-            batch_data = generate_minibatch(batch_data)
+            batch_data = generate_minibatch(batch_data, mapper=mapper)
             yield batch_data
             batch_data = []
 
     return queue_reader
 
 
-def generate_minibatch(batch_data, label_padding_value=255):
+def generate_minibatch(batch_data, label_padding_value=255, mapper=None):
+    if mapper is not None and mapper.batch_transforms is not None:
+        for op in mapper.batch_transforms:
+            batch_data = op(batch_data)
     # if batch_size is 1, do not pad the image
     if len(batch_data) == 1:
         return batch_data

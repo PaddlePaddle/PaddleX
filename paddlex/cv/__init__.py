@@ -26,6 +26,7 @@ ResNet50 = models.ResNet50
 DarkNet53 = models.DarkNet53
 # detection
 YOLOv3 = models.YOLOv3
+PPYOLO = models.PPYOLO
 #EAST = models.EAST
 FasterRCNN = models.FasterRCNN
 MaskRCNN = models.MaskRCNN

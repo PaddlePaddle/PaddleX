@@ -15,21 +15,11 @@
 from __future__ import absolute_import
 import math
 import tqdm
-import os.path as osp
-import numpy as np
-from multiprocessing.pool import ThreadPool
-import paddle.fluid as fluid
-import paddlex.utils.logging as logging
 import paddlex
-import copy
-from paddlex.cv.transforms import arrange_transforms
-from paddlex.cv.datasets import generate_minibatch
-from .base import BaseAPI
-from collections import OrderedDict
-from .utils.detection_eval import eval_results, bbox2out
+from .ppyolo import PPYOLO
 
 
-class YOLOv3(BaseAPI):
+class YOLOv3(PPYOLO):
     """构建YOLOv3，并实现其训练、评估、预测和模型导出。
 
     Args:
@@ -65,12 +55,12 @@ class YOLOv3(BaseAPI):
                      320, 352, 384, 416, 448, 480, 512, 544, 576, 608
                  ]):
         self.init_params = locals()
-        super(YOLOv3, self).__init__('detector')
         backbones = [
             'DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
+        super(YOLOv3, self).__init__('detector')
         self.backbone = backbone
         self.num_classes = num_classes
         self.anchors = anchors
@@ -84,6 +74,16 @@ class YOLOv3(BaseAPI):
         self.sync_bn = True
         self.train_random_shapes = train_random_shapes
         self.fixed_input_shape = None
+        self.use_fine_grained_loss = False
+        self.use_coord_conv = False
+        self.use_iou_aware = False
+        self.use_spp = False
+        self.use_drop_block = False
+        self.use_iou_loss = False
+        self.scale_x_y = 1.
+        self.use_matrix_nms = False
+        self.use_ema = False
+        self.with_dcn_v2 = False
 
     def _get_backbone(self, backbone_name):
         if backbone_name == 'DarkNet53':
@@ -103,59 +103,6 @@ class YOLOv3(BaseAPI):
             backbone = paddlex.cv.nets.MobileNetV3(
                 norm_type='sync_bn', model_name=model_name)
         return backbone
-
-    def build_net(self, mode='train'):
-        model = paddlex.cv.nets.detection.YOLOv3(
-            backbone=self._get_backbone(self.backbone),
-            num_classes=self.num_classes,
-            mode=mode,
-            anchors=self.anchors,
-            anchor_masks=self.anchor_masks,
-            ignore_threshold=self.ignore_threshold,
-            label_smooth=self.label_smooth,
-            nms_score_threshold=self.nms_score_threshold,
-            nms_topk=self.nms_topk,
-            nms_keep_topk=self.nms_keep_topk,
-            nms_iou_threshold=self.nms_iou_threshold,
-            train_random_shapes=self.train_random_shapes,
-            fixed_input_shape=self.fixed_input_shape)
-        inputs = model.generate_inputs()
-        model_out = model.build_net(inputs)
-        outputs = OrderedDict([('bbox', model_out)])
-        if mode == 'train':
-            self.optimizer.minimize(model_out)
-            outputs = OrderedDict([('loss', model_out)])
-        return inputs, outputs
-
-    def default_optimizer(self, learning_rate, warmup_steps, warmup_start_lr,
-                          lr_decay_epochs, lr_decay_gamma,
-                          num_steps_each_epoch):
-        if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
-            logging.error(
-                "In function train(), parameters should satisfy: warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
-                exit=False)
-            logging.error(
-                "See this doc for more information: https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
-                exit=False)
-            logging.error(
-                "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
-                format(lr_decay_epochs[0] * num_steps_each_epoch, warmup_steps
-                       // num_steps_each_epoch))
-        boundaries = [b * num_steps_each_epoch for b in lr_decay_epochs]
-        values = [(lr_decay_gamma**i) * learning_rate
-                  for i in range(len(lr_decay_epochs) + 1)]
-        lr_decay = fluid.layers.piecewise_decay(
-            boundaries=boundaries, values=values)
-        lr_warmup = fluid.layers.linear_lr_warmup(
-            learning_rate=lr_decay,
-            warmup_steps=warmup_steps,
-            start_lr=warmup_start_lr,
-            end_lr=learning_rate)
-        optimizer = fluid.optimizer.Momentum(
-            learning_rate=lr_warmup,
-            momentum=0.9,
-            regularization=fluid.regularizer.L2DecayRegularizer(5e-04))
-        return optimizer
 
     def train(self,
               num_epochs,
@@ -214,259 +161,11 @@ class YOLOv3(BaseAPI):
             ValueError: 评估类型不在指定列表中。
             ValueError: 模型从inference model进行加载。
         """
-        if not self.trainable:
-            raise ValueError("Model is not trainable from load_model method.")
-        if metric is None:
-            if isinstance(train_dataset, paddlex.datasets.CocoDetection):
-                metric = 'COCO'
-            elif isinstance(train_dataset, paddlex.datasets.VOCDetection) or \
-                    isinstance(train_dataset, paddlex.datasets.EasyDataDet):
-                metric = 'VOC'
-            else:
-                raise ValueError(
-                    "train_dataset should be datasets.VOCDetection or datasets.COCODetection or datasets.EasyDataDet."
-                )
-        assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
-        self.metric = metric
 
-        self.labels = train_dataset.labels
-        # 构建训练网络
-        if optimizer is None:
-            # 构建默认的优化策略
-            num_steps_each_epoch = train_dataset.num_samples // train_batch_size
-            optimizer = self.default_optimizer(
-                learning_rate=learning_rate,
-                warmup_steps=warmup_steps,
-                warmup_start_lr=warmup_start_lr,
-                lr_decay_epochs=lr_decay_epochs,
-                lr_decay_gamma=lr_decay_gamma,
-                num_steps_each_epoch=num_steps_each_epoch)
-        self.optimizer = optimizer
-        # 构建训练、验证、预测网络
-        self.build_program()
-        # 初始化网络权重
-        self.net_initialize(
-            startup_prog=fluid.default_startup_program(),
-            pretrain_weights=pretrain_weights,
-            save_dir=save_dir,
-            sensitivities_file=sensitivities_file,
-            eval_metric_loss=eval_metric_loss,
-            resume_checkpoint=resume_checkpoint)
-        # 训练
-        self.train_loop(
-            num_epochs=num_epochs,
-            train_dataset=train_dataset,
-            train_batch_size=train_batch_size,
-            eval_dataset=eval_dataset,
-            save_interval_epochs=save_interval_epochs,
-            log_interval_steps=log_interval_steps,
-            save_dir=save_dir,
-            use_vdl=use_vdl,
-            early_stop=early_stop,
-            early_stop_patience=early_stop_patience)
-
-    def evaluate(self,
-                 eval_dataset,
-                 batch_size=1,
-                 epoch_id=None,
-                 metric=None,
-                 return_details=False):
-        """评估。
-
-        Args:
-            eval_dataset (paddlex.datasets): 验证数据读取器。
-            batch_size (int): 验证数据批大小。默认为1。
-            epoch_id (int): 当前评估模型所在的训练轮数。
-            metric (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认为None，
-                根据用户传入的Dataset自动选择，如为VOCDetection，则metric为'VOC';
-                如为COCODetection，则metric为'COCO'。
-            return_details (bool): 是否返回详细信息。
-
-        Returns:
-            tuple (metrics, eval_details) | dict (metrics): 当return_details为True时，返回(metrics, eval_details)，
-                当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，
-                分别表示平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。
-                eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
-                预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
-        """
-        arrange_transforms(
-            model_type=self.model_type,
-            class_name=self.__class__.__name__,
-            transforms=eval_dataset.transforms,
-            mode='eval')
-        if metric is None:
-            if hasattr(self, 'metric') and self.metric is not None:
-                metric = self.metric
-            else:
-                if isinstance(eval_dataset, paddlex.datasets.CocoDetection):
-                    metric = 'COCO'
-                elif isinstance(eval_dataset, paddlex.datasets.VOCDetection):
-                    metric = 'VOC'
-                else:
-                    raise Exception(
-                        "eval_dataset should be datasets.VOCDetection or datasets.COCODetection."
-                    )
-        assert metric in ['COCO', 'VOC'], "Metric only support 'VOC' or 'COCO'"
-
-        total_steps = math.ceil(eval_dataset.num_samples * 1.0 / batch_size)
-        results = list()
-
-        data_generator = eval_dataset.generator(
-            batch_size=batch_size, drop_last=False)
-        logging.info(
-            "Start to evaluating(total_samples={}, total_steps={})...".format(
-                eval_dataset.num_samples, total_steps))
-        for step, data in tqdm.tqdm(
-                enumerate(data_generator()), total=total_steps):
-            images = np.array([d[0] for d in data])
-            im_sizes = np.array([d[1] for d in data])
-            feed_data = {'image': images, 'im_size': im_sizes}
-            with fluid.scope_guard(self.scope):
-                outputs = self.exe.run(
-                    self.test_prog,
-                    feed=[feed_data],
-                    fetch_list=list(self.test_outputs.values()),
-                    return_numpy=False)
-            res = {
-                'bbox': (np.array(outputs[0]),
-                         outputs[0].recursive_sequence_lengths())
-            }
-            res_id = [np.array([d[2]]) for d in data]
-            res['im_id'] = (res_id, [])
-            if metric == 'VOC':
-                res_gt_box = [d[3].reshape(-1, 4) for d in data]
-                res_gt_label = [d[4].reshape(-1, 1) for d in data]
-                res_is_difficult = [d[5].reshape(-1, 1) for d in data]
-                res_id = [np.array([d[2]]) for d in data]
-                res['gt_box'] = (res_gt_box, [])
-                res['gt_label'] = (res_gt_label, [])
-                res['is_difficult'] = (res_is_difficult, [])
-            results.append(res)
-            logging.debug("[EVAL] Epoch={}, Step={}/{}".format(epoch_id, step +
-                                                               1, total_steps))
-        box_ap_stats, eval_details = eval_results(
-            results, metric, eval_dataset.coco_gt, with_background=False)
-        evaluate_metrics = OrderedDict(
-            zip(['bbox_mmap'
-                 if metric == 'COCO' else 'bbox_map'], box_ap_stats))
-        if return_details:
-            return evaluate_metrics, eval_details
-        return evaluate_metrics
-
-    @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
-        arrange_transforms(
-            model_type=model_type,
-            class_name=class_name,
-            transforms=transforms,
-            mode='test')
-        pool = ThreadPool(thread_num)
-        batch_data = pool.map(transforms, images)
-        pool.close()
-        pool.join()
-        padding_batch = generate_minibatch(batch_data)
-        im = np.array(
-            [data[0] for data in padding_batch],
-            dtype=padding_batch[0][0].dtype)
-        im_size = np.array([data[1] for data in padding_batch], dtype=np.int32)
-
-        return im, im_size
-
-    @staticmethod
-    def _postprocess(res, batch_size, num_classes, labels):
-        clsid2catid = dict({i: i for i in range(num_classes)})
-        xywh_results = bbox2out([res], clsid2catid)
-        preds = [[] for i in range(batch_size)]
-        for xywh_res in xywh_results:
-            image_id = xywh_res['image_id']
-            del xywh_res['image_id']
-            xywh_res['category'] = labels[xywh_res['category_id']]
-            preds[image_id].append(xywh_res)
-
-        return preds
-
-    def predict(self, img_file, transforms=None):
-        """预测。
-
-        Args:
-            img_file (str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-            transforms (paddlex.det.transforms): 数据预处理操作。
-
-        Returns:
-            list: 预测结果列表，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
-              预测框得分组成。
-        """
-        if transforms is None and not hasattr(self, 'test_transforms'):
-            raise Exception("transforms need to be defined, now is None.")
-        if isinstance(img_file, (str, np.ndarray)):
-            images = [img_file]
-        else:
-            raise Exception("img_file must be str/np.ndarray")
-
-        if transforms is None:
-            transforms = self.test_transforms
-        im, im_size = YOLOv3._preprocess(images, transforms, self.model_type,
-                                         self.__class__.__name__)
-
-        with fluid.scope_guard(self.scope):
-            result = self.exe.run(self.test_prog,
-                                  feed={'image': im,
-                                        'im_size': im_size},
-                                  fetch_list=list(self.test_outputs.values()),
-                                  return_numpy=False,
-                                  use_program_cache=True)
-
-        res = {
-            k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(self.test_outputs.keys()), result)
-        }
-        res['im_id'] = (np.array(
-            [[i] for i in range(len(images))]).astype('int32'), [[]])
-        preds = YOLOv3._postprocess(res,
-                                    len(images), self.num_classes, self.labels)
-        return preds[0]
-
-    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
-        """预测。
-
-        Args:
-            img_file_list (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
-                且类型为float32且为BGR格式的数组。
-            transforms (paddlex.det.transforms): 数据预处理操作。
-            thread_num (int): 并发执行各图像预处理时的线程数。
-        Returns:
-            list: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、
-              预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
-              预测框得分组成。
-        """
-        if transforms is None and not hasattr(self, 'test_transforms'):
-            raise Exception("transforms need to be defined, now is None.")
-
-        if not isinstance(img_file_list, (list, tuple)):
-            raise Exception("im_file must be list/tuple")
-
-        if transforms is None:
-            transforms = self.test_transforms
-        im, im_size = YOLOv3._preprocess(img_file_list, transforms,
-                                         self.model_type,
-                                         self.__class__.__name__, thread_num)
-
-        with fluid.scope_guard(self.scope):
-            result = self.exe.run(self.test_prog,
-                                  feed={'image': im,
-                                        'im_size': im_size},
-                                  fetch_list=list(self.test_outputs.values()),
-                                  return_numpy=False,
-                                  use_program_cache=True)
-
-        res = {
-            k: (np.array(v), v.recursive_sequence_lengths())
-            for k, v in zip(list(self.test_outputs.keys()), result)
-        }
-        res['im_id'] = (np.array(
-            [[i] for i in range(len(img_file_list))]).astype('int32'), [[]])
-        preds = YOLOv3._postprocess(res,
-                                    len(img_file_list), self.num_classes,
-                                    self.labels)
-        return preds
+        return super(YOLOv3, self).train(
+            num_epochs, train_dataset, train_batch_size, eval_dataset,
+            save_interval_epochs, log_interval_steps, save_dir,
+            pretrain_weights, optimizer, learning_rate, warmup_steps,
+            warmup_start_lr, lr_decay_epochs, lr_decay_gamma, metric, use_vdl,
+            sensitivities_file, eval_metric_loss, early_stop,
+            early_stop_patience, resume_checkpoint, False)

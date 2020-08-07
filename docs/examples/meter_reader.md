@@ -245,7 +245,6 @@ step 5. 推理预测：
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
-
 ## 模型训练
 
 

@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.0)
 project(PaddleX CXX C)
 
-option(WITH_MKL        "Compile demo with MKL/OpenBlas support,defaultuseMKL."          ON)
-option(WITH_GPU        "Compile demo with GPU/CPU, default use CPU."                    ON)
+option(WITH_MKL        "Compile human_segmenter with MKL/OpenBlas support,defaultuseMKL."          ON)
+option(WITH_GPU        "Compile human_segmenter with GPU/CPU, default use CPU."                    ON)
 if (NOT WIN32)
-    option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   OFF)
+    option(WITH_STATIC_LIB "Compile human_segmenter with static/shared library, default use static."   OFF)
 else()
-    option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   ON)
+    option(WITH_STATIC_LIB "Compile human_segmenter with static/shared library, default use static."   ON)
 endif()
-option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
-option(WITH_ENCRYPTION "Compile demo with encryption tool."   OFF)
+option(WITH_TENSORRT "Compile human_segmenter with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile human_segmenter with encryption tool."   OFF)
 
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
@@ -20,7 +20,6 @@ SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/demo)
 else()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddlex_inference)
@@ -50,9 +49,7 @@ endmacro()
 
 
 if (WITH_ENCRYPTION)
-  if (NOT (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64"))
-    add_definitions( -DWITH_ENCRYPTION=${WITH_ENCRYPTION})
-  endif()
+add_definitions( -DWITH_ENCRYPTION=${WITH_ENCRYPTION})
 endif()
 
 if (WITH_MKL)
@@ -124,7 +121,6 @@ else ()
   include_directories("${PADDLE_DIR}/paddle/include")
   link_directories("${PADDLE_DIR}/paddle/lib")
 endif ()
-
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 if (WIN32)
@@ -270,11 +266,9 @@ endif()
 
 if(WITH_ENCRYPTION)
   if(NOT WIN32)
-    if (NOT (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64"))
       include_directories("${ENCRYPTION_DIR}/include")
       link_directories("${ENCRYPTION_DIR}/lib")
       set(DEPS ${DEPS} ${ENCRYPTION_DIR}/lib/libpmodel-decrypt${CMAKE_SHARED_LIBRARY_SUFFIX})
-    endif()
   else()
       include_directories("${ENCRYPTION_DIR}/include")
       link_directories("${ENCRYPTION_DIR}/lib")
@@ -288,102 +282,27 @@ if (NOT WIN32)
 endif()
 
 set(DEPS ${DEPS} ${OpenCV_LIBS})
-
 add_library(paddlex_inference SHARED src/visualize src/transforms.cpp src/paddlex.cpp)
 ADD_DEPENDENCIES(paddlex_inference ext-yaml-cpp)
 target_link_libraries(paddlex_inference ${DEPS})
 
-add_executable(classifier demo/classifier.cpp src/transforms.cpp src/paddlex.cpp)
-ADD_DEPENDENCIES(classifier ext-yaml-cpp)
-target_link_libraries(classifier ${DEPS})
-
-add_executable(detector demo/detector.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
-ADD_DEPENDENCIES(detector ext-yaml-cpp)
-target_link_libraries(detector ${DEPS})
-
-add_executable(segmenter demo/segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
-ADD_DEPENDENCIES(segmenter ext-yaml-cpp)
-target_link_libraries(segmenter ${DEPS})
-
-add_executable(video_classifier demo/video_classifier.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
-ADD_DEPENDENCIES(video_classifier ext-yaml-cpp)
-target_link_libraries(video_classifier ${DEPS})
-
-add_executable(video_detector demo/video_detector.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
-ADD_DEPENDENCIES(video_detector ext-yaml-cpp)
-target_link_libraries(video_detector ${DEPS})
-
-add_executable(video_segmenter demo/video_segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
-ADD_DEPENDENCIES(video_segmenter ext-yaml-cpp)
-target_link_libraries(video_segmenter ${DEPS})
+add_executable(human_segmenter human_segmenter.cpp src/transforms.cpp src/paddlex.cpp src/visualize.cpp)
+ADD_DEPENDENCIES(human_segmenter ext-yaml-cpp)
+target_link_libraries(human_segmenter ${DEPS})
 
 
 if (WIN32 AND WITH_MKL)
-    add_custom_command(TARGET classifier POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./paddlex_inference/Release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
+    add_custom_command(TARGET human_segmenter POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./mklml.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./libiomp5md.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./mkldnn.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-    )
-    add_custom_command(TARGET detector POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./paddlex_inference/Release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-    )
-    add_custom_command(TARGET segmenter POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./paddlex_inference/Release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-    )
-    add_custom_command(TARGET video_classifier POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./paddlex_inference/Release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-    )
-    add_custom_command(TARGET video_detector POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./paddlex_inference/Release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
-    )
-    add_custom_command(TARGET video_segmenter POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./paddlex_inference/Release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./paddlex_inference/Release/libiomp5md.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./paddlex_inference/Release/mkldnn.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ./release/mklml.dll
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ./release/libiomp5md.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll ./release/mkldnn.dll
     )
     # for encryption
     if (EXISTS "${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll")
-        add_custom_command(TARGET classifier POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
-        )
-        add_custom_command(TARGET detector POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
-        )
-        add_custom_command(TARGET segmenter POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
-        )
-        add_custom_command(TARGET video_classifier POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
-        )
-        add_custom_command(TARGET video_detector POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
-        )
-        add_custom_command(TARGET video_segmenter POST_BUILD
+        add_custom_command(TARGET human_segmenter POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./pmodel-decrypt.dll
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ENCRYPTION_DIR}/lib/pmodel-decrypt.dll ./release/pmodel-decrypt.dll
         )

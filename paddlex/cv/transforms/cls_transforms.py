@@ -46,7 +46,7 @@ class Compose(ClsTransform):
             raise ValueError('The length of transforms ' + \
                             'must be equal or larger than 1!')
         self.transforms = transforms
-
+        self.batch_transforms = None
         # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
         for op in self.transforms:
             if not isinstance(op, ClsTransform):
