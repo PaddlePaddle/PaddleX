@@ -141,7 +141,7 @@ class JingLing2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
@@ -158,7 +158,7 @@ class JingLing2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
@@ -211,7 +211,7 @@ class LabelMe2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
@@ -227,7 +227,7 @@ class LabelMe2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             img_file = osp.join(image_dir, img_name)
             img = np.asarray(PIL.Image.open(img_file))
@@ -261,7 +261,7 @@ class EasyData2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
@@ -297,7 +297,7 @@ class EasyData2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             img_file = osp.join(image_dir, img_name)
             img = np.asarray(PIL.Image.open(img_file))
