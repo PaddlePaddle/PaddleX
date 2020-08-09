@@ -147,7 +147,7 @@ class LabelMe2COCO(X2COCO):
             img_name_part = osp.splitext(img_file)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_file))
+                os.remove(osp.join(img_dir, img_file))
                 continue
             image_id = image_id + 1
             with open(json_file, mode='r', \
@@ -220,7 +220,7 @@ class EasyData2COCO(X2COCO):
             img_name_part = osp.splitext(img_file)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_file))
+                os.remove(osp.join(img_dir, img_file))
                 continue
             image_id = image_id + 1
             with open(json_file, mode='r', \
@@ -317,7 +317,7 @@ class JingLing2COCO(X2COCO):
             img_name_part = osp.splitext(img_file)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_file))
+                os.remove(osp.join(img_dir, img_file))
                 continue
             image_id = image_id + 1
             with open(json_file, mode='r', \

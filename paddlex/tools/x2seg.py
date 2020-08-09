@@ -20,6 +20,7 @@ import json
 import os
 import os.path as osp
 import shutil
+import math
 import numpy as np
 import PIL.Image
 from .base import MyEncoder, is_pic, get_encoding
