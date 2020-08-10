@@ -60,7 +60,7 @@ class YOLOv3(PPYOLO):
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
-        super(YOLOv3, self).__init__('detector')
+        super(PPYOLO, self).__init__('detector')
         self.backbone = backbone
         self.num_classes = num_classes
         self.anchors = anchors
