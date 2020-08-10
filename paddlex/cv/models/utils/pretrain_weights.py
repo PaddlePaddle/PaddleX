@@ -116,7 +116,9 @@ coco_pretrain = {
     'DeepLabv3p_MobileNetV2_x1.0_COCO':
     'https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz',
     'DeepLabv3p_Xception65_COCO':
-    'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz'
+    'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz',
+    'PPYOLO_ResNet50_vd_ssld_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/ppyolo_2x.pdparams'
 }
 
 cityscapes_pretrain = {
@@ -226,7 +228,9 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
             new_save_dir = paddlex.pretrain_dir
-        if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p']:
+        if class_name in [
+                'YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p', 'PPYOLO'
+        ]:
             backbone = '{}_{}'.format(class_name, backbone)
         backbone = "{}_{}".format(backbone, flag)
         if flag == 'COCO':
