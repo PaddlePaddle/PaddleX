@@ -118,13 +118,15 @@ public class Visualize {
     public Mat draw(SegResult result, Mat visualizeMat, ImageBlob imageBlob, int cutoutClass) {
         int new_h = (int)imageBlob.getNewImageSize()[2];
         int new_w = (int)imageBlob.getNewImageSize()[3];
-        Mat mask = new Mat(new_h, new_w, CvType.CV_8UC(1));
-
+        Mat mask = new Mat(new_h, new_w, CvType.CV_32FC(1));
+        float[] scoreData = new float[new_h*new_w];
         for  (int h = 0; h < new_h; h++) {
             for  (int w = 0; w < new_w; w++){
-                mask.put(h , w, (1-result.getMask().getScoreData()[cutoutClass + h * new_h + w]) * 255);
+                scoreData[new_h * h + w] =  (1-result.getMask().getScoreData()[cutoutClass + h * new_h + w]) * 255;
             }
         }
+        mask.put(0,0, scoreData);
+        mask.convertTo(mask,CvType.CV_8UC(1));
         ListIterator<Map.Entry<String, int[]>> reverseReshapeInfo = new ArrayList<Map.Entry<String, int[]>>(imageBlob.getReshapeInfo().entrySet()).listIterator(imageBlob.getReshapeInfo().size());
         while (reverseReshapeInfo.hasPrevious()) {
             Map.Entry<String, int[]> entry = reverseReshapeInfo.previous();
@@ -135,10 +137,7 @@ public class Visualize {
                 Size sz = new Size(entry.getValue()[0], entry.getValue()[1]);
                 Imgproc.resize(mask, mask, sz,0,0,Imgproc.INTER_LINEAR);
             }
-            Log.i(TAG, "postprocess operator: " + entry.getKey());
-            Log.i(TAG, "shape:: " + String.valueOf(mask.width()) + ","+ String.valueOf(mask.height()));
         }
-
         Mat dst  = new Mat();
         List<Mat> listMat = Arrays.asList(visualizeMat, mask);
         Core.merge(listMat, dst);
