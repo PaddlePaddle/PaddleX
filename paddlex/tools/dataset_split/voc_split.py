@@ -47,6 +47,9 @@ def split_voc_dataset(dataset_dir, val_percent, test_percent, save_dir):
                 cname = obj.find('name').text
                 if not cname in label_list:
                     label_list.append(cname)
+        else:
+            logging.error("The annotation file {} doesn't exist!".format(
+                anno_name))
 
     random.shuffle(image_anno_list)
     image_num = len(image_anno_list)
