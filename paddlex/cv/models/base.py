@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import functools
 import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
 from paddlex.utils.utils import EarlyStop
+from paddlex.cv.transforms import arrange_transforms
 import paddlex
 from collections import OrderedDict
 from os import path as osp
@@ -102,23 +103,6 @@ class BaseAPI:
                     mode='test')
         self.test_prog = self.test_prog.clone(for_test=True)
 
-    def arrange_transforms(self, transforms, mode='train'):
-        # 给transforms添加arrange操作
-        if self.model_type == 'classifier':
-            arrange_transform = paddlex.cls.transforms.ArrangeClassifier
-        elif self.model_type == 'segmenter':
-            arrange_transform = paddlex.seg.transforms.ArrangeSegmenter
-        elif self.model_type == 'detector':
-            arrange_name = 'Arrange{}'.format(self.__class__.__name__)
-            arrange_transform = getattr(paddlex.det.transforms, arrange_name)
-        else:
-            raise Exception("Unrecognized model type: {}".format(
-                self.model_type))
-        if type(transforms.transforms[-1]).__name__.startswith('Arrange'):
-            transforms.transforms[-1] = arrange_transform(mode=mode)
-        else:
-            transforms.transforms.append(arrange_transform(mode=mode))
-
     def build_train_data_loader(self, dataset, batch_size):
         # 初始化data_loader
         if self.train_data_loader is None:
@@ -140,7 +124,11 @@ class BaseAPI:
                            batch_size=1,
                            batch_num=10,
                            cache_dir="./temp"):
-        self.arrange_transforms(transforms=dataset.transforms, mode='quant')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=dataset.transforms,
+            mode='quant')
         dataset.num_samples = batch_size * batch_num
         try:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
@@ -204,22 +192,31 @@ class BaseAPI:
                 if self.model_type == 'classifier':
                     if pretrain_weights not in ['IMAGENET']:
                         logging.warning(
-                            "Pretrain_weights for classifier should be defined as directory path or parameter file or 'IMAGENET' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
                 elif self.model_type == 'detector':
                     if pretrain_weights not in ['IMAGENET', 'COCO']:
                         logging.warning(
-                            "Pretrain_weights for detector should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or None, but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
                 elif self.model_type == 'segmenter':
                     if pretrain_weights not in [
                             'IMAGENET', 'COCO', 'CITYSCAPES'
                     ]:
                         logging.warning(
-                            "Pretrain_weights for segmenter should be defined as directory path or parameter file or 'IMAGENET' or 'COCO' or 'CITYSCAPES', but it is {}, so we force to set it as 'IMAGENET'".
+                            "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
+                        logging.warning(
+                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
+                        )
                         pretrain_weights = 'IMAGENET'
             if hasattr(self, 'backbone'):
                 backbone = self.backbone
@@ -249,8 +246,8 @@ class BaseAPI:
             logging.info(
                 "Load pretrain weights from {}.".format(pretrain_weights),
                 use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(self.exe, self.train_prog,
-                                                      pretrain_weights, fuse_bn)
+            paddlex.utils.utils.load_pretrain_weights(
+                self.exe, self.train_prog, pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
             import paddleslim
@@ -354,7 +351,9 @@ class BaseAPI:
         logging.info("Model saved in {}.".format(save_dir))
 
     def export_inference_model(self, save_dir):
-        test_input_names = [var.name for var in list(self.test_inputs.values())]
+        test_input_names = [
+            var.name for var in list(self.test_inputs.values())
+        ]
         test_outputs = list(self.test_outputs.values())
         with fluid.scope_guard(self.scope):
             if self.__class__.__name__ == 'MaskRCNN':
@@ -392,7 +391,8 @@ class BaseAPI:
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info("Model for inference deploy saved in {}.".format(save_dir))
+        logging.info("Model for inference deploy saved in {}.".format(
+            save_dir))
 
     def train_loop(self,
                    num_epochs,
@@ -416,8 +416,11 @@ class BaseAPI:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
         # 给transform添加arrange操作
-        self.arrange_transforms(
-            transforms=train_dataset.transforms, mode='train')
+        arrange_transforms(
+            model_type=self.model_type,
+            class_name=self.__class__.__name__,
+            transforms=train_dataset.transforms,
+            mode='train')
         # 构建train_data_loader
         self.build_train_data_loader(
             dataset=train_dataset, batch_size=train_batch_size)
@@ -516,11 +519,13 @@ class BaseAPI:
                         eta = ((num_epochs - i) * total_num_steps - step - 1
                                ) * avg_step_time
                     if time_eval_one_epoch is not None:
-                        eval_eta = (total_eval_times - i // save_interval_epochs
-                                    ) * time_eval_one_epoch
+                        eval_eta = (
+                            total_eval_times - i // save_interval_epochs
+                        ) * time_eval_one_epoch
                     else:
-                        eval_eta = (total_eval_times - i // save_interval_epochs
-                                    ) * total_num_steps_eval * avg_step_time
+                        eval_eta = (
+                            total_eval_times - i // save_interval_epochs
+                        ) * total_num_steps_eval * avg_step_time
                     eta_str = seconds_to_hms(eta + eval_eta)
 
                     logging.info(
@@ -543,6 +548,8 @@ class BaseAPI:
                 current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
                 if not osp.isdir(current_save_dir):
                     os.makedirs(current_save_dir)
+                if getattr(self, 'use_ema', False):
+                    self.exe.run(self.ema.apply_program)
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
                     self.eval_metrics, self.eval_details = self.evaluate(
                         eval_dataset=eval_dataset,
@@ -569,6 +576,8 @@ class BaseAPI:
                             log_writer.add_scalar(
                                 "Metrics/Eval(Epoch): {}".format(k), v, i + 1)
                 self.save_model(save_dir=current_save_dir)
+                if getattr(self, 'use_ema', False):
+                    self.exe.run(self.ema.restore_program)
                 time_eval_one_epoch = time.time() - eval_epoch_start_time
                 eval_epoch_start_time = time.time()
                 if best_model_epoch > 0:

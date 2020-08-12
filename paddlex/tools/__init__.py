@@ -15,3 +15,4 @@
 # limitations under the License.
 
 from .convert import *
+from .split import *

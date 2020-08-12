@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -170,7 +170,8 @@ def expand_segms(segms, x, y, height, width, ratio):
                                 0).astype(mask.dtype)
         expanded_mask[y:y + height, x:x + width] = mask
         rle = mask_util.encode(
-            np.array(expanded_mask, order='F', dtype=np.uint8))
+            np.array(
+                expanded_mask, order='F', dtype=np.uint8))
         return rle
 
     expanded_segms = []

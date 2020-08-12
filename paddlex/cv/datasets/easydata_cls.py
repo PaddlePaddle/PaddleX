@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import random
 import copy
 import json
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .imagenet import ImageNet
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -68,6 +69,8 @@ class EasyDataCls(ImageNet):
             for line in f:
                 img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                json_file = path_normalization(json_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(json_file):

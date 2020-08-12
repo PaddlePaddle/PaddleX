@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import os.path as osp
 import random
 import copy
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import is_pic
 from .dataset import get_encoding
@@ -33,7 +34,7 @@ class ImageNet(Dataset):
         num_workers (int|str): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据
             系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核
             数的一半。
-        buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
+        buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为8。
         parallel_method (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'
             线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
@@ -66,6 +67,7 @@ class ImageNet(Dataset):
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                items[0] = path_normalization(items[0])
                 if not is_pic(items[0]):
                     continue
                 full_path = osp.join(data_dir, items[0])

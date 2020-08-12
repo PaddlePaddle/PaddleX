@@ -40,14 +40,14 @@
 
 ### 剪裁
 
-PaddleLite推理耗时说明：
+Paddle Lite推理耗时说明：
 
 环境：Qualcomm SnapDragon 845 + armv8
 
 速度指标：Thread1/Thread2/Thread4耗时
 
 
-| 模型 | 压缩策略 | Top-1 | 存储体积 |PaddleLite推理耗时|TensorRT推理速度(FPS)|
+| 模型 | 压缩策略 | Top-1 | 存储体积 |Paddle Lite推理耗时|TensorRT推理速度(FPS)|
 |:--:|:---:|:--:|:--:|:--:|:--:|
 | MobileNetV1 |    无    |         70.99%         |       17MB       | 66.052\35.8014\19.5762|-|
 | MobileNetV1 | 剪裁 -30% |  70.4% (-0.59%)  |       12MB       | 46.5958\25.3098\13.6982|-|
@@ -70,13 +70,13 @@ PaddleLite推理耗时说明：
 
 数据集：Pasacl VOC & COCO2017
 
-PaddleLite推理耗时说明：
+Paddle Lite推理耗时说明：
 
 环境：Qualcomm SnapDragon 845 + armv8
 
 速度指标：Thread1/Thread2/Thread4耗时
 
-|              模型              |     压缩策略      |   数据集   | Image/GPU | 输入608 Box mmAP | 存储体积 | PaddleLite推理耗时(ms)(608*608) | TensorRT推理速度(FPS)(608*608) |
+|              模型              |     压缩策略      |   数据集   | Image/GPU | 输入608 Box mmAP | 存储体积 | Paddle Lite推理耗时(ms)(608*608) | TensorRT推理速度(FPS)(608*608) |
 | :----------------------------: | :---------------: | :--------: | :-------: | :------------: | :----------: | :--------------: | :--------------: |
 |      MobileNet-V1-YOLOv3       | 无     | Pascal VOC |     8     |      76.2      |      94MB      | 1238\796.943\520.101|60.04|
 |      MobileNet-V1-YOLOv3       | 剪裁 -52.88% | Pascal VOC |     8     |  77.6 (+1.4)   |      31MB      | 602.497\353.759\222.427 |99.36|
@@ -108,14 +108,14 @@ PaddleLite推理耗时说明：
 
 ### 剪裁
 
-PaddleLite推理耗时说明：
+Paddle Lite推理耗时说明：
 
 环境：Qualcomm SnapDragon 845 + armv8
 
 速度指标：Thread1/Thread2/Thread4耗时
 
 
-|   模型    |     压缩方法      |     mIoU      | 存储体积 | PaddleLite推理耗时 | TensorRT推理速度(FPS) |
+|   模型    |     压缩方法      |     mIoU      | 存储体积 | Paddle Lite推理耗时 | TensorRT推理速度(FPS) |
 | :-------: | :---------------: | :-----------: | :------: | :------------: | :----: |
 | FastSCNN | 无     |     69.64     |       11MB       | 1226.36\682.96\415.664 |39.53|
 | FastSCNN | 剪裁 -47.60% | 66.68 (-2.96) |      5.7MB       | 866.693\494.467\291.748 |51.48|

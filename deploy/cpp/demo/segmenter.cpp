@@ -39,10 +39,9 @@ DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num,
              omp_get_num_procs(),
              "Number of preprocessing threads");
-DEFINE_bool(use_ir_optim, false, "use ir optimization");
 
 int main(int argc, char** argv) {
-  // 解析命令行参数
+  // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   if (FLAGS_model_dir == "") {
@@ -54,20 +53,15 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // 加载模型
+  // Load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
              FLAGS_use_trt,
              FLAGS_gpu_id,
-             FLAGS_key,
-             FLAGS_use_ir_optim);
-
-  double total_running_time_s = 0.0;
-  double total_imread_time_s = 0.0;
+             FLAGS_key);
   int imgs = 1;
-  auto colormap = PaddleX::GenerateColorMap(model.labels.size());
-  // 进行预测
+  // Predict
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {
@@ -81,7 +75,6 @@ int main(int argc, char** argv) {
     }
     imgs = image_paths.size();
     for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
-      auto start = system_clock::now();
       int im_vec_size =
           std::min(static_cast<int>(image_paths.size()), i + FLAGS_batch_size);
       std::vector<cv::Mat> im_vec(im_vec_size - i);
@@ -92,21 +85,11 @@ int main(int argc, char** argv) {
       for (int j = i; j < im_vec_size; ++j) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
-      auto imread_end = system_clock::now();
       model.predict(im_vec, &results, thread_num);
-      auto imread_duration = duration_cast<microseconds>(imread_end - start);
-      total_imread_time_s += static_cast<double>(imread_duration.count()) *
-                             microseconds::period::num /
-                             microseconds::period::den;
-      auto end = system_clock::now();
-      auto duration = duration_cast<microseconds>(end - start);
-      total_running_time_s += static_cast<double>(duration.count()) *
-                              microseconds::period::num /
-                              microseconds::period::den;
-      // 可视化
+      // Visualize results
       for (int j = 0; j < im_vec_size - i; ++j) {
         cv::Mat vis_img =
-            PaddleX::Visualize(im_vec[j], results[j], model.labels, colormap);
+            PaddleX::Visualize(im_vec[j], results[j], model.labels);
         std::string save_path =
             PaddleX::generate_save_path(FLAGS_save_dir, image_paths[i + j]);
         cv::imwrite(save_path, vis_img);
@@ -114,28 +97,16 @@ int main(int argc, char** argv) {
       }
     }
   } else {
-    auto start = system_clock::now();
     PaddleX::SegResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
     model.predict(im, &result);
-    auto end = system_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    total_running_time_s += static_cast<double>(duration.count()) *
-                            microseconds::period::num /
-                            microseconds::period::den;
-    // 可视化
-    cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels, colormap);
+    // Visualize results
+    cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels);
     std::string save_path =
         PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
     cv::imwrite(save_path, vis_img);
     result.clear();
     std::cout << "Visualized output saved as " << save_path << std::endl;
   }
-  std::cout << "Total running time: " << total_running_time_s
-            << " s, average running time: " << total_running_time_s / imgs
-            << " s/img, total read img time: " << total_imread_time_s
-            << " s, average read img time: " << total_imread_time_s / imgs
-            << " s, batch_size = " << FLAGS_batch_size << std::endl;
-
   return 0;
 }

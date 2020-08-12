@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import json
 import cv2
 import numpy as np
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import get_encoding
 from .dataset import is_pic
+
 
 class EasyDataSeg(Dataset):
     """读取EasyDataSeg语义分割任务数据集，并对样本进行相应的处理。
@@ -66,18 +68,20 @@ class EasyDataSeg(Dataset):
                 cname2cid[line.strip()] = label_id
                 label_id += 1
                 self.labels.append(line.strip())
-                
+
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                json_file = path_normalization(json_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(json_file):
                     continue
                 if not osp.exists(img_file):
-                    raise IOError(
-                        'The image file {} is not exist!'.format(img_file))
+                    raise IOError('The image file {} is not exist!'.format(
+                        img_file))
                 with open(json_file, mode='r', \
                           encoding=get_encoding(json_file)) as j:
                     json_info = json.load(j)
@@ -94,7 +98,8 @@ class EasyDataSeg(Dataset):
                     mask_dict['counts'] = obj['mask'].encode()
                     mask = decode(mask_dict)
                     mask *= cid
-                    conflict_index = np.where(((lable_npy > 0) & (mask == cid)) == True)
+                    conflict_index = np.where(((lable_npy > 0) &
+                                               (mask == cid)) == True)
                     mask[conflict_index] = 0
                     lable_npy += mask
                 self.file_list.append([img_file, lable_npy])

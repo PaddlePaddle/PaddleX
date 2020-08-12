@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,3 +19,4 @@ from .seg_dataset import SegDataset
 from .easydata_cls import EasyDataCls
 from .easydata_det import EasyDataDet
 from .easydata_seg import EasyDataSeg
+from .dataset import generate_minibatch

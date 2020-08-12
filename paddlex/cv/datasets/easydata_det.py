@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import json
 import cv2
 import numpy as np
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .voc import VOCDetection
 from .dataset import is_pic
 from .dataset import get_encoding
+
 
 class EasyDataDet(VOCDetection):
     """读取EasyDataDet格式的检测数据集，并对样本进行相应的处理。
@@ -40,7 +42,7 @@ class EasyDataDet(VOCDetection):
             线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
-    
+
     def __init__(self,
                  data_dir,
                  file_list,
@@ -59,12 +61,12 @@ class EasyDataDet(VOCDetection):
         self.file_list = list()
         self.labels = list()
         self._epoch = 0
-        
+
         annotations = {}
         annotations['images'] = []
         annotations['categories'] = []
         annotations['annotations'] = []
-        
+
         cname2cid = {}
         label_id = 1
         with open(label_list, encoding=get_encoding(label_list)) as fr:
@@ -79,7 +81,7 @@ class EasyDataDet(VOCDetection):
                 'id': v,
                 'name': k
             })
-            
+
         from pycocotools.mask import decode
         ct = 0
         ann_ct = 0
@@ -87,13 +89,15 @@ class EasyDataDet(VOCDetection):
             for line in f:
                 img_file, json_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
+                img_file = path_normalization(img_file)
+                json_file = path_normalization(json_file)
                 if not is_pic(img_file):
                     continue
                 if not osp.isfile(json_file):
                     continue
                 if not osp.exists(img_file):
-                    raise IOError(
-                        'The image file {} is not exist!'.format(img_file))
+                    raise IOError('The image file {} is not exist!'.format(
+                        img_file))
                 with open(json_file, mode='r', \
                           encoding=get_encoding(json_file)) as j:
                     json_info = json.load(j)
@@ -124,21 +128,15 @@ class EasyDataDet(VOCDetection):
                         mask = decode(mask_dict)
                         gt_poly[i] = self.mask2polygon(mask)
                     annotations['annotations'].append({
-                        'iscrowd':
-                        0,
-                        'image_id':
-                        int(im_id[0]),
+                        'iscrowd': 0,
+                        'image_id': int(im_id[0]),
                         'bbox': [x1, y1, x2 - x1 + 1, y2 - y1 + 1],
-                        'area':
-                        float((x2 - x1 + 1) * (y2 - y1 + 1)),
-                        'segmentation':
-                        [[x1, y1, x1, y2, x2, y2, x2, y1]] if gt_poly[i] is None else gt_poly[i],
-                        'category_id':
-                        cname2cid[cname],
-                        'id':
-                        ann_ct,
-                        'difficult':
-                        0
+                        'area': float((x2 - x1 + 1) * (y2 - y1 + 1)),
+                        'segmentation': [[x1, y1, x1, y2, x2, y2, x2, y1]]
+                        if gt_poly[i] is None else gt_poly[i],
+                        'category_id': cname2cid[cname],
+                        'id': ann_ct,
+                        'difficult': 0
                     })
                     ann_ct += 1
                 im_info = {
@@ -159,14 +157,10 @@ class EasyDataDet(VOCDetection):
                     self.file_list.append([img_file, voc_rec])
                     ct += 1
                     annotations['images'].append({
-                        'height':
-                        im_h,
-                        'width':
-                        im_w,
-                        'id':
-                        int(im_id[0]),
-                        'file_name':
-                        osp.split(img_file)[1]
+                        'height': im_h,
+                        'width': im_w,
+                        'id': int(im_id[0]),
+                        'file_name': osp.split(img_file)[1]
                     })
 
         if not len(self.file_list) > 0:
@@ -178,10 +172,10 @@ class EasyDataDet(VOCDetection):
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
-        
+
     def mask2polygon(self, mask):
         contours, hierarchy = cv2.findContours(
-            (mask).astype(np.uint8), cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+            (mask).astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         segmentation = []
         for contour in contours:
             contour_list = contour.flatten().tolist()

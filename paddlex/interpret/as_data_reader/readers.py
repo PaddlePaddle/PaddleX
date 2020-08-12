@@ -1,11 +1,11 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -138,8 +138,10 @@ class ReaderConfig(object):
         ...
 
     """
+
     def __init__(self, dataset_dir, is_test):
-        image_paths, labels, self.num_classes = self.get_dataset_info(dataset_dir, is_test)
+        image_paths, labels, self.num_classes = self.get_dataset_info(
+            dataset_dir, is_test)
         random_per = np.random.permutation(range(len(image_paths)))
         self.image_paths = image_paths[random_per]
         self.labels = labels[random_per]
@@ -147,7 +149,8 @@ class ReaderConfig(object):
 
     def get_reader(self):
         def reader():
-            IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
+            IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm',
+                              '.tif', '.tiff', '.webp')
             target_size = 256
             crop_size = 224
 
@@ -171,7 +174,8 @@ class ReaderConfig(object):
         return reader
 
     def get_dataset_info(self, dataset_dir, is_test=False):
-        IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
+        IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm',
+                          '.tif', '.tiff', '.webp')
 
         # read
         if is_test:
@@ -199,7 +203,8 @@ class ReaderConfig(object):
 
 def create_reader(list_image_path, list_label=None, is_test=False):
     def reader():
-        IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
+        IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm',
+                          '.tif', '.tiff', '.webp')
         target_size = 256
         crop_size = 224
 

@@ -1,11 +1,11 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ from .interpretation_predict import interpretation_predict
 from .core.interpretation import Interpretation
 from .core.normlime_base import precompute_global_classifier
 from .core._session_preparation import gen_user_home
+from paddlex.cv.transforms import arrange_transforms
 
 
 def lime(img_file, model, num_samples=3000, batch_size=50, save_dir='./'):
@@ -48,7 +49,11 @@ def lime(img_file, model, num_samples=3000, batch_size=50, save_dir='./'):
             'The interpretation only can deal with the Normal model')
     if not osp.exists(save_dir):
         os.makedirs(save_dir)
-    model.arrange_transforms(transforms=model.test_transforms, mode='test')
+    arrange_transforms(
+        model.model_type,
+        model.__class__.__name__,
+        transforms=model.test_transforms,
+        mode='test')
     tmp_transforms = copy.deepcopy(model.test_transforms)
     tmp_transforms.transforms = tmp_transforms.transforms[:-2]
     img = tmp_transforms(img_file)[0]
@@ -94,7 +99,11 @@ def normlime(img_file,
             'The interpretation only can deal with the Normal model')
     if not osp.exists(save_dir):
         os.makedirs(save_dir)
-    model.arrange_transforms(transforms=model.test_transforms, mode='test')
+    arrange_transforms(
+        model.model_type,
+        model.__class__.__name__,
+        transforms=model.test_transforms,
+        mode='test')
     tmp_transforms = copy.deepcopy(model.test_transforms)
     tmp_transforms.transforms = tmp_transforms.transforms[:-2]
     img = tmp_transforms(img_file)[0]

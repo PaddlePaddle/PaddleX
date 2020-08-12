@@ -1,4 +1,4 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 #Licensed under the Apache License, Version 2.0 (the "License");
 #you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ def export_lite():
     opt = lite.Opt()
     model_file = os.path.join(FLAGS.model_dir, '__model__')
     params_file = os.path.join(FLAGS.model_dir, '__params__')
-    opt.run_optimize("", model_file, params_file, FLAGS.place, FLAGS.save_file)
+    opt.run_optimize("", model_file, params_file, 'naive_buffer', FLAGS.place,
+                     FLAGS.save_file)
 
 
 if __name__ == '__main__':

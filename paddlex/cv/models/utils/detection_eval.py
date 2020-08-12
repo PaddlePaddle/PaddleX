@@ -1,11 +1,11 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-# 
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -158,8 +158,8 @@ def loadRes(coco_obj, anns):
         for id, ann in enumerate(anns):
             ann['id'] = id + 1
     elif 'bbox' in anns[0] and not anns[0]['bbox'] == []:
-        res.dataset['categories'] = copy.deepcopy(
-            coco_obj.dataset['categories'])
+        res.dataset['categories'] = copy.deepcopy(coco_obj.dataset[
+            'categories'])
         for id, ann in enumerate(anns):
             bb = ann['bbox']
             x1, x2, y1, y2 = [bb[0], bb[0] + bb[2], bb[1], bb[1] + bb[3]]
@@ -169,8 +169,8 @@ def loadRes(coco_obj, anns):
             ann['id'] = id + 1
             ann['iscrowd'] = 0
     elif 'segmentation' in anns[0]:
-        res.dataset['categories'] = copy.deepcopy(
-            coco_obj.dataset['categories'])
+        res.dataset['categories'] = copy.deepcopy(coco_obj.dataset[
+            'categories'])
         for id, ann in enumerate(anns):
             # now only support compressed RLE format as segmentation results
             ann['area'] = maskUtils.area(ann['segmentation'])
@@ -179,8 +179,8 @@ def loadRes(coco_obj, anns):
             ann['id'] = id + 1
             ann['iscrowd'] = 0
     elif 'keypoints' in anns[0]:
-        res.dataset['categories'] = copy.deepcopy(
-            coco_obj.dataset['categories'])
+        res.dataset['categories'] = copy.deepcopy(coco_obj.dataset[
+            'categories'])
         for id, ann in enumerate(anns):
             s = ann['keypoints']
             x = s[0::3]
@@ -375,8 +375,8 @@ def mask2out(results, clsid2catid, resolution, thresh_binarize=0.5):
             expand_bbox = expand_boxes(bbox, scale)
             expand_bbox = expand_bbox.astype(np.int32)
 
-            padded_mask = np.zeros((resolution + 2, resolution + 2),
-                                   dtype=np.float32)
+            padded_mask = np.zeros(
+                (resolution + 2, resolution + 2), dtype=np.float32)
 
             for j in range(num):
                 xmin, ymin, xmax, ymax = expand_bbox[j].tolist()
@@ -404,7 +404,8 @@ def mask2out(results, clsid2catid, resolution, thresh_binarize=0.5):
                 im_mask[y0:y1, x0:x1] = resized_mask[(y0 - ymin):(y1 - ymin), (
                     x0 - xmin):(x1 - xmin)]
                 segm = mask_util.encode(
-                    np.array(im_mask[:, :, np.newaxis], order='F'))[0]
+                    np.array(
+                        im_mask[:, :, np.newaxis], order='F'))[0]
                 catid = clsid2catid[clsid]
                 segm['counts'] = segm['counts'].decode('utf8')
                 coco_res = {
@@ -571,8 +572,8 @@ def prune_zero_padding(gt_box, gt_label, difficult=None):
                 gt_box[i, 2] == 0 and gt_box[i, 3] == 0:
             break
         valid_cnt += 1
-    return (gt_box[:valid_cnt], gt_label[:valid_cnt],
-            difficult[:valid_cnt] if difficult is not None else None)
+    return (gt_box[:valid_cnt], gt_label[:valid_cnt], difficult[:valid_cnt]
+            if difficult is not None else None)
 
 
 def bbox_area(bbox, is_bbox_normalized):
@@ -694,8 +695,9 @@ class DetectionMAP(object):
         """
         mAP = 0.
         valid_cnt = 0
-        for id, (score_pos, count) in enumerate(
-                zip(self.class_score_poss, self.class_gt_counts)):
+        for id, (
+                score_pos, count
+        ) in enumerate(zip(self.class_score_poss, self.class_gt_counts)):
             if count == 0: continue
             if len(score_pos) == 0:
                 valid_cnt += 1

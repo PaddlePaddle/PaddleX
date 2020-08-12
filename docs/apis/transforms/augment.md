@@ -10,11 +10,11 @@ PaddleX对于图像分类、目标检测、实例分割和语义分割内置了�
 | :------- | :------------|
 | 图像分类 | [RandomCrop](cls_transforms.html#randomcrop)、[RandomHorizontalFlip](cls_transforms.html#randomhorizontalflip)、[RandomVerticalFlip](cls_transforms.html#randomverticalflip)、 <br> [RandomRotate](cls_transforms.html#randomratate)、 [RandomDistort](cls_transforms.html#randomdistort) |
 |目标检测<br>实例分割| [RandomHorizontalFlip](det_transforms.html#randomhorizontalflip)、[RandomDistort](det_transforms.html#randomdistort)、[RandomCrop](det_transforms.html#randomcrop)、<br> [MixupImage](det_transforms.html#mixupimage)(仅支持YOLOv3模型)、[RandomExpand](det_transforms.html#randomexpand) |
-|语义分割  | [RandomHorizontalFlip](seg_transforms.html#randomhorizontalflip)、[RandomVerticalFlip](seg_transforms.html#randomverticalflip)、[RandomRangeScaling](seg_transforms.html#randomrangescaling)、<br> [RandomStepScaling](seg_transforms.html#randomstepscaling)、[RandomPaddingCrop](seg_transforms.html#randompaddingcrop)、 [RandomBlur](seg_transforms.html#randomblur)、<br> [RandomRotate](seg_transforms.html#randomrotate)、[RandomScaleAspect](seg_transforms.html#randomscaleaspect)、[RandomDistort](seg_transforms.html#randomdistort) |
+|语义分割  | [RandomHorizontalFlip](seg_transforms.html#randomhorizontalflip)、[RandomVerticalFlip](seg_transforms.html#randomverticalflip)、[ResizeRangeScaling](seg_transforms.html#resizerangescaling)、<br> [ResizeStepScaling](seg_transforms.html#resizestepscaling)、[RandomPaddingCrop](seg_transforms.html#randompaddingcrop)、 [RandomBlur](seg_transforms.html#randomblur)、<br> [RandomRotate](seg_transforms.html#randomrotate)、[RandomScaleAspect](seg_transforms.html#randomscaleaspect)、[RandomDistort](seg_transforms.html#randomdistort) |
 
 ## imgaug增强库的支持
 
-PaddleX目前已适配imgaug图像增强库，用户可以直接在PaddleX构造`transforms`时，调用imgaug的方法, 如下示例
+PaddleX目前已适配imgaug图像增强库，用户可以直接在PaddleX构造`transforms`时，调用imgaug的方法，如下示例，
 ```
 import paddlex as pdx
 from paddlex.cls import transforms
@@ -30,7 +30,7 @@ train_transforms = transforms.Compose([
 
 | 增强方法 | 图像分类 | 目标检测<br> 实例分割 | 语义分割 | 备注 |
 | :------  | :------- | :-------------------- | :------- | :--- |
-| [imgaug.augmenters.arithmetic](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_arithmetic.html) |√ |√ |√ | Cutout, DropoutJpegCompression等|
+| [imgaug.augmenters.arithmetic](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_arithmetic.html) |√ |√ |√ | Cutout, Dropout, JpegCompression等|
 | [imgaug.augmenters.artistic](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_artistic.html) |√ |√ |√ | 图像卡通化|
 | [imgaug.augmenters.blur](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_blur.html) |√ |√ |√ | GaussianBlur, AverageBlur等|
 | [imgaug.augmenters.collections](https://imgaug.readthedocs.io/en/latest/source/api_augmenters_collections.html) |√ | | |提供了RandAugment方法 |

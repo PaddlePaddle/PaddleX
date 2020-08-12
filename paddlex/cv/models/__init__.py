@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ from .classifier import HRNet_W18
 from .classifier import AlexNet
 from .base import BaseAPI
 from .yolo_v3 import YOLOv3
+from .ppyolo import PPYOLO
 from .faster_rcnn import FasterRCNN
 from .mask_rcnn import MaskRCNN
 from .unet import UNet

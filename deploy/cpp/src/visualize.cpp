@@ -34,8 +34,8 @@ std::vector<int> GenerateColorMap(int num_class) {
 cv::Mat Visualize(const cv::Mat& img,
                      const DetResult& result,
                      const std::map<int, std::string>& labels,
-                     const std::vector<int>& colormap,
                      float threshold) {
+  auto colormap = GenerateColorMap(labels.size());
   cv::Mat vis_img = img.clone();
   auto boxes = result.boxes;
   for (int i = 0; i < boxes.size(); ++i) {
@@ -107,8 +107,8 @@ cv::Mat Visualize(const cv::Mat& img,
 
 cv::Mat Visualize(const cv::Mat& img,
                      const SegResult& result,
-                     const std::map<int, std::string>& labels,
-                     const std::vector<int>& colormap) {
+                     const std::map<int, std::string>& labels) {
+  auto colormap = GenerateColorMap(labels.size());
   std::vector<uint8_t> label_map(result.label_map.data.begin(),
                                  result.label_map.data.end());
   cv::Mat mask(result.label_map.shape[0],

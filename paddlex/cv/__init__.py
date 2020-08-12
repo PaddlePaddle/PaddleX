@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ ResNet50 = models.ResNet50
 DarkNet53 = models.DarkNet53
 # detection
 YOLOv3 = models.YOLOv3
+PPYOLO = models.PPYOLO
 #EAST = models.EAST
 FasterRCNN = models.FasterRCNN
 MaskRCNN = models.MaskRCNN

@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,8 +34,12 @@ def sensitivity(program,
                 param_names,
                 eval_func,
                 sensitivities_file=None,
-                pruned_ratios=None):
-    scope = fluid.global_scope()
+                pruned_ratios=None,
+                scope=None):
+    if scope is None:
+        scope = fluid.global_scope()
+    else:
+        scope = scope
     graph = GraphWrapper(program)
     sensitivities = load_sensitivities(sensitivities_file)
 
@@ -256,7 +260,8 @@ def cal_params_sensitivities(model, save_file, eval_dataset, batch_size=8):
         prune_names,
         eval_for_prune,
         sensitivities_file=save_file,
-        pruned_ratios=list(np.arange(0.1, 1, 0.1)))
+        pruned_ratios=list(np.arange(0.1, 1, 0.1)),
+        scope=model.scope)
     return sensitivitives
 
 
@@ -283,8 +288,8 @@ def get_params_ratios(sensitivities_file, eval_metric_loss=0.05):
     if not osp.exists(sensitivities_file):
         raise Exception('The sensitivities file is not exists!')
     sensitivitives = paddleslim.prune.load_sensitivities(sensitivities_file)
-    params_ratios = paddleslim.prune.get_ratios_by_loss(
-        sensitivitives, eval_metric_loss)
+    params_ratios = paddleslim.prune.get_ratios_by_loss(sensitivitives,
+                                                        eval_metric_loss)
     return params_ratios
 
 

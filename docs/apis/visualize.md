@@ -1,33 +1,59 @@
-# 可视化-visualize
+# 预测结果可视化
+
 PaddleX提供了一系列模型预测和结果分析的可视化函数。
 
-## 目标检测/实例分割预测结果可视化
+## paddlex.det.visualize
+> **目标检测/实例分割预测结果可视化**  
 ```
 paddlex.det.visualize(image, result, threshold=0.5, save_dir='./')
 ```
 将目标检测/实例分割模型预测得到的Box框和Mask在原图上进行可视化。
 
 ### 参数
-> * **image** (str): 原图文件路径。  
+> * **image** (str|np.ndarray): 原图文件路径或numpy数组(HWC排列，BGR格式)。  
 > * **result** (str): 模型预测结果。
 > * **threshold**(float): score阈值，将Box置信度低于该阈值的框过滤不进行可视化。默认0.5
 > * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。
 
 ### 使用示例
-> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)和[测试图片](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong.jpeg)
+> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)
 ```
 import paddlex as pdx
 model = pdx.load_model('xiaoduxiong_epoch_12')
-result = model.predict('xiaoduxiong.jpeg')
-pdx.det.visualize('xiaoduxiong.jpeg', result, save_dir='./')
+result = model.predict('./xiaoduxiong_epoch_12/xiaoduxiong.jpeg')
+pdx.det.visualize('./xiaoduxiong_epoch_12/xiaoduxiong.jpeg', result, save_dir='./')
 # 预测结果保存在./visualize_xiaoduxiong.jpeg
 ```
+## paddlex.seg.visualize
+> **语义分割模型预测结果可视化**  
+```
+paddlex.seg.visualize(image, result, weight=0.6, save_dir='./')
+```
+将语义分割模型预测得到的Mask在原图上进行可视化。
 
-## 目标检测/实例分割准确率-召回率可视化
+### 参数
+> * **image** (str|np.ndarray): 原图文件路径或numpy数组(HWC排列，BGR格式)。  
+> * **result** (str): 模型预测结果。
+> * **weight**(float): mask可视化结果与原图权重因子，weight表示原图的权重。默认0.6。
+> * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。
+
+### 使用示例
+> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/cityscape_deeplab.tar.gz)和[测试图片](https://bj.bcebos.com/paddlex/datasets/city.png)
+```
+import paddlex as pdx
+model = pdx.load_model('cityscape_deeplab')
+result = model.predict('city.png')
+pdx.det.visualize('city.png', result, save_dir='./')
+# 预测结果保存在./visualize_city.png
+```
+
+## paddlex.det.draw_pr_curve
+> **目标检测/实例分割准确率-召回率可视化**  
 ```
 paddlex.det.draw_pr_curve(eval_details_file=None, gt=None, pred_bbox=None, pred_mask=None, iou_thresh=0.5, save_dir='./')
 ```
 将目标检测/实例分割模型评估结果中各个类别的准确率和召回率的对应关系进行可视化，同时可视化召回率和置信度阈值的对应关系。
+> 注：PaddleX在训练过程中保存的模型目录中，均包含`eval_result.json`文件，可将此文件路径传给`eval_details_file`参数，设定`iou_threshold`即可得到对应模型在验证集上的PR曲线图。
 
 ### 参数
 > * **eval_details_file** (str): 模型评估结果的保存路径，包含真值信息和预测结果。默认值为None。
@@ -73,37 +99,18 @@ pdx.det.draw_pr_curve(gt=gt, pred_bbox=bbox, save_dir='./insect')
 预测框的各个类别的准确率和召回率的对应关系、召回率和置信度阈值的对应关系可视化如下：
 ![](./images/insect_bbox_pr_curve(iou-0.5).png)
 
-## 语义分割预测结果可视化
-```
-paddlex.seg.visualize(image, result, weight=0.6, save_dir='./')
-```
-将语义分割模型预测得到的Mask在原图上进行可视化。
 
-### 参数
-> * **image** (str): 原图文件路径。  
-> * **result** (str): 模型预测结果。
-> * **weight**(float): mask可视化结果与原图权重因子，weight表示原图的权重。默认0.6。
-> * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。
-
-### 使用示例
-> 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/cityscape_deeplab.tar.gz)和[测试图片](https://bj.bcebos.com/paddlex/datasets/city.png)
+## paddlex.slim.visualzie
+> **模型剪裁比例可视化分析**  
 ```
-import paddlex as pdx
-model = pdx.load_model('cityscape_deeplab')
-result = model.predict('city.png')
-pdx.det.visualize('city.png', result, save_dir='./')
-# 预测结果保存在./visualize_city.png
+paddlex.slim.visualize(model, sensitivities_file, save_dir='./')
 ```
-
-## 模型裁剪比例可视化分析
-```
-paddlex.slim.visualize(model, sensitivities_file)
-```
-利用此接口，可以分析在不同的`eval_metric_loss`参数下，模型被裁剪的比例情况。可视化结果纵轴为eval_metric_loss参数值，横轴为对应的模型被裁剪的比例。
+利用此接口，可以分析在不同的`eval_metric_loss`参数下，模型被剪裁的比例情况。可视化结果纵轴为eval_metric_loss参数值，横轴为对应的模型被剪裁的比例。`eval_metric_loss`即卷积的敏感度，是指按照剪裁率将模型剪裁后模型精度的损失。
 
 ### 参数
 >* **model** (paddlex.cv.models): 使用PaddleX加载的模型。
 >* **sensitivities_file** (str): 模型各参数在验证集上计算得到的参数敏感度信息文件。
+>* **save_dir**(str): 可视化结果保存路径，默认为当前目录
 
 ### 使用示例
 > 点击下载示例中的[模型](https://bj.bcebos.com/paddlex/models/vegetables_mobilenet.tar.gz)和[sensitivities_file](https://bj.bcebos.com/paddlex/slim_prune/mobilenetv2.sensitivities)
@@ -114,70 +121,17 @@ pdx.slim.visualize(model, 'mobilenetv2.sensitivities', save_dir='./')
 # 可视化结果保存在./sensitivities.png
 ```
 
-## LIME可解释性结果可视化
+## paddlex.transforms.visualize
+> **数据预处理/增强过程可视化**  
 ```
-paddlex.interpret.lime(img_file, 
-                       model, 
-                       num_samples=3000, 
-                       batch_size=50,
-                       save_dir='./')
-```
-使用LIME算法将模型预测结果的可解释性可视化。  
-LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME的思想是以输入样本为中心，在其附近的空间中进行随机采样，每个采样通过原模型得到新的输出，这样得到一系列的输入和对应的输出，LIME用一个简单的、可解释的模型（比如线性回归模型）来拟合这个映射关系，得到每个输入维度的权重，以此来解释模型。    
-
-**注意：** 可解释性结果可视化目前只支持分类模型。
-
-### 参数
->* **img_file** (str): 预测图像路径。
->* **model** (paddlex.cv.models): paddlex中的模型。
->* **num_samples** (int): LIME用于学习线性模型的采样数，默认为3000。
->* **batch_size** (int): 预测数据batch大小，默认为50。
->* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。 
-
-
-### 使用示例
-> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/lime.py)。
-
-
-## NormLIME可解释性结果可视化
-```
-paddlex.interpret.normlime(img_file, 
-                           model, 
-                           dataset=None,
-                           num_samples=3000, 
-                           batch_size=50,
-                           save_dir='./',
-                           normlime_weights_file=None)
-```
-使用NormLIME算法将模型预测结果的可解释性可视化。
-NormLIME是利用一定数量的样本来出一个全局的解释。由于NormLIME计算量较大，此处采用一种简化的方式：使用一定数量的测试样本（目前默认使用所有测试样本），对每个样本进行特征提取，映射到同一个特征空间；然后以此特征做为输入，以模型输出做为输出，使用线性回归对其进行拟合，得到一个全局的输入和输出的关系。之后，对一测试样本进行解释时，使用NormLIME全局的解释，来对LIME的结果进行滤波，使最终的可视化结果更加稳定。
-
-**注意：** 可解释性结果可视化目前只支持分类模型。
-
-### 参数
->* **img_file** (str): 预测图像路径。
->* **model** (paddlex.cv.models): paddlex中的模型。
->* **dataset** (paddlex.datasets): 数据集读取器，默认为None。
->* **num_samples** (int): LIME用于学习线性模型的采样数，默认为3000。
->* **batch_size** (int): 预测数据batch大小，默认为50。
->* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。
->* **normlime_weights_file** (str): NormLIME初始化文件名，若不存在，则计算一次，保存于该路径；若存在，则直接载入。
-
-**注意：** dataset`读取的是一个数据集，该数据集不宜过大，否则计算时间会较长，但应包含所有类别的数据。NormLIME可解释性结果可视化目前只支持分类模型。
-### 使用示例
-> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)。
-
-
-## 数据预处理/增强过程可视化
-```
-paddlex.transforms.visualize(dataset, 
-                             img_count=3, 
+paddlex.transforms.visualize(dataset,
+                             img_count=3,
                              save_dir='vdl_output')
 ```
 对数据预处理/增强中间结果进行可视化。
 可使用VisualDL查看中间结果：
 1. VisualDL启动方式: visualdl --logdir vdl_output --port 8001
-2. 浏览器打开 https://0.0.0.0:8001即可，
+2. 浏览器打开 https://0.0.0.0:8001 即可，
     其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 
 ### 参数

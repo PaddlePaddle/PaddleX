@@ -17,6 +17,7 @@ import os.path as osp
 import random
 import copy
 import paddlex.utils.logging as logging
+from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import get_encoding
 from .dataset import is_pic
@@ -30,7 +31,7 @@ class SegDataset(Dataset):
         file_list (str): 描述数据集图片文件和对应标注文件的文件路径（文本内每行路径为相对data_dir的相对路）。
         label_list (str): 描述数据集包含的类别信息文件路径。默认值为None。
         transforms (list): 数据集中每个样本的预处理/增强算子。
-        num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为4。
+        num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。
         buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
         parallel_method (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'
             线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
@@ -61,10 +62,11 @@ class SegDataset(Dataset):
                 for line in f:
                     item = line.strip()
                     self.labels.append(item)
-
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                items[0] = path_normalization(items[0])
+                items[1] = path_normalization(items[1])
                 if not is_pic(items[0]):
                     continue
                 full_path_im = osp.join(data_dir, items[0])

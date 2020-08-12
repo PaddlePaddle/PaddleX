@@ -11,6 +11,4 @@
    metrics.md
    interpret.md
    parameters.md
-   how_to_convert_dataset.md
-   datasets.md
 
