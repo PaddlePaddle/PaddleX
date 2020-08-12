@@ -1,9 +1,9 @@
 # openvino预编译库的路径
-OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
+OPENVINO_DIR=/path/to/inference_engine/
 # gflags预编译库的路径
-GFLAGS_DIR=/wangsiyuan06/gflags/build
+GFLAGS_DIR=/path/to/gflags
 # ngraph lib的路径，编译openvino时通常会生成
-NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph/lib
+NGRAPH_LIB=/path/to/ngraph/lib/
 
 # opencv预编译库的路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/

@@ -27,13 +27,6 @@ def arg_parser():
         default=None,
         help="path to openvino model .xml file")
     parser.add_argument(
-        "--device",
-        "-d",
-        type=str,
-        default='CPU',
-        help="Specify the target device to infer on:[CPU, GPU, FPGA, HDDL, MYRIAD,HETERO]"
-             "Default value is CPU")
-    parser.add_argument(
         "--img",
         "-i",
         type=str,
@@ -49,11 +42,27 @@ def arg_parser():
 
 
     parser.add_argument(
-        "--cfg_file",
+        "--cfg_dir",
         "-c",
         type=str,
         default=None,
         help="Path to PaddelX model yml file")
+
+
+    parser.add_argument(
+        "--thread_num",
+        "-t",
+        type=int,
+        default=1,
+        help="Path to PaddelX model yml file")
+
+    parser.add_argument(
+        "--input_shape",
+        "-ip",
+        type=str,
+        default=None,
+        help=" image input shape of model [NCHW] like [1,3,224,244] ")
+
 
 
     return parser
@@ -62,14 +71,14 @@ def arg_parser():
 def main():
     parser = arg_parser()
     args = parser.parse_args()
-    model_xml = args.model_dir
-    model_yaml = args.cfg_file
-
+    model_nb = args.model_dir
+    model_yaml = args.cfg_dir
+    thread_num = args.thread_num
+    input_shape = args.input_shape
+    input_shape = input_shape[1:-1].split(",",3)
+    shape = list(map(int,input_shape))
     #model init
-    if("CPU" not in args.device):
-        predictor = deploy.Predictor(model_xml,model_yaml,args.device)
-    else:
-        predictor = deploy.Predictor(model_xml,model_yaml)
+    predictor = deploy.Predictor(model_nb,model_yaml,thread_num,shape)
     
     #predict
     if(args.img_list != None):

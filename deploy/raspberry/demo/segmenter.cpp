@@ -25,12 +25,12 @@
 
 
 DEFINE_string(model_dir, "", "Path of openvino model xml file");
-DEFINE_string(cfg_file, "", "Path of PaddleX model yaml file");
+DEFINE_string(cfg_dir, "", "Path of PaddleX model yaml file");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
-DEFINE_string(device, "CPU", "Device name");
 DEFINE_string(save_dir, "", "Path to save visualized image");
-
+DEFINE_int32(batch_size, 1, "Batch size of infering");
+DEFINE_int32(thread_num, 1, "num of thread to infer");
 
 int main(int argc, char** argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
     std::cerr << "--model_dir need to be defined" << std::endl;
     return -1;
   }
-  if (FLAGS_cfg_file == "") {
-    std::cerr << "--cfg_file need to be defined" << std::endl;
+  if (FLAGS_cfg_dir == "") {
+    std::cerr << "--cfg_dir need to be defined" << std::endl;
     return -1;
   }
   if (FLAGS_image == "" & FLAGS_image_list == "") {
@@ -48,8 +48,10 @@ int main(int argc, char** argv) {
   }
 
   //
+  std::cout << "init start" << std::endl;
   PaddleX::Model model; 
-  model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_device);
+  model.Init(FLAGS_model_dir, FLAGS_cfg_dir, FLAGS_thread_num);
+  std::cout << "init done" << std::endl;
   int imgs = 1;
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
   
@@ -60,6 +62,7 @@ int main(int argc, char** argv) {
     return -1;
     }
     std::string image_path;
+
     while (getline(inf, image_path)) {
       PaddleX::SegResult result;
       cv::Mat im = cv::imread(image_path, 1);
@@ -71,7 +74,9 @@ int main(int argc, char** argv) {
         cv::imwrite(save_path, vis_img);
         std::cout << "Visualized output saved as " << save_path << std::endl;
       }
+
     }
+
   }else{
     PaddleX::SegResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 
@@ -27,7 +26,7 @@ std::map<std::string, int> interpolations = {{"LINEAR", cv::INTER_LINEAR},
                                              {"CUBIC", cv::INTER_CUBIC},
                                              {"LANCZOS4", cv::INTER_LANCZOS4}};
 
-bool Normalize::Run(cv::Mat* im, ImageBlob* data){
+bool Normalize::Run(cv::Mat* im){
   for (int h = 0; h < im->rows; h++) {
     for (int w = 0; w < im->cols; w++) {
       im->at<cv::Vec3f>(h, w)[0] =
@@ -41,6 +40,19 @@ bool Normalize::Run(cv::Mat* im, ImageBlob* data){
   return true;
 }
 
+bool CenterCrop::Run(cv::Mat* im) {
+  int height = static_cast<int>(im->rows);
+  int width = static_cast<int>(im->cols);
+  if (height < height_ || width < width_) {
+    std::cerr << "[CenterCrop] Image size less than crop size" << std::endl;
+    return false;
+  }
+  int offset_x = static_cast<int>((width - width_) / 2);
+  int offset_y = static_cast<int>((height - height_) / 2);
+  cv::Rect crop_roi(offset_x, offset_y, width_, height_);
+  *im = (*im)(crop_roi);
+  return true;
+}
 
 
 float ResizeByShort::GenerateScale(const cv::Mat& im) {
@@ -58,109 +70,11 @@ float ResizeByShort::GenerateScale(const cv::Mat& im) {
   return scale;
 }
 
-bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
-  data->im_size_before_resize_.push_back({im->rows, im->cols});
-  data->reshape_order_.push_back("resize");
-
+bool ResizeByShort::Run(cv::Mat* im) {
   float scale = GenerateScale(*im);
   int width = static_cast<int>(scale * im->cols);
   int height = static_cast<int>(scale * im->rows);
   cv::resize(*im, *im, cv::Size(width, height), 0, 0, cv::INTER_LINEAR);
-  
-  data->new_im_size_[0] = im->rows;
-  data->new_im_size_[1] = im->cols;
-  data->scale = scale;
-  
-  return true;
-}
-
-bool CenterCrop::Run(cv::Mat* im, ImageBlob* data) {
-  int height = static_cast<int>(im->rows);
-  int width = static_cast<int>(im->cols);
-  if (height < height_ || width < width_) {
-    std::cerr << "[CenterCrop] Image size less than crop size" << std::endl;
-    return false;
-  }
-  int offset_x = static_cast<int>((width - width_) / 2);
-  int offset_y = static_cast<int>((height - height_) / 2);
-  cv::Rect crop_roi(offset_x, offset_y, width_, height_);
-  *im = (*im)(crop_roi);
-  data->new_im_size_[0] = im->rows;
-  data->new_im_size_[1] = im->cols;
-  return true;
-}
-
-
-bool Padding::Run(cv::Mat* im, ImageBlob* data) {
-  data->im_size_before_resize_.push_back({im->rows, im->cols});
-  data->reshape_order_.push_back("padding");
-
-  int padding_w = 0;
-  int padding_h = 0;
-  if (width_ > 1 & height_ > 1) {
-    padding_w = width_ - im->cols;
-    padding_h = height_ - im->rows;
-  } else if (coarsest_stride_ >= 1) {
-    int h = im->rows;
-    int w = im->cols;
-    padding_h =
-        ceil(h * 1.0 / coarsest_stride_) * coarsest_stride_ - im->rows;
-    padding_w =
-        ceil(w * 1.0 / coarsest_stride_) * coarsest_stride_ - im->cols;
-  }
-
-  if (padding_h < 0 || padding_w < 0) {
-    std::cerr << "[Padding] Computed padding_h=" << padding_h
-              << ", padding_w=" << padding_w
-              << ", but they should be greater than 0." << std::endl;
-    return false;
-  }
-  cv::copyMakeBorder(
-      *im, *im, 0, padding_h, 0, padding_w, cv::BORDER_CONSTANT, cv::Scalar(0));
-  data->new_im_size_[0] = im->rows;
-  data->new_im_size_[1] = im->cols;
-  return true;
-}
-
-bool ResizeByLong::Run(cv::Mat* im, ImageBlob* data) {
-  if (long_size_ <= 0) {
-    std::cerr << "[ResizeByLong] long_size should be greater than 0"
-              << std::endl;
-    return false;
-  }
-  data->im_size_before_resize_.push_back({im->rows, im->cols});
-  data->reshape_order_.push_back("resize");
-  int origin_w = im->cols;
-  int origin_h = im->rows;
-
-  int im_size_max = std::max(origin_w, origin_h);
-  float scale =
-      static_cast<float>(long_size_) / static_cast<float>(im_size_max);
-  cv::resize(*im, *im, cv::Size(), scale, scale, cv::INTER_NEAREST);
-  data->new_im_size_[0] = im->rows;
-  data->new_im_size_[1] = im->cols;
-  data->scale = scale;
-  return true;
-}
-
-bool Resize::Run(cv::Mat* im, ImageBlob* data) {
-  if (width_ <= 0 || height_ <= 0) {
-    std::cerr << "[Resize] width and height should be greater than 0"
-              << std::endl;
-    return false;
-  }
-  if (interpolations.count(interp_) <= 0) {
-    std::cerr << "[Resize] Invalid interpolation method: '" << interp_ << "'"
-              << std::endl;
-    return false;
-  }
-  data->im_size_before_resize_.push_back({im->rows, im->cols});
-  data->reshape_order_.push_back("resize");
-
-  cv::resize(
-      *im, *im, cv::Size(width_, height_), 0, 0, interpolations[interp_]);
-  data->new_im_size_[0] = im->rows;
-  data->new_im_size_[1] = im->cols;
   return true;
 }
 
@@ -180,16 +94,10 @@ std::shared_ptr<Transform> Transforms::CreateTransform(
     const std::string& transform_name) {
   if (transform_name == "Normalize") {
     return std::make_shared<Normalize>();
-  } else if (transform_name == "ResizeByShort") {
-    return std::make_shared<ResizeByShort>();
   } else if (transform_name == "CenterCrop") {
     return std::make_shared<CenterCrop>();
-  } else if (transform_name == "Resize") {
-    return std::make_shared<Resize>();
-  } else if (transform_name == "Padding") {
-    return std::make_shared<Padding>();
-  } else if (transform_name == "ResizeByLong") {
-    return std::make_shared<ResizeByLong>();
+  } else if (transform_name == "ResizeByShort") {
+    return std::make_shared<ResizeByShort>();
   } else {
     std::cerr << "There's unexpected transform(name='" << transform_name
               << "')." << std::endl;
@@ -197,20 +105,15 @@ std::shared_ptr<Transform> Transforms::CreateTransform(
   }
 }
 
-bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
+bool Transforms::Run(cv::Mat* im, Blob::Ptr blob) {
   // 按照transforms中预处理算子顺序处理图像
   if (to_rgb_) {
     cv::cvtColor(*im, *im, cv::COLOR_BGR2RGB);
   }
   (*im).convertTo(*im, CV_32FC3);
-  
-  data->ori_im_size_[0] = im->rows;
-  data->ori_im_size_[1] = im->cols;
-  data->new_im_size_[0] = im->rows;
-  data->new_im_size_[1] = im->cols;
 
   for (int i = 0; i < transforms_.size(); ++i) {
-    if (!transforms_[i]->Run(im,data)) {
+    if (!transforms_[i]->Run(im)) {
       std::cerr << "Apply transforms to image failed!" << std::endl;
       return false;
     }
@@ -218,15 +121,13 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
 
   // 将图像由NHWC转为NCHW格式
   // 同时转为连续的内存块存储到Blob
-  
-  SizeVector blobSize = data->blob->getTensorDesc().getDims();
+  SizeVector blobSize = blob->getTensorDesc().getDims();
   const size_t width = blobSize[3];
   const size_t height = blobSize[2];
   const size_t channels = blobSize[1];
-  MemoryBlob::Ptr mblob = InferenceEngine::as<MemoryBlob>(data->blob);
+  MemoryBlob::Ptr mblob = InferenceEngine::as<MemoryBlob>(blob);
   auto mblobHolder = mblob->wmap();
   float *blob_data = mblobHolder.as<float *>();
-    
   for (size_t c = 0; c < channels; c++) {
       for (size_t  h = 0; h < height; h++) {
           for (size_t w = 0; w < width; w++) {
