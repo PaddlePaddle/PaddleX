@@ -39,6 +39,9 @@ def split_seg_dataset(dataset_dir, val_percent, test_percent, save_dir):
             anno_name = replace_ext(image_file, "PNG")
             if osp.exists(osp.join(dataset_dir, "Annotations", anno_name)):
                 image_anno_list.append([image_file, anno_name])
+            else:
+                logging.error("The annotation file {} doesn't exist!".format(
+                    anno_name))
 
     if not osp.exists(osp.join(dataset_dir, "labels.txt")):
         for image_anno in image_anno_list:
