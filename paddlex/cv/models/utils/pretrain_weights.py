@@ -122,6 +122,8 @@ coco_pretrain = {
 }
 
 cityscapes_pretrain = {
+    'DeepLabv3p_MobileNetV3_large_x1_0_ssld_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/deeplabv3p_mobilenetv3_large_cityscapes.tar.gz',
     'DeepLabv3p_MobileNetV2_x1.0_CITYSCAPES':
     'https://paddleseg.bj.bcebos.com/models/mobilenet_cityscapes.tgz',
     'DeepLabv3p_Xception65_CITYSCAPES':
@@ -167,7 +169,8 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             flag = 'IMAGENET'
         if class_name == 'DeepLabv3p' and backbone in [
                 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
-                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0',
+                'MobileNetV3_large_x1_0_ssld'
         ]:
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
