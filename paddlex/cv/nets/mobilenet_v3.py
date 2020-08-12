@@ -150,7 +150,8 @@ class MobileNetV3():
             else:
                 raise NotImplementedError
 
-        self.modify_bottle_params(output_stride)
+        if self.for_seg:
+            self.modify_bottle_params(output_stride)
 
     def modify_bottle_params(self, output_stride=None):
         if output_stride is not None and output_stride % 2 != 0:

@@ -146,7 +146,8 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
     if flag == 'COCO':
         if class_name == 'DeepLabv3p' and backbone in [
                 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
-                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0',
+                'MobileNetV3_large_x1_0_ssld'
         ]:
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
@@ -169,8 +170,7 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             flag = 'IMAGENET'
         if class_name == 'DeepLabv3p' and backbone in [
                 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
-                'MobileNetV2_x1.5', 'MobileNetV2_x2.0',
-                'MobileNetV3_large_x1_0_ssld'
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
         ]:
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
