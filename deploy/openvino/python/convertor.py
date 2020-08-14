@@ -1,17 +1,3 @@
-#copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import os
 from six import text_type as _text_type
 import argparse
@@ -37,7 +23,12 @@ def arg_parser():
         "--fixed_input_shape",
         "-fs",
         default=None,
-        help="export openvino model with  input shape:[h,w]")
+        help="export openvino model with  input shape:[w,h]")
+    parser.add_argument(
+        "--data_type",
+        "-dp",
+        default="FP32",
+        help="FP32 or FP16, the data_type of openvino IR")
     return parser
 
 
@@ -56,9 +47,8 @@ def export_openvino_model(model, args):
         logging.error(
             "You need to install x2paddle first, pip install x2paddle>=0.7.4")
         
-    from x2paddle.op_mapper.paddle_op_mapper import PaddleOpMapper
-    mapper = PaddleOpMapper()
-    mapper.convert(model.test_prog, args.save_dir)
+    import x2paddle.convert as x2pc
+    x2pc.paddle2onnx(args.model_dir, args.save_dir)
 
     import mo.main as mo
     from mo.utils.cli_parser import get_onnx_cli_parser
