@@ -8,12 +8,12 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 * OpenVINO 2020.4
 * CMake 3.0+
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/latest/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](hhttps://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  
+**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/latest/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  
 
 **注意**：安装完OpenVINO后需要手动添加OpenVINO目录到系统环境变量，否则在运行程序时会出现找不到dll的情况。以OpenVINO不改变OpenVINO安装目录情况下为示例，流程如下
 - 我的电脑->属性->高级系统设置->环境变量
     - 在系统变量中找到Path（如没有，自行创建），并双击编辑
-    - 新建，将OpenVINO以下路径填入并保存:  
+    - 新建，分别将OpenVINO以下路径填入并保存:  
       `C:\Program File (x86)\IntelSWTools\openvino\inference_engine\bin\intel64\Release`  
       `C:\Program File (x86)\IntelSWTools\openvino\inference_engine\external\tbb\bin`  
       `C:\Program File (x86)\IntelSWTools\openvino\deployment_tools\ngraph\lib`  
@@ -55,10 +55,11 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 |  ----  | ----  |
 | OPENCV_DIR  | opencv库路径 |
 | OPENVINO_DIR | OpenVINO推理库路径，在OpenVINO安装目录下的deployment/inference_engine目录，若未修改OpenVINO默认安装目录可以不用修改 |
-| NGRAPH——LIB | OpenVINO的ngraph库路径，在OpenVINO安装目录下的deployment/ngraph/lib目录，若未修改OpenVINO默认安装目录可以不用修改 |
+| NGRAPH_LIB | OpenVINO的ngraph库路径，在OpenVINO安装目录下的deployment/ngraph/lib目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | GFLAGS_DIR | gflags库路径 |
 | GLOG_DIR  | glog库路径 |
-| WITH_STATIC_LIB | 是否静态编译，默认为True |
+| WITH_STATIC_LIB | 是否静态编译，默认为True |  
+
 **设置完成后**, 点击`保存并生成CMake缓存以加载变量`。
 5. 点击`生成`->`全部生成`
 ### Step5: 预测
@@ -66,7 +67,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ```
 D:
-cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
+cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
 * 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，`segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：

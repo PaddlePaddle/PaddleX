@@ -17,6 +17,8 @@ Paddle-Lite模型需要通过Paddle-Lite的opt工具转出模型，下载并解�
 | --param_file  | 导出inference模型中包含的参数文件：`__params__`所在的路径|
 | --valid_targets  |指定模型可执行的backend，这里请指定为`arm`|
 | --optimize_out_type | 输出模型类型，目前支持两种类型：protobuf和naive_buffer，其中naive_buffer是一种更轻量级的序列化/反序列化，这里请指定为`naive_buffer`|  
+
+
 若安装了python版本的Paddle-Lite也可以通过如下方式转换
 ``` 
 ./paddle_lite_opt --model_file=<model_path> \
