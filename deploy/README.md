@@ -15,4 +15,4 @@
     - [模型裁剪](../docs/deploy/paddlelite/slim/prune.md)
   - [Android平台](../docs/deploy/paddlelite/android.md)
 - [OpenVINO部署](../docs/deploy/openvino/introduction.md)
-- [树莓派部署](../docs/deplop/raspberry/Raspberry.md)
+- [树莓派部署](../docs/deploy/raspberry/Raspberry.md)
