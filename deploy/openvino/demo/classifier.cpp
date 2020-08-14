@@ -22,7 +22,7 @@
 #include "include/paddlex/paddlex.h"
 
 DEFINE_string(model_dir, "", "Path of inference model");
-DEFINE_string(cfg_dir, "", "Path of inference model");
+DEFINE_string(cfg_dir, "", "Path of PaddelX model yml file");
 DEFINE_string(device, "CPU", "Device name");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
@@ -62,7 +62,8 @@ int main(int argc, char** argv) {
       model.predict(im, &result);
       std::cout << "Predict label: " << result.category
                 << ", label_id:" << result.category_id
-                << ", score: " << result.score << std::endl;
+                << ", score: " << result.score 
+                << ", num_img: " << model.count_num_ << std::endl;
     }
   } else {
     PaddleX::ClsResult result;

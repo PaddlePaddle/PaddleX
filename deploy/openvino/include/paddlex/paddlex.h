@@ -17,6 +17,7 @@
 #include <functional>
 #include <iostream>
 #include <numeric>
+#include <chrono> 
 
 #include "yaml-cpp/yaml.h"
 
@@ -48,15 +49,20 @@ class Model {
 
   bool load_config(const std::string& model_dir);
 
-  bool preprocess(cv::Mat* input_im);
+  bool preprocess(cv::Mat* input_im, ImageBlob* inputs);
 
   bool predict(const cv::Mat& im, ClsResult* result);
+  
+  bool predict(const cv::Mat& im, DetResult* result);  
+
+  bool predict(const cv::Mat& im, SegResult* result);
+
 
   std::string type;
   std::string name;
-  std::vector<std::string> labels;
+  std::map<int, std::string> labels;
   Transforms transforms_;
-  Blob::Ptr inputs_;
+  ImageBlob inputs_;
   Blob::Ptr output_;
   CNNNetwork network_;
   ExecutableNetwork executable_network_;

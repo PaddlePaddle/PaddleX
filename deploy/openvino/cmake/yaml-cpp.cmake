@@ -1,4 +1,3 @@
-find_package(Git REQUIRED)
 
 include(ExternalProject)
 
