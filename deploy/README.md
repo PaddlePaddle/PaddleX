@@ -14,5 +14,5 @@
     - [模型量化](../docs/deploy/paddlelite/slim/quant.md)
     - [模型裁剪](../docs/deploy/paddlelite/slim/prune.md)
   - [Android平台](../docs/deploy/paddlelite/android.md)
-- [OpenVINO部署](../docs/develoy/openvino/)
+- [OpenVINO部署](../docs/develoy/openvino/introduction.md)
 - [树莓派部署](../docs/develop/raspberry/Raspberry.md)
