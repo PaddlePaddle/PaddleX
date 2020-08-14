@@ -4,10 +4,12 @@ PaddleX支持将训练好的paddle模型通过openvino实现模型的预测加�
 ## 部署支持情况
 下表提供了PaddleX在不同环境下对使用OpenVINO加速支持情况  
 
-|硬件平台|Linux|Windows|Raspbian OS|c++|python |分类|检测|分割|  
+|硬件平台|Linux|Windows|Raspbian OS|c++|python |分类|检测|分割|
 | ----|  ---- | ---- | ----|  ---- | ---- |---- | ---- |---- |
 |CPU|支持|支持|不支持|支持|支持|支持|支持|支持|
 |VPU|支持|支持|支持|支持|支持|支持|不支持|不支持|  
+
+
 其中Raspbian OS为树莓派操作系统。
 
 ## 部署流程
