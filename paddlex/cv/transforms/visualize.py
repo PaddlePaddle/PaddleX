@@ -191,9 +191,9 @@ def det_compose(im,
                     bboxes[:, 3] = bboxes[:, 3] * h_scale
                 else:
                     bboxes = outputs[2]['gt_bbox']
-                if not isinstance(
-                        op,
-                        pdx.cv.transforms.det_transforms.RandomHorizontalFlip):
+                if not isinstance(op, (
+                        pdx.cv.transforms.det_transforms.RandomHorizontalFlip,
+                        pdx.cv.transforms.det_transforms.Padding)):
                     for i in range(bboxes.shape[0]):
                         bbox = bboxes[i]
                         cname = labels[outputs[2]['gt_class'][i][0] - 1]

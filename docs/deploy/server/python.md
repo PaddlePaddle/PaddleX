@@ -27,7 +27,7 @@ import paddlex as pdx
 predictor = pdx.deploy.Predictor('./inference_model')
 image_list = ['xiaoduxiong_test_image/JPEGImages/WeChatIMG110.jpeg',
     'xiaoduxiong_test_image/JPEGImages/WeChatIMG111.jpeg']
-result = predictor.predict(image_list=image_list)
+result = predictor.batch_predict(image_list=image_list)
 ```
 
 * 视频流预测
