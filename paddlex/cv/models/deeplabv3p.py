@@ -420,9 +420,6 @@ class DeepLabv3p(BaseAPI):
                     elif info[0] == 'padding':
                         w, h = info[1][1], info[1][0]
                         one_pred = one_pred[0:h, 0:w]
-                    else:
-                        raise Exception(
-                            "Unexpected info '{}' in im_info".format(info[0]))
                 one_pred = one_pred.astype('int64')
                 one_pred = one_pred[np.newaxis, :, :, np.newaxis]
                 one_label = one_label[np.newaxis, np.newaxis, :, :]
@@ -480,9 +477,6 @@ class DeepLabv3p(BaseAPI):
                     w, h = info[1][1], info[1][0]
                     pred = pred[0:h, 0:w]
                     logit = logit[0:h, 0:w, :]
-                else:
-                    raise Exception("Unexpected info '{}' in im_info".format(
-                        info[0]))
             pred_list.append(pred)
             logit_list.append(logit)
 
