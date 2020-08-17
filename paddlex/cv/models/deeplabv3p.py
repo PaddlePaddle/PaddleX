@@ -553,8 +553,31 @@ class DeepLabv3p(BaseAPI):
                      img_file,
                      tile_size=[512, 512],
                      batch_size=32,
-                     thread_num=8):
-        image = cv2.imread(img_file)
+                     thread_num=8,
+                     transforms=None):
+        """无重叠的大图切小图预测。
+        Args:
+            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
+            tile_size(list|tuple): 切分小块的大小，格式为（W，H）。默认值为[512, 512]。
+            batch_size(int)：对小块进行批量预测时的批量大小。默认值为32。
+            thread_num (int): 并发执行各小块预处理时的线程数。默认值为8。
+            transforms(paddlex.cv.transforms): 数据预处理操作。
+
+
+        Returns:
+            dict: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
+                像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)
+        """
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+
+        if isinstance(img_file, str):
+            image = cv2.imread(img_file)
+        elif isinstance(img_file, np.ndarray):
+            image = img_file.copy()
+        else:
+            raise Exception("im_file must be list/tuple")
+
         height, width, channel = image.shape
         image_tile_list = list()
         # crop the image into tile pieces
@@ -577,7 +600,8 @@ class DeepLabv3p(BaseAPI):
             end = min(i + batch_size, num_tiles)
             res = self.batch_predict(
                 img_file_list=image_tile_list[begin:end],
-                thread_num=thread_num)
+                thread_num=thread_num,
+                transforms=transforms)
             for j in range(begin, end):
                 h_id = j // (width // tile_size[0] + 1)
                 w_id = j % (width // tile_size[0] + 1)
@@ -598,7 +622,31 @@ class DeepLabv3p(BaseAPI):
                              pad_size=[64, 64],
                              batch_size=32,
                              thread_num=8):
-        image = cv2.imread(img_file)
+        """有重叠的大图切小图预测。
+        Args:
+            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
+            tile_size(list|tuple): 切分小块中间部分用于拼接预测结果的大小，格式为（W，H）。默认值为[512, 512]。
+            pad_size(list|tuple): 切分小块向四周扩展的大小，格式为（W，H）。默认值为[64，64]。
+            batch_size(int)：对小块进行批量预测时的批量大小。默认值为32
+            thread_num (int): 并发执行各小块预处理时的线程数。默认值为8。
+            transforms(paddlex.cv.transforms): 数据预处理操作。
+
+
+        Returns:
+            dict: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
+                像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)
+        """
+
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+
+        if isinstance(img_file, str):
+            image = cv2.imread(img_file)
+        elif isinstance(img_file, np.ndarray):
+            image = img_file.copy()
+        else:
+            raise Exception("im_file must be list/tuple")
+
         height, width, channel = image.shape
         image_tile_list = list()
 
@@ -638,7 +686,8 @@ class DeepLabv3p(BaseAPI):
             end = min(i + batch_size, num_tiles)
             res = self.batch_predict(
                 img_file_list=image_tile_list[begin:end],
-                thread_num=thread_num)
+                thread_num=thread_num,
+                transforms=transforms)
             for j in range(begin, end):
                 h_id = j // (width // tile_size[0] + 1)
                 w_id = j % (width // tile_size[0] + 1)

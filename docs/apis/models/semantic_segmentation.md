@@ -112,6 +112,46 @@ batch_predict(self, img_file_list, transforms=None, thread_num=2):
 
 
 
+### tile_predict
+
+> DeepLabv3p模型无重叠的大图切小图预测接口。将大图像切分成互不重叠多个小块，分别对每个小块进行预测，最后将小块预测结果拼接成大图预测结果。由于每个小块边缘部分的预测效果会比中间部分的差，因此每个小块拼接处可能会有明显的裂痕感。
+
+> 需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`tile_predict`接口时，用户需要再重新定义test_transforms传入给`tile_predict`接口。
+
+> **参数**
+> >
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **tile_size** (list|tuple): 切分小块的大小，格式为（W，H）。默认值为[512, 512]。
+> > - **batch_size** (int)：对小块进行批量预测时的批量大小。默认值为32。
+> > - **thread_num** (int): 并发执行各小块预处理时的线程数。默认值为8。
+> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+
+> **返回值**
+> >
+> > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+### overlap_tile_predict
+
+> DeepLabv3p模型有重叠的大图切小图预测接口。Unet论文作者提出一种有重叠的大图切小图策略（Overlap-tile strategy）来消除拼接处的裂痕感。每次划分小块时向四周扩展面积，例如下图中的蓝色部分区域，到拼接大图时取小块中间部分的预测结果，例如下图中的黄色部分区域，对于处于原始图像边缘处的小块，其扩展面积下的像素则通过将边缘部分像素镜像填补得到。
+
+![](../../../examples/remote_sensing/images/overlap_tile.png)
+
+> 需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`overlap_tile_predict`接口时，用户需要再重新定义test_transforms传入给`overlap_tile_predict`接口。
+
+> **参数**
+> >
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **tile_size** (list|tuple): 切分小块中间部分用于拼接预测结果的大小，格式为（W，H）。默认值为[512, 512]。
+> > - **pad_size** (list|tuple): 切分小块向四周扩展的大小，格式为（W，H）。
+> > - **batch_size** (int)：对小块进行批量预测时的批量大小。默认值为32。
+> > - **thread_num** (int): 并发执行各小块预处理时的线程数。默认值为8。
+> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+
+> **返回值**
+> >
+> > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+
 ## paddlex.seg.UNet
 
 ```python
@@ -133,6 +173,8 @@ paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, us
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
 > - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
+> - tile_predict 无重叠的大图切小图预测接口同 [DeepLabv3p模型tile_predict接口](#tile-predict)
+> - overlap_tile_predict 有重叠的大图切小图预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
 
 ## paddlex.seg.HRNet
 
@@ -155,6 +197,8 @@ paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=Fal
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
 > - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
+> - tile_predict 无重叠的大图切小图预测接口同 [DeepLabv3p模型tile_predict接口](#tile-predict)
+> - overlap_tile_predict 有重叠的大图切小图预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
 
 ## paddlex.seg.FastSCNN
 
@@ -177,3 +221,5 @@ paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, cla
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
 > - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
+> - tile_predict 无重叠的大图切小图预测接口同 [DeepLabv3p模型tile_predict接口](#tile-predict)
+> - overlap_tile_predict 有重叠的大图切小图预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
