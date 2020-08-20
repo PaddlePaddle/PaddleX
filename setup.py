@@ -31,7 +31,7 @@ setuptools.setup(
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
         'paddleslim==1.0.1', 'visualdl>=2.0.0b', 'paddlehub>=1.6.2',
-        'shapely>=1.7.0'
+        'shapely>=1.7.0', "opencv-python"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

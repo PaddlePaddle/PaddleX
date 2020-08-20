@@ -8,3 +8,4 @@ paddleslim == 1.0.1
 shapely
 x2paddle
 paddlepaddle-gpu
+opencv-python
