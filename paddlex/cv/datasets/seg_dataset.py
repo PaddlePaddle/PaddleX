@@ -67,8 +67,6 @@ class SegDataset(Dataset):
                 items = line.strip().split()
                 items[0] = path_normalization(items[0])
                 items[1] = path_normalization(items[1])
-                if not is_pic(items[0]):
-                    continue
                 full_path_im = osp.join(data_dir, items[0])
                 full_path_label = osp.join(data_dir, items[1])
                 if not osp.exists(full_path_im):

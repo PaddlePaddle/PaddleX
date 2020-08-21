@@ -60,6 +60,24 @@ class Compose(SegTransform):
                         "Elements in transforms should be defined in 'paddlex.seg.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
                     )
 
+    @staticmethod
+    def decode_image(im, label):
+        if isinstance(im, np.ndarray):
+            if len(im.shape) != 3:
+                raise Exception(
+                    "im should be 3-dimensions, but now is {}-dimensions".
+                    format(len(im.shape)))
+        else:
+            try:
+                im = cv2.imread(im)
+            except:
+                raise ValueError('Can\'t read The image file {}!'.format(im))
+        im = im.astype('float32')
+        if label is not None:
+            if not isinstance(label, np.ndarray):
+                label = np.asarray(Image.open(label))
+        return (im, label)
+
     def __call__(self, im, im_info=None, label=None):
         """
         Args:
@@ -73,24 +91,12 @@ class Compose(SegTransform):
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
 
-        if isinstance(im, np.ndarray):
-            if len(im.shape) != 3:
-                raise Exception(
-                    "im should be 3-dimensions, but now is {}-dimensions".
-                    format(len(im.shape)))
-        else:
-            try:
-                im = cv2.imread(im)
-            except:
-                raise ValueError('Can\'t read The image file {}!'.format(im))
-        im = im.astype('float32')
-        if im_info is None:
-            im_info = [('origin_shape', im.shape[0:2])]
+        im, label = self.decode_image(im, label)
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        if im_info is None:
+            im_info = [('origin_shape', im.shape[0:2])]
         if label is not None:
-            if not isinstance(label, np.ndarray):
-                label = np.asarray(Image.open(label))
             origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
@@ -561,11 +567,21 @@ class Normalize(SegTransform):
         ValueError: mean或std不是list对象。std包含0。
     """
 
-    def __init__(self, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]):
+    def __init__(self,
+                 mean=[0.5, 0.5, 0.5],
+                 std=[0.5, 0.5, 0.5],
+                 min_val=[0, 0, 0],
+                 max_val=[255.0, 255.0, 255.0]):
+        self.min_val = min_val
+        self.max_val = max_val
         self.mean = mean
         self.std = std
         if not (isinstance(self.mean, list) and isinstance(self.std, list)):
             raise ValueError("{}: input type is invalid.".format(self))
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
         from functools import reduce
         if reduce(lambda x, y: x * y, self.std) == 0:
             raise ValueError('{}: std is invalid!'.format(self))
@@ -588,7 +604,7 @@ class Normalize(SegTransform):
 
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std)
+        im = normalize(im, mean, std, self.min_val, self.max_val)
 
         if label is None:
             return (im, im_info)
@@ -752,23 +768,26 @@ class RandomPaddingCrop(SegTransform):
             pad_height = max(crop_height - img_height, 0)
             pad_width = max(crop_width - img_width, 0)
             if (pad_height > 0 or pad_width > 0):
-                im = cv2.copyMakeBorder(
-                    im,
-                    0,
-                    pad_height,
-                    0,
-                    pad_width,
-                    cv2.BORDER_CONSTANT,
-                    value=self.im_padding_value)
+                img_channel = im.shape[2]
+                import copy
+                orig_im = copy.deepcopy(im)
+                im = np.zeros((img_height + pad_height, img_width + pad_width,
+                               img_channel)).astype(orig_im.dtype)
+                for i in range(img_channel):
+                    im[:, :, i] = np.pad(
+                        orig_im[:, :, i],
+                        pad_width=((0, pad_height), (0, pad_width)),
+                        mode='constant',
+                        constant_values=(self.im_padding_value[i],
+                                         self.im_padding_value[i]))
+
                 if label is not None:
-                    label = cv2.copyMakeBorder(
-                        label,
-                        0,
-                        pad_height,
-                        0,
-                        pad_width,
-                        cv2.BORDER_CONSTANT,
-                        value=self.label_padding_value)
+                    label = np.pad(label,
+                                   pad_width=((0, pad_height), (0, pad_width)),
+                                   mode='constant',
+                                   constant_values=(self.label_padding_value,
+                                                    self.label_padding_value))
+
                 img_height = im.shape[0]
                 img_width = im.shape[1]
 

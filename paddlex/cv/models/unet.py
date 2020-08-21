@@ -43,6 +43,7 @@ class UNet(DeepLabv3p):
 
     def __init__(self,
                  num_classes=2,
+                 input_channel=3,
                  upsample_mode='bilinear',
                  use_bce_loss=False,
                  use_dice_loss=False,
@@ -71,6 +72,7 @@ class UNet(DeepLabv3p):
                     'Expect class_weight is a list or string but receive {}'.
                     format(type(class_weight)))
         self.num_classes = num_classes
+        self.input_channel = input_channel
         self.upsample_mode = upsample_mode
         self.use_bce_loss = use_bce_loss
         self.use_dice_loss = use_dice_loss
@@ -82,6 +84,7 @@ class UNet(DeepLabv3p):
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.UNet(
             self.num_classes,
+            input_channel=self.input_channel,
             mode=mode,
             upsample_mode=self.upsample_mode,
             use_bce_loss=self.use_bce_loss,
