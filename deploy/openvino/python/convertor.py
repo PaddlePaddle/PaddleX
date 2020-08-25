@@ -28,7 +28,7 @@ def arg_parser():
         "--data_type",
         "-dp",
         default="FP32",
-        help="FP32 or FP16, the data_type of openvino IR")
+        help="option, FP32 or FP16, the data_type of openvino IR")
     return parser
 
 
@@ -61,6 +61,10 @@ def export_openvino_model(model, args):
     onnx_parser.set_defaults(output_dir=args.save_dir)
     shape = '[1,3,'
     shape =  shape + args.fixed_input_shape[1:]
+    if model.__class__.__name__ == "YOLOV3":
+        shape = shape + ",[1,2]"
+        inputs = "image,im_size"
+        onnx_parser.set_defaults(input = inputs)
     onnx_parser.set_defaults(input_shape = shape)
     mo.main(onnx_parser,'onnx')
 
