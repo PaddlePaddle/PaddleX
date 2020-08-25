@@ -1,9 +1,10 @@
 # Python预测部署
-文档说明了在树莓派上使用python版本的Paddle-Lite进行PaddleX模型好的预测部署，Paddle-Lite python版本的预测库下载，用户也可以下载whl文件进行安装[Paddle-Lite_2.6.0_python](https://github.com/PaddlePaddle/Paddle-Lite/releases/download/v2.6.0/armlinux_python_installer.zip)，更多版本请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
+文档说明了在树莓派上使用Python版本的Paddle-Lite进行PaddleX模型好的预测部署，根据下面的命令安装Python版本的Paddle-Lite预测库，若安装不成功用户也可以下载whl文件进行安装[Paddle-Lite_2.6.0_python](https://github.com/PaddlePaddle/Paddle-Lite/releases/download/v2.6.0/armlinux_python_installer.zip)，更多版本请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
 ```
 python -m pip install paddlelite
 ```
 部署前需要先将PaddleX模型转换为Paddle-Lite的nb模型，具体请参考[Paddle-Lite模型转换](./export_nb_model.md)
+**注意**：若用户使用2.6.0的Python预测库，请下载2.6.0版本的opt转换工具转换模型
 
 
 

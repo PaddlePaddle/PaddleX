@@ -4,13 +4,13 @@ PaddleX支持通过Paddle-Lite和基于OpenVINO的神经计算棒(NCS2)这两种
 
 ## 硬件环境配置  
 
-对于尚未安装系统的树莓派首先需要进行系统安装、环境配置等步奏来初始化硬件环境，过程中需要的软硬件如下： 
+对于尚未安装系统的树莓派首先需要进行系统安装、环境配置等步骤来初始化硬件环境，过程中需要的软硬件如下： 
 
 - 硬件：micro SD，显示器，键盘，鼠标
 - 软件：Raspbian OS
 ### Step1：系统安装
 - 格式化micro SD卡为FAT格式，Windows和Mac下建议使用[SD Memory Card Formatter](https://www.sdcard.org/downloads/formatter/)工具，Linux下请参考[NOOBS For Raspberry Pi](http://qdosmsq.dunbar-it.co.uk/blog/2013/06/noobs-for-raspberry-pi/)  
-- 下载NOOBS版本的Raspbian OS [下载地址](https://www.raspberrypi.org/downloads/)并将解压后的文件复制到SD中，插入SD到树莓派上通电，然后将自动安装系统
+- 下载NOOBS版本的Raspbian OS [下载地址](https://www.raspberrypi.org/downloads/)并将解压后的文件复制到SD中，插入SD后给树莓派通电，然后将自动安装系统
 ### Step2：环境配置
 - 启用VNC和SSH服务：打开LX终端输入，输入如下命令，选择Interfacing Option然后选择P2 SSH 和 P3 VNC分别打开SSH与VNC。打开后就可以通过SSH或者VNC的方式连接树莓派
 ```
@@ -23,9 +23,10 @@ sudo apt-get upgrade
 ```
 
 ## Paddle-Lite部署
-基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型。部署的流程包括：PaddleX模型转换与转换后的模型部署  
+基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型。   
+部署的流程包括：PaddleX模型转换与转换后的模型部署  
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/latest/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)
+**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)
 
 请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录 `/root/projects/`演示**。
 
@@ -39,10 +40,11 @@ mkdir -p /root/projects
 cd /root/projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
-**说明**：其中C++预测代码在PaddleX/deploy/raspberry 目录，该目录不依赖任何PaddleX下其他目录，如果需要在python下预测部署请参考[python预测部署](./python.md)。  
+**说明**：其中C++预测代码在PaddleX/deploy/raspberry 目录，该目录不依赖任何PaddleX下其他目录，如果需要在python下预测部署请参考[Python预测部署](./python.md)。  
 
 ### Step2：Paddle-Lite预编译库下载
-提供了下载的opt工具对应的Paddle-Lite在ArmLinux下面的预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)。建议用户使用预编译库，若需要自行编译，在树莓派上LX终端输入
+提供了下载的opt工具对应的Paddle-Lite在ArmLinux下面的预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)。  
+建议用户使用预编译库，若需要自行编译，在树莓派上LX终端输入
 ```
 git clone https://github.com/PaddlePaddle/Paddle-Lite.git
 cd Paddle-Lite

@@ -8,9 +8,9 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 * OpenVINO 2020.4
 * CMake 3.0+
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/latest/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  
+**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  
 
-**注意**：安装完OpenVINO后需要手动添加OpenVINO目录到系统环境变量，否则在运行程序时会出现找不到dll的情况。以OpenVINO不改变OpenVINO安装目录情况下为示例，流程如下
+**注意**：安装完OpenVINO后需要手动添加OpenVINO目录到系统环境变量，否则在运行程序时会出现找不到dll的情况。以安装OpenVINO时不改变OpenVINO安装目录情况下为示例，流程如下
 - 我的电脑->属性->高级系统设置->环境变量
     - 在系统变量中找到Path（如没有，自行创建），并双击编辑
     - 新建，分别将OpenVINO以下路径填入并保存:  
@@ -36,7 +36,10 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 **说明**：其中`C++`预测代码在`PaddleX\deploy\openvino` 目录，该目录不依赖任何`PaddleX`下其他目录。
 
 ### Step2 软件依赖
-提供了依赖软件预编译库，[gflas-glog](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)，[opencv](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)，请下载上面两个连接的预编译库。若需要自行下载请参考：
+提供了依赖软件预编译库:
+- [gflas-glog](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)  
+- [opencv](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
+请下载上面两个连接的预编译库。若需要自行下载请参考：
 - gflags:[下载地址](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags)
 - glog：[编译文档](https://github.com/google/glog)
 - opencv:[下载地址](https://opencv.org/releases/)  

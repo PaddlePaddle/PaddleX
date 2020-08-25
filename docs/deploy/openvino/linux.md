@@ -10,7 +10,7 @@
 * OpenVINO 2020.4 
 * 硬件平台：CPU、VPU
   
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/latest/install.html) ， OpenVINO安装请参考[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)或者[OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html)
+**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请根据相应的系统参考[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)或者[OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html)
 
 请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录 `/root/projects/`演示**。
 
@@ -26,7 +26,7 @@ mkdir -p /root/projects
 cd /root/projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
-**说明**：其中C++预测代码在PaddleX\deploy\openvino 目录，该目录不依赖任何PaddleX下其他目录。
+**说明**：其中C++预测代码在PaddleX/deploy/openvino 目录，该目录不依赖任何PaddleX下其他目录。
 
 ### Step2 软件依赖
 提供了依赖软件预编包或者一键编译，用户不需要单独下载或编译第三方依赖软件。若需要自行编译第三方依赖软件请参考：
@@ -41,7 +41,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
   
 ### Step3: 编译
-编译`cmake`的命令在`scripts/build.sh`中，若在树莓派(Raspbian OS)上编译请修改ARCH参数x86为armv7，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数,其主要内容说明如下：
+编译`cmake`的命令在`scripts/build.sh`中，若在树莓派(Raspbian OS)上编译请修改ARCH参数x86为armv7，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
 ```
 # openvino预编译库的路径
 OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
@@ -63,7 +63,7 @@ ARCH=x86
 
 ### Step4: 预测
 
-编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：
+编译成功后，分类任务的预测可执行程序为`classifier`，分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -86,7 +86,7 @@ linux系统在CPU下做单张图片的分类任务预测
 
 `样例二`:
 linux系统在CPU下做多张图片的分割任务预测，并保存预测可视化结果
-预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
+预测的多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
 ```
 /path/to/images/test_img1.jpeg
 /path/to/images/test_img2.jpeg
@@ -109,12 +109,12 @@ linux系统在CPU下做多张图片的分割任务预测，并保存预测可视
 ## 性能测试
 `测试一`：  
 在服务器CPU下测试了OpenVINO对PaddleX部署的加速性能：
-- cpu：Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz
-- openvino： 2020.4
-- paddleX：采用paddle预测库(1.8)，打开mkldnn加速，打开多线程。
-- 模型来自paddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。
+- CPU：Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz
+- OpenVINO： 2020.4
+- PaddleX：采用Paddle预测库(1.8)，打开mkldnn加速，打开多线程。
+- 模型来自PaddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。
 
-|模型| paddleX| openvino |  图片输入大小|
+|模型| PaddleX| OpenVINO |  图片输入大小|
 |---|---|---|---|
 |resnet-50 | 20.56 | 16.12 | 224*224 |
 |mobilenet-V2 | 5.16 | 2.31 |224*224|
@@ -125,24 +125,24 @@ linux系统在CPU下做多张图片的分割任务预测，并保存预测可视
 
 `测试二`:
 在PC机上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。
-- cpu：Intel(R) Core(TM) i5-4300U 1.90GHz
-- vpu：Movidius Neural Compute Stick2
-- openvino： 2020.4
-- 模型来自paddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
+- CPU：Intel(R) Core(TM) i5-4300U 1.90GHz
+- VPU：Movidius Neural Compute Stick2
+- OpenVINO： 2020.4
+- 模型来自PaddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
 
-|模型|openvino|输入图片|
+|模型|OpenVINO|输入图片|
 |---|---|---|
 |mobilenetV2|24.00|224*224|
 |resnet50_vd_ssld|58.53|224*224|    
 
 `测试三`:
 在树莓派3B上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。
-- cpu ：ARM Cortex-A72 1.2GHz 64bit
-- vpu：Movidius Neural Compute Stick2
-- openvino： 2020.4
+- CPU ：ARM Cortex-A72 1.2GHz 64bit
+- VPU：Movidius Neural Compute Stick2
+- OpenVINO 2020.4
 - 模型来自paddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
 
-|模型|openvino|输入图片大小|
+|模型|OpenVINO|输入图片大小|
 |---|---|---|
 |mobilenetV2|43.15|224*224|
 |resnet50|82.66|224*224|  
