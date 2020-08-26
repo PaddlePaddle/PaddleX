@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ def multithread_reader(mapper,
         while not isinstance(sample, EndSignal):
             batch_data.append(sample)
             if len(batch_data) == batch_size:
-                batch_data = generate_minibatch(batch_data)
+                batch_data = generate_minibatch(batch_data, mapper=mapper)
                 yield batch_data
                 batch_data = []
             sample = out_queue.get()
@@ -127,11 +127,11 @@ def multithread_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = generate_minibatch(batch_data)
+                    batch_data = generate_minibatch(batch_data, mapper=mapper)
                     yield batch_data
                     batch_data = []
         if not drop_last and len(batch_data) != 0:
-            batch_data = generate_minibatch(batch_data)
+            batch_data = generate_minibatch(batch_data, mapper=mapper)
             yield batch_data
             batch_data = []
 
@@ -188,18 +188,21 @@ def multiprocess_reader(mapper,
             else:
                 batch_data.append(sample)
                 if len(batch_data) == batch_size:
-                    batch_data = generate_minibatch(batch_data)
+                    batch_data = generate_minibatch(batch_data, mapper=mapper)
                     yield batch_data
                     batch_data = []
         if len(batch_data) != 0 and not drop_last:
-            batch_data = generate_minibatch(batch_data)
+            batch_data = generate_minibatch(batch_data, mapper=mapper)
             yield batch_data
             batch_data = []
 
     return queue_reader
 
 
-def generate_minibatch(batch_data, label_padding_value=255):
+def generate_minibatch(batch_data, label_padding_value=255, mapper=None):
+    if mapper is not None and mapper.batch_transforms is not None:
+        for op in mapper.batch_transforms:
+            batch_data = op(batch_data)
     # if batch_size is 1, do not pad the image
     if len(batch_data) == 1:
         return batch_data
@@ -218,14 +221,13 @@ def generate_minibatch(batch_data, label_padding_value=255):
             (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
         padding_im[:, :im_h, :im_w] = data[0]
         if len(data) > 2:
-           # padding the image, label and insert 'padding' into `im_info` of segmentation during evaluating phase.
+            # padding the image, label and insert 'padding' into `im_info` of segmentation during evaluating phase.
             if len(data[1]) == 0 or 'padding' not in [
                     data[1][i][0] for i in range(len(data[1]))
             ]:
                 data[1].append(('padding', [im_h, im_w]))
             padding_batch.append((padding_im, data[1], data[2]))
 
-            
         elif len(data) > 1:
             if isinstance(data[1], np.ndarray) and len(data[1].shape) > 1:
                 # padding the image and label of segmentation during the training

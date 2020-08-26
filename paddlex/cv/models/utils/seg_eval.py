@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ class ConfusionMatrix(object):
     """
 
     def __init__(self, num_classes=2, streaming=False):
-        self.confusion_matrix = np.zeros([num_classes, num_classes],
-                                         dtype='int64')
+        self.confusion_matrix = np.zeros(
+            [num_classes, num_classes], dtype='int64')
         self.num_classes = num_classes
         self.streaming = streaming
 
@@ -42,15 +42,15 @@ class ConfusionMatrix(object):
         pred = np.asarray(pred)[mask]
         one = np.ones_like(pred)
         # Accumuate ([row=label, col=pred], 1) into sparse matrix
-        spm = csr_matrix((one, (label, pred)),
-                         shape=(self.num_classes, self.num_classes))
+        spm = csr_matrix(
+            (one, (label, pred)), shape=(self.num_classes, self.num_classes))
         spm = spm.todense()
         self.confusion_matrix += spm
 
     def zero_matrix(self):
         """ Clear confusion matrix """
-        self.confusion_matrix = np.zeros([self.num_classes, self.num_classes],
-                                         dtype='int64')
+        self.confusion_matrix = np.zeros(
+            [self.num_classes, self.num_classes], dtype='int64')
 
     def mean_iou(self):
         iou_list = []

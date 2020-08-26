@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ import yaml
 import paddlex
 import paddle.fluid as fluid
 from paddlex.cv.transforms import build_transforms
-from paddlex.cv.models import BaseClassifier, YOLOv3, FasterRCNN, MaskRCNN, DeepLabv3p
+from paddlex.cv.models import BaseClassifier
+from paddlex.cv.models import PPYOLO, FasterRCNN, MaskRCNN
+from paddlex.cv.models import DeepLabv3p
 
 
 class Predictor:
@@ -28,6 +30,7 @@ class Predictor:
                  use_gpu=True,
                  gpu_id=0,
                  use_mkl=False,
+                 mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
                  memory_optimize=True):
@@ -38,6 +41,7 @@ class Predictor:
                 use_gpu: 是否使用gpu，默认True
                 gpu_id: 使用gpu的id，默认0
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
+                mkl_thread_num: mkldnn计算线程数，默认为4
                 use_trt: 是否使用TensorRT，默认False
                 use_glog: 是否启用glog日志, 默认False
                 memory_optimize: 是否启动内存优化，默认True
@@ -72,13 +76,15 @@ class Predictor:
             to_rgb = False
         self.transforms = build_transforms(self.model_type,
                                            self.info['Transforms'], to_rgb)
-        self.predictor = self.create_predictor(
-            use_gpu, gpu_id, use_mkl, use_trt, use_glog, memory_optimize)
+        self.predictor = self.create_predictor(use_gpu, gpu_id, use_mkl,
+                                               mkl_thread_num, use_trt,
+                                               use_glog, memory_optimize)
 
     def create_predictor(self,
                          use_gpu=True,
                          gpu_id=0,
                          use_mkl=False,
+                         mkl_thread_num=4,
                          use_trt=False,
                          use_glog=False,
                          memory_optimize=True):
@@ -93,6 +99,7 @@ class Predictor:
             config.disable_gpu()
         if use_mkl:
             config.enable_mkldnn()
+            config.set_cpu_math_library_num_threads(mkl_thread_num)
         if use_glog:
             config.enable_glog_info()
         else:
@@ -124,8 +131,8 @@ class Predictor:
                 thread_num=thread_num)
             res['image'] = im
         elif self.model_type == "detector":
-            if self.model_name == "YOLOv3":
-                im, im_size = YOLOv3._preprocess(
+            if self.model_name in ["PPYOLO", "YOLOv3"]:
+                im, im_size = PPYOLO._preprocess(
                     image,
                     self.transforms,
                     self.model_type,
@@ -185,8 +192,8 @@ class Predictor:
             res = {'bbox': (results[0][0], offset_to_lengths(results[0][1])), }
             res['im_id'] = (np.array(
                 [[i] for i in range(batch_size)]).astype('int32'), [[]])
-            if self.model_name == "YOLOv3":
-                preds = YOLOv3._postprocess(res, batch_size, self.num_classes,
+            if self.model_name in ["PPYOLO", "YOLOv3"]:
+                preds = PPYOLO._postprocess(res, batch_size, self.num_classes,
                                             self.labels)
             elif self.model_name == "FasterRCNN":
                 preds = FasterRCNN._postprocess(res, batch_size,

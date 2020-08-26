@@ -18,14 +18,12 @@ MyDataset/ # 实例分割数据集根目录
 
 在PaddleX中，为了区分训练集和验证集，在`MyDataset`同级目录，使用不同的json表示数据的划分，例如`train.json`和`val.json`。[点击下载实例分割示例数据集](https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz)。
 
-<!--
-> 注：也可使用PaddleX自带工具，对数据集进行随机划分，在数据按照上述示例组织结构后，使用如下命令，即可快速完成数据集随机划分，其中split指定训练集的比例，剩余比例用于验证集。
+> 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中val_value表示验证集的比例，test_value表示测试集的比例（可以为0），剩余的比例用于训练集。
 > ```
-> paddlex --split_dataset --from MSCOCO --pics ./JPEGImages --annotations ./annotations.json --split 0.8 --save_dir ./splited_dataset_dir
+> paddlex --split_dataset --format COCO --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
 > ```
--->
 
-MSCOCO数据的标注文件采用json格式，用户可使用Labelme, 精灵标注助手或EasyData等标注工具进行标注，参见[数据标注工具](../annotations.md)
+MSCOCO数据的标注文件采用json格式，用户可使用Labelme, 精灵标注助手或EasyData等标注工具进行标注，参见[数据标注工具](../annotation.md)
 
 ## PaddleX加载数据集
 示例代码如下，

@@ -51,7 +51,8 @@ DEFINE_string(seg_key, "", "Segmenter model key of encryption");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
-DEFINE_double(score_threshold, 0.5, "Detected bbox whose score is lower than this threshlod is filtered");
+DEFINE_double(score_threshold, 0.5,
+  "Detected bbox whose score is lower than this threshlod is filtered");
 
 void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
              PaddleX::Model *seg_model, const std::string save_dir,
@@ -207,7 +208,7 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  // 加载模型
+  // Load model
   PaddleX::Model det_model;
   det_model.Init(FLAGS_det_model_dir, FLAGS_use_gpu, FLAGS_use_trt,
                  FLAGS_gpu_id, FLAGS_det_key);

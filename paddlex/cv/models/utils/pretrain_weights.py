@@ -116,10 +116,14 @@ coco_pretrain = {
     'DeepLabv3p_MobileNetV2_x1.0_COCO':
     'https://bj.bcebos.com/v1/paddleseg/deeplab_mobilenet_x1_0_coco.tgz',
     'DeepLabv3p_Xception65_COCO':
-    'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz'
+    'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz',
+    'PPYOLO_ResNet50_vd_ssld_COCO':
+    'https://paddlemodels.bj.bcebos.com/object_detection/ppyolo_2x.pdparams'
 }
 
 cityscapes_pretrain = {
+    'DeepLabv3p_MobileNetV3_large_x1_0_ssld_CITYSCAPES':
+    'https://paddleseg.bj.bcebos.com/models/deeplabv3p_mobilenetv3_large_cityscapes.tar.gz',
     'DeepLabv3p_MobileNetV2_x1.0_CITYSCAPES':
     'https://paddleseg.bj.bcebos.com/models/mobilenet_cityscapes.tgz',
     'DeepLabv3p_Xception65_CITYSCAPES':
@@ -142,7 +146,8 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
     if flag == 'COCO':
         if class_name == 'DeepLabv3p' and backbone in [
                 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',
-                'MobileNetV2_x1.5', 'MobileNetV2_x2.0'
+                'MobileNetV2_x1.5', 'MobileNetV2_x2.0',
+                'MobileNetV3_large_x1_0_ssld'
         ]:
             model_name = '{}_{}'.format(class_name, backbone)
             logging.warning(warning_info.format(model_name, flag, 'IMAGENET'))
@@ -226,7 +231,9 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         new_save_dir = save_dir
         if hasattr(paddlex, 'pretrain_dir'):
             new_save_dir = paddlex.pretrain_dir
-        if class_name in ['YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p']:
+        if class_name in [
+                'YOLOv3', 'FasterRCNN', 'MaskRCNN', 'DeepLabv3p', 'PPYOLO'
+        ]:
             backbone = '{}_{}'.format(class_name, backbone)
         backbone = "{}_{}".format(backbone, flag)
         if flag == 'COCO':

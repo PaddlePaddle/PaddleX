@@ -1,5 +1,5 @@
 # coding: utf8
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -144,8 +144,7 @@ class UNet(object):
         with scope("up"):
             if self.upsample_mode == 'bilinear':
                 short_cut_shape = fluid.layers.shape(short_cut)
-                data = fluid.layers.resize_bilinear(
-                    data, short_cut_shape[2:], align_corners=False)
+                data = fluid.layers.resize_bilinear(data, short_cut_shape[2:])
             else:
                 data = deconv(
                     data,

@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -531,8 +531,8 @@ def save_mask_inference_model(dirname,
     if isinstance(target_vars, Variable):
         target_vars = [target_vars]
     elif export_for_deployment:
-        if not (bool(target_vars)
-                and all(isinstance(var, Variable) for var in target_vars)):
+        if not (bool(target_vars) and
+                all(isinstance(var, Variable) for var in target_vars)):
             raise ValueError("'target_vars' should be a list of Variable.")
 
     main_program = _get_valid_program(main_program)

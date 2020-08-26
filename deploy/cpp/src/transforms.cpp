@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <math.h>
 
 #include "include/paddlex/transforms.h"
 
@@ -60,8 +61,8 @@ bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
   data->reshape_order_.push_back("resize");
 
   float scale = GenerateScale(*im);
-  int width = static_cast<int>(scale * im->cols);
-  int height = static_cast<int>(scale * im->rows);
+  int width = static_cast<int>(round(scale * im->cols));
+  int height = static_cast<int>(round(scale * im->rows));
   cv::resize(*im, *im, cv::Size(width, height), 0, 0, cv::INTER_LINEAR);
 
   data->new_im_size_[0] = im->rows;

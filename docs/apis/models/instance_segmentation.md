@@ -101,4 +101,4 @@ batch_predict(self, img_file_list, transforms=None, thread_num=2)
 >
 > **返回值**
 >
-> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，key'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。
+> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，包含关键字：'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。

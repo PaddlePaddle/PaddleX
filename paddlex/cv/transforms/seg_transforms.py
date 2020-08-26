@@ -1,5 +1,5 @@
 # coding: utf8
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ class Compose(SegTransform):
             raise ValueError('The length of transforms ' + \
                             'must be equal or larger than 1!')
         self.transforms = transforms
+        self.batch_transforms = None
         self.to_rgb = False
         # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
         for op in self.transforms:
@@ -72,8 +73,6 @@ class Compose(SegTransform):
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
 
-        if im_info is None:
-            im_info = list()
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
@@ -85,6 +84,8 @@ class Compose(SegTransform):
             except:
                 raise ValueError('Can\'t read The image file {}!'.format(im))
         im = im.astype('float32')
+        if im_info is None:
+            im_info = [('origin_shape', im.shape[0:2])]
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if label is not None:

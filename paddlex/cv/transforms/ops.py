@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ def random_crop(im,
                 (float(im.shape[1]) / im.shape[0]) / (w**2))
     scale_max = min(scale[1], bound)
     scale_min = min(scale[0], bound)
-    target_area = im.shape[0] * im.shape[1] * np.random.uniform(
-        scale_min, scale_max)
+    target_area = im.shape[0] * im.shape[1] * np.random.uniform(scale_min,
+                                                                scale_max)
     target_size = math.sqrt(target_area)
     w = int(target_size * w)
     h = int(target_size * h)
@@ -145,6 +145,7 @@ def brightness(im, brightness_lower, brightness_upper):
     delta = np.random.uniform(brightness_lower, brightness_upper)
     im += delta
     return im
+
 
 def rotate(im, rotate_lower, rotate_upper):
     rotate_delta = np.random.uniform(rotate_lower, rotate_upper)

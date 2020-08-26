@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ class MobileNetV2:
         self.output_stride = output_stride
         self.end_points = end_points
         self.decode_points = decode_points
-        self.bottleneck_params_list = [(1, 16, 1, 1), (6, 24, 2, 2),
-                                       (6, 32, 3, 2), (6, 64, 4, 2),
-                                       (6, 96, 3, 1), (6, 160, 3, 2),
-                                       (6, 320, 1, 1)]
+        self.bottleneck_params_list = [
+            (1, 16, 1, 1), (6, 24, 2, 2), (6, 32, 3, 2), (6, 64, 4, 2),
+            (6, 96, 3, 1), (6, 160, 3, 2), (6, 320, 1, 1)
+        ]
         self.modify_bottle_params(output_stride)
 
     def __call__(self, input):
@@ -104,11 +104,10 @@ class MobileNetV2:
             output = fluid.layers.pool2d(
                 input=output, pool_type='avg', global_pooling=True)
 
-            output = fluid.layers.fc(
-                input=output,
-                size=self.num_classes,
-                param_attr=ParamAttr(name='fc10_weights'),
-                bias_attr=ParamAttr(name='fc10_offset'))
+            output = fluid.layers.fc(input=output,
+                                     size=self.num_classes,
+                                     param_attr=ParamAttr(name='fc10_weights'),
+                                     bias_attr=ParamAttr(name='fc10_offset'))
         return output
 
     def modify_bottle_params(self, output_stride=None):

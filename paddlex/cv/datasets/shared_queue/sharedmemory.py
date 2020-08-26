@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -278,8 +278,8 @@ class PageAllocator(object):
     def set_alloc_info(self, alloc_pos, used_pages):
         """ set allocating position to new value
         """
-        memcopy(self._base[4:12], struct.pack(
-            str('II'), alloc_pos, used_pages))
+        memcopy(self._base[4:12],
+                struct.pack(str('II'), alloc_pos, used_pages))
 
     def set_page_status(self, start, page_num, status):
         """ set pages from 'start' to 'end' with new same status 'status'
@@ -525,8 +525,8 @@ class SharedMemoryMgr(object):
             logger.info('destroy [%s]' % (self))
 
         if not self._released and not self._allocator.empty():
-            logger.debug(
-                'not empty when delete this SharedMemoryMgr[%s]' % (self))
+            logger.debug('not empty when delete this SharedMemoryMgr[%s]' %
+                         (self))
         else:
             self._released = True
 

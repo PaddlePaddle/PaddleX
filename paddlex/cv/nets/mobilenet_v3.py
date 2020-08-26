@@ -42,7 +42,9 @@ class MobileNetV3():
                  extra_block_filters=[[256, 512], [128, 256], [128, 256],
                                       [64, 128]],
                  num_classes=None,
-                 lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0]):
+                 lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
+                 for_seg=False,
+                 output_stride=None):
         assert len(lr_mult_list) == 5, \
             "lr_mult_list length in MobileNetV3 must be 5 but got {}!!".format(
             len(lr_mult_list))
@@ -57,48 +59,112 @@ class MobileNetV3():
         self.num_classes = num_classes
         self.lr_mult_list = lr_mult_list
         self.curr_stage = 0
-        if model_name == "large":
-            self.cfg = [
-                # kernel_size, expand, channel, se_block, act_mode, stride
-                [3, 16, 16, False, 'relu', 1],
-                [3, 64, 24, False, 'relu', 2],
-                [3, 72, 24, False, 'relu', 1],
-                [5, 72, 40, True, 'relu', 2],
-                [5, 120, 40, True, 'relu', 1],
-                [5, 120, 40, True, 'relu', 1],
-                [3, 240, 80, False, 'hard_swish', 2],
-                [3, 200, 80, False, 'hard_swish', 1],
-                [3, 184, 80, False, 'hard_swish', 1],
-                [3, 184, 80, False, 'hard_swish', 1],
-                [3, 480, 112, True, 'hard_swish', 1],
-                [3, 672, 112, True, 'hard_swish', 1],
-                [5, 672, 160, True, 'hard_swish', 2],
-                [5, 960, 160, True, 'hard_swish', 1],
-                [5, 960, 160, True, 'hard_swish', 1],
-            ]
-            self.cls_ch_squeeze = 960
-            self.cls_ch_expand = 1280
-            self.lr_interval = 3
-        elif model_name == "small":
-            self.cfg = [
-                # kernel_size, expand, channel, se_block, act_mode, stride
-                [3, 16, 16, True, 'relu', 2],
-                [3, 72, 24, False, 'relu', 2],
-                [3, 88, 24, False, 'relu', 1],
-                [5, 96, 40, True, 'hard_swish', 2],
-                [5, 240, 40, True, 'hard_swish', 1],
-                [5, 240, 40, True, 'hard_swish', 1],
-                [5, 120, 48, True, 'hard_swish', 1],
-                [5, 144, 48, True, 'hard_swish', 1],
-                [5, 288, 96, True, 'hard_swish', 2],
-                [5, 576, 96, True, 'hard_swish', 1],
-                [5, 576, 96, True, 'hard_swish', 1],
-            ]
-            self.cls_ch_squeeze = 576
-            self.cls_ch_expand = 1280
-            self.lr_interval = 2
+        self.for_seg = for_seg
+        self.decode_point = None
+
+        if self.for_seg:
+            if model_name == "large":
+                self.cfg = [
+                    # k, exp, c,  se,     nl,  s,
+                    [3, 16, 16, False, 'relu', 1],
+                    [3, 64, 24, False, 'relu', 2],
+                    [3, 72, 24, False, 'relu', 1],
+                    [5, 72, 40, True, 'relu', 2],
+                    [5, 120, 40, True, 'relu', 1],
+                    [5, 120, 40, True, 'relu', 1],
+                    [3, 240, 80, False, 'hard_swish', 2],
+                    [3, 200, 80, False, 'hard_swish', 1],
+                    [3, 184, 80, False, 'hard_swish', 1],
+                    [3, 184, 80, False, 'hard_swish', 1],
+                    [3, 480, 112, True, 'hard_swish', 1],
+                    [3, 672, 112, True, 'hard_swish', 1],
+                    # The number of channels in the last 4 stages is reduced by a
+                    # factor of 2 compared to the standard implementation.
+                    [5, 336, 80, True, 'hard_swish', 2],
+                    [5, 480, 80, True, 'hard_swish', 1],
+                    [5, 480, 80, True, 'hard_swish', 1],
+                ]
+                self.cls_ch_squeeze = 480
+                self.cls_ch_expand = 1280
+                self.lr_interval = 3
+            elif model_name == "small":
+                self.cfg = [
+                    # k, exp, c,  se,     nl,  s,
+                    [3, 16, 16, True, 'relu', 2],
+                    [3, 72, 24, False, 'relu', 2],
+                    [3, 88, 24, False, 'relu', 1],
+                    [5, 96, 40, True, 'hard_swish', 2],
+                    [5, 240, 40, True, 'hard_swish', 1],
+                    [5, 240, 40, True, 'hard_swish', 1],
+                    [5, 120, 48, True, 'hard_swish', 1],
+                    [5, 144, 48, True, 'hard_swish', 1],
+                    # The number of channels in the last 4 stages is reduced by a
+                    # factor of 2 compared to the standard implementation.
+                    [5, 144, 48, True, 'hard_swish', 2],
+                    [5, 288, 48, True, 'hard_swish', 1],
+                    [5, 288, 48, True, 'hard_swish', 1],
+                ]
+            else:
+                raise NotImplementedError
         else:
-            raise NotImplementedError
+            if model_name == "large":
+                self.cfg = [
+                    # kernel_size, expand, channel, se_block, act_mode, stride
+                    [3, 16, 16, False, 'relu', 1],
+                    [3, 64, 24, False, 'relu', 2],
+                    [3, 72, 24, False, 'relu', 1],
+                    [5, 72, 40, True, 'relu', 2],
+                    [5, 120, 40, True, 'relu', 1],
+                    [5, 120, 40, True, 'relu', 1],
+                    [3, 240, 80, False, 'hard_swish', 2],
+                    [3, 200, 80, False, 'hard_swish', 1],
+                    [3, 184, 80, False, 'hard_swish', 1],
+                    [3, 184, 80, False, 'hard_swish', 1],
+                    [3, 480, 112, True, 'hard_swish', 1],
+                    [3, 672, 112, True, 'hard_swish', 1],
+                    [5, 672, 160, True, 'hard_swish', 2],
+                    [5, 960, 160, True, 'hard_swish', 1],
+                    [5, 960, 160, True, 'hard_swish', 1],
+                ]
+                self.cls_ch_squeeze = 960
+                self.cls_ch_expand = 1280
+                self.lr_interval = 3
+            elif model_name == "small":
+                self.cfg = [
+                    # kernel_size, expand, channel, se_block, act_mode, stride
+                    [3, 16, 16, True, 'relu', 2],
+                    [3, 72, 24, False, 'relu', 2],
+                    [3, 88, 24, False, 'relu', 1],
+                    [5, 96, 40, True, 'hard_swish', 2],
+                    [5, 240, 40, True, 'hard_swish', 1],
+                    [5, 240, 40, True, 'hard_swish', 1],
+                    [5, 120, 48, True, 'hard_swish', 1],
+                    [5, 144, 48, True, 'hard_swish', 1],
+                    [5, 288, 96, True, 'hard_swish', 2],
+                    [5, 576, 96, True, 'hard_swish', 1],
+                    [5, 576, 96, True, 'hard_swish', 1],
+                ]
+                self.cls_ch_squeeze = 576
+                self.cls_ch_expand = 1280
+                self.lr_interval = 2
+            else:
+                raise NotImplementedError
+
+        if self.for_seg:
+            self.modify_bottle_params(output_stride)
+
+    def modify_bottle_params(self, output_stride=None):
+        if output_stride is not None and output_stride % 2 != 0:
+            raise Exception("output stride must to be even number")
+        if output_stride is None:
+            return
+        else:
+            stride = 2
+            for i, _cfg in enumerate(self.cfg):
+                stride = stride * _cfg[-1]
+                if stride > output_stride:
+                    s = 1
+                    self.cfg[i][-1] = s
 
     def _conv_bn_layer(self,
                        input,
@@ -152,6 +218,14 @@ class MobileNetV3():
             elif act == 'relu6':
                 bn = fluid.layers.relu6(bn)
         return bn
+
+    def make_divisible(self, v, divisor=8, min_value=None):
+        if min_value is None:
+            min_value = divisor
+        new_v = max(min_value, int(v + divisor / 2) // divisor * divisor)
+        if new_v < 0.9 * v:
+            new_v += divisor
+        return new_v
 
     def _hard_swish(self, x):
         return x * fluid.layers.relu6(x + 3) / 6.
@@ -220,6 +294,9 @@ class MobileNetV3():
             use_cudnn=False,
             name=name + '_depthwise')
 
+        if self.curr_stage == 5:
+            self.decode_point = conv1
+
         if use_se:
             conv1 = self._se_block(
                 input=conv1, num_out_filter=num_mid_filter, name=name + '_se')
@@ -282,7 +359,7 @@ class MobileNetV3():
         conv = self._conv_bn_layer(
             input,
             filter_size=3,
-            num_filters=inplanes if scale <= 1.0 else int(inplanes * scale),
+            num_filters=self.make_divisible(inplanes * scale),
             stride=2,
             padding=1,
             num_groups=1,
@@ -290,6 +367,7 @@ class MobileNetV3():
             act='hard_swish',
             name='conv1')
         i = 0
+        inplanes = self.make_divisible(inplanes * scale)
         for layer_cfg in cfg:
             self.block_stride *= layer_cfg[5]
             if layer_cfg[5] == 2:
@@ -297,18 +375,31 @@ class MobileNetV3():
             conv = self._residual_unit(
                 input=conv,
                 num_in_filter=inplanes,
-                num_mid_filter=int(scale * layer_cfg[1]),
-                num_out_filter=int(scale * layer_cfg[2]),
+                num_mid_filter=self.make_divisible(scale * layer_cfg[1]),
+                num_out_filter=self.make_divisible(scale * layer_cfg[2]),
                 act=layer_cfg[4],
                 stride=layer_cfg[5],
                 filter_size=layer_cfg[0],
                 use_se=layer_cfg[3],
                 name='conv' + str(i + 2))
-
-            inplanes = int(scale * layer_cfg[2])
+            inplanes = self.make_divisible(scale * layer_cfg[2])
             i += 1
             self.curr_stage = i
         blocks.append(conv)
+
+        if self.for_seg:
+            conv = self._conv_bn_layer(
+                input=conv,
+                filter_size=1,
+                num_filters=self.make_divisible(scale * self.cls_ch_squeeze),
+                stride=1,
+                padding=0,
+                num_groups=1,
+                if_act=True,
+                act='hard_swish',
+                name='conv_last')
+
+            return conv, self.decode_point
 
         if self.num_classes:
             conv = self._conv_bn_layer(

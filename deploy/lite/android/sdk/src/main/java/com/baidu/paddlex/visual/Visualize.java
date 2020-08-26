@@ -31,8 +31,11 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -118,13 +121,13 @@ public class Visualize {
     public Mat draw(SegResult result, Mat visualizeMat, ImageBlob imageBlob, int cutoutClass) {
         int new_h = (int)imageBlob.getNewImageSize()[2];
         int new_w = (int)imageBlob.getNewImageSize()[3];
-        Mat mask = new Mat(new_h, new_w, CvType.CV_8UC(1));
+        Mat mask = new Mat(new_h, new_w, CvType.CV_32FC(1));
+        float[] scoreData = new float[new_h*new_w];
+        System.arraycopy(result.getMask().getScoreData() ,cutoutClass*new_h*new_w, scoreData ,0, new_h*new_w);
+        mask.put(0,0, scoreData);
+        Core.multiply(mask, new Scalar(255), mask);
+        mask.convertTo(mask,CvType.CV_8UC(1));
 
-        for  (int h = 0; h < new_h; h++) {
-            for  (int w = 0; w < new_w; w++){
-                mask.put(h , w, (1-result.getMask().getScoreData()[cutoutClass + h * new_h + w]) * 255);
-            }
-        }
         ListIterator<Map.Entry<String, int[]>> reverseReshapeInfo = new ArrayList<Map.Entry<String, int[]>>(imageBlob.getReshapeInfo().entrySet()).listIterator(imageBlob.getReshapeInfo().size());
         while (reverseReshapeInfo.hasPrevious()) {
             Map.Entry<String, int[]> entry = reverseReshapeInfo.previous();
@@ -135,10 +138,7 @@ public class Visualize {
                 Size sz = new Size(entry.getValue()[0], entry.getValue()[1]);
                 Imgproc.resize(mask, mask, sz,0,0,Imgproc.INTER_LINEAR);
             }
-            Log.i(TAG, "postprocess operator: " + entry.getKey());
-            Log.i(TAG, "shape:: " + String.valueOf(mask.width()) + ","+ String.valueOf(mask.height()));
         }
-
         Mat dst  = new Mat();
         List<Mat> listMat = Arrays.asList(visualizeMat, mask);
         Core.merge(listMat, dst);

@@ -1,5 +1,5 @@
 # coding: utf8
-# copyright (c) 2019 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,8 +69,7 @@ class Xception():
 
     def __call__(
             self,
-            input,
-    ):
+            input, ):
         self.stride = 2
         self.block_point = 0
         self.short_cuts = dict()
@@ -140,7 +139,8 @@ class Xception():
         param_attr = fluid.ParamAttr(
             name=name_scope + 'weights',
             regularizer=None,
-            initializer=fluid.initializer.TruncatedNormal(loc=0.0, scale=0.09))
+            initializer=fluid.initializer.TruncatedNormal(
+                loc=0.0, scale=0.09))
         with scope("entry_flow"):
             with scope("conv1"):
                 data = bn_relu(
@@ -178,10 +178,10 @@ class Xception():
             for i in range(block_num):
                 block_point = block_point + 1
                 with scope("block" + str(i + 1)):
-                    stride = strides[i] if check_stride(
-                        s * strides[i], output_stride) else 1
-                    data, short_cuts = self.xception_block(
-                        data, chns[i], [1, 1, stride])
+                    stride = strides[i] if check_stride(s * strides[i],
+                                                        output_stride) else 1
+                    data, short_cuts = self.xception_block(data, chns[i],
+                                                           [1, 1, stride])
                     s = s * stride
                     if check_points(block_point, self.decode_points):
                         self.short_cuts[block_point] = short_cuts[1]
@@ -205,8 +205,8 @@ class Xception():
             for i in range(block_num):
                 block_point = block_point + 1
                 with scope("block" + str(i + 1)):
-                    stride = strides[i] if check_stride(
-                        s * strides[i], output_stride) else 1
+                    stride = strides[i] if check_stride(s * strides[i],
+                                                        output_stride) else 1
                     data, short_cuts = self.xception_block(
                         data, chns[i], [1, 1, strides[i]], skip_conv=False)
                     s = s * stride
@@ -302,16 +302,15 @@ class Xception():
                 initializer=fluid.initializer.TruncatedNormal(
                     loc=0.0, scale=0.09))
             with scope('shortcut'):
-                skip = bn(
-                    conv(
-                        input,
-                        channels[-1],
-                        1,
-                        strides[-1],
-                        groups=1,
-                        padding=0,
-                        param_attr=param_attr),
-                    eps=1e-3)
+                skip = bn(conv(
+                    input,
+                    channels[-1],
+                    1,
+                    strides[-1],
+                    groups=1,
+                    padding=0,
+                    param_attr=param_attr),
+                          eps=1e-3)
         else:
             skip = input
         return data + skip, results

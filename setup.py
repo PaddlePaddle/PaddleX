@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ setuptools.setup(
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
         'paddleslim==1.0.1', 'visualdl>=2.0.0b', 'paddlehub>=1.6.2',
-        'shapely>=1.7.0'
+        'shapely>=1.7.0', "opencv-python"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

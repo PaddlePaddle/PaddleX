@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -80,7 +80,9 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
         self._support_activation_quantize_type = [
             'range_abs_max', 'moving_average_abs_max', 'abs_max'
         ]
-        self._support_weight_quantize_type = ['abs_max', 'channel_wise_abs_max']
+        self._support_weight_quantize_type = [
+            'abs_max', 'channel_wise_abs_max'
+        ]
         self._support_algo_type = ['KL', 'abs_max', 'min_max']
         self._support_quantize_op_type = \
             list(set(QuantizationTransformPass._supported_quantizable_op_type +
@@ -240,8 +242,8 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                 '[Calculate weight] Weight_id={}/{}, time_each_weight={} s.'.
                 format(
                     str(ct),
-                    str(len(self._quantized_weight_var_name)), str(end -
-                                                                   start)))
+                    str(len(self._quantized_weight_var_name)),
+                    str(end - start)))
             ct += 1
 
         ct = 1

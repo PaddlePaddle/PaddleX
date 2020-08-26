@@ -17,13 +17,15 @@ train_transforms = transforms.Compose([
     transforms.RandomDistort(),
     transforms.RandomExpand(),
     transforms.RandomCrop(),
-    transforms.Resize(target_size=608, interp='RANDOM'),
+    transforms.Resize(
+        target_size=608, interp='RANDOM'),
     transforms.RandomHorizontalFlip(),
     transforms.Normalize(),
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.Resize(target_size=608, interp='CUBIC'),
+    transforms.Resize(
+        target_size=608, interp='CUBIC'),
     transforms.Normalize(),
 ])
 
@@ -42,10 +44,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     transforms=eval_transforms)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标
-# VisualDL启动方式: visualdl --logdir output/yolov3_darknet/vdl_log --port 8001
-# 浏览器打开 https://0.0.0.0:8001即可
-# 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
+# 可使用VisualDL查看训练指标，参考https://paddlex.readthedocs.io/zh_CN/develop/train/visualdl.html
 num_classes = len(train_dataset.labels)
 
 # API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-yolov3

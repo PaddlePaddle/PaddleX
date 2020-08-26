@@ -1,5 +1,5 @@
 # coding: utf8
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -77,12 +77,9 @@ class HRNet(object):
         st4 = self.backbone(image)
         # upsample
         shape = fluid.layers.shape(st4[0])[-2:]
-        st4[1] = fluid.layers.resize_bilinear(
-            st4[1], out_shape=shape, align_corners=False, align_mode=1)
-        st4[2] = fluid.layers.resize_bilinear(
-            st4[2], out_shape=shape, align_corners=False, align_mode=1)
-        st4[3] = fluid.layers.resize_bilinear(
-            st4[3], out_shape=shape, align_corners=False, align_mode=1)
+        st4[1] = fluid.layers.resize_bilinear(st4[1], out_shape=shape)
+        st4[2] = fluid.layers.resize_bilinear(st4[2], out_shape=shape)
+        st4[3] = fluid.layers.resize_bilinear(st4[3], out_shape=shape)
 
         out = fluid.layers.concat(st4, axis=1)
         last_channels = sum(self.backbone.channels[str(self.backbone.width)][
@@ -107,8 +104,7 @@ class HRNet(object):
             bias_attr=False)
 
         input_shape = fluid.layers.shape(image)[-2:]
-        logit = fluid.layers.resize_bilinear(
-            out, input_shape, align_corners=False, align_mode=1)
+        logit = fluid.layers.resize_bilinear(out, input_shape)
 
         if self.num_classes == 1:
             out = sigmoid_to_softmax(logit)
