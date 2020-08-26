@@ -311,7 +311,7 @@ class YOLOv3:
 
     def _upsample(self, input, scale=2, name=None):
         out = fluid.layers.resize_nearest(
-            input=input, scale=float(scale), name=name)
+            input=input, scale=float(scale), name=name, align_corners=False)
         return out
 
     def _detection_block(self,
