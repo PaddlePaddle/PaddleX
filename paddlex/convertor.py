@@ -44,7 +44,7 @@ def export_onnx_model(model, save_dir, opset_version=10):
         logging.error(
             "You need to install x2paddle first, pip install x2paddle>=0.7.4")
     if opset_version == 10 and model.__class__.__name__ == "YOLOv3":
-        logging.error(
+        logging.warning(
             "Export for openVINO by default, the output of multiclass_nms exported to onnx will contains background. If you need onnx completely consistent with paddle, please use X2Paddle to export"
         )
         x2paddle.op_mapper.paddle2onnx.opset10.paddle_custom_layer.multiclass_nms.multiclass_nms = multiclass_nms_for_openvino
@@ -63,7 +63,6 @@ def multiclass_nms_for_openvino(op, block):
     This op is get the select boxes from origin boxes.
     This op is for OpenVINO, which donn't support dynamic shape).
     """
-    print('openvino')
     import math
     import sys
     import numpy as np
