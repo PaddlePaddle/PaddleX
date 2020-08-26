@@ -31,7 +31,7 @@ def export_onnx(model_dir, save_dir, fixed_input_shape):
 
 def export_onnx_model(model, save_dir, opset_version=10):
     if model.__class__.__name__ == "FastSCNN" or (
-            model.model_type != "detector" and
+            model.model_type == "detector" and
             model.__class__.__name__ != "YOLOv3"):
         logging.error(
             "Only image classifier models, detection models(YOLOv3) and semantic segmentation models(except FastSCNN) are supported to export to ONNX"
