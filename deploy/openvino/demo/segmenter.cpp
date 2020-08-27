@@ -63,8 +63,6 @@ int main(int argc, char** argv) {
     return -1;
     }
     std::string image_path;
-    model.total_time_ = 0.0f;
-    model.count_num_ = 0;
     while (getline(inf, image_path)) {
       PaddleX::SegResult result;
       cv::Mat im = cv::imread(image_path, 1);
