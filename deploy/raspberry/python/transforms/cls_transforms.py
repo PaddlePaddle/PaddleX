@@ -1,10 +1,10 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,7 +18,6 @@ import random
 import os.path as osp
 import numpy as np
 from PIL import Image, ImageEnhance
-import utils.logging as logging
 
 
 class ClsTransform:
@@ -49,14 +48,7 @@ class Compose(ClsTransform):
                             'must be equal or larger than 1!')
         self.transforms = transforms
 
-        # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
-        for op in self.transforms:
-            if not isinstance(op, ClsTransform):
-                import imgaug.augmenters as iaa
-                if not isinstance(op, iaa.Augmenter):
-                    raise Exception(
-                        "Elements in transforms should be defined in 'paddlex.cls.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
-                    )
+
 
     def __call__(self, im, label=None):
         """
@@ -79,18 +71,10 @@ class Compose(ClsTransform):
                 raise TypeError('Can\'t read The image file {}!'.format(im))
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         for op in self.transforms:
-            if isinstance(op, ClsTransform):
-                outputs = op(im, label)
-                im = outputs[0]
-                if len(outputs) == 2:
-                    label = outputs[1]
-            else:
-                import imgaug.augmenters as iaa
-                if isinstance(op, iaa.Augmenter):
-                    im = execute_imgaug(op, im)
-                outputs = (im, )
-                if label is not None:
-                    outputs = (im, label)
+            outputs = op(im, label)
+            im = outputs[0]
+            if len(outputs) == 2:
+                label = outputs[1]
         return outputs
 
     def add_augmenters(self, augmenters):
@@ -100,107 +84,8 @@ class Compose(ClsTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                print("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
-
-
-class RandomCrop(ClsTransform):
-    """对图像进行随机剪裁，模型训练时的数据增强操作。
-
-    1. 根据lower_scale、lower_ratio、upper_ratio计算随机剪裁的高、宽。
-    2. 根据随机剪裁的高、宽随机选取剪裁的起始点。
-    3. 剪裁图像。
-    4. 调整剪裁后的图像的大小到crop_size*crop_size。
-
-    Args:
-        crop_size (int): 随机裁剪后重新调整的目标边长。默认为224。
-        lower_scale (float): 裁剪面积相对原面积比例的最小限制。默认为0.08。
-        lower_ratio (float): 宽变换比例的最小限制。默认为3. / 4。
-        upper_ratio (float): 宽变换比例的最大限制。默认为4. / 3。
-    """
-
-    def __init__(self,
-                 crop_size=224,
-                 lower_scale=0.08,
-                 lower_ratio=3. / 4,
-                 upper_ratio=4. / 3):
-        self.crop_size = crop_size
-        self.lower_scale = lower_scale
-        self.lower_ratio = lower_ratio
-        self.upper_ratio = upper_ratio
-
-    def __call__(self, im, label=None):
-        """
-        Args:
-            im (np.ndarray): 图像np.ndarray数据。
-            label (int): 每张图像所对应的类别序号。
-
-        Returns:
-            tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
-                   当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
-        """
-        im = random_crop(im, self.crop_size, self.lower_scale,
-                         self.lower_ratio, self.upper_ratio)
-        if label is None:
-            return (im, )
-        else:
-            return (im, label)
-
-
-class RandomHorizontalFlip(ClsTransform):
-    """以一定的概率对图像进行随机水平翻转，模型训练时的数据增强操作。
-
-    Args:
-        prob (float): 随机水平翻转的概率。默认为0.5。
-    """
-
-    def __init__(self, prob=0.5):
-        self.prob = prob
-
-    def __call__(self, im, label=None):
-        """
-        Args:
-            im (np.ndarray): 图像np.ndarray数据。
-            label (int): 每张图像所对应的类别序号。
-
-        Returns:
-            tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
-                   当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
-        """
-        if random.random() < self.prob:
-            im = horizontal_flip(im)
-        if label is None:
-            return (im, )
-        else:
-            return (im, label)
-
-
-class RandomVerticalFlip(ClsTransform):
-    """以一定的概率对图像进行随机垂直翻转，模型训练时的数据增强操作。
-
-    Args:
-        prob (float): 随机垂直翻转的概率。默认为0.5。
-    """
-
-    def __init__(self, prob=0.5):
-        self.prob = prob
-
-    def __call__(self, im, label=None):
-        """
-        Args:
-            im (np.ndarray): 图像np.ndarray数据。
-            label (int): 每张图像所对应的类别序号。
-
-        Returns:
-            tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
-                   当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
-        """
-        if random.random() < self.prob:
-            im = vertical_flip(im)
-        if label is None:
-            return (im, )
-        else:
-            return (im, label)
 
 
 class Normalize(ClsTransform):
@@ -315,131 +200,6 @@ class CenterCrop(ClsTransform):
             return (im, label)
 
 
-class RandomRotate(ClsTransform):
-    def __init__(self, rotate_range=30, prob=0.5):
-        """以一定的概率对图像在[-rotate_range, rotaterange]角度范围内进行旋转，模型训练时的数据增强操作。
-
-        Args:
-            rotate_range (int): 旋转度数的范围。默认为30。
-            prob (float): 随机旋转的概率。默认为0.5。
-        """
-        self.rotate_range = rotate_range
-        self.prob = prob
-
-    def __call__(self, im, label=None):
-        """
-        Args:
-            im (np.ndarray): 图像np.ndarray数据。
-            label (int): 每张图像所对应的类别序号。
-
-        Returns:
-            tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
-                   当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
-        """
-        rotate_lower = -self.rotate_range
-        rotate_upper = self.rotate_range
-        im = im.astype('uint8')
-        im = Image.fromarray(im)
-        if np.random.uniform(0, 1) < self.prob:
-            im = rotate(im, rotate_lower, rotate_upper)
-        im = np.asarray(im).astype('float32')
-        if label is None:
-            return (im, )
-        else:
-            return (im, label)
-
-
-class RandomDistort(ClsTransform):
-    """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。
-
-    1. 对变换的操作顺序进行随机化操作。
-    2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。
-
-    Args:
-        brightness_range (float): 明亮度因子的范围。默认为0.9。
-        brightness_prob (float): 随机调整明亮度的概率。默认为0.5。
-        contrast_range (float): 对比度因子的范围。默认为0.9。
-        contrast_prob (float): 随机调整对比度的概率。默认为0.5。
-        saturation_range (float): 饱和度因子的范围。默认为0.9。
-        saturation_prob (float): 随机调整饱和度的概率。默认为0.5。
-        hue_range (int): 色调因子的范围。默认为18。
-        hue_prob (float): 随机调整色调的概率。默认为0.5。
-    """
-
-    def __init__(self,
-                 brightness_range=0.9,
-                 brightness_prob=0.5,
-                 contrast_range=0.9,
-                 contrast_prob=0.5,
-                 saturation_range=0.9,
-                 saturation_prob=0.5,
-                 hue_range=18,
-                 hue_prob=0.5):
-        self.brightness_range = brightness_range
-        self.brightness_prob = brightness_prob
-        self.contrast_range = contrast_range
-        self.contrast_prob = contrast_prob
-        self.saturation_range = saturation_range
-        self.saturation_prob = saturation_prob
-        self.hue_range = hue_range
-        self.hue_prob = hue_prob
-
-    def __call__(self, im, label=None):
-        """
-        Args:
-            im (np.ndarray): 图像np.ndarray数据。
-            label (int): 每张图像所对应的类别序号。
-
-        Returns:
-            tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
-                   当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
-        """
-        brightness_lower = 1 - self.brightness_range
-        brightness_upper = 1 + self.brightness_range
-        contrast_lower = 1 - self.contrast_range
-        contrast_upper = 1 + self.contrast_range
-        saturation_lower = 1 - self.saturation_range
-        saturation_upper = 1 + self.saturation_range
-        hue_lower = -self.hue_range
-        hue_upper = self.hue_range
-        ops = [brightness, contrast, saturation, hue]
-        random.shuffle(ops)
-        params_dict = {
-            'brightness': {
-                'brightness_lower': brightness_lower,
-                'brightness_upper': brightness_upper
-            },
-            'contrast': {
-                'contrast_lower': contrast_lower,
-                'contrast_upper': contrast_upper
-            },
-            'saturation': {
-                'saturation_lower': saturation_lower,
-                'saturation_upper': saturation_upper
-            },
-            'hue': {
-                'hue_lower': hue_lower,
-                'hue_upper': hue_upper
-            }
-        }
-        prob_dict = {
-            'brightness': self.brightness_prob,
-            'contrast': self.contrast_prob,
-            'saturation': self.saturation_prob,
-            'hue': self.hue_prob,
-        }
-        for id in range(len(ops)):
-            params = params_dict[ops[id].__name__]
-            prob = prob_dict[ops[id].__name__]
-            params['im'] = im
-            if np.random.uniform(0, 1) < prob:
-                im = ops[id](**params)
-        if label is None:
-            return (im, )
-        else:
-            return (im, label)
-
-
 class ArrangeClassifier(ClsTransform):
     """获取训练/验证/预测所需信息。注意：此操作不需用户自己显示调用
 
@@ -510,12 +270,7 @@ class ComposedClsTransforms(Compose):
             )
 
         if mode == 'train':
-            # 训练时的transforms，包含数据增强
-            transforms = [
-                RandomCrop(crop_size=width), RandomHorizontalFlip(prob=0.5),
-                Normalize(
-                    mean=mean, std=std)
-            ]
+            pass
         else:
             # 验证/预测时的transforms
             transforms = [
