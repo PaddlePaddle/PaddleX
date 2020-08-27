@@ -32,14 +32,14 @@ void Model::create_predictor(const std::string& model_dir,
     for (const auto & inputInfoItem : inputInfo) {
       if (inputInfoItem.second->getTensorDesc().getDims().size() == 4) {
         imageInputName = inputInfoItem.first;
-        inputInfoItem.second->setPrecision(Precision::FP32);
+        inputInfoItem.second->setPrecision(InferenceEngine::Precision::FP32);
         inputInfoItem.second->getPreProcess().setResizeAlgorithm(
-          RESIZE_BILINEAR);
-        inputInfoItem.second->setLayout(Layout::NCHW);
+          InferenceEngine::RESIZE_BILINEAR);
+        inputInfoItem.second->setLayout(InferenceEngine::Layout::NCHW);
       }
       if (inputInfoItem.second->getTensorDesc().getDims().size() == 2) {
         imageInputName = inputInfoItem.first;
-        inputInfoItem.second->setPrecision(Precision::FP32);
+        inputInfoItem.second->setPrecision(InferenceEngine::Precision::FP32);
       }
     }
     if (device == "MYRIAD") {
@@ -114,7 +114,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   std::string output_name = network_.getOutputsInfo().begin()->first;
   output_ = infer_request.GetBlob(output_name);
   InferenceEngine::MemoryBlob::CPtr moutput =
-    as<InferenceEngine::MemoryBlob>(output_);
+    InferenceEngine::as<InferenceEngine::MemoryBlob>(output_);
   auto moutputHolder = moutput->rmap();
   float* outputs_data = moutputHolder.as<float *>();
 
@@ -165,7 +165,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   std::string outputName = iter->first;
   InferenceEngine::Blob::Ptr output = infer_request.GetBlob(outputName);
   InferenceEngine::MemoryBlob::CPtr moutput =
-    as<InferenceEngine::MemoryBlob>(output);
+    InferenceEngine::as<InferenceEngine::MemoryBlob>(output);
   InferenceEngine::TensorDesc blob_output = moutput->getTensorDesc();
   std::vector<size_t> output_shape = blob_output.getDims();
   auto moutputHolder = moutput->rmap();
@@ -221,9 +221,6 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
 
   //
   infer_request.Infer();
-  if (count_num_ >= 20) {
-    total_time_ = total_time_ + time_used.count();
-  }
 
   OInferenceEngine::utputsDataMap out_map = network_.getOutputsInfo();
   auto iter = out_map.begin();
@@ -232,7 +229,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   InferenceEngine::Blob::Ptr output_score =
     infer_request.GetBlob(output_name_score);
   InferenceEngine::MemoryBlob::CPtr moutput_score =
-    as<InferenceEngine::MemoryBlob>(output_score);
+    InferenceEngine::as<InferenceEngine::MemoryBlob>(output_score);
   InferenceEngine::TensorDesc blob_score = moutput_score->getTensorDesc();
   std::vector<size_t> output_score_shape = blob_score.getDims();
   int size = 1;
@@ -250,7 +247,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   InferenceEngine::Blob::Ptr output_label =
     infer_request.GetBlob(output_name_label);
   InferenceEngine::MemoryBlob::CPtr moutput_label =
-    as<InferenceEngine::MemoryBlob>(output_label);
+    InferenceEngine::as<InferenceEngine::MemoryBlob>(output_label);
   InferenceEngine::TensorDesc blob_label = moutput_label->getTensorDesc();
   std::vector<size_t> output_label_shape = blob_label.getDims();
   size = 1;
