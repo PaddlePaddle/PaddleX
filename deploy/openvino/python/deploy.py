@@ -23,14 +23,8 @@ from six import text_type as _text_type
 from openvino.inference_engine import IECore
 
 
-
-
-
 class Predictor:
-    def __init__(self,
-                 model_xml,
-                 model_yaml,
-                 device="CPU"):
+    def __init__(self, model_xml, model_yaml, device="CPU"):
         self.device = device
         if not osp.exists(model_xml):
             print("model xml file is not exists in {}".format(model_xml))
@@ -54,28 +48,27 @@ class Predictor:
             to_rgb = True
         else:
             to_rgb = False
-        self.transforms = self.build_transforms(self.info['Transforms'], to_rgb)
+        self.transforms = self.build_transforms(self.info['Transforms'],
+                                                to_rgb)
         self.predictor, self.net = self.create_predictor()
         self.total_time = 0
         self.count_num = 0
-
-
-
 
     def create_predictor(self):
 
         #initialization for specified device
         print("Creating Inference Engine")
         ie = IECore()
-        print("Loading network files:\n\t{}\n\t{}".format(self.model_xml, self.model_bin))
+        print("Loading network files:\n\t{}\n\t{}".format(self.model_xml,
+                                                          self.model_bin))
         net = ie.read_network(model=self.model_xml, weights=self.model_bin)
         net.batch_size = 1
         network_config = {}
         if self.device == "MYRIAD":
-            network_config = {'VPU_HW_STAGES_OPTIMIZATION':'NO'}
-        exec_net = ie.load_network(network=net, device_name=self.device, network_config)
+            network_config = {'VPU_HW_STAGES_OPTIMIZATION': 'NO'}
+        exec_net = ie.load_network(
+            network=net, device_name=self.device, config=network_config)
         return exec_net, net
-
 
     def build_transforms(self, transforms_info, to_rgb=True):
         if self.model_type == "classifier":
@@ -97,8 +90,8 @@ class Predictor:
         if hasattr(eval_transforms, 'to_rgb'):
             eval_transforms.to_rgb = to_rgb
         self.arrange_transforms(eval_transforms)
-        return eval_transforms    
- 
+        return eval_transforms
+
     def arrange_transforms(self, eval_transforms):
         if self.model_type == 'classifier':
             import transforms.cls_transforms as transforms
@@ -118,16 +111,15 @@ class Predictor:
         else:
             eval_transforms.transforms.append(arrange_transform(mode='test'))
 
-
     def raw_predict(self, preprocessed_input):
         self.count_num += 1
         feed_dict = {}
         if self.model_name == "YOLOv3":
-            inputs = self.net.inputs 
+            inputs = self.net.inputs
             for name in inputs:
-                if(len(inputs[name].shape) == 2):
+                if (len(inputs[name].shape) == 2):
                     feed_dict[name] = preprocessed_input['im_size']
-                elif(len(inputs[name].shape) == 4):
+                elif (len(inputs[name].shape) == 4):
                     feed_dict[name] = preprocessed_input['image']
                 else:
                     pass
@@ -137,14 +129,13 @@ class Predictor:
         #Start sync inference
         print("Starting inference in synchronous mode")
         res = self.predictor.infer(inputs=feed_dict)
- 
+
         #Processing output blob
         print("Processing output blob")
         return res
-        
 
     def preprocess(self, image):
-        res = dict() 
+        res = dict()
         if self.model_type == "classifier":
             im, = self.transforms(image)
             im = np.expand_dims(im, axis=0).copy()
@@ -170,7 +161,6 @@ class Predictor:
             res['image'] = im
             res['im_info'] = im_info
         return res
-    
 
     def classifier_postprocess(self, preds, topk=1):
         """ 对分类模型的预测结果做后处理
@@ -184,7 +174,7 @@ class Predictor:
             'score': preds[output_name][0][l],
         } for l in pred_label]
         print(result)
-        return result 
+        return result
 
     def segmenter_postprocess(self, preds, preprocessed_inputs):
         """ 对语义分割结果做后处理
@@ -210,7 +200,7 @@ class Predictor:
                 raise Exception("Unexpected info '{}' in im_info".format(info[
                     0]))
         return {'label_map': label_map, 'score_map': score_map}
-        
+
     def detector_postprocess(self, preds, preprocessed_inputs):
         """对图像检测结果做后处理
         """
@@ -218,13 +208,12 @@ class Predictor:
         outputs = preds[output_name][0]
         result = []
         for out in outputs:
-            if(out[0] > 0):
+            if (out[0] > 0):
                 result.append(out.tolist())
             else:
                 pass
         print(result)
         return result
-
 
     def predict(self, image, topk=1, threshold=0.5):
         preprocessed_input = self.preprocess(image)
@@ -235,5 +224,4 @@ class Predictor:
             results = self.detector_postprocess(model_pred, preprocessed_input)
         elif self.model_type == "segmenter":
             results = self.segmenter_postprocess(model_pred,
-                                                 preprocessed_input) 
-
+                                                 preprocessed_input)

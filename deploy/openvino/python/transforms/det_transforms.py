@@ -25,7 +25,6 @@ import cv2
 from PIL import Image, ImageEnhance
 
 from .ops import *
-from .box_utils import *
 
 
 class DetTransform:
@@ -143,7 +142,9 @@ class Compose(DetTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                print("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                print(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -394,8 +395,6 @@ class Resize(DetTransform):
             return (im, im_info, label_info)
 
 
-
-
 class Normalize(DetTransform):
     """对图像进行标准化。
 
@@ -438,8 +437,6 @@ class Normalize(DetTransform):
             return (im, im_info)
         else:
             return (im, im_info, label_info)
-
-
 
 
 class ArrangeYOLOv3(DetTransform):
@@ -489,8 +486,6 @@ class ArrangeYOLOv3(DetTransform):
             im_shape = im_info['image_shape']
             outputs = (im, im_shape)
         return outputs
-
-
 
 
 class ComposedYOLOv3Transforms(Compose):

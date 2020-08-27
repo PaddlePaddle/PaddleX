@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from .ops import *
-from .imgaug_support import execute_imgaug
 import random
 import os.path as osp
 import numpy as np
@@ -47,8 +46,6 @@ class Compose(ClsTransform):
             raise ValueError('The length of transforms ' + \
                             'must be equal or larger than 1!')
         self.transforms = transforms
-
-
 
     def __call__(self, im, label=None):
         """
@@ -84,7 +81,9 @@ class Compose(ClsTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                print("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                print(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
