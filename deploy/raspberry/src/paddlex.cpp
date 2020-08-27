@@ -16,18 +16,17 @@
 #include <iostream>
 #include <fstream>
 
-using namespace paddle::lite_api;
 
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
                             const std::string& cfg_dir,
                             int thread_num) {
-  MobileConfig config;
+  paddle::lite_api::MobileConfig config;
   config.set_model_from_file(model_dir);
-  config.set_threads(thread_num);  
+  config.set_threads(thread_num);
   load_config(cfg_dir);
-  predictor_ = CreatePaddlePredictor<MobileConfig>(config);
+  predictor_ = CreatePaddlePredictor<paddle::lite_api::MobileConfig>(config);
 }
 
 bool Model::load_config(const std::string& cfg_dir) {
@@ -83,12 +82,11 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  
-  ;
+
   predictor_->Run();
 
-
-  std::unique_ptr<const Tensor> output_tensor(std::move(predictor_->GetOutput(0)));
+  std::unique_ptr<const paddle::lite_api::Tensor> output_tensor(
+    std::move(predictor_->GetOutput(0)));
   const float *outputs_data = output_tensor->mutable_data<float>();
 
 
@@ -97,10 +95,6 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
   result->category = labels[result->category_id];
-  //for (int i=0;i<sizeof(outputs_data);i++){
-  //    std::cout <<  labels[i] << std::endl;
-  //    std::cout <<  outputs_[i] << std::endl;
-  //    }
 }
 
 bool Model::predict(const cv::Mat& im, DetResult* result) {
@@ -115,7 +109,6 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
                  "to function predict()!" << std::endl;
     return false;
   }
-  
   inputs_.input_tensor_ = std::move(predictor_->GetInput(0));
 
   cv::Mat im_clone = im.clone();
@@ -126,18 +119,14 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   int h = inputs_.new_im_size_[0];
   int w = inputs_.new_im_size_[1];
   if (name == "YOLOv3") {
-    std::unique_ptr<Tensor> im_size_tensor(std::move(predictor_->GetInput(1)));
-    const std::vector<int64_t> IM_SIZE_SHAPE = {1,2};
+    std::unique_ptr<paddle::lite_api::Tensor> im_size_tensor(
+      std::move(predictor_->GetInput(1)));
+    const std::vector<int64_t> IM_SIZE_SHAPE = {1, 2};
     im_size_tensor->Resize(IM_SIZE_SHAPE);
     auto *im_size_data = im_size_tensor->mutable_data<int>();
     memcpy(im_size_data, inputs_.ori_im_size_.data(), 1*2*sizeof(int));
   }
-  
-  
   predictor_->Run();
- 
-  
-
   auto output_names = predictor_->GetOutputNames();
   auto output_box_tensor = predictor_->GetTensor(output_names[0]);
   const float *output_box = output_box_tensor->mutable_data<float>();
@@ -177,27 +166,17 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                  "function predict()!" << std::endl;
     return false;
   }
- 
   inputs_.input_tensor_ = std::move(predictor_->GetInput(0));
-
-  
   cv::Mat im_clone = im.clone();
   if (!preprocess(&im_clone, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
   std::cout << "Preprocess is done" << std::endl;
- 
-
   predictor_->Run();
-
- 
-
   auto output_names = predictor_->GetOutputNames();
 
   auto output_label_tensor = predictor_->GetTensor(output_names[0]);
-  std::cout << "output0" << output_names[0] << std::endl; 
-  std::cout << "output1" << output_names[1] << std::endl; 
   const int64_t *label_data = output_label_tensor->mutable_data<int64_t>();
   std::vector<int64_t> output_label_shape = output_label_tensor->shape();
   int size = 1;
@@ -272,5 +251,4 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   result->score_map.shape = {mask_score.rows, mask_score.cols};
   return true;
 }
- 
-}  // namespce of PaddleX
+}  // namespace PaddleX

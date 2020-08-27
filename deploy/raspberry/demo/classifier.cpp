@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
       model.predict(im, &result);
       std::cout << "Predict label: " << result.category
                 << ", label_id:" << result.category_id
-                << ", score: " << result.score 
+                << ", score: " << result.score
                 << ", num_img: " << model.count_num_ << std::endl;
     }
   } else {

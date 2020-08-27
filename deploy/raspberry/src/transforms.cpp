@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
+#include "include/paddlex/transforms.h"
+
+#include <math.h>
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include <math.h>
 
-#include "include/paddlex/transforms.h"
+
 
 namespace PaddleX {
 
@@ -27,7 +31,7 @@ std::map<std::string, int> interpolations = {{"LINEAR", cv::INTER_LINEAR},
                                              {"CUBIC", cv::INTER_CUBIC},
                                              {"LANCZOS4", cv::INTER_LANCZOS4}};
 
-bool Normalize::Run(cv::Mat* im, ImageBlob* data){
+bool Normalize::Run(cv::Mat* im, ImageBlob* data) {
   for (int h = 0; h < im->rows; h++) {
     for (int w = 0; w < im->cols; w++) {
       im->at<cv::Vec3f>(h, w)[0] =
@@ -66,11 +70,9 @@ bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
   int width = static_cast<int>(round(scale * im->cols));
   int height = static_cast<int>(round(scale * im->rows));
   cv::resize(*im, *im, cv::Size(width, height), 0, 0, cv::INTER_LINEAR);
-  
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   data->scale = scale;
-  
   return true;
 }
 
@@ -204,7 +206,6 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
     cv::cvtColor(*im, *im, cv::COLOR_BGR2RGB);
   }
   (*im).convertTo(*im, CV_32FC3);
-  
   data->ori_im_size_[0] = im->rows;
   data->ori_im_size_[1] = im->cols;
   data->new_im_size_[0] = im->rows;
@@ -219,14 +220,12 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
 
   // 将图像由NHWC转为NCHW格式
   // 同时转为连续的内存块存储到Blob
-  
   int height = im->rows;
   int width = im->cols;
-  int channels = im->channels();  
+  int channels = im->channels();
   const std::vector<int64_t> INPUT_SHAPE = {1, channels, height, width};
   data->input_tensor_->Resize(INPUT_SHAPE);
   auto *input_data = data->input_tensor_->mutable_data<float>();
-
   for (size_t c = 0; c < channels; c++) {
       for (size_t  h = 0; h < height; h++) {
           for (size_t w = 0; w < width; w++) {

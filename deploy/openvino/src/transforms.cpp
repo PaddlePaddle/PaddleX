@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "include/paddlex/transforms.h"
+
+#include <math.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <math.h>
 
-#include "include/paddlex/transforms.h"
 
 namespace PaddleX {
 
@@ -28,7 +30,7 @@ std::map<std::string, int> interpolations = {{"LINEAR", cv::INTER_LINEAR},
                                              {"CUBIC", cv::INTER_CUBIC},
                                              {"LANCZOS4", cv::INTER_LANCZOS4}};
 
-bool Normalize::Run(cv::Mat* im, ImageBlob* data){
+bool Normalize::Run(cv::Mat* im, ImageBlob* data) {
   for (int h = 0; h < im->rows; h++) {
     for (int w = 0; w < im->cols; w++) {
       im->at<cv::Vec3f>(h, w)[0] =
@@ -62,16 +64,13 @@ float ResizeByShort::GenerateScale(const cv::Mat& im) {
 bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
   data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("resize");
-
   float scale = GenerateScale(*im);
   int width = static_cast<int>(round(scale * im->cols));
   int height = static_cast<int>(round(scale * im->rows));
   cv::resize(*im, *im, cv::Size(width, height), 0, 0, cv::INTER_LINEAR);
-  
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   data->scale = scale;
-  
   return true;
 }
 
@@ -166,7 +165,8 @@ bool Resize::Run(cv::Mat* im, ImageBlob* data) {
   return true;
 }
 
-void Transforms::Init(const YAML::Node& transforms_node, std::string type, bool to_rgb) {
+void Transforms::Init(
+  const YAML::Node& transforms_node, std::string type, bool to_rgb) {
   transforms_.clear();
   to_rgb_ = to_rgb;
   type_ = type;
@@ -206,20 +206,18 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
     cv::cvtColor(*im, *im, cv::COLOR_BGR2RGB);
   }
   (*im).convertTo(*im, CV_32FC3);
-  
-  if(type_ == "detector" ){
-    LockedMemory<void> input2Mapped = as<MemoryBlob>(data->ori_im_size_)->wmap();
+  if (type_ == "detector") {
+    LockedMemory<void> input2Mapped = as<MemoryBlob>(
+      data->ori_im_size_)->wmap();
     float *p = input2Mapped.as<float*>();
     p[0] = im->rows;
     p[1] = im->cols;
   }
-  //data->ori_im_size_[0] = im->rows;
-  //data->ori_im_size_[1] = im->cols;
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
 
   for (int i = 0; i < transforms_.size(); ++i) {
-    if (!transforms_[i]->Run(im,data)) {
+    if (!transforms_[i]->Run(im, data)) {
       std::cerr << "Apply transforms to image failed!" << std::endl;
       return false;
     }
@@ -227,15 +225,14 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
 
   // 将图像由NHWC转为NCHW格式
   // 同时转为连续的内存块存储到Blob
-  
-  SizeVector blobSize = data->blob->getTensorDesc().getDims();
+  InferenceEngine::SizeVector blobSize = data->blob->getTensorDesc().getDims();
   const size_t width = blobSize[3];
   const size_t height = blobSize[2];
   const size_t channels = blobSize[1];
-  MemoryBlob::Ptr mblob = InferenceEngine::as<MemoryBlob>(data->blob);
+  MemoryBlob::Ptr mblob = InferenceEngine::as<InferenceEngine::MemoryBlob>(
+    data->blob);
   auto mblobHolder = mblob->wmap();
   float *blob_data = mblobHolder.as<float *>();
-    
   for (size_t c = 0; c < channels; c++) {
       for (size_t  h = 0; h < height; h++) {
           for (size_t w = 0; w < width; w++) {

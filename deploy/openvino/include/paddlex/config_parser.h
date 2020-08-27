@@ -54,4 +54,4 @@ class ConfigPaser {
   YAML::Node Transforms_;
 };
 
-}  // namespace PaddleDetection
+}  // namespace PaddleX

@@ -1,3 +1,17 @@
+//   Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include <glog/logging.h>
 #include <omp.h>
 
@@ -41,7 +55,7 @@ int main(int argc, char** argv) {
   }
 
   //
-  PaddleX::Model model; 
+  PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_dir, FLAGS_device);
 
   int imgs = 1;
@@ -49,7 +63,7 @@ int main(int argc, char** argv) {
   // 进行预测
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
-    if(!inf){
+    if (!inf) {
       std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
       return -1;
     }
@@ -58,16 +72,16 @@ int main(int argc, char** argv) {
       PaddleX::DetResult result;
       cv::Mat im = cv::imread(image_path, 1);
       model.predict(im, &result);
-      if(FLAGS_save_dir != ""){
-        cv::Mat vis_img =
-          PaddleX::Visualize(im, result, model.labels, colormap, FLAGS_threshold);  
+      if (FLAGS_save_dir != "") {
+        cv::Mat vis_img = PaddleX::Visualize(
+          im, result, model.labels, colormap, FLAGS_threshold);
         std::string save_path =
-          PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);      
+          PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
         cv::imwrite(save_path, vis_img);
         std::cout << "Visualized output saved as " << save_path << std::endl;
       }
     }
-  }else {
+  } else {
   PaddleX::DetResult result;
   cv::Mat im = cv::imread(FLAGS_image, 1);
   model.predict(im, &result);
@@ -81,10 +95,10 @@ int main(int argc, char** argv) {
                 << result.boxes[i].coordinate[2] << ", "
                 << result.boxes[i].coordinate[3] << ")" << std::endl;
     }
-    if(FLAGS_save_dir != ""){
+    if (FLAGS_save_dir != "") {
     // 可视化
-      cv::Mat vis_img =
-          PaddleX::Visualize(im, result, model.labels, colormap, FLAGS_threshold);
+      cv::Mat vis_img = PaddleX::Visualize(
+        im, result, model.labels, colormap, FLAGS_threshold);
       std::string save_path =
           PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
       cv::imwrite(save_path, vis_img);
@@ -94,5 +108,3 @@ int main(int argc, char** argv) {
   }
   return 0;
 }
-
-

@@ -16,18 +16,17 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <memory>
-#include <string>
 #include <unordered_map>
 #include <utility>
+#include <memory>
+#include <string>
 #include <vector>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
 #include <inference_engine.hpp>
-using namespace InferenceEngine;
+
 
 namespace PaddleX {
 
@@ -38,8 +37,7 @@ namespace PaddleX {
 class ImageBlob {
  public:
   // Original image height and width
-  //std::vector<int> ori_im_size_ = std::vector<int>(2);
-  Blob::Ptr ori_im_size_;
+  InferenceEngine::Blob::Ptr ori_im_size_;
 
   // Newest image height and width after process
   std::vector<int> new_im_size_ = std::vector<int>(2);
@@ -50,7 +48,7 @@ class ImageBlob {
   // Resize scale
   float scale = 1.0;
   // Buffer for image data after preprocessing
-  Blob::Ptr blob;
+  InferenceEngine::Blob::Ptr blob;
 
   void clear() {
     im_size_before_resize_.clear();
@@ -90,7 +88,7 @@ class ResizeByShort : public Transform {
     } else {
       max_size_ = -1;
     }
-  };
+  }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
@@ -196,12 +194,11 @@ class Padding : public Transform {
     }
     if (item["im_padding_value"].IsDefined()) {
       im_value_ = item["im_padding_value"].as<std::vector<float>>();
-    }
-    else {
+    } else {
       im_value_ = {0, 0, 0};
     }
   }
-  
+
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:

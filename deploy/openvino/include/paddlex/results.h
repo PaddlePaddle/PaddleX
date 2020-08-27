@@ -68,4 +68,4 @@ class SegResult : public BaseResult {
     score_map.clear();
   }
 };
-}  // namespce of PaddleX
+}  // namespace PaddleX

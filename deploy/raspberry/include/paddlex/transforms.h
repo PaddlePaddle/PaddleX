@@ -15,6 +15,7 @@
 #pragma once
 
 #include <yaml-cpp/yaml.h>
+#include <paddle_api.h>
 
 #include <memory>
 #include <string>
@@ -26,9 +27,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "paddle_api.h"
 
-using namespace paddle::lite_api;
 
 namespace PaddleX {
 
@@ -90,7 +89,7 @@ class ResizeByShort : public Transform {
     } else {
       max_size_ = -1;
     }
-  };
+  }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:
@@ -196,12 +195,11 @@ class Padding : public Transform {
     }
     if (item["im_padding_value"].IsDefined()) {
       im_value_ = item["im_padding_value"].as<std::vector<float>>();
-    }
-    else {
+    } else {
       im_value_ = {0, 0, 0};
     }
   }
-  
+
   virtual bool Run(cv::Mat* im, ImageBlob* data);
 
  private:

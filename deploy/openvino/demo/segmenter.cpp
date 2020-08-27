@@ -50,12 +50,12 @@ int main(int argc, char** argv) {
 
   //
   std::cout << "init start" << std::endl;
-  PaddleX::Model model; 
+  PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_dir, FLAGS_device);
   std::cout << "init done" << std::endl;
   int imgs = 1;
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
-  
+
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
       PaddleX::SegResult result;
       cv::Mat im = cv::imread(image_path, 1);
       model.predict(im, &result);
-      if(FLAGS_save_dir != ""){
+      if (FLAGS_save_dir != "") {
       cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels, colormap);
         std::string save_path =
           PaddleX::generate_save_path(FLAGS_save_dir, image_path);
@@ -77,13 +77,11 @@ int main(int argc, char** argv) {
         std::cout << "Visualized output saved as " << save_path << std::endl;
       }
     }
-  }else{
+  } else {
     PaddleX::SegResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
-    std::cout << "predict start" << std::endl;
     model.predict(im, &result);
-    std::cout << "predict done" << std::endl; 
-    if(FLAGS_save_dir != ""){
+    if (FLAGS_save_dir != "") {
       cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels, colormap);
       std::string save_path =
           PaddleX::generate_save_path(FLAGS_save_dir, FLAGS_image);
