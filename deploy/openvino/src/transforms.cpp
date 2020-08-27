@@ -208,7 +208,8 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   (*im).convertTo(*im, CV_32FC3);
   if (type_ == "detector") {
     InferenceEngine::LockedMemory<void> input2Mapped =
-      as<InferenceEngine::MemoryBlob>(data->ori_im_size_)->wmap();
+      InferenceEngine::as<InferenceEngine::MemoryBlob>(
+        data->ori_im_size_)->wmap();
     float *p = input2Mapped.as<float*>();
     p[0] = im->rows;
     p[1] = im->cols;
