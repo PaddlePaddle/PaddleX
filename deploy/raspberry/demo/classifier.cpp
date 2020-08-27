@@ -63,8 +63,7 @@ int main(int argc, char** argv) {
       model.predict(im, &result);
       std::cout << "Predict label: " << result.category
                 << ", label_id:" << result.category_id
-                << ", score: " << result.score
-                << ", num_img: " << model.count_num_ << std::endl;
+                << ", score: " << result.score << std::endl;
     }
   } else {
     PaddleX::ClsResult result;
