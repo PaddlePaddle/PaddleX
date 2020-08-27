@@ -23,7 +23,7 @@ sudo apt-get upgrade
 ```
 
 ## Paddle-Lite部署
-基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型。   
+基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其实检测模型仅支持YOLOV3   
 部署的流程包括：PaddleX模型转换与转换后的模型部署  
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)

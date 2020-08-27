@@ -6,11 +6,11 @@ PaddleX支持将训练好的Paddle模型通过OpenVINO实现模型的预测加�
 
 |硬件平台|Linux|Windows|Raspbian OS|c++|python |分类|检测|分割|
 | ----|  ---- | ---- | ----|  ---- | ---- |---- | ---- |---- |
-|CPU|支持|支持|不支持|支持|支持|支持|支持|支持|
+|CPU|支持|支持|不支持|支持|支持|支持|支持|不支持|
 |VPU|支持|支持|支持|支持|支持|支持|不支持|不支持|  
 
 
-其中Raspbian OS为树莓派操作系统。
+**注意**：其中Raspbian OS为树莓派操作系统。检测模型仅支持YOLOV3，由于OpenVINO不支持ONNX的resize-11 OP的原因，目前还不支持Paddle的分割模型
 
 ## 部署流程
 **PaddleX到OpenVINO的部署流程可以分为如下两步**： 
@@ -29,4 +29,4 @@ CPU或者VPU的情况下使用OpenVINO进行预测加速
 
 **[Windows](./windows.md)**:介绍了PaddleX在操作系统为Window，编程语言为C++，硬件平台为CPU或者VPU的情况下使用OpenVINO进行预测加速  
 
-**[python](./windows.md)**:介绍了PaddleX在python下使用OpenVINO进行预测加速
+**[Python](./python.md)**:介绍了PaddleX在python下使用OpenVINO进行预测加速

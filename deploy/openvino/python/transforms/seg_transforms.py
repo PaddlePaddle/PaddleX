@@ -1,11 +1,11 @@
 # coding: utf8
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,14 +14,12 @@
 # limitations under the License.
 
 from .ops import *
-from .imgaug_support import execute_imgaug
 import random
 import os.path as osp
 import numpy as np
 from PIL import Image
 import cv2
 from collections import OrderedDict
-import utils.logging as logging
 
 
 class SegTransform:
@@ -53,14 +51,7 @@ class Compose(SegTransform):
                             'must be equal or larger than 1!')
         self.transforms = transforms
         self.to_rgb = False
-        # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
-        for op in self.transforms:
-            if not isinstance(op, SegTransform):
-                import imgaug.augmenters as iaa
-                if not isinstance(op, iaa.Augmenter):
-                    raise Exception(
-                        "Elements in transforms should be defined in 'paddlex.seg.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
-                    )
+
 
     def __call__(self, im, im_info=None, label=None):
         """
@@ -116,7 +107,7 @@ class Compose(SegTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                logging.error("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                print("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -828,76 +819,6 @@ class RandomBlur(SegTransform):
             return (im, im_info, label)
 
 
-class RandomRotate(SegTransform):
-    """对图像进行随机旋转, 模型训练时的数据增强操作。
-    在旋转区间[-rotate_range, rotate_range]内，对图像进行随机旋转，当存在标注图像时，同步进行，
-    并对旋转后的图像和标注图像进行相应的padding。
-
-    Args:
-        rotate_range (float): 最大旋转角度。默认为15度。
-        im_padding_value (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。
-        label_padding_value (int): 标注图像padding的值。默认为255。
-
-    """
-
-    def __init__(self,
-                 rotate_range=15,
-                 im_padding_value=[127.5, 127.5, 127.5],
-                 label_padding_value=255):
-        self.rotate_range = rotate_range
-        self.im_padding_value = im_padding_value
-        self.label_padding_value = label_padding_value
-
-    def __call__(self, im, im_info=None, label=None):
-        """
-        Args:
-            im (np.ndarray): 图像np.ndarray数据。
-            im_info (list): 存储图像reisze或padding前的shape信息，如
-                [('resize', [200, 300]), ('padding', [400, 600])]表示
-                图像在过resize前shape为(200, 300)， 过padding前shape为
-                (400, 600)
-            label (np.ndarray): 标注图像np.ndarray数据。
-
-        Returns:
-            tuple: 当label为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
-                当label不为空时，返回的tuple为(im, im_info, label)，分别对应图像np.ndarray数据、
-                存储与图像相关信息的字典和标注图像np.ndarray数据。
-        """
-        if self.rotate_range > 0:
-            (h, w) = im.shape[:2]
-            do_rotation = np.random.uniform(-self.rotate_range,
-                                            self.rotate_range)
-            pc = (w // 2, h // 2)
-            r = cv2.getRotationMatrix2D(pc, do_rotation, 1.0)
-            cos = np.abs(r[0, 0])
-            sin = np.abs(r[0, 1])
-
-            nw = int((h * sin) + (w * cos))
-            nh = int((h * cos) + (w * sin))
-
-            (cx, cy) = pc
-            r[0, 2] += (nw / 2) - cx
-            r[1, 2] += (nh / 2) - cy
-            dsize = (nw, nh)
-            im = cv2.warpAffine(
-                im,
-                r,
-                dsize=dsize,
-                flags=cv2.INTER_LINEAR,
-                borderMode=cv2.BORDER_CONSTANT,
-                borderValue=self.im_padding_value)
-            label = cv2.warpAffine(
-                label,
-                r,
-                dsize=dsize,
-                flags=cv2.INTER_NEAREST,
-                borderMode=cv2.BORDER_CONSTANT,
-                borderValue=self.label_padding_value)
-
-        if label is None:
-            return (im, im_info)
-        else:
-            return (im, im_info, label)
 
 
 class RandomScaleAspect(SegTransform):
@@ -1125,11 +1046,7 @@ class ComposedSegTransforms(Compose):
                  std=[0.5, 0.5, 0.5]):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
-            transforms = [
-                RandomHorizontalFlip(prob=0.5), ResizeStepScaling(),
-                RandomPaddingCrop(crop_size=train_crop_size), Normalize(
-                    mean=mean, std=std)
-            ]
+            pass
         else:
             # 验证/预测时的transforms
             transforms = [Normalize(mean=mean, std=std)]

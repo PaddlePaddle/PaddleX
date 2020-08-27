@@ -63,7 +63,7 @@ ARCH=x86
 
 ### Step4: 预测
 
-编译成功后，分类任务的预测可执行程序为`classifier`，分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：
+编译成功后，分类任务的预测可执行程序为`classifier`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -72,7 +72,7 @@ ARCH=x86
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
 | --cfg_dir | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测和分割任务，默认值为" "既不保存可视化结果 |
+| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
 
 ### 样例
 `样例一`：
@@ -85,7 +85,7 @@ linux系统在CPU下做单张图片的分类任务预测
 
 
 `样例二`:
-linux系统在CPU下做多张图片的分割任务预测，并保存预测可视化结果
+linux系统在CPU下做多张图片的检测任务预测，并保存预测可视化结果
 预测的多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
 ```
 /path/to/images/test_img1.jpeg
@@ -95,7 +95,7 @@ linux系统在CPU下做多张图片的分割任务预测，并保存预测可视
 ```
 
 ```shell
-./build/segmenter --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output
+./build/detector --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output
 ```
 
 `样例三`:  
@@ -118,9 +118,6 @@ linux系统在CPU下做多张图片的分割任务预测，并保存预测可视
 |---|---|---|---|
 |resnet-50 | 20.56 | 16.12 | 224*224 |
 |mobilenet-V2 | 5.16 | 2.31 |224*224|
-|hrnet | None | 63.35 |512*512|
-|unet | 276.40 | 211.49 |512*512|
-|deeplabv3 | None | 25.91 |512*512|
 |yolov3-mobilnetv1 |76.63| 46.26|608*608 |   
 
 `测试二`:

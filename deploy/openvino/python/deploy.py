@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import numpy as np
 import yaml
 from six import text_type as _text_type
 from openvino.inference_engine import IECore
-from utils import logging 
+
 
 
 
@@ -33,11 +33,11 @@ class Predictor:
                  device="CPU"):
         self.device = device
         if not osp.exists(model_xml):
-            logging.error("model xml file is not exists in {}".format(model_xml))
+            print("model xml file is not exists in {}".format(model_xml))
         self.model_xml = model_xml
         self.model_bin = osp.splitext(model_xml)[0] + ".bin"
         if not osp.exists(model_yaml):
-            logging,error("model yaml file is not exists in {}".format(model_yaml))
+            print("model yaml file is not exists in {}".format(model_yaml))
         with open(model_yaml) as f:
             self.info = yaml.load(f.read(), Loader=yaml.Loader)
         self.model_type = self.info['_Attributes']['model_type']
@@ -65,9 +65,9 @@ class Predictor:
     def create_predictor(self):
 
         #initialization for specified device
-        logging.info("Creating Inference Engine")
+        print("Creating Inference Engine")
         ie = IECore()
-        logging.info("Loading network files:\n\t{}\n\t{}".format(self.model_xml, self.model_bin))
+        print("Loading network files:\n\t{}\n\t{}".format(self.model_xml, self.model_bin))
         net = ie.read_network(model=self.model_xml, weights=self.model_bin)
         net.batch_size = 1
         network_config = {}
@@ -135,11 +135,11 @@ class Predictor:
             input_blob = next(iter(self.net.inputs))
             feed_dict[input_blob] = preprocessed_input['image']
         #Start sync inference
-        logging.info("Starting inference in synchronous mode")
+        print("Starting inference in synchronous mode")
         res = self.predictor.infer(inputs=feed_dict)
  
         #Processing output blob
-        logging.info("Processing output blob")
+        print("Processing output blob")
         return res
         
 
@@ -167,7 +167,6 @@ class Predictor:
         elif self.model_type == "segmenter":
             im, im_info = self.transforms(image)
             im = np.expand_dims(im, axis=0).copy()
-            #np.savetxt('./input_data.txt',im.flatten())
             res['image'] = im
             res['im_info'] = im_info
         return res
@@ -193,11 +192,9 @@ class Predictor:
         it = iter(self.net.outputs)
         next(it)
         score_name = next(it)
-        #np.savetxt('./score_map.txt',preds[score_name].flatten())
         score_map = np.squeeze(preds[score_name])
         score_map = np.transpose(score_map, (1, 2, 0))
         label_name = next(it)
-        #np.savetxt('./label_map.txt',preds[label_name].flatten())
         label_map = np.squeeze(preds[label_name]).astype('uint8')
         im_info = preprocessed_inputs['im_info']
         for info in im_info[::-1]:

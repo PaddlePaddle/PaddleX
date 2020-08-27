@@ -73,7 +73,7 @@ D:
 cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
-* 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，`segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+* 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -82,7 +82,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
 | --cfg_dir | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测和分割任务，默认值为" "既不保存可视化结果 |
+| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
 
 ### 样例
 `样例一`：
@@ -94,7 +94,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
 `样例二`:
-在CPU下做多张图片的分割任务预测，并保存预测可视化结果
+在CPU下做多张图片的检测任务预测，并保存预测可视化结果
 预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
 ```
 /path/to/images/test_img1.jpeg
@@ -104,7 +104,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
 ```shell
-./segmenter.exe --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output
+./detector.exe --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output
 ```
 
 `样例三`:  
