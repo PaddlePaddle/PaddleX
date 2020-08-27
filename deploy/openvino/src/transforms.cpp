@@ -207,8 +207,8 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   }
   (*im).convertTo(*im, CV_32FC3);
   if (type_ == "detector") {
-    LockedMemory<void> input2Mapped = as<MemoryBlob>(
-      data->ori_im_size_)->wmap();
+    InferenceEngine::LockedMemory<void> input2Mapped =
+      as<InferenceEngine::MemoryBlob>(data->ori_im_size_)->wmap();
     float *p = input2Mapped.as<float*>();
     p[0] = im->rows;
     p[1] = im->cols;
@@ -229,8 +229,8 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   const size_t width = blobSize[3];
   const size_t height = blobSize[2];
   const size_t channels = blobSize[1];
-  MemoryBlob::Ptr mblob = InferenceEngine::as<InferenceEngine::MemoryBlob>(
-    data->blob);
+  InferenceEngine::MemoryBlob::Ptr mblob =
+    InferenceEngine::as<InferenceEngine::MemoryBlob>(data->blob);
   auto mblobHolder = mblob->wmap();
   float *blob_data = mblobHolder.as<float *>();
   for (size_t c = 0; c < channels; c++) {
