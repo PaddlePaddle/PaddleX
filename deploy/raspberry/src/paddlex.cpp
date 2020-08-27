@@ -26,7 +26,9 @@ void Model::create_predictor(const std::string& model_dir,
   config.set_model_from_file(model_dir);
   config.set_threads(thread_num);
   load_config(cfg_dir);
-  predictor_ = CreatePaddlePredictor<paddle::lite_api::MobileConfig>(config);
+  predictor_ =
+    paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(
+      config);
 }
 
 bool Model::load_config(const std::string& cfg_dir) {

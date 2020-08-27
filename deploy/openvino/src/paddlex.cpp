@@ -222,7 +222,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   //
   infer_request.Infer();
 
-  OInferenceEngine::utputsDataMap out_map = network_.getOutputsInfo();
+  InferenceEngine::OutputsDataMap out_map = network_.getOutputsInfo();
   auto iter = out_map.begin();
   iter++;
   std::string output_name_score = iter->first;

@@ -49,7 +49,7 @@ class ImageBlob {
   // Resize scale
   float scale = 1.0;
   // Buffer for image data after preprocessing
-  std::unique_ptr<Tensor> input_tensor_;
+  std::unique_ptr<paddle::lite_api::Tensor> input_tensor_;
 
   void clear() {
     im_size_before_resize_.clear();
