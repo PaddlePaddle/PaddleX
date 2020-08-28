@@ -20,6 +20,7 @@
 |instance_segmentation/mask_rcnn_r18_fpn.py | 实例分割MaskRCNN | 小度熊分拣 |
 |instance_segmentation/mask_rcnn_f50_fpn.py | 实例分割MaskRCNN | 小度熊分拣 |
 |semantic_segmentation/deeplabv3p_mobilenetv2.py | 语义分割DeepLabV3 | 视盘分割 |
+|semantic_segmentation/deeplabv3p_mobilenetv2.py | 语义分割DeepLabV3 | 视盘分割 |
 |semantic_segmentation/deeplabv3p_mobilenetv2_x0.25.py | 语义分割DeepLabV3 | 视盘分割 |
 |semantic_segmentation/deeplabv3p_xception65.py | 语义分割DeepLabV3 | 视盘分割 |
 |semantic_segmentation/fast_scnn.py | 语义分割FastSCNN | 视盘分割 |

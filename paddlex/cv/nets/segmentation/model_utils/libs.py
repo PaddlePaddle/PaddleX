@@ -112,6 +112,10 @@ def bn_relu(data, norm_type='bn', eps=1e-5):
     return fluid.layers.relu(bn(data, norm_type=norm_type, eps=eps))
 
 
+def qsigmoid(data):
+    return fluid.layers.relu6(data + 3) * 0.16667
+
+
 def relu(data):
     return fluid.layers.relu(data)
 

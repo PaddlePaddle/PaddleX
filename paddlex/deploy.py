@@ -19,7 +19,9 @@ import yaml
 import paddlex
 import paddle.fluid as fluid
 from paddlex.cv.transforms import build_transforms
-from paddlex.cv.models import BaseClassifier, YOLOv3, FasterRCNN, MaskRCNN, DeepLabv3p
+from paddlex.cv.models import BaseClassifier
+from paddlex.cv.models import PPYOLO, FasterRCNN, MaskRCNN
+from paddlex.cv.models import DeepLabv3p
 
 
 class Predictor:
@@ -129,8 +131,8 @@ class Predictor:
                 thread_num=thread_num)
             res['image'] = im
         elif self.model_type == "detector":
-            if self.model_name == "YOLOv3":
-                im, im_size = YOLOv3._preprocess(
+            if self.model_name in ["PPYOLO", "YOLOv3"]:
+                im, im_size = PPYOLO._preprocess(
                     image,
                     self.transforms,
                     self.model_type,
@@ -190,8 +192,8 @@ class Predictor:
             res = {'bbox': (results[0][0], offset_to_lengths(results[0][1])), }
             res['im_id'] = (np.array(
                 [[i] for i in range(batch_size)]).astype('int32'), [[]])
-            if self.model_name == "YOLOv3":
-                preds = YOLOv3._postprocess(res, batch_size, self.num_classes,
+            if self.model_name in ["PPYOLO", "YOLOv3"]:
+                preds = PPYOLO._postprocess(res, batch_size, self.num_classes,
                                             self.labels)
             elif self.model_name == "FasterRCNN":
                 preds = FasterRCNN._postprocess(res, batch_size,

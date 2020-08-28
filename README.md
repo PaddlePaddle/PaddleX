@@ -104,8 +104,8 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 交流与反馈
 
 - 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
-- PaddleX用户交流群：1045148026 (手机QQ扫描如下二维码快速加入)  
-  ![](./docs/gui/images/QR.jpg)
+- PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
+  ![](./docs/gui/images/QR2.jpg)
 
 
 

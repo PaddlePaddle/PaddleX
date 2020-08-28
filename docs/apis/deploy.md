@@ -7,7 +7,7 @@
 图像分类、目标检测、实例分割、语义分割统一的预测器，实现高性能预测。
 
 ```
-paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, use_mkl=False, use_trt=False, use_glog=False, memory_optimize=True)
+paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, use_mkl=False, mkl_thread_num=4, use_trt=False, use_glog=False, memory_optimize=True)
 ```
 
 **参数**
@@ -16,6 +16,7 @@ paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, use_mkl=False, use_
 > * **use_gpu** (bool): 是否使用GPU进行预测。
 > * **gpu_id** (int): 使用的GPU序列号。
 > * **use_mkl** (bool): 是否使用mkldnn加速库。
+> * **mkl_thread_num** (int): 使用mkldnn加速库时的线程数，默认为4
 > * **use_trt** (boll): 是否使用TensorRT预测引擎。
 > * **use_glog** (bool): 是否打印中间日志。
 > * **memory_optimize** (bool): 是否优化内存使用。

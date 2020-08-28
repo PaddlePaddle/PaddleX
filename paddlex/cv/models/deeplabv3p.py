@@ -37,7 +37,7 @@ class DeepLabv3p(BaseAPI):
         num_classes (int): 类别数。
         backbone (str): DeepLabv3+的backbone网络，实现特征图的计算，取值范围为['Xception65', 'Xception41',
             'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5',
-            'MobileNetV2_x2.0']。默认'MobileNetV2_x1.0'。
+            'MobileNetV2_x2.0', 'MobileNetV3_large_x1_0_ssld']。默认'MobileNetV2_x1.0'。
         output_stride (int): backbone 输出特征图相对于输入的下采样倍数，一般取值为8或16。默认16。
         aspp_with_sep_conv (bool):  在asspp模块是否采用separable convolutions。默认True。
         decoder_use_sep_conv (bool)： decoder模块是否采用separable convolutions。默认True。
@@ -51,10 +51,13 @@ class DeepLabv3p(BaseAPI):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None时，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。默认255。
+        pooling_crop_size (list): 当backbone为MobileNetV3_large_x1_0_ssld时，需设置为训练过程中模型输入大小, 格式为[W, H]。
+            在encoder模块中获取图像平均值时被用到，若为None，则直接求平均值；若为模型输入大小，则使用'pool'算子得到平均值。
+            默认值为None。
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: backbone取值不在['Xception65', 'Xception41', 'MobileNetV2_x0.25',
-            'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0']之内。
+            'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0', 'MobileNetV3_large_x1_0_ssld']之内。
         ValueError: class_weight为list, 但长度不等于num_class。
                 class_weight为str, 但class_weight.low()不等于dynamic。
         TypeError: class_weight不为None时，其类型不是list或str。
@@ -71,7 +74,8 @@ class DeepLabv3p(BaseAPI):
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255):
+                 ignore_index=255,
+                 pooling_crop_size=None):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -85,12 +89,12 @@ class DeepLabv3p(BaseAPI):
         if backbone not in [
                 'Xception65', 'Xception41', 'MobileNetV2_x0.25',
                 'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5',
-                'MobileNetV2_x2.0'
+                'MobileNetV2_x2.0', 'MobileNetV3_large_x1_0_ssld'
         ]:
             raise ValueError(
                 "backbone: {} is set wrong. it should be one of "
                 "('Xception65', 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5',"
-                " 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0')".
+                " 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0', 'MobileNetV3_large_x1_0_ssld')".
                 format(backbone))
 
         if class_weight is not None:
@@ -121,6 +125,30 @@ class DeepLabv3p(BaseAPI):
         self.labels = None
         self.sync_bn = True
         self.fixed_input_shape = None
+        self.pooling_stride = [1, 1]
+        self.pooling_crop_size = pooling_crop_size
+        self.aspp_with_se = False
+        self.se_use_qsigmoid = False
+        self.aspp_convs_filters = 256
+        self.aspp_with_concat_projection = True
+        self.add_image_level_feature = True
+        self.use_sum_merge = False
+        self.conv_filters = 256
+        self.output_is_logits = False
+        self.backbone_lr_mult_list = None
+        if 'MobileNetV3' in backbone:
+            self.output_stride = 32
+            self.pooling_stride = (4, 5)
+            self.aspp_with_se = True
+            self.se_use_qsigmoid = True
+            self.aspp_convs_filters = 128
+            self.aspp_with_concat_projection = False
+            self.add_image_level_feature = False
+            self.use_sum_merge = True
+            self.output_is_logits = True
+            if self.output_is_logits:
+                self.conv_filters = self.num_classes
+            self.backbone_lr_mult_list = [0.15, 0.35, 0.65, 0.85, 1]
 
     def _get_backbone(self, backbone):
         def mobilenetv2(backbone):
@@ -167,10 +195,22 @@ class DeepLabv3p(BaseAPI):
                 end_points=end_points,
                 decode_points=decode_points)
 
+        def mobilenetv3(backbone):
+            scale = 1.0
+            lr_mult_list = self.backbone_lr_mult_list
+            return paddlex.cv.nets.MobileNetV3(
+                scale=scale,
+                model_name='large',
+                output_stride=self.output_stride,
+                lr_mult_list=lr_mult_list,
+                for_seg=True)
+
         if 'Xception' in backbone:
             return xception(backbone)
         elif 'MobileNetV2' in backbone:
             return mobilenetv2(backbone)
+        elif 'MobileNetV3' in backbone:
+            return mobilenetv3(backbone)
 
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.DeepLabv3p(
@@ -186,7 +226,17 @@ class DeepLabv3p(BaseAPI):
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
             ignore_index=self.ignore_index,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            pooling_stride=self.pooling_stride,
+            pooling_crop_size=self.pooling_crop_size,
+            aspp_with_se=self.aspp_with_se,
+            se_use_qsigmoid=self.se_use_qsigmoid,
+            aspp_convs_filters=self.aspp_convs_filters,
+            aspp_with_concat_projection=self.aspp_with_concat_projection,
+            add_image_level_feature=self.add_image_level_feature,
+            use_sum_merge=self.use_sum_merge,
+            conv_filters=self.conv_filters,
+            output_is_logits=self.output_is_logits)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()
@@ -370,9 +420,6 @@ class DeepLabv3p(BaseAPI):
                     elif info[0] == 'padding':
                         w, h = info[1][1], info[1][0]
                         one_pred = one_pred[0:h, 0:w]
-                    else:
-                        raise Exception(
-                            "Unexpected info '{}' in im_info".format(info[0]))
                 one_pred = one_pred.astype('int64')
                 one_pred = one_pred[np.newaxis, :, :, np.newaxis]
                 one_label = one_label[np.newaxis, np.newaxis, :, :]
@@ -430,9 +477,6 @@ class DeepLabv3p(BaseAPI):
                     w, h = info[1][1], info[1][0]
                     pred = pred[0:h, 0:w]
                     logit = logit[0:h, 0:w, :]
-                else:
-                    raise Exception("Unexpected info '{}' in im_info".format(
-                        info[0]))
             pred_list.append(pred)
             logit_list.append(logit)
 
