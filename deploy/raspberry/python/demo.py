@@ -27,27 +27,17 @@ def arg_parser():
         default=None,
         help="path to openvino model .xml file")
     parser.add_argument(
-        "--img",
-        "-i",
-        type=str,
-        default=None,
-        help="path to an image files")
+        "--img", "-i", type=str, default=None, help="path to an image files")
 
     parser.add_argument(
-        "--img_list",
-        "-l",
-        type=str,
-        default=None,
-        help="Path to a imglist")
-
+        "--img_list", "-l", type=str, default=None, help="Path to a imglist")
 
     parser.add_argument(
-        "--cfg_dir",
+        "--cfg_file",
         "-c",
         type=str,
         default=None,
         help="Path to PaddelX model yml file")
-
 
     parser.add_argument(
         "--thread_num",
@@ -63,8 +53,6 @@ def arg_parser():
         default=None,
         help=" image input shape of model [NCHW] like [1,3,224,244] ")
 
-
-
     return parser
 
 
@@ -72,16 +60,16 @@ def main():
     parser = arg_parser()
     args = parser.parse_args()
     model_nb = args.model_dir
-    model_yaml = args.cfg_dir
+    model_yaml = args.cfg_file
     thread_num = args.thread_num
     input_shape = args.input_shape
-    input_shape = input_shape[1:-1].split(",",3)
-    shape = list(map(int,input_shape))
+    input_shape = input_shape[1:-1].split(",", 3)
+    shape = list(map(int, input_shape))
     #model init
-    predictor = deploy.Predictor(model_nb,model_yaml,thread_num,shape)
-    
+    predictor = deploy.Predictor(model_nb, model_yaml, thread_num, shape)
+
     #predict
-    if(args.img_list != None):
+    if (args.img_list != None):
         f = open(args.img_list)
         lines = f.readlines()
         for im_path in lines:
@@ -91,6 +79,7 @@ def main():
     else:
         im_path = args.img
         predictor.predict(im_path)
+
 
 if __name__ == "__main__":
     main()

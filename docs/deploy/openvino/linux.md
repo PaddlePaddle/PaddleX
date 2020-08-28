@@ -7,9 +7,9 @@
 * GCC* 5.4.0
 * CMake 3.0+
 * PaddleX 1.0+
-* OpenVINO 2020.4 
+* OpenVINO 2020.4
 * 硬件平台：CPU、VPU
-  
+
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请根据相应的系统参考[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)或者[OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html)
 
 请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录 `/root/projects/`演示**。
@@ -35,11 +35,11 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 - glog：编译请参考[编译文档](https://github.com/google/glog)
 
-- opencv: 编译请参考 
+- opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
- 
 
-  
+
+
 ### Step3: 编译
 编译`cmake`的命令在`scripts/build.sh`中，若在树莓派(Raspbian OS)上编译请修改ARCH参数x86为armv7，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
 ```
@@ -71,7 +71,7 @@ ARCH=x86
 | --image  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
-| --cfg_dir | PaddleX model 的.yml配置文件 |
+| --cfg_file | PaddleX model 的.yml配置文件 |
 | --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
 
 ### 样例
@@ -80,7 +80,7 @@ linux系统在CPU下做单张图片的分类任务预测
 测试图片 `/path/to/test_img.jpeg`  
 
 ```shell
-./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_dir=/path/to/PadlleX_model.yml
+./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml
 ```
 
 
@@ -95,7 +95,7 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 ```
 
 ```shell
-./build/detector --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output
+./build/detector --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --save_dir ./output
 ```
 
 `样例三`:  
@@ -103,7 +103,7 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 测试图片 `/path/to/test_img.jpeg`  
 
 ```shell
-./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_dir=/path/to/PadlleX_model.yml --device=MYRIAD
+./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml --device=MYRIAD
 ```
 
 ## 性能测试
@@ -118,7 +118,7 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 |---|---|---|---|
 |resnet-50 | 20.56 | 16.12 | 224*224 |
 |mobilenet-V2 | 5.16 | 2.31 |224*224|
-|yolov3-mobilnetv1 |76.63| 46.26|608*608 |   
+|yolov3-mobilnetv1 |76.63| 46.26|608*608 |  
 
 `测试二`:
 在PC机上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。
@@ -130,7 +130,7 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 |模型|OpenVINO|输入图片|
 |---|---|---|
 |mobilenetV2|24.00|224*224|
-|resnet50_vd_ssld|58.53|224*224|    
+|resnet50_vd_ssld|58.53|224*224|  
 
 `测试三`:
 在树莓派3B上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。

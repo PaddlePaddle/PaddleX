@@ -24,7 +24,7 @@ if [ ! -d "./deps/glog" ]; then
 fi
 
 if [ "$ARCH" = "x86" ]; then
-    OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/x86opencv/opencv.tar.bz2 
+    OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/x86opencv/opencv.tar.bz2
 else
     OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/armopencv/opencv.tar.bz2
 fi

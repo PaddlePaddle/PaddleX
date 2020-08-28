@@ -20,19 +20,19 @@
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
-                            const std::string& cfg_dir,
+                            const std::string& cfg_file,
                             int thread_num) {
   paddle::lite_api::MobileConfig config;
   config.set_model_from_file(model_dir);
   config.set_threads(thread_num);
-  load_config(cfg_dir);
+  load_config(cfg_file);
   predictor_ =
     paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(
       config);
 }
 
-bool Model::load_config(const std::string& cfg_dir) {
-  YAML::Node config = YAML::LoadFile(cfg_dir);
+bool Model::load_config(const std::string& cfg_file) {
+  YAML::Node config = YAML::LoadFile(cfg_file);
   type = config["_Attributes"]["model_type"].as<std::string>();
   name = config["Model"].as<std::string>();
   bool to_rgb = true;

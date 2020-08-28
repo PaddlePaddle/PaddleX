@@ -25,7 +25,7 @@
 
 
 DEFINE_string(model_dir, "", "Path of openvino model xml file");
-DEFINE_string(cfg_dir, "", "Path of PaddleX model yaml file");
+DEFINE_string(cfg_file, "", "Path of PaddleX model yaml file");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_string(save_dir, "", "Path to save visualized image");
@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
     std::cerr << "--model_dir need to be defined" << std::endl;
     return -1;
   }
-  if (FLAGS_cfg_dir == "") {
-    std::cerr << "--cfg_dir need to be defined" << std::endl;
+  if (FLAGS_cfg_file == "") {
+    std::cerr << "--cfg_file need to be defined" << std::endl;
     return -1;
   }
   if (FLAGS_image == "" & FLAGS_image_list == "") {
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   //
   std::cout << "init start" << std::endl;
   PaddleX::Model model;
-  model.Init(FLAGS_model_dir, FLAGS_cfg_dir, FLAGS_thread_num);
+  model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_thread_num);
   std::cout << "init done" << std::endl;
   int imgs = 1;
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());

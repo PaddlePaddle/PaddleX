@@ -32,29 +32,19 @@ def arg_parser():
         type=str,
         default='CPU',
         help="Specify the target device to infer on:[CPU, GPU, FPGA, HDDL, MYRIAD,HETERO]"
-             "Default value is CPU")
+        "Default value is CPU")
     parser.add_argument(
-        "--img",
-        "-i",
-        type=str,
-        default=None,
-        help="path to an image files")
+        "--img", "-i", type=str, default=None, help="path to an image files")
 
     parser.add_argument(
-        "--img_list",
-        "-l",
-        type=str,
-        default=None,
-        help="Path to a imglist")
-
+        "--img_list", "-l", type=str, default=None, help="Path to a imglist")
 
     parser.add_argument(
-        "--cfg_dir",
+        "--cfg_file",
         "-c",
         type=str,
         default=None,
         help="Path to PaddelX model yml file")
-
 
     return parser
 
@@ -63,16 +53,16 @@ def main():
     parser = arg_parser()
     args = parser.parse_args()
     model_xml = args.model_dir
-    model_yaml = args.cfg_dir
+    model_yaml = args.cfg_file
 
     #model init
-    if("CPU" not in args.device):
-        predictor = deploy.Predictor(model_xml,model_yaml,args.device)
+    if ("CPU" not in args.device):
+        predictor = deploy.Predictor(model_xml, model_yaml, args.device)
     else:
-        predictor = deploy.Predictor(model_xml,model_yaml)
-    
+        predictor = deploy.Predictor(model_xml, model_yaml)
+
     #predict
-    if(args.img_list != None):
+    if (args.img_list != None):
         f = open(args.img_list)
         lines = f.readlines()
         for im_path in lines:
@@ -82,6 +72,7 @@ def main():
     else:
         im_path = args.img
         predictor.predict(im_path)
+
 
 if __name__ == "__main__":
     main()

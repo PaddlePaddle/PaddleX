@@ -39,13 +39,13 @@ namespace PaddleX {
 class Model {
  public:
   void Init(const std::string& model_dir,
-            const std::string& cfg_dir,
+            const std::string& cfg_file,
             std::string device) {
-    create_predictor(model_dir, cfg_dir,  device);
+    create_predictor(model_dir, cfg_file,  device);
   }
 
   void create_predictor(const std::string& model_dir,
-                        const std::string& cfg_dir,
+                        const std::string& cfg_file,
                         std::string device);
 
   bool load_config(const std::string& model_dir);

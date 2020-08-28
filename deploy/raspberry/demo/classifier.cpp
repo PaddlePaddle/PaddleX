@@ -22,7 +22,7 @@
 #include "include/paddlex/paddlex.h"
 
 DEFINE_string(model_dir, "", "Path of inference model");
-DEFINE_string(cfg_dir, "", "Path of PaddelX model yml file");
+DEFINE_string(cfg_file, "", "Path of PaddelX model yml file");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
 DEFINE_int32(thread_num, 1, "num of thread to infer");
@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
     std::cerr << "--model_dir need to be defined" << std::endl;
     return -1;
   }
-  if (FLAGS_cfg_dir == "") {
-    std::cerr << "--cfg_dir need to be defined" << std::endl;
+  if (FLAGS_cfg_file == "") {
+    std::cerr << "--cfg_flie need to be defined" << std::endl;
     return -1;
   }
   if (FLAGS_image == "" & FLAGS_image_list == "") {
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 
   // 加载模型
   PaddleX::Model model;
-  model.Init(FLAGS_model_dir, FLAGS_cfg_dir, FLAGS_thread_num);
+  model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_thread_num);
   std::cout << "init is done" << std::endl;
   // 进行预测
   if (FLAGS_image_list != "") {

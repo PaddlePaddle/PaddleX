@@ -81,7 +81,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 | --image  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
-| --cfg_dir | PaddleX model 的.yml配置文件 |
+| --cfg_file | PaddleX model 的.yml配置文件 |
 | --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
 
 ### 样例
@@ -90,7 +90,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 测试图片 `/path/to/test_img.jpeg`  
 
 ```shell
-./classifier.exe --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_dir=/path/to/PadlleX_model.yml
+./classifier.exe --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml
 ```
 
 `样例二`:
@@ -104,7 +104,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
 ```shell
-./detector.exe --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output
+./detector.exe --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --save_dir ./output
 ```
 
 `样例三`:  
@@ -112,5 +112,5 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 测试图片 `/path/to/test_img.jpeg`  
 
 ```shell
-.classifier.exe --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_dir=/path/to/PadlleX_model.yml --device=MYRIAD
+.classifier.exe --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml --device=MYRIAD
 ```

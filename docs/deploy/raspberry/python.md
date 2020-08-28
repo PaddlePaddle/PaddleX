@@ -22,10 +22,10 @@ python -m pip install paddlelite
 | --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
 | --img  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
-| --cfg_dir | PaddleX model 的.yml配置文件 |
+| --cfg_file | PaddleX model 的.yml配置文件 |
 | --thread_num  | 预测的线程数, 默认值为1 |
 | --input_shape  | 模型输入中图片输入的大小[N,C,H.W] |
-  
+
 ### 样例
 `样例一`：  
 测试图片 `/path/to/test_img.jpeg`  
@@ -33,7 +33,7 @@ python -m pip install paddlelite
 ```
 cd /root/projects/python  
 
-python demo.py --model_dir /path/to/openvino_model --img /path/to/test_img.jpeg --cfg_dir /path/to/PadlleX_model.yml --thread_num 4 --input_shape [1,3,224,224]
+python demo.py --model_dir /path/to/openvino_model --img /path/to/test_img.jpeg --cfg_file /path/to/PadlleX_model.yml --thread_num 4 --input_shape [1,3,224,224]
 ```  
 
 样例二`:
@@ -50,5 +50,5 @@ python demo.py --model_dir /path/to/openvino_model --img /path/to/test_img.jpeg 
 ```
 cd /root/projects/python  
 
-python demo.py --model_dir /path/to/models/openvino_model --image_list /root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --thread_num 4 --input_shape [1,3,224,224]
+python demo.py --model_dir /path/to/models/openvino_model --image_list /root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --thread_num 4 --input_shape [1,3,224,224]
 ```

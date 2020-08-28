@@ -20,7 +20,7 @@
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
-                            const std::string& cfg_dir,
+                            const std::string& cfg_file,
                             std::string device) {
     InferenceEngine::Core ie;
     network_ = ie.ReadNetwork(
@@ -49,11 +49,11 @@ void Model::create_predictor(const std::string& model_dir,
     } else {
       executable_network_ = ie.LoadNetwork(network_, device);
     }
-    load_config(cfg_dir);
+    load_config(cfg_file);
 }
 
-bool Model::load_config(const std::string& cfg_dir) {
-  YAML::Node config = YAML::LoadFile(cfg_dir);
+bool Model::load_config(const std::string& cfg_file) {
+  YAML::Node config = YAML::LoadFile(cfg_file);
   type = config["_Attributes"]["model_type"].as<std::string>();
   name = config["Model"].as<std::string>();
   bool to_rgb = true;

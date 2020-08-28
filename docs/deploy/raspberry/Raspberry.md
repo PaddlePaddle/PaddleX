@@ -4,7 +4,7 @@ PaddleX支持通过Paddle-Lite和基于OpenVINO的神经计算棒(NCS2)这两种
 
 ## 硬件环境配置  
 
-对于尚未安装系统的树莓派首先需要进行系统安装、环境配置等步骤来初始化硬件环境，过程中需要的软硬件如下： 
+对于尚未安装系统的树莓派首先需要进行系统安装、环境配置等步骤来初始化硬件环境，过程中需要的软硬件如下：
 
 - 硬件：micro SD，显示器，键盘，鼠标
 - 软件：Raspbian OS
@@ -23,7 +23,7 @@ sudo apt-get upgrade
 ```
 
 ## Paddle-Lite部署
-基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其实检测模型仅支持YOLOV3   
+基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其实检测模型仅支持YOLOV3  
 部署的流程包括：PaddleX模型转换与转换后的模型部署  
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)
@@ -62,11 +62,11 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 
 - glog：编译请参考[编译文档](https://github.com/google/glog)
 
-- opencv: 编译请参考 
+- opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
 ### Step4: 编译
-编译`cmake`的命令在`scripts/build.sh`中，修改LITE_DIR为Paddle-Lite预测库目录，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下： 
-``` 
+编译`cmake`的命令在`scripts/build.sh`中，修改LITE_DIR为Paddle-Lite预测库目录，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
+```
 # Paddle-Lite预编译库的路径
 LITE_DIR=/path/to/Paddle-Lite/inference/lib
 # gflags预编译库的路径
@@ -91,7 +91,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 | --image  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --thread_num | 预测的线程数，默认值为1 |
-| --cfg_dir | PaddleX model 的.yml配置文件 |
+| --cfg_file | PaddleX model 的.yml配置文件 |
 | --save_dir | 可视化结果图片保存地址，仅适用于检测和分割任务，默认值为" "既不保存可视化结果 |
 
 ### 样例
@@ -100,8 +100,8 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 测试图片 `/path/to/test_img.jpeg`  
 
 ```shell
-./build/classifier --model_dir=/path/to/nb_model 
---image=/path/to/test_img.jpeg --cfg_dir=/path/to/PadlleX_model.yml  --thread_num=4
+./build/classifier --model_dir=/path/to/nb_model
+--image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml  --thread_num=4
 ```
 
 
@@ -116,7 +116,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 ```
 
 ```shell
-./build/segmenter --model_dir=/path/to/models/nb_model --image_list=/root/projects/images_list.txt --cfg_dir=/path/to/PadlleX_model.yml --save_dir ./output --thread_num=4  
+./build/segmenter --model_dir=/path/to/models/nb_model --image_list=/root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --save_dir ./output --thread_num=4  
 ```  
 
 ## 性能测试
