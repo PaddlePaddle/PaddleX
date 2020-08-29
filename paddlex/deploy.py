@@ -13,6 +13,7 @@
 # limitations under the License.
 import os
 import os.path as osp
+import psutil
 import cv2
 import numpy as np
 import yaml
@@ -30,7 +31,7 @@ class Predictor:
                  use_gpu=True,
                  gpu_id=0,
                  use_mkl=False,
-                 mkl_thread_num=4,
+                 mkl_thread_num=psutil.cpu_count(),
                  use_trt=False,
                  use_glog=False,
                  memory_optimize=True):
@@ -84,7 +85,7 @@ class Predictor:
                          use_gpu=True,
                          gpu_id=0,
                          use_mkl=False,
-                         mkl_thread_num=4,
+                         mkl_thread_num=psutil.cpu_count(),
                          use_trt=False,
                          use_glog=False,
                          memory_optimize=True):
@@ -98,8 +99,9 @@ class Predictor:
         else:
             config.disable_gpu()
         if use_mkl:
-            config.enable_mkldnn()
-            config.set_cpu_math_library_num_threads(mkl_thread_num)
+            if self.model_name not in ["HRNet", "DeepLabv3p"]:
+                config.enable_mkldnn()
+                config.set_cpu_math_library_num_threads(mkl_thread_num)
         if use_glog:
             config.enable_glog_info()
         else:
