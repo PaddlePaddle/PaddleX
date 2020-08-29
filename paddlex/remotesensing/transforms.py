@@ -2,17 +2,23 @@ import os
 import os.path as osp
 import imghdr
 import gdal
+gdal.UseExceptions()
+gdal.PushErrorHandler('CPLQuietErrorHandler')
 import numpy as np
 from PIL import Image
 
 from paddlex.seg import transforms
+import paddlex.utils.logging as logging
 
 
 def read_img(img_path):
     img_format = imghdr.what(img_path)
     name, ext = osp.splitext(img_path)
     if img_format == 'tiff' or ext == '.img':
-        dataset = gdal.Open(img_path)
+        try:
+            dataset = gdal.Open(img_path)
+        except:
+            logging.error(gdal.GetLastErrorMsg())
         if dataset == None:
             raise Exception('Can not open', img_path)
         im_data = dataset.ReadAsArray()
@@ -36,9 +42,25 @@ def decode_image(im, label):
             im = read_img(im)
         except:
             raise ValueError('Can\'t read The image file {}!'.format(im))
+    im = im.astype('float32')
+
     if label is not None:
-        if not isinstance(label, np.ndarray):
-            label = read_img(label)
+        if isinstance(label, np.ndarray):
+            if len(label.shape) != 2:
+                raise Exception(
+                    "label should be 2-dimensions, but now is {}-dimensions".
+                    format(len(label.shape)))
+
+        else:
+            try:
+                label = np.asarray(Image.open(label))
+            except:
+                ValueError('Can\'t read The label file {}!'.format(label))
+    im_height, im_width, _ = im.shape
+    label_height, label_width = label.shape
+    if im_height != label_height or im_width != label_width:
+        raise Exception(
+            "The height or width of the image is not same as the label")
     return (im, label)
 
 

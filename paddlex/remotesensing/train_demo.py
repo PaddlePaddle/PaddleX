@@ -16,7 +16,7 @@
 import os.path as osp
 import argparse
 from paddlex.seg import transforms
-import paddlex.RemoteSensing.transforms as custom_transforms
+import paddlex.remotesensing.transforms as rs_transforms
 import paddlex as pdx
 
 
@@ -110,22 +110,22 @@ train_transforms = transforms.Compose([
     transforms.RandomHorizontalFlip(0.5),
     transforms.ResizeStepScaling(0.5, 2.0, 0.25),
     transforms.RandomPaddingCrop(im_padding_value=[1000] * channel),
-    custom_transforms.Clip(
+    rs_transforms.Clip(
         min_val=clip_min_value, max_val=clip_max_value),
     transforms.Normalize(
         min_val=clip_min_value, max_val=clip_max_value, mean=mean, std=std),
 ])
 
-train_transforms.decode_image = custom_transforms.decode_image
+train_transforms.decode_image = rs_transforms.decode_image
 
 eval_transforms = transforms.Compose([
-    custom_transforms.Clip(
+    rs_transforms.Clip(
         min_val=clip_min_value, max_val=clip_max_value),
     transforms.Normalize(
         min_val=clip_min_value, max_val=clip_max_value, mean=mean, std=std),
 ])
 
-eval_transforms.decode_image = custom_transforms.decode_image
+eval_transforms.decode_image = rs_transforms.decode_image
 
 train_list = osp.join(data_dir, 'train.txt')
 val_list = osp.join(data_dir, 'val.txt')

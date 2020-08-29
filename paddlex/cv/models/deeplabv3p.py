@@ -65,6 +65,7 @@ class DeepLabv3p(BaseAPI):
 
     def __init__(self,
                  num_classes=2,
+                 input_channel=3,
                  backbone='MobileNetV2_x1.0',
                  output_stride=16,
                  aspp_with_sep_conv=True,
@@ -114,6 +115,7 @@ class DeepLabv3p(BaseAPI):
 
         self.backbone = backbone
         self.num_classes = num_classes
+        self.input_channel = input_channel
         self.use_bce_loss = use_bce_loss
         self.use_dice_loss = use_dice_loss
         self.class_weight = class_weight
@@ -215,6 +217,7 @@ class DeepLabv3p(BaseAPI):
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.DeepLabv3p(
             self.num_classes,
+            input_channel=self.input_channel,
             mode=mode,
             backbone=self._get_backbone(self.backbone),
             output_stride=self.output_stride,

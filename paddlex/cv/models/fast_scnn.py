@@ -48,6 +48,7 @@ class FastSCNN(DeepLabv3p):
 
     def __init__(self,
                  num_classes=2,
+                 input_channel=3,
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
@@ -86,6 +87,7 @@ class FastSCNN(DeepLabv3p):
             )
 
         self.num_classes = num_classes
+        self.input_channel = input_channel
         self.use_bce_loss = use_bce_loss
         self.use_dice_loss = use_dice_loss
         self.class_weight = class_weight
@@ -97,6 +99,7 @@ class FastSCNN(DeepLabv3p):
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.FastSCNN(
             self.num_classes,
+            input_channel=self.input_channel,
             mode=mode,
             use_bce_loss=self.use_bce_loss,
             use_dice_loss=self.use_dice_loss,

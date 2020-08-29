@@ -20,7 +20,6 @@ import paddlex.utils.logging as logging
 from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import get_encoding
-from .dataset import is_pic
 
 
 class SegDataset(Dataset):
@@ -64,6 +63,10 @@ class SegDataset(Dataset):
                     self.labels.append(item)
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
+                if line.count(" ") > 1:
+                    raise Exception(
+                        "A space is defined as the separator, but it exists in image or label name {}."
+                        .format(line))
                 items = line.strip().split()
                 items[0] = path_normalization(items[0])
                 items[1] = path_normalization(items[1])

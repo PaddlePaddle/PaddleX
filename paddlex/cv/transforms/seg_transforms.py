@@ -74,8 +74,22 @@ class Compose(SegTransform):
                 raise ValueError('Can\'t read The image file {}!'.format(im))
         im = im.astype('float32')
         if label is not None:
-            if not isinstance(label, np.ndarray):
-                label = np.asarray(Image.open(label))
+            if isinstance(label, np.ndarray):
+                if len(label.shape) != 2:
+                    raise Exception(
+                        "label should be 2-dimensions, but now is {}-dimensions".
+                        format(len(label.shape)))
+
+            else:
+                try:
+                    label = np.asarray(Image.open(label))
+                except:
+                    ValueError('Can\'t read The label file {}!'.format(label))
+        im_height, im_width, _ = im.shape
+        label_height, label_width = label.shape
+        if im_height != label_height or im_width != label_width:
+            raise Exception(
+                "The height or width of the image is not same as the label")
         return (im, label)
 
     def __call__(self, im, im_info=None, label=None):
@@ -605,6 +619,7 @@ class Normalize(SegTransform):
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
         im = normalize(im, mean, std, self.min_val, self.max_val)
+        im = im.astype('float32')
 
         if label is None:
             return (im, im_info)
