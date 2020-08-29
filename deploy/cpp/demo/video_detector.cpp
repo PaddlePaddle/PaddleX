@@ -35,6 +35,7 @@ using namespace std::chrono;  // NOLINT
 DEFINE_string(model_dir, "", "Path of inference model");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_bool(use_trt, false, "Infering with TensorRT");
+DEFINE_bool(use_mkl, true, "Infering with MKL");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_bool(use_camera, false, "Infering with Camera");
 DEFINE_int32(camera_id, 0, "Camera id");
@@ -42,6 +43,9 @@ DEFINE_string(video_path, "", "Path of input video");
 DEFINE_bool(show_result, false, "show the result of each frame with a window");
 DEFINE_bool(save_result, true, "save the result of each frame to a video");
 DEFINE_string(key, "", "key of encryption");
+DEFINE_int32(thread_num,
+             omp_get_num_procs(),
+             "Number of preprocessing threads");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
 DEFINE_double(threshold,
               0.5,
@@ -64,8 +68,10 @@ int main(int argc, char** argv) {
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
              FLAGS_use_trt,
+             FLAGS_use_mkl,
              FLAGS_gpu_id,
-             FLAGS_key);
+             FLAGS_key,
+             FLAGS_thread_num);
   // Open video
   cv::VideoCapture capture;
   if (FLAGS_use_camera) {

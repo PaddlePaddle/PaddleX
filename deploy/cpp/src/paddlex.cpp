@@ -21,8 +21,10 @@ namespace PaddleX {
 void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
                              bool use_trt,
+                             bool use_mkl,
                              int gpu_id,
                              std::string key,
+                             int thread_num,
                              bool use_ir_optim) {
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
@@ -56,6 +58,10 @@ void Model::create_predictor(const std::string& model_dir,
 
   if (key == "") {
     config.SetModel(model_file, params_file);
+  }
+  if (use_mkl && name != "HRNet" && name != "DeepLabv3p") {
+    config.EnableMKLDNN();
+    config.SetCpuMathLibraryNumThreads(12);
   }
   if (use_gpu) {
     config.EnableUseGpu(100, gpu_id);

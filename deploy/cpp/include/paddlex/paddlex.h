@@ -77,17 +77,29 @@ class Model {
   void Init(const std::string& model_dir,
             bool use_gpu = false,
             bool use_trt = false,
+            bool use_mkl = true,
             int gpu_id = 0,
             std::string key = "",
+            int thread_num = 1,
             bool use_ir_optim = true) {
-    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, use_ir_optim);
+    create_predictor(
+                     model_dir,
+                     use_gpu,
+                     use_trt,
+                     use_mkl,
+                     gpu_id,
+                     key,
+                     thread_num,
+                     use_ir_optim);
   }
 
   void create_predictor(const std::string& model_dir,
                         bool use_gpu = false,
                         bool use_trt = false,
+                        bool use_mkl = true,
                         int gpu_id = 0,
                         std::string key = "",
+                        int thread_num = 1,
                         bool use_ir_optim = true);
 
   /*
