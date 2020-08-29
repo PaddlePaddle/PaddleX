@@ -48,11 +48,9 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  //
-  std::cout << "init start" << std::endl;
+  // load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_device);
-  std::cout << "init done" << std::endl;
   int imgs = 1;
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
 

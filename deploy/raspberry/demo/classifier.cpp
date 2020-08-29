@@ -44,11 +44,11 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // 加载模型
+  // load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_thread_num);
   std::cout << "init is done" << std::endl;
-  // 进行预测
+  // predict
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {

@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  //
+  // load model
   std::cout << "init start" << std::endl;
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_thread_num);

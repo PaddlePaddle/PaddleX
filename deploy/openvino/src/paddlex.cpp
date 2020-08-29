@@ -67,9 +67,9 @@ bool Model::load_config(const std::string& cfg_file) {
       return false;
     }
   }
-  // 构建数据处理流
+  // init preprocess ops
   transforms_.Init(config["Transforms"], type, to_rgb);
-  // 读入label lis
+  // read label list
   for (const auto& item : config["_Attributes"]["labels"]) {
     int index = labels.size();
     labels[index] = item.as<std::string>();
@@ -98,7 +98,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
               << std::endl;
     return false;
   }
-  // 处理输入图像
+  // preprocess
   InferenceEngine::InferRequest infer_request =
     executable_network_.CreateInferRequest();
   std::string input_name = network_.getInputsInfo().begin()->first;
@@ -109,6 +109,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
     return false;
   }
 
+  // predict
   infer_request.Infer();
 
   std::string output_name = network_.getOutputsInfo().begin()->first;
@@ -118,7 +119,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   auto moutputHolder = moutput->rmap();
   float* outputs_data = moutputHolder.as<float *>();
 
-  // 对模型输出结果进行后处理
+  // post process
   auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_data));
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
@@ -206,20 +207,20 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                  "function predict()!" << std::endl;
     return false;
   }
-  //
+  // init infer
   InferenceEngine::InferRequest infer_request =
     executable_network_.CreateInferRequest();
   std::string input_name = network_.getInputsInfo().begin()->first;
   inputs_.blob = infer_request.GetBlob(input_name);
 
-  //
+  // preprocess
   cv::Mat im_clone = im.clone();
   if (!preprocess(&im_clone, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
 
-  //
+  // predict
   infer_request.Infer();
 
   InferenceEngine::OutputsDataMap out_map = network_.getOutputsInfo();

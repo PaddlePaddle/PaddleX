@@ -201,7 +201,7 @@ std::shared_ptr<Transform> Transforms::CreateTransform(
 }
 
 bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
-  // 按照transforms中预处理算子顺序处理图像
+  // preprocess by order
   if (to_rgb_) {
     cv::cvtColor(*im, *im, cv::COLOR_BGR2RGB);
   }
@@ -224,8 +224,8 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
     }
   }
 
-  // 将图像由NHWC转为NCHW格式
-  // 同时转为连续的内存块存储到Blob
+  // image format NHWC to NCHW
+  // img data save to ImageBlob
   InferenceEngine::SizeVector blobSize = data->blob->getTensorDesc().getDims();
   const size_t width = blobSize[3];
   const size_t height = blobSize[2];

@@ -40,7 +40,7 @@ void Model::create_predictor(const std::string& model_dir,
   }
 #endif
   if (yaml_input == "") {
-    // 读取配置文件
+    // read yaml file
     std::ifstream yaml_fin(yaml_file);
     yaml_fin.seekg(0, std::ios::end);
     size_t yaml_file_size = yaml_fin.tellg();
@@ -48,7 +48,7 @@ void Model::create_predictor(const std::string& model_dir,
     yaml_fin.seekg(0);
     yaml_fin.read(&yaml_input[0], yaml_file_size);
   }
-  // 读取配置文件内容
+  // load yaml file
   if (!load_config(yaml_input)) {
     std::cerr << "Parse file 'model.yml' failed!" << std::endl;
     exit(-1);
@@ -64,13 +64,13 @@ void Model::create_predictor(const std::string& model_dir,
   }
   config.SwitchUseFeedFetchOps(false);
   config.SwitchSpecifyInputNames(true);
-  // 开启图优化
+  // enable graph Optim
 #if defined(__arm__) || defined(__aarch64__)
   config.SwitchIrOptim(false);
 #else
   config.SwitchIrOptim(use_ir_optim);
 #endif
-  // 开启内存优化
+  // enable Memory Optim
   config.EnableMemoryOptim();
   if (use_trt) {
     config.EnableTensorRtEngine(
@@ -108,9 +108,9 @@ bool Model::load_config(const std::string& yaml_input) {
       return false;
     }
   }
-  // 构建数据处理流
+  // build data preprocess stream
   transforms_.Init(config["Transforms"], to_rgb);
-  // 读入label list
+  // read label list
   labels.clear();
   for (const auto& item : config["_Attributes"]["labels"]) {
     int index = labels.size();
@@ -152,19 +152,19 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
                  "to function predict()!" << std::endl;
     return false;
   }
-  // 处理输入图像
+  // im preprocess
   if (!preprocess(im, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  // 使用加载的模型进行预测
+  // predict
   auto in_tensor = predictor_->GetInputTensor("image");
   int h = inputs_.new_im_size_[0];
   int w = inputs_.new_im_size_[1];
   in_tensor->Reshape({1, 3, h, w});
   in_tensor->copy_from_cpu(inputs_.im_data_.data());
   predictor_->ZeroCopyRun();
-  // 取出模型的输出结果
+  // get result
   auto output_names = predictor_->GetOutputNames();
   auto output_tensor = predictor_->GetOutputTensor(output_names[0]);
   std::vector<int> output_shape = output_tensor->shape();
@@ -174,7 +174,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   }
   outputs_.resize(size);
   output_tensor->copy_to_cpu(outputs_.data());
-  // 对模型输出结果进行后处理
+  // postprocess
   auto ptr = std::max_element(std::begin(outputs_), std::end(outputs_));
   result->category_id = std::distance(std::begin(outputs_), ptr);
   result->score = *ptr;
@@ -198,12 +198,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     return false;
   }
   inputs_batch_.assign(im_batch.size(), ImageBlob());
-  // 处理输入图像
+  // preprocess
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  // 使用加载的模型进行预测
+  // predict
   int batch_size = im_batch.size();
   auto in_tensor = predictor_->GetInputTensor("image");
   int h = inputs_batch_[0].new_im_size_[0];
@@ -218,7 +218,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   in_tensor->copy_from_cpu(inputs_data.data());
   // in_tensor->copy_from_cpu(inputs_.im_data_.data());
   predictor_->ZeroCopyRun();
-  // 取出模型的输出结果
+  // get result
   auto output_names = predictor_->GetOutputNames();
   auto output_tensor = predictor_->GetOutputTensor(output_names[0]);
   std::vector<int> output_shape = output_tensor->shape();
@@ -228,7 +228,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   }
   outputs_.resize(size);
   output_tensor->copy_to_cpu(outputs_.data());
-  // 对模型输出结果进行后处理
+  // postprocess
   (*results).clear();
   (*results).resize(batch_size);
   int single_batch_size = size / batch_size;
@@ -258,7 +258,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     return false;
   }
 
-  // 处理输入图像
+  // preprocess
   if (!preprocess(im, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
@@ -288,7 +288,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     im_info_tensor->copy_from_cpu(im_info);
     im_shape_tensor->copy_from_cpu(im_shape);
   }
-  // 使用加载的模型进行预测
+  // predict
   predictor_->ZeroCopyRun();
 
   std::vector<float> output_box;
@@ -306,7 +306,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     return true;
   }
   int num_boxes = size / 6;
-  // 解析预测框box
+  // box postprocess
   for (int i = 0; i < num_boxes; ++i) {
     Box box;
     box.category_id = static_cast<int>(round(output_box[i * 6]));
@@ -321,7 +321,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     box.coordinate = {xmin, ymin, w, h};
     result->boxes.push_back(std::move(box));
   }
-  // 实例分割需解析mask
+  // mask postprocess
   if (name == "MaskRCNN") {
     std::vector<float> output_mask;
     auto output_mask_tensor = predictor_->GetOutputTensor(output_names[1]);
@@ -366,12 +366,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
 
   inputs_batch_.assign(im_batch.size(), ImageBlob());
   int batch_size = im_batch.size();
-  // 处理输入图像
+  // preprocess
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  // 对RCNN类模型做批量padding
+  // RCNN model padding
   if (batch_size > 1) {
     if (name == "FasterRCNN" || name == "MaskRCNN") {
       int max_h = -1;
@@ -452,10 +452,10 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     im_info_tensor->copy_from_cpu(im_info.data());
     im_shape_tensor->copy_from_cpu(im_shape.data());
   }
-  // 使用加载的模型进行预测
+  // predict
   predictor_->ZeroCopyRun();
 
-  // 读取所有box
+  // get all box
   std::vector<float> output_box;
   auto output_names = predictor_->GetOutputNames();
   auto output_box_tensor = predictor_->GetOutputTensor(output_names[0]);
@@ -472,7 +472,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   }
   auto lod_vector = output_box_tensor->lod();
   int num_boxes = size / 6;
-  // 解析预测框box
+  // box postprocess
   (*results).clear();
   (*results).resize(batch_size);
   for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
@@ -492,7 +492,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     }
   }
 
-  // 实例分割需解析mask
+  // mask postprocess
   if (name == "MaskRCNN") {
     std::vector<float> output_mask;
     auto output_mask_tensor = predictor_->GetOutputTensor(output_names[1]);
@@ -537,7 +537,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
     return false;
   }
 
-  // 处理输入图像
+  // preprocess
   if (!preprocess(im, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
@@ -549,10 +549,10 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   im_tensor->Reshape({1, 3, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
-  // 使用加载的模型进行预测
+  // predict
   predictor_->ZeroCopyRun();
 
-  // 获取预测置信度，经过argmax后的labelmap
+  // get labelmap
   auto output_names = predictor_->GetOutputNames();
   auto output_label_tensor = predictor_->GetOutputTensor(output_names[0]);
   std::vector<int> output_label_shape = output_label_tensor->shape();
@@ -565,7 +565,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   result->label_map.data.resize(size);
   output_label_tensor->copy_to_cpu(result->label_map.data.data());
 
-  // 获取预测置信度scoremap
+  // get scoremap
   auto output_score_tensor = predictor_->GetOutputTensor(output_names[1]);
   std::vector<int> output_score_shape = output_score_tensor->shape();
   size = 1;
@@ -577,7 +577,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   result->score_map.data.resize(size);
   output_score_tensor->copy_to_cpu(result->score_map.data.data());
 
-  // 解析输出结果到原图大小
+  // get origin image result
   std::vector<uint8_t> label_map(result->label_map.data.begin(),
                                  result->label_map.data.end());
   cv::Mat mask_label(result->label_map.shape[1],
@@ -647,7 +647,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     return false;
   }
 
-  // 处理输入图像
+  // preprocess
   inputs_batch_.assign(im_batch.size(), ImageBlob());
   if (!preprocess(im_batch, &inputs_batch_, thread_num)) {
     std::cerr << "Preprocess failed!" << std::endl;
@@ -670,10 +670,10 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   im_tensor->copy_from_cpu(inputs_data.data());
   // im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
-  // 使用加载的模型进行预测
+  // predict
   predictor_->ZeroCopyRun();
 
-  // 获取预测置信度，经过argmax后的labelmap
+  // get labelmap
   auto output_names = predictor_->GetOutputNames();
   auto output_label_tensor = predictor_->GetOutputTensor(output_names[0]);
   std::vector<int> output_label_shape = output_label_tensor->shape();
@@ -698,7 +698,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
               (*results)[i].label_map.data.data());
   }
 
-  // 获取预测置信度scoremap
+  // get scoremap
   auto output_score_tensor = predictor_->GetOutputTensor(output_names[1]);
   std::vector<int> output_score_shape = output_score_tensor->shape();
   size = 1;
@@ -722,7 +722,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
               (*results)[i].score_map.data.data());
   }
 
-  // 解析输出结果到原图大小
+  // get origin image result
   for (int i = 0; i < batch_size; ++i) {
     std::vector<uint8_t> label_map((*results)[i].label_map.data.begin(),
                                    (*results)[i].label_map.data.end());
