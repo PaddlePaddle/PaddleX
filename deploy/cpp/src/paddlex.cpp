@@ -348,10 +348,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
       auto begin_mask =
           output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
       auto end_mask = begin_mask + mask_pixels;
-      for (auto iter = begin_mask; iter != end_mask; iter++) {
-        int mask_int = floor((*iter) + 0.5);
-        box->mask.data.push_back(mask_int);
-      }
+      box->mask.data.assign(begin_mask, end_mask);
       box->mask.shape = {static_cast<int>(box->coordinate[2]),
                          static_cast<int>(box->coordinate[3])};
     }
@@ -520,17 +517,14 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
       (*results)[i].mask_resolution = output_mask_shape[2];
       for (int j = 0; j < (*results)[i].boxes.size(); ++j) {
-        Box* box = &(*results)[i].boxes[j];
+        Box* box = &result->boxes[i];
         int category_id = box->category_id;
-        auto begin_mask = output_mask.begin() +
-                          (mask_idx * classes + category_id) * mask_pixels;
+        auto begin_mask =
+          output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
         auto end_mask = begin_mask + mask_pixels;
-        for (auto iter = begin_mask; iter != end_mask; iter++) {
-          int mask_int = floor((*iter) + 0.5);
-          box->mask.data.push_back(mask_int);
-        }
+        box->mask.data.assign(begin_mask, end_mask);
         box->mask.shape = {static_cast<int>(box->coordinate[2]),
-                           static_cast<int>(box->coordinate[3])};
+                         static_cast<int>(box->coordinate[3])};
         mask_idx++;
       }
     }

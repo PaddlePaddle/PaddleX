@@ -86,11 +86,12 @@ cv::Mat Visualize(const cv::Mat& img,
     }
     cv::Mat bin_mask(result.mask_resolution,
                      result.mask_resolution,
-                     CV_8UC1,
+                     CV_32FC1
                      boxes[i].mask.data.data());
     cv::resize(bin_mask,
                bin_mask,
                cv::Size(boxes[i].mask.shape[0], boxes[i].mask.shape[1]));
+    cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
     cv::Mat full_mask = cv::Mat::zeros(vis_img.size(), CV_8UC1);
     bin_mask.copyTo(full_mask(roi));
     cv::Mat mask_ch[3];

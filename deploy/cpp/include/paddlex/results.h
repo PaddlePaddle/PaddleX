@@ -47,7 +47,7 @@ struct Box {
   // confidence score
   float score;
   std::vector<float> coordinate;
-  Mask<int> mask;
+  Mask<float> mask;
 };
 
 /*
