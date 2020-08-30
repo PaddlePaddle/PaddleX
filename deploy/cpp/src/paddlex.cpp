@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include <math.h>
 #include <omp.h>
 #include <algorithm>
 #include <fstream>
@@ -346,7 +348,10 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
       auto begin_mask =
           output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
       auto end_mask = begin_mask + mask_pixels;
-      box->mask.data.assign(begin_mask, end_mask);
+      for (auto iter = begin_mask; iter != end_mask; iter++) {
+        int mask_int = floor((*iter) + 0.5);
+        box->mask.push_back(mask_int);
+      }
       box->mask.shape = {static_cast<int>(box->coordinate[2]),
                          static_cast<int>(box->coordinate[3])};
     }
@@ -520,7 +525,10 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
         auto begin_mask = output_mask.begin() +
                           (mask_idx * classes + category_id) * mask_pixels;
         auto end_mask = begin_mask + mask_pixels;
-        box->mask.data.assign(begin_mask, end_mask);
+        for (auto iter = begin_mask; iter != end_mask; iter++) {
+          int mask_int = floor((*iter) + 0.5);
+          box->mask.push_back(mask_int);
+        }
         box->mask.shape = {static_cast<int>(box->coordinate[2]),
                            static_cast<int>(box->coordinate[3])};
         mask_idx++;
