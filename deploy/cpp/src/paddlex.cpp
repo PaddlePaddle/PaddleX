@@ -350,7 +350,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
       auto end_mask = begin_mask + mask_pixels;
       for (auto iter = begin_mask; iter != end_mask; iter++) {
         int mask_int = floor((*iter) + 0.5);
-        box->mask.push_back(mask_int);
+        box->mask.data.push_back(mask_int);
       }
       box->mask.shape = {static_cast<int>(box->coordinate[2]),
                          static_cast<int>(box->coordinate[3])};
@@ -527,7 +527,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
         auto end_mask = begin_mask + mask_pixels;
         for (auto iter = begin_mask; iter != end_mask; iter++) {
           int mask_int = floor((*iter) + 0.5);
-          box->mask.push_back(mask_int);
+          box->mask.data.push_back(mask_int);
         }
         box->mask.shape = {static_cast<int>(box->coordinate[2]),
                            static_cast<int>(box->coordinate[3])};
