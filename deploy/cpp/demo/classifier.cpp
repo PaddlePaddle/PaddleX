@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
              FLAGS_use_mkl,
              FLAGS_gpu_id,
              FLAGS_key,
-             FLAGS_mkl_thread_num;
+             FLAGS_mkl_thread_num);
 
   // Predict
   int imgs = 1;
