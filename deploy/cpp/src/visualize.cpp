@@ -84,9 +84,11 @@ cv::Mat Visualize(const cv::Mat& img,
     if (boxes[i].mask.data.size() == 0) {
       continue;
     }
+    std::vector<float> mask_data;
+    mask_data.assign(boxes[i].mask.data.begin(), boxes[i].mask.data.end());
     cv::Mat bin_mask(boxes[i].mask.shape[1],
                      boxes[i].mask.shape[0],
-                     CV_8UC1,
+                     CV_32FC1,
                      boxes[i].mask.data.data());
     cv::Mat full_mask = cv::Mat::zeros(vis_img.size(), CV_8UC1);
     bin_mask.copyTo(full_mask(roi));
