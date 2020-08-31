@@ -362,7 +362,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
                bin_mask,
                cv::Size(box->mask.shape[0], box->mask.shape[1]));
       cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
-      auto mask_int_begin = reinterpret_cast<int*>(bin_mask.data);
+      auto mask_int_begin = reinterpret_cast<float*>(bin_mask.data);
       auto mask_int_end =
         mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
       box->mask.data.assign(mask_int_begin, mask_int_end);
@@ -546,7 +546,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
                 bin_mask,
                 cv::Size(box->mask.shape[0], box->mask.shape[1]));
         cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
-        auto mask_int_begin = reinterpret_cast<int*>(bin_mask.data);
+        auto mask_int_begin = reinterpret_cast<float*>(bin_mask.data);
         auto mask_int_end =
           mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
         box->mask.data.assign(mask_int_begin, mask_int_end);

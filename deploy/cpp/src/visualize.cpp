@@ -84,8 +84,8 @@ cv::Mat Visualize(const cv::Mat& img,
     if (boxes[i].mask.data.size() == 0) {
       continue;
     }
-    cv::Mat bin_mask(boxes[i].mask.shape[0],
-                     boxes[i].mask.shape[1],
+    cv::Mat bin_mask(boxes[i].mask.shape[1],
+                     boxes[i].mask.shape[0],
                      CV_8UC1,
                      boxes[i].mask.data.data());
     cv::Mat full_mask = cv::Mat::zeros(vis_img.size(), CV_8UC1);
