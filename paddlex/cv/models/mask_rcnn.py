@@ -408,14 +408,13 @@ class MaskRCNN(FasterRCNN):
 
         return preds[0]
 
-    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+    def batch_predict(self, img_file_list, transforms=None):
         """预测。
 
         Args:
             img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
                 也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
             transforms (paddlex.det.transforms): 数据预处理操作。
-            thread_num (int): 并发执行各图像预处理时的线程数。
         Returns:
             dict: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、预测框类别名称、
                   预测框坐标(坐标格式为[xmin, ymin, w, h]）、
@@ -432,7 +431,7 @@ class MaskRCNN(FasterRCNN):
             transforms = self.test_transforms
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
             img_file_list, transforms, self.model_type,
-            self.__class__.__name__, thread_num)
+            self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
