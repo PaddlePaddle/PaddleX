@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "include/paddlex/transforms.h"
+
+#include <math.h>
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include <math.h>
 
-#include "include/paddlex/transforms.h"
 
 namespace PaddleX {
 
@@ -195,7 +197,7 @@ std::shared_ptr<Transform> Transforms::CreateTransform(
 }
 
 bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
-  // 按照transforms中预处理算子顺序处理图像
+  // do all preprocess ops by order
   if (to_rgb_) {
     cv::cvtColor(*im, *im, cv::COLOR_BGR2RGB);
   }
@@ -211,8 +213,8 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
     }
   }
 
-  // 将图像由NHWC转为NCHW格式
-  // 同时转为连续的内存块存储到ImageBlob
+  // data format NHWC to NCHW
+  // img data save to ImageBlob
   int h = im->rows;
   int w = im->cols;
   int c = im->channels();

@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -216,8 +217,7 @@ class Padding : public Transform {
     }
     if (item["im_padding_value"].IsDefined()) {
       im_value_ = item["im_padding_value"].as<std::vector<float>>();
-    }
-    else {
+    } else {
       im_value_ = {0, 0, 0};
     }
   }

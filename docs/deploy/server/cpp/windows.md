@@ -109,6 +109,8 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 | image  | 要预测的图片文件路径 |
 | image_list  | 按行存储图片路径的.txt文件 |
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
+| use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
+| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，classifier无该参数 |
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
@@ -124,6 +126,8 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 | camera_id | 摄像头设备ID，默认值为0 |
 | video_path | 视频文件的路径 |
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
+| use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
+| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
 | save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
