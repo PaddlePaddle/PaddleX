@@ -13,7 +13,6 @@
 # limitations under the License.
 import os
 import os.path as osp
-import psutil
 import cv2
 import numpy as np
 import yaml
@@ -31,7 +30,7 @@ class Predictor:
                  use_gpu=True,
                  gpu_id=0,
                  use_mkl=False,
-                 mkl_thread_num=psutil.cpu_count(),
+                 mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
                  memory_optimize=True):

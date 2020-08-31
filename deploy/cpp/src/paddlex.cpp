@@ -31,7 +31,7 @@ void Model::create_predictor(const std::string& model_dir,
                              bool use_mkl,
                              int gpu_id,
                              std::string key,
-                             int thread_num,
+                             int mkl_thread_num,
                              bool use_ir_optim) {
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
@@ -68,7 +68,7 @@ void Model::create_predictor(const std::string& model_dir,
   }
   if (use_mkl && name != "HRNet" && name != "DeepLabv3p") {
     config.EnableMKLDNN();
-    config.SetCpuMathLibraryNumThreads(12);
+    config.SetCpuMathLibraryNumThreads(mkl_thread_num);
   }
   if (use_gpu) {
     config.EnableUseGpu(100, gpu_id);

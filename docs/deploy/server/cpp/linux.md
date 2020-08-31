@@ -126,6 +126,7 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
 | use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
 | use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
+| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | save_dir | 保存可视化结果的路径, 默认值为"output"，**classfier无该参数** |
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
@@ -143,12 +144,12 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 | use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
 | use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
 | use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
+| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
 | gpu_id  | GPU 设备ID, 默认值为0 |
 | show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
 | save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
 | save_dir | 保存可视化结果的路径, 默认值为"output"|
 | key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
-| thread_num | 预测的线程数，默认为cpu处理器个数 |
 
 **注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
 

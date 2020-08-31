@@ -38,9 +38,9 @@ DEFINE_bool(use_trt, false, "Infering with TensorRT");
 DEFINE_bool(use_mkl, true, "Infering with MKL");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_string(key, "", "key of encryption");
-DEFINE_int32(thread_num,
+DEFINE_int32(mkl_thread_num,
              omp_get_num_procs(),
-             "Number of preprocessing threads");
+             "Number of mkl threads");
 DEFINE_bool(use_camera, false, "Infering with Camera");
 DEFINE_int32(camera_id, 0, "Camera id");
 DEFINE_string(video_path, "", "Path of input video");
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
              FLAGS_use_mkl,
              FLAGS_gpu_id,
              FLAGS_key,
-             FLAGS_thread_num);
+             FLAGS_mkl_thread_num);
 
   // Open video
   cv::VideoCapture capture;

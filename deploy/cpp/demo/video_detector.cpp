@@ -43,9 +43,9 @@ DEFINE_string(video_path, "", "Path of input video");
 DEFINE_bool(show_result, false, "show the result of each frame with a window");
 DEFINE_bool(save_result, true, "save the result of each frame to a video");
 DEFINE_string(key, "", "key of encryption");
-DEFINE_int32(thread_num,
+DEFINE_int32(mkl_thread_num,
              omp_get_num_procs(),
-             "Number of preprocessing threads");
+             "Number of mkl threads");
 DEFINE_string(save_dir, "output", "Path to save visualized image");
 DEFINE_double(threshold,
               0.5,
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
              FLAGS_use_mkl,
              FLAGS_gpu_id,
              FLAGS_key,
-             FLAGS_thread_num);
+             FLAGS_mkl_thread_num);
   // Open video
   cv::VideoCapture capture;
   if (FLAGS_use_camera) {

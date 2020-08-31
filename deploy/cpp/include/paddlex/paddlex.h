@@ -80,7 +80,7 @@ class Model {
             bool use_mkl = true,
             int gpu_id = 0,
             std::string key = "",
-            int thread_num = 1,
+            int mkl_thread_num = 4,
             bool use_ir_optim = true) {
     create_predictor(
                      model_dir,
@@ -89,7 +89,7 @@ class Model {
                      use_mkl,
                      gpu_id,
                      key,
-                     thread_num,
+                     mkl_thread_num,
                      use_ir_optim);
   }
 
@@ -99,7 +99,7 @@ class Model {
                         bool use_mkl = true,
                         int gpu_id = 0,
                         std::string key = "",
-                        int thread_num = 1,
+                        int mkl_thread_num = 4,
                         bool use_ir_optim = true);
 
   /*
