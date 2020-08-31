@@ -532,12 +532,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
     for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
       (*results)[i].mask_resolution = output_mask_shape[2];
       for (int j = 0; j < (*results)[i].boxes.size(); ++j) {
-        Box* box = &result->boxes[i];
+        Box* box = &(*results)[i]->boxes[i];
         int category_id = box->category_id;
         box->mask.shape = {static_cast<int>(box->coordinate[2]),
                           static_cast<int>(box->coordinate[3])};
         auto begin_mask =
-          output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
+          output_mask.data() + (i * classes + box->category_id) * mask_pixels;
         cv::Mat bin_mask(result->mask_resolution,
                       result->mask_resolution,
                       CV_32FC1,
@@ -546,7 +546,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
                 bin_mask,
                 cv::Size(box->mask.shape[0], box->mask.shape[1]));
         cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
-        auto mask_int_begin = bin_mask.data;
+        auto mask_int_begin = reinterpret_cast<int*>(bin_mask.data);
         auto mask_int_end =
           mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
         box->mask.data.assign(mask_int_begin, mask_int_end);
