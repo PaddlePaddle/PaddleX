@@ -66,9 +66,9 @@ int main(int argc, char** argv) {
              FLAGS_use_gpu,
              FLAGS_use_trt,
              FLAGS_use_mkl,
+             FLAGS_mkl_thread_num,
              FLAGS_gpu_id,
-             FLAGS_key,
-             FLAGS_mkl_thread_num);
+             FLAGS_key);
   int imgs = 1;
   std::string save_dir = "output";
   // Predict

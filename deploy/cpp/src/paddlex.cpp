@@ -29,9 +29,9 @@ void Model::create_predictor(const std::string& model_dir,
                              bool use_gpu,
                              bool use_trt,
                              bool use_mkl,
+                             int mkl_thread_num,
                              int gpu_id,
                              std::string key,
-                             int mkl_thread_num,
                              bool use_ir_optim) {
   paddle::AnalysisConfig config;
   std::string model_file = model_dir + OS_PATH_SEP + "__model__";
