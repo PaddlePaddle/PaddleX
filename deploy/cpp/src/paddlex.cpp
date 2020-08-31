@@ -18,6 +18,11 @@
 #include <fstream>
 #include <cstring>
 #include "include/paddlex/paddlex.h"
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
 namespace PaddleX {
 
 void Model::create_predictor(const std::string& model_dir,
