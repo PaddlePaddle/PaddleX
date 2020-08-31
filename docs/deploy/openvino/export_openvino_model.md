@@ -35,4 +35,4 @@ python convertor.py --model_dir /path/to/inference_model --save_dir /path/to/ope
 | --data type(option)  | FP32、FP16，默认为FP32，VPU下的IR需要为FP16 |  
 **注意**：
 - 由于OpenVINO不支持ONNX的resize-11 OP的原因，目前还不支持Paddle的分割模型
-- yoloV3模型paddle->OpenVINO后，OpenVINO输出的box包含了background
+- YOLOv3在通过OpenVINO部署时，由于OpenVINO对ONNX OP的支持限制，我们在将YOLOv3的Paddle模型导出时，对最后一层multiclass_nms进行了特殊处理，导出的ONNX模型，最终输出的Box结果包括背景类别（而Paddle模型不包含），此处在OpenVINO的部署代码中，我们通过后处理过滤了背景类别。

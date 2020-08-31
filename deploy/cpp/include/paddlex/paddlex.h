@@ -70,8 +70,8 @@ class Model {
    * @param model_dir: the directory which contains model.yml
    * @param use_gpu: use gpu or not when infering
    * @param use_trt: use Tensor RT or not when infering
-   * @param use_trt: use mkl or not when infering
-   * @param mkl_thread_num: the threads of mkl when infering
+   * @param use_mkl: use mkl or not when infering
+   * @param mkl_thread_num: number of threads for mkldnn when infering
    * @param gpu_id: the id of gpu when infering with using gpu
    * @param key: the key of encryption when using encrypted model
    * @param use_ir_optim: use ir optimization when infering
