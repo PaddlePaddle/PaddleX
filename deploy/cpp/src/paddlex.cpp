@@ -345,12 +345,22 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     result->mask_resolution = output_mask_shape[2];
     for (int i = 0; i < result->boxes.size(); ++i) {
       Box* box = &result->boxes[i];
-      auto begin_mask =
-          output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
-      auto end_mask = begin_mask + mask_pixels;
-      box->mask.data.assign(begin_mask, end_mask);
       box->mask.shape = {static_cast<int>(box->coordinate[2]),
                          static_cast<int>(box->coordinate[3])};
+      auto begin_mask =
+          output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
+      cv::Mat bin_mask(result->mask_resolution,
+                     result->mask_resolution,
+                     CV_32FC1,
+                     begin_mask);
+      cv::resize(bin_mask,
+               bin_mask,
+               cv::Size(box->mask.shape[0], box->mask.shape[1]));
+      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
+      auto mask_int_begin = bin_mask.data;
+      auto mask_int_end =
+        mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
+      box->mask.data.assign(mask_int_begin, mask_int_end);
     }
   }
   return true;
@@ -519,12 +529,22 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
       for (int j = 0; j < (*results)[i].boxes.size(); ++j) {
         Box* box = &result->boxes[i];
         int category_id = box->category_id;
+        box->mask.shape = {static_cast<int>(box->coordinate[2]),
+                          static_cast<int>(box->coordinate[3])};
         auto begin_mask =
           output_mask.begin() + (i * classes + box->category_id) * mask_pixels;
-        auto end_mask = begin_mask + mask_pixels;
-        box->mask.data.assign(begin_mask, end_mask);
-        box->mask.shape = {static_cast<int>(box->coordinate[2]),
-                         static_cast<int>(box->coordinate[3])};
+        cv::Mat bin_mask(result->mask_resolution,
+                      result->mask_resolution,
+                      CV_32FC1,
+                      begin_mask);
+        cv::resize(bin_mask,
+                bin_mask,
+                cv::Size(box->mask.shape[0], box->mask.shape[1]));
+        cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
+        auto mask_int_begin = bin_mask.data;
+        auto mask_int_end =
+          mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
+        box->mask.data.assign(mask_int_begin, mask_int_end);
         mask_idx++;
       }
     }
