@@ -24,7 +24,7 @@ cd /root/projects/python
 
 python convertor.py --model_dir /path/to/inference_model --save_dir /path/to/openvino_model --fixed_input_shape [w,h]
 ```
-**转换成功后会在save_dir下出现后缀名为.xml、.bin、.mapping三个文件**   
+**转换成功后会在save_dir下出现后缀名为.xml、.bin、.mapping三个文件**  
 转换参数说明如下：
 
 |  参数   | 说明  |
@@ -32,6 +32,7 @@ python convertor.py --model_dir /path/to/inference_model --save_dir /path/to/ope
 | --model_dir  | Paddle模型路径，请确保__model__, \_\_params__model.yml在同一个目录|
 | --save_dir  | OpenVINO模型保存路径 |
 | --fixed_input_shape  | 模型输入的[W,H] |
-| --data type(option)  | FP32、FP16，默认为FP32，VPU下的IR需要为FP16 |
-
-
+| --data type(option)  | FP32、FP16，默认为FP32，VPU下的IR需要为FP16 |  
+**注意**：
+- 由于OpenVINO不支持ONNX的resize-11 OP的原因，目前还不支持Paddle的分割模型
+- yoloV3模型paddle->OpenVINO后，OpenVINO输出的box包含了background
