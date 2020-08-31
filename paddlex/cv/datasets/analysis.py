@@ -23,6 +23,7 @@ import multiprocessing as mp
 
 import paddlex.utils.logging as logging
 from paddlex.utils import path_normalization
+from paddlex.cv.transforms.seg_transforms import Compose
 from .dataset import get_encoding
 
 
@@ -56,38 +57,6 @@ class Seg:
                         full_path_label))
                 self.file_list.append([full_path_im, full_path_label])
         self.num_samples = len(self.file_list)
-
-    @staticmethod
-    def decode_image(im, label):
-        if isinstance(im, np.ndarray):
-            if len(im.shape) != 3:
-                raise Exception(
-                    "im should be 3-dimensions, but now is {}-dimensions".
-                    format(len(im.shape)))
-        else:
-            try:
-                im = cv2.imread(im)
-            except:
-                raise ValueError('Can\'t read The image file {}!'.format(im))
-        im = im.astype('float32')
-        if label is not None:
-            if isinstance(label, np.ndarray):
-                if len(label.shape) != 2:
-                    raise Exception(
-                        "label should be 2-dimensions, but now is {}-dimensions".
-                        format(len(label.shape)))
-
-            else:
-                try:
-                    label = np.asarray(Image.open(label))
-                except:
-                    ValueError('Can\'t read The label file {}!'.format(label))
-        im_height, im_width, _ = im.shape
-        label_height, label_width = label.shape
-        if im_height != label_height or im_width != label_width:
-            raise Exception(
-                "The height or width of the image is not same as the label")
-        return (im, label)
 
     def _get_shape(self):
         max_height = max(self.im_height_list)
@@ -127,48 +96,25 @@ class Seg:
                         im_pixel_info[c][v] = n
                     else:
                         im_pixel_info[c][v] += n
-        mode = osp.split(self.file_list_path)[-1].split('.')[0]
-        with open(
-                osp.join(self.data_dir,
-                         '{}_image_pixel_info.pkl'.format(mode)), 'wb') as f:
-            pickle.dump(im_pixel_info, f)
-
-        import matplotlib.pyplot as plt
-        plot_id = (channel // 3 + 1) * 100 + 31
-        for c in range(channel):
-            if c > 8:
-                continue
-            plt.subplot(plot_id + c)
-            plt.bar(im_pixel_info[c].keys(),
-                    im_pixel_info[c].values(),
-                    width=1,
-                    log=True)
-            plt.xlabel('image pixel value')
-            plt.ylabel('number')
-            plt.title('channel={}'.format(c))
-        plt.savefig(
-            osp.join(self.data_dir, '{}_image_pixel_info.png'.format(mode)),
-            dpi=800)
-        plt.close()
         return im_pixel_info
 
     def _get_mean_std(self):
         im_mean = np.asarray(self.im_mean_list)
         im_mean = im_mean.sum(axis=0)
         im_mean = im_mean / len(self.file_list)
-        im_mean /= 255.
+        im_mean /= self.max_im_value - self.min_im_value
 
         im_std = np.asarray(self.im_std_list)
         im_std = im_std.sum(axis=0)
         im_std = im_std / len(self.file_list)
-        im_std /= 255.
+        im_std /= self.max_im_value - self.min_im_value
 
         return (im_mean, im_std)
 
     def _get_image_info(self, start, end):
         for id in range(start, end):
             full_path_im, full_path_label = self.file_list[id]
-            image, label = self.decode_image(full_path_im, full_path_label)
+            image, label = Compose.decode_image(full_path_im, full_path_label)
 
             height, width, channel = image.shape
             self.im_height_list[id] = height
@@ -176,9 +122,9 @@ class Seg:
             self.im_channel_list[id] = channel
 
             self.im_mean_list[
-                id] = [np.mean(image[:, :, c]) for c in range(channel)]
+                id] = [image[:, :, c].mean() for c in range(channel)]
             self.im_std_list[
-                id] = [np.mean(image[:, :, c]) for c in range(channel)]
+                id] = [image[:, :, c].std() for c in range(channel)]
             for c in range(channel):
                 unique, counts = np.unique(image[:, :, c], return_counts=True)
                 self.im_value_list[id].extend([unique])
@@ -192,7 +138,7 @@ class Seg:
                               clip_max_value):
         for id in range(start, end):
             full_path_im, full_path_label = self.file_list[id]
-            image, label = self.decode_image(full_path_im, full_path_label)
+            image, label = Compose.decode_image(full_path_im, full_path_label)
             for c in range(self.channel_num):
                 np.clip(
                     image[:, :, c],
@@ -219,7 +165,6 @@ class Seg:
         self.label_value_num_list = [[] for i in range(len(self.file_list))]
 
         num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
-        num_workers = 6
         threads = []
         one_worker_file = len(self.file_list) // num_workers
         for i in range(num_workers):
@@ -228,39 +173,41 @@ class Seg:
                 i + 1) if i < num_workers - 1 else len(self.file_list)
             t = threading.Thread(
                 target=self._get_image_info, args=(start, end))
-            print("====", len(self.file_list), start, end)
-            #t.daemon = True
             threads.append(t)
         for t in threads:
             t.start()
         for t in threads:
             t.join()
-        print('ok')
-        import time
-        import sys
-        sys.exit(0)
-        time.sleep(1000000)
-        return
 
-        #self._get_image_info(0, len(self.file_list))
         unique, counts = np.unique(self.im_channel_list, return_counts=True)
-        print('==== unique')
         if len(unique) > 1:
             raise Exception("There are {} kinds of image channels: {}.".format(
                 len(unique), unique[:]))
         self.channel_num = unique[0]
         shape_info = self._get_shape()
-        print('==== shape_info')
         self.max_height = shape_info['max_height']
         self.max_width = shape_info['max_width']
         self.min_height = shape_info['min_height']
         self.min_width = shape_info['min_width']
         self.label_pixel_info = self._get_label_pixel_info()
-        print('==== label_pixel_info')
         self.im_pixel_info = self._get_image_pixel_info()
-        print('==== im_pixel_info')
-        im_mean, im_std = self._get_mean_std()
-        print('==== get_mean_std')
+        mode = osp.split(self.file_list_path)[-1].split('.')[0]
+        import matplotlib.pyplot as plt
+        for c in range(self.channel_num):
+            plt.figure()
+            plt.bar(self.im_pixel_info[c].keys(),
+                    self.im_pixel_info[c].values(),
+                    width=1,
+                    log=True)
+            plt.xlabel('image pixel value')
+            plt.ylabel('number')
+            plt.title('channel={}'.format(c))
+            plt.savefig(
+                osp.join(self.data_dir,
+                         '{}_channel{}_distribute.png'.format(mode, c)),
+                dpi=100)
+            plt.close()
+
         max_im_value = list()
         min_im_value = list()
         for c in range(self.channel_num):
@@ -269,70 +216,78 @@ class Seg:
         self.max_im_value = np.asarray(max_im_value)
         self.min_im_value = np.asarray(min_im_value)
 
+        im_mean, im_std = self._get_mean_std()
+
+        info = {
+            'channel_num': self.channel_num,
+            'image_pixel': self.im_pixel_info,
+            'label_pixel': self.label_pixel_info,
+            'file_num': len(self.file_list),
+            'max_height': self.max_height,
+            'max_width': self.max_width,
+            'min_height': self.min_height,
+            'min_width': self.min_width,
+            'max_image_value': self.max_im_value,
+            'min_image_value': self.min_im_value
+        }
+        saved_pkl_file = osp.join(self.data_dir,
+                                  '{}_infomation.pkl'.format(mode))
+        with open(osp.join(saved_pkl_file), 'wb') as f:
+            pickle.dump(info, f)
+
         logging.info(
             "############## The analysis results are as follows ##############\n"
         )
         logging.info("{} samples in file {}\n".format(
             len(self.file_list), self.file_list_path))
-        logging.info("Maximal image height: {} Maximal image width: {}.\n".
-                     format(self.max_height, self.max_width))
         logging.info("Minimal image height: {} Minimal image width: {}.\n".
                      format(self.min_height, self.min_width))
+        logging.info("Maximal image height: {} Maximal image width: {}.\n".
+                     format(self.max_height, self.max_width))
         logging.info("Image channel is {}.\n".format(self.channel_num))
         logging.info(
-            "Image mean value: {} Image standard deviation: {} (normalized by 255, sorted by a BGR format).\n".
-            format(im_mean, im_std))
+            "Minimal image value: {} Maximal image value: {} (arranged in 0-{} channel order) \n".
+            format(self.min_im_value, self.max_im_value, self.channel_num))
+        logging.info(
+            "Image pixel distribution of each channel is saved with 'distribute.png' in the {}"
+            .format(self.data_dir))
+        logging.info(
+            "Image mean value: {} Image standard deviation: {} (normalized by the (max_im_value - min_im_value), arranged in 0-{} channel order).\n".
+            format(im_mean, im_std, self.channel_num))
         logging.info(
             "Label pixel information is shown in a format of (label_id, the number of label_id, the ratio of label_id):"
         )
         for v, (n, r) in self.label_pixel_info.items():
             logging.info("({}, {}, {})".format(v, n, r))
-        mode = osp.split(self.file_list_path)[-1].split('.')[0]
-        saved_pkl_file = osp.join(self.data_dir,
-                                  '{}_image_pixel_info.pkl'.format(mode))
-        saved_png_file = osp.join(self.data_dir,
-                                  '{}_image_pixel_info.png'.format(mode))
-        logging.info(
-            "Image pixel information is saved in the file '{}' and shown in the file '{}'".
-            format(saved_pkl_file, saved_png_file))
 
-    def cal_clipvalue_ratio(self, clip_min_value, clip_max_value):
-        if len(clip_min_value) != self.channel_num or len(
-                clip_max_value) != self.channel_num:
+        logging.info("Dataset information is saved in {}".format(
+            saved_pkl_file))
+
+    def cal_clipped_mean_std(self, clip_min_value, clip_max_value,
+                             data_info_file):
+        with open(data_info_file, 'rb') as f:
+            im_info = pickle.load(f)
+        channel_num = im_info['channel_num']
+        min_im_value = im_info['min_image_value']
+        max_im_value = im_info['max_image_value']
+        im_pixel_info = im_info['image_pixel']
+
+        if len(clip_min_value) != channel_num or len(
+                clip_max_value) != channel_num:
             raise Exception(
                 "The length of clip_min_value or clip_max_value should be equal to the number of image channel {}."
-                .format(self.channle_num))
-        for c in range(self.channel_num):
-            if clip_min_value[c] < self.min_im_value[c] or clip_min_value[
-                    c] > self.max_im_value[c]:
+                .format(channle_num))
+        for c in range(channel_num):
+            if clip_min_value[c] < min_im_value[c] or clip_min_value[
+                    c] > max_im_value[c]:
                 raise Exception(
                     "Clip_min_value of the channel {} is not in [{}, {}]".
-                    format(c, self.min_im_value[c], self.max_im_value[c]))
-            if clip_max_value[c] < self.min_im_value[c] or clip_max_value[
-                    c] > self.max_im_value[c]:
+                    format(c, min_im_value[c], max_im_value[c]))
+            if clip_max_value[c] < min_im_value[c] or clip_max_value[
+                    c] > max_im_value[c]:
                 raise Exception(
                     "Clip_max_value of the channel {} is not in [{}, {}]".
-                    format(c, self.min_im_value[c], self.max_im_value[c]))
-            clip_pixel_num = 0
-            pixel_num = sum(self.im_pixel_info[c].values())
-            for v, n in self.im_pixel_info[c].items():
-                if v < clip_min_value[c] or v > clip_max_value[c]:
-                    clip_pixel_num += n
-            logging.info("Channel {}, the ratio of pixels to be clipped = {}".
-                         format(c, clip_pixel_num / pixel_num))
-
-    def cal_clipped_mean_std(self, clip_min_value, clip_max_value):
-        for c in range(self.channel_num):
-            if clip_min_value[c] < self.min_im_value[c] or clip_min_value[
-                    c] > self.max_im_value[c]:
-                raise Exception(
-                    "Clip_min_value of the channel {} is not in [{}, {}]".
-                    format(c, self.min_im_value[c], self.max_im_value[c]))
-            if clip_max_value[c] < self.min_im_value[c] or clip_max_value[
-                    c] > self.max_im_value[c]:
-                raise Exception(
-                    "Clip_max_value of the channel {} is not in [{}, {}]".
-                    format(c, self.min_im_value[c], self.max_im_value[c]))
+                    format(c, min_im_value[c], self.max_im_value[c]))
 
         self.clipped_im_mean_list = [[] for i in range(len(self.file_list))]
         self.clipped_im_std_list = [[] for i in range(len(self.file_list))]
@@ -340,6 +295,7 @@ class Seg:
         num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
         threads = []
         one_worker_file = len(self.file_list) // num_workers
+        self.channel_num = channel_num
         for i in range(num_workers):
             start = one_worker_file * i
             end = one_worker_file * (
@@ -349,9 +305,9 @@ class Seg:
                 args=(start, end, clip_min_value, clip_max_value))
             threads.append(t)
         for t in threads:
-            t.setDaemon(True)
             t.start()
-        t.join()
+        for t in threads:
+            t.join()
 
         im_mean = np.asarray(self.clipped_im_mean_list)
         im_mean = im_mean.sum(axis=0)
@@ -361,6 +317,15 @@ class Seg:
         im_std = im_std.sum(axis=0)
         im_std = im_std / len(self.file_list)
 
+        for c in range(channel_num):
+            clip_pixel_num = 0
+            pixel_num = sum(im_pixel_info[c].values())
+            for v, n in im_pixel_info[c].items():
+                if v < clip_min_value[c] or v > clip_max_value[c]:
+                    clip_pixel_num += n
+            logging.info("Channel {}, the ratio of pixels to be clipped = {}".
+                         format(c, clip_pixel_num / pixel_num))
+
         logging.info(
-            "Image mean value: {} Image standard deviation: {} (normalized by (clip_max_value - clip_min_value)).\n".
-            format(im_mean, im_std))
+            "Image mean value: {} Image standard deviation: {} (normalized by (clip_max_value - clip_min_value), arranged in 0-{} channel order).\n".
+            format(im_mean, im_std, self.channel_num))

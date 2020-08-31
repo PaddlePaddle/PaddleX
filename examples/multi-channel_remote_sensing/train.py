@@ -16,7 +16,6 @@
 import os.path as osp
 import argparse
 from paddlex.seg import transforms
-import paddlex.remotesensing.transforms as rs_transforms
 import paddlex as pdx
 
 
@@ -26,6 +25,24 @@ def parse_args():
         '--data_dir',
         dest='data_dir',
         help='dataset directory',
+        default=None,
+        type=str)
+    parser.add_argument(
+        '--train_file_list',
+        dest='train_file_list',
+        help='train file_list',
+        default=None,
+        type=str)
+    parser.add_argument(
+        '--eval_file_list',
+        dest='eval_file_list',
+        help='eval file_list',
+        default=None,
+        type=str)
+    parser.add_argument(
+        '--label_list',
+        dest='label_list',
+        help='label_list file',
         default=None,
         type=str)
     parser.add_argument(
@@ -93,6 +110,9 @@ def parse_args():
 
 args = parse_args()
 data_dir = args.data_dir
+train_list = args.train_file_list
+val_list = args.eval_file_list
+label_list = args.label_list
 save_dir = args.save_dir
 num_classes = args.num_classes
 channel = args.channel
@@ -110,26 +130,18 @@ train_transforms = transforms.Compose([
     transforms.RandomHorizontalFlip(0.5),
     transforms.ResizeStepScaling(0.5, 2.0, 0.25),
     transforms.RandomPaddingCrop(im_padding_value=[1000] * channel),
-    rs_transforms.Clip(
+    transforms.Clip(
         min_val=clip_min_value, max_val=clip_max_value),
     transforms.Normalize(
         min_val=clip_min_value, max_val=clip_max_value, mean=mean, std=std),
 ])
-
-train_transforms.decode_image = rs_transforms.decode_image
 
 eval_transforms = transforms.Compose([
-    rs_transforms.Clip(
+    transforms.Clip(
         min_val=clip_min_value, max_val=clip_max_value),
     transforms.Normalize(
         min_val=clip_min_value, max_val=clip_max_value, mean=mean, std=std),
 ])
-
-eval_transforms.decode_image = rs_transforms.decode_image
-
-train_list = osp.join(data_dir, 'train.txt')
-val_list = osp.join(data_dir, 'val.txt')
-label_list = osp.join(data_dir, 'labels.txt')
 
 train_dataset = pdx.datasets.SegDataset(
     data_dir=data_dir,
