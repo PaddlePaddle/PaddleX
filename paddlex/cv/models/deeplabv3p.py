@@ -54,6 +54,8 @@ class DeepLabv3p(BaseAPI):
         pooling_crop_size (list): 当backbone为MobileNetV3_large_x1_0_ssld时，需设置为训练过程中模型输入大小, 格式为[W, H]。
             在encoder模块中获取图像平均值时被用到，若为None，则直接求平均值；若为模型输入大小，则使用'pool'算子得到平均值。
             默认值为None。
+        input_channel (int): 输入图像通道数。默认值3。
+
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: backbone取值不在['Xception65', 'Xception41', 'MobileNetV2_x0.25',
@@ -65,7 +67,6 @@ class DeepLabv3p(BaseAPI):
 
     def __init__(self,
                  num_classes=2,
-                 input_channel=3,
                  backbone='MobileNetV2_x1.0',
                  output_stride=16,
                  aspp_with_sep_conv=True,
@@ -76,7 +77,8 @@ class DeepLabv3p(BaseAPI):
                  use_dice_loss=False,
                  class_weight=None,
                  ignore_index=255,
-                 pooling_crop_size=None):
+                 pooling_crop_size=None,
+                 input_channel=3):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -115,7 +117,6 @@ class DeepLabv3p(BaseAPI):
 
         self.backbone = backbone
         self.num_classes = num_classes
-        self.input_channel = input_channel
         self.use_bce_loss = use_bce_loss
         self.use_dice_loss = use_dice_loss
         self.class_weight = class_weight
@@ -151,6 +152,7 @@ class DeepLabv3p(BaseAPI):
             if self.output_is_logits:
                 self.conv_filters = self.num_classes
             self.backbone_lr_mult_list = [0.15, 0.35, 0.65, 0.85, 1]
+        self.input_channel = input_channel
 
     def _get_backbone(self, backbone):
         def mobilenetv2(backbone):
@@ -217,7 +219,6 @@ class DeepLabv3p(BaseAPI):
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.DeepLabv3p(
             self.num_classes,
-            input_channel=self.input_channel,
             mode=mode,
             backbone=self._get_backbone(self.backbone),
             output_stride=self.output_stride,
@@ -239,7 +240,8 @@ class DeepLabv3p(BaseAPI):
             add_image_level_feature=self.add_image_level_feature,
             use_sum_merge=self.use_sum_merge,
             conv_filters=self.conv_filters,
-            output_is_logits=self.output_is_logits)
+            output_is_logits=self.output_is_logits,
+            input_channel=self.input_channel)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()

@@ -33,6 +33,7 @@ class UNet(DeepLabv3p):
             自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，
             即平时使用的交叉熵损失函数。
         ignore_index (int): label上忽略的值，label为ignore_index的像素不参与损失函数的计算。默认255。
+        input_channel (int): 输入图像通道数。默认值3。
 
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
@@ -43,12 +44,12 @@ class UNet(DeepLabv3p):
 
     def __init__(self,
                  num_classes=2,
-                 input_channel=3,
                  upsample_mode='bilinear',
                  use_bce_loss=False,
                  use_dice_loss=False,
                  class_weight=None,
-                 ignore_index=255):
+                 ignore_index=255,
+                 input_channel=3):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -72,7 +73,6 @@ class UNet(DeepLabv3p):
                     'Expect class_weight is a list or string but receive {}'.
                     format(type(class_weight)))
         self.num_classes = num_classes
-        self.input_channel = input_channel
         self.upsample_mode = upsample_mode
         self.use_bce_loss = use_bce_loss
         self.use_dice_loss = use_dice_loss
@@ -80,18 +80,19 @@ class UNet(DeepLabv3p):
         self.ignore_index = ignore_index
         self.labels = None
         self.fixed_input_shape = None
+        self.input_channel = input_channel
 
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.UNet(
             self.num_classes,
-            input_channel=self.input_channel,
             mode=mode,
             upsample_mode=self.upsample_mode,
             use_bce_loss=self.use_bce_loss,
             use_dice_loss=self.use_dice_loss,
             class_weight=self.class_weight,
             ignore_index=self.ignore_index,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            input_channel=self.input_channel)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()

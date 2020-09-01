@@ -21,6 +21,8 @@ import numpy as np
 from PIL import Image
 import cv2
 import imghdr
+import six
+import sys
 from collections import OrderedDict
 
 import paddlex.utils.logging as logging
@@ -67,14 +69,15 @@ class Compose(SegTransform):
         img_format = imghdr.what(img_path)
         name, ext = osp.splitext(img_path)
         if img_format == 'tiff' or ext == '.img':
-            import gdal
-            gdal.UseExceptions()
-            gdal.PushErrorHandler('CPLQuietErrorHandler')
-
             try:
-                dataset = gdal.Open(img_path)
+                import gdal
             except:
-                logging.error(gdal.GetLastErrorMsg())
+                six.reraise(*sys.exc_info())
+                raise Exception(
+                    "Please refer to https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/multi-channel_remote_sensing/README.md to install gdal"
+                )
+
+            dataset = gdal.Open(img_path)
             if dataset == None:
                 raise Exception('Can not open', img_path)
             im_data = dataset.ReadAsArray()

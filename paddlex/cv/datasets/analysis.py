@@ -40,11 +40,11 @@ class Seg:
 
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
-                if line.count(" ") > 1:
+                items = line.strip().split()
+                if len(items) > 2:
                     raise Exception(
                         "A space is defined as the separator, but it exists in image or label name {}."
                         .format(line))
-                items = line.strip().split()
                 items[0] = path_normalization(items[0])
                 items[1] = path_normalization(items[1])
                 full_path_im = osp.join(data_dir, items[0])
