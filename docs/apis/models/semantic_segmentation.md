@@ -110,6 +110,34 @@ batch_predict(self, img_file_list, transforms=None):
 > > - **dict**: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
 
 
+### overlap_tile_predict
+
+```
+overlap_tile_predict(self, img_file, tile_size=[512, 512], pad_size=[64, 64], batch_size=32, transforms=None)
+```
+
+> DeepLabv3p模型的滑动预测接口, 支持有重叠和无重叠两种方式。
+
+> **无重叠的滑动窗口预测**：在输入图片上以固定大小的窗口滑动，分别对每个窗口下的图像进行预测，最后将各窗口的预测结果拼接成输入图片的预测结果。**使用时需要把参数`pad_size`设置为`[0, 0]`**。
+
+> **有重叠的滑动窗口预测**：在Unet论文中，作者提出一种有重叠的滑动窗口预测策略（Overlap-tile strategy）来消除拼接处的裂痕感。对各滑动窗口预测时，会向四周扩展一定的面积，对扩展后的窗口进行预测，例如下图中的蓝色部分区域，到拼接时只取各窗口中间部分的预测结果，例如下图中的黄色部分区域。位于输入图像边缘处的窗口，其扩展面积下的像素则通过将边缘部分像素镜像填补得到。
+
+![](../../../examples/remote_sensing/images/overlap_tile.png)
+
+> 需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`overlap_tile_predict`接口时，用户需要再重新定义test_transforms传入给`overlap_tile_predict`接口。
+
+> **参数**
+> >
+> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
+> > - **tile_size** (list|tuple): 滑动窗口的大小，该区域内用于拼接预测结果，格式为（W，H）。默认值为[512, 512]。
+> > - **pad_size** (list|tuple): 滑动窗口向四周扩展的大小，扩展区域内不用于拼接预测结果，格式为（W，H）。默认值为[64, 64]。
+> > - **batch_size** (int)：对窗口进行批量预测时的批量大小。默认值为32。
+> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+
+> **返回值**
+> >
+> > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
 
 ## paddlex.seg.UNet
 
@@ -133,6 +161,7 @@ paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, us
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
 > - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
+> - overlap_tile_predict 滑动窗口预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
 
 ## paddlex.seg.HRNet
 
@@ -156,6 +185,7 @@ paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=Fal
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
 > - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
+> - overlap_tile_predict 滑动窗预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
 
 ## paddlex.seg.FastSCNN
 
@@ -179,3 +209,4 @@ paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, cla
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
 > - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
+> - overlap_tile_predict 滑动窗预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)

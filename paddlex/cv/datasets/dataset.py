@@ -239,9 +239,8 @@ def generate_minibatch(batch_data, label_padding_value=255, mapper=None):
                 _, label_h, label_w = data[1].shape
                 padding_label[:, :label_h, :label_w] = data[1]
                 padding_batch.append((padding_im, padding_label))
-            elif len(data[1]) == 0 or isinstance(
-                    data[1][0],
-                    tuple) and data[1][0][0] in ['resize', 'padding']:
+            elif len(data[1]) == 0 or isinstance(data[1][0], tuple) and data[
+                    1][0][0] in ['origin_shape', 'resize', 'padding']:
                 # padding the image and insert 'padding' into `im_info`
                 # of segmentation during the infering phase
                 if len(data[1]) == 0 or 'padding' not in [

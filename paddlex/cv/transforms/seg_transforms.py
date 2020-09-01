@@ -723,28 +723,25 @@ class Padding(SegTransform):
             target_width = self.target_size[0]
         pad_height = target_height - im_height
         pad_width = target_width - im_width
-        if pad_height < 0 or pad_width < 0:
-            raise ValueError(
-                'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
-                .format(im_width, im_height, target_width, target_height))
-        else:
-            im = cv2.copyMakeBorder(
-                im,
+        pad_height = max(pad_height, 0)
+        pad_width = max(pad_width, 0)
+        im = cv2.copyMakeBorder(
+            im,
+            0,
+            pad_height,
+            0,
+            pad_width,
+            cv2.BORDER_CONSTANT,
+            value=self.im_padding_value)
+        if label is not None:
+            label = cv2.copyMakeBorder(
+                label,
                 0,
                 pad_height,
                 0,
                 pad_width,
                 cv2.BORDER_CONSTANT,
-                value=self.im_padding_value)
-            if label is not None:
-                label = cv2.copyMakeBorder(
-                    label,
-                    0,
-                    pad_height,
-                    0,
-                    pad_width,
-                    cv2.BORDER_CONSTANT,
-                    value=self.label_padding_value)
+                value=self.label_padding_value)
         if label is None:
             return (im, im_info)
         else:
