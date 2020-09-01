@@ -32,7 +32,6 @@ from . import slim
 from . import convertor
 from . import tools
 from . import deploy
-from . import remotesensing
 
 try:
     import pycocotools
