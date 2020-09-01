@@ -31,14 +31,14 @@ cd PaddleX/examples/remote_sensing/
 运行以下脚本，下载原始数据集，并完成数据集的切分：
 
 ```
-python3 prepare_data.py
+python prepare_data.py
 ```
 
 ## 模型训练
 
 分割模型选择Backbone为MobileNetv3_large_ssld的Deeplabv3模型，该模型兼备高性能高精度的优点。运行以下脚本，进行模型训练：
 ```
-python3 train.py
+python train.py
 ```
 
 也可以跳过模型训练步骤，直接下载预训练模型进行后续的模型预测和评估：
@@ -71,12 +71,12 @@ tar -xvf ccf_remote_model.tar.gz
 
 运行以下脚本使用有重叠的滑动窗口进行预测：
 ```
-python3 predict.py
+python predict.py
 ```
 
 ## 模型评估
 
 在训练过程中，每隔10个迭代轮数会评估一次模型在验证集的精度。由于已事先将原始大尺寸图片切分成小块，此时相当于使用无重叠的大图切小图预测方式，最优模型精度miou为80.58%。运行以下脚本，将采用有重叠的大图切小图的预测方式，重新评估原始大尺寸图片的模型精度，此时miou为81.52%。
 ```
-python3 eval.py
+python eval.py
 ```
