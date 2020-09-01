@@ -23,6 +23,7 @@ import yaml
 import copy
 import json
 import functools
+import multiprocessing as mp
 import paddlex.utils.logging as logging
 from paddlex.utils import seconds_to_hms
 from paddlex.utils.utils import EarlyStop
@@ -75,6 +76,16 @@ class BaseAPI:
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
         self.scope = fluid.global_scope()
+
+        # 线程池，在模型在预测时用于对输入数据以图片为单位进行并行处理
+        # 主要用于batch_predict接口
+        thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
+        self.thread_pool = mp.pool.ThreadPool(thread_num)
+
+    def reset_thread_pool(self, thread_num):
+        self.thread_pool.close()
+        self.thread_pool.join()
+        self.thread_pool = mp.pool.ThreadPool(thread_num)
 
     def _get_single_card_bs(self, batch_size):
         if batch_size % len(self.places) == 0:
@@ -356,23 +367,13 @@ class BaseAPI:
         ]
         test_outputs = list(self.test_outputs.values())
         with fluid.scope_guard(self.scope):
-            if self.__class__.__name__ == 'MaskRCNN':
-                from paddlex.utils.save import save_mask_inference_model
-                save_mask_inference_model(
-                    dirname=save_dir,
-                    executor=self.exe,
-                    params_filename='__params__',
-                    feeded_var_names=test_input_names,
-                    target_vars=test_outputs,
-                    main_program=self.test_prog)
-            else:
-                fluid.io.save_inference_model(
-                    dirname=save_dir,
-                    executor=self.exe,
-                    params_filename='__params__',
-                    feeded_var_names=test_input_names,
-                    target_vars=test_outputs,
-                    main_program=self.test_prog)
+            fluid.io.save_inference_model(
+                dirname=save_dir,
+                executor=self.exe,
+                params_filename='__params__',
+                feeded_var_names=test_input_names,
+                target_vars=test_outputs,
+                main_program=self.test_prog)
         model_info = self.get_model_info()
         model_info['status'] = 'Infer'
 

@@ -79,7 +79,6 @@ cd PaddleX/examples/meter_reader/
 | save_dir	| 保存可视化结果的路径, 默认值为"output"|
 | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
 | seg_batch_size | 分割的批量大小，默认为2 |
-| seg_thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
 | use_camera | 是否使用摄像头采集图片，默认为False |
 | camera_id | 摄像头设备ID，默认值为0 |
 | use_erode | 是否使用图像腐蚀对分割预测图进行细分，默认为False |

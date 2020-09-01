@@ -105,12 +105,6 @@ def parse_args():
         help="Segmentation batch size",
         type=int,
         default=2)
-    parser.add_argument(
-        '--seg_thread_num',
-        dest='seg_thread_num',
-        help="Thread number of segmentation preprocess",
-        type=int,
-        default=2)
 
     return parser.parse_args()
 
@@ -143,8 +137,7 @@ class MeterReader:
                 use_erode=True,
                 erode_kernel=4,
                 score_threshold=0.5,
-                seg_batch_size=2,
-                seg_thread_num=2):
+                seg_batch_size=2):
         if isinstance(im_file, str):
             im = cv2.imread(im_file).astype('float32')
         else:
@@ -190,8 +183,7 @@ class MeterReader:
                 meter_images.append(resized_meters[j - i])
             result = self.segmenter.batch_predict(
                 transforms=self.seg_transforms,
-                img_file_list=meter_images,
-                thread_num=seg_thread_num)
+                img_file_list=meter_images)
             if use_erode:
                 kernel = np.ones((erode_kernel, erode_kernel), np.uint8)
                 for i in range(len(result)):
@@ -334,7 +326,7 @@ def infer(args):
         for im_file in image_lists:
             meter_reader.predict(im_file, args.save_dir, args.use_erode,
                                  args.erode_kernel, args.score_threshold,
-                                 args.seg_batch_size, args.seg_thread_num)
+                                 args.seg_batch_size)
     elif args.use_camera:
         cap_video = cv2.VideoCapture(args.camera_id)
         if not cap_video.isOpened():
@@ -347,7 +339,7 @@ def infer(args):
             if ret:
                 meter_reader.predict(frame, args.save_dir, args.use_erode,
                                      args.erode_kernel, args.score_threshold,
-                                     args.seg_batch_size, args.seg_thread_num)
+                                     args.seg_batch_size)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:
