@@ -22,7 +22,7 @@
 #include "include/paddlex/paddlex.h"
 
 DEFINE_string(model_dir, "", "Path of inference model");
-DEFINE_string(cfg_dir, "", "Path of inference model");
+DEFINE_string(cfg_file, "", "Path of PaddelX model yml file");
 DEFINE_string(device, "CPU", "Device name");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image list file");
@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
     std::cerr << "--model_dir need to be defined" << std::endl;
     return -1;
   }
-  if (FLAGS_cfg_dir == "") {
-    std::cerr << "--cfg_dir need to be defined" << std::endl;
+  if (FLAGS_cfg_file == "") {
+    std::cerr << "--cfg_file need to be defined" << std::endl;
     return -1;
   }
   if (FLAGS_image == "" & FLAGS_image_list == "") {
@@ -44,11 +44,11 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // 加载模型
+  // load model
   PaddleX::Model model;
-  model.Init(FLAGS_model_dir, FLAGS_cfg_dir, FLAGS_device);
+  model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_device);
 
-  // 进行预测
+  // predict
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {

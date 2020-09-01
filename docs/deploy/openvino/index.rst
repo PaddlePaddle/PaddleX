@@ -6,6 +6,8 @@ OpenVINO部署
    :maxdepth: 2
    :caption: 文档目录:
 
+   introduction.md
    windows.md
    linux.md
-   intel_movidius.md
+   python.md
+   export_openvino_model.md 

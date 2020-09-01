@@ -47,7 +47,7 @@ cv::Mat Visualize(const cv::Mat& img,
                             boxes[i].coordinate[2],
                             boxes[i].coordinate[3]);
 
-    // 生成预测框和标题
+    // draw box and title
     std::string text = boxes[i].category;
     int c1 = colormap[3 * boxes[i].category_id + 0];
     int c2 = colormap[3 * boxes[i].category_id + 1];
@@ -63,13 +63,13 @@ cv::Mat Visualize(const cv::Mat& img,
     origin.x = roi.x;
     origin.y = roi.y;
 
-    // 生成预测框标题的背景
+    // background
     cv::Rect text_back = cv::Rect(boxes[i].coordinate[0],
                                   boxes[i].coordinate[1] - text_size.height,
                                   text_size.width,
                                   text_size.height);
 
-    // 绘图和文字
+    // draw
     cv::rectangle(vis_img, roi, roi_color, 2);
     cv::rectangle(vis_img, text_back, roi_color, -1);
     cv::putText(vis_img,
@@ -80,18 +80,16 @@ cv::Mat Visualize(const cv::Mat& img,
                 cv::Scalar(255, 255, 255),
                 thickness);
 
-    // 生成实例分割mask
+    // mask
     if (boxes[i].mask.data.size() == 0) {
       continue;
     }
-    cv::Mat bin_mask(result.mask_resolution,
-                     result.mask_resolution,
+    std::vector<float> mask_data;
+    mask_data.assign(boxes[i].mask.data.begin(), boxes[i].mask.data.end());
+    cv::Mat bin_mask(boxes[i].mask.shape[1],
+                     boxes[i].mask.shape[0],
                      CV_32FC1,
                      boxes[i].mask.data.data());
-    cv::resize(bin_mask,
-               bin_mask,
-               cv::Size(boxes[i].mask.shape[0], boxes[i].mask.shape[1]));
-    cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
     cv::Mat full_mask = cv::Mat::zeros(vis_img.size(), CV_8UC1);
     bin_mask.copyTo(full_mask(roi));
     cv::Mat mask_ch[3];
