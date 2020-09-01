@@ -32,7 +32,6 @@ from . import slim
 from . import convertor
 from . import tools
 from . import deploy
-from . import remotesensing
 
 try:
     import pycocotools
@@ -45,8 +44,8 @@ except:
     )
 
 import paddlehub as hub
-if hub.version.hub_version < '1.6.2':
-    raise Exception("[ERROR] paddlehub >= 1.6.2 is required")
+if hub.version.hub_version < '1.8.2':
+    raise Exception("[ERROR] paddlehub >= 1.8.2 is required")
 
 env_info = get_environ_info()
 load_model = cv.models.load_model
