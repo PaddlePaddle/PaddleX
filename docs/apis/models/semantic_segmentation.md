@@ -3,8 +3,7 @@
 ## paddlex.seg.DeepLabv3p
 
 ```python
-paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride=16, aspp_with_sep_conv=True, decoder_use_sep_conv=True, encoder_with_aspp=True, enable_decoder=True, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, pooling_crop_size=None)
-
+paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride=16, aspp_with_sep_conv=True, decoder_use_sep_conv=True, encoder_with_aspp=True, enable_decoder=True, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, pooling_crop_size=None, input_channel=3)
 ```
 
 > 构建DeepLabv3p分割器。
@@ -23,6 +22,7 @@ paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride
 > > - **class_weight** (list/str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
 > > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
 > > - **pooling_crop_size** (int)：当backbone为`MobileNetV3_large_x1_0_ssld`时，需设置为训练过程中模型输入大小，格式为[W, H]。例如模型输入大小为[512, 512], 则`pooling_crop_size`应该设置为[512, 512]。在encoder模块中获取图像平均值时被用到，若为None，则直接求平均值；若为模型输入大小，则使用`avg_pool`算子得到平均值。默认值None。
+> > - **input_channel** (int): 输入图像通道数。默认值3。
 
 ### train
 
@@ -114,7 +114,7 @@ batch_predict(self, img_file_list, transforms=None):
 ## paddlex.seg.UNet
 
 ```python
-paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255)
+paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, input_channel=3)
 ```
 
 > 构建UNet分割器。
@@ -127,6 +127,7 @@ paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, us
 > > - **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。当use_bce_loss和use_dice_loss都为False时，使用交叉熵损失函数。默认False。
 > > - **class_weight** (list/str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
 > > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
+> > - **input_channel** (int): 输入图像通道数。默认值3。
 
 > - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
@@ -136,7 +137,7 @@ paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, us
 ## paddlex.seg.HRNet
 
 ```python
-paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255)
+paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, input_channel=3)
 ```
 
 > 构建HRNet分割器。
@@ -149,6 +150,7 @@ paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=Fal
 > > - **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。当use_bce_loss和use_dice_loss都为False时，使用交叉熵损失函数。默认False。
 > > - **class_weight** (list|str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
 > > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
+> > - **input_channel** (int): 输入图像通道数。默认值3。
 
 > - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
@@ -158,7 +160,7 @@ paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=Fal
 ## paddlex.seg.FastSCNN
 
 ```python
-paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, multi_loss_weight=[1.0])
+paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, multi_loss_weight=[1.0], input_channel=3)
 ```
 
 > 构建FastSCNN分割器。
@@ -171,6 +173,7 @@ paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, cla
 > > - **class_weight** (list/str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
 > > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
 > > - **multi_loss_weight** (list): 多分支上的loss权重。默认计算一个分支上的loss，即默认值为[1.0]。也支持计算两个分支或三个分支上的loss，权重按[fusion_branch_weight, higher_branch_weight, lower_branch_weight]排列，fusion_branch_weight为空间细节分支和全局上下文分支融合后的分支上的loss权重，higher_branch_weight为空间细节分支上的loss权重，lower_branch_weight为全局上下文分支上的loss权重，若higher_branch_weight和lower_branch_weight未设置则不会计算这两个分支上的loss。
+> > - **input_channel** (int): 输入图像通道数。默认值3。
 
 > - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
 > - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)

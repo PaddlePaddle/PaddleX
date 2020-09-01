@@ -36,7 +36,7 @@ class PPYOLO(BaseAPI):
 
     Args:
         num_classes (int): 类别数。默认为80。
-        backbone (str): PPYOLO的backbone网络，取值范围为['ResNet50_vd']。默认为'ResNet50_vd'。
+        backbone (str): PPYOLO的backbone网络，取值范围为['ResNet50_vd_ssld']。默认为'ResNet50_vd_ssld'。
         with_dcn_v2 (bool): Backbone是否使用DCNv2结构。默认为True。
         anchors (list|tuple): anchor框的宽度和高度，为None时表示使用默认值
                     [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],

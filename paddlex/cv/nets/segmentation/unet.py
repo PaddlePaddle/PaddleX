@@ -64,6 +64,7 @@ class UNet(object):
 
     def __init__(self,
                  num_classes,
+                 input_channel=3,
                  mode='train',
                  upsample_mode='bilinear',
                  use_bce_loss=False,
@@ -92,6 +93,7 @@ class UNet(object):
                     'Expect class_weight is a list or string but receive {}'.
                     format(type(class_weight)))
         self.num_classes = num_classes
+        self.input_channel = input_channel
         self.mode = mode
         self.upsample_mode = upsample_mode
         self.use_bce_loss = use_bce_loss
@@ -232,13 +234,16 @@ class UNet(object):
 
         if self.fixed_input_shape is not None:
             input_shape = [
-                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+                None, self.input_channel, self.fixed_input_shape[1],
+                self.fixed_input_shape[0]
             ]
             inputs['image'] = fluid.data(
                 dtype='float32', shape=input_shape, name='image')
         else:
             inputs['image'] = fluid.data(
-                dtype='float32', shape=[None, 3, None, None], name='image')
+                dtype='float32',
+                shape=[None, self.input_channel, None, None],
+                name='image')
         if self.mode == 'train':
             inputs['label'] = fluid.data(
                 dtype='int32', shape=[None, 1, None, None], name='label')
