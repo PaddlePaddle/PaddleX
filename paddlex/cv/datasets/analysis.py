@@ -265,6 +265,9 @@ class Seg:
 
     def cal_clipped_mean_std(self, clip_min_value, clip_max_value,
                              data_info_file):
+        if not osp.exists(data_info_file):
+            raise Exception("Dataset information file {} does not exist.".
+                            format(data_info_file))
         with open(data_info_file, 'rb') as f:
             im_info = pickle.load(f)
         channel_num = im_info['channel_num']

@@ -18,7 +18,7 @@ import numpy as np
 from PIL import Image, ImageEnhance
 
 
-def normalize(im, mean, std, min_value, max_value):
+def normalize(im, mean, std, min_value=[0, 0, 0], max_value=[255, 255, 255]):
     # Rescaling (min-max normalization)
     range_value = [max_value[i] - min_value[i] for i in range(len(max_value))]
     im = (im - min_value) / range_value
