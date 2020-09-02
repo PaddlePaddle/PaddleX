@@ -48,6 +48,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
+- [PaddleX GUI安装环境说明](./docs/gui/download.md)
   
 
 ## 产品模块说明
