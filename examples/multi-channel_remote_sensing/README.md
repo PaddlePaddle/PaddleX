@@ -41,7 +41,7 @@ cd PaddleX/examples/channel_remote_sensing/
 遥感影像的格式多种多样，不同传感器产生的数据格式也可能不同。PaddleX现已兼容以下4种格式图片读取：
 
 - `tif`
-- `png`
+- `png`, `jpeg`, `bmp`
 - `img`
 - `npy`
 
