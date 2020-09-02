@@ -99,19 +99,19 @@ export CUDA_VISIBLE_DEVICES=
 * 预测单张图片
 
 ```shell
-python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image /path/to/meter_test/20190822_168.jpg --save_dir ./output --use_erode
+python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image /path/to/meter_test/20190822_168.jpg --save_dir ./output --use_erode
 ```
 
 * 预测多张图片
 
 ```shell
-python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image_dir /path/to/meter_test --save_dir ./output --use_erode
+python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image_dir /path/to/meter_test --save_dir ./output --use_erode
 ```
 
 * 开启摄像头预测
 
 ```shell
-python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --save_dir ./output --use_erode --use_camera
+python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --save_dir ./output --use_erode --use_camera
 ```
 
 ## <h2 id="4">推理部署</h2>
@@ -269,12 +269,12 @@ git clone https://github.com/PaddlePaddle/PaddleX
 
 * 表盘检测的训练
 ```
-python3 /path/to/PaddleX/examples/meter_reader/train_detection.py
+python /path/to/PaddleX/examples/meter_reader/train_detection.py
 ```
 * 指针和刻度分割的训练
 
 ```
-python3 /path/to/PaddleX/examples/meter_reader/train_segmentation.py
+python /path/to/PaddleX/examples/meter_reader/train_segmentation.py
 
 ```
 
