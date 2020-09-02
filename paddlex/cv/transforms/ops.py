@@ -26,7 +26,7 @@ def normalize(im, mean, std, min_value=[0, 0, 0], max_value=[255, 255, 255]):
     # Standardization (Z-score Normalization)
     im -= mean
     im /= std
-    return im
+    return im.astype('float32')
 
 
 def permute(im, to_bgr=False):
