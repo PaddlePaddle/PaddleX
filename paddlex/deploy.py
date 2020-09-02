@@ -30,7 +30,7 @@ class Predictor:
                  model_dir,
                  use_gpu=True,
                  gpu_id=0,
-                 use_mkl=False,
+                 use_mkl=True,
                  mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
@@ -94,7 +94,7 @@ class Predictor:
                          use_gpu=True,
                          gpu_id=0,
                          use_mkl=False,
-                         mkl_thread_num=mp.cpu_count(),
+                         mkl_thread_num=4,
                          use_trt=False,
                          use_glog=False,
                          memory_optimize=True):
