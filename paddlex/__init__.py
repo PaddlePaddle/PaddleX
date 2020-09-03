@@ -43,6 +43,11 @@ except:
         "[WARNING] pycocotools install: https://paddlex.readthedocs.io/zh_CN/develop/install.html#pycocotools"
     )
 
+import paddle
+if paddle.__version__ == '0.0.0':
+    print("[NOTICE]\tYou are using paddlepaddle with version= 0.0.0")
+elif paddle.__version__ < '1.8.4':
+    raise Exception("[ERROR] paddlepaddle-gpu or paddlepaddle >= 1.8.4 is required")
 import paddlehub as hub
 if hub.version.hub_version < '1.8.2':
     raise Exception("[ERROR] paddlehub >= 1.8.2 is required")
