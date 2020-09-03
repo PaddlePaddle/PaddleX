@@ -16,6 +16,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import paddle
 from paddle import fluid
 try:
     from collections.abc import Sequence
@@ -67,19 +68,34 @@ class YOLOv3Loss(object):
                 scale_x_y = self.scale_x_y if not isinstance(
                     self.scale_x_y, Sequence) else self.scale_x_y[i]
                 anchor_mask = anchor_masks[i]
-                loss = fluid.layers.yolov3_loss(
-                    x=output,
-                    gt_box=gt_box,
-                    gt_label=gt_label,
-                    gt_score=gt_score,
-                    anchors=anchors,
-                    anchor_mask=anchor_mask,
-                    class_num=num_classes,
-                    ignore_thresh=self._ignore_thresh,
-                    downsample_ratio=self.downsample[i],
-                    use_label_smooth=self._label_smooth,
-                    scale_x_y=scale_x_y,
-                    name=prefix_name + "yolo_loss" + str(i))
+                if paddle.__version__ < '1.8.4' and paddle.__version__ != '0.0.0':
+                    loss = fluid.layers.yolov3_loss(
+                        x=output,
+                        gt_box=gt_box,
+                        gt_label=gt_label,
+                        gt_score=gt_score,
+                        anchors=anchors,
+                        anchor_mask=anchor_mask,
+                        class_num=num_classes,
+                        ignore_thresh=self._ignore_thresh,
+                        downsample_ratio=self.downsample[i],
+                        use_label_smooth=self._label_smooth,
+                        name=prefix_name + "yolo_loss" + str(i))
+                else:
+                    loss = fluid.layers.yolov3_loss(
+                        x=output,
+                        gt_box=gt_box,
+                        gt_label=gt_label,
+                        gt_score=gt_score,
+                        anchors=anchors,
+                        anchor_mask=anchor_mask,
+                        class_num=num_classes,
+                        ignore_thresh=self._ignore_thresh,
+                        downsample_ratio=self.downsample[i],
+                        use_label_smooth=self._label_smooth,
+                        scale_x_y=scale_x_y,
+                        name=prefix_name + "yolo_loss" + str(i))
+
 
                 losses.append(fluid.layers.reduce_mean(loss))
 
