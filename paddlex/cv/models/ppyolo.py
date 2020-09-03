@@ -18,6 +18,7 @@ import tqdm
 import os.path as osp
 import numpy as np
 from multiprocessing.pool import ThreadPool
+import paddle
 import paddle.fluid as fluid
 from paddle.fluid.layers.learning_rate_scheduler import _decay_step_counter
 from paddle.fluid.optimizer import ExponentialMovingAverage
@@ -122,6 +123,9 @@ class PPYOLO(BaseAPI):
         self.use_matrix_nms = use_matrix_nms
         self.use_ema = False
         self.with_dcn_v2 = with_dcn_v2
+
+        if paddle.__version__ < '1.8.4' and paddle.__version__ != '0.0.0':
+            raise Exception("PPYOLO requires paddlepaddle or paddlepaddle-gpu >= 1.8.4")
 
     def _get_backbone(self, backbone_name):
         if backbone_name.startswith('ResNet50_vd'):
