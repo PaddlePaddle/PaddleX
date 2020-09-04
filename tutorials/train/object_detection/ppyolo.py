@@ -52,7 +52,7 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=8,
     eval_dataset=eval_dataset,
-    learning_rate=0.0005,
+    learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
     save_dir='output/ppyolo',
     use_vdl=True)
