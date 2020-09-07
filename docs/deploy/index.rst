@@ -11,3 +11,5 @@
    server/index
    nvidia-jetson.md
    paddlelite/index
+   openvino/index
+   raspberry/index

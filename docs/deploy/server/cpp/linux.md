@@ -19,16 +19,15 @@
 
 ### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
 
-PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.8版本，以下提供了多个不同版本的Paddle预测库:
+PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.8.4版本，以下提供了多个不同版本的Paddle预测库:
 
-|  版本说明   | 预测库(1.8.2版本)  |
+|  版本说明   | 预测库(1.8.4版本)  |
 |  ----  | ----  |
-| ubuntu14.04_cpu_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-avx-mkl/fluid_inference.tgz) |
-| ubuntu14.04_cpu_avx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-avx-openblas/fluid_inference.tgz) |
-| ubuntu14.04_cpu_noavx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-cpu-noavx-openblas/fluid_inference.tgz) |
-| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
-| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz ) |
-| ubuntu14.04_cuda10.1_cudnn7.6_avx_mkl_trt6  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.8.2-gpu-cuda10.1-cudnn7.6-avx-mkl-trt6%2Ffluid_inference.tgz) |
+| ubuntu14.04_cpu_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cpu_avx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-avx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cpu_noavx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-noavx-openblas/fluid_inference.tgz) |
+| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
+| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz) |
 
 更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html)
 
@@ -42,7 +41,7 @@ fluid_inference
 └── version.txt # 版本和编译信息
 ```
 
-**注意:** 预编译版本除`nv-jetson-cuda10-cudnn7.5-trt5` 以外其它包都是基于`GCC 4.8.5`编译，使用高版本`GCC`可能存在 `ABI`兼容性问题，建议降级或[自行编译预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
+**注意:** 预编译版本除nv-jetson-cuda10-cudnn7.5-trt5 以外其它包都是基于`GCC 4.8.5`编译，使用高版本`GCC`可能存在 `ABI`兼容性问题，建议降级或[自行编译预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
 
 
 ### Step3: 编译
@@ -97,7 +96,7 @@ make
 ```
 **注意：** linux环境下编译会自动下载OPENCV, PaddleX-Encryption和YAML，如果编译环境无法访问外网，可手动下载：
 
-- [opencv3gcc4.8.tar.bz2](https://paddleseg.bj.bcebos.com/deploy/docker/opencv3gcc4.8.tar.bz2)
+- [opencv3.4.6gcc4.8ffmpeg.tar.gz2](https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2)
 - [paddlex-encryption.zip](https://bj.bcebos.com/paddlex/tools/paddlex-encryption.zip)
 - [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 
