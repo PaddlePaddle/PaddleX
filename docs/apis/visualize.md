@@ -131,8 +131,8 @@ paddlex.transforms.visualize(dataset,
 ```
 对数据预处理/增强中间结果进行可视化。
 可使用VisualDL查看中间结果：
-1. VisualDL启动方式: visualdl --logdir vdl_output --port 8001
-2. 浏览器打开 https://0.0.0.0:8001 即可，
+1. VisualDL启动方式: visualdl --logdir vdl_output/image_transforms --port 8001
+2. 浏览器打开 https://0.0.0.0:8001 ，在页面上面点击`『样本数据-图像』`即可。
     其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 
 ### 参数
