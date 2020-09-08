@@ -23,6 +23,7 @@ from paddlex.cv.transforms import build_transforms
 from paddlex.cv.models import BaseClassifier
 from paddlex.cv.models import PPYOLO, FasterRCNN, MaskRCNN
 from paddlex.cv.models import DeepLabv3p
+import paddlex.utils.logging as logging
 
 
 class Predictor:
@@ -108,9 +109,13 @@ class Predictor:
         else:
             config.disable_gpu()
         if use_mkl:
-            if self.model_name not in ["HRNet", "DeepLabv3p"]:
+            if self.model_name not in ["HRNet", "DeepLabv3p", "PPYOLO"]:
                 config.enable_mkldnn()
                 config.set_cpu_math_library_num_threads(mkl_thread_num)
+            else:
+                logging.warning(
+                    "HRNet/DeepLabv3p/PPYOLO are not supported for the use of mkldnn\n"
+                )
         if use_glog:
             config.enable_glog_info()
         else:

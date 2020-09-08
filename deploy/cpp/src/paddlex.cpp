@@ -66,9 +66,14 @@ void Model::create_predictor(const std::string& model_dir,
   if (key == "") {
     config.SetModel(model_file, params_file);
   }
-  if (use_mkl && name != "HRNet" && name != "DeepLabv3p") {
-    config.EnableMKLDNN();
-    config.SetCpuMathLibraryNumThreads(mkl_thread_num);
+  if (use_mkl) {
+    if (name != "HRNet" && name != "DeepLabv3p" && name != "PPYOLO") {
+        config.EnableMKLDNN();
+        config.SetCpuMathLibraryNumThreads(mkl_thread_num);
+    } else {
+        std::cerr << "HRNet/DeepLabv3p/PPYOLO are not supported "
+                  << "for the use of mkldnn" << std::endl;
+    }
   }
   if (use_gpu) {
     config.EnableUseGpu(100, gpu_id);
