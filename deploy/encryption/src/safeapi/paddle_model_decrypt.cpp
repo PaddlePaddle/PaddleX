@@ -18,9 +18,10 @@ int paddle_check_file_encrypted(const char* file_path) {
     return util::SystemUtils::check_file_encrypted(file_path);
 }
 
-std::string decrypt_file(const char* file_path, const char* key) {
-    int ret = paddle_check_file_encrypted(file_path);
+std::string decrypt_file_with_code(const char* file_path, const char* key, int* decrypt_code) {
+int ret = paddle_check_file_encrypted(file_path);
     if (ret != CODE_OK) {
+        *decrypt_code = ret;
         LOGD("[M]check file encrypted failed, code: %d", ret);
         return std::string();
     }
@@ -29,6 +30,7 @@ std::string decrypt_file(const char* file_path, const char* key) {
     std::string key_str = baidu::base::base64::base64_decode(std::string(key));
     int ret_check = util::SystemUtils::check_key_match(key_str.c_str(), file_path);
     if (ret_check != CODE_OK) {
+        *decrypt_code = ret_check;
         LOGD("[M]check key failed in decrypt_file, code: %d", ret_check);
         return std::string();
     }
@@ -44,6 +46,7 @@ std::string decrypt_file(const char* file_path, const char* key) {
     size_t data_len = 0;
     int ret_read_data = ioutil::read_with_pos(file_path, pos, &dataptr, &data_len);
     if (ret_read_data != CODE_OK) {
+        *decrypt_code = ret_read_data;
         LOGD("[M]read file failed, code = %d", ret_read_data);
         return std::string();
     }
@@ -51,6 +54,11 @@ std::string decrypt_file(const char* file_path, const char* key) {
     // decrypt model data
     size_t model_plain_len = data_len - AES_GCM_TAG_LENGTH;
     unsigned char* model_plain = (unsigned char*) malloc(sizeof(unsigned char) * model_plain_len);
+    if (model_plain == NULL) {
+        *decrypt_code = CODE_MALLOC_FAILED;
+        LOGD("model_plain malloc failed(decrypt_file), code: %d", CODE_MALLOC_FAILED);
+		return std::string();
+    }
 
     int ret_decrypt_file = 
         util::crypto::AesGcm::decrypt_aes_gcm(
@@ -64,12 +72,23 @@ std::string decrypt_file(const char* file_path, const char* key) {
     free(aes_key);
     free(aes_iv);
     if (ret_decrypt_file != CODE_OK) {
+        *decrypt_code = ret_decrypt_file;
         free(model_plain);
         LOGD("[M]decrypt file failed, decrypt ret = %d", ret_decrypt_file);
         return std::string();
     }
-    std::string result((const char*)model_plain);
+    std::string result((const char*)model_plain, (const char*)model_plain + model_plain_len);
     free(model_plain);
+    *decrypt_code = CODE_OK;
+    return result;
+}
+
+std::string decrypt_file(const char* file_path, const char* key) {
+    int decrypt_code = 0;
+    std::string result = decrypt_file_with_code(file_path, key, &decrypt_code);
+    if (decrypt_code != CODE_OK) {
+        LOGD("[M]decrypt file failed(decrypt_file), decrypt ret = %d", decrypt_code);
+    }
     return result;
 }
 
@@ -139,6 +158,10 @@ int paddle_security_load_model(
         // decrypt model data
         model_plain_len = model_data_len - AES_GCM_TAG_LENGTH;
         model_plain = (unsigned char*) malloc(sizeof(unsigned char) * model_plain_len);
+        if (model_plain == NULL) {
+            LOGD("model_plain malloc failed");
+            return CODE_MALLOC_FAILED;
+        }
 
         int ret_decrypt_model =
             util::crypto::AesGcm::decrypt_aes_gcm(model_dataptr,
@@ -176,6 +199,10 @@ int paddle_security_load_model(
         // decrypt params data
         params_plain_len = params_data_len - AES_GCM_TAG_LENGTH;
         params_plain = (unsigned char*) malloc(sizeof(unsigned char) * params_plain_len);
+        if (params_plain == NULL) {
+            LOGD("params_plain malloc failed");
+            return CODE_MALLOC_FAILED;
+        }
 
         int ret_decrypt_params =
             util::crypto::AesGcm::decrypt_aes_gcm(params_dataptr,
@@ -202,13 +229,8 @@ int paddle_security_load_model(
     config->SetModelBuffer(reinterpret_cast<const char*>(model_plain), model_plain_len,
                            reinterpret_cast<const char*>(params_plain), params_plain_len);
 
-    if (m_en_flag == 1) {
-        free(model_dataptr);
-    }
-
-    if (p_en_flag == 1) {
-        free(params_dataptr);
-    }
+    free(model_plain);
+    free(params_plain);
 
     return CODE_OK;
 }

@@ -28,6 +28,10 @@ int read_file(const char* file_path, unsigned char** dataptr, size_t* sizeptr) {
     fseek(fp, 0, SEEK_END);
     *sizeptr = ftell(fp);
     *dataptr = (unsigned char*) malloc(sizeof(unsigned char) * (*sizeptr));
+    if (*dataptr == NULL) {
+        LOGD("malloc failed when read file");
+        return CODE_MALLOC_FAILED;
+    }
 
     fseek(fp, 0, SEEK_SET);
     fread(*dataptr, 1, *sizeptr, fp);
@@ -68,6 +72,10 @@ int read_with_pos(const char* file_path, size_t pos, unsigned char** dataptr, si
 
     *sizeptr = filesize - pos;
     *dataptr = (unsigned char*) malloc(sizeof(unsigned char) * (filesize - pos));
+    if (*dataptr == NULL) {
+        LOGD("malloc failed when read file");
+        return CODE_MALLOC_FAILED;
+    }
     fseek(fp, pos, SEEK_SET);
     fread(*dataptr, 1, filesize - pos, fp);
     fclose(fp);
@@ -172,17 +180,17 @@ int read_dir_files(const char* dir_path, std::vector<std::string>& files) {
 	}
 
 	do {
-		std::cout << "File name = " << fileinfo.name << std::endl;
+		// std::cout << "File name = " << fileinfo.name << std::endl;
 		if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0) {
 			files.push_back(fileinfo.name);
 		}
 	} while (!_findnext(handle, &fileinfo));
 
-std::cout << files.size() << std::endl;
+    /* std::cout << files.size() << std::endl;
     for (size_t i = 0; i < files.size(); i++)
     {
         std::cout << files[i] << std::endl;
-    }
+    } */
 
 	_findclose(handle);
 #endif
