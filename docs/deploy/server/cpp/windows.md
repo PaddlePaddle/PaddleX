@@ -82,7 +82,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 1. 如果使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
 2. 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
 3. Windows环境下编译会自动下载YAML，如果编译环境无法访问外网，可手动下载： [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)。YAML文件下载后无需解压，在`cmake/yaml.cmake`中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
-4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)。例如解压到`D:/projects`，解压后目录为`D:/projects/paddlex-encryption`。编译时需勾选`WITH_EBNCRYPTION`并且在`ENCRTYPTION_DIR`填入`D:/projects/paddlex-encryption`。
+4. 如果需要使用模型加密功能，需要手动下载[Windows预测模型加密工具](https://bj.bcebos.com/paddlex/tools/win/1.2.0/paddlex-encryption.zip)。例如解压到`D:/projects`，解压后目录为`D:/projects/paddlex-encryption`。编译时需勾选`WITH_EBNCRYPTION`并且在`ENCRTYPTION_DIR`填入`D:/projects/paddlex-encryption`。
 ![](../../images/vs2019_step_encryption.png)
 ![](../../images/vs2019_step6.png)
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。
