@@ -40,9 +40,9 @@ PaddleX提供一个轻量级的模型加密部署方案，通过PaddleX内置的
 
 ### 1.2 加密工具
 
-[Linux版本 PaddleX模型加密工具](https://bj.bcebos.com/paddlex/tools/paddlex-encryption.zip)，编译脚本会自动下载该版本加密工具，您也可以选择手动下载。
+[Linux版本 PaddleX模型加密工具](https://bj.bcebos.com/paddlex/tools/1.2.0/paddlex-encryption.zip)，编译脚本会自动下载该版本加密工具，您也可以选择手动下载。
 
-[Windows版本 PaddleX模型加密工具](https://bj.bcebos.com/paddlex/tools/win/paddlex-encryption.zip)，该版本加密工具需手动下载，如果您在使用Visual Studio 2019编译C++预测代码的过程中已经下载过该工具，此处可不必重复下载。
+[Windows版本 PaddleX模型加密工具](https://bj.bcebos.com/paddlex/tools/win/1.2.0/paddlex-encryption.zip)，该版本加密工具需手动下载，如果您在使用Visual Studio 2019编译C++预测代码的过程中已经下载过该工具，此处可不必重复下载。
 
 Linux加密工具包含内容为：
 ```

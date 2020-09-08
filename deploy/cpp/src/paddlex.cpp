@@ -66,9 +66,14 @@ void Model::create_predictor(const std::string& model_dir,
   if (key == "") {
     config.SetModel(model_file, params_file);
   }
-  if (use_mkl && name != "HRNet" && name != "DeepLabv3p") {
-    config.EnableMKLDNN();
-    config.SetCpuMathLibraryNumThreads(mkl_thread_num);
+  if (use_mkl) {
+    if (name != "HRNet" && name != "DeepLabv3p" && name != "PPYOLO") {
+        config.EnableMKLDNN();
+        config.SetCpuMathLibraryNumThreads(mkl_thread_num);
+    } else {
+        std::cerr << "HRNet/DeepLabv3p/PPYOLO are not supported "
+                  << "for the use of mkldnn" << std::endl;
+    }
   }
   if (use_gpu) {
     config.EnableUseGpu(100, gpu_id);
@@ -85,7 +90,7 @@ void Model::create_predictor(const std::string& model_dir,
 #endif
   // enable Memory Optim
   config.EnableMemoryOptim();
-  if (use_trt) {
+  if (use_trt && use_gpu) {
     config.EnableTensorRtEngine(
         1 << 20 /* workspace_size*/,
         32 /* max_batch_size*/,
@@ -283,7 +288,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   im_tensor->Reshape({1, 3, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
-  if (name == "YOLOv3") {
+  if (name == "YOLOv3" || name == "PPYOLO") {
     auto im_size_tensor = predictor_->GetInputTensor("im_size");
     im_size_tensor->Reshape({1, 2});
     im_size_tensor->copy_from_cpu(inputs_.ori_im_size_.data());
@@ -442,7 +447,7 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
               inputs_data.begin() + i * 3 * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
-  if (name == "YOLOv3") {
+  if (name == "YOLOv3" || name == "PPYOLO") {
     auto im_size_tensor = predictor_->GetInputTensor("im_size");
     im_size_tensor->Reshape({batch_size, 2});
     std::vector<int> inputs_data_size(batch_size * 2);
