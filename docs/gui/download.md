@@ -24,5 +24,5 @@
   * **内存**：建议8G以上  
   * **硬盘空间**：建议SSD剩余空间1T以上（非必须）  
 
-***注：PaddleX在Windows及Mac OS系统只支持单卡模型。Windows系统暂不支持NCCL。***
+***注：PaddleX在Mac OS系统只支持单卡模型。Windows系统暂不支持NCCL。***
 
