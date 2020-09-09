@@ -13,3 +13,4 @@
    paddlelite/index
    openvino/index
    raspberry/index
+   opencv.md
