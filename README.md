@@ -45,7 +45,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
    无代码开发的可视化客户端，应用Paddle API实现，使开发者快速进行产业项目验证，并为用户开发自有深度学习软件/应用提供参照。
 
-- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载Paddle X GUI一键绿色安装包。
+- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载PaddleX GUI一键绿色安装包。
 
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
