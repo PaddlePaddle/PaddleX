@@ -114,7 +114,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 更新日志
 
 > [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
-
+- 2020.09.05 v1.1.6
 - 2020.07.13 v1.1.0
 - 2020.07.12 v1.0.8
 - 2020.05.20 v1.0.0
