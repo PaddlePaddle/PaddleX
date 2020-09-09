@@ -30,7 +30,7 @@
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
   **前置依赖**
-> - paddlepaddle >= 1.8.0
+> - paddlepaddle >= 1.8.4
 > - python >= 3.6
 > - cython
 > - pycocotools
