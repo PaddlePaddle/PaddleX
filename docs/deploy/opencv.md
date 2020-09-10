@@ -32,10 +32,15 @@ make install
 ### 3. 编译PaddleX预测代码依赖自己的opencv
 修改`deploy/cpp/script/build.sh`
 
-1. 注释或删除掉如下一行代码
+1. 注释或删除掉如下代码
 
 ```
-sh $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具
+{
+    bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具和opencv依赖库
+} || {
+    echo "Fail to execute script/bootstrap.sh"
+    exit -1
+}
 ```
 
 2. 模型加密开关设置
