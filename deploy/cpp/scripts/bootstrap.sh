@@ -8,25 +8,31 @@ fi
 
 # download pre-compiled opencv lib
 OPENCV_URL=https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2
-system_name=`awk -F= '/^NAME/{print $2}' /etc/os-release `
-system_version=`awk -F= '/^VERSION_ID/{print $2}' /etc/os-release `
+{
+    system_name=`awk -F= '/^NAME/{print $2}' /etc/os-release `
+} || {
+    echo "[ERROR] There's some problems, maybe caused by your system is not Ubuntu, refer this doc for more informat: https://github.com/PaddlePaddle/PaddleX/tree/develop/docs/deploy/opencv.md"
+    exit -1
+}
 
 # download pre-compiled opencv lib
 OPENCV_URL=https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2
-if [ $system_name = '"Ubuntu"' ]
+if [ $system_name == '"Ubuntu"' ]
 then
-    if [ $system_version = '"18.04"' ]
+    system_version=`awk -F= '/^VERSION_ID/{print $2}' /etc/os-release `
+    if [ $system_version == '"18.04"' ]
     then
         OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/opencv3.4.6gcc4.8ffmpeg_ubuntu_18.04.tar.gz2
-    elif [ $system_version = '"16.04"' ]
+    elif [ $system_version == '"16.04"' ]
     then
         OPENCV_URL=https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2
     else
-        echo "Cannot find pre-comipled opencv lib for your system environment, refer this doc for more information: https://github.com/PaddlePaddle/PaddleX/tree/develop/docs/deploy/opencv.md"
+        echo "[ERROR] Cannot find pre-comipled opencv lib for your system environment, refer this doc for more information: https://github.com/PaddlePaddle/PaddleX/tree/develop/docs/deploy/opencv.md"
         exit -1
     fi
 else
-    echo "Cannot find pre-comipled opencv lib for your system environment, refer this doc for more information: https://github.com/PaddlePaddle/PaddleX/tree/develop/docs/deploy/opencv.md"
+    echo "[ERROR] Cannot find pre-comipled opencv lib for your system environment, refer this doc for more information: https://github.com/PaddlePaddle/PaddleX/tree/develop/docs/deploy/opencv.md"
+    exit -1
 fi
 
 if [ ! -d "./deps/opencv3.4.6gcc4.8ffmpeg/" ]; then
