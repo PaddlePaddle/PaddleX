@@ -39,3 +39,29 @@ paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annota
 **注意**：  
 1. 精灵标注的目标检测数据可以在工具内部导出为PascalVOC格式，因此paddlex未提供精灵标注数据到PascalVOC格式的转换  
 2. 在将LabelMe数据集转换为COCO数据集时，LabelMe的图像文件名和json文件名需要一一对应，才可正确转换
+
+## 手机拍照标注说明
+
+当您收集的样本图像来源于手机拍照时，请注意由于手机拍照信息内附带水平垂直方向信息，这可能会使得在标注和训练时出现问题，因此在拍完照后注意去除照片中的方向信息，使用如下函数即可解决
+```
+from PIL import Image, ExifTags
+def rotate(im):
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+        exif = dict(im._getexif().items())
+        if exif[orientation] == 3:
+            im = im.rotate(180, expand=True)
+        if exif[orientation] == 6:
+            im = im.rotate(270, expand=True)
+        if exif[orientation] == 8:
+            im = im.rotate(90, expand=True)
+    except:
+        pass
+
+img_file = '1.jpeg'
+im = Image.open(img_file)
+rotate(im)
+im.save('new_1.jpeg')
+```
