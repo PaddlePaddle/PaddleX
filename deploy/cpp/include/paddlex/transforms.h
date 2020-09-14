@@ -82,6 +82,16 @@ class Normalize : public Transform {
   virtual void Init(const YAML::Node& item) {
     mean_ = item["mean"].as<std::vector<float>>();
     std_ = item["std"].as<std::vector<float>>();
+    if (item["min_val"].IsDefined()) {
+      min_val_ = item["min_val"].as<std::vector<float>>();
+    } else {
+      min_val_ = std::vector<float>(0., mean_.size());
+    }
+    if (item["max_val"].IsDefined()) {
+      max_val_ = item["max_val"].as<std::vector<float>>();
+    } else {
+      max_val_ = std::vector<float>(255., mean_.size());
+    }
   }
 
   virtual bool Run(cv::Mat* im, ImageBlob* data);
@@ -89,6 +99,8 @@ class Normalize : public Transform {
  private:
   std::vector<float> mean_;
   std::vector<float> std_;
+  std::vector<float> min_val_;
+  std::vector<float> max_val_;
 };
 
 /*
@@ -229,6 +241,25 @@ class Padding : public Transform {
   int height_ = 0;
   std::vector<float> im_value_;
 };
+
+/*
+ * @brief
+ * This class execute clip operation on image matrix
+ * */
+class Clip : public Transform {
+ public:
+  virtual void Init(const YAML::Node& item) {
+    min_val_ = item["min_val"].as<std::vector<float>>();
+    max_val_ = item["max_val"].as<std::vector<float>>();
+  }
+
+  virtual bool Run(cv::Mat* im, ImageBlob* data);
+
+ private:
+  std::vector<float> min_val_;
+  std::vector<float> max_val_;
+};
+
 /*
  * @brief
  * This class is transform operations manager. It stores all neccessary

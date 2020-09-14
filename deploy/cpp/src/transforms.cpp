@@ -30,14 +30,14 @@ std::map<std::string, int> interpolations = {{"LINEAR", cv::INTER_LINEAR},
                                              {"LANCZOS4", cv::INTER_LANCZOS4}};
 
 bool Normalize::Run(cv::Mat* im, ImageBlob* data) {
-  for (int h = 0; h < im->rows; h++) {
-    for (int w = 0; w < im->cols; w++) {
-      im->at<cv::Vec3f>(h, w)[0] =
-          (im->at<cv::Vec3f>(h, w)[0] / 255.0 - mean_[0]) / std_[0];
-      im->at<cv::Vec3f>(h, w)[1] =
-          (im->at<cv::Vec3f>(h, w)[1] / 255.0 - mean_[1]) / std_[1];
-      im->at<cv::Vec3f>(h, w)[2] =
-          (im->at<cv::Vec3f>(h, w)[2] / 255.0 - mean_[2]) / std_[2];
+  for (int c = 0; c < im->channels(); c++) {
+    float range_val = max_val_[c] - min_val_[c];
+    for (int h = 0; h < im->rows; h++) {
+      for (int w = 0; w < im->cols; w++) {
+        im->at<cv::Vec3f>(h, w)[c] =
+            ((im->at<cv::Vec3f>(h, w)[c] - min_val_[c]) / range_val -
+            mean_[c]) / std_[c];
+      }
     }
   }
   return true;
@@ -113,9 +113,16 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
               << ", but they should be greater than 0." << std::endl;
     return false;
   }
-  cv::Scalar value = cv::Scalar(im_value_[0], im_value_[1], im_value_[2]);
-  cv::copyMakeBorder(
-      *im, *im, 0, padding_h, 0, padding_w, cv::BORDER_CONSTANT, value);
+  std::vector<cv::Mat> padded_im_per_channel;
+  for (size_t i = 0; i < im->channels(); i++) {
+    const cv::Mat per_channel = cv::Mat(im->size(), CV_32FC1, im_value_[i]);
+    padded_im_per_channel.push_back(per_channel);
+  }
+  cv::Mat padded_im;
+  cv::merge(padded_im_per_channel, padded_im);
+  cv::Rect im_roi = cv::Rect(0, 0, im->cols, im->rows);
+  im->copyTo(padded_im(im_roi));
+  *im = padded_im;
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   return true;
@@ -160,6 +167,22 @@ bool Resize::Run(cv::Mat* im, ImageBlob* data) {
       *im, *im, cv::Size(width_, height_), 0, 0, interpolations[interp_]);
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
+  return true;
+}
+
+bool Clip::Run(cv::Mat* im, ImageBlob* data) {
+  for (int h = 0; h < im->rows; h++) {
+    for (int w = 0; w < im->cols; w++) {
+      for (int c = 0; c < im->channels(); c++) {
+        if (im->at<cv::Vec3f>(h, w)[c] < min_val_[c]) {
+          im->at<cv::Vec3f>(h, w)[c] = min_val_[c];
+        }
+        if (im->at<cv::Vec3f>(h, w)[c] > max_val_[c]) {
+          im->at<cv::Vec3f>(h, w)[c] = max_val_[c];
+        }
+      }
+    }
+  }
   return true;
 }
 
