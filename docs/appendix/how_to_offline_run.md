@@ -10,6 +10,8 @@ PaddleX在模型训练时，存在以下两种情况需要进行联网下载
 在训练模型时，需要配置paddlex全局预训练模型路径，将此路径指定到存放了所有预训练模型的路径即可，如下示例代码
 ```
 import paddlex as pdx
+# 在import paddlex指定全局的预训练模型路径
+# 模型训练时会跳过下载的过程，使用该目录下载好的模型
 pdx.pretrain_dir = '/home/work/paddlex_pretrain'
 ```
 按上方式配置后，之后即可进行无联网模型训练
