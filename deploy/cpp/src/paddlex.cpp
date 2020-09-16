@@ -134,6 +134,11 @@ bool Model::load_config(const std::string& yaml_input) {
     int index = labels.size();
     labels[index] = item.as<std::string>();
   }
+  if (config["_init_params"]["input_channel"].IsDefined()) {
+    input_channel = config["_init_params"]["input_channel"].as<int>();
+  } else {
+    input_channel = 3;
+  }
   return true;
 }
 
@@ -179,7 +184,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   auto in_tensor = predictor_->GetInputTensor("image");
   int h = inputs_.new_im_size_[0];
   int w = inputs_.new_im_size_[1];
-  in_tensor->Reshape({1, 3, h, w});
+  in_tensor->Reshape({1, input_channel, h, w});
   in_tensor->copy_from_cpu(inputs_.im_data_.data());
   predictor_->ZeroCopyRun();
   // get result
@@ -226,12 +231,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   auto in_tensor = predictor_->GetInputTensor("image");
   int h = inputs_batch_[0].new_im_size_[0];
   int w = inputs_batch_[0].new_im_size_[1];
-  in_tensor->Reshape({batch_size, 3, h, w});
-  std::vector<float> inputs_data(batch_size * 3 * h * w);
+  in_tensor->Reshape({batch_size, input_channel, h, w});
+  std::vector<float> inputs_data(batch_size * input_channel * h * w);
   for (int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(),
               inputs_batch_[i].im_data_.end(),
-              inputs_data.begin() + i * 3 * h * w);
+              inputs_data.begin() + i * input_channel * h * w);
   }
   in_tensor->copy_from_cpu(inputs_data.data());
   // in_tensor->copy_from_cpu(inputs_.im_data_.data());
@@ -285,7 +290,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   int h = inputs_.new_im_size_[0];
   int w = inputs_.new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
-  im_tensor->Reshape({1, 3, h, w});
+  im_tensor->Reshape({1, input_channel, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
   if (name == "YOLOv3" || name == "PPYOLO") {
@@ -439,12 +444,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   int h = inputs_batch_[0].new_im_size_[0];
   int w = inputs_batch_[0].new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
-  im_tensor->Reshape({batch_size, 3, h, w});
-  std::vector<float> inputs_data(batch_size * 3 * h * w);
+  im_tensor->Reshape({batch_size, input_channel, h, w});
+  std::vector<float> inputs_data(batch_size * input_channel * h * w);
   for (int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(),
               inputs_batch_[i].im_data_.end(),
-              inputs_data.begin() + i * 3 * h * w);
+              inputs_data.begin() + i * input_channel * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
   if (name == "YOLOv3" || name == "PPYOLO") {
@@ -584,7 +589,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   int h = inputs_.new_im_size_[0];
   int w = inputs_.new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
-  im_tensor->Reshape({1, 3, h, w});
+  im_tensor->Reshape({1, input_channel, h, w});
   im_tensor->copy_from_cpu(inputs_.im_data_.data());
 
   // predict
@@ -698,12 +703,12 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
   int h = inputs_batch_[0].new_im_size_[0];
   int w = inputs_batch_[0].new_im_size_[1];
   auto im_tensor = predictor_->GetInputTensor("image");
-  im_tensor->Reshape({batch_size, 3, h, w});
-  std::vector<float> inputs_data(batch_size * 3 * h * w);
+  im_tensor->Reshape({batch_size, input_channel, h, w});
+  std::vector<float> inputs_data(batch_size * input_channel * h * w);
   for (int i = 0; i < batch_size; ++i) {
     std::copy(inputs_batch_[i].im_data_.begin(),
               inputs_batch_[i].im_data_.end(),
-              inputs_data.begin() + i * 3 * h * w);
+              inputs_data.begin() + i * input_channel * h * w);
   }
   im_tensor->copy_from_cpu(inputs_data.data());
   // im_tensor->copy_from_cpu(inputs_.im_data_.data());

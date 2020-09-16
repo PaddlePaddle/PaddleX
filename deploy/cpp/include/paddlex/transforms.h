@@ -85,12 +85,12 @@ class Normalize : public Transform {
     if (item["min_val"].IsDefined()) {
       min_val_ = item["min_val"].as<std::vector<float>>();
     } else {
-      min_val_ = std::vector<float>(0., mean_.size());
+      min_val_ = std::vector<float>(mean_.size(), 0.);
     }
     if (item["max_val"].IsDefined()) {
       max_val_ = item["max_val"].as<std::vector<float>>();
     } else {
-      max_val_ = std::vector<float>(255., mean_.size());
+      max_val_ = std::vector<float>(mean_.size(), 255.);
     }
   }
 
