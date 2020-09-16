@@ -27,7 +27,7 @@ Seg分析器的分析接口，完成以下信息的分析统计：
 > * 图像各通道归一化后的均值和方差
 > * 标注图中各类别的数量及比重
 
-[代码示例](https://github.com/PaddlePaddle/PaddleX/examples/multi-channel_remote_sensing/tools/analysis.py)
+[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/analysis.py)
 
 [统计信息示例](../../examples/multi-channel_remote_sensing/analysis.html#id2)
 
@@ -43,6 +43,6 @@ Seg分析器用于计算图像截断后的均值和方差的接口。
 > > * **clip_max_value** (list): 截断的上限，大于max_val的数值均设为max_val。
 > > * **data_info_file** (str): 在analysis()接口中保存的分析结果文件(名为`train_information.pkl`)的路径。
 
-[代码示例](https://github.com/PaddlePaddle/PaddleX/examples/multi-channel_remote_sensing/tools/cal_clipped_mean_std.py)
+[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/cal_clipped_mean_std.py)
 
 [计算结果示例](../../examples/multi-channel_remote_sensing/analysis.html#id4)

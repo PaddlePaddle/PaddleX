@@ -89,7 +89,7 @@ cv::Mat Visualize(const cv::Mat& img,
     cv::Mat bin_mask(boxes[i].mask.shape[1],
                      boxes[i].mask.shape[0],
                      CV_32FC1,
-                     boxes[i].mask.data.data());
+                     mask_data.data());
     cv::Mat full_mask = cv::Mat::zeros(vis_img.size(), CV_8UC1);
     bin_mask.copyTo(full_mask(roi));
     cv::Mat mask_ch[3];
