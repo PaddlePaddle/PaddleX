@@ -233,6 +233,6 @@ class Model {
   // a predictor which run the model predicting
   std::unique_ptr<paddle::PaddlePredictor> predictor_;
   // input channel
-  int input_channel;
+  int input_channel_;
 };
 }  // namespace PaddleX
