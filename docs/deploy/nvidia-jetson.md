@@ -14,7 +14,7 @@
 
  `git clone https://github.com/PaddlePaddle/PaddleX.git`
 
-**说明**：其中`C++`预测代码在`/root/projects/PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
+**说明**：其中`C++`预测代码在`PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
 
 
 ### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
