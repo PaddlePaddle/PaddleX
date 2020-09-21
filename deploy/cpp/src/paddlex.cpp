@@ -66,7 +66,7 @@ void Model::create_predictor(const std::string& model_dir,
   if (key == "") {
     config.SetModel(model_file, params_file);
   }
-  if (use_mkl) {
+  if (use_mkl && !use_gpu) {
     if (name != "HRNet" && name != "DeepLabv3p" && name != "PPYOLO") {
         config.EnableMKLDNN();
         config.SetCpuMathLibraryNumThreads(mkl_thread_num);
