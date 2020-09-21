@@ -108,7 +108,7 @@ class Predictor:
             config.enable_use_gpu(100, gpu_id)
         else:
             config.disable_gpu()
-        if use_mkl:
+        if use_mkl and not use_gpu:
             if self.model_name not in ["HRNet", "DeepLabv3p", "PPYOLO"]:
                 config.enable_mkldnn()
                 config.set_cpu_math_library_num_threads(mkl_thread_num)
