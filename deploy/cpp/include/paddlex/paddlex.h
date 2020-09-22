@@ -232,5 +232,7 @@ class Model {
   std::vector<float> outputs_;
   // a predictor which run the model predicting
   std::unique_ptr<paddle::PaddlePredictor> predictor_;
+  // input channel
+  int input_channel_;
 };
 }  // namespace PaddleX
