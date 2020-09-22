@@ -42,7 +42,7 @@ def visualize(model, sensitivities_file, save_dir='./'):
     y = list()
     for loss_thresh in tqdm.tqdm(list(np.arange(0.05, 1, 0.05))):
         prune_ratio = 1 - cal_model_size(
-            program, place, sensitivities_file, eval_metric_loss=loss_thresh)
+            program, place, sensitivities_file, eval_metric_loss=loss_thresh, scope=model.scope)
         x.append(prune_ratio)
         y.append(loss_thresh)
     plt.plot(x, y, color='green', linewidth=0.5, marker='o', markersize=3)
