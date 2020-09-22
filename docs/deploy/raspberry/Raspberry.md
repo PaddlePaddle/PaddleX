@@ -125,7 +125,8 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 系统：raspbian OS
 软件：paddle-lite 2.6.1
 ### 测试结果
-单位ms，num表示paddle-lite下使用的线程数
+单位ms，num表示paddle-lite下使用的线程数  
+
 |模型|lite(num=4)|输入图片大小|
 | ----|  ---- | ----|
 |mobilenet-v2|136.19|224*224|
@@ -147,6 +148,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 |ShuffleNetV2|115.97|224*224|
 |Xception41|1418.29|224*224|
 |Xception65|2094.7|224*224|  
+
 
 从测试结果看建议用户在树莓派上使用MobileNetV1-V3,ShuffleNetV2这类型的小型网络
 
