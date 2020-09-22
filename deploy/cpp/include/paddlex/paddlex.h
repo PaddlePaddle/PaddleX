@@ -70,6 +70,8 @@ class Model {
    * @param model_dir: the directory which contains model.yml
    * @param use_gpu: use gpu or not when infering
    * @param use_trt: use Tensor RT or not when infering
+   * @param use_mkl: use mkl or not when infering
+   * @param mkl_thread_num: number of threads for mkldnn when infering
    * @param gpu_id: the id of gpu when infering with using gpu
    * @param key: the key of encryption when using encrypted model
    * @param use_ir_optim: use ir optimization when infering
@@ -77,15 +79,26 @@ class Model {
   void Init(const std::string& model_dir,
             bool use_gpu = false,
             bool use_trt = false,
+            bool use_mkl = true,
+            int mkl_thread_num = 4,
             int gpu_id = 0,
             std::string key = "",
             bool use_ir_optim = true) {
-    create_predictor(model_dir, use_gpu, use_trt, gpu_id, key, use_ir_optim);
+    create_predictor(
+                     model_dir,
+                     use_gpu,
+                     use_trt,
+                     use_mkl,
+                     mkl_thread_num,
+                     gpu_id,
+                     key,
+                     use_ir_optim);
   }
-
   void create_predictor(const std::string& model_dir,
                         bool use_gpu = false,
                         bool use_trt = false,
+                        bool use_mkl = true,
+                        int mkl_thread_num = 4,
                         int gpu_id = 0,
                         std::string key = "",
                         bool use_ir_optim = true);
@@ -219,5 +232,7 @@ class Model {
   std::vector<float> outputs_;
   // a predictor which run the model predicting
   std::unique_ptr<paddle::PaddlePredictor> predictor_;
+  // input channel
+  int input_channel_;
 };
 }  // namespace PaddleX

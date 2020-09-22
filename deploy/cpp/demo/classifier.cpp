@@ -29,6 +29,10 @@ using namespace std::chrono;  // NOLINT
 DEFINE_string(model_dir, "", "Path of inference model");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_bool(use_trt, false, "Infering with TensorRT");
+DEFINE_bool(use_mkl, true, "Infering with MKL");
+DEFINE_int32(mkl_thread_num,
+             omp_get_num_procs(),
+             "Number of mkl threads");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_string(key, "", "key of encryption");
 DEFINE_string(image, "", "Path of test image file");
@@ -56,6 +60,8 @@ int main(int argc, char** argv) {
   model.Init(FLAGS_model_dir,
              FLAGS_use_gpu,
              FLAGS_use_trt,
+             FLAGS_use_mkl,
+             FLAGS_mkl_thread_num,
              FLAGS_gpu_id,
              FLAGS_key);
 

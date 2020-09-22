@@ -78,16 +78,19 @@ paddlex.seg.transforms.ResizeStepScaling(min_scale_factor=0.75, max_scale_factor
 
 ## Normalize
 ```python
-paddlex.seg.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+paddlex.seg.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0])
 ```
 对图像进行标准化。
 
-1.图像像素归一化到区间 [0.0, 1.0]。
-2.对图像进行减均值除以标准差操作。
+1.像素值减去min_val
+2.像素值除以(max_val-min_val), 归一化到区间 [0.0, 1.0]。
+3.对图像进行减均值除以标准差操作。
+
 ### 参数
 * **mean** (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。
 * **std** (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。
-
+* **min_val** (list): 图像数据集的最小值。默认值[0, 0, 0]。
+* **max_val** (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。
 
 ## Padding
 ```python
@@ -166,6 +169,16 @@ paddlex.seg.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, 
 * **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
 * **hue_range** (int): 色调因子的范围。默认为18。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+
+## Clip
+```python
+paddlex.seg.transforms.Clip(min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0])
+```
+对图像上超出一定范围的数据进行截断。
+
+### 参数
+* **min_val** (list): 裁剪的下限，小于min_val的数值均设为min_val. 默认值0。
+* **max_val** (list): 裁剪的上限，大于max_val的数值均设为max_val. 默认值255.0。
 
 <!--
 ## ComposedSegTransforms

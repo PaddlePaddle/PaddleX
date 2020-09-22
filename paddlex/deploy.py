@@ -16,10 +16,14 @@ import os.path as osp
 import cv2
 import numpy as np
 import yaml
+import multiprocessing as mp
 import paddlex
 import paddle.fluid as fluid
 from paddlex.cv.transforms import build_transforms
-from paddlex.cv.models import BaseClassifier, YOLOv3, FasterRCNN, MaskRCNN, DeepLabv3p
+from paddlex.cv.models import BaseClassifier
+from paddlex.cv.models import PPYOLO, FasterRCNN, MaskRCNN
+from paddlex.cv.models import DeepLabv3p
+import paddlex.utils.logging as logging
 
 
 class Predictor:
@@ -27,7 +31,7 @@ class Predictor:
                  model_dir,
                  use_gpu=True,
                  gpu_id=0,
-                 use_mkl=False,
+                 use_mkl=True,
                  mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
@@ -77,6 +81,15 @@ class Predictor:
         self.predictor = self.create_predictor(use_gpu, gpu_id, use_mkl,
                                                mkl_thread_num, use_trt,
                                                use_glog, memory_optimize)
+        # 线程池，在模型在预测时用于对输入数据以图片为单位进行并行处理
+        # 主要用于batch_predict接口
+        thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
+        self.thread_pool = mp.pool.ThreadPool(thread_num)
+
+    def reset_thread_pool(self, thread_num):
+        self.thread_pool.close()
+        self.thread_pool.join()
+        self.thread_pool = mp.pool.ThreadPool(thread_num)
 
     def create_predictor(self,
                          use_gpu=True,
@@ -95,9 +108,14 @@ class Predictor:
             config.enable_use_gpu(100, gpu_id)
         else:
             config.disable_gpu()
-        if use_mkl:
-            config.enable_mkldnn()
-            config.set_cpu_math_library_num_threads(mkl_thread_num)
+        if use_mkl and not use_gpu:
+            if self.model_name not in ["HRNet", "DeepLabv3p", "PPYOLO"]:
+                config.enable_mkldnn()
+                config.set_cpu_math_library_num_threads(mkl_thread_num)
+            else:
+                logging.warning(
+                    "HRNet/DeepLabv3p/PPYOLO are not supported for the use of mkldnn\n"
+                )
         if use_glog:
             config.enable_glog_info()
         else:
@@ -112,7 +130,7 @@ class Predictor:
         predictor = fluid.core.create_paddle_predictor(config)
         return predictor
 
-    def preprocess(self, image, thread_num=1):
+    def preprocess(self, image, thread_pool=None):
         """ 对图像做预处理
 
             Args:
@@ -126,16 +144,16 @@ class Predictor:
                 self.transforms,
                 self.model_type,
                 self.model_name,
-                thread_num=thread_num)
+                thread_pool=thread_pool)
             res['image'] = im
         elif self.model_type == "detector":
-            if self.model_name == "YOLOv3":
-                im, im_size = YOLOv3._preprocess(
+            if self.model_name in ["PPYOLO", "YOLOv3"]:
+                im, im_size = PPYOLO._preprocess(
                     image,
                     self.transforms,
                     self.model_type,
                     self.model_name,
-                    thread_num=thread_num)
+                    thread_pool=thread_pool)
                 res['image'] = im
                 res['im_size'] = im_size
             if self.model_name.count('RCNN') > 0:
@@ -144,7 +162,7 @@ class Predictor:
                     self.transforms,
                     self.model_type,
                     self.model_name,
-                    thread_num=thread_num)
+                    thread_pool=thread_pool)
                 res['image'] = im
                 res['im_info'] = im_resize_info
                 res['im_shape'] = im_shape
@@ -154,7 +172,7 @@ class Predictor:
                 self.transforms,
                 self.model_type,
                 self.model_name,
-                thread_num=thread_num)
+                thread_pool=thread_pool)
             res['image'] = im
             res['im_info'] = im_info
         return res
@@ -190,8 +208,8 @@ class Predictor:
             res = {'bbox': (results[0][0], offset_to_lengths(results[0][1])), }
             res['im_id'] = (np.array(
                 [[i] for i in range(batch_size)]).astype('int32'), [[]])
-            if self.model_name == "YOLOv3":
-                preds = YOLOv3._postprocess(res, batch_size, self.num_classes,
+            if self.model_name in ["PPYOLO", "YOLOv3"]:
+                preds = PPYOLO._postprocess(res, batch_size, self.num_classes,
                                             self.labels)
             elif self.model_name == "FasterRCNN":
                 preds = FasterRCNN._postprocess(res, batch_size,
@@ -251,17 +269,16 @@ class Predictor:
 
         return results[0]
 
-    def batch_predict(self, image_list, topk=1, thread_num=2):
+    def batch_predict(self, image_list, topk=1):
         """ 图片预测
 
             Args:
                 image_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
                     也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
-                thread_num (int): 并发执行各图像预处理时的线程数。
 
                 topk(int): 分类预测时使用，表示预测前topk的结果
         """
-        preprocessed_input = self.preprocess(image_list)
+        preprocessed_input = self.preprocess(image_list, self.thread_pool)
         model_pred = self.raw_predict(preprocessed_input)
         im_shape = None if 'im_shape' not in preprocessed_input else preprocessed_input[
             'im_shape']

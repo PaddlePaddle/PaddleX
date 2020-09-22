@@ -44,8 +44,8 @@ except:
     )
 
 import paddlehub as hub
-if hub.version.hub_version < '1.6.2':
-    raise Exception("[ERROR] paddlehub >= 1.6.2 is required")
+if hub.version.hub_version < '1.8.2':
+    raise Exception("[ERROR] paddlehub >= 1.8.2 is required")
 
 env_info = get_environ_info()
 load_model = cv.models.load_model
@@ -56,4 +56,4 @@ log_level = 2
 
 from . import interpret
 
-__version__ = '1.1.1'
+__version__ = '1.2.1'

@@ -70,7 +70,6 @@ cd PaddleX/examples/meter_reader/
 | save_dir	| 保存可视化结果的路径, 默认值为"output"|
 | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
 | seg_batch_size | 分割的批量大小，默认为2 |
-| seg_thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
 | use_camera | 是否使用摄像头采集图片，默认为False |
 | camera_id | 摄像头设备ID，默认值为0 |
 | use_erode | 是否使用图像腐蚀对分割预测图进行细分，默认为False |
@@ -91,19 +90,19 @@ export CUDA_VISIBLE_DEVICES=
 * 预测单张图片
 
 ```shell
-python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image /path/to/meter_test/20190822_168.jpg --save_dir ./output --use_erode
+python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image /path/to/meter_test/20190822_168.jpg --save_dir ./output --use_erode
 ```
 
 * 预测多张图片
 
 ```shell
-python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image_dir /path/to/meter_test --save_dir ./output --use_erode
+python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image_dir /path/to/meter_test --save_dir ./output --use_erode
 ```
 
 * 开启摄像头预测
 
 ```shell
-python3 reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --save_dir ./output --use_erode --use_camera
+python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --save_dir ./output --use_erode --use_camera
 ```
 
 ## 推理部署
@@ -260,12 +259,12 @@ step 5. 推理预测：
 
 * 表盘检测的训练
 ```
-python3 /path/to/PaddleX/examples/meter_reader/train_detection.py
+python /path/to/PaddleX/examples/meter_reader/train_detection.py
 ```
 * 指针和刻度分割的训练
 
 ```
-python3 /path/to/PaddleX/examples/meter_reader/train_segmentation.py
+python /path/to/PaddleX/examples/meter_reader/train_segmentation.py
 
 ```
 

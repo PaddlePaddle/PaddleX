@@ -23,8 +23,12 @@ LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME
 >* **batch_size** (int): 预测数据batch大小，默认为50。
 >* **save_dir** (str): 可解释性可视化结果（保存为png格式文件）和中间文件存储路径。
 
+### 可视化效果
+
+![](./docs/gui/images/LIME.png)
 
 ### 使用示例
+
 > 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/lime.py)。
 
 

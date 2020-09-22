@@ -24,6 +24,7 @@ import paddlex.utils.logging as logging
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.cv.datasets import generate_minibatch
+from paddlex.cv.transforms.seg_transforms import Compose
 from collections import OrderedDict
 from .base import BaseAPI
 from .utils.seg_eval import ConfusionMatrix
@@ -54,6 +55,8 @@ class DeepLabv3p(BaseAPI):
         pooling_crop_size (list): 当backbone为MobileNetV3_large_x1_0_ssld时，需设置为训练过程中模型输入大小, 格式为[W, H]。
             在encoder模块中获取图像平均值时被用到，若为None，则直接求平均值；若为模型输入大小，则使用'pool'算子得到平均值。
             默认值为None。
+        input_channel (int): 输入图像通道数。默认值3。
+
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
         ValueError: backbone取值不在['Xception65', 'Xception41', 'MobileNetV2_x0.25',
@@ -75,7 +78,8 @@ class DeepLabv3p(BaseAPI):
                  use_dice_loss=False,
                  class_weight=None,
                  ignore_index=255,
-                 pooling_crop_size=None):
+                 pooling_crop_size=None,
+                 input_channel=3):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -149,6 +153,7 @@ class DeepLabv3p(BaseAPI):
             if self.output_is_logits:
                 self.conv_filters = self.num_classes
             self.backbone_lr_mult_list = [0.15, 0.35, 0.65, 0.85, 1]
+        self.input_channel = input_channel
 
     def _get_backbone(self, backbone):
         def mobilenetv2(backbone):
@@ -236,7 +241,8 @@ class DeepLabv3p(BaseAPI):
             add_image_level_feature=self.add_image_level_feature,
             use_sum_merge=self.use_sum_merge,
             conv_filters=self.conv_filters,
-            output_is_logits=self.output_is_logits)
+            output_is_logits=self.output_is_logits,
+            input_channel=self.input_channel)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()
@@ -443,16 +449,22 @@ class DeepLabv3p(BaseAPI):
         return metrics
 
     @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+    def _preprocess(images,
+                    transforms,
+                    model_type,
+                    class_name,
+                    thread_pool=None):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
             transforms=transforms,
             mode='test')
-        pool = ThreadPool(thread_num)
-        batch_data = pool.map(transforms, images)
-        pool.close()
-        pool.join()
+        if thread_pool is not None:
+            batch_data = thread_pool.map(transforms, images)
+        else:
+            batch_data = list()
+            for image in images:
+                batch_data.append(transforms(image))
         padding_batch = generate_minibatch(batch_data)
         im = np.array(
             [data[0] for data in padding_batch],
@@ -517,13 +529,12 @@ class DeepLabv3p(BaseAPI):
         preds = DeepLabv3p._postprocess(result, im_info)
         return preds[0]
 
-    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+    def batch_predict(self, img_file_list, transforms=None):
         """预测。
         Args:
             img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
                 也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
             transforms(paddlex.cv.transforms): 数据预处理操作。
-            thread_num (int): 并发执行各图像预处理时的线程数。
 
         Returns:
             list: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
@@ -538,7 +549,7 @@ class DeepLabv3p(BaseAPI):
             transforms = self.test_transforms
         im, im_info = DeepLabv3p._preprocess(
             img_file_list, transforms, self.model_type,
-            self.__class__.__name__, thread_num)
+            self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
@@ -549,86 +560,18 @@ class DeepLabv3p(BaseAPI):
         preds = DeepLabv3p._postprocess(result, im_info)
         return preds
 
-    def tile_predict(self,
-                     img_file,
-                     tile_size=[512, 512],
-                     batch_size=32,
-                     thread_num=8,
-                     transforms=None):
-        """无重叠的大图切小图预测。
-        Args:
-            img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-            tile_size(list|tuple): 切分小块的大小，格式为（W，H）。默认值为[512, 512]。
-            batch_size(int)：对小块进行批量预测时的批量大小。默认值为32。
-            thread_num (int): 并发执行各小块预处理时的线程数。默认值为8。
-            transforms(paddlex.cv.transforms): 数据预处理操作。
-
-
-        Returns:
-            dict: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，
-                像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)
-        """
-        if transforms is None and not hasattr(self, 'test_transforms'):
-            raise Exception("transforms need to be defined, now is None.")
-
-        if isinstance(img_file, str):
-            image = cv2.imread(img_file)
-        elif isinstance(img_file, np.ndarray):
-            image = img_file.copy()
-        else:
-            raise Exception("im_file must be list/tuple")
-
-        height, width, channel = image.shape
-        image_tile_list = list()
-        # crop the image into tile pieces
-        for h in range(0, height, tile_size[1]):
-            for w in range(0, width, tile_size[0]):
-                left = w
-                upper = h
-                right = min(w + tile_size[0], width)
-                lower = min(h + tile_size[1], height)
-                image_tile = image[upper:lower, left:right, :]
-                image_tile_list.append(image_tile)
-
-        # predict
-        label_map = np.zeros((height, width), dtype=np.uint8)
-        score_map = np.zeros(
-            (height, width, self.num_classes), dtype=np.float32)
-        num_tiles = len(image_tile_list)
-        for i in range(0, num_tiles, batch_size):
-            begin = i
-            end = min(i + batch_size, num_tiles)
-            res = self.batch_predict(
-                img_file_list=image_tile_list[begin:end],
-                thread_num=thread_num,
-                transforms=transforms)
-            for j in range(begin, end):
-                h_id = j // (width // tile_size[0] + 1)
-                w_id = j % (width // tile_size[0] + 1)
-                left = w_id * tile_size[0]
-                upper = h_id * tile_size[1]
-                right = min((w_id + 1) * tile_size[0], width)
-                lower = min((h_id + 1) * tile_size[1], height)
-                label_map[upper:lower, left:right] = res[j - begin][
-                    "label_map"]
-                score_map[upper:lower, left:right, :] = res[j - begin][
-                    "score_map"]
-        result = {"label_map": label_map, "score_map": score_map}
-        return result
-
     def overlap_tile_predict(self,
                              img_file,
                              tile_size=[512, 512],
                              pad_size=[64, 64],
                              batch_size=32,
-                             thread_num=8):
+                             transforms=None):
         """有重叠的大图切小图预测。
         Args:
             img_file(str|np.ndarray): 预测图像路径，或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-            tile_size(list|tuple): 切分小块中间部分用于拼接预测结果的大小，格式为（W，H）。默认值为[512, 512]。
-            pad_size(list|tuple): 切分小块向四周扩展的大小，格式为（W，H）。默认值为[64，64]。
-            batch_size(int)：对小块进行批量预测时的批量大小。默认值为32
-            thread_num (int): 并发执行各小块预处理时的线程数。默认值为8。
+            tile_size(list|tuple): 滑动窗口的大小，该区域内用于拼接预测结果，格式为（W，H）。默认值为[512, 512]。
+            pad_size(list|tuple): 滑动窗口向四周扩展的大小，扩展区域内不用于拼接预测结果，格式为（W，H）。默认值为[64，64]。
+            batch_size(int)：对窗口进行批量预测时的批量大小。默认值为32
             transforms(paddlex.cv.transforms): 数据预处理操作。
 
 
@@ -641,7 +584,7 @@ class DeepLabv3p(BaseAPI):
             raise Exception("transforms need to be defined, now is None.")
 
         if isinstance(img_file, str):
-            image = cv2.imread(img_file)
+            image, _ = Compose.decode_image(img_file, None)
         elif isinstance(img_file, np.ndarray):
             image = img_file.copy()
         else:
@@ -651,28 +594,37 @@ class DeepLabv3p(BaseAPI):
         image_tile_list = list()
 
         # Padding along the left and right sides
-        left_pad = cv2.flip(image[0:height, 0:pad_size[0], :], 1)
-        right_pad = cv2.flip(image[0:height, -pad_size[0]:width, :], 1)
-        padding_image = cv2.hconcat([left_pad, image])
-        padding_image = cv2.hconcat([padding_image, right_pad])
+        if pad_size[0] > 0:
+            left_pad = cv2.flip(image[0:height, 0:pad_size[0], :], 1)
+            right_pad = cv2.flip(image[0:height, -pad_size[0]:width, :], 1)
+            padding_image = cv2.hconcat([left_pad, image])
+            padding_image = cv2.hconcat([padding_image, right_pad])
+        else:
+            import copy
+            padding_image = copy.deepcopy(image)
 
         # Padding along the upper and lower sides
         padding_height, padding_width, _ = padding_image.shape
-        upper_pad = cv2.flip(padding_image[0:pad_size[1], 0:padding_width, :],
-                             0)
-        lower_pad = cv2.flip(
-            padding_image[-pad_size[1]:padding_height, 0:padding_width, :], 0)
-        padding_image = cv2.vconcat([upper_pad, padding_image])
-        padding_image = cv2.vconcat([padding_image, lower_pad])
+        if pad_size[1] > 0:
+            upper_pad = cv2.flip(
+                padding_image[0:pad_size[1], 0:padding_width, :], 0)
+            lower_pad = cv2.flip(
+                padding_image[-pad_size[1]:padding_height, 0:padding_width, :],
+                0)
+            padding_image = cv2.vconcat([upper_pad, padding_image])
+            padding_image = cv2.vconcat([padding_image, lower_pad])
 
-        padding_height, padding_width, _ = padding_image.shape
         # crop the padding image into tile pieces
-        for h in range(0, padding_height, tile_size[1]):
-            for w in range(0, padding_width, tile_size[0]):
-                left = w
-                upper = h
-                right = min(w + tile_size[0] + pad_size[0] * 2, padding_width)
-                lower = min(h + tile_size[1] + pad_size[1] * 2, padding_height)
+        padding_height, padding_width, _ = padding_image.shape
+
+        for h_id in range(0, height // tile_size[1] + 1):
+            for w_id in range(0, width // tile_size[0] + 1):
+                left = w_id * tile_size[0]
+                upper = h_id * tile_size[1]
+                right = min(left + tile_size[0] + pad_size[0] * 2,
+                            padding_width)
+                lower = min(upper + tile_size[1] + pad_size[1] * 2,
+                            padding_height)
                 image_tile = padding_image[upper:lower, left:right, :]
                 image_tile_list.append(image_tile)
 
@@ -686,7 +638,6 @@ class DeepLabv3p(BaseAPI):
             end = min(i + batch_size, num_tiles)
             res = self.batch_predict(
                 img_file_list=image_tile_list[begin:end],
-                thread_num=thread_num,
                 transforms=transforms)
             for j in range(begin, end):
                 h_id = j // (width // tile_size[0] + 1)
@@ -697,9 +648,13 @@ class DeepLabv3p(BaseAPI):
                 lower = min((h_id + 1) * tile_size[1], height)
                 tile_label_map = res[j - begin]["label_map"]
                 tile_score_map = res[j - begin]["score_map"]
+                tile_upper = pad_size[1]
+                tile_lower = tile_label_map.shape[0] - pad_size[1]
+                tile_left = pad_size[0]
+                tile_right = tile_label_map.shape[1] - pad_size[0]
                 label_map[upper:lower, left:right] = \
-                    tile_label_map[pad_size[1]:-pad_size[1], pad_size[0]:-pad_size[0]]
+                    tile_label_map[tile_upper:tile_lower, tile_left:tile_right]
                 score_map[upper:lower, left:right, :] = \
-                    tile_score_map[pad_size[1]:-pad_size[1], pad_size[0]:-pad_size[0], :]
+                    tile_score_map[tile_upper:tile_lower, tile_left:tile_right, :]
         result = {"label_map": label_map, "score_map": score_map}
         return result

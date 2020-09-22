@@ -36,6 +36,8 @@ class FastSCNN(DeepLabv3p):
             也支持计算两个分支或三个分支上的loss，权重按[fusion_branch_weight, higher_branch_weight, lower_branch_weight]排列，
             fusion_branch_weight为空间细节分支和全局上下文分支融合后的分支上的loss权重，higher_branch_weight为空间细节分支上的loss权重，
             lower_branch_weight为全局上下文分支上的loss权重，若higher_branch_weight和lower_branch_weight未设置则不会计算这两个分支上的loss。
+        input_channel (int): 输入图像通道数。默认值3。
+
 
     Raises:
         ValueError: use_bce_loss或use_dice_loss为真且num_calsses > 2。
@@ -52,7 +54,8 @@ class FastSCNN(DeepLabv3p):
                  use_dice_loss=False,
                  class_weight=None,
                  ignore_index=255,
-                 multi_loss_weight=[1.0]):
+                 multi_loss_weight=[1.0],
+                 input_channel=3):
         self.init_params = locals()
         super(DeepLabv3p, self).__init__('segmenter')
         # dice_loss或bce_loss只适用两类分割中
@@ -93,6 +96,7 @@ class FastSCNN(DeepLabv3p):
         self.ignore_index = ignore_index
         self.labels = None
         self.fixed_input_shape = None
+        self.input_channel = input_channel
 
     def build_net(self, mode='train'):
         model = paddlex.cv.nets.segmentation.FastSCNN(
@@ -103,7 +107,8 @@ class FastSCNN(DeepLabv3p):
             class_weight=self.class_weight,
             ignore_index=self.ignore_index,
             multi_loss_weight=self.multi_loss_weight,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            input_channel=self.input_channel)
         inputs = model.generate_inputs()
         model_out = model.build_net(inputs)
         outputs = OrderedDict()

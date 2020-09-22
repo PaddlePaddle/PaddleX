@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import numpy as np
+
+import paddle
 from paddle import fluid
 from paddle.fluid.param_attr import ParamAttr
 from paddle.fluid.regularizer import L2Decay
@@ -311,7 +314,7 @@ class YOLOv3:
 
     def _upsample(self, input, scale=2, name=None):
         out = fluid.layers.resize_nearest(
-            input=input, scale=float(scale), name=name)
+            input=input, scale=float(scale), name=name, align_corners=False)
         return out
 
     def _detection_block(self,
@@ -407,16 +410,28 @@ class YOLOv3:
             scale_x_y = self.scale_x_y if not isinstance(
                 self.scale_x_y, Sequence) else self.scale_x_y[i]
 
-            box, score = fluid.layers.yolo_box(
-                x=input,
-                img_size=im_size,
-                anchors=self.mask_anchors[i],
-                class_num=self.num_classes,
-                conf_thresh=self.nms.score_threshold,
-                downsample_ratio=self.downsample[i],
-                name=self.prefix_name + 'yolo_box' + str(i),
-                clip_bbox=self.clip_bbox,
-                scale_x_y=self.scale_x_y)
+            if paddle.__version__ < '1.8.4' and paddle.__version__ != '0.0.0':
+                box, score = fluid.layers.yolo_box(
+                    x=input,
+                    img_size=im_size,
+                    anchors=self.mask_anchors[i],
+                    class_num=self.num_classes,
+                    conf_thresh=self.nms.score_threshold,
+                    downsample_ratio=self.downsample[i],
+                    name=self.prefix_name + 'yolo_box' + str(i),
+                    clip_bbox=self.clip_bbox)
+            else:
+                box, score = fluid.layers.yolo_box(
+                    x=input,
+                    img_size=im_size,
+                    anchors=self.mask_anchors[i],
+                    class_num=self.num_classes,
+                    conf_thresh=self.nms.score_threshold,
+                    downsample_ratio=self.downsample[i],
+                    name=self.prefix_name + 'yolo_box' + str(i),
+                    clip_bbox=self.clip_bbox,
+                    scale_x_y=self.scale_x_y)
+
             boxes.append(box)
             scores.append(fluid.layers.transpose(score, perm=[0, 2, 1]))
 

@@ -1,6 +1,6 @@
 # PaddleX文档
 
-PaddleX的使用文档均在本目录结构下。文档采用Read the Docs方式组织，您可以直接访问[在线文档](https://paddlex.readthedocs.io/zh_CN/latest/index.html)进行查阅。
+PaddleX的使用文档均在本目录结构下。文档采用Read the Docs方式组织，您可以直接访问[在线文档](https://paddlex.readthedocs.io/zh_CN/develop/index.html)进行查阅。
 
 ## 编译文档
 在本目录下按如下步骤进行文档编译

@@ -18,6 +18,7 @@ import tqdm
 import os.path as osp
 import numpy as np
 from multiprocessing.pool import ThreadPool
+import paddle
 import paddle.fluid as fluid
 from paddle.fluid.layers.learning_rate_scheduler import _decay_step_counter
 from paddle.fluid.optimizer import ExponentialMovingAverage
@@ -36,7 +37,7 @@ class PPYOLO(BaseAPI):
 
     Args:
         num_classes (int): 类别数。默认为80。
-        backbone (str): PPYOLO的backbone网络，取值范围为['ResNet50_vd']。默认为'ResNet50_vd'。
+        backbone (str): PPYOLO的backbone网络，取值范围为['ResNet50_vd_ssld']。默认为'ResNet50_vd_ssld'。
         with_dcn_v2 (bool): Backbone是否使用DCNv2结构。默认为True。
         anchors (list|tuple): anchor框的宽度和高度，为None时表示使用默认值
                     [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
@@ -122,6 +123,9 @@ class PPYOLO(BaseAPI):
         self.use_matrix_nms = use_matrix_nms
         self.use_ema = False
         self.with_dcn_v2 = with_dcn_v2
+
+        if paddle.__version__ < '1.8.4' and paddle.__version__ != '0.0.0':
+            raise Exception("PPYOLO requires paddlepaddle or paddlepaddle-gpu >= 1.8.4")
 
     def _get_backbone(self, backbone_name):
         if backbone_name.startswith('ResNet50_vd'):
@@ -447,16 +451,18 @@ class PPYOLO(BaseAPI):
         return evaluate_metrics
 
     @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+    def _preprocess(images, transforms, model_type, class_name, thread_pool=None):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
             transforms=transforms,
             mode='test')
-        pool = ThreadPool(thread_num)
-        batch_data = pool.map(transforms, images)
-        pool.close()
-        pool.join()
+        if thread_pool is not None:
+            batch_data = thread_pool.map(transforms, images)
+        else:
+            batch_data = list()
+            for image in images:
+                batch_data.append(transforms(image))
         padding_batch = generate_minibatch(batch_data)
         im = np.array(
             [data[0] for data in padding_batch],
@@ -520,14 +526,13 @@ class PPYOLO(BaseAPI):
                                     len(images), self.num_classes, self.labels)
         return preds[0]
 
-    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+    def batch_predict(self, img_file_list, transforms=None):
         """预测。
 
         Args:
             img_file_list (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径，也可以是解码后的排列格式为（H，W，C）
                 且类型为float32且为BGR格式的数组。
             transforms (paddlex.det.transforms): 数据预处理操作。
-            thread_num (int): 并发执行各图像预处理时的线程数。
         Returns:
             list: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、
               预测框类别名称、预测框坐标(坐标格式为[xmin, ymin, w, h]）、
@@ -543,7 +548,7 @@ class PPYOLO(BaseAPI):
             transforms = self.test_transforms
         im, im_size = PPYOLO._preprocess(img_file_list, transforms,
                                          self.model_type,
-                                         self.__class__.__name__, thread_num)
+                                         self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

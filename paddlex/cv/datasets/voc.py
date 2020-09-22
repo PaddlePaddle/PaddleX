@@ -91,6 +91,10 @@ class VOCDetection(Dataset):
                 line = fr.readline()
                 if not line:
                     break
+                if len(line.strip().split()) > 2:
+                    raise Exception(
+                        "A space is defined as the separator, but it exists in image or label name {}."
+                        .format(line))
                 img_file, xml_file = [osp.join(data_dir, x) \
                         for x in line.strip().split()[:2]]
                 img_file = path_normalization(img_file)

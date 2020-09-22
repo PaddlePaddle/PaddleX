@@ -5,26 +5,14 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 import paddlex as pdx
 
-# 导入模型参数
+model_dir = 'output/deeplabv3p_mobilenetv3_large_ssld/best_model'
+img_file = "dataset/JPEGImages/5.png"
+save_dir = 'output/deeplabv3p_mobilenetv3_large_ssld/'
+
 model = pdx.load_model('output/deeplabv3p_mobilenetv3_large_ssld/best_model')
 
-# 指定待预测图像路径
-img_file = "dataset/JPEGImages/5.png"
-
-# 使用"无重叠的大图切小图"方式进行预测：将大图像切分成互不重叠多个小块，分别对每个小块进行预测
-# 最后将小块预测结果拼接成大图预测结果
-# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#tile-predict
-# pred = model.tile_predict(img_file=img_file, tile_size=(769, 769))
-
-# 使用"有重叠的大图切小图"策略进行预测：将大图像切分成相互重叠的多个小块，
-# 分别对每个小块进行预测，将小块预测结果的中间部分拼接成大图预测结果
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict
-pred = model.overlap_tile_predict(img_file=img_file, tile_size=(769, 769))
+pred = model.overlap_tile_predict(
+    img_file=img_file, tile_size=(769, 769), pad_size=[64, 64], batch_size=32)
 
-# 可视化预测结果
-# API说明：
-pdx.seg.visualize(
-    img_file,
-    pred,
-    weight=0.,
-    save_dir='output/deeplabv3p_mobilenetv3_large_ssld/')
+pdx.seg.visualize(img_file, pred, weight=0., save_dir=save_dir)

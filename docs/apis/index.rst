@@ -6,6 +6,7 @@ API接口说明
 
    transforms/index.rst
    datasets.md
+   analysis.md
    models/index.rst
    slim.md
    visualize.md
