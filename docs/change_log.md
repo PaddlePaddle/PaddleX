@@ -2,23 +2,23 @@
 
 **v1.2.0** 2020.09.07
 - 模型更新
-  > - 新增目标检测模型PPYOLO[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
-  > - FasterRCNN、MaskRCNN、YOLOv3、DeepLabv3p等模型新增内置COCO数据集预训练模型
-  > - 目标检测模型FasterRCNN和MaskRCNN新增backbone HRNet_W18[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
-  > - 语义分割模型DeepLabv3p新增backbone MobileNetV3_large_ssld[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
+  > - 新增产业最实用目标检测模型PP-YOLO，深入考虑产业应用对精度速度的双重面诉求，COCO数据集精度45.2%，Tesla V100预测速度72.9FPS。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
+  > - FasterRCNN、MaskRCNN、YOLOv3、DeepLabv3p等模型新增内置COCO数据集预训练模型，适用于小数据集的微调训练。
+  > - 目标检测模型FasterRCNN和MaskRCNN新增backbone HRNet_W18，适用于对细节预测要求较高的应用场景。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
+  > - 语义分割模型DeepLabv3p新增backbone MobileNetV3_large_ssld，模型体积9.3MB，Cityscapes数据集精度仍保持有73.28%。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
 
 - 模型部署更新
-  > - 新增模型通过OpenVINO的部署方案[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
-  > - 新增模型在树莓派上的部署方案[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
-  > - 优化PaddleLite Android部署的数据预处理和后处理代码性能
-  > - 优化Paddle服务端C++代码部署代码，增加use_mkl等参数，通过mkldnn显著提升模型在CPU上的预测性能
+  > - 新增模型通过OpenVINO预测加速的部署方案，CPU上相比mkldnn加速库预测速度提升1.5～2倍左右。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
+  > - 新增模型在树莓派上的部署方案，进一步丰富边缘侧的部署方案。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
+  > - 优化PaddleLite Android部署的数据预处理和后处理代码性能，预处理速度提升10倍左右，后处理速度提升4倍左右。
+  > - 优化Paddle服务端C++代码部署代码，增加use_mkl等参数，CPU上相比未开启mkldnn预测速度提升10～50倍左右。
 
 - 产业案例更新
-  > - 新增RGB图像遥感分割案例[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
-  > - 新增多通道遥感分割案例[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
+  > - 新增大尺寸RGB图像遥感分割案例，提供滑动窗口预测接口，不仅能避免显存不足的发生，而且能通过配置重叠程度消除最终预测结果中各窗口拼接处的裂痕感。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
+  > - 新增多通道遥感影像分割案例，打通语义分割任务对任意通道数量的数据分析、模型训练、模型部署全流程。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
 
 - 其它
-  > - 新增数据集切分功能，支持通过命令行切分ImageNet、PascalVOC、MSCOCO和语义分割数据集[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/data/format/classification.html#id2)
+  > - 新增数据集切分功能，支持通过命令行一键切分ImageNet、PascalVOC、MSCOCO和语义分割数据集[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/data/format/classification.html#id2)
 
 **v1.1.0** 2020.07.12
 
