@@ -46,12 +46,6 @@ def arg_parser():
     return parser
 
 
-def reverse_input(shape):
-    shape_list = shape[1:-1].split(',')
-    shape = '[1,3,' + shape_list[1] + ',' + shape_list[0] + ']'
-    return shape
-
-
 def export_openvino_model(model, args):
     if model.model_type == "detector" or model.__class__.__name__ == "FastSCNN":
         print(
