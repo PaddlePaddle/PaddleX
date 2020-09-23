@@ -69,7 +69,7 @@ def load_model(model_dir, fixed_input_shape=None):
             if status == "Prune":
                 from .slim.prune import update_program
                 model.test_prog = update_program(model.test_prog, model_dir,
-                                                 model.places[0])
+                                                 model.places[0], scope=model_scope)
             import pickle
             with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
                 load_dict = pickle.load(f)
