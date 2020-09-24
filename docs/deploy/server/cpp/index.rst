@@ -8,3 +8,4 @@ C++部署
 
    windows.md
    linux.md
+   api.md
