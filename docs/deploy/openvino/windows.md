@@ -14,8 +14,11 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 - 我的电脑->属性->高级系统设置->环境变量
     - 在系统变量中找到Path（如没有，自行创建），并双击编辑
     - 新建，分别将OpenVINO以下路径填入并保存:  
+
       `C:\Program File (x86)\IntelSWTools\openvino\inference_engine\bin\intel64\Release`  
+
       `C:\Program File (x86)\IntelSWTools\openvino\inference_engine\external\tbb\bin`  
+
       `C:\Program File (x86)\IntelSWTools\openvino\deployment_tools\ngraph\lib`  
 
 请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录为 `D:\projects`演示。**
@@ -50,13 +53,13 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step3: 使用Visual Studio 2019直接编译CMake
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-2. 点击： `文件`->`打开`->`CMake` 选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\openvino`），并打开`CMakeList.txt`：
+2. 点击： `文件`->`打开`->`CMake` 选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\openvino`），并打开`CMakeList.txt`  
 3. 点击：`项目`->`CMake设置`
 4. 点击`浏览`，分别设置编译选项指定`OpenVINO`、`Gflags`、`GLOG`、`NGRAPH`、`OPENCV`的路径  
 
 |  参数名   | 含义  |
 |  ----  | ----  |
-| OPENCV_DIR  | opencv库路径 |
+| OPENCV_DIR  | OpenCV库路径 |
 | OPENVINO_DIR | OpenVINO推理库路径，在OpenVINO安装目录下的deployment/inference_engine目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | NGRAPH_LIB | OpenVINO的ngraph库路径，在OpenVINO安装目录下的deployment/ngraph/lib目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | GFLAGS_DIR | gflags库路径 |

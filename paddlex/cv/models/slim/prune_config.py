@@ -171,10 +171,14 @@ def get_prune_params(model):
             model_type.startswith('ShuffleNetV2'):
         for block in program.blocks:
             for param in block.all_parameters():
-                pd_var = fluid.global_scope().find_var(param.name)
-                pd_param = pd_var.get_tensor()
-                if len(np.array(pd_param).shape) == 4:
-                    prune_names.append(param.name)
+                pd_var = model.scope.find_var(param.name)
+                try:
+                    pd_param = pd_var.get_tensor()
+                    if len(np.array(pd_param).shape) == 4:
+                        prune_names.append(param.name)
+                except Exception as e:
+                    print("None Tensor Name: ", param.name)
+                    print("Error message: {}".format(e))
         if model_type == 'AlexNet':
             prune_names.remove('conv5_weights')
         if model_type == 'ShuffleNetV2':
