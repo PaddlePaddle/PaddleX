@@ -304,7 +304,9 @@ def get_prune_params(model):
                 'conv9_depthwise_weights', 'conv6_expand_weights',
                 'conv5_se_2_weights', 'conv14_expand_weights',
                 'conv4_depthwise_weights', 'conv7_expand_weights',
-                'conv7_depthwise_weights'
+                'conv7_depthwise_weights', 'encoder/aspp0/weights',
+                'decoder/merge/weights', 'encoder/image_pool/weights',
+                'decoder/weights'
             ]
         for param in program.global_block().all_parameters():
             if 'weight' not in param.name:
