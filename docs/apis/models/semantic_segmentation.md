@@ -138,7 +138,6 @@ overlap_tile_predict(self, img_file, tile_size=[512, 512], pad_size=[64, 64], ba
 > >
 > > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
 
-
 ## paddlex.seg.UNet
 
 ```python
