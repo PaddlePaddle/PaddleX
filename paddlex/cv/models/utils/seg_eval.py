@@ -142,3 +142,36 @@ class ConfusionMatrix(object):
 
         kappa = (po - pe) / (1 - pe)
         return kappa
+
+    def f1_score(self):
+        f1score_list = []
+        # TODO: use numpy sum axis api to simpliy
+        vji = np.zeros(self.num_classes, dtype=int)
+        vij = np.zeros(self.num_classes, dtype=int)
+        for j in range(self.num_classes):
+            v_j = 0
+            for i in range(self.num_classes):
+                v_j += self.confusion_matrix[j][i]
+            vji[j] = v_j
+
+        for i in range(self.num_classes):
+            v_i = 0
+            for j in range(self.num_classes):
+                v_i += self.confusion_matrix[j][i]
+            vij[i] = v_i
+
+        for c in range(self.num_classes):
+            if vji[c] == 0:
+                precision = 0
+            else:
+                precision = self.confusion_matrix[c][c] / vji[c]
+            if vij[c] == 0:
+                recall = 0
+            else:
+                recall = self.confusion_matrix[c][c] / vij[c]
+            if vji[c] == 0 and vij[c] == 0:
+                f1score = 0
+            else:
+                f1score = 2 * precision * recall / (recall + precision)
+            f1score_list.append(f1score)
+        return np.array(f1score_list)
