@@ -22,7 +22,7 @@ paddlex --export_inference --model_dir=/path/to/paddle_model --save_dir=./infere
 ```
 cd /root/projects/python
 
-python convertor.py --model_dir /path/to/inference_model --save_dir /path/to/openvino_model --fixed_input_shape [w,h]
+python converter.py --model_dir /path/to/inference_model --save_dir /path/to/openvino_model --fixed_input_shape [w,h]
 ```
 **转换成功后会在save_dir下出现后缀名为.xml、.bin、.mapping三个文件**  
 转换参数说明如下：
