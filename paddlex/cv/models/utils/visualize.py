@@ -93,6 +93,7 @@ def visualize_segmentation(image,
     if abs(weight) < 1e-5:
         vis_result = pseudo_img
     else:
+        print(im.dtype, pseudo_img.dtype)
         vis_result = cv2.addWeighted(im, weight, pseudo_img, 1 - weight, 0)
 
     if save_dir is not None:

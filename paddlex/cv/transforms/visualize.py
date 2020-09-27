@@ -236,16 +236,22 @@ def seg_compose(im,
                     len(im.shape)))
     else:
         try:
-            im = cv2.imread(im).astype('float32')
+            im = cv2.imread(im)
         except:
             raise ValueError('Can\'t read The image file {}!'.format(im))
-    im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    #im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    im = im.astype('float32')
+    h, w, c = im.shape
     if label is not None:
         if not isinstance(label, np.ndarray):
             label = np.asarray(Image.open(label))
     if vdl_writer is not None:
-        vdl_writer.add_image(
-            tag='0. OriginalImage' + '/' + str(step), img=im, step=0)
+        for i in range(0, c, 3):
+            if c > 3:
+                tag = '0. OriginalImage/{}_{}'.format(str(step), str(i // 3))
+            else:
+                tag = '0. OriginalImage/{}'.format(str(step))
+            vdl_writer.add_image(tag=tag, img=im[:, :, i:i + 3], step=0)
     op_id = 1
     for op in transforms:
         if isinstance(op, SegTransform):
@@ -264,8 +270,15 @@ def seg_compose(im,
             else:
                 outputs = (im, im_info)
         if vdl_writer is not None:
-            tag = str(op_id) + '. ' + op.__class__.__name__ + '/' + str(step)
-            vdl_writer.add_image(tag=tag, img=im, step=0)
+            for i in range(0, c, 3):
+                if c > 3:
+                    tag = str(
+                        op_id) + '. ' + op.__class__.__name__ + '/' + str(
+                            step) + '_' + str(i // 3)
+                else:
+                    tag = str(
+                        op_id) + '. ' + op.__class__.__name__ + '/' + str(step)
+                vdl_writer.add_image(tag=tag, img=im[:, :, i:i + 3], step=0)
         op_id += 1
 
 
