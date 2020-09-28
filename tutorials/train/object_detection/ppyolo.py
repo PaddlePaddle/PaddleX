@@ -50,7 +50,7 @@ model = pdx.det.PPYOLO(num_classes=num_classes)
 model.train(
     num_epochs=270,
     train_dataset=train_dataset,
-    train_batch_size=1,
+    train_batch_size=8,
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
