@@ -68,7 +68,7 @@ tar -xvf google_change_det_model.tar.gz
 
 在训练过程中，每隔10个迭代轮数会评估一次模型在验证集的精度。由于已事先将原始大尺寸图片切分成小块，相当于使用无重叠的滑动窗口预测方式，最优模型精度:
 
-| mean_iou | category__iou | overal_accuracy | category_accuracy | category_F1-score | kappa |
+| mean_iou | category__iou | overall_accuracy | category_accuracy | category_F1-score | kappa |
 | -- | -- | -- | -- | --| -- |
 | 84.24% | 97.54%、70.94%| 97.68% | 98.50%、85.99% | 98.75%、83% | 81.76% |
 
@@ -76,7 +76,7 @@ category分别对应`unchanged`和`changed`两类。
 
 运行以下脚本，将采用有重叠的滑动窗口预测方式，重新评估原始大尺寸图片的模型精度，此时模型精度为：
 
-| mean_iou | category__iou | overal_accuracy | category_accuracy | category_F1-score | kappa |
+| mean_iou | category__iou | overall_accuracy | category_accuracy | category_F1-score | kappa |
 | -- | -- | -- | -- | --| -- |
 | 85.33% | 97.79%、72.87% | 97.97% | 98.66%、87.06% | 98.99%、84.30% | 83.19% |
 
