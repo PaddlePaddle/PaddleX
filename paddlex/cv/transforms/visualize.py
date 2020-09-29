@@ -239,7 +239,7 @@ def seg_compose(im,
             im = cv2.imread(im)
         except:
             raise ValueError('Can\'t read The image file {}!'.format(im))
-    #im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     im = im.astype('float32')
     h, w, c = im.shape
     if label is not None:

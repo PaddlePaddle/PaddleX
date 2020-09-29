@@ -840,19 +840,14 @@ class RandomPaddingCrop(SegTransform):
                 img_width = im.shape[1]
 
             if crop_height > 0 and crop_width > 0:
-                while 1:
-                    h_off = np.random.randint(img_height - crop_height + 1)
-                    w_off = np.random.randint(img_width - crop_width + 1)
+                h_off = np.random.randint(img_height - crop_height + 1)
+                w_off = np.random.randint(img_width - crop_width + 1)
 
-                    im = im[h_off:(crop_height + h_off), w_off:(w_off +
-                                                                crop_width), :]
-                    if label is not None:
-                        label = label[h_off:(crop_height + h_off), w_off:(
-                            w_off + crop_width)]
-                    if np.max(im) != np.min(im):
-                        break
-                    else:
-                        print('There is only one class\n')
+                im = im[h_off:(crop_height + h_off), w_off:(w_off + crop_width
+                                                            ), :]
+                if label is not None:
+                    label = label[h_off:(crop_height + h_off), w_off:(
+                        w_off + crop_width)]
         if label is None:
             return (im, im_info)
         else:
