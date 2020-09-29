@@ -37,19 +37,17 @@ def export_onnx_model(model, save_dir, opset_version=10):
             "Only image classifier models, detection models(YOLOv3) and semantic segmentation models(except FastSCNN) are supported to export to ONNX"
         )
     try:
-        import x2paddle
-        if x2paddle.__version__ < '0.7.4':
-            logging.error("You need to upgrade x2paddle >= 0.7.4")
+        import paddle2onnx 
     except:
         logging.error(
-            "You need to install x2paddle first, pip install x2paddle>=0.7.4")
+            "You need to install paddle2onnx first, pip install paddle2onnx")
+    import paddle2onnx as p2o
     if opset_version == 10 and model.__class__.__name__ == "YOLOv3":
         logging.warning(
-            "Export for openVINO by default, the output of multiclass_nms exported to onnx will contains background. If you need onnx completely consistent with paddle, please use X2Paddle to export"
+            "Export for openVINO by default, the output of multiclass_nms exported to onnx will contains background. If you need onnx completely consistent with paddle, please use paddle2onnx to export"
         )
-        x2paddle.op_mapper.paddle2onnx.opset10.paddle_custom_layer.multiclass_nms.multiclass_nms = multiclass_nms_for_openvino
-    from x2paddle.op_mapper.paddle2onnx.paddle_op_mapper import PaddleOpMapper
-    mapper = PaddleOpMapper()
+        p2o.op_mapper.opset9.paddle_custom_layer.multiclass_nms.multiclass_nms = multiclass_nms_for_openvino
+    mapper = p2o.PaddleOpMapper()
     mapper.convert(
         model.test_prog,
         save_dir,
