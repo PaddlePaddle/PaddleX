@@ -10,3 +10,4 @@
    detection.md
    instance_segmentation.md
    segmentation.md
+   change_detection.md

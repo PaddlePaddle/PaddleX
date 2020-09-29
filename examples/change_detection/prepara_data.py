@@ -3,104 +3,128 @@ import os.path as osp
 import numpy as np
 import cv2
 import shutil
-from PIL import Image
+import random
+# 为保证每次运行该脚本时划分的样本一致，故固定随机种子
+random.seed(0)
+
 import paddlex as pdx
 
 # 定义训练集切分时的滑动窗口大小和步长，格式为(W, H)
-train_tile_size = (512, 512)
-train_stride = (256, 256)
+train_tile_size = (1024, 1024)
+train_stride = (512, 512)
 # 定义验证集切分时的滑动窗口大小和步长，格式(W, H)
-val_tile_size = (256, 256)
-val_stride = (256, 256)
+val_tile_size = (769, 769)
+val_stride = (769, 769)
+# 训练集和验证集比例
+train_ratio = 0.75
+val_ratio = 0.25
+# 切分后的数据集保存路径
+tiled_dataset = './tiled_dataset'
+# 切分后的图像文件保存路径
+tiled_image_dir = osp.join(tiled_dataset, 'JPEGImages')
+# 切分后的标注文件保存路径
+tiled_anno_dir = osp.join(tiled_dataset, 'Annotations')
 
-## 下载并解压2015 CCF大数据比赛提供的高清遥感影像
-#SZTAKI_AirChange_Benchmark = 'https://bj.bcebos.com/paddlex/examples/remote_sensing/datasets/ccf_remote_dataset.tar.gz'
-#pdx.utils.download_and_decompress(SZTAKI_AirChange_Benchmark, path='./')
+# 下载和解压Google Dataset数据集
+change_det_dataset = 'https://bj.bcebos.com/paddlex/examples/change_detection/google_change_det_dataset.tar.gz'
+pdx.utils.download_and_decompress(change_det_dataset, path='./')
+change_det_dataset = './google_change_det_dataset'
+image1_dir = osp.join(change_det_dataset, 'T1')
+image2_dir = osp.join(change_det_dataset, 'T2')
+label_dir = osp.join(change_det_dataset, 'labels_change')
 
-if not osp.exists('./dataset/JPEGImages'):
-    os.makedirs('./dataset/JPEGImages')
-if not osp.exists('./dataset/Annotations'):
-    os.makedirs('./dataset/Annotations')
+if not osp.exists(tiled_image_dir):
+    os.makedirs(tiled_image_dir)
+if not osp.exists(tiled_anno_dir):
+    os.makedirs(tiled_anno_dir)
 
-# 将前4张图片划分入训练集，并切分成小块之后加入到训练集中
-# 并生成train_list.txt
-train_list = {'Szada': [2, 3, 4, 5, 6, 7], 'Tiszadob': [1, 2, 4, 5]}
-val_list = {'Szada': [1], 'Tiszadob': [3]}
-all_list = [train_list, val_list]
+# 划分数据集
+im1_file_list = os.listdir(image1_dir)
+im2_file_list = os.listdir(image2_dir)
+label_file_list = os.listdir(label_dir)
+im1_file_list = sorted(
+    im1_file_list, key=lambda k: int(k.split('test')[-1].split('_')[0]))
+im2_file_list = sorted(
+    im2_file_list, key=lambda k: int(k.split('test')[-1].split('_')[0]))
+label_file_list = sorted(
+    label_file_list, key=lambda k: int(k.split('test')[-1].split('_')[0]))
 
-for i, data_list in enumerate(all_list):
-    id = 0
-    if i == 0:
-        for key, value in data_list.items():
-            for v in value:
-                shutil.copyfile(
-                    "SZTAKI_AirChange_Benchmark/{}/{}/im1.bmp".format(key, v),
-                    "./dataset/JPEGImages/{}_{}_im1.bmp".format(key, v))
-                shutil.copyfile(
-                    "SZTAKI_AirChange_Benchmark/{}/{}/im2.bmp".format(key, v),
-                    "./dataset/JPEGImages/{}_{}_im2.bmp".format(key, v))
-                label = cv2.imread(
-                    "SZTAKI_AirChange_Benchmark/{}/{}/gt.bmp".format(key, v))
-                label = label[:, :, 0]
-                label = label != 0
-                label = label.astype(np.uint8)
-                cv2.imwrite("./dataset/Annotations/{}_{}_gt.png".format(
-                    key, v), label)
+file_list = list()
+for im1_file, im2_file, label_file in zip(im1_file_list, im2_file_list,
+                                          label_file_list):
+    im1_file = osp.join(image1_dir, im1_file)
+    im2_file = osp.join(image2_dir, im2_file)
+    label_file = osp.join(label_dir, label_file)
+    file_list.append((im1_file, im2_file, label_file))
+random.shuffle(file_list)
+train_num = int(len(file_list) * train_ratio)
 
-                id += 1
-                mode = 'w' if id == 1 else 'a'
-                with open('./dataset/train_list.txt', mode) as f:
-                    f.write(
-                        "JPEGImages/{}_{}_im1.bmp JPEGImages/{}_{}_im2.bmp Annotations/{}_{}_gt.png\n".
-                        format(key, v, key, v, key, v))
-
-    if i == 0:
+# 将大图切分成小图
+for i, item in enumerate(file_list):
+    if i < train_num:
         stride = train_stride
         tile_size = train_tile_size
     else:
         stride = val_stride
         tile_size = val_tile_size
-    for key, value in data_list.items():
-        for v in value:
-            im1 = cv2.imread("SZTAKI_AirChange_Benchmark/{}/{}/im1.bmp".format(
-                key, v))
-            im2 = cv2.imread("SZTAKI_AirChange_Benchmark/{}/{}/im2.bmp".format(
-                key, v))
-            label = cv2.imread(
-                "SZTAKI_AirChange_Benchmark/{}/{}/gt.bmp".format(key, v))
-            label = label[:, :, 0]
-            label = label != 0
-            label = label.astype(np.uint8)
-            H, W, C = im1.shape
-            tile_id = 1
-            for h in range(0, H, stride[1]):
-                for w in range(0, W, stride[0]):
-                    left = w
-                    upper = h
-                    right = min(w + tile_size[0], W)
-                    lower = min(h + tile_size[1], H)
-                    tile_im1 = im1[upper:lower, left:right, :]
-                    tile_im2 = im2[upper:lower, left:right, :]
-                    cv2.imwrite("./dataset/JPEGImages/{}_{}_{}_im1.bmp".format(
-                        key, v, tile_id), tile_im1)
-                    cv2.imwrite("./dataset/JPEGImages/{}_{}_{}_im2.bmp".format(
-                        key, v, tile_id), tile_im2)
-                    cut_label = label[upper:lower, left:right]
-                    cv2.imwrite("./dataset/Annotations/{}_{}_{}_gt.png".format(
-                        key, v, tile_id), cut_label)
-                    with open('./dataset/{}_list.txt'.format(
-                            'train' if i == 0 else 'val'), 'a') as f:
-                        f.write(
-                            "JPEGImages/{}_{}_{}_im1.bmp JPEGImages/{}_{}_{}_im2.bmp Annotations/{}_{}_{}_gt.png\n".
-                            format(key, v, tile_id, key, v, tile_id, key, v,
-                                   tile_id))
-                    tile_id += 1
+    set_name = 'train' if i < train_num else 'val'
+
+    # 生成原图的file_list
+    im1_file, im2_file, label_file = item[:]
+    mode = 'w' if i in [0, train_num] else 'a'
+    with open(
+            osp.join(change_det_dataset, '{}_list.txt'.format(set_name)),
+            mode) as f:
+        f.write("T1/{} T2/{} labels_change/{}\n".format(
+            osp.split(im1_file)[-1],
+            osp.split(im2_file)[-1], osp.split(label_file)[-1]))
+
+    im1 = cv2.imread(im1_file)
+    im2 = cv2.imread(im2_file)
+    # 将三通道的label图像转换成单通道的png格式图片
+    # 且将标注0和255转换成0和1
+    label = cv2.imread(label_file, cv2.IMREAD_GRAYSCALE)
+    label = label != 0
+    label = label.astype(np.uint8)
+
+    H, W, C = im1.shape
+    tile_id = 1
+    im1_name = osp.split(im1_file)[-1].split('.')[0]
+    im2_name = osp.split(im2_file)[-1].split('.')[0]
+    label_name = osp.split(label_file)[-1].split('.')[0]
+    for h in range(0, H, stride[1]):
+        for w in range(0, W, stride[0]):
+            left = w
+            upper = h
+            right = min(w + tile_size[0], W)
+            lower = min(h + tile_size[1], H)
+            tile_im1 = im1[upper:lower, left:right, :]
+            tile_im2 = im2[upper:lower, left:right, :]
+            cv2.imwrite(
+                osp.join(tiled_image_dir,
+                         "{}_{}.bmp".format(im1_name, tile_id)), tile_im1)
+            cv2.imwrite(
+                osp.join(tiled_image_dir,
+                         "{}_{}.bmp".format(im2_name, tile_id)), tile_im2)
+            cut_label = label[upper:lower, left:right]
+            cv2.imwrite(
+                osp.join(tiled_anno_dir,
+                         "{}_{}.png".format(label_name, tile_id)), cut_label)
+            mode = 'w' if i in [0, train_num] and tile_id == 1 else 'a'
+            with open(
+                    osp.join(tiled_dataset, '{}_list.txt'.format(set_name)),
+                    mode) as f:
+                f.write(
+                    "JPEGImages/{}_{}.bmp JPEGImages/{}_{}.bmp Annotations/{}_{}.png\n".
+                    format(im1_name, tile_id, im2_name, tile_id, label_name,
+                           tile_id))
+            tile_id += 1
 
 # 生成labels.txt
 label_list = ['unchanged', 'changed']
 for i, label in enumerate(label_list):
     mode = 'w' if i == 0 else 'a'
-    with open('./dataset/labels.txt', 'a') as f:
+    with open(osp.join(tiled_dataset, 'labels.txt'), 'a') as f:
         name = "{}\n".format(label) if i < len(
             label_list) - 1 else "{}".format(label)
         f.write(name)

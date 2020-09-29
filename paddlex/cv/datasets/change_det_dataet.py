@@ -25,11 +25,11 @@ from .dataset import get_encoding
 
 
 class ChangeDetDataset(Dataset):
-    """读取语义分割任务数据集，并对样本进行相应的处理。
+    """读取用于完成地块检测的语义分割任务数据集，并对样本进行相应的处理。
 
     Args:
         data_dir (str): 数据集所在的目录路径。
-        file_list (str): 描述数据集图片文件和对应标注文件的文件路径（文本内每行路径为相对data_dir的相对路）。
+        file_list (str): 描述数据集图片1文件、图片2文件和对应标注文件的文件路径（文本内每行路径为相对data_dir的相对路）。
         label_list (str): 描述数据集包含的类别信息文件路径。默认值为None。
         transforms (list): 数据集中每个样本的预处理/增强算子。
         num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。
