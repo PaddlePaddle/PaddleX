@@ -26,7 +26,7 @@ tiled_image_dir = osp.join(tiled_dataset, 'JPEGImages')
 tiled_anno_dir = osp.join(tiled_dataset, 'Annotations')
 
 # 下载和解压Google Dataset数据集
-change_det_dataset = 'https://bj.bcebos.com/paddlex/examples/change_detection/google_change_det_dataset.tar.gz'
+change_det_dataset = 'https://bj.bcebos.com/paddlex/examples/change_detection/dataset/google_change_det_dataset.tar.gz'
 pdx.utils.download_and_decompress(change_det_dataset, path='./')
 change_det_dataset = './google_change_det_dataset'
 image1_dir = osp.join(change_det_dataset, 'T1')
