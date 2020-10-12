@@ -22,7 +22,7 @@ if [ ! -d "./deps/glog" ]; then
     cd ..
     cd ..
 fi
-OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/armopencv/opencv.tar.bz2
+OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/armlinux/opencv.tar.bz2
 if [ ! -d "./deps/opencv" ]; then
     cd deps
     wget -c ${OPENCV_URL}
