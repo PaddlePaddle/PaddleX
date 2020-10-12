@@ -228,7 +228,7 @@ endif()
 if (NOT WIN32)
     set(DEPS ${DEPS}
         ${MATH_LIB} ${MKLDNN_LIB}
-        glog gflags protobuf z xxhash yaml-cpp
+        glog gflags protobuf xxhash yaml-cpp
         )
     if(EXISTS "${PADDLE_DIR}/third_party/install/snappystream/lib")
         set(DEPS ${DEPS} snappystream)

@@ -60,8 +60,6 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
-- glog：编译请参考[编译文档](https://github.com/google/glog)
-
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
 ### Step4: 编译
@@ -71,8 +69,6 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 LITE_DIR=/path/to/Paddle-Lite/inference/lib
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
-# glog预编译库的路径
-GLOG_DIR=$(pwd)/deps/glog
 # opencv预编译库的路径
 OPENCV_DIR=$(pwd)/deps/opencv/
 ```
