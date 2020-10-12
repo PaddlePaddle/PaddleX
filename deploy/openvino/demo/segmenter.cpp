@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
+#include <gflags/gflags.h>
 
 #include <algorithm>
 #include <fstream>

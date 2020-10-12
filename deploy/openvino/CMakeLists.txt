@@ -8,7 +8,6 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 SET(OPENVINO_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(GFLAGS_DIR "" CACHE PATH "Location of libraries")
-SET(GLOG_DIR "" CACHE PATH "Location of libraries")
 SET(NGRAPH_LIB "" CACHE PATH "Location of libraries")
 SET(ARCH "" CACHE PATH "Location of libraries")
 
@@ -47,9 +46,6 @@ if (NOT DEFINED GFLAGS_DIR OR ${GFLAGS_DIR} STREQUAL "")
     message(FATAL_ERROR "please set GFLAGS_DIR with -DGFLAGS_DIR=/path/gflags")
 endif()
 
-if (NOT DEFINED GLOG_DIR OR ${GLOG_DIR} STREQUAL "")
-    message(FATAL_ERROR "please set GLOG_DIR with -DLOG_DIR=/path/glog")
-endif()
 
 if (NOT DEFINED NGRAPH_LIB OR ${NGRAPH_LIB} STREQUAL "")
     message(FATAL_ERROR "please set NGRAPH_DIR with -DNGRAPH_DIR=/path/ngraph")
@@ -70,9 +66,6 @@ endif()
 link_directories("${GFLAGS_DIR}/lib")
 include_directories("${GFLAGS_DIR}/include")
 
-link_directories("${GLOG_DIR}/lib")
-include_directories("${GLOG_DIR}/include")
-
 link_directories("${NGRAPH_LIB}")
 link_directories("${NGRAPH_LIB}/lib")
 
@@ -86,7 +79,6 @@ endif ()
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 if (WIN32)
-    add_definitions("/DGOOGLE_GLOG_DLL_DECL=")
     set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} /bigobj /MTd")
     set(CMAKE_C_FLAGS_RELEASE  "${CMAKE_C_FLAGS_RELEASE} /bigobj /MT")
     set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} /bigobj /MTd")
@@ -126,11 +118,11 @@ endif(WIN32)
 
 if (NOT WIN32)
     set(DEPS ${DEPS}
-        glog gflags  z  yaml-cpp
+        gflags yaml-cpp
         )
 else()
     set(DEPS ${DEPS}
-        glog gflags_static  libyaml-cppmt)
+        gflags_static  libyaml-cppmt)
     set(DEPS ${DEPS} libcmt shlwapi)
 endif(NOT WIN32)
 

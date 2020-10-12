@@ -40,11 +40,10 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step2 软件依赖
 提供了依赖软件预编译库:
-- [gflas-glog](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)  
+- [gflas](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)  
 - [opencv](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
 请下载上面两个连接的预编译库。若需要自行下载请参考：
 - gflags:[下载地址](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags)
-- glog：[编译文档](https://github.com/google/glog)
 - opencv:[下载地址](https://opencv.org/releases/)  
 下载完opencv后需要配置环境变量，如下流程所示  
     - 我的电脑->属性->高级系统设置->环境变量
@@ -55,7 +54,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
 2. 点击： `文件`->`打开`->`CMake` 选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\openvino`），并打开`CMakeList.txt`  
 3. 点击：`项目`->`CMake设置`
-4. 点击`浏览`，分别设置编译选项指定`OpenVINO`、`Gflags`、`GLOG`、`NGRAPH`、`OPENCV`的路径  
+4. 点击`浏览`，分别设置编译选项指定`OpenVINO`、`Gflags`、`NGRAPH`、`OPENCV`的路径  
 
 |  参数名   | 含义  |
 |  ----  | ----  |
@@ -63,7 +62,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 | OPENVINO_DIR | OpenVINO推理库路径，在OpenVINO安装目录下的deployment/inference_engine目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | NGRAPH_LIB | OpenVINO的ngraph库路径，在OpenVINO安装目录下的deployment/ngraph/lib目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | GFLAGS_DIR | gflags库路径 |
-| GLOG_DIR  | glog库路径 |
 | WITH_STATIC_LIB | 是否静态编译，默认为True |  
 
 **设置完成后**, 点击`保存并生成CMake缓存以加载变量`。
