@@ -93,7 +93,9 @@ def visualize_segmentation(image,
     if abs(weight) < 1e-5:
         vis_result = pseudo_img
     else:
-        vis_result = cv2.addWeighted(im, weight, pseudo_img, 1 - weight, 0)
+        vis_result = cv2.addWeighted(im, weight,
+                                     pseudo_img.astype('float32'), 1 - weight,
+                                     0)
 
     if save_dir is not None:
         if not os.path.exists(save_dir):

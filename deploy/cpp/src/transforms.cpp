@@ -197,6 +197,22 @@ void Transforms::Init(const YAML::Node& transforms_node, bool to_rgb) {
   to_rgb_ = to_rgb;
   for (const auto& item : transforms_node) {
     std::string name = item.begin()->first.as<std::string>();
+    if (name == "ArrangeClassifier") {
+      continue;
+    }
+    if (name == "ArrangeSegmenter") {
+      continue;
+    }
+    if (name == "ArrangeFasterRCNN") {
+      continue;
+    }
+    if (name == "ArrangeMaskRCNN") {
+      continue;
+    }
+    if (name == "ArrangeYOLOv3") {
+      continue;
+    }
+
     std::shared_ptr<Transform> transform = CreateTransform(name);
     transform->Init(item.begin()->second);
     transforms_.push_back(transform);
