@@ -58,7 +58,7 @@ if (WIN32)
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
   unset(OpenCV_DIR CACHE)
 else ()
-  find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/cmake NO_DEFAULT_PATH)
+	find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
 endif ()
 
 include_directories(${OpenCV_INCLUDE_DIRS})
