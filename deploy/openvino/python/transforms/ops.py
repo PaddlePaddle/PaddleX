@@ -18,11 +18,15 @@ import numpy as np
 from PIL import Image, ImageEnhance
 
 
-def normalize(im, mean, std):
-    im = im / 255.0
+def normalize(im, mean, std, min_value=[0, 0, 0], max_value=[255, 255, 255]):
+    # Rescaling (min-max normalization)
+    range_value = [max_value[i] - min_value[i] for i in range(len(max_value))]
+    im = (im - min_value) / range_value
+
+    # Standardization (Z-score Normalization)
     im -= mean
     im /= std
-    return im
+    return im.astype('float32')
 
 
 def permute(im, to_bgr=False):
@@ -69,8 +73,8 @@ def random_crop(im,
                 (float(im.shape[1]) / im.shape[0]) / (w**2))
     scale_max = min(scale[1], bound)
     scale_min = min(scale[0], bound)
-    target_area = im.shape[0] * im.shape[1] * np.random.uniform(
-        scale_min, scale_max)
+    target_area = im.shape[0] * im.shape[1] * np.random.uniform(scale_min,
+                                                                scale_max)
     target_size = math.sqrt(target_area)
     w = int(target_size * w)
     h = int(target_size * h)
@@ -145,6 +149,7 @@ def brightness(im, brightness_lower, brightness_upper):
     delta = np.random.uniform(brightness_lower, brightness_upper)
     im += delta
     return im
+
 
 def rotate(im, rotate_lower, rotate_upper):
     rotate_delta = np.random.uniform(rotate_lower, rotate_upper)

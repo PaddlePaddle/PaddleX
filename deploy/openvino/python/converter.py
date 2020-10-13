@@ -13,9 +13,11 @@
 # limitations under the License.
 
 import os
+import os.path as osp
 from six import text_type as _text_type
 import argparse
 import sys
+import yaml
 import paddlex as pdx
 
 
@@ -68,11 +70,17 @@ def export_openvino_model(model, args):
     onnx_parser.add_argument("--model_dir", type=_text_type)
     onnx_parser.add_argument("--save_dir", type=_text_type)
     onnx_parser.add_argument("--fixed_input_shape")
-    onnx_input = os.path.join(args.save_dir, 'x2paddle_model.onnx')
+    onnx_input = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
     onnx_parser.set_defaults(input_model=onnx_input)
     onnx_parser.set_defaults(output_dir=args.save_dir)
     shape_list = args.fixed_input_shape[1:-1].split(',')
-    shape = '[1,3,' + shape_list[1] + ',' + shape_list[0] + ']'
+    with open(osp.join(args.model_dir, "model.yml")) as f:
+        info = yaml.load(f.read(), Loader=yaml.Loader)
+    input_channel = 3
+    if 'input_channel' in info['_init_params']:
+        input_channel = info['_init_params']['input_channel']
+    shape = '[1,{},' + shape_list[1] + ',' + shape_list[0] + ']'
+    shape = shape.format(input_channel)
     if model.__class__.__name__ == "YOLOV3":
         shape = shape + ",[1,2]"
         inputs = "image,im_size"

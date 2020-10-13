@@ -29,7 +29,8 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 **说明**：其中C++预测代码在PaddleX/deploy/openvino 目录，该目录不依赖任何PaddleX下其他目录。
 
 ### Step2 软件依赖
-提供了依赖软件预编包或者一键编译，用户不需要单独下载或编译第三方依赖软件。若需要自行编译第三方依赖软件请参考：
+
+Step3中的编译脚本会一键安装第三方依赖软件的预编译包，用户不需要单独下载或编译这些依赖软件。若需要自行编译第三方依赖软件请参考：
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
@@ -37,7 +38,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
-
 
 
 ### Step3: 编译
@@ -72,7 +72,7 @@ ARCH=x86
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
 | --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
+| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "，即不保存可视化结果 |
 
 ### 样例
 `样例一`：

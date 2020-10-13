@@ -19,6 +19,7 @@ import os.path as osp
 import numpy as np
 from PIL import Image
 import cv2
+import imghdr
 from collections import OrderedDict
 
 
@@ -52,6 +53,62 @@ class Compose(SegTransform):
         self.transforms = transforms
         self.to_rgb = False
 
+    @staticmethod
+    def read_img(img_path):
+        img_format = imghdr.what(img_path)
+        name, ext = osp.splitext(img_path)
+        if img_format == 'tiff' or ext == '.img':
+            try:
+                import gdal
+            except:
+                six.reraise(*sys.exc_info())
+                raise Exception(
+                    "Please refer to https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/multi-channel_remote_sensing/README.md to install gdal"
+                )
+
+            dataset = gdal.Open(img_path)
+            if dataset == None:
+                raise Exception('Can not open', img_path)
+            im_data = dataset.ReadAsArray()
+            return im_data.transpose((1, 2, 0))
+        elif img_format in ['jpeg', 'bmp', 'png']:
+            return cv2.imread(img_path)
+        elif ext == '.npy':
+            return np.load(img_path)
+        else:
+            raise Exception('Image format {} is not supported!'.format(ext))
+
+    @staticmethod
+    def decode_image(im, label):
+        if isinstance(im, np.ndarray):
+            if len(im.shape) != 3:
+                raise Exception(
+                    "im should be 3-dimensions, but now is {}-dimensions".
+                    format(len(im.shape)))
+        else:
+            try:
+                im = Compose.read_img(im)
+            except:
+                raise ValueError('Can\'t read The image file {}!'.format(im))
+        im = im.astype('float32')
+        if label is not None:
+            if isinstance(label, np.ndarray):
+                if len(label.shape) != 2:
+                    raise Exception(
+                        "label should be 2-dimensions, but now is {}-dimensions".
+                        format(len(label.shape)))
+
+            else:
+                try:
+                    label = np.asarray(Image.open(label))
+                except:
+                    ValueError('Can\'t read The label file {}!'.format(label))
+            im_height, im_width, _ = im.shape
+            label_height, label_width = label.shape
+            if im_height != label_height or im_width != label_width:
+                raise Exception(
+                    "The height or width of the image is not same as the label")
+        return (im, label)
 
     def __call__(self, im, im_info=None, label=None):
         """
@@ -67,23 +124,13 @@ class Compose(SegTransform):
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
 
-        if im_info is None:
-            im_info = list()
-        if isinstance(im, np.ndarray):
-            if len(im.shape) != 3:
-                raise Exception(
-                    "im should be 3-dimensions, but now is {}-dimensions".
-                    format(len(im.shape)))
-        else:
-            try:
-                im = cv2.imread(im).astype('float32')
-            except:
-                raise ValueError('Can\'t read The image file {}!'.format(im))
+        im, label = self.decode_image(im, label)
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        if im_info is None:
+            im_info = [('origin_shape', im.shape[0:2])]
         if label is not None:
-            if not isinstance(label, np.ndarray):
-                label = np.asarray(Image.open(label))
+            origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
                 outputs = op(im, im_info, label)
@@ -98,6 +145,10 @@ class Compose(SegTransform):
                     outputs = (im, im_info, label)
                 else:
                     outputs = (im, im_info)
+        if self.transforms[-1].__class__.__name__ == 'ArrangeSegmenter':
+            if self.transforms[-1].mode == 'eval':
+                if label is not None:
+                    outputs = (im, im_info, origin_label)
         return outputs
 
     def add_augmenters(self, augmenters):
@@ -107,7 +158,9 @@ class Compose(SegTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                print("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                print(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -536,22 +589,35 @@ class ResizeStepScaling(SegTransform):
 
 class Normalize(SegTransform):
     """对图像进行标准化。
-    1.尺度缩放到 [0,1]。
-    2.对图像进行减均值除以标准差操作。
+    1.像素值减去min_val
+    2.像素值除以(max_val-min_val)
+    3.对图像进行减均值除以标准差操作。
 
     Args:
         mean (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。
         std (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。
+        min_val (list): 图像数据集的最小值。默认值[0, 0, 0]。
+        max_val (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。
 
     Raises:
         ValueError: mean或std不是list对象。std包含0。
     """
 
-    def __init__(self, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]):
+    def __init__(self,
+                 mean=[0.5, 0.5, 0.5],
+                 std=[0.5, 0.5, 0.5],
+                 min_val=[0, 0, 0],
+                 max_val=[255.0, 255.0, 255.0]):
+        self.min_val = min_val
+        self.max_val = max_val
         self.mean = mean
         self.std = std
         if not (isinstance(self.mean, list) and isinstance(self.std, list)):
             raise ValueError("{}: input type is invalid.".format(self))
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
         from functools import reduce
         if reduce(lambda x, y: x * y, self.std) == 0:
             raise ValueError('{}: std is invalid!'.format(self))
@@ -574,7 +640,8 @@ class Normalize(SegTransform):
 
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std)
+        im = normalize(im, mean, std, self.min_val, self.max_val)
+        im = im.astype('float32')
 
         if label is None:
             return (im, im_info)
@@ -646,28 +713,29 @@ class Padding(SegTransform):
             target_width = self.target_size[0]
         pad_height = target_height - im_height
         pad_width = target_width - im_width
-        if pad_height < 0 or pad_width < 0:
-            raise ValueError(
-                'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
-                .format(im_width, im_height, target_width, target_height))
-        else:
-            im = cv2.copyMakeBorder(
-                im,
-                0,
-                pad_height,
-                0,
-                pad_width,
-                cv2.BORDER_CONSTANT,
-                value=self.im_padding_value)
+        pad_height = max(pad_height, 0)
+        pad_width = max(pad_width, 0)
+        if (pad_height > 0 or pad_width > 0):
+            im_channel = im.shape[2]
+            import copy
+            orig_im = copy.deepcopy(im)
+            im = np.zeros((im_height + pad_height, im_width + pad_width,
+                           im_channel)).astype(orig_im.dtype)
+            for i in range(im_channel):
+                im[:, :, i] = np.pad(
+                    orig_im[:, :, i],
+                    pad_width=((0, pad_height), (0, pad_width)),
+                    mode='constant',
+                    constant_values=(self.im_padding_value[i],
+                                     self.im_padding_value[i]))
+
             if label is not None:
-                label = cv2.copyMakeBorder(
-                    label,
-                    0,
-                    pad_height,
-                    0,
-                    pad_width,
-                    cv2.BORDER_CONSTANT,
-                    value=self.label_padding_value)
+                label = np.pad(label,
+                               pad_width=((0, pad_height), (0, pad_width)),
+                               mode='constant',
+                               constant_values=(self.label_padding_value,
+                                                self.label_padding_value))
+
         if label is None:
             return (im, im_info)
         else:
@@ -738,23 +806,26 @@ class RandomPaddingCrop(SegTransform):
             pad_height = max(crop_height - img_height, 0)
             pad_width = max(crop_width - img_width, 0)
             if (pad_height > 0 or pad_width > 0):
-                im = cv2.copyMakeBorder(
-                    im,
-                    0,
-                    pad_height,
-                    0,
-                    pad_width,
-                    cv2.BORDER_CONSTANT,
-                    value=self.im_padding_value)
+                img_channel = im.shape[2]
+                import copy
+                orig_im = copy.deepcopy(im)
+                im = np.zeros((img_height + pad_height, img_width + pad_width,
+                               img_channel)).astype(orig_im.dtype)
+                for i in range(img_channel):
+                    im[:, :, i] = np.pad(
+                        orig_im[:, :, i],
+                        pad_width=((0, pad_height), (0, pad_width)),
+                        mode='constant',
+                        constant_values=(self.im_padding_value[i],
+                                         self.im_padding_value[i]))
+
                 if label is not None:
-                    label = cv2.copyMakeBorder(
-                        label,
-                        0,
-                        pad_height,
-                        0,
-                        pad_width,
-                        cv2.BORDER_CONSTANT,
-                        value=self.label_padding_value)
+                    label = np.pad(label,
+                                   pad_width=((0, pad_height), (0, pad_width)),
+                                   mode='constant',
+                                   constant_values=(self.label_padding_value,
+                                                    self.label_padding_value))
+
                 img_height = im.shape[0]
                 img_width = im.shape[1]
 
@@ -817,8 +888,6 @@ class RandomBlur(SegTransform):
             return (im, im_info)
         else:
             return (im, im_info, label)
-
-
 
 
 class RandomScaleAspect(SegTransform):
@@ -974,6 +1043,34 @@ class RandomDistort(SegTransform):
             params['im'] = im
             if np.random.uniform(0, 1) < prob:
                 im = ops[id](**params)
+        im = im.astype('float32')
+        if label is None:
+            return (im, im_info)
+        else:
+            return (im, im_info, label)
+
+
+class Clip(SegTransform):
+    """
+    对图像上超出一定范围的数据进行截断。
+
+    Args:
+        min_val (list): 裁剪的下限，小于min_val的数值均设为min_val. 默认值0.
+        max_val (list): 裁剪的上限，大于max_val的数值均设为max_val. 默认值255.0.
+    """
+
+    def __init__(self, min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0]):
+        self.min_val = min_val
+        self.max_val = max_val
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
+    def __call__(self, im, im_info=None, label=None):
+        for k in range(im.shape[2]):
+            np.clip(
+                im[:, :, k], self.min_val[k], self.max_val[k], out=im[:, :, k])
+
         if label is None:
             return (im, im_info)
         else:
@@ -1013,9 +1110,12 @@ class ArrangeSegmenter(SegTransform):
                 'quant'时，返回的tuple为(im,)，为图像np.ndarray数据。
         """
         im = permute(im, False)
-        if self.mode == 'train' or self.mode == 'eval':
+        if self.mode == 'train':
             label = label[np.newaxis, :, :]
             return (im, label)
+        if self.mode == 'eval':
+            label = label[np.newaxis, :, :]
+            return (im, im_info, label)
         elif self.mode == 'test':
             return (im, im_info)
         else:
@@ -1025,30 +1125,55 @@ class ArrangeSegmenter(SegTransform):
 class ComposedSegTransforms(Compose):
     """ 语义分割模型(UNet/DeepLabv3p)的图像处理流程，具体如下
         训练阶段：
-        1. 随机对图像以0.5的概率水平翻转
-        2. 按不同的比例随机Resize原图
+        1. 随机对图像以0.5的概率水平翻转，若random_horizontal_flip为False，则跳过此步骤
+        2. 按不同的比例随机Resize原图, 处理方式参考[paddlex.seg.transforms.ResizeRangeScaling](#resizerangescaling)。若min_max_size为None，则跳过此步骤
         3. 从原图中随机crop出大小为train_crop_size大小的子图，如若crop出来的图小于train_crop_size，则会将图padding到对应大小
         4. 图像归一化
-        预测阶段：
-        1. 图像归一化
+       预测阶段：
+        1. 将图像的最长边resize至(min_max_size[0] + min_max_size[1])//2, 短边按比例resize。若min_max_size为None，则跳过此步骤
+        2. 图像归一化
 
         Args:
-            mode(str): 图像处理所处阶段，训练/验证/预测，分别对应'train', 'eval', 'test'
-            train_crop_size(list): 模型训练阶段，随机从原图crop的大小
-            mean(list): 图像均值
-            std(list): 图像方差
+            mode(str): Transforms所处的阶段，包括`train', 'eval'或'test'
+            min_max_size(list): 用于对图像进行resize，具体作用参见上述步骤。
+            train_crop_size(list): 训练过程中随机裁剪原图用于训练，具体作用参见上述步骤。此参数仅在mode为`train`时生效。
+            mean(list): 图像均值, 默认为[0.485, 0.456, 0.406]。
+            std(list): 图像方差，默认为[0.229, 0.224, 0.225]。
+            random_horizontal_flip(bool): 数据增强，是否随机水平翻转图像，此参数仅在mode为`train`时生效。
     """
 
     def __init__(self,
                  mode,
-                 train_crop_size=[769, 769],
+                 min_max_size=[400, 600],
+                 train_crop_size=[512, 512],
                  mean=[0.5, 0.5, 0.5],
-                 std=[0.5, 0.5, 0.5]):
+                 std=[0.5, 0.5, 0.5],
+                 random_horizontal_flip=True):
         if mode == 'train':
             # 训练时的transforms，包含数据增强
-            pass
+            if min_max_size is None:
+                transforms = [
+                    RandomPaddingCrop(crop_size=train_crop_size), Normalize(
+                        mean=mean, std=std)
+                ]
+            else:
+                transforms = [
+                    ResizeRangeScaling(
+                        min_value=min(min_max_size),
+                        max_value=max(min_max_size)),
+                    RandomPaddingCrop(crop_size=train_crop_size), Normalize(
+                        mean=mean, std=std)
+                ]
+            if random_horizontal_flip:
+                transforms.insert(0, RandomHorizontalFlip())
         else:
             # 验证/预测时的transforms
-            transforms = [Normalize(mean=mean, std=std)]
-
+            if min_max_size is None:
+                transforms = [Normalize(mean=mean, std=std)]
+            else:
+                long_size = (min(min_max_size) + max(min_max_size)) // 2
+                transforms = [
+                    ResizeByLong(long_size=long_size), Normalize(
+                        mean=mean, std=std)
+                ]
         super(ComposedSegTransforms, self).__init__(transforms)
