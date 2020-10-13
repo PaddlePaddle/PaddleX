@@ -23,7 +23,9 @@ python -m pip install paddlelite
 | --img  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --cfg_file | PaddleX model 的.yml配置文件 |
-| --thread_num  | 预测的线程数, 默认值为1 |
+| --thread_num  | 预测的线程数, 默认值为1 |  
+
+**注意**：由于Paddle-lite的python api尚不支持int64数据的输入，目前树莓派在python下不支持部署YoloV3，如需要请使用C++代码部署YoloV3模型
 
 ### 样例
 `样例一`：  
