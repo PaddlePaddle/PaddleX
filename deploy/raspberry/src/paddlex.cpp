@@ -118,26 +118,23 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  int h = inputs_.new_im_size_[0];
-  int w = inputs_.new_im_size_[1];
   if (name == "YOLOv3") {
     std::unique_ptr<paddle::lite_api::Tensor> im_size_tensor(
       std::move(predictor_->GetInput(1)));
-    const std::vector<int64_t> IM_SIZE_SHAPE = {1, 2};
-    im_size_tensor->Resize(IM_SIZE_SHAPE);
+    im_size_tensor->Resize({1,2});
     auto *im_size_data = im_size_tensor->mutable_data<int>();
     memcpy(im_size_data, inputs_.ori_im_size_.data(), 1*2*sizeof(int));
   }
   predictor_->Run();
   auto output_names = predictor_->GetOutputNames();
   auto output_box_tensor = predictor_->GetTensor(output_names[0]);
-  const float *output_box = output_box_tensor->mutable_data<float>();
-  std::vector<int64_t> output_box_shape = output_box_tensor->shape();
-  int size = 1;
+  auto *output_box = output_box_tensor->mutable_data<float>();
+  auto output_box_shape = output_box_tensor->shape();
+  int64_t size = 1;
   for (const auto& i : output_box_shape) {
     size *= i;
   }
-  int num_boxes = size / 6;
+  auto num_boxes = static_cast<int>(size / 6);
   for (int i = 0; i < num_boxes; ++i) {
     Box box;
     box.category_id = static_cast<int>(round(output_box[i * 6]));
