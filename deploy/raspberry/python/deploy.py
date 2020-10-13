@@ -201,8 +201,6 @@ class Predictor:
     def detector_postprocess(self, preprocessed_inputs):
         out_tensor = self.predictor.get_output(0)
         out_data = out_tensor.float_data()
-        print("@@@@@@@@@@@")
-        print(out_data)
         out_shape = tuple(out_tensor.shape())
         out_data = np.array(out_data)
         outputs = out_data.reshape(out_shape)
@@ -221,5 +219,4 @@ class Predictor:
         elif self.model_type == "detector":
             results = self.detector_postprocess(preprocessed_input)
         elif self.model_type == "segmenter":
-            pass
             results = self.segmenter_postprocess(preprocessed_input)
