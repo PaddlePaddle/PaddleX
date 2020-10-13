@@ -24,11 +24,10 @@ from paddlelite.lite import *
 
 
 class Predictor:
-    def __init__(self, model_nb, model_yaml, thread_num, shape):
+    def __init__(self, model_nb, model_yaml, thread_num):
         if not osp.exists(model_nb):
             print("model nb file is not exists in {}".format(model_xml))
         self.model_nb = model_nb
-        self.shape = shape
         config = MobileConfig()
         config.set_model_from_file(model_nb)
         config.set_threads(thread_num)
@@ -100,6 +99,7 @@ class Predictor:
     def raw_predict(self, preprocessed_input):
         self.count_num += 1
         input_tensor = self.predictor.get_input(0)
+        im_shape = preprocessed_input['image'].shape
         input_tensor.resize(self.shape)
         input_tensor.set_float_data(preprocessed_input['image'])
         if self.model_name == "YOLOv3":
@@ -123,18 +123,23 @@ class Predictor:
         res = dict()
         if self.model_type == "classifier":
             im, = self.transforms(image)
+            self.shape = [1] + list(im.shape)
             im = np.expand_dims(im, axis=0).copy()
             im = im.flatten()
             res['image'] = im
         elif self.model_type == "detector":
             if self.model_name == "YOLOv3":
                 im, im_shape = self.transforms(image)
+                self.shape = [1] + list(im.shape)
                 im = np.expand_dims(im, axis=0).copy()
                 im_shape = np.expand_dims(im_shape, axis=0).copy()
+                im = im.flatten()
+                im_shape = im_shape.flatten()
                 res['image'] = im
                 res['im_size'] = im_shape
             if self.model_name.count('RCNN') > 0:
                 im, im_resize_info, im_shape = self.transforms(image)
+                self.shape = [1] + list(im.shape)
                 im = np.expand_dims(im, axis=0).copy()
                 im_resize_info = np.expand_dims(im_resize_info, axis=0).copy()
                 im_shape = np.expand_dims(im_shape, axis=0).copy()
@@ -143,6 +148,7 @@ class Predictor:
                 res['im_shape'] = im_shape
         elif self.model_type == "segmenter":
             im, im_info = self.transforms(image)
+            self.shape = [1] + list(im.shape)
             im = np.expand_dims(im, axis=0).copy()
             #np.savetxt('./input_data.txt',im.flatten())
             res['image'] = im
@@ -167,7 +173,7 @@ class Predictor:
         out_label = out_label_tensor.float_data()
         label_shape = tuple(out_label_tensor.shape())
         label_map = np.array(out_label).astype('uint8')
-        label_map = label_map.reshap(label_shape)
+        label_map = label_map.reshape(label_shape)
         label_map = np.squeeze(label_map)
 
         out_score_tensor = self.predictor.get_output(1)
@@ -195,13 +201,16 @@ class Predictor:
     def detector_postprocess(self, preprocessed_inputs):
         out_tensor = self.predictor.get_output(0)
         out_data = out_tensor.float_data()
+        print("@@@@@@@@@@@")
+        print(out_data)
         out_shape = tuple(out_tensor.shape())
         out_data = np.array(out_data)
-        outputs = label_data.reshap(out_shape)
+        outputs = out_data.reshape(out_shape)
 
         result = []
         for out in outputs:
             result.append(out.tolist())
+        #print(result)
         return result
 
     def predict(self, image, topk=1, threshold=0.5):

@@ -46,13 +46,6 @@ def arg_parser():
         default=1,
         help="Path to PaddelX model yml file")
 
-    parser.add_argument(
-        "--input_shape",
-        "-ip",
-        type=str,
-        default=None,
-        help=" image input shape of model [NCHW] like [1,3,224,244] ")
-
     return parser
 
 
@@ -62,11 +55,8 @@ def main():
     model_nb = args.model_dir
     model_yaml = args.cfg_file
     thread_num = args.thread_num
-    input_shape = args.input_shape
-    input_shape = input_shape[1:-1].split(",", 3)
-    shape = list(map(int, input_shape))
     #model init
-    predictor = deploy.Predictor(model_nb, model_yaml, thread_num, shape)
+    predictor = deploy.Predictor(model_nb, model_yaml, thread_num)
 
     #predict
     if (args.img_list != None):

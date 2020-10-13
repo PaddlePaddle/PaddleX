@@ -216,9 +216,6 @@ class Predictor:
         return result
 
     def predict(self, image, topk=1, threshold=0.5):
-        if self.model_type == "detector":
-            print("lite python api does not support detector")
-            return
         preprocessed_input = self.preprocess(image)
         model_pred = self.raw_predict(preprocessed_input)
         if self.model_type == "classifier":
