@@ -11,22 +11,11 @@ if [ ! -d "./deps/gflag" ]; then
     cd ..
     cd ..
 fi
-if [ ! -d "./deps/glog" ]; then
-    cd deps
-    git clone https://github.com/google/glog
-    sudo apt-get install autoconf automake libtool
-    cd glog
-    ./autogen.sh
-    ./configure
-    make -j 8
-    cd ..
-    cd ..
-fi
 
 if [ "$ARCH" = "x86" ]; then
     OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/x86opencv/opencv.tar.bz2
 else
-    OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/armopencv/opencv.tar.bz2
+    OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/armlinux/opencv.tar.bz2
 fi
 if [ ! -d "./deps/opencv" ]; then
     cd deps

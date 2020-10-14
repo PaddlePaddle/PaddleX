@@ -68,7 +68,7 @@ def export_openvino_model(model, args):
     onnx_parser.add_argument("--model_dir", type=_text_type)
     onnx_parser.add_argument("--save_dir", type=_text_type)
     onnx_parser.add_argument("--fixed_input_shape")
-    onnx_input = os.path.join(args.save_dir, 'x2paddle_model.onnx')
+    onnx_input = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
     onnx_parser.set_defaults(input_model=onnx_input)
     onnx_parser.set_defaults(output_dir=args.save_dir)
     shape_list = args.fixed_input_shape[1:-1].split(',')

@@ -58,13 +58,12 @@ if (WIN32)
   find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
   unset(OpenCV_DIR CACHE)
 else ()
-  find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/cmake NO_DEFAULT_PATH)
+	find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
 endif ()
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 if (WIN32)
-    add_definitions("/DGOOGLE_GLOG_DLL_DECL=")
     set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} /bigobj /MTd")
     set(CMAKE_C_FLAGS_RELEASE  "${CMAKE_C_FLAGS_RELEASE} /bigobj /MT")
     set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} /bigobj /MTd")
@@ -87,11 +86,11 @@ endif()
 
 if (NOT WIN32)
     set(DEPS ${DEPS}
-        glog gflags  z  yaml-cpp
+        gflags yaml-cpp
         )
 else()
     set(DEPS ${DEPS}
-        glog gflags_static libprotobuf zlibstatic xxhash libyaml-cppmt)
+        gflags_static libprotobuf zlibstatic xxhash libyaml-cppmt)
     set(DEPS ${DEPS} libcmt shlwapi)
 endif(NOT WIN32)
 

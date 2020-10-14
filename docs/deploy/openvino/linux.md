@@ -33,8 +33,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
-- glog：编译请参考[编译文档](https://github.com/google/glog)
-
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
 
@@ -47,8 +45,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
-# glog预编译库的路径
-GLOG_DIR=$(pwd)/deps/glog
 # ngraph lib预编译库的路径
 NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph/lib
 # opencv预编译库的路径

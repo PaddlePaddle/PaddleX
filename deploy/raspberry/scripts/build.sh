@@ -3,8 +3,6 @@ LITE_DIR=/path/to/Paddle-Lite/inference/lib
 
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
-# glog预编译库的路径
-GLOG_DIR=$(pwd)/deps/glog
 
 # opencv预编译库的路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv
