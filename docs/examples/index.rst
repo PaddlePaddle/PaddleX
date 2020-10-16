@@ -14,3 +14,4 @@ PaddleX精选飞桨视觉开发套件在产业实践中的成熟模型结构，�
    human_segmentation.md
    multi-channel_remote_sensing/README.md
    remote_sensing.md
+   change_detection.md

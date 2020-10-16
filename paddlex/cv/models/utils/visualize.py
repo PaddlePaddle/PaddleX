@@ -62,7 +62,8 @@ def visualize_segmentation(image,
     label_map = result['label_map']
     color_map = get_color_map_list(256)
     if color is not None:
-        color_map[0:len(color) // 3][:] = color
+        for i in range(len(color) // 3):
+            color_map[i] = color[i * 3:(i + 1) * 3]
     color_map = np.array(color_map).astype("uint8")
 
     # Use OpenCV LUT for color mapping
@@ -94,7 +95,7 @@ def visualize_segmentation(image,
         vis_result = pseudo_img
     else:
         vis_result = cv2.addWeighted(im, weight,
-                                     pseudo_img.astype('float32'), 1 - weight,
+                                     pseudo_img.astype(im.dtype), 1 - weight,
                                      0)
 
     if save_dir is not None:

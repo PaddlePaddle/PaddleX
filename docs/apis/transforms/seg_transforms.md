@@ -87,10 +87,10 @@ paddlex.seg.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], min_
 3.对图像进行减均值除以标准差操作。
 
 ### 参数
-* **mean** (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。
-* **std** (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。
-* **min_val** (list): 图像数据集的最小值。默认值[0, 0, 0]。
-* **max_val** (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。
+* **mean** (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。长度应与图像通道数量相同。
+* **std** (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。长度应与图像通道数量相同。
+* **min_val** (list): 图像数据集的最小值。默认值[0, 0, 0]。长度应与图像通道数量相同。
+* **max_val** (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。长度应与图像通道数量相同。
 
 ## Padding
 ```python
@@ -99,7 +99,7 @@ paddlex.seg.transforms.Padding(target_size, im_padding_value=[127.5, 127.5, 127.
 对图像或标注图像进行padding，padding方向为右和下。根据提供的值对图像或标注图像进行padding操作。
 ### 参数
 * **target_size** (int|list|tuple): padding后图像的大小。
-* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。
+* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。长度应与图像通道数量相同。
 * **label_padding_value** (int): 标注图像padding的值。默认值为255（仅在训练时需要设定该参数）。
 
 
@@ -110,7 +110,7 @@ paddlex.seg.transforms.RandomPaddingCrop(crop_size=512, im_padding_value=[127.5,
 对图像和标注图进行随机裁剪，当所需要的裁剪尺寸大于原图时，则进行padding操作，模型训练时的数据增强操作。
 ### 参数
 * **crop_size**（int|list|tuple): 裁剪图像大小。默认为512。
-* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。
+* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。长度应与图像通道数量相同。
 * **label_padding_value** (int): 标注图像padding的值。默认值为255。
 
 
@@ -127,13 +127,13 @@ paddlex.seg.transforms.RandomBlur(prob=0.1)
 ```python
 paddlex.seg.transforms.RandomRotate(rotate_range=15, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
 ```
-对图像进行随机旋转，模型训练时的数据增强操作。
+对图像进行随机旋转，模型训练时的数据增强操作。目前支持多通道的RGB图像，例如支持多张RGB图像沿通道轴做concatenate后的图像数据，不支持通道数量不是3的倍数的图像数据。
 
 在旋转区间[-rotate_range, rotate_range]内，对图像进行随机旋转，当存在标注图像时，同步进行，
 并对旋转后的图像和标注图像进行相应的padding。
 ### 参数
 * **rotate_range** (float): 最大旋转角度。默认为15度。
-* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。
+* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。长度应与图像通道数量相同。
 * **label_padding_value** (int): 标注图像padding的值。默认为255。
 
 
@@ -153,7 +153,7 @@ paddlex.seg.transforms.RandomScaleAspect(min_scale=0.5, aspect_ratio=0.33)
 ```python
 paddlex.seg.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
-以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。
+以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。目前支持多通道的RGB图像，例如支持多张RGB图像沿通道轴做concatenate后的图像数据，不支持通道数量不是3的倍数的图像数据。
 
 1.对变换的操作顺序进行随机化操作。
 2.按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  

@@ -436,11 +436,17 @@ class DeepLabv3p(BaseAPI):
                 epoch_id, step + 1, total_steps, iou))
 
         category_iou, miou = conf_mat.mean_iou()
-        category_acc, macc = conf_mat.accuracy()
+        category_acc, oacc = conf_mat.accuracy()
+        category_f1score = conf_mat.f1_score()
 
         metrics = OrderedDict(
-            zip(['miou', 'category_iou', 'macc', 'category_acc', 'kappa'],
-                [miou, category_iou, macc, category_acc, conf_mat.kappa()]))
+            zip([
+                'miou', 'category_iou', 'oacc', 'category_acc', 'kappa',
+                'category_F1-score'
+            ], [
+                miou, category_iou, oacc, category_acc, conf_mat.kappa(),
+                category_f1score
+            ]))
         if return_details:
             eval_details = {
                 'confusion_matrix': conf_mat.confusion_matrix.tolist()
