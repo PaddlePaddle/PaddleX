@@ -33,7 +33,7 @@ paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, use_mkl=False, mkl_
 ### predict 接口
 
 ```
-predict(image, topk=1)
+predict(image)
 ```
 
 单张图片预测接口。
@@ -41,11 +41,10 @@ predict(image, topk=1)
 > **参数**
 >
 > > * **image** (str|np.ndarray): 待预测的图片路径或numpy数组(HWC排列，BGR格式)。
-> > * **topk** (int): 图像分类时使用的参数，表示预测前topk个可能的分类。
 
 ### batch_predict 接口
 ```
-batch_predict(image_list, topk=1)
+batch_predict(image_list)
 ```
 批量图片预测接口。
 
