@@ -118,7 +118,7 @@ coco_pretrain = {
     'DeepLabv3p_Xception65_COCO':
     'https://paddleseg.bj.bcebos.com/models/xception65_coco.tgz',
     'PPYOLO_ResNet50_vd_ssld_COCO':
-    'https://paddlemodels.bj.bcebos.com/object_detection/ppyolo_2x.pdparams'
+    'https://bj.bcebos.com/paddlex/models/ppyolo_resnet50_vd_ssld.tar'
 }
 
 cityscapes_pretrain = {
