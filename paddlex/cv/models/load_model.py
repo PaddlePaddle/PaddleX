@@ -68,8 +68,11 @@ def load_model(model_dir, fixed_input_shape=None):
             model.exe.run(startup_prog)
             if status == "Prune":
                 from .slim.prune import update_program
-                model.test_prog = update_program(model.test_prog, model_dir,
-                                                 model.places[0], scope=model_scope)
+                model.test_prog = update_program(
+                    model.test_prog,
+                    model_dir,
+                    model.places[0],
+                    scope=model_scope)
             import pickle
             with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
                 load_dict = pickle.load(f)
@@ -92,7 +95,7 @@ def load_model(model_dir, fixed_input_shape=None):
     if 'Transforms' in info:
         transforms_mode = info.get('TransformsMode', 'RGB')
         # 固定模型的输入shape
-        fix_input_shape(info, fixed_input_shape=fixed_input_shape)
+        fix_input_shape(info, fixed_input_shape=model.fixed_input_shape)
         if transforms_mode == 'RGB':
             to_rgb = True
         else:
@@ -121,6 +124,9 @@ def load_model(model_dir, fixed_input_shape=None):
 
 def fix_input_shape(info, fixed_input_shape=None):
     if fixed_input_shape is not None:
+        input_channel = 3
+        if 'input_channel' in info['_init_params']:
+            input_channel = info['_init_params']['input_channel']
         resize = {'ResizeByShort': {}}
         padding = {'Padding': {}}
         if info['_Attributes']['model_type'] == 'classifier':
@@ -129,5 +135,7 @@ def fix_input_shape(info, fixed_input_shape=None):
             resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
             resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
             padding['Padding']['target_size'] = list(fixed_input_shape)
+            if info['_Attributes']['model_type'] == 'segmenter':
+                padding['Padding']['im_padding_value'] = [0.] * input_channel
             info['Transforms'].append(resize)
             info['Transforms'].append(padding)

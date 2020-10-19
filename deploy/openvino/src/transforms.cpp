@@ -31,19 +31,23 @@ std::map<std::string, int> interpolations = {{"LINEAR", cv::INTER_LINEAR},
                                              {"LANCZOS4", cv::INTER_LANCZOS4}};
 
 bool Normalize::Run(cv::Mat* im, ImageBlob* data) {
-  for (int h = 0; h < im->rows; h++) {
-    for (int w = 0; w < im->cols; w++) {
-      im->at<cv::Vec3f>(h, w)[0] =
-          (im->at<cv::Vec3f>(h, w)[0] / 255.0 - mean_[0]) / std_[0];
-      im->at<cv::Vec3f>(h, w)[1] =
-          (im->at<cv::Vec3f>(h, w)[1] / 255.0 - mean_[1]) / std_[1];
-      im->at<cv::Vec3f>(h, w)[2] =
-          (im->at<cv::Vec3f>(h, w)[2] / 255.0 - mean_[2]) / std_[2];
-    }
+  std::vector<float> range_val;
+  for (int c = 0; c < im->channels(); c++) {
+    range_val.push_back(max_val_[c] - min_val_[c]);
   }
+
+  std::vector<cv::Mat> split_im;
+  cv::split(*im, split_im);
+  for (int c = 0; c < im->channels(); c++) {
+    cv::subtract(split_im[c], cv::Scalar(min_val_[c]), split_im[c]);
+    cv::divide(split_im[c], cv::Scalar(range_val[c]), split_im[c]);
+    cv::subtract(split_im[c], cv::Scalar(mean_[c]), split_im[c]);
+    cv::divide(split_im[c], cv::Scalar(std_[c]), split_im[c]);
+  }
+  cv::merge(split_im, *im);
+
   return true;
 }
-
 
 
 float ResizeByShort::GenerateScale(const cv::Mat& im) {
@@ -71,6 +75,7 @@ bool ResizeByShort::Run(cv::Mat* im, ImageBlob* data) {
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
   data->scale = scale;
+
   return true;
 }
 
@@ -115,11 +120,22 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
               << ", but they should be greater than 0." << std::endl;
     return false;
   }
-  cv::Scalar value = cv::Scalar(im_value_[0], im_value_[1], im_value_[2]);
-  cv::copyMakeBorder(
-      *im, *im, 0, padding_h, 0, padding_w, cv::BORDER_CONSTANT, value);
+  std::vector<cv::Mat> padded_im_per_channel;
+  for (size_t i = 0; i < im->channels(); i++) {
+    const cv::Mat per_channel = cv::Mat(im->rows + padding_h,
+                                        im->cols + padding_w,
+                                        CV_32FC1,
+                                        cv::Scalar(im_value_[i]));
+    padded_im_per_channel.push_back(per_channel);
+  }
+  cv::Mat padded_im;
+  cv::merge(padded_im_per_channel, padded_im);
+  cv::Rect im_roi = cv::Rect(0, 0, im->cols, im->rows);
+  im->copyTo(padded_im(im_roi));
+  *im = padded_im;
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
+
   return true;
 }
 
@@ -165,6 +181,22 @@ bool Resize::Run(cv::Mat* im, ImageBlob* data) {
   return true;
 }
 
+bool Clip::Run(cv::Mat* im, ImageBlob* data) {
+  std::vector<cv::Mat> split_im;
+  cv::split(*im, split_im);
+  for (int c = 0; c < im->channels(); c++) {
+    cv::threshold(split_im[c], split_im[c], max_val_[c], max_val_[c],
+                  cv::THRESH_TRUNC);
+    cv::subtract(cv::Scalar(0), split_im[c], split_im[c]);
+    cv::threshold(split_im[c], split_im[c], min_val_[c], min_val_[c],
+                  cv::THRESH_TRUNC);
+    cv::divide(split_im[c], cv::Scalar(-1), split_im[c]);
+  }
+  cv::merge(split_im, *im);
+
+  return true;
+}
+
 void Transforms::Init(
   const YAML::Node& transforms_node, std::string type, bool to_rgb) {
   transforms_.clear();
@@ -172,6 +204,21 @@ void Transforms::Init(
   type_ = type;
   for (const auto& item : transforms_node) {
     std::string name = item.begin()->first.as<std::string>();
+    if (name == "ArrangeClassifier") {
+      continue;
+    }
+    if (name == "ArrangeSegmenter") {
+      continue;
+    }
+    if (name == "ArrangeFasterRCNN") {
+      continue;
+    }
+    if (name == "ArrangeMaskRCNN") {
+      continue;
+    }
+    if (name == "ArrangeYOLOv3") {
+      continue;
+    }
     std::cout << "trans name: " << name << std::endl;
     std::shared_ptr<Transform> transform = CreateTransform(name);
     transform->Init(item.begin()->second);
@@ -193,6 +240,8 @@ std::shared_ptr<Transform> Transforms::CreateTransform(
     return std::make_shared<Padding>();
   } else if (transform_name == "ResizeByLong") {
     return std::make_shared<ResizeByLong>();
+  } else if (transform_name == "Clip") {
+    return std::make_shared<Clip>();
   } else {
     std::cerr << "There's unexpected transform(name='" << transform_name
               << "')." << std::endl;
@@ -205,7 +254,7 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
   if (to_rgb_) {
     cv::cvtColor(*im, *im, cv::COLOR_BGR2RGB);
   }
-  (*im).convertTo(*im, CV_32FC3);
+  (*im).convertTo(*im, CV_32FC(im->channels()));
   if (type_ == "detector") {
     InferenceEngine::LockedMemory<void> input2Mapped =
       InferenceEngine::as<InferenceEngine::MemoryBlob>(
@@ -234,14 +283,27 @@ bool Transforms::Run(cv::Mat* im, ImageBlob* data) {
     InferenceEngine::as<InferenceEngine::MemoryBlob>(data->blob);
   auto mblobHolder = mblob->wmap();
   float *blob_data = mblobHolder.as<float *>();
-  for (size_t c = 0; c < channels; c++) {
+  if (channels == 3) {
+    for (size_t c = 0; c < channels; c++) {
       for (size_t  h = 0; h < height; h++) {
-          for (size_t w = 0; w < width; w++) {
-              blob_data[c * width * height + h * width + w] =
-                      im->at<cv::Vec3f>(h, w)[c];
-          }
+        for (size_t w = 0; w < width; w++) {
+          blob_data[c * width * height + h * width + w] =
+            im->at<cv::Vec3f>(h, w)[c];
+        }
       }
+    }
+  } else {
+    for (size_t  h = 0; h < height; h++) {
+      float *pixelPtr = im->ptr<float>(h);
+      for (size_t w = 0; w < width; w++) {
+        for (size_t c = 0; c < channels; c++) {
+          blob_data[c * width * height + h * width + w] =
+            pixelPtr[w*channels + c];
+        }
+      }
+    }
   }
+
   return true;
 }
 }  // namespace PaddleX
