@@ -23,7 +23,8 @@ sudo apt-get upgrade
 ```
 
 ## Paddle-Lite部署
-基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其实检测模型仅支持YOLOV3  
+基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其中检测模型仅支持YOLOV3  
+
 部署的流程包括：PaddleX模型转换与转换后的模型部署  
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)
@@ -81,6 +82,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 ### Step3: 预测
 
 编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：  
+
 |  参数   | 说明  |
 |  ----  | ----  |
 | --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|

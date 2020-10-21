@@ -20,7 +20,10 @@ paddlex --export_inference --model_dir=/path/to/paddle_model --save_dir=./infere
 ## 导出OpenVINO模型
 
 ```
-cd /root/projects/python
+mkdir -p /root/projects
+cd /root/projects
+git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX/deploy/openvino/python
 
 python converter.py --model_dir /path/to/inference_model --save_dir /path/to/openvino_model --fixed_input_shape [w,h]
 ```

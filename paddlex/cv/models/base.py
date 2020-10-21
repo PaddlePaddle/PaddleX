@@ -319,6 +319,8 @@ class BaseAPI:
                 info['Transforms'] = list()
                 for op in self.test_transforms.transforms:
                     name = op.__class__.__name__
+                    if name.startswith('Arrange'):
+                        continue
                     attr = op.__dict__
                     info['Transforms'].append({name: attr})
         info['completed_epochs'] = self.completed_epochs

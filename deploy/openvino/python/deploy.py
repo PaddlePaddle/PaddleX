@@ -173,7 +173,6 @@ class Predictor:
             'category': self.labels[l],
             'score': preds[output_name][0][l],
         } for l in pred_label]
-        print(result)
         return result
 
     def segmenter_postprocess(self, preds, preprocessed_inputs):
@@ -212,7 +211,6 @@ class Predictor:
                 result.append(out.tolist())
             else:
                 pass
-        print(result)
         return result
 
     def predict(self, image, topk=1, threshold=0.5):
