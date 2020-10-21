@@ -74,7 +74,7 @@ D:
 cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
-* 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+* 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，`segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
