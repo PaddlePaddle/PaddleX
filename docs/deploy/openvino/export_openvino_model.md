@@ -3,11 +3,11 @@
 
 ## 环境依赖
 
-* ONNX 1.5.0+
-* PaddleX 1.0+
-* OpenVINO 2020.4
+* ONNX 1.6.0+
+* PaddleX 1.2+
+* OpenVINO 2021.1+
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，ONNX请安装1.5.0以上版本否则会出现转模型错误。
+**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，ONNX请安装1.6.0以上版本否则会出现转模型错误。
 
 请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
 
@@ -38,5 +38,5 @@ python converter.py --model_dir /path/to/inference_model --save_dir /path/to/ope
 | --data type(option)  | FP32、FP16，默认为FP32，VPU下的IR需要为FP16 |  
 
 **注意**：
-- 由于OpenVINO不支持ONNX的resize-11 OP的原因，目前还不支持Paddle的分割模型
+- 由于OpenVINO 从2021.1版本开始支持ONNX的resize-11 OP的原因，请下载OpenVINO 2021.1+的版本
 - YOLOv3在通过OpenVINO部署时，由于OpenVINO对ONNX OP的支持限制，我们在将YOLOv3的Paddle模型导出时，对最后一层multiclass_nms进行了特殊处理，导出的ONNX模型，最终输出的Box结果包括背景类别（而Paddle模型不包含），此处在OpenVINO的部署代码中，我们通过后处理过滤了背景类别。
