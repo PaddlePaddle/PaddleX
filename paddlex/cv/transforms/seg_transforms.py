@@ -98,7 +98,7 @@ class Compose(SegTransform):
                     format(len(im.shape)))
         else:
             try:
-                im = Compose.read_img(im)
+                im = Compose.read_img(im).astype('float32')
             except:
                 raise ValueError('Can\'t read The image file {}!'.format(im))
         im = im.astype('float32')

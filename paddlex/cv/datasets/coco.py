@@ -131,6 +131,9 @@ class CocoDetection(VOCDetection):
                 'difficult': difficult
             }
 
+            if None in gt_poly:
+                del label_info['gt_poly']
+
             coco_rec = (im_info, label_info)
             self.file_list.append([im_fname, coco_rec])
         if not len(self.file_list) > 0:
