@@ -109,7 +109,7 @@ class Compose(DetTransform):
                 im = im_file
             else:
                 try:
-                    im = cv2.imread(im_file)
+                    im = cv2.imread(im_file).astype('float32')
                 except:
                     raise TypeError('Can\'t read The image file {}!'.format(
                         im_file))
