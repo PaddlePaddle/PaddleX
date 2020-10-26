@@ -249,7 +249,7 @@ def generate_minibatch(batch_data, label_padding_value=255, mapper=None):
                 padding_batch.append((padding_im, ) + tuple(data[1:]))
         else:
             # padding the image of classification during the infering phase
-            padding_batch.append((padding_im))
+            padding_batch.append((padding_im, ))
     return padding_batch
 
 
