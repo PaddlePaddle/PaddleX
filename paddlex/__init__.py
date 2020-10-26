@@ -43,10 +43,6 @@ except:
         "[WARNING] pycocotools install: https://paddlex.readthedocs.io/zh_CN/develop/install.html#pycocotools"
     )
 
-import paddlehub as hub
-if hub.version.hub_version < '1.8.2':
-    raise Exception("[ERROR] paddlehub >= 1.8.2 is required")
-
 env_info = get_environ_info()
 load_model = cv.models.load_model
 datasets = cv.datasets
