@@ -23,7 +23,8 @@ sudo apt-get upgrade
 ```
 
 ## Paddle-Lite部署
-基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其实检测模型仅支持YOLOV3  
+基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其中检测模型仅支持YOLOV3  
+
 部署的流程包括：PaddleX模型转换与转换后的模型部署  
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)
@@ -60,8 +61,6 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
-- glog：编译请参考[编译文档](https://github.com/google/glog)
-
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
 ### Step4: 编译
@@ -71,8 +70,6 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 LITE_DIR=/path/to/Paddle-Lite/inference/lib
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
-# glog预编译库的路径
-GLOG_DIR=$(pwd)/deps/glog
 # opencv预编译库的路径
 OPENCV_DIR=$(pwd)/deps/opencv/
 ```
@@ -85,6 +82,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 ### Step3: 预测
 
 编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：  
+
 |  参数   | 说明  |
 |  ----  | ----  |
 | --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
@@ -125,7 +123,8 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 系统：raspbian OS
 软件：paddle-lite 2.6.1
 ### 测试结果
-单位ms，num表示paddle-lite下使用的线程数
+单位ms，num表示paddle-lite下使用的线程数  
+
 |模型|lite(num=4)|输入图片大小|
 | ----|  ---- | ----|
 |mobilenet-v2|136.19|224*224|
@@ -147,6 +146,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 |ShuffleNetV2|115.97|224*224|
 |Xception41|1418.29|224*224|
 |Xception65|2094.7|224*224|  
+
 
 从测试结果看建议用户在树莓派上使用MobileNetV1-V3,ShuffleNetV2这类型的小型网络
 

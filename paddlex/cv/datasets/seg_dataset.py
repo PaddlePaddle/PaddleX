@@ -20,7 +20,6 @@ import paddlex.utils.logging as logging
 from paddlex.utils import path_normalization
 from .dataset import Dataset
 from .dataset import get_encoding
-from .dataset import is_pic
 
 
 class SegDataset(Dataset):
@@ -65,10 +64,12 @@ class SegDataset(Dataset):
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                if len(items) > 2:
+                    raise Exception(
+                        "A space is defined as the separator, but it exists in image or label name {}."
+                        .format(line))
                 items[0] = path_normalization(items[0])
                 items[1] = path_normalization(items[1])
-                if not is_pic(items[0]):
-                    continue
                 full_path_im = osp.join(data_dir, items[0])
                 full_path_label = osp.join(data_dir, items[1])
                 if not osp.exists(full_path_im):

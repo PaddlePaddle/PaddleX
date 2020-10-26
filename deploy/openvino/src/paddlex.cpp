@@ -67,9 +67,9 @@ bool Model::load_config(const std::string& cfg_file) {
       return false;
     }
   }
-  // 构建数据处理流
+  // init preprocess ops
   transforms_.Init(config["Transforms"], type, to_rgb);
-  // 读入label lis
+  // read label list
   for (const auto& item : config["_Attributes"]["labels"]) {
     int index = labels.size();
     labels[index] = item.as<std::string>();
@@ -98,7 +98,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
               << std::endl;
     return false;
   }
-  // 处理输入图像
+  // preprocess
   InferenceEngine::InferRequest infer_request =
     executable_network_.CreateInferRequest();
   std::string input_name = network_.getInputsInfo().begin()->first;
@@ -109,6 +109,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
     return false;
   }
 
+  // predict
   infer_request.Infer();
 
   std::string output_name = network_.getOutputsInfo().begin()->first;
@@ -118,7 +119,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   auto moutputHolder = moutput->rmap();
   float* outputs_data = moutputHolder.as<float *>();
 
-  // 对模型输出结果进行后处理
+  // post process
   auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_data));
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
@@ -160,9 +161,17 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
 
   infer_request.Infer();
 
-  InferenceEngine::OutputsDataMap out_map = network_.getOutputsInfo();
-  auto iter = out_map.begin();
-  std::string outputName = iter->first;
+  InferenceEngine::OutputsDataMap out_maps = network_.getOutputsInfo();
+  std::string outputName;
+  for (const auto & output_map : out_maps) {
+    if (output_map.second->getTensorDesc().getDims().size() == 3) {
+      outputName = output_map.first;
+    }
+  }
+  if (outputName.empty()) {
+    std::cerr << "get result node failed!" << std::endl:
+    return false;
+  }
   InferenceEngine::Blob::Ptr output = infer_request.GetBlob(outputName);
   InferenceEngine::MemoryBlob::CPtr moutput =
     InferenceEngine::as<InferenceEngine::MemoryBlob>(output);
@@ -206,43 +215,26 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
                  "function predict()!" << std::endl;
     return false;
   }
-  //
+  // init infer
   InferenceEngine::InferRequest infer_request =
     executable_network_.CreateInferRequest();
   std::string input_name = network_.getInputsInfo().begin()->first;
   inputs_.blob = infer_request.GetBlob(input_name);
 
-  //
+  // preprocess
   cv::Mat im_clone = im.clone();
   if (!preprocess(&im_clone, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
 
-  //
+  // predict
   infer_request.Infer();
 
   InferenceEngine::OutputsDataMap out_map = network_.getOutputsInfo();
   auto iter = out_map.begin();
   iter++;
-  std::string output_name_score = iter->first;
-  InferenceEngine::Blob::Ptr output_score =
-    infer_request.GetBlob(output_name_score);
-  InferenceEngine::MemoryBlob::CPtr moutput_score =
-    InferenceEngine::as<InferenceEngine::MemoryBlob>(output_score);
-  InferenceEngine::TensorDesc blob_score = moutput_score->getTensorDesc();
-  std::vector<size_t> output_score_shape = blob_score.getDims();
-  int size = 1;
-  for (auto& i : output_score_shape) {
-    size *= static_cast<int>(i);
-    result->score_map.shape.push_back(static_cast<int>(i));
-  }
-  result->score_map.data.resize(size);
-  auto moutputHolder_score = moutput_score->rmap();
-  float* score_data = moutputHolder_score.as<float *>();
-  memcpy(result->score_map.data.data(), score_data, moutput_score->byteSize());
 
-  iter++;
   std::string output_name_label = iter->first;
   InferenceEngine::Blob::Ptr output_label =
     infer_request.GetBlob(output_name_label);
@@ -250,7 +242,7 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
     InferenceEngine::as<InferenceEngine::MemoryBlob>(output_label);
   InferenceEngine::TensorDesc blob_label = moutput_label->getTensorDesc();
   std::vector<size_t> output_label_shape = blob_label.getDims();
-  size = 1;
+  int size = 1;
   for (auto& i : output_label_shape) {
     size *= static_cast<int>(i);
     result->label_map.shape.push_back(static_cast<int>(i));
@@ -260,7 +252,23 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
   int* label_data = moutputHolder_label.as<int *>();
   memcpy(result->label_map.data.data(), label_data, moutput_label->byteSize());
 
-
+  iter++;
+  std::string output_name_score = iter->first;
+  InferenceEngine::Blob::Ptr output_score =
+    infer_request.GetBlob(output_name_score);
+  InferenceEngine::MemoryBlob::CPtr moutput_score =
+    InferenceEngine::as<InferenceEngine::MemoryBlob>(output_score);
+  InferenceEngine::TensorDesc blob_score = moutput_score->getTensorDesc();
+  std::vector<size_t> output_score_shape = blob_score.getDims();
+  size = 1;
+  for (auto& i : output_score_shape) {
+    size *= static_cast<int>(i);
+    result->score_map.shape.push_back(static_cast<int>(i));
+  }
+  result->score_map.data.resize(size);
+  auto moutputHolder_score = moutput_score->rmap();
+  float* score_data = moutputHolder_score.as<float *>();
+  memcpy(result->score_map.data.data(), score_data, moutput_score->byteSize());
 
   std::vector<uint8_t> label_map(result->label_map.data.begin(),
                                  result->label_map.data.end());

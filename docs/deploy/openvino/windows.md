@@ -14,8 +14,11 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 - 我的电脑->属性->高级系统设置->环境变量
     - 在系统变量中找到Path（如没有，自行创建），并双击编辑
     - 新建，分别将OpenVINO以下路径填入并保存:  
+
       `C:\Program File (x86)\IntelSWTools\openvino\inference_engine\bin\intel64\Release`  
+
       `C:\Program File (x86)\IntelSWTools\openvino\inference_engine\external\tbb\bin`  
+
       `C:\Program File (x86)\IntelSWTools\openvino\deployment_tools\ngraph\lib`  
 
 请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录为 `D:\projects`演示。**
@@ -37,11 +40,10 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step2 软件依赖
 提供了依赖软件预编译库:
-- [gflas-glog](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)  
+- [gflas](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)  
 - [opencv](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
 请下载上面两个连接的预编译库。若需要自行下载请参考：
 - gflags:[下载地址](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags)
-- glog：[编译文档](https://github.com/google/glog)
 - opencv:[下载地址](https://opencv.org/releases/)  
 下载完opencv后需要配置环境变量，如下流程所示  
     - 我的电脑->属性->高级系统设置->环境变量
@@ -50,17 +52,16 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step3: 使用Visual Studio 2019直接编译CMake
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-2. 点击： `文件`->`打开`->`CMake` 选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\openvino`），并打开`CMakeList.txt`：
+2. 点击： `文件`->`打开`->`CMake` 选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\openvino`），并打开`CMakeList.txt`  
 3. 点击：`项目`->`CMake设置`
-4. 点击`浏览`，分别设置编译选项指定`OpenVINO`、`Gflags`、`GLOG`、`NGRAPH`、`OPENCV`的路径  
+4. 点击`浏览`，分别设置编译选项指定`OpenVINO`、`Gflags`、`NGRAPH`、`OPENCV`的路径  
 
 |  参数名   | 含义  |
 |  ----  | ----  |
-| OPENCV_DIR  | opencv库路径 |
+| OPENCV_DIR  | OpenCV库路径 |
 | OPENVINO_DIR | OpenVINO推理库路径，在OpenVINO安装目录下的deployment/inference_engine目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | NGRAPH_LIB | OpenVINO的ngraph库路径，在OpenVINO安装目录下的deployment/ngraph/lib目录，若未修改OpenVINO默认安装目录可以不用修改 |
 | GFLAGS_DIR | gflags库路径 |
-| GLOG_DIR  | glog库路径 |
 | WITH_STATIC_LIB | 是否静态编译，默认为True |  
 
 **设置完成后**, 点击`保存并生成CMake缓存以加载变量`。
@@ -73,7 +74,7 @@ D:
 cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 ```
 
-* 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+* 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，`segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -82,7 +83,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
 | --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
+| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "，即不保存可视化结果 |
 
 ### 样例
 `样例一`：

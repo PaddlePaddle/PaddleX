@@ -6,8 +6,6 @@ NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph/lib
 
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
-# glog预编译库的路径
-GLOG_DIR=$(pwd)/deps/glog
 
 # opencv使用自带预编译版本
 OPENCV_DIR=$(pwd)/deps/opencv/
@@ -25,7 +23,6 @@ cd build
 cmake .. \
     -DOPENCV_DIR=${OPENCV_DIR} \
     -DGFLAGS_DIR=${GFLAGS_DIR} \
-    -DGLOG_DIR=${GLOG_DIR} \
     -DOPENVINO_DIR=${OPENVINO_DIR} \
     -DNGRAPH_LIB=${NGRAPH_LIB} \
     -DARCH=${ARCH}

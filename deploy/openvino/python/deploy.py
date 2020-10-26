@@ -173,7 +173,6 @@ class Predictor:
             'category': self.labels[l],
             'score': preds[output_name][0][l],
         } for l in pred_label]
-        print(result)
         return result
 
     def segmenter_postprocess(self, preds, preprocessed_inputs):
@@ -181,11 +180,11 @@ class Predictor:
         """
         it = iter(self.net.outputs)
         next(it)
+        label_name = next(it)
+        label_map = np.squeeze(preds[label_name]).astype('uint8')
         score_name = next(it)
         score_map = np.squeeze(preds[score_name])
         score_map = np.transpose(score_map, (1, 2, 0))
-        label_name = next(it)
-        label_map = np.squeeze(preds[label_name]).astype('uint8')
         im_info = preprocessed_inputs['im_info']
         for info in im_info[::-1]:
             if info[0] == 'resize':
@@ -204,15 +203,16 @@ class Predictor:
     def detector_postprocess(self, preds, preprocessed_inputs):
         """对图像检测结果做后处理
         """
-        output_name = next(iter(self.net.outputs))
-        outputs = preds[output_name][0]
+        outputs = self.net.outputs
+        for name in outpus:
+            if (len(outputs[name].shape == 3)):
+                output = preds[name][0]
         result = []
-        for out in outputs:
+        for out in output:
             if (out[0] > 0):
                 result.append(out.tolist())
             else:
                 pass
-        print(result)
         return result
 
     def predict(self, image, topk=1, threshold=0.5):

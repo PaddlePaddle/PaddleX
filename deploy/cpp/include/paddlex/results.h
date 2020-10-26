@@ -37,7 +37,7 @@ struct Mask {
 };
 
 /*
- * @brief 
+ * @brief
  * This class represents target box in detection or instance segmentation tasks.
  * */
 struct Box {
@@ -47,7 +47,7 @@ struct Box {
   // confidence score
   float score;
   std::vector<float> coordinate;
-  Mask<float> mask;
+  Mask<int> mask;
 };
 
 /*

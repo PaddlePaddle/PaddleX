@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
+#include <gflags/gflags.h>
 
 #include <algorithm>
 #include <fstream>
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  //
+  // load model
   std::cout << "init start" << std::endl;
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_thread_num);

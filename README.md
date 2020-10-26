@@ -14,10 +14,13 @@
 ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
 ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
 
+[完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)
+
 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
 
 **PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
 
+![](./docs/gui/images/paddlexoverview.png)
 
 
 ## 安装
@@ -29,7 +32,7 @@
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
   **前置依赖**
-> - paddlepaddle >= 1.8.0
+> - paddlepaddle >= 1.8.4
 > - python >= 3.6
 > - cython
 > - pycocotools
@@ -44,10 +47,11 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
    无代码开发的可视化客户端，应用Paddle API实现，使开发者快速进行产业项目验证，并为用户开发自有深度学习软件/应用提供参照。
 
-- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载Paddle X GUI一键绿色安装包。
+- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载PaddleX GUI一键绿色安装包。
 
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
+- [PaddleX GUI安装环境说明](./docs/gui/download.md)
   
 
 ## 产品模块说明
@@ -112,7 +116,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 更新日志
 
 > [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
-
+- 2020.09.05 v1.2.0
 - 2020.07.13 v1.1.0
 - 2020.07.12 v1.0.8
 - 2020.05.20 v1.0.0

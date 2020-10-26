@@ -46,9 +46,9 @@ bool Model::load_config(const std::string& cfg_file) {
       return false;
     }
   }
-  // 构建数据处理流
+  // init preprocess ops
   transforms_.Init(config["Transforms"], to_rgb);
-  // 读入label lis
+  // read label list
   for (const auto& item : config["_Attributes"]["labels"]) {
     int index = labels.size();
     labels[index] = item.as<std::string>();
@@ -77,14 +77,14 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
               << std::endl;
     return false;
   }
-  // 处理输入图像
+  // preprocess
   inputs_.input_tensor_ = std::move(predictor_->GetInput(0));
   cv::Mat im_clone = im.clone();
   if (!preprocess(&im_clone, &inputs_)) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-
+  // predict
   predictor_->Run();
 
   std::unique_ptr<const paddle::lite_api::Tensor> output_tensor(
@@ -92,7 +92,7 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   const float *outputs_data = output_tensor->mutable_data<float>();
 
 
-  // 对模型输出结果进行后处理
+  // postprocess
   auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_data));
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
@@ -118,26 +118,23 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
     std::cerr << "Preprocess failed!" << std::endl;
     return false;
   }
-  int h = inputs_.new_im_size_[0];
-  int w = inputs_.new_im_size_[1];
   if (name == "YOLOv3") {
     std::unique_ptr<paddle::lite_api::Tensor> im_size_tensor(
       std::move(predictor_->GetInput(1)));
-    const std::vector<int64_t> IM_SIZE_SHAPE = {1, 2};
-    im_size_tensor->Resize(IM_SIZE_SHAPE);
+    im_size_tensor->Resize({1,2});
     auto *im_size_data = im_size_tensor->mutable_data<int>();
     memcpy(im_size_data, inputs_.ori_im_size_.data(), 1*2*sizeof(int));
   }
   predictor_->Run();
   auto output_names = predictor_->GetOutputNames();
   auto output_box_tensor = predictor_->GetTensor(output_names[0]);
-  const float *output_box = output_box_tensor->mutable_data<float>();
-  std::vector<int64_t> output_box_shape = output_box_tensor->shape();
-  int size = 1;
+  auto *output_box = output_box_tensor->mutable_data<float>();
+  auto output_box_shape = output_box_tensor->shape();
+  int64_t size = 1;
   for (const auto& i : output_box_shape) {
     size *= i;
   }
-  int num_boxes = size / 6;
+  auto num_boxes = static_cast<int>(size / 6);
   for (int i = 0; i < num_boxes; ++i) {
     Box box;
     box.category_id = static_cast<int>(round(output_box[i * 6]));

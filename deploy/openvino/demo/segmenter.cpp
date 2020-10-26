@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
+#include <gflags/gflags.h>
 
 #include <algorithm>
 #include <fstream>
@@ -48,11 +48,9 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  //
-  std::cout << "init start" << std::endl;
+  // load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_device);
-  std::cout << "init done" << std::endl;
   int imgs = 1;
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
 

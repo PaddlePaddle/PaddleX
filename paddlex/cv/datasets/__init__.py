@@ -20,3 +20,5 @@ from .easydata_cls import EasyDataCls
 from .easydata_det import EasyDataDet
 from .easydata_seg import EasyDataSeg
 from .dataset import generate_minibatch
+from .analysis import Seg
+from .change_det_dataset import ChangeDetDataset

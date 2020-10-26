@@ -35,11 +35,6 @@
           "name": "WITH_STATIC_LIB",
           "value": "True",
           "type": "BOOL"
-        },
-        {
-          "name": "GLOG_DIR",
-          "value": "/path/to/glog",
-          "type": "PATH"
         }
       ]
     }

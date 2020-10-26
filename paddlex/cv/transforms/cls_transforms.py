@@ -72,7 +72,7 @@ class Compose(ClsTransform):
                     format(len(im.shape)))
         else:
             try:
-                im = cv2.imread(im)
+                im = cv2.imread(im).astype('float32')
             except:
                 raise TypeError('Can\'t read The image file {}!'.format(im))
         im = im.astype('float32')

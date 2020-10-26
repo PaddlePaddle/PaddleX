@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
-#include <omp.h>
+#include <gflags/gflags.h>
 
 #include <algorithm>
 #include <chrono>  // NOLINT
@@ -54,13 +53,13 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  //
+  // load model
   PaddleX::Model model;
   model.Init(FLAGS_model_dir, FLAGS_cfg_file, FLAGS_thread_num);
 
   int imgs = 1;
   auto colormap = PaddleX::GenerateColorMap(model.labels.size());
-  // 进行预测
+  // predict
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
     if (!inf) {
@@ -97,7 +96,7 @@ int main(int argc, char** argv) {
                 << result.boxes[i].coordinate[3] << ")" << std::endl;
     }
     if (FLAGS_save_dir != "") {
-    // 可视化
+    // visualize
       cv::Mat vis_img = PaddleX::Visualize(
         im, result, model.labels, colormap, FLAGS_threshold);
       std::string save_path =

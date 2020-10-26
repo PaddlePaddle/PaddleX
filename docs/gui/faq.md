@@ -1,4 +1,4 @@
-## FAQ
+
 
 1. **为什么训练速度这么慢？**
 
@@ -28,8 +28,18 @@
 5. **如何调用后端代码？**
 
    PaddleX 团队为您整理了相关的API接口文档，方便您学习和使用。具体请参见[PaddleX API说明文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/index.html)
+   
+   
+   
+6. **如何在离线环境下使用PaddleX？**
 
+   PaddleX是支撑用户在本地离线环境中训练模型的，但是如果大家希望使用PaddleX团队为大家准备好的在标准数据集上训练的预训练模型，则需要在线环境进行下载。大家可以参照完整的无联网情况下进行模型训练的[文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/how_to_offline_run.md)查看如何一键快速下载所有预训练模型。
 
+   
+
+7. **有没有行业应用案例，或者实现好的工程实例？**
+
+   有的，PaddleX提供丰富的行业应用案例和完整的示例项目，请参考[PaddleX产业案例集](https://paddlex.readthedocs.io/zh_CN/develop/examples/index.html)
 
 **如果您有任何问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的问题和需求**
 

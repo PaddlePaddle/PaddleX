@@ -20,7 +20,11 @@ import os.path as osp
 import numpy as np
 from PIL import Image
 import cv2
+import imghdr
+import six
+import sys
 from collections import OrderedDict
+
 import paddlex.utils.logging as logging
 
 
@@ -60,6 +64,63 @@ class Compose(SegTransform):
                         "Elements in transforms should be defined in 'paddlex.seg.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
                     )
 
+    @staticmethod
+    def read_img(img_path):
+        img_format = imghdr.what(img_path)
+        name, ext = osp.splitext(img_path)
+        if img_format == 'tiff' or ext == '.img':
+            try:
+                import gdal
+            except:
+                six.reraise(*sys.exc_info())
+                raise Exception(
+                    "Please refer to https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/multi-channel_remote_sensing/README.md to install gdal"
+                )
+
+            dataset = gdal.Open(img_path)
+            if dataset == None:
+                raise Exception('Can not open', img_path)
+            im_data = dataset.ReadAsArray()
+            return im_data.transpose((1, 2, 0))
+        elif img_format in ['jpeg', 'bmp', 'png']:
+            return cv2.imread(img_path)
+        elif ext == '.npy':
+            return np.load(img_path)
+        else:
+            raise Exception('Image format {} is not supported!'.format(ext))
+
+    @staticmethod
+    def decode_image(im, label):
+        if isinstance(im, np.ndarray):
+            if len(im.shape) != 3:
+                raise Exception(
+                    "im should be 3-dimensions, but now is {}-dimensions".
+                    format(len(im.shape)))
+        else:
+            try:
+                im = Compose.read_img(im).astype('float32')
+            except:
+                raise ValueError('Can\'t read The image file {}!'.format(im))
+        im = im.astype('float32')
+        if label is not None:
+            if isinstance(label, np.ndarray):
+                if len(label.shape) != 2:
+                    raise Exception(
+                        "label should be 2-dimensions, but now is {}-dimensions".
+                        format(len(label.shape)))
+
+            else:
+                try:
+                    label = np.asarray(Image.open(label))
+                except:
+                    ValueError('Can\'t read The label file {}!'.format(label))
+            im_height, im_width, _ = im.shape
+            label_height, label_width = label.shape
+            if im_height != label_height or im_width != label_width:
+                raise Exception(
+                    "The height or width of the image is not same as the label")
+        return (im, label)
+
     def __call__(self, im, im_info=None, label=None):
         """
         Args:
@@ -73,24 +134,12 @@ class Compose(SegTransform):
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
 
-        if isinstance(im, np.ndarray):
-            if len(im.shape) != 3:
-                raise Exception(
-                    "im should be 3-dimensions, but now is {}-dimensions".
-                    format(len(im.shape)))
-        else:
-            try:
-                im = cv2.imread(im)
-            except:
-                raise ValueError('Can\'t read The image file {}!'.format(im))
-        im = im.astype('float32')
-        if im_info is None:
-            im_info = [('origin_shape', im.shape[0:2])]
+        im, label = self.decode_image(im, label)
         if self.to_rgb:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        if im_info is None:
+            im_info = [('origin_shape', im.shape[0:2])]
         if label is not None:
-            if not isinstance(label, np.ndarray):
-                label = np.asarray(Image.open(label))
             origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
@@ -550,22 +599,35 @@ class ResizeStepScaling(SegTransform):
 
 class Normalize(SegTransform):
     """对图像进行标准化。
-    1.尺度缩放到 [0,1]。
-    2.对图像进行减均值除以标准差操作。
+    1.像素值减去min_val
+    2.像素值除以(max_val-min_val)
+    3.对图像进行减均值除以标准差操作。
 
     Args:
         mean (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。
         std (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。
+        min_val (list): 图像数据集的最小值。默认值[0, 0, 0]。
+        max_val (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。
 
     Raises:
         ValueError: mean或std不是list对象。std包含0。
     """
 
-    def __init__(self, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]):
+    def __init__(self,
+                 mean=[0.5, 0.5, 0.5],
+                 std=[0.5, 0.5, 0.5],
+                 min_val=[0, 0, 0],
+                 max_val=[255.0, 255.0, 255.0]):
+        self.min_val = min_val
+        self.max_val = max_val
         self.mean = mean
         self.std = std
         if not (isinstance(self.mean, list) and isinstance(self.std, list)):
             raise ValueError("{}: input type is invalid.".format(self))
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
         from functools import reduce
         if reduce(lambda x, y: x * y, self.std) == 0:
             raise ValueError('{}: std is invalid!'.format(self))
@@ -588,7 +650,8 @@ class Normalize(SegTransform):
 
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std)
+        im = normalize(im, mean, std, self.min_val, self.max_val)
+        im = im.astype('float32')
 
         if label is None:
             return (im, im_info)
@@ -660,28 +723,29 @@ class Padding(SegTransform):
             target_width = self.target_size[0]
         pad_height = target_height - im_height
         pad_width = target_width - im_width
-        if pad_height < 0 or pad_width < 0:
-            raise ValueError(
-                'the size of image should be less than target_size, but the size of image ({}, {}), is larger than target_size ({}, {})'
-                .format(im_width, im_height, target_width, target_height))
-        else:
-            im = cv2.copyMakeBorder(
-                im,
-                0,
-                pad_height,
-                0,
-                pad_width,
-                cv2.BORDER_CONSTANT,
-                value=self.im_padding_value)
+        pad_height = max(pad_height, 0)
+        pad_width = max(pad_width, 0)
+        if (pad_height > 0 or pad_width > 0):
+            im_channel = im.shape[2]
+            import copy
+            orig_im = copy.deepcopy(im)
+            im = np.zeros((im_height + pad_height, im_width + pad_width,
+                           im_channel)).astype(orig_im.dtype)
+            for i in range(im_channel):
+                im[:, :, i] = np.pad(
+                    orig_im[:, :, i],
+                    pad_width=((0, pad_height), (0, pad_width)),
+                    mode='constant',
+                    constant_values=(self.im_padding_value[i],
+                                     self.im_padding_value[i]))
+
             if label is not None:
-                label = cv2.copyMakeBorder(
-                    label,
-                    0,
-                    pad_height,
-                    0,
-                    pad_width,
-                    cv2.BORDER_CONSTANT,
-                    value=self.label_padding_value)
+                label = np.pad(label,
+                               pad_width=((0, pad_height), (0, pad_width)),
+                               mode='constant',
+                               constant_values=(self.label_padding_value,
+                                                self.label_padding_value))
+
         if label is None:
             return (im, im_info)
         else:
@@ -752,23 +816,26 @@ class RandomPaddingCrop(SegTransform):
             pad_height = max(crop_height - img_height, 0)
             pad_width = max(crop_width - img_width, 0)
             if (pad_height > 0 or pad_width > 0):
-                im = cv2.copyMakeBorder(
-                    im,
-                    0,
-                    pad_height,
-                    0,
-                    pad_width,
-                    cv2.BORDER_CONSTANT,
-                    value=self.im_padding_value)
+                img_channel = im.shape[2]
+                import copy
+                orig_im = copy.deepcopy(im)
+                im = np.zeros((img_height + pad_height, img_width + pad_width,
+                               img_channel)).astype(orig_im.dtype)
+                for i in range(img_channel):
+                    im[:, :, i] = np.pad(
+                        orig_im[:, :, i],
+                        pad_width=((0, pad_height), (0, pad_width)),
+                        mode='constant',
+                        constant_values=(self.im_padding_value[i],
+                                         self.im_padding_value[i]))
+
                 if label is not None:
-                    label = cv2.copyMakeBorder(
-                        label,
-                        0,
-                        pad_height,
-                        0,
-                        pad_width,
-                        cv2.BORDER_CONSTANT,
-                        value=self.label_padding_value)
+                    label = np.pad(label,
+                                   pad_width=((0, pad_height), (0, pad_width)),
+                                   mode='constant',
+                                   constant_values=(self.label_padding_value,
+                                                    self.label_padding_value))
+
                 img_height = im.shape[0]
                 img_width = im.shape[1]
 
@@ -869,7 +936,7 @@ class RandomRotate(SegTransform):
                 存储与图像相关信息的字典和标注图像np.ndarray数据。
         """
         if self.rotate_range > 0:
-            (h, w) = im.shape[:2]
+            h, w, c = im.shape
             do_rotation = np.random.uniform(-self.rotate_range,
                                             self.rotate_range)
             pc = (w // 2, h // 2)
@@ -884,13 +951,18 @@ class RandomRotate(SegTransform):
             r[0, 2] += (nw / 2) - cx
             r[1, 2] += (nh / 2) - cy
             dsize = (nw, nh)
-            im = cv2.warpAffine(
-                im,
-                r,
-                dsize=dsize,
-                flags=cv2.INTER_LINEAR,
-                borderMode=cv2.BORDER_CONSTANT,
-                borderValue=self.im_padding_value)
+            rot_ims = list()
+            for i in range(0, c, 3):
+                ori_im = im[:, :, i:i + 3]
+                rot_im = cv2.warpAffine(
+                    ori_im,
+                    r,
+                    dsize=dsize,
+                    flags=cv2.INTER_LINEAR,
+                    borderMode=cv2.BORDER_CONSTANT,
+                    borderValue=self.im_padding_value[i:i + 3])
+                rot_ims.append(rot_im)
+            im = np.concatenate(rot_ims, axis=-1)
             label = cv2.warpAffine(
                 label,
                 r,
@@ -1052,13 +1124,46 @@ class RandomDistort(SegTransform):
             'saturation': self.saturation_prob,
             'hue': self.hue_prob
         }
-        for id in range(4):
-            params = params_dict[ops[id].__name__]
-            prob = prob_dict[ops[id].__name__]
-            params['im'] = im
-            if np.random.uniform(0, 1) < prob:
-                im = ops[id](**params)
+        dis_ims = list()
+        h, w, c = im.shape
+        for i in range(0, c, 3):
+            ori_im = im[:, :, i:i + 3]
+            for id in range(4):
+                params = params_dict[ops[id].__name__]
+                prob = prob_dict[ops[id].__name__]
+                params['im'] = ori_im
+                if np.random.uniform(0, 1) < prob:
+                    ori_im = ops[id](**params)
+            dis_ims.append(ori_im)
+        im = np.concatenate(dis_ims, axis=-1)
         im = im.astype('float32')
+        if label is None:
+            return (im, im_info)
+        else:
+            return (im, im_info, label)
+
+
+class Clip(SegTransform):
+    """
+    对图像上超出一定范围的数据进行截断。
+
+    Args:
+        min_val (list): 裁剪的下限，小于min_val的数值均设为min_val. 默认值0.
+        max_val (list): 裁剪的上限，大于max_val的数值均设为max_val. 默认值255.0.
+    """
+
+    def __init__(self, min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0]):
+        self.min_val = min_val
+        self.max_val = max_val
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
+    def __call__(self, im, im_info=None, label=None):
+        for k in range(im.shape[2]):
+            np.clip(
+                im[:, :, k], self.min_val[k], self.max_val[k], out=im[:, :, k])
+
         if label is None:
             return (im, im_info)
         else:

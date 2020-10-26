@@ -168,7 +168,7 @@ def main():
             logging.error(
                 "paddlex --export_inference --model_dir model_path --save_dir infer_model"
             )
-        pdx.convertor.export_onnx_model(model, args.save_dir, args.onnx_opset)
+        pdx.converter.export_onnx_model(model, args.save_dir, args.onnx_opset)
 
     if args.data_conversion:
         assert args.source is not None, "--source should be defined while converting dataset"
@@ -189,7 +189,7 @@ def main():
 
     if args.split_dataset:
         assert args.dataset_dir is not None, "--dataset_dir should be defined while spliting dataset"
-        assert args.format is not None, "--form should be defined while spliting dataset"
+        assert args.format is not None, "--format should be defined while spliting dataset"
         assert args.val_value is not None, "--val_value should be defined while spliting dataset"
 
         dataset_dir = args.dataset_dir

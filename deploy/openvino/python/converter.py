@@ -13,11 +13,13 @@
 # limitations under the License.
 
 import os
+import os.path as osp
 from six import text_type as _text_type
 import argparse
 import sys
-from utils import logging 
+import yaml
 import paddlex as pdx
+
 
 def arg_parser():
     parser = argparse.ArgumentParser()
@@ -46,41 +48,36 @@ def arg_parser():
     return parser
 
 
-    
-
-
 def export_openvino_model(model, args):
-    if model.model_type == "detector" or model.__class__.__name__ == "FastSCNN":
-        logging.error(
-            "Only image classifier models and semantic segmentation models(except FastSCNN) are supported to export to openvino")
-    try:
-        import x2paddle
-        if x2paddle.__version__ < '0.7.4':
-            logging.error("You need to upgrade x2paddle >= 0.7.4")
-    except:
-        logging.error(
-            "You need to install x2paddle first, pip install x2paddle>=0.7.4")
-        
-    import x2paddle.convert as x2pc
-    x2pc.paddle2onnx(args.model_dir, args.save_dir)
+
+    if model.__class__.__name__ == "YOLOv3":
+        pdx.converter.export_onnx_model(model, args.save_dir)
+    else:
+        pdx.converter.export_onnx_model(model, args.save_dir, 11)
 
     import mo.main as mo
     from mo.utils.cli_parser import get_onnx_cli_parser
     onnx_parser = get_onnx_cli_parser()
-    onnx_parser.add_argument("--model_dir",type=_text_type)
-    onnx_parser.add_argument("--save_dir",type=_text_type)
+    onnx_parser.add_argument("--model_dir", type=_text_type)
+    onnx_parser.add_argument("--save_dir", type=_text_type)
     onnx_parser.add_argument("--fixed_input_shape")
-    onnx_input = os.path.join(args.save_dir, 'x2paddle_model.onnx')
+    onnx_input = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
     onnx_parser.set_defaults(input_model=onnx_input)
     onnx_parser.set_defaults(output_dir=args.save_dir)
-    shape = '[1,3,'
-    shape =  shape + args.fixed_input_shape[1:]
-    if model.__class__.__name__ == "YOLOV3":
+    shape_list = args.fixed_input_shape[1:-1].split(',')
+    with open(osp.join(args.model_dir, "model.yml")) as f:
+        info = yaml.load(f.read(), Loader=yaml.Loader)
+    input_channel = 3
+    if 'input_channel' in info['_init_params']:
+        input_channel = info['_init_params']['input_channel']
+    shape = '[1,{},' + shape_list[1] + ',' + shape_list[0] + ']'
+    shape = shape.format(input_channel)
+    if model.__class__.__name__ == "YOLOv3":
         shape = shape + ",[1,2]"
         inputs = "image,im_size"
-        onnx_parser.set_defaults(input = inputs)
-    onnx_parser.set_defaults(input_shape = shape)
-    mo.main(onnx_parser,'onnx')
+        onnx_parser.set_defaults(input=inputs)
+    onnx_parser.set_defaults(input_shape=shape)
+    mo.main(onnx_parser, 'onnx')
 
 
 def main():
@@ -90,12 +87,11 @@ def main():
     assert args.save_dir is not None, "--save_dir should be defined to create openvino model"
     model = pdx.load_model(args.model_dir)
     if model.status == "Normal" or model.status == "Prune":
-        logging.error(
+        print(
             "Only support inference model, try to export model first as below,",
             exit=False)
     export_openvino_model(model, args)
 
-if  __name__ == "__main__":
+
+if __name__ == "__main__":
     main()
-
-

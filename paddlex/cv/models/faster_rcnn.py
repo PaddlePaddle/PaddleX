@@ -376,16 +376,18 @@ class FasterRCNN(BaseAPI):
         return metrics
 
     @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_num=1):
+    def _preprocess(images, transforms, model_type, class_name, thread_pool=None):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
             transforms=transforms,
             mode='test')
-        pool = ThreadPool(thread_num)
-        batch_data = pool.map(transforms, images)
-        pool.close()
-        pool.join()
+        if thread_pool is not None:
+            batch_data = thread_pool.map(transforms, images)
+        else:
+            batch_data = list()
+            for image in images:
+                batch_data.append(transforms(image))
         padding_batch = generate_minibatch(batch_data)
         im = np.array([data[0] for data in padding_batch])
         im_resize_info = np.array([data[1] for data in padding_batch])
@@ -453,14 +455,13 @@ class FasterRCNN(BaseAPI):
 
         return preds[0]
 
-    def batch_predict(self, img_file_list, transforms=None, thread_num=2):
+    def batch_predict(self, img_file_list, transforms=None):
         """预测。
 
         Args:
             img_file_list(list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是图像路径
                 也可以是解码后的排列格式为（H，W，C）且类型为float32且为BGR格式的数组。
             transforms (paddlex.det.transforms): 数据预处理操作。
-            thread_num (int): 并发执行各图像预处理时的线程数。
 
         Returns:
             list: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个预测结果由预测框类别标签、
@@ -477,7 +478,7 @@ class FasterRCNN(BaseAPI):
             transforms = self.test_transforms
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
             img_file_list, transforms, self.model_type,
-            self.__class__.__name__, thread_num)
+            self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

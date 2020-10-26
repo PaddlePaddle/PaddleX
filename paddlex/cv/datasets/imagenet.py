@@ -67,6 +67,10 @@ class ImageNet(Dataset):
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
                 items = line.strip().split()
+                if len(items) > 2:
+                    raise Exception(
+                        "A space is defined as the separator, but it exists in image or label name {}."
+                        .format(line))
                 items[0] = path_normalization(items[0])
                 if not is_pic(items[0]):
                     continue

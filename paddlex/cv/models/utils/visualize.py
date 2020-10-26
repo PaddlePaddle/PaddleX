@@ -20,6 +20,7 @@ import numpy as np
 import time
 import paddlex.utils.logging as logging
 from .detection_eval import fixed_linspace, backup_linspace, loadRes
+from paddlex.cv.datasets.dataset import is_pic
 
 
 def visualize_detection(image, result, threshold=0.5, save_dir='./'):
@@ -44,7 +45,11 @@ def visualize_detection(image, result, threshold=0.5, save_dir='./'):
         return image
 
 
-def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
+def visualize_segmentation(image,
+                           result,
+                           weight=0.6,
+                           save_dir='./',
+                           color=None):
     """
     Convert segment result to color image, and save added image.
     Args:
@@ -52,10 +57,15 @@ def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
         result: the predict result of image
         weight: the image weight of visual image, and the result weight is (1 - weight)
         save_dir: the directory for saving visual image
+        color: the list of a BGR-mode color for each label.
     """
     label_map = result['label_map']
     color_map = get_color_map_list(256)
+    if color is not None:
+        for i in range(len(color) // 3):
+            color_map[i] = color[i * 3:(i + 1) * 3]
     color_map = np.array(color_map).astype("uint8")
+
     # Use OpenCV LUT for color mapping
     c1 = cv2.LUT(label_map, color_map[:, 0])
     c2 = cv2.LUT(label_map, color_map[:, 1])
@@ -65,11 +75,28 @@ def visualize_segmentation(image, result, weight=0.6, save_dir='./'):
     if isinstance(image, np.ndarray):
         im = image
         image_name = str(int(time.time() * 1000)) + '.jpg'
+        if image.shape[2] != 3:
+            logging.info(
+                "The image is not 3-channel array, so predicted label map is shown as a pseudo color image."
+            )
+            weight = 0.
     else:
         image_name = os.path.split(image)[-1]
-        im = cv2.imread(image)
+        if not is_pic(image):
+            logging.info(
+                "The image cannot be opened by opencv, so predicted label map is shown as a pseudo color image."
+            )
+            image_name = image_name.split('.')[0] + '.jpg'
+            weight = 0.
+        else:
+            im = cv2.imread(image)
 
-    vis_result = cv2.addWeighted(im, weight, pseudo_img, 1 - weight, 0)
+    if abs(weight) < 1e-5:
+        vis_result = pseudo_img
+    else:
+        vis_result = cv2.addWeighted(im, weight,
+                                     pseudo_img.astype(im.dtype), 1 - weight,
+                                     0)
 
     if save_dir is not None:
         if not os.path.exists(save_dir):

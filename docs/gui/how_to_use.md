@@ -1,5 +1,7 @@
 # PaddleX GUI使用教程
 
+*注：如果你的系统是 Mac OS 10.15.5及以上，在双击客户端icon后，需要在Terminal中执行 sudo xattr -r -d com.apple.quarantine /Users/username/PaddleX ，并稍等几秒来启动客户端，其中 /Users/username/PaddleX 为您保存PaddleX的文件夹路径*
+
 **第一步：准备数据**
 
 在开始模型训练前，您需要根据不同的任务类型，将数据标注为相应的格式。目前PaddleX支持【图像分类】、【目标检测】、【语义分割】、【实例分割】四种任务类型。不同类型任务的数据处理方式可查看[数据标注方式](https://paddlex.readthedocs.io/zh_CN/latest/appendix/datasets.html)。

@@ -29,15 +29,13 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 **说明**：其中C++预测代码在PaddleX/deploy/openvino 目录，该目录不依赖任何PaddleX下其他目录。
 
 ### Step2 软件依赖
-提供了依赖软件预编包或者一键编译，用户不需要单独下载或编译第三方依赖软件。若需要自行编译第三方依赖软件请参考：
+
+Step3中的编译脚本会一键安装第三方依赖软件的预编译包，用户不需要单独下载或编译这些依赖软件。若需要自行编译第三方依赖软件请参考：
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
-- glog：编译请参考[编译文档](https://github.com/google/glog)
-
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
-
 
 
 ### Step3: 编译
@@ -47,8 +45,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
-# glog预编译库的路径
-GLOG_DIR=$(pwd)/deps/glog
 # ngraph lib预编译库的路径
 NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph/lib
 # opencv预编译库的路径
@@ -63,7 +59,7 @@ ARCH=x86
 
 ### Step4: 预测
 
-编译成功后，分类任务的预测可执行程序为`classifier`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：
+编译成功后，分类任务的预测可执行程序为`classifier`，检测任务的预测可执行程序为`detector`，分割任务的预测可执行程序为`segmenter`，其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -72,7 +68,7 @@ ARCH=x86
 | --image_list  | 按行存储图片路径的.txt文件 |
 | --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
 | --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "既不保存可视化结果 |
+| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "，即不保存可视化结果 |
 
 ### 样例
 `样例一`：
@@ -118,7 +114,9 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 |---|---|---|---|
 |resnet-50 | 20.56 | 16.12 | 224*224 |
 |mobilenet-V2 | 5.16 | 2.31 |224*224|
-|yolov3-mobilnetv1 |76.63| 46.26|608*608 |  
+|yolov3-mobilnetv1 |76.63| 46.26|608*608 |
+|unet| 276.40| 211.49| 512*512|  
+
 
 `测试二`:
 在PC机上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。

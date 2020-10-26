@@ -27,7 +27,7 @@ pdx.det.visualize('./xiaoduxiong_epoch_12/xiaoduxiong.jpeg', result, save_dir='.
 ## paddlex.seg.visualize
 > **语义分割模型预测结果可视化**  
 ```
-paddlex.seg.visualize(image, result, weight=0.6, save_dir='./')
+paddlex.seg.visualize(image, result, weight=0.6, save_dir='./', color=None)
 ```
 将语义分割模型预测得到的Mask在原图上进行可视化。
 
@@ -36,6 +36,7 @@ paddlex.seg.visualize(image, result, weight=0.6, save_dir='./')
 > * **result** (str): 模型预测结果。
 > * **weight**(float): mask可视化结果与原图权重因子，weight表示原图的权重。默认0.6。
 > * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。
+> * **color** (list): 各类别的BGR颜色值组成的列表。例如两类时可设置为[255, 255, 255, 0, 0, 0]。默认值为None，则使用默认生成的颜色列表。
 
 ### 使用示例
 > 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/cityscape_deeplab.tar.gz)和[测试图片](https://bj.bcebos.com/paddlex/datasets/city.png)
@@ -130,8 +131,8 @@ paddlex.transforms.visualize(dataset,
 ```
 对数据预处理/增强中间结果进行可视化。
 可使用VisualDL查看中间结果：
-1. VisualDL启动方式: visualdl --logdir vdl_output --port 8001
-2. 浏览器打开 https://0.0.0.0:8001 即可，
+1. VisualDL启动方式: visualdl --logdir vdl_output/image_transforms --port 8001
+2. 浏览器打开 https://0.0.0.0:8001 ，在页面上面点击`『样本数据-图像』`即可。
     其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 
 ### 参数

@@ -91,7 +91,23 @@ sensitivities_data = {
     'DeepLabv3p_Xception65_aspp_decoder':
     'https://bj.bcebos.com/paddlex/slim_prune/deeplab_xception65_with_aspp_decoder.sensitivities',
     'DeepLabv3p_Xception41_aspp_decoder':
-    'https://bj.bcebos.com/paddlex/slim_prune/deeplab_xception41_with_aspp_decoder.sensitivities'
+    'https://bj.bcebos.com/paddlex/slim_prune/deeplab_xception41_with_aspp_decoder.sensitivities',
+    'HRNet_W18_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w18.sensitivities',
+    'HRNet_W30_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w30.sensitivities',
+    'HRNet_W32_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w32.sensitivities',
+    'HRNet_W40_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w40.sensitivities',
+    'HRNet_W44_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w44.sensitivities',
+    'HRNet_W48_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w48.sensitivities',
+    'HRNet_W64_Seg':
+    'https://bj.bcebos.com/paddlex/slim_prune/hrnet_w64.sensitivities',
+    'FastSCNN':
+    'https://bj.bcebos.com/paddlex/slim_prune/fast_scnn.sensitivities'
 }
 
 
@@ -105,6 +121,8 @@ def get_sensitivities(flag, model, save_dir):
     elif hasattr(model, 'encoder_with_aspp') or hasattr(model,
                                                         'enable_decoder'):
         model_type = model_type + '_' + 'aspp' + '_' + 'decoder'
+    if model_type.startswith('HRNet') and model.model_type == 'segmenter':
+        model_type = '{}_W{}_Seg'.format(model_type, model.width)
     if osp.isfile(flag):
         return flag
     elif flag == 'DEFAULT':
@@ -153,10 +171,14 @@ def get_prune_params(model):
             model_type.startswith('ShuffleNetV2'):
         for block in program.blocks:
             for param in block.all_parameters():
-                pd_var = fluid.global_scope().find_var(param.name)
-                pd_param = pd_var.get_tensor()
-                if len(np.array(pd_param).shape) == 4:
-                    prune_names.append(param.name)
+                pd_var = model.scope.find_var(param.name)
+                try:
+                    pd_param = pd_var.get_tensor()
+                    if len(np.array(pd_param).shape) == 4:
+                        prune_names.append(param.name)
+                except Exception as e:
+                    print("None Tensor Name: ", param.name)
+                    print("Error message: {}".format(e))
         if model_type == 'AlexNet':
             prune_names.remove('conv5_weights')
         if model_type == 'ShuffleNetV2':
@@ -243,19 +265,17 @@ def get_prune_params(model):
         for i in params_not_prune:
             if i in prune_names:
                 prune_names.remove(i)
-    
-    elif model_type.startswith('HRNet'):
+
+    elif model_type.startswith('HRNet') and model.model_type == 'segmenter':
         for param in program.global_block().all_parameters():
             if 'weight' not in param.name:
                 continue
             prune_names.append(param.name)
-        params_not_prune = [
-            'conv-1_weights'
-        ]
+        params_not_prune = ['conv-1_weights']
         for i in params_not_prune:
             if i in prune_names:
                 prune_names.remove(i)
-    
+
     elif model_type.startswith('FastSCNN'):
         for param in program.global_block().all_parameters():
             if 'weight' not in param.name:
@@ -263,19 +283,43 @@ def get_prune_params(model):
             if 'dwise' in param.name or 'depthwise' in param.name or 'logit' in param.name:
                 continue
             prune_names.append(param.name)
-        params_not_prune = [
-            'classifier/weights'
-        ]
+        params_not_prune = ['classifier/weights']
         for i in params_not_prune:
             if i in prune_names:
                 prune_names.remove(i)
 
     elif model_type.startswith('DeepLabv3p'):
+        if model_type.lower() == "deeplabv3p_mobilenetv3_large_x1_0_ssld":
+            params_not_prune = [
+                'last_1x1_conv_weights', 'conv14_se_2_weights',
+                'conv16_depthwise_weights', 'conv13_depthwise_weights',
+                'conv15_se_2_weights', 'conv2_depthwise_weights',
+                'conv6_depthwise_weights', 'conv8_depthwise_weights',
+                'fc_weights', 'conv3_depthwise_weights', 'conv7_se_2_weights',
+                'conv16_expand_weights', 'conv16_se_2_weights',
+                'conv10_depthwise_weights', 'conv11_depthwise_weights',
+                'conv15_expand_weights', 'conv5_expand_weights',
+                'conv15_depthwise_weights', 'conv14_depthwise_weights',
+                'conv12_se_2_weights', 'conv1_weights',
+                'conv13_expand_weights', 'conv_last_weights',
+                'conv12_depthwise_weights', 'conv13_se_2_weights',
+                'conv12_expand_weights', 'conv5_depthwise_weights',
+                'conv6_se_2_weights', 'conv10_expand_weights',
+                'conv9_depthwise_weights', 'conv6_expand_weights',
+                'conv5_se_2_weights', 'conv14_expand_weights',
+                'conv4_depthwise_weights', 'conv7_expand_weights',
+                'conv7_depthwise_weights', 'encoder/aspp0/weights',
+                'decoder/merge/weights', 'encoder/image_pool/weights',
+                'decoder/weights'
+            ]
         for param in program.global_block().all_parameters():
             if 'weight' not in param.name:
                 continue
             if 'dwise' in param.name or 'depthwise' in param.name or 'logit' in param.name:
                 continue
+            if model_type.lower() == "deeplabv3p_mobilenetv3_large_x1_0_ssld":
+                if param.name in params_not_prune:
+                    continue
             prune_names.append(param.name)
         params_not_prune = [
             'xception_{}/exit_flow/block2/separable_conv3/pointwise/weights'.
