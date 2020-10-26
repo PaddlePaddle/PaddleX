@@ -3,7 +3,7 @@
 
 ## 前置条件
 * Python 3.6+
-* OpenVINO 2020.4
+* OpenVINO 2021.1
 
 **说明**：OpenVINO安装请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)  
 
