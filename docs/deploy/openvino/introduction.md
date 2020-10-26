@@ -1,5 +1,7 @@
 # OpenVINO部署简介
-PaddleX支持将训练好的Paddle模型通过OpenVINO实现模型的预测加速，OpenVINO详细资料与安装流程请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，本文档使用OpenVINO 2020.4测试通过。
+PaddleX支持将训练好的Paddle模型通过OpenVINO实现模型的预测加速，OpenVINO详细资料与安装流程请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，本文档使用OpenVINO 2020.4与2021.1测试通过。  
+**注意**：由于PaddleX分割模型使用了ReSize-11 Op，OpenVINO 2021.1版本开始支持支持Resize-11 ，请务必下载OpenVINO 2021.1+版本  
+
 
 ## 部署支持情况
 下表提供了PaddleX在不同环境下对使用OpenVINO加速的支持情况  
