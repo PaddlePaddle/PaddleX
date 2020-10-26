@@ -138,20 +138,25 @@ class VOCDetection(Dataset):
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
-                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
-                        1:-1]
+                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:
+                                                                             -1]
                     cname = obj.find(name_tag).text.strip()
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
-                    diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
-                        1:-1]
+                    diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:
+                                                                             -1]
                     try:
                         _difficult = int(obj.find(diff_tag).text)
                     except Exception:
                         _difficult = 0
                     pattern = re.compile('<bndbox>', re.IGNORECASE)
-                    box_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:
-                                                                            -1]
+                    box_tag = pattern.findall(str(ET.tostringlist(obj)))
+                    if len(box_tag) == 0:
+                        logging.warning(
+                            "There's no field '<bndbox>' in one of object, so this object will be ignored. xml file: {}".
+                            format(xml_file))
+                        continue
+                    box_tag = box_tag[0][1:-1]
                     box_element = obj.find(box_tag)
                     pattern = re.compile('<xmin>', re.IGNORECASE)
                     xmin_tag = pattern.findall(

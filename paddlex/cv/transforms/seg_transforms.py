@@ -98,9 +98,11 @@ class Compose(SegTransform):
                     format(len(im.shape)))
         else:
             try:
+                im_path = im
                 im = Compose.read_img(im).astype('float32')
             except:
-                raise ValueError('Can\'t read The image file {}!'.format(im))
+                raise ValueError('Can\'t read The image file {}!'.format(
+                    im_path))
         im = im.astype('float32')
         if label is not None:
             if isinstance(label, np.ndarray):
@@ -455,8 +457,7 @@ class ResizeByShort(SegTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale *
-                                          im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -732,12 +733,12 @@ class Padding(SegTransform):
             im = np.zeros((im_height + pad_height, im_width + pad_width,
                            im_channel)).astype(orig_im.dtype)
             for i in range(im_channel):
-                im[:, :, i] = np.pad(
-                    orig_im[:, :, i],
-                    pad_width=((0, pad_height), (0, pad_width)),
-                    mode='constant',
-                    constant_values=(self.im_padding_value[i],
-                                     self.im_padding_value[i]))
+                im[:, :, i] = np.pad(orig_im[:, :, i],
+                                     pad_width=((0, pad_height),
+                                                (0, pad_width)),
+                                     mode='constant',
+                                     constant_values=(self.im_padding_value[i],
+                                                      self.im_padding_value[i]))
 
             if label is not None:
                 label = np.pad(label,
