@@ -5,7 +5,7 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 
 ## 前置条件
 * Visual Studio 2019
-* OpenVINO 2020.4
+* OpenVINO 2021.1+
 * CMake 3.0+
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  

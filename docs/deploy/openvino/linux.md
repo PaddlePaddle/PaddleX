@@ -7,7 +7,7 @@
 * GCC* 5.4.0
 * CMake 3.0+
 * PaddleX 1.0+
-* OpenVINO 2020.4
+* OpenVINO 2021.1+
 * 硬件平台：CPU、VPU
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请根据相应的系统参考[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)或者[OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html)

@@ -185,7 +185,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   }
   int num_boxes = size / 6;
   for (int i = 0; i < num_boxes; ++i) {
-    if (data[i * 6] > 0) {
+    if (data[i * 6] >= 0) {
       Box box;
       box.category_id = static_cast<int>(data[i * 6]);
       box.category = labels[box.category_id];
