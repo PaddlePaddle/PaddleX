@@ -63,6 +63,9 @@ class FasterRCNN(object):
             test_pre_nms_top_n=6000,
             test_post_nms_top_n=1000,
             test_nms_thresh=0.7,
+            rpn_cls_loss='SigmoidCrossEntropy',
+            rpn_focal_loss_alpha=0.25,
+            rpn_focal_loss_gamma=2,
             #roi_extractor
             roi_extractor=None,
             #bbox_head
@@ -104,7 +107,10 @@ class FasterRCNN(object):
                     train_nms_thresh=train_nms_thresh,
                     test_pre_nms_top_n=test_pre_nms_top_n,
                     test_post_nms_top_n=test_post_nms_top_n,
-                    test_nms_thresh=test_nms_thresh)
+                    test_nms_thresh=test_nms_thresh,
+                    rpn_cls_loss=rpn_cls_loss,
+                    rpn_focal_loss_alpha=rpn_focal_loss_alpha,
+                    rpn_focal_loss_gamma=rpn_focal_loss_gamma)
             else:
                 rpn_head = FPNRPNHead(
                     anchor_start_size=anchor_sizes[0],
@@ -121,7 +127,10 @@ class FasterRCNN(object):
                     train_nms_thresh=train_nms_thresh,
                     test_pre_nms_top_n=test_pre_nms_top_n,
                     test_post_nms_top_n=test_post_nms_top_n,
-                    test_nms_thresh=test_nms_thresh)
+                    test_nms_thresh=test_nms_thresh,
+                    rpn_cls_loss=rpn_cls_loss,
+                    rpn_focal_loss_alpha=rpn_focal_loss_alpha,
+                    rpn_focal_loss_gamma=rpn_focal_loss_gamma)
         self.rpn_head = rpn_head
         if roi_extractor is None:
             if self.fpn is None:

@@ -16,10 +16,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import numpy as np
 from paddle import fluid
 from paddle.fluid.param_attr import ParamAttr
 from paddle.fluid.initializer import Normal
 from paddle.fluid.regularizer import L2Decay
+from paddle.fluid.initializer import Constant
 
 __all__ = ['RPNHead', 'FPNRPNHead']
 
@@ -39,6 +41,9 @@ class RPNHead(object):
             rpn_positive_overlap=0.7,
             rpn_negative_overlap=0.3,
             use_random=True,
+            rpn_cls_loss='SigmoidCrossEntropy',
+            rpn_focal_loss_gamma=2,
+            rpn_focal_loss_alpha=0.25,
             #train_proposal
             train_pre_nms_top_n=12000,
             train_post_nms_top_n=2000,
@@ -75,6 +80,9 @@ class RPNHead(object):
         self.test_min_size = test_min_size
         self.test_eta = test_eta
         self.num_classes = num_classes
+        self.rpn_cls_loss = rpn_cls_loss
+        self.rpn_focal_loss_gamma = rpn_focal_loss_gamma
+        self.rpn_focal_loss_alpha = rpn_focal_loss_alpha
 
     def _get_output(self, input):
         """
@@ -99,7 +107,8 @@ class RPNHead(object):
             act='relu',
             name='conv_rpn',
             param_attr=ParamAttr(
-                name="conv_rpn_w", initializer=Normal(loc=0., scale=0.01)),
+                name="conv_rpn_w", initializer=Normal(
+                    loc=0., scale=0.01)),
             bias_attr=ParamAttr(
                 name="conv_rpn_b", learning_rate=2., regularizer=L2Decay(0.)))
         # Generate anchors
@@ -111,6 +120,11 @@ class RPNHead(object):
             variance=self.variance)
         num_anchor = self.anchor.shape[2]
         # Proposal classification scores
+        if self.rpn_cls_loss == 'SigmoidCrossEntropy':
+            bias_init = None
+        elif self.rpn_cls_loss == 'SigmoidFocalLoss':
+            value = float(-np.log((1 - 0.01) / 0.01))
+            bias_init = Constant(value=value)
         self.rpn_cls_score = fluid.layers.conv2d(
             rpn_conv,
             num_filters=num_anchor * self.num_classes,
@@ -121,9 +135,11 @@ class RPNHead(object):
             name='rpn_cls_score',
             param_attr=ParamAttr(
                 name="rpn_cls_logits_w",
-                initializer=Normal(loc=0., scale=0.01)),
+                initializer=Normal(
+                    loc=0., scale=0.01)),
             bias_attr=ParamAttr(
                 name="rpn_cls_logits_b",
+                initializer=bias_init,
                 learning_rate=2.,
                 regularizer=L2Decay(0.)))
         # Proposal bbox regression deltas
@@ -136,8 +152,8 @@ class RPNHead(object):
             act=None,
             name='rpn_bbox_pred',
             param_attr=ParamAttr(
-                name="rpn_bbox_pred_w", initializer=Normal(loc=0.,
-                                                           scale=0.01)),
+                name="rpn_bbox_pred_w", initializer=Normal(
+                    loc=0., scale=0.01)),
             bias_attr=ParamAttr(
                 name="rpn_bbox_pred_b",
                 learning_rate=2.,
@@ -251,25 +267,58 @@ class RPNHead(object):
         """
         rpn_cls, rpn_bbox, anchor, anchor_var = self._get_loss_input()
         if self.num_classes == 1:
-            score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight = \
-                fluid.layers.rpn_target_assign(
-                    bbox_pred=rpn_bbox,
-                    cls_logits=rpn_cls,
-                    anchor_box=anchor,
-                    anchor_var=anchor_var,
-                    gt_boxes=gt_box,
-                    is_crowd=is_crowd,
-                    im_info=im_info,
-                    rpn_batch_size_per_im=self.rpn_batch_size_per_im,
-                    rpn_straddle_thresh=self.rpn_straddle_thresh,
-                    rpn_fg_fraction=self.rpn_fg_fraction,
-                    rpn_positive_overlap=self.rpn_positive_overlap,
-                    rpn_negative_overlap=self.rpn_negative_overlap,
-                    use_random=self.use_random)
-            score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
-            score_tgt.stop_gradient = True
-            rpn_cls_loss = fluid.layers.sigmoid_cross_entropy_with_logits(
-                x=score_pred, label=score_tgt)
+            if self.rpn_cls_loss == 'SigmoidCrossEntropy':
+                score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight = \
+                    fluid.layers.rpn_target_assign(
+                        bbox_pred=rpn_bbox,
+                        cls_logits=rpn_cls,
+                        anchor_box=anchor,
+                        anchor_var=anchor_var,
+                        gt_boxes=gt_box,
+                        is_crowd=is_crowd,
+                        im_info=im_info,
+                        rpn_batch_size_per_im=self.rpn_batch_size_per_im,
+                        rpn_straddle_thresh=self.rpn_straddle_thresh,
+                        rpn_fg_fraction=self.rpn_fg_fraction,
+                        rpn_positive_overlap=self.rpn_positive_overlap,
+                        rpn_negative_overlap=self.rpn_negative_overlap,
+                        use_random=self.use_random)
+                score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
+                score_tgt.stop_gradient = True
+                rpn_cls_loss = fluid.layers.sigmoid_cross_entropy_with_logits(
+                    x=score_pred, label=score_tgt)
+            elif self.rpn_cls_loss == 'SigmoidFocalLoss':
+                binary_gt_label = fluid.layers.full_like(
+                    gt_box, fill_value=1, dtype='int32')
+                binary_gt_label = fluid.layers.reduce_sum(
+                    binary_gt_label, dim=1, keep_dim=True)
+                data = fluid.layers.fill_constant(
+                    shape=[1], value=4, dtype='int32')
+                binary_gt_label = fluid.layers.greater_equal(binary_gt_label,
+                                                             data)
+                binary_gt_label = fluid.layers.cast(
+                    binary_gt_label, dtype='int32')
+                score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight, fg_num = \
+                    fluid.layers.retinanet_target_assign(
+                        bbox_pred=rpn_bbox,
+                        cls_logits=rpn_cls,
+                        anchor_box=anchor,
+                        anchor_var=anchor_var,
+                        gt_boxes=gt_box,
+                        gt_labels=binary_gt_label,
+                        is_crowd=is_crowd,
+                        im_info=im_info,
+                        positive_overlap=self.rpn_positive_overlap,
+                        negative_overlap=self.rpn_negative_overlap,
+                        num_classes=1)
+                fg_num = fluid.layers.reduce_sum(fg_num, name='fg_num')
+                score_tgt = fluid.layers.cast(score_tgt, 'int32')
+                rpn_cls_loss = fluid.layers.sigmoid_focal_loss(
+                    x=score_pred,
+                    label=score_tgt,
+                    fg_num=fg_num,
+                    gamma=self.rpn_focal_loss_gamma,
+                    alpha=self.rpn_focal_loss_alpha)
         else:
             score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight = \
                 fluid.layers.rpn_target_assign(
@@ -295,8 +344,12 @@ class RPNHead(object):
                 label=labels_int64,
                 numeric_stable_mode=True)
 
-        rpn_cls_loss = fluid.layers.reduce_mean(
-            rpn_cls_loss, name='loss_rpn_cls')
+        if self.rpn_cls_loss == 'SigmoidCrossEntropy':
+            rpn_cls_loss = fluid.layers.reduce_mean(
+                rpn_cls_loss, name='loss_rpn_cls')
+        elif self.rpn_cls_loss == 'SigmoidFocalLoss':
+            rpn_cls_loss = fluid.layers.reduce_sum(
+                rpn_cls_loss, name='loss_rpn_cls')
 
         loc_tgt = fluid.layers.cast(x=loc_tgt, dtype='float32')
         loc_tgt.stop_gradient = True
@@ -308,12 +361,15 @@ class RPNHead(object):
             outside_weight=bbox_weight)
         rpn_reg_loss = fluid.layers.reduce_sum(
             rpn_reg_loss, name='loss_rpn_bbox')
-        score_shape = fluid.layers.shape(score_tgt)
-        score_shape = fluid.layers.cast(x=score_shape, dtype='float32')
-        norm = fluid.layers.reduce_prod(score_shape)
-        norm.stop_gradient = True
-        rpn_reg_loss = rpn_reg_loss / norm
-
+        if self.rpn_cls_loss == 'SigmoidCrossEntropy':
+            score_shape = fluid.layers.shape(score_tgt)
+            score_shape = fluid.layers.cast(x=score_shape, dtype='float32')
+            norm = fluid.layers.reduce_prod(score_shape)
+            norm.stop_gradient = True
+            rpn_reg_loss = rpn_reg_loss / norm
+        elif self.rpn_cls_loss == 'SigmoidFocalLoss':
+            rpn_reg_loss = rpn_reg_loss / fluid.layers.cast(fg_num,
+                                                            rpn_reg_loss.dtype)
         return {'loss_rpn_cls': rpn_cls_loss, 'loss_rpn_bbox': rpn_reg_loss}
 
 
@@ -333,6 +389,9 @@ class FPNRPNHead(RPNHead):
             rpn_positive_overlap=0.7,
             rpn_negative_overlap=0.3,
             use_random=True,
+            rpn_cls_loss='SigmoidCrossEntropy',
+            rpn_focal_loss_gamma=2,
+            rpn_focal_loss_alpha=0.25,
             #train_proposal
             train_pre_nms_top_n=2000,
             train_post_nms_top_n=2000,
@@ -366,7 +425,10 @@ class FPNRPNHead(RPNHead):
             test_nms_thresh=test_nms_thresh,
             test_min_size=test_min_size,
             test_eta=test_eta,
-            num_classes=num_classes)
+            num_classes=num_classes,
+            rpn_cls_loss=rpn_cls_loss,
+            rpn_focal_loss_gamma=rpn_focal_loss_gamma,
+            rpn_focal_loss_alpha=rpn_focal_loss_alpha)
         self.anchor_start_size = anchor_start_size
         self.num_chan = num_chan
         self.min_level = min_level
@@ -410,7 +472,8 @@ class FPNRPNHead(RPNHead):
             name=conv_name,
             param_attr=ParamAttr(
                 name=conv_share_name + '_w',
-                initializer=Normal(loc=0., scale=0.01)),
+                initializer=Normal(
+                    loc=0., scale=0.01)),
             bias_attr=ParamAttr(
                 name=conv_share_name + '_b',
                 learning_rate=2.,
@@ -418,13 +481,18 @@ class FPNRPNHead(RPNHead):
 
         self.anchors, self.anchor_var = fluid.layers.anchor_generator(
             input=conv_rpn_fpn,
-            anchor_sizes=(self.anchor_start_size * 2.**
-                          (feat_lvl - self.min_level), ),
+            anchor_sizes=(self.anchor_start_size * 2.
+                          **(feat_lvl - self.min_level), ),
             stride=(2.**feat_lvl, 2.**feat_lvl),
             aspect_ratios=self.aspect_ratios,
             variance=self.variance)
 
         cls_num_filters = num_anchors * self.num_classes
+        if self.rpn_cls_loss == 'SigmoidCrossEntropy':
+            bias_init = None
+        elif self.rpn_cls_loss == 'SigmoidFocalLoss':
+            value = float(-np.log((1 - 0.01) / 0.01))
+            bias_init = Constant(value=value)
         self.rpn_cls_score = fluid.layers.conv2d(
             input=conv_rpn_fpn,
             num_filters=cls_num_filters,
@@ -433,9 +501,11 @@ class FPNRPNHead(RPNHead):
             name=cls_name,
             param_attr=ParamAttr(
                 name=cls_share_name + '_w',
-                initializer=Normal(loc=0., scale=0.01)),
+                initializer=Normal(
+                    loc=0., scale=0.01)),
             bias_attr=ParamAttr(
                 name=cls_share_name + '_b',
+                initializer=bias_init,
                 learning_rate=2.,
                 regularizer=L2Decay(0.)))
         self.rpn_bbox_pred = fluid.layers.conv2d(
@@ -446,7 +516,8 @@ class FPNRPNHead(RPNHead):
             name=bbox_name,
             param_attr=ParamAttr(
                 name=bbox_share_name + '_w',
-                initializer=Normal(loc=0., scale=0.01)),
+                initializer=Normal(
+                    loc=0., scale=0.01)),
             bias_attr=ParamAttr(
                 name=bbox_share_name + '_b',
                 learning_rate=2.,
@@ -471,8 +542,8 @@ class FPNRPNHead(RPNHead):
                 shape of (rois_num, 1).
         """
 
-        rpn_cls_score_fpn, rpn_bbox_pred_fpn = self._get_output(
-            body_feat, feat_lvl)
+        rpn_cls_score_fpn, rpn_bbox_pred_fpn = self._get_output(body_feat,
+                                                                feat_lvl)
 
         if self.num_classes == 1:
             rpn_cls_prob_fpn = fluid.layers.sigmoid(

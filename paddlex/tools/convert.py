@@ -19,6 +19,7 @@ from .x2imagenet import JingLing2ImageNet
 from .x2coco import LabelMe2COCO
 from .x2coco import EasyData2COCO
 from .x2coco import JingLing2COCO
+from .x2coco import VOC2COCO
 from .x2voc import LabelMe2VOC
 from .x2voc import EasyData2VOC
 from .x2seg import JingLing2Seg
@@ -30,11 +31,13 @@ jingling2imagenet = JingLing2ImageNet().convert
 labelme2coco = LabelMe2COCO().convert
 easydata2coco = EasyData2COCO().convert
 jingling2coco = JingLing2COCO().convert
+voc2coco = VOC2COCO().convert
 labelme2voc = LabelMe2VOC().convert
 easydata2voc = EasyData2VOC().convert
 jingling2seg = JingLing2Seg().convert
 labelme2seg = LabelMe2Seg().convert
 easydata2seg = EasyData2Seg().convert
+
 
 def dataset_conversion(source, to, pics, anns, save_dir):
     if source == 'labelme' and to == 'PascalVOC':
@@ -47,6 +50,8 @@ def dataset_conversion(source, to, pics, anns, save_dir):
         jingling2imagenet(pics, anns, save_dir)
     elif source == 'jingling' and to == 'MSCOCO':
         jingling2coco(pics, anns, save_dir)
+    elif source == 'PascalVOC' and to == 'MSCOCO':
+        voc2coco(pics, anns, save_dir)
     elif source == 'jingling' and to == 'SEG':
         jingling2seg(pics, anns, save_dir)
     elif source == 'easydata' and to == 'ImageNet':

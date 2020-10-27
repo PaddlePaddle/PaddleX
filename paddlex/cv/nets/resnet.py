@@ -151,10 +151,8 @@ class ResNet(object):
                    groups=1,
                    act=None,
                    name=None,
-                   dcn_v2=False,
-                   use_lr_mult_list=False):
-        lr_mult = self.lr_mult_list[
-            self.curr_stage] if use_lr_mult_list else 1.0
+                   dcn_v2=False):
+        lr_mult = self.lr_mult_list[self.curr_stage]
         _name = self.prefix_name + name if self.prefix_name != '' else name
         if not dcn_v2:
             conv = fluid.layers.conv2d(
@@ -269,8 +267,7 @@ class ResNet(object):
                     pool_padding=0,
                     ceil_mode=True,
                     pool_type='avg')
-                return self._conv_norm(
-                    input, ch_out, 1, 1, name=name, use_lr_mult_list=True)
+                return self._conv_norm(input, ch_out, 1, 1, name=name)
             return self._conv_norm(input, ch_out, 1, stride, name=name)
         else:
             return input

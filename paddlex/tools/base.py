@@ -18,6 +18,7 @@ import json
 import chardet
 import numpy as np
 
+
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -28,13 +29,15 @@ class MyEncoder(json.JSONEncoder):
             return obj.tolist()
         else:
             return super(MyEncoder, self).default(obj)
-        
+
+
 def is_pic(img_name):
     valid_suffix = ["JPEG", "jpeg", "JPG", "jpg", "BMP", "bmp", "PNG", "png"]
     suffix = img_name.split(".")[-1]
     if suffix not in valid_suffix:
         return False
     return True
+
 
 def get_encoding(path):
     f = open(path, 'rb')

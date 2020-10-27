@@ -46,7 +46,11 @@ class FasterRCNN(BaseAPI):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512]):
+                 anchor_sizes=[32, 64, 128, 256, 512],
+                 with_dcn=False,
+                 rpn_cls_loss='SigmoidCrossEntropy',
+                 rpn_focal_loss_alpha=0.25,
+                 rpn_focal_loss_gamma=2):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
@@ -62,9 +66,17 @@ class FasterRCNN(BaseAPI):
         self.anchor_sizes = anchor_sizes
         self.labels = None
         self.fixed_input_shape = None
+        self.with_dcn = with_dcn
+        rpn_cls_losses = ['SigmoidFocalLoss', 'SigmoidCrossEntropy']
+        assert rpn_cls_loss in rpn_cls_losses, "rpn_cls_loss should be one of {}".format(
+            rpn_cls_losses)
+        self.rpn_cls_loss = rpn_cls_loss
+        self.rpn_focal_loss_alpha = rpn_focal_loss_alpha
+        self.rpn_focal_loss_gamma = rpn_focal_loss_gamma
 
     def _get_backbone(self, backbone_name):
         norm_type = None
+        lr_mult_list = [1.0, 1.0, 1.0, 1.0, 1.0]
         if backbone_name == 'ResNet18':
             layers = 18
             variant = 'b'
@@ -89,6 +101,11 @@ class FasterRCNN(BaseAPI):
             if self.with_fpn is False:
                 self.with_fpn = True
             return backbone
+        elif backbone_name == 'ResNet50_vd_ssld':
+            layers = 50
+            variant = 'd'
+            norm_type = 'bn'
+            lr_mult_list = [1.0, 0.05, 0.05, 0.1, 0.15]
         if self.with_fpn:
             backbone = paddlex.cv.nets.resnet.ResNet(
                 norm_type='bn' if norm_type is None else norm_type,
@@ -97,7 +114,9 @@ class FasterRCNN(BaseAPI):
                 freeze_norm=True,
                 norm_decay=0.,
                 feature_maps=[2, 3, 4, 5],
-                freeze_at=2)
+                freeze_at=2,
+                lr_mult_list=lr_mult_list,
+                dcn_v2_stages=[3, 4, 5] if self.with_dcn else [])
         else:
             backbone = paddlex.cv.nets.resnet.ResNet(
                 norm_type='affine_channel' if norm_type is None else norm_type,
@@ -106,7 +125,9 @@ class FasterRCNN(BaseAPI):
                 freeze_norm=True,
                 norm_decay=0.,
                 feature_maps=4,
-                freeze_at=2)
+                freeze_at=2,
+                lr_mult_list=lr_mult_list,
+                dcn_v2_stages=[3, 4, 5] if self.with_dcn else [])
         return backbone
 
     def build_net(self, mode='train'):
@@ -121,7 +142,10 @@ class FasterRCNN(BaseAPI):
             anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            rpn_cls_loss=self.rpn_cls_loss,
+            rpn_focal_loss_alpha=self.rpn_focal_loss_alpha,
+            rpn_focal_loss_gamma=self.rpn_focal_loss_gamma)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -376,7 +400,11 @@ class FasterRCNN(BaseAPI):
         return metrics
 
     @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_pool=None):
+    def _preprocess(images,
+                    transforms,
+                    model_type,
+                    class_name,
+                    thread_pool=None):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,

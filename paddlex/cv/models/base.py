@@ -578,7 +578,7 @@ class BaseAPI:
                                     continue
                             log_writer.add_scalar(
                                 "Metrics/Eval(Epoch): {}".format(k), v, i + 1)
-                self.save_model(save_dir=current_save_dir)
+                #self.save_model(save_dir=current_save_dir)
                 if getattr(self, 'use_ema', False):
                     self.exe.run(self.ema.restore_program)
                 time_eval_one_epoch = time.time() - eval_epoch_start_time
