@@ -23,22 +23,23 @@ import numpy as np
 import PIL.ImageDraw
 from .base import MyEncoder, is_pic, get_encoding
 from paddlex.utils import path_normalization
-        
-        
+
+
 class X2COCO(object):
     def __init__(self):
         self.images_list = []
         self.categories_list = []
         self.annotations_list = []
-    
+
     def generate_categories_field(self, label, labels_list):
         category = {}
         category["supercategory"] = "component"
         category["id"] = len(labels_list) + 1
         category["name"] = label
         return category
-    
-    def generate_rectangle_anns_field(self, points, label, image_id, object_id, label_to_num):
+
+    def generate_rectangle_anns_field(self, points, label, image_id, object_id,
+                                      label_to_num):
         annotation = {}
         seg_points = np.asarray(points).copy()
         seg_points[1, :] = np.asarray(points)[2, :]
@@ -48,14 +49,14 @@ class X2COCO(object):
         annotation["image_id"] = image_id + 1
         annotation["bbox"] = list(
             map(float, [
-                points[0][0], points[0][1], points[1][0] - points[0][0], points[1][
-                    1] - points[0][1]
+                points[0][0], points[0][1], points[1][0] - points[0][0],
+                points[1][1] - points[0][1]
             ]))
         annotation["area"] = annotation["bbox"][2] * annotation["bbox"][3]
         annotation["category_id"] = label_to_num[label]
         annotation["id"] = object_id + 1
         return annotation
-    
+
     def convert(self, image_dir, json_dir, dataset_save_dir):
         """转换。
         Args:
@@ -74,8 +75,8 @@ class X2COCO(object):
         for img_name in os.listdir(image_dir):
             if is_pic(img_name):
                 shutil.copyfile(
-                            osp.join(image_dir, img_name),
-                            osp.join(new_image_dir, img_name))
+                    osp.join(image_dir, img_name),
+                    osp.join(new_image_dir, img_name))
         # Convert the json files.
         self.parse_json(new_image_dir, json_dir)
         coco_data = {}
@@ -83,42 +84,42 @@ class X2COCO(object):
         coco_data["categories"] = self.categories_list
         coco_data["annotations"] = self.annotations_list
         json_path = osp.join(dataset_save_dir, "annotations.json")
-        json.dump(
-            coco_data,
-            open(json_path, "w"),
-            indent=4,
-            cls=MyEncoder)
-    
-    
+        f = open(json_path, "w")
+        json.dump(coco_data, f, indent=4, cls=MyEncoder)
+        f.close()
+
+
 class LabelMe2COCO(X2COCO):
     """将使用LabelMe标注的数据集转换为COCO数据集。
     """
+
     def __init__(self):
         super(LabelMe2COCO, self).__init__()
-        
+
     def generate_images_field(self, json_info, image_file, image_id):
         image = {}
         image["height"] = json_info["imageHeight"]
         image["width"] = json_info["imageWidth"]
         image["id"] = image_id + 1
         json_img_path = path_normalization(json_info["imagePath"])
-        json_info["imagePath"] = osp.join(osp.split(json_img_path)[0], image_file)
+        json_info["imagePath"] = osp.join(
+            osp.split(json_img_path)[0], image_file)
         image["file_name"] = osp.split(json_info["imagePath"])[-1]
         return image
-    
-    def generate_polygon_anns_field(self, height, width, 
-                                    points, label, image_id, 
-                                    object_id, label_to_num):
+
+    def generate_polygon_anns_field(self, height, width, points, label,
+                                    image_id, object_id, label_to_num):
         annotation = {}
         annotation["segmentation"] = [list(np.asarray(points).flatten())]
         annotation["iscrowd"] = 0
         annotation["image_id"] = image_id + 1
-        annotation["bbox"] = list(map(float, self.get_bbox(height, width, points)))
+        annotation["bbox"] = list(
+            map(float, self.get_bbox(height, width, points)))
         annotation["area"] = annotation["bbox"][2] * annotation["bbox"][3]
         annotation["category_id"] = label_to_num[label]
         annotation["id"] = object_id + 1
         return annotation
-    
+
     def get_bbox(self, height, width, points):
         polygons = points
         mask = np.zeros([height, width], dtype=np.uint8)
@@ -137,7 +138,7 @@ class LabelMe2COCO(X2COCO):
             left_top_c, left_top_r, right_bottom_c - left_top_c,
             right_bottom_r - left_top_r
         ]
-    
+
     def parse_json(self, img_dir, json_dir):
         image_id = -1
         object_id = -1
@@ -153,7 +154,8 @@ class LabelMe2COCO(X2COCO):
             with open(json_file, mode='r', \
                               encoding=get_encoding(json_file)) as j:
                 json_info = json.load(j)
-                img_info = self.generate_images_field(json_info, img_file, image_id)
+                img_info = self.generate_images_field(json_info, img_file,
+                                                      image_id)
                 self.images_list.append(img_info)
                 for shapes in json_info["shapes"]:
                     object_id = object_id + 1
@@ -167,23 +169,26 @@ class LabelMe2COCO(X2COCO):
                     p_type = shapes["shape_type"]
                     if p_type == "polygon":
                         self.annotations_list.append(
-                            self.generate_polygon_anns_field(json_info["imageHeight"], json_info[
-                                "imageWidth"], points, label, image_id,
-                                                object_id, label_to_num))
+                            self.generate_polygon_anns_field(
+                                json_info["imageHeight"], json_info[
+                                    "imageWidth"], points, label, image_id,
+                                object_id, label_to_num))
                     if p_type == "rectangle":
                         points.append([points[0][0], points[1][1]])
                         points.append([points[1][0], points[0][1]])
                         self.annotations_list.append(
-                            self.generate_rectangle_anns_field(points, label, image_id,
-                                                  object_id, label_to_num))
-                        
-    
+                            self.generate_rectangle_anns_field(
+                                points, label, image_id, object_id,
+                                label_to_num))
+
+
 class EasyData2COCO(X2COCO):
     """将使用EasyData标注的检测或分割数据集转换为COCO数据集。
     """
+
     def __init__(self):
-        super(EasyData2COCO, self).__init__()        
-    
+        super(EasyData2COCO, self).__init__()
+
     def generate_images_field(self, img_path, image_id):
         image = {}
         img = cv2.imread(img_path)
@@ -193,23 +198,23 @@ class EasyData2COCO(X2COCO):
         img_path = path_normalization(img_path)
         image["file_name"] = osp.split(img_path)[-1]
         return image
-    
-    def generate_polygon_anns_field(self, points, segmentation, 
-                                    label, image_id, object_id,
-                                    label_to_num):
+
+    def generate_polygon_anns_field(self, points, segmentation, label,
+                                    image_id, object_id, label_to_num):
         annotation = {}
         annotation["segmentation"] = segmentation
         annotation["iscrowd"] = 1 if len(segmentation) > 1 else 0
         annotation["image_id"] = image_id + 1
-        annotation["bbox"] = list(map(float, [
-                points[0][0], points[0][1], points[1][0] - points[0][0], points[1][
-                    1] - points[0][1]
+        annotation["bbox"] = list(
+            map(float, [
+                points[0][0], points[0][1], points[1][0] - points[0][0],
+                points[1][1] - points[0][1]
             ]))
         annotation["area"] = annotation["bbox"][2] * annotation["bbox"][3]
         annotation["category_id"] = label_to_num[label]
         annotation["id"] = object_id + 1
         return annotation
-        
+
     def parse_json(self, img_dir, json_dir):
         from pycocotools.mask import decode
         image_id = -1
@@ -226,7 +231,8 @@ class EasyData2COCO(X2COCO):
             with open(json_file, mode='r', \
                               encoding=get_encoding(json_file)) as j:
                 json_info = json.load(j)
-                img_info = self.generate_images_field(osp.join(img_dir, img_file), image_id)
+                img_info = self.generate_images_field(
+                    osp.join(img_dir, img_file), image_id)
                 self.images_list.append(img_info)
                 for shapes in json_info["labels"]:
                     object_id = object_id + 1
@@ -242,31 +248,36 @@ class EasyData2COCO(X2COCO):
                         points.append([points[0][0], points[1][1]])
                         points.append([points[1][0], points[0][1]])
                         self.annotations_list.append(
-                            self.generate_rectangle_anns_field(points, label, image_id,
-                                                  object_id, label_to_num))
+                            self.generate_rectangle_anns_field(
+                                points, label, image_id, object_id,
+                                label_to_num))
                     else:
                         mask_dict = {}
-                        mask_dict['size'] = [img_info["height"], img_info["width"]]
+                        mask_dict[
+                            'size'] = [img_info["height"], img_info["width"]]
                         mask_dict['counts'] = shapes['mask'].encode()
                         mask = decode(mask_dict)
                         contours, hierarchy = cv2.findContours(
-                                (mask).astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                            (mask).astype(np.uint8), cv2.RETR_TREE,
+                            cv2.CHAIN_APPROX_SIMPLE)
                         segmentation = []
                         for contour in contours:
                             contour_list = contour.flatten().tolist()
                             if len(contour_list) > 4:
                                 segmentation.append(contour_list)
                         self.annotations_list.append(
-                            self.generate_polygon_anns_field(points, segmentation, label, image_id, object_id,
-                                                label_to_num))
-                        
+                            self.generate_polygon_anns_field(
+                                points, segmentation, label, image_id,
+                                object_id, label_to_num))
+
 
 class JingLing2COCO(X2COCO):
     """将使用EasyData标注的检测或分割数据集转换为COCO数据集。
     """
+
     def __init__(self):
         super(JingLing2COCO, self).__init__()
-        
+
     def generate_images_field(self, json_info, image_id):
         image = {}
         image["height"] = json_info["size"]["height"]
@@ -275,20 +286,20 @@ class JingLing2COCO(X2COCO):
         json_info["path"] = path_normalization(json_info["path"])
         image["file_name"] = osp.split(json_info["path"])[-1]
         return image
-    
-    def generate_polygon_anns_field(self, height, width, 
-                                    points, label, image_id, 
-                                    object_id, label_to_num):
+
+    def generate_polygon_anns_field(self, height, width, points, label,
+                                    image_id, object_id, label_to_num):
         annotation = {}
         annotation["segmentation"] = [list(np.asarray(points).flatten())]
         annotation["iscrowd"] = 0
         annotation["image_id"] = image_id + 1
-        annotation["bbox"] = list(map(float, self.get_bbox(height, width, points)))
+        annotation["bbox"] = list(
+            map(float, self.get_bbox(height, width, points)))
         annotation["area"] = annotation["bbox"][2] * annotation["bbox"][3]
         annotation["category_id"] = label_to_num[label]
         annotation["id"] = object_id + 1
         return annotation
-    
+
     def get_bbox(self, height, width, points):
         polygons = points
         mask = np.zeros([height, width], dtype=np.uint8)
@@ -307,7 +318,7 @@ class JingLing2COCO(X2COCO):
             left_top_c, left_top_r, right_bottom_c - left_top_c,
             right_bottom_r - left_top_r
         ]
-        
+
     def parse_json(self, img_dir, json_dir):
         image_id = -1
         object_id = -1
@@ -329,7 +340,7 @@ class JingLing2COCO(X2COCO):
                 for i, obj in enumerate(json_info["outputs"]["object"]):
                     if i == 0:
                         if "polygon" in obj:
-                            anns_type = "polygon" 
+                            anns_type = "polygon"
                     else:
                         if anns_type not in obj:
                             continue
@@ -343,22 +354,26 @@ class JingLing2COCO(X2COCO):
                     if anns_type == "polygon":
                         points = []
                         for j in range(int(len(obj["polygon"]) / 2.0)):
-                            points.append([obj["polygon"]["x" + str(j + 1)], 
-                                           obj["polygon"]["y" + str(j + 1)]])
+                            points.append([
+                                obj["polygon"]["x" + str(j + 1)],
+                                obj["polygon"]["y" + str(j + 1)]
+                            ])
                         self.annotations_list.append(
-                            self.generate_polygon_anns_field(json_info["size"]["height"], 
-                                                             json_info["size"]["width"], 
-                                                             points, 
-                                                             label, 
-                                                             image_id,
-                                                             object_id, 
-                                                             label_to_num))
+                            self.generate_polygon_anns_field(
+                                json_info["size"]["height"], json_info["size"][
+                                    "width"], points, label, image_id,
+                                object_id, label_to_num))
                     if anns_type == "bndbox":
                         points = []
-                        points.append([obj["bndbox"]["xmin"], obj["bndbox"]["ymin"]])
-                        points.append([obj["bndbox"]["xmax"], obj["bndbox"]["ymax"]])
-                        points.append([obj["bndbox"]["xmin"], obj["bndbox"]["ymax"]])
-                        points.append([obj["bndbox"]["xmax"], obj["bndbox"]["ymin"]])
+                        points.append(
+                            [obj["bndbox"]["xmin"], obj["bndbox"]["ymin"]])
+                        points.append(
+                            [obj["bndbox"]["xmax"], obj["bndbox"]["ymax"]])
+                        points.append(
+                            [obj["bndbox"]["xmin"], obj["bndbox"]["ymax"]])
+                        points.append(
+                            [obj["bndbox"]["xmax"], obj["bndbox"]["ymin"]])
                         self.annotations_list.append(
-                            self.generate_rectangle_anns_field(points, label, image_id,
-                                                  object_id, label_to_num))
+                            self.generate_rectangle_anns_field(
+                                points, label, image_id, object_id,
+                                label_to_num))
