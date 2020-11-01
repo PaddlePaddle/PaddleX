@@ -22,10 +22,24 @@ import shutil
 import numpy as np
 from .base import MyEncoder, is_pic, get_encoding
 
+ch2en = {
+    u'不导电': 'bu_dao_dian',
+    u'擦花': 'ca_hua',
+    u'角位漏底': 'jiao_wei_lou_di',
+    u'桔皮': 'ju_pi',
+    u'漏底': 'lou_di',
+    u'喷流': 'pen_liu',
+    u'起坑': 'qi_keng',
+    u'漆泡': 'qi_pao',
+    u'杂色': 'za_se',
+    u'脏点': 'zang_dian'
+}
+
+
 class X2VOC(object):
     def __init__(self):
         pass
-    
+
     def convert(self, image_dir, json_dir, dataset_save_dir):
         """转换。
         Args:
@@ -44,32 +58,37 @@ class X2VOC(object):
         for img_name in os.listdir(image_dir):
             if is_pic(img_name):
                 shutil.copyfile(
-                            osp.join(image_dir, img_name),
-                            osp.join(new_image_dir, img_name))
+                    osp.join(image_dir, img_name),
+                    osp.join(new_image_dir, img_name))
         # Convert the json files.
         xml_dir = osp.join(dataset_save_dir, "Annotations")
         if osp.exists(xml_dir):
             shutil.rmtree(xml_dir)
         os.makedirs(xml_dir)
         self.json2xml(new_image_dir, json_dir, xml_dir)
-        
-        
+
+
 class LabelMe2VOC(X2VOC):
     """将使用LabelMe标注的数据集转换为VOC数据集。
     """
+
     def __init__(self):
         pass
-    
+
     def json2xml(self, image_dir, json_dir, xml_dir):
         import xml.dom.minidom as minidom
+        i = 0
+        print('length: ', len(os.listdir(image_dir)))
         for img_name in os.listdir(image_dir):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
+            i += 1
+            print(i, " ", img_name)
             if not osp.exists(json_file):
                 os.remove(os.remove(osp.join(image_dir, img_name)))
                 continue
-            xml_doc = minidom.Document() 
-            root = xml_doc.createElement("annotation") 
+            xml_doc = minidom.Document()
+            root = xml_doc.createElement("annotation")
             xml_doc.appendChild(root)
             node_folder = xml_doc.createElement("folder")
             node_folder.appendChild(xml_doc.createTextNode("JPEGImages"))
@@ -77,11 +96,17 @@ class LabelMe2VOC(X2VOC):
             node_filename = xml_doc.createElement("filename")
             node_filename.appendChild(xml_doc.createTextNode(img_name))
             root.appendChild(node_filename)
+            print(i, " ", json_file)
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
                 json_info = json.load(j)
-                h = json_info["imageHeight"]
-                w = json_info["imageWidth"]
+                if 'imageHeight' in json_info and 'imageWidth' in json_info:
+                    h = json_info["imageHeight"]
+                    w = json_info["imageWidth"]
+                else:
+                    img_file = osp.join(image_dir, img_name)
+                    im_data = cv2.imread(img_file)
+                    h, w, c = im_data.shape
                 node_size = xml_doc.createElement("size")
                 node_width = xml_doc.createElement("width")
                 node_width.appendChild(xml_doc.createTextNode(str(w)))
@@ -94,12 +119,24 @@ class LabelMe2VOC(X2VOC):
                 node_size.appendChild(node_depth)
                 root.appendChild(node_size)
                 for shape in json_info["shapes"]:
-                    if shape["shape_type"] != "rectangle":
-                        continue
+                    if 'shape_type' in shape:
+                        if shape["shape_type"] != "rectangle":
+                            continue
+                        (xmin, ymin), (xmax, ymax) = shape["points"]
+                        xmin, xmax = sorted([xmin, xmax])
+                        ymin, ymax = sorted([ymin, ymax])
+                    else:
+                        points = shape["points"]
+                        points_num = len(points)
+                        x = [points[i][0] for i in range(points_num)]
+                        y = [points[i][1] for i in range(points_num)]
+                        xmin = min(x)
+                        xmax = max(x)
+                        ymin = min(y)
+                        ymax = max(y)
                     label = shape["label"]
-                    (xmin, ymin), (xmax, ymax) = shape["points"]
-                    xmin, xmax = sorted([xmin, xmax])
-                    ymin, ymax = sorted([ymin, ymax])
+                    label = ch2en[label]
+                    #print(label)
                     node_obj = xml_doc.createElement("object")
                     node_name = xml_doc.createElement("name")
                     node_name.appendChild(xml_doc.createTextNode(label))
@@ -123,15 +160,21 @@ class LabelMe2VOC(X2VOC):
                     node_obj.appendChild(node_box)
                     root.appendChild(node_obj)
             with open(osp.join(xml_dir, img_name_part + ".xml"), 'w') as fxml:
-                xml_doc.writexml(fxml, indent='\t', addindent='\t', newl='\n', encoding="utf-8")
-                    
-                    
+                xml_doc.writexml(
+                    fxml,
+                    indent='\t',
+                    addindent='\t',
+                    newl='\n',
+                    encoding="utf-8")
+
+
 class EasyData2VOC(X2VOC):
     """将使用EasyData标注的分割数据集转换为VOC数据集。
     """
+
     def __init__(self):
         pass
-    
+
     def json2xml(self, image_dir, json_dir, xml_dir):
         import xml.dom.minidom as minidom
         for img_name in os.listdir(image_dir):
@@ -140,8 +183,8 @@ class EasyData2VOC(X2VOC):
             if not osp.exists(json_file):
                 os.remove(os.remove(osp.join(image_dir, img_name)))
                 continue
-            xml_doc = minidom.Document() 
-            root = xml_doc.createElement("annotation") 
+            xml_doc = minidom.Document()
+            root = xml_doc.createElement("annotation")
             xml_doc.appendChild(root)
             node_folder = xml_doc.createElement("folder")
             node_folder.appendChild(xml_doc.createTextNode("JPEGImages"))
@@ -195,5 +238,9 @@ class EasyData2VOC(X2VOC):
                     node_obj.appendChild(node_box)
                     root.appendChild(node_obj)
             with open(osp.join(xml_dir, img_name_part + ".xml"), 'w') as fxml:
-                xml_doc.writexml(fxml, indent='\t', addindent='\t', newl='\n', encoding="utf-8")                    
-                    
+                xml_doc.writexml(
+                    fxml,
+                    indent='\t',
+                    addindent='\t',
+                    newl='\n',
+                    encoding="utf-8")
