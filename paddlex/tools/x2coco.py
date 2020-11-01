@@ -87,7 +87,9 @@ class X2COCO(object):
         coco_data["categories"] = self.categories_list
         coco_data["annotations"] = self.annotations_list
         json_path = osp.join(dataset_save_dir, "annotations.json")
-        json.dump(coco_data, open(json_path, "w"), indent=4, cls=MyEncoder)
+        f = open(json_path, "w")
+        json.dump(coco_data, f, indent=4, cls=MyEncoder)
+        f.close()
 
 
 class LabelMe2COCO(X2COCO):
