@@ -104,8 +104,11 @@ class VOCDetection(Dataset):
                 if not osp.isfile(xml_file):
                     continue
                 if not osp.exists(img_file):
-                    raise IOError('The image file {} is not exist!'.format(
-                        img_file))
+                    #raise IOError('The image file {} is not exist!'.format(
+                    #    img_file))
+                    continue
+                if not osp.exists(xml_file):
+                    continue
                 tree = ET.parse(xml_file)
                 if tree.find('id') is None:
                     im_id = np.array([ct])
@@ -141,6 +144,8 @@ class VOCDetection(Dataset):
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
                         1:-1]
                     cname = obj.find(name_tag).text.strip()
+                    if cname in ['bu_dao_dian', 'jiao_wei_lou_di']:
+                        cname = 'lou_di'
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
                     diff_tag = pattern.findall(str(ET.tostringlist(obj)))[0][

@@ -312,13 +312,29 @@ class RPNHead(object):
                         negative_overlap=self.rpn_negative_overlap,
                         num_classes=1)
                 fg_num = fluid.layers.reduce_sum(fg_num, name='fg_num')
-                score_tgt = fluid.layers.cast(score_tgt, 'int32')
-                rpn_cls_loss = fluid.layers.sigmoid_focal_loss(
-                    x=score_pred,
-                    label=score_tgt,
-                    fg_num=fg_num,
-                    gamma=self.rpn_focal_loss_gamma,
-                    alpha=self.rpn_focal_loss_alpha)
+                #score_tgt = fluid.layers.cast(score_tgt, 'int32')
+                #rpn_cls_loss = fluid.layers.sigmoid_focal_loss(
+                #    x=score_pred,
+                #    label=score_tgt,
+                #    fg_num=fg_num,
+                #    gamma=self.rpn_focal_loss_gamma,
+                #    alpha=self.rpn_focal_loss_alpha)
+                score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
+                score_tgt.stop_gradient = True
+                loss = fluid.layers.sigmoid_cross_entropy_with_logits(
+                    x=score_pred, label=score_tgt)
+
+                pred = fluid.layers.sigmoid(score_pred)
+                p_t = pred * score_tgt + (1 - pred) * (1 - score_tgt)
+
+                if self.rpn_focal_loss_alpha is not None:
+                    alpha_t = self.rpn_focal_loss_alpha * score_tgt + (
+                        1 - self.rpn_focal_loss_alpha) * (1 - score_tgt)
+                    loss = alpha_t * loss
+                gamma_t = fluid.layers.pow((1 - p_t),
+                                           self.rpn_focal_loss_gamma)
+                loss = gamma_t * loss
+                rpn_cls_loss = loss / fg_num
         else:
             score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight = \
                 fluid.layers.rpn_target_assign(

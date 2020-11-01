@@ -50,7 +50,16 @@ class FasterRCNN(BaseAPI):
                  with_dcn=False,
                  rpn_cls_loss='SigmoidCrossEntropy',
                  rpn_focal_loss_alpha=0.25,
-                 rpn_focal_loss_gamma=2):
+                 rpn_focal_loss_gamma=2,
+                 rcnn_bbox_loss='SmoothL1Loss',
+                 rcnn_nms='MultiClassNMS',
+                 keep_top_k=100,
+                 nms_threshold=0.5,
+                 score_threshold=0.05,
+                 softnms_sigma=0.5,
+                 post_threshold=0.05,
+                 bbox_assigner='BBoxAssigner',
+                 fpn_num_channels=256):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
@@ -73,6 +82,15 @@ class FasterRCNN(BaseAPI):
         self.rpn_cls_loss = rpn_cls_loss
         self.rpn_focal_loss_alpha = rpn_focal_loss_alpha
         self.rpn_focal_loss_gamma = rpn_focal_loss_gamma
+        self.rcnn_bbox_loss = rcnn_bbox_loss
+        self.rcnn_nms = rcnn_nms
+        self.keep_top_k = keep_top_k
+        self.nms_threshold = nms_threshold
+        self.score_threshold = score_threshold
+        self.softnms_sigma = softnms_sigma
+        self.post_threshold = post_threshold
+        self.bbox_assigner = bbox_assigner
+        self.fpn_num_channels = fpn_num_channels
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -145,7 +163,16 @@ class FasterRCNN(BaseAPI):
             fixed_input_shape=self.fixed_input_shape,
             rpn_cls_loss=self.rpn_cls_loss,
             rpn_focal_loss_alpha=self.rpn_focal_loss_alpha,
-            rpn_focal_loss_gamma=self.rpn_focal_loss_gamma)
+            rpn_focal_loss_gamma=self.rpn_focal_loss_gamma,
+            rcnn_bbox_loss=self.rcnn_bbox_loss,
+            rcnn_nms=self.rcnn_nms,
+            keep_top_k=self.keep_top_k,
+            nms_threshold=self.nms_threshold,
+            score_threshold=self.score_threshold,
+            post_threshold=self.post_threshold,
+            softnms_sigma=self.softnms_sigma,
+            bbox_assigner=self.bbox_assigner,
+            fpn_num_channels=self.fpn_num_channels)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -187,6 +214,7 @@ class FasterRCNN(BaseAPI):
             end_lr=learning_rate)
         optimizer = fluid.optimizer.Momentum(
             learning_rate=lr_warmup,
+            #learning_rate=lr_decay,
             momentum=0.9,
             regularization=fluid.regularizer.L2Decay(1e-04))
         return optimizer

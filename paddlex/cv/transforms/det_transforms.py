@@ -177,7 +177,7 @@ class ResizeByShort(DetTransform):
     4. 根据调整大小的比例对图像进行resize。
 
     Args:
-        target_size (int): 短边目标长度。默认为800。
+        short_size (int|list): 短边目标长度。默认为800。
         max_size (int): 长边目标长度的最大限制。默认为1333。
 
      Raises:
@@ -186,9 +186,9 @@ class ResizeByShort(DetTransform):
 
     def __init__(self, short_size=800, max_size=1333):
         self.max_size = int(max_size)
-        if not isinstance(short_size, int):
+        if not (isinstance(short_size, int) or isinstance(short_size, list)):
             raise TypeError(
-                "Type of short_size is invalid. Must be Integer, now is {}".
+                "Type of short_size is invalid. Must be Integer or List, now is {}".
                 format(type(short_size)))
         self.short_size = short_size
         if not (isinstance(self.max_size, int)):
@@ -221,7 +221,12 @@ class ResizeByShort(DetTransform):
             raise ValueError('ResizeByShort: image is not 3-dimensional.')
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
-        scale = float(self.short_size) / im_short_size
+        if isinstance(self.short_size, list):
+            # Case for multi-scale training
+            selected_size = random.choice(self.short_size)
+        else:
+            selected_size = self.short_size
+        scale = float(selected_size) / im_short_size
         if self.max_size > 0 and np.round(scale *
                                           im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)

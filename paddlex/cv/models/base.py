@@ -34,6 +34,9 @@ from os import path as osp
 from paddle.fluid.framework import Program
 from .utils.pretrain_weights import get_pretrain_weights
 
+#fluid.default_startup_program().random_seed = 1000
+#fluid.default_main_program().random_seed = 1000
+
 
 def dict2str(dict_input):
     out = ''
@@ -544,7 +547,7 @@ class BaseAPI:
             time_train_one_epoch = time.time() - epoch_start_time
             epoch_start_time = time.time()
 
-            # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            ## 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
             self.completed_epochs += 1
             eval_epoch_start_time = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
@@ -591,3 +594,4 @@ class BaseAPI:
                 if eval_dataset is not None and early_stop:
                     if earlystop(current_accuracy):
                         break
+            #return

@@ -24,6 +24,9 @@ from paddle.fluid.initializer import Normal, Xavier
 from paddle.fluid.regularizer import L2Decay
 from paddle.fluid.initializer import MSRA
 
+from .loss.diou_loss import DiouLoss
+from .ops import MultiClassNMS, MatrixNMS, MultiClassSoftNMS, MultiClassDiouNMS
+
 __all__ = ['BBoxHead', 'TwoFCHead']
 
 
@@ -42,23 +45,27 @@ class TwoFCHead(object):
     def __call__(self, roi_feat):
         fan = roi_feat.shape[1] * roi_feat.shape[2] * roi_feat.shape[3]
 
-        fc6 = fluid.layers.fc(
-            input=roi_feat,
-            size=self.mlp_dim,
-            act='relu',
-            name='fc6',
-            param_attr=ParamAttr(
-                name='fc6_w', initializer=Xavier(fan_out=fan)),
-            bias_attr=ParamAttr(
-                name='fc6_b', learning_rate=2., regularizer=L2Decay(0.)))
-        head_feat = fluid.layers.fc(
-            input=fc6,
-            size=self.mlp_dim,
-            act='relu',
-            name='fc7',
-            param_attr=ParamAttr(name='fc7_w', initializer=Xavier()),
-            bias_attr=ParamAttr(
-                name='fc7_b', learning_rate=2., regularizer=L2Decay(0.)))
+        fc6 = fluid.layers.fc(input=roi_feat,
+                              size=self.mlp_dim,
+                              act='relu',
+                              name='fc6',
+                              param_attr=ParamAttr(
+                                  name='fc6_w',
+                                  initializer=Xavier(fan_out=fan)),
+                              bias_attr=ParamAttr(
+                                  name='fc6_b',
+                                  learning_rate=2.,
+                                  regularizer=L2Decay(0.)))
+        head_feat = fluid.layers.fc(input=fc6,
+                                    size=self.mlp_dim,
+                                    act='relu',
+                                    name='fc7',
+                                    param_attr=ParamAttr(
+                                        name='fc7_w', initializer=Xavier()),
+                                    bias_attr=ParamAttr(
+                                        name='fc7_b',
+                                        learning_rate=2.,
+                                        regularizer=L2Decay(0.)))
 
         return head_feat
 
@@ -73,6 +80,7 @@ class BBoxHead(object):
             box_normalized=False,
             axis=1,
             #MultiClassNMS
+            rcnn_nms='MultiClassNMS',
             score_threshold=.05,
             nms_top_k=-1,
             keep_top_k=100,
@@ -80,25 +88,63 @@ class BBoxHead(object):
             normalized=False,
             nms_eta=1.0,
             background_label=0,
+            post_threshold=.05,
+            softnms_sigma=0.5,
             #bbox_loss
             sigma=1.0,
-            num_classes=81):
+            num_classes=81,
+            rcnn_bbox_loss='SmoothL1Loss',
+            diouloss_weight=10.0,
+            diouloss_is_cls_agnostic=False,
+            diouloss_use_complete_iou_loss=True):
         super(BBoxHead, self).__init__()
         self.head = head
         self.prior_box_var = prior_box_var
         self.code_type = code_type
         self.box_normalized = box_normalized
         self.axis = axis
-        self.score_threshold = score_threshold
-        self.nms_top_k = nms_top_k
-        self.keep_top_k = keep_top_k
-        self.nms_threshold = nms_threshold
-        self.normalized = normalized
-        self.nms_eta = nms_eta
-        self.background_label = background_label
         self.sigma = sigma
         self.num_classes = num_classes
         self.head_feat = None
+        self.rcnn_bbox_loss = rcnn_bbox_loss
+        self.diouloss_weight = diouloss_weight
+        self.diouloss_is_cls_agnostic = diouloss_is_cls_agnostic
+        self.diouloss_use_complete_iou_loss = diouloss_use_complete_iou_loss
+        if self.rcnn_bbox_loss == 'DIoULoss':
+            self.diou_loss = DiouLoss(
+                loss_weight=self.diouloss_weight,
+                is_cls_agnostic=self.diouloss_is_cls_agnostic,
+                num_classes=num_classes,
+                use_complete_iou_loss=self.diouloss_use_complete_iou_loss)
+        if rcnn_nms == 'MultiClassNMS':
+            self.nms = MultiClassNMS(
+                score_threshold=score_threshold,
+                keep_top_k=keep_top_k,
+                nms_threshold=nms_threshold,
+                normalized=normalized,
+                nms_eta=nms_eta,
+                background_label=background_label)
+        elif rcnn_nms == 'MultiClassSoftNMS':
+            self.nms = MultiClassSoftNMS(
+                score_threshold=score_threshold,
+                keep_top_k=keep_top_k,
+                softnms_sigma=softnms_sigma,
+                normalized=normalized,
+                background_label=background_label)
+        elif rcnn_nms == 'MatrixNMS':
+            self.nms = MatrixNMS(
+                score_threshold=score_threshold,
+                post_threshold=post_threshold,
+                keep_top_k=keep_top_k,
+                normalized=normalized,
+                background_label=background_label)
+        elif rcnn_nms == 'MultiClassCiouNMS':
+            self.nms = MultiClassDiouNMS(
+                score_threshold=score_threshold,
+                keep_top_k=keep_top_k,
+                nms_threshold=nms_threshold,
+                normalized=normalized,
+                background_label=background_label)
 
     def get_head_feat(self, input=None):
         """
@@ -130,24 +176,30 @@ class BBoxHead(object):
         if not isinstance(self.head, TwoFCHead):
             head_feat = fluid.layers.pool2d(
                 head_feat, pool_type='avg', global_pooling=True)
-        cls_score = fluid.layers.fc(
-            input=head_feat,
-            size=self.num_classes,
-            act=None,
-            name='cls_score',
-            param_attr=ParamAttr(
-                name='cls_score_w', initializer=Normal(loc=0.0, scale=0.01)),
-            bias_attr=ParamAttr(
-                name='cls_score_b', learning_rate=2., regularizer=L2Decay(0.)))
-        bbox_pred = fluid.layers.fc(
-            input=head_feat,
-            size=4 * self.num_classes,
-            act=None,
-            name='bbox_pred',
-            param_attr=ParamAttr(
-                name='bbox_pred_w', initializer=Normal(loc=0.0, scale=0.001)),
-            bias_attr=ParamAttr(
-                name='bbox_pred_b', learning_rate=2., regularizer=L2Decay(0.)))
+        cls_score = fluid.layers.fc(input=head_feat,
+                                    size=self.num_classes,
+                                    act=None,
+                                    name='cls_score',
+                                    param_attr=ParamAttr(
+                                        name='cls_score_w',
+                                        initializer=Normal(
+                                            loc=0.0, scale=0.01)),
+                                    bias_attr=ParamAttr(
+                                        name='cls_score_b',
+                                        learning_rate=2.,
+                                        regularizer=L2Decay(0.)))
+        bbox_pred = fluid.layers.fc(input=head_feat,
+                                    size=4 * self.num_classes,
+                                    act=None,
+                                    name='bbox_pred',
+                                    param_attr=ParamAttr(
+                                        name='bbox_pred_w',
+                                        initializer=Normal(
+                                            loc=0.0, scale=0.001)),
+                                    bias_attr=ParamAttr(
+                                        name='bbox_pred_b',
+                                        learning_rate=2.,
+                                        regularizer=L2Decay(0.)))
         return cls_score, bbox_pred
 
     def get_loss(self, roi_feat, labels_int32, bbox_targets,
@@ -179,12 +231,19 @@ class BBoxHead(object):
         loss_cls = fluid.layers.softmax_with_cross_entropy(
             logits=cls_score, label=labels_int64, numeric_stable_mode=True)
         loss_cls = fluid.layers.reduce_mean(loss_cls)
-        loss_bbox = fluid.layers.smooth_l1(
-            x=bbox_pred,
-            y=bbox_targets,
-            inside_weight=bbox_inside_weights,
-            outside_weight=bbox_outside_weights,
-            sigma=self.sigma)
+        if self.rcnn_bbox_loss == 'SmoothL1Loss':
+            loss_bbox = fluid.layers.smooth_l1(
+                x=bbox_pred,
+                y=bbox_targets,
+                inside_weight=bbox_inside_weights,
+                outside_weight=bbox_outside_weights,
+                sigma=self.sigma)
+        elif self.rcnn_bbox_loss == 'DIoULoss':
+            loss_bbox = self.diou_loss(
+                x=bbox_pred,
+                y=bbox_targets,
+                inside_weight=bbox_inside_weights,
+                outside_weight=bbox_outside_weights)
         loss_bbox = fluid.layers.reduce_mean(loss_bbox)
         return {'loss_cls': loss_cls, 'loss_bbox': loss_bbox}
 
@@ -229,14 +288,5 @@ class BBoxHead(object):
         cliped_box = fluid.layers.box_clip(input=decoded_box, im_info=im_shape)
         if return_box_score:
             return {'bbox': cliped_box, 'score': cls_prob}
-        pred_result = fluid.layers.multiclass_nms(
-            bboxes=cliped_box,
-            scores=cls_prob,
-            score_threshold=self.score_threshold,
-            nms_top_k=self.nms_top_k,
-            keep_top_k=self.keep_top_k,
-            nms_threshold=self.nms_threshold,
-            normalized=self.normalized,
-            nms_eta=self.nms_eta,
-            background_label=self.background_label)
+        pred_result = self.nms(bboxes=cliped_box, scores=cls_prob)
         return {'bbox': pred_result}
