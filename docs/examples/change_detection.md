@@ -6,7 +6,7 @@
 
 * Paddle paddle >= 1.8.4
 * Python >= 3.5
-* PaddleX >= 1.3.0
+* PaddleX >= 1.2.2.
 
 安装的相关问题参考[PaddleX安装](../install.md)
 
