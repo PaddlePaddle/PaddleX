@@ -122,8 +122,8 @@ class FasterRCNN(object):
                     test_nms_thresh=test_nms_thresh,
                     rpn_cls_loss=rpn_cls_loss,
                     rpn_focal_loss_alpha=rpn_focal_loss_alpha,
-                    rpn_focal_loss_gamma=rpn_focal_loss_gamma,
-                    use_random=False)
+                    rpn_focal_loss_gamma=rpn_focal_loss_gamma)
+                #use_random=False)
             else:
                 rpn_head = FPNRPNHead(
                     anchor_start_size=anchor_sizes[0],
@@ -143,8 +143,8 @@ class FasterRCNN(object):
                     test_nms_thresh=test_nms_thresh,
                     rpn_cls_loss=rpn_cls_loss,
                     rpn_focal_loss_alpha=rpn_focal_loss_alpha,
-                    rpn_focal_loss_gamma=rpn_focal_loss_gamma,
-                    use_random=False)
+                    rpn_focal_loss_gamma=rpn_focal_loss_gamma)
+                #use_random=False)
         self.rpn_head = rpn_head
         if roi_extractor is None:
             if self.fpn is None:
