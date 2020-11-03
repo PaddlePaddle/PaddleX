@@ -79,7 +79,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
  ```  
 
 
-#### Step4: 预测
+#### Step5: 预测
 
 编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：  
 
