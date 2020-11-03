@@ -31,11 +31,11 @@ sudo apt-get upgrade
 
 请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录 `/root/projects/`演示**。
 
-## Paddle-Lite模型转换
+### Paddle-Lite模型转换
 将PaddleX模型转换为Paddle-Lite模型，具体请参考[Paddle-Lite模型转换](./export_nb_model.md)
 
-## Paddle-Lite 预测
-### Step1 下载PaddleX预测代码
+### Paddle-Lite 预测
+#### Step1 下载PaddleX预测代码
 ```
 mkdir -p /root/projects
 cd /root/projects
@@ -43,7 +43,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
 **说明**：其中C++预测代码在PaddleX/deploy/raspberry 目录，该目录不依赖任何PaddleX下其他目录，如果需要在python下预测部署请参考[Python预测部署](./python.md)。  
 
-### Step2：Paddle-Lite预编译库下载
+#### Step2：Paddle-Lite预编译库下载
 提供了下载的opt工具对应的Paddle-Lite在ArmLinux下面的预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)。  
 建议用户使用预编译库，若需要自行编译，在树莓派上LX终端输入
 ```
@@ -56,14 +56,14 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 
 **注意**：预测库版本需要跟opt版本一致，更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
 
-### Step3 软件依赖
+#### Step3 软件依赖
 提供了依赖软件的预编包或者一键编译，用户不需要单独下载或编译第三方依赖软件。若需要自行编译第三方依赖软件请参考：
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
-### Step4: 编译
+#### Step4: 编译
 编译`cmake`的命令在`scripts/build.sh`中，修改LITE_DIR为Paddle-Lite预测库目录，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
 ```
 # Paddle-Lite预编译库的路径
@@ -79,7 +79,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
  ```  
 
 
-### Step3: 预测
+#### Step4: 预测
 
 编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：  
 
@@ -92,7 +92,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 | --cfg_file | PaddleX model 的.yml配置文件 |
 | --save_dir | 可视化结果图片保存地址，仅适用于检测和分割任务，默认值为" "既不保存可视化结果 |
 
-### 样例
+#### 样例
 `样例一`：
 单张图片分类任务  
 测试图片 `/path/to/test_img.jpeg`  
@@ -152,5 +152,5 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 
 ## NCS2部署
 树莓派支持通过OpenVINO在NCS2上跑PaddleX模型预测，目前仅支持PaddleX的分类网络，基于NCS2的方式包含Paddle模型转OpenVINO IR以及部署IR在NCS2上进行预测两个步骤。
-- 模型转换请参考：[PaddleX模型转换为OpenVINO IR]('./openvino/export_openvino_model.md')，raspbian OS上的OpenVINO不支持模型转换，需要先在host侧转换FP16的IR。
-- 预测部署请参考[OpenVINO部署](./openvino/linux.md)中VPU在raspbian OS部署的部分
+- 模型转换请参考：[PaddleX模型转换为OpenVINO IR]('../openvino/export_openvino_model.md')，raspbian OS上的OpenVINO不支持模型转换，需要先在host侧转换FP16的IR。
+- 预测部署请参考[OpenVINO部署](../openvino/linux.md)中VPU在raspbian OS部署的部分
