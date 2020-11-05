@@ -20,11 +20,7 @@
 
 预训练模型的存储大小和推理时长如下所示，其中移动端模型的运行环境为cpu：骁龙855，内存：6GB，图片大小：192*192
 
-| 模型 | 模型大小 | 计算耗时 |
-| --- | --- | --- |
-|humanseg_server_inference| 158M | - |
-|humanseg_mobile_inference | 5.8 M | 42.35ms |
-|humanseg_mobile_quant | 1.6M | 24.93ms |
+![](../pics/47.png)
 
 执行以下脚本下载全部的预训练模型：
 
@@ -322,18 +318,7 @@ step 3. 按照[Nvidia Jetson开发板部署](../deploy/nvidia-jetson.md)中的St
 
 step 4. 编译成功后，可执行程为`build/human_segmenter`，其主要命令参数说明如下：
 
-  | 参数    | 说明   |
-  | ---- | ---- |
-  |  model_dir    | 人像分割模型路径     |
-  | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
-  | gpu_id	| GPU 设备ID, 默认值为0 |
-  | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
-  | camera_id | 摄像头设备ID，默认值为0 |
-  | video_path | 视频文件的路径 |
-  | show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果，支持值为0或1(默认值为0) |
-  | save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
-  |	image            | 待预测的图片路径  |
-  | save_dir	| 保存可视化结果的路径, 默认值为"output"|
+![](../pics/48.png)
 
 step 5. 推理预测
 

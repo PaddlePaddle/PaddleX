@@ -21,13 +21,7 @@
 
 PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.8.4版本，以下提供了多个不同版本的Paddle预测库:
 
-|  版本说明   | 预测库(1.8.4版本)  |
-|  ----  | ----  |
-| ubuntu14.04_cpu_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-avx-mkl/fluid_inference.tgz) |
-| ubuntu14.04_cpu_avx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-avx-openblas/fluid_inference.tgz) |
-| ubuntu14.04_cpu_noavx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-noavx-openblas/fluid_inference.tgz) |
-| ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
-| ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz) |
+![](../../../pics/19.png)
 
 更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html)
 
@@ -117,38 +111,11 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 * 编译成功后，图片预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| image  | 要预测的图片文件路径 |
-| image_list  | 按行存储图片路径的.txt文件 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
-| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，**classfier无该参数** |
-| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
-| batch_size | 预测的批量大小，默认为1 |
-| thread_num | 预测的线程数，默认为cpu处理器个数 |
+![](../../../pics/20.png)
 
 * 编译成功后，视频预测demo的可执行程序分别为`build/demo/video_detector`，`build/demo/video_classifier`，`build/demo/video_segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| use_camera | 是否使用摄像头预测，支持值为0或1(默认值为0) |
-| camera_id | 摄像头设备ID，默认值为0 |
-| video_path | 视频文件的路径 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
-| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
-| save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
-| save_dir | 保存可视化结果的路径, 默认值为"output"|
-| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
+![](../../../pics/21.png)
 
 **注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
 

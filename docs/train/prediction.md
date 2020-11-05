@@ -89,17 +89,7 @@ pdx.seg.visualize(test_jpg, result, weight=0.0, save_dir='./')
 
 PaddleX提供了部分公开数据集上训练好的模型，用户可以直接下载后参照本文档加载使用。
 
-| 类型 |     模型(点击下载)     |     数据集    |     大小     |     指标    |    指标数值    |
-|:--- | :----------  | :-----------  | :----------  | :---------- | :------------- |
-| 图像分类 | [MobileNetV3_small_ssld](https://bj.bcebos.com/paddlex/models/mobilenetv3_small_ssld_imagenet.tar.gz) | ImageNet | 13MB | Accuracy  |     71.3%        |
-| 图像分类 | [ResNet50_vd_ssld](https://bj.bcebos.com/paddlex/models/resnet50_vd_ssld_imagenet.tar.gz)  | ImageNet  | 110MB  | Accuracy  |   82.4%       |
-| 目标检测 | [FasterRCNN-ResNet50-FPN](https://bj.bcebos.com/paddlex/models/faster_r50_fpn_coco.tar.gz) | MSCOCO | 179MB     |    Box MAP  |       37.7%     |
-| 目标检测 | [YOLOv3-MobileNetV1](https://bj.bcebos.com/paddlex/models/yolov3_mobilenetv1_coco.tar.gz)    | MSCOCO | 106MB      | Box MAP    |      29.3%      |
-| 目标检测 | [YOLOv3-DarkNet53](https://bj.bcebos.com/paddlex/models/yolov3_darknet53_coco.tar.gz)      | MSCOCO | 266MMB      | Box MAP    |      34.8%      |
-| 目标检测 | [YOLOv3-MobileNetV3](https://bj.bcebos.com/paddlex/models/yolov3_mobilenetv3_coco.tar.gz)      | MSCOCO | 101MB      | Box MAP    |      31.6%      |
-| 实例分割 | [MaskRCNN-ResNet50-FPN](https://bj.bcebos.com/paddlex/models/mask_r50_fpn_coco.tar.gz)  | MSCOCO | 193MB     | Box MAP/Seg MAP |   38.7% / 34.7%     |
-| 语义分割 | [DeepLabv3p-Xception65](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_server_params.tar)  | 人像分割 | -     | mIoU        |      -          |
-| 语义分割 | [HRNet_w18_small](https://bj.bcebos.com/paddlex/examples/human_seg/models/humanseg_mobile_params.tar)           | 人像分割   | -   | mIou       |        -           |
+![](../pics/8.png)
 
 PaddleX的`load_model`接口可以满足用户一般的模型调研需求，如果是追求更高性能的预测部署，可以参考如下文档
 

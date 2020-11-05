@@ -43,13 +43,7 @@ cd PaddleX/examples/channel_remote_sensing/
 
 数值、类别、颜色对应表：
 
-|Pixel value|Class|Color|
-|---|---|---|
-|0|cloud|white|
-|1|shadow|black|
-|2|snow/ice|cyan|
-|3|water|blue|
-|4|land|grey|
+![](../../pics/49.png)
 
  ![](../../../examples/multi-channel_remote_sensing/docs/images/dataset.png)
 
@@ -116,10 +110,4 @@ python predict.py
 
 数值、类别、颜色对应表：
 
-|Pixel value|Class|Color|
-|---|---|---|
-|0|cloud|white|
-|1|shadow|black|
-|2|snow/ice|cyan|
-|3|water|blue|
-|4|land|grey|
+![](../../pics/50.png)

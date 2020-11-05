@@ -29,11 +29,7 @@ python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/
 ```
 > 其中`export_lite.py`脚本请至github下载：https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/lite/export_lite.py
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| --model_dir  | 预测模型所在路径，包含"\_\_model\_\_", "\_\_params\_\_", "model.yml"文件 |
-| --save_file  | 模型输出的名称，假设为/path/to/lite_model_name, 则输出为路径为/path/to/lite_model_name.nb |
-| --place | 运行的平台，可选：arm\|opencl\|x86\|npu\|xpu\|rknpu\|apu，安卓部署请选择arm|
+![](../../pics/26.png)
 
 ### 2.3 使用bin文件优化模型(linux)
 
@@ -47,12 +43,7 @@ python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/
       --optimize_out=model_output_name
 ```
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| --model_file  | 导出inference模型中包含的网络结构文件：`__model__`所在的路径|
-| --param_file  | 导出inference模型中包含的参数文件：`__params__`所在的路径|
-| --valid_targets  |指定模型可执行的backend，这里请指定为`arm`|
-| --optimize_out_type | 输出模型类型，目前支持两种类型：protobuf和naive_buffer，其中naive_buffer是一种更轻量级的序列化/反序列化，这里请指定为`naive_buffer`|
+![](../../pics/27.png)
 
 详细的使用方法和参数含义请参考: [使用opt转化模型](https://paddle-lite.readthedocs.io/zh/latest/user_guides/opt/opt_bin.html)
 

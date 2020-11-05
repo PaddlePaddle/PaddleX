@@ -26,12 +26,7 @@ $ hub convert --model_dir XXXX \
 ```
 **参数**：
 
-|参数|用途|
-|-|-|
-|--model_dir/-m|`PaddleX Inference Model`所在的目录|
-|--module_name/-n|生成预训练模型的名称|
-|--module_version/-v|生成预训练模型的版本，默认为`1.0.0`|
-|--output_dir/-o|生成预训练模型的存放位置，默认为`{module_name}_{timestamp}`|
+![](../pics/11.png)
 
 因此，我们仅需要一行命令即可完成预训练模型的转换。
 
@@ -71,11 +66,7 @@ $ hub serving start --modules/-m [Module1==Version1, Module2==Version2, ...] \
 
 **参数**：
 
-|  参数 |  用途  |
-|:----- | :----- |
-|--modules/-m|PaddleHub Serving预安装模型，以多个Module==Version键值对的形式列出<br>*`当不指定Version时，默认选择最新版本`*|
-|--port/-p|服务端口，默认为8866|
-|--config/-c|使用配置文件配置模型|
+![](../pics/12.png)
 
 因此，我们仅需要一行代码即可完成模型的部署，如下：
 
@@ -103,10 +94,7 @@ $ hub serving start -m mobilenetv3_small_ssld_imagenet_hub
 
 ```
 
-|  参数 |  用途  |
-|:----- | :----- |
-|modules_info|PaddleHub Serving预安装模型，以字典列表形式列出，key为模型名称。其中:<br>`init_args`为模型加载时输入的参数，等同于`paddlehub.Module(**init_args)`<br>`predict_args`为模型预测时输入的参数，以`mobilenetv3_small_ssld_imagenet_hub`为例，等同于`mobilenetv3_small_ssld_imagenet_hub.batch_predict(**predict_args)`
-|port|服务端口，默认为8866|
+![](../pics/13.png)
 
 ### 5 测试
 在第二步模型安装的同时，会生成一个客户端请求示例，存放在模型安装目录，默认为`${HUB_HOME}/.paddlehub/modules`，对于此例，我们可以在`~/.paddlehub/modules/mobilenetv3_small_ssld_imagenet_hub`找到此客户端示例`serving_client_demo.py`，代码如下：

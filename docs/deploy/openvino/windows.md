@@ -58,13 +58,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 3. 点击：`项目`->`CMake设置`
 4. 点击`浏览`，分别设置编译选项指定`OpenVINO`、`Gflags`、`NGRAPH`、`OPENCV`的路径  
 
-|  参数名   | 含义  |
-|  ----  | ----  |
-| OPENCV_DIR  | OpenCV库路径 |
-| OPENVINO_DIR | OpenVINO推理库路径，在OpenVINO安装目录下的deployment/inference_engine目录，若未修改OpenVINO默认安装目录可以不用修改 |
-| NGRAPH_LIB | OpenVINO的ngraph库路径，在OpenVINO安装目录下的deployment/ngraph/lib目录，若未修改OpenVINO默认安装目录可以不用修改 |
-| GFLAGS_DIR | gflags库路径 |
-| WITH_STATIC_LIB | 是否静态编译，默认为True |  
+![](../../pics/29.png)
 
 **设置完成后**, 点击`保存并生成CMake缓存以加载变量`。
 5. 点击`生成`->`全部生成`
@@ -78,14 +72,7 @@ cd D:\projects\PaddleX\deploy\openvino\out\build\x64-Release
 
 * 编译成功后，图片预测demo的入口程序为`detector.exe`，`classifier.exe`，`segmenter.exe`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
-| --image  | 要预测的图片文件路径 |
-| --image_list  | 按行存储图片路径的.txt文件 |
-| --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
-| --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "，即不保存可视化结果 |
+![](../../pics/30.png)
 
 ### 样例
 `样例一`：

@@ -15,15 +15,9 @@ python -m pip install paddlelite
 请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
 
 ## 预测部署
-运行/root/projects/PaddleX/deploy/raspberry/python目录下demo.py文件可以进行预测，其命令参数说明如下：
+运行PaddleX/deploy/raspberry/python目录下demo.py文件可以进行预测，其命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
-| --img  | 要预测的图片文件路径 |
-| --image_list  | 按行存储图片路径的.txt文件 |
-| --cfg_file | PaddleX model 的.yml配置文件 |
-| --thread_num  | 预测的线程数, 默认值为1 |  
+![](../../pics/38.png)
 
 **注意**：由于Paddle-lite的python api尚不支持int64数据的输入，目前树莓派在python下不支持部署YoloV3，如需要请使用C++代码部署YoloV3模型
 

@@ -83,14 +83,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 
 编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：  
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
-| --image  | 要预测的图片文件路径 |
-| --image_list  | 按行存储图片路径的.txt文件 |
-| --thread_num | 预测的线程数，默认值为1 |
-| --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测和分割任务，默认值为" "既不保存可视化结果 |
+![](../../pics/36.png)
 
 #### 样例
 `样例一`：
@@ -125,27 +118,7 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 ### 测试结果
 单位ms，num表示paddle-lite下使用的线程数  
 
-|模型|lite(num=4)|输入图片大小|
-| ----|  ---- | ----|
-|mobilenet-v2|136.19|224*224|
-|resnet-50|1131.42|224*224|
-|deeplabv3|2162.03|512*512|
-|hrnet|6118.23|512*512|
-|yolov3-darknet53|4741.15|320*320|
-|yolov3-mobilenet|1424.01|320*320|
-|densenet121|1144.92|224*224|
-|densenet161|2751.57|224*224|
-|densenet201|1847.06|224*224|
-|HRNet_W18|1753.06|224*224|
-|MobileNetV1|177.63|224*224|
-|MobileNetV3_large_ssld|133.99|224*224|
-|MobileNetV3_small_ssld|53.99|224*224|
-|ResNet101|2290.56|224*224|
-|ResNet101_vd|2337.51|224*224|
-|ResNet101_vd_ssld|3124.49|224*224|
-|ShuffleNetV2|115.97|224*224|
-|Xception41|1418.29|224*224|
-|Xception65|2094.7|224*224|  
+![](../../pics/37.png)
 
 
 从测试结果看建议用户在树莓派上使用MobileNetV1-V3,ShuffleNetV2这类型的小型网络

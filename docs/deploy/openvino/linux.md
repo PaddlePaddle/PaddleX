@@ -61,14 +61,7 @@ ARCH=x86
 
 编译成功后，分类任务的预测可执行程序为`classifier`，检测任务的预测可执行程序为`detector`，分割任务的预测可执行程序为`segmenter`，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
-| --image  | 要预测的图片文件路径 |
-| --image_list  | 按行存储图片路径的.txt文件 |
-| --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
-| --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "，即不保存可视化结果 |
+![](../../pics/31.png)
 
 ### 样例
 `样例一`：
@@ -110,12 +103,7 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 - PaddleX：采用Paddle预测库(1.8)，打开mkldnn加速，打开多线程。
 - 模型来自PaddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。
 
-|模型| PaddleX| OpenVINO |  图片输入大小|
-|---|---|---|---|
-|resnet-50 | 20.56 | 16.12 | 224*224 |
-|mobilenet-V2 | 5.16 | 2.31 |224*224|
-|yolov3-mobilnetv1 |76.63| 46.26|608*608 |
-|unet| 276.40| 211.49| 512*512|  
+![](../../pics/32.png)
 
 
 `测试二`:
@@ -125,10 +113,7 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 - OpenVINO： 2020.4
 - 模型来自PaddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
 
-|模型|OpenVINO|输入图片|
-|---|---|---|
-|mobilenetV2|24.00|224*224|
-|resnet50_vd_ssld|58.53|224*224|  
+![](../../pics/33.png)
 
 `测试三`:
 在树莓派3B上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。
@@ -137,7 +122,4 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 - OpenVINO 2020.4
 - 模型来自paddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
 
-|模型|OpenVINO|输入图片大小|
-|---|---|---|
-|mobilenetV2|43.15|224*224|
-|resnet50|82.66|224*224|  
+![](../../pics/34.png)

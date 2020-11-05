@@ -61,19 +61,7 @@ cd PaddleX/examples/meter_reader/
 预测执行文件为`reader_infer.py`，其主要参数说明如下：
 
 
-| 参数    | 说明   |
-| ---- | ---- |
-|  detector_dir    | 表计检测模型路径     |
-|	segmenter_dir		 | 指针和刻度分割模型路径|
-|	image            | 待预测的图片路径  |
-|  image_dir       | 存储待预测图片的文件夹路径 |
-| save_dir	| 保存可视化结果的路径, 默认值为"output"|
-| score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
-| seg_batch_size | 分割的批量大小，默认为2 |
-| use_camera | 是否使用摄像头采集图片，默认为False |
-| camera_id | 摄像头设备ID，默认值为0 |
-| use_erode | 是否使用图像腐蚀对分割预测图进行细分，默认为False |
-| erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
+![](../pics/44.png)
 
 step 3. 预测
 
@@ -129,22 +117,7 @@ step 4. 编译成功后，可执行文件在`out\build\x64-Release`目录下，�
 
    预测程序为paddle_inference\meter_reader.exe，其主要命令参数说明如下：
 
-   | 参数    | 说明   |
-   | ---- | ---- |
-   |  det_model_dir    | 表计检测模型路径     |
-   |	seg_model_dir		 | 指针和刻度分割模型路径|
-   |	image            | 待预测的图片路径  |
-   |  image_list       | 按行存储图片路径的.txt文件 |
-   | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
-   | gpu_id	| GPU 设备ID, 默认值为0 |
-   | save_dir	| 保存可视化结果的路径, 默认值为"output"|
-   | seg_batch_size | 分割的批量大小，默认为2 |
-   | thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
-   | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
-   | camera_id | 摄像头设备ID，默认值为0 |
-   | use_erode | 是否使用图像腐蚀对分割预测图进行去噪，支持值为0或1(默认值为1) |
-   | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
-   | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
+![](../pics/45.png)
 
 step 5. 推理预测：
 
@@ -199,22 +172,7 @@ step 3. 按照[Nvidia Jetson开发板部署](../deploy/nvidia-jetson.md)中的St
 
 step 4. 编译成功后，可执行程为`build/meter_reader/meter_reader`，其主要命令参数说明如下：
 
-  | 参数    | 说明   |
-  | ---- | ---- |
-  |  det_model_dir    | 表计检测模型路径     |
-  |	seg_model_dir		 | 指针和刻度分割模型路径|
-  |	image            | 待预测的图片路径  |
-  |  image_list       | 按行存储图片路径的.txt文件 |
-  | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
-  | gpu_id	| GPU 设备ID, 默认值为0 |
-  | save_dir	| 保存可视化结果的路径, 默认值为"output"|
-  | seg_batch_size | 分割的批量大小，默认为2 |
-  | thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
-  | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
-  | camera_id | 摄像头设备ID，默认值为0 |
-  | use_erode | 是否使用图像腐蚀对分割预测图进行细分，支持值为0或1(默认值为1) |
-  | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
-  | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
+![](../pics/46.png)
 
 step 5. 推理预测：
 

@@ -21,9 +21,7 @@
 
 目前PaddlePaddle为Nvidia Jetson提供了一个基于1.6.2版本的C++ 预测库。
 
-|  版本说明   | 预测库(1.6.2版本)  |
-|  ----  | ----  |
-| nv-jetson-cuda10-cudnn7.5-trt5 | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/1.7.1-nv-jetson-cuda10-cudnn7.5-trt5/fluid_inference.tar.gz) |
+![](../pics/23.png)
 
 下载并解压后`/root/projects/fluid_inference`目录包含内容为：
 ```
@@ -90,32 +88,11 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 
 * 编译成功后，图片预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| image  | 要预测的图片文件路径 |
-| image_list  | 按行存储图片路径的.txt文件 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，**classfier无该参数** |
-| batch_size | 预测的批量大小，默认为1 |
-| thread_num | 预测的线程数，默认为cpu处理器个数 |
+![](../pics/24.png)
 
 * 编译成功后，视频预测demo的可执行程序分别为`build/demo/video_detector`，`build/demo/video_classifier`，`build/demo/video_segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| use_camera | 是否使用摄像头预测，支持值为0或1(默认值为0) |
-| camera_id | 摄像头设备ID，默认值为0 |
-| video_path | 视频文件的路径 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
-| save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
-| save_dir | 保存可视化结果的路径, 默认值为"output" |
+![](../pics/25.png)
 
 **注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
 

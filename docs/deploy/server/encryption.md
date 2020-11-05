@@ -89,20 +89,7 @@ Windows平台:
 ### 2.1 Linux平台使用
 参考[Linux平台编译指南](cpp/linux.md)编译C++部署代码。编译成功后，预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
 
-|  参数   | 说明  |
-|  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| image  | 要预测的图片文件路径 |
-| image_list  | 按行存储图片路径的.txt文件 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，classifier无该参数 |
-| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
-| batch_size | 预测的批量大小，默认为1 |
-| thread_num | 预测的线程数，默认为cpu处理器个数 |
-| use_ir_optim | 是否使用图优化策略，支持值为0或1（默认值为1，图像分割默认值为0）|
-
+![](../../pics/22.png)
 
 ### 样例
 

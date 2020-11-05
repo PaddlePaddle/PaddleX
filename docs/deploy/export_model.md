@@ -10,13 +10,7 @@
 paddlex --export_inference --model_dir=./xiaoduxiong_epoch_12 --save_dir=./inference_model
 ```
 
-| 参数 | 说明 |
-| ---- | ---- |
-| --export_inference | 是否将模型导出为用于部署的inference格式，指定即为True |
-| --model_dir | 待导出的模型路径 |
-| --save_dir | 导出的模型存储路径 |
-| --fixed_input_shape | 固定导出模型的输入大小，默认值为None |
-
+![](../pics/10.png)
 
 使用TensorRT预测时，需固定模型的输入大小，通过`--fixed_input_shape `来制定输入大小[w,h]。
 
