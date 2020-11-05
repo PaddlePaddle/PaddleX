@@ -77,6 +77,3 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 html_static_path = ['_static']
 
 html_logo = 'paddlex.png'
-
-extensions = ['rst2pdf.pdfbuilder']
-pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Your Name'),]
