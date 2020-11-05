@@ -1,3 +1,5 @@
+简体中文| [English](./README_EN.md)
+
 
 
 
@@ -108,8 +110,12 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 交流与反馈
 
 - 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
+
 - PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
-  ![](./docs/gui/images/QR2.jpg)
+  
+  <p align="center">
+    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
+  </p>
 
 
 
