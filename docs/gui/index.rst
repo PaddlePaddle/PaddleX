@@ -47,7 +47,7 @@ PaddleX GUI覆盖深度学习模型开发必经的 **数据处理** 、 **超参
    :caption: 文档目录
    
    download.md
-   how_to_use.md
+   usage/index
    faq.md
 
 
