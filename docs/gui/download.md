@@ -1,15 +1,22 @@
-## PaddleX GUI安装
+# 下载安装
 
- PaddleX GUI是提升项目开发效率的核心模块，开发者可快速完成深度学习模型全流程开发。我们诚挚地邀请您前往 [官网](https://www.paddlepaddle.org.cn/paddle/paddleX)下载试用PaddleX GUI可视化前端，并获得您宝贵的意见或开源项目贡献。
+下载地址：https://www.paddlepaddle.org.cn/paddle/paddleXPaddleX 
 
 
+## 安装方式
 
-### 安装推荐环境
+**注意：安装/解压路径请务必在不包含中文和空格的路径下，否则会导致可能无法正确训练模型**
+
+- Windows下载后双击后选择安装路径即可
+- Mac/Ubuntu下载后解压即可
+
+
+## 安装推荐环境
 
 * **操作系统**：
-  * Windows7/8/10（推荐Windows 10）；
+  * Windows 10；
   * Mac OS 10.13+；
-  * Ubuntu 18.04+；
+  * Ubuntu 18.04(Ubuntu暂只支持18.04)；
 
 ***注：处理器需为x86_64架构，支持MKL。***
 
@@ -24,5 +31,4 @@
   * **内存**：建议8G以上  
   * **硬盘空间**：建议SSD剩余空间1T以上（非必须）  
 
-***注：PaddleX在Mac OS系统只支持单卡模型。Windows系统暂不支持NCCL。***
-
+***注：PaddleX在Mac OS系统只支持CPU训练。Windows系统只支持单GPU卡训练。***
