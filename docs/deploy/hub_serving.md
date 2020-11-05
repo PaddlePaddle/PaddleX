@@ -102,8 +102,8 @@ $ hub serving start -m mobilenetv3_small_ssld_imagenet_hub
 }
 
 ```
-|参数|用途|
-|-|-|
+|  参数 |  用途  |
+|:----- | :----- |
 |modules_info|PaddleHub Serving预安装模型，以字典列表形式列出，key为模型名称。其中:<br>`init_args`为模型加载时输入的参数，等同于`paddlehub.Module(**init_args)`<br>`predict_args`为模型预测时输入的参数，以`mobilenetv3_small_ssld_imagenet_hub`为例，等同于`mobilenetv3_small_ssld_imagenet_hub.batch_predict(**predict_args)`
 |port|服务端口，默认为8866|
 
