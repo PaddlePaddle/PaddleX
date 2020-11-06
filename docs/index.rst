@@ -34,6 +34,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    train/index
    train/prediction.md
    appendix/parameters.md
+   train/model_export.md
 
 .. toctree::
    :maxdepth: 1
