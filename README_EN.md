@@ -9,7 +9,8 @@
 </p>
 
 
-<p align= "center"> PaddleX -- PaddlePaddle End-2-End Development Toolkit, enables developers to implement real industry projects in a low-code form quickly </p>
+<p align= "center"> PaddleX -- PaddlePaddle End-to-End Development Toolkit, 
+  enables developers to implement real industry projects in a low-code form quickly </p>
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)[![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)![python version](https://img.shields.io/badge/python-3.6+-orange.svg)![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
 ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
