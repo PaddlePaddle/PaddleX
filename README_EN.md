@@ -20,7 +20,7 @@ It is integrated the abilities of **Image classification**, **Object detection**
 
 **PaddleX** has been validated in a dozen of industry application scenarios such as **Quality Inspection**, **Security**, **Patrol Inspection**, **Remote Sensing**, **Retail**,  **Medical** etc.. In addition, it **provides a wealth of case practice tutorials**, to help developer could apply to actual cases easily.
 
-![](./docs/gui/images/paddlexoverview.png)
+![](./docs/gui/images/paddlexoverview_en.png)
 
 
 ## Installation
