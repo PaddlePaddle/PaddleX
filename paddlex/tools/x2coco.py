@@ -66,7 +66,8 @@ class X2COCO(object):
         """
         assert osp.exists(image_dir), "he image folder does not exist!"
         assert osp.exists(json_dir), "The json folder does not exist!"
-        assert osp.exists(dataset_save_dir), "The save folder does not exist!"
+        if not osp.exists(dataset_save_dir):
+            os.makedirs(dataset_save_dir)
         # Convert the image files.
         new_image_dir = osp.join(dataset_save_dir, "JPEGImages")
         if osp.exists(new_image_dir):
