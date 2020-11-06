@@ -63,6 +63,7 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 
 - opencv: 编译请参考
 [编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
+
 #### Step4: 编译
 编译`cmake`的命令在`scripts/build.sh`中，修改LITE_DIR为Paddle-Lite预测库目录，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
 ```
@@ -152,5 +153,5 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 
 ## NCS2部署
 树莓派支持通过OpenVINO在NCS2上跑PaddleX模型预测，目前仅支持PaddleX的分类网络，基于NCS2的方式包含Paddle模型转OpenVINO IR以及部署IR在NCS2上进行预测两个步骤。
-- 模型转换请参考：[PaddleX模型转换为OpenVINO IR]('../openvino/export_openvino_model.md')，raspbian OS上的OpenVINO不支持模型转换，需要先在host侧转换FP16的IR。
+- 模型转换请参考：[PaddleX模型转换为OpenVINO IR](../openvino/export_openvino_model.md)，raspbian OS上的OpenVINO不支持模型转换，需要先在host侧转换FP16的IR。
 - 预测部署请参考[OpenVINO部署](../openvino/linux.md)中VPU在raspbian OS部署的部分
