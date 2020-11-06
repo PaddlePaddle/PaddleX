@@ -1,5 +1,5 @@
 # Python预测部署
-文档说明了在python下基于OpenVINO的预测部署，部署前需要先将paddle模型转换为OpenVINO的Inference Engine，请参考[模型转换](docs/deploy/openvino/export_openvino_model.md)。目前CPU硬件上支持PadlleX的分类、检测、分割模型；VPU上支持PaddleX的分类模型。
+文档说明了在python下基于OpenVINO的预测部署，部署前需要先将paddle模型转换为OpenVINO的Inference Engine，请参考[模型转换](./export_openvino_model.md)。目前CPU硬件上支持PadlleX的分类、检测、分割模型；VPU上支持PaddleX的分类模型。
 
 ## 前置条件
 * Python 3.6+
