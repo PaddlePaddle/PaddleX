@@ -50,10 +50,11 @@ def arg_parser():
 
 def export_openvino_model(model, args):
 
+    onnx_save_file = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
     if model.__class__.__name__ == "YOLOv3":
-        pdx.converter.export_onnx_model(model, args.save_dir)
+        pdx.converter.export_onnx_model(model, onnx_save_file)
     else:
-        pdx.converter.export_onnx_model(model, args.save_dir, 11)
+        pdx.converter.export_onnx_model(model, onnx_save_file, 11)
 
     import mo.main as mo
     from mo.utils.cli_parser import get_onnx_cli_parser
@@ -61,8 +62,7 @@ def export_openvino_model(model, args):
     onnx_parser.add_argument("--model_dir", type=_text_type)
     onnx_parser.add_argument("--save_dir", type=_text_type)
     onnx_parser.add_argument("--fixed_input_shape")
-    onnx_input = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
-    onnx_parser.set_defaults(input_model=onnx_input)
+    onnx_parser.set_defaults(input_model=onnx_save_file)
     onnx_parser.set_defaults(output_dir=args.save_dir)
     shape_list = args.fixed_input_shape[1:-1].split(',')
     with open(osp.join(args.model_dir, "model.yml")) as f:
