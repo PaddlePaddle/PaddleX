@@ -143,11 +143,11 @@ class VOCDetection(Dataset):
                     cname = obj.find(name_tag).text.strip()
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
-                    difficult_tag = pattern.findall(str(ET.tostringlist(obj)))
-                    if len(difficult_tag) == 0:
+                    diff_tag = pattern.findall(str(ET.tostringlist(obj)))
+                    if len(diff_tag) == 0:
                         _difficult = 0
                     else:
-                        diff_tag = difficult_tag[0][1:-1]
+                        diff_tag = diff_tag[0][1:-1]
                         try:
                             _difficult = int(obj.find(diff_tag).text)
                         except Exception:
