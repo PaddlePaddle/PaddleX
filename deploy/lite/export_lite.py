@@ -42,7 +42,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--save_file",
         type=str,
-        default="paddlex.onnx",
+        default="paddlex.nb",
         help="file name for storing the output files.",
         required=True)
     FLAGS = parser.parse_args()

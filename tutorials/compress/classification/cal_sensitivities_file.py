@@ -39,7 +39,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model_dir",
-        default="./output/mobilenet/best_model",
+        default="./output/mobilenetv2/best_model",
         type=str,
         help="The model path.")
     parser.add_argument(
