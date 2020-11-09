@@ -19,7 +19,7 @@
 
 ## 格式转换
 
-LabelMe标注后的数据还需要进行转换为SEG格式，才可以用于实例分割任务的训练，创建保存目录`D:\dataset_seg`，在python环境中安装paddlex后，使用如下命令即可
+LabelMe标注后的数据还需要进行转换为SEG格式，才可以用于语义分割任务的训练，创建保存目录`D:\dataset_seg`，在python环境中安装paddlex后，使用如下命令即可
 ```
 paddlex --data_conversion --source labelme --to SEG \
         --pics D:\MyDataset\JPEGImages \
