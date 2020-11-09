@@ -43,7 +43,7 @@ python prepare_data.py
 
 **注意：**
 
-* tiff格式的图片PaddleX统一使用gdal库读取，gdal安装可参考[文档](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html#id2)。若数据是tiff格式的三通道RGB图像，如果不想安装gdal，需自行转成jpeg、bmp、png格式图片。
+* tiff格式的图片PaddleX统一使用gdal库读取，gdal安装可参考[gdal文档](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html#id2)。若数据是tiff格式的三通道RGB图像，如果不想安装gdal，需自行转成jpeg、bmp、png格式图片。
 
 * label文件需为单通道的png格式图片，且标注从0开始计数，标注255表示该类别不参与计算。例如本案例中，0表示`unchanged`类，1表示`changed`类。
 
