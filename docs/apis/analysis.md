@@ -29,7 +29,7 @@ Seg分析器的分析接口，完成以下信息的分析统计：
 
 [代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/analysis.py)
 
-[统计信息示例](../../examples/multi-channel_remote_sensing/analysis.html#id2)
+[统计信息示例](../examples/multi-channel_remote_sensing/analysis.html#id2)
 
 ### cal_clipped_mean_std
 ```python
