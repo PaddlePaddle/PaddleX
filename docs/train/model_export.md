@@ -36,10 +36,6 @@ PaddleX作为开放开源的套件，其中的大部分模型均支持导出为O
 ### 如何导出
 
 - 1. 参考文档[部署模型导出](../deploy/eport_model.md)，将训练保存的模型导出为部署模型  
-- 2. 安装paddle2onnx `pip install paddle2onnx`，转换命令如下，通过`--opset_version`指定版本(9/10/11)
-
-```
-paddle2onnx --model_dir paddlex_infere_model --save_file model.onnx --opset_version 10 --enable_onnx_checker True
-```
+- 2. 安装paddle2onnx `pip install paddle2onnx`，转换命令如下，通过`--opset_version`指定版本(9/10/11)，转换使用方法参考[Paddle2ONNX说明](https://github.com/PaddlePaddle/paddle2onnx)
 
 - 附: Paddle2ONNX参阅 [https://github.com/PaddlePaddle/paddle2onnx](https://github.com/PaddlePaddle/paddle2onnx)
