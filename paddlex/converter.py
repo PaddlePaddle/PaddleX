@@ -287,6 +287,6 @@ def export_onnx_model(model, save_dir, opset_version=10):
 
     p2o.program2onnx(
         model.test_prog,
-        save_dir,
         scope=model.scope,
+        save_file=save_dir,
         opset_version=opset_version)
