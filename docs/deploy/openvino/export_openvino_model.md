@@ -37,7 +37,7 @@ python converter.py --model_dir /path/to/inference_model --save_dir /path/to/ope
 | --model_dir  | Paddle模型路径，请确保__model__, \_\_params__model.yml在同一个目录|
 | --save_dir  | OpenVINO模型保存路径 |
 | --fixed_input_shape  | 模型输入的[W,H] |
-| --data type(option)  | （可选）FP32、FP16，默认为FP32，VPU下的IR需要为FP16 |  
+| --data_type(option)  | （可选）FP32、FP16，默认为FP32，VPU下的IR需要为FP16 |  
 
 **注意**：
 - 由于OpenVINO 从2021.1版本开始支持ONNX的resize-11 OP的原因，请下载OpenVINO 2021.1+的版本
