@@ -161,6 +161,7 @@ def main():
         assert args.save_dir is not None, "--save_dir should be defined to create onnx model"
 
         model = pdx.load_model(args.model_dir)
+
         if model.status == "Normal" or model.status == "Prune":
             logging.error(
                 "Only support inference model, try to export model first as below,",
@@ -168,7 +169,8 @@ def main():
             logging.error(
                 "paddlex --export_inference --model_dir model_path --save_dir infer_model"
             )
-        pdx.converter.export_onnx_model(model, args.save_dir, args.onnx_opset)
+        save_file = os.path.join(args.save_dir, 'paddle2onnx_model.onnx') 
+        pdx.converter.export_onnx_model(model, save_file, args.onnx_opset)
 
     if args.data_conversion:
         assert args.source is not None, "--source should be defined while converting dataset"
