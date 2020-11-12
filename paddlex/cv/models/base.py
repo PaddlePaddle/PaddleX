@@ -34,9 +34,6 @@ from os import path as osp
 from paddle.fluid.framework import Program
 from .utils.pretrain_weights import get_pretrain_weights
 
-#fluid.default_startup_program().random_seed = 1000
-#fluid.default_main_program().random_seed = 1000
-
 
 def dict2str(dict_input):
     out = ''
@@ -138,11 +135,15 @@ class BaseAPI:
                            batch_size=1,
                            batch_num=10,
                            cache_dir="./temp"):
+        input_channel = 3
+        if hasattr(self, 'input_channel'):
+            input_channel = self.input_channel
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=dataset.transforms,
-            mode='quant')
+            mode='quant',
+            input_channel=input_channel)
         dataset.num_samples = batch_size * batch_num
         try:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
@@ -422,11 +423,15 @@ class BaseAPI:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
         # 给transform添加arrange操作
+        input_channel = 3
+        if hasattr(self, 'input_channel'):
+            input_channel = self.input_channel
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=train_dataset.transforms,
-            mode='train')
+            mode='train',
+            input_channel=input_channel)
         # 构建train_data_loader
         self.build_train_data_loader(
             dataset=train_dataset, batch_size=train_batch_size)
@@ -547,7 +552,7 @@ class BaseAPI:
             time_train_one_epoch = time.time() - epoch_start_time
             epoch_start_time = time.time()
 
-            ## 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
             self.completed_epochs += 1
             eval_epoch_start_time = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
@@ -581,7 +586,7 @@ class BaseAPI:
                                     continue
                             log_writer.add_scalar(
                                 "Metrics/Eval(Epoch): {}".format(k), v, i + 1)
-                #self.save_model(save_dir=current_save_dir)
+                self.save_model(save_dir=current_save_dir)
                 if getattr(self, 'use_ema', False):
                     self.exe.run(self.ema.restore_program)
                 time_eval_one_epoch = time.time() - eval_epoch_start_time
@@ -594,4 +599,3 @@ class BaseAPI:
                 if eval_dataset is not None and early_stop:
                     if earlystop(current_accuracy):
                         break
-            #return

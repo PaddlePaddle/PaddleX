@@ -22,19 +22,6 @@ import shutil
 import numpy as np
 from .base import MyEncoder, is_pic, get_encoding
 
-ch2en = {
-    u'不导电': 'bu_dao_dian',
-    u'擦花': 'ca_hua',
-    u'角位漏底': 'jiao_wei_lou_di',
-    u'桔皮': 'ju_pi',
-    u'漏底': 'lou_di',
-    u'喷流': 'pen_liu',
-    u'起坑': 'qi_keng',
-    u'漆泡': 'qi_pao',
-    u'杂色': 'za_se',
-    u'脏点': 'zang_dian'
-}
-
 
 class X2VOC(object):
     def __init__(self):
@@ -78,12 +65,10 @@ class LabelMe2VOC(X2VOC):
     def json2xml(self, image_dir, json_dir, xml_dir):
         import xml.dom.minidom as minidom
         i = 0
-        print('length: ', len(os.listdir(image_dir)))
         for img_name in os.listdir(image_dir):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             i += 1
-            print(i, " ", img_name)
             if not osp.exists(json_file):
                 os.remove(os.remove(osp.join(image_dir, img_name)))
                 continue
@@ -96,7 +81,6 @@ class LabelMe2VOC(X2VOC):
             node_filename = xml_doc.createElement("filename")
             node_filename.appendChild(xml_doc.createTextNode(img_name))
             root.appendChild(node_filename)
-            print(i, " ", json_file)
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
                 json_info = json.load(j)
@@ -135,8 +119,6 @@ class LabelMe2VOC(X2VOC):
                         ymin = min(y)
                         ymax = max(y)
                     label = shape["label"]
-                    label = ch2en[label]
-                    #print(label)
                     node_obj = xml_doc.createElement("object")
                     node_name = xml_doc.createElement("name")
                     node_name.appendChild(xml_doc.createTextNode(label))

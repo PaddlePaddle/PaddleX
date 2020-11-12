@@ -267,8 +267,7 @@ class RPNHead(object):
         """
         rpn_cls, rpn_bbox, anchor, anchor_var = self._get_loss_input()
         if self.num_classes == 1:
-            if self.rpn_cls_loss == 'SigmoidCrossEntropy':
-                score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight = \
+            score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight = \
                     fluid.layers.rpn_target_assign(
                         bbox_pred=rpn_bbox,
                         cls_logits=rpn_cls,
@@ -283,44 +282,18 @@ class RPNHead(object):
                         rpn_positive_overlap=self.rpn_positive_overlap,
                         rpn_negative_overlap=self.rpn_negative_overlap,
                         use_random=self.use_random)
-                score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
-                score_tgt.stop_gradient = True
+            score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
+            score_tgt.stop_gradient = True
+            if self.rpn_cls_loss == 'SigmoidCrossEntropy':
                 rpn_cls_loss = fluid.layers.sigmoid_cross_entropy_with_logits(
                     x=score_pred, label=score_tgt)
             elif self.rpn_cls_loss == 'SigmoidFocalLoss':
-                binary_gt_label = fluid.layers.full_like(
-                    gt_box, fill_value=1, dtype='int32')
-                binary_gt_label = fluid.layers.reduce_sum(
-                    binary_gt_label, dim=1, keep_dim=True)
                 data = fluid.layers.fill_constant(
-                    shape=[1], value=4, dtype='int32')
-                binary_gt_label = fluid.layers.greater_equal(binary_gt_label,
-                                                             data)
-                binary_gt_label = fluid.layers.cast(
-                    binary_gt_label, dtype='int32')
-                score_pred, loc_pred, score_tgt, loc_tgt, bbox_weight, fg_num = \
-                    fluid.layers.retinanet_target_assign(
-                        bbox_pred=rpn_bbox,
-                        cls_logits=rpn_cls,
-                        anchor_box=anchor,
-                        anchor_var=anchor_var,
-                        gt_boxes=gt_box,
-                        gt_labels=binary_gt_label,
-                        is_crowd=is_crowd,
-                        im_info=im_info,
-                        positive_overlap=self.rpn_positive_overlap,
-                        negative_overlap=self.rpn_negative_overlap,
-                        num_classes=1)
-                fg_num = fluid.layers.reduce_sum(fg_num, name='fg_num')
-                #score_tgt = fluid.layers.cast(score_tgt, 'int32')
-                #rpn_cls_loss = fluid.layers.sigmoid_focal_loss(
-                #    x=score_pred,
-                #    label=score_tgt,
-                #    fg_num=fg_num,
-                #    gamma=self.rpn_focal_loss_gamma,
-                #    alpha=self.rpn_focal_loss_alpha)
-                score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
-                score_tgt.stop_gradient = True
+                    shape=[1], value=1, dtype='int32')
+                fg_label = fluid.layers.greater_equal(score_tgt, data)
+                fg_label = fluid.layers.cast(fg_label, dtype='int32')
+                fg_num = fluid.layers.reduce_sum(fg_label)
+                fg_num.stop_gradient = True
                 loss = fluid.layers.sigmoid_cross_entropy_with_logits(
                     x=score_pred, label=score_tgt)
 

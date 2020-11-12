@@ -768,3 +768,193 @@ class DetectionMAP(object):
             accum_fp += 1 - int(pos)
             accum_fp_list.append(accum_fp)
         return accum_tp_list, accum_fp_list
+
+
+def makeplot(rs, ps, outDir, class_name, iou_type):
+    import matplotlib.pyplot as plt
+
+    cs = np.vstack([
+        np.ones((2, 3)), np.array([.31, .51, .74]), np.array([.75, .31, .30]),
+        np.array([.36, .90, .38]), np.array([.50, .39, .64]),
+        np.array([1, .6, 0])
+    ])
+    areaNames = ['allarea', 'small', 'medium', 'large']
+    types = ['C75', 'C50', 'Loc', 'Sim', 'Oth', 'BG', 'FN']
+    for i in range(len(areaNames)):
+        area_ps = ps[..., i, 0]
+        figure_tile = iou_type + '-' + class_name + '-' + areaNames[i]
+        aps = [ps_.mean() for ps_ in area_ps]
+        ps_curve = [
+            ps_.mean(axis=1) if ps_.ndim > 1 else ps_ for ps_ in area_ps
+        ]
+        ps_curve.insert(0, np.zeros(ps_curve[0].shape))
+        fig = plt.figure()
+        ax = plt.subplot(111)
+        for k in range(len(types)):
+            ax.plot(rs, ps_curve[k + 1], color=[0, 0, 0], linewidth=0.5)
+            ax.fill_between(
+                rs,
+                ps_curve[k],
+                ps_curve[k + 1],
+                color=cs[k],
+                label=str('[{:.3f}'.format(aps[k]) + ']' + types[k]))
+        plt.xlabel('recall')
+        plt.ylabel('precision')
+        plt.xlim(0, 1.)
+        plt.ylim(0, 1.)
+        plt.title(figure_tile)
+        plt.legend()
+        fig.savefig(outDir + '/{}.png'.format(figure_tile))
+        plt.close(fig)
+
+
+def analyze_individual_category(k, cocoDt, cocoGt, catId, iou_type):
+    from pycocotools.coco import COCO
+    from pycocotools.cocoeval import COCOeval
+
+    nm = cocoGt.loadCats(catId)[0]
+    logging.info('--------------analyzing {}-{}---------------'.format(
+        k + 1, nm['name']))
+    ps_ = {}
+    dt = copy.deepcopy(cocoDt)
+    nm = cocoGt.loadCats(catId)[0]
+    imgIds = cocoGt.getImgIds()
+    dt_anns = dt.dataset['annotations']
+    select_dt_anns = []
+    for ann in dt_anns:
+        if ann['category_id'] == catId:
+            select_dt_anns.append(ann)
+    dt.dataset['annotations'] = select_dt_anns
+    dt.createIndex()
+    # compute precision but ignore superclass confusion
+    gt = copy.deepcopy(cocoGt)
+    child_catIds = gt.getCatIds(supNms=[nm['supercategory']])
+    for idx, ann in enumerate(gt.dataset['annotations']):
+        if (ann['category_id'] in child_catIds and
+                ann['category_id'] != catId):
+            gt.dataset['annotations'][idx]['ignore'] = 1
+            gt.dataset['annotations'][idx]['iscrowd'] = 1
+            gt.dataset['annotations'][idx]['category_id'] = catId
+    cocoEval = COCOeval(gt, copy.deepcopy(dt), iou_type)
+    cocoEval.params.imgIds = imgIds
+    cocoEval.params.maxDets = [100]
+    cocoEval.params.iouThrs = [.1]
+    cocoEval.params.useCats = 1
+    cocoEval.evaluate()
+    cocoEval.accumulate()
+    ps_supercategory = cocoEval.eval['precision'][0, :, k, :, :]
+    ps_['ps_supercategory'] = ps_supercategory
+    # compute precision but ignore any class confusion
+    gt = copy.deepcopy(cocoGt)
+    for idx, ann in enumerate(gt.dataset['annotations']):
+        if ann['category_id'] != catId:
+            gt.dataset['annotations'][idx]['ignore'] = 1
+            gt.dataset['annotations'][idx]['iscrowd'] = 1
+            gt.dataset['annotations'][idx]['category_id'] = catId
+    cocoEval = COCOeval(gt, copy.deepcopy(dt), iou_type)
+    cocoEval.params.imgIds = imgIds
+    cocoEval.params.maxDets = [100]
+    cocoEval.params.iouThrs = [.1]
+    cocoEval.params.useCats = 1
+    cocoEval.evaluate()
+    cocoEval.accumulate()
+    ps_allcategory = cocoEval.eval['precision'][0, :, k, :, :]
+    ps_['ps_allcategory'] = ps_allcategory
+    return k, ps_
+
+
+def coco_error_analysis(eval_details_file=None,
+                        gt=None,
+                        pred_bbox=None,
+                        pred_mask=None,
+                        save_dir='./output'):
+    """
+    Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+    """
+
+    from multiprocessing import Pool
+    from pycocotools.coco import COCO
+    from pycocotools.cocoeval import COCOeval
+
+    if eval_details_file is not None:
+        import json
+        with open(eval_details_file, 'r') as f:
+            eval_details = json.load(f)
+            pred_bbox = eval_details['bbox']
+            if 'mask' in eval_details:
+                pred_mask = eval_details['mask']
+            gt = eval_details['gt']
+    if gt is None or pred_bbox is None:
+        raise Exception(
+            "gt/pred_bbox/pred_mask is None now, please set right eval_details_file or gt/pred_bbox/pred_mask."
+        )
+    if pred_bbox is not None and len(pred_bbox) == 0:
+        raise Exception("There is no predicted bbox.")
+    if pred_mask is not None and len(pred_mask) == 0:
+        raise Exception("There is no predicted mask.")
+
+    def _analyze_results(cocoGt, cocoDt, res_type, out_dir):
+        directory = os.path.dirname(out_dir + '/')
+        if not os.path.exists(directory):
+            logging.info('-------------create {}-----------------'.format(
+                out_dir))
+            os.makedirs(directory)
+
+        imgIds = cocoGt.getImgIds()
+        res_out_dir = out_dir + '/' + res_type + '/'
+        res_directory = os.path.dirname(res_out_dir)
+        if not os.path.exists(res_directory):
+            logging.info('-------------create {}-----------------'.format(
+                res_out_dir))
+            os.makedirs(res_directory)
+        iou_type = res_type
+        cocoEval = COCOeval(
+            copy.deepcopy(cocoGt), copy.deepcopy(cocoDt), iou_type)
+        cocoEval.params.imgIds = imgIds
+        cocoEval.params.iouThrs = [.75, .5, .1]
+        cocoEval.params.maxDets = [100]
+        cocoEval.evaluate()
+        cocoEval.accumulate()
+        ps = cocoEval.eval['precision']
+        ps = np.vstack([ps, np.zeros((4, *ps.shape[1:]))])
+        catIds = cocoGt.getCatIds()
+        recThrs = cocoEval.params.recThrs
+        with Pool(processes=48) as pool:
+            args = [(k, cocoDt, cocoGt, catId, iou_type)
+                    for k, catId in enumerate(catIds)]
+            analyze_results = pool.starmap(analyze_individual_category, args)
+        for k, catId in enumerate(catIds):
+            nm = cocoGt.loadCats(catId)[0]
+            logging.info('--------------saving {}-{}---------------'.format(
+                k + 1, nm['name']))
+            analyze_result = analyze_results[k]
+            assert k == analyze_result[0], ""
+            ps_supercategory = analyze_result[1]['ps_supercategory']
+            ps_allcategory = analyze_result[1]['ps_allcategory']
+            # compute precision but ignore superclass confusion
+            ps[3, :, k, :, :] = ps_supercategory
+            # compute precision but ignore any class confusion
+            ps[4, :, k, :, :] = ps_allcategory
+            # fill in background and false negative errors and plot
+            T, _, _, A, _ = ps.shape
+            for t in range(T):
+                for a in range(A):
+                    if np.sum(ps[t, :, k, a, :] ==
+                              -1) != len(ps[t, :, k, :, :]):
+                        ps[t, :, k, a, :][ps[t, :, k, a, :] == -1] = 0
+            ps[5, :, k, :, :] = (ps[4, :, k, :, :] > 0)
+            ps[6, :, k, :, :] = 1.0
+            makeplot(recThrs, ps[:, :, k], res_out_dir, nm['name'], iou_type)
+        makeplot(recThrs, ps, res_out_dir, 'allclass', iou_type)
+
+    coco_gt = COCO()
+    coco_gt.dataset = gt
+    coco_gt.createIndex()
+    from pycocotools.cocoeval import COCOeval
+    if pred_bbox is not None:
+        coco_dt = loadRes(coco_gt, pred_bbox)
+        _analyze_results(coco_gt, coco_dt, res_type='bbox', out_dir=save_dir)
+    if pred_mask is not None:
+        coco_dt = loadRes(coco_gt, pred_mask)
+        _analyze_results(coco_gt, coco_dt, res_type='segm', out_dir=save_dir)
+    logging.info("The analysis figures are saved in {}".format(save_dir))

@@ -46,6 +46,7 @@ class FasterRCNN(object):
     def __init__(
             self,
             backbone,
+            input_channel=3,
             mode='train',
             num_classes=81,
             with_fpn=False,
@@ -103,7 +104,8 @@ class FasterRCNN(object):
             else:
                 fpn = FPN()
         self.fpn = fpn
-        self.fpn.num_chan = fpn_num_channels
+        if self.fpn is not None:
+            self.fpn.num_chan = fpn_num_channels
         self.num_classes = num_classes
         if rpn_head is None:
             if self.fpn is None:
@@ -123,7 +125,6 @@ class FasterRCNN(object):
                     rpn_cls_loss=rpn_cls_loss,
                     rpn_focal_loss_alpha=rpn_focal_loss_alpha,
                     rpn_focal_loss_gamma=rpn_focal_loss_gamma)
-                #use_random=False)
             else:
                 rpn_head = FPNRPNHead(
                     anchor_start_size=anchor_sizes[0],
@@ -144,7 +145,6 @@ class FasterRCNN(object):
                     rpn_cls_loss=rpn_cls_loss,
                     rpn_focal_loss_alpha=rpn_focal_loss_alpha,
                     rpn_focal_loss_gamma=rpn_focal_loss_gamma)
-                #use_random=False)
         self.rpn_head = rpn_head
         if roi_extractor is None:
             if self.fpn is None:
@@ -206,6 +206,7 @@ class FasterRCNN(object):
                 bbox_reg_weights=bbox_reg_weights,
                 num_classes=num_classes,
                 shuffle_before_sample=self.rpn_head.use_random)
+        self.input_channel = input_channel
 
     def build_net(self, inputs):
         im = inputs['image']
@@ -272,13 +273,16 @@ class FasterRCNN(object):
 
         if self.fixed_input_shape is not None:
             input_shape = [
-                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+                None, self.input_channel, self.fixed_input_shape[1],
+                self.fixed_input_shape[0]
             ]
             inputs['image'] = fluid.data(
                 dtype='float32', shape=input_shape, name='image')
         else:
             inputs['image'] = fluid.data(
-                dtype='float32', shape=[None, 3, None, None], name='image')
+                dtype='float32',
+                shape=[None, self.input_channel, None, None],
+                name='image')
         if self.mode == 'train':
             inputs['im_info'] = fluid.data(
                 dtype='float32', shape=[None, 3], name='im_info')

@@ -341,6 +341,8 @@ class Resize(SegTransform):
             fx=im_scale_x,
             fy=im_scale_y,
             interpolation=self.interp_dict[self.interp])
+        if im.ndim < 3:
+            im = np.expand_dims(im, axis=-1)
         if label is not None:
             label = cv2.resize(
                 label,
@@ -463,6 +465,8 @@ class ResizeByShort(SegTransform):
         im = cv2.resize(
             im, (resized_width, resized_height),
             interpolation=cv2.INTER_NEAREST)
+        if im.ndim < 3:
+            im = np.expand_dims(im, axis=-1)
         if label is not None:
             im = cv2.resize(
                 label, (resized_width, resized_height),
@@ -584,6 +588,8 @@ class ResizeStepScaling(SegTransform):
             fx=scale_factor,
             fy=scale_factor,
             interpolation=cv2.INTER_LINEAR)
+        if im.ndim < 3:
+            im = np.expand_dims(im, axis=-1)
         if label is not None:
             label = cv2.resize(
                 label, (0, 0),
@@ -1030,6 +1036,8 @@ class RandomScaleAspect(SegTransform):
                     im = cv2.resize(
                         im, (img_width, img_height),
                         interpolation=cv2.INTER_LINEAR)
+                    if im.ndim < 3:
+                        im = np.expand_dims(im, axis=-1)
                     label = cv2.resize(
                         label, (img_width, img_height),
                         interpolation=cv2.INTER_NEAREST)

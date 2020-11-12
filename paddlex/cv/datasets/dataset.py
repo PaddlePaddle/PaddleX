@@ -205,14 +205,6 @@ def generate_minibatch(batch_data, label_padding_value=255, mapper=None):
             batch_data = op(batch_data)
     # if batch_size is 1, do not pad the image
     if len(batch_data) == 1:
-        #im = np.load('/home/luoqianhui/PaddleDetection/image.npy')
-        #im_info = np.load('/home/luoqianhui/PaddleDetection/im_info.npy')
-        #box = np.load('/home/luoqianhui/PaddleDetection/gt_bbox.npy')
-        #id = np.load('/home/luoqianhui/PaddleDetection/gt_class.npy')
-        #diff = np.load('/home/luoqianhui/PaddleDetection/difficult.npy')
-        #im_shape = np.array([1920,2560,1], dtype=np.float32)
-        #batch_data = [(im, im_info, box, im_shape, id, diff)]
-        #batch_data = [(im, im_info, box, id, diff)]
         return batch_data
     width = [data[0].shape[2] for data in batch_data]
     height = [data[0].shape[1] for data in batch_data]

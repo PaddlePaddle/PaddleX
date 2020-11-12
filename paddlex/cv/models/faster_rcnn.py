@@ -59,7 +59,12 @@ class FasterRCNN(BaseAPI):
                  softnms_sigma=0.5,
                  post_threshold=0.05,
                  bbox_assigner='BBoxAssigner',
-                 fpn_num_channels=256):
+                 fpn_num_channels=256,
+                 input_channel=3,
+                 rpn_batch_size_per_im=256,
+                 rpn_fg_fraction=0.5,
+                 test_pre_nms_top_n=None,
+                 test_post_nms_top_n=1000):
         self.init_params = locals()
         super(FasterRCNN, self).__init__('detector')
         backbones = [
@@ -91,6 +96,11 @@ class FasterRCNN(BaseAPI):
         self.post_threshold = post_threshold
         self.bbox_assigner = bbox_assigner
         self.fpn_num_channels = fpn_num_channels
+        self.input_channel = input_channel
+        self.rpn_batch_size_per_im = rpn_batch_size_per_im
+        self.rpn_fg_fraction = rpn_fg_fraction
+        self.test_pre_nms_top_n = test_pre_nms_top_n
+        self.test_post_nms_top_n = test_post_nms_top_n
 
     def _get_backbone(self, backbone_name):
         norm_type = None
@@ -151,6 +161,8 @@ class FasterRCNN(BaseAPI):
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
         test_pre_nms_top_n = 1000 if self.with_fpn else 6000
+        if self.test_pre_nms_top_n is not None:
+            test_pre_nms_top_n = self.test_pre_nms_top_n
         model = paddlex.cv.nets.detection.FasterRCNN(
             backbone=self._get_backbone(self.backbone),
             mode=mode,
@@ -172,7 +184,11 @@ class FasterRCNN(BaseAPI):
             post_threshold=self.post_threshold,
             softnms_sigma=self.softnms_sigma,
             bbox_assigner=self.bbox_assigner,
-            fpn_num_channels=self.fpn_num_channels)
+            fpn_num_channels=self.fpn_num_channels,
+            input_channel=self.input_channel,
+            rpn_batch_size_per_im=self.rpn_batch_size_per_im,
+            rpn_fg_fraction=self.rpn_fg_fraction,
+            test_post_nms_top_n=self.test_post_nms_top_n)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -214,7 +230,6 @@ class FasterRCNN(BaseAPI):
             end_lr=learning_rate)
         optimizer = fluid.optimizer.Momentum(
             learning_rate=lr_warmup,
-            #learning_rate=lr_decay,
             momentum=0.9,
             regularization=fluid.regularizer.L2Decay(1e-04))
         return optimizer
@@ -238,7 +253,9 @@ class FasterRCNN(BaseAPI):
               use_vdl=False,
               early_stop=False,
               early_stop_patience=5,
-              resume_checkpoint=None):
+              resume_checkpoint=None,
+              sensitivities_file=None,
+              eval_metric_loss=0.05):
         """训练。
 
         Args:
@@ -266,6 +283,9 @@ class FasterRCNN(BaseAPI):
             early_stop_patience (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内
                 连续下降或持平，则终止训练。默认值为5。
             resume_checkpoint (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
+            sensitivities_file (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，
+                则自动下载在ImageNet图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
+            eval_metric_loss (float): 可容忍的精度损失。默认为0.05。
 
         Raises:
             ValueError: 评估类型不在指定列表中。
@@ -307,7 +327,9 @@ class FasterRCNN(BaseAPI):
             pretrain_weights=pretrain_weights,
             fuse_bn=fuse_bn,
             save_dir=save_dir,
-            resume_checkpoint=resume_checkpoint)
+            resume_checkpoint=resume_checkpoint,
+            sensitivities_file=sensitivities_file,
+            eval_metric_loss=eval_metric_loss)
 
         # 训练
         self.train_loop(
@@ -343,14 +365,19 @@ class FasterRCNN(BaseAPI):
             tuple (metrics, eval_details) /dict (metrics): 当return_details为True时，返回(metrics, eval_details)，
                 当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，
                 分别表示平均准确率平均值在各个阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。
-                eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
-                预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
+                eval_details为dict，包含bbox和gt两个关键字。其中关键字bbox的键值是一个列表，列表中每个元素代表一个预测结果，
+                一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。而关键字gt的键值是真实标注框的相关信息。
         """
+
+        input_channel = 3
+        if hasattr(self, 'input_channel'):
+            input_channel = self.input_channel
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=eval_dataset.transforms,
-            mode='eval')
+            mode='eval',
+            input_channel=input_channel)
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -433,11 +460,15 @@ class FasterRCNN(BaseAPI):
                     model_type,
                     class_name,
                     thread_pool=None):
+        input_channel = 3
+        if hasattr(self, input_channel):
+            input_channel = self.input_channel
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
             transforms=transforms,
-            mode='test')
+            mode='test',
+            input_channel=input_channel)
         if thread_pool is not None:
             batch_data = thread_pool.map(transforms, images)
         else:

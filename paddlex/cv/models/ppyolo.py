@@ -125,7 +125,8 @@ class PPYOLO(BaseAPI):
         self.with_dcn_v2 = with_dcn_v2
 
         if paddle.__version__ < '1.8.4' and paddle.__version__ != '0.0.0':
-            raise Exception("PPYOLO requires paddlepaddle or paddlepaddle-gpu >= 1.8.4")
+            raise Exception(
+                "PPYOLO requires paddlepaddle or paddlepaddle-gpu >= 1.8.4")
 
     def _get_backbone(self, backbone_name):
         if backbone_name.startswith('ResNet50_vd'):
@@ -383,8 +384,8 @@ class PPYOLO(BaseAPI):
             tuple (metrics, eval_details) | dict (metrics): 当return_details为True时，返回(metrics, eval_details)，
                 当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，
                 分别表示平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。
-                eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
-                预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
+                eval_details为dict，包含bbox和gt两个关键字。其中关键字bbox的键值是一个列表，列表中每个元素代表一个预测结果，
+                一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。而关键字gt的键值是真实标注框的相关信息。
         """
         arrange_transforms(
             model_type=self.model_type,
@@ -451,7 +452,11 @@ class PPYOLO(BaseAPI):
         return evaluate_metrics
 
     @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_pool=None):
+    def _preprocess(images,
+                    transforms,
+                    model_type,
+                    class_name,
+                    thread_pool=None):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
@@ -546,9 +551,9 @@ class PPYOLO(BaseAPI):
 
         if transforms is None:
             transforms = self.test_transforms
-        im, im_size = PPYOLO._preprocess(img_file_list, transforms,
-                                         self.model_type,
-                                         self.__class__.__name__, self.thread_pool)
+        im, im_size = PPYOLO._preprocess(
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
