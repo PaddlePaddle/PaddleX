@@ -131,6 +131,13 @@ def fix_input_shape(info, fixed_input_shape=None):
         padding = {'Padding': {}}
         if info['_Attributes']['model_type'] == 'classifier':
             pass
+        elif info['Model'].count('YOLO') > 0:
+            resize_op_index = None
+            for i in range(len(info['Transforms'])):
+                if list(info['Transforms'][i].keys())[0] == 'Resize':
+                    resize_op_index = i
+            if resize_op_index is not None:
+                info['Transforms'][resize_op_index]['Resize']['target_size'] = fixed_input_shape[0]
         else:
             resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
             resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
