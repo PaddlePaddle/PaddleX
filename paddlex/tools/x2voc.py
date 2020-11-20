@@ -67,7 +67,7 @@ class LabelMe2VOC(X2VOC):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             xml_doc = minidom.Document() 
             root = xml_doc.createElement("annotation") 
