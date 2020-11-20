@@ -20,6 +20,8 @@ import sys
 import yaml
 import paddlex as pdx
 
+assert pdx.__version__ >= '1.2.6', "paddlex >= 1.2.6 is required."
+
 
 def arg_parser():
     parser = argparse.ArgumentParser()
