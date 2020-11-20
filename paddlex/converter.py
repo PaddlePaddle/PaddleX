@@ -33,7 +33,7 @@ class MultiClassNMS4OpenVINO():
         background = node.attr('background_label')
         normalized = node.attr('normalized')
         if normalized == False:
-            logging.warn(
+            logging.warning(
                         "The parameter normalized of multiclass_nms OP of Paddle is False, which has diff with ONNX." \
                         " Please set normalized=True in multiclass_nms of Paddle, see doc Q1 in" \
                         " https://github.com/PaddlePaddle/paddle2onnx/blob/develop/FAQ.md")

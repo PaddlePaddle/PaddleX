@@ -82,3 +82,4 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    appendix/metrics.md
    appendix/interpret.md
    appendix/how_to_offline_run.md
+   change_log.md
