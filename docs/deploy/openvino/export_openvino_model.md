@@ -17,7 +17,7 @@ paddle模型转openvino之前需要先把paddle模型导出为inference格式模
 paddlex --export_inference --model_dir=/path/to/paddle_model --save_dir=./inference_model --fixed_input_shape=[w,h]
 ```
 
-**注意**：需要转OpenVINO模型时，导出inference模型请务必指定`--fixed_input_shape`参数来固定模型的输入大小，且模型的输入大小需要与训练时一致
+**注意**：需要转OpenVINO模型时，导出inference模型请务必指定`--fixed_input_shape`参数来固定模型的输入大小，且模型的输入大小需要与训练时一致。 PaddleX客户端在发布模型时没有固定输入大小，因此对于可视化客户端，请找到任务所在目录，从里面的`output`文件夹找到`best_model`模型目录，将此目录使用如上命令进行固定shape导出即可。
 
 ## 导出OpenVINO模型
 
