@@ -35,7 +35,8 @@ class Predictor:
                  mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
-                 memory_optimize=True):
+                 memory_optimize=True,
+                 max_trt_batch_size=1):
         """ 创建Paddle Predictor
 
             Args:
@@ -47,6 +48,7 @@ class Predictor:
                 use_trt: 是否使用TensorRT，默认False
                 use_glog: 是否启用glog日志, 默认False
                 memory_optimize: 是否启动内存优化，默认True
+                max_trt_batch_size: 在使用TensorRT时配置的最大batch size，默认1
         """
         if not osp.isdir(model_dir):
             raise Exception("[ERROR] Path {} not exist.".format(model_dir))
@@ -80,7 +82,8 @@ class Predictor:
                                            self.info['Transforms'], to_rgb)
         self.predictor = self.create_predictor(use_gpu, gpu_id, use_mkl,
                                                mkl_thread_num, use_trt,
-                                               use_glog, memory_optimize)
+                                               use_glog, memory_optimize,
+                                               max_trt_batch_size)
         # 线程池，在模型在预测时用于对输入数据以图片为单位进行并行处理
         # 主要用于batch_predict接口
         thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
@@ -98,7 +101,8 @@ class Predictor:
                          mkl_thread_num=4,
                          use_trt=False,
                          use_glog=False,
-                         memory_optimize=True):
+                         memory_optimize=True,
+                         max_trt_batch_size=1):
         config = fluid.core.AnalysisConfig(
             os.path.join(self.model_dir, '__model__'),
             os.path.join(self.model_dir, '__params__'))
@@ -106,6 +110,14 @@ class Predictor:
         if use_gpu:
             # 设置GPU初始显存(单位M)和Device ID
             config.enable_use_gpu(100, gpu_id)
+            if use_trt:
+                config.enable_tensorrt_engine(
+                            workspace_size=1<<10,
+                            max_batch_size=max_trt_batch_size,
+                            min_subgraph_size=3,
+                            precision_mode=fluid.core.AnalysisConfig.Precision.Float32,
+                            use_static=False,
+                            use_calib_mode=False)
         else:
             config.disable_gpu()
         if use_mkl and not use_gpu:

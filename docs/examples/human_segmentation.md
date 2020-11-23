@@ -17,6 +17,33 @@
 > * Inference Model和Quant Inference Model为预测部署模型，包含`__model__`计算图结构、`__params__`模型参数和`model.yaml`基础的模型配置信息。
 > * 其中Inference Model适用于服务端的CPU和GPU预测部署，Qunat Inference Model为量化版本，适用于通过Paddle Lite进行移动端等端侧设备部署。
 
+#### 关于预测锯齿问题
+在训练完模型后，可能会遇到预测出来结果存在『锯齿』的问题，这个可能存在的原因是由于模型在预测过程中，经历了原图缩放再放大的过程，如下流程所示，
+
+```
+原图输入 -> 预处理transforms将图像缩放至目标大小 -> Paddle模型预测 -> 预测结果放大至原图大小 
+```
+对于这种原因导致的问题，可以手动修改模型中的`model.yml`文件，将预处理中的目标大小**调整到更高**优化此问题，如在本文档中提供的人像分割server端模型中`model.yml`文件内容，修改`target_size`至1024*1024（这样也会带来模型预测所需的资源更多，预测速度更慢）
+```
+Model: DeepLabv3p
+Transforms:
+- Resize:
+    interp: LINEAR
+    target_size:
+    - 512
+    - 512
+```
+修改为
+```
+Model: DeepLabv3p
+Transforms:
+- Resize:
+    interp: LINEAR
+    target_size:
+    - 1024
+    - 1024
+```
+
 
 预训练模型的存储大小和推理时长如下所示，其中移动端模型的运行环境为cpu：骁龙855，内存：6GB，图片大小：192*192
 

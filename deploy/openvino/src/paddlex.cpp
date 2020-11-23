@@ -164,12 +164,12 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   InferenceEngine::OutputsDataMap out_maps = network_.getOutputsInfo();
   std::string outputName;
   for (const auto & output_map : out_maps) {
-    if (output_map.second->getTensorDesc().getDims().size() == 3) {
+    if (output_map.second->getTensorDesc().getDims().size() == 2) {
       outputName = output_map.first;
     }
   }
   if (outputName.empty()) {
-    std::cerr << "get result node failed!" << std::endl:
+    std::cerr << "get result node failed!" << std::endl;
     return false;
   }
   InferenceEngine::Blob::Ptr output = infer_request.GetBlob(outputName);

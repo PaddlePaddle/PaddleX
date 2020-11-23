@@ -36,7 +36,8 @@ class X2ImageNet(object):
         """
         assert osp.exists(image_dir), "The image folder does not exist!"
         assert osp.exists(json_dir), "The json folder does not exist!"
-        assert osp.exists(dataset_save_dir), "The save folder does not exist!"
+        if not osp.exists(dataset_save_dir):
+            os.makedirs(dataset_save_dir)
         assert len(os.listdir(dataset_save_dir)) == 0, "The save folder must be empty!"
         for img_name in os.listdir(image_dir):
             img_name_part = osp.splitext(img_name)[0]

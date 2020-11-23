@@ -22,7 +22,7 @@ MyDataset/ # 图像分类数据集根目录
 
 在模型进行训练时，我们需要划分训练集，验证集和测试集，因此需要对如上数据进行划分，直接使用paddlex命令即可将数据集随机划分成70%训练集，20%验证集和10%测试集
 ```
-paddlex --split_dataset ImageNet --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
+paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
 ```
 
 划分好的数据集会额外生成`labels.txt`, `train_list.txt`, `val_list.txt`, `test_list.txt`四个文件，之后可直接进行训练。

@@ -19,6 +19,8 @@ dataset = pdx.datasets.ImageNet(
 
 # 开始量化
 pdx.slim.export_quant_model(model, dataset, 
+			  batch_size=4,
+			  batch_num=5,
 	                  save_dir='./quant_mobilenet', 
 	                  cache_dir='./tmp')
 ```

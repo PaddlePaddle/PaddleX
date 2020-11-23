@@ -173,9 +173,9 @@ class Predictor:
         score_name = next(it)
         score_map = np.squeeze(preds[score_name])
         score_map = np.transpose(score_map, (1, 2, 0))
-        
+
         im_info = preprocessed_inputs['im_info']
-        
+
         for info in im_info[0][::-1]:
             if info[0] == 'resize':
                 w, h = info[1][1], info[1][0]
@@ -192,8 +192,8 @@ class Predictor:
         """
         outputs = self.net.outputs
         for name in outputs:
-            if (len(outputs[name].shape) == 3):
-                output = preds[name][0]
+            if (len(outputs[name].shape) == 2):
+                output = preds[name]
         result = []
         for out in output:
             if (out[0] >= 0):

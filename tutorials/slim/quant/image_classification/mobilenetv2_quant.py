@@ -28,4 +28,4 @@ dataset = pdx.datasets.ImageNet(
                 transforms=model.test_transforms)
 
 # 开始量化
-pdx.slim.export_quant_model(model, dataset, save_dir='./quant_mobilenet', cache_dir='./tmp')
+pdx.slim.export_quant_model(model, dataset, batch_size=4, batch_num=10, save_dir='./quant_mobilenet', cache_dir='./tmp')
