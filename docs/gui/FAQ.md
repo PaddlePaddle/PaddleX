@@ -18,3 +18,6 @@
 PaddleX客户端目前需用户手动下载最新版升级，旧版本可直接删除原安装目录即可。升级前请备份好工作空间下的3个workspace.*.pb文件，避免升级过程可能导致项目信息丢失。
 
 PaddleX更新历史和下载地址: https://www.paddlepaddle.org.cn/paddlex/download
+
+## 4. 如何卸载PaddleX客户端
+客户端安装本质只是解压文件到相应目录，因此卸载直接删除安装目录和桌面快捷方式即可。
