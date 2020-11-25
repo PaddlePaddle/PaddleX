@@ -1,46 +1,29 @@
+# PaddleX客户端常见问题
 
+## 1. 训练出错，提示『训练任务异常中止，请查阅错误日志具体确认原因』？
+请按照以下步骤来查找原因
 
-1. **为什么训练速度这么慢？**
+- 1.首先根据提示，找到错误日志，根据日志提示判断原因
+- 2.如无法确定原因，测a)尝试重新训练，看是否能正常训练； b)调低batchsize（同时按比例调低学习率）排除是否是显存不足原因导致
+- 3.如第2步仍然失败，请前往GitHub提ISSUE，a) 描述清楚问题 b) 贴上训练参数截图 c) 附上错误日志   https://github.com/PaddlePaddle/PaddleX/issues
+- 4.如无Github帐号，则可加QQ群1045148026在线咨询工程师（咨询时请附上出错日志)
 
-   PaddleX完全采用您本地的硬件进行计算，深度学习任务确实对算力要求较高，为了使您能快速体验应用PaddleX进行开发，我们适配了CPU硬件，但强烈建议您使用GPU以提升训练速度和开发体验。
+## 2. 没有使用GPU，使用CPU，错误日志仍然提示"cuda error"
+部分Windows机型由于GPU型号或驱动较老，导致训练时无法使用GPU，还会导致使用不了CPU，针对此情况，可采取如下方式解决
+- 1.在PaddleX客户端安装目录下，删除"paddle"文件夹
+- 2.下载paddlepaddle-cpu（压缩文件可在[百度网盘](https://pan.baidu.com/s/1GrzLCuzuw-PAEx4BELnc0w)下载，提取码iaor，约57M)，下载解压后，将目前中的paddle文件夹拷贝至PaddleX客户端安装目录下即可
+- 3.重新启动PaddleX客户端，替换后客户端仅支持使用CPU训练模型
 
-   
+## 3. 如何升级PaddleX客户端
+PaddleX客户端目前需用户手动下载最新版升级，旧版本可直接删除原安装目录即可。升级前请备份好工作空间下的3个workspace.*.pb文件，避免升级过程可能导致项目信息丢失。
 
-2. **我可以在服务器或云平台上部署PaddleX么？**
+PaddleX更新历史和下载地址: https://www.paddlepaddle.org.cn/paddlex/download
 
-   PaddleX GUI是一个适配本地单机安装的客户端，无法在服务器上直接进行部署，您可以直接使用PaddleX API，或采用飞桨核心框架进行服务器上的部署。如果您希望使用公有算力，强烈建议您尝试飞桨产品系列中的 [EasyDL](https://ai.baidu.com/easydl/) 或 [AI Studio](https://aistudio.baidu.com/aistudio/index)进行开发。
+## 4. 如何卸载PaddleX客户端
+客户端安装本质只是解压文件到相应目录，因此卸载直接删除安装目录和桌面快捷方式即可。
 
-   
-
-3. **PaddleX支持EasyData标注的数据吗？**
-
-   支持，PaddleX可顺畅读取EasyData标注的数据。但当前版本的PaddleX GUI暂时无法支持直接导入EasyData数据格式，您可以参照文档，将[数据集进行转换](https://paddlex.readthedocs.io/zh_CN/latest/appendix/how_to_convert_dataset.html)再导入PaddleX GUI进行后续开发。
-   同时，我们也在紧密开发PaddleX GUI可直接导入EasyData数据格式的功能。
-
-   
-
-4. **为什么模型裁剪分析耗时这么长？**
-
-   模型裁剪分析过程是对模型各卷积层的敏感度信息进行分析，根据各参数对模型效果的影响进行不同比例的裁剪。此过程需要重复多次直至FLOPS满足要求，最后再进行精调训练获得最终裁剪后的模型，因此耗时较长。有关模型裁剪的原理，可参见文档[剪裁原理介绍](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#2-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E5%89%AA%E8%A3%81%E5%8E%9F%E7%90%86)
-
-   
-
-5. **如何调用后端代码？**
-
-   PaddleX 团队为您整理了相关的API接口文档，方便您学习和使用。具体请参见[PaddleX API说明文档](https://paddlex.readthedocs.io/zh_CN/latest/apis/index.html)
-   
-   
-   
-6. **如何在离线环境下使用PaddleX？**
-
-   PaddleX是支撑用户在本地离线环境中训练模型的，但是如果大家希望使用PaddleX团队为大家准备好的在标准数据集上训练的预训练模型，则需要在线环境进行下载。大家可以参照完整的无联网情况下进行模型训练的[文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/how_to_offline_run.md)查看如何一键快速下载所有预训练模型。
-
-   
-
-7. **有没有行业应用案例，或者实现好的工程实例？**
-
-   有的，PaddleX提供丰富的行业应用案例和完整的示例项目，请参考[PaddleX产业案例集](https://paddlex.readthedocs.io/zh_CN/develop/examples/index.html)
-
-**如果您有任何问题或建议，欢迎以issue的形式，或加入PaddleX官方QQ群（1045148026）直接反馈您的问题和需求**
-
-![](./images/QR.jpg)
+## 5. 使用客户端训练检测模型在测试图片中出现很多目标框，甚至同一物体上出现多个目标框
+目标检测模型和实例分割模型，在模型预测阶段，会将所有可能的目标都输出，对于输出，我们需要可以按如下方式来处理
+- 1.观察预测出来的各个目标框，各框上应该还同时包含相应框的置信度分数
+- 2.设定一个threshold，过滤掉低置信度的目标框
+上面两个步骤，在客户端的评估界面，我们可以手动输入threshold后，重新再预测；而对于在实际使用，例如Python预测部署，则根据得到结果中的'score'进行过滤
