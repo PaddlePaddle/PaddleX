@@ -27,3 +27,6 @@ PaddleX更新历史和下载地址: https://www.paddlepaddle.org.cn/paddlex/down
 - 1.观察预测出来的各个目标框，各框上应该还同时包含相应框的置信度分数
 - 2.设定一个threshold，过滤掉低置信度的目标框
 上面两个步骤，在客户端的评估界面，我们可以手动输入threshold后，重新再预测；而对于在实际使用，例如Python预测部署，则根据得到结果中的'score'进行过滤
+
+## 6. 使用CPU训练时，如何设置CPU_NUM多CPU卡进行训练
+Windows平台上由于缺少NCCL库，无法使用多GPU或多CPU训练。而对于v1.1.5版本及以下版本，当前无法设置多CPU进行训练（v1.1.5版本及以下版本，请勿在环境变量中设置CPU_NUM，可能会导致无法使用CPU进行模型训练）
