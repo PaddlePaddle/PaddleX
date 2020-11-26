@@ -202,7 +202,7 @@ class BaseAPI:
             if pretrain_weights is not None and not os.path.exists(
                     pretrain_weights):
                 if self.model_type == 'classifier':
-                    if pretrain_weights not in ['IMAGENET']:
+                    if pretrain_weights not in ['IMAGENET', 'BAIDU10W']:
                         logging.warning(
                             "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
