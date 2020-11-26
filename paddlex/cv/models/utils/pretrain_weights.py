@@ -76,6 +76,11 @@ image_pretrain = {
     'http://paddle-imagenet-models-name.bj.bcebos.com/AlexNet_pretrained.tar'
 }
 
+baidu10w_pretrain = {
+    'ResNet50_vd_BAIDU10W':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet50_vd_10w_pretrained.tar'
+}
+
 coco_pretrain = {
     'YOLOv3_DarkNet53_COCO':
     'https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar',
@@ -180,6 +185,11 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
         elif class_name == 'FastSCNN':
             logging.warning(warning_info.format(class_name, flag, 'CITYSCAPES'))
             flag = 'CITYSCAPES'
+    elif flag == 'BAIDU10W':
+        if class_name not in ['ResNet50_vd']:
+            raise Exception(
+                "Only the classifier ResNet50_vd supports BAIDU10W pretrained weights"
+            )
 
     if flag == 'IMAGENET':
         new_save_dir = save_dir
@@ -239,6 +249,37 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
             url = coco_pretrain[backbone]
         elif flag == 'CITYSCAPES':
             url = cityscapes_pretrain[backbone]
+        fname = osp.split(url)[-1].split('.')[0]
+
+        if getattr(paddlex, 'gui_mode', False):
+            paddlex.utils.download_and_decompress(url, path=new_save_dir)
+            return osp.join(new_save_dir, fname)
+        try:
+            logging.info(
+                "Connecting PaddleHub server to get pretrain weights...")
+            hub.download(backbone, save_path=new_save_dir)
+        except Exception as e:
+            logging.error(
+                "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
+                format(url),
+                exit=False)
+            if isinstance(hub.ResourceNotFoundError):
+                raise Exception("Resource for backbone {} not found".format(
+                    backbone))
+            elif isinstance(hub.ServerConnectionError):
+                raise Exception(
+                    "Cannot get reource for backbone {}, please check your internet connection"
+                    .format(backbone))
+            else:
+                raise Exception(
+                    "Unexpected error, please make sure paddlehub >= 1.6.2")
+        return osp.join(new_save_dir, backbone)
+    elif flag == 'BAIDU10W':
+        new_save_dir = save_dir
+        if hasattr(paddlex, 'pretrain_dir'):
+            new_save_dir = paddlex.pretrain_dir
+        backbone = backbone + '_BAIDU10W'
+        url = baidu10w_pretrain[backbone]
         fname = osp.split(url)[-1].split('.')[0]
 
         if getattr(paddlex, 'gui_mode', False):

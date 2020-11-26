@@ -27,7 +27,7 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, s
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代步数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。若模型为'ResNet50_vd'，则默认下载百度自研10万类预训练模型，即默认为'BAIDU10W'。
 > > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
 > > - **learning_rate** (float): 默认优化器的初始学习率。默认为0.025。
 > > - **warmup_steps** (int): 默认优化器的warmup步数，学习率将在设定的步数内，从warmup_start_lr线性增长至设定的learning_rate，默认为0。
