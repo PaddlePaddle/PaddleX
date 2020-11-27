@@ -141,9 +141,7 @@ class Compose(DetTransform):
             else:
                 return (im, im_info, label_info)
 
-        input_channel = 3
-        if hasattr(self, 'input_channel'):
-            input_channel = self.input_channel
+        input_channel = getattr(self, 'input_channel', 3)
         outputs = decode_image(im, im_info, label_info, input_channel)
         im = outputs[0]
         im_info = outputs[1]
@@ -186,6 +184,8 @@ class ResizeByShort(DetTransform):
     1. 获取图像的长边和短边长度。
     2. 根据短边与short_size的比例，计算长边的目标长度，
        此时高、宽的resize比例为short_size/原图短边长度。
+       若short_size为数组，则随机从该数组中挑选一个数值
+       作为short_size。
     3. 如果max_size>0，调整resize比例：
        如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
     4. 根据调整大小的比例对图像进行resize。

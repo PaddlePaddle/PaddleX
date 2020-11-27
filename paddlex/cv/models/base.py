@@ -135,9 +135,7 @@ class BaseAPI:
                            batch_size=1,
                            batch_num=10,
                            cache_dir="./temp"):
-        input_channel = 3
-        if hasattr(self, 'input_channel'):
-            input_channel = self.input_channel
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
@@ -205,7 +203,7 @@ class BaseAPI:
             if pretrain_weights is not None and not os.path.exists(
                     pretrain_weights):
                 if self.model_type == 'classifier':
-                    if pretrain_weights not in ['IMAGENET']:
+                    if pretrain_weights not in ['IMAGENET', 'BAIDU10W']:
                         logging.warning(
                             "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
@@ -423,9 +421,7 @@ class BaseAPI:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
         # 给transform添加arrange操作
-        input_channel = 3
-        if hasattr(self, 'input_channel'):
-            input_channel = self.input_channel
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,

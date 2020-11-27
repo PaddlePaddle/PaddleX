@@ -62,7 +62,8 @@ class YOLOv3:
             nms_topk=1000,
             nms_keep_topk=100,
             nms_iou_threshold=0.45,
-            fixed_input_shape=None):
+            fixed_input_shape=None,
+            input_channel=3):
         if anchors is None:
             anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                        [59, 119], [116, 90], [156, 198], [373, 326]]
@@ -125,6 +126,7 @@ class YOLOv3:
         self.keep_prob = 0.9
         self.downsample = [32, 16, 8]
         self.clip_bbox = True
+        self.input_channel = input_channel
 
     def _head(self, input, is_train=True):
         outputs = []
@@ -446,13 +448,16 @@ class YOLOv3:
         inputs = OrderedDict()
         if self.fixed_input_shape is not None:
             input_shape = [
-                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+                None, self.input_channel, self.fixed_input_shape[1],
+                self.fixed_input_shape[0]
             ]
             inputs['image'] = fluid.data(
                 dtype='float32', shape=input_shape, name='image')
         else:
             inputs['image'] = fluid.data(
-                dtype='float32', shape=[None, 3, None, None], name='image')
+                dtype='float32',
+                shape=[None, self.input_channel, None, None],
+                name='image')
         if self.mode == 'train':
             inputs['gt_box'] = fluid.data(
                 dtype='float32', shape=[None, None, 4], name='gt_box')

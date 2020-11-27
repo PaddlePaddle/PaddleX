@@ -12,16 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-from . import cv
-from . import tools
-
-FasterRCNN = cv.models.FasterRCNN
-YOLOv3 = cv.models.YOLOv3
-PPYOLO = cv.models.PPYOLO
-MaskRCNN = cv.models.MaskRCNN
-transforms = cv.transforms.det_transforms
-visualize = cv.models.utils.visualize.visualize_detection
-draw_pr_curve = cv.models.utils.visualize.draw_pr_curve
-coco_error_analysis = cv.models.utils.detection_eval.coco_error_analysis
-paste_objects = tools.dataset_generate.det.paste_objects
+from . import det

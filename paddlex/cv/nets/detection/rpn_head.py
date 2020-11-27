@@ -282,9 +282,9 @@ class RPNHead(object):
                         rpn_positive_overlap=self.rpn_positive_overlap,
                         rpn_negative_overlap=self.rpn_negative_overlap,
                         use_random=self.use_random)
-            score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
-            score_tgt.stop_gradient = True
             if self.rpn_cls_loss == 'SigmoidCrossEntropy':
+                score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
+                score_tgt.stop_gradient = True
                 rpn_cls_loss = fluid.layers.sigmoid_cross_entropy_with_logits(
                     x=score_pred, label=score_tgt)
             elif self.rpn_cls_loss == 'SigmoidFocalLoss':
@@ -294,6 +294,8 @@ class RPNHead(object):
                 fg_label = fluid.layers.cast(fg_label, dtype='int32')
                 fg_num = fluid.layers.reduce_sum(fg_label)
                 fg_num.stop_gradient = True
+                score_tgt = fluid.layers.cast(x=score_tgt, dtype='float32')
+                score_tgt.stop_gradient = True
                 loss = fluid.layers.sigmoid_cross_entropy_with_logits(
                     x=score_pred, label=score_tgt)
 

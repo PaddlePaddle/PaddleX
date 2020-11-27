@@ -65,7 +65,7 @@ class Compose(SegTransform):
                     )
 
     @staticmethod
-    def read_img(img_path):
+    def read_img(img_path, input_channel=3):
         img_format = imghdr.what(img_path)
         name, ext = osp.splitext(img_path)
         if img_format == 'tiff' or ext == '.img':
@@ -83,14 +83,17 @@ class Compose(SegTransform):
             im_data = dataset.ReadAsArray()
             return im_data.transpose((1, 2, 0))
         elif img_format in ['jpeg', 'bmp', 'png']:
-            return cv2.imread(img_path)
+            if input_channel == 3:
+                return cv2.imread(img_path)
+            else:
+                im = cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
         elif ext == '.npy':
             return np.load(img_path)
         else:
             raise Exception('Image format {} is not supported!'.format(ext))
 
     @staticmethod
-    def decode_image(im, label):
+    def decode_image(im, label, input_channel=3):
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
@@ -98,7 +101,7 @@ class Compose(SegTransform):
                     format(len(im.shape)))
         else:
             try:
-                im = Compose.read_img(im).astype('float32')
+                im = Compose.read_img(im, input_channel).astype('float32')
             except:
                 raise ValueError('Can\'t read The image file {}!'.format(im))
         im = im.astype('float32')
@@ -134,8 +137,9 @@ class Compose(SegTransform):
             tuple: 根据网络所需字段所组成的tuple；字段由transforms中的最后一个数据预处理操作决定。
         """
 
-        im, label = self.decode_image(im, label)
-        if self.to_rgb:
+        input_channel = getattr(self, 'input_channel', 3)
+        im, label = self.decode_image(im, label, input_channel)
+        if self.to_rgb and input_channel == 3:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if im_info is None:
             im_info = [('origin_shape', im.shape[0:2])]

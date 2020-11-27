@@ -85,6 +85,9 @@ class Predictor:
         # 主要用于batch_predict接口
         thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
         self.thread_pool = mp.pool.ThreadPool(thread_num)
+        self.input_channel = 3
+        if 'input_channel' in self.info['_init_params']:
+            self.input_channel = self.info['_init_params']['input_channel']
 
     def reset_thread_pool(self, thread_num):
         self.thread_pool.close()
@@ -144,7 +147,8 @@ class Predictor:
                 self.transforms,
                 self.model_type,
                 self.model_name,
-                thread_pool=thread_pool)
+                thread_pool=thread_pool,
+                input_channel=self.input_channel)
             res['image'] = im
         elif self.model_type == "detector":
             if self.model_name in ["PPYOLO", "YOLOv3"]:
@@ -153,7 +157,8 @@ class Predictor:
                     self.transforms,
                     self.model_type,
                     self.model_name,
-                    thread_pool=thread_pool)
+                    thread_pool=thread_pool,
+                    input_channel=self.input_channel)
                 res['image'] = im
                 res['im_size'] = im_size
             if self.model_name.count('RCNN') > 0:
@@ -162,7 +167,8 @@ class Predictor:
                     self.transforms,
                     self.model_type,
                     self.model_name,
-                    thread_pool=thread_pool)
+                    thread_pool=thread_pool,
+                    input_channel=self.input_channel)
                 res['image'] = im
                 res['im_info'] = im_resize_info
                 res['im_shape'] = im_shape
@@ -172,7 +178,8 @@ class Predictor:
                 self.transforms,
                 self.model_type,
                 self.model_name,
-                thread_pool=thread_pool)
+                thread_pool=thread_pool,
+                input_channel=self.input_channel)
             res['image'] = im
             res['im_info'] = im_info
         return res

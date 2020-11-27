@@ -38,6 +38,7 @@ class MaskRCNN(FasterRCNN):
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
+        input_channel (int): 输入图像的通道数量。默认为3。
     """
 
     def __init__(self,
@@ -45,7 +46,8 @@ class MaskRCNN(FasterRCNN):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512]):
+                 anchor_sizes=[32, 64, 128, 256, 512],
+                 input_channel=3):
         self.init_params = locals()
         backbones = [
             'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
@@ -64,6 +66,7 @@ class MaskRCNN(FasterRCNN):
         else:
             self.mask_head_resolution = 14
         self.fixed_input_shape = None
+        self.input_channel = input_channel
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
@@ -78,7 +81,8 @@ class MaskRCNN(FasterRCNN):
             test_pre_nms_top_n=test_pre_nms_top_n,
             num_convs=num_convs,
             mask_head_resolution=self.mask_head_resolution,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            input_channel=self.input_channel)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -257,11 +261,13 @@ class MaskRCNN(FasterRCNN):
                 预测框类别id、表示预测框内各像素点是否属于物体的二值图、预测框得分。
                 而关键字gt的键值是真实标注框的相关信息。
         """
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=eval_dataset.transforms,
-            mode='eval')
+            mode='eval',
+            input_channel=input_channel)
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -383,8 +389,13 @@ class MaskRCNN(FasterRCNN):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            images, transforms, self.model_type, self.__class__.__name__)
+            images,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
@@ -431,9 +442,14 @@ class MaskRCNN(FasterRCNN):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            img_file_list, transforms, self.model_type,
-            self.__class__.__name__, self.thread_pool)
+            img_file_list,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            self.thread_pool,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

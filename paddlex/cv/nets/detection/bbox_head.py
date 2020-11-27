@@ -110,7 +110,7 @@ class BBoxHead(object):
         self.diouloss_weight = diouloss_weight
         self.diouloss_is_cls_agnostic = diouloss_is_cls_agnostic
         self.diouloss_use_complete_iou_loss = diouloss_use_complete_iou_loss
-        if self.rcnn_bbox_loss == 'DIoULoss':
+        if self.rcnn_bbox_loss == 'CIoULoss':
             self.diou_loss = DiouLoss(
                 loss_weight=self.diouloss_weight,
                 is_cls_agnostic=self.diouloss_is_cls_agnostic,
@@ -238,7 +238,7 @@ class BBoxHead(object):
                 inside_weight=bbox_inside_weights,
                 outside_weight=bbox_outside_weights,
                 sigma=self.sigma)
-        elif self.rcnn_bbox_loss == 'DIoULoss':
+        elif self.rcnn_bbox_loss == 'CIoULoss':
             loss_bbox = self.diou_loss(
                 x=bbox_pred,
                 y=bbox_targets,

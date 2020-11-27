@@ -35,10 +35,43 @@ class FasterRCNN(BaseAPI):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): FasterRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18', 'ResNet50_vd_ssld']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
+        with_dcn (bool): backbone网络中是否使用deformable convolution network v2。默认为False。
+        rpn_cls_loss (str): RPN部分的分类损失函数，取值范围为['SigmoidCrossEntropy', 'SigmoidFocalLoss']。
+            当遇到模型误检了很多背景区域时，可以考虑使用'SigmoidFocalLoss'，并调整适合的`rpn_focal_loss_alpha`
+            和`rpn_focal_loss_gamma`。默认为'SigmoidCrossEntropy'。
+        rpn_focal_loss_alpha (float)：当RPN的分类损失函数设置为'SigmoidFocalLoss'时，用于调整
+            正样本和负样本的比例因子，默认为0.25。当PN的分类损失函数设置为'SigmoidCrossEntropy'时，
+            `rpn_focal_loss_alpha`的设置不生效。
+        rpn_focal_loss_gamma (float): 当RPN的分类损失函数设置为'SigmoidFocalLoss'时，用于调整
+            易分样本和难分样本的比例因子，默认为2。当RPN的分类损失函数设置为'SigmoidCrossEntropy'时，
+            `rpn_focal_loss_gamma`的设置不生效。
+        rcnn_bbox_loss (str): RCNN部分的位置回归损失函数，取值范围为['SmoothL1Loss', 'CIoULoss']。
+            默认为'SmoothL1Loss'。
+        rcnn_nms (str): RCNN部分的非极大值抑制的计算方法，取值范围为['MultiClassNMS', 'MultiClassSoftNMS',
+            'MultiClassCiouNMS']。默认为'MultiClassNMS'。当选择'MultiClassNMS'时，可以将`keep_top_k`设置成100、
+            `nms_threshold`设置成0.5、`score_threshold`设置成0.05。当选择'MultiClassSoftNMS'时，可以将`keep_top_k`设置为300、
+            `score_threshold`设置为0.01、`softnms_sigma`设置为0.5。当选择'MultiClassCiouNMS'时，可以将`keep_top_k`设置为100、
+            `score_threshold`设置成0.05、`nms_threshold`设置成0.5。
+        keep_top_k (int): RCNN部分在进行非极大值抑制计算后，每张图像保留最多保存`keep_top_k`个检测框。默认为100。
+        nms_threshold (float): RCNN部分在进行非极大值抑制时，用于剔除检测框所需的IoU阈值。
+            当`rcnn_nms`设置为`MultiClassSoftNMS`时，`nms_threshold`的设置不生效。默认为0.5。
+        score_threshold (float): RCNN部分在进行非极大值抑制前，用于过滤掉低置信度边界框所需的置信度阈值。默认为0.05。
+        softnms_sigma (float): 当`rcnn_nms`设置为`MultiClassSoftNMS`时，用于调整被抑制的检测框的置信度，
+            调整公式为`score = score * weights, weights = exp(-(iou * iou) / softnms_sigma)`。默认设为0.5。
+        bbox_assigner (str): 训练阶段，RCNN部分生成正负样本的采样方式。可选范围为['BBoxAssigner', 'LibraBBoxAssigner']。
+            当目标物体的区域只占原始图像的一小部分时，使用`LibraBBoxAssigner`采样方式模型效果更佳。默认为'BBoxAssigner'。
+        fpn_num_channels (int): FPN部分特征层的通道数量。默认为256。
+        input_channel (int): 输入图像的通道数量。默认为3。
+        rpn_batch_size_per_im (int): 训练阶段，RPN部分每张图片的正负样本的数量总和。默认为256。
+        rpn_fg_fraction (float): 训练阶段，RPN部分每张图片的正负样本数量总和中正样本的占比。默认为0.5。
+        test_pre_nms_top_n (int)：预测阶段，RPN部分做非极大值抑制计算的候选框的数量。若设置为None,
+            有FPN结构的话，`test_pre_nms_top_n`会被设置成6000, 无FPN结构的话，`test_pre_nms_top_n`会被设置成
+            1000。默认为None。
+        test_post_nms_top_n (int): 预测阶段，RPN部分做完非极大值抑制后保留的候选框的数量。默认为1000。
     """
 
     def __init__(self,
@@ -57,7 +90,6 @@ class FasterRCNN(BaseAPI):
                  nms_threshold=0.5,
                  score_threshold=0.05,
                  softnms_sigma=0.5,
-                 post_threshold=0.05,
                  bbox_assigner='BBoxAssigner',
                  fpn_num_channels=256,
                  input_channel=3,
@@ -69,7 +101,7 @@ class FasterRCNN(BaseAPI):
         super(FasterRCNN, self).__init__('detector')
         backbones = [
             'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
-            'HRNet_W18'
+            'HRNet_W18', 'ResNet50_vd_ssld'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -93,7 +125,6 @@ class FasterRCNN(BaseAPI):
         self.nms_threshold = nms_threshold
         self.score_threshold = score_threshold
         self.softnms_sigma = softnms_sigma
-        self.post_threshold = post_threshold
         self.bbox_assigner = bbox_assigner
         self.fpn_num_channels = fpn_num_channels
         self.input_channel = input_channel
@@ -181,7 +212,6 @@ class FasterRCNN(BaseAPI):
             keep_top_k=self.keep_top_k,
             nms_threshold=self.nms_threshold,
             score_threshold=self.score_threshold,
-            post_threshold=self.post_threshold,
             softnms_sigma=self.softnms_sigma,
             bbox_assigner=self.bbox_assigner,
             fpn_num_channels=self.fpn_num_channels,
@@ -369,9 +399,7 @@ class FasterRCNN(BaseAPI):
                 一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。而关键字gt的键值是真实标注框的相关信息。
         """
 
-        input_channel = 3
-        if hasattr(self, 'input_channel'):
-            input_channel = self.input_channel
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
@@ -459,10 +487,8 @@ class FasterRCNN(BaseAPI):
                     transforms,
                     model_type,
                     class_name,
-                    thread_pool=None):
-        input_channel = 3
-        if hasattr(self, input_channel):
-            input_channel = self.input_channel
+                    thread_pool=None,
+                    input_channel=3):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
@@ -516,8 +542,13 @@ class FasterRCNN(BaseAPI):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            images, transforms, self.model_type, self.__class__.__name__)
+            images,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
@@ -563,9 +594,14 @@ class FasterRCNN(BaseAPI):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            img_file_list, transforms, self.model_type,
-            self.__class__.__name__, self.thread_pool)
+            img_file_list,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            self.thread_pool,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
