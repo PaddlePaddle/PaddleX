@@ -6,6 +6,14 @@ if [ ! -d "./paddlex-encryption" ]; then
     rm -rf paddlex-encryption.zip
 fi
 
+# install yaml
+YAML_URL=https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip
+if [ ! -f "./deps/yaml-cpp.zip" ]; then
+    cd deps
+    wget -c ${YAML_URL}
+    cd ..
+fi
+
 # download pre-compiled opencv lib
 OPENCV_URL=https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2
 {

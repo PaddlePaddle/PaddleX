@@ -44,35 +44,41 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 **说明**：其中C++预测代码在PaddleX/deploy/raspberry 目录，该目录不依赖任何PaddleX下其他目录，如果需要在python下预测部署请参考[Python预测部署](./python.md)。  
 
 #### Step2：Paddle-Lite预编译库下载
-提供了下载的opt工具对应的Paddle-Lite在ArmLinux下面的预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)。  
-建议用户使用预编译库，若需要自行编译，在树莓派上LX终端输入
+提供了下载的opt工具对应2.6.1版本的Paddle-Lite在架构为armv7hf的ArmLinux下面的Full版本预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)  
+其他版本与arm架构的Paddle-Lite预测库请在官网[Releases](https://github.com/PaddlePaddle/Paddle-Lite/release)下载
+对于armv7hf架构的树莓派建议用户使用文档提供预编译库，对于架构为armv8的树莓派用户则需要自行编译，在树莓派上LX终端输入  
+
 ```
 git clone https://github.com/PaddlePaddle/Paddle-Lite.git
 cd Paddle-Lite
 sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  --build_extra=ON full_publish
-```  
+```
+对于armv7hf的架构预编库位置：`./build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`  
 
-预编库位置：`./build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`  
-
-**注意**：预测库版本需要跟opt版本一致，更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
+**注意**：预测库版本需要跟opt版本一致，检测与分割请使用Paddle-LITE的full版本预测库,更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
 
 #### Step3 软件依赖
-提供了依赖软件的预编包或者一键编译，用户不需要单独下载或编译第三方依赖软件。若需要自行编译第三方依赖软件请参考：
+提供了依赖软件的预编包或者一键编译，对于armv7树莓派用户不需要单独下载或编译第三方依赖软件，对于armv8树莓派用户需要自行编译opencv，编译第三方依赖软件请参考：
 
 - gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
 
 - opencv: 编译请参考
-[编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
+[编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)  
+**注意**:对于armv8树莓派用户，需要自行编译opencv  
 
 #### Step4: 编译
 编译`cmake`的命令在`scripts/build.sh`中，修改LITE_DIR为Paddle-Lite预测库目录，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
 ```
 # Paddle-Lite预编译库的路径
 LITE_DIR=/path/to/Paddle-Lite/inference/lib
-# gflags预编译库的路径
+# gflags预编译库的路径，若没有自行编译无需修改
 GFLAGS_DIR=$(pwd)/deps/gflags
-# opencv预编译库的路径
+# opencv预编译库的路径，若自行编译请指定到对应路径
 OPENCV_DIR=$(pwd)/deps/opencv/
+# arm处理器架构 armv7或者armv8
+ARCH=armv7
+# Lite预测库版本 light或者full
+LITE=full
 ```
 执行`build`脚本：
  ```shell
@@ -154,4 +160,5 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 ## NCS2部署
 树莓派支持通过OpenVINO在NCS2上跑PaddleX模型预测，目前仅支持PaddleX的分类网络，基于NCS2的方式包含Paddle模型转OpenVINO IR以及部署IR在NCS2上进行预测两个步骤。
 - 模型转换请参考：[PaddleX模型转换为OpenVINO IR](../openvino/export_openvino_model.md)，raspbian OS上的OpenVINO不支持模型转换，需要先在host侧转换FP16的IR。
-- 预测部署请参考[OpenVINO部署](../openvino/linux.md)中VPU在raspbian OS部署的部分
+- 预测部署请参考[OpenVINO部署](../openvino/linux.md)中VPU在raspbian OS部署的部分  
+- 目前仅支持armv7的树莓派
