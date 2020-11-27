@@ -1,5 +1,5 @@
 # Paddle-Lite预编译库的路径
-LITE_DIR=/home/pi/wsy/Paddle-Lite/build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx
+LITE_DIR=/path/to/Paddle-Lite/inference/lib
 
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags
