@@ -105,7 +105,8 @@ class X2Seg(object):
         """
         assert osp.exists(image_dir), "The image folder does not exist!"
         assert osp.exists(json_dir), "The json folder does not exist!"
-        assert osp.exists(dataset_save_dir), "The save folder does not exist!"
+        if not osp.exists(dataset_save_dir):
+            os.makedirs(dataset_save_dir)
         # Convert the image files.
         new_image_dir = osp.join(dataset_save_dir, "JPEGImages")
         if osp.exists(new_image_dir):
@@ -158,7 +159,7 @@ class JingLing2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
@@ -211,7 +212,7 @@ class LabelMe2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             with open(json_file, mode="r", \
                               encoding=get_encoding(json_file)) as j:
@@ -297,7 +298,7 @@ class EasyData2Seg(X2Seg):
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
             if not osp.exists(json_file):
-                os.remove(os.remove(osp.join(image_dir, img_name)))
+                os.remove(osp.join(image_dir, img_name))
                 continue
             img_file = osp.join(image_dir, img_name)
             img = np.asarray(PIL.Image.open(img_file))

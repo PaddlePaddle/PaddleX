@@ -14,6 +14,8 @@
 
 from __future__ import absolute_import
 
+__version__ = '1.2.6'
+
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
     os.environ['FLAGS_eager_delete_tensor_gb'] = '0.0'
@@ -22,6 +24,19 @@ if 'FLAGS_allocator_strategy' not in os.environ:
 if "CUDA_VISIBLE_DEVICES" in os.environ:
     if os.environ["CUDA_VISIBLE_DEVICES"].count("-1") > 0:
         os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
+import paddle
+version = paddle.__version__.strip().split('.')
+if version[0] == '1':
+    if version[1] != '8':
+        raise Exception(
+            'For running paddlex(v{}), Version of paddlepaddle should be greater than 1.8.3'.
+            format(__version__))
+elif version[0] == '2':
+    print(
+        "[WARNING] You are using paddlepaddle(v{}) which may not compatible with paddlex(v{}), paddlepaddle==1.8.4 is strongly recommended.".
+        format(paddle.__version__, __version__))
+    paddle.enable_static()
 
 from .utils.utils import get_environ_info
 from . import cv
@@ -43,10 +58,6 @@ except:
         "[WARNING] pycocotools install: https://paddlex.readthedocs.io/zh_CN/develop/install.html#pycocotools"
     )
 
-import paddlehub as hub
-if hub.version.hub_version < '1.8.2':
-    raise Exception("[ERROR] paddlehub >= 1.8.2 is required")
-
 env_info = get_environ_info()
 load_model = cv.models.load_model
 datasets = cv.datasets
@@ -55,5 +66,3 @@ transforms = cv.transforms
 log_level = 2
 
 from . import interpret
-
-__version__ = '1.2.1'

@@ -93,17 +93,19 @@ class Compose(SegTransform):
             raise Exception('Image format {} is not supported!'.format(ext))
 
     @staticmethod
-    def decode_image(im, label, input_channel=3):
+    def decode_image(im_path, label, input_channel=3):
         if isinstance(im, np.ndarray):
             if len(im.shape) != 3:
                 raise Exception(
                     "im should be 3-dimensions, but now is {}-dimensions".
                     format(len(im.shape)))
+            im = im_path
         else:
             try:
-                im = Compose.read_img(im, input_channel).astype('float32')
+                im = Compose.read_img(im_path, input_channel).astype('float32')
             except:
-                raise ValueError('Can\'t read The image file {}!'.format(im))
+                raise ValueError('Can\'t read The image file {}!'.format(
+                    im_path))
         im = im.astype('float32')
         if label is not None:
             if isinstance(label, np.ndarray):

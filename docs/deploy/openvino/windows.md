@@ -5,7 +5,7 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 
 ## 前置条件
 * Visual Studio 2019
-* OpenVINO 2020.4
+* OpenVINO 2021.1+
 * CMake 3.0+
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  
@@ -42,9 +42,11 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 提供了依赖软件预编译库:
 - [gflas](https://bj.bcebos.com/paddlex/deploy/windows/third-parts.zip)  
 - [opencv](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
+
 请下载上面两个连接的预编译库。若需要自行下载请参考：
 - gflags:[下载地址](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags)
 - opencv:[下载地址](https://opencv.org/releases/)  
+
 下载完opencv后需要配置环境变量，如下流程所示  
     - 我的电脑->属性->高级系统设置->环境变量
     - 在系统变量中找到Path（如没有，自行创建），并双击编辑

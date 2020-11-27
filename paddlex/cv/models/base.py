@@ -153,10 +153,11 @@ class BaseAPI:
         is_use_cache_file = True
         if cache_dir is None:
             is_use_cache_file = False
+        quant_prog = self.test_prog.clone(for_test=True)
         post_training_quantization = PaddleXPostTrainingQuantization(
             executor=self.exe,
             dataset=dataset,
-            program=self.test_prog,
+            program=quant_prog,
             inputs=self.test_inputs,
             outputs=self.test_outputs,
             batch_size=batch_size,
@@ -370,6 +371,7 @@ class BaseAPI:
             var.name for var in list(self.test_inputs.values())
         ]
         test_outputs = list(self.test_outputs.values())
+        save_prog = self.test_prog.clone(for_test=True)
         with fluid.scope_guard(self.scope):
             fluid.io.save_inference_model(
                 dirname=save_dir,
@@ -377,7 +379,7 @@ class BaseAPI:
                 params_filename='__params__',
                 feeded_var_names=test_input_names,
                 target_vars=test_outputs,
-                main_program=self.test_prog)
+                main_program=save_prog)
         model_info = self.get_model_info()
         model_info['status'] = 'Infer'
 
@@ -484,6 +486,9 @@ class BaseAPI:
         best_accuracy = -1.0
         best_model_epoch = -1
         start_epoch = self.completed_epochs
+        # task_id: 目前由PaddleX GUI赋值
+        # 用于在VisualDL日志中注明所属任务id
+        task_id = getattr(paddlex, "task_id", "")
         for i in range(start_epoch, num_epochs):
             records = list()
             step_start_time = time.time()
@@ -514,8 +519,8 @@ class BaseAPI:
                     if use_vdl:
                         for k, v in step_metrics.items():
                             log_writer.add_scalar(
-                                'Metrics/Training(Step): {}'.format(k), v,
-                                num_steps)
+                                '{}-Metrics/Training(Step): {}'.format(
+                                    task_id, k), v, num_steps)
 
                     # 估算剩余时间
                     avg_step_time = np.mean(time_stat)
@@ -581,7 +586,8 @@ class BaseAPI:
                                 if v.size > 1:
                                     continue
                             log_writer.add_scalar(
-                                "Metrics/Eval(Epoch): {}".format(k), v, i + 1)
+                                "{}-Metrics/Eval(Epoch): {}".format(
+                                    task_id, k), v, i + 1)
                 self.save_model(save_dir=current_save_dir)
                 if getattr(self, 'use_ema', False):
                     self.exe.run(self.ema.restore_program)

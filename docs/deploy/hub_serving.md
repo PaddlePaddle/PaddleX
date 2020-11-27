@@ -1,4 +1,4 @@
-# 轻量级服务化部署
+# PaddleHub轻量级服务化部署
 ## 简介
 借助`PaddleHub-Serving`，可以将`PaddleX`的`Inference Model`进行快速部署，以提供在线预测的能力。
 

@@ -166,8 +166,7 @@ class PPYOLO(BaseAPI):
             use_matrix_nms=self.use_matrix_nms,
             use_fine_grained_loss=self.use_fine_grained_loss,
             use_iou_loss=self.use_iou_loss,
-            batch_size=self.batch_size_per_gpu
-            if hasattr(self, 'batch_size_per_gpu') else 8,
+            batch_size=getattr(self, 'batch_size_per_gpu', 8),
             input_channel=self.input_channel)
         if mode == 'train' and self.use_iou_loss or self.use_iou_aware:
             model.max_height = self.max_height
@@ -307,8 +306,7 @@ class PPYOLO(BaseAPI):
         self.use_ema = use_ema
         self.ema_decay = ema_decay
 
-        self.batch_size_per_gpu = int(train_batch_size /
-                                      paddlex.env_info['num'])
+        self.batch_size_per_gpu = self._get_single_card_bs(train_batch_size)
         if self.use_fine_grained_loss:
             for transform in train_dataset.transforms.transforms:
                 if isinstance(transform, paddlex.det.transforms.Resize):
@@ -572,6 +570,9 @@ class PPYOLO(BaseAPI):
             self.__class__.__name__,
             self.thread_pool,
             input_channel=input_channel)
+        im, im_size = PPYOLO._preprocess(
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

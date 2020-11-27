@@ -1,6 +1,16 @@
 # 模型压缩
 
+## paddlex.slim.prune.analysis
+> **计算参数敏感度**
+```
+paddlex.slim.prune.analysis(model, dataset, batch_size, save_file='model.sensi.data')
+```
+此函数接口与`paddlex.slim.cal_params_sensitivites`接口功能一致，仅修改了函数名，参数名，顺序和默认值，推荐使用此接口。
+
+使用示例参考[教程-模型裁剪训练](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/slim/prune)
+
 ## paddlex.slim.cal_params_sensitivities
+> 此函数接口与`paddlex.slim.prune.analysis`功能一致，推荐使用`paddlex.slim.prune.analysis`接口  
 > **计算参数敏感度**  
 ```
 paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size=8)

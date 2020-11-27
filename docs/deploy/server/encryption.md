@@ -165,3 +165,20 @@ D:\projects\images\xiaoduxiongn.jpeg
 .\paddlex_inference\detector.exe --model_dir=D:\projects\paddlex_encrypted_model --image_list=D:\projects\images_list.txt --use_gpu=1 --save_dir=output --key=kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=
 ```
 `--key`传入加密工具输出的密钥，例如`kLAl1qOs5uRbFt0/RrIDTZW2+tOf5bzvUIaHGF8lJ1c=`, 图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
+
+## 附录-PaddlePaddle其它模型加密使用
+
+PaddleX提供的加密方案不仅只适配于PaddleX训练的模型，对于PaddlePaddle其它模型套件或用户自行开发的模型同样适用。用户完全可以使用PaddleX的加密工具来加密如PaddleDetection、PaddleSeg、PaddleClas、PaddleOCR等套件训练的模型。
+
+### 加密方法
+1. 下载PaddleX加密工具
+- [Linux版本](https://bj.bcebos.com/paddlex/tools/1.2.0/paddlex-encryption.zip)
+- [Windows版本](https://bj.bcebos.com/paddlex/tools/win/1.2.0/paddlex-encryption.zip)
+
+2. 加密模型
+一般我们使用Paddle训练导出的部署模型都可以保存为`__model__`和`__params__`两个文件，PaddleX在模型保存时，还会额外再保存一个`model.yml`文件，用于存储模型的一些信息。PaddleX在加密模型时，会读取模型目录中这三个文件，进行加密，生成`__model__.encrypted`， `__params__.encrypted`和`model.yml.encrypted`三个文件。  
+因此在使用PaddleX加密工具加密别的套件或用户自行开发训练导出的模型时，需在模型目录中包含`__model__`，`__params__`和`model.yml`三个文件。非PaddleX训练的模型，用户可自行创建一个`model.yml`的同名文件，加密后无需理会此文件即可。
+> 模型加密命令参考本文档前面步骤
+
+3. 加载加密模型
+在使用Paddle预测库加载加密模型时，C++代码开发参考[Paddle部署代码模型加载函数](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/src/paddlex.cpp#L46)，同时需要引入新的头文件`paddle_model_decrypt.h`，相应依赖就在下载的加密工具中，CMakelist中参考[PaddleX的依赖](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/CMakeLists.txt#L52)即可。
