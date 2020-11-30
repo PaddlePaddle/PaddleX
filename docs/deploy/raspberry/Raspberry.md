@@ -54,7 +54,7 @@ git clone https://github.com/PaddlePaddle/Paddle-Lite.git
 cd Paddle-Lite
 sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  --build_extra=ON full_publish
 ```
-对于armv7hf的架构预编库位置：`./build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`  
+预编库位置：`./build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`  
 
 **注意**：预测库版本需要跟opt版本一致，检测与分割请使用Paddle-LITE的full版本预测库,更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
 
