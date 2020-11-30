@@ -18,7 +18,7 @@
 | --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
 | --img  | 要预测的图片文件路径 |
 | --image_list  | 按行存储图片路径的.txt文件 |
-| --device  | 运行的平台, 默认值为"CPU" |
+| --device  | 运行的平台,可选项{"CPU"，"MYRIAD"} ,默认值为"CPU"，VPU下上请使用"MYRIAD" |
 | --cfg_file | PaddleX model 的.yml配置文件 |
 
 ### 样例
