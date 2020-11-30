@@ -158,8 +158,7 @@ class Predictor:
                 self.transforms,
                 self.model_type,
                 self.model_name,
-                thread_pool=thread_pool,
-                input_channel=self.input_channel)
+                thread_pool=thread_pool)
             res['image'] = im
         elif self.model_type == "detector":
             if self.model_name in ["PPYOLO", "YOLOv3"]:

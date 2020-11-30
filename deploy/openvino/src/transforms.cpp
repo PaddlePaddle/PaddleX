@@ -122,7 +122,18 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
               << ", but they should be greater than 0." << std::endl;
     return false;
   }
-  if (im->channels() < 4) {
+  if (im->channels() < 5) {
+    cv::Scalar value;
+    if (im->channels() == 1) {
+      value = cv::Scalar(im_value_[0]);
+    } else if (im->channels() == 2) {
+      value = cv::Scalar(im_value_[0], im_value_[1]);
+    } else if (im->channels() == 3) {
+      value = cv::Scalar(im_value_[0], im_value_[1], im_value_[2]);
+    } else if (im->channels() == 4) {
+      value = cv::Scalar(im_value_[0], im_value_[1], im_value_[2],
+                                    im_value_[3]);
+    }
     cv::copyMakeBorder(
     *im,
     *im,
@@ -131,7 +142,7 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
     0,
     padding_w,
     cv::BORDER_CONSTANT,
-    cv::Scalar(0));
+    value);
   } else {
     std::vector<cv::Mat> padded_im_per_channel(im->channels());
     #pragma omp parallel for num_threads(im->channels())

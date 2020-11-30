@@ -67,6 +67,7 @@ class MaskRCNN(FasterRCNN):
             self.mask_head_resolution = 14
         self.fixed_input_shape = None
         self.input_channel = input_channel
+        self.with_dcn = False
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000

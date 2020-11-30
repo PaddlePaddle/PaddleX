@@ -94,11 +94,11 @@ class Compose(SegTransform):
 
     @staticmethod
     def decode_image(im_path, label, input_channel=3):
-        if isinstance(im, np.ndarray):
-            if len(im.shape) != 3:
+        if isinstance(im_path, np.ndarray):
+            if len(im_path.shape) != 3:
                 raise Exception(
                     "im should be 3-dimensions, but now is {}-dimensions".
-                    format(len(im.shape)))
+                    format(len(im_path.shape)))
             im = im_path
         else:
             try:
