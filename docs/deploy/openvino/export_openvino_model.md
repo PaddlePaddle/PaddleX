@@ -8,6 +8,7 @@
 * OpenVINO 2021.1+
 
 **说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，ONNX请安装1.6.0以上版本否则会出现转模型错误。
+**注意**：安装OpenVINO时请务必安装官网教程初始化OpenVINO运行环境，并安装相关依赖  
 
 请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
 
