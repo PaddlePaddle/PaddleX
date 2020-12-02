@@ -95,7 +95,9 @@ int main(int argc, char** argv) {
       for (int j = i; j < im_vec_size; ++j) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
-      model.predict(im_vec, &results, thread_num);
+      if (!model.predict(im_vec, &results, thread_num)) {
+        return -1;
+      }
       // Output predicted bounding boxes
       for (int j = 0; j < im_vec_size - i; ++j) {
         for (int k = 0; k < results[j].boxes.size(); ++k) {
@@ -123,7 +125,9 @@ int main(int argc, char** argv) {
   } else {
     PaddleX::DetResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
-    model.predict(im, &result);
+    if (!model.predict(im, &result)) {
+      return -1;
+    }
     // Output predicted bounding boxes
     for (int i = 0; i < result.boxes.size(); ++i) {
       std::cout << "image file: " << FLAGS_image << std::endl;

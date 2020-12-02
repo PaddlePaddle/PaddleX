@@ -171,7 +171,10 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   inputs_.clear();
   if (type == "detector") {
     std::cerr << "Loading model is a 'detector', DetResult should be passed to "
-                 "function predict()!"
+                 "function predict()!" << std::endl;
+    return false;
+  } else if (type == "segmenter") {
+    std::cerr << "Loading model is a 'segmenter', SegResult should be passed "
                  "to function predict()!" << std::endl;
     return false;
   }

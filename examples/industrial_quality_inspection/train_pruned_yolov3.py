@@ -6,10 +6,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 from paddlex.det import transforms
 import paddlex as pdx
 
-# 下载和解压铝材缺陷检测数据集
-aluminum_dataset = 'https://bj.bcebos.com/paddlex/examples/industrial_quality_inspection/datasets/aluminum_inspection.tar.gz'
-pdx.utils.download_and_decompress(aluminum_dataset, path='./')
-
 # 定义训练和验证时的transforms
 # API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/det_transforms.html
 train_transforms = transforms.Compose([
@@ -55,5 +51,8 @@ model.train(
     warmup_steps=4000,
     learning_rate=0.000125,
     lr_decay_epochs=[240, 320],
-    save_dir='output/yolov3_mobilenetv3',
-    use_vdl=True)
+    pretrain_weights='output/yolov3_mobilenetv3/best_model',
+    save_dir='output/yolov3_mobilenetv3_prune',
+    use_vdl=True,
+    sensitivities_file='./sensitivities.data',
+    eval_metric_loss=0.05)

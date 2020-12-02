@@ -140,7 +140,9 @@ int main(int argc, char** argv) {
       break;
     }
     // Begin to predict
-    model.predict(frame, &result);
+    if (!model.predict(frame, &result)) {
+      return -1;
+    }
     // Visualize results
     cv::Mat vis_img = PaddleX::Visualize(frame, result, model.labels);
     if (FLAGS_show_result || FLAGS_use_camera) {

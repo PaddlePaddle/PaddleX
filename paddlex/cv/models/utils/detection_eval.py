@@ -1,3 +1,4 @@
+# coding: utf8
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -771,6 +772,21 @@ class DetectionMAP(object):
 
 
 def makeplot(rs, ps, outDir, class_name, iou_type):
+    """针对某个特定类别，绘制不同评估要求下的准确率和召回率。
+       绘制结果说明参考COCODataset官网给出分析工具说明https://cocodataset.org/#detection-eval。
+
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+
+       Args:
+           rs (np.array): 在不同置信度阈值下计算得到的召回率。
+           ps (np.array): 在不同置信度阈值下计算得到的准确率。ps与rs相同位置下的数值为同一个置信度阈值
+               计算得到的准确率与召回率。
+           outDir (str): 图表保存的路径。
+           class_name (str): 类别名。
+           iou_type (str): iou计算方式，若为检测框，则设置为'bbox'，若为像素级分割结果，则设置为'segm'。
+
+    """
+
     import matplotlib.pyplot as plt
 
     cs = np.vstack([
@@ -809,6 +825,24 @@ def makeplot(rs, ps, outDir, class_name, iou_type):
 
 
 def analyze_individual_category(k, cocoDt, cocoGt, catId, iou_type):
+    """针对某个特定类别，分析忽略亚类混淆和类别混淆时的准确率。
+
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+
+       Args:
+           k (int): 待分析类别的序号。
+           cocoDt (pycocotols.coco.COCO): 按COCO类存放的预测结果。
+           cocoGt (pycocotols.coco.COCO): 按COCO类存放的真值。
+           catId (int): 待分析类别在数据集中的类别id。
+           iou_type (str): iou计算方式，若为检测框，则设置为'bbox'，若为像素级分割结果，则设置为'segm'。
+
+       Returns:
+           int:
+           dict: 有关键字'ps_supercategory'和'ps_allcategory'。关键字'ps_supercategory'的键值是忽略亚类间
+               混淆时的准确率，关键字'ps_allcategory'的键值是忽略类别间混淆时的准确率。
+
+    """
+
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
 
@@ -868,8 +902,23 @@ def coco_error_analysis(eval_details_file=None,
                         pred_bbox=None,
                         pred_mask=None,
                         save_dir='./output'):
-    """
-    Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+    """逐个分析模型预测错误的原因，并将分析结果以图表的形式展示。
+       分析结果说明参考COCODataset官网给出分析工具说明https://cocodataset.org/#detection-eval。
+
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+
+       Args:
+           eval_details_file (str):  模型评估结果的保存路径，包含真值信息和预测结果。
+           gt (list): 数据集的真值信息。默认值为None。
+           pred_bbox (list): 模型在数据集上的预测框。默认值为None。
+           pred_mask (list): 模型在数据集上的预测mask。默认值为None。
+           save_dir (str): 可视化结果保存路径。默认值为'./output'。
+
+        Note:
+           eval_details_file的优先级更高，只要eval_details_file不为None，
+           就会从eval_details_file提取真值信息和预测结果做分析。
+           当eval_details_file为None时，则用gt、pred_mask、pred_mask做分析。
+
     """
 
     from multiprocessing import Pool

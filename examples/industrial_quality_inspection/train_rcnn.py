@@ -1,7 +1,7 @@
 # 环境变量配置，用于控制是否使用GPU
 # 说明文档：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html#gpu
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3,4'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 from paddlex.det import transforms
 import paddlex as pdx
@@ -65,10 +65,10 @@ model = pdx.det.FasterRCNN(
 model.train(
     num_epochs=80,
     train_dataset=train_dataset,
-    train_batch_size=10,
+    train_batch_size=2,
     eval_dataset=eval_dataset,
-    learning_rate=0.0125,
+    learning_rate=0.0025,
     lr_decay_epochs=[60, 70],
-    warmup_steps=1000,
+    warmup_steps=5000,
     save_dir='output/faster_rcnn_r50_vd_dcn',
     use_vdl=True)

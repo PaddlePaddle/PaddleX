@@ -32,5 +32,4 @@ if not os.path.exists(save_dir):
 
 model = pdx.load_model(model_dir)
 res = model.predict(img_file)
-det_vis = pdx.det.visualize(
-    img_file, res, threshold=score_threshold, save_dir=save_dir)
+pdx.det.visualize(img_file, res, threshold=score_threshold, save_dir=save_dir)

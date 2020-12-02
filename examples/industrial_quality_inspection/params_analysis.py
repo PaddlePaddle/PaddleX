@@ -19,7 +19,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import paddlex as pdx
 
 
-def cal_sensitivies_file(model_dir, dataset, save_file):
+def params_analysis(model_dir, dataset, batch_size, save_file):
     # 加载模型
     model = pdx.load_model(model_dir)
 
@@ -30,8 +30,11 @@ def cal_sensitivies_file(model_dir, dataset, save_file):
         label_list=os.path.join(dataset, 'labels.txt'),
         transforms=model.eval_transforms)
 
-    pdx.slim.cal_params_sensitivities(
-        model, save_file, eval_dataset, batch_size=8)
+    pdx.slim.prune.analysis(
+        model,
+        dataset=eval_dataset,
+        batch_size=batch_size,
+        save_file=save_file)
 
 
 if __name__ == '__main__':
@@ -46,6 +49,7 @@ if __name__ == '__main__':
         default="./aluminum_inspection",
         type=str,
         help="The model path.")
+    parser.add_argument("--batch_size", default=8, type=int, help="Batch size")
     parser.add_argument(
         "--save_file",
         default="./sensitivities.data",
@@ -53,4 +57,5 @@ if __name__ == '__main__':
         help="The sensitivities file path.")
 
     args = parser.parse_args()
-    cal_sensitivies_file(args.model_dir, args.dataset, args.save_file)
+    params_analysis(args.model_dir, args.dataset, args.batch_size,
+                    args.save_file)

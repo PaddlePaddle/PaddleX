@@ -169,8 +169,7 @@ paddlex.det.coco_error_analysis(eval_details_file=None, gt=None, pred_bbox=None,
 > * **gt** (list): 数据集的真值信息。默认值为None。
 > * **pred_bbox** (list): 模型在数据集上的预测框。默认值为None。
 > * **pred_mask** (list): 模型在数据集上的预测mask。默认值为None。
-> * **iou_thresh** (float): 判断预测框或预测mask为真阳时的IoU阈值。默认值为0.5。
-> * **save_dir** (str): 可视化结果保存路径。默认值为'./'。
+> * **save_dir** (str): 可视化结果保存路径。默认值为'./output'。
 
 **注意：**`eval_details_file`的优先级更高，只要`eval_details_file`不为None，就会从`eval_details_file`提取真值信息和预测结果做分析。当`eval_details_file`为None时，则用`gt`、`pred_mask`、`pred_mask`做分析。
 

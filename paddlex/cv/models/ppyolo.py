@@ -166,7 +166,7 @@ class PPYOLO(BaseAPI):
             use_matrix_nms=self.use_matrix_nms,
             use_fine_grained_loss=self.use_fine_grained_loss,
             use_iou_loss=self.use_iou_loss,
-            batch_size=getattr(self, 'batch_size_per_gpu', 8),
+            batch_size=getattr(self, 'batch_size_per_gpu', None),
             input_channel=self.input_channel)
         if mode == 'train' and self.use_iou_loss or self.use_iou_aware:
             model.max_height = self.max_height

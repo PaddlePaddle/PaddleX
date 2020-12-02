@@ -146,8 +146,6 @@ class VOCDetection(Dataset):
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
                         1:-1]
                     cname = obj.find(name_tag).text.strip()
-                    if cname in ['bu_dao_dian', 'jiao_wei_lou_di']:
-                        cname = 'lou_di'
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
                     diff_tag = pattern.findall(str(ET.tostringlist(obj)))
