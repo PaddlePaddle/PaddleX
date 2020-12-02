@@ -45,4 +45,4 @@ Seg分析器用于计算图像截断后的均值和方差的接口。
 
 [代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/cal_clipped_mean_std.py)
 
-[计算结果示例](../../examples/multi-channel_remote_sensing/analysis.html#id4)
+[计算结果示例](../examples/multi-channel_remote_sensing/analysis.html#id4)
