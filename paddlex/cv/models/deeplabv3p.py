@@ -459,12 +459,14 @@ class DeepLabv3p(BaseAPI):
                     transforms,
                     model_type,
                     class_name,
-                    thread_pool=None):
+                    thread_pool=None,
+                    input_channel=3):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
             transforms=transforms,
-            mode='test')
+            mode='test',
+            input_channel=input_channel)
         if thread_pool is not None:
             batch_data = thread_pool.map(transforms, images)
         else:
@@ -523,8 +525,13 @@ class DeepLabv3p(BaseAPI):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_info = DeepLabv3p._preprocess(
-            images, transforms, self.model_type, self.__class__.__name__)
+            images,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
@@ -553,9 +560,14 @@ class DeepLabv3p(BaseAPI):
             raise Exception("im_file must be list/tuple")
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_info = DeepLabv3p._preprocess(
-            img_file_list, transforms, self.model_type,
-            self.__class__.__name__, self.thread_pool)
+            img_file_list,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            self.thread_pool,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

@@ -26,6 +26,8 @@ from .rpn_head import (RPNHead, FPNRPNHead)
 from .roi_extractor import (RoIAlign, FPNRoIAlign)
 from .bbox_head import (BBoxHead, TwoFCHead)
 from ..resnet import ResNetC5
+from .loss.diou_loss import DiouLoss
+from .ops import BBoxAssigner, LibraBBoxAssigner
 
 __all__ = ['FasterRCNN']
 
@@ -44,6 +46,7 @@ class FasterRCNN(object):
     def __init__(
             self,
             backbone,
+            input_channel=3,
             mode='train',
             num_classes=81,
             with_fpn=False,
@@ -63,6 +66,9 @@ class FasterRCNN(object):
             test_pre_nms_top_n=6000,
             test_post_nms_top_n=1000,
             test_nms_thresh=0.7,
+            rpn_cls_loss='SigmoidCrossEntropy',
+            rpn_focal_loss_alpha=0.25,
+            rpn_focal_loss_gamma=2,
             #roi_extractor
             roi_extractor=None,
             #bbox_head
@@ -70,6 +76,9 @@ class FasterRCNN(object):
             keep_top_k=100,
             nms_threshold=0.5,
             score_threshold=0.05,
+            rcnn_nms='MultiClassNMS',
+            softnms_sigma=0.5,
+            post_threshold=.05,
             #bbox_assigner
             batch_size_per_im=512,
             fg_fraction=.25,
@@ -77,7 +86,13 @@ class FasterRCNN(object):
             bg_thresh_hi=.5,
             bg_thresh_lo=0.,
             bbox_reg_weights=[0.1, 0.1, 0.2, 0.2],
-            fixed_input_shape=None):
+            fixed_input_shape=None,
+            rcnn_bbox_loss='SmoothL1Loss',
+            diouloss_weight=10.0,
+            diouloss_is_cls_agnostic=False,
+            diouloss_use_complete_iou_loss=True,
+            bbox_assigner='BBoxAssigner',
+            fpn_num_channels=256):
         super(FasterRCNN, self).__init__()
         self.backbone = backbone
         self.mode = mode
@@ -89,6 +104,8 @@ class FasterRCNN(object):
             else:
                 fpn = FPN()
         self.fpn = fpn
+        if self.fpn is not None:
+            self.fpn.num_chan = fpn_num_channels
         self.num_classes = num_classes
         if rpn_head is None:
             if self.fpn is None:
@@ -104,7 +121,10 @@ class FasterRCNN(object):
                     train_nms_thresh=train_nms_thresh,
                     test_pre_nms_top_n=test_pre_nms_top_n,
                     test_post_nms_top_n=test_post_nms_top_n,
-                    test_nms_thresh=test_nms_thresh)
+                    test_nms_thresh=test_nms_thresh,
+                    rpn_cls_loss=rpn_cls_loss,
+                    rpn_focal_loss_alpha=rpn_focal_loss_alpha,
+                    rpn_focal_loss_gamma=rpn_focal_loss_gamma)
             else:
                 rpn_head = FPNRPNHead(
                     anchor_start_size=anchor_sizes[0],
@@ -121,7 +141,10 @@ class FasterRCNN(object):
                     train_nms_thresh=train_nms_thresh,
                     test_pre_nms_top_n=test_pre_nms_top_n,
                     test_post_nms_top_n=test_post_nms_top_n,
-                    test_nms_thresh=test_nms_thresh)
+                    test_nms_thresh=test_nms_thresh,
+                    rpn_cls_loss=rpn_cls_loss,
+                    rpn_focal_loss_alpha=rpn_focal_loss_alpha,
+                    rpn_focal_loss_gamma=rpn_focal_loss_gamma)
         self.rpn_head = rpn_head
         if roi_extractor is None:
             if self.fpn is None:
@@ -145,7 +168,15 @@ class FasterRCNN(object):
                 keep_top_k=keep_top_k,
                 nms_threshold=nms_threshold,
                 score_threshold=score_threshold,
-                num_classes=num_classes)
+                rcnn_nms=rcnn_nms,
+                softnms_sigma=softnms_sigma,
+                post_threshold=post_threshold,
+                num_classes=num_classes,
+                rcnn_bbox_loss=rcnn_bbox_loss,
+                diouloss_weight=diouloss_weight,
+                diouloss_is_cls_agnostic=diouloss_is_cls_agnostic,
+                diouloss_use_complete_iou_loss=diouloss_use_complete_iou_loss)
+
         self.bbox_head = bbox_head
         self.batch_size_per_im = batch_size_per_im
         self.fg_fraction = fg_fraction
@@ -155,6 +186,27 @@ class FasterRCNN(object):
         self.bbox_reg_weights = bbox_reg_weights
         self.rpn_only = rpn_only
         self.fixed_input_shape = fixed_input_shape
+        if bbox_assigner == 'BBoxAssigner':
+            self.bbox_assigner = BBoxAssigner(
+                batch_size_per_im=batch_size_per_im,
+                fg_fraction=fg_fraction,
+                fg_thresh=fg_thresh,
+                bg_thresh_hi=bg_thresh_hi,
+                bg_thresh_lo=bg_thresh_lo,
+                bbox_reg_weights=bbox_reg_weights,
+                num_classes=num_classes,
+                shuffle_before_sample=self.rpn_head.use_random)
+        elif bbox_assigner == 'LibraBBoxAssigner':
+            self.bbox_assigner = LibraBBoxAssigner(
+                batch_size_per_im=batch_size_per_im,
+                fg_fraction=fg_fraction,
+                fg_thresh=fg_thresh,
+                bg_thresh_hi=bg_thresh_hi,
+                bg_thresh_lo=bg_thresh_lo,
+                bbox_reg_weights=bbox_reg_weights,
+                num_classes=num_classes,
+                shuffle_before_sample=self.rpn_head.use_random)
+        self.input_channel = input_channel
 
     def build_net(self, inputs):
         im = inputs['image']
@@ -175,20 +227,12 @@ class FasterRCNN(object):
 
         if self.mode == 'train':
             rpn_loss = self.rpn_head.get_loss(im_info, gt_bbox, is_crowd)
-            outputs = fluid.layers.generate_proposal_labels(
+            outputs = self.bbox_assigner(
                 rpn_rois=rois,
                 gt_classes=inputs['gt_label'],
                 is_crowd=inputs['is_crowd'],
                 gt_boxes=inputs['gt_box'],
-                im_info=inputs['im_info'],
-                batch_size_per_im=self.batch_size_per_im,
-                fg_fraction=self.fg_fraction,
-                fg_thresh=self.fg_thresh,
-                bg_thresh_hi=self.bg_thresh_hi,
-                bg_thresh_lo=self.bg_thresh_lo,
-                bbox_reg_weights=self.bbox_reg_weights,
-                class_nums=self.num_classes,
-                use_random=self.rpn_head.use_random)
+                im_info=inputs['im_info'])
 
             rois = outputs[0]
             labels_int32 = outputs[1]
@@ -229,13 +273,16 @@ class FasterRCNN(object):
 
         if self.fixed_input_shape is not None:
             input_shape = [
-                None, 3, self.fixed_input_shape[1], self.fixed_input_shape[0]
+                None, self.input_channel, self.fixed_input_shape[1],
+                self.fixed_input_shape[0]
             ]
             inputs['image'] = fluid.data(
                 dtype='float32', shape=input_shape, name='image')
         else:
             inputs['image'] = fluid.data(
-                dtype='float32', shape=[None, 3, None, None], name='image')
+                dtype='float32',
+                shape=[None, self.input_channel, None, None],
+                name='image')
         if self.mode == 'train':
             inputs['im_info'] = fluid.data(
                 dtype='float32', shape=[None, 3], name='im_info')

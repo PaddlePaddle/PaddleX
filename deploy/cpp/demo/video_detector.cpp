@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
     if (FLAGS_use_camera) {
       video_fourcc = 828601953;
     } else {
-      video_fourcc = static_cast<int>(capture.get(CV_CAP_PROP_FOURCC));
+      video_fourcc = CV_FOURCC('M', 'J', 'P', 'G');
     }
 
     if (FLAGS_use_camera) {
@@ -141,7 +141,9 @@ int main(int argc, char** argv) {
       break;
     }
     // Begin to predict
-    model.predict(frame, &result);
+    if (!model.predict(frame, &result)) {
+      return -1;
+    }
     // Visualize results
     cv::Mat vis_img =
         PaddleX::Visualize(frame, result, model.labels, FLAGS_threshold);
