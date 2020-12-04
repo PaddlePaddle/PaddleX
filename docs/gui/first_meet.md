@@ -15,7 +15,7 @@
 
 ## 支持PaddleX
 
-当前GitHub Repo即为PaddleX的开源项目地址，欢迎大家star支持PaddleX的开发者！
+当前GitHub Repo即为PaddleX的开源项目地址，**欢迎大家star支持PaddleX的开发者！**
 ![](images/star.png)
 
 个人开发者或企业用户有相关需求及建议，欢迎在此Github上提ISSUE，或邮件至paddlex@baidu.com。
