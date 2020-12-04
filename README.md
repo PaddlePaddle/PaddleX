@@ -25,6 +25,7 @@
 ![](./docs/gui/images/paddlexoverview.png)
 
 ## 近期贡献者
+
 [![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/0)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/0)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/1)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/1)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/2)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/2)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/3)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/3)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/4)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/4)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/5)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/5)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/6)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/6)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/7)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/7)
 
 ## 安装
