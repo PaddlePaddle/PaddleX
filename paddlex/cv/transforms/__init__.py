@@ -84,7 +84,12 @@ def build_transforms_v1(model_type, transforms_info, batch_transforms_info):
     return eval_transforms
 
 
-def arrange_transforms(model_type, class_name, transforms, mode='train'):
+def arrange_transforms(model_type,
+                       class_name,
+                       transforms,
+                       mode='train',
+                       input_channel=3):
+    transforms.input_channel = input_channel
     # 给transforms添加arrange操作
     if model_type == 'classifier':
         arrange_transform = cls_transforms.ArrangeClassifier

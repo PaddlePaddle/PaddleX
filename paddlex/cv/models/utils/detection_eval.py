@@ -1,3 +1,4 @@
+# coding: utf8
 # copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -768,3 +769,241 @@ class DetectionMAP(object):
             accum_fp += 1 - int(pos)
             accum_fp_list.append(accum_fp)
         return accum_tp_list, accum_fp_list
+
+
+def makeplot(rs, ps, outDir, class_name, iou_type):
+    """针对某个特定类别，绘制不同评估要求下的准确率和召回率。
+       绘制结果说明参考COCODataset官网给出分析工具说明https://cocodataset.org/#detection-eval。
+
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+
+       Args:
+           rs (np.array): 在不同置信度阈值下计算得到的召回率。
+           ps (np.array): 在不同置信度阈值下计算得到的准确率。ps与rs相同位置下的数值为同一个置信度阈值
+               计算得到的准确率与召回率。
+           outDir (str): 图表保存的路径。
+           class_name (str): 类别名。
+           iou_type (str): iou计算方式，若为检测框，则设置为'bbox'，若为像素级分割结果，则设置为'segm'。
+
+    """
+
+    import matplotlib.pyplot as plt
+
+    cs = np.vstack([
+        np.ones((2, 3)), np.array([.31, .51, .74]), np.array([.75, .31, .30]),
+        np.array([.36, .90, .38]), np.array([.50, .39, .64]),
+        np.array([1, .6, 0])
+    ])
+    areaNames = ['allarea', 'small', 'medium', 'large']
+    types = ['C75', 'C50', 'Loc', 'Sim', 'Oth', 'BG', 'FN']
+    for i in range(len(areaNames)):
+        area_ps = ps[..., i, 0]
+        figure_tile = iou_type + '-' + class_name + '-' + areaNames[i]
+        aps = [ps_.mean() for ps_ in area_ps]
+        ps_curve = [
+            ps_.mean(axis=1) if ps_.ndim > 1 else ps_ for ps_ in area_ps
+        ]
+        ps_curve.insert(0, np.zeros(ps_curve[0].shape))
+        fig = plt.figure()
+        ax = plt.subplot(111)
+        for k in range(len(types)):
+            ax.plot(rs, ps_curve[k + 1], color=[0, 0, 0], linewidth=0.5)
+            ax.fill_between(
+                rs,
+                ps_curve[k],
+                ps_curve[k + 1],
+                color=cs[k],
+                label=str('[{:.3f}'.format(aps[k]) + ']' + types[k]))
+        plt.xlabel('recall')
+        plt.ylabel('precision')
+        plt.xlim(0, 1.)
+        plt.ylim(0, 1.)
+        plt.title(figure_tile)
+        plt.legend()
+        fig.savefig(outDir + '/{}.png'.format(figure_tile))
+        plt.close(fig)
+
+
+def analyze_individual_category(k, cocoDt, cocoGt, catId, iou_type):
+    """针对某个特定类别，分析忽略亚类混淆和类别混淆时的准确率。
+
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+
+       Args:
+           k (int): 待分析类别的序号。
+           cocoDt (pycocotols.coco.COCO): 按COCO类存放的预测结果。
+           cocoGt (pycocotols.coco.COCO): 按COCO类存放的真值。
+           catId (int): 待分析类别在数据集中的类别id。
+           iou_type (str): iou计算方式，若为检测框，则设置为'bbox'，若为像素级分割结果，则设置为'segm'。
+
+       Returns:
+           int:
+           dict: 有关键字'ps_supercategory'和'ps_allcategory'。关键字'ps_supercategory'的键值是忽略亚类间
+               混淆时的准确率，关键字'ps_allcategory'的键值是忽略类别间混淆时的准确率。
+
+    """
+
+    from pycocotools.coco import COCO
+    from pycocotools.cocoeval import COCOeval
+
+    nm = cocoGt.loadCats(catId)[0]
+    logging.info('--------------analyzing {}-{}---------------'.format(
+        k + 1, nm['name']))
+    ps_ = {}
+    dt = copy.deepcopy(cocoDt)
+    nm = cocoGt.loadCats(catId)[0]
+    imgIds = cocoGt.getImgIds()
+    dt_anns = dt.dataset['annotations']
+    select_dt_anns = []
+    for ann in dt_anns:
+        if ann['category_id'] == catId:
+            select_dt_anns.append(ann)
+    dt.dataset['annotations'] = select_dt_anns
+    dt.createIndex()
+    # compute precision but ignore superclass confusion
+    gt = copy.deepcopy(cocoGt)
+    child_catIds = gt.getCatIds(supNms=[nm['supercategory']])
+    for idx, ann in enumerate(gt.dataset['annotations']):
+        if (ann['category_id'] in child_catIds and
+                ann['category_id'] != catId):
+            gt.dataset['annotations'][idx]['ignore'] = 1
+            gt.dataset['annotations'][idx]['iscrowd'] = 1
+            gt.dataset['annotations'][idx]['category_id'] = catId
+    cocoEval = COCOeval(gt, copy.deepcopy(dt), iou_type)
+    cocoEval.params.imgIds = imgIds
+    cocoEval.params.maxDets = [100]
+    cocoEval.params.iouThrs = [.1]
+    cocoEval.params.useCats = 1
+    cocoEval.evaluate()
+    cocoEval.accumulate()
+    ps_supercategory = cocoEval.eval['precision'][0, :, k, :, :]
+    ps_['ps_supercategory'] = ps_supercategory
+    # compute precision but ignore any class confusion
+    gt = copy.deepcopy(cocoGt)
+    for idx, ann in enumerate(gt.dataset['annotations']):
+        if ann['category_id'] != catId:
+            gt.dataset['annotations'][idx]['ignore'] = 1
+            gt.dataset['annotations'][idx]['iscrowd'] = 1
+            gt.dataset['annotations'][idx]['category_id'] = catId
+    cocoEval = COCOeval(gt, copy.deepcopy(dt), iou_type)
+    cocoEval.params.imgIds = imgIds
+    cocoEval.params.maxDets = [100]
+    cocoEval.params.iouThrs = [.1]
+    cocoEval.params.useCats = 1
+    cocoEval.evaluate()
+    cocoEval.accumulate()
+    ps_allcategory = cocoEval.eval['precision'][0, :, k, :, :]
+    ps_['ps_allcategory'] = ps_allcategory
+    return k, ps_
+
+
+def coco_error_analysis(eval_details_file=None,
+                        gt=None,
+                        pred_bbox=None,
+                        pred_mask=None,
+                        save_dir='./output'):
+    """逐个分析模型预测错误的原因，并将分析结果以图表的形式展示。
+       分析结果说明参考COCODataset官网给出分析工具说明https://cocodataset.org/#detection-eval。
+
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+
+       Args:
+           eval_details_file (str):  模型评估结果的保存路径，包含真值信息和预测结果。
+           gt (list): 数据集的真值信息。默认值为None。
+           pred_bbox (list): 模型在数据集上的预测框。默认值为None。
+           pred_mask (list): 模型在数据集上的预测mask。默认值为None。
+           save_dir (str): 可视化结果保存路径。默认值为'./output'。
+
+        Note:
+           eval_details_file的优先级更高，只要eval_details_file不为None，
+           就会从eval_details_file提取真值信息和预测结果做分析。
+           当eval_details_file为None时，则用gt、pred_mask、pred_mask做分析。
+
+    """
+
+    from multiprocessing import Pool
+    from pycocotools.coco import COCO
+    from pycocotools.cocoeval import COCOeval
+
+    if eval_details_file is not None:
+        import json
+        with open(eval_details_file, 'r') as f:
+            eval_details = json.load(f)
+            pred_bbox = eval_details['bbox']
+            if 'mask' in eval_details:
+                pred_mask = eval_details['mask']
+            gt = eval_details['gt']
+    if gt is None or pred_bbox is None:
+        raise Exception(
+            "gt/pred_bbox/pred_mask is None now, please set right eval_details_file or gt/pred_bbox/pred_mask."
+        )
+    if pred_bbox is not None and len(pred_bbox) == 0:
+        raise Exception("There is no predicted bbox.")
+    if pred_mask is not None and len(pred_mask) == 0:
+        raise Exception("There is no predicted mask.")
+
+    def _analyze_results(cocoGt, cocoDt, res_type, out_dir):
+        directory = os.path.dirname(out_dir + '/')
+        if not os.path.exists(directory):
+            logging.info('-------------create {}-----------------'.format(
+                out_dir))
+            os.makedirs(directory)
+
+        imgIds = cocoGt.getImgIds()
+        res_out_dir = out_dir + '/' + res_type + '/'
+        res_directory = os.path.dirname(res_out_dir)
+        if not os.path.exists(res_directory):
+            logging.info('-------------create {}-----------------'.format(
+                res_out_dir))
+            os.makedirs(res_directory)
+        iou_type = res_type
+        cocoEval = COCOeval(
+            copy.deepcopy(cocoGt), copy.deepcopy(cocoDt), iou_type)
+        cocoEval.params.imgIds = imgIds
+        cocoEval.params.iouThrs = [.75, .5, .1]
+        cocoEval.params.maxDets = [100]
+        cocoEval.evaluate()
+        cocoEval.accumulate()
+        ps = cocoEval.eval['precision']
+        ps = np.vstack([ps, np.zeros((4, *ps.shape[1:]))])
+        catIds = cocoGt.getCatIds()
+        recThrs = cocoEval.params.recThrs
+        with Pool(processes=48) as pool:
+            args = [(k, cocoDt, cocoGt, catId, iou_type)
+                    for k, catId in enumerate(catIds)]
+            analyze_results = pool.starmap(analyze_individual_category, args)
+        for k, catId in enumerate(catIds):
+            nm = cocoGt.loadCats(catId)[0]
+            logging.info('--------------saving {}-{}---------------'.format(
+                k + 1, nm['name']))
+            analyze_result = analyze_results[k]
+            assert k == analyze_result[0], ""
+            ps_supercategory = analyze_result[1]['ps_supercategory']
+            ps_allcategory = analyze_result[1]['ps_allcategory']
+            # compute precision but ignore superclass confusion
+            ps[3, :, k, :, :] = ps_supercategory
+            # compute precision but ignore any class confusion
+            ps[4, :, k, :, :] = ps_allcategory
+            # fill in background and false negative errors and plot
+            T, _, _, A, _ = ps.shape
+            for t in range(T):
+                for a in range(A):
+                    if np.sum(ps[t, :, k, a, :] ==
+                              -1) != len(ps[t, :, k, :, :]):
+                        ps[t, :, k, a, :][ps[t, :, k, a, :] == -1] = 0
+            ps[5, :, k, :, :] = (ps[4, :, k, :, :] > 0)
+            ps[6, :, k, :, :] = 1.0
+            makeplot(recThrs, ps[:, :, k], res_out_dir, nm['name'], iou_type)
+        makeplot(recThrs, ps, res_out_dir, 'allclass', iou_type)
+
+    coco_gt = COCO()
+    coco_gt.dataset = gt
+    coco_gt.createIndex()
+    from pycocotools.cocoeval import COCOeval
+    if pred_bbox is not None:
+        coco_dt = loadRes(coco_gt, pred_bbox)
+        _analyze_results(coco_gt, coco_dt, res_type='bbox', out_dir=save_dir)
+    if pred_mask is not None:
+        coco_dt = loadRes(coco_gt, pred_mask)
+        _analyze_results(coco_gt, coco_dt, res_type='segm', out_dir=save_dir)
+    logging.info("The analysis figures are saved in {}".format(save_dir))

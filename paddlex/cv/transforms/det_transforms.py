@@ -98,7 +98,7 @@ class Compose(DetTransform):
                 字段由transforms中的最后一个数据预处理操作决定。
         """
 
-        def decode_image(im_file, im_info, label_info):
+        def decode_image(im_file, im_info, label_info, input_channel=3):
             if im_info is None:
                 im_info = dict()
             if isinstance(im_file, np.ndarray):
@@ -109,12 +109,19 @@ class Compose(DetTransform):
                 im = im_file
             else:
                 try:
-                    im = cv2.imread(im_file).astype('float32')
+                    if input_channel == 3:
+                        im = cv2.imread(im_file).astype('float32')
+                    else:
+                        im = cv2.imread(im_file,
+                                        cv2.IMREAD_UNCHANGED).astype('float32')
+                        if im.ndim < 3:
+                            im = np.expand_dims(im, axis=-1)
                 except:
                     raise TypeError('Can\'t read The image file {}!'.format(
                         im_file))
             im = im.astype('float32')
-            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+            if input_channel == 3:
+                im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
                 [im.shape[0], im.shape[1], 1.], dtype=np.float32)
@@ -134,7 +141,8 @@ class Compose(DetTransform):
             else:
                 return (im, im_info, label_info)
 
-        outputs = decode_image(im, im_info, label_info)
+        input_channel = getattr(self, 'input_channel', 3)
+        outputs = decode_image(im, im_info, label_info, input_channel)
         im = outputs[0]
         im_info = outputs[1]
         if len(outputs) == 3:
@@ -146,6 +154,10 @@ class Compose(DetTransform):
                 outputs = op(im, im_info, label_info)
                 im = outputs[0]
             else:
+                if im.shape[-1] != 3:
+                    raise Exception(
+                        "Only the 3-channel RGB image is supported in the imgaug operator, but recieved image channel is {}".
+                        format(im.shape[-1]))
                 im = execute_imgaug(op, im)
                 if label_info is not None:
                     outputs = (im, im_info, label_info)
@@ -172,12 +184,14 @@ class ResizeByShort(DetTransform):
     1. 获取图像的长边和短边长度。
     2. 根据短边与short_size的比例，计算长边的目标长度，
        此时高、宽的resize比例为short_size/原图短边长度。
+       若short_size为数组，则随机从该数组中挑选一个数值
+       作为short_size。
     3. 如果max_size>0，调整resize比例：
        如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
     4. 根据调整大小的比例对图像进行resize。
 
     Args:
-        target_size (int): 短边目标长度。默认为800。
+        short_size (int|list): 短边目标长度。默认为800。
         max_size (int): 长边目标长度的最大限制。默认为1333。
 
      Raises:
@@ -186,9 +200,9 @@ class ResizeByShort(DetTransform):
 
     def __init__(self, short_size=800, max_size=1333):
         self.max_size = int(max_size)
-        if not isinstance(short_size, int):
+        if not (isinstance(short_size, int) or isinstance(short_size, list)):
             raise TypeError(
-                "Type of short_size is invalid. Must be Integer, now is {}".
+                "Type of short_size is invalid. Must be Integer or List, now is {}".
                 format(type(short_size)))
         self.short_size = short_size
         if not (isinstance(self.max_size, int)):
@@ -221,7 +235,12 @@ class ResizeByShort(DetTransform):
             raise ValueError('ResizeByShort: image is not 3-dimensional.')
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
-        scale = float(self.short_size) / im_short_size
+        if isinstance(self.short_size, list):
+            # Case for multi-scale training
+            selected_size = random.choice(self.short_size)
+        else:
+            selected_size = self.short_size
+        scale = float(selected_size) / im_short_size
         if self.max_size > 0 and np.round(scale *
                                           im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
@@ -231,6 +250,8 @@ class ResizeByShort(DetTransform):
         im = cv2.resize(
             im, (resized_width, resized_height),
             interpolation=cv2.INTER_LINEAR)
+        if im.ndim < 3:
+            im = np.expand_dims(im, axis=-1)
         im_info['im_resize_info'] = np.array(im_resize_info).astype(np.float32)
         if label_info is None:
             return (im, im_info)
@@ -528,7 +549,9 @@ class Normalize(DetTransform):
         """
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std)
+        min_val = [0] * im.shape[-1]
+        max_val = [255] * im.shape[-1]
+        im = normalize(im, mean, std, min_val, max_val)
         if label_info is None:
             return (im, im_info)
         else:
@@ -582,6 +605,11 @@ class RandomDistort(DetTransform):
                    当label_info不为空时，返回的tuple为(im, im_info, label_info)，分别对应图像np.ndarray数据、
                    存储与标注框相关信息的字典。
         """
+        if im.shape[-1] != 3:
+            raise Exception(
+                "Only the 3-channel RGB image is supported in the RandomDistort operator, but recieved image channel is {}".
+                format(im.shape[-1]))
+
         brightness_lower = 1 - self.brightness_range
         brightness_upper = 1 + self.brightness_range
         contrast_lower = 1 - self.contrast_range
@@ -1013,6 +1041,45 @@ class RandomCrop(DetTransform):
                 return (im, im_info, label_info)
 
         return (im, im_info, label_info)
+
+
+class CLAHE(DetTransform):
+    """对图像进行对比度增强。
+    Args:
+        clip_limit (int|float): 颜色对比度的阈值，默认值为2.。
+        tile_grid_size (list|tuple): 进行像素均衡化的网格大小。默认值为(8, 8)。
+    Raises:
+        TypeError: 形参数据类型不满足需求。
+    """
+
+    def __init__(self, clip_limit=2., tile_grid_size=(8, 8)):
+        self.clip_limit = clip_limit
+        self.tile_grid_size = tile_grid_size
+
+    def __call__(self, im, im_info=None, label_info=None):
+        """
+        Args:
+            im (numnp.ndarraypy): 图像np.ndarray数据。
+            im_info (dict, 可选): 存储与图像相关的信息。
+            label_info (dict, 可选): 存储与标注框相关的信息。
+
+        Returns:
+            tuple: 当label_info为空时，返回的tuple为(im, im_info)，分别对应图像np.ndarray数据、存储与图像相关信息的字典；
+                   当label_info不为空时，返回的tuple为(im, im_info, label_info)，分别对应图像np.ndarray数据、
+                   存储与标注框相关信息的字典。
+        """
+        if im.shape[-1] != 1:
+            raise Exception(
+                "Only the one-channel image is supported in the CLAHE operator, but recieved image channel is {}".
+                format(im.shape[-1]))
+        clahe = cv2.createCLAHE(
+            clipLimit=self.clip_limit, tileGridSize=self.tile_grid_size)
+        im = clahe.apply(im).astype(im.dtype)
+
+        if label_info is None:
+            return (im, im_info)
+        else:
+            return (im, im_info, label_info)
 
 
 class ArrangeFasterRCNN(DetTransform):

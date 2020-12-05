@@ -38,6 +38,7 @@ class YOLOv3(PPYOLO):
         nms_iou_threshold (float): 进行NMS时，用于剔除检测框IoU的阈值。默认为0.45。
         label_smooth (bool): 是否使用label smooth。默认值为False。
         train_random_shapes (list|tuple): 训练时从列表中随机选择图像大小。默认值为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
+        input_channel (int): 输入图像的通道数量。默认为3。
     """
 
     def __init__(self,
@@ -53,7 +54,8 @@ class YOLOv3(PPYOLO):
                  label_smooth=False,
                  train_random_shapes=[
                      320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ]):
+                 ],
+                 input_channel=3):
         self.init_params = locals()
         backbones = [
             'DarkNet53', 'ResNet34', 'MobileNetV1', 'MobileNetV3_large'
@@ -84,6 +86,7 @@ class YOLOv3(PPYOLO):
         self.use_matrix_nms = False
         self.use_ema = False
         self.with_dcn_v2 = False
+        self.input_channel = input_channel
 
     def _get_backbone(self, backbone_name):
         if backbone_name == 'DarkNet53':

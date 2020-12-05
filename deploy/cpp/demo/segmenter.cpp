@@ -91,7 +91,9 @@ int main(int argc, char** argv) {
       for (int j = i; j < im_vec_size; ++j) {
         im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
       }
-      model.predict(im_vec, &results, thread_num);
+      if (!model.predict(im_vec, &results, thread_num)) {
+        return -1;
+      }
       // Visualize results
       for (int j = 0; j < im_vec_size - i; ++j) {
         cv::Mat vis_img =
@@ -105,7 +107,9 @@ int main(int argc, char** argv) {
   } else {
     PaddleX::SegResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
-    model.predict(im, &result);
+    if (!model.predict(im, &result)) {
+      return -1;
+    }
     // Visualize results
     cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels);
     std::string save_path =

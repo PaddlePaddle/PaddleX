@@ -30,3 +30,6 @@ PaddleX更新历史和下载地址: https://www.paddlepaddle.org.cn/paddlex/down
 
 ## 6. 使用CPU训练时，如何设置CPU_NUM多CPU卡进行训练
 Windows平台上由于缺少NCCL库，无法使用多GPU或多CPU训练。而对于v1.1.5版本及以下版本，当前无法设置多CPU进行训练（v1.1.5版本及以下版本，请勿在环境变量中设置CPU_NUM，可能会导致无法使用CPU进行模型训练）
+
+## 7. 如何查看GPU的使用情况
+Windows/Linux上都可以在打开命令终端后（Windows为CMD命令行）后，输入nvidia-smi命令查看GPU使用情况。不建议使用其它方式（如任务管理器等）。如若提示此命令不存在，可在网上搜索相应解决方法。
