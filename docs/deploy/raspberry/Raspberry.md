@@ -56,7 +56,7 @@ sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  
 ```
 预编库位置：`./build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`  
 
-**注意**：预测库版本需要跟opt版本一致，检测与分割请使用Paddle-LITE的full版本预测库,更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
+**注意**：预测库版本需要跟opt版本一致，检测与分割请使用Paddle-Lite的full版本预测库,更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
 
 #### Step3 软件依赖
 提供了依赖软件的预编包或者一键编译，对于armv7树莓派用户不需要单独下载或编译第三方依赖软件，对于armv8树莓派用户需要自行编译opencv，编译第三方依赖软件请参考：
