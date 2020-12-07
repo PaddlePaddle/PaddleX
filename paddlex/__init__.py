@@ -47,6 +47,7 @@ from . import slim
 from . import converter
 from . import tools
 from . import deploy
+from . import restful
 
 try:
     import pycocotools
