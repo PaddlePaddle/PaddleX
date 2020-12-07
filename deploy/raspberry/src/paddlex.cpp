@@ -90,10 +90,13 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   std::unique_ptr<const paddle::lite_api::Tensor> output_tensor(
     std::move(predictor_->GetOutput(0)));
   const float *outputs_data = output_tensor->mutable_data<float>();
-
-
+  auto output_shape = output_tensor->shape();
+  int64_t size = 1;
+  for (const auto& i : output_shape) {
+    size *= i;
+  }
   // postprocess
-  auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_data));
+  auto ptr = std::max_element(outputs_data, outputs_data + size);
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
   result->category = labels[result->category_id];
@@ -121,7 +124,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
   if (name == "YOLOv3") {
     std::unique_ptr<paddle::lite_api::Tensor> im_size_tensor(
       std::move(predictor_->GetInput(1)));
-    im_size_tensor->Resize({1,2});
+    im_size_tensor->Resize({1, 2});
     auto *im_size_data = im_size_tensor->mutable_data<int>();
     memcpy(im_size_data, inputs_.ori_im_size_.data(), 1*2*sizeof(int));
   }
