@@ -64,7 +64,9 @@ int main(int argc, char** argv) {
     while (getline(inf, image_path)) {
       PaddleX::SegResult result;
       cv::Mat im = cv::imread(image_path, 1);
-      model.predict(im, &result);
+      if (!model.predict(im, &result)) {
+        return -1;
+      }
       if (FLAGS_save_dir != "") {
       cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels, colormap);
         std::string save_path =
@@ -76,7 +78,9 @@ int main(int argc, char** argv) {
   } else {
     PaddleX::SegResult result;
     cv::Mat im = cv::imread(FLAGS_image, 1);
-    model.predict(im, &result);
+    if (!model.predict(im, &result)) {
+      return -1;
+    }
     if (FLAGS_save_dir != "") {
       cv::Mat vis_img = PaddleX::Visualize(im, result, model.labels, colormap);
       std::string save_path =

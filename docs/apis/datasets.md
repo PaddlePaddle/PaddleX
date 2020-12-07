@@ -41,6 +41,15 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
 
+### add_negative_samples(self, image_dir)
+
+> **将背景图片加入训练**
+
+> > * **image_dir** (str): 背景图片所在的文件夹目录。
+
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/industrial_quality_inspection/train_rcnn.py#L45)
+
+
 ## paddlex.datasets.CocoDetection
 > **用于实例分割/目标检测模型**  
 ```
@@ -60,6 +69,15 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > > * **buffer_size** (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。  
 > > * **parallel_method** (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。  
+
+### add_negative_samples(self, image_dir)
+
+> **将背景图片加入训练**
+
+> > * **image_dir** (str): 背景图片所在的文件夹目录。
+
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/industrial_quality_inspection/train_rcnn.py#L45)
+
 
 ## paddlex.datasets.SegDataset
 > **用于语义分割模型**  

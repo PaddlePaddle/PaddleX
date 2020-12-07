@@ -70,7 +70,9 @@ int main(int argc, char** argv) {
     while (getline(inf, image_path)) {
       PaddleX::DetResult result;
       cv::Mat im = cv::imread(image_path, 1);
-      model.predict(im, &result);
+      if (!model.predict(im, &result)) {
+        return -1;
+      }
       if (FLAGS_save_dir != "") {
         cv::Mat vis_img = PaddleX::Visualize(
           im, result, model.labels, colormap, FLAGS_threshold);
@@ -83,7 +85,9 @@ int main(int argc, char** argv) {
   } else {
   PaddleX::DetResult result;
   cv::Mat im = cv::imread(FLAGS_image, 1);
-  model.predict(im, &result);
+  if (!model.predict(im, &result)) {
+    return -1;
+  }
   for (int i = 0; i < result.boxes.size(); ++i) {
       std::cout << "image file: " << FLAGS_image << std::endl;
       std::cout << ", predict label: " << result.boxes[i].category

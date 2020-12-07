@@ -36,9 +36,11 @@ bool Normalize::Run(cv::Mat* im, ImageBlob* data) {
 
   std::vector<cv::Mat> split_im;
   cv::split(*im, split_im);
+  #pragma omp parallel for num_threads(im->channels())
   for (int c = 0; c < im->channels(); c++) {
+    float range_val = max_val_[c] - min_val_[c];
     cv::subtract(split_im[c], cv::Scalar(min_val_[c]), split_im[c]);
-    cv::divide(split_im[c], cv::Scalar(range_val[c]), split_im[c]);
+    cv::divide(split_im[c], cv::Scalar(range_val), split_im[c]);
     cv::subtract(split_im[c], cv::Scalar(mean_[c]), split_im[c]);
     cv::divide(split_im[c], cv::Scalar(std_[c]), split_im[c]);
   }
@@ -92,6 +94,50 @@ bool CenterCrop::Run(cv::Mat* im, ImageBlob* data) {
   return true;
 }
 
+void Padding::GeneralPadding(cv::Mat* im,
+                             const std::vector<float> &padding_val,
+                             int padding_w, int padding_h) {
+  cv::Scalar value;
+  if (im->channels() == 1) {
+    value = cv::Scalar(padding_val[0]);
+  } else if (im->channels() == 2) {
+    value = cv::Scalar(padding_val[0], padding_val[1]);
+  } else if (im->channels() == 3) {
+    value = cv::Scalar(padding_val[0], padding_val[1], padding_val[2]);
+  } else if (im->channels() == 4) {
+    value = cv::Scalar(padding_val[0], padding_val[1], padding_val[2],
+                                  padding_val[3]);
+  }
+  cv::copyMakeBorder(
+  *im,
+  *im,
+  0,
+  padding_h,
+  0,
+  padding_w,
+  cv::BORDER_CONSTANT,
+  value);
+}
+
+void Padding::MultichannelPadding(cv::Mat* im,
+                                  const std::vector<float> &padding_val,
+                                  int padding_w, int padding_h) {
+  std::vector<cv::Mat> padded_im_per_channel(im->channels());
+  #pragma omp parallel for num_threads(im->channels())
+  for (size_t i = 0; i < im->channels(); i++) {
+    const cv::Mat per_channel = cv::Mat(im->rows + padding_h,
+                                        im->cols + padding_w,
+                                        CV_32FC1,
+                                        cv::Scalar(padding_val[i]));
+    padded_im_per_channel[i] = per_channel;
+  }
+  cv::Mat padded_im;
+  cv::merge(padded_im_per_channel, padded_im);
+  cv::Rect im_roi = cv::Rect(0, 0, im->cols, im->rows);
+  im->copyTo(padded_im(im_roi));
+  *im = padded_im;
+}
+
 bool Padding::Run(cv::Mat* im, ImageBlob* data) {
   data->im_size_before_resize_.push_back({im->rows, im->cols});
   data->reshape_order_.push_back("padding");
@@ -116,19 +162,11 @@ bool Padding::Run(cv::Mat* im, ImageBlob* data) {
               << ", but they should be greater than 0." << std::endl;
     return false;
   }
-  std::vector<cv::Mat> padded_im_per_channel;
-  for (size_t i = 0; i < im->channels(); i++) {
-    const cv::Mat per_channel = cv::Mat(im->rows + padding_h,
-                                        im->cols + padding_w,
-                                        CV_32FC1,
-                                        cv::Scalar(im_value_[i]));
-    padded_im_per_channel.push_back(per_channel);
+  if (im->channels() < 5) {
+    Padding::GeneralPadding(im, im_value_, padding_w, padding_h);
+  } else {
+    Padding::MultichannelPadding(im, im_value_, padding_w, padding_h);
   }
-  cv::Mat padded_im;
-  cv::merge(padded_im_per_channel, padded_im);
-  cv::Rect im_roi = cv::Rect(0, 0, im->cols, im->rows);
-  im->copyTo(padded_im(im_roi));
-  *im = padded_im;
   data->new_im_size_[0] = im->rows;
   data->new_im_size_[1] = im->cols;
 

@@ -9,3 +9,4 @@
    Raspberry.md
    python.md
    export_nb_model.md 
+   NCS2.md

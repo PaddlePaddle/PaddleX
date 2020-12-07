@@ -104,8 +104,13 @@ class VOCDetection(Dataset):
                 if not osp.isfile(xml_file):
                     continue
                 if not osp.exists(img_file):
-                    raise IOError('The image file {} is not exist!'.format(
+                    logging.warning('The image file {} is not exist!'.format(
                         img_file))
+                    continue
+                if not osp.exists(xml_file):
+                    logging.warning('The annotation file {} is not exist!'.
+                                    format(xml_file))
+                    continue
                 tree = ET.parse(xml_file)
                 if tree.find('id') is None:
                     im_id = np.array([ct])
@@ -138,8 +143,8 @@ class VOCDetection(Dataset):
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
-                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:
-                                                                             -1]
+                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
+                        1:-1]
                     cname = obj.find(name_tag).text.strip()
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
@@ -229,6 +234,12 @@ class VOCDetection(Dataset):
         self.coco_gt.createIndex()
 
     def add_negative_samples(self, image_dir):
+        """将背景图片加入训练
+
+        Args:
+            image_dir (str)：背景图片所在的文件夹目录。
+
+        """
         import cv2
         if not osp.exists(image_dir):
             raise Exception("{} background images directory does not exist.".
@@ -248,7 +259,7 @@ class VOCDetection(Dataset):
 
             max_img_id += 1
             im_fname = osp.join(image_dir, image)
-            img_data = cv2.imread(im_fname)
+            img_data = cv2.imread(im_fname, cv2.IMREAD_UNCHANGED)
             im_h, im_w, im_c = img_data.shape
             im_info = {
                 'im_id': np.array([max_img_id]).astype('int32'),

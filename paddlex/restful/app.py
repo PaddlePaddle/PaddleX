@@ -548,8 +548,9 @@ def task_evaluate():
         from .project.task import get_evaluate_result
         ret = get_evaluate_result(data, SD.workspace)
         ret['evaluate_status'] = ret['evaluate_status'].value
-        ret['result']['Confusion_Matrix'] = ret['result'][
-            'Confusion_Matrix'].tolist()
+        if 'Confusion_Matrix' in ret['result']:
+            ret['result']['Confusion_Matrix'] = ret['result'][
+                'Confusion_Matrix'].tolist()
         ret['result'] = CustomEncoder().encode(ret['result'])
         return ret
     if request.method == 'POST':

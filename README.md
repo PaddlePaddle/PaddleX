@@ -8,7 +8,7 @@
 </p>
 
 
-<p align= "center"> PaddleX -- 飞桨全流程开发套件，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
+<p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
 [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)
@@ -24,6 +24,9 @@
 
 ![](./docs/gui/images/paddlexoverview.png)
 
+## 近期贡献者
+
+[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/0)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/0)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/1)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/1)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/2)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/2)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/3)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/3)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/4)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/4)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/5)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/5)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/6)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/6)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/7)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/7)
 
 ## 安装
 

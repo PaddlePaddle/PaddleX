@@ -80,14 +80,16 @@ class Predictor:
             to_rgb = False
         self.transforms = build_transforms(self.model_type,
                                            self.info['Transforms'], to_rgb)
-        self.predictor = self.create_predictor(use_gpu, gpu_id, use_mkl,
-                                               mkl_thread_num, use_trt,
-                                               use_glog, memory_optimize,
-                                               max_trt_batch_size)
+        self.predictor = self.create_predictor(
+            use_gpu, gpu_id, use_mkl, mkl_thread_num, use_trt, use_glog,
+            memory_optimize, max_trt_batch_size)
         # 线程池，在模型在预测时用于对输入数据以图片为单位进行并行处理
         # 主要用于batch_predict接口
         thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
         self.thread_pool = mp.pool.ThreadPool(thread_num)
+        self.input_channel = 3
+        if 'input_channel' in self.info['_init_params']:
+            self.input_channel = self.info['_init_params']['input_channel']
 
     def reset_thread_pool(self, thread_num):
         self.thread_pool.close()
@@ -112,12 +114,12 @@ class Predictor:
             config.enable_use_gpu(100, gpu_id)
             if use_trt:
                 config.enable_tensorrt_engine(
-                            workspace_size=1<<10,
-                            max_batch_size=max_trt_batch_size,
-                            min_subgraph_size=3,
-                            precision_mode=fluid.core.AnalysisConfig.Precision.Float32,
-                            use_static=False,
-                            use_calib_mode=False)
+                    workspace_size=1 << 10,
+                    max_batch_size=max_trt_batch_size,
+                    min_subgraph_size=3,
+                    precision_mode=fluid.core.AnalysisConfig.Precision.Float32,
+                    use_static=False,
+                    use_calib_mode=False)
         else:
             config.disable_gpu()
         if use_mkl and not use_gpu:
@@ -165,7 +167,8 @@ class Predictor:
                     self.transforms,
                     self.model_type,
                     self.model_name,
-                    thread_pool=thread_pool)
+                    thread_pool=thread_pool,
+                    input_channel=self.input_channel)
                 res['image'] = im
                 res['im_size'] = im_size
             if self.model_name.count('RCNN') > 0:
@@ -174,7 +177,8 @@ class Predictor:
                     self.transforms,
                     self.model_type,
                     self.model_name,
-                    thread_pool=thread_pool)
+                    thread_pool=thread_pool,
+                    input_channel=self.input_channel)
                 res['image'] = im
                 res['im_info'] = im_resize_info
                 res['im_shape'] = im_shape
@@ -184,7 +188,8 @@ class Predictor:
                 self.transforms,
                 self.model_type,
                 self.model_name,
-                thread_pool=thread_pool)
+                thread_pool=thread_pool,
+                input_channel=self.input_channel)
             res['image'] = im
             res['im_info'] = im_info
         return res

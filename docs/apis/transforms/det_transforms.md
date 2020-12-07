@@ -32,13 +32,13 @@ paddlex.det.transforms.ResizeByShort(short_size=800, max_size=1333)
 
 根据图像的短边调整图像大小（resize）。  
 1. 获取图像的长边和短边长度。  
-2. 根据短边与short_size的比例，计算长边的目标长度，此时高、宽的resize比例为short_size/原图短边长度。  
+2. 根据短边与short_size的比例，计算长边的目标长度，此时高、宽的resize比例为short_size/原图短边长度。若short_size为数组，则随机从该数组中挑选一个数值作为short_size。
 3. 如果max_size>0，调整resize比例：
    如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
 4. 根据调整大小的比例对图像进行resize。
 
 ### 参数
-* **short_size** (int): 短边目标长度。默认为800。
+* **short_size** (int|list): 短边目标长度。默认为800。当需要做多尺度训练时，可以将`short_size`设置成数组，例如[500, 600, 700, 800]。
 * **max_size** (int): 长边目标长度的最大限制。默认为1333。
 
 ## Padding
@@ -122,7 +122,7 @@ paddlex.det.transforms.MixupImage(alpha=1.5, beta=1.5, mixup_epoch=-1)
 * **beta** (float): 随机beta分布的上限。默认为1.5。
 * **mixup_epoch** (int): 在前mixup_epoch轮使用mixup增强操作；当该参数为-1时，该策略不会生效。默认为-1。
 
-## RandomExpand类
+## RandomExpand
 ```python
 paddlex.det.transforms.RandomExpand(ratio=4., prob=0.5, fill_value=[123.675, 116.28, 103.53])
 ```
@@ -167,6 +167,17 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
 * **num_attempts** (int): 在放弃寻找有效裁剪区域前尝试的次数。默认值为50。
 * **allow_no_crop** (bool): 是否允许未进行裁剪。默认值为True。
 * **cover_all_box** (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
+
+## CLAHE
+```
+paddlex.det.transforms.CLAHE(clip_limit=2., tile_grid_size=(8, 8))
+```
+对图像进行对比度增强。
+
+### 参数
+
+* **clip_limit** (int|float): 颜色对比度的阈值，默认值为2.。
+* **tile_grid_size** (list|tuple): 进行像素均衡化的网格大小。默认值为(8, 8)。
 
 <!--
 ## ComposedRCNNTransforms
