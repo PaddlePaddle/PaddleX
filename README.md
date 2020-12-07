@@ -104,8 +104,8 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 * 卫星遥感： 
   * [RGB遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
-  * [多通道遥感影像分割]（https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html）
-  * [地块变化检测]（https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html）
+  * [多通道遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
+  * [地块变化检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
 
 * [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
 
