@@ -116,11 +116,16 @@ bool Model::predict(const cv::Mat& im, ClsResult* result) {
   output_ = infer_request.GetBlob(output_name);
   InferenceEngine::MemoryBlob::CPtr moutput =
     InferenceEngine::as<InferenceEngine::MemoryBlob>(output_);
+  InferenceEngine::TensorDesc blob_output = moutput->getTensorDesc();
+  std::vector<size_t> output_shape = blob_output.getDims();
   auto moutputHolder = moutput->rmap();
   float* outputs_data = moutputHolder.as<float *>();
-
+  int size = 1;
+  for (auto& i : output_shape) {
+    size *= static_cast<int>(i);
+  }
   // post process
-  auto ptr = std::max_element(outputs_data, outputs_data+sizeof(outputs_data));
+  auto ptr = std::max_element(outputs_data, outputs_data + size);
   result->category_id = std::distance(outputs_data, ptr);
   result->score = *ptr;
   result->category = labels[result->category_id];
