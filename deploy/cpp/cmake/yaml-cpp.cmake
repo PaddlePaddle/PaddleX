@@ -4,7 +4,7 @@ message("${CMAKE_BUILD_TYPE}")
 
 ExternalProject_Add(
         ext-yaml-cpp
-        URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip
+	URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip
         URL_MD5 9542d6de397d1fbd649ed468cb5850e6
         CMAKE_ARGS
         -DYAML_CPP_BUILD_TESTS=OFF

@@ -2,7 +2,7 @@
 if [ ! -d "./deps" ]; then
     mkdir deps
 fi
-if [ ! -d "./deps/gflag" ]; then
+if [ ! -d "./deps/gflags" ]; then
     cd deps
     git clone https://github.com/gflags/gflags
     cd gflags
@@ -11,6 +11,15 @@ if [ ! -d "./deps/gflag" ]; then
     cd ..
     cd ..
 fi
+
+# install yaml
+YAML_URL=https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip
+if [ ! -f "./deps/yaml-cpp.zip" ]; then
+    cd deps
+    wget -c ${YAML_URL}
+    cd ..
+fi
+
 
 if [ "$ARCH" = "x86" ]; then
     OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/x86opencv/opencv.tar.bz2

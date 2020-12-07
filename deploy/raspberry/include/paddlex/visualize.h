@@ -22,7 +22,7 @@
 #include <io.h>
 #else  // Linux/Unix
 #include <dirent.h>
-#include <sys/io.h>
+#include <sys/uio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
