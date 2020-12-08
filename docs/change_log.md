@@ -1,53 +1,56 @@
-# 更新日志
+# Update log
 
 **v1.2.0** 2020.09.07
-- 模型更新
-  > - 新增产业最实用目标检测模型PP-YOLO，深入考虑产业应用对精度速度的双重面诉求，COCO数据集精度45.2%，Tesla V100预测速度72.9FPS。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
-  > - FasterRCNN、MaskRCNN、YOLOv3、DeepLabv3p等模型新增内置COCO数据集预训练模型，适用于小数据集的微调训练。
-  > - 目标检测模型FasterRCNN和MaskRCNN新增backbone HRNet_W18，适用于对细节预测要求较高的应用场景。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
-  > - 语义分割模型DeepLabv3p新增backbone MobileNetV3_large_ssld，模型体积9.3MB，Cityscapes数据集精度仍保持有73.28%。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
+- Model Update
+   > - Add the most practical object detection model PP-YOLO in the industry. Deeply considering the double requirements for precision and speed in the industrial application, the COCO dataset precision is 45.2% and the Tesla V100 inference speed is 72.9 FPS. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
+   > - Add to FasterRCNN, MaskRCNN, YOLOv3, DeepLabv3p and other models a built-in COCO dataset pre-training model which applies to fine-tuned training of small datasets. 
+   > - Add to object detection models FasterRCNN and MaskRCNN backbone HRNet_W18 which applies to application scenarios having high requirements for details inference. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
+   > - Add backbone MobileNetV3_large_ssld to the semantic segmentation model DeepLabv3p. The model volume is 9.3 MB and the Cityscapes dataset precision still is 73.28%. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
 
-- 模型部署更新
-  > - 新增模型通过OpenVINO预测加速的部署方案，CPU上相比mkldnn加速库预测速度提升1.5～2倍左右。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
-  > - 新增模型在树莓派上的部署方案，进一步丰富边缘侧的部署方案。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
-  > - 优化PaddleLite Android部署的数据预处理和后处理代码性能，预处理速度提升10倍左右，后处理速度提升4倍左右。
-  > - 优化Paddle服务端C++代码部署代码，增加use_mkl等参数，CPU上相比未开启mkldnn预测速度提升10～50倍左右。
+- Model Deployment Update
+   > - Add a model inference acceleration deployment solution via OpenVINO. Compared with the mkldnn acceleration library, the inference speed increases by about 1.5-2 times on the CPU. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
+   > - Add a model deployment solution on Raspberry Pi and further enrich an edge deployment solution. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
+   > - Optimize the data preprocessing and postprocessing code performance of PaddleLite Android deployment. The preprocessing speed increases by about 10 times and the postprocessing speed increases by about 4 times.
+   > - Optimize C++ deployment codes on the Paddle server and add parameters such as use_mkl. Compared with not starting mkldnn, the inference speed increases by about 10-50 times on the CPU.
 
-- 产业案例更新
-  > - 新增大尺寸RGB图像遥感分割案例，提供滑动窗口预测接口，不仅能避免显存不足的发生，而且能通过配置重叠程度消除最终预测结果中各窗口拼接处的裂痕感。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
-  > - 新增多通道遥感影像分割案例，打通语义分割任务对任意通道数量的数据分析、模型训练、模型部署全流程。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
 
-- 其它
-  > - 新增数据集切分功能，支持通过命令行一键切分ImageNet、PascalVOC、MSCOCO和语义分割数据集[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/data/format/classification.html#id2)
+- Industrial Case Update
+   > - Add a remote sensing segmentation case of large RGB images and provide a sliding window inference API, which can not only avoid the occurrence of insufficient GPU memory, but also eliminate the cracking feeling at the splice of the windows in the final inference results by configuring the degree of overlapping. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
+   > - Add a multi-channel remote sensing image segmentation case and bridge the whole process of data analysis, model training and model deployment of semantic segmentation tasks on any number of channels. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
+
+
+- Others
+   > - Add the dataset splitting function which supports splitting ImageNet, PascalVOC, MSCOCO and semantic segmentation datasets with one click via command line. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/data/format/classification.html#id2)
+
 
 **v1.1.0** 2020.07.12
 
-- 模型更新
-> - 新增语义分割模型HRNet、FastSCNN
-> - 目标检测FasterRCNN、实例分割MaskRCNN新增backbone HRNet
-> - 目标检测/实例分割模型新增COCO数据集预训练模型
-> - 集成X2Paddle，PaddleX所有分类模型和语义分割模型支持导出为ONNX协议
-- 模型部署更新
-> - 模型加密增加支持Windows平台
-> - 新增Jetson、Paddle Lite模型部署预测方案
-> - C++部署代码新增batch批预测，并采用OpenMP对预处理进行并行加速
-- 新增2个PaddleX产业案例
-> - [人像分割案例](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
-> - [工业表计读数案例](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
-- 新增数据格式转换功能，LabelMe、精灵标注助手和EasyData平台标注的数据转为PaddleX支持加载的数据格式
-- PaddleX文档更新，优化文档结构
+- Model Update
+> - Add semantic segmentation models HRNet and FastSCNN
+> - Add backbone HRNet to the object detection FasterRCNN and the instance segmentation MaskRCNN
+> - Add a COCO dataset pre-training model to the object detection/ instance segmentation model
+> - Integrate X2Paddle. All PaddleX classification and semantic segmentation models support export as an ONNX protocol
+- Model Deployment Update
+> - Add the support for the Windows platform in model encryption
+> - Add a Jetson and Paddle Lite model deployment and inference solution
+> - Add batch inference in the C++ deployment codes and use OpenMP for parallel acceleration of preprocessing
+- Add two PaddleX Industrial Cases
+> - [Portrait segmentation case] (https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
+> - [Industrial instrument reading case] (https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
+- Add the data format conversion function which converts data annotated by LabelMe, Colabeler and the EasyData platform into a data format that PaddleX supports loading
+- Update the PaddleX document by optimizing the document structure
 
 
 **v1.0.0** 2020.05.20
 
-- 增加模型C++部署和Python部署代码
-- 增加模型加密部署方案
-- 增加分类模型的OpenVINO部署方案
-- 增加模型可解释性的接口
+- Add model C++ and Python deployment codes
+- Add a model encryption deployment solution
+- Add an OpenVINO deployment solution for classification models
+- Add a model interpretability API
 
 
 **v0.1.8** 2020.05.17
 
-- 修复部分代码Bug
-- 新增EasyData平台数据标注格式支持
-- 支持imgaug数据增强库的pixel-level算子
+- Fix some code bugs
+- Add the support for the data annotation format on the EasyData platform
+- Support the pixel-level operator in the imgaug data enhancement library

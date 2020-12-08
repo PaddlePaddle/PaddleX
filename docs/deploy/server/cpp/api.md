@@ -1,13 +1,13 @@
-# C++代码接口说明
+# C++ code interface description
 
-## 头文件
+## Header file
 `include/paddlex/paddlex.h`
 
-## 类 PaddleX::Model
+## Class PaddleX::Model
 
-模型类，用于加载PaddleX训练的模型。
+Model class is used to load models trained by PaddleX.
 
-### 模型加载
+### Complete model loading
 ```
 PaddleX::Model::Init(const std::string& model_dir,
                      bool use_gpu = false,
@@ -19,117 +19,119 @@ PaddleX::Model::Init(const std::string& model_dir,
                      bool use_ir_optim = true)
 ```
 
-**参数**  
-- model_dir: 模型目录路径
-- use_gpu: 是否使用gpu预测
-- use_trt: 是否使用TensorRT
-- use_mkl: 是否使用MKLDNN加速模型在CPU上的预测性能
-- mkl_thread_num: 使用MKLDNN时，线程数量
-- gpu_id: 使用gpu的id号
-- key: 模型解密密钥，此参数用于加载加密的PaddleX模型时使用
-- use_ir_optim: 是否加速模型后进行图优化
+**Parameters**
+- model_dir: path to the model directory
+- use_gpu: whether to use GPU for prediction
+- use_trt: whether or not to TensorRT
+- use_mkl: whether or not to use MKLDNN to accelerate the predicted performance of the model on the CPU
+- mkl_thread_num: the number of threads when MKLDNN is used
+- gpu_id: ID of the GPU
+- key: model decryption key. It is used when the encrypted PaddleX model is loaded.
+- use_ir_optim: whether to speed up the model after image optimization
 
-**返回值**
-- 返回true或false，表示模型是否加载成功
+**Returned value**
+- Returns true or false, indicating whether the model is loaded successfully.
 
-### 模型预测推断
+### Model prediction inference
 
-**分类模型单张图片预测**
+**Single image prediction of category model**
 ```
 PaddleX::Model::predict(const cv::Mat& im, ClsResult* result)
 ```
-**分类模型多张图片批预测**
+**Batch prediction for multiple pictures in category model**
 ```
 PaddleX::Model::predict(const std::vector<cv::Mat>& im_batch, std::vector<ClsResult>* results)
 ```
-**目标检测/实例分割模型单张图片预测**
+**Object detection/instance segmentation model single picture prediction**
 ```
 PaddleX::Model::predict(const cv::Mat& im, DetResult* result)
 ```
-**目标检测/实例分割模型多张图片批预测**
+**Object detection/instance segmentation model batch prediction for multiple images**
 ```
 PaddleX::Model::predict(const std::vector<cv::Mat>& im_batch, std::vector<DetResult>* results)
 ```
-**语义分割模型单张图片预测**
+**Single image prediction for semantic segmentation model**
 ```
 PaddleX::Model::predict(const cv::Mat& im, SegResult* result)
 ```
-**语义分割模型多张图片批预测**
+**Multiple image batch prediction for semantic segmentation model**
 ```
 PaddleX::Model::predict(const std::vector<cv::Mat>& im_batch, std::vector<SegResult>* results)
 ```
-各接口返回值为true或false，用于表示是否预测成功
+The return value of each interface is true or false, indicating whether the prediction is successful or not.
 
-预测时，需传入cv::Mat结构体，结构需与如下示代码加载的结构体一致
+In the prediction, the cv::Mat structure should be passed in, and the structure should be identical to the one loaded by the following code
 ```
 cv::Mat im = cv::imread('test.jpg', 1);
 ```
-当使用批预测时，注意会传入的vector中所有数据作为一个批次进行预测，因此vector越大，所需要使用的GPU显存会越高。
+In the use of batch prediction, it should be noted that all the data in the incoming vector is predicted as a batch. Therefore, the larger the vector, the higher the GPU video memory required.
 
-预测时，同时传入ClsResult/DetResult/SegResult结构体，用于存放模型的预测结果，各结构体说明如下
+In the prediction, the ClsResult/DetResult/SegResult structure is passed in at the same time to store the prediction result of the model. The description of each structure is as follows:
 ```
-// 分类模型预测结果
+// Prediction results of category models
 class ClsResult {
- public:
-  int category_id; // 类别id
-  std::string category; // 类别标签
-  float score; // 预测置信度
-  std::string type = "cls";
-}
+public:
+ int category_id; //Category_id
+ std::string category; //Category label
+ float score; // Prediction confidence level
+ std::string type = "cls";
+} 
 
-// 目标检测/实例分割模型预测结果
+//Prediction results of object detection/instance segmentation model
 class DetResult {
  public:
-  std::vector<Box> boxes; // 预测结果中的各个目标框
-  int mask_resolution; 
-  std::string type = "det";
-}
+ std::vector<Box> boxes; // Each object box in the prediction result
+ int mask_resolution; std::string type = "det"; 
+} 
 
-// 语义分割模型预测结果
-class SegResult : public BaseResult {
+// Prediction results of semantic segmentation model
+class SegResult :public BaseResult {
  public:
-  Mask<int64_t> label_map; // 预测分割中各像素的类别
-  Mask<float> score_map; // 预测分割中各像素的置信度
-  std::string type = "seg";
+  Mask<int64_t> label_map; // Category of each pixel in the prediction segmentation
+  Mask<float> score_map; // Confidence level of each pixel in the prediction segmentation
+  std::string type = "seg"; 
 }
 
 struct Box {
-  int category_id; // 类别id
-  std::string category; // 类别标签
-  float score; // 置信度
-  std::vector<float> coordinate; // 4个元素值，表示xmin, ymin, width, height
-  Mask<int> mask; // 实例分割中，用于表示Box内的分割结果
-}
+  int category_id; //Category_id
+  std::string category; //Category label
+  float score; // Confidence level
+  std::vector<float> coordinate; // 4 element values, indicating xmin, ymin, width, height
+  Mask<int> mask; // In instance segmentation, it represents the segmentation result of inside Box
+} 
 
 struct Mask {
-  std::vector<T> data; // 分割中的label map或score map
-  std::vector<int> shape; // 表示分割图的shape
-}
+  std::vector<T> data;// the label map or score map in the segmentation
+  std::vector<int> shape; // represents the shape of the segmented graph.
+ }
 ```
 
-## 预测结果可视化
+## Visualization of predicted results
 
-### 目标检测/实例分割结果可视化
+### Object detection/instance segmentation result visualization
 ```
-PaddleX::Visualize(const cv::Mat& img, // 原图
-				   const DetResult& result, // 预测结果
-				   const std::map<int, std::string>& labels // 各类别信息<id, label_name>
-				  )
+PaddleX::Visualize(const cv::Mat& img, // original image)
+                                                    const DetResult& result, // prediction result
+                                                    const std::map<int, std::string>& labels // each class of info <id, label_name>
+                                                    )
 ```
-返回cv::Mat结构体，即为可视化后的结果
+Returns the cv::Mat structure, that is, the result of visualization
 
-### 语义分割结果可视化
+### Visualization of semantic segmentation results
 ```
-PaddleX::Visualize(const cv::Mat& img, // 原图
-				   const SegResult& result, // 预测结果
-                   const std::map<int, std::string>& labels // 各类别信息<id, label_name>
-                  )
+PaddleX::Visualize(const cv::Mat& img, // original image
+                                                   const SegResult& result, // prediction result
+                   const std::map<int, std::string>& labels // each class of info <id, label_name>
+                    )
 ```
-返回cv::Mat结构体，即为可视化后的结果
+Returns the cv::Mat structure, that is, the result of visualization
 
 
-## 代码示例
+## Code example:
 
-- 图像分类 [PaddleX/deploy/cpp/demo/classifier.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/classifier.cpp)  
-- 目标检测/实例分割 [PaddleX/deploy/cpp/demo/detector.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/detector.cpp)
-- 语义分割 [PaddleX/deploy/cpp/demo/segmenter.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/segmenter.cpp)
+- Image classification
+[PaddleX/deploy/cpp/demo/classifier.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/classifier.cpp)  
+- Object detection/Instance segmentation
+[PaddleX/deploy/cpp/demo/detector.cpp ](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/detector.cpp)
+- Semantic segmentation
+[PaddleX/deploy/cpp/demo/segmenter.cpp ](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/segmenter.cpp)

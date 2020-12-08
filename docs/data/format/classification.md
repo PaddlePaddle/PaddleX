@@ -1,84 +1,45 @@
-# 图像分类ImageNet
+# PaddleClas Image Classification
 
-## 数据文件夹结构
+## Data folder structure
 
-在PaddleX中，图像分类支持ImageNet数据集格式。数据集目录`data_dir`下包含多个文件夹，每个文件夹中的图像均属于同一个类别，文件夹的命名即为类别名（注意路径中不要包括中文，空格）。
-如下为示例结构
+In PaddleX, image classification supports ImageNet dataset format. The dataset directory `data_dir` contains multiple folders, and the images in each folder belong to the same category. The folder name is the category name (note that the path should not contain Chinese characters and spaces). The structure example is as follows:
 ```
-MyDataset/ # 图像分类数据集根目录
-|--dog/ # 当前文件夹所有图片属于dog类别
-|  |--d1.jpg
-|  |--d2.jpg
-|  |--...
-|  |--...
-|
-|--...
-|
-|--snake/ # 当前文件夹所有图片属于snake类别
-|  |--s1.jpg
-|  |--s2.jpg
-|  |--...
-|  |--...
+MyDataset/ # Image classification dataset root directory |--dog/ # All pictures in the current folder belong to the dog category. |--d1.jpg |--d2.jpg |--. . . |--. . . | |--. . . | |--snake/ # All pictures in the current folder belongs to the snake category. |--s1.jpg |--s2.jpg |--. . . |--. . .
 ```
 
-## 划分训练集验证集
+## Divide the training set and validation sets
 
-**为了用于训练，我们需要在`MyDataset`目录下准备`train_list.txt`, `val_list.txt`和`labels.txt`三个文件**，分别用于表示训练集列表，验证集列表和类别标签列表。[点击下载图像分类示例数据集](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
+**To facilitate training`, `prepare `train_list.txt , `val_list.txt` and labels.txt` files in the `MyDataset directory, indicating training set list, validation set list and category labels list, respectively.`Click to download the image classification example dataset** [](https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz)
 
 
-> 注：也可使用PaddleX自带工具，对数据集进行随机划分，**在数据集按照上面格式组织后**，使用如下命令即可快速完成数据集随机划分，其中val_value表示验证集的比例，test_value表示测试集的比例（可以为0），剩余的比例用于训练集。
+> Note: You can also use PaddleX's own tool to randomly divide the dataset. After the dataset is organized in the above format, run the following commands to quickly complete the random division of the dataset, where val_value indicates the ratio of the validation set, and test_value indicates the ratio of the test set (which can be 0), and the remaining ratio is used for the training set. ****
 > ```
 > paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
 > ```
 
 
-**labels.txt**  
+**labels.txt **
 
-labels.txt用于列出所有类别，类别对应行号表示模型训练过程中类别的id(行号从0开始计数)，例如labels.txt为以下内容
+labels.txt: lists all the categories. The corresponding line number of the category represents the id of the category during the training of the model (the line number starts counting from 0), for example, labels.txt has the following content:
 ```
-dog
-cat
-snake
+dog cat snake
 ```
-即表示该分类数据集中共有3个类别，分别为`dog`，`cat`和`snake`，在模型训练中`dog`对应的类别id为0, `cat`对应1，以此类推
+There are three `cat`egories in the dataset`,` namely `dog`, cat and `snake`. In the model training, the category id of dog is 0, cat is 1, and so on.``
 
-**train_list.txt**  
+**train_list.txt **
 
-train_list.txt列出用于训练时的图片集合，与其对应的类别id，示例如下
+train_list.txt lists the collection of images used for training. The corresponding category ids are as follows (example):
 ```
-dog/d1.jpg 0
-dog/d2.jpg 0
-cat/c1.jpg 1
-... ...
-snake/s1.jpg 2
+dog/d1.jpg 0 dog/d2.jpg 0 cat/c1.jpg 1 . . . . . .snake/s1.jpg 2
 ```
-其中第一列为相对对`MyDataset`的相对路径，第二列为图片对应类别的类别id
+The first column is the relative path to `MyDataset`, and the second column is the category id of the corresponding category for the image.
 
-**val_list.txt**  
+**val_list.txt **
 
-val_list列出用于验证时的图片集成，与其对应的类别id，格式与train_list.txt一致
+val_list lists the image integration used for validation. The corresponding category id is in the same format as train_list.txt.
 
-## PaddleX数据集加载  
-示例代码如下,
+## PaddleX dataset loading
+Sample codes are as follows:
 ```
-import paddlex as pdx
-from paddlex.cls import transforms
-train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224), transforms.RandomHorizontalFlip(),
-    transforms.Normalize()
-])
-eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224), transforms.Normalize()
-])
-train_dataset = pdx.datasets.ImageNet(
-                    data_dir='./MyDataset',
-                    file_list='./MyDataset/train_list.txt',
-                    label_list='./MyDataset/labels.txt',
-                    transforms=train_transforms)
-eval_dataset = pdx.datasets.ImageNet(
-                    data_dir='./MyDataset',
-                    file_list='./MyDataset/eval_list.txt',
-                    label_list='./MyDataset/labels.txt',
-                    transforms=eval_transforms)
+import paddlex as pdx from paddlex.cls import transforms train_transforms = transforms. Compose([ transforms. RandomCrop(crop_size=224), transforms. RandomHorizontalFlip(), transforms. Normalize() ]) eval_transforms = transforms. Compose([ transforms. ResizeByShort(short_size=256), transforms. CenterCrop(crop_size=224), transforms. Normalize() ]) train_dataset = pdx.datasets. ImageNet( data_dir = '. /MyDataset', file_list='. /MyDataset/train_list.txt', label_list='. /MyDataset/labels.txt', transforms=train_transforms) eval_dataset = pdx.datasets. ImageNet( data_dir = '. /MyDataset', file_list='. /MyDataset/eval_list.txt', label_list='. /MyDataset/labels.txt', transforms=eval_transforms)
 ```

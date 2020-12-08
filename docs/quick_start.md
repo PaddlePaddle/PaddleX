@@ -1,85 +1,85 @@
-# 10分钟快速上手使用
+# Quick start within 10 minutes
 
-本文档在一个小数据集上展示了如何通过PaddleX进行训练。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/450220)。  
+This document shows how to perform training on a small dataset through PaddleX. This example is synchronized to AIStudio. You can directly [experience this model training online] (https://aistudio.baidu.com/aistudio/projectdetail/450220).
 
-本示例代码源于Github [tutorials/train/classification/mobilenetv3_small_ssld.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small_ssld.py)，用户可自行下载至本地运行。  
+The codes of this example are derived from Github [tutorials/train/classification/mobilenetv3_small_ssld.py] (https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small_ssld.py). You can download and run them locally.
 
-PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练代码开发！
+All model trainings in PaddleX follow the following three steps to quickly finish the development of training codes.
 
-| 步骤 |                  |说明             |
+| Steps |  | Description |
 | :--- | :--------------- | :-------------- |
-| 第1步| <a href=#定义训练验证图像处理流程transforms>定义transforms</a>  | 用于定义模型训练、验证、预测过程中，<br>输入图像的预处理和数据增强操作 |
-| 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
-| 第3步| <a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
+| Step 1 | <a href=#Define a training/validation image processing flow transforms>Define transforms</a> | Used to define <br>input image preprocessing and data enhancement operations during model training, validation and inference|
+| Step 2 | <a href="#Define a dataset and load an image classification dataset">Define datasets</a> | Used to define model training and validation datasets to be loaded|
+| Step 3 | <a href="#Start training using the MobileNetV3_small_ssld model">Define models and start training</a> | Select any required models and perform training|
 
-> **注意**：不同模型的transforms、datasets和训练参数都有较大差异，更多模型训练，可直接根据文档教程获取更多模型的训练代码。[模型训练教程](train/index.html)
+> **Note**: The transforms, datasets and training parameters of different models are quite different. For more model trainings, you can get more model training codes directly from the tutorial. [Model training tutorial] (train/index.html)
 
-PaddleX的其它用法
+Other usages of PaddleX
 
-- <a href="#训练过程使用VisualDL查看训练指标变化">使用VisualDL查看训练过程中的指标变化</a>
-- <a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>
+- <a href="#View a change in training indexes using VisualDL during training">Use VisualDL to view an index change during training</a>
+- <a href="#Load a model saved during training and perform inference">Load a model saved during training and perform inference</a>
 
 
-<a name="安装PaddleX"></a>
-**1. 安装PaddleX**  
-> 安装相关过程和问题可以参考PaddleX的[安装文档](./install.md)。
+<a name="Install PaddleX"></a>
+**1 Install PaddleX**
+> For the installation-related process and problems, refer to the PaddleX [installation document]. (./install.md)
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
 
-<a name="准备蔬菜分类数据集"></a>
-**2. 准备蔬菜分类数据集**  
+<a name="Prepare a vegetable classification dataset"></a>
+**2 Prepare a vegetable classification dataset**
 ```
 wget https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz
 tar xzvf vegetables_cls.tar.gz
 ```
 
-<a name="定义训练验证图像处理流程transforms"></a>
-**3. 定义训练/验证图像处理流程transforms**  
+<a name="Define a training/validation image processing flow transforms"></a>
+**3 Define a training/validation image processing flow transforms**
 
-因为训练时加入了数据增强操作，因此在训练和验证过程中，模型的数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](apis/transforms/cls_transforms.html#randomcrop)和[RandomHorizontalFlip](apis/transforms/cls_transforms.html#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](apis/transforms/augment.md)。
+Model data processing flows must be respectively defined during training and validation because data enhancement operations are added during training. [RandomCrop](apis/transforms/cls_transforms.html#randomcrop) and [RandomHorizontalFlip](apis/transforms/cls_transforms.html#randomhorizontalflip) data enhancement methods are added in train_transforms`, as shown in the following codes. For more methods, refer to the [data enhancement document] (apis/transforms/augment.md).
 ```
 from paddlex.cls import transforms
-train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224),
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize()
-])
-eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224),
-    transforms.Normalize()
+train_transforms = transforms. Compose([
+    transforms. RandomCrop(crop_size=224),
+    transforms. RandomHorizontalFlip(),
+    transforms. Normalize() 
+]) 
+eval_transforms = transforms. Compose([
+    transforms. ResizeByShort(short_size=256),
+    transforms. CenterCrop(crop_size=224),
+    transforms. Normalize()
 ])
 ```
 
-<a name="定义dataset加载图像分类数据集"></a>
-**4. 定义`dataset`加载图像分类数据集**  
+<a name="Define a dataset and load an image classification dataset"></a>
+**4 Define a `dataset` and load an image classification dataset**
 
-定义数据集，`pdx.datasets.ImageNet`表示读取ImageNet格式的分类数据集
-- [paddlex.datasets.ImageNet接口说明](apis/datasets.md)
-- [ImageNet数据格式说明](data/format/classification.md)
+Define a dataset. `pdx.datasets. ImageNet` inidicates reading a classification dataset in ImageNet format
+- [paddlex.datasets. ImageNet API description](apis/datasets.md)
+- [ImageNet data format description](data/format/classification.md)
 
 ```
-train_dataset = pdx.datasets.ImageNet(
+train_dataset = pdx.datasets. ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/train_list.txt',
     label_list='vegetables_cls/labels.txt',
     transforms=train_transforms,
     shuffle=True)
-eval_dataset = pdx.datasets.ImageNet(
-    data_dir='vegetables_cls',
-    file_list='vegetables_cls/val_list.txt',
-    label_list='vegetables_cls/labels.txt',
-    transforms=eval_transforms)
+eval_dataset = pdx.datasets. ImageNet(
+     data_dir='vegetables_cls',
+     file_list='vegetables_cls/val_list.txt',
+     label_list='vegetables_cls/labels.txt',
+     transforms=eval_transforms)
 ```
 
-<a name="使用MoibleNetV3_small_ssld模型开始训练"></a>
-**5. 使用MobileNetV3_small_ssld模型开始训练**  
+<a name="Start training using the MobileNetV3_small_ssld model"></a>
+**5 Start training using the MobileNetV3_small_ssld model**
 
-本文档中使用百度基于蒸馏方法得到的MobileNetV3预训练模型，模型结构与MobileNetV3一致，但精度更高。PaddleX内置了20多种分类模型，查阅[PaddleX模型库](appendix/model_zoo.md)了解更多分类模型。
+In this document, the MobileNetV3 pre-training model obtained by Baidu based on the distillation method is used. The model structure is the same as MobileNetV3, but the precision is higher. PaddleX has more than 20 built-in classification models. For the details of more classification models, refer to the [PaddleX model library] (appendix/model_zoo.md).
 ```
 num_classes = len(train_dataset.labels)
-model = pdx.cls.MobileNetV3_small_ssld(num_classes=num_classes)
+model = pdx.cls. MobileNetV3_small_ssld(num_classes=num_classes)
 
 model.train(num_epochs=20,
             train_dataset=train_dataset,
@@ -90,37 +90,37 @@ model.train(num_epochs=20,
             use_vdl=True)
 ```
 
-<a name="训练过程使用VisualDL查看训练指标变化"></a>
-**6. 训练过程使用VisualDL查看训练指标变化**  
+<a name="View a change in training indexes using VisualDL during training"></a>
+**6 View a change in training indexes using VisualDL during training**
 
-训练过程中，模型在训练集和验证集上的指标均会以标准输出流形式输出到命令终端。当用户设定`use_vdl=True`时，也会使用VisualDL格式将指标打点到`save_dir`目录下的`vdl_log`文件夹，在终端运行如下命令启动visualdl并查看可视化的指标变化情况。
+Model indexes on both the training and validation sets are outputted to a command terminal in the form of standard output stream during training When you set `use_vdl=True`, indexes are also sent to the `vdl_log` folder in the `save_dir` directory in VisualDL format. Run the following command in the terminal to start visualdl and view a visual index change.
 ```
 visualdl --logdir output/mobilenetv3_small_ssld --port 8001
 ```
-服务启动后，通过浏览器打开https://0.0.0.0:8001或https://localhost:8001即可。
+After the service is started, open https://0.0.0.0:8001 or https://localhost:8001 on the browser.
 
-如果您使用的是AIStudio平台进行训练，不能通过此方式启动visualdl，请参考AIStudio VisualDL启动教程使用
+If you use the AIStudio platform for training, you cannot start visualdl using this method. Refer to the AIStudio VisualDL start tutorial
 
-<a name="加载训练保存的模型预测"></a>
-**7. 加载训练保存的模型预测**  
+<a name="Load a model saved during training and perform inference"></a>
+**7 Load a model saved during training and perform inference**
 
-模型在训练过程中，会每间隔一定轮数保存一次模型，在验证集上评估效果最好的一轮会保存在`save_dir`目录下的`best_model`文件夹。通过如下方式可加载模型，进行预测。
-- [load_model接口说明](apis/load_model.md)
-- [分类模型predict接口说明](apis/models/classification.html#predict)
+A model is saved every certain number of rounds during training. The round with the best evaluation on the validation set is saved in the `best_model` folder in the `save_dir` directory. The following method is used to load a model and perform inference.
+- [load_model API description](apis/load_model.md)
+- [predict API description for a classification model](apis/models/classification.html#predict)
 ```
 import paddlex as pdx
-model = pdx.load_model('output/mobilenetv3_small_ssld/best_model')
+model = pdx. load_model('output/mobilenetv3_small_ssld/best_model')
 result = model.predict('vegetables_cls/bocai/100.jpg')
-print("Predict Result: ", result)
+print("Predict Result:", result)
 ```
-预测结果输出如下,
+The inference results are outputted as follows:
 ```
-Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'category_id': 0}]
+Predict Result:Predict Result:[{'score':0.9999393, 'category':'bocai', 'category_id':0}]
 ```
 
-<a name="更多使用教程"></a>
-**更多使用教程**
-- 1.[目标检测模型训练](train/object_detection.md)
-- 2.[语义分割模型训练](train/semantic_segmentation.md)
-- 3.[实例分割模型训练](train/instance_segmentation.md)
-- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress)
+<a name="More tutorials"></a>
+**More tutorials**
+- 1 [Object detection model training](train/object_detection.md)
+- 2 [Semantic segmentation model training](train/semantic_segmentation.md)
+- 3 [Instance segmentation model training](train/instance_segmentation.md)
+- 4 [If a model is too large and you want to have a small model, try to prune it.](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress)

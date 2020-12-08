@@ -1,24 +1,25 @@
-# 模型加载
+# Complete model loading
 
-PaddleX提供了统一的模型加载接口，支持加载PaddleX保存的模型，并在验证集上进行评估或对测试图片进行预测
+PaddleX provides a unified model loading API which supports loading models saved by PaddleX and performs evaluations on the validation set or predicts test images
 
 ## paddlex.load_model
-> **加载PaddleX保存的模型**  
+> **Load models saved by PaddleX**
 
 ```
 paddlex.load_model(model_dir)
 ```
 
-### 参数
+### Parameters
 
-* **model_dir**: 训练过程中保存的模型路径
+* **model_dir**: Model path saved in the training process
 
-### 返回值
-* **paddlex.cv.models**, 模型类。
+### Returned value
+* **paddlex.cv.models**, model type. 
 
-### 示例
-> 1. [点击下载](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)PaddleX在小度熊分拣数据上训练的MaskRCNN模型
-> 2. [点击下载](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz)小度熊分拣数据集
+### Example
+> 1. [Click to download](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz) the MaskRCNN model trained by PaddleX on Xiaoduxiong sorting data
+> 2. [Click to download](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz) the Xiaoduxiong sorting dataset
+
 
 ```
 import paddlex as pdx
@@ -27,15 +28,16 @@ model_dir = './xiaoduxiong_epoch_12'
 data_dir = './xiaoduxiong_ins_det/JPEGImages'
 ann_file = './xiaoduxiong_ins_det/val.json'
 
-# 加载垃圾分拣模型
-model = pdx.load_model(model_dir)
+# Load a waste sorting model
+model = pdx.load_model(model_dir) 
 
-# 预测
+# Predict 
 pred_result = model.predict('./xiaoduxiong_ins_det/JPEGImages/WechatIMG114.jpeg')
 
-# 在验证集上进行评估
+# Evaluate on the validation set
 eval_reader = pdx.cv.datasets.CocoDetection(data_dir=data_dir,
                                             ann_file=ann_file,
                                             transforms=model.eval_transforms)
 eval_result = model.evaluate(eval_reader, batch_size=1)
+```
 ```

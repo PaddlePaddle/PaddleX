@@ -1,281 +1,280 @@
-# MeterReader工业表计读数
+# MeterReader Industrial Meter Readings
 
-本案例基于PaddleX实现对传统机械式指针表计的检测与自动读数功能，开放表计数据和预训练模型，并提供在windows系统的服务器端以及linux系统的jetson嵌入式设备上的部署指南。
+This case implements the detection and automatic reading of traditional mechanical pointer meters based on PaddleX, to open up the meter data and pre-training model, and provide the deployment guide for server-side on Windows-based systems and jetson embedded devices on Linux-based systems.
 
-## 目录
+## Directory
 
-* [读数流程](#1)
-* [表计数据和预训练模型](#2)
-* [快速体验表盘读数](#3)
-* [推理部署](#4)
-* [模型训练](#5)
+* [Reading flow](#1)
+* [Metering data and pre-training models](#2)
+* [Quick experience of dial readings](#3)
+* [Inference deployment](#4)
+* [Model training](#5)
 
 
-## <h2 id="1">读数流程</h2>
+## <h2 id="1">Reading flow</h2>
 
-表计读数共分为三个步骤完成：
+Meter readings are completed in three steps:
 
-* 第一步，使用目标检测模型检测出图像中的表计
-* 第二步，使用语义分割模型将各表计的指针和刻度分割出来
-* 第三步，根据指针的相对位置和预知的量程计算出各表计的读数。
+* Step 1: Detect the meter in the image by using the object detection model.
+* Step 2: Use the semantic segmentation model to segment the pointer and scales of each meter.
+* Step 3: Calculate the reading of each meter based on the relative position of the pointer and the predicted range.
 
 ![MeterReader_Architecture](image/MeterReader_Architecture.jpg)
 
-* **表计检测**：由于本案例中没有面积较小的表计，所以目标检测模型选择性能更优的**YOLOv3**。考虑到本案例主要在有GPU的设备上部署，所以骨干网路选择精度更高的**DarkNet53**。
-* **刻度和指针分割**：考虑到刻度和指针均为细小区域，语义分割模型选择效果更好的**DeepLapv3**。
-* **读数后处理**：首先，对语义分割的预测类别图进行图像腐蚀操作，以达到刻度细分的目的。然后把环形的表盘展开为矩形图像，根据图像中类别信息生成一维的刻度数组和一维的指针数组。接着计算刻度数组的均值，用均值对刻度数组进行二值化操作。最后定位出指针相对刻度的位置，根据刻度的根数判断表盘的类型以此获取表盘的量程，将指针相对位置与量程做乘积得到表盘的读数。
+* **Meter detection**: Since there is no meter with a small area in this case, the object detection model chooses **YOLOv3 that has better performance**. With the consideration that this case is mainly deployed on devices with GPUs, **DarkNet53** with higher precision is chosen for the backbone network.
+* **Scale and pointer segmentation**: With the consideration that the scale and pointer are in fine regions, the semantic segmentation model chooses **DeepLapv3** that has better performance.
+* **Post-processing of readings**: 1. The semantically segmented prediction class map is subjected to an image etching operation for the purpose of scale segmentation. 2. The ring-shaped dial is expanded into a rectangular image, and a one-dimensional scale array and a one-dimensional pointer array are generated based on the class information in the image. 3. The mean value of the scale array is calculated, to use the mean value of the scale array for the binary operation. 4. The position of the pointer relative to the scale is located, to determine the type of dial according to the number of the scales to obtain the range of the dial, to multiply the relative position of the pointer and the range to get the reading of the dial.
 
 
-## <h2 id="2">表计数据和预训练模型</h2>
+## <h2 id="2">Metering data and pre-training models</h2>
 
-本案例开放了表计测试图片，用于体验表计读数的预测推理全流程。还开放了表计检测数据集、指针和刻度分割数据集，用户可以使用这些数据集重新训练模型。
+This case opens up meter test images for experiencing the full flow of prediction inference for meter readings. It also opens up the meter detection dataset, and pointer and scale segmentation dataset to allow users to use these datasets for experiencing the training model.
 
-| 表计测试图片                                                 | 表计检测数据集                                               | 指针和刻度分割数据集                                         |
+| Meter test image | Meter detection dataset | Pointer and scale segmentation dataset |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [meter_test](https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_test.tar.gz) | [meter_det](https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_det.tar.gz) | [meter_seg](https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz) |
 
-本案例开放了预先训练好的检测模型和语义分割模型，可以使用这些模型快速体验表计读数全流程，也可以直接将这些模型部署在服务器端或jetson嵌入式设备上进行推理预测。
+The case opens up pre-trained detection and semantic segmentation models, which can be used to quickly experience the full flow of the meter reading, or deployed directly on server-side or jetson embedded devices to perform the inference prediction.
 
-| 表计检测模型                                                 | 指针和刻度分割模型                                           |
+| Meter detection model | Pointer and scale segmentation model |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [meter_det_inference_model](https://bj.bcebos.com/paddlex/examples/meter_reader/models/meter_det_inference_model.tar.gz) | [meter_seg_inference_model](https://bj.bcebos.com/paddlex/examples/meter_reader/models/meter_seg_inference_model.tar.gz) |
 
 
-## <h2 id="3">快速体验表盘读数</h2>
+## <h2 id="3">Quick experience of dial readings</h2>
 
-可以使用本案例提供的预训练模型快速体验表计读数的自动预测全流程。如果不需要预训练模型，可以跳转至小节`模型训练` 重新训练模型。
+You can use the pre-trained model provided in this case to quickly experience the full flow of automatic prediction of meter readings. If you do not need a pre-trained model, you can go to the `model training` to restart the training model.
 
-#### 前置依赖
+#### Pre-dependence
 
 * Paddle paddle >= 1.8.0
 * Python >= 3.5
 * PaddleX >= 1.0.0
 
-安装的相关问题参考[PaddleX安装](../../docs/install.md)
+For installation related issues, refer to [PaddleX] Installation. (../../docs/install.md)
 
-#### 测试表计读数
+#### Test meter readings
 
-1. 下载PaddleX源码:
+1. Download PaddleX source code:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-2. 预测执行文件位于`PaddleX/examples/meter_reader/`，进入该目录：
+2. The prediction execution file is located in `PaddleX/examples/meter_reader/`. Access the directory:
 
 ```
 cd PaddleX/examples/meter_reader/
 ```
 
-预测执行文件为`reader_infer.py`，其主要参数说明如下：
+The prediction execution file is `reader_infer.py`, and its main parameters are described as follows:
 
 
-| 参数    | 说明   |
+| Parameters | Description |
 | ---- | ---- |
-|  detector_dir    | 表计检测模型路径     |
-|	segmenter_dir		 | 指针和刻度分割模型路径|
-|	image            | 待预测的图片路径  |
-|  image_dir       | 存储待预测图片的文件夹路径 |
-| save_dir	| 保存可视化结果的路径, 默认值为"output"|
-| score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
-| seg_batch_size | 分割的批量大小，默认为2 |
-| use_camera | 是否使用摄像头采集图片，默认为False |
-| camera_id | 摄像头设备ID，默认值为0 |
-| use_erode | 是否使用图像腐蚀对分割预测图进行细分，默认为False |
-| erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
+| detector_dir | Meter detection model path |
+| segmenter_dir | Pointer and scale segmentation model paths |
+| Image | Image path to be predicted |
+| image_dir | Folder paths to store images to be predicted |
+| save_dir | Path to save the visualization results (default value is "output") |
+| score_threshold | Boxes with prediction scores below this threshold are filtered out during the output of the detection model, and the default value is 0.5. |
+| seg_batch_size | Batch size of the segmentation (default value is 2) |
+| use_camera | Whether to use a camera to capture pictures (default value is False) |
+| camera_id | Camera device ID (default value is 0) |
+| use_erode | Whether to subdivide the segmentation prediction images by using image erosion (default value is False) |
+| erode_kernel | Convolution kernel size during image etching operation (default value is 4) |
 
-3. 预测
+3. Prediction
 
-若要使用GPU，则指定GPU卡号（以0号卡为例）：
+If the GPU is used, the GPU card number is specified (for example, card 0):
 
 ```shell
 export CUDA_VISIBLE_DEVICES=0
 ```
-若不使用GPU，则将CUDA_VISIBLE_DEVICES指定为空:
+If the GPU is not used, CUDA_VISIBLE_DEVICES is set to null:
 ```shell
 export CUDA_VISIBLE_DEVICES=
 ```
 
-* 预测单张图片
+* Prediction of a single picture
 
 ```shell
 python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image /path/to/meter_test/20190822_168.jpg --save_dir ./output --use_erode
 ```
 
-* 预测多张图片
+* Prediction of multiple pictures
 
 ```shell
 python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --image_dir /path/to/meter_test --save_dir ./output --use_erode
 ```
 
-* 开启摄像头预测
+* Start the camera for prediction
 
 ```shell
 python reader_infer.py --detector_dir /path/to/det_inference_model --segmenter_dir /path/to/seg_inference_model --save_dir ./output --use_erode --use_camera
 ```
 
-## <h2 id="4">推理部署</h2>
+## <h2 id="4">Inference deployment</h2>
 
-### Windows系统的服务器端安全部署
+### Server-side security deployment of Windows systems
 
-#### c++部署
+#### c++ deployment
 
-1. 下载PaddleX源码:
+1. Download PaddleX source code:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-2. 将`PaddleX\examples\meter_reader\deploy\cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX\deploy\cpp`目录下，拷贝之前可以将`PaddleX\deploy\cpp`下原本的`CMakeList.txt`做好备份。
+2. Copy the `meter_reader` folder and `CMakeList.txt` from `PaddleX\deploy\cpp` to the `PaddleX\deploy\cpp` directory. Make a backup of the original `CMakeList.txt` in `PaddleX\deploy\cpp` before copying.
 
-3. 按照[Windows平台部署](../../docs/deploy/server/cpp/windows.md)中的Step2至Step4完成C++预测代码的编译。
+3. Compile the C++ prediction code according to Step2 to Step4 in the [Windows platform deployment]. (../../docs/deploy/server/cpp/windows.md)
 
-4. 编译成功后，可执行文件在`out\build\x64-Release`目录下，打开`cmd`，并切换到该目录：
+4. After successful compilation, the executable file is in the `out\build\x64-Release` directory. Run `cmd`, to switch to that directory:
 
    ```
    cd PaddleX\deploy\cpp\out\build\x64-Release
    ```
 
-   预测程序为paddle_inference\meter_reader.exe，其主要命令参数说明如下：
+   The prediction program is paddle_inference\meter_reader.exe. Its main command parameters are described below:
 
-   | 参数    | 说明   |
+   | Parameters | Description |
    | ---- | ---- |
-   |  det_model_dir    | 表计检测模型路径     |
-   |	seg_model_dir		 | 指针和刻度分割模型路径|
-   |	image            | 待预测的图片路径  |
-   |  image_list       | 按行存储图片路径的.txt文件 |
-   | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
-   | gpu_id	| GPU 设备ID, 默认值为0 |
-   | save_dir	| 保存可视化结果的路径, 默认值为"output"|
-   | seg_batch_size | 分割的批量大小，默认为2 |
-   | thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
-   | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
-   | camera_id | 摄像头设备ID，默认值为0 |
-   | use_erode | 是否使用图像腐蚀对分割预测图进行去噪，支持值为0或1(默认值为1) |
-   | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
-   | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
+   | det_model_dir | Meter detection model path |
+   | seg_model_dir | Pointer and scale segmentation model paths |
+   | Image | Image path to be predicted |
+   | image_list | .txt file of storing image paths by line |
+   | use_gpu | Whether to use GPU prediction (value is 0 (default) or 1) |
+   | gpu_id | GPU device ID (default value is 0) |
+   | save_dir | Path to save the visualization results (default value is "output") |
+   | seg_batch_size | Batch size of the segmentation (default value is 2) |
+   | thread_num | Number of threads for segmentation prediction (default value is the number of cpu processors) |
+   | use_camera | Whether to use a camera to capture pictures (value is 0 (default) or 1) |
+   | camera_id | Camera device ID (default value is 0) |
+   | use_erode | Whether to use image erosion to denoise the segmentation prediction images (value is 0 or 1 (default)) |
+   | erode_kernel | Convolution kernel size during image etching operation (default value is 4) |
+   | score_threshold | Boxes with prediction scores below this threshold are filtered out during the output of the detection model and the default value is 0.5. |
 
-5. 推理预测：
+5. Inference prediction:
 
-  用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[导出inference模型](https://paddlex.readthedocs.io/zh_CN/latest/tutorials/deploy/deploy_server/deploy_python.html#inference)将模型导出为inference格式。
+The model for the deployment inference should be in inference format. The pre-training models provided in this case are in inference format. For a re-trained model, you need to refer to the [Export of Inference Model] (https://paddlex.readthedocs.io/zh_CN/latest/tutorials/deploy/deploy_server/deploy_python.html#inference) to export the model to inference format.
 
-  * 使用未加密的模型对单张图片做预测
-  ```shell
+* Use unencrypted models to make predictions on a single picture.
+```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image=\path\to\meter_test\20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
-  ```
+```
 
-  * 使用未加密的模型对图像列表做预测
+* Use unencrypted models to make predictions about image lists
 
-  图像列表image_list.txt内容的格式如下，因绝对路径不同，暂未提供该文件，用户可根据实际情况自行生成：
-  ```
-  \path\to\images\1.jpg
-  \path\to\images\2.jpg
-  ...
-  \path\to\images\n.jpg
-  ```
+The format of the image_list.txt content is as follows (it is not provided yet due to the different absolute paths, and can be generated by the user as required):
+```
+\path\to\images\1.jpg 
+\path\to\images\2.jpg
+ . . . 
+\path\to\images\n.jpg
+```
 
-  ```shell
+```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --image_list=\path\to\meter_test\image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
-  ```
+```
 
-  * 使用未加密的模型开启摄像头做预测
+* Use unencrypted models to start the camera to make predictions
 
-  ```shell
+```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\det_inference_model --seg_model_dir=\path\to\seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
   ```
 
-  * 使用加密后的模型对单张图片做预测  
+* Prediction of a single image using an encrypted model
 
-  如果未对模型进行加密，请参考[加密PaddleX模型](../../docs/deploy/server/encryption.md#13-加密paddlex模型)对模型进行加密。例如加密后的检测模型所在目录为`\path\to\encrypted_det_inference_model`，密钥为`yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`；加密后的分割模型所在目录为`\path\to\encrypted_seg_inference_model`，密钥为`DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`  
+If the model is not encrypted, please refer to the [encrypted PaddleX model] (../../docs/deploy/server/encryption.md#13-encrypt paddlex model) to encrypt the model. For example, the directory where the encrypted detection model is located is `\path\to\encrypted_det_inference_model`, and the key is `yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0=`; after encryption, the directory where the segmentation model is located is `\path\to\encrypted_seg_inference_model`, and the key is `DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=`
 
-  ```shell  
+```shell
   .\paddlex_inference\meter_reader.exe --det_model_dir=\path\to\encrypted_det_inference_model --seg_model_dir=\path\to\encrypted_seg_inference_model --image=\path\to\test.jpg --use_gpu=1 --use_erode=1 --save_dir=output --det_key yEBLDiBOdlj+5EsNNrABhfDuQGkdcreYcHcncqwdbx0= --seg_key DbVS64I9pFRo5XmQ8MNV2kSGsfEr4FKA6OH9OUhRrsY=  
-  ```
+```
 
-### Linux系统的jetson嵌入式设备安全部署
+### Security deployment of jetson embedded devices for Linux systems
 
-#### c++部署
+#### c++ deployment
 
-1. 下载PaddleX源码:
+1. Download PaddleX source code:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-2. 将`PaddleX/examples/meter_reader/deploy/cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX/deploy/cpp`目录下，拷贝之前可以将`PaddleX/deploy/cpp`下原本的`CMakeList.txt`做好备份。
+2. Copy `meter_reader` folder and `CMakeList.txt` from `PaddleX/examples/meter_reader/deploy/cpp` to `PaddleX/deploy/cpp` directory. You can make a backup of the original `CMakeList.txt` in `PaddleX/deploy/cpp` before copying.
 
-3. 按照[Nvidia Jetson开发板部署](../../docs/deploy/nvidia-jetson.md)中的Step2至Step3完成C++预测代码的编译。
+3. Follow Step2 to Step3 in the [Nvidia Jetson deployment] (../../docs/deploy/nvidia-jetson.md) to compile the C++ prediction codes.
 
-4. 编译成功后，可执行程为`build/meter_reader/meter_reader`，其主要命令参数说明如下：
+4. After successful compilation, the executable program is `build/meter_reader/meter_reader`. Main command parameters are as follows:
 
-  | 参数    | 说明   |
-  | ---- | ---- |
-  |  det_model_dir    | 表计检测模型路径     |
-  |	seg_model_dir		 | 指针和刻度分割模型路径|
-  |	image            | 待预测的图片路径  |
-  |  image_list       | 按行存储图片路径的.txt文件 |
-  | use_gpu	| 是否使用 GPU 预测, 支持值为0或1(默认值为0)|
-  | gpu_id	| GPU 设备ID, 默认值为0 |
-  | save_dir	| 保存可视化结果的路径, 默认值为"output"|
-  | seg_batch_size | 分割的批量大小，默认为2 |
-  | thread_num	| 分割预测的线程数，默认为cpu处理器个数 |
-  | use_camera | 是否使用摄像头采集图片，支持值为0或1(默认值为0) |
-  | camera_id | 摄像头设备ID，默认值为0 |
-  | use_erode | 是否使用图像腐蚀对分割预测图进行细分，支持值为0或1(默认值为1) |
-  | erode_kernel | 图像腐蚀操作时的卷积核大小，默认值为4 |
-  | score_threshold | 检测模型输出结果中，预测得分低于该阈值的框将被滤除，默认值为0.5|
+| Parameters | Description |
+| ---- | ---- |
+| det_model_dir | Meter detection model path |
+| seg_model_dir | Pointer and scale segmentation model paths |
+| Image | Image path to be predicted |
+| image_list | .txt file of storing image paths by line |
+| use_gpu | Whether to use GPU prediction (value is 0 (default) or 1) |
+| gpu_id | GPU device ID (default value is 0) |
+| save_dir | Path to save the visualization results (default value is "output") |
+| seg_batch_size | Batch size of the segmentation (default value is 2) |
+| thread_num | Number of threads for segmentation prediction ( default value is the number of cpu processors) |
+| use_camera | Whether to use a camera to capture pictures (value is 0 (default) or 1) |
+| camera_id | Camera device ID (default value is 0) |
+| use_erode | Whether to subdivide the segmentation prediction pictures by using image erosion (value is 0 or 1 (default)) |
+| erode_kernel | Convolution kernel size during image etching operation (default value is 4) |
+| score_threshold | Boxes with prediction scores below this threshold are filtered out during the output of the detection model and the default value is 0.5. |
 
-5. 推理预测：
+5. Inference prediction:
 
-  用于部署推理的模型应为inference格式，本案例提供的预训练模型均为inference格式，如若是重新训练的模型，需参考[部署模型导出](../../docs/deploy/export_model.md)将模型导出为inference格式。
+The model for the deployment inference should be in inference format. The pre-training models provided in this case are in inference format. For a re-trained model, you need to refer to the [Deployment Model Export] (../../docs/deploy/export_model.md) to export the model to inference format.
 
-  * 使用未加密的模型对单张图片做预测
+* Use unencrypted models to make predictions on a single picture.
 
-  ```shell
+```shell
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image=/path/to/meter_test/20190822_168.jpg --use_gpu=1 --use_erode=1 --save_dir=output
-  ```
+```
 
-  * 使用未加密的模型对图像列表做预测
-  图像列表image_list.txt内容的格式如下，因绝对路径不同，暂未提供该文件，用户可根据实际情况自行生成：
-  ```
+* Use unencrypted models to make predictions about image lists
+The format of the image_list.txt content is as follows (it is not provided yet due to the different absolute paths, and can be generated by the user as required):
+```
   \path\to\images\1.jpg
   \path\to\images\2.jpg
   ...
   \path\to\images\n.jpg
-  ```
+```
 
   ```shell
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --image_list=/path/to/image_list.txt --use_gpu=1 --use_erode=1 --save_dir=output
-  ```
+```
 
-  * 使用未加密的模型开启摄像头做预测
+* Use unencrypted models to start the camera to make predictions
 
   ```shell
   ./build/meter_reader/meter_reader --det_model_dir=/path/to/det_inference_model --seg_model_dir=/path/to/seg_inference_model --use_camera=1 --use_gpu=1 --use_erode=1 --save_dir=output
-  ```
+```
 
-## <h2 id="5">模型训练</h2>
+## <h2 id="5">Model training</h2>
 
 
-#### 前置依赖
+#### Pre-dependence
 
-* Paddle paddle >= 1.8.0
+* PaddlePaddle >= 1.8.0
 * Python >= 3.5
 * PaddleX >= 1.0.0
 
-安装的相关问题参考[PaddleX安装](../../docs/install.md)
+For installation related issues, refer to [PaddleX Installation] (../../docs/install.md).
 
-#### 训练
+#### Training
 
-* 表盘检测的训练
+* Training of dial detection
 ```
 python /path/to/PaddleX/examples/meter_reader/train_detection.py
 ```
-* 指针和刻度分割的训练
+* Training of pointer and scale segmentation
 
 ```
 python /path/to/PaddleX/examples/meter_reader/train_segmentation.py
-
 ```
 
-运行以上脚本可以训练本案例的检测模型和分割模型。如果不需要本案例的数据和模型参数，可更换数据，选择合适的模型并调整训练参数。
+Run the above script to train the detection model and segmentation model in this case. If you do not need the data and model parameters of this case, you can change the data, select the appropriate model and adjust the training parameters.

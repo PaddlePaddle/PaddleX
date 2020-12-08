@@ -1,83 +1,85 @@
-# PaddleX模型介绍
+# Introduction to the PaddleX model
 
-PaddleX针对图像分类、目标检测、实例分割和语义分割4种视觉任务提供了丰富的模型算法，用户根据在实际场景中的需求选择合适的模型。
+PaddleX provides rich model algorithms for four vision tasks: image classification, object detection, instance segmentation and semantic segmentation, allowing users to choose the appropriate model as required in real scenarios.
 
-## 图像分类
-图像分类任务指的是输入一张图片，模型预测图片的类别，如识别为风景、动物、车等。
+## Image classification
+The image classification task refers to the input of an image for the model to predict the category of the image, for example, identifying it as a landscape, animal, car, and so on.
 
 ![](./images/image_classification.png)
 
-对于图像分类任务，针对不同的应用场景，PaddleX提供了百度改进的模型，见下表所示:
+For the image classification task, PaddleX provides Baidu's improved model for different application scenarios. See the following table:
 
-> * GPU预测速度的评估环境基于T4机器，在FP32+TensorRT配置下运行500次测得（去除前10次的warmup时间）。
-> * CPU预测速度的的评估环境基于骁龙855（SD855）。
-> * Top1准确率为ImageNet-1000数据集上评估所得。
+> * GPU prediction speed is obtained based on the evaluation environment of the T4 machine by measuring 500 times under FP32+TensorRT configuration (removing the warmup time of the first 10 times).
+> * CPU prediction speed is based on the evaluation environment of Snapdragon 855 (SD855).
+> * Top 1 accuracy is evaluated on the ImageNet-1000 dataset.
 
-|    模型    |  模型特点 | 存储体积 | GPU time(ms) bs=1 | SD855 time(ms) bs=1 | Top1准确率 |
+| Model | Model Feature | Storage Size | GPU time(ms) bs=1 | SD855 time(ms) bs=1 | Top1 Accuracy |
 | :--------- | :------  | :---------- | :-----------| :-------------  | :--- |
-| MobileNetV3_small_ssld | 轻量高速，适用于追求高速的实时移动端场景 | 12.5MB | - | 6.5463 | 71.3.0% |
-| ShuffleNetV2 | 轻量级模型，精度相对偏低，适用于要求更小存储体积的实时移动端场景 | 10.2MB | - | 10.941 | 68.8% |
-| MobileNetV3_large_ssld | 轻量级模型，在存储方面优势不大，在速度和精度上表现适中，适合于移动端场景 | 22.8MB | - | 19.30835 | 79.0% |
-| MobileNetV2 | 轻量级模型，适用于使用GPU预测的移动端场景 | 15.0MB | - | 23.317699 | 72.2 % |
-| ResNet50_vd_ssld | 高精度模型，预测时间较短，适用于大多数的服务器端场景 | 103.5MB | 3.47712 | - | 82.4% |
-| ResNet101_vd_ssld | 超高精度模型，预测时间相对较长，适用于有大数据量时的服务器端场景 | 180.5MB | 6.11704 | - | 83.7% |
-| Xception65 | 超高精度模型，预测时间更长，在处理较大数据量时有较高的精度，适用于服务器端场景 | 161.6MB | 7.26158 | - | 80.3% |
+| MobileNetV3_small_ssld | Lightweight and high speed, suitable for real-time mobile scenes in high speed. | 12.5MB | - | 6.5463 | 71.3.0% |
+| ShuffleNetV2 | Lightweight model with relatively low precision, suitable for real-time mobile scenarios requiring smaller storage size | 10.2MB | - | 10.941 | 68.8% |
+| MobileNetV3_large_ssld | Lightweight model with little storage advantage, moderate performance in terms of speed and precision, suitable for mobile scenarios | 22.8MB | - | 19.30835 | 79.0% |
+| MobileNetV2 | Lightweight model, suitable for mobile scenarios by using GPU predictions | 15.0MB | - | 23.317699 | 72.2% |
+| ResNet50_vd_ssld | High precision models with short prediction time, suitable for most server scenarios | 103.5MB | 3.47712 | - | 82.4% |
+| ResNet101_vd_ssld | Ultra-high precision model with relatively long prediction time, suitable for server scenarios with large data volumes. | 180.5MB | 6.11704 | - | 83.7% |
+| Xception65 | Ultra-high precision model with longer prediction time and higher precision when processing large data volumes, suitable for server scenarios | 161.6MB | 7.26158 | - | 80.30% |
 
-包括上述模型，PaddleX支持近20种图像分类模型，其余模型可参考[PaddleX模型库](../appendix/model_zoo.md)
+In addition to the above models, PaddleX supports nearly 20 image classification models. For the rest of the models, refer to the [PaddleX model library]. (../appendix/model_zoo.md)
 
 
-## 目标检测
-目标检测任务指的是输入图像，模型识别出图像中物体的位置（用矩形框框出来，并给出框的位置），和物体的类别，如在手机等零件质检中，用于检测外观上的瑕疵等。
+## Object detection
+Object detection task means that the model identifies the position of the object in the input image (framed by a rectangle and marked the position of the frame) and the object class. For example, detect cosmetic defects in the quality control of parts of mobile phones.
 
 ![](./images/object_detection.png)
 
-对于目标检测，针对不同的应用场景，PaddleX提供了主流的YOLOv3模型和Faster-RCNN模型，见下表所示
+For object detection, PaddleX provides the mainstream YOLOv3 model and the Faster-RCNN model in different application scenarios. See the following table:
 
-> * GPU预测速度评估环境基于Tesla V100机器，在FP32+TensorRT配置下运行100次测得（去除前10次warmup时间)。
-> * Box mmAP为MSCOCO数据集上评估所得。
+> * GPU prediction speed is obtained based on the evaluation environment of Tesla V100 by measuring 100 times under FP32+TensorRT configuration (removing the warmup time of the first 10 times).
+> * Box mmAP is the evaluation result on the MSCOCO dataset.
 
-|   模型   | 模型特点 | 存储体积  |  GPU time(ms) bs=1 | Box mmAP |
+| Model | Model Feature | Storage Size | GPU time(ms) bs=1 | Box mmAP |
 | :------- | :-------  | :---------  | :---------- | :--- |
-| YOLOv3-MobileNetV3_large | 适用于追求高速预测的移动端场景 | 100.7MB | - | 31.6 |
-| YOLOv3-MobileNetV1 | 精度相对偏低，适用于追求高速预测的服务器端场景 | 99.2MB| 11.834 | 29.3 |
-| YOLOv3-DarkNet53 | 在预测速度和模型精度上都有较好的表现，适用于大多数的服务器端场景| 249.2MB | 20.252 | 38.9 |
-| PPYOLO | 预测速度和模型精度都比YOLOv3-DarkNet53优异，适用于大多数的服务器端场景 | 329.1MB | - | 45.9 |
-| FasterRCNN-ResNet50-FPN | 经典的二阶段检测器，预测速度相对较慢，适用于重视模型精度的服务器端场景 | 167.MB | 24.758 | 37.2 |
-| FasterRCNN-HRNet_W18-FPN | 适用于对图像分辨率较为敏感、对目标细节预测要求更高的服务器端场景 | 115.5MB | - | 36 |
-| FasterRCNN-ResNet101_vd-FPN | 超高精度模型，预测时间更长，在处理较大数据量时有较高的精度，适用于服务器端场景 | 244.3MB | 29.969 | 40.5 |
+| YOLOv3-MobileNetV3_large | Suitable for mobile scenarios where high-speed prediction is required | 100.7 MB | - | 31.6 |
+| YOLOv3-MobileNetV1 | Relatively low precision, suitable for server-side scenarios that require high-speed prediction. | 99.2 MB | 11.834 | 29.3 |
+| YOLOv3-DarkNet53 | Good performance in terms of prediction speed and model precision for most server-side scenarios | 249.2 MB | 20.252 | 38.9 |
+| PPYOLO | Better prediction speed and model precision than YOLOv3-DarkNet53, suitable for most server-side scenarios | 329.1 MB | - | 45.9 |
+| FasterRCNN-ResNet50-FPN | Classic two-stage detector with relatively slow prediction speed for server-side scenarios that attach importance to the model precision | 167 MB | 24.758 | 37.2 |
+| FasterRCNN - HRNet_W18-FPN | Suitable for server-side scenes that are sensitive to image resolution and require more details of object prediction | 115.5MB | - | 36 |
+| FasterRCNN-ResNet101_vd-FPN | Ultra-high precision model with longer prediction time and higher precision when processing large data volumes, suitable for server scenarios | 244.3MB | 29.969 | 40.5 |
 
-除上述模型外，YOLOv3和Faster RCNN还支持其他backbone，详情可参考[PaddleX模型库](../appendix/model_zoo.md)
+In addition to the above models, YOLOv3 and Faster RCNN also support other backbones. For details, refer to the [PaddleX model library] (../appendix/model_zoo.md). 
 
-### 实例分割
-在目标检测中，模型识别出图像中物体的位置和物体的类别。而实例分割则是在目标检测的基础上，做了像素级的分类，将框内的属于目标物体的像素识别出来。
+### Instance segmentation
+In the object detection, the model identifies the location of the object in the image and the category of the object. Instance segmentation, with pixel-level classification on the basis of object detection, identifies the pixels within the frame that belong to the target object.
 
 ![](./images/instance_segmentation.png)
 
-PaddleX目前提供了实例分割MaskRCNN模型，支持5种不同的backbone网络，详情可参考[PaddleX模型库](../appendix/model_zoo.md)
+PaddleX currently provides the instance segmentation MaskRCNN model, which supports 5 different backbone networks. Refer to the [PaddleX model library] for more details (../appendix/model_zoo.md).
 
-> * GPU预测速度评估环境基于Tesla V100机器，在FP32+TensorRT配置下运行100次测得（去除前10次warmup时间)。
-> * Box mmAP为MSCOCO数据集上评估所得。
+> * GPU prediction speed is obtained based on the evaluation environment of Tesla V100 by measuring 100 times under FP32+TensorRT configuration (removing the warmup time of the first 10 times).
+> * Box mmAP is the evaluation result on the MSCOCO dataset.
 
-|  模型 | 模型特点 | 存储体积 | GPU time(ms) bs=1 | Box mmAP | Seg mmAP |
+
+| Model | Model Feature | Storage Size | GPU time(ms) bs=1 | Box mmAP | Seg mmAP |
 | :---- | :------- | :---------- | :---------- | :--- |:--- |
-| MaskRCNN-HRNet_W18-FPN | 适用于对图像分辨率较为敏感、对目标细节预测要求更高的服务器端场景 | 143.9MB | - | 38.2 | 33.4 |
-| MaskRCNN-ResNet50-FPN | 精度较高，适合大多数的服务器端场景| 177.7M | 83.567 | 38.7 | 34.7 |
-| MaskRCNN-ResNet101_vd-FPN | 高精度但预测时间更长，在处理较大数据量时有较高的精度，适用于服务器端场景 | 253.7M | 97.647 | 41.4 | 36.8 |
+| MaskRCNN - HRNet_W18-FPN | Suitable for server-side scenes that are sensitive to image resolution and require more details of object prediction | 143.9MB | -- | 38.2 | 33.4 |
+| MaskRCNN-ResNet50-FPN | High precision, suitable for most server-side scenarios | 177.7M | 83.567 | 38.7 | 34.7 |
+| MaskRCNN-ResNet101_vd-FPN | High precision with longer prediction time, suitable for server-side scenarios in the processing of larger data volumes with higher precision | 253.7M | 97.647 | 41.4 | 36.8 |
 
-## 语义分割
-语义分割用于对图像做像素级的分类，应用在人像分类、遥感图像识别等场景。  
+## Semantic segmentation
+Semantic segmentation is used to perform pixel-level classification of images, and is applied in scenarios such as portrait classification and remote sensing image recognition.
 
 ![](./images/semantic_segmentation.png)
 
-对于语义分割，PaddleX也针对不同的应用场景，提供了不同的模型选择，如下表所示
+For semantic segmentation, PaddleX also provides different model options for different scenarios. See the following table:
 
-> * mIoU为Cityscapes数据集上评估所得。
+> * mIoU is evaluated on the Cityscapes dataset.
 
-| 模型 | 模型特点 | 存储体积 | 预测速度（毫秒） | mIoU |
+
+| Model | Model Feature | Storage Size | Prediction Speed (milliseconds) | mIOU |
 | :---- | :------- | :---------- | :--- | :--- |
-| DeepLabv3p-MobileNetV2_x1.0 | 轻量级模型，适用于移动端场景| 14.7MB | - |  69.8% |
-| DeepLabv3-MobileNetV3_large_x1_0_ssld | 轻量级模型，适用于移动端场景| 9.3MB | - | 73.28% |
-| HRNet_W18_Small_v1 | 轻量高速，适用于移动端场景 | - | - | - |
-| FastSCNN | 轻量高速，适用于追求高速预测的移动端或服务器端场景 | 9.8MB | - | 69.64 |
-| HRNet_W18 | 高精度模型，适用于对图像分辨率较为敏感、对目标细节预测要求更高的服务器端场景| 77.3MB | - | 79.36 |
-| DeepLabv3p-Xception65 | 高精度但预测时间更长，在处理较大数据量时有较高的精度，适用于服务器且背景复杂的场景| 329.3MB | - | 79.3% |
+| DeepLabv3p-MobileNetV2_x1.0 | Lightweight model, suitable for mobile scenarios | 14.7MB | - | 69.8% |
+| DeepLabv3-MobileNetV3_large_x1_0_ssld | Lightweight model, suitable for mobile scenarios | 9.3 MB | - | 73.28% |
+| HRNet_W18_Small_v1 | Lightweight and high speed, suitable for mobile scenes | - | - | - |
+| FastSCNN | Lightweight and high speed, suitable for mobile or server-side scenarios that require high speed prediction. | 9.8MB | - | 69.64 |
+| HRNet_W18 | High-precision model, suitable for server-side scenarios that are sensitive to image resolution and require higher prediction of target details. | 77.3MB | - | 79.36 |
+| DeepLabv3p-Xception65 | High precision with longer prediction time, suitable for larger data volume with high precision in server scenarios with complex background | 329.3MB | - | 79.3% |

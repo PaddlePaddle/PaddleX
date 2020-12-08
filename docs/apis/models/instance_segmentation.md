@@ -3,20 +3,20 @@
 ## MaskRCNN
 
 ```python
-paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512], input_channel=3)
-
+paddlex.det. MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512])
 ```
 
-> 构建MaskRCNN检测器。**注意在MaskRCNN中，num_classes需要设置为类别数+背景类，如目标包括human、dog两种，则num_classes需设为3，多的一种为背景background类别**
+> Build a MaskRCNN detector. **Note that num_classes needs to be set to number of classes+background class in MaskRCNN. If an object includes humans and dogs, set num_classes to 3 so that the background class is included**
 
-> **参数**
+> **Parameters**
 
-> > - **num_classes** (int): 包含了背景类的类别数。默认为81。
-> > - **backbone** (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
-> > - **with_fpn** (bool): 是否使用FPN结构。默认为True。
-> > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
-> > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
-> > - **input_channel** (int): 输入图像的通道数量。默认为3。
+> > - **num_classes** (int): Number of classes including the background class. It is 81 by default.
+> - > **backbone** (str): MaskRCNN backbone network in a value range of 'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18'[.]It is 'ResNet50' by default.
+- **with_fpn** (bool): Whether to use FPN structure. It is true by default.
+- **aspect_ratios** (list): Optional value of the anchor aspect ratio. It is 0[.]5, 1.0, 2.0 by default.
+- **anchor_sizes** (list): Optional value of the anchor size. It is 32, 64, 128, 256, 512[ by default].
+
+
 
 #### train
 
@@ -24,29 +24,30 @@ paddlex.det.MaskRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_
 train(self, num_epochs, train_dataset, train_batch_size=1, eval_dataset=None, save_interval_epochs=1, log_interval_steps=20, save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=1.0/800, warmup_steps=500, warmup_start_lr=1.0 / 2400, lr_decay_epochs=[8, 11], lr_decay_gamma=0.1, metric=None, use_vdl=False, early_stop=False, early_stop_patience=5, resume_checkpoint=None)
 ```
 
-> MaskRCNN模型的训练接口，函数内置了`piecewise`学习率衰减策略和`momentum`优化器。
+> MaskRCNN model training API. The function has a built-in `piecewise` learning rate attenuation policy and a `momentum` optimizer.
 
-> **参数**
->
-> > - **num_epochs** (int): 训练迭代轮数。
-> > - **train_dataset** (paddlex.datasets): 训练数据读取器。
-> > - **train_batch_size** (int): 训练数据batch大小。目前检测仅支持单卡评估，训练数据batch大小与显卡数量之商为验证数据batch大小。默认为1。
-> > - **eval_dataset** (paddlex.datasets): 验证数据读取器。
-> > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
-> > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
-> > - **save_dir** (str): 模型保存路径。默认值为'output'。
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，则自动下载在COCO数据集上预训练的模型权重（注意：暂未提供ResNet18和HRNet_W18的COCO预训练模型）；若为None，则不使用预训练模型。默认为None。
-> > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认优化器：fluid.layers.piecewise_decay衰减策略，fluid.optimizer.Momentum优化方法。
-> > - **learning_rate** (float): 默认优化器的初始学习率。默认为0.00125。
-> > - **warmup_steps** (int):  默认优化器进行warmup过程的步数。默认为500。
-> > - **warmup_start_lr** (int): 默认优化器warmup的起始学习率。默认为1.0/2400。
-> > - **lr_decay_epochs** (list): 默认优化器的学习率衰减轮数。默认为[8, 11]。
-> > - **lr_decay_gamma** (float): 默认优化器的学习率衰减率。默认为0.1。
-> > - **metric** (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认值为None。
-> > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认值为False。
-> > - **early_stop** (float): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
-> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
+> **Parameters**
+> - **num_epochs** (int): Number of training iteration epochs.
+- **train_dataset** (paddlex.datasets): Training data reader.
+- **train_batch_size** (int): Training data batch size. Currently, the detection supports only the single-card evaluation. The quotient of the training data batch size and the GPU quantity is a validation data batch size. It is 1 by default.
+- **eval_dataset** (paddlex.datasets): Validation data reader.
+- **save_interval_epochs** (int): Model saving interval (unit: number of iteration epochs). It is 1 by default.
+- **log_interval_steps** (int): Training log output interval (unit: number of iterations). It is 2 by default.
+- **save_dir** (str): Path where models are saved. It is 'output' by default.
+- **pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded (Note: A COCO pre-training model for ResNet18 and HRNet_W18 is unavailable temporarily. If it is none, no pre-training model is used. It is None by default.
+- **optimizer** (paddle.fluid.optimizer): Optimizer. When this parameter is none, a default optimizer is used: fluid.layers.piecewise_decay attenuation policy, fluid.optimizer. Momentum optimization method.
+- **learning_rate** (float): Initial learning rate of the default optimizer. It is 0.00125 by default.
+- **warmup_steps** (int): Number of steps to perform the warmup process by the default optimizer. It is 500 by default.
+- **warmup_start_lr** (int): Initial learning rate of warmup of the default optimizer. It is 1.0/2400 by default.
+- **lr_decay_epochs** (list): Number of learning rate attenuation epochs of the default optimizer. It is 8, 11[ by default].
+- **lr_decay_gamma** (float): Attenuation rate of learning rate of the default optimizer. It is 0.1 by default.
+- **metric** (bool): Evaluation method during training in the value range of 'COCO', 'VOC' .[It is None by default.]
+- **use_vdl** (bool): Whether to use VisualDL for visualization. It is false by default.
+- **early_stop** (float): Whether to use a policy for early termination of training. It is false by default.
+- **early_stop_patience** (int): When a policy for early termination of training is used, training is terminated if the validation set precision continuously decreases or remains unchanged within early_stop_patience epochs. It is 5 by default.``
+- **resume_checkpoint** (str): When training is resumed, specify a model path saved during the last training. If it is None, training is not resumed. It is None by default.
+
+
 
 #### evaluate
 
@@ -54,19 +55,20 @@ train(self, num_epochs, train_dataset, train_batch_size=1, eval_dataset=None, sa
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_details=False)
 ```
 
-> MaskRCNN模型的评估接口，模型评估后会返回在验证集上的指标box_mmap(metric指定为COCO时)和相应的seg_mmap。
+> MaskRCNN model evaluation API. The index box_mmap (when metric is set to COCO) on the validation set and the corresponding seg_mmap are returned after the model is evaluated.
 
-> **参数**
->
-> > - **eval_dataset** (paddlex.datasets): 验证数据读取器。
-> > - **batch_size** (int): 验证数据批大小。默认为1。当前只支持设置为1。
-> > - **epoch_id** (int): 当前评估模型所在的训练轮数。
-> > - **metric** (bool): 训练过程中评估的方式，取值范围为['COCO', 'VOC']。默认为None，根据用户传入的Dataset自动选择，如为VOCDetection，则`metric`为'VOC'; 如为COCODetection，则`metric`为'COCO'。
-> > - **return_details** (bool): 是否返回详细信息。默认值为False。
-> >
-> **返回值**
->
-> > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'和'segm_mmap'或者’bbox_map‘和'segm_map'，分别表示预测框和分割区域平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，包含`bbox`、`mask`和`gt`三个关键字。其中关键字`bbox`的键值是一个列表，列表中每个元素代表一个预测结果，一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。关键字`mask`的键值是一个列表，列表中每个元素代表各预测框内物体的分割结果，分割结果由图像id、预测框类别id、表示预测框内各像素点是否属于物体的二值图、预测框得分。而关键字gt的键值是真实标注框的相关信息。
+> **Parameters**
+> - **eval_dataset** (paddlex.datasets): Validation data reader.
+- **batch_size** (int): Validation data batch size. It is 1 by default. Currently, it must be set to 1.
+- **epoch_id** (int): Number of training epochs of the current evaluation model.
+- **metric** (bool): Evaluation method during training in the value range of 'COCO', 'VOC' .[It is none by default. It is automatically selected according to the dataset passed by you. If it is VOCDetection, ]metric is 'VOC'. If it is COCODetection, metric is 'COCO'.````
+- **return_details** (bool): Whether to return detailed information. It is false by default.
+
+
+**Returned value**
+> - **tuple** (metrics, eval_details) | **dict** (metrics): When return_details` is true, (metrics, eval_details) is returned. When return_details is false, metrics is returned.`metrics is dict and contains keywords: ' bbox_mmap' and 'segm_mmap' or ’bbox_map‘ and 'segm_map' which respectively indicates that the results of the average value of average accuracy rates of the predicted box and the segmented area under each threshold take the results of the average value (mmAP) and the average value of average accuracy rates (mAP). eval_details is dict and contains two keywords: ' bbox', 'mask' and ’gt‘. The key value of the keyword 'bbox' is a list of results of an predictred box. Each element in the list represents an prediction result. An prediction result is a list consisting of an image ID, an predictred box class ID, predicted box coordinates and an predicted box score. The key value of the keyword 'mask' is a list of results of an predicted area. Each element in the list represents an prediction result. An prediction result is a list consisting of an image ID, an predicted area class ID, predicted area coordinates and an predicted area score. The key value of the keyword ’gt‘ is information on the true annotated box and area.
+
+
 
 #### predict
 
@@ -74,16 +76,16 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 predict(self, img_file, transforms=None)
 ```
 
-> MaskRCNN模型预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`FasterRCNN.test_transforms`和`FasterRCNN.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
+> MaskRCNN model prediction API. Note that the image processing flow during prediction can be saved in `FasterRCNN.test_transforms and `FasterRCNN.eval_transforms` during model saving only when eval_dataset is defined during training. If eval_dataset is not defined during training, when the `predict API for prediction is called, you need to redefine and pass test_transforms to the predict API.````
 
-> **参数**
->
-> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
-> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
->
-> **返回值**
->
-> > - **list**: 预测结果列表，列表中每个元素均为一个dict，key'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。
+> **Parameters**
+> - **img_file** (str|np.ndarray): Path or numpy array of the predicted image (HWC arrangement, BGR format).
+- **transforms** (paddlex.det.transforms): Data preprocessing operation.
+
+**Returned value**
+> - **list**: List of prediction results. Each element in the list has a dict. The key includes 'bbox', 'mask', 'category', 'category_id' and 'score' which indicate the box coordinate information, mask information, class, class ID and confidence of each predicted object respectively. The box coordinate information is [xmin, ymin, w, h], i.e. the x and y coordinates and the box width and height in the top left corner. The mask information is a binary image which has the same size as the original figure. The value 1 indicates that pixels belong to the prediction class. The value 0 indicates that pixels are a background.
+
+
 
 
 #### batch_predict
@@ -92,13 +94,13 @@ predict(self, img_file, transforms=None)
 batch_predict(self, img_file_list, transforms=None)
 ```
 
-> MaskRCNN模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`FasterRCNN.test_transforms`和`FasterRCNN.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`batch_predict`接口时，用户需要再重新定义test_transforms传入给`batch_predict`接口。
+> MaskRCNN model batch prediction API. Note that the image processing flow during prediction can be saved in `FasterRCNN.test_transforms and `FasterRCNN.eval_transforms` during model saving only when eval_dataset is defined during training. If eval_dataset is not defined during training, when the `batch_predict API for prediction is called, you need to redefine and pass test_transforms to the batch_predict API.````
 
-> **参数**
->
-> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是预测图像路径或numpy数组(HWC排列，BGR格式)。
-> > - **transforms** (paddlex.det.transforms): 数据预处理操作。
->
-> **返回值**
->
-> > - **list**: 每个元素都为列表，表示各图像的预测结果。在各图像的预测结果列表中，每个元素均为一个dict，包含关键字：'bbox', 'mask', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、Mask信息，类别、类别id、置信度。其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。Mask信息为原图大小的二值图，1表示像素点属于预测类别，0表示像素点是背景。
+> **Parameters**
+> - **img_file_list** (list|tuple): Images in the list (or tuple) are simultaneously predicted. Elements in the list are predicted image paths or numpy arrays (HWC arrangement, BGR format).
+- **transforms** (paddlex.det.transforms): Data preprocessing operation.
+
+**Returned value**
+> - **list**: Each element is a list which indicates prediction results of each image. Each element in the list of prediction results of each image has a dict and contains keywords: ' bbox', 'mask', 'category', 'category_id' and 'score' which indicate the box coordinate information, mask information, class, class ID and confidence of each predicted object respectively. The box coordinate information is xmin, ymin, w, h[, i.e. the x and y coordinates and the box width and height in the top left corner.]The mask information is a binary image which has the same size as the original figure. The value 1 indicates that pixels belong to the prediction class. The value 0 indicates that pixels are a background.
+
+

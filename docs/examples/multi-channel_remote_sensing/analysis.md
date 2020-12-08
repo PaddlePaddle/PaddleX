@@ -1,65 +1,64 @@
-# 数据分析
+# Data analysis
 
-遥感影像往往由许多波段组成，不同波段数据分布可能大相径庭，例如可见光波段和热红外波段分布十分不同。为了更深入了解数据的分布来优化模型训练效果，需要对数据进行分析。
+Remote sensing images are often composed of many wavelengths, and the distribution of data in different wavelengths may vary greatly, for example, the visible and thermal infrared wavelengths are differently distributed. In order to better understand the distribution of the data to optimize the training effect of the model, the data needs to be analyzed.
 
-## 统计分析
-执行以下脚本，对训练集进行统计分析，屏幕会输出分析结果，同时结果也会保存至文件`train_information.pkl`中：
+## Statistical analysis
+Run the following script to statistically analyze the training set. The analysis results are displayed in the screen. The results will be saved in `train_information.pkl`.
 
 ```
 python tools/analysis.py
 ```
 
-数据统计分析内容如下：
+The statistical analysis of the data is as follows.
 
-* 图像数量
+* Number of images
 
-例如统计出训练集中有64张图片：
+For example, 64 pictures are counted in the training set.
 ```
 64 samples in file dataset/remote_sensing_seg/train.txt
 ```
-* 图像最大和最小的尺寸
+* Maximum and minimum image size
 
-例如统计出训练集中最大的高宽和最小的高宽分别是(1000, 1000)和(1000, 1000):
+For example, the maximum and minimum height and width of the training set are (1000, 1000) and (1000, 1000) respectively:
 ```
-Minimal image height: 1000 Minimal image width: 1000.
-Maximal image height: 1000 Maximal image width: 1000.
+Minimal image height: 1000 Minimal image width:1000.
+Maximal image height: 1000 Maximal image width:1000.
 ```
-* 图像通道数量
+* Number of image channels
 
-例如统计出图像的通道数量为10:
+For example, the number of image channels is 10:
 
 ```
 Image channel is 10.
 ```
-* 图像各通道的最小值和最大值
+* The minimum and maximum values for each image channel.
 
-最小值和最大值分别以列表的形式输出，按照通道从小到大排列。例如：
+The minimum and maximum values are output as a list, arranged by channel in ascending order. For example:
 
 ```
 Minimal image value: [7.172e+03 6.561e+03 5.777e+03 5.103e+03 4.291e+03 1.000e+00 1.000e+00 4.232e+03 6.934e+03 7.199e+03]
 Maximal image value: [65535. 65535. 65535. 65535. 65535. 65535. 65535. 56534. 65535. 63215.]
-
 ```
-* 图像各通道的像素值分布
+* Distribution of pixel values of each image channel
 
-针对各个通道，统计出各像素值的数量，并以柱状图的形式呈现在以'distribute.png'结尾的图片中。**需要注意的是，为便于观察，纵坐标为对数坐标**。用户可以查看这些图片来选择是否需要对分布在头部和尾部的像素值进行截断。
+For each channel, the number of pixel values is counted and presented as a histogram in the image ending with 'distribute.png'. **It should be noted that the vertical coordinates are logarithmic coordinates**. You can view these images and choose whether or not to clip the values of pixels distributed at the head and tail.
 
 ```
 Image pixel distribution of each channel is saved with 'distribute.png' in the dataset/remote_sensing_seg
 ```
 
-* 图像各通道归一化后的均值和方差
+* Mean and variance normalized for each channel of the image.
 
-各通道归一化系数为各通道最大值与最小值之差，均值和方差以列别形式输出，按照通道从小到大排列。例如：
+The normalization factor for each channel is the difference between the maximum and minimum values in each channel, and the mean and variance are output in column form, arranged by channel in the ascending order. For example:
 
 ```
 Image mean value: [0.23417574 0.22283101 0.2119595  0.2119887  0.27910388 0.21294892 0.17294037 0.10158925 0.43623915 0.41019192]
 Image standard deviation: [0.06831269 0.07243951 0.07284761 0.07875261 0.08120818 0.0609302 0.05110716 0.00696064 0.03849307 0.03205579]
 ```
 
-* 标注图中各类别的数量及比重
+* Number and weight of categories on the chart
 
-统计各类别的像素数量和在数据集全部像素的占比，以（类别值，该类别的数量，该类别的占比）的格式输出。例如：
+Statistics on the number of pixels in each category and the percentage of all pixels in the dataset, output in the format (category value, number of pixels of that category, percentage of pixels in that category). For example:
 
 ```
 Label pixel information is shown in a format of (label_id, the number of label_id, the ratio of label_id):
@@ -68,36 +67,35 @@ Label pixel information is shown in a format of (label_id, the number of label_i
 (2, 3955012, 0.0617970625)
 (3, 2814243, 0.04397254687499999)
 (4, 39350870, 0.6148573437500001)
-
 ```
 
-## 2 确定像素值截断范围
+## 2. Determine the clipping range of the pixel value
 
-遥感影像数据分布范围广，往往存在一些异常值，这会影响算法对实际数据分布的拟合效果。为更好地对数据进行归一化，可以抑制遥感影像中少量的异常值。根据`图像各通道的像素值分布`来确定像素值的截断范围，并在后续图像预处理过程中对超出范围的像素值通过截断进行校正，从而去除异常值带来的干扰。**注意：该步骤是否执行根据数据集实际分布来决定。**
+Remote sensing image is widely distributed, with certain abnormal values. This affects the algorithm's fit to the actual data distribution. In order to better normalize the data, a small number of abnormal values in remote sensing images can be suppressed. The clip range of pixel values is determined based on the `pixel value distribution of each image channel`, and the out-of-range pixel values are corrected by clipping during subsequent image pre-processing to remove the interference caused by the abnormal values. **Note: This step is determined by the actual distribution of the data set.**
 
-例如各通道的像素值分布可视化效果如下：
+For example, the pixel value distribution for each channel is visualized as follows.
 
 ![](../../../examples/multi-channel_remote_sensing/docs/images/image_pixel_distribution.png)
-**需要注意的是，为便于观察，纵坐标为对数坐标。**
+**It should be noted that the vertical coordinates are logarithmic coordinates.**
 
 
-对于上述分布，我们选取的截断范围是(按照通道从小到大排列)：
+For the above distribution, we have chosen the following truncation ranges (arranged according to channels from smallest to largest).
 
 ```
-截断范围最小值： clip_min_value = [7172,  6561,  5777, 5103, 4291, 4000, 4000, 4232, 6934, 7199]
-截断范围最大值： clip_max_value = [50000, 50000, 50000, 50000, 50000, 40000, 30000, 18000, 40000, 36000]
+Truncation range min: clip_min_value = [7172, 6561, 5777, 5103, 4291, 4000, 4000, 4232, 6934, 7199]
+Truncation range max: clip_max_value = [50000, 50000, 50000, 50000, 50000, 40000, 30000, 18000, 40000, 36000]
 ```
 
-## 3 确定像素值截断范围
+## 3 Determining the pixel value truncation range
 
-为避免数据截断范围选取不当带来的影响，应该统计异常值像素占比，确保受影响的像素比例不要过高。接着对截断后的数据计算归一化后的均值和方差，**用于后续模型训练时的图像预处理参数设置**。
+In order to avoid the effects of incorrectly selected data truncation ranges, the percentage of outlier pixels should be counted to ensure that the proportion of affected pixels is not too high. Then calculate the normalized mean and variance of the truncated data **ifor mage pre-processing parameter settings for subsequent model training**.
 
-执行以下脚本：
+Run the following scripts:
 ```
 python tools/cal_clipped_mean_std.py
 ```
 
-截断像素占比统计结果如下:
+The statistics of the percentage of the clipped pixels are as follows:
 
 ```
 Channel 0, the ratio of pixels to be clipped = 0.00054778125
@@ -111,9 +109,9 @@ Channel 7, the ratio of pixels to be clipped = 6.5625e-07
 Channel 8, the ratio of pixels to be clipped = 0.000185921875
 Channel 9, the ratio of pixels to be clipped = 0.000139671875
 ```
-可看出，被截断像素占比均不超过0.2%。
+It can be seen that the percentage of the clipped pixel does not exceed 0.2%.
 
-裁剪后数据的归一化系数如下：
+The normalization coefficients for the clipped data are as follows.
 ```
 Image mean value: [0.15163569 0.15142828 0.15574491 0.1716084  0.2799778  0.27652043 0.28195933 0.07853807 0.56333154 0.5477584 ]
 Image standard deviation: [0.09301891 0.09818967 0.09831126 0.1057784  0.10842132 0.11062996 0.12791838 0.02637859 0.0675052  0.06168227]

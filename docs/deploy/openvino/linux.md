@@ -1,88 +1,87 @@
-# Linux平台
+# Linux platform
 
 
-## 前置条件
+## Pre-conditions
 
-* OS: Ubuntu、Raspbian OS
+* OS: Ubuntu, Raspbian OS
 * GCC* 5.4.0
 * CMake 3.0+
 * PaddleX 1.0+
 * OpenVINO 2021.1+
-* 硬件平台：CPU、VPU
+* Hardware platform: CPU, VPU
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请根据相应的系统参考[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)或者[OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html)
+**Note**: For PaddleX installation, see [PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) description. For the installation of OpenVINO, see [OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html) or [OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html) description according to the corresponding systems.
 
-请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录 `/root/projects/`演示**。
+Make sure that the above basic software is installed on your system and that you have configured your environment accordingly. **The following examples are based on the `/root/projects/` directory**.
 
 
 
-## 预测部署  
+## Inference deployment
 
-文档提供了c++下预测部署的方法，如果需要在python下预测部署请参考[python预测部署](./python.md)
+This document provides prediction deployment methods under c++. To perform prediction deployment under python, see [python prediction deployment](./python.md).
 
-### Step1 下载PaddleX预测代码
+### Step1 Download the PaddleX prediction code.
 ```
 mkdir -p /root/projects
 cd /root/projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
-**说明**：其中C++预测代码在PaddleX/deploy/openvino 目录，该目录不依赖任何PaddleX下其他目录。
+**Note**: The C++ prediction code is in PaddleX/deploy/openvino. The directory does not depend on any other directory in PaddleX.
 
-### Step2 软件依赖
+### Step2 Software dependencies
 
-Step3中的编译脚本会一键安装第三方依赖软件的预编译包，用户不需要单独下载或编译这些依赖软件。若需要自行编译第三方依赖软件请参考：
+For the compiled scripts in Step3, the pre-compiled package of a third-party dependent software is installed by pressing one key. Users do not need to download or compile these dependent software separately. If you need to compile a third-party dependency software yourself, refer to:
 
-- gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
+- gflags: For compiling, refer to [Compiling Documents] (https://gflags.github.io/gflags/#download).
 
-- opencv: 编译请参考
-[编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
+- opencv: For compiling, refer to [Compiling Documents] (https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html).
 
 
-### Step3: 编译
-编译`cmake`的命令在`scripts/build.sh`中，若在树莓派(Raspbian OS)上编译请修改ARCH参数x86为armv7，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
+### Step3: Compile
+The command to compile `cmake` is in `scripts/build.sh`. If the compiling is performed in Raspberry (Raspbian OS), modify the ARCH parameters x86 to armv7. If you compile your own third-party dependency software, modify the main parameters as required, according to the software compiled in Step 1. The main content is described as follows:
 ```
-# openvino预编译库的路径
+# Path of the openvino pre-compiling library
 OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
-# gflags预编译库的路径
+# Path to the gflags pre-compiling library
 GFLAGS_DIR=$(pwd)/deps/gflags
-# ngraph lib预编译库的路径
+# Path to the ngraph lib pre-compiling library
 NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph/lib
-# opencv预编译库的路径
+# Path to the opencv pre-compiling library 
 OPENCV_DIR=$(pwd)/deps/opencv/
-#cpu架构（x86或armv7）
+#cpu architecture (x86 or armv7)
 ARCH=x86
 ```
-执行`build`脚本：
- ```shell
- sh ./scripts/build.sh
- ```  
+Run the `build` script:
+```shell
+sh . /scripts/build.sh
+```
 
-### Step4: 预测
+### Step4: Prediction
 
-编译成功后，分类任务的预测可执行程序为`classifier`，检测任务的预测可执行程序为`detector`，分割任务的预测可执行程序为`segmenter`，其主要命令参数说明如下：
+After successful compilation, the prediction executable program for the classification task is `classifier`, the prediction executable program for the detection task is `detector`, and the prediction executable program for the segmentation task is `segmenter`. The main command parameters are described as follows:
 
-|  参数   | 说明  |
+| Parameters | Description |
 |  ----  | ----  |
-| --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
-| --image  | 要预测的图片文件路径 |
-| --image_list  | 按行存储图片路径的.txt文件 |
-| --device  | 运行的平台，可选项{"CPU"，"MYRIAD"}，默认值为"CPU"，如在VPU上请使用"MYRIAD"|
-| --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测任务，默认值为" "，即不保存可视化结果 |
+| --model_dir | The path of the .xml file generated in the model conversion. Make sure that the three files generated in the model conversion are in the same path. |
+| --image | The path of the image file to be predicted |
+| --image_list | .txt file of storing image paths by line |
+| --device | Running platform. Options are {"CPU", "MYRIAD"}, and the default value is "CPU". For VPU, use "MYRIAD". |
+| --cfg_file | .yml configuration file of PaddleX model. |
+| --save_dir | Storage address of visualization result images. It is only for inspection tasks. The default value is " ". That is, the visualization result is not saved. |
 
-### 样例
-`样例一`：
-linux系统在CPU下做单张图片的分类任务预测  
-测试图片 `/path/to/test_img.jpeg`  
+### Example
+`Example 1`:
+Classification task prediction for a single image under CPU in Linux
+Test image: `/path/to/test_img.jpeg`
 
 ```shell
-./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml
+. /build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml
 ```
 
 
-`样例二`:
-linux系统在CPU下做多张图片的检测任务预测，并保存预测可视化结果
-预测的多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
+`Example 2`:
+The Linux system performs multiple image detection task predictions under the CPU, and saves the prediction visualization results
+Predicted multiple images `/path/to/image_list.txt`, image_list.txt content in the following format.
 ```
 /path/to/images/test_img1.jpeg
 /path/to/images/test_img2.jpeg
@@ -94,23 +93,23 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 ./build/detector --model_dir=/path/to/models/openvino_model --image_list=/root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --save_dir ./output
 ```
 
-`样例三`:  
-树莓派(Raspbian OS)在VPU下做单张图片分类任务预测
-测试图片 `/path/to/test_img.jpeg`  
+`Example 3`:
+Raspbian OS Single image classification task prediction under VPU
+Test image: `/path/to/test_img.jpeg`
 
 ```shell
-./build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml --device=MYRIAD
+. /build/classifier --model_dir=/path/to/openvino_model --image=/path/to/test_img.jpeg --cfg_file=/path/to/PadlleX_model.yml --device=MYRIAD
 ```
 
-## 性能测试
-`测试一`：  
-在服务器CPU下测试了OpenVINO对PaddleX部署的加速性能：
-- CPU：Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz
-- OpenVINO： 2020.4
-- PaddleX：采用Paddle预测库(1.8)，打开mkldnn加速，打开多线程。
-- 模型来自PaddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。
+## Performance Test
+`Test 1`:
+The performance of OpenVINO acceleration on PaddleX deployments was tested at the server CPU.
+- CPU: Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz
+- OpenVINO: 2020.4
+- PaddleX: using Paddle prediction library (1.8), to enable the mkldnn acceleration and start the multithreading.
+- The model is from PaddleX tutorials, the Batch Size is 1, the time consumption unit is ms/image. Only the model running time is calculated, not including the pre-processing and post-processing of the data, 20 images warmup, 100 images for testing the performance.
 
-|模型| PaddleX| OpenVINO |  图片输入大小|
+| Model | PaddleX | OpenVINO | Image Input Size |
 |---|---|---|---|
 |resnet-50 | 20.56 | 16.12 | 224*224 |
 |mobilenet-V2 | 5.16 | 2.31 |224*224|
@@ -118,26 +117,26 @@ linux系统在CPU下做多张图片的检测任务预测，并保存预测可视
 |unet| 276.40| 211.49| 512*512|  
 
 
-`测试二`:
-在PC机上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。
+`Test 2`:
+Inserting a VPU architecture Neural Compute Stick (NCS2) into a PC to accelerate through Openvino.
 - CPU：Intel(R) Core(TM) i5-4300U 1.90GHz
 - VPU：Movidius Neural Compute Stick2
 - OpenVINO： 2020.4
-- 模型来自PaddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
+- The model is from PaddleX tutorials, the Batch Size is 1, the time consumption unit is ms/image. Only the model running time is calculated, not including the pre-processing and post-processing of the data, 20 images warmup, 100 images for testing the performance.
 
-|模型|OpenVINO|输入图片|
+| Model | OpenVINO | Enter a Picture |
 |---|---|---|
 |mobilenetV2|24.00|224*224|
 |resnet50_vd_ssld|58.53|224*224|  
 
-`测试三`:
-在树莓派3B上插入VPU架构的神经计算棒(NCS2)，通过Openvino加速。
+`Test 3`:
+Inserting a VPU architecture neural computation stick (NCS2) on the Raspberry 3B to accelerate through Openvino.
 - CPU ：ARM Cortex-A72 1.2GHz 64bit
 - VPU：Movidius Neural Compute Stick2
 - OpenVINO 2020.4
-- 模型来自paddleX tutorials，Batch Size均为1，耗时单位为ms/image，只计算模型运行时间，不包括数据的预处理和后处理，20张图片warmup，100张图片测试性能。  
+- The model is from PaddleX tutorials, the Batch Size is 1, the time consumption unit is ms/image. Only the model running time is calculated, not including the pre-processing and post-processing of the data, 20 images warmup, 100 images for testing the performance.
 
-|模型|OpenVINO|输入图片大小|
+| Model | OpenVINO | Input Image Size |
 |---|---|---|
 |mobilenetV2|43.15|224*224|
 |resnet50|82.66|224*224|  

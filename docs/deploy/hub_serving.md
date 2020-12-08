@@ -1,22 +1,22 @@
-# PaddleHub轻量级服务化部署
-## 简介
-借助`PaddleHub-Serving`，可以将`PaddleX`的`Inference Model`进行快速部署，以提供在线预测的能力。
+# Lightweight service-oriented deployments
+## Introduction
+With `PaddleHub-Serving`, `PaddleX`'s `Inference Model` can be rapidly deployed to provide the online prediction ability.
 
-关于`PaddleHub-Serving`的更多信息，可参照[PaddleHub-Serving](https://github.com/PaddlePaddle/PaddleHub/blob/develop/docs/tutorial/serving.md)。
+For more information on `PaddleHub-Serving`, refer to [PaddleHub-Serving]. (https://github.com/PaddlePaddle/PaddleHub/blob/develop/docs/tutorial/serving.md)
 
-**注意：使用此方式部署，需确保自己Python环境中PaddleHub的版本高于1.8.0, 可在命令终端输入`pip show paddlehub`确认版本信息。**
-
-
-下面，我们按照步骤，实现将一个图像分类模型[MobileNetV3_small_ssld](https://bj.bcebos.com/paddlex/models/mobilenetv3_small_ssld_imagenet.tar.gz)转换成`PaddleHub`的预训练模型，并利用`PaddleHub-Serving`实现一键部署。
+**Note: To deploy in this way, you need to make sure that the version of PaddleHub in the Python environment is later than 1.8.0. You can run `pip show paddlehub` to confirm the version information.**
 
 
-## 模型部署
+Next, follow the steps to convert an image classification model [MobileNetV3_small_ssld](https://bj.bcebos.com/paddlex/models/mobilenetv3_small_ssld_imagenet.tar.gz) into a pre-training model for `PaddleHub`, and use `PaddleHub-Serving` to implement one-key deployment.
 
-### 1 部署模型准备
-部署模型的格式均为目录下包含`__model__`，`__params__`和`model.yml`三个文件，如若不然，则参照[部署模型导出文档](./export_model.md)进行导出。
 
-### 2 模型转换
-首先，我们将`PaddleX`的`Inference Model`转换成`PaddleHub`的预训练模型，使用命令`hub convert`即可一键转换，对此命令的说明如下：
+## Model Deployment
+
+### 1 Preparation for deployment model
+The format of the deployment model is three files `__model__`, `__params__` and `model.yml` contained in the directory. For the format of the files, refer to the [deployment model export file]. (./export_model.md)
+
+### 2 Model conversion
+First, convert `PaddleX`'s `Inference Model` to `PaddleHub`'s pre-training model. Run `hub convert` to implement the one-key conversion. The command is described as follows:
 
 ```shell
 $ hub convert --model_dir XXXX \
@@ -24,67 +24,66 @@ $ hub convert --model_dir XXXX \
               --module_version XXXX \
               --output_dir XXXX
 ```
-**参数**：
+**Parameters**:
 
-|参数|用途|
-|-|-|
-|--model_dir/-m|`PaddleX Inference Model`所在的目录|
-|--module_name/-n|生成预训练模型的名称|
-|--module_version/-v|生成预训练模型的版本，默认为`1.0.0`|
-|--output_dir/-o|生成预训练模型的存放位置，默认为`{module_name}_{timestamp}`|
+|Parameters|Use|
+|-|-| |--model_dir/-m|`PaddleX Inference Model` directory|
+|--module_name/-n| Generate the name of the pre-training model|
+|--module_version/-v| Version of generating the pre-training model. The default value is `1.0.0`|
+|`--output_dir/-o| Directory of storing the generated pre-trained model. The default name is `{module_name}_{timestamp}`|
 
-因此，我们仅需要一行命令即可完成预训练模型的转换。
+Therefore, you only need to run a command to complete the conversion of the pre-training model.
 
 ```shell
- hub convert --model_dir mobilenetv3_small_ssld_imagenet_hub --module_name mobilenetv3_small_ssld_imagenet_hub
+hub convert --model_dir mobilenetv3_small_ssld_imagenet_hub --module_name mobilenetv3_small_ssld_imagenet_hub
 ```
 
-转换成功后会打印提示信息，如下：
+After the conversion is complete the prompted information is as follows:
 ```shell
 $ The converted module is stored in `MobileNetV3_small_ssld_hub_1596077881.868501`.
 ```
-等待生成成功的提示后，我们就在输出目录中得到了一个`PaddleHub`的一个预训练模型。
+After the prompt, a pre-training model of `PaddleHub` in the output directory is obtained.
 
-### 3 模型安装
-在模型转换一步中，我们得到了一个`.tar.gz`格式的预训练模型压缩包，在进行部署之前需要先安装到本机，使用命令`hub install`即可一键安装，对此命令的说明如下：
+### 3 Model installation
+In the model conversion step, a pre-trained model compression package in the `.tar. gz` format. Before deploying, you need to install it locally by running the command `hub install`. The description is as follows:
 ```shell
 $ hub install ${MODULE}
 ```
-其中${MODULE}为要安装的预训练模型文件路径。
+${MODULE} is the path of the pre-training model file to be installed.
 
-因此，我们使用`hub install`命令安装：
+Run `hub install`.
 ```shell
 hub install MobileNetV3_small_ssld_hub_1596077881.868501/mobilenetv3_small_ssld_imagenet_hub.tar.gz
 ```
-安装成功后会打印提示信息，如下：
+After a successful installation, the following message is displayed:
 ```shell
 $ Successfully installed mobilenetv3_small_ssld_imagenet_hub
 ```
 
-### 4 模型部署
-下面，我们只需要使用`hub serving`命令即可完成模型的一键部署，对此命令的说明如下：
+### 4 Model deployment
+You can run `hub serving` to deploy the model through one-key. The description is as follows:
 ```shell
 $ hub serving start --modules/-m [Module1==Version1, Module2==Version2, ...] \
                     --port/-p XXXX
                     --config/-c XXXX
 ```
 
-**参数**：
+**Parameters**:
 
-|参数|用途|
+|Parameters|Use|
 |-|-|
-|--modules/-m|PaddleHub Serving预安装模型，以多个Module==Version键值对的形式列出<br>*`当不指定Version时，默认选择最新版本`*|
-|--port/-p|服务端口，默认为8866|
-|--config/-c|使用配置文件配置模型|
+|--modules/-m|PaddleHub Serving pre-installed models, listed as multiple Module==Version key-value pairs<br>*. `When Version is not specified, the default selection is the latest version`*|
+|--port/-p|Service port, default is 8866|
+|--config/-c|Configure the model using configuration files|
 
-因此，我们仅需要一行代码即可完成模型的部署，如下：
+Therefore, only one line of code is needed to deploy the model.
 
 ```shell
 $ hub serving start -m mobilenetv3_small_ssld_imagenet_hub
 ```
-等待模型加载后，此预训练模型就已经部署在机器上了。
+After the model is loaded, this pre-training model is now deployed on the machine.
 
-我们还可以使用配置文件对部署的模型进行更多配置，配置文件格式如下：
+You can perform more configurations by using the configuration file. The format of the configuration file is as follows:
 ```json
 {
   "modules_info": {
@@ -102,13 +101,13 @@ $ hub serving start -m mobilenetv3_small_ssld_imagenet_hub
 }
 
 ```
-|参数|用途|
+|Parameters|Use|
 |-|-|
-|modules_info|PaddleHub Serving预安装模型，以字典列表形式列出，key为模型名称。其中:<br>`init_args`为模型加载时输入的参数，等同于`paddlehub.Module(**init_args)`<br>`predict_args`为模型预测时输入的参数，以`mobilenetv3_small_ssld_imagenet_hub`为例，等同于`mobilenetv3_small_ssld_imagenet_hub.batch_predict(**predict_args)`
-|port|服务端口，默认为8866|
+|modules_info| PaddleHub Serving pre-installed models, listed as a dictionary list, key is the model name. where: <br>`init_args` is the parameter to be entered when the model is loaded, equivalent to `paddlehub. Module(**init_args)`<br>`predict_args` is the parameter entered when the model is predicted. For example, in `mobilenetv3_small_ssld_imagenet_hub`, it is equivalent to `mobilenetv3_small_ssld_imagenet_hub.batch_predict(**predict_args)`
+|port| service port, default is 8866|
 
-### 5 测试
-在第二步模型安装的同时，会生成一个客户端请求示例，存放在模型安装目录，默认为`${HUB_HOME}/.paddlehub/modules`，对于此例，我们可以在`~/.paddlehub/modules/mobilenetv3_small_ssld_imagenet_hub`找到此客户端示例`serving_client_demo.py`，代码如下：
+### 5 Test
+While the model is installed in the second step, a client request example is generated and stored in the model installation directory. By default, it is `${HUB_HOME}/.paddlehub/modules`. In this example, the client example `serving_client_demo.py` can be found in `~/.paddlehub/modules/mobilenetv3_small_ssld_imagenet_hub`. The codes are as follows: 
 
 ```python
 # coding: utf8
@@ -124,30 +123,29 @@ def cv2_to_base64(image):
 
 
 if __name__ == '__main__':
-    # 获取图片的base64编码格式
-    img1 = cv2_to_base64(cv2.imread("IMAGE_PATH1"))
-    img2 = cv2_to_base64(cv2.imread("IMAGE_PATH2"))
-    data = {'images': [img1, img2]}
-    # 指定content-type
-    headers = {"Content-type": "application/json"}
-    # 发送HTTP请求
-    url = "http://127.0.0.1:8866/predict/mobilenetv3_small_ssld_imagenet_hub"
-    r = requests.post(url=url, headers=headers, data=json.dumps(data))
+      # Get the base64 encoding format of the image 
+       img1 = cv2_to_base64(cv2.imread("IMAGE_PATH1"))
+       img2 = cv2_to_base64(cv2.imread("IMAGE_PATH2"))
+       data = {'images':[img1, img2]} 
+       # Specify content-type
+       headers = {"Content-type":"application/json"} 
+       # Send an HTTP request url = "http://127.0.0.1:8866/predict/mobilenetv3_small_ssld_imagenet_hub"
+       r = requests.post(url=url, headers=headers, data=json.dumps(data)) 
 
-    # 打印预测结果
-    print(r.json()["results"])
+       # Print the prediction result
+        print(r.json()["results"])
 ```
-使用的测试图片如下：
+The following test images are used.
 
 ![](../train/images/test.jpg)
 
-将代码中的`IMAGE_PATH1`改成想要进行预测的图片路径后，在命令行执行：
+After changing `IMAGE_PATH1` in the code to the path of the image where you want to make the prediction, run the following command line:
 ```python
-python ~/.paddlehub/module/MobileNetV3_small_ssld_hub/serving_client_demo.py
+python ~/. paddlehub/module/MobileNetV3_small_ssld_hub/serving_client_demo.py
 ```
-即可收到预测结果，如下：
+The following prediction results can be received:
 ```shell
-[[{'category': 'envelope', 'category_id': 549, 'score': 0.2141510397195816}]]
+[[{'category':'envelope', 'category_id':549, 'score':0.2141510397195816}]]
 ````
 
-到此，我们就完成了`PaddleX`模型的一键部署。
+The one-key deployment of the `PaddleX` model is completed.

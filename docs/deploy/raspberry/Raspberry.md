@@ -1,102 +1,100 @@
-# 树莓派
-PaddleX支持通过Paddle-Lite和基于OpenVINO的神经计算棒(NCS2)这两种方式在树莓派上完成预测部署。
+# Raspberry
+PaddleX supports the prediction deployment on the raspberry through both Paddle-Lite and the OpenVINO-based Neural Compute Stick (NCS2).
 
 
-## 硬件环境配置  
+## Hardware environment configuration
 
-对于尚未安装系统的树莓派首先需要进行系统安装、环境配置等步骤来初始化硬件环境，过程中需要的软硬件如下：
+For a Raspberry without installing the system yet, you need to perform the system installation and environment configuration to initialize the hardware environment. The required software and hardware are as follows:
 
-- 硬件：micro SD，显示器，键盘，鼠标
-- 软件：Raspbian OS
-### Step1：系统安装
-- 格式化micro SD卡为FAT格式，Windows和Mac下建议使用[SD Memory Card Formatter](https://www.sdcard.org/downloads/formatter/)工具，Linux下请参考[NOOBS For Raspberry Pi](http://qdosmsq.dunbar-it.co.uk/blog/2013/06/noobs-for-raspberry-pi/)  
-- 下载NOOBS版本的Raspbian OS [下载地址](https://www.raspberrypi.org/downloads/)并将解压后的文件复制到SD中，插入SD后给树莓派通电，然后将自动安装系统
-### Step2：环境配置
-- 启用VNC和SSH服务：打开LX终端输入，输入如下命令，选择Interfacing Option然后选择P2 SSH 和 P3 VNC分别打开SSH与VNC。打开后就可以通过SSH或者VNC的方式连接树莓派
+- Hardware: micro SD, monitor, keyboard, mouse
+- Software: Raspbian OS
+### Step1: System installation
+- Format micro SD card as FAT. In the Windows and Mac systems, the [SD Memory Card Formatter](https://www.sdcard.org/downloads/formatter/) tool is recommended. In the Linux system, refer to [NOOBS For Raspberry Pi.](http://qdosmsq.dunbar-it.co.uk/blog/2013/06/noobs-for-raspberry-pi/)
+- Download the NOOBS Raspbian OS [download link] (https://www.raspberrypi.org/downloads/). Copy the decompressed file to SD. After the SD is inserted, the Raspberry is powered on. The system is installed automatically.
+### Step2: Environment configuration
+- Start the VNC and SSH services: start the LX Terminal. Enter the following command, and select Interfacing Option. Then, select P2 SSH and P3 VNC to start the SSH and VNC respectively. After the startup, the Raspberry is connected through SSH or VNC.
 ```
 sudo raspi-config
 ```
-- 更换源：由于树莓派官方源速度很慢，建议在官网查询国内源 [树莓派软件源](https://www.jianshu.com/p/67b9e6ebf8a0)。更换后执行
+- Replace source: The official Raspberry source is very slow; therefore, it is recommended to check the official website of the domestic source[ Raspberry software](https://www.jianshu.com/p/67b9e6ebf8a0). After the replacement, run the following:
 ```
 sudo apt-get update
 sudo apt-get upgrade
 ```
 
-## Paddle-Lite部署
-基于Paddle-Lite的部署目前可以支持PaddleX的分类、分割与检测模型，其中检测模型仅支持YOLOV3  
+## Paddle-Lite deployment
+The Paddle-Lite-based deployment currently support PaddleX classification, segmentation and detection models. For the detection model, only YOLOV3 is supported.
 
-部署的流程包括：PaddleX模型转换与转换后的模型部署  
+Deployment process include: PaddleX model conversion and post-conversion model deployment
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)，Paddle-Lite详细资料请参考[Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html)
+**Note**: For the PaddleX installation, refer to [PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html). For the details of the Paddle-Lite, refer to [Paddle-Lite](https://paddle-lite.readthedocs.io/zh/latest/index.html).
 
-请确保系统已经安装好上述基本软件，并配置好相应环境，**下面所有示例以工作目录 `/root/projects/`演示**。
+Make sure that the above basic software is installed on your system and that you have configured your environment accordingly. **The following examples are based on the `/root/projects/` directory**.
 
-### Paddle-Lite模型转换
-将PaddleX模型转换为Paddle-Lite模型，具体请参考[Paddle-Lite模型转换](./export_nb_model.md)
+## Paddle-Lite model conversion
+Convert the PaddleX model to Paddle-Lite model. For details, see Paddle-Lite Model Conversions.[](./export_nb_model.md)
 
-### Paddle-Lite 预测
-#### Step1 下载PaddleX预测代码
+## Paddle-Lite predication
+### Step1 Download the PaddleX prediction code.
 ```
 mkdir -p /root/projects
 cd /root/projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
-**说明**：其中C++预测代码在PaddleX/deploy/raspberry 目录，该目录不依赖任何PaddleX下其他目录，如果需要在python下预测部署请参考[Python预测部署](./python.md)。  
+**Note**: The C++ prediction code is in PaddleX/deploy/raspberry directory. This directory does not depend on any other directory under PaddleX. For the prediction deployment in the Python, refer to [Python prediction deployment] (./python.md).
 
-#### Step2：Paddle-Lite预编译库下载
-提供了下载的opt工具对应的Paddle-Lite在ArmLinux下面的预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)。  
-建议用户使用预编译库，若需要自行编译，在树莓派上LX终端输入
+### Step2: Download the Paddle-Lite pre-compiling library.
+Provide the Paddle-Lite pre-compiling library under ArmLinux corresponding to the downloaded opt tool: [Paddle-Lite (ArmLinux) pre-compiling library] (https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2).
+The pre-compiling library is recommended. If you compile it yourself, enter the following command in the LX terminal on the Raspberry.
 ```
 git clone https://github.com/PaddlePaddle/Paddle-Lite.git
 cd Paddle-Lite
 sudo ./lite/tools/build.sh  --arm_os=armlinux --arm_abi=armv7hf --arm_lang=gcc  --build_extra=ON full_publish
-```  
-
-预编库位置：`./build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`  
-
-**注意**：预测库版本需要跟opt版本一致，更多Paddle-Lite编译内容请参考[Paddle-Lite编译](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html)；更多预编译Paddle-Lite预测库请参考[Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases)
-
-#### Step3 软件依赖
-提供了依赖软件的预编包或者一键编译，用户不需要单独下载或编译第三方依赖软件。若需要自行编译第三方依赖软件请参考：
-
-- gflags：编译请参考 [编译文档](https://gflags.github.io/gflags/#download)  
-
-- opencv: 编译请参考
-[编译文档](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
-
-#### Step4: 编译
-编译`cmake`的命令在`scripts/build.sh`中，修改LITE_DIR为Paddle-Lite预测库目录，若自行编译第三方依赖软件请根据Step1中编译软件的实际情况修改主要参数，其主要内容说明如下：
 ```
-# Paddle-Lite预编译库的路径
+
+Path of pre-compiling library: `/build.lite.armlinux.armv7hf.gcc/inference_lite_lib.armlinux.armv7hf/cxx`
+
+**Note**: The prediction library version needs to be the same as the opt version. For more Paddle-Lite compiling contents, refer to [Paddle-Lite Compilaing](https://paddle-lite.readthedocs.io/zh/latest/user_guides/source_compile.html). For more pre-compiling Paddle-Lite prediction library, refer to [Paddle-Lite Release Note](https://github.com/PaddlePaddle/Paddle-Lite/releases).
+
+### Step3 Software dependencies
+Pre-compiling packages or one-key compilation of dependent software are provided. Users do not need to separately download or compile a third party dependent software. If you need to compile a third-party dependency software yourself, refer to:
+
+- gflags: For compiling, refer to the [Compiling Documents](https://gflags.github.io/gflags/#download).
+
+- opencv: For compiling, refer to [Compiling Documents] (https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html).
+### Step4: Compile
+Compile `cmake` in `scripts/build. sh`. Modify LITE_DIR to Paddle-Lite prediction library directory. If you compile a third-party dependency software, modify the main parameters as required in Step 1. The main content is described as follows:
+```
+# Path to the Paddle-Lite pre-compiling library
 LITE_DIR=/path/to/Paddle-Lite/inference/lib
-# gflags预编译库的路径
+# Path to the gflags pre-compiling library
 GFLAGS_DIR=$(pwd)/deps/gflags
-# opencv预编译库的路径
+# Path to the opencv pre-compiling library
 OPENCV_DIR=$(pwd)/deps/opencv/
 ```
-执行`build`脚本：
- ```shell
- sh ./scripts/build.sh
- ```  
+Run the `build` script:
+```shell
+sh . /scripts/build.sh
+```
 
 
-#### Step5: 预测
+### Step3: Prediction
 
-编译成功后，分类任务的预测可执行程序为`classifier`,分割任务的预测可执行程序为`segmenter`，检测任务的预测可执行程序为`detector`，其主要命令参数说明如下：  
+After successful compilation, the prediction executable program for the classification task is `classifier`, the prediction executable for the segmentation task is `segmenter`, and the prediction executable program for the detection task is `detector`. The main command parameters are as follows:
 
-|  参数   | 说明  |
+| Parameters | Description |
 |  ----  | ----  |
-| --model_dir  | 模型转换生成的.xml文件路径，请保证模型转换生成的三个文件在同一路径下|
-| --image  | 要预测的图片文件路径 |
-| --image_list  | 按行存储图片路径的.txt文件 |
-| --thread_num | 预测的线程数，默认值为1 |
-| --cfg_file | PaddleX model 的.yml配置文件 |
-| --save_dir | 可视化结果图片保存地址，仅适用于检测和分割任务，默认值为" "既不保存可视化结果 |
+| --model_dir | The path of the .xml file generated in the model conversion. Make sure that the three files generated in the model conversion are in the same path. |
+| --image | The path of the image file to be predicted |
+| --image_list | .txt file of storing image paths by line |
+| --thread_num | Number of predicated threads, the default value is 1 |
+| --cfg_file | .yml configuration file of PaddleX model. |
+| --save_dir | Visualization results storage image. It is applicable to only detection and segmentation tasks. The default value is " ", that is, visualization results are not saved. |
 
-#### 样例
-`样例一`：
-单张图片分类任务  
-测试图片 `/path/to/test_img.jpeg`  
+### Example
+`Example 1`:
+Single image classification task
+Test image `/path/to/test_img.jpeg`
 
 ```shell
 ./build/classifier --model_dir=/path/to/nb_model
@@ -104,9 +102,9 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 ```
 
 
-`样例二`:
-多张图片分割任务
-预测多个图片`/path/to/image_list.txt`，image_list.txt内容的格式如下：
+`Example 2`:
+Multi-image segmentation task
+Prediction of multiple images: `/path/to/image_list.txt`. The format of the image_list.txt content is as follows:
 ```
 /path/to/images/test_img1.jpeg
 /path/to/images/test_img2.jpeg
@@ -116,17 +114,17 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 
 ```shell
 ./build/segmenter --model_dir=/path/to/models/nb_model --image_list=/root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --save_dir ./output --thread_num=4  
-```  
+```
 
-## 性能测试
-### 测试环境：
-硬件：Raspberry Pi 3 Model B
-系统：raspbian OS
-软件：paddle-lite 2.6.1
-### 测试结果
-单位ms，num表示paddle-lite下使用的线程数  
+## Performance test
+### Test environment:
+Hardware: Raspberry Pi 3 Model B
+System: raspbian OS
+Software: paddle-lite 2.6.1
+### Test results
+Unit: ms. The num parameter indicates the number of threads used under paddle-lite.
 
-|模型|lite(num=4)|输入图片大小|
+| Model | lite(num=4) | Input Image Size |
 | ----|  ---- | ----|
 |mobilenet-v2|136.19|224*224|
 |resnet-50|1131.42|224*224|
@@ -149,9 +147,9 @@ OPENCV_DIR=$(pwd)/deps/opencv/
 |Xception65|2094.7|224*224|  
 
 
-从测试结果看建议用户在树莓派上使用MobileNetV1-V3,ShuffleNetV2这类型的小型网络
+From the test results, it is recommended that users use MobileNetV1-V3 and ShuffleNetV2, and other small networks on Raspberry.
 
-## NCS2部署
-树莓派支持通过OpenVINO在NCS2上跑PaddleX模型预测，目前仅支持PaddleX的分类网络，基于NCS2的方式包含Paddle模型转OpenVINO IR以及部署IR在NCS2上进行预测两个步骤。
-- 模型转换请参考：[PaddleX模型转换为OpenVINO IR](../openvino/export_openvino_model.md)，raspbian OS上的OpenVINO不支持模型转换，需要先在host侧转换FP16的IR。
-- 预测部署请参考[OpenVINO部署](../openvino/linux.md)中VPU在raspbian OS部署的部分
+## NCS2 deployment
+Raspberry supports the running of PaddleX model prediction on NCS2 through OpenVINO. Currently, only PaddleX classification network is supported. The NCS2-based method includes two steps: Paddle model converted to OpenVINO IR and deployment of IR on NCS2 for prediction.
+- For model conversion, refer to: [PaddleX model converted to OpenVINO IR]('./openvino/export_openvino_model.md'). OpenVINO on raspbian OS does not support model conversion. You need to convert FP16 IR on the host side first.
+- For the prediction deployment, refer to the VPU deployment in raspbian OS in [OpenVINO deployment] (./openvino/linux.md).

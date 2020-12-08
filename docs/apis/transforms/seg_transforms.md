@@ -1,184 +1,177 @@
 # paddlex.seg.transforms
 
-对用于分割任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
+This section describes the operation on data used for segmentation tasks. The [Compose](#compose) class can be used to combine image preprocessing/augmenter operations.
 
 
 ## Compose
 ```python
-paddlex.seg.transforms.Compose(transforms)
+paddlex.seg.transforms. Compose(transforms)
 ```
-根据数据预处理/数据增强列表对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/fast_scnn.py#L15)
-### 参数
-* **transforms** (list): 数据预处理/数据增强列表。
+The input data is operated on according to the data preprocessing/data augmenter list. [Usage Example](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/fast_scnn.py#L15)
+### Parameters
+* **transforms** (list): Data preprocessing/data augmenter list.
 
 
 ## RandomHorizontalFlip
 ```python
-paddlex.seg.transforms.RandomHorizontalFlip(prob=0.5)
+paddlex.seg.transforms. RandomHorizontalFlip(prob=0.5)
 ```
-以一定的概率对图像进行水平翻转，模型训练时的数据增强操作。
-### 参数
-* **prob** (float): 随机水平翻转的概率。默认值为0.5。
+Flip the image horizontally with a certain probability. It is the data augmenter operation during model training.
+### Parameters
+* **prob** (float): The probability of a random level flip. It is 0.5 by default.
 
 
 ## RandomVerticalFlip
 ```python
-paddlex.seg.transforms.RandomVerticalFlip(prob=0.1)
+paddlex.seg.transforms. RandomVerticalFlip(prob=0.1)
 ```
-以一定的概率对图像进行垂直翻转，模型训练时的数据增强操作。
-### 参数
-* **prob**  (float): 随机垂直翻转的概率。默认值为0.1。
+Flip the image vertically with a certain probability. It is the data augmenter operation during model training.
+### Parameters
+* **prob** (float): probability of a random vertical flip. The default value is 0.1.
 
 
 ## Resize
 ```python
-paddlex.seg.transforms.Resize(target_size, interp='LINEAR')
+paddlex.seg.transforms. Resize(target_size, interp='LINEAR')
 ```
-调整图像大小（resize）。
+Resizes the image (resize).
 
-- 当目标大小（target_size）类型为int时，根据插值方式，
-      将图像resize为[target_size, target_size]。
-- 当目标大小（target_size）类型为list或tuple时，根据插值方式，
-  将图像resize为target_size, target_size的输入应为[w, h]或（w, h）。
-### 参数
-* **target_size** (int|list|tuple): 目标大小
-* **interp** (str): resize的插值方式，与opencv的插值方式对应，
-可选的值为['NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4']，默认为"LINEAR"。
+- When the target size (target_size) type is int, resize the image to [[target_size, target_size]] according to the interpolation method.
+- When the target size (target_size) type is list or tuple, resize the image to target_size. The input for target_size should be [w, h] or (w, h) according to the interpolation method.
+### Parameters
+* **target_size** (int|list|tuple): target size
+* **interp** (str): resize interpolation. It is corresponding to opencv interpolation. The available values are 'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4' and the default value is "LINEAR". []
 
 
 ## ResizeByLong
 ```python
-paddlex.seg.transforms.ResizeByLong(long_size)
+paddlex.seg.transforms. ResizeByLong(long_size)
 ```
-对图像长边resize到固定值，短边按比例进行缩放。
-### 参数
-* **long_size** (int): resize后图像的长边大小。
+Resize the long side of the image to a fixed value and scale the short side proportionally.
+### Parameters
+* **long_size** (int): Size of the long side of the image after resize.
 
 
 ## ResizeRangeScaling
 ```python
-paddlex.seg.transforms.ResizeRangeScaling(min_value=400, max_value=600)
+paddlex.seg.transforms. ResizeRangeScaling(min_value=400, max_value=600)
 ```
-对图像长边随机resize到指定范围内，短边按比例进行缩放，模型训练时的数据增强操作。
-### 参数
-* **min_value** (int): 图像长边resize后的最小值。默认值400。
-* **max_value** (int): 图像长边resize后的最大值。默认值600。
+Randomly resize the long side of the image to the specified range. Scale the short side proportionally. Perform the data augmenter operation during model training.
+### Parameters
+* **min_value** (int): The minimum value after the long side is resized. The default value is 400.
+* **max_value** (int): The maximum value after resizing the long side of the image. Default value is 600.
 
 
 ## ResizeStepScaling
 ```python
-paddlex.seg.transforms.ResizeStepScaling(min_scale_factor=0.75, max_scale_factor=1.25, scale_step_size=0.25)
+paddlex.seg.transforms. ResizeStepScaling(min_scale_factor=0.75, max_scale_factor=1.25, scale_step_size=0.25)
 ```
-对图像按照某一个比例resize，这个比例以scale_step_size为步长，在[min_scale_factor, max_scale_factor]随机变动,模型训练时的数据增强操作。
-### 参数
-* **min_scale_factor**（float), resize最小尺度。默认值0.75。
-* **max_scale_factor** (float), resize最大尺度。默认值1.25。
-* **scale_step_size** (float), resize尺度范围间隔。默认值0.25。
+Resize the image by a scale in scale_step_size. It varies randomly in the range [[min_scale_factor, max_scale_factor]]. It is the data augmenter operation during model training.
+### Parameters
+* **min_scale_factor**(float), resize the minimum scale. The default value is 0.75.
+* **max_scale_factor** (float), maximal resize scale. The default value is 1.25.
+* **scale_step_size** (float), resize scale range interval. The default value is 0.25.
 
 
 ## Normalize
 ```python
-paddlex.seg.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0])
+paddlex.seg.transforms. Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0])
 ```
-对图像进行标准化。
+Standardize the image.
 
-1.像素值减去min_val
-2.像素值除以(max_val-min_val), 归一化到区间 [0.0, 1.0]。
-3.对图像进行减均值除以标准差操作。
+1 Pixel value minus min_val 2 Pixel value divided by (max_val - min_val), normalized to interval [0]. 0, 1.0 .3The image is subtracted from the mean and divided by the standard deviation.
 
-### 参数
-* **mean** (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。长度应与图像通道数量相同。
-* **std** (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。长度应与图像通道数量相同。
-* **min_val** (list): 图像数据集的最小值。默认值[0, 0, 0]。长度应与图像通道数量相同。
-* **max_val** (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。长度应与图像通道数量相同。
+### Parameters
+* **mean** (list): The mean value of the image data set. Default values are 0[.]5, 0.5, 0.5 .The length should be the same as the number of image channels.
+* **std** (list): Standard deviation of the image dataset. Default values are 0[.]5, 0.5, 0.5 .The length should be the same as the number of image channels.
+* **min_val** (list): Minimum value of the image dataset. The default value is 0, 0, 0[.]The length should be the same as the number of image channels.
+* **max_val** (list): The maximum value of the image dataset. The default value is 255[.]0, 255.0, 255.0 .The length should be the same as the number of image channels.
 
 ## Padding
 ```python
-paddlex.seg.transforms.Padding(target_size, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
+paddlex.seg.transforms. Padding(target_size, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
 ```
-对图像或标注图像进行padding，padding方向为右和下。根据提供的值对图像或标注图像进行padding操作。
-### 参数
-* **target_size** (int|list|tuple): padding后图像的大小。
-* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。长度应与图像通道数量相同。
-* **label_padding_value** (int): 标注图像padding的值。默认值为255（仅在训练时需要设定该参数）。
+Perform padding on an image or label image with padding direction right and down. Padding is applied to the image or label image according to the provided value.
+### Parameters
+* **target_size** (int|list|tuple): Size of the image after padding.
+* **im_padding_value** (list): The value of the padding of the image. The default value is 127[.]5, 127.5, 127.5 .The length should be the same as the number of image channels.
+* **label_padding_value** (int): The value of the label image padding. The default value is 255 (this parameter only needs to be set during training).
 
 
 ## RandomPaddingCrop
 ```python
-paddlex.seg.transforms.RandomPaddingCrop(crop_size=512, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
+paddlex.seg.transforms. RandomPaddingCrop(crop_size=512, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
 ```
-对图像和标注图进行随机裁剪，当所需要的裁剪尺寸大于原图时，则进行padding操作，模型训练时的数据增强操作。
-### 参数
-* **crop_size**（int|list|tuple): 裁剪图像大小。默认为512。
-* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。长度应与图像通道数量相同。
-* **label_padding_value** (int): 标注图像padding的值。默认值为255。
+Random cropping of images and labeled maps. Perform the padding operations when the desired crop size is larger than the original. It is the data augmenter operation during model training.
+### Parameters
+* **crop_size**(int|list|tuple): The size of the crop image. The default value is 512.
+* **im_padding_value** (list): The value of the padding of the image. The default value is 127[.]5, 127.5, 127.5 .The length should be the same as the number of image channels.
+* **label_padding_value** (int): The value of the label image padding. The default value is 255.
 
 
 ## RandomBlur
 ```python
-paddlex.seg.transforms.RandomBlur(prob=0.1)
+paddlex.seg.transforms. RandomBlur(prob=0.1)
 ```
-以一定的概率对图像进行高斯模糊，模型训练时的数据增强操作。
-### 参数
-* **prob** (float): 图像模糊概率。默认为0.1。
+Gaussian blurring of the image with a certain probability. It is the data augmenter operation during model training.
+### Parameters
+* **prob** (float): Probability of image blurring. It is 0.1 by default.
 
 
 ## RandomRotate
 ```python
-paddlex.seg.transforms.RandomRotate(rotate_range=15, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
+paddlex.seg.transforms. RandomRotate(rotate_range=15, im_padding_value=[127.5, 127.5, 127.5], label_padding_value=255)
 ```
-对图像进行随机旋转，模型训练时的数据增强操作。目前支持多通道的RGB图像，例如支持多张RGB图像沿通道轴做concatenate后的图像数据，不支持通道数量不是3的倍数的图像数据。
+Random rotation of images. It is the data augmenter operation during model training. At present, it supports multi-channel RGB images. For example, it supports image data of multiple RGB images after concatenate along the channel axis, but it does not support image data with the number of channels not multiples of 3.
 
-在旋转区间[-rotate_range, rotate_range]内，对图像进行随机旋转，当存在标注图像时，同步进行，
-并对旋转后的图像和标注图像进行相应的padding。
-### 参数
-* **rotate_range** (float): 最大旋转角度。默认为15度。
-* **im_padding_value** (list): 图像padding的值。默认为[127.5, 127.5, 127.5]。长度应与图像通道数量相同。
-* **label_padding_value** (int): 标注图像padding的值。默认为255。
+Random rotation of images within the rotation range [[-rotate_range, rotate_range]]. It is synchronized when labeled images exist. You can apply the corresponding padding to the rotated and labelled images.
+### Parameters
+* **rotate_range** (float): The maximum rotation angle. The default value is 15 degrees.
+* **im_padding_value** (list): The value of the padding of the image. The default value is 127[.]5, 127.5, 127.5 .The length should be the same as the number of image channels.
+* **label_padding_value** (int): The value of the label image padding. The default value is 255.
 
 
 ## RandomScaleAspect
 ```python
-paddlex.seg.transforms.RandomScaleAspect(min_scale=0.5, aspect_ratio=0.33)
+paddlex.seg.transforms. RandomScaleAspect(min_scale=0.5, aspect_ratio=0.33)
 ```
-裁剪并resize回原始尺寸的图像和标注图像，模型训练时的数据增强操作。
+Crop and resize back to the original size image and labeled image. It is the data augmenter operation during model training.
 
-按照一定的面积比和宽高比对图像进行裁剪，并reszie回原始图像的图像，当存在标注图时，同步进行。
-### 参数
-* **min_scale**  (float)：裁取图像占原始图像的面积比，取值[0，1]，为0时则返回原图。默认为0.5。
-* **aspect_ratio** (float): 裁取图像的宽高比范围，非负值，为0时返回原图。默认为0.33。
+Cropping and resizing the image according to the area ratio and aspect ratio. When there is a labeled image, the operation is performed simultaneously.
+### Parameters
+* **min_scale** (float): the area ratio of the crop image to the original image, The value is 0 or 1. If the value is 0, return to the original image. The default value is 0.5.[]
+* **aspect_ratio** (float): the aspect ratio range of the crop image. It is a non-negative value. When it is 0, return to the original image. The default value is 0.33.
 
 
 ## RandomDistort
 ```python
-paddlex.seg.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
+paddlex.seg.transforms. RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
-以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。目前支持多通道的RGB图像，例如支持多张RGB图像沿通道轴做concatenate后的图像数据，不支持通道数量不是3的倍数的图像数据。
+Random pixel content transformation of the image with a certain probability. It is the data augmenter operation in the model training. At present, it supports multi-channel RGB images. For example, it supports image data of multiple RGB images after concatenate along the channel axis, but it does not support image data with the number of channels not multiples of 3.
 
-1.对变换的操作顺序进行随机化操作。
-2.按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+1 Randomize the operation order of the transformations. 2 Perform a random pixel content transformation in the range[-range, range] with a certain probability on the image in the order shown in Step 1.
 
-【注意】该数据增强必须在数据增强Normalize之前使用。
+[Note] This data augmenter must be used before the Normalize.
 
-### 参数
-* **brightness_range** (float): 明亮度因子的范围。默认为0.5。
-* **brightness_prob** (float): 随机调整明亮度的概率。默认为0.5。
-* **contrast_range** (float): 对比度因子的范围。默认为0.5。
-* **contrast_prob** (float): 随机调整对比度的概率。默认为0.5。
-* **saturation_range** (float): 饱和度因子的范围。默认为0.5。
-* **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
-* **hue_range** (int): 色调因子的范围。默认为18。
-* **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+### Parameters
+* **brightness_range** (float): the range of the brightness factor. The default value is 0.5.
+* **brightness_prob** (float): The probability that the brightness is adjusted randomly. The default value is 0.5.
+* **contrast_range** (float): The range of the contrast factor. The default value is 0.5.
+* **contrast_prob** (float): The probability of randomly adjusting the contrast. The default value is 0.5.
+* **saturation_range** (float): The range of the saturation factor. The default value is 0.5.
+* **saturation_prob** (float): The probability of randomly adjusting the saturation. The default value is 0.5.
+* **hue_range** (int): The range of the hue factor. The default value is 18.
+* **hue_prob** (float): The probability of randomly adjusting the hue. The default value is 0.5.
 
 ## Clip
 ```python
-paddlex.seg.transforms.Clip(min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0])
+paddlex.seg.transforms. Clip(min_val=[0, 0, 0], max_val=[255.0, 255.0, 255.0])
 ```
-对图像上超出一定范围的数据进行截断。
+Clip data that is out of range on the image.
 
-### 参数
-* **min_val** (list): 裁剪的下限，小于min_val的数值均设为min_val. 默认值0。
-* **max_val** (list): 裁剪的上限，大于max_val的数值均设为max_val. 默认值255.0。
+### Parameters
+* **min_val** (list): the lower limit of the clip, any value smaller than min_val is set to min_val. The default value is 0.
+* **max_val** (list): The upper limit of the crop, any value greater than max_val will be set to max_val. The default value is 255.0.
 
 <!--
 ## ComposedSegTransforms

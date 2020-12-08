@@ -1,50 +1,50 @@
-# 目标检测模型裁剪训练
+# Object detection model pruning training
 
-## 第一步 正常训练目标检测模型
+## Step 1: Perform the normal training object detection model.
 
 ```
 python yolov3_train.py
 ```
 
-在此步骤中，训练的模型会保存在`output/yolov3_mobilenetv1`目录下
+In this step, the training model is saved in the `output/yolov3_mobilenetv1` directory.
 
-## 第二步 分析模型参数信息
+## Step 2: Analyze the model parameter information.
 
 ```
 python param_analysis.py
 ```
-参数分析完后，会得到`yolov3.sensi.data`文件，此文件保存了各参数的敏感度信息。  
+After the parameters are analyzed, you can get the `yolov3.sensi.data` file. It saves the sensitive information for each parameter. `
 
-> 我们可以继续加载模型和敏感度文件，进行可视化，如下命令所示
+> You can continue to load the model and sensitive file for visualization by running the following command:
 > ```
 > python slim_visualize.py
 > ```
-> 可视化结果出下图
-纵轴为`eval_metric_loss`(接下来第三步需要配置的参数)，横轴为模型被裁剪的比例，从图中可以看到，  
-- 当`eval_metric_loss`设0.05时，模型被裁掉63.1%（剩余36.9%）  
-- 当`eval_metric_loss`设0.1时，模型被裁掉68.6%（剩余31.4%）
+> The visualization results are as follows: 
+The vertical axis is `eval_metric_loss` (the parameter to be configured in Step 3) and the horizontal axis is the scale at which the model is pruned. See it in the following diagram.
+- When `eval_metric_loss` is set to 0.05, the model is pruned by 63.1% (36.9% of the model remains)
+- When `eval_metric_loss` is set to 0.1, the model is pruned by 68.6% (31.4% of the model remains)
 
 ![](./sensitivities.png)
 
-## 第三步 模型进行裁剪训练
+## Step 3: Perform the model pruning training.
 
 ```
 python yolov3_prune_train.py
 ```
-此步骤的代码与第一步的代码基本一致，唯一的区别是在最后的train函数中，`yolov3_prune_train.py`修改了里面的`pretrain_weights`、`save_dir`、`sensitivities_file`和`eval_metric_loss`四个参数
+The code for this step is almost identical to that in Step 1. The only difference is: in the last train function, the four parameters such as ` pretrain_weights`, `save_dir`, `sensitivities_file`, and `eval_metric_loss` in `yolov3_prune_train.py` are modified.
 
-- pretrain_weights: 在裁剪训练中，设置为之前训练好的模型
-- save_dir: 模型训练过程中，模型的保存位置
-- sensitivities_file: 在第二步中分析得到的参数敏感度信息文件
-- eval_metric_loss: 第二步中可视化的相关参数，通过此参数可相应的改变最终模型被裁剪的比例
+- pretrain_weights: In the pruning training, set to the previously trained model.
+- save_dir: It indicates the model storage location in the model training process.
+- sensitivities_file: It is the parameter sensitive information file obtained from the analysis in Step 2.
+- eval_metric_loss: It is the visualized relevant parameter in Step 2. You can use the parameter to change the pruning scale of the final model accordingly.
 
-## 裁剪效果
+## Pruning effect
 
-在本示例数据上，裁剪效果对比如下，其中预测采用**CPU，关闭MKLDNN**进行预测，预测时间不包含数据的预处理和结果的后处理。  
-可以看到在模型被裁剪掉63%后，模型精度还有上升，单张图片的预测用时减少了30%。
+For data in this example, the pruning effects are compared as follows: The prediction is performed by using the **CPU, with disabling MKLDNN**. The prediction time does not include pre-processing of data or post-processing of the results.
+It can be seen that after the model is pruned by 63%, the model precision increases and the prediction time for a single image is reduced by 30%.
 
 
-| 模型 | 参数文件大小 | 预测速度 | MAP |
+| Model | Parameter file size | Prediction speed | MAP |
 | :--- | :----------  | :------- | :--- |
 | YOLOv3-MobileNetV1 |    93M       |   1.045s  | 0.635 |
-| YOLOv3-MobileNetV1(裁掉63%) | 35M | 0.735s | 0.735 |
+| YOLOv3-MobileNetV1 (pruned by 63%) | 35M | 0.735s | 0.735 |

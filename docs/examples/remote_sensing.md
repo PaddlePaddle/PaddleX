@@ -1,82 +1,82 @@
-# RGB遥感影像分割
+# RGB remote sensing image segmentation
 
-本案例基于PaddleX实现遥感影像分割，提供滑动窗口预测方式，以避免在直接对大尺寸图片进行预测时显存不足的发生。此外，滑动窗口之间的重叠程度可配置，以此消除最终预测结果中各窗口拼接处的裂痕感。
+This case is the implementation of remote sensing image segmentation based on PaddleX, and provides a prediction method in a sliding window to avoid the occurrence of insufficient display memory in the direct prediction of large-size images. In addition, the degree of overlapping between the sliding windows can be configured. This can eliminate cracks in the final prediction results at the window splices.
 
-## 前置依赖
+## Pre-dependence
 
 * Paddle paddle >= 1.8.4
 * Python >= 3.5
 * PaddleX >= 1.1.4
 
-安装的相关问题参考[PaddleX安装](../install.md)
+For installation related issues, refer to [PaddleX Installation]. (../install.md)
 
-下载PaddleX源码:
+Download PaddleX source code:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-该案例所有脚本均位于`PaddleX/examples/remote_sensing/`，进入该目录：
+All scripts for the case are located in `PaddleX/examples/remote_sensing/`. Access the directory:
 
 ```
 cd PaddleX/examples/remote_sensing/
 ```
 
-## 数据准备
+## Data preparation
 
-本案例使用2015 CCF大数据比赛提供的高清遥感影像，包含5张带标注的RGB图像，图像尺寸最大有7969 × 7939、最小有4011 × 2470。该数据集共标注了5类物体，分别是背景（标记为0）、植被（标记为1）、建筑（标记为2）、水体（标记为3）、道路 （标记为4）。
+In this case, the high-definition remote sensing images provided by the 2015 CCF Big Data competition is used, containing five RGB images with labels with a maximum image size of 7969 × 7939 and a minimum size of 4011 × 2470. The dataset is labeled with a total of 5 categories of objects: background (labeled 0), vegetation (labeled 1), buildings (labeled 2), bodies of water (labeled 3), and roads (labeled 4).
 
-本案例将前4张图片划分入训练集，第5张图片作为验证集。为增加训练时的批量大小，以滑动窗口为(1024，1024)、步长为(512, 512)对前4张图片进行切分，加上原本的4张大尺寸图片，训练集一共有688张图片。在训练过程中直接对大图片进行验证会导致显存不足，为避免此类问题的出现，针对验证集以滑动窗口为(769, 769)、步长为(769，769)对第5张图片进行切分，得到40张子图片。
+In this case, the first four images are categorized into the training set and the fifth image is used as the validation set. In order to increase the batch size during training, the first four images are cut with sliding window (1024, 1024) and step (512, 512). In addition to the original four large images, there are 688 images in the training set in total. In order to avoid the occurrence of insufficient display memory in the validation of large-size images during training, the 5th image is cut in the sliding window (769, 769) and step (769, 769) for the validation set to obtain 40 sub-images.
 
-运行以下脚本，下载原始数据集，并完成数据集的切分：
+Run the following script to download the original dataset and complete the cut of the dataset.
 
 ```
 python prepare_data.py
 ```
 
-## 模型训练
+## Model training
 
-分割模型选择Backbone为MobileNetv3_large_ssld的Deeplabv3模型，该模型兼备高性能高精度的优点。运行以下脚本，进行模型训练：
+For the split model, the Deeplabv3 model whose Backbone is set to MobileNetv3_large_ssld and the model features high performance and high precision. Run the following script to carry out the model training:
 ```
 python train.py
 ```
 
-也可以跳过模型训练步骤，直接下载预训练模型进行后续的模型预测和评估：
+You can also skip the model training step and directly download the pre-trained model for subsequent model prediction and evaluation.
 ```
 wget https://bj.bcebos.com/paddlex/examples/remote_sensing/models/ccf_remote_model.tar.gz
 tar -xvf ccf_remote_model.tar.gz
 ```
 
-## 模型预测
+## Model predictions
 
-直接对大尺寸图片进行预测会导致显存不足，为避免此类问题的出现，本案例提供了滑动窗口预测接口，支持有重叠和无重叠两种方式。
+The direct prediction of large size images can lead to insufficient video memory. In order to avoid such a problem, this case provides a sliding window prediction interface, which supports both overlapping and non-overlapping methods.
 
-* 无重叠的滑动窗口预测
+* Non-overlapping sliding window prediction
 
-在输入图片上以固定大小的窗口滑动，分别对每个窗口下的图像进行预测，最后将各窗口的预测结果拼接成输入图片的预测结果。由于每个窗口边缘部分的预测效果会比中间部分的差，因此每个窗口拼接处可能会有明显的裂痕感。
+The images under each window are predicted separately by sliding the windows at a fixed size on input images. Finally, the prediction results of each window are stitched together into the prediction result of the input images. Since the prediction effect of the edge part of each window is worse than that of the middle part, there may be obvious cracks in each window splice.
 
-该预测方式的API接口详见[overlap_tile_predict](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict)，**使用时需要把参数`pad_size`设置为`[0, 0]`**。
+For the API of the prediction method, see [overlap_tile_predict] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict). The parameter `pad_size` must be set to `[0, 0]`** during use.
 
-* 有重叠的滑动窗口预测
+* Overlapping sliding window prediction
 
-在Unet论文中，作者提出一种有重叠的滑动窗口预测策略（Overlap-tile strategy）来消除拼接处的裂痕感。对各滑动窗口预测时，会向四周扩展一定的面积，对扩展后的窗口进行预测，例如下图中的蓝色部分区域，到拼接时只取各窗口中间部分的预测结果，例如下图中的黄色部分区域。位于输入图像边缘处的窗口，其扩展面积下的像素则通过将边缘部分像素镜像填补得到。
+In the Unet paper, the author proposes an Overlap-tile prediction strategy with overlapping sliding window to eliminate the cracking sensation at the splice. In the prediction in each sliding window, a certain area is expanded around the expanded window, such as the blue part of the area in the figure below. Only the middle part of the window is predicted in the splice, for example, the yellow part area in the figure below. The pixels under the expanded area of the window located at the edge of the input image are obtained by mirroring the pixels at the edge.
 
-该预测方式的API接口说明详见[overlap_tile_predict](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict)。
+The API for this prediction method is described in [overlap_tile_predict](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict).
 
 ![](../../examples/remote_sensing/images/overlap_tile.png)
 
-相比无重叠的滑动窗口预测，有重叠的滑动窗口预测策略将本案例的模型精度miou从80.58%提升至81.52%，并且将预测可视化结果中裂痕感显著消除，可见下图中两种预测方式的效果对比。
+Compared to the non-overlapping sliding window prediction, the overlapping sliding window prediction strategy improves the model precision from 80.58% to 81.52%, and eliminates the cracking sensation in the prediction visualization. See the effect comparison of the two prediction methods.
 
 ![](../../examples/remote_sensing/images/visualize_compare.jpg)
 
-运行以下脚本使用有重叠的滑动窗口进行预测：
+Run the following script for prediction by using overlapping sliding windows:
 ```
 python predict.py
 ```
 
-## 模型评估
+## Model evaluation
 
-在训练过程中，每隔10个迭代轮数会评估一次模型在验证集的精度。由于已事先将原始大尺寸图片切分成小块，此时相当于使用无重叠的大图切小图预测方式，最优模型精度miou为80.58%。运行以下脚本，将采用有重叠的大图切小图的预测方式，重新评估原始大尺寸图片的模型精度，此时miou为81.52%。
+During the training process, the precision of the model in the validation set is evaluated every 10 iteration rounds. The original large size image is cut into small slices in advance. Therefore, the prediction method by using the overlapping big image slicing small image is used. The optimal model precision miou is 80.58%. Run the following script to re-evaluate the model precision of the original large size image in the prediction method by using the overlapping big image slicing small image. At this time, miou is 81.52%.
 ```
 python eval.py
 ```

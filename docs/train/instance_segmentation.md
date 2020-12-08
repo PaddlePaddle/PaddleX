@@ -1,30 +1,30 @@
-# 实例分割
+# Instance segmentation
 
-## 介绍
+## Introduction
 
-PaddleX目前提供了MaskRCNN实例分割模型结构，多种backbone模型，可满足开发者不同场景和性能的需求。
+Currently, PaddleX provides a MaskRCNN with instance segmentation model structure and various backbone models to meet the requirements of developers for different scenarios and performance.
 
-- **Box MMAP/Seg MMAP**: 模型在COCO数据集上的测试精度
-- **预测速度**：单张图片的预测用时（不包括预处理和后处理)
-- "-"表示指标暂未更新
+- **Box MMAP/Seg MMAP**: Model test precision on the COCO dataset
+- **Inference speed**: Inference time for a single image (preprocessing and postprocessing excluded)
+- "-" indicates that the indexes are not updated temporarily
 
-| 模型(点击获取代码)               | Box MMAP/Seg MMAP | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
+| Model (Click to obtain codes) | Box MMAP/Seg MMAP | Model Size | GPU Inference Speed | Arm Inference Speed | Note |
 | :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
-| [MaskRCNN-ResNet50-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py)   |  38.7%/34.7%   |   177.7MB    |  160.185ms       |   -    | 模型精度高，适用于服务端部署   |
-| [MaskRCNN-ResNet18-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r18_fpn.py)   |  33.6%/30.5%   |   189.1MB    |  -       |   -    | 模型精度高，适用于服务端部署   |
-| [MaskRCNN-HRNet-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_hrnet_fpn.py)   |  38.7%/34.7%   |   120.7MB    |  -       |   -    | 模型精度高，预测速度快，适用于服务端部署   |
+| [MaskRCNN-ResNet50-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py) | 38.7% / 34.7% | 177.7 MB | 160.185 ms | - | The model has a high precision and applies to server deployment |
+| [MaskRCNN-ResNet18-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r18_fpn.py) | 33.6%/30.5% | 189.1 MB | - | - | The model has a high precision and applies to server deployment |
+| [MaskRCNN-HRNet-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_hrnet_fpn.py) | 38.7% / 34.7% | 120.7 MB | - | - | The model has a high precision and a fast inference speed and applies to server deployment |
 
 
-## 开始训练
+## Start training
 
-将代码保存到本地后运行（代码下载链接位于上面表格中），**代码会自动下载训练数据并开始训练**。如保存为`mask_rcnn_r50_fpn.py`，执行如下命令即可开始训练：
+Save and run codes locally (The code downloading links are located in the table above) and **codes automatically download training data and start training**. If codes are saved as `mask_rcnn_r50_fpn.py`, execute the following command to start training:
 
 ```
 python mask_rcnn_r50_fpn.py
 ```
 
-## 相关文档
+## Related document
 
-- 【**重要**】针对自己的机器环境和数据，调整训练参数？先了解下PaddleX中训练参数作用。[——>>传送门](../appendix/parameters.md)
-- 【**有用**】没有机器资源？使用AIStudio免费的GPU资源在线训练模型。[——>>传送门](https://aistudio.baidu.com/aistudio/projectdetail/450925)
-- 【**拓展**】更多实例分割模型，查阅[PaddleX模型库](../appendix/model_zoo.md)和[API使用文档](../apis/models/instance_segmentation.md)。
+- [**Important**] Adjust training parameters according to your machine environment and data, adjust training parameters? Understand the role of training parameters in PaddleX first. [——>>Portal](../appendix/parameters.md)
+- [**Useful**] There are no machine resources? Use a free AIStudio GPU resource: online training model. [——>>Portal](https://aistudio.baidu.com/aistudio/projectdetail/450925)
+- [**Extension**] For more instance segmentation models, refer to the [PaddleX model library] (../appendix/model_zoo.md) and the [API operation document](../apis/models/instance_segmentation.md).

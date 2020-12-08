@@ -1,145 +1,144 @@
-# PaddleX指标及日志
+# PaddleX metrics and log
 
-PaddleX在模型训练、评估过程中，都会有相应的日志和指标反馈，本文档用于说明这些日志和指标的含义。
+PaddleX has logs and metrics that are fed back during model training and evaluation. This document describes the meanings of logs and metrics.
 
-## 训练通用统计信息
+## Generic training statistics
 
-PaddleX所有模型在训练过程中，输出的日志信息都包含了6个通用的统计信息，用于辅助用户进行模型训练，例如**分割模型**的训练日志，如下图所示。
+The output log information of all PaddleX models during training contains six common statistics that are used to assist users in model training, for example, training log for segmentation models. See the following.** **
 
 ![](images/seg_train.png)
 
-各字段含义如下:
+The meaning of each field is as follows:
 
-| 字段           | 字段值示例           | 含义                                                         |
+| Field | Example of field value | Meaning |
 | -------------- | -------------------- | ------------------------------------------------------------ |
-| Epoch          | Epoch=4/20           | [迭代轮数]所有训练数据会被训练20轮，当前处于第4轮                  |
-| Step           | Step=62/66            | [迭代步数]所有训练数据被训练一轮所需要的迭代步数为66，当前处于第62步  |
-| loss           | loss=0.007226          | [损失函数值]参与当前迭代步数的训练样本的平均损失函数值loss，loss值越低，表明模型在训练集上拟合的效果越好(如上日志中第1行表示第4个epoch的第62个Batch的loss值为0.007226) |
-| lr             | lr=0.008215          | [学习率]当前模型迭代过程中的学习率                           |
-| time_each_step | time_each_step=0.41s | [每步迭代时间]训练过程计算得到的每步迭代平均用时             |
-| eta            | eta=0:9:44          | [剩余时间]模型训练完成所需剩余时间预估为0小时9分钟44秒      |
-|                |                      |                                                              |
+| Epoch | Epoch=4/20 | [[Iteration epoch] All training data is trained for 20 rounds. Currently it is at round 4] |
+| Step | Step=62/66 | [[Iteration Steps] The number of iteration steps required for all training data to be trained for a round is 66. Currently, it is at step 62] |
+| Loss | loss=0.007226 | [[Loss function] It participates in the average loss function value of the training sample for the current iteration step. The lower the loss value, the better the model fits on the training set (For example, Line 1 in the above log indicates that the 62nd Batch of the 4th epoch has a loss value of 0.007226)] |
+| Lr | lr=0.008215 | [[Learning rate] It is the learning rate in the current model iteration process.] |
+| time_each_step | time_each_step=0.41s | [[Average time per iteration] It is the average time consumption calculated from the training process for each iteration step] |
+| eta | eta=0:9:44 | [[Remaining time] Model remaining completion time required to complete the training is estimated to be 0 hours 9 minutes 44 seconds] |
+|  |  |  |
 
-不同模型的日志中除了上述通用字段外，还有其它字段，这些字段含义可见文档后面对各任务模型的描述。
+In addition to the above general fields, there are other fields in the logs of the different models. For the meanings of these fields, see the description of each task model.
 
-## 评估通用统计信息
+## Evaluate generic statistical information
 
-PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epochs`参数，每间隔一定轮数进行评估和保存。例如**分类模型**的评估日志，如下图所示。
+All models in PaddleX are evaluated and saved at regular intervals during the training process according to the `save_interval_epochs` parameter set by the user. For example, the evaluation log for the classification model is shown in the figure below.****
 
 ![](images/cls_eval.png)
 
-上图中第1行表明验证数据集中样本数为240，需要迭代8步才能评估完所有验证数据；第5行用于表明第2轮的模型已经完成保存操作；第6行则表明当前保存的模型中，第2轮的模型在验证集上指标最优（分类任务看`acc1`，此时`acc1`值为0.258333），最优模型会保存在`best_model`目录中。
+The first line in the above figure indicates that the number of samples in the validation dataset is 240. It takes 8 iteration steps to evaluate all the validation data; the fifth line indicates that the second round of the model completes the saving operation; the sixth line indicates: In the current saving model, the second-round model has the optimal metrics in the validation set (see `acc1` for the classification task, and the value of acc1 is 0.258333). The optimal model is saved in the `best_model` directory.``
 
-## 分类特有统计信息
+## Classify specific statistic information
 
-### 训练日志字段
+### Training log field
 
-分类任务的训练日志除了通用统计信息外，还包括`acc1`和`acc5`两个特有字段。
+The training log for the classification task includes two specific fields `acc1` and `acc5`, in addition to generic statistics.
 
-> 注： acck准确率是针对一张图片进行计算的：把模型在各个类别上的预测得分按从高往低进行排序，取出前k个预测类别，若这k个预测类别包含了真值类，则认为该图片分类正确。
+> Note: The acc accuracy is calculated for a single image: the prediction scores of the model on each category are sorted from in the descending order, the top k prediction categories are taken out. If these k prediction categories contain the true value, the image is considered to be correctly classified.
 
 ![](images/cls_train.png)
 
 
-上图中第1行中的`acc1`表示参与当前迭代步数的训练样本的平均top1准确率，值越高代表模型越优；`acc5`表示参与当前迭代步数的训练样本的平均top5（若类别数n少于5，则为topn）准确率，值越高代表模型越优。第4行中的`loss`表示整个训练集的平均损失函数值，`acc1`表示整个训练集的平均top1准确率，`acc5`表示整个训练集的平均top5准确率。
+The `acc1` in Line 1 of the above figure represents the average top1 accuracy of the training samples participating in the current iterations, and the higher values indicates the better model. `acc5` represents the average top5 (topn if the number of categories n is less than 5) accuracy of the training samples participating in the current iteration of steps, and the higher value indicates the better model. The `loss` in line 4 represents the average loss function value for the entire training set. `acc1` indicates the average top1 accuracy for the entire training set, and `acc5` indicates the average top5 accuracy for the entire training set.
 
 
-### 评估日志字段
+### Evaluate the log field
 
 ![](images/cls_eval.png)
 
-上图中第3行中的`acc1`表示整个验证集的平均top1准确率，`acc5`表示整个验证集的平均top5准确率。
+acc1` in Line 3 of the above figure represents the average top1 accuracy of the entire validation set, and `acc5` represents the average top5 accuracy of the entire validation set.`
 
 
-## 检测特有统计信息
+## Detect specific statistical information
 
-### 训练日志字段
+### Training log field
 
 #### YOLOv3
 
-YOLOv3的训练日志只包括训练通用统计信息（见上文训练通用统计信息）。
+YOLOv3's training log includes only training generic statistics (see Training Generic Statistics above).
 
 ![](images/yolo_train.png)
 
-上图中第5行`loss`表示整个训练集的平均损失函数loss值。
+The `loss` in Line 5 in the above figure represents the average loss function (loss) value for the entire training set.
 
 #### FasterRCNN
 
-FasterRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss_bbox`、`loss_rpn_cls`和`loss_rpn_bbox`，这些字段的含义如下:
+FasterRCNN's training log includes, in addition to generic statistics, `loss_cls`, `loss_bbox`, `loss_rpn_cls`, and `loss_rpn_bbox`. The meanings of the fields are as follows:
 
-| 字段           | 含义                                          |
+| Field | Meaning |
 | -------------- | --------------------------------------------- |
-| loss_cls          | RCNN子网络中分类损失函数值                  |
-| loss_bbox          | RCNN子网络中检测框回归损失函数值  |
-| loss_rpn_cls       | RPN子网络中分类损失函数值   |
-| loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
-| loss              | 所有子网络损失函数值之和          |
+| loss_cls | Classification of loss function values in RCNN subnet |
+| loss_bbox | Detection box regression loss function values in RCNN subnet |
+| loss_rpn_cls | Classification loss function values in RPN subnet |
+| loss_rpn_bbox | Detection box regression loss function value in RPN subnet |
+| Loss | Sum of all subnet loss function values |
 
 ![](images/faster_train.png)
 
-上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
+In the above figure`, `loss`, `loss_cls`, `loss_bbox`, `loss_rpn_clss`, and `loss_rpn_bbox in Line 1 are all the loss values of the training samples participating in the current iteration step, while Line 7 is the loss function value for the entire training set.
 
 #### MaskRCNN
 
-MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_cls`和`loss_rpn_bbox`，这些字段的含义如下:
+MaskRCNN's training log includes, in addition to generic statistics, `loss_cls`, `loss_bbox`, `loss_mask`, `loss_rpn_cls`, and `loss_rpn_bbox`. The meanings of the fields are as follows:
 
 
-| 字段           | 含义                                          |
+| Field | Meaning |
 | -------------- | --------------------------------------------- |
-| loss_cls          | RCNN子网络中分类损失函数值                  |
-| loss_bbox          | RCNN子网络中检测框回归损失函数值  |
-| loss_mask          | RCNN子网络中Mask回归损失函数值  |
-| loss_rpn_cls       | RPN子网络中分类损失函数值   |
-| loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
-| loss              | 所有子网络损失函数值之和          |
+| loss_cls | Classification of loss function values in RCNN subnet |
+| loss_bbox | Detection box regression loss function values in RCNN subnet |
+| loss_mask | Mask regression loss function values in RCNN subnet |
+| loss_rpn_cls | Classification loss function values in RPN subnet |
+| loss_rpn_bbox | Detection box regression loss function value in RPN subnet |
+| Loss | Sum of all subnet loss function values |
 
 ![](images/mask_train.png)
 
-上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
+In the above figure`, `loss`, `loss_cls`, `loss_bbox`, `loss_mask`, `loss_rpn_clss`, and `loss_rpn_bbox in Line 1 are all loss values for the training samples participating in the current iteration step, and line 7 is the loss function value for the entire training set.
 
-### 评估日志字段
+### Evaluate the log field
 
-检测可以使用两种评估标准：VOC评估标准和COCO评估标准。
+Two evaluation standards can be used for detection: VOC evaluation standard and COCO evaluation standard.
 
-#### VOC评估标准
+#### VOC evaluation standard
 
 ![](images/voc_eval.png)
 
-> 注：`map`为平均准确率的平均值，即IoU(Intersection Over Union)取0.5时各个类别的准确率-召回率曲线下面积的平均值。
+> Note: `map` is the average value of the average accuracy, that is, the average of the area under the accuracy-recall curve for each category when Intersection Over Union (IoU) is set to 0.5.
 
-上图中第3行`bbox_map`表示检测任务中整个验证集的平均准确率平均值。
+Line 3 of the `bbox_map` in the above figure shows the average accuracy of the entire validation set for the detection task.
 
-#### COCO评估标准
+#### COCO evaluation standard
 
-> 注：COCO评估指标可参见[COCO官网解释](http://cocodataset.org/#detection-eval)。PaddleX主要反馈`mmAP`，即AP at IoU=.50:.05:.95这项指标，为在各个IoU阈值下平均准确率平均值（mAP）的平均值。
+> Note: for the COCO evaluation metrics, see COCO official website for details .[PaddleX mainly feeds back ](http://cocodataset.org/#detection-eval)mmAP . That is, AP at IoU=.50:.05:.95 metric is the average of the mAP at each IoU threshold.``
 
-COCO格式的数据集不仅可以用于训练目标检测模型，也可以用于训练实例分割模型。在目标检测中，PaddleX主要反馈针对检测框的`bbox_mmAP`指标；在实例分割中，还包括针对Mask的`seg_mmAP`指标。如下所示，第一张日志截图为目标检测的评估结果，第二张日志截图为实例分割的评估结果。
+The COCO-formatted dataset can be used to train not only object detection models, but also training instance segmentation models. In object detection, PaddleX mainly feeds the `bbox_mmAP` metric against the detection box. For the instance segmentation, it also includes the `seg_mmAP` metric against the Mask. As shown below, the first log screenshot shows the evaluation result of the object detection, and the second log screenshot shows the evaluation result of instance segmentation.
 
 ![](images/faster_eval.png)
 
-上图中红框标注的`bbox_mmap`表示整个验证集的检测框平均准确率平均值。
+The `bbox_mmap` marked by the red box in the above figure represents the average accuracy of the detection boxes for the entire validation set.
 
-![](images/mask_eval.png)
-上图中红框标注的`bbox_mmap`和`seg_mmap`分别表示整个验证集的检测框平均准确率平均值、Mask平均准确率平均值。
+![](images/mask_eval.png)The bbox_mmap` and `seg_mmap` marked in the red box in the above figure represent the average accuracy of the detection box averaged over the entire validation set, and the average accuracy of the Mask averaged over the entire validation set, respectively.`
 
-## 分割特有统计信息
+## Segmentation of specific statistics
 
-### 训练日志字段
+### Training log field
 
-语义分割的训练日志只包括训练通用统计信息（见上文训练通用统计信息）。
+Training logs for semantic segmentation include only training generic statistics (see Training Generic Statistics above).
 
 ![](images/seg_train.png)
 
-### 评估日志字段
+### Evaluate the log field
 
-语义分割的评估日志包括了`miou`、`category_iou`、`macc`、`category_acc`、`kappa`，这些字段的含义如下：
+The evaluation log for semantic partitioning includes the fields `miou`, `category_iou`, `macc`, `category_acc`, and `kappa`. The meanings are as follows:
 
-| 字段           | 含义                                          |
+| Field | Meaning |
 | -------------- | --------------------------------------------- |
-| miou          | 各类IoU(Intersection Over Union)的平均值         |
-| category_iou          | 各类别的IoU  |
-| macc          | 平均准确率，即预测正确的像素数/总像素数  |
-| category_acc       | 各类别的准确率，即各类别预测正确的像素数/预测为该类别的总像素数  |
-| kappa      | kappa系数，用于一致性检验  |
+| mIOU | Average value of each type of IoU |
+| category_iou | Various types of IoU |
+| macc | Average accuracy, that is, the number of pixels correctly predicted / total number of pixels |
+| category_acc | Accuracy for each category, that is, the number of pixels correctly predicted for each category / total number of pixels predicted for that category |
+| Kappa | kappa coefficient. It is used for consistency validation. |
 
 ![](images/seg_eval.png)

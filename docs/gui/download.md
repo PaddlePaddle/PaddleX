@@ -1,34 +1,28 @@
-# 下载安装
+## PaddleX GUI installation
 
-下载地址：https://www.paddlepaddle.org.cn/paddle/paddleXPaddleX 
-
-
-## 安装方式
-
-**注意：安装/解压路径请务必在不包含中文和空格的路径下，否则会导致可能无法正确训练模型**
-
-- Windows下载后双击后选择安装路径即可
-- Mac/Ubuntu下载后解压即可
+PaddleX GUI is a core module to improve project development efficiency. Developers can quickly complete the whole development of deep learning models. We sincerely invite you to download and try out the PaddleX GUI visualization front-end at our [official website] (https://www.paddlepaddle.org.cn/paddle/paddleX), and hope to get your valuable comments or contribution to the open source project.
 
 
-## 安装推荐环境
 
-* **操作系统**：
-  * Windows 10；
-  * Mac OS 10.13+；
-  * Ubuntu 18.04(Ubuntu暂只支持18.04)；
+### Recommended Installation Environment
 
-***注：处理器需为x86_64架构，支持MKL。***
+* **Operating System**
+   * Windows7/8/10 (Windows 10 recommended);
+   * Mac OS 10.13+;
+   * Ubuntu 18.04+;
 
-* **训练硬件**：  
-  * **GPU**（仅Windows及Linux系统）：  
-    推荐使用支持CUDA的NVIDIA显卡，例如：GTX 1070+以上性能的显卡；  
-    Windows系统X86_64驱动版本>=411.31；  
-    Linux系统X86_64驱动版本>=410.48；  
-    显存8G以上；  
-  * **CPU**：  
-    PaddleX当前支持您用本地CPU进行训练，但推荐使用GPU以获得更好的开发体验。
-  * **内存**：建议8G以上  
-  * **硬盘空间**：建议SSD剩余空间1T以上（非必须）  
+***Note: The processor must use an x86_64 architecture and support MKL. ***
 
-***注：PaddleX在Mac OS系统只支持CPU训练。Windows系统只支持单GPU卡训练。***
+* **Training Hardware**:
+   * **GPU** (Only the Windows and Linux systems): 
+   NVIDIA GPUs which support the CUDA, such as GTX 1070+ or better GPUs，are recommended;
+   Windows system X86_64 drive version >=411.31;
+   Linux system X86_64 drive version >=410.48;
+   8G or more GPU display memory
+   * **CPU**: 
+   Currently, PaddleX allows you to train with a local CPU, but a GPU is recommended for a better development experience.
+   * **Memory**: 8G or more is recommended
+   * **Hard disk space**: 1T or more SSD remaining space is recommended (not mandatory)
+
+***Note: PaddleX only supports single-card models in the Mac OS system. The Windows system currently does not support NCCL. ***
+
