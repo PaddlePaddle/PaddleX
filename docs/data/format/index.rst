@@ -1,10 +1,10 @@
-数据格式说明
+Data Format Description
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    classification.md
    detection.md

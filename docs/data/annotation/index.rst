@@ -1,10 +1,10 @@
-数据标注、转换、划分
+Data Annotation,Transformation and Division
 =======================================
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: 目录:
+   :caption: Catalogue:
 
    classification.md
    object_detection.md
