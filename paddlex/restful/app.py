@@ -870,11 +870,11 @@ def model():
     if request.method == 'DELETE':
         if data['type'] == 'pretrained':
             from .model import delete_pretrained_model
-            ret = delete_pretrained_model(data, workspace)
+            ret = delete_pretrained_model(data, SD.workspace)
             return ret
         if data['type'] == 'exported':
             from .model import delete_exported_model
-            ret = delete_exported_model(data, workspace)
+            ret = delete_exported_model(data, SD.workspace)
             return ret
 
 
