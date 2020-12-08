@@ -1,13 +1,13 @@
-# 数据分析
+# Data Analysis
 
 遥感影像往往由许多波段组成，不同波段数据分布可能大相径庭，例如可见光波段和热红外波段分布十分不同。为了更深入了解数据的分布来优化模型训练效果，需要对数据进行分析。
 
-## 目录
+## Catalogue
 * [1. 统计分析](#1)
 * [2. 确定像素值截断范围](#2)
 * [3. 统计截断后的均值和方差](#3)
 
-## <h2 id="1">统计分析</h2>
+## <h2 id="1">Statistical analysis</h2>
 执行以下脚本，对训练集进行统计分析，屏幕会输出分析结果，同时结果也会保存至文件`train_information.pkl`中：
 
 ```
@@ -76,7 +76,7 @@ Label pixel information is shown in a format of (label_id, the number of label_i
 
 ```
 
-## <h2 id="2">2 确定像素值截断范围</h2>
+## <h2 id="2">2 Determine the truncation range of pixel values</h2>
 
 遥感影像数据分布范围广，往往存在一些异常值，这会影响算法对实际数据分布的拟合效果。为更好地对数据进行归一化，可以抑制遥感影像中少量的异常值。根据`图像各通道的像素值分布`来确定像素值的截断范围，并在后续图像预处理过程中对超出范围的像素值通过截断进行校正，从而去除异常值带来的干扰。**注意：该步骤是否执行根据数据集实际分布来决定。**
 
@@ -92,7 +92,7 @@ Label pixel information is shown in a format of (label_id, the number of label_i
 截断范围最大值： clip_max_value = [50000, 50000, 50000, 50000, 50000, 40000, 30000, 18000, 40000, 36000]
 ```
 
-## <h2 id="3">3 确定像素值截断范围</h2>
+## <h2 id="3">3 Determine the truncation range of pixel values</h2>
 
 为避免数据截断范围选取不当带来的影响，应该统计异常值像素占比，确保受影响的像素比例不要过高。接着对截断后的数据计算归一化后的均值和方差，**用于后续模型训练时的图像预处理参数设置**。
 

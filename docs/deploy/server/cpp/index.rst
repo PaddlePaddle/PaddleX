@@ -1,10 +1,10 @@
-C++部署
+C++ Deployment
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    windows.md
    linux.md

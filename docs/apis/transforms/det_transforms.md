@@ -173,21 +173,22 @@ ComposedRCNNTransforms共包括以下几个步骤：
 > > 2. 图像采用[ResizeByShort](#ResizeByShort)方式，根据min_max_size参数，进行缩入
 > > 3. 使用[Padding](#Padding)将图像的长和宽分别Padding成32的倍数
 
-### 参数
+### Parameters
 * **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
 * **min_max_size** (list): 输入模型中图像的最短边长度和最长边长度，参考[ResizeByShort](#ResizeByShort)（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)，默认[800, 1333]
 * **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
 * **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
 * **random_horizontal_flip**(bool): 数据增强，是否以0.5的概率使用随机水平翻转增强，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
-### 添加数据增强方式
+### Add data enhancement methods
 ```python
 ComposedRCNNTransforms.add_augmenters(augmenters)
 ```
 > **参数**
+>
 > * **augmenters**(list): 数据增强方式列表
 
-#### 使用示例
+#### Example
 ```
 import paddlex as pdx
 from paddlex.det import transforms
@@ -240,7 +241,7 @@ ComposedYOLOv3Transforms共包括以下几个步骤：
 > > 1. 将图像Resize成shape参数大小
 > > 2. 图像归一化
 
-### 参数
+### Parameters
 * **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
 * **shape** (list): 输入模型中图像的大小（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)， 默认[608, 608]
 * **mixup_epoch**(int): 模型训练过程中，在前mixup_epoch轮迭代中，使用mixup策略，如果为-1，则不使用mixup策略， 默认250。底层实现采用[paddlex.det.transforms.MixupImage](#mixupimage)
@@ -251,14 +252,15 @@ ComposedYOLOv3Transforms共包括以下几个步骤：
 * **random_crop**(bool): 数据增强，是否在训练过程中随机裁剪图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomCrop](#randomcrop)
 * **random_horizontal_flip**(bool): 数据增强，是否在训练过程中随机水平翻转图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
-### 添加数据增强方式
+### Add data enhancement methods
 ```python
 ComposedYOLOv3Transforms.add_augmenters(augmenters)
 ```
 > **参数**
+>
 > * **augmenters**(list): 数据增强方式列表
 
-#### 使用示例
+#### Example
 ```
 import paddlex as pdx
 from paddlex.det import transforms

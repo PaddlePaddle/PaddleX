@@ -1,10 +1,10 @@
-模型压缩
+Model Compression
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    quant.md
    prune.md

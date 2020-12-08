@@ -1,10 +1,10 @@
-Paddle Lite移动端部署
+Paddle Lite Mobile Deployment
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    slim/index
    android.md

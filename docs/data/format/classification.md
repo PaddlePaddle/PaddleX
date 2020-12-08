@@ -4,7 +4,20 @@
 
 In PaddleX, image classification supports ImageNet dataset format. The dataset directory `data_dir` contains multiple folders, and the images in each folder belong to the same category. The folder name is the category name (note that the path should not contain Chinese characters and spaces). The structure example is as follows:
 ```
-MyDataset/ # Image classification dataset root directory |--dog/ # All pictures in the current folder belong to the dog category. |--d1.jpg |--d2.jpg |--. . . |--. . . | |--. . . | |--snake/ # All pictures in the current folder belongs to the snake category. |--s1.jpg |--s2.jpg |--. . . |--. . .
+-MyDataset/ # Image classification dataset root directory
+|--dog/ # All pictures in the current folder belong to the dog category.
+|  |--d1.jpg
+|  |--d2.jpg
+|  |--...
+|  |--...
+|
+|--...
+|
+|--snake/ # All pictures in the current folder belongs to the snake category.
+|  |--s1.jpg
+|  |--s2.jpg
+|  |--...
+|  |--...
 ```
 
 ## Divide the training set and validation sets

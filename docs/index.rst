@@ -1,15 +1,15 @@
 Welcome to use PaddleX！
 =======================================
 
-PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习全流程开发工具。具备 **全流程打通** 、**融合产业实践** 、**易用易集成** 三大特点。
+PaddleX is a Entire Process Development Toolkit for Deep Learning based on the core frameworks, development kits and tool components of the PaddlePaddle. It has three major characteristics of "whole process connection", "integration of industrial practice" and "ease of use and integration".
 
 * Official Website: http://www.paddlepaddle.org.cn/paddle/paddlex
 * GitHub: https://github.com/PaddlePaddle/PaddleX
 * Official QQ Chat Group: 1045148026
 * GitHub Issue: http://www.github.com/PaddlePaddle/PaddleX/issues
 
-1. 注：本使用手册在打印为pdf后，可能会存在部分格式的兼容问题；
-2. 注：本文档持续在http://paddlex.readthedocs.io/进行更新。
+1. Note：The user manual may be compatible with some formats when printed as PDF;
+2. Note：This document is continuously updated at http://paddlex.readthedocs.io/ .
 
 
 .. toctree::
@@ -45,7 +45,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
 
 .. toctree::
    :maxdepth: 1
-   :caption: 5. 模型多端安全部署
+   :caption: 5. Model Multiterminal Security Deployment
 
    deploy/export_model.md
    deploy/hub_serving.md
@@ -57,7 +57,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
 
 .. toctree::
    :maxdepth: 1
-   :caption: 6. 产业案例集
+   :caption: 6. Industrial Case Examples
 
    examples/meter_reader.md
    examples/human_segmentation.md
@@ -68,7 +68,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
 
 .. toctree::
    :maxdepth: 1
-   :caption: 7. 可视化客户端使用
+   :caption: 7. Visual Client Usage
 
    gui/introduce.md
    gui/download.md
@@ -77,7 +77,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
 
 .. toctree::
    :maxdepth: 1
-   :caption: 8. 附录
+   :caption: 8. Appendix
 
    apis/index.rst
    appendix/model_zoo.md

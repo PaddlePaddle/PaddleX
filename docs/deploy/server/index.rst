@@ -1,10 +1,10 @@
-CPU/GPU(加密)部署
+CPU / GPU (encryption) deployment
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    python.md
    cpp/index

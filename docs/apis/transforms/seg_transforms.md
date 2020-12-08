@@ -189,7 +189,7 @@ ComposedSegTransforms共包括以下几个步骤：
 > > 1. 将图像的最长边resize至(min_max_size[0] + min_max_size[1])//2, 短边按比例resize。若min_max_size为None，则跳过此步骤
 > > 1. 图像归一化
 
-### 参数
+### Parameters
 * **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
 * **min_max_size**(list): 用于对图像进行resize，具体作用参见上述步骤。
 * **train_crop_size** (list): 训练过程中随机裁剪原图用于训练，具体作用参见上述步骤。此参数仅在mode为`train`时生效。
@@ -197,14 +197,15 @@ ComposedSegTransforms共包括以下几个步骤：
 * **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
 * **random_horizontal_flip**(bool): 数据增强，是否随机水平翻转图像，此参数仅在mode为`train`时生效。
 
-### 添加数据增强方式
+### Add data enhancement methods
 ```python
 ComposedSegTransforms.add_augmenters(augmenters)
 ```
 > **参数**
+>
 > * **augmenters**(list): 数据增强方式列表
 
-#### 使用示例
+#### Example
 ```
 import paddlex as pdx
 from paddlex.seg import transforms
