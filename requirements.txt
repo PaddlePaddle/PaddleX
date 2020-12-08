@@ -9,3 +9,4 @@ shapely
 paddle2onnx
 paddlepaddle-gpu
 opencv-python
+psutil
