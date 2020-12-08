@@ -5,7 +5,7 @@ PaddleX GUI是基于PaddleX实现的可视化开发客户端。开发者以点�
 
 PaddleX GUI 当前提供Windows，Mac，Ubuntu三种版本一键绿色安装的方式。请至飞桨官网：https://www.paddlepaddle.org.cn/paddle/paddleX 下载您需要的版本。
 
-功能简介
+Function Introduction
 ---------------------------------------
 PaddleX GUI是PaddleX API的衍生品，它在集成API功能的基础上，额外提供了可视化分析、评估等附加功能，致力于为开发者带来极致顺畅的开发体验。其拥有以下独特的功能：
 
@@ -44,7 +44,7 @@ PaddleX GUI覆盖深度学习模型开发必经的 **数据处理** 、 **超参
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录
+   :caption: Catalogue
    
    download.md
    usage/index

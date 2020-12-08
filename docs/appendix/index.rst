@@ -1,10 +1,10 @@
-附录
+Appendix
 =======================================
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: 目录:
+   :caption: Catalogue:
 
    model_zoo.md
    slim_model_zoo.md

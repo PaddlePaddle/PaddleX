@@ -1,4 +1,4 @@
-模型压缩
+Model Compression
 =======================================
 
 PaddleX集成了PaddleSlim, 可帮助用户对模型进行裁剪和量化，减小模型的计算量和体积，提升模型的预测性能。
@@ -8,7 +8,7 @@ PaddleX集成了PaddleSlim, 可帮助用户对模型进行裁剪和量化，减�
 
 .. toctree::
    :maxdepth: 1
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    prune.md
    quant.md

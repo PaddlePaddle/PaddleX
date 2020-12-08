@@ -1,10 +1,10 @@
-OpenVINO部署
+OpenVINO Deployment
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    introduction.md
    windows.md

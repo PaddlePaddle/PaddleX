@@ -1,4 +1,4 @@
-# 天池铝材表面缺陷检测初赛数据集示例
+# Example of preliminary data set for surface defect detection of Tianchi aluminum products
 
 | 序号 | 瑕疵名称 | 瑕疵成因 | 瑕疵图片示例 | 图片数量 |
 | -- | -- | -- | -- | -- |

@@ -1,6 +1,6 @@
-# 数据集工具
+# Dataset tools
 
-## 数据集分析
+## Dataset analysis
 
 ### paddlex.datasets.analysis.Seg
 ```python
@@ -49,7 +49,7 @@ Seg分析器用于计算图像截断后的均值和方差的接口。
 
 [计算结果示例](../examples/multi-channel_remote_sensing/analysis.html#id4)
 
-## 数据集生成
+## Dataset generation
 
 ### paddlex.det.paste_objects
 ```python

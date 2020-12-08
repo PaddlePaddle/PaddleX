@@ -1,10 +1,10 @@
-数据准备
+Data Preparation
 =======================================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: 文档目录:
+   :caption: Catalogue:
 
    annotation.md
    format/index

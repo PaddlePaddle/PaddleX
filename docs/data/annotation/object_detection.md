@@ -1,47 +1,36 @@
-# 目标检测
+# Object detection
 
-目标检测数据的标注推荐使用LabelMe标注工具，如您先前并无安装，那么LabelMe的安装可参考[LabelMe安装和启动](labelme.md)
+## Introduction
 
-**注意：LabelMe对于中文支持不够友好，因此请不要在如下的路径以及文件名中出现中文字符!**
+Currently, PaddleX provides FasterRCNN and YOLOv3 detection structures and various backbone models to meet the requirements of developers for different scenarios and performances.
 
-## 准备工作     
+- **Box MMAP**: Model test precision on the COCO dataset
+- **Inference speed**: Inference time for a single image (preprocessing and postprocessing excluded)
+- "-" indicates that the indexes are not updated temporarily
 
-1. 将收集的图像存放于`JPEGImages`文件夹下，例如存储在`D:\MyDataset\JPEGImages`
-2. 创建与图像文件夹相对应的文件夹`Annotations`，用于存储标注的json文件，如`D:MyDataset\Annotations`
-3. 打开LabelMe，点击”Open Dir“按钮，选择需要标注的图像所在的文件夹打开，则”File List“对话框中会显示所有图像所对应的绝对路径，接着便可以开始遍历每张图像，进行标注工作      
+| Model (Click to obtain codes) | Box MMAP | Model Size | GPU Inference Speed | Arm Inference Speed | Note |
+| :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
+| [YOLOv3-MobileNetV1](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py) | 29.3% | 99.2 MB | 15.442 ms | - | The model is small, has a fast inference speed and applies to low-performance or mobile devices |
+|
+| [YOLOv3-MobileNetV3](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv3.py) | 31.6% | 100.7 MB | 143.322 ms | - | The model is small and has an advantageous inference speed on the mobile terminal |
+| [YOLOv3-DarkNet53](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_darknet53.py) | 38.9% | 249.2 MB | 42.672 ms | - | The model is large, has a fast inference speed and applies to the server |
+| [PPYOLO](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/ppyolo.py) | 45.9% | 329.1 MB | - | - | The model is large, has the faster inference speed than YOLOv3-DarkNet53 and applies to the server |
+| [FasterRCNN-ResNet50-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/faster_rcnn_r50_fpn.py) | 37.2% | 167.7 MB | 197.715 ms | - | The model has a high precision and applies to server deployment |
+| [FasterRCNN-ResNet18-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/faster_rcnn_r18_fpn.py) | 32.6% | 173.2 MB | - | - | The model has a high precision and applies to server deployment |
+| [FasterRCNN-HRNet-FPN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/faster_rcnn_hrnet_fpn.py) | 36.0% | 115. MB | 81.592 ms | - | The model has a high precision and a fast inference speed and applies to server deployment |
 
-## 目标框标注    
 
-1. 打开矩形框标注工具(右键菜单->Create Rectangle)，具体如下图所示     
-![](./pics/detection1.png)
+## Start training
 
-2. 使用拖拉的方式对目标物体进行标识，并在弹出的对话框中写明对应label（当label已存在时点击即可, 此处请注意label勿使用中文），具体如下图所示，当框标注错误时，可点击左侧的“Edit Polygons”再点击标注框，通过拖拉进行修改，也可再点击“Delete Polygon”进行删除。    
-![](./pics/detection3.png)
+Save and run codes locally (The code downloading links are located in the table above) and **codes automatically download training data and start training**.  If codes are saved as `yolov3_mobilenetv1.py`, execute the following command to start training:
 
-3. 点击右侧”Save“，将标注结果保存到中创建的文件夹Annotations目录中
-
-## 格式转换
-
-LabelMe标注后的数据还需要进行转换为PascalVOC或MSCOCO格式，才可以用于目标检测任务的训练，创建`D:\dataset_voc`目录，在python环境中安装paddlex后，使用如下命令即可
 ```
-paddlex --data_conversion --source labelme --to PascalVOC \
-        --pics D:\MyDataset\JPEGImages \
-        --annotations D:\MyDataset\Annotations \
-        --save_dir D:\dataset_voc
+python yolov3_mobilenetv1.py
 ```
 
-> 注：此文档中以LabelMe为示例，展示了格式转换，如您使用的是数据标注精灵工具，则可在标注完后，选择直接保存为PascalVOC格式
 
-## 数据集划分
+## Related document
 
-转换完数据后，为了进行训练，还需要将数据划分为训练集、验证集和测试集，同样在安装paddlex后，使用如下命令即可将数据划分为70%训练集，20%验证集和10%的测试集
-```
-paddlex --split_dataset --format VOC --dataset_dir D:\MyDataset --val_value 0.2 --test_value 0.1
-```
-执行上面命令行，会在`D:\MyDataset`下生成`labels.txt`, `train_list.txt`, `val_list.txt`和`test_list.txt`，分别存储类别信息，训练样本列表，验证样本列表，测试样本列表
-
-> 注：如您使用PaddleX可视化客户端进行模型训练，数据集划分功能集成在客户端内，无需自行使用命令划分
-
-
-- [目标检测任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py)
-
+- [**Important**] Adjust training parameters according to your machine environment and data, adjust training parameters? Understand the role of training parameters in PaddleX first. [——>>Portal] (../appendix/parameters.md)
+- [**Useful**] There are no machine resources? Use a free AIStudio GPU resource: online training model. [——>>Portal] (https://aistudio.baidu.com/aistudio/projectdetail/450925)
+- [**Extension**] For more object detection models, refer to the [PaddleX model library](../appendix/model_zoo.md) and the [API operation document](../apis/models/detection.md). 

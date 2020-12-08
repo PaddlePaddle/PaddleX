@@ -10,6 +10,7 @@ paddlex.cls.transforms. Compose(transforms)
 The input data is operated by the data preprocessing/augmenter operator. [Usage Example](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py#L15)
 
 > **Parameters**
+>
 > * **transforms** (list): Data preprocessing/data augmenter list.
 
 
@@ -138,21 +139,22 @@ ComposedClsTransforms共包括以下几个步骤：
 > > 2. 从图像中心crop出一个大小为crop_size的图像
 > > 3. 将图像进行归一化
 
-### 参数
+### Parameters
 * **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
 * **crop_size** (int|list): 输入到模型里的图像大小，默认为[224, 224]（与原图大小无关，根据上述几个步骤，会将原图处理成该图大小输入给模型训练)
 * **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
 * **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
 * **random_horizontal_flip**(bool): 数据增强，是否以0，5的概率使用随机水平翻转增强，仅在model为'train'时生效，默认为True。底层实现采用[paddlex.cls.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
-### 添加数据增强方式
+### Add data enhancement methods
 ```python
 ComposedClsTransforms.add_augmenters(augmenters)
 ```
 > **参数**
+>
 > * **augmenters**(list): 数据增强方式列表
 
-#### 使用示例
+#### Example
 ```
 import paddlex as pdx
 from paddlex.cls import transforms
