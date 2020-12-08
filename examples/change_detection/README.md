@@ -1,87 +1,87 @@
-# 地块变化检测
+# Plot change detection
 
-本案例基于PaddleX实现地块变化检测，将同一地块的前期与后期两张图片进行拼接，而后输入给语义分割网络进行变化区域的预测。在训练阶段，使用随机缩放尺寸、旋转、裁剪、颜色空间扰动、水平翻转、竖直翻转多种数据增强策略。在验证和预测阶段，使用滑动窗口预测方式，以避免在直接对大尺寸图片进行预测时显存不足的发生。
+This case implements the plot change detection based on PaddleX, that is, two images of the same plot in the early stage and late stage are stitched together and then input to the semantic segmentation network for predicting the change of the area. In the training phase, a variety of data enhancement strategies such as random scaling size, rotation, pruning, color space perturbation, horizontal flipping, and vertical flipping are used. In the validation and prediction phases, sliding window prediction is used to avoid insufficiency of display memory when large-size images are directly predicted.
 
-## 目录
-* [数据准备](#1)
-* [模型训练](#2)
-* [模型评估](#3)
-* [模型预测](#4)
+## Directory
+* [Data preparation](#1)
+* [Model training](#2)
+* [Model evaluation](#3)
+* [Model predictions](#4)
 
 
-#### 前置依赖
+#### Pre-dependence
 
-* Paddle paddle >= 1.8.4
+* PaddlePaddle >= 1.8.4
 * Python >= 3.5
 * PaddleX >= 1.3.0
 
-安装的相关问题参考[PaddleX安装](../install.md)
+For installation related issues, refer to [PaddleX Installation]. (../install.md)
 
-下载PaddleX源码:
+Download PaddleX source code:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
 ```
 
-该案例所有脚本均位于`PaddleX/examples/change_detection/`，进入该目录：
+All scripts of this case are located in `PaddleX/examples/change_detection/`. Access the directory:
 
 ```
 cd PaddleX/examples/change_detection/
 ```
 
-## <h2 id="1">数据准备</h2>
+## <h2 id="1">Data preparation</h2>
 
-本案例使用[Daifeng Peng等人](https://ieeexplore.ieee.org/document/9161009)开放的[Google Dataset](https://github.com/daifeng2016/Change-Detection-Dataset-for-High-Resolution-Satellite-Imagery), 该数据集涵盖了广州部分区域于2006年至2019年期间的房屋建筑物的变化情况，用于分析城市化进程。一共有20对高清图片，图片有红、绿、蓝三个波段，空间分辨率为0.55m，图片大小有1006x1168至4936x5224不等。
+This case uses the [Google Dataset](https://github.com/daifeng2016/Change-Detection-Dataset-for-High-Resolution-Satellite-Imagery) developed by [Daifeng Peng, etc.](https://ieeexplore.ieee.org/document/9161009). The dataset covers changes in houses and buildings in partial areas in Guangzhou from 2006 to 2019 for analyzing the urbanization process. There are 20 pairs of high-resolution images in red, green and blue bands with a spatial resolution of 0.55m, and image sizes range from 1006x1168 to 4936x5224.
 
-由于Google Dataset仅标注了房屋建筑物是否发生变化，因此本案例是二分类变化检测任务，可根据实际需求修改类别数量即可拓展为多分类变化检测。
+Google Dataset only marks whether the houses and buildings are changed; therefore, this case is a two-class change detection task, which can be extended to the multi-class change detection by modifying the number of classes according to actual needs.
 
-本案例将15张图片划分入训练集，5张图片划分入验证集。由于图片尺寸过大，直接训练会发生显存不足的问题，因此以滑动窗口为(1024，1024)、步长为(512, 512)对训练图片进行切分，切分后的训练集一共有743张图片。以滑动窗口为(769, 769)、步长为(769，769)对验证图片进行切分，得到108张子图片，用于训练过程中的验证。
+In this case, 15 images are categorized into the training set and 5 images are categorized into the validation set. Since the size of the images is too large, direct training may cause the problem of insufficient display memory, the training images are divided according to the sliding window (1024, 1024) and step (512, 512). There are 743 pictures in the training set after the division. Divide the validation pictures based on a sliding window of (769, 769) and a step of (769, 769) to get 108 sub-pictures for validation during training.
 
-运行以下脚本，下载原始数据集，并完成数据集的切分：
+Run the following script to download the original dataset and complete the cut of the dataset.
 
 ```
 python prepare_data.py
 ```
 
-切分后的数据示意如下：
+Data after division is as follows:
 
-<img src="./images/change_det_data.jpg" alt="变化检测数据" align=center />
+<img src="./images/change_det_data.jpg" alt="Change detection data" align=center/>
 
 
-**注意：**
+**Note:**
 
-* tiff格式的图片PaddleX统一使用gdal库读取，gdal安装可参考[文档](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html#id2)。若数据是tiff格式的三通道RGB图像，如果不想安装gdal，需自行转成jpeg、bmp、png格式图片。
+* PaddleX uses the gdal library to read tiff images. For the installation of gdal, see the reference [document] (https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html#id2). For RGB pictures in tiff, if you don't want to install gdal, you need to convert pictures to formats such as jpeg, bmp, or png.
 
-* label文件需为单通道的png格式图片，且标注从0开始计数，标注255表示该类别不参与计算。例如本案例中，0表示`unchanged`类，1表示`changed`类。
+* The label file should be a single-channel image in png format, and the labels start counting from 0, the label 255 means the category is not involved in the calculation. For example, in this case, 0 means `unchanged` class, 1 means changed `class`.
 
-## <h2 id="2">模型训练</h2>
+## <h2 id="2">Model training</h2>
 
-由于数据量较小，分割模型选择较好兼顾浅层细节信息和深层语义信息的UNet模型。运行以下脚本，进行模型训练：
+Due to the small amount of data, choose the UNet model for the segmentation model, because it features both shallow details and deep semantic information. Run the following script to carry out the model training:
 
 ```
 python train.py
 ```
 
-本案例使用0,1,2,3号GPU卡完成训练，可根据实际显存大小更改训练脚本中的GPU卡数量和`train_batch_size`的设置值，按`train_batch_size`的调整比例相应地调整学习率`learning_rate`，例如`train_batch_size`由16减少至8时，`learning_rate`则由0.1减少至0.05。此外，不同数据集上能获得最优精度所对应`learning_rate`可能有所不同，可以尝试调整。
+You can change the number of GPU cards and setting value of `train_batch_size` in the training script according to the actual video memory size, and then adjust the `learning_rate` according to the adjustment ratio of `train_batch_size`. For example, when `train_batch_size` decreases from 16 to 8, `learning_rate` decreases from 0.1 to 0.05. In addition, the `learning_rate` corresponding to the optimal precision obtained on different datasets may vary. You can try to adjust it.
 
-也可以跳过模型训练步骤，直接下载预训练模型进行后续的模型评估和预测：
+It is also possible to skip the model training step and directly download the pre-training model for subsequent model evaluation and prediction.
 
 ```
 wget https://bj.bcebos.com/paddlex/examples/change_detection/models/google_change_det_model.tar.gz
 tar -xvf google_change_det_model.tar.gz
 ```
 
-## <h2 id="3">模型评估</h2>
+## <h2 id="3">Model evaluation</h2>
 
-在训练过程中，每隔10个迭代轮数会评估一次模型在验证集的精度。由于已事先将原始大尺寸图片切分成小块，相当于使用无重叠的滑动窗口预测方式，最优模型精度:
+During the training process, the precision of the model in the validation set is evaluated every 10 iteration rounds. The original large size images are sliced into smaller blocks in advance. Therefore, it means that a non-overlapping sliding-window prediction method is used. The optimal model precision:
 
 | mean_iou | category__iou | overall_accuracy | category_accuracy | category_F1-score | kappa |
 | -- | -- | -- | -- | --| -- |
 | 84.24% | 97.54%、70.94%| 97.68% | 98.50%、85.99% | 98.75%、83% | 81.76% |
 
-category分别对应`unchanged`和`changed`两类。
+The category corresponds to `unchanged` and `changed` respectively.
 
-运行以下脚本，将采用有重叠的滑动窗口预测方式，重新评估原始大尺寸图片的模型精度，此时模型精度为：
+Run the following script to re-evaluate the model precision of the original large size image by using overlapping sliding window predictions. The model precision at that time is:
 
 | mean_iou | category__iou | overall_accuracy | category_accuracy | category_F1-score | kappa |
 | -- | -- | -- | -- | --| -- |
@@ -92,16 +92,16 @@ category分别对应`unchanged`和`changed`两类。
 python eval.py
 ```
 
-滑动窗口预测接口说明详见[API说明](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict)，已有的使用场景可参考[RGB遥感分割案例](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html#id4)。可根据实际显存大小修改评估脚本中`tile_size`，`pad_size`和`batch_size`。
+For the sliding window prediction interface, see [API description] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#overlap-tile-predict). For the existing usage scenarios, see  [RGB remote sensing segmentation case]. The `tile_size`, `pad_size` and `batch_size` of the evaluation script can be modified according to the actual memory size.
 
-## <h2 id="4">模型预测</h2>
+## <h2 id="4">Model predictions</h2>
 
-执行以下脚本，使用有重叠的滑动预测窗口对验证集进行预测。可根据实际显存大小修改评估脚本中`tile_size`，`pad_size`和`batch_size`。
+Run the following script to predict the validation set by using an overlapping sliding prediction window. The `tile_size`, `pad_size` and `batch_size` of the evaluation script can be modified according to the actual memory size.
 
 ```
 python predict.py
 ```
 
-预测可视化结果如下图所示:
+The result of the prediction visualization is shown in the following figure:
 
-<img src="./images/change_det_prediction.jpg" alt="变化检测预测图" align=center />
+<img src="./images/change_det_prediction.jpg" alt="Change detection prediction graph" align=center />

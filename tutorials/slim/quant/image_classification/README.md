@@ -1,16 +1,16 @@
-# 图像分类模型量化
+# Image classification model quantification
 
-在此目录下提供了MobileNetV2模型的量化示例，执行如下命令即可
+A quantification example of the MobileNetV2 model is provided in this directory by executing the following command:
 
-## 第一步 量化模型
+## Step 1: Obtain the quantification model.
 ```
 python mobilenetv2_quant.py
 ```
-执行代码会自动下载模型和数据集
+Execute the code to automatically download the model and data set
 
-## 第二步 导出为PaddleLite模型
+## Step 2: Export as the PaddleLite model.
 
 ```
 python paddlelite_export.py
 ```
-执行此脚本前，需安装paddlelite，在python环境中`pip install paddlelite`即可
+Before executing this script, you need to install paddlelite. In the Python environment, run `pip install paddlelite`.

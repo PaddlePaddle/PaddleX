@@ -1,35 +1,34 @@
-# OpenVINO部署简介
-PaddleX支持将训练好的Paddle模型通过OpenVINO实现模型的预测加速，OpenVINO详细资料与安装流程请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，本文档使用OpenVINO 2020.4与2021.1测试通过。  
-**注意**：由于PaddleX分割模型使用了ReSize-11 Op，OpenVINO 2021.1版本开始支持支持Resize-11 ，请务必下载OpenVINO 2021.1+版本  
+# Introduction to OpenVINO deployment
+PaddleX supports the prediction acceleration of the trained Paddle model through [OpenVINO](https://docs.openvinotoolkit.org/latest/index.html). For details and installation process, refer to OpenVINO document. This document is based on OpenVINO 2020.4 and 2021.1.
+**Note**: Resize-11 is supported starting from OpenVINO 2021.1 because the PaddleX segmentation model uses ReSize-11 Op. Make sure to download OpenVINO 2021.1+.
 
 
-## 部署支持情况
-下表提供了PaddleX在不同环境下对使用OpenVINO加速的支持情况  
+## Deployment support
+The following table lists the support status of using OpenVINO for acceleration by PaddleX in different environments
 
-|硬件平台|Linux|Windows|Raspbian OS|c++|python |分类|检测|分割|
+| Hardware platform | Linux | Windows | Raspbian OS | C++ | Python | Classification | Detection | Segmentation |
 | ----|  ---- | ---- | ----|  ---- | ---- |---- | ---- |---- |
-|CPU|支持|支持|不支持|支持|支持|支持|支持|支持|
-|VPU|支持|支持|支持|支持|支持|支持|不支持|不支持|  
+| CPU | Supported | Supported | Not supported | Supported | Supported | Supported | Supported | Supported |
+| VPU | Supported | Supported | Supported | Supported | Supported | Supported | Not supported | Not supported |
 
 
-**注意**：其中Raspbian OS为树莓派操作系统。检测模型仅支持YOLOv3
+**Note**: Raspbian OS is the Raspberry OS. The detection model supports only YOLOv3
 
-## 部署流程
-**PaddleX到OpenVINO的部署流程可以分为如下两步**：
+## Deployment process
+**The PaddleX to OpenVINO deployment process has the following two steps**:
 
-  * **模型转换**:将Paddle的模型转换为OpenVINO的Inference Engine
-  * **预测部署**:使用Inference Engine进行预测
+* **Model conversion**: Convert Paddle's model to OpenVINO's Inference Engine.
+* **Prediction Deployment**: Prediction with using Inference Engine**
 
-## 模型转换
-**模型转换请参考文档[模型转换](./export_openvino_model.md)**  
-**说明**：由于不同软硬件平台下OpenVINO模型转换方法一致，故如何转换模型后续文档中不再赘述。
+## Model conversion
+**For model conversion, refer to the [Model Conversion](./export_openvino_model.md) document.**
+**Note**: Since the methods of converting OpenVINO model are the same under different hardware and software platforms, details on how to convert the model are omitted in subsequent documents.
 
-## 预测部署
-由于不同软硬下部署OpenVINO实现预测的方式不完全一致，具体请参考：  
+## Inference deployment
+The methods of deploying OpenVINO to implement predictions are not completely identical in different hardware and software. For details, refer to:
 
-**[Linux](./linux.md)**:介绍了PaddleX在操作系统为Linux或者Raspbian OS，编程语言为C++，硬件平台为
-CPU或者VPU的情况下使用OpenVINO进行预测加速  
+**[Linux](./linux.md)**: introduces the prediction acceleration by using OpenVINO when PaddleX operates on Linux or Raspbian OS with C++ programming language and hardware platform is CPU or VPU.
 
-**[Windows](./windows.md)**:介绍了PaddleX在操作系统为Window，编程语言为C++，硬件平台为CPU或者VPU的情况下使用OpenVINO进行预测加速  
+**[Windows](./windows.md)**: introduces the prediction acceleration by using OpenVINO when PaddleX operates on Windows OS with C++ programming language and hardware platform is CPU or VPU
 
-**[Python](./python.md)**:介绍了PaddleX在python下使用OpenVINO进行预测加速
+**[Python](./python.md)**: introduces the prediction acceleration by using OpenVINO when PaddleX operates in Python

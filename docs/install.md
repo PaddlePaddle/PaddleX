@@ -1,48 +1,48 @@
-# 快速安装
+# Quick installation
 
-以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于1.8.1)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick)
+By default, the following installation process supposes that you have installed paddlepaddle-gpu or paddlepaddle (version greater than or equal to 1.8.1)**. For the paddlepaddle installation method, refer to the official website of [PaddlePaddle] (https://www.paddlepaddle.org.cn/install/quick). 
 
-## pip安装
+## pip installation
 
-注意其中pycocotools在Windows安装较为特殊，可参考下面的Windows安装命令  
+Note that the pycocotools installation in Windows is special. Refer to the following installation command in Windows
 
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```
 
-## Anaconda安装
-Anaconda是一个开源的Python发行版本，其包含了conda、Python等180多个科学包及其依赖项。使用Anaconda可以通过创建多个独立的Python环境，避免用户的Python环境安装太多不同版本依赖导致冲突。  
-- 参考[Anaconda安装PaddleX文档](appendix/anaconda_install.md)
+## Anaconda installation
+Anaconda is an open source Python released version which contains more than 180 science packages and their dependencies such as conda and Python. By creating multiple independent Python environments, the use of Anaconda can avoid conflict due to too many different version dependencies installed in your Python environment.
+- Refer to the [PaddleX document on Anaconda installation](appendix/anaconda_install.md)
 
-## 代码安装
+## Code installation
 
-github代码会跟随开发进度不断更新
+The github codes will be constantly updated with the development progress
 
 ```
-git clone https://github.com/PaddlePaddle/PaddleX.git
+git clone https://github.com/PaddlePaddle/PaddleX.git 
 cd PaddleX
 git checkout develop
 python setup.py install
 ```
 
 
-## pycocotools安装问题
+## pycocotools installation problems
 
-PaddleX依赖pycocotools包，如安装pycocotools失败，可参照如下方式安装pycocotools
+For the PaddleX dependency pycocotools package. If the pycocotools installation fails, install pycocotools by referring to the following method
 
-### Windows系统
-* Windows安装时可能会提示`Microsoft Visual C++ 14.0 is required`，从而导致安装出错，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
-> 注意：安装完后，需要重新打开新的终端命令窗口
+### Windows system
+* During installation in Windows, the message `Microsoft Visual C++ 14.0 is required` may be displayed, resulting in installation error. [Click to download and install VC build] tools and then execute the following pip command (https://go.microsoft.com/fwlink/?LinkId=691126)
+> Note: After the installation is complete, you must reopen a new terminal command window
 
 ```
 pip install cython
 pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 ```
 
-### Linux/Mac系统
-* Linux/Mac系统下，直接使用pip安装如下两个依赖即可
+### Linux/Mac system
+* Directly use pip to install the following two dependencies in the Linux/Mac system
 
 ```
-pip install cython  
+pip install cython
 pip install pycocotools
 ```

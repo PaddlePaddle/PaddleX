@@ -1,45 +1,45 @@
-# Android平台
+# Android platform
 
-PaddleX的安卓端部署基于Paddle Lite实现，部署的流程如下，首先将训练好的模型导出为inference model，然后对模型进行优化，最后使用Paddle Lite预测库进行部署，Paddle Lite的详细介绍和使用可参考：[Paddle Lite文档](https://paddle-lite.readthedocs.io/zh/latest/)
+The Android deployment of PaddleX is based on Paddle Lite, the deployment process is as follows: export the trained model as reference model, then optimize the model, and finally use the Paddle Lite prediction library to perform the deployment. For the detailed introduction and use of Paddle Lite, see the [Paddle Lite document](https://paddle-lite.readthedocs.io/zh/latest/).
 
 > PaddleX --> Inference Model --> Paddle Lite Opt --> Paddle Lite Inference
 
-文章简介：
-- 1.介绍如何将PaddleX导出为inference model
-- 2.使用Paddle Lite的OPT模块对模型进行优化
-- 3.介绍基于PaddleX Android SDK的安卓demo，以及如何快速部署训练好的模型
-- 4.介绍PaddleX Android SDK和二次开发
+Introduction:
+- 1. Describes how to export PaddleX to an inference model.
+- 2. Optimizes the model using Paddle Lite's OPT module.
+- 3. Describes the Android demo based on PaddleX Android SDK and how to quickly deploy the trained model.
+- 4. Describes the PaddleX Android SDK and Secondary Development
 
-## 1. 将PaddleX模型导出为inference模型
+## 1. Export the PaddleX model to an inference model.
 
-参考[导出inference模型](../export_model.md)将模型导出为inference格式模型。
+Refer to the [export inference model](../export_model.md) to export the model to an inference format.
 
-## 2. 将inference模型优化为Paddle Lite模型
+## 2. Optimize the inference model to a Paddle Lite model
 
-目前提供了两种方法将Paddle模型优化为Paddle Lite模型:
+Two methods are available to optimize the Paddle model to the Paddle Lite model:
 
-- 1. python脚本优化模型，简单上手，目前支持最新的Paddle Lite 2.6.1版本
-- 2. bin文件优化模型(linux)，支持develop版本(Commit Id:11cbd50e)，**部署语义分割`DeepLab模型`和`Unet模型`时只能采用bin文件优化方式**。
+- 1. The python script optimization model features ease-of-use. Currently, the latest version is Paddle Lite version 2.6.1.
+- 2. The bin file optimization model (Linux) supports the develop version (Commit Id:11cbd50e) .**Only bin file optimization can be used in the deployment of the semantic segmentation `DeepLab model` and `Unet model`**.
 
-### 2.1 使用python脚本优化模型
+### 2.1 Using python script optimization model
 
 ```bash
 pip install paddlelite
 python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/lite_model_name --place place/to/run
 ```
-> 其中`export_lite.py`脚本请至github下载：https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/lite/export_lite.py
+> For the `export_lite.py` script, download it by accessing the github: https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/lite/export_lite.py
 
-|  参数   | 说明  |
+| Parameters | Description |
 |  ----  | ----  |
-| --model_dir  | 预测模型所在路径，包含"\_\_model\_\_", "\_\_params\_\_", "model.yml"文件 |
-| --save_file  | 模型输出的名称，假设为/path/to/lite_model_name, 则输出为路径为/path/to/lite_model_name.nb |
-| --place | 运行的平台，可选：arm\|opencl\|x86\|npu\|xpu\|rknpu\|apu，安卓部署请选择arm|
+| --model_dir | Path of predication model. It contains "\_\_model\_\_", "\_\_params\_\_", "model.yml" file. |
+| --save_file | Name of model output. If it is /path/to/lite_model_name, the output path is /path/to/lite_model_name.nb. |
+| --place | Platform for running. Options: arm\|opencl\|x86\|npu\|xpu\|rknpu\|apu. For the Android deployment, select arm |
 
-### 2.3 使用bin文件优化模型(linux)
+### 2.3 Optimizing models with bin files (Linux)
 
-首先下载并解压: [模型优化工具opt](https://bj.bcebos.com/paddlex/deploy/lite/model_optimize_tool_11cbd50e.tar.gz)
+First download and decompress: [Model Optimizer opt](https://bj.bcebos.com/paddlex/deploy/lite/model_optimize_tool_11cbd50e.tar.gz)
 
-``` bash
+```bash
 ./opt --model_file=<model_path> \
       --param_file=<param_path> \
       --valid_targets=arm \
@@ -47,67 +47,65 @@ python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/
       --optimize_out=model_output_name
 ```
 
-|  参数   | 说明  |
+| Parameters | Description |
 |  ----  | ----  |
-| --model_file  | 导出inference模型中包含的网络结构文件：`__model__`所在的路径|
-| --param_file  | 导出inference模型中包含的参数文件：`__params__`所在的路径|
-| --valid_targets  |指定模型可执行的backend，这里请指定为`arm`|
-| --optimize_out_type | 输出模型类型，目前支持两种类型：protobuf和naive_buffer，其中naive_buffer是一种更轻量级的序列化/反序列化，这里请指定为`naive_buffer`|
+| --model_file | Export the network structure file contained in the inference model: the path where `__model__` is located. |
+| --param_file | Export the parameter file contained in the inference model: the path where `__params__` is located. |
+| --valid_targets | Specify the model executable backend. Here it is specified as `arm`. |
+| --optimize_out_type | Output model type. Currently supports two types: protobuf and naive_buffer`, where naive_buffer is a more lightweight serialization/deserialization. Here it is specified as naive_buffer`. |
 
-详细的使用方法和参数含义请参考: [使用opt转化模型](https://paddle-lite.readthedocs.io/zh/latest/user_guides/opt/opt_bin.html)
+For detailed usage and parameter meaning, refer to [Using the opt conversion model] (https://paddle-lite.readthedocs.io/zh/latest/user_guides/opt/opt_bin.html)
 
-## 3. 移动端（Android）Demo
+## 3 Mobile (Android) Demo
 
-PaddleX提供了基于PaddleX Android SDK的安卓demo，位于`/PaddleX/deploy/lite/android/demo`，该demo已预置了MobilenetV2的模型参数，用户可直接将该demo导入Android Studio后运行体验，同时也支持用户将预置的Mobilenetv2模型参数替换成其他PaddleX导出的检测或分割模型进行预测。
+PaddleX provides an Android demo based on PaddleX Android SDK, located in `/PaddleX/deploy/lite/android/demo`. This demo is preset with the MobilenetV2 model parameters. Users can directly import the demo into Android Studio and run the experience. The user can replace the preset Mobilenetv2 model parameters with other detection or segmentation models exported by PaddleX for prediction.
 
-### 3.1 要求
+### 3.1 Requirements
 
 - Android Studio 3.4
-- Android手机或开发板
+- Android phone or development panel
 
-### 3.2 分类Demo
+### 3.2 Category Demo
 
-#### 3.2.1 导入工程并运行
+#### 3.2.1 Importing the project and running
 
-- 打开Android Studio，在"Welcome to Android Studio"窗口点击"Open an existing Android Studio project"，在弹出的路径选择窗口中进入`/PaddleX/deploy/lite/android/demo`目录，然后点击右下角的"Open"按钮，导入工程；
-- 通过USB连接Android手机或开发板；
-- 载入工程后，点击菜单栏的Run->Run 'App'按钮，在弹出的"Select Deployment Target"窗口选择已经连接的Android设备，然后点击"OK"按钮；
-- 运行成功后，Android设备将加载一个名为PaddleX Demo的App，默认会加载一个测试图片，同时还支持拍照和从图库选择照片进行预测；
+- Start the Android Studio and click "Open an existing Android Studio project" in the "Welcome to Android Studio" window. In the pop-up path selection window, access the `/PaddleX/deploy/lite/android/demo` directory. At the bottom right corner, click "Open" to import the project.
+- Connect an Android phone or development panel through a USB port.
+- After loading the project, choose Run->Run 'App'. In the pop-up "Select Deployment Target" window, select the connected Android device and click "OK".
+- Upon successful operation, the Android device loads an App called PaddleX Demo. By default, a test image is uploaded. In addition, the prediction is supported by taking photos and selecting photos from the gallery.
 
-**注意**：在工程构建的过程中会远程下载Mobilenetv2模型、yml配置文件、测试的图片，以及PaddleX Android SDK。
+**Note**: In the project construction process, the system remotely downloads the Mobilenetv2 model, yml configuration file, test pictures, and PaddleX Android SDK.
 
-### 3.3 部署自定义模型
+### 3.3 Deploy a customized model
 
-该demo还支持用户自定义模型来进行预测，可帮助用户快速验证自己训练好的模型，首先我们已经根据step1~step2描述，准备好了Lite模型(.nb文件)和yml配置文件(注意：导出Lite模型时需指定--place=arm)，然后在Android Studio的project视图中：
+The demo also supports user-defined models to perform predictions. This can help users quickly verify the trained models. First, you have prepared the Lite model (.nb file) and yml configuration file as described in Step 1 to Step 2 (Note: specify --place=arm when exporting the Lite model). In the project view of Android Studio:
 
-- 将.nb文件拷贝到`/src/main/assets/model/`目录下, 根据.nb文件的名字，修改文件`/src/main/res/values/strings.xml`中的`MODEL_PATH_DEFAULT`；
-- 将.yml文件拷贝到`/src/main/assets/config/`目录下，根据.yml文件的名字，修改文件`/src/main/res/values/strings.xml`中的`YAML_PATH_DEFAULT`；
-- 可根据需要替换测试图片，将图片拷贝到`/src/main/assets/images/`目录下，根据图片文件的名字，修改文件`/src/main/res/values/strings.xml`中的`IMAGE_PATH_DEFAULT`；
-- 将工程导入后，点击菜单栏的Run->Run 'App'按钮，在弹出的"Select Deployment Target"窗口选择已经连接的Android设备，然后点击"OK"按钮。
+- Copy the .nb file to the `/src/main/assets/model/` directory, and modify the `MODEL_PATH_DEFAULT` in the `/src/main/res/values/strings.xml` file according to the name of the .nb file.
+- Copy the .yml file to the `/src/main/assets/config/` directory, and modify the `YAML_PATH_DEFAULT` in the `/src/main/res/values/strings.xml` file according to the name of the .yml file.
+- You can replace the test image as required, copy the image to the `/src/main/assets/images/` directory, and modify the `IMAGE_PATH_DEFAULT` in the file `/src/main/res/values/strings.xml` according to the name of the image file.
+- After importing the project, click the Run->Run 'App' button in the menu bar. In the displayed "Select Deployment Target" window, select the connected Android device, and then click "OK".
 
-## 4. PaddleX Android SDK和二次开发
+## 4. PaddleX Android SDK and secondary development
 
-PaddleX Android SDK是PaddleX基于Paddle Lite开发的安卓端AI推理工具，以PaddleX导出的Yaml配置文件为接口，针对不同的模型实现图片的预处理，后处理，并进行可视化，开发者可集成到业务中。
-该SDK自底向上主要包括：Paddle Lite推理引擎层，Paddle Lite接口层以及PaddleX业务层。
+PaddleX Android SDK is an Android AI reasoning tool developed by PaddleX based on Paddle Lite. It uses the Yaml configuration file exported by PaddleX as an interface to realize image preprocessing, postprocessing, and visualization for different models. Developers can integrate it into the services.
+The SDK mainly includes Paddle Lite inference engine layer, Paddle Lite interface layer, and PaddleX service layer from bottom to top.
 
-- Paddle Lite推理引擎层，是在Android上编译好的二进制包，只涉及到Kernel 的执行，且可以单独部署，以支持极致轻量级部署。
-- Paddle Lite接口层，以Java接口封装了底层c++推理库。
-- PaddleX业务层，封装了PaddleX导出模型的预处理，推理和后处理，以及可视化，支持PaddleX导出的检测、分割、分类模型。
+- The Paddle Lite inference engine layer is a binary package compiled on Android. It only involves the execution of the Kernel and can be deployed separately to support extremely lightweight deployment.
+- The Paddle Lite interface layer encapsulates the underlying C++ inference library with a Java interface.
+- The PaddleX service layer encapsulates the pre-processing, inference and post-processing, and visualization of the PaddleX export model. It supports the detection, segmentation, and classification models exported by PaddleX.
 
-![架构](../images/paddlex_android_sdk_framework.jpg)
+![Architecture](../images/paddlex_android_sdk_framework.jpg)
 
-### 4.1 SDK安装
+### 4.1 SDK installation
 
-首先下载并解压[PaddleX Android SDK](https://bj.bcebos.com/paddlex/deploy/lite/paddlex_lite_11cbd50e.tar.gz)，得到paddlex.aar文件，将拷贝到android工程目录app/libs/下面，然后为app的build.gradle添加依赖：
+First, download and decompress the [PaddleX Android SDK](https://bj.bcebos.com/paddlex/deploy/lite/paddlex_lite_11cbd50e.tar.gz), to obtain the paddlex.aar file, copy it to the android project directory app/libs/, and then add dependencies for the build.gradle of the APP:
 
 ```
 dependencies {
     implementation fileTree(include: ['*.jar','*aar'], dir: 'libs')
-}
-
 ```
 
-### 4.2 SDK使用用例
+### 4.2 SDK example
 ```
 import com.baidu.paddlex.Predictor;
 import com.baidu.paddlex.config.ConfigParser;
@@ -147,66 +145,73 @@ if (configParser.getModelType().equalsIgnoreCase("segmenter")) {
     ClsResult clsResult = predictor.getClsResult();
 }
 ```
-### 4.3 Result成员变量
+### 4.3 Result member variables
 
-**注意**：Result所有的成员变量以java bean的方式获取。
+**Note**: All the member variables of Result are obtained by way of java bean.
 
 ```java
-com.baidu.paddlex.postprocess.ClsResult
+com.baidu.paddlex.postprocess. ClsResult
 ```
 
 ##### Fields
-> * **type** (String|static): 值为"cls"。
-> * **categoryId** (int): 类别ID。
-> * **category** (String): 类别名称。
-> * **score** (float): 预测置信度。
+> * **type** (String|static): The value is "cls".
+> * **categoryId** (int): category ID.
+> * **category** (String): category name.
+> * **score** (float): prediction confidence.
+
 
 ```java
-com.baidu.paddlex.postprocess.DetResult
+com.baidu.paddlex.postprocess. DetResult
 ```
 ##### Nested classes
-> * **DetResult.Box** 模型预测的box结果。
+> The box result predicted by the * **DetResult.Box** .
+
 
 ##### Fields
-> * **type** (String|static): 值为"det"。
-> * **boxes** (List<DetResult.Box>): 模型预测的box结果。
+> * **type** (String|static): The value is "det".
+> * **boxes** (List<DetResult. Box>): The box result predicted by the model.
+
 
 ```java
-com.baidu.paddlex.postprocess.DetResult.Box
+com.baidu.paddlex.postprocess. DetResult. Box
 ```
 ##### Fields
-> * **categoryId** (int): 类别ID。
-> * **category** (String): 类别名称。
-> * **score** (float): 预测框的置信度。
-> * **coordinate** (float[4]): 预测框的坐标值{xmin, ymin, xmax, ymax}。
+> * **categoryId** (int): category ID.
+> * **category** (String): category name.
+> * **score** (float): the confidence of the prediction box.
+> * **coordinate** (float[4]): The coordinate value of the prediction box {xmin, ymin, xmax, ymax}.
+
 
 ```java
-com.baidu.paddlex.postprocess.SegResult
+com.baidu.paddlex.postprocess. SegResult
 ```
-#####  Nested classes
-> * **SegResult.Mask**: 模型预测的mask结果。
+##### Nested classes
+> * **SegResult. Mask**: The mask result predicted by the model.
+
 
 ##### Fields
-> * **type** (String|static): 值为"Seg"。
-> * **mask** (SegResult.Mask): 模型预测的mask结果。
+> * **type** (String|static): The value is "Seg".
+> * **mask** (SegResult. Mask): The mask result predicted by the model.
+
 
 ```java
-com.baidu.paddlex.postprocess.SegResult.Mask
+com.baidu.paddlex.postprocess. SegResult. Mask
 ```
 ##### Fields
-> * **scoreData** (float[]): 模型预测在各个类别的置信度，长度为: 1 * numClass *  H * W
-> * **scoreShape** (long[4]): scoreData的shape信息，[1, numClass, H, W]
-> * **labelData** (long[]): 模型预测置信度最高的label，长度为: 1 * H * W * 1
-> * **labelShape** (long[4]): labelData的shape信息，[1, H, W, 1]
+> * **scoreData** (float[]): the confidence of the model prediction in each category. The length is: 1 * numClass * H * W
+> * **scoreShape** (long[4]): shape information of scoreData, [1, numClass, H, W]
+> * **labelData** (long[]): The label with the highest model prediction confidence, the length is: 1 * H * W * 1
+> * **labelShape** (long[4]): shape information of labelData, [1, H, W, 1]
 
-### 4.4 SDK二次开发
 
-- 打开Android Studio新建项目(或加载已有项目)。点击菜单File->New->Import Module，导入工程`/PaddleX/deploy/lite/android/sdk`, Project视图会新增名为sdk的module
-- 在app的build.grade里面添加依赖:
- ```
+### 4.4 SDK secondary development
+
+- Open Android Studio to create a new project (or load an existing project). Choose File->New->Import Module, and import the project `/PaddleX/deploy/lite/android/sdk`. The Project view is added with a module named sdk.
+- Add dependency in build.grade of the APP:
+```
   dependencies {
       implementation project(':sdk')
   }
- ```
+```
 
-- 源代码位于sdk/main/java/下，修改源码进行二次开发后，点击菜单栏的Build->Run 'sdk'按钮可编译生成aar，文件位于sdk/build/outputs/aar/路径下。
+- The source code is located in sdk/main/java/. After modifying the source code for secondary development, choose Build->Run 'sdk' button in the menu bar to compile and generate aar. The file is located in the sdk/build/outputs/aar/path.

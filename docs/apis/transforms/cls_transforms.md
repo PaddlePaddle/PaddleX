@@ -1,126 +1,126 @@
 # paddlex.cls.transforms
 
-对图像分类任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
+This section describes the operations for image classification tasks. The [Compose](#compose) class can be used to combine image preprocessing/augmenter operations.
 
 ## Compose
 ```python
-paddlex.cls.transforms.Compose(transforms)
+paddlex.cls.transforms. Compose(transforms)
 ```
 
-根据数据预处理/增强算子对输入数据进行操作。  [使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py#L15)
+The input data is operated by the data preprocessing/augmenter operator. [Usage Example](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py#L15)
 
-> **参数**
-> * **transforms** (list): 数据预处理/数据增强列表。
+> **Parameters**
+> * **transforms** (list): Data preprocessing/data augmenter list.
+
 
 ## Normalize
 ```python
-paddlex.cls.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.cls.transforms. Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ```
 
-对图像进行标准化。  
-1. 对图像进行归一化到区间[0.0, 1.0]。  
-2. 对图像进行减均值除以标准差操作。
+Standardize the image.
+1. Images are normalized to range [0].0, 1.0.
+2. The image is subtracted from the mean and divided by the standard deviation.
 
-### 参数
-* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+### Parameters
+* **mean** (list): The mean value of the image data set. Default values are 0 .[485, 0.456, and 0.406.]
+* **std** (list): Standard deviation of the image dataset. Default values are 0[.]229, 0.224, 0.225.
 
 ## ResizeByShort
 ```python
-paddlex.cls.transforms.ResizeByShort(short_size=256, max_size=-1)
+paddlex.cls.transforms. ResizeByShort(short_size=256, max_size=-1)
 ```
 
-根据图像的短边调整图像大小（resize）。  
-1. 获取图像的长边和短边长度。  
-2. 根据短边与short_size的比例，计算长边的目标长度，此时高、宽的resize比例为short_size/原图短边长度。  
-3. 如果max_size>0，调整resize比例：
-   如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
-4. 根据调整大小的比例对图像进行resize。
+Resizes the image according to the short edge of the image.
+1. Get the length of the long and short edges of the image.
+2. According to the ratio of short side and short_size, calculate the target length of the long side. At this time, the resize ratio of height and width is short_size/original short side length.
+3. If max_size>0, adjust the resize ratio: if the target length of the long side is > max_size, the resize ratio of height and width is max_size/the length of the long edge of the original image.
+4. Resize the image according to the resize ratio.
 
-### 参数
-* **short_size** (int): 调整大小后的图像目标短边长度。默认为256。
-* **max_size** (int): 长边目标长度的最大限制。默认为-1。
+### Parameters
+* **short_size** (int): The target length of the short side of the resized image. The default value is 256.
+* **max_size** (int): Maximal limit of the length of the long side target. The default value is -1.
 
 ## CenterCrop
 ```python
-paddlex.cls.transforms.CenterCrop(crop_size=224)
+paddlex.cls.transforms. CenterCrop(crop_size=224)
 ```
 
-以图像中心点扩散裁剪长宽为`crop_size`的正方形  
-1. 计算剪裁的起始点。  
-2. 剪裁图像。
+Diffusely prune a square with `crop_size` at the center of the image.
+1. Calculates the start point of the pruning.
+2. Prune the image.
 
-### 参数
-* **crop_size** (int): 裁剪的目标边长。默认为224。
+### Parameters
+* **crop_size** (int): The length of the target edge to be pruned. The default value is 224.
 
 ## RandomCrop
 ```python
-paddlex.cls.transforms.RandomCrop(crop_size=224, lower_scale=0.08, lower_ratio=3. / 4, upper_ratio=4. / 3)
+paddlex.cls.transforms. RandomCrop(crop_size=224, lower_scale=0.08, lower_ratio=3. / 4, upper_ratio=4. / 3)
 ```
 
-对图像进行随机剪裁，模型训练时的数据增强操作。
-1. 根据lower_scale、lower_ratio、upper_ratio计算随机剪裁的高、宽。
-2. 根据随机剪裁的高、宽随机选取剪裁的起始点。
-3. 剪裁图像。
-4. 调整剪裁后的图像的大小到crop_size*crop_size。
+Random pruning of images, data augmenter operations for the model training.
+1. Calculate the height and width of random pruning according to lower_scale, lower_ratio and upper_ratio.
+2. Pick the starting point of the random pruning according to the height and width of the random pruning.
+3. Prune the image.
+4. Resize the pruning image to crop_size*crop_size.
 
-### 参数
-* **crop_size** (int): 随机裁剪后重新调整的目标边长。默认为224。
-* **lower_scale** (float): 裁剪面积相对原面积比例的最小限制。默认为0.08。
-* **lower_ratio** (float): 宽变换比例的最小限制。默认为3. / 4。
-* **upper_ratio** (float): 宽变换比例的最大限制。默认为4. / 3。
+### Parameters
+* **crop_size** (int): The length of the target edge to be resized after random cropping. The default value is 224.
+* **lower_scale** (float): Minimum limit of the ratio of the crop area to the original area. The default value is 0.08.
+* **lower_ratio** (float):The minimum limit of the width change scale. The default value is 3. / 4.
+* **upper_ratio** (float): Minimum limit for the width change ratio. The default value is 4. / 3.
 
 ## RandomHorizontalFlip
 ```python
-paddlex.cls.transforms.RandomHorizontalFlip(prob=0.5)
+paddlex.cls.transforms. RandomHorizontalFlip(prob=0.5)
 ```
 
-以一定的概率对图像进行随机水平翻转，模型训练时的数据增强操作。
+Flip the image horizontally at random with a certain probability. It is the data augmenter operation during model training.
 
-### 参数
-* **prob** (float): 随机水平翻转的概率。默认为0.5。
+### Parameters
+* **prob** (float): The probability of a random level flip. The default value is 0.5.
 
 ## RandomVerticalFlip
 ```python
-paddlex.cls.transforms.RandomVerticalFlip(prob=0.5)
+paddlex.cls.transforms. RandomVerticalFlip(prob=0.5)
 ```
 
-以一定的概率对图像进行随机垂直翻转，模型训练时的数据增强操作。
+Vertically flip the image at random with a certain probability. It is the data augmenter operation in the model training.
 
-### 参数
-* **prob** (float): 随机垂直翻转的概率。默认为0.5。
+### Parameters
+* **prob** (float): probability of a random vertical flip. The default value is 0.5.
 
 ## RandomRotate
 ```python
-paddlex.cls.transforms.RandomRotate(rotate_range=30, prob=0.5)
+paddlex.cls.transforms. RandomRotate(rotate_range=30, prob=0.5)
 ```
 
-以一定的概率对图像在[-rotate_range, rotaterange]角度范围内进行旋转，模型训练时的数据增强操作。
+Rotate the image with probability in [-rotate_range, rotaterange] angle range. It is the data augmenter operation in the model training.
 
-### 参数
-* **rotate_range** (int): 旋转度数的范围。默认为30。
-* **prob** (float): 随机旋转的概率。默认为0.5。
+### Parameters
+* **rotate_range** (int): The range of the rotation degree. The default value is 30.
+* **prob** (float):The probability of random rotation. The default value is 0.5.
 
 ## RandomDistort
 ```python
-paddlex.cls.transforms.RandomDistort(brightness_range=0.9, brightness_prob=0.5, contrast_range=0.9, contrast_prob=0.5, saturation_range=0.9, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
+paddlex.cls.transforms. RandomDistort(brightness_range=0.9, brightness_prob=0.5, contrast_range=0.9, contrast_prob=0.5, saturation_range=0.9, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
 
-以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。  
-1. 对变换的操作顺序进行随机化操作。
-2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+Random pixel content transformation of the image with a certain probability. It is the data augmenter operation in the model training.
+1. Randomize the operation order of the transformations.
+2. Perform a random pixel content transformation in the range[-range, range] with a certain probability on the image in the order shown in Step 1.
 
-【注意】该数据增强必须在数据增强Normalize之前使用。
+[Note] This data augmenter must be used before the Normalize.
 
-### 参数
-* **brightness_range** (float): 明亮度因子的范围。默认为0.9。
-* **brightness_prob** (float): 随机调整明亮度的概率。默认为0.5。
-* **contrast_range** (float): 对比度因子的范围。默认为0.9。
-* **contrast_prob** (float): 随机调整对比度的概率。默认为0.5。
-* **saturation_range** (float): 饱和度因子的范围。默认为0.9。
-* **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
-* **hue_range** (int): 色调因子的范围。默认为18。
-* **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+### Parameters
+* **brightness_range** (float): the range of the brightness factor. The default value is 0.9.
+* **brightness_prob** (float): The probability that the brightness is adjusted randomly. The default value is 0.5.
+* **contrast_range** (float): The range of the contrast factor. The default value is 0.9.
+* **contrast_prob** (float): The probability of randomly adjusting the contrast. The default value is 0.5.
+* **saturation_range** (float): The range of the saturation factor. The default value is 0.9.
+* **saturation_prob** (float): The probability of randomly adjusting the saturation. The default value is 0.5.
+* **hue_range** (int): The range of the hue factor. The default value is 18.
+* **hue_prob** (float): The probability of randomly adjusting the hue. The default value is 0.5.
 
 <!--
 ## ComposedClsTransforms

@@ -1,27 +1,27 @@
-# Linux平台部署
+# Linux platform deployment
 
-## 说明
-本文档在 `Linux`平台使用`GCC 4.8.5` 和 `GCC 4.9.4`测试过，如果需要使用更高G++版本编译使用，则需要重新编译Paddle预测库，请参考: [从源码编译Paddle预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
+## Description
+This document is tested with `GCC 4.8.5` and `GCC 4.9.4` in the `Linux`. To compile it with a later G++ version, you need to recompile the Paddle Prediction Library. Refer to [Compiling Paddle Prediction Library](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12) from source code.
 
-## 前置条件
+## Pre-conditions
 * G++ 4.8.2 ~ 4.9.4
-* CUDA 9.0 / CUDA 10.0, CUDNN 7+ （仅在使用GPU版本的预测库时需要）
+* CUDA 9.0 / CUDA 10.0, CUDNN 7+ (required only if using GPU version prediction library)
 * CMake 3.0+
 
-请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
+Make sure that the above basic software is installed on your system. **All the following examples are in the working directory `/root/projects/`**.
 
-### Step1: 下载代码
+### Step1: Download the code.
 
- `git clone https://github.com/PaddlePaddle/PaddleX.git`
+`git clone https://github.com/PaddlePaddle/PaddleX.git `
 
-**说明**：其中`C++`预测代码在`/root/projects/PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
+**Note**: The C++ prediction code is in `/root/projects/`PaddleX`/deploy/cpp` directory. This directory does not depend on any other directory under `PaddleX`.
 
 
-### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
+### Step2: Download PaddlePaddle C++ Prediction Library: paddle_inference.
 
-PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持TensorRT，提供了不同的预编译版本，目前PaddleX依赖于Paddle1.8.4版本，以下提供了多个不同版本的Paddle预测库:
+The PaddlePaddle C++ prediction library provides different pre-compiled versions for different `CPUs`, `CUDAs`, and whether to support TensorRT. At present, PaddleX depends on the Paddle 1.8.4 version. The following provides a number of different versions of Paddle prediction libraries:
 
-|  版本说明   | 预测库(1.8.4版本)  |
+| Release Notes | Prediction Library (Version 1.8.4) |
 |  ----  | ----  |
 | ubuntu14.04_cpu_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-avx-mkl/fluid_inference.tgz) |
 | ubuntu14.04_cpu_avx_openblas  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-cpu-avx-openblas/fluid_inference.tgz) |
@@ -29,54 +29,52 @@ PaddlePaddle C++ 预测库针对不同的`CPU`，`CUDA`，以及是否支持Tens
 | ubuntu14.04_cuda9.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-gpu-cuda9-cudnn7-avx-mkl/fluid_inference.tgz) |
 | ubuntu14.04_cuda10.0_cudnn7_avx_mkl  | [paddle_inference](https://paddle-inference-lib.bj.bcebos.com/latest-gpu-cuda10-cudnn7-avx-mkl/fluid_inference.tgz) |
 
-更多和更新的版本，请根据实际情况下载:  [C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html)
+For more and later versions, you can download as required: [C++ prediction library download list] (https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html)
 
-下载并解压后`/root/projects/fluid_inference`目录包含内容为：
+The directory `/root/projects/fluid_inference` after downloading and decompression contains the following contents:
 ```
-fluid_inference
-├── paddle # paddle核心库和头文件
+fluid_inference ├── paddle # paddle core library and header files
+| 
+├──third_party # third-party dependency library and header files
 |
-├── third_party # 第三方依赖库和头文件
-|
-└── version.txt # 版本和编译信息
+└── version.txt # Version and compilation information
 ```
 
-**注意:** 预编译版本除`nv-jetson-cuda10-cudnn7.5-trt5` 以外其它包都是基于`GCC 4.8.5`编译，使用高版本`GCC`可能存在 `ABI`兼容性问题，建议降级或[自行编译预测库](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。
+**Note**: Except for `nv-jetson-cuda10-cudnn7.5-trt5`, other packages in the pre-compiled versions are based on `GCC 4.8.5`. There may be a `ABI` compatibility problem in the use of the later version of `GCC`. It is recommended to downgrade or [compile the prediction library yourself]. (https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)
 
 
-### Step3: 编译
+### Step3: Compile
 
-编译`cmake`的命令在`scripts/build.sh`中，请根据实际情况修改主要参数，其主要内容说明如下：
+The command to compile `cmake` is in `scripts/build.sh`. Modify the main parameters as required. The main contents are described as follows:
 ```
-# 是否使用GPU(即是否使用 CUDA)
+# Whether GPU is used (i.e., whether CUDA is used)
 WITH_GPU=OFF
-# 使用MKL or openblas
+# Use MKL or openblas
 WITH_MKL=ON
-# 是否集成 TensorRT(仅WITH_GPU=ON 有效)
+# Whether or not to integrate TensorRT (only WITH_GPU=ON available)
 WITH_TENSORRT=OFF
-# TensorRT 的路径，如果需要集成TensorRT，需修改为您实际安装的TensorRT路径
-TENSORRT_DIR=/root/projects/TensorRT/
-# Paddle 预测库路径, 请修改为您实际安装的预测库路径
+# TensorRT path. If you need to integrate TensorRT, change the path to the actual TensorRT you installed. TENSORRT_DIR=/root/projects/TensorRT/
+# Paddle prediction library path. Change the path to the actual prediction library you installed.
 PADDLE_DIR=/root/projects/fluid_inference
-# Paddle 的预测库是否使用静态库来编译
-# 使用TensorRT时，Paddle的预测库通常为动态库
-WITH_STATIC_LIB=OFF
-# CUDA 的 lib 路径
+# Whether or not Paddle's prediction library is compiled using a static library
+# When TensorRT is used, Paddle's prediction library is usually a dynamic library
+WITH_STATIC_LIB=OFF 
+# CUDA's lib path
 CUDA_LIB=/usr/local/cuda/lib64
-# CUDNN 的 lib 路径
-CUDNN_LIB=/usr/local/cuda/lib64
+# CUDNN's lib path
+CUDNN_LIB=/usr/local/cuda/lib64 
 
-# 是否加载加密后的模型
+# Whether to load the encrypted model
 WITH_ENCRYPTION=ON
-# 加密工具的路径, 如果使用自带预编译版本可不修改
-sh $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具
-ENCRYPTION_DIR=$(pwd)/paddlex-encryption
+# Path to the encryption tool. It may not be modified if you use the customized pre-compiling version.
+sh $(pwd)/scripts/bootstrap.sh # Download the pre-compiling version of the encryption tool
+ENCRYPTION_DIR=$(pwd)/paddlex-encryption 
 
-# OPENCV 路径, 如果使用自带预编译版本可不修改
-sh $(pwd)/scripts/bootstrap.sh  # 下载预编译版本的opencv
-OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/
+# OPENCV path. It may not be modified if you use the customized pre-compiling version.
+sh $(pwd)/scripts/bootstrap.sh # Download the pre-compiled version of opencv 
+OPENCV_DIR=$(pwd)/deps/opencv3gcc4.8/ 
 
-# 以下无需改动
+# You should not modify the following: 
 rm -rf build
 mkdir -p build
 cd build
@@ -94,84 +92,87 @@ cmake .. \
     -DOPENCV_DIR=${OPENCV_DIR}
 make
 ```
-**注意：** linux环境下编译会自动下载OPENCV, PaddleX-Encryption和YAML，如果编译环境无法访问外网，可手动下载：
+**Note: **In the compiling in the Linux, the OPENCV, PaddleX-Encryption, and YAML are automatically downloaded. If the access to the Internet is unavailable in the compiling environment, you can download manually:
 
 - [opencv3.4.6gcc4.8ffmpeg.tar.gz2](https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2)
 - [paddlex-encryption.zip](https://bj.bcebos.com/paddlex/tools/1.2.0/paddlex-encryption.zip)
 - [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 
-opencv3gcc4.8.tar.bz2文件下载后解压，然后在script/build.sh中指定`OPENCE_DIR`为解压后的路径。
+Download opencv3gcc4.8.tar.bz2. Then, unzip it. Specify `OPENCE_DIR` in script/build.sh as the path to unzip. 
 
-paddlex-encryption.zip文件下载后解压，然后在script/build.sh中指定`ENCRYPTION_DIR`为解压后的路径。
+Download paddlex-encryption.zip. Then unzip it. Specify `ENCRYPTION_DIR` in script/build.sh as the path to unzip.
 
-yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址，改为下载文件的路径。
+After downloading the yaml-cpp.zip file, you don't need to decompress it. In cmake/yaml.cmake, change the website in the `URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` to the path of the downloading file.
 
-修改脚本设置好主要参数后，执行`build`脚本：
- ```shell
- sh ./scripts/build.sh
- ```
+After setting the main parameters of the modified script, run the `build` script.
+```shell
+sh . /scripts/build.sh
+```
 
-### Step4: 预测及可视化
+### Step4: Prediction and visualization
 
-**在加载模型前，请检查你的模型目录中文件应该包括`model.yml`、`__model__`和`__params__`三个文件。如若不满足这个条件，请参考[模型导出为Inference文档](../../export_model.md)将模型导出为部署格式。**  
+**Before loading the model, make sure that the files in your model directory should include `model.yml`, `__model__`, and `__params__`.`If this condition is not met, refer to the [Model Export to Inference document](../../export_model.md) to export your model to the deployment format. **
 
-* 编译成功后，图片预测demo的可执行程序分别为`build/demo/detector`，`build/demo/classifier`，`build/demo/segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+* After successful compilation, the executable programs for the image prediction demo are `build/demo/detector`, `build/demo/classifier`, and `build/demo/segmenter`. Users can choose according to their model type. The main command parameters are as follows:
 
-|  参数   | 说明  |
+| Parameters | Description |
 |  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| image  | 要预测的图片文件路径 |
-| image_list  | 按行存储图片路径的.txt文件 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
-| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| save_dir | 保存可视化结果的路径, 默认值为"output"，**classfier无该参数** |
-| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
-| batch_size | 预测的批量大小，默认为1 |
-| thread_num | 预测的线程数，默认为cpu处理器个数 |
+| model_dir | The path of the exported prediction model |
+| image | The path of the image file to be predicted |
+| image_list | .txt file of storing image paths by line |
+| use_gpu | Whether to use GPU prediction (value is 0 (default) or 1) |
+| use_trt | Whether to use TensorRT for prediction, the value is 0 or 1 (the default value is 0) |
+| use_mkl | Whether or not to use MKL to accelerate CPU prediction, the value is 0 or 1 (default value is 1). |
+| mkl_thread_num | Number of threads for MKL inference. By default, it is the number of CPU processors |
+| gpu_id | GPU device ID (default value is 0) |
+| save_dir | The path to save the visualization result, default is "output", classfier has no such parameter.**** |
+| key | Key information generated during the encryption process, default value is "" the unencrypted model is loaded. |
+| batch_size | Prediction batch size, default is 1 |
+| thread_num | Number of predicted threads. By default, it is the number of CPU processors |
 
-* 编译成功后，视频预测demo的可执行程序分别为`build/demo/video_detector`，`build/demo/video_classifier`，`build/demo/video_segmenter`，用户可根据自己的模型类型选择，其主要命令参数说明如下：
+* After successful compilation, the executable programs of the video prediction demo are `build/demo/video_detector`, `build/demo/video_classifier`, and `build/demo/video_segmenter`. Users can choose according to the model type. The main command parameters are as follows:
 
-|  参数   | 说明  |
+| Parameters | Description |
 |  ----  | ----  |
-| model_dir  | 导出的预测模型所在路径 |
-| use_camera | 是否使用摄像头预测，支持值为0或1(默认值为0) |
-| camera_id | 摄像头设备ID，默认值为0 |
-| video_path | 视频文件的路径 |
-| use_gpu  | 是否使用 GPU 预测, 支持值为0或1(默认值为0) |
-| use_trt  | 是否使用 TensorRT 预测, 支持值为0或1(默认值为0) |
-| use_mkl  | 是否使用 MKL加速CPU预测, 支持值为0或1(默认值为1) |
-| mkl_thread_num | MKL推理的线程数，默认为cpu处理器个数 |
-| gpu_id  | GPU 设备ID, 默认值为0 |
-| show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
-| save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
-| save_dir | 保存可视化结果的路径, 默认值为"output"|
-| key | 加密过程中产生的密钥信息，默认值为""表示加载的是未加密的模型 |
+| model_dir | The path of the exported prediction model |
+| use_camera | Whether to use the camera for prediction, the value is 0 or 1 (default value is 0) |
+| camera_id | Camera device ID (default value is 0) |
+| video_path | Path of video file |
+| use_gpu | Whether to use GPU prediction (value is 0 (default) or 1) |
+| use_trt | Whether to use TensorRT for prediction, the value is 0 or 1 (the default value is 0) |
+| use_mkl | Whether or not to use MKL to accelerate CPU prediction, the value is 0 or 1 (default value is 1). |
+| mkl_thread_num | Number of threads for MKL inference. By default, it is the number of CPU processors |
+| gpu_id | GPU device ID (default value is 0) |
+| show_result | Whether or not to display the prediction visualization result in real time on the screen when making prediction on the video file (the result does not reflect the real frame rate because the delay process is added), the supported value is 0 or 1 (the default value is 0). |
+| save_result | Whether to save the predicted visual result of each frame as a video file, the value is 0 or 1 (default value is 1) |
+| save_dir | Path to save the visualization results (default value is "output") |
+| key | Key information generated during the encryption process, default value is "" the unencrypted model is loaded. |
 
-**注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
+**Note: If the GUI is unavailable in the system, you should not set show_result to 1. When using a camera for prediction, press `ESC` to disable the camera and launch the prediction program.**
 
-## 样例
+## Example
 
-可使用[小度熊识别模型](../../export_model.md)中导出的`inference_model`和测试图片进行预测，导出到/root/projects，模型路径为/root/projects/inference_model。
+Predictions can be made using the `inference_model`  and test images exported from the [DUDU recognition model]>(../../export_model.md), to export to /root/projects. The model path is /root/projects/inference_model.
 
-> 关于预测速度的说明：加载模型后前几张图片的预测速度会较慢，这是因为运行启动时涉及到内存显存初始化等步骤，通常在预测20-30张图片后模型的预测速度达到稳定。
+> Description about the prediction speed: The prediction speed of the first few images after loading the model is slow, because the initialization of the video card and memory is involved in the start-up. Generally, the prediction speed after predicting 20-30 images is stable.
 
-**样例一：**
+**Example 1:**
 
-不使用`GPU`测试图片 `/root/projects/images/xiaoduxiong.jpeg`  
+Not using `GPU` test images: `/root/projects/images/xiaoduxiong.jpeg`
 
 ```shell
-./build/demo/detector --model_dir=/root/projects/inference_model --image=/root/projects/images/xiaoduxiong.jpeg --save_dir=output
+. /build/demo/detector --model_dir=/root/projects/inference_model --image=/root/projects/images/xiaoduxiong.jpeg --save_dir=output
 ```
-图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
+The image `file visual predictions` are saved in the directory where the `save_dir` parameter is set.
 
 
-**样例二:**
+**Example 2:**
 
-使用`GPU`预测多个图片`/root/projects/image_list.txt`，image_list.txt内容的格式如下：
+Using the `GPU` to predict multiple images `/root/projects/image_list.txt`. The content of image_list.txt is in the following format:`
 ```
+/root/projects/images/xiaoduxiong1.jpeg /root/projects/images/xiaoduxiong2.jpeg . . . /root/projects/images/xiaoduxiongn.jpeg
+```
+```shell
 /root/projects/images/xiaoduxiong1.jpeg
 /root/projects/images/xiaoduxiong2.jpeg
 ...
@@ -180,22 +181,22 @@ yaml-cpp.zip文件下载后无需解压，在cmake/yaml.cmake中将`URL https://
 ```shell
 ./build/demo/detector --model_dir=/root/projects/inference_model --image_list=/root/projects/images_list.txt --use_gpu=1 --save_dir=output --batch_size=2 --thread_num=2
 ```
-图片文件`可视化预测结果`会保存在`save_dir`参数设置的目录下。
+The image file `visual predictions` are saved in the directory where the `save_dir` parameter is set.
 
-**样例三：**
+**Example 3:**
 
-使用摄像头预测：
-
-```shell
-./build/demo/video_detector --model_dir=/root/projects/inference_model --use_camera=1 --use_gpu=1 --save_dir=output --save_result=1
-```
-当`save_result`设置为1时，`可视化预测结果`会以视频文件的格式保存在`save_dir`参数设置的目录下。
-
-**样例四：**
-
-对视频文件进行预测：
+Using the camera prediction:
 
 ```shell
-./build/demo/video_detector --model_dir=/root/projects/inference_model --video_path=/path/to/video_file --use_gpu=1 --save_dir=output --show_result=1 --save_result=1
+. /build/demo/video_detector --model_dir=/root/projects/inference_model --use_camera=1 --use_gpu=1 --save_dir=output --save_result=1
 ```
-当`save_result`设置为1时，`可视化预测结果`会以视频文件的格式保存在`save_dir`参数设置的目录下。如果系统有GUI，通过将`show_result`设置为1在屏幕上观看可视化预测结果。
+When `save_result` is set to 1, the `visual prediction results` are saved in the directory where the `save_dir` parameter is set in the video file format.
+
+**Example 4:**
+
+Predicting the video file:
+
+```shell
+. /build/demo/video_detector --model_dir=/root/projects/inference_model --video_path=/path/to/video_file --use_gpu=1 --save_dir=output --show_result=1 --save_result=1
+```
+When `save_result` is set to 1, the `visual prediction results` are saved in the directory where the `save_dir` parameter is set in the video file format.`If the GUI is available in the system, view the visual prediciton results on the screen by setting `show_result to 1.

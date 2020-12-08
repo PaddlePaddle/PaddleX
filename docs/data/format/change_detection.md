@@ -1,53 +1,37 @@
-# 地块检测ChangeDet
+# Plot Detection ChangeDet
 
-## 数据集文件夹结构
+## Dataset folder structure
 
-在PaddleX中，**标注文件为png文件**。建议用户将数据集按照如下方式进行组织，同一地块不同时期的地貌原图均放在同一目录，如`JPEGImages`，标注的同名png文件均放在同一目录，如`Annotations`，示例如下
+In PaddleX, the annotation files are png files**.**It is recommended that users organize the dataset in the following way: The original landscape maps of the same plot at different periods are placed in the same directory, such as JPEGImages`. The marked png files with the same name are placed in the same directory, such as `Annotations`.`
 ```
-MyDataset/ # 语义分割数据集根目录
-|--JPEGImages/ # 原图文件所在目录，包含同一物体前期和后期的图片
-|  |--1_1.jpg
-|  |--1_2.jpg
-|  |--2_1.jpg
-|  |--2_2.jpg
-|  |--...
-|  |--...
-|
-|--Annotations/ # 标注文件所在目录
-|  |--1.png
-|  |--2.png
-|  |--...
-|  |--...
+MyDataset/ # Semantic segmentation dataset root directory --JPEGImages/ # The directory where the original image files are located, containing images of the same object in both early stage and late stage |--1_1.jpg |--1_2.jpg |--2_1.jpg |--2_2.jpg |--. . . |--. . . | |--Annotations/ # Mark the directory where the file is located. |--1.png |--2.png |--. . . |--. . .
 ```
-同一地块不同时期的地貌原图，如1_1.jpg和1_2.jpg，可以是RGB彩色图像、灰度图、或tiff格式的多通道图像。语义分割的标注图像，如1.png，为单通道图像，像素标注类别需要从0开始递增（一般0表示background背景), 例如0， 1， 2， 3表示4种类别，标注类别最多255个类别(其中像素值255不参与训练和评估)。
+Original landscape images of the same plot at different times, such as 1_1.jpg and 1_2.jpg, which can be RGB color images, grayscale maps, or multi-channel images in tiff format. Semantically segmented annotated images, for example, 1.png, It is the single channel image. Pixel annotation categories should start from 0 in the ascending order (0 means background), for example, 0, 1, 2, 3 mean four categories. There are up to 255 categories (the pixel 255 is not involved in training and evaluation).
 
-## 划分训练集验证集
+## Divide the training set and validation sets
 
-**为了用于训练，我们需要在`MyDataset`目录下准备`train_list.txt`, `val_list.txt`和`labels.txt`三个文件**，分别用于表示训练集列表，验证集列表和类别标签列表。
+**To facilitate training`, `prepare `train_list.txt , `val_list.txt` and labels.txt` files in the `MyDataset directory, indicating training set list, validation set list and category labels list, respectively.` **
 
-**labels.txt**  
+**labels.txt **
 
-labels.txt用于列出所有类别，类别对应行号表示模型训练过程中类别的id(行号从0开始计数)，例如labels.txt为以下内容
+labels.txt: lists all the categories. The corresponding line number of the category represents the id of the category during the training of the model (the line number starts counting from 0), for example, labels.txt has the following content:
 ```
-unchanged
-changed
+unchanged changed
 ```
-表示该检测数据集中共有2个分割类别，分别为`unchanged`和`changed`，在模型训练中`unchanged`对应的类别id为0, `changed`对应1，以此类推，如不知具体类别标签，可直接在labels.txt逐行写0，1，2...序列即可。
+Indicates that there are two segmentation categories in the detection dataset, namely, `un`changed` and changed. In the model training, the category id corresponding to `unchanged` is 0, changed is 1, and so on. If you don’t know the specific category label, you can directly enter labels.txt one by one, 0, 1, 2…`.`.`序列即可。
 
-**train_list.txt**  
+**train_list.txt **
 
-train_list.txt列出用于训练时的图片集合，与其对应的标注文件，示例如下
+train_list.txt lists the collection of images used for training. The corresponding annotation files are as follows (example):
 ```
-JPEGImages/1_1.jpg JPEGImages/1_2.jpg Annotations/1.png
-JPEGImages/2_1.jpg JPEGImages/2_2.jpg Annotations/2.png
-... ...
+JPEGImages/1_1.jpg JPEGImages/1_2.jpg Annotations/1.png JPEGImages/2_1.jpg JPEGImages/2_2.jpg Annotations/2.png . . . . . .
 ```
-其中第一列和第二列为原图相对`MyDataset`的相对路径，对应同一地块不同时期的地貌图像，第三列为标注文件相对`MyDataset`的相对路径
+The first and second columns correspond to the relative paths of the original image relative to `MyDataset` for different periods of the same plot, and the third column is the relative path of the labeled file relative to MyDataset``
 
-**val_list.txt**  
+**val_list.txt **
 
-val_list列出用于验证时的图片集成，与其对应的标注文件，格式与val_list.txt一致
+val_list lists the image integration used for validation. Its corresponding annotation file has the same format as val_list.txt.
 
-## PaddleX数据集加载  
+## PaddleX dataset loading
 
-[示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/change_detection/train.py)
+[sample code (computing)](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/change_detection/train.py)

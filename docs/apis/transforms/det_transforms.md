@@ -1,183 +1,160 @@
 # paddlex.det.transforms
 
-对目标检测/实例分割任务的数据进行操作。可以利用[Compose](#compose)类将图像预处理/增强操作进行组合。
+This section describes the operation of data of the object detection/instance segmentation tasks. The [Compose](#compose) class can be used to combine image preprocessing/augmenter operations.
 
 ## Compose
 ```python
-paddlex.det.transforms.Compose(transforms)
+paddlex.det.transforms. Compose(transforms)
 ```
 
-根据数据预处理/增强算子对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py#L15)
+The input data is operated by the data preprocessing/augmenter operator. [Usage Example](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py#L15)
 
-### 参数
-* **transforms** (list): 数据预处理/数据增强列表。
+### Parameters
+* **transforms** (list): Data preprocessing/data augmenter list.
 
 ## Normalize
 ```python
-paddlex.det.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.det.transforms. Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ```
 
-对图像进行标准化。  
-1. 归一化图像到到区间[0.0, 1.0]。  
-2. 对图像进行减均值除以标准差操作。
+Standardize the image.
+1. Normalizes the image to the interval [[0].0, 1.0].
+2. The image is subtracted from the mean and divided by the standard deviation.
 
-### 参数
-* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+### Parameters
+* **mean** (list): The mean value of the image data set. Default values are 0 .[485, 0.456, and 0.406.]
+* **std** (list): Standard deviation of the image dataset. Default values are 0[.]229, 0.224, 0.225.
 
 ## ResizeByShort
 ```python
-paddlex.det.transforms.ResizeByShort(short_size=800, max_size=1333)
+paddlex.det.transforms. ResizeByShort(short_size=800, max_size=1333)
 ```
 
-根据图像的短边调整图像大小（resize）。  
-1. 获取图像的长边和短边长度。  
-2. 根据短边与short_size的比例，计算长边的目标长度，此时高、宽的resize比例为short_size/原图短边长度。若short_size为数组，则随机从该数组中挑选一个数值作为short_size。
-3. 如果max_size>0，调整resize比例：
-   如果长边的目标长度>max_size，则高、宽的resize比例为max_size/原图长边长度。
-4. 根据调整大小的比例对图像进行resize。
+Resizes the image according to the short edge of the image.
+1. Get the length of the long and short edges of the image.
+2. According to the ratio of short side and short_size, calculate the target length of the long side. At this time, the resize ratio of height and width is short_size/original short side length.
+3. If max_size>0, adjust the resize ratio: if the target length of the long side is > max_size, the resize ratio of height and width is max_size/the length of the long edge of the original image.
+4. Resize the image according to the resize ratio.
 
-### 参数
-* **short_size** (int|list): 短边目标长度。默认为800。当需要做多尺度训练时，可以将`short_size`设置成数组，例如[500, 600, 700, 800]。
-* **max_size** (int): 长边目标长度的最大限制。默认为1333。
+### Parameters
+* **short_size** (int): The length of the short side object. The default value is 800.
+* **max_size** (int): Maximal limit of the length of the long side target. The default value is 1333.
 
 ## Padding
 ```python
-paddlex.det.transforms.Padding(coarsest_stride=1)
+paddlex.det.transforms. Padding(coarsest_stride=1)
 ```
 
-将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640], `coarest_stride`为32，则由于300不为32的倍数，因此在图像最右和最下使用0值进行padding，最终输出图像为[320, 640]
-1. 如果coarsest_stride为1则直接返回。
-2. 计算宽和高与最邻近的coarest_stride倍数差值
-3. 根据计算得到的差值，在图像最右和最下进行padding
+Multiples of padding the length and width of the image to the coarsest_stride. If the input image is [300], `640`, and the coarsest_stride is 32, the rightmost and the bottom of the image is padded with 0, and the final output image is [[320, 640], because 300 is not a multiple of 32.]
+1. Returns directly if coarsest_stride is 1.
+2. Calculate the difference between the width and the height and the nearest coarsest_stride multiple
+3. Based on the calculated difference, padding is performed on the rightmost and lowest part of the image.
 
-### 参数
-* **coarsest_stride** (int): 填充后的图像长、宽为该参数的倍数，默认为1。
+### Parameters
+* **coarsest_stride** (int): the length and width of the filled image is a multiple of this parameter. The default value is 1.
 
 ## Resize
 ```python
-paddlex.det.transforms.Resize(target_size=608, interp='LINEAR')
+paddlex.det.transforms. Resize(target_size=608, interp='LINEAR')
 ```
 
-调整图像大小（resize）。  
-* 当目标大小（target_size）类型为int时，根据插值方式，将图像resize为[target_size, target_size]。  
-* 当目标大小（target_size）类型为list或tuple时，根据插值方式，将图像resize为target_size。  
-【注意】当插值方式为“RANDOM”时，则随机选取一种插值方式进行resize，作为模型训练时的数据增强操作。
+Resizes the image (resize).
+* When the target size (target_size) type is int, resize the image to [[target_size, target_size]] according to the interpolation method.
+* When the target size (target_size) type is list or tuple, resize the image to target_size according to the interpolation method. [Note] When the interpolation method is "RANDOM", one of the interpolation methods is randomly selected for resize. It is the data augmenter operation during model training.
 
-### 参数
-* **target_size** (int/list/tuple): 短边目标长度。默认为608。
-* **interp** (str): resize的插值方式，与opencv的插值方式对应，取值范围为['NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM']。默认为"LINEAR"。
+### Parameters
+* **target_size** (int/list/tuple): target length of short side. Default value is 608.
+* **interp** (str): The interpolation mode of resize, corresponding to the interpolation of opencv, with the value range 'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'[.]The default value is "LINEAR".
 
 ## RandomHorizontalFlip
 ```python
-paddlex.det.transforms.RandomHorizontalFlip(prob=0.5)
+paddlex.det.transforms. RandomHorizontalFlip(prob=0.5)
 ```
 
-以一定的概率对图像进行随机水平翻转，模型训练时的数据增强操作。
+Flip the image horizontally at random with a certain probability. It is the data augmenter operation during model training.
 
-### 参数
-* **prob** (float): 随机水平翻转的概率。默认为0.5。
+### Parameters
+* **prob** (float): The probability of a random level flip. The default value is 0.5.
 
 ## RandomDistort
 ```python
-paddlex.det.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
+paddlex.det.transforms. RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
 
-以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。  
-1. 对变换的操作顺序进行随机化操作。
-2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+Random pixel content transformation of the image with a certain probability. It is the data augmenter operation in the model training.
+1. Randomize the operation order of the transformations.
+2. Perform a random pixel content transformation in the range[-range, range] with a certain probability on the image in the order shown in Step 1.
 
-【注意】该数据增强必须在数据增强Normalize之前使用。
+[Note] This data augmenter must be used before the Normalize.
 
-### 参数
-* **brightness_range** (float): 明亮度因子的范围。默认为0.5。
-* **brightness_prob** (float): 随机调整明亮度的概率。默认为0.5。
-* **contrast_range** (float): 对比度因子的范围。默认为0.5。
-* **contrast_prob** (float): 随机调整对比度的概率。默认为0.5。
-* **saturation_range** (float): 饱和度因子的范围。默认为0.5。
-* **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
-* **hue_range** (int): 色调因子的范围。默认为18。
-* **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+### Parameters
+* **brightness_range** (float): the range of the brightness factor. The default value is 0.5.
+* **brightness_prob** (float): The probability that the brightness is adjusted randomly. The default value is 0.5.
+* **contrast_range** (float): The range of the contrast factor. The default value is 0.5.
+* **contrast_prob** (float): The probability of randomly adjusting the contrast. The default value is 0.5.
+* **saturation_range** (float): The range of the saturation factor. The default value is 0.5.
+* **saturation_prob** (float): The probability of randomly adjusting the saturation. The default value is 0.5.
+* **hue_range** (int): The range of the hue factor. The default value is 18.
+* **hue_prob** (float): The probability of randomly adjusting the hue. The default value is 0.5.
 
 ## MixupImage
 ```python
-paddlex.det.transforms.MixupImage(alpha=1.5, beta=1.5, mixup_epoch=-1)
+paddlex.det.transforms. MixupImage(alpha=1.5, beta=1.5, mixup_epoch=-1)
 ```
 
-对图像进行mixup操作，模型训练时的数据增强操作，目前仅YOLOv3模型支持该transform。  
-当label_info中不存在mixup字段时，直接返回，否则进行下述操作：
-1. 从随机beta分布中抽取出随机因子factor。  
-2. 根据不同情况进行处理：
-    * 当factor>=1.0时，去除label_info中的mixup字段，直接返回。  
-    * 当factor<=0.0时，直接返回label_info中的mixup字段，并在label_info中去除该字段。  
-    * 其余情况，执行下述操作：  
-    （1）原图像乘以factor，mixup图像乘以(1-factor)，叠加2个结果。  
-    （2）拼接原图像标注框和mixup图像标注框。  
-    （3）拼接原图像标注框类别和mixup图像标注框类别。  
-    （4）原图像标注框混合得分乘以factor，mixup图像标注框混合得分乘以(1-factor)，叠加2个结果。
-3. 更新im_info中的augment_shape信息。
+Perform mixup operations on images. It is the data augmenter operation during model training. Currently, only the YOLOv3 model supports this transform. When the mixup field does not exist in label_info, return directly. Otherwise, perform the following operations:
+1. The random factor is extracted from the random beta distribution.
+2. The processing varies with different scenarios.
+   * When factor >= 1.0, remove the mixup field in label_info and return it directly.
+   * When the factor <= 0.0, return the mixup field in label_info directly. The field is removed from label_info.
+   * For the rest, perform the following operations: (1) multiply the original image by the factor, multiply the mixup image by (1-factor), and superimpose the two results. (2) Splice the original image label box and the mixup image label box. (3) Splice original image label box category and mixup image label box category. (4) Multiply the original image label box mixing score by the factor, and multiply the mixup image label box mixing score by (1-factor), and superimpose the 2 results.
+3. Update the augment_shape information in im_info.
 
-### 参数
-* **alpha** (float): 随机beta分布的下限。默认为1.5。
-* **beta** (float): 随机beta分布的上限。默认为1.5。
-* **mixup_epoch** (int): 在前mixup_epoch轮使用mixup增强操作；当该参数为-1时，该策略不会生效。默认为-1。
+### Parameters
+* **alpha** (float): The lower limit of the random beta distribution. The default value is 1.5.
+* **beta** (float): The upper limit of the random beta distribution. The default value is 1.5.
+* **mixup_epoch** (int): Use mixup augmentation in the previous mixup_epoch round. This policy does not take effect when this parameter is -1. The default value is -1.
 
-## RandomExpand
+## RandomExpand Class
 ```python
-paddlex.det.transforms.RandomExpand(ratio=4., prob=0.5, fill_value=[123.675, 116.28, 103.53])
+paddlex.det.transforms. RandomExpand(ratio=4. , prob=0.5, fill_value=[123.675, 116.28, 103.53])
 ```
 
-随机扩张图像，模型训练时的数据增强操作。
-1. 随机选取扩张比例（扩张比例大于1时才进行扩张）。
-2. 计算扩张后图像大小。
-3. 初始化像素值为输入填充值的图像，并将原图像随机粘贴于该图像上。
-4. 根据原图像粘贴位置换算出扩张后真实标注框的位置坐标。
-5. 根据原图像粘贴位置换算出扩张后真实分割区域的位置坐标。
+Randomly expand the image. It is the data augmenter operation during model training.
+1. Randomly select the expansion ratio (expansion is performed only when the expansion ratio is greater than 1).
+2. Calculate the size of the expanded image.
+3. Initialize the image whose pixel value is the input fill-in value, and paste the original image randomly on this image.
+4. Compute the position coordinates of the expanded real label box from the original image pasted position.
+5. Compute the position of the real segmentation area after expansion based on the original image pasted position.
 
-### 参数
-* **ratio** (float): 图像扩张的最大比例。默认为4.0。
-* **prob** (float): 随机扩张的概率。默认为0.5。
-* **fill_value** (list): 扩张图像的初始填充值（0-255）。默认为[123.675, 116.28, 103.53]。  
+### Parameters
+* **ratio** (float): The maximum ratio of image expansion. The default value is 4.0.
+* **prob** (float): Probability of random expansion. The default value is 0.5.
+* **fill_value** (list): The initial fill-in value of the expanded image (0-255). The default value is 123[.]675, 116.28, 103.53.
 
-【注意】该数据增强必须在数据增强Resize、ResizeByShort之前使用。
+[Note] This data augmenter must be used before the data augmenter of Resize and ResizeByShort.
 
 ## RandomCrop
 ```python
-paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3, .5, .7, .9], scaling=[.3, 1.], num_attempts=50, allow_no_crop=True, cover_all_box=False)
+paddlex.det.transforms. RandomCrop(aspect_ratio=[.5, 2. ], thresholds=[.0, .1, .3, .5, .7, .9], scaling=[.3, 1. ], num_attempts=50, allow_no_crop=True, cover_all_box=False)
 ```
 
-随机裁剪图像，模型训练时的数据增强操作。  
-1. 若allow_no_crop为True，则在thresholds加入’no_crop’。
-2. 随机打乱thresholds。
-3. 遍历thresholds中各元素：
-    (1) 如果当前thresh为’no_crop’，则返回原始图像和标注信息。
-    (2) 随机取出aspect_ratio和scaling中的值并由此计算出候选裁剪区域的高、宽、起始点。
-    (3) 计算真实标注框与候选裁剪区域IoU，若全部真实标注框的IoU都小于thresh，则继续第3步。
-    (4) 如果cover_all_box为True且存在真实标注框的IoU小于thresh，则继续第3步。
-    (5) 筛选出位于候选裁剪区域内的真实标注框，若有效框的个数为0，则继续第3步，否则进行第4步。
-4. 换算有效真值标注框相对候选裁剪区域的位置坐标。
-5. 换算有效分割区域相对候选裁剪区域的位置坐标。  
+Random crop image. It is the data augmenter operation during model training.
+1. If allow_no_crop is True, add 'no_crop' to the thresholds.
+2. Randomly disrupt the thresholds.
+3. Traverse the elements in the thresholds: (1) If the current thresh is 'no_crop', return the original image and label information. (2) Randomly retrieve the values of aspect_ratio and scaling, and calculate the height, width and start point of the candidate cropping area. (3) Calculate the IoU of the real label box and the candidate cropping area. If all IoUs of the real label box are less than thresh, go to step 3. (4) If the cover_all_box is True and the IoU of the real label box is less than thresh, go to step 3. (5) Filter out the real label boxes located in the candidate cropping area. If the number of valid boxes is 0, go to step 3. Otherwise, go to step 4.
+4. Convert the position coordinates of the valid true label box relative to the candidate cropping region.
+5. Convert the position coordinates of the valid segmentation region relative to the candidate crop region.
 
-【注意】该数据增强必须在数据增强Resize、ResizeByShort之前使用。
+[Note] This data augmenter must be used before the data augmenter of Resize and ResizeByShort.
 
-### 参数
-* **aspect_ratio** (list): 裁剪后短边缩放比例的取值范围，以[min, max]形式表示。默认值为[.5, 2.]。
-* **thresholds** (list): 判断裁剪候选区域是否有效所需的IoU阈值取值列表。默认值为[.0, .1, .3, .5, .7, .9]。
-* **scaling** (list): 裁剪面积相对原面积的取值范围，以[min, max]形式表示。默认值为[.3, 1.]。
-* **num_attempts** (int): 在放弃寻找有效裁剪区域前尝试的次数。默认值为50。
-* **allow_no_crop** (bool): 是否允许未进行裁剪。默认值为True。
-* **cover_all_box** (bool): 是否要求所有的真实标注框都必须在裁剪区域内。默认值为False。
-
-## CLAHE
-```
-paddlex.det.transforms.CLAHE(clip_limit=2., tile_grid_size=(8, 8))
-```
-对图像进行对比度增强。
-
-### 参数
-
-* **clip_limit** (int|float): 颜色对比度的阈值，默认值为2.。
-* **tile_grid_size** (list|tuple): 进行像素均衡化的网格大小。默认值为(8, 8)。
+### Parameters
+* **aspect_ratio** (list): the range of the scaling of the cropping short edge, in the form of min and max. The default values are [.5, 2.]。 []
+* **thresholds** (list): the list of IoU thresholds to determine whether the cropped candidate region is valid. The default values are .[0, .1, .3, .5, .7, .9 . ]
+* **scaling** (list): the range of the cropping area relative to the original area, in the form of min and max. The default values are [.3, 1.]。 []
+* **num_attempts** (int): The number of attempts before giving up on finding a valid crop area. The default value is 50.
+* **allow_no_crop** (bool): Whether to allow no cropping. It is true by default.
+* **cover_all_box** (bool): whether or not require all real label boxes to be in the crop area. It is false by default.
 
 <!--
 ## ComposedRCNNTransforms

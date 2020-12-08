@@ -3,26 +3,28 @@
 ## paddlex.seg.DeepLabv3p
 
 ```python
-paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride=16, aspp_with_sep_conv=True, decoder_use_sep_conv=True, encoder_with_aspp=True, enable_decoder=True, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, pooling_crop_size=None, input_channel=3)
+paddlex. seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride=16, aspp_with_sep_conv=True, decoder_use_sep_conv=True, encoder_with_aspp=True, enable_decoder=True, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, pooling_crop_size=None, input_channel=3)
 ```
 
-> 构建DeepLabv3p分割器。
+> Build a DeepLabv3p segmenter.
 
-> **参数**
+> **Parameters**
 
-> > - **num_classes** (int): 类别数。
-> > - **backbone** (str): DeepLabv3+的backbone网络，实现特征图的计算，取值范围为['Xception65', 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0', 'MobileNetV3_large_x1_0_ssld']，默认值为'MobileNetV2_x1.0'。
-> > - **output_stride** (int): backbone 输出特征图相对于输入的下采样倍数，一般取值为8或16。默认16。
-> > - **aspp_with_sep_conv** (bool):  aspp模块是否采用separable convolutions。默认True。
-> > - **decoder_use_sep_conv** (bool)： decoder模块是否采用separable convolutions。默认True。
-> > - **encoder_with_aspp** (bool): 是否在encoder阶段采用aspp模块。默认True。
-> > - **enable_decoder** (bool): 是否使用decoder模块。默认True。
-> > - **use_bce_loss** (bool): 是否使用bce loss作为网络的损失函数，只能用于两类分割。可与dice loss同时使用。默认False。
-> > - **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用，当`use_bce_loss`和`use_dice_loss`都为False时，使用交叉熵损失函数。默认False。
-> > - **class_weight** (list/str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
-> > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
-> > - **pooling_crop_size** (int)：当backbone为`MobileNetV3_large_x1_0_ssld`时，需设置为训练过程中模型输入大小，格式为[W, H]。例如模型输入大小为[512, 512], 则`pooling_crop_size`应该设置为[512, 512]。在encoder模块中获取图像平均值时被用到，若为None，则直接求平均值；若为模型输入大小，则使用`avg_pool`算子得到平均值。默认值None。
-> > - **input_channel** (int): 输入图像通道数。默认值3。
+> > - **num_classes** (int): Number of classes.
+> - > **backbone** (str): DeepLabv3+ backbone network to implement the calculation of characteristic images in a value range of 'Xception65', 'Xception41', 'MobileNetV2_x0.25', 'MobileNetV2_x0.5', 'MobileNetV2_x1.0', 'MobileNetV2_x1.5', 'MobileNetV2_x2.0', 'MobileNetV3_large_x1_0_ssld'. It is 'MobileNetV2_x1.0' by default.[ ]
+- **output_stride** (int): Downsampling multiple of the backbone output characteristic image relative to the input. It is generally 8 or 16. It is 16 by default.
+- **aspp_with_sep_conv** (bool): Whether the decoder module uses separable convolutions. It is true by default.
+- **decoder_use_sep_conv** (bool)：Whether the decoder module uses separable convolutions. It is true by default.
+- **encoder_with_aspp** (bool): Whether to use an ASPP module in the encoder phase. It is true by default.
+- **enable_decoder** (bool): Whether to use a decoder module. It is true by default.
+- **use_bce_loss** (bool): Whether to use bce loss as a network loss function. The bce loss function can be used for two kinds of segmentation only and may be used with dice loss. It is false by default.
+- **use_dice_loss** (bool): Whether to use dice loss as a network loss function. The dice loss function can be used for two kinds of segmentation only and may be used with dice loss. When both use_bce_loss` and use_dice_loss are false, the cross entropy loss function is used.`It is false by default.``
+- **class_weight** (list/str): Weight of various losses of the cross entropy loss function. When class_weight` is a list, the length shall be `num_classes`.`When class_weight` is str, weight.`lower() shall be 'dynamic'. At this moment, the corresponding weight is automatically calculated according to the proportion of all classes of pixels in each round. The weight of each class is as follows: Proportion of each class * num_classes. When class_weight is the default none, the weight of each class is 1, i.e. the usually used cross entropy loss function.
+- **ignore_index** (int): Value ignored on a label. A pixel of which the label is ignore_index does not participate in the calculation of the loss function. It is 255 by default.``
+- **pooling_crop_size** (int): When backbone is MobileNetV3_large_x1_0_ssld`, this parameter must be set to a model input size during training in `W, H[ format]. For example, if the model input size is [512, 512], `pooling_crop_size` shall be set to 512, 512[.]This parameter is used when an image average is obtained in the encoder module. If it is none, an average is directly calculated. If it is a model input size, an average is obtained using the avg_pool` operator.`It is None by default.
+- **input_channel** (int): Number of input image channels. It is 3 by default.
+
+
 
 ### train
 
@@ -30,27 +32,28 @@ paddlex.seg.DeepLabv3p(num_classes=2, backbone='MobileNetV2_x1.0', output_stride
 train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, eval_batch_size=1, save_interval_epochs=1, log_interval_steps=2, save_dir='output', pretrain_weights='IMAGENET', optimizer=None, learning_rate=0.01, lr_decay_power=0.9, use_vdl=False, sensitivities_file=None, eval_metric_loss=0.05, early_stop=False, early_stop_patience=5, resume_checkpoint=None):
 ```
 
-> DeepLabv3p模型的训练接口，函数内置了`polynomial`学习率衰减策略和`momentum`优化器。
+> DeepLabv3p model training API. The function has a built-in `polynomial` learning rate attenuation policy and a `momentum` optimizer.
 
-> **参数**
-> >
-> > - **num_epochs** (int): 训练迭代轮数。
-> > - **train_dataset** (paddlex.datasets): 训练数据读取器。
-> > - **train_batch_size** (int): 训练数据batch大小。同时作为验证数据batch大小。默认2。
-> > - **eval_dataset** (paddlex.datasets): 评估数据读取器。
-> > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
-> > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
-> > - **save_dir** (str): 模型保存路径。默认'output'
-> > - **pretrain_weights** (str): 若指定为路径时，则加载路径下预训练模型；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串'COCO'，则自动下载在COCO数据集上预训练的模型权重（注意：暂未提供Xception41、MobileNetV2_x0.25、MobileNetV2_x0.5、MobileNetV2_x1.5、MobileNetV2_x2.0的COCO预训练模型）；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES数据集上预训练的模型权重（注意：暂未提供Xception41、MobileNetV2_x0.25、MobileNetV2_x0.5、MobileNetV2_x1.5、MobileNetV2_x2.0的CITYSCAPES预训练模型）；若为None，则不使用预训练模型。默认'IMAGENET'。
-> > - **optimizer** (paddle.fluid.optimizer): 优化器。当该参数为None时，使用默认的优化器：使用fluid.optimizer.Momentum优化方法，polynomial的学习率衰减策略。
-> > - **learning_rate** (float): 默认优化器的初始学习率。默认0.01。
-> > - **lr_decay_power** (float): 默认优化器学习率衰减指数。默认0.9。
-> > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认False。
-> > - **sensitivities_file** (str): 若指定为路径时，则加载路径下敏感度信息进行裁剪；若为字符串'DEFAULT'，则自动下载在Cityscapes图片数据上获得的敏感度信息进行裁剪；若为None，则不进行裁剪。默认为None。
-> > - **eval_metric_loss** (float): 可容忍的精度损失。默认为0.05。
-> > - **early_stop** (bool): 是否使用提前终止训练策略。默认值为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认值为5。
-> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径。若为None，则不会恢复训练。默认值为None。
+> **Parameters**
+> - **num_epochs** (int): Number of training iteration epochs.
+- **train_dataset** (paddlex.datasets): Training data reader.
+- **train_batch_size** (int): Training data batch size. It is also a validation data batch size. It is 2 by default.
+- **eval_dataset** (paddlex.datasets): Evaluation data reader.
+- **save_interval_epochs** (int): Model saving interval (unit: number of iteration epochs). It is 1 by default.
+- **log_interval_steps** (int): Training log output interval (unit: number of iterations). It is 2 by default.
+- **save_dir** (str): Path where models are saved. It is 'output' by default.
+- **pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded (Note: A COCO pre-training model for Xception41, MobileNetV2_x0.25, MobileNetV2_x0.5, MobileNetV2_x1.5 and MobileNetV2_x2.0 is unavailable temporarily). If it is a string 'CITYSCAPES', a model weight pre-trained on the CITYSCAPES dataset is automatically downloaded (Note: A CITYSCAPES pre-training model for Xception41, MobileNetV2_x0.25, MobileNetV2_x0.5, MobileNetV2_x1.5 and MobileNetV2_x2.0 is unavailable temporarily). If it is none, no pre-training model is used. It is 'IMAGENET' by default.
+- **optimizer** (paddle.fluid.optimizer): Optimizer. When this parameter is none, the following default optimizer is used: Use the fluid.optimizer. Momentum optimization and the polynomial learning rate attenuation policy.
+- **learning_rate** (float): Initial learning rate of the default optimizer. It is 0.01 by default.
+- **lr_decay_power** (float): Learning rate attenuation index of the default optimizer. It is 0.9 by default.
+- **use_vdl** (bool): Whether to use VisualDL for visualization. It is false by default.
+- **sensitivities_file** (str): If it is a path, sensitivity information under the path is loaded to perform pruning. If it is a string 'DEFAULT', sensitivity information obtained on Cityscapes image data is automatically downloaded to perform pruning. If it is None, no pruning is performed. It is None by default.
+- **eval_metric_loss** (float): Tolerable precision loss. It is 0.05 by default.
+- **early_stop** (bool): Whether to use a policy for early termination of training. It is false by default.
+- **early_stop_patience** (int): When a policy for early termination of training is used, training is terminated if the validation set precision continuously decreases or remains unchanged within early_stop_patience epochs. It is 5 by default.``
+- **resume_checkpoint** (str): When training is resumed, specify a model path saved during the last training. If it is None, training is not resumed. It is None by default.
+
+
 
 ### evaluate
 
@@ -58,21 +61,21 @@ train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, ev
 evaluate(self, eval_dataset, batch_size=1, epoch_id=None, return_details=False):
 ```
 
-> DeepLabv3p模型评估接口。
+> DeepLabv3p model evaluation API.
 
->  **参数**
-> >
-> > - **eval_dataset** (paddlex.datasets): 评估数据读取器。
-> > - **batch_size** (int): 评估时的batch大小。默认1。
-> > - **epoch_id** (int): 当前评估模型所在的训练轮数。
-> > - **return_details** (bool): 是否返回详细信息。默认False。
+> **Parameters**
+> - **eval_dataset** (paddlex.datasets): Evaluation data reader.
+- **batch_size** (int): Batch size during evaluation. It is 1 by default.
+- **epoch_id** (int): Number of training epochs of the current evaluation model.
+- **return_details** (bool): Whether to return detailed information. It is false by default.
 
-> **返回值**
-> >
-> > - **dict**: 当`return_details`为False时，返回dict。包含关键字：'miou'、'category_iou'、'macc'、
-> >   'category_acc'和'kappa'，分别表示平均IoU、各类别IoU、平均准确率、各类别准确率和kappa系数。
-> > - **tuple** (metrics, eval_details)：当`return_details`为True时，增加返回dict (eval_details)，
-> >   包含关键字：'confusion_matrix'，表示评估的混淆矩阵。
+
+
+> **Returned value**
+> - **dict**: When return_details` is false, dict is returned.`The following keywords are contained: ' miou', 'category_iou', 'macc', 'category_acc' and 'kappa' which indicate the average IoU， the IoU of each class, the average accuracy rate, the accuracy rate of each class and the kappa coefficient respectively.
+- **tuple** (metrics, eval_details): When return_details` is true, the return of dict (eval_details) is added.`The following keywords are contained: ' confusion_matrix' which indicates the evaluation confusion matrix.
+
+
 
 ### predict
 
@@ -80,16 +83,18 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, return_details=False):
 predict(self, img_file, transforms=None):
 ```
 
-> DeepLabv3p模型预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`predict`接口时，用户需要再重新定义test_transforms传入给`predict`接口。
+> DeepLabv3p Model inference API. Note that the image processing flow during inference can be saved in `DeepLabv3p.test_transforms and `DeepLabv3p.eval_transforms` during model saving only when eval_dataset is defined during training. If eval_dataset is not defined during training, when the `predict API for prediction is called, you need to redefine and pass test_transforms to the predict API.````
 
-> **参数**
-> >
-> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
-> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+> **Parameters**
+> - **img_file** (str|np.ndarray): Path or numpy array of the predicted image (HWC arrangement, BGR format).
+- **transforms** (paddlex.seg.transforms): Data preprocessing operation.
 
-> **返回值**
-> >
-> > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+
+> **Returned value**
+> - **dict**: It contains the keywords 'label_map' and 'score_map'. 'label_map' stores an inference result grayscale image. A pixel value indicates the corresponding class. 'score_map' stores a probability of each class. shape = (h, w, num_classes).
+
+
 
 
 ### batch_predict
@@ -98,16 +103,18 @@ predict(self, img_file, transforms=None):
 batch_predict(self, img_file_list, transforms=None):
 ```
 
-> DeepLabv3p模型批量预测接口。需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`batch_predict`接口时，用户需要再重新定义test_transforms传入给`batch_predict`接口。
+> DeepLabv3p model batch inference API. Note that the image processing flow during inference can be saved in `DeepLabv3p.test_transforms and `DeepLabv3p.eval_transforms` during model saving only when eval_dataset is defined during training. If eval_dataset is not defined during training, when the `batch_predict API for prediction is called, you need to redefine and pass test_transforms to the batch_predict API.````
 
-> **参数**
-> >
-> > - **img_file_list** (list|tuple): 对列表（或元组）中的图像同时进行预测，列表中的元素可以是预测图像路径或numpy数组(HWC排列，BGR格式)。
-> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+> **Parameters**
+> - **img_file_list** (list|tuple): Images in the list (or tuple) are simultaneously predicted. Elements in the list are predicted image paths or numpy arrays (HWC arrangement, BGR format).
+- **transforms** (paddlex.seg.transforms): Data preprocessing operation.
 
-> **返回值**
-> >
-> > - **dict**: 每个元素都为列表，表示各图像的预测结果。各图像的预测结果用字典表示，包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+
+> **Returned value**
+> - **dict**: Each element is a list which indicates inference results of each image. The inference results of each image is expressed as a dictionary. It contains the keywords 'label_map' and 'score_map'. 'label_map' stores an inference result grayscale image. A pixel value indicates the corresponding class. 'score_map' stores a probability of each class. shape = (h, w, num_classes).
+
+
 
 
 ### overlap_tile_predict
@@ -116,96 +123,107 @@ batch_predict(self, img_file_list, transforms=None):
 overlap_tile_predict(self, img_file, tile_size=[512, 512], pad_size=[64, 64], batch_size=32, transforms=None)
 ```
 
-> DeepLabv3p模型的滑动预测接口, 支持有重叠和无重叠两种方式。
+> Sliding inference API for the DeepLabv3p model. The overlapping and non-overlapping modes are supported.
 
-> **无重叠的滑动窗口预测**：在输入图片上以固定大小的窗口滑动，分别对每个窗口下的图像进行预测，最后将各窗口的预测结果拼接成输入图片的预测结果。**使用时需要把参数`pad_size`设置为`[0, 0]`**。
+> **Non-overlapping sliding window inference: Slide on the input image using a window of fixed size. Infer an image under each window. Splice inference results of each window into inference results of the input image.**The parameter pad_size ** must be set to `[0, 0]` during use`.`**
 
-> **有重叠的滑动窗口预测**：在Unet论文中，作者提出一种有重叠的滑动窗口预测策略（Overlap-tile strategy）来消除拼接处的裂痕感。对各滑动窗口预测时，会向四周扩展一定的面积，对扩展后的窗口进行预测，例如下图中的蓝色部分区域，到拼接时只取各窗口中间部分的预测结果，例如下图中的黄色部分区域。位于输入图像边缘处的窗口，其扩展面积下的像素则通过将边缘部分像素镜像填补得到。
+> **Overlapping sliding window inference: In Unet’s paper, the author proposed an overlap-tile strategy to eliminate a crack feeling at the splice.**In the prediction in each sliding window, a certain area is expanded around the expanded window, such as the blue part of the area in the figure below. Only the middle part of the window is predicted in the splice, for example, the yellow part area in the figure below. The pixels under the expanded area of the window located at the edge of the input image are obtained by mirroring the pixels at the edge.
 
 ![](../../../examples/remote_sensing/images/overlap_tile.png)
 
-> 需要注意的是，只有在训练过程中定义了eval_dataset，模型在保存时才会将预测时的图像处理流程保存在`DeepLabv3p.test_transforms`和`DeepLabv3p.eval_transforms`中。如未在训练时定义eval_dataset，那在调用预测`overlap_tile_predict`接口时，用户需要再重新定义test_transforms传入给`overlap_tile_predict`接口。
+> Note that the image processing flow during inference can be saved in `DeepLabv3p.test_transforms and `DeepLabv3p.eval_transforms` during model saving only when eval_dataset is defined during training. If eval_dataset is not defined during training, when the `overlap_tile_predict API for inference is called, you need to redefine and pass test_transforms to the overlap_tile_predict API.````
 
-> **参数**
-> >
-> > - **img_file** (str|np.ndarray): 预测图像路径或numpy数组(HWC排列，BGR格式)。
-> > - **tile_size** (list|tuple): 滑动窗口的大小，该区域内用于拼接预测结果，格式为（W，H）。默认值为[512, 512]。
-> > - **pad_size** (list|tuple): 滑动窗口向四周扩展的大小，扩展区域内不用于拼接预测结果，格式为（W，H）。默认值为[64, 64]。
-> > - **batch_size** (int)：对窗口进行批量预测时的批量大小。默认值为32。
-> > - **transforms** (paddlex.seg.transforms): 数据预处理操作。
+> **Parameters**
+> - **img_file** (str|np.ndarray): Path or numpy array of the predicted image (HWC arrangement, BGR format).
+- **tile_size** (list|tuple): Sliding window size. This area is used to splice inference results. The format is (W, H). It is 512, 512[ by default].
+- **pad_size** (list|tuple): Size of the area where the sliding window extends towards its surrounding. The extended area is not used to splice prediction results. The format is (W, H). It is 64, 64[ by default].
+- **batch_size** (int): Batch size during the batch inference on the window. It is 32 by default.
+- **transforms** (paddlex.seg.transforms): Data preprocessing operation.
 
-> **返回值**
-> >
-> > - **dict**: 包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。
+
+
+> **Returned value**
+> - **dict**: It contains the keywords 'label_map' and 'score_map'. 'label_map' stores an inference result grayscale image. A pixel value indicates the corresponding class. 'score_map' stores a probability of each class. shape = (h, w, num_classes).
+
+
 
 ## paddlex.seg.UNet
 
 ```python
-paddlex.seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, input_channel=3)
+paddlex. seg.UNet(num_classes=2, upsample_mode='bilinear', use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, input_channel=3)
 ```
 
-> 构建UNet分割器。
+> Build a UNet segmenter.
 
-> **参数**
+> **Parameters**
 
-> > - **num_classes** (int): 类别数。
-> > - **upsample_mode** (str): UNet decode时采用的上采样方式，取值为'bilinear'时利用双线行差值进行上菜样，当输入其他选项时则利用反卷积进行上菜样，默认为'bilinear'。
-> > - **use_bce_loss** (bool): 是否使用bce loss作为网络的损失函数，只能用于两类分割。可与dice loss同时使用。默认False。
-> > - **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。当use_bce_loss和use_dice_loss都为False时，使用交叉熵损失函数。默认False。
-> > - **class_weight** (list/str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
-> > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
-> > - **input_channel** (int): 输入图像通道数。默认值3。
+> > - **num_classes** (int): Number of classes.
+- **upsample_mode** (str): Upsampling mode used during the UNet decoding. When the value is 'bilinear', a bilinear difference value is used to perform upsampling. When other options are input, a deconvolution is used to perform upsasmpling. It is 'bilinear' by default.
+- **use_bce_loss** (bool): Whether to use bce loss as a network loss function. The bce loss function can be used for two kinds of segmentation only and may be used with dice loss. It is false by default.
+- **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。Whether to use dice loss as a network loss function. The dice loss function can be used for two kinds of segmentation only and may be used with bce loss. When both use_bce_loss and use_dice_loss are false, the cross entropy loss function is used. It is false by default.
+- **class_weight** (list/str): Weight of various losses of the cross entropy loss function. When class_weight` is a list, the length shall be `num_classes`.`When class_weight` is str, weight.`lower() shall be 'dynamic'. At this moment, the corresponding weight is automatically calculated according to the proportion of all classes of pixels in each round. The weight of each class is as follows: Proportion of each class * num_classes. When class_weight is the default none, the weight of each class is 1, i.e. the usually used cross entropy loss function.
+- **ignore_index** (int): Value ignored on a label. A pixel of which the label is ignore_index does not participate in the calculation of the loss function. It is 255 by default.``
+- **input_channel** (int): Number of input image channels. It is 3 by default.
 
-> - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
-> - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
-> - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
-> - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
-> - overlap_tile_predict 滑动窗口预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
+
+
+> - The description of the train API for training is the same as the train API of the DeepLabv3p model[](#train)
+- The description of the evaluate API for evaluation is the same as the evaluate API of the DeepLabv3p model[](#evaluate)
+- The description of the predict API for inference is the same as the predict API of the DeepLabv3p model[](#predict)
+- The description of the batch_predict API for batch prediction is the same as the predict API of the DeepLabv3p model[](#batch-predict)
+- The overlap_tile_predict API for sliding window prediction is the same as the poverlap_tile_predict API of the DeepLabv3p model[](#overlap-tile-predict)
+
 
 ## paddlex.seg.HRNet
 
 ```python
-paddlex.seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, input_channel=3)
+paddlex. seg.HRNet(num_classes=2, width=18, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, input_channel=3)
 ```
 
-> 构建HRNet分割器。
+> Build an HRNet segmenter.
 
-> **参数**
+> **Parameters**
 
-> > - **num_classes** (int): 类别数。
-> > - **width** (int|str): 高分辨率分支中特征层的通道数量。默认值为18。可选择取值为[18, 30, 32, 40, 44, 48, 60, 64, '18_small_v1']。'18_small_v1'是18的轻量级版本。
-> > - **use_bce_loss** (bool): 是否使用bce loss作为网络的损失函数，只能用于两类分割。可与dice loss同时使用。默认False。
-> > - **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。当use_bce_loss和use_dice_loss都为False时，使用交叉熵损失函数。默认False。
-> > - **class_weight** (list|str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
-> > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
-> > - **input_channel** (int): 输入图像通道数。默认值3。
+> > - **num_classes** (int): Number of classes.
+- **width** (int|str): Number of channels in the characteristic layer in a high-resolution branch. It is 18 by default. The optional values are 18, 30, 32, 40, 44, 48, 60, 64, '18_small_v1'. ' 18_small_v1' is the lightweight version of 18.[]
+- **use_bce_loss** (bool): Whether to use bce loss as a network loss function. The bce loss function can be used for two kinds of segmentation only and may be used with dice loss. It is false by default.
+- **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。Whether to use dice loss as a network loss function. The dice loss function can be used for two kinds of segmentation only and may be used with bce loss. When both use_bce_loss and use_dice_loss are false, the cross entropy loss function is used. It is false by default.
+- **class_weight** (list|str): Weight of various losses of the cross entropy loss function. When class_weight` is a list, the length shall be `num_classes`.`When class_weight` is str, weight.`lower() shall be 'dynamic'. At this moment, the corresponding weight is automatically calculated according to the proportion of all classes of pixels in each round. The weight of each class is as follows: Proportion of each class * num_classes. When class_weight is the default none, the weight of each class is 1, i.e. the usually used cross entropy loss function.
+- **ignore_index** (int): Value ignored on a label. A pixel of which the label is ignore_index does not participate in the calculation of the loss function. It is 255 by default.``
+- **input_channel** (int): Number of input image channels. It is 3 by default.
 
-> - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
-> - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
-> - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
-> - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
-> - overlap_tile_predict 滑动窗预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
+
+
+> - The description of the train API for training is the same as the train API of the DeepLabv3p model[](#train)
+- The description of the evaluate API for evaluation is the same as the evaluate API of the DeepLabv3p model[](#evaluate)
+- The description of the predict API for inference is the same as the predict API of the DeepLabv3p model[](#predict)
+- The description of the batch_predict API for batch prediction is the same as the predict API of the DeepLabv3p model[](#batch-predict)
+- The overlap_tile_predict API for sliding window inference is the same as the poverlap_tile_predict API of the DeepLabv3p model[](#overlap-tile-predict)
+
 
 ## paddlex.seg.FastSCNN
 
 ```python
-paddlex.seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, multi_loss_weight=[1.0], input_channel=3)
+paddlex. seg.FastSCNN(num_classes=2, use_bce_loss=False, use_dice_loss=False, class_weight=None, ignore_index=255, multi_loss_weight=[1.0], input_channel=3)
 ```
 
-> 构建FastSCNN分割器。
+> Build a FastSCNN segmenter.
 
-> **参数**
+> **Parameters**
 
-> > - **num_classes** (int): 类别数。
-> > - **use_bce_loss** (bool): 是否使用bce loss作为网络的损失函数，只能用于两类分割。可与dice loss同时使用。默认False。
-> > - **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。当use_bce_loss和use_dice_loss都为False时，使用交叉熵损失函数。默认False。
-> > - **class_weight** (list/str): 交叉熵损失函数各类损失的权重。当`class_weight`为list的时候，长度应为`num_classes`。当`class_weight`为str时， weight.lower()应为'dynamic'，这时会根据每一轮各类像素的比重自行计算相应的权重，每一类的权重为：每类的比例 * num_classes。class_weight取默认值None是，各类的权重1，即平时使用的交叉熵损失函数。
-> > - **ignore_index** (int): label上忽略的值，label为`ignore_index`的像素不参与损失函数的计算。默认255。
-> > - **multi_loss_weight** (list): 多分支上的loss权重。默认计算一个分支上的loss，即默认值为[1.0]。也支持计算两个分支或三个分支上的loss，权重按[fusion_branch_weight, higher_branch_weight, lower_branch_weight]排列，fusion_branch_weight为空间细节分支和全局上下文分支融合后的分支上的loss权重，higher_branch_weight为空间细节分支上的loss权重，lower_branch_weight为全局上下文分支上的loss权重，若higher_branch_weight和lower_branch_weight未设置则不会计算这两个分支上的loss。
-> > - **input_channel** (int): 输入图像通道数。默认值3。
+> > - **num_classes** (int): Number of classes.
+- **use_bce_loss** (bool): Whether to use bce loss as a network loss function. The bce loss function can be used for two kinds of segmentation only and may be used with dice loss. It is false by default.
+- **use_dice_loss** (bool): 是否使用dice loss作为网络的损失函数，只能用于两类分割，可与bce loss同时使用。Whether to use dice loss as a network loss function. The dice loss function can be used for two kinds of segmentation only and may be used with bce loss. When both use_bce_loss and use_dice_loss are false, the cross entropy loss function is used. It is false by default.
+- **class_weight** (list/str): Weight of various losses of the cross entropy loss function. When class_weight` is a list, the length shall be `num_classes`.`When class_weight` is str, weight.`lower() shall be 'dynamic'. At this moment, the corresponding weight is automatically calculated according to the proportion of all classes of pixels in each round. The weight of each class is as follows: Proportion of each class * num_classes. When class_weight is the default none, the weight of each class is 1, i.e. the usually used cross entropy loss function.
+- **ignore_index** (int): Value ignored on a label. A pixel of which the label is ignore_index does not participate in the calculation of the loss function. It is 255 by default.``
+- **multi_loss_weight** (list): Loss weight on multiple branches. The default is to calculate a loss on one branch, i .[e. the default is ]1.0 .[A loss on two or three branches can also be calculated and the weight is arranged in a sequence of ]fusion_branch_weight, higher_branch_weight, lower_branch_weight. fusion_branch_weight is the loss weight on the branch after the spatial detail branch and the global context branch are blended. higher_branch_weight is the loss weight on the spatial detail branch. lower_branch_weight is the loss weight on the global context branch. If higher_branch_weight and lower_branch_weight are not set, a loss on these two branches will not be calculated.
+- **input_channel** (int): Number of input image channels. It is 3 by default.
 
-> - train 训练接口说明同 [DeepLabv3p模型train接口](#train)
-> - evaluate 评估接口说明同 [DeepLabv3p模型evaluate接口](#evaluate)
-> - predict 预测接口说明同 [DeepLabv3p模型predict接口](#predict)
-> - batch_predict 批量预测接口说明同 [DeepLabv3p模型predict接口](#batch-predict)
-> - overlap_tile_predict 滑动窗预测接口同 [DeepLabv3p模型poverlap_tile_predict接口](#overlap-tile-predict)
+
+
+> - The description of the train API for training is the same as the train API of the DeepLabv3p model[](#train)
+- The description of the evaluate API for evaluation is the same as the evaluate API of the DeepLabv3p model[](#evaluate)
+- The description of the predict API for inference is the same as the predict API of the DeepLabv3p model[](#predict)
+- The description of the batch_predict API for batch prediction is the same as the predict API of the DeepLabv3p model[](#batch-predict)
+- The overlap_tile_predict API for sliding window inference is the same as the poverlap_tile_predict API of the DeepLabv3p model[](#overlap-tile-predict)
+

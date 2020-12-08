@@ -1,34 +1,34 @@
-# 语义分割
+# Semantic segmentation
 
-## 介绍
+## Introduction
 
-PaddleX目前提供了DeepLabv3p、UNet、HRNet和FastSCNN四种语义分割结构,多种backbone模型，可满足开发者不同场景和性能的需求。
+Currently, PaddleX provides DeepLabv3p, UNet, HRNet and FastSCNN with semantic segmentation structures and various backbone models to meet the requirements of developers for different scenarios and performance.
 
-- **mIoU**: 模型在CityScape数据集上的测试精度
-- **预测速度**：单张图片的预测用时（不包括预处理和后处理)
-- "-"表示指标暂未更新
+- **mIoU**: Model test precision on the CityScape dataset
+- **Inference speed**: Inference time for a single image (preprocessing and postprocessing excluded)
+- "-" indicates that the indexes are not updated temporarily
 
-| 模型(点击获取代码)               | mIoU | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
+| Model (Click to obtain codes) | mIOU | Model Size | GPU Inference Speed | Arm Inference Speed | Note |
 | :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
-| [DeepLabv3p-MobileNetV2-x0.25](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2_x0.25.py) |  -  |  2.9MB  |  -   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
-| [DeepLabv3p-MobileNetV2-x1.0](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2.py) |  69.8%  |  11MB  |  -   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
-| [DeepLabv3_MobileNetV3_large_x1_0_ssld](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv3_large_ssld.py) | 73.28% | 9.3MB |  -   | -  |  模型小，预测速度快，精度较高，适用于低性能或移动端设备 |
-| [DeepLabv3p-Xception65](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_xception65.py)        | 79.3%  | 158MB   |  -  | -  |  模型大，精度高，适用于服务端   |
-| [UNet](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/unet.py)     | -  | 52MB   | -   | -  |  模型较大，精度高，适用于服务端   |
-| [HRNet](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/hrnet.py)   |  79.4%   |   37MB    |  -       |   -    | 模型较小，模型精度高，适用于服务端部署   |
-| [FastSCNN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/fast_scnn.py)   |  -   |   4.5MB    |  -       |   -    | 模型小，预测速度快，适用于低性能或移动端设备   |
+| [DeepLabv3p-MobileNetV2-x0.25](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2_x0.25.py) | -- | 2.9 MB | - | - | The model is small, has a fast inference speed and applies to low-performance or mobile devices |
+| [DeepLabv3p-MobileNetV2-x1.0](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv2.py) | 69.8% | 11 MB | - | - | The model is small, has a fast inference speed and applies to low-performance or mobile devices |
+| [DeepLabv3_MobileNetV3_large_x1_0_ssld](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_mobilenetv3_large_ssld.py) | 73.28% | 9.3 MB | - | - | The model is small, has a fast inference speed and a high precision and applies to low-performance or mobile devices |
+| [DeepLabv3p-Xception65](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_xception65.py) | 79.3% | 158 MB | - | - | The model is large, has a high precision and applies to the server |
+| [UNet](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/unet.py) | - | 52 MB | - | - | The model is large, has a high precision and applies to the server |
+| [HRNet](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/hrnet.py) | 79.4% | 37 MB | - | - | The model is large, has a high model precision and applies to server deployment |
+| [FastSCNN](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/fast_scnn.py) | - | 4.5 MB | - | - | The model is small, has a fast inference speed and applies to low-performance or mobile devices |
 
 
-## 开始训练
+## Start training
 
-将代码保存到本地后运行（代码下载链接位于上面的表格中），**代码会自动下载训练数据并开始训练**。如保存为`deeplabv3p_mobilenetv2_x0.25.py`，执行如下命令即可开始训练：
+Save and run codes locally (The code downloading links are located in the table above) and **codes automatically download training data**. Start training. If codes are saved as `deeplabv3p_mobilenetv2_x0.25.py`, execute the following command to start training:
 ```
 python deeplabv3p_mobilenetv2_x0.25.py
 ```
 
 
-## 相关文档
+## Related document
 
-- 【**重要**】针对自己的机器环境和数据，调整训练参数？先了解下PaddleX中训练参数作用。[——>>传送门](../appendix/parameters.md)
-- 【**有用**】没有机器资源？使用AIStudio免费的GPU资源在线训练模型。[——>>传送门](https://aistudio.baidu.com/aistudio/projectdetail/450925)
-- 【**拓展**】更多语义分割模型，查阅[PaddleX模型库](../appendix/model_zoo.md)和[API使用文档](../apis/models/semantic_segmentation.md)。
+- [**Important**] Adjust training parameters according to your machine environment and data, adjust training parameters? Understand the role of training parameters in PaddleX first. ——>>[Portal] (../appendix/parameters.md)
+- [**Useful**] There are no machine resources? Use a free AIStudio GPU resource: online training model. ——>>[Portal] (https://aistudio.baidu.com/aistudio/projectdetail/450925)
+- [**Extension**] For more semantic segmentation models, refer to the [PaddleX model library](../appendix/model_zoo.md) and the [API operation document](../apis/models/semantic_segmentation.md).

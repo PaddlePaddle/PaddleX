@@ -1,11 +1,11 @@
-# PaddleX文档
+# PaddleX documents
 
-PaddleX的使用文档均在本目录结构下。文档采用Read the Docs方式组织，您可以直接访问[在线文档](https://paddlex.readthedocs.io/zh_CN/develop/index.html)进行查阅。
+All PaddleX documents used are under this directory structure. Documents are organized by the Read the Docs method. You can view them by directly accessing [online documents] (https://paddlex.readthedocs.io/zh_CN/develop/index.html). 
 
-## 编译文档
-在本目录下按如下步骤进行文档编译
+## Compiling documents
+Compile documents in this directory according to the following steps:
 
-- 安装依赖: `pip install -r requirements.txt`
-- 编译: `make html`
+- Install dependencies: `pip install -r requirements.txt `
+- Compile: `make html`
 
-编译完成后，编译文件在`_build`目录下，直接打开`_build/html/index.html`即可查阅。
+After the compilation is finished, the compiled document is located in the `_build` directory. Directly open `_build/html/index.html` to view the document.

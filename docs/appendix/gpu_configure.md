@@ -1,70 +1,53 @@
-# 多卡GPU/CPU训练
+# Multi-card GPU/CPU training
 
-## GPU卡数配置
-PaddleX在训练过程中会优先选择**当前所有可用的GPU卡进行训练**，在评估时**分类和分割任务仍使用多张卡**而**检测任务只使用1张卡**进行计算，在预测时各任务**则只会使用1张卡进行计算**。
+## GPU card count configuration
+During training, PaddleX gives priority to all available GPU cards**.** For the classification and segmentation tasks during evaluation, multiple cards are used. For the detection task, only one card is used for calculation. In the prediction of each task, only one card is used for calculation.** **********
 
-用户如想配置PaddleX在运行时使用的卡的数量，可在命令行终端（Shell）或Python代码中按如下方式配置：
+To configure the number of cards that PaddleX uses during runtime, perform the configuration in the command line terminal (shell) or in Python codes as follows:
 
-命令行终端：
+Command line terminal:
 ```
-# 使用1号GPU卡
-export CUDA_VISIBLE_DEVICES='1'
-# 使用0, 1, 3号GPU卡
-export CUDA_VISIBLE_DEVICES='0,1,3'
-# 不使用GPU,仅使用CPU
-export CUDA_VISIBLE_DEVICES=''
+# Use GPU card 1 export CUDA_VISIBLE_DEVICES='1' # Use GPU cards 0, 1, and 3 export CUDA_VISIBLE_DEVICES='0,1,3' # No GPU, CPU only export CUDA_VISIBLE_DEVICES=''
 ```
 
-python代码：
+python codes:
 ```
-# 注意：须要在第一次import paddlex或paddle前执行如下语句
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,3'
-import paddlex as pdx
+# Note: The following statement must be executed before the first running of import of paddlex or paddle. import os os. environ['CUDA_VISIBLE_DEVICES'] = '0,1,3' import paddlex as pdx
 ```
 
-## 使用多个GPU卡训练
+## Training with multiple GPU cards
 
-目前PaddlePaddle支持在Linux下使用多卡训练，Windows只支持单卡，在命令行终端输入`nvidia-smi`可以查看自己机器的GPU卡信息，如若提示命令未找到，则用户需要自行安装CUDA驱动。  
+PaddlePaddle currently supports multi-card training in the Linux, and single-card training in the Windows. You can view the computer GPU card information by typing `nvidia-smi` in the command line terminal. If the system prompts that the card information is not found, you can install CUDA driver.
 
-PaddleX在多卡GPU下训练时，无需额外的配置，用户按照上文的方式，通过`CUDA_VISIBLE_DEVICES`环境变量配置所需要使用的卡的数量即可。  
+When PaddleX is trained in the multi-card GPU, no additional configuration is required. You can configure the number of cards as required by running the `CUDA_VISIBLE_DEVICES` environment variable.
 
-需要注意的是，在训练代码中，可根据卡的数量，调高`batch_size`和`learning_rate`等参数，GPU卡数量越多，则可以支持更高的`batch_size`(注意batch_size需能被卡的数量整除), 同时更高的`batch_size`也意味着学习率`learning_rate`也要对应上调。同理，在训练过程中，如若因显存或内存不够导致训练失败，用户也需自行调低`batch_size`，并且按比例调低学习率。
+It should be noted that the number of cards in the training code can be adjusted, that is, set `batch_size` and `learning_rate` to higher values. The larger the number of GPU cards, the higher the batch_size supported (keep in mind that the batch_size should be divisible by the number of cards). A higher batch_size also means a higher learning rate, that is, the learning_rate should be set to a larger value accordingly.`Similarly, during the training process, if the training fails due to lack of video memory or memory, you need to set `batch_size` and learning_rate to smaller values proportionally.``` ``
 
-## CPU配置
-PaddleX在训练过程中可以选择使用CPU进行训练、评估和预测。通过以下方式进行配置：
+## CPU Configuration
+PaddleX has the option of using the CPU for training, evaluation, and prediction during the training process. Perform configurations in the following method:
 
-命令行终端：
+Command line terminal:
 ```
 export CUDA_VISIBLE_DEVICES=""
 ```
 
-python代码：
+python codes:
 ```
-# 注意：须要在第一次import paddlex或paddle前执行如下语句
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
-import paddlex as pdx
+# Note: The following statement must be executed before the first running of import of paddlex or paddle. import os os.environ['CUDA_VISIBLE_DEVICES'] = '' import paddlex as pdx
 ```
-此时使用的CPU个数为1。
+The number of CPUs used is 1.
 
-## 使用多个CPU训练
-通过设置环境变量`CPU_NUM`可以改变CPU个数，如果未设置，则CPU数目默认设为1，即`CPU_NUM`=1。 在物理核心数量范围内，该参数的配置可以加速模型。
+## Training with multiple CPUs
+The number of CPUs can be changed by setting the environment variable `CPU_NUM`. If it is not set, the number of CPUs is set to 1 by default, that is, CPU_NUM`=1.`Within the range of physical quantity, the configuration of this parameter can accelerate the model.
 
-PaddleX在训练过程中会选择`CPU_NUM`个CPU进行训练，在评估时分类和分割任务仍使用`CPU_NUM`个CPU，而检测任务只使用1个CPU进行计算，在预测时各任务则只会使用1个CPU进行计算。
-通过以下方式可设置CPU的个数：
+PaddleX selects the number of CPUs (specified by the `CPU_NUM`) for training, uses the number of CPUs (specified by the CPU_NUM) for classification and segmentation tasks during evaluation, uses only one CPU for computation for the detection task, and uses only one CPU for computation for each task in prediction.`Set the number of CPUs in the following methods:`
 
-命令行终端：
+Command line terminal:
 ```
-export CUDA_VISIBLE_DEVICES=""
-export CPU_NUM=2
+export CUDA_VISIBLE_DEVICES="" export CPU_NUM=2
 ```
 
-python代码：
+python codes:
 ```
-# 注意：须要在第一次import paddlex或paddle前执行如下语句
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
-os.environ['CPU_NUM'] = '2'
-import paddlex as pdx
+# Note: The following statement must be executed before the first running of import of paddlex or paddle. import os os.environ['CUDA_VISIBLE_DEVICES'] = '' os.environ['CPU_NUM'] = '2' import paddlex as pdx
 ```

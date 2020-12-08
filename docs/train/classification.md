@@ -1,32 +1,32 @@
-# 图像分类
+# Image classification
 
-## 介绍
+## Introduction
 
-PaddleX共提供了20+的图像分类模型，可满足开发者不同场景的需求下的使用。
+PaddleX provides a total of more than 20 image classification models to meet the requirements of developers for different scenarios.
 
-- **Top1精度**: 模型在ImageNet数据集上的测试精度
-- **预测速度**：单张图片的预测用时（不包括预处理和后处理)
-- "-"表示指标暂未更新
+- **Top1 precision**: Model test precision on the ImageNet dataset
+- **Inference speed**: Inference time for a single image (preprocessing and postprocessing excluded)
+- "-" indicates that the indexes are not updated temporarily
 
-| 模型（点击获取代码）               | Top1精度 | 模型大小 | GPU预测速度 | Arm预测速度 | 备注 |
+| Model (Click to obtain codes) | Top1 precision | Model size | GPU Inference Speed | Arm Inference Speed | Note |
 | :----------------  | :------- | :------- | :---------  | :---------  | :-----    |
-| [MobileNetV3_small_ssld](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small_ssld.py) |  71.3%  |  21.0MB  |  6.809ms   | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
-| [MobileNetV2](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py)        | 72.2%  | 14.0MB   |  4.546ms  | -  |  模型小，预测速度快，适用于低性能或移动端设备   |
-| [ShuffleNetV2](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/shufflenetv2.py)     | 68.8%  | 9.0MB   | 6.101ms   | -  |  模型体积小，预测速度快，适用于低性能或移动端设备   |
-| [ResNet50_vd_ssld](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/resnet50_vd_ssld.py)   |  82.4%   |   102.8MB    |  9.058ms       |   -    | 模型精度高，适用于服务端部署   |
+| [MobileNetV3_small_ssld](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small_ssld.py) | 71.3% | 21.0 MB | 6.809 ms | - | The model is small, has a fast inference speed and applies to low-performance or mobile devices |
+| [MobileNetV2](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py) | 72.2% | 14.0 MB | 4.546 ms | - | The model is small, has a fast inference speed and applies to low-performance or mobile devices |
+| [ShuffleNetV2](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/shufflenetv2.py) | 68.8% | 9.0 MB | 6.101 ms | - | The model has a small volume and a fast inference speed and applies to low-performance or mobile terminal devices |
+| [ResNet50_vd_ssld](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/resnet50_vd_ssld.py) | 82.4% | 102.8 MB | 9.058 ms | - | The model has a high precision and applies to server deployment |
 
 
-## 开始训练
+## Start training
 
-将代码保存到本地后运行（代码下载链接位于上面的表格），**代码会自动下载训练数据并开始训练**。如保存为`mobilenetv3_small_ssld.py`，执行如下命令即可开始训练：
+Save and run codes locally (The code downloading links are located in the table above) and **codes automatically download training data and start training*. If codes are saved as `mobilenetv3_small_ssld.py`, execute the following command to start training:
 
 ```
 python mobilenetv3_small_ssld.py
 ```
 
 
-## 相关文档
+## Related document
 
-- 【**重要**】针对自己的机器环境和数据，调整训练参数？先了解下PaddleX中训练参数作用。[——>>传送门](../appendix/parameters.md)
-- 【**有用**】没有机器资源？使用AIStudio免费的GPU资源在线训练模型。[——>>传送门](https://aistudio.baidu.com/aistudio/projectdetail/450925)
-- 【**拓展**】更多图像分类模型，查阅[PaddleX模型库](../appendix/model_zoo.md)和[API使用文档](../apis/models/classification.md)。
+- [**Important**] Adjust training parameters according to your machine environment and data, adjust training parameters? Understand the role of training parameters in PaddleX first. [——>>Portal] (../appendix/parameters.md)
+- [**Useful**] There are no machine resources? Use a free AIStudio GPU resource: online training model. [——>>Portal] (https://aistudio.baidu.com/aistudio/projectdetail/450925)
+- [**Extension**] For more image classification models, refer to the [PaddleX model library](../appendix/model_zoo.md) and the [API operation document](../apis/models/classification.md).

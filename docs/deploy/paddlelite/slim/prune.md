@@ -1,56 +1,56 @@
-# 模型剪裁
+# Model pruning
 
-为了更好地满足端侧部署场景下低内存带宽、低功耗、低计算资源占用以及低模型存储等需求，PaddleX通过集成PaddleSlim来实现模型剪裁功能，进一步提升Paddle Lite端侧部署性能。
+To meet the requirements of low memory, low bandwidth, low power consumption, low computing resource usage, and low model storage in end-side deployment scenarios, PaddleX is integrated with PaddleSlim to implement the model pruning function, and to further improve the Paddle Lite end-side deployment performance.
 
-## 原理介绍
+## Introduction to the principles
 
-模型剪裁通过剪裁卷积层中Kernel输出通道的大小及其关联层参数大小，来减小模型大小和降低模型计算复杂度，可以加快模型部署后的预测速度，其关联剪裁的原理可参见[PaddleSlim相关文档](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#id16)。**一般而言，在同等模型精度前提下，数据复杂度越低，模型可以被剪裁的比例就越高**。
+Model pruning is used to reduce the size of the model and reduce the computational complexity of the model by pruning the size of the Kernel output channel in the convolutional layer and the size of its related layer parameters. This can accelerate the prediction speed after model deployment. The principle of related pruning can be found in [PaddleSlim document](https://paddlepaddle.github.io/PaddleSlim/algo/algo.html#id16). **Generally, under the premise of the same model precision, the lower the data complexity, the higher the proportion of models that can be pruned**.
 
-## 剪裁方法
-PaddleX提供了两种方式:
+## Pruning method
+PaddleX provides two pruning methods:
 
-**1.用户自行计算剪裁配置(推荐)，整体流程包含三个步骤**
+**1. You can calculate the pruning configuration (recommended). The overall process has three steps:**
 
-* **第一步**： 使用数据集训练原始模型  
-* **第二步**：利用第一步训练好的模型，在验证数据集上计算模型中各个参数的敏感度，并将敏感度信息存储至本地文件  
-* **第三步**：使用数据集训练剪裁模型（与第一步差异在于需要在`train`接口中，将第二步计算得到的敏感信息文件传给接口的`sensitivities_file`参数）  
+* **Step 1**: Use the dataset to train the original model**
+* **Step 2**: Use the model trained in Step 1 to calculate the sensitivity of each parameter in the model on the validation dataset, and store the sensitivity information to a local file**
+* **Step 3**: Use the dataset to `train` the pruning model (the difference from Step 1 is that the sensitive information file calculated in Step 2 needs to be passed to the `sensitivities_file` parameter of the interface in the train interface)
 
-> 以上三个步骤**相当于模型需要训练两遍**，第一遍和第二遍分别对应上面的第一步和第三步，但其中第三步训练的是剪裁后的模型，因此训练速度较第一步会更快。  
-> 上面的第二步会遍历模型中的部分剪裁参数，分别计算各个参数剪裁后对于模型在验证集上效果的影响，**因此会在验证集上评估多次**。  
+> In the above three steps, the model needs to be trained twice. The first model training corresponds to Step 1, and the second model training corresponds to Step 3. It is the pruned model in Step 3; therefore, the training speed is faster than Step 1. 
+> In Step 2, some of the tailoring parameters in the model are traversed, to calculate the impact of each parameter pruning on the model of the validation set. **Therefore, the validation set is evaluated for multiple times**.
 
-**2.使用PaddleX内置的剪裁方案**  
-> PaddleX内置的模型剪裁方案是**基于各任务常用的公开数据集**上计算得到的参数敏感度信息，由于不同数据集特征分布会有较大差异，所以该方案相较于第1种方案剪裁得到的模型**精度一般而言会更低**（**且用户自定义数据集与标准数据集特征分布差异越大，导致训练的模型精度会越低**），仅在用户想节省时间的前提下可以参考使用，使用方式只需一步，  
+**2. Use PaddleX's built-in pruning scheme**
+> The built-in model pruning scheme of PaddleX is **based on the parameter sensitivity information computed on the public dataset** commonly used in each task. Because the feature distribution of different datasets vary greatly, the model **accuracy obtained by this scheme is generally lower** than the first scheme (**the greater the difference between the user-defined dataset and the standard dataset feature distribution, the lower the accuracy of the training model). It can be used as a reference only if a user wants to save time. Only one step is required.
 
-> **一步**： 使用数据集训练剪裁模型，在训练调用`train`接口时，将接口中的`sensitivities_file`参数设置为`DEFAULT`字符串
+> **One step**: Use the dataset to train the pruning model. When the `train` interface is called for training, set the `sensitivities_file` parameter in the interface to the `DEFAULT`.
 
-> 注：各模型内置的剪裁方案分别依据的公开数据集为： 图像分类——ImageNet数据集、目标检测——PascalVOC数据集、语义分割——CityScape数据集
+> Note: The built-in pruning scheme of each model is based on the public datasets respectively: image classification-ImageNet dataset, object detection-PascalVOC dataset, semantic segmentation-CityScape dataset.
 
-## 剪裁实验
-基于上述两种方案，我们在PaddleX上使用样例数据进行了实验，在Tesla P40上实验指标如下所示:
+## Pruning experiment
+Based on the above two schemes, the experiment is conducted on PaddleX by using example data. The experimental indicators on Tesla P40 are as follows:
 
-### 图像分类
-实验背景：使用MobileNetV2模型，数据集为蔬菜分类示例数据，剪裁训练代码见[tutorials/compress/classification](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/classification)
+### Image classification
+Experimental background: Use the MobileNetV2 model. The data set is the sample data of vegetable classification. For the pruning training code, see [tutorials/compress/classification](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/classification).
 
-| 模型 | 剪裁情况 | 模型大小 | Top1准确率(%) |GPU预测速度 | CPU预测速度 |
+| Model | Pruning | Model Size | Top1 Accuracy Rate (%) | GPU Prediction Speed | CPU Prediction Speed |
 | :-----| :--------| :-------- | :---------- |:---------- |:----------|
-|MobileNetV2 | 无剪裁（原模型）| 13.0M | 97.50|6.47ms |47.44ms |
-|MobileNetV2 | 方案一(eval_metric_loss=0.10) | 2.1M | 99.58 |5.03ms |20.22ms |
-|MobileNetV2 | 方案二(eval_metric_loss=0.10) | 6.0M | 99.58 |5.42ms |29.06ms |
+| MobileNetV2 | No pruning (original model) | 13.0M | 97.50 | 6.47ms | 47.44ms |
+| MobileNetV2 | Scheme 1 (eval_metric_loss=0.10) | 2.1M | 99.58 | 5.03ms | 20.22ms |
+| MobileNetV2 | Scheme 2 (eval_metric_loss=0.10) | 6.0M | 99.58 | 5.42ms | 29.06ms |
 
-### 目标检测
-实验背景：使用YOLOv3-MobileNetV1模型，数据集为昆虫检测示例数据，剪裁训练代码见[tutorials/compress/detection](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/detection)
+### Object detection
+Experimental background: Use the YOLOv3-MobileNetV1 model. The dataset is insect detection example data. For the pruning training codes, see [tutorials/compress/detection]. (https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/detection)
 
-| 模型 | 剪裁情况 | 模型大小 | MAP(%) |GPU预测速度 | CPU预测速度 |
+| Model | Pruning | Model size | MAP(%) | GPU Prediction Speed | CPU Prediction Speed |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|
-|YOLOv3-MobileNetV1 | 无剪裁（原模型）| 139M | 67.57| 14.88ms |976.42ms |
-|YOLOv3-MobileNetV1 | 方案一(eval_metric_loss=0.10) | 34M | 75.49 |10.60ms |558.49ms |
-|YOLOv3-MobileNetV1 | 方案二(eval_metric_loss=0.05) | 29M | 50.27| 9.43ms |360.46ms |
+| YOLOv3-MobileNetV1 | No pruning (original model) | 139M | 67.57 | 14.88ms | 976.42ms |
+| YOLOv3-MobileNetV1 | Scheme 1 (eval_metric_loss=0.10) | 34M | 75.49 | 10.60ms | 558.49ms |
+| YOLOv3-MobileNetV1 | Scheme 2 (eval_metric_loss=0.05) | 29M | 50.27 | 9.43ms | 360.46ms |
 
-### 语义分割
-实验背景：使用UNet模型，数据集为视盘分割示例数据，剪裁训练代码见[tutorials/compress/segmentation](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/segmentation)
+### Semantic segmentation
+Experimental background: Use the UNet model. The dataset is the example data of optic disc segmentation. For the pruning training code, see [tutorials/compress/segmentation](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/segmentation).
 
-| 模型 | 剪裁情况 | 模型大小 | mIoU(%) |GPU预测速度 | CPU预测速度 |
+| Model | Pruning | Model Size | mIoU(%) | GPU Prediction Speed | CPU Prediction Speed |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|
-|UNet | 无剪裁（原模型）| 77M | 91.22 |33.28ms |9523.55ms |
-|UNet | 方案一(eval_metric_loss=0.10) |26M | 90.37 |21.04ms |3936.20ms |
-|UNet | 方案二(eval_metric_loss=0.10) |23M | 91.21 |18.61ms |3447.75ms |
+| UNet | No pruning (original model) | 77M | 91.22 | 33.28ms | 9523.55ms |
+| UNet | Scheme 1 (eval_metric_loss=0.10) | 26M | 90.37 | 21.04ms | 3936.20ms |
+| UNet | Scheme 2 (eval_metric_loss=0.10) | 23M | 91.21 | 18.61ms | 3447.75ms |

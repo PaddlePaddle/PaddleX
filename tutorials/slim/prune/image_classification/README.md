@@ -1,51 +1,51 @@
-# 图像分类模型裁剪训练
+# Image classification model pruning training
 
-## 第一步 正常训练图像分类模型
+## Step 1: Perform the normal training image classification model.
 
 ```
 python mobilenetv2_train.py
 ```
 
-在此步骤中，训练的模型会保存在`output/mobilenetv2`目录下
+In this step, the training model is saved in the `output/mobilenetv2` directory.
 
-## 第二步 分析模型参数信息
+## Step 2: Analyze the model parameter information.
 
 ```
 python param_analysis.py
 ```
-参数分析完后，会得到`mobilenetv2.sensi.data`文件，此文件保存了各参数的敏感度信息。  
+After the parameters are analyzed, you get the `mobilenetv2.sensi.data` file. It saves the sensitive information for each parameter. 
 
-> 我们可以继续加载模型和敏感度文件，进行可视化，如下命令所示
+> You can continue to load the model and sensitive file for visualization by running the following command:
 > ```
 > python slim_visualize.py
 > ```
-> 可视化结果出下图
-纵轴为`eval_metric_loss`(接下来第三步需要配置的参数)，横轴为模型被裁剪的比例，从图中可以看到，  
-- 当`eval_metric_loss`设0.05时，模型被裁掉68.4%（剩余31.6%）  
-- 当`eval_metric_loss`设0.1时，模型被裁掉78.5%（剩余21.5%）
+> The visualization results are as follows: 
+The vertical axis is `eval_metric_loss` (the parameter to be configured in Step 3) and the horizontal axis is the scale at which the model is pruned. See it in the following diagram.
+- When `eval_metric_loss` is set to 0.05, the model is pruned by 68.4% (31.6% of the model remains)
+- When `eval_metric_loss` is set to 0.1, the model is pruned by 78.5% (21.5% of the model remains)
 
 ![](./sensitivities.png)
 
-## 第三步 模型进行裁剪训练
+## Step 3: Perform the model pruning training.
 
 ```
 python mobilenetv2_prune_train.py
 ```
-此步骤的代码与第一步的代码基本一致，唯一的区别是在最后的train函数中，`mobilenetv2_prune_train.py`修改了里面的`pretrain_weights`、`save_dir`、`sensitivities_file`和`eval_metric_loss`四个参数
+The code in this step is almost identical to that in Step 1. The only difference is: in the last train function, the four parameters such as ` pretrain_weights`, `save_dir`, `sensitivities_file`, and `eval_metric_loss` in `mobilenetv2_prune_train.py` are modified.
 
-- pretrain_weights: 在裁剪训练中，设置为之前训练好的模型
-- save_dir: 模型训练过程中，模型的保存位置
-- sensitivities_file: 在第二步中分析得到的参数敏感度信息文件
-- eval_metric_loss: 第二步中可视化的相关参数，通过此参数可相应的改变最终模型被裁剪的比例
-
-
-## 裁剪效果
-
-在本示例数据上，裁剪效果对比如下，其中预测采用**CPU，关闭MKLDNN**进行预测，预测时间不包含数据的预处理和结果的后处理。  
-可以看到在模型被裁剪掉64%后，模型精度还有上升，单张图片的预测用时减少了37%。
+- pretrain_weights: In the pruning training, set to the previously trained model.
+- save_dir: It indicates the model storage location in the model training process.
+- sensitivities_file: It is the parameter sensitive information file obtained from the analysis in Step 2.
+- eval_metric_loss: It is the visualized relevant parameter in Step 2. You can use the parameter to change the pruning scale of the final model accordingly.
 
 
-| 模型 | 参数文件大小 | 预测速度 | 准确率 |
+## Pruning effect
+
+For data in this example, the pruning effects are compared as follows: The prediction is performed by using the **CPU, with disabling MKLDNN**. The prediction time does not include pre-processing of data or post-processing of the results.
+It can be seen that after the model is pruned by 64%, the model precision increases and the prediction time for a single image is reduced by 37%.
+
+
+| Model | Parameter file size | Prediction speed | Accuracy rate |
 | :--- | :----------  | :------- | :--- |
 | MobileNetV2 |    8.7M       |   0.057s  | 0.92 |
-| MobileNetV2(裁掉68%) | 2.8M | 0.036s | 0.99 |
+| MobileNetV2 (pruned by 68%) | 2.8M | 0.036s | 0.99 |
