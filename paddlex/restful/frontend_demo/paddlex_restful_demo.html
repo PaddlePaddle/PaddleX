@@ -431,6 +431,8 @@ var g_current_dataset_page = 1;
 var g_const_imgs_per_page = 3;
 //当前标签
 var g_current_dataset_lable_name = "";
+//是否显示标注
+var g_b_show_img_labels = false;
 
 //数据集状态
 var DatasetStatus = {
@@ -680,7 +682,16 @@ function load_labels_imgs(str_lbl_name, int_page = 1)
      {
          var str_img_file_name = lst_img_files[j];
          var str_img_file = str_dataset_path + "/" + str_img_file_name;
-         var str_img_file_content = get_img_file_from_server(str_img_file);
+         //是否显示标注
+         var str_img_file_content = "";
+         if(g_b_show_img_labels == true)
+         {
+             str_img_file_content = get_img_file_from_server(str_img_file, str_dataset_id);
+         }
+         else
+         {
+             str_img_file_content = get_img_file_from_server(str_img_file);
+         }
          //更新img框内容
          img_count = img_count + 1;
          var obj_img = document.getElementById('dataset_img_' + img_count);
@@ -720,10 +731,17 @@ function load_labels_imgs(str_lbl_name, int_page = 1)
 }
 
 //从服务端请求文件内容
-function get_img_file_from_server(str_file_name)
+function get_img_file_from_server(str_file_name, str_dataset_id = "")
 {
     var http_request = new XMLHttpRequest();
-    http_request.open("GET", str_srv_url + "/file?path=" + str_file_name, false);
+    if(str_dataset_id == "")
+    {
+        http_request.open("GET", str_srv_url + "/file?path=" + str_file_name, false);
+    }
+    else
+    {
+        http_request.open("GET", str_srv_url + "/file?path=" + str_file_name + "&did=" + str_dataset_id, false);
+    }
     http_request.send(null);
     
     var obj_json = eval('(' + http_request.responseText + ')'); 
@@ -797,6 +815,28 @@ function show_browse_dataset_win_modal(obj)
     var obj_json_dataset_details = eval('(' + str_dataset_details + ')'); 
     var lst_labels = obj_json_dataset_details["details"]["labels"];
     var lst_files = obj_json_dataset_details["details"]["label_info"];
+    
+    //数据集详情
+    document.getElementById('browse_dataset_name_text').value = document.getElementById('view_dataset_name_' + obj.id).value;
+    document.getElementById('browse_dataset_type_text').value = document.getElementById('view_dataset_type_' + obj.id).value;
+    document.getElementById('browse_dataset_desc_text').value = document.getElementById('view_dataset_desc_' + obj.id).value;
+    
+    //分类不需要显示标注
+    if(document.getElementById('browse_dataset_type_text').value == "图像分类")
+    {
+        document.getElementById('dataset_chk_show_label').style.visibility = "hidden";
+        document.getElementById('dataset_chk_show_label_txt').style.visibility = "hidden";
+    }
+    else
+    {
+        document.getElementById('dataset_chk_show_label').style.visibility = "";
+        document.getElementById('dataset_chk_show_label_txt').style.visibility = "";
+    }
+    
+    //默认不显示标注
+    g_b_show_img_labels = false;
+    document.getElementById('dataset_chk_show_label').checked = false;
+    
     //刷新标签
     add_labels_to_table(lst_labels, lst_files);
     
@@ -807,10 +847,6 @@ function show_browse_dataset_win_modal(obj)
     //刷新翻页按纽
     refresh_dataset_page_buttons();
     
-    //数据集详情
-    document.getElementById('browse_dataset_name_text').value = document.getElementById('view_dataset_name_' + obj.id).value;
-    document.getElementById('browse_dataset_type_text').value = document.getElementById('view_dataset_type_' + obj.id).value;
-    document.getElementById('browse_dataset_desc_text').value = document.getElementById('view_dataset_desc_' + obj.id).value;
     
     on_win_browse_dataset.style.display = "block";
     over_win_browse_dataset.style.display = "block";
@@ -884,6 +920,13 @@ function dataset_next_page()
     refresh_dataset_page_buttons()
 }
 
+//显示标注
+function show_dataset_labels()
+{
+    g_b_show_img_labels = !g_b_show_img_labels;
+    load_labels_imgs(g_current_dataset_lable_name, g_current_dataset_page);
+}
+
 //根据任务状态更新任务信息UI
 function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
 {
@@ -944,7 +987,7 @@ function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
         str_task_msg = train_http_request.responseText;
         try
         {
-            var obj_train_msg_json = eval('(' + str_task_msg + ')'); 
+            var obj_train_msg_json = eval('(' + str_task_msg + ')');
             var dic_train_log_metric = obj_train_msg_json["train_log"]["train_metrics"];
             running_duration = obj_train_msg_json["train_log"]["running_duration"];
             var curr_epoc = dic_train_log_metric["Epoch"];
@@ -1090,7 +1133,7 @@ function task_next_step_process(obj)
     else if(str_btn_label == "继续训练")
     {
         //重新启动模型训练
-        var str_start_tid = ""
+        var str_start_tid = "";
         var obj_start_task_id_input = document.getElementById('task_detail_id');
         str_start_tid = obj_start_task_id_input.value;
         
@@ -1345,7 +1388,7 @@ function show_task_popupmenu(obj)
 {
     var obj_task_id = document.getElementById('popup_menu_task_id');
     obj_task_id.value = obj.id;
-    var menu = document.getElementById('popupmenu_task');  
+    var menu = document.getElementById('popupmenu_task');
     menu.style.display = 'block';
     menu.style.left =  document.documentElement.scrollLeft + document.body.scrollLeft+ window.event.clientX + 'px';
     menu.style.top = document.documentElement.scrollTop + document.body.scrollTop+ window.event.clientY + 'px';
@@ -1393,7 +1436,7 @@ document.onclick = function()
     menu = document.getElementById('popupmenu_model');
     menu.style.display = 'none';
     var obj_model_id = document.getElementById('popup_menu_model_id');
-    obj_model_id.value = ""; 	  
+    obj_model_id.value = "";
 }
 
 //PaddleX RestfulAPI Demo Code
@@ -1499,7 +1542,7 @@ function create_project(input_data)
             if (http_request.status==200)
             {
                  str_json = http_request.responseText;
-                 alert(str_json);
+                 alert("项目创建成功！\n" + str_json);
                  var obj_json = eval('(' + str_json + ')');
                  var str_new_pid = obj_json["pid"];
                  
@@ -1636,7 +1679,7 @@ function create_dataset(input_data)
         {
             if (http_request.status==200)
             {
-                 alert(http_request.responseText)
+                 alert("数据集创建成功！\n" + http_request.responseText);
                  hide_create_dataset_win_modal();
                  load_datasets();
             }
@@ -1736,7 +1779,7 @@ function split_dataset(obj)
     var val_split = obj_split_dataset_var_percent.value/100;
     
     var obj_split_dataset_test_percent = document.getElementById('split_dataset_test_percent');
-    var test_split = obj_split_dataset_test_percent.value/100;        
+    var test_split = obj_split_dataset_test_percent.value/100;
     
     var data = {"did":str_split_dataset_id, "val_split":val_split, "test_split":test_split};
 
@@ -1744,7 +1787,7 @@ function split_dataset(obj)
     
     http_request.open("PUT", str_srv_url + "/dataset/split", true);
     http_request.setRequestHeader("Content-type","application/json");
-    http_request.send(JSON.stringify(data));	  
+    http_request.send(JSON.stringify(data));
 }
 
 //获取所有导出模型
@@ -2831,7 +2874,7 @@ function delete_task()
     http_request.send(JSON.stringify(data));        
 }
 
-//删除任务
+//删除模型
 function delete_model()
 {
     var obj_model_id = document.getElementById('popup_menu_model_id');
@@ -2851,7 +2894,7 @@ function delete_model()
             if (http_request.status==200)
             {
                  alert("删除模型：" + str_del_model_id + "删除成功!\n" +  http_request.responseText);
-                 load_tasks();
+                 load_models();
             }
             else
             {
@@ -3382,7 +3425,7 @@ function dispatch_key_press()
     <table width="100%" align="center" id="table_browse_dataset_head">
       <tr>
       	<th width="50%">全部标签</th>
-      	<th width="50%">全部数据预览 &nbsp;&nbsp&nbsp;&nbsp&nbsp;&nbsp<label><input type="checkbox" id="dataset_chk_show_label" value="显示标注" style="height: 12px;width: 12px;">&nbsp;显示标注</label></th>
+      	<th width="50%">全部数据预览 &nbsp;&nbsp&nbsp;&nbsp&nbsp;&nbsp<label id="dataset_chk_show_label_txt"><input type="checkbox" id="dataset_chk_show_label" value="显示标注" onclick="show_dataset_labels()" style="height: 12px;width: 12px;">&nbsp;显示标注</label></th>
       </tr>
     </table>
   </div>
