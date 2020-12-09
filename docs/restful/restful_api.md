@@ -193,6 +193,7 @@ methods=='PUT':切分某个数据集
 methods=='GET':获取服务端的文件，目前支持图片、xml格式文件
 	Args：
 		'path'(str):文件在服务端的路径
+		'did'(str, optional):可选，数据集id仅在文件为图片时有效。若存在返回图片带label可视化。注意当前不支持分类数据集数据的标注可视化
 	Return:
 		#数据为图片
 		img_data(str)： base64图片数据
@@ -708,6 +709,16 @@ methods=='POST':#创建一个模型
 			pmid(str):预训练模型id
 		if type == 'exported':
 			emid(str):inference模型id
+	Exampe:
+		#创建一个预训练模型
+		params={
+			pid : 'P0001',
+			tid : 'T0001',
+			name : 'Pretrain_model',
+			type : 'pretrained',
+			source_path : '/path/to/pretrian_model',
+		}
+		ret = requests.post(url + 'model', json=params)
 
 methods=='DELETE':删除一个模型
 	Args:

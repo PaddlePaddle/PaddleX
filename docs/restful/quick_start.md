@@ -1,9 +1,9 @@
 # 快速开始
 
 ## 环境依赖  
-paddlepaddle-gpu/paddlepaddle
-paddlex
-pycocotools
+- paddlepaddle-gpu/paddlepaddle  
+- paddlex  
+- pycocotools  
 
 
 ## 服务端启动PaddleX Restful服务
@@ -39,7 +39,7 @@ url = "https://127.0.0.1:5000"
 params = {"name": "我的第一个数据集", "desc": "这里是数据集的描述文字", "dataset_type": "detection"}  
 ret = requests.post(url+"/dataset", json=params)  
 #获取数据集id
-did = ret.json()['did']
+did = ret.json()['id']
 ```
 
 #### 导入数据集
