@@ -210,6 +210,18 @@ def get_npy_from_coco_json(coco, npy_path, files):
         np.save(osp.join(npy_path, npy_name), anno_dict)
 
 
+def get_label_count(label_info):
+    """ 根据存储的label_info字段，计算label_count字段
+
+    Args:
+        label_info: 存储的label_info
+    """
+    label_count = dict()
+    for key in sorted(label_info):
+        label_count[key] = len(label_info[key])
+    return label_count
+
+
 class MyEncoder(json.JSONEncoder):
     # 调整json文件存储形式
     def default(self, obj):

@@ -231,7 +231,7 @@ def get_file():
             return {'status': -1}
         if is_pic(path):
             from .dataset.dataset import img_base64
-            ret = img_base64(data)
+            ret = img_base64(data, SD.workspace)
             return ret
         file_type = path[(path.rfind('.') + 1):]
         if file_type in ['xml', 'npy', 'log']:
