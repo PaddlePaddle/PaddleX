@@ -34,3 +34,4 @@ PaddleX RESTful API 二次开发
    quick_start.md
    restful_api.md
    data_struct.md
+   tree.md
