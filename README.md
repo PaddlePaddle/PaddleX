@@ -141,3 +141,8 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 贡献代码
 
 我们非常欢迎您为PaddleX贡献代码或者提供使用建议。如果您可以修复某个issue或者增加一个新功能，欢迎给我们提交Pull Requests。
+
+## 开发者贡献项目
+
+* [工业相机实时目标检测GUI](https://github.com/xmy0916/SoftwareofIndustrialCameraUsePaddle) 
+（windows系统，基于pyqt5开发）
