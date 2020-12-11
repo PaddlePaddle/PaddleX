@@ -76,7 +76,7 @@
 
 ## Instance segmentation model
 
-> 表中模型精度BoxAP/MaskAP通过`evaluate()`接口测试MSCOCO验证集得到，符号`-`表示相关指标暂未测试，预测时间在以下环境测试所的 The model precision BoxAP/MaskAP in the table is obtained by testing the MSCOCO validation set through the evaluate() interface. , The symbol - indicates that the relevant metrics have not been tested yet, and the prediction time is obtained in the following environment:
+> The model precision BoxAP/MaskAP in the table is obtained by testing the MSCOCO validation set through the `evaluate()` interface. , The symbol `-` indicates that the relevant metrics have not been tested yet, and the prediction time is obtained in the following environment:
 
 - Test environment:
    - CUDA 9.0

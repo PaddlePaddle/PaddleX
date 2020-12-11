@@ -1,7 +1,7 @@
 Industrial Case Examples
 =======================================
 
-PaddleX精选飞桨视觉开发套件在产业实践中的成熟模型结构，提供统一易用的全流程API和模型部署SDK，打通模型在各种硬件设备上的部署流程，开放从模型训练到多端安全部署的全流程案例实践教程。
+PaddleX selects mature model structure of PaddlePaddle visual development kit in industrial practice, provides unified and easy-to-use whole process API and model deployment SDK, gets through the deployment process of model on various hardware devices, and opens the whole process case practice course from model training to multi terminal security deployment.
 
 .. figure:: images/PaddleX_Panorama.png
 

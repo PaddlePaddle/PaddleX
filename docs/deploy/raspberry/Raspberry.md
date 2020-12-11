@@ -32,7 +32,7 @@ Deployment process include: PaddleX model conversion and post-conversion model d
 Make sure that the above basic software is installed on your system and that you have configured your environment accordingly. **The following examples are based on the `/root/projects/` directory**.
 
 ## Paddle-Lite model conversion
-Convert the PaddleX model to Paddle-Lite model. For details, see Paddle-Lite Model Conversions.[](./export_nb_model.md)
+Convert the PaddleX model to Paddle-Lite model. For details, see [Paddle-Lite Model Conversions](./export_nb_model.md).
 
 ## Paddle-Lite predication
 ### Step1 Download the PaddleX prediction code.
@@ -144,7 +144,7 @@ Unit: ms. The num parameter indicates the number of threads used under paddle-li
 |ResNet101_vd_ssld|3124.49|224*224|
 |ShuffleNetV2|115.97|224*224|
 |Xception41|1418.29|224*224|
-|Xception65|2094.7|224*224|  
+|Xception65|2094.7|224*224|
 
 
 From the test results, it is recommended that users use MobileNetV1-V3 and ShuffleNetV2, and other small networks on Raspberry.

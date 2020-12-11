@@ -161,24 +161,25 @@ Random crop image. It is the data augmenter operation during model training.
 ```python
 paddlex.det.transforms.ComposedRCNNTransforms(mode, min_max_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
 ```
-目标检测FasterRCNN和实例分割MaskRCNN模型中已经组合好的数据处理流程，开发者可以直接使用ComposedRCNNTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomHorizontalFlip](#RandomHorizontalFlip)数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
-ComposedRCNNTransforms共包括以下几个步骤：
-> 训练阶段：
-> > 1. 随机以0.5的概率将图像水平翻转, 若random_horizontal_flip为False，则跳过此步骤
-> > 2. 将图像进行归一化
-> > 3. 图像采用[ResizeByShort](#ResizeByShort)方式，根据min_max_size参数，进行缩入
-> > 4. 使用[Padding](#Padding)将图像的长和宽分别Padding成32的倍数
-> 验证/预测阶段：
-> > 1. 将图像进行归一化
-> > 2. 图像采用[ResizeByShort](#ResizeByShort)方式，根据min_max_size参数，进行缩入
-> > 3. 使用[Padding](#Padding)将图像的长和宽分别Padding成32的倍数
+For the combined data processing process in the target detection FasterRCNN and instance segmentation MaskRCNN models, developers can directly use ComposedRCNNTransforms to simplify the process of manually combining transforms. This class already contains the [RandomHorizontalFlip](#RandomHorizontalFlip) data enhancement method, and you can still add new data enhancement methods through the [add_augmenters function interface](#add_augmenters).  
+ComposedRCNNTransforms includes the following steps:
+
+> Training stage:
+> > 1. Randomly flip the image horizontally with a probability of 0.5. If random_horizon_flip is False, skip this step
+> > 2. The image was normalized
+> > 3. According to the min_max_size parameter, the image is indented in [ResizeByShort](#ResizeByShort) mode
+> > 4. Use [Padding](#Padding) to pad the length and width of the image to a multiple of 32
+> Validation / Prediction stage:
+> > 1. The image was normalized
+> > 2. According to the min_max_size parameter, the image is indented in [ResizeByShort](#ResizeByShort) mode
+> > 3. Use [Padding](#Padding) to pad the length and width of the image to a multiple of 32
 
 ### Parameters
-* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
-* **min_max_size** (list): 输入模型中图像的最短边长度和最长边长度，参考[ResizeByShort](#ResizeByShort)（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)，默认[800, 1333]
-* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
-* **random_horizontal_flip**(bool): 数据增强，是否以0.5的概率使用随机水平翻转增强，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
+* **mode** (str): The stage of Transforms, including 'train', 'eval' or 'test'
+* **min_max_size** (list): Input the shortest edge length and longest edge length of the image in the model, refer to [ResizeByShort](#ResizeByShort)（It has nothing to do with the size of the original image. According to the above steps, the original image will be processed into the corresponding size and input to the model training). The default is [800, 1333]
+* **mean** (list): Mean value of the image, the default is [0.485, 0.456, 0.406]。
+* **std** (list): Variance of the image, the default is [0.229, 0.224, 0.225]。
+* **random_horizontal_flip**(bool): Whether to use random horizontal flip enhancement with a probability of 0,5 is only effective when the model is' train '. The default value is true.The underlying implementation adopts[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
 ### Add data enhancement methods
 ```python
@@ -186,7 +187,7 @@ ComposedRCNNTransforms.add_augmenters(augmenters)
 ```
 > **参数**
 >
-> * **augmenters**(list): 数据增强方式列表
+> * **augmenters**(list): List of data enhancement methods
 
 #### Example
 ```
@@ -195,21 +196,21 @@ from paddlex.det import transforms
 train_transforms = transforms.ComposedRCNNTransforms(mode='train', min_max_size=[800, 1333])
 eval_transforms = transforms.ComposedRCNNTransforms(mode='eval', min_max_size=[800, 1333])
 
-# 添加数据增强
+# Add data enhancement
 import imgaug.augmenters as iaa
 train_transforms.add_augmenters([
 			transforms.RandomDistort(),
 			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
 ])
 ```
-上面代码等价于
+The code above is equivalent to
 ```
 import paddlex as pdx
 from paddlex.det import transforms
 train_transforms = transforms.Composed([
 		transforms.RandomDistort(),
 		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
-		# 上面两个为通过add_augmenters额外添加的数据增强方式
+		# The above two are additional data enhancement methods that are added through add_aummenters
 		transforms.RandomHorizontalFlip(prob=0.5),
 		transforms.Normalize(),
         transforms.ResizeByShort(short_size=800, max_size=1333),
@@ -227,38 +228,39 @@ eval_transforms = transforms.Composed([
 ```python
 paddlex.det.transforms.ComposedYOLOv3Transforms(mode, shape=[608, 608], mixup_epoch=250, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_distort=True, random_expand=True, random_crop=True, random_horizontal_flip=True)
 ```
-目标检测YOLOv3模型中已经组合好的数据处理流程，开发者可以直接使用ComposedYOLOv3Transforms，简化手动组合transforms的过程, 该类中已经包含了[MixupImage](#MixupImage)、[RandomDistort](#RandomDistort)、[RandomExpand](#RandomExpand)、[RandomCrop](#RandomCrop)、[RandomHorizontalFlip](#RandomHorizontalFlip)5种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
-ComposedYOLOv3Transforms共包括以下几个步骤：
-> 训练阶段：
-> > 1. 在前mixup_epoch轮迭代中，使用MixupImage策略，若mixup_epoch为-1，则跳过此步骤
-> > 2. 对图像进行随机扰动，包括亮度，对比度，饱和度和色调，若random_distort为False，则跳过此步骤
-> > 3. 随机扩充图像，若random_expand为False， 则跳过此步骤
-> > 4. 随机裁剪图像，若random_crop为False， 则跳过此步骤
-> > 5. 将4步骤的输出图像Resize成shape参数的大小
-> > 6. 随机0.5的概率水平翻转图像，若random_horizontal_flip为False，则跳过此步骤
-> > 7. 图像归一化
-> 验证/预测阶段：
-> > 1. 将图像Resize成shape参数大小
-> > 2. 图像归一化
+For the data processing process that has been combined in the target detection YOLOv3 model, developers can directly use ComposedYOLOv3Transforms to simplify the process of manually combining transforms. This class already contains five data enhancement methods [MixupImage](#MixupImage)、[RandomDistort](#RandomDistort)、[RandomExpand](#RandomExpand)、[RandomCrop](#RandomCrop)、[RandomHorizontalFlip](#RandomHorizontalFlip). You can still add new data enhancement methods through the [add_augmenters function interface](#add_augmenters).  
+ComposedYOLOv3Transforms includes the following steps:
+
+> Training stage:
+> > 1. In the previous mixup_epoch round iterations, use the MixupImage strategy. If mixup_epoch is - 1, skip this step
+> > 2. Randomly disturb the image, including brightness, contrast, saturation and hue. If random_distort is False, skip this step
+> > 3. Expand the image randomly. If random_expand is False, skip this step
+> > 4. Crop the image randomly. If random_crop is false, skip this step
+> > 5. Resize the output image of step 4 to the size of the shape parameter
+> > 6. Randomly flip the image horizontally with a probability of 0.5. If random_horizon_flip is False, skip this step
+> > 7. Image normalization
+> Validation / Prediction stage:
+> > 1. Resize the image to the shape parameter size
+> > 2. Image normalization
 
 ### Parameters
-* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
-* **shape** (list): 输入模型中图像的大小（与原图大小无关，根据上述几个步骤，会将原图处理成相应大小输入给模型训练)， 默认[608, 608]
-* **mixup_epoch**(int): 模型训练过程中，在前mixup_epoch轮迭代中，使用mixup策略，如果为-1，则不使用mixup策略， 默认250。底层实现采用[paddlex.det.transforms.MixupImage](#mixupimage)
-* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
-* **random_distort**(bool): 数据增强，是否在训练过程中随机扰动图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomDistort](#randomdistort)
-* **random_expand**(bool): 数据增强，是否在训练过程随机扩张图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomExpand](#randomexpand)
-* **random_crop**(bool): 数据增强，是否在训练过程中随机裁剪图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomCrop](#randomcrop)
-* **random_horizontal_flip**(bool): 数据增强，是否在训练过程中随机水平翻转图像，仅在mode为'train'时生效，默认为True。底层实现采用[paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
+* **mode** (str): The stage of Transforms, including 'train', 'eval' or 'test'
+* **shape** (list):  The image size input into the model, the default is [608, 608]（It has nothing to do with the size of the original image. According to the above steps, the original image will be processed into the size of the graph and input to the model training)
+* **mixup_epoch**(int): In the process of model training, the mixup strategy is used in the previous mixup_epoch iterations. If it is - 1, the mixup strategy is not used, and the default value is 250.The underlying implementation adopts [paddlex.det.transforms.MixupImage](#mixupimage)
+* **mean** (list): Mean value of the image, the default is [0.485, 0.456, 0.406]。
+* **std** (list):  Variance of the image, the default is [0.229, 0.224, 0.225]。
+* **random_distort**(bool): Data enhancement, whether the image is randomly disturbed during the training process, only takes effect when the mode is 'train', and the default is true. The underlying implementation adopts [paddlex.det.transforms.RandomDistort](#randomdistort)
+* **random_expand**(bool): Data enhancement, whether to expand images randomly during training, only takes effect when mode is' train '. The default value is true. The underlying implementation adopts [paddlex.det.transforms.RandomExpand](#randomexpand)
+* **random_crop**(bool):Data enhancement, whether to crop images randomly during training, only takes effect when mode is' train '. The default is true. The underlying implementation adopts [paddlex.det.transforms.RandomCrop](#randomcrop)
+* **random_horizontal_flip**(bool): Data enhancement, whether to flip the image horizontally randomly during the training process, only takes effect when the mode is' train '. The default value is true. The underlying implementation adopts [paddlex.det.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
 ### Add data enhancement methods
 ```python
 ComposedYOLOv3Transforms.add_augmenters(augmenters)
 ```
-> **参数**
+> Parameter
 >
-> * **augmenters**(list): 数据增强方式列表
+> * **augmenters**(list): List of data enhancement methods
 
 #### Example
 ```
@@ -267,19 +269,19 @@ from paddlex.det import transforms
 train_transforms = transforms.ComposedYOLOv3Transforms(mode='train', shape=[480, 480])
 eval_transforms = transforms.ComposedYOLOv3Transforms(mode='eval', shape=[480, 480])
 
-# 添加数据增强
+# Add data enhancement
 import imgaug.augmenters as iaa
 train_transforms.add_augmenters([
 			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
 ])
 ```
-上面代码等价于
+The code above is equivalent to
 ```
 import paddlex as pdx
 from paddlex.det import transforms
 train_transforms = transforms.Composed([
 		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
-		# 上面为通过add_augmenters额外添加的数据增强方式
+		# The above two are additional data enhancement methods that are added through add_aummenters
         transforms.MixupImage(mixup_epoch=250),
         transforms.RandomDistort(),
         transforms.RandomExpand(),

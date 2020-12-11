@@ -23,7 +23,7 @@ labels.txt: lists all the categories. The corresponding line number of the categ
 ```
 background human car
 ```
-Indicates that there are 3 segmentation categories in the detection dataset`,` namely, `background`, `human` and `car`. In the model training, the category id corresponding to background is 0, human corresponds to 1, and so on. If you don't know the specific category label, you can directly enter labels. txt by marking 0, 1, 2 line by line.`.`. 序列即可。
+Indicates that there are 3 segmentation categories in the detection dataset`,` namely, `background`, `human` and `car`. In the model training, the category id corresponding to background is 0, human corresponds to 1, and so on. If you don't know the specific category label, you can directly enter labels. txt by marking 0, 1, 2 line by line.`.`. 
 
 **train_list.txt **
 

@@ -16,7 +16,7 @@ In PaddleX, to distinguish between the training set and the validation set, diff
 > paddlex --split_dataset --format COCO --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
 > ```
 
-MSCOCO data annotation files are in the JSON format. Users can use the annotation tools such as Labelme, Wizard Annotation Assistant or EasyData to annotate. For details, see the data annotation tool.[](../annotation.md)
+MSCOCO data annotation files are in the JSON format. Users can use the annotation tools such as Labelme, Wizard Annotation Assistant or EasyData to annotate. For details, see the [data annotation tool](../annotation.md).
 
 ## PaddleX loads dataset
 Example codes are as follows:

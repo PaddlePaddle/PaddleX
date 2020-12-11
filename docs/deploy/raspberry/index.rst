@@ -1,4 +1,4 @@
-Raspberry Deployment
+Raspberry Pi Deployment
 =======================================
 
 
