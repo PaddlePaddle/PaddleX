@@ -7,47 +7,49 @@
 paddlex.datasets.analysis.Seg(data_dir, file_list, label_list)
 ```
 
-构建统计分析语义分类数据集的分析器。
+Construct the analyzer of statistical analysis semantic classification dataset.
 
-> **参数**
-> > * **data_dir** (str): 数据集所在的目录路径。  
-> > * **file_list** (str): 描述数据集图片文件和类别id的文件路径（文本内每行路径为相对`data_dir`的相对路径）。  
-> > * **label_list** (str): 描述数据集包含的类别信息文件路径。  
+> **Parameters**
+>
+> > * **data_dir** (str): The directory path where the dataset is located.  
+> > * **file_list** (str): Describes the file path of the image file and category id of the dataset （the path of each line in the text is the relative path of the relative`data_dir`）。  
+> > * **label_list** (str): Describes the path of the category information file contained in the dataset.  
 
 #### analysis
 ```python
 analysis(self)
 ```
 
-Seg分析器的分析接口，完成以下信息的分析统计：
+The analysis interface of SEG analyzer completes the analysis and statistics of the following information:
 
-> * 图像数量
-> * 图像最大和最小的尺寸
-> * 图像通道数量
-> * 图像各通道的最小值和最大值
-> * 图像各通道的像素值分布
-> * 图像各通道归一化后的均值和方差
-> * 标注图中各类别的数量及比重
+> * Number of images
+> * Maximum and minimum size of image
+> * Number of image channels
+> * The minimum and maximum values of each channel of the image
+> * Pixel value distribution of each channel of the image
+> * Mean and variance of normalized image channels
+> * Mark the number and proportion of each category in the diagram
 
-[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/analysis.py)
+[Code Example](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/analysis.py)
 
-[统计信息示例](../../examples/multi-channel_remote_sensing/analysis.html#id2)
+[Sample Example](../../examples/multi-channel_remote_sensing/analysis.html#id2)
 
 #### cal_clipped_mean_std
 ```python
 cal_clipped_mean_std(self, clip_min_value, clip_max_value, data_info_file)
 ```
 
-Seg分析器用于计算图像截断后的均值和方差的接口。
+SEG analyzer is used to calculate the mean and variance of image after truncation.
 
-> **参数**
-> > * **clip_min_value** (list):  截断的下限，小于min_val的数值均设为min_val。
-> > * **clip_max_value** (list): 截断的上限，大于max_val的数值均设为max_val。
-> > * **data_info_file** (str): 在analysis()接口中保存的分析结果文件(名为`train_information.pkl`)的路径。
+> Parameters
+>
+> > * **clip_min_value** (list):  The lower limit of truncation and the values less than min_val are set as min_val.
+> > * **clip_max_value** (list): The upper limit of truncation and the value greater than max_val is set as max_val.
+> > * **data_info_file** (str): The path of the analysis result file (named `train_information.pkl`)saved in the analysis() interface.
 
-[代码示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/cal_clipped_mean_std.py)
+[Code Example](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/multi-channel_remote_sensing/tools/cal_clipped_mean_std.py)
 
-[计算结果示例](../examples/multi-channel_remote_sensing/analysis.html#id4)
+[Calculation Results Example](../examples/multi-channel_remote_sensing/analysis.html#id4)
 
 ## Dataset generation
 
@@ -56,14 +58,15 @@ Seg分析器用于计算图像截断后的均值和方差的接口。
 paddlex.det.paste_objects(templates, background, save_dir='dataset_clone')
 ```
 
-将目标物体粘贴在背景图片上生成新的图片和标注文件
+Paste the target object on the background image to generate a new image and annotation file
 
-> **参数**
-> > * **templates** (list|tuple)：可以将多张图像上的目标物体同时粘贴在同一个背景图片上，因此templates是一个列表，其中每个元素是一个dict，表示一张图片的目标物体。一张图片的目标物体有`image`和`annos`两个关键字，`image`的键值是图像的路径，或者是解码后的排列格式为（H, W, C）且类型为uint8且为BGR格式的数组。图像上可以有多个目标物体，因此`annos`的键值是一个列表，列表中每个元素是一个dict，表示一个目标物体的信息。该dict包含`polygon`和`category`两个关键字，其中`polygon`表示目标物体的边缘坐标，例如[[0, 0], [0, 1], [1, 1], [1, 0]]，`category`表示目标物体的类别，例如'dog'。
-> > * **background** (dict): 背景图片可以有真值，因此background是一个dict，包含`image`和`annos`两个关键字，`image`的键值是背景图像的路径，或者是解码后的排列格式为（H, W, C）且类型为uint8且为BGR格式的数组。若背景图片上没有真值，则`annos`的键值是空列表[]，若有，则`annos`的键值是由多个dict组成的列表，每个dict表示一个物体的信息，包含`bbox`和`category`两个关键字，`bbox`的键值是物体框左上角和右下角的坐标，即[x1, y1, x2, y2]，`category`表示目标物体的类别，例如'dog'。
-> > * **save_dir** (str)：新图片及其标注文件的存储目录。默认值为`dataset_clone`。
+> **Parameters**
+>
+> > * **templates** (list|tuple)：The target objects on multiple images can be pasted on the same background image at the same time, so templates is a list, in which each element is a dict, which represents the target object of a picture. The target object of an image has two keywords `image` and`annos`. The key value of `image` is the path of the image, or it is an array of decoded array format (H, W, C) of uint8 and BGR format. There can be multiple target objects on the image, so the key value of `annos` is a list. Each element in the list is a dict, which represents the information of a target object. The dict contains two keywords`polygon`and`category`, where`polygon`represents the edge coordinates of the target object, such as [[0, 0], [0, 1], [1, 1], [1, 0]], and`category`represents the category of the target object, such as' dog'.
+> > * **background** (dict): Background images can have true values, so background is a dict, which contains the keywords`image`and`annos`. The key value of `image` is the path of the background image, or it is an array of decoded array format (H, W, C) with uint8 type and BGR format. If there is no true value on the background image, the key value of `annos` is an empty list [], if there is one, the key value of`annos` is a list composed of multiple dicts. Each dict represents the information of an object, including the keywords`bbox`and`category`. The key value of`bbox`is the coordinates of the upper left corner and the lower right corner of the object frame, i.e. [x1, Y1, X2, Y2], and`category`represents the category of the target object, such as' dog'.
+> > * **save_dir** (str)：Storage directory for new pictures and their annotation files. The default value is`dataset_clone`.
 
-> **代码示例**
+> Code Example
 
 ```python
 import paddlex as pdx

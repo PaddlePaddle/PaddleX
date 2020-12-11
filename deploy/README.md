@@ -1,18 +1,19 @@
 # Model Deployment
 
-本目录为PaddleX模型部署代码，编译和使用教程参考：
+This directory is for PaddleX model deployment code, compilation and use tutorial reference:
 
-- [服务端部署](../docs/deploy/server/)
-  - [Python部署](../docs/deploy/server/python.md)
-  - [C++部署](../docs/deploy/server/cpp/)
-    - [Windows平台部署](../docs/deploy/server/cpp/windows.md)
-    - [Linux平台部署](../docs/deploy/server/cpp/linux.md)
-  - [模型加密部署](../docs/deploy/server/encryption.md)
-- [Nvidia Jetson开发板部署](../docs/deploy/nvidia-jetson.md)
-- [移动端部署](../docs/deploy/paddlelite/)
-  - [模型压缩](../docs/deploy/paddlelite/slim)
-    - [模型量化](../docs/deploy/paddlelite/slim/quant.md)
-    - [模型裁剪](../docs/deploy/paddlelite/slim/prune.md)
-  - [Android平台](../docs/deploy/paddlelite/android.md)
-- [OpenVINO部署](../docs/deploy/openvino/introduction.md)
-- [树莓派部署](../docs/deploy/raspberry/Raspberry.md)
+- [Server Deployment](../docs/deploy/server/)
+  - [Python Deployment](../docs/deploy/server/python.md)
+  - [C++ Deployment](../docs/deploy/server/cpp/)
+    - [Windows Platform Deployment](../docs/deploy/server/cpp/windows.md)
+    - [Linux Platform Deployment](../docs/deploy/server/cpp/linux.md)
+  - [Model Encryption Deployment](../docs/deploy/server/encryption.md)
+- [Nvidia Jetson Development Board Deployment](../docs/deploy/nvidia-jetson.md)
+- [Mobile Deployment](../docs/deploy/paddlelite/)
+  - [Model Compression](../docs/deploy/paddlelite/slim)
+    - [Model Quant](../docs/deploy/paddlelite/slim/quant.md)
+    - [Model Prune](../docs/deploy/paddlelite/slim/prune.md)
+  - [Android Platform](../docs/deploy/paddlelite/android.md)
+- [OpenVINO Deployment](../docs/deploy/openvino/introduction.md)
+- [Raspberry Pi Deployment](../docs/deploy/raspberry/Raspberry.md)
+

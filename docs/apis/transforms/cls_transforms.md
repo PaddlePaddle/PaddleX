@@ -128,31 +128,32 @@ Random pixel content transformation of the image with a certain probability. It 
 ```python
 paddlex.cls.transforms.ComposedClsTransforms(mode, crop_size=[224, 224], mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], random_horizontal_flip=True)
 ```
-分类模型中已经组合好的数据处理流程，开发者可以直接使用ComposedClsTransforms，简化手动组合transforms的过程, 该类中已经包含了[RandomCrop](#RandomCrop)和[RandomHorizontalFlip](#RandomHorizontalFlip)两种数据增强方式，你仍可以通过[add_augmenters函数接口](#add_augmenters)添加新的数据增强方式。  
-ComposedClsTransforms共包括以下几个步骤：
-> 训练阶段：
-> > 1. 随机从图像中crop一块子图，并resize成crop_size大小
-> > 2. 将1的输出按0.5的概率随机进行水平翻转, 若random_horizontal_flip为False，则跳过此步骤
-> > 3. 将图像进行归一化
-> 验证/预测阶段：
-> > 1. 将图像按比例Resize，使得最小边长度为crop_size[0] * 1.14
-> > 2. 从图像中心crop出一个大小为crop_size的图像
-> > 3. 将图像进行归一化
+For the data processing processes that have been combined in the classification model, developers can directly use ComposedClsTransforms to simplify the process of manually combining transforms. This class already contains two data enhancement methods [RandomCrop](#RandomCrop) and [RandomHorizontalFlip](#RandomHorizontalFlip). You can still add new data enhancement methods through the [add_augmenters function interface](#add_augmenters). 
+ComposedClsTransforms includes the following steps:
+
+> Training stage:
+> > 1. Crop a subgraph randomly from the image, and resize it to the size of crop_size
+> > 2. Flip the output of 1 at random with a probability of 0.5. If random_horizon_flip is False, skip this step
+> > 3. The image was normalized
+> Validation / Prediction stage:
+> > 1. Resize the image so that the minimum edge length is crop_size [0] * 1.14
+> > 2. Crop a crop_size image from the center of the image
+> > 3. The image was normalized
 
 ### Parameters
-* **mode** (str): Transforms所处的阶段，包括`train', 'eval'或'test'
-* **crop_size** (int|list): 输入到模型里的图像大小，默认为[224, 224]（与原图大小无关，根据上述几个步骤，会将原图处理成该图大小输入给模型训练)
-* **mean** (list): 图像均值, 默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像方差，默认为[0.229, 0.224, 0.225]。
-* **random_horizontal_flip**(bool): 数据增强，是否以0，5的概率使用随机水平翻转增强，仅在model为'train'时生效，默认为True。底层实现采用[paddlex.cls.transforms.RandomHorizontalFlip](#randomhorizontalflip)
+* **mode** (str): The stage of Transforms, including 'train', 'eval' or 'test'
+* **crop_size** (int|list): The image size input into the model, the default is [224, 224]（It has nothing to do with the size of the original image. According to the above steps, the original image will be processed into the size of the graph and input to the model training)
+* **mean** (list): Mean value of the image, the default is [0.485, 0.456, 0.406].
+* **std** (list): Variance of the image, the default is [0.229, 0.224, 0.225].
+* **random_horizontal_flip**(bool): Whether to use random horizontal flip enhancement with a probability of 0,5 is only effective when the model is' train '. The default value is true.The underlying implementation adopts[paddlex.cls.transforms.RandomHorizontalFlip](#randomhorizontalflip)
 
 ### Add data enhancement methods
 ```python
 ComposedClsTransforms.add_augmenters(augmenters)
 ```
-> **参数**
+> Parameter
 >
-> * **augmenters**(list): 数据增强方式列表
+> * **augmenters**(list): List of data enhancement methods
 
 #### Example
 ```
@@ -161,21 +162,21 @@ from paddlex.cls import transforms
 train_transforms = transforms.ComposedClsTransforms(mode='train', crop_size=[320, 320])
 eval_transforms = transforms.ComposedClsTransforms(mode='eval', crop_size=[320, 320])
 
-# 添加数据增强
+# Add data enhancement
 import imgaug.augmenters as iaa
 train_transforms.add_augmenters([
 			transforms.RandomDistort(),
 			iaa.blur.GaussianBlur(sigma=(0.0, 3.0))
 ])
 ```
-上面代码等价于
+The code above is equivalent to
 ```
 import paddlex as pdx
 from paddlex.cls import transforms
 train_transforms = transforms.Composed([
 		transforms.RandomDistort(),
 		iaa.blur.GaussianBlur(sigma=(0.0, 3.0)),
-		# 上面两个为通过add_augmenters额外添加的数据增强方式
+		# The above two are additional data enhancement methods that are added through add_aummenters
 		transforms.RandomCrop(crop_size=320),
 		transforms.RandomHorizontalFlip(prob=0.5),
 		transforms.Normalize()
