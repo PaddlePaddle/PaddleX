@@ -29,7 +29,8 @@ url = "https://127.0.0.1:5000"
 - 2)：创建项目并绑定数据集
 - 3)：获取参数并创建任务
 - 4)：开始训练
-
+- 5)：评估任务
+- 6)：导出模型
 
 
 ### 数据集操作
@@ -129,9 +130,93 @@ ret = requests.get(url+'/project/task/metrics', json=params)
 ret.json()获取返回值：
 {'status': 1, 'train_log': 训练日志}
 ```
+
 ### 停止训练任务
 通过如下操作，停止正在训练的任务
 ```
 params = {'tid': tid, 'act': 'stop'}
 ret = requests.put(url+'/project/task/train', json=params)
+```
+
+### 获取训练任务信息
+```
+params = {'tid': tid, 'type': 'train'}
+ret = requests.get(url+'/project/task/metrics', json=params)
+#任务训练信息
+train_log = ret.json()['train_log']
+```
+
+### 创建一个评估任务，并获取评估结果
+```
+#获取任务状态
+params = {'tid': tid}
+ret = requests.get(url+'/project/task', json=params)
+#判断是否训练完成
+if TaskStatus(ret.json()['task_status']) == TaskStatus.XTRAINDONE:
+    #创建一个评估任务，可以指定score_thresh
+    params = {'tid': tid, 'score_thresh', 0.3}
+    ret = requests.post(url+'/project/task/evaluate', json=params)
+#获取评估任务状态
+import time
+while：
+    params = {'tid': tid}
+    ret = requests.get(url+'/project/task/evaluate', json=params)
+    #判断是否评估完成
+    if TaskStatus(ret.json()['evaluate_status']) == TaskStatus.XEVALUATED:
+        break
+    else:
+        time.sleep(1)
+#获取评估结果
+result = ret.json()['result']
+```
+
+### 使用模型进行预测
+
+```
+import cv2
+import numpy as np
+#预测图片路径
+img_path = '/path/to/img'
+params = dict()
+#base64编码
+with open(img_path, 'rb') as f:
+    base64_data = base64.b64encode(f.read())
+    base64_str = str(base64_data,'utf-8')
+    params['image_data'] = base64_str
+params['tid'] = tid
+#单张推理
+ret = requests.post(url + 'project/task/predict', json=params)
+#获取结果保存地址
+result_path = ret.json()['path']
+#判断是否预测完成
+while：
+    params = {'tid': tid}
+    ret = requests.get(url+'/project/task/predict', json=params)
+    #判断是否评估完成
+    if PredictStatus(ret.json()['predict_status']) == PredictStatus.XPREDONE:
+        break
+    else:
+        time.sleep(1)
+# 获取结果
+params = {'path' : result_path}
+ret = requests.get(url+'/file', json=params)
+#图片based64数据
+img_data = ret.json()['img_data']
+#转换为numpy数据
+img_data = base64.b64decode(img_data)
+img_array = np.frombuffer(img_data, np.uint8)
+img = cv2.imdecode(img_array, cv2.COLOR_RGB2BGR)
+```
+
+### 导出inference模型
+
+```
+#导出inference模型
+#保存地址
+save_dir = '/path/to/save/inference/model'
+params = {'tid': tid ,'type': 'inference', 'save_dir' : save_dir}
+ret = requests.post(url+'/project/task/export', json=params)
+#workspace创建inference模型信息
+params = {'pid' : pid, 'tid': tid, 'name': 'my_inference_model', 'type': 'exported', 'path' : save_dir, 'exported_type': 0}
+ret = requests.post(url+'/model', json=params)
 ```

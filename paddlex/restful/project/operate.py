@@ -471,9 +471,11 @@ def get_task_max_saved_epochs(task_path):
     saved_epoch_num = -1
     output_path = osp.join(task_path, "output")
     if osp.exists(output_path):
-        for file in os.listdir(output_path):
-            if file.startswith("epoch_"):
-                curr_epoch_num = int(file[6:])
+        for f in os.listdir(output_path):
+            if f.startswith("epoch_"):
+                if not osp.exists(osp.join(output_path, f, '.success')):
+                    continue
+                curr_epoch_num = int(f[6:])
                 if curr_epoch_num > saved_epoch_num:
                     saved_epoch_num = curr_epoch_num
     return saved_epoch_num

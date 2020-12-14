@@ -1,6 +1,12 @@
-# RESTful目录结构  
+# RESTful API
+本目录为PaddleX RESTful API的代码，使用教程请参考
+- [简介](../../docs/gui/introduction_restful.md)
+- [快速开始](../../docs/gui/quick_start.md)
+- [api详细介绍](../../docs/gui/restful_api.md)
+- [自定义数据结构](../../docs/gui/data_struct.md)
 
-介绍了PaddleX RESTful的整体目录结构
+## 文档目录结构
+
 
 ```
 restful
@@ -13,8 +19,8 @@ restful
 | |____seg_dataset.py	// 分割数据集
 | |____cls_dataset.py	// 分类数据集
 | |____dataset.py	// 处理/dataset 请求
-| |____operate.py	// 操作函数
-| |____utils.py		// 工具函数
+| |____operate.py	// 数据集基础操作函数
+| |____utils.py		// 数据集基础工具函数
 | |____ins_seg_dataset.py	// 示例分割数据集
 | |____det_dataset.py	// 检测数据集
 |______init__.py
@@ -23,7 +29,7 @@ restful
 | |____task.py	// 处理/project/task 请求
 | |______init__.py
 | |____visualize.py	// 数据可视化
-| |____operate.py	// 操作函数
+| |____operate.py	// 任务基础操作函数
 | |____evaluate		// 模型评估
 | | |____detection.py	// 检测模型评估
 | | |____classification.py	// 分类模型评估
@@ -43,11 +49,13 @@ restful
 | | |______init__.py
 | | |____segmentation.py	// 分割模型剪裁
 | |____project.py	// 处理/project请求
-|____utils.py	// 工具函数
+|____utils.py	// 基础工具函数
 |____app.py	// 创建flask app
 |____front_demo	// 前端demo
 |____workspace.py	// 处理/workspace请求
 |____demo.py	// 处理/demo 请求
 |____workspace.proto	// workspace 结构化信息
+|____frontend_demo // 前端demo
+| |____paddlex_restful_demo.html    //前端demo文件
 
 ```
