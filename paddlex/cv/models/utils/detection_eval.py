@@ -996,6 +996,7 @@ def coco_error_analysis(eval_details_file=None,
             makeplot(recThrs, ps[:, :, k], res_out_dir, nm['name'], iou_type)
         makeplot(recThrs, ps, res_out_dir, 'allclass', iou_type)
 
+    np.linspace = fixed_linspace
     coco_gt = COCO()
     coco_gt.dataset = gt
     coco_gt.createIndex()
@@ -1006,4 +1007,5 @@ def coco_error_analysis(eval_details_file=None,
     if pred_mask is not None:
         coco_dt = loadRes(coco_gt, pred_mask)
         _analyze_results(coco_gt, coco_dt, res_type='segm', out_dir=save_dir)
+    np.linspace = backup_linspace
     logging.info("The analysis figures are saved in {}".format(save_dir))
