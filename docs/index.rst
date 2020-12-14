@@ -74,6 +74,12 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    gui/download.md
    gui/how_to_use.md
    gui/FAQ.md
+   gui/introduction_restful.md
+   gui/quick_start.md
+   gui/restful_api.md
+   gui/data_struct.md
+   gui/tree.md
+
 
 .. toctree::
    :maxdepth: 1

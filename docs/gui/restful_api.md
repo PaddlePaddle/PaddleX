@@ -20,6 +20,11 @@
 
 
 ### /workspace [GET,PUT]
+主要是对工作空间的结构化信息进行操作，包括修改合和获取工作空间中数据集、项目、任务的属性
+- GET请求：获取workspace中数据集、项目、任务、模型的属性
+- PUT请求：修改workspace中数据集、项目、任务、模型的属性，对于创建项目之后我们需求通过该接口将数据集与项目绑定才能进行训练任务
+对于可以获取和修改的属性请参考[Protobuf结构化数据](./data_struct.md#Protobuf结构化数据)  
+
 ```
 methods=='GET':获取工作目录中项目、数据集、任务的属性
 	Args：
@@ -55,11 +60,18 @@ methods=='PUT':修改工作目录中项目、数据集、任务的属性
 		params = {'struct': 'project', 'id': 'P0001', 'attr_dict': attr_dict}
 		ret = requests.post(url + '/workspace', json=params)
 ```
-**说明：对于可以获取和修改的属性请参考[Protobuf结构化数据](./data_struct.md#Protobuf结构化数据)**
+
 
 
 
 ### /dataset
+对数据集进行操作，包括创建、导入、查询、删除数据集的功能
+- POST请求:创建数据集，创建时需要指定数据集类型可以是['classification', 'detection', 'segmentation','instance_segmentation']中的一种
+- GET请求:创建好数据集后，可以通过GET请求获取数据集信息，目前支持获取单个或者所有数据集的信息
+- PUT请求:导入数据集，创建数据集后并没有真实的数据与数据集关联，需要通过导入功能，将数据导入到工作空间内，需要导入的数据集必须按照
+- DELETE:删除一个数据集  
+DatasetStatus定义了数据集状态，具体请参考[数据集状态变量](./data_struct.md#状态枚举变量)  
+
 methods = [GET,POST,PUT,DELETE]
 ```
 methods=='GET':获取所有数据集或者单个数据集的信息
@@ -116,7 +128,7 @@ methods=='POST':创建一个新的数据集
 	Args:
 		name(str):数据集名字
 		desc(str):数据集描述
-		dataset_type(str):数据集类型，可以是['classification', 'detection', 'segmentation','instance_segmentation','remote_segmentation']
+		dataset_type(str):数据集类型，可以是['classification', 'detection', 'segmentation','instance_segmentation']
 	Return:
 		did(str):数据集id
 		status
@@ -149,31 +161,9 @@ methods=='DELETE':删除已有的某个数据集
 		ret = requests.delete(url + '/dataset'， json=params)
 ```
 
-### /dataset/details [GET]
-```
-methods=='GET':获取某个数据集的详细信息
-	Args：
-		did(str)：数据集id
-	Return:
-		details(dict)：数据集详细信息，
-		status
-	Example:
-		#获取数据集id为'D0001'的数据集的详细信息
-		params = {'did':'D0001'}
-		ret = requests.get(url + '/dataset/details'， json=params)
-	Ruturn中的自定数据结构:
-		数据集详细信息(details)，其中的key包括如下:
-		details{
-			'file_info'(dict): 全量数据集文件与标签映射表,
-			'label_info'(dict): 标签与全量数据集文件映射表,
-			'labels'(list): 标签列表,
-			'train_files'(list): 训练集文件列表,
-			'val_files'(list): 验证集文件列表,
-			'test_files'(list): 测试集文件列表
-		}
-```
-
 ### /dataset/split [PUT]
+按照比例切分一个已经导入数据的数据集  
+
 ```
 methods=='PUT':切分某个数据集
 	Args：
@@ -188,9 +178,39 @@ methods=='PUT':切分某个数据集
 		ret = requests.put(url + '/dataset/split'， json=params)
 ```
 
-### /file [GET]
+### /dataset/details [GET]
+获取切分后数据集的具体信息  
+
 ```
-methods=='GET':获取服务端的文件，目前支持图片、xml格式文件
+methods=='GET':获取某个数据集的详细信息
+	Args：
+		did(str)：数据集id
+	Return:
+		details(dict)：数据集详细信息，
+		status
+	Example:
+		#获取数据集id为'D0001'的数据集的详细信息
+		params = {'did':'D0001'}
+		ret = requests.get(url + '/dataset/details'， json=params)
+	Ruturn中的自定数据结构:
+		数据集详细信息(details)，其中的key包括如下:
+		details{
+			'file_info'(dict): 全量数据集文件与标签映射表,key:图片相对于数据集地址的相对路径；value:标签文件相对于数据集地址的相对路径
+			'label_info'(dict): 标签与全量数据集文件映射表,key:标签的类别；value:标签文件相对于数据集地址的相对路径
+			'labels'(list): 标签列表
+			'train_files'(list): 训练集文件列表,相对于据集地址的相对路径
+			'val_files'(list): 验证集文件列表,相对于据集地址的相对路径
+			'test_files'(list): 测试集文件列表，相对于据集地址的相对路径
+			'class_train_file_list(dict)'：类别与训练集映射表，key为类别、value为训练图片相对于据集地址的相对路径
+			'class_val_file_list(dict)'：类别与评估集映射表，key为类别、value为评估图片相对于据集地址的相对路径
+		}
+```
+
+### /file [GET]
+#用于文件传输，目前支持图片、xml格式文件、log或者txt格式文件，对于图片文件如果带有did参数则会返回带可视化label的图片数据  
+
+```
+methods=='GET':获取服务端的文件，目前支持图片、xml格式文件、log文件
 	Args：
 		'path'(str):文件在服务端的路径
 		'did'(str, optional):可选，数据集id仅在文件为图片时有效。若存在返回图片带label可视化。注意当前不支持分类数据集数据的标注可视化
@@ -200,7 +220,7 @@ methods=='GET':获取服务端的文件，目前支持图片、xml格式文件
 		status
 		#数据为xml文件
 		ret:数据流
-		#数据为log文件
+		#数据为log或者txt文件
 		ret:json数据
 	Example1:
 		#获取图片，目前支持的图片格式有：
@@ -225,6 +245,11 @@ methods=='GET':获取服务端的文件，目前支持图片、xml格式文件
 ```
 
 ### /project [GET,POST,DELETE]
+项目相关操作，包括创建、删除、查询项目
+- POST请求：创建一个项目,支持分类、检测、语义分割、实例分割
+- GET请求:查询已经创建项目中的信息，可以是单个项目或者是所有项目
+- DELETE：删除一个项目，同时会删除项目里面所有task  
+
 ```
 methods=='GET':获取指定项目id的信息
 	Args:
@@ -242,6 +267,22 @@ methods=='GET':获取指定项目id的信息
 	Example2:
 		#获取所有项目信息
 		ret = requests.get(url + '/project', json=params)
+	Ruturn中的自定数据结构:
+		单个项目属性attr(dict){
+			id(str):项目id，
+			name(str):项目名字，
+			desc(str):项目描述，
+			type(str):项目类型，
+			did(str):项目绑定的数据集id，
+			path(str):项目在服务端的路径，
+			create_time(str):项目创建时间，
+			tasks(list):项目中包含所有任务的任务状态变量的int值
+		}
+		多个项目的属性projects(list)，对于list里面每一个元素表示了单个项目属性的字典project其数据结构如下
+		project(dict){
+			id(str):项目id，
+			attr(dict):项目属性字典，与单个项目属性一致
+		}
 
 methods=='POST':创建一个项目
 	Args:
@@ -252,8 +293,8 @@ methods=='POST':创建一个项目
 		pid(str):项目id
 		status
 	Example:
-		#创建一个新的项目，project_type支持{'classification', 'detection', 'segmentation', 'instance_segmentation', 'remote_segmentation')}
-		params = {'name' : '分类项目'，'desc': '一个新的项目'，project_type}
+		#创建一个新的项目，project_type支持{'classification', 'detection', 'segmentation', 'instance_segmentation'}
+		params = {'name' : '分类项目'，'desc': '一个新的项目'，'project_type' : 'classification'}
 		ret = requests.post(url + '/project', json=params)
 		#获取项目id
 		pid = ret.json()['pid']
@@ -270,6 +311,12 @@ methods=='DELETE':删除一个项目，以及项目相关的task
 ```
 
 ### /project/task [GET,POST,DELETE]
+任务相关，创建、获取、删除任务
+- POST请求:创建一个任务可以是训练任务也可以是剪裁任务，剪裁任务需要指定parent_id
+- GET请求: 获取单个任务、单个项目内所有任务、所有任务的信息，当tid存在时返回指定任务的信息，如果任务状态(TaskStatus)显示任务停止可以通过resume查询任务是否可以恢复训练以及保存的最大epoch；当pid存在时返回该项目下面所有任务信息
+- DELETE请求:删除任务  
+TaskStatus定义了任务状态，具体请参考[任务状态变量](./data_struct.md#状态枚举变量)  
+
 ```
 methods=='GET':#获取某个任务的信息或者所有任务的信息
 	Args：
@@ -321,6 +368,10 @@ methods=='DELETE':#删除任务
 ```
 
 ### /project/task/params [GET,POST]
+获取和设置训练参数
+- GET请求:获取已有的参数信息或者默认的参数信息，当tid存在时获取该任务已有的参数信息、当pid存在时获取该项目的推荐参数给该任务，在创建任务之前需要先获取默认参数
+- POST请求：设置训练参数，用户修改训练参数后通过该接口设置训练参数，在workspace内会将训练参数保存为params.pkl文件  
+
 ```
 methods=='GET':#获取任务id对应的参数，或者获取项目默认参数
 	Args:
@@ -356,6 +407,10 @@ methods=='POST':#设置任务参数，将前端用户设置训练参数dict保�
 ```
 
 ### /project/task/train [POST,PUT]
+任务训练(包括剪裁任务训练），主要是启动和停止任务，需要先设置好训练参数
+-POST请求：启动一个训练任务，异步操作，启动前需要设置好训练的参数
+-PUT请求：暂停一个训练任务或者重启一个暂停的训练任务，重启训练任务可以设置重启的epoch数  
+
 ```
 methods=='POST':#异步，启动训练或者裁剪任务
 	Args：
@@ -382,25 +437,31 @@ methods=='PUT':#改变任务训练的状态，即终止训练或者恢复训练
 ```
 
 ### /project/task/prune [GET,POST,PUT]
+创建、获取、停止剪裁任务分析；在启动剪裁任务训练之前需要通过此接口完成剪裁任务分析
+- GET请求:获取剪裁任务状态信息
+- POST请求:创建剪裁分析任务，异步操作
+- PUT请求:停止正在进行的剪裁分析任务  
+PruneStatus定义了裁剪分析任务状态，具体请参考[裁剪分析状态变量](./data_struct.md#状态枚举变量)  
+
 ```
-methods=='GET':#获取裁剪任务的状态
+methods=='GET':#获取剪裁任务的状态
 	Args：
 		tid(str):任务id
 	Return:
-		prune_status(int): 裁剪任务状态(PruneStatus)枚举变量的值
+		prune_status(int): 剪裁任务状态(PruneStatus)枚举变量的值
 		status
 	Example:
 		#启动任务id为T0001的任务的训练
 		params = {'tid':'T0001'}
 		ret = requests.get(url + '/project/task/prune',json=params)
 
-methods=='POST':#异步，创建一个裁剪分析，对于启动裁剪任务前需要先启动裁剪分析
+methods=='POST':#异步，创建一个剪裁分析，对于启动剪裁任务前需要先启动剪裁分析
 	Args：
 		tid(str):任务id
 	Return:
 		status
 	Example:
-		#对任务id为T0001的任务启动裁剪分析任务
+		#对任务id为T0001的任务启动剪裁分析任务
 		params = {'tid':'T0001'}
 		ret = requests.post(url + '/project/task/prune',json=params)
 
@@ -417,6 +478,10 @@ methods=='PUT':#改变裁剪分析任务的状态
 ```
 
 ### /project/task/evaluate [GET,POST]
+创建、获取一个评估任务
+- POST请求：创建一个评估任务，需要模型训练好后调用，异步操作
+- GET请求: 获取评估任务的状态  
+
 ```
 methods=='GET':#获取模型评估的结果
 	Args：
@@ -448,6 +513,9 @@ methods=='POST':#异步，创建一个评估任务
 ```
 
 ### /project/task/metrics [GET]
+获取训练、评估、剪裁的日志和敏感度与模型裁剪率关系图
+- GET请求：通过type来确定需要获取的内容  
+
 ```
 methods=='GET':#获取日志数据
 	Args:
@@ -467,9 +535,24 @@ methods=='GET':#获取日志数据
 		#获取训练日志
 		paramas = {'tid': 'T0002', 'type': 'train'}
 		ret = requests.get(url + '/project/task/metrics',json=params)
+	Ruturn中的自定数据结构:
+		train_log(dict){
+			eta: 剩余时间，
+			train_metrics: 训练指标，
+			eval_metircs: 评估指标，
+			download_status: 下载模型状态，
+			eval_done: 是否已保存模型，
+			train_error: 训练错误原因
+		}
 ```
 
 ### /project/task/predict [GET, POST]
+创建、查询、停止一个预测任务
+- POST请求:创建一个预测任务、图片输入需要先进行base64编码、异步操作
+- GET请求:获取预测任务的状态
+- PUT请求:停止一个预测任务
+PredictStatus定义了预测任务状态变量，具体请参考[预测任务状态变量](./data_struct.md#状态枚举变量)  
+
 ```
 methods=='GET':#获取预测状态
 	Args：
@@ -516,7 +599,7 @@ methods=='POST':#创建预测任务，目前仅支持单张图片的预测
 			ret = requests.get(url + '/file',json=params)
 			img_data = ret.json()['img_data']
 
-methods=='PUT':#创建预测任务，目前仅支持单张图片的预测
+methods=='PUT':#停止一个预测任务
 	Args:
 		tid(str):任务id
 	Return:
@@ -525,6 +608,10 @@ methods=='PUT':#创建预测任务，目前仅支持单张图片的预测
 ```
 
 ### /project/task/export [GET,POST,PUT]
+创建、获取、停止模型装换或者导出、支持导出inference和lite的模型
+- POST请求:创建模型导出，可以通过type确定导出inference模型还是lite模型
+- GET请求:获取导出的结果日志、或者时导出状态
+- PUT请求：停止模型的导出  
 
 ```
 methods=='GET':#获取导出模型的状态
@@ -576,6 +663,9 @@ methods=='PUT':#停止导出模型
 ```
 
 ### /project/task/vdl [GET]
+打开任务的可视化分析工具(VisualDL)  
+- GET请求:打开任务的vdl  
+
 ```
 methods=='GET':#打开某个任务的可视化分析工具(VisualDL)
 	Args:
@@ -591,7 +681,9 @@ methods=='GET':#打开某个任务的可视化分析工具(VisualDL)
 		url = ret.json()['url']
 ```
 
-### /system [GET,DELETE]
+### /system [GET]
+获取系统信息包括CPU、GPU信息
+- GET请求：获取系统信息、在paddlex启动restful时会自行调用此api、若需要使用GPU请确定已经安装好了pycuda包
 ```
 methods=='GET':#获取系统GPU、CPU信息
 	Args:
@@ -626,6 +718,11 @@ info={
 ```
 
 ### /demo [GET,POST,PUT]
+创建、获取、删除demo项目，
+- GET请求： 获取demo下载的进度
+- POST请求： 下载和载入demo项目
+- PUT请求： 停止下载demo项目  
+
 ```
 methods=='GET':#获取demo下载进度
 	Args:
@@ -673,6 +770,10 @@ methods=='PUT':#停止下载或创建demo工程
 ```
 
 ### /model [GET,POST,DELETE]
+- GET请求： 获取所有或者单个模型的信息，可以是预训练模型或者inference模型
+- POST请求： 在workspace中创建模型，对于inference模型需要先通过/project/task/export接口现在导出inference模型
+- DELETE请求： 删除一个模型
+
 ```
 methods=='GET':#获取一个或者所有模型的信息
 	Args:

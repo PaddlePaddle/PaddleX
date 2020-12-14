@@ -731,7 +731,7 @@ def export_lite_model(data, workspace):
     if not osp.exists(osp.join(save_dir, "model.nb")):
         if osp.exists(save_dir):
             shutil.rmtree(save_dir)
-        return {'status': -1, 'message': "导出为lite模型失败，Ubuntu下请保证 gcc版本 >= 5.0"}
+        return {'status': -1, 'message': "导出为lite模型失败"}
     return {'status': 1, 'message': "完成"}
 
 
