@@ -473,15 +473,15 @@ var Model_List = {
                       "MobileNetV3_small_ssld", "MobileNetV3_large_ssld", "Xception41",
                       "Xception65", "DenseNet121", "DenseNet161", "DenseNet201","ShuffleNetV2"],
      "detection":["YOLOv3", "FasterRCNN", "PPYOLO"],
-     "instance_segmentation":["DeepLabv3+", "U-Net", "HRNet_W18", "FastSCNN"],
-     "segmentation":["MaskRCNN"]
+     "segmentation":["DeepLabv3+", "U-Net", "HRNet_W18", "FastSCNN"],
+     "instance_segmentation":["MaskRCNN"]
 }
 
 var Backbone_List = {
     "YOLOv3": ["DarkNet53", "ResNet34", "MobileNetV1", "MobileNetV3_large"],
     "PPYOLO": ["ResNet50_vd_ssld"],
     "FasterRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"],
-    "DeepLabv3p": ["Xception65", "Xception41", "MobileNetV3_large_x1_0_ssld", "MobileNetV2_x0.25",
+    "DeepLabv3+": ["Xception65", "Xception41", "MobileNetV3_large_x1_0_ssld", "MobileNetV2_x0.25",
                    "MobileNetV2_x0.5", "MobileNetV2_x1.0", "MobileNetV2_x1.5","MobileNetV2_x2.0"],
     "MaskRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"]
 }
@@ -749,6 +749,16 @@ function get_img_file_from_server(str_file_name, str_dataset_id = "")
     return str_data;
 }
 
+//从服务端获取日志文件
+function get_log_file_from_server(str_log_file_name)
+{
+    var http_request = new XMLHttpRequest();
+    http_request.open("GET", str_srv_url + "/file?path=" + str_log_file_name, false);
+    http_request.send(null);
+    
+    return http_request.responseText;
+}
+
 //刷新翻页按纽
 function refresh_dataset_page_buttons()
 {
@@ -880,7 +890,7 @@ function zoom_image(obj)
     }
 }
 
-//放大预览图片
+//关闭放大预览图片窗口
 function hide_zoom_img(obj)
 {
     var on_win_browse_img = document.getElementById('win_browse_img');
@@ -888,6 +898,16 @@ function hide_zoom_img(obj)
     
     on_win_browse_img.style.display = "none";
     over_win_browse_img.style.display = "none";
+}
+
+//关闭日志查看窗口
+function hide_log_win(obj)
+{
+    var on_win_view_log = document.getElementById('win_view_log');
+    var over_win_view_log = document.getElementById('win_view_log_over');
+    
+    on_win_view_log.style.display = "none";
+    on_win_view_log.style.display = "none";
 }
 
 //上一页
@@ -955,6 +975,8 @@ function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
     else if (str_task_status == TaskStatus.XTRAINFAIL)
     {
         str_view_task_status_text = "任务训练失败";
+        
+        str_task_next_button_lable = "查看错误日志";
     }
     else if (str_task_status == TaskStatus.XTRAINDONE)
     {
@@ -1122,6 +1144,29 @@ function task_next_step_process(obj)
     if(str_btn_label == "关闭")
     {
         hide_task_detail_info_win_modal();
+    }
+    else if(str_btn_label == "查看错误日志")
+    {
+        var str_error_tid = document.getElementById('task_detail_id').value;
+        var str_error_task_pid = document.getElementById('view_task_pid_' + str_error_tid).value;
+        //日志路径
+        var http_request = new XMLHttpRequest();
+        http_request.open('GET', str_srv_url + "/workspace", false);
+        http_request.send(null);
+    
+        var obj_json = eval('(' + http_request.responseText + ')');
+        var str_server_workspace_path = obj_json["dirname"];
+        var str_error_log_path = str_server_workspace_path + "/projects/" + str_error_task_pid + "/" + str_error_tid + "/err.log";
+        
+        var str_error_info = get_log_file_from_server(str_error_log_path);
+        
+        //显示错误信息
+        document.getElementById('view_log_text').value = str_error_info;
+        var on_win_view_log = document.getElementById('win_view_log');
+        var over_win_view_log = document.getElementById('win_view_log_over');
+    
+        on_win_view_log.style.display = "block";
+        on_win_view_log.style.display = "block";
     }
     else if(str_btn_label == "评估&导出模型")
     {
@@ -1613,6 +1658,7 @@ function load_datasets()
 function load_tasks()
 {
     document.getElementById("btn_refresh").value = "刷新所有任务信息";
+    document.getElementById("table_create_new").style.display = "none";
     
     var http_request;
     if (window.XMLHttpRequest)
@@ -1643,6 +1689,8 @@ function load_tasks()
 function load_project_tasks(str_project_id)
 {
     document.getElementById("btn_refresh").value = "刷新项目任务信息";
+    document.getElementById("table_create_new").style.display = "block";
+    document.getElementById("btn_create_new").value = "新建任务";
     
     var http_request;
     if (window.XMLHttpRequest)
@@ -1824,6 +1872,9 @@ function fill_table_contents(list_contents, type = "project")
     if(type == "project")
     {
         document.getElementById("btn_refresh").value = "刷新项目信息";
+        document.getElementById("table_create_new").style.display = "block";
+        document.getElementById("btn_create_new").value = "新建项目";
+    
         rows = table_contents.rows.length;
         for (i=0;i<rows;i++) 
         { 
@@ -1897,6 +1948,9 @@ function fill_table_contents(list_contents, type = "project")
     else if(type == "dataset")
     {
         document.getElementById("btn_refresh").value = "刷新数据集信息";
+        document.getElementById("table_create_new").style.display = "block";
+        document.getElementById("btn_create_new").value = "新建数据集";
+    
         rows = table_contents.rows.length;
         for (i=0;i<rows;i++) 
         { 
@@ -2195,6 +2249,8 @@ function fill_table_contents(list_contents, type = "project")
     else if(type == "models")
     {
         document.getElementById("btn_refresh").value = "刷新模型信息";
+        document.getElementById("table_create_new").style.display = "none";
+    
         rows = table_contents.rows.length;
         for (i=0;i<rows;i++) 
         { 
@@ -2436,6 +2492,17 @@ function add_parms_to_table(str_parms, str_type = "classification")
     
     //通用参数
     add_one_task_parm_to_table("model", "模型选择", g_train_task_parms["model"], newTr.id, "selection",str_type);
+    
+    //骨干网络
+    if (g_train_task_parms.hasOwnProperty("backbone"))
+    {
+        add_one_task_parm_to_table("backbone", "骨干网络", g_train_task_parms["backbone"], newTr.id, "selection",str_type);
+    }
+    else
+    {
+        add_one_task_parm_to_table("backbone", "骨干网络", "", newTr.id, "selection",str_type);
+    }
+    
     add_one_task_parm_to_table("pretrain_weights", "预训练模型", g_train_task_parms["pretrain_weights"], newTr.id, "selection");
     add_one_task_parm_to_table("image_shape", "图像大小", g_train_task_parms["image_shape"], newTr.id);
     
@@ -2524,8 +2591,9 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
     if(parent_key != "")
     {
         newTr.className = "child_" + parent_key;
-        newTr.id = "child_" + parent_key;
+        newTr.id = "task_parms_" + str_key;
     }
+    
     var newTd0=newTr.insertCell();
     var newTd1=newTr.insertCell();
     newTd0.innerHTML = str_view;
@@ -2539,13 +2607,32 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
         {
             //任务类型
             var str_list = Model_List[task_type];
-            var str_html = "<select id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\">";
+            var str_html = "<select id=\"task_detail_parm_" + str_key + "\" onchange=\"change_model_type(this);\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\">";
             for(var i=0;i<str_list.length;i++)
             {
                 if(str_value ==  str_list[i])
                     str_html = str_html + "<option value=\"" + str_list[i] + "\" selected=\"selected\">" + str_list[i] + "</option>";
                 else
                     str_html = str_html + "<option value=\"" + str_list[i] + "\">" + str_list[i] + "</option>";
+            }
+            str_html = str_html + "</select>";
+            newTd1.innerHTML = str_html;
+        }
+        else if (str_key == "backbone")
+        {
+            //骨干网络
+            var lst_backbones = ["NA"];
+            if(str_value != "")
+            {
+                lst_backbones = Backbone_List[document.getElementById('task_detail_parm_model').value];
+            }
+            var str_html = "<select id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\">";
+            for(var i=0;i<lst_backbones.length;i++)
+            {
+                if(str_value ==  lst_backbones[i])
+                    str_html = str_html + "<option value=\"" + lst_backbones[i] + "\" selected=\"selected\">" + lst_backbones[i] + "</option>";
+                else
+                    str_html = str_html + "<option value=\"" + lst_backbones[i] + "\">" + lst_backbones[i] + "</option>";
             }
             str_html = str_html + "</select>";
             newTd1.innerHTML = str_html;
@@ -2910,6 +2997,52 @@ function delete_model()
     http_request.send(JSON.stringify(data));        
 }
 
+//新建对象
+function create_new(obj)
+{
+    var str_btn_lbl = obj.value;
+    if(str_btn_lbl == "新建数据集")
+    {
+        show_create_dataset_win_modal(obj);
+    }
+    else if(str_btn_lbl == "新建项目")
+    {
+        show_create_project_win_modal(obj);
+    }
+    else if(str_btn_lbl == "新建任务")
+    {
+        show_create_task_win_modal(obj);
+    }
+}
+
+//修改模型下拉列表选项
+function change_model_type(obj)
+{
+    var str_model_name = obj.value;
+    
+    if (Backbone_List.hasOwnProperty(str_model_name))
+    {
+        lst_backbones = Backbone_List[str_model_name];
+    }
+    else
+    {
+        lst_backbones = ["NA"];
+    }
+    
+    var obj_sel_backbone = document.getElementById('task_detail_parm_backbone');
+    obj_sel_backbone.options.length = 0;
+    
+    if(lst_backbones.length > 0)
+    {
+        var i = 0;
+        for(var p in lst_backbones)
+        {
+            obj_sel_backbone.options[obj_sel_backbone.options.length] = new Option(lst_backbones[p], i);
+            i=i+1;
+        }
+    }
+}
+
 //修改创建项目时下拉列表触发更新下拉数据集列表
 function change_create_project_type(obj)
 {
@@ -2944,6 +3077,7 @@ function dispatch_key_press()
         case 27:
         {
             hide_zoom_img(null);
+            hide_log_win(null);
         }
     }
 }
@@ -3042,6 +3176,17 @@ function dispatch_key_press()
 <br>
 <div id="div_demo_title"><h2><font color="#0000cd"> 欢迎使用 PaddleX RestfulAPI</font></h2></div>
 
+<table width="100%" height="40px" align="center" cellspacing="1px" id="table_create_new">
+<tr>
+  <td style="width: 5px;"></td>
+  <td>
+    <div class="btn" style="width: 120px; height: 38px; float:left; background: #007FFF;">
+      <input type="button" id="btn_create_new" style="width: 120px; height: 38px; background: #007FFF; " value="新建项目" onclick="javascript:create_new(this);"/>
+    </div>
+  </td>
+</tr>
+</table>
+
 <!--show projects/tasks/datasets/models information-->
 <table width="100%" height="100%" align="center" cellspacing="20px" id="table_contents" style="font-size:18px; border:0px border-collapse:separate; border-spacing:10px 90px; solid #cad9ea;">
 <tr>
@@ -3050,7 +3195,6 @@ function dispatch_key_press()
   <view_item id="btn_set_server" onclick="show_server_info(this)" style="width: 330px; height: 90px; align: center"><br><font color="red">连接服务器失败，点击设置服务器信息</font></view_item>
   </div>
 </td>
-<td>
 </tr>
 </table>
 
@@ -3064,7 +3208,7 @@ function dispatch_key_press()
   <br/>
   
   <!--input information-->
-  <table width="100%" align="center" id="table_create_prj">
+  <table width="100%" align="center" id="table_server_info">
   <tr>
   <td><br><div style="font-size: 14px;">服务器地址：</div></td>
   <td>
@@ -3153,7 +3297,7 @@ function dispatch_key_press()
   <!--input informations-->
   <table width="100%" align="center" id="table_create_dataset">
   <tr>
-  <td><br><div style="font-size: 14px;">数据集名称:</div></td>
+  <td ><br><div style="font-size: 14px;">数据集名称:</div></td>
   <td>
     <br>
     <input id="dataset_name_text" value="新建数据集" style="width:85% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text" />
@@ -3200,7 +3344,7 @@ function dispatch_key_press()
   <!--input informations-->
   <table width="100%" align="center" id="table_import_dataset">
   <tr>
-  <td><br><div style="font-size: 14px;">数据集路径：</div></td>
+  <td width="30%"><br><div style="font-size: 14px;">数据集路径（服务器端）：</div></td>
   <td>
     <br>
     <input type="hidden" id="import_dataset_id" value="">
@@ -3263,7 +3407,7 @@ function dispatch_key_press()
 <!--数据集导入弹出窗口-->
 
 <!--创建任务弹出窗口-->
-<div id="input_win_create_task" style="display:none;border:1px solid #cccccc;height:400px;width:50%;position:absolute;top:24%;left:24%;z-index:15;background:white;overflow:auto">
+<div id="input_win_create_task" style="display:none;border:1px solid #cccccc;height:400px;width:50%;position:absolute;top:24%;left:24%;z-index:15;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">任务详细信息</div><br>
@@ -3307,9 +3451,9 @@ function dispatch_key_press()
   </div>
   <br/>
   <!--input informations-->
-  <table width="100%" align="center" id="table_create_prj">
+  <table width="100%" align="center" id="table_task_detail_info">
   <tr>
-  <td><div style="font-size: 14px;">任务状态：</div></td>
+  <td width="25%"><div style="font-size: 14px;">任务状态：</div></td>
   <td>
     <input type="hidden" id="task_detail_id">
     <input id="task_detail_status_text" style="width:95% ;height:20px;Float:left;padding: 4px 8px; margin-left: 4px; border: none; outline: none;" type="text" readonly="readonly"/>
@@ -3317,28 +3461,28 @@ function dispatch_key_press()
   <td>&nbsp&nbsp</td>
   </tr>
   <tr>
-  <td><div style="font-size: 14px;">训练进度：</div></td>
+  <td width="25%"><div style="font-size: 14px;">训练进度：</div></td>
   <td>
     <div class="progress"> <span id="task_detail_status_progress_bar_value" class="green" style="width: 0%;"><span id="task_detail_status_progress_bar">0%</span></span></div>
   </td>
   <td>&nbsp&nbsp</td>
   </tr>
   <tr>
-  <td><div style="font-size: 14px;">运行时间：</div></td>
+  <td width="25%"><div style="font-size: 14px;">运行时间：</div></td>
   <td>
     <input id="task_detail_running_duration_text" style="width:95% ;height:20px;Float:left;padding: 4px 8px; margin-left: 4px; border: none; outline: none;" type="text" readonly="readonly"/>
   </td>
   <td>&nbsp&nbsp</td>
   </tr>
   <tr>
-  <td><div style="font-size: 14px;">VDL可视化数据：</div></td>
+  <td width="25%"><div style="font-size: 14px;">VDL可视化数据：</div></td>
   <td>
     <input id="task_detail_vdl_text" value="点击查看" onclick="open_task_vdl_window(this);" style="color: #0000cd; width:95% ;height:20px;Float:left;padding: 4px 8px; margin-left: 4px; border: none; outline: none;" type="text" readonly="readonly"/>
   </td>
   <td>&nbsp&nbsp</td>
   </tr>  
   <tr>
-  <td><div style="font-size: 14px;">任务信息：</div></td>
+  <td width="25%"><div style="font-size: 14px;">任务信息：</div></td>
   <td>
     <textarea id="task_detail_log_text" style="width:95% ;height:100px; resize:none" readonly="readonly"></textarea>
   </td>
@@ -3368,7 +3512,7 @@ function dispatch_key_press()
   <!--input informations-->
   <table width="100%" align="center" id="table_evaluate_export_model">
   <tr>
-  <td><br><div style="font-size: 14px;">导出路径：</div></td>
+  <td width="20%"><br><div style="font-size: 14px;">导出路径：</div></td>
   <td>
     <br>
     <input type="hidden" id="evaluate_export_task_id" value="">
@@ -3496,6 +3640,25 @@ function dispatch_key_press()
 </div>
 <div id="win_browse_img_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
 <!--浏览原图弹出窗口-->
+
+<!--浏览日志窗口-->
+<div id="win_view_log" onclick="" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:absolute;top:15%;left:20%;z-index:15;background:white;">
+  <table width="100%" align="center" id="table_log">
+    <tr>
+      <td>
+        <textarea id="view_log_text" style="width:99% ;height:550px; resize:none" readonly="readonly"></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div style="text-align: right;">
+        <div class="btn"><input type="button" id="btn_close_view_log_win" value="关闭" onclick="hide_log_win(this);" /></div>
+      </td>
+    </tr>
+  </table>
+</div>
+<div id="win_view_log_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<!--浏览日志窗口-->
 
 <div class="btn">
     <input type="button" id="btn_refresh" style="width: 150px; height: 50px; " value="刷新项目信息" onclick="javascript:refresh_contents(this);"/>
