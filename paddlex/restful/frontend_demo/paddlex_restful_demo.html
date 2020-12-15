@@ -425,6 +425,9 @@ var g_instance_refresh_clock;
 
 //浏览数据集变量
 var g_dataset_files = {};
+var g_dataset_train_files = {};
+var g_dataset_evaluate_files = {};
+var g_dataset_test_files = {};
 //记录当前页
 var g_current_dataset_page = 1;
 //每页显示几张图片
@@ -433,6 +436,8 @@ var g_const_imgs_per_page = 3;
 var g_current_dataset_lable_name = "";
 //是否显示标注
 var g_b_show_img_labels = false;
+//显示数据集范围(默认全量数据)
+var g_b_show_dataset_type = "all";
 
 //数据集状态
 var DatasetStatus = {
@@ -473,7 +478,7 @@ var Model_List = {
                       "MobileNetV3_small_ssld", "MobileNetV3_large_ssld", "Xception41",
                       "Xception65", "DenseNet121", "DenseNet161", "DenseNet201","ShuffleNetV2"],
      "detection":["YOLOv3", "FasterRCNN", "PPYOLO"],
-     "segmentation":["DeepLabv3+", "U-Net", "HRNet_W18", "FastSCNN"],
+     "segmentation":["DeepLabv3p", "U-Net", "HRNet_W18", "FastSCNN"],
      "instance_segmentation":["MaskRCNN"]
 }
 
@@ -481,7 +486,7 @@ var Backbone_List = {
     "YOLOv3": ["DarkNet53", "ResNet34", "MobileNetV1", "MobileNetV3_large"],
     "PPYOLO": ["ResNet50_vd_ssld"],
     "FasterRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"],
-    "DeepLabv3+": ["Xception65", "Xception41", "MobileNetV3_large_x1_0_ssld", "MobileNetV2_x0.25",
+    "DeepLabv3p": ["Xception65", "Xception41", "MobileNetV3_large_x1_0_ssld", "MobileNetV2_x0.25",
                    "MobileNetV2_x0.5", "MobileNetV2_x1.0", "MobileNetV2_x1.5","MobileNetV2_x2.0"],
     "MaskRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"]
 }
@@ -670,6 +675,22 @@ function get_dataset_detail_info(str_dataset_id)
 function load_labels_imgs(str_lbl_name, int_page = 1)
 {
      var lst_img_files = g_dataset_files[str_lbl_name];
+     if (g_b_show_dataset_type == "all")
+     {
+         lst_img_files = g_dataset_files[str_lbl_name];
+     }
+     else if (g_b_show_dataset_type == "train")
+     {
+         lst_img_files = g_dataset_train_files[str_lbl_name];
+     }
+     else if (g_b_show_dataset_type == "evaluate")
+     {
+         lst_img_files = g_dataset_evaluate_files[str_lbl_name];
+     }
+     else if (g_b_show_dataset_type == "test")
+     {
+         lst_img_files = g_dataset_test_files[str_lbl_name];
+     }
      
      var str_dataset_id = document.getElementById('browse_dataset_id').value;
      //获取数据集路径
@@ -714,6 +735,7 @@ function load_labels_imgs(str_lbl_name, int_page = 1)
              str_b64_type = "data:image/png;base64,";
          
          obj_img.src = str_b64_type + str_img_file_content;
+         obj_img.style.visibility='';
          
          //更新文件名称
          var idx_path_split = str_img_file_name.lastIndexOf("/");
@@ -726,6 +748,17 @@ function load_labels_imgs(str_lbl_name, int_page = 1)
          if(img_count >= g_const_imgs_per_page)
          {
              break;
+         }
+     }
+     
+     //清除无需显示的图像框
+     if(img_count < g_const_imgs_per_page)
+     {
+         for(var k=img_count + 1;k<=g_const_imgs_per_page;k++)
+         {
+             document.getElementById('dataset_img_' + k).src = " ";
+             document.getElementById('dataset_img_' + k).style.visibility='hidden';
+             document.getElementById('dataset_img_' + k + "_file_name").innerText = "";
          }
      }
 }
@@ -762,15 +795,36 @@ function get_log_file_from_server(str_log_file_name)
 //刷新翻页按纽
 function refresh_dataset_page_buttons()
 {
-    var max_page_num = Math.ceil(g_dataset_files[g_current_dataset_lable_name].length / g_const_imgs_per_page);
+    var int_file_count = g_dataset_files[g_current_dataset_lable_name].length;
+    if (g_b_show_dataset_type == "all")
+    {
+        int_file_count = g_dataset_files[g_current_dataset_lable_name].length;
+    }
+    else if (g_b_show_dataset_type == "train")
+    {
+        int_file_count = g_dataset_train_files[g_current_dataset_lable_name].length;
+    }
+    else if (g_b_show_dataset_type == "evaluate")
+    {
+        int_file_count = g_dataset_evaluate_files[g_current_dataset_lable_name].length;
+    }
+    else if (g_b_show_dataset_type == "test")
+    {
+        int_file_count = g_dataset_test_files[g_current_dataset_lable_name].length;
+    }
+     
+    var max_page_num = Math.ceil(int_file_count / g_const_imgs_per_page);
     
     document.getElementById('dataset_page_info').innerText = "第" + g_current_dataset_page + "页/共" + max_page_num + "页";
 }
 
 //加载数据标签信息
-function add_labels_to_table(str_lbl_list,dic_file_lst)
+function add_labels_to_table(str_lbl_list,dic_file_lst,dic_train_lst,dic_evaluate_lst,dic_test_lst)
 {
     g_dataset_files = dic_file_lst;
+    g_dataset_train_files = dic_train_lst;
+    g_dataset_evaluate_files = dic_evaluate_lst;
+    g_dataset_test_files = dic_test_lst;
     
     var rows = table_dataset_labels.rows.length;
     for (i=rows-1;i>=1;i--)
@@ -782,6 +836,9 @@ function add_labels_to_table(str_lbl_list,dic_file_lst)
     {
         var str_lbl_name = str_lbl_list[j];
         var lst_files = dic_file_lst[str_lbl_name];
+        var lst_train_files = dic_train_lst[str_lbl_name];
+        var lst_evaluate_files = dic_evaluate_lst[str_lbl_name];
+        var lst_test_files = dic_test_lst[str_lbl_name];
         
         var rows = table_dataset_labels.rows.length;
         var newTr = table_dataset_labels.insertRow(rows);
@@ -790,11 +847,35 @@ function add_labels_to_table(str_lbl_list,dic_file_lst)
         {
             g_current_dataset_page = 1;
             g_current_dataset_lable_name = this.id;
+            
+            var tbl_trs = table_dataset_labels.getElementsByTagName("tr");
+            for(var k = 1; k < tbl_trs.length; k++)
+            {
+                var bg_color = "#f2f2f2";
+                if(k % 2 == 0)
+                {
+                    bg_color = "#ffffff";
+                }
+                else
+                {
+                    bg_color = "#f2f2f2";
+                }
+                if(k == this.rowIndex)
+                {
+                    bg_color = "#76D6FF";
+                }
+                tbl_trs[k].style.backgroundColor = bg_color;
+            }
+            
             load_labels_imgs(this.id, g_current_dataset_page);
             refresh_dataset_page_buttons();
         }
         
         newTr.style.cursor="pointer";
+        if(j == 0)
+        {
+            newTr.style.backgroundColor = "#76D6FF";
+        }
     
         var newTd0=newTr.insertCell();
         newTd0.innerText = str_lbl_name;
@@ -803,13 +884,13 @@ function add_labels_to_table(str_lbl_list,dic_file_lst)
         newTd1.innerText = lst_files.length;
         
         var newTd2=newTr.insertCell();
-        newTd2.innerText = "";
+        newTd2.innerText = lst_train_files.length;
         
        var newTd3=newTr.insertCell();
-        newTd3.innerText = "";
+        newTd3.innerText = lst_evaluate_files.length;
         
         var newTd4=newTr.insertCell();
-        newTd4.innerText = "";
+        newTd4.innerText = lst_test_files.length;
     }
 }
 
@@ -825,6 +906,11 @@ function show_browse_dataset_win_modal(obj)
     var obj_json_dataset_details = eval('(' + str_dataset_details + ')'); 
     var lst_labels = obj_json_dataset_details["details"]["labels"];
     var lst_files = obj_json_dataset_details["details"]["label_info"];
+    
+    //训练集及测试集
+    var lst_train_files = obj_json_dataset_details["details"]["class_train_file_list"];
+    var lst_evaluate_files = obj_json_dataset_details["details"]["class_val_file_list"];
+    var lst_test_files = obj_json_dataset_details["details"]["class_test_file_list"];
     
     //数据集详情
     document.getElementById('browse_dataset_name_text').value = document.getElementById('view_dataset_name_' + obj.id).value;
@@ -847,8 +933,12 @@ function show_browse_dataset_win_modal(obj)
     g_b_show_img_labels = false;
     document.getElementById('dataset_chk_show_label').checked = false;
     
+    //默认显示全量数据
+    g_b_show_dataset_type = "all";
+    document.getElementById('sel_dataset_view_type')[0].selected = true;
+    
     //刷新标签
-    add_labels_to_table(lst_labels, lst_files);
+    add_labels_to_table(lst_labels, lst_files, lst_train_files, lst_evaluate_files, lst_test_files);
     
     //加载预览图片
     g_current_dataset_lable_name = lst_labels[0];
@@ -867,6 +957,7 @@ function hide_browse_dataset_win_modal(obj)
 {
     //当前页重置
     g_current_dataset_page = 1;
+    g_b_show_dataset_type = "all";
     
     var on_win_browse_dataset = document.getElementById('win_browse_dataset');
     var over_win_browse_dataset = document.getElementById('win_browse_dataset_over');
@@ -921,7 +1012,7 @@ function dataset_pre_page()
     
     load_labels_imgs(g_current_dataset_lable_name, g_current_dataset_page);
     
-    refresh_dataset_page_buttons()
+    refresh_dataset_page_buttons();
 }
 
 //下一页
@@ -930,14 +1021,42 @@ function dataset_next_page()
     g_current_dataset_page = g_current_dataset_page + 1;
     
     //是否大于最大页
-    if(g_current_dataset_page * g_const_imgs_per_page > g_dataset_files[g_current_dataset_lable_name].length + 2)
+    var int_file_max_count = g_dataset_files[g_current_dataset_lable_name].length;
+    if (g_b_show_dataset_type == "all")
+    {
+        int_file_max_count = g_dataset_files[g_current_dataset_lable_name].length;
+    }
+    else if (g_b_show_dataset_type == "train")
+    {
+        int_file_max_count = g_dataset_train_files[g_current_dataset_lable_name].length;
+    }
+    else if (g_b_show_dataset_type == "evaluate")
+    {
+        int_file_max_count = g_dataset_evaluate_files[g_current_dataset_lable_name].length;
+    }
+    else if (g_b_show_dataset_type == "test")
+    {
+        int_file_max_count = g_dataset_test_files[g_current_dataset_lable_name].length;
+    }
+    
+    if(g_current_dataset_page * g_const_imgs_per_page > int_file_max_count + 2)
     {
         g_current_dataset_page = g_current_dataset_page - 1;
     }
     
     load_labels_imgs(g_current_dataset_lable_name, g_current_dataset_page);
     
-    refresh_dataset_page_buttons()
+    refresh_dataset_page_buttons();
+}
+
+//显示全量数据或者其他数据
+function change_dataset_view_type(obj)
+{
+    g_b_show_dataset_type = obj.value;
+    g_current_dataset_page = 1;
+    load_labels_imgs(g_current_dataset_lable_name, g_current_dataset_page);
+    
+    refresh_dataset_page_buttons();
 }
 
 //显示标注
@@ -1092,7 +1211,7 @@ function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
     }
     else
     {
-       obj_stop_task_div.style.visibility = "hidden";
+        obj_stop_task_div.style.visibility = "hidden";
     }
 }
 
@@ -1364,7 +1483,8 @@ function export_model(obj)
         }
     }
 
-    var data = {"tid":str_export_task_id,"type":"infer","save_dir":str_model_save_path,'quant': false, 'epoch':5};
+    //默认epoch为自动获取最优
+    var data = {"tid":str_export_task_id,"type":"infer","save_dir":str_model_save_path,'quant': false};
     http_request.open("POST", str_srv_url + "/project/task/export", true);
     http_request.setRequestHeader("Content-type","application/json");
     http_request.send(JSON.stringify(data));
@@ -1524,6 +1644,17 @@ function set_server_addr(input_data)
 
     http_request.open('GET', str_srv_url + "/workspace", true);
     http_request.send(null);
+}
+
+//获取服务器系统信息
+function get_server_system_info(str_info_type = "machine_info")
+{
+    var http_request = new XMLHttpRequest();
+
+    http_request.open('GET', str_srv_url + "/system?type=" + str_info_type, false);
+    http_request.send(null);
+    
+    return http_request.responseText;
 }
 
 //获取工作区所有项目信息
@@ -2076,7 +2207,7 @@ function fill_table_contents(list_contents, type = "project")
         }
     }
     else if(type == "task")
-    {       
+    {   
         rows = table_contents.rows.length;
         for (i=0;i<rows;i++) 
         { 
@@ -2216,6 +2347,8 @@ function fill_table_contents(list_contents, type = "project")
             
             str_html = str_html + "任务ID：" + str_id + "<br>";
             
+            str_type = get_project_type(str_pid);
+            
             if(str_type == "classification")
                 str_type_view = "<font color=\"green\">图像分类</font>";
             else if(str_type == "detection")
@@ -2354,6 +2487,17 @@ function fill_table_with_error()
     newTd0.innerHTML = str_html;
 }
 
+//获取项目任务类型
+function get_project_type(str_pid)
+{
+    var http_request = new XMLHttpRequest();
+    http_request.open("GET", str_srv_url + "/project?id=" + str_pid, false);
+    http_request.send(null);
+    
+    var obj_json = eval('(' + http_request.responseText + ')');
+    return obj_json["attr"]["type"];
+}
+
 //显示创建任务弹出窗口
 function show_create_task_win_modal(obj)
 {
@@ -2387,7 +2531,7 @@ function show_create_task_win_modal(obj)
     var http_request = new XMLHttpRequest();
     http_request.open("GET", str_srv_url + "/project/task/params?pid=" + str_project_id, false);
     http_request.send(null);
-    
+
     //填充参数到表格
     add_parms_to_table(http_request.responseText, str_task_type);
     
@@ -2510,8 +2654,36 @@ function add_parms_to_table(str_parms, str_type = "classification")
     add_one_task_parm_to_table("learning_rate", "学习率", g_train_task_parms["learning_rate"], newTr.id);
     add_one_task_parm_to_table("batch_size", "批大小", g_train_task_parms["batch_size"], newTr.id);
     
-    add_one_task_parm_to_table("use_gpu", "是否使用GPU", "yes", newTr.id, "enable");
-    
+    //获取系统信息用于GPU信息选择
+    var str_sys_info = get_server_system_info();
+
+    var obj_json = eval('(' + str_sys_info + ')');
+    var int_gpu_count = parseInt(obj_json["info"]["gpu_num"]);
+    var int_cpu_count = parseInt(obj_json["info"]["cpu_num"]);
+    var str_sys_platform = obj_json["info"]["sysstr"];
+
+    if(int_gpu_count > 0)
+    {
+        add_one_task_parm_to_table("use_gpu", "是否使用GPU", "yes", newTr.id, "enable");
+        if(str_sys_platform.toLowerCase() == "linux");
+        {
+            var str_gpu_card_num = "0";
+            for (i=1; i < int_gpu_count; i++)
+            {
+                str_gpu_card_num = str_gpu_card_num + "," + i;
+            }
+            if (g_train_task_parms.hasOwnProperty("cuda_visible_devices") && g_train_task_parms["cuda_visible_devices"].length > 0)
+            {
+                str_gpu_card_num = g_train_task_parms["cuda_visible_devices"];
+            }
+            add_one_task_parm_to_table("cuda_visible_devices", "训练使用GPU卡列表", str_gpu_card_num, newTr.id, "text");
+        }
+    }
+    else
+    {
+        add_one_task_parm_to_table("use_gpu", "是否使用GPU", "否(未检测到GPU)", newTr.id, "label");
+    }
+        
     //高级参数
     var rows = table_create_task.rows.length;
     var newTr = table_create_task.insertRow(rows); 
@@ -2569,13 +2741,15 @@ function add_parms_to_table(str_parms, str_type = "classification")
     newTd0.colSpan="2";
     newTd0.innerText="数据增强策略";
 
-    add_one_task_parm_to_table("augument_enable", "随机亮度", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("augument_enable", "随机对比度", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("augument_enable", "随机水平翻转", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("augument_enable", "随机垂直翻转", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("augument_enable", "随机旋转", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("augument_enable", "随机饱和度", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("augument_enable", "随机色调", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("brightness", "随机亮度", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("contrast", "随机对比度", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("horizontal_flip", "随机水平翻转", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("vertical_flip", "随机垂直翻转", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("rotate", "随机旋转", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("saturation", "随机饱和度", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("hue", "随机色调", "off", newTr.id, "switch");
+    
+    add_one_task_parm_to_table("augument_details", "数据增强详细设置", "点击设置...", newTr.id, "button");
 }
 
 //增加一个训练参数到表格(text/select/enable/switch)
@@ -2600,6 +2774,14 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
     if(parm_type == "text")
     {
         newTd1.innerHTML = "<input id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\" type=\"text\"/>";
+    }
+    else if (parm_type == "label")
+    {
+        newTd1.innerHTML = "<input id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\" type=\"text\" readonly=\"readonly\"/>";
+    }
+    else if (parm_type == "button")
+    {
+        newTd1.innerHTML = "<input type=\"button\" onclick=\"set_augument_detail_parms(this)\" id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\"/>";
     }
     else if (parm_type == "selection")
     {
@@ -2700,10 +2882,16 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
     }
 }
 
+//设置数据增强详细信息
+function set_augument_detail_parms(obj)
+{
+    
+}
+
 //预训练模型列表
 function get_pretrained_model_list(str_model_name)
 {
-    var lst_pretrained_model = ["IMAGENET","COCO","不使用预训练模型"];
+    var lst_pretrained_model = ["IMAGENET","不使用预训练模型"];
 
     return lst_pretrained_model;
 }
@@ -2764,11 +2952,23 @@ function create_task()
          }
     
          //获取训练参数
+         get_input_task_parm_value("model","text");
+         get_input_task_parm_value("backbone","text");
+         
          get_input_task_parm_value("num_epochs","int");
          get_input_task_parm_value("batch_size","int");
-         get_input_task_parm_value("learning_rate","int");
+         get_input_task_parm_value("learning_rate","float");
          
-    
+         get_input_task_parm_value("save_interval_epochs","int");
+         
+         //图像参数
+         get_input_task_parm_value("image_shape","list");
+         get_input_task_parm_value("image_mean","list");
+         get_input_task_parm_value("image_std","list");
+         
+         //是否使用GPU
+         get_input_task_parm_value("use_gpu","text");
+         
          //调用创建接口创建任务
          //alert(JSON.stringify(g_train_task_parms));
          var data = {"pid":str_project_id,"train":JSON.stringify(g_train_task_parms)};
@@ -2786,12 +2986,39 @@ function get_input_task_parm_value(str_key, str_type="int")
     var obj_task_parm_input = document.getElementById(str_input_obj_key);
     var str_value = obj_task_parm_input.value;
     
-     if(str_type == "int")
+    if(str_type == "int")
     {
         g_train_task_parms[str_key] = parseInt(str_value);
-     }
+    }
+    else if (str_type == "float")
+    {
+        g_train_task_parms[str_key] = parseFloat(str_value);
+    }
+    else if (str_type == "list")
+    {
+        g_train_task_parms[str_key] = str_value.split(',').map(Number);
+    }
     else
-     {
+    {
+        if(str_key == "backbone" && str_value == "NA")
+        {
+            g_train_task_parms[str_key] = "";
+            return;
+        }
+        if(str_key == "use_gpu")
+        {
+            if(str_value == "yes")
+            {
+                g_train_task_parms["use_gpu"] = true;
+                var str_card_list = document.getElementById('task_detail_parm_cuda_visible_devices').value
+                g_train_task_parms["cuda_visible_devices"] = str_card_list.split(',').map(Number);
+                return;
+            }
+            else
+            {
+                return;
+            }
+        }
         g_train_task_parms[str_key] = str_value;
     }
 }
@@ -3031,16 +3258,16 @@ function change_model_type(obj)
     
     var obj_sel_backbone = document.getElementById('task_detail_parm_backbone');
     obj_sel_backbone.options.length = 0;
+    obj_sel_backbone.value = "NA";
     
     if(lst_backbones.length > 0)
     {
-        var i = 0;
         for(var p in lst_backbones)
         {
-            obj_sel_backbone.options[obj_sel_backbone.options.length] = new Option(lst_backbones[p], i);
-            i=i+1;
+            obj_sel_backbone.options[obj_sel_backbone.options.length] = new Option(lst_backbones[p], lst_backbones[p]);
         }
     }
+    obj_sel_backbone[0].selected = true;
 }
 
 //修改创建项目时下拉列表触发更新下拉数据集列表
@@ -3568,8 +3795,17 @@ function dispatch_key_press()
   <div>
     <table width="100%" align="center" id="table_browse_dataset_head">
       <tr>
-      	<th width="50%">全部标签</th>
-      	<th width="50%">全部数据预览 &nbsp;&nbsp&nbsp;&nbsp&nbsp;&nbsp<label id="dataset_chk_show_label_txt"><input type="checkbox" id="dataset_chk_show_label" value="显示标注" onclick="show_dataset_labels()" style="height: 12px;width: 12px;">&nbsp;显示标注</label></th>
+        <th width="50%">全部标签</th>
+        <th width="50%">
+           <select id="sel_dataset_view_type" onchange="change_dataset_view_type(this);" style="width:180px;height:30px;Float:left;">
+             <option value="all">查看全量数据</option>
+             <option value="train">查看训练集</option>
+             <option value="evaluate">查看验证集</option>
+             <option value="test">查看测试集</option>
+           </select>
+           全部数据预览 &nbsp;&nbsp&nbsp;&nbsp&nbsp;&nbsp
+           <label id="dataset_chk_show_label_txt"><input type="checkbox" id="dataset_chk_show_label" value="显示标注" onclick="show_dataset_labels()" style="height: 12px;width: 12px;">&nbsp;显示标注</label>
+        </th>
       </tr>
     </table>
   </div>
@@ -3593,9 +3829,9 @@ function dispatch_key_press()
           <div class="table-dataset-labels">
           <table width="100%" align="center" id="table_dataset_imgs">
             <tr>
-              <td><img id="dataset_img_1" src="" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="150" width="150" hspace="0" vspace="0"/></td>
-              <td><img id="dataset_img_2" src="" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="150" width="150" hspace="0" vspace="0"/></td>
-              <td><img id="dataset_img_3" src="" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="150" width="150" hspace="0" vspace="0"/></td>
+              <td><img id="dataset_img_1" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="150" width="150" hspace="0" vspace="0"/></td>
+              <td><img id="dataset_img_2" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="150" width="150" hspace="0" vspace="0"/></td>
+              <td><img id="dataset_img_3" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="150" width="150" hspace="0" vspace="0"/></td>
             </tr>
             <tr>
               <td id="dataset_img_1_file_name">img_file</td>
