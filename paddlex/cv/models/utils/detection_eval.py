@@ -921,7 +921,7 @@ def coco_error_analysis(eval_details_file=None,
 
     """
 
-    from multiprocessing import Pool
+    import multiprocessing as mp
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
 
@@ -968,10 +968,11 @@ def coco_error_analysis(eval_details_file=None,
         ps = np.vstack([ps, np.zeros((4, *ps.shape[1:]))])
         catIds = cocoGt.getCatIds()
         recThrs = cocoEval.params.recThrs
-        with Pool(processes=48) as pool:
-            args = [(k, cocoDt, cocoGt, catId, iou_type)
-                    for k, catId in enumerate(catIds)]
-            analyze_results = pool.starmap(analyze_individual_category, args)
+        thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
+        thread_pool = mp.pool.ThreadPool(thread_num)
+        args = [(k, cocoDt, cocoGt, catId, iou_type)
+                for k, catId in enumerate(catIds)]
+        analyze_results = thread_pool.starmap(analyze_individual_category, args)
         for k, catId in enumerate(catIds):
             nm = cocoGt.loadCats(catId)[0]
             logging.info('--------------saving {}-{}---------------'.format(
