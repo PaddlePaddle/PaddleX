@@ -335,8 +335,11 @@ def _call_paddlex_export_infer(task_path, save_dir, export_status_path, epoch):
     import os
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
     import paddlex as pdx
-    model_dir = "epoch_{}".format(epoch)
-    model_path = osp.join(task_path, 'output', model_dir)
+    if epoch is not None:
+        model_dir = "epoch_{}".format(epoch)
+        model_path = osp.join(task_path, 'output', model_dir)
+    else:
+        model_path = osp.join(task_path, 'output', 'best_model')
     model = pdx.load_model(model_path)
     model.export_inference_model(save_dir)
     set_folder_status(export_status_path, TaskStatus.XEXPORTED)
@@ -353,8 +356,11 @@ def _call_paddlex_export_quant(task_path, params, save_dir, export_status_path,
     task_type = params['task_type']
     os.environ['CUDA_VISIBLE_DEVICES'] = params['train'].cuda_visible_devices
     import paddlex as pdx
-    model_dir = "epoch_{}".format(epoch)
-    model_path = osp.join(task_path, 'output', model_dir)
+    if epoch is not None:
+        model_dir = "epoch_{}".format(epoch)
+        model_path = osp.join(task_path, 'output', model_dir)
+    else:
+        model_path = osp.join(task_path, 'output', 'best_model')
     model = pdx.load_model(model_path)
     if task_type == "classification":
         train_file_list = osp.join(dataset_path, 'train_list.txt')
@@ -823,7 +829,7 @@ def get_export_status(task_path):
     return status, message
 
 
-def export_quant_model(task_path, save_dir, epoch):
+def export_quant_model(task_path, save_dir, epoch=None):
     """导出量化模型
 
     Args:
@@ -850,7 +856,7 @@ def export_quant_model(task_path, save_dir, epoch):
     return p
 
 
-def export_noquant_model(task_path, save_dir, epoch):
+def export_noquant_model(task_path, save_dir, epoch=None):
     """导出inference模型
 
     Args:

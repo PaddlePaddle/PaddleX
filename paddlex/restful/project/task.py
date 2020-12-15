@@ -703,8 +703,8 @@ def export_infer_model(data, workspace, monitored_processes):
     from .operate import export_noquant_model, export_quant_model
     tid = data['tid']
     save_dir = data['save_dir']
-    epoch = data['epoch']
-    quant = data['quant']
+    epoch = data['epoch'] if 'epoch' in data else None
+    quant = data['quant'] if 'quant' in data else False
     assert tid in workspace.tasks, "任务ID'{}'不存在".format(tid)
     path = workspace.tasks[tid].path
     if quant:

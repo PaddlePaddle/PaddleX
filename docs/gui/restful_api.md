@@ -203,6 +203,7 @@ methods=='GET':获取某个数据集的详细信息
 			'test_files'(list): 测试集文件列表，相对于据集地址的相对路径
 			'class_train_file_list(dict)'：类别与训练集映射表，key为类别、value为训练图片相对于据集地址的相对路径
 			'class_val_file_list(dict)'：类别与评估集映射表，key为类别、value为评估图片相对于据集地址的相对路径
+			'class_test_file_list(dict)':类别与测试集映射表，key为类别、value为测试图片相对于据集地址的相对路径
 		}
 ```
 
@@ -637,7 +638,8 @@ methods=='POST':#导出inference模型或者导出lite模型
 		tid(str):任务id
 		type(str):保存模型的类别[infer,lite]，支持inference模型导出和lite的模型导出
 		save_dir(str):保存模型的路径
-		quant(bool,optional)可选，type为infer有效，是否导出量化后的模型
+		epoch(str,optional)可选，指定导出的epoch数默认为评估效果最好的epoch
+		quant(bool,optional)可选，type为infer有效，是否导出量化后的模型，默认为False
 		model_path(str,optional)可选，type为lite时有效，inference模型的地址
 	Return:
 		status
