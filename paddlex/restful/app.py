@@ -302,6 +302,7 @@ def task():
             if 'tid' in Args：
                 task_status(int):任务状态(TaskStatus)枚举变量的值
                 message(str)：任务状态信息
+                type:任务类型包括{'classification', 'detection', 'segmentation', 'instance_segmentation'}
                 resumable(bool):仅Args中存在resume时返回，任务训练是否可以恢复
                 max_saved_epochs(int):仅Args中存在resume时返回，当前训练模型保存的最大epoch
             else:

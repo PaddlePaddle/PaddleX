@@ -329,6 +329,7 @@ methods=='GET':#获取某个任务的信息或者所有任务的信息
 		if 'tid' in Args：
 			task_status(int):任务状态(TaskStatus)枚举变量的值
 			message(str)：任务状态信息
+			type(str):任务类型包括{'classification', 'detection', 'segmentation', 'instance_segmentation'}
 			resumable(bool):仅Args中存在resume时返回，任务训练是否可以恢复
 			max_saved_epochs(int):仅Args中存在resume时返回，当前训练模型保存的最大epoch
 		else:
@@ -340,6 +341,18 @@ methods=='GET':#获取某个任务的信息或者所有任务的信息
 	Example2：
 		#获取所有任务的信息
 		ret = requests.get(url + '/project/task')
+	Ruturn中的自定数据结构:
+		所有任务属性(tasks)，任务属性attr(dict)的list
+		attr{
+			'id'(str): 任务id
+			'name'(str): 任务名字
+			'desc'(str): 任务详细描述
+			'pid'(str): 任务所属的项目id
+			'path'(str): 任务在工作空间的路径
+			'create_time'(str): 任务创建时间
+			'status(int)'：任务状态(TaskStatus)枚举变量的值
+			'type(str)'：任务类型包括{'classification', 'detection', 'segmentation', 'instance_segmentation'}
+		}
 
 methods=='POST':#创建任务(训练或者裁剪)
 	Args:
