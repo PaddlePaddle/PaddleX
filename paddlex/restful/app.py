@@ -302,6 +302,7 @@ def task():
             if 'tid' in Args：
                 task_status(int):任务状态(TaskStatus)枚举变量的值
                 message(str)：任务状态信息
+                type:任务类型包括{'classification', 'detection', 'segmentation', 'instance_segmentation'}
                 resumable(bool):仅Args中存在resume时返回，任务训练是否可以恢复
                 max_saved_epochs(int):仅Args中存在resume时返回，当前训练模型保存的最大epoch
             else:
@@ -630,7 +631,8 @@ def task_export():
             tid(str):任务id
             type(str):保存模型的类别[infer,lite]，支持inference模型导出和lite的模型导出
             save_dir(str):保存模型的路径
-            quant(bool,optional)可选，type为infer有效，是否导出量化后的模型
+            epoch(str,optional)可选，指定导出的epoch数默认为评估效果最好的epoch
+            quant(bool,optional)可选，type为infer有效，是否导出量化后的模型，默认为False
             model_path(str,optional)可选，type为lite时有效，inference模型的地址
         Return:
             status

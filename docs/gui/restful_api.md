@@ -203,6 +203,7 @@ methods=='GET':获取某个数据集的详细信息
 			'test_files'(list): 测试集文件列表，相对于据集地址的相对路径
 			'class_train_file_list(dict)'：类别与训练集映射表，key为类别、value为训练图片相对于据集地址的相对路径
 			'class_val_file_list(dict)'：类别与评估集映射表，key为类别、value为评估图片相对于据集地址的相对路径
+			'class_test_file_list(dict)':类别与测试集映射表，key为类别、value为测试图片相对于据集地址的相对路径
 		}
 ```
 
@@ -328,6 +329,7 @@ methods=='GET':#获取某个任务的信息或者所有任务的信息
 		if 'tid' in Args：
 			task_status(int):任务状态(TaskStatus)枚举变量的值
 			message(str)：任务状态信息
+			type(str):任务类型包括{'classification', 'detection', 'segmentation', 'instance_segmentation'}
 			resumable(bool):仅Args中存在resume时返回，任务训练是否可以恢复
 			max_saved_epochs(int):仅Args中存在resume时返回，当前训练模型保存的最大epoch
 		else:
@@ -339,6 +341,18 @@ methods=='GET':#获取某个任务的信息或者所有任务的信息
 	Example2：
 		#获取所有任务的信息
 		ret = requests.get(url + '/project/task')
+	Ruturn中的自定数据结构:
+		所有任务属性(tasks)，任务属性attr(dict)的list
+		attr{
+			'id'(str): 任务id
+			'name'(str): 任务名字
+			'desc'(str): 任务详细描述
+			'pid'(str): 任务所属的项目id
+			'path'(str): 任务在工作空间的路径
+			'create_time'(str): 任务创建时间
+			'status(int)'：任务状态(TaskStatus)枚举变量的值
+			'type(str)'：任务类型包括{'classification', 'detection', 'segmentation', 'instance_segmentation'}
+		}
 
 methods=='POST':#创建任务(训练或者裁剪)
 	Args:
@@ -637,7 +651,8 @@ methods=='POST':#导出inference模型或者导出lite模型
 		tid(str):任务id
 		type(str):保存模型的类别[infer,lite]，支持inference模型导出和lite的模型导出
 		save_dir(str):保存模型的路径
-		quant(bool,optional)可选，type为infer有效，是否导出量化后的模型
+		epoch(str,optional)可选，指定导出的epoch数默认为评估效果最好的epoch
+		quant(bool,optional)可选，type为infer有效，是否导出量化后的模型，默认为False
 		model_path(str,optional)可选，type为lite时有效，inference模型的地址
 	Return:
 		status

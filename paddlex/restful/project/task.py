@@ -141,6 +141,7 @@ def list_tasks(data, workspace):
         task_pid = workspace.tasks[key].pid
         task_path = workspace.tasks[key].path
         task_create_time = workspace.tasks[key].create_time
+        task_type = workspace.projects[task_pid].type
         from .operate import get_task_status
         path = workspace.tasks[task_id].path
         status, message = get_task_status(path)
@@ -155,7 +156,8 @@ def list_tasks(data, workspace):
             "pid": task_pid,
             "path": task_path,
             "create_time": task_create_time,
-            "status": status.value
+            "status": status.value,
+            'type': task_type
         }
         task_list.append(attr)
     return {'status': 1, 'tasks': task_list}
@@ -250,6 +252,8 @@ def get_task_status(data, workspace):
     assert tid in workspace.tasks, "任务ID'{}'不存在".format(tid)
     path = workspace.tasks[tid].path
     status, message = get_task_status(path)
+    task_pid = workspace.tasks[tid].pid
+    task_type = workspace.projects[task_pid].type
     if 'resume' in data:
         max_saved_epochs = get_task_max_saved_epochs(path)
         params = {'tid': tid}
@@ -261,10 +265,16 @@ def get_task_status(data, workspace):
             'task_status': status.value,
             'message': message,
             'resumable': resumable,
-            'max_saved_epochs': max_saved_epochs
+            'max_saved_epochs': max_saved_epochs,
+            'type': task_type
         }
 
-    return {'status': 1, 'task_status': status.value, 'message': message}
+    return {
+        'status': 1,
+        'task_status': status.value,
+        'message': message,
+        'type': task_type
+    }
 
 
 def get_train_metrics(data, workspace):
@@ -703,8 +713,8 @@ def export_infer_model(data, workspace, monitored_processes):
     from .operate import export_noquant_model, export_quant_model
     tid = data['tid']
     save_dir = data['save_dir']
-    epoch = data['epoch']
-    quant = data['quant']
+    epoch = data['epoch'] if 'epoch' in data else None
+    quant = data['quant'] if 'quant' in data else False
     assert tid in workspace.tasks, "任务ID'{}'不存在".format(tid)
     path = workspace.tasks[tid].path
     if quant:
