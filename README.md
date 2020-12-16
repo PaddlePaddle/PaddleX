@@ -17,7 +17,7 @@
 
 [Complete PaddleX Online Documentation Contents](https://paddlex.readthedocs.io/zh_CN/develop_en/index.html)
 
-It is integrated the abilities of **Image classification**, **Object detection**, **Semantic segmentation**, and **Instance segmentation** in the Paddle CV toolkits, and get through the whole-process development from **Data preparation** and **Model training and optimization** to **Multi-end deployment**. At the same time, PaddleX provides **Succinct APIs** and a **Graphical Ueser Interface**. Developers can quickly complete the end-to-end process development of the Paddle in a form of **low-code**  without installing different libraries.
+It is integrated the abilities of **Image classification**, **Object detection**, **Semantic segmentation**, and **Instance segmentation** in the Paddle CV toolkits, and get through the whole-process development from **Data preparation** and **Model training and optimization** to **Multi-end deployment**. At the same time, PaddleX provides **Concise APIs** and a **Graphical User Interface**. Developers can quickly complete the end-to-end process development of the Paddle in a form of **low-code** without installing different libraries.
 
 **PaddleX** has been validated in a dozen of industry application scenarios such as **Quality Inspection**, **Security**, **Patrol Inspection**, **Remote Sensing**, **Retail**,  **Medical** etc.. In addition, it **provides a wealth of case practice tutorials**, to help developer could apply to actual cases easily.
 
