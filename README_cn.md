@@ -6,27 +6,24 @@
 <p align="center">
   <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
+ <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
+
+[![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
+ ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
+
+:hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
+
+:factory: **PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
 
 
-<p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
-[![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE)
-[![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases)
-![python version](https://img.shields.io/badge/python-3.6+-orange.svg)
-![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
-![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
+:heart:**您可以前往  [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)  查看完整*Read the Doc* 格式的文档，获得更好的阅读体验**:heart:
 
-[完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)
 
-集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
-
-**PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
 
 ![](./docs/gui/images/paddlexoverview.png)
 
-## 近期贡献者
 
-[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/0)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/0)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/1)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/1)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/2)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/2)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/3)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/3)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/4)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/4)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/5)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/5)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/6)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/6)[![](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/images/7)](https://sourcerer.io/fame/LaraStuStu/PaddlePaddle/Paddlex/links/7)
 
 ## 安装
 
@@ -75,7 +72,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 ## 完整使用文档及API说明
 
-- [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)
+- [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html):heart:
 
 - [10分钟快速上手系列教程](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
 - [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
@@ -90,30 +87,28 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - [PaddleX快速上手——Faster-RCNN AI识虫](https://aistudio.baidu.com/aistudio/projectdetail/439888)
 - [PaddleX快速上手——DeepLabv3+ 视盘分割](https://aistudio.baidu.com/aistudio/projectdetail/440197)
 
-
-
-## 全流程产业应用案例
+## 全流程产业应用案例:star:
 
 （continue to be updated）
 
 * 工业巡检：
   * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
-
 * 工业质检：
   * [电池隔膜缺陷检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection/README.html)
-
 * 卫星遥感： 
   * [RGB遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
   * [多通道遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
   * [地块变化检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
-
 * [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
+* 模型多端安全部署
+  * [CPU/GPU(加密)部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/server/index.html)
+  * [OpenVINO加速部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
+  * [Nvidia Jetson开发板部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/nvidia-jetson.html)
+  * [树莓派部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
 
+* [模型可解释性](https://paddlex.readthedocs.io/zh_CN/develop/appendix/interpret.html)
 
-
-## [FAQ](./docs/gui/faq.md)
-
-
+## :question:[FAQ](./docs/gui/faq.md):question:
 
 ## 交流与反馈
 
@@ -130,19 +125,29 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 更新日志
 
 > [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
-- 2020.09.05 v1.2.0
-- 2020.07.13 v1.1.0
-- 2020.07.12 v1.0.8
-- 2020.05.20 v1.0.0
-- 2020.05.17 v0.1.8
+- **2020.09.07 v1.2.0** 
+
+  新增产业最实用目标检测模型PP-YOLO，FasterRCNN、MaskRCNN、YOLOv3、DeepLabv3p等模型新增内置COCO数据集预训练模型，适用于小模型精调。新增多种Backbone，优化体积及预测速度。优化OpenVINO、PaddleLite Android、服务端C++预测部署方案，新增树莓派部署方案等。
+
+- **2020.07.12 v1.1.0** 
+
+  新增人像分割、工业标记读数案例。模型新增HRNet、FastSCNN、FasterRCNN，实例分割MaskRCNN新增Backbone HRNet。集成X2Paddle，PaddleX所有分类模型和语义分割模型支持导出为ONNX协议。新增模型加密Windows平台支持。新增Jetson、Paddle Lite模型部署预测方案。
+
+- **2020.05.20 v1.0.0** 
+
+  新增C++和Python部署，模型加密部署，分类模型OpenVINO部署。新增模型可解释性接口
+
+- **2020.05.17 v0.1.8** 
+
+  新增EasyData平台数据标注格式，支持imgaug数据增强库的pixel-level算子
 
 
 
-## 贡献代码
+## :hugs: 贡献代码:hugs:
 
 我们非常欢迎您为PaddleX贡献代码或者提供使用建议。如果您可以修复某个issue或者增加一个新功能，欢迎给我们提交Pull Requests。
 
-## 开发者贡献项目
+### 开发者贡献项目
 
 * [工业相机实时目标检测GUI](https://github.com/xmy0916/SoftwareofIndustrialCameraUsePaddle) 
 （windows系统，基于pyqt5开发）
