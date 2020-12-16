@@ -36,6 +36,7 @@ elif version[0] == '2':
     print(
         "[WARNING] You are using paddlepaddle(v{}) which may not compatible with paddlex(v{}), paddlepaddle==1.8.4 is strongly recommended.".
         format(paddle.__version__, __version__))
+if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
 
 from .utils.utils import get_environ_info
