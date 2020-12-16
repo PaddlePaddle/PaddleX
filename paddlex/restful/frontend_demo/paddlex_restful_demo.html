@@ -1066,6 +1066,49 @@ function show_dataset_labels()
     load_labels_imgs(g_current_dataset_lable_name, g_current_dataset_page);
 }
 
+//秒转换为日期
+function left_second_to_time(int_sec = 0)
+{ 
+    var time_sec = parseInt(int_sec);
+    var time_min = 0;
+    var time_hour = 0;
+    var time_day = 0;
+    if(time_sec > 60)
+    { 
+        time_min = parseInt(time_sec/60); 
+        time_sec = parseInt(time_sec%60); 
+        if(time_min > 60)
+        { 
+            time_hour = parseInt(time_min/60); 
+            time_min = parseInt(time_min%60); 
+            if(time_hour > 24)
+            {
+                time_day = parseInt(time_hour/24);
+                time_hour = parseInt(time_hour%24);
+            }
+        }
+    }
+    
+    var result = '';
+    if(time_sec > 0)
+    {
+        result = "" + parseInt(time_sec) + "秒";
+    }
+    if(time_min > 0)
+    { 
+        result = "" + parseInt(time_min) + "分" + result;
+    } 
+    if(time_hour > 0)
+    { 
+        result = "" + parseInt(time_hour) + "小时" + result;
+    } 
+    if(time_day > 0)
+    { 
+        result = "" + parseInt(time_day) + "天" + result;
+    }
+    return result;
+}
+
 //根据任务状态更新任务信息UI
 function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
 {
@@ -1137,6 +1180,10 @@ function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
             var curr_acc5 = dic_train_log_metric["acc5"];
             var curr_loss = dic_train_log_metric["loss"];
             var curr_lr = dic_train_log_metric["lr"];
+            var left_time = parseInt(obj_train_msg_json["train_log"]["eta"]);
+            
+            if(left_time > 0)
+                running_duration = "已运行: " + running_duration + "  (估计剩余时间: " + left_second_to_time(left_time) + ")";
         
             //计算进度
             var cur_progress = parseInt((parseInt(curr_epoc)-1)/parseInt(g_train_task_parms["num_epochs"]) * 100);
@@ -1747,6 +1794,22 @@ function create_project(input_data)
     http_request.send(JSON.stringify(data));
 }
 
+//对某个字段排序
+function sort_compare(sort_field, sort_type = "asc")
+{
+    return function(a,b)
+    {
+        if(sort_type == "asc")
+        {
+            return a[sort_field].localeCompare(b[sort_field]);
+        }
+        else
+        {
+            return b[sort_field].localeCompare(a[sort_field]);
+        }
+    }
+}
+
 //查看一个项目
 function show_project(data)
 {
@@ -2032,7 +2095,8 @@ function fill_table_contents(list_contents, type = "project")
             newTd0.innerHTML = str_html;
             return;
         }
-
+        
+        obj_prjs.sort(sort_compare('id'));
         for(var p in obj_prjs)
         {
             str_id = obj_prjs[p].id;
@@ -2108,7 +2172,8 @@ function fill_table_contents(list_contents, type = "project")
             newTd0.innerHTML = str_html;
             return;
         }
-
+        
+        obj_datasets.sort(sort_compare('id'));
         for(var p in obj_datasets)
         {
             str_id = obj_datasets[p].id;
@@ -2245,6 +2310,7 @@ function fill_table_contents(list_contents, type = "project")
             return;
         }
 
+        obj_tasks.sort(sort_compare('id'));
         for(var p in obj_tasks)
         {
             str_id = obj_tasks[p].id;
@@ -2411,6 +2477,7 @@ function fill_table_contents(list_contents, type = "project")
             return;
         }
 
+        obj_models.sort(sort_compare('id'));
         for(var p in obj_models)
         {
             str_id = obj_models[p].id;
@@ -2527,11 +2594,12 @@ function show_create_task_win_modal(obj)
     {
         str_task_type = g_view_project_task_type;
     }
+
     //取出默认参数
     var http_request = new XMLHttpRequest();
     http_request.open("GET", str_srv_url + "/project/task/params?pid=" + str_project_id, false);
     http_request.send(null);
-
+    
     //填充参数到表格
     add_parms_to_table(http_request.responseText, str_task_type);
     
@@ -3011,7 +3079,8 @@ function get_input_task_parm_value(str_key, str_type="int")
             {
                 g_train_task_parms["use_gpu"] = true;
                 var str_card_list = document.getElementById('task_detail_parm_cuda_visible_devices').value
-                g_train_task_parms["cuda_visible_devices"] = str_card_list.split(',').map(Number);
+                g_train_task_parms["cuda_visible_devices"] = str_card_list;
+                //g_train_task_parms["cuda_visible_devices"] = str_card_list.split(',').map(Number);
                 return;
             }
             else
@@ -3753,7 +3822,7 @@ function dispatch_key_press()
   <div style="margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5;">
     <!--评估任务-->
     <div class="btn"><input type="button" id="btn_cancel_evaluate_export" style="background:#529EFF;" value="取消" onclick="hide_evaluate_export_win_modal(this);" /></div>
-    &nbsp;&nbsp;&nbsp;&nbsp;  	
+    &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="btn" id="div_btn_evaluate_task"><input type="button" id="btn_evaluate_task_info" style="background:#008F00;" value="启动评估" onclick="evaluate_task(this);" /></div>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="btn"><input type="button" id="btn_close_evaluate_export" value="导出" onclick="export_model(this);" /></div>
