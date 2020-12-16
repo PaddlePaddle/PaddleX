@@ -146,3 +146,6 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 * [工业相机实时目标检测GUI](https://github.com/xmy0916/SoftwareofIndustrialCameraUsePaddle) 
 （windows系统，基于pyqt5开发）
+* [工业相机实时目标检测GUI](https://github.com/LiKangyuLKY/PaddleXCsharp) 
+（windows系统，基于C#开发）
+
