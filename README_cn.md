@@ -140,8 +140,16 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - **2020.05.17 v0.1.8** 
 
   新增EasyData平台数据标注格式，支持imgaug数据增强库的pixel-level算子
+  
+## 近期活动更新
 
+- 2020.12.16 
 
+  《直击深度学习部署最后一公里 C#软件部署实战》b站直播中奖用户名单请点击[PaddleX直播中奖名单](./docs/luckydraw.md)查看~
+
+- 2020.12.09
+
+  往期直播《直击深度学习部署最后一公里 目标检测兴趣小组》回放链接：https://www.bilibili.com/video/BV1rp4y1q7ap?from=search&seid=105037779997274685
 
 ## :hugs: 贡献代码:hugs:
 
