@@ -32,7 +32,7 @@
 
 **PaddleX提供两种开发模式，满足用户的不同需求：**
 
-1. **Python开发模式：** 
+1. **Python开发模式：**
 
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
@@ -48,7 +48,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 详细安装方法请参考[PaddleX安装](https://paddlex.readthedocs.io/zh_CN/develop/install.html)
 
 
-2. **Padlde GUI模式：**
+2. **PaddleX GUI模式：**
 
    无代码开发的可视化客户端，应用Paddle API实现，使开发者快速进行产业项目验证，并为用户开发自有深度学习软件/应用提供参照。
 
@@ -57,7 +57,13 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
 - [PaddleX GUI安装环境说明](./docs/gui/download.md)
-  
+
+
+3. **PaddleX Restful:**
+  使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
+- 前往[PaddleX RESTful API使用教程](./docs/gui/introduction.md)
+
+
 
 ## 产品模块说明
 
@@ -71,7 +77,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 - **多端安全部署**：内置[PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)模型压缩工具和**模型加密部署模块**，与飞桨原生预测库Paddle Inference及高性能端侧推理引擎[Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite) 无缝打通，使开发者快速实现模型的多端、高性能、安全部署。
 
-  
+
 
 ## 完整使用文档及API说明
 
@@ -80,6 +86,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - [10分钟快速上手系列教程](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
 - [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
 - [PaddleX API接口说明](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
+- [PaddleX RESTful API说明](https://paddlex.readthedocs.io/zh_CN/develop/gui/introduction.html)
 
 ### 在线项目示例
 
@@ -102,7 +109,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 * 工业质检：
   * [电池隔膜缺陷检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection/README.html)
 
-* 卫星遥感： 
+* 卫星遥感：
   * [RGB遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
   * [多通道遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
   * [地块变化检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
@@ -120,7 +127,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
 
 - PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
-  
+
   <p align="center">
     <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
   </p>

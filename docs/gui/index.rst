@@ -53,11 +53,16 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。
 
 **paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]**
 
-PaddleX Remote GUI
+支持RESTful版本的GUI
 ---------------------------------------
 
-PaddleX Remote GUI是针对PaddleX RESTful开发的可视化客户端。开发者可以通过客户端连接开启RESTful服务的服务端，通过GUI实现深度学习全流程：**数据处理** 、 **超参配置** 、 **模型训练及优化** 、 **模型发布**，无需开发一行代码，即可得到高性深度学习推理模型。
+支持RESTful版本的GUI是针对PaddleX RESTful开发的可视化客户端。开发者可以通过客户端连接开启RESTful服务的服务端，通过GUI远程的实现深度学习全流程：**数据处理** 、 **超参配置** 、 **模型训练及优化** 、 **模型发布**，无需开发一行代码，即可得到高性深度学习推理模型。
 
+
+支持RESTful版本Web Demo
+---------------------------------------
+
+支持RESTful版本Web Demo是针对PaddleX RESTful开发的网页版可视化客户端。开发者可以通过Web Demo连接开启RESTful服务的服务端，远程实现深度学习全流程：**数据处理** 、 **超参配置** 、 **模型训练及优化** 、 **模型发布**，无需开发一行代码，即可得到高性深度学习推理模型。
 
 PaddleX RESTful API 二次开发
 ---------------------------------------
