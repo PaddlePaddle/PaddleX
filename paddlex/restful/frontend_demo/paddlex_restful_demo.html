@@ -422,6 +422,8 @@ var g_view_project_task_type = "classification";
 
 //用于刷新任务定时器句柄
 var g_instance_refresh_clock;
+//用于刷新下载进度定时器句柄
+var g_instance_download_demo_clock;
 
 //浏览数据集变量
 var g_dataset_files = {};
@@ -468,6 +470,13 @@ var TaskStatus = {
     XEXPORTFAIL:13, //任务导出模型失败
     XPRUNEING:14, //裁剪分析任务运行中
     XPRUNETRAIN:15  //裁剪训练任务运行中
+};
+
+var DownloadStatus = {
+    XDDOWNLOADING:0, //下载中
+    XDDOWNLOADFAIL:1, //下载失败
+    XDDOWNLOADDONE:2,//下载完成
+    XDDECOMPRESSED:3//解压完成
 };
 
 //参数范围
@@ -2025,7 +2034,7 @@ function split_dataset(obj)
     
     var data = {"did":str_split_dataset_id, "val_split":val_split, "test_split":test_split};
 
-    alert(JSON.stringify(data));
+    //alert(JSON.stringify(data));
     
     http_request.open("PUT", str_srv_url + "/dataset/split", true);
     http_request.setRequestHeader("Content-type","application/json");
@@ -2088,8 +2097,8 @@ function fill_table_contents(list_contents, type = "project")
         if(count_prj <= 0)
         {
             var newTd0=newTr.insertCell();
-            var str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"show_create_project_win_modal(this)\" style=\"width: 240px; height: 90px; align: center\">"
-            str_html = str_html + "<br><font color=\"blue\">暂无项目，点击创建新项目</font>";
+            var str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"show_download_demo_win_modal(this)\" style=\"width: 510px; height: 90px; align: center\">"
+            str_html = str_html + "<br><font color=\"blue\">暂无项目，点击下载示例项目（或点击新建按纽创建新项目）</font>";
   
             str_html = str_html + "</view_item></div>";
             newTd0.innerHTML = str_html;
@@ -2123,7 +2132,7 @@ function fill_table_contents(list_contents, type = "project")
                 
             //如下所示，后续如果要获取对象数据，可以在此处放hidden input，后续再通过id获取
             str_html = str_html + "项目类型：" + str_type_view + "<br>" + "<input type=\"hidden\" id=\"view_project_type_" + str_id + "\" value=\"" + str_type + "\">";
-            str_html = str_html + "项目描述：" + str_desc + "<br><br><br>";
+            str_html = str_html + "项目描述：" + str_desc + "<br><br>";
             str_html = str_html + "创建时间：" + str_crttime + "<br>";
             str_html = str_html + "</view_item></div>";
             newTd0.innerHTML = str_html;
@@ -2252,7 +2261,7 @@ function fill_table_contents(list_contents, type = "project")
                 
             //如果需要获取对象信息，可以在此增加hidden的input
             str_html = str_html + "数据集类型：" + str_type_view + "<br>" + "<input type=\"hidden\" id=\"view_dataset_type_" + str_id + "\" value=\"" + str_dataset_type + "\">";
-            str_html = str_html + "数据集描述：" + str_desc + "<br><br>" + "<input type=\"hidden\" id=\"view_dataset_desc_" + str_id + "\" value=\"" + str_desc + "\">";
+            str_html = str_html + "数据集描述：" + str_desc + "<br>" + "<input type=\"hidden\" id=\"view_dataset_desc_" + str_id + "\" value=\"" + str_desc + "\">";
             str_html = str_html + "创建时间：" + str_crttime + "<br>" + "<input type=\"hidden\" id=\"view_dataset_path_" + str_id + "\" value=\"" + str_dataset_path + "\">";	                         
             
             str_html = str_html + "数据集状态：" + view_status_str + "<br>";
@@ -2956,6 +2965,355 @@ function set_augument_detail_parms(obj)
     
 }
 
+//Demo案例下载窗口
+function show_download_demo_win_modal()
+{
+    document.getElementById('download_cls_label').disabled = false;
+    document.getElementById('download_det_label').disabled = false;
+    document.getElementById('download_ins_label').disabled = false;
+    document.getElementById('download_seg_label').disabled = false;
+    
+    document.getElementById('download_cls_label').checked = false;
+    document.getElementById('download_det_label').checked = false;
+    document.getElementById('download_ins_label').checked = false;
+    document.getElementById('download_seg_label').checked = false;
+    
+    document.getElementById('cls_download_status_progress_bar_value').style = "width: 0%;";
+    document.getElementById('cls_download_status_progress_bar').innerText = "0%";
+    document.getElementById('det_download_status_progress_bar_value').style = "width: 0%;";
+    document.getElementById('det_download_status_progress_bar').innerText = "0%";
+    document.getElementById('ins_download_status_progress_bar_value').style = "width: 0%;";
+    document.getElementById('ins_download_status_progress_bar').innerText = "0%";
+    document.getElementById('seg_download_status_progress_bar_value').style = "width: 0%;";
+    document.getElementById('seg_download_status_progress_bar').innerText = "0%";
+    
+    document.getElementById('btn_download_proc').style.background = "#0000cd";
+    document.getElementById('btn_download_proc').value = "开始下载";
+    
+    var on_win_download_demo = document.getElementById('demo_download_win');
+    var over_win_download_demo = document.getElementById('demo_download_win_over');
+    
+    on_win_download_demo.style.display = "block";
+    over_win_download_demo.style.display = "block";
+}
+
+//关闭下载窗口
+function hide_download_demo_win_modal()
+{
+    //关闭定时器
+    g_instance_download_demo_clock=window.clearInterval(g_instance_download_demo_clock);
+    
+    var on_win_download_demo = document.getElementById('demo_download_win');
+    var over_win_download_demo = document.getElementById('demo_download_win_over');
+    
+    on_win_download_demo.style.display = "none";
+    over_win_download_demo.style.display = "none";
+}
+
+//下载相关操作
+function download_win_btn_proc(obj)
+{
+    var str_btn_txt = obj.value;
+    if(str_btn_txt == "开始下载" || str_btn_txt == "重新下载")
+    {
+        if (document.getElementById('download_cls_label').checked == false && document.getElementById('download_det_label').checked == false
+            && document.getElementById('download_ins_label').checked == false && document.getElementById('download_seg_label').checked == false)
+        {
+            alert("请至少选择一个示例项目!");
+            return;
+        }
+        
+        document.getElementById('download_cls_label').disabled = true;
+        document.getElementById('download_det_label').disabled = true;
+        document.getElementById('download_ins_label').disabled = true;
+        document.getElementById('download_seg_label').disabled = true;
+
+        //启动下载任务
+        start_download_demo(obj);
+        //启动定时器
+        g_instance_download_demo_clock = self.setInterval("refresh_download_progress()",2000);
+        
+        document.getElementById('btn_download_proc').style.background = "#FF2600";
+        document.getElementById('btn_download_proc').value = "停止下载";
+    }
+    else if(str_btn_txt == "停止下载")
+    {
+        document.getElementById('download_cls_label').disabled = false;
+        document.getElementById('download_det_label').disabled = false;
+        document.getElementById('download_ins_label').disabled = false;
+        document.getElementById('download_seg_label').disabled = false;
+        //停止任务
+        stop_download_demo(obj);
+        //停止定时器
+        g_instance_download_demo_clock=window.clearInterval(g_instance_download_demo_clock);
+    
+        document.getElementById('btn_download_proc').style.background = "#0000cd";
+        document.getElementById('btn_download_proc').value = "开始下载";
+    }
+}
+
+//下载示例项目
+function start_download_demo(obj)
+{
+    //下载项目
+    if (document.getElementById('download_cls_label').checked == true)
+    {
+        download_one_project("classification");
+    }
+    if (document.getElementById('download_det_label').checked == true)
+    {
+        download_one_project("detection");
+    }
+    if (document.getElementById('download_ins_label').checked == true)
+    {
+        download_one_project("instance_segmentation");
+    }
+    if (document.getElementById('download_seg_label').checked == true)
+    {
+        download_one_project("segmentation");
+    }
+}
+
+//下载一个示例工程
+function download_one_project(prj_type = "classification")
+{
+    var http_request = new XMLHttpRequest();
+    http_request.onreadystatechange=function()
+    {
+        if (http_request.readyState==4)
+        {
+            if (http_request.status!=200)
+            {
+                 alert("下载" + prj_type + "示例项目失败，请检查服务器配置!\n" + http_request.responseText);
+            }
+        }
+    }
+
+    var data = {"type":"download","prj_type":prj_type};
+    http_request.open("POST", str_srv_url + "/demo", false);
+    http_request.setRequestHeader("Content-type","application/json");
+    http_request.send(JSON.stringify(data));
+}
+
+//停止下载demo
+function stop_download_demo(obj)
+{
+    if (document.getElementById('download_cls_label').checked == true)
+    {
+        stop_download_one_project("classification");
+    }
+    if (document.getElementById('download_det_label').checked == true)
+    {
+        stop_download_one_project("detection");
+    }
+    if (document.getElementById('download_ins_label').checked == true)
+    {
+        stop_download_one_project("instance_segmentation");
+    }
+    if (document.getElementById('download_seg_label').checked == true)
+    {
+        stop_download_one_project("segmentation");
+    }
+}
+
+//停止正在下载的项目
+function stop_download_one_project(prj_type = "classification")
+{
+    var http_request = new XMLHttpRequest();
+    http_request.onreadystatechange=function()
+    {
+        if (http_request.readyState==4)
+        {
+            if (http_request.status!=200)
+            {
+                 //alert("停止" + prj_type + "示例项目失败，请检查服务器配置!\n" + http_request.responseText);
+            }
+        }
+    }
+    var data = {"prj_type":prj_type};
+    
+    http_request.open("PUT", str_srv_url + "/demo", true);
+    http_request.setRequestHeader("Content-type","application/json");
+    http_request.send(JSON.stringify(data));
+}
+
+//刷新下载进度
+function refresh_download_progress()
+{
+    //获取下载进度，刷新下载任务窗口
+    var int_progress = 0;
+    var b_finish = true;
+    if (document.getElementById('download_cls_label').checked == true)
+    {
+        var dic_status = get_one_project_download_status("classification");
+        int_progress = dic_status.progress;
+        //进度条
+        var obj_view_cls_download_status_progress_value = document.getElementById('cls_download_status_progress_bar_value');
+        obj_view_cls_download_status_progress_value.style = "width: " + int_progress + "%;";
+        var obj_view_cls_download_status_progress_bar = document.getElementById('cls_download_status_progress_bar');
+        obj_view_cls_download_status_progress_bar.innerText = int_progress + "%";
+        
+        if(int_progress < 100)
+        {
+            b_finish = false;
+        }
+    }
+    if (document.getElementById('download_det_label').checked == true)
+    {
+        var dic_status = get_one_project_download_status("detection");
+        int_progress = dic_status.progress;
+        
+        //进度条
+        var obj_view_det_download_status_progress_value = document.getElementById('det_download_status_progress_bar_value');
+        obj_view_det_download_status_progress_value.style = "width: " + int_progress + "%;";
+        var obj_view_det_download_status_progress_bar = document.getElementById('det_download_status_progress_bar');
+        obj_view_det_download_status_progress_bar.innerText = int_progress + "%";
+        
+        if(int_progress < 100)
+        {
+            b_finish = false;
+        }
+    }
+    if (document.getElementById('download_ins_label').checked == true)
+    {
+        var dic_status = get_one_project_download_status("instance_segmentation");
+        int_progress = dic_status.progress;
+        //进度条
+        var obj_view_ins_download_status_progress_value = document.getElementById('ins_download_status_progress_bar_value');
+        obj_view_ins_download_status_progress_value.style = "width: " + int_progress + "%;";
+        var obj_view_ins_download_status_progress_bar = document.getElementById('ins_download_status_progress_bar');
+        obj_view_ins_download_status_progress_bar.innerText = int_progress + "%";
+        
+        if(int_progress < 100)
+        {
+            b_finish = false;
+        }
+    }
+    if (document.getElementById('download_seg_label').checked == true)
+    {
+        var dic_status = get_one_project_download_status("segmentation");
+        int_progress = dic_status.progress;
+        //进度条
+        var obj_view_seg_download_status_progress_value = document.getElementById('seg_download_status_progress_bar_value');
+        obj_view_seg_download_status_progress_value.style = "width: " + int_progress + "%;";
+        var obj_view_seg_download_status_progress_bar = document.getElementById('seg_download_status_progress_bar');
+        obj_view_seg_download_status_progress_bar.innerText = int_progress + "%";
+        
+        if(int_progress < 100)
+        {
+            b_finish = false;
+        }
+    }
+    
+    if(b_finish == true)
+    {
+        g_instance_download_demo_clock=window.clearInterval(g_instance_download_demo_clock);
+        //创建对应项目
+        alert("示例工程下载完成！即将创建对应工程，请稍候...");
+        
+        create_demo_project();
+        
+        document.getElementById('download_cls_label').disabled = false;
+        document.getElementById('download_det_label').disabled = false;
+        document.getElementById('download_ins_label').disabled = false;
+        document.getElementById('download_seg_label').disabled = false;
+        
+        document.getElementById('btn_download_proc').style.background = "#0000cd";
+        document.getElementById('btn_download_proc').value = "重新下载";
+        
+        alert("示例工程创建完成！");
+        
+        load_projects();
+    }
+}
+
+//创建示例项目
+function create_demo_project()
+{
+    if (document.getElementById('download_cls_label').checked == true)
+    {
+        create_one_demo_project("classification");
+    }
+    if (document.getElementById('download_det_label').checked == true)
+    {
+        create_one_demo_project("detection");
+    }
+    if (document.getElementById('download_ins_label').checked == true)
+    {
+        create_one_demo_project("instance_segmentation");
+    }
+    if (document.getElementById('download_seg_label').checked == true)
+    {
+        create_one_demo_project("segmentation");
+    }
+}
+
+//创建一个示例工程
+function create_one_demo_project(prj_type = "classification")
+{
+    var http_request = new XMLHttpRequest();
+    http_request.onreadystatechange=function()
+    {
+        if (http_request.readyState==4)
+        {
+            if (http_request.status!=200)
+            {
+                 alert("创建" + prj_type + "示例项目失败，请检查服务器配置!\n" + http_request.responseText);
+            }
+        }
+    }
+
+    var data = {"type":"load","prj_type":prj_type};
+    http_request.open("POST", str_srv_url + "/demo", false);
+    http_request.setRequestHeader("Content-type","application/json");
+    http_request.send(JSON.stringify(data));
+}
+
+//获取一个项目的下载进度
+function get_one_project_download_status(prj_type = "classification")
+{
+    var http_request = new XMLHttpRequest();
+    http_request.open("GET", str_srv_url + "/demo?prj_type=" + prj_type, false);
+    http_request.send(null);
+    
+    var obj_json = eval('(' + http_request.responseText + ')'); 
+    var str_download_status = obj_json["attr"]["status"];
+    var int_progress = 0;
+    if(obj_json["attr"]["progress"] != "")
+    {
+        int_progress = parseInt(obj_json["attr"]["progress"]);;
+    }
+    
+    if(str_download_status == DownloadStatus.XDDOWNLOADFAIL)
+    {
+        int_progress = 0;
+    }
+    else if(str_download_status == DownloadStatus.XDDOWNLOADING)
+    {
+        if(int_progress > 50)
+        {
+            int_progress = 50;
+        }
+    }
+    else if(str_download_status == DownloadStatus.XDDOWNLOADDONE)
+    {
+        int_progress = 50;
+    }
+    else if(str_download_status == DownloadStatus.XDDECOMPRESSED)
+    {
+        int_progress = 100;
+    }
+    
+    return {status:str_download_status, progress:int_progress};
+}
+
+//设置->下载示例项目
+function download_demo_btn_proc(obj)
+{
+    show_download_demo_win_modal();
+    hide_server_info(obj);
+}
+
 //预训练模型列表
 function get_pretrained_model_list(str_model_name)
 {
@@ -3517,6 +3875,9 @@ function dispatch_key_press()
   <br>
   <!--buttons-->
   <div style="margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5;">
+    <!--下载示例项目-->
+    <div class="btn" id="div_btn_download_demo"><input type="button" id="btn_download_demo" style="background:#008F00;" value="下载示例项目" onclick="download_demo_btn_proc(this);" /></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="btn"><input type="button" id="btn_cancel_cfg_srv" style="background:#529EFF;" value="取消" onclick="hide_server_info(this);" /></div>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="btn"><input type="button" id="btn_cfg_srv" value="设置" onclick="set_server_addr(this);" /></div>
@@ -3964,6 +4325,66 @@ function dispatch_key_press()
 </div>
 <div id="win_view_log_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
 <!--浏览日志窗口-->
+
+<!--数据增强详细信息窗口-->
+<!--数据增强详细信息窗口-->
+
+<!--Demo下载窗口-->
+<div id="demo_download_win" style="display:none;border:1px solid #cccccc;height:390px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+  <!--title-->
+  <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
+    <br><div style="font-size: 20px;">下载示例项目</div><br>
+  </div>
+  <br/>
+  <!--demos-->
+  <table width="100%" align="center" id="download_demo_detail_info">
+  <tr>
+  <td width="40%"><br>
+    <label id="download_cls"><input type="checkbox" id="download_cls_label" value="下载图像分类示例项目" style="height: 12px;width: 12px;">下载图像分类示例项目</label>
+  </td>
+  <td>
+    <br><div class="progress"> <span id="cls_download_status_progress_bar_value" class="green" style="width: 0%;"><span id="cls_download_status_progress_bar">0%</span></span></div>
+  </td>
+  <td>&nbsp</td>
+  </tr>
+  <tr>
+  <td width="40%"><br>
+    <label id="download_det"><input type="checkbox" id="download_det_label" value="下载目标检测示例项目" style="height: 12px;width: 12px;">下载目标检测示例项目</label>
+  </td>
+  <td>
+    <br><div class="progress"> <span id="det_download_status_progress_bar_value" class="green" style="width: 0%;"><span id="det_download_status_progress_bar">0%</span></span></div>
+  </td>
+  <td>&nbsp</td>
+  </tr>
+  <tr>
+  <td width="40%"><br>
+    <label id="download_ins"><input type="checkbox" id="download_ins_label" value="下载实例分割示例项目" style="height: 12px;width: 12px;">下载实例分割示例项目</label>
+  </td>
+  <td>
+    <br><div class="progress"> <span id="ins_download_status_progress_bar_value" class="green" style="width: 0%;"><span id="ins_download_status_progress_bar">0%</span></span></div>
+  </td>
+  <td>&nbsp</td>
+  </tr>
+  <tr>
+  <td width="40%"><br>
+    <label id="download_seg"><input type="checkbox" id="download_seg_label" value="下载语义分割示例项目" style="height: 12px;width: 12px;">下载语义分割示例项目</label>
+  </td>
+  <td>
+    <br><div class="progress"> <span id="seg_download_status_progress_bar_value" class="green" style="width: 0%;"><span id="seg_download_status_progress_bar">0%</span></span></div>
+  </td>
+  <td>&nbsp</td>
+  </tr>
+  </table>
+  <br>
+  <!--buttons-->
+  <div style="margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5;">
+    <div class="btn"><input type="button" id="btn_cancel_download_demo" style="background:#529EFF;" value="关闭窗口" onclick="hide_download_demo_win_modal();" /></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="btn"><input type="button" id="btn_download_proc" value="开始下载" onclick="download_win_btn_proc(this);" /></div>
+  </div>
+</div>
+<div id="demo_download_win_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0;z-index:9;background: silver;"></div>
+<!--Demo下载窗口-->
 
 <div class="btn">
     <input type="button" id="btn_refresh" style="width: 150px; height: 50px; " value="刷新项目信息" onclick="javascript:refresh_contents(this);"/>
