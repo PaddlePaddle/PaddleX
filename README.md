@@ -59,7 +59,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - [PaddleX GUI安装环境说明](./docs/gui/download.md)
 
 
-3. **PaddleX Restful:**
+3. **PaddleX Restful:**  
   使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
 - 前往[PaddleX RESTful API使用教程](./docs/gui/introduction.md)
 
