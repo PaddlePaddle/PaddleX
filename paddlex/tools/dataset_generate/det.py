@@ -151,6 +151,10 @@ def paste_objects(templates, background, save_dir='dataset_clone'):
             except:
                 raise TypeError('Can\'t read The image file {}!'.format(
                     temp_im))
+        if im_c != temp_im.shape[-1]:
+            raise Exception(
+                "The channels of template({}) and background({}) images are not same. Objects cannot be pasted normally! Please check your images.".
+                format(temp_im.shape[-1], im_c))
         temp_annos = temp['annos']
         for temp_anno in temp_annos:
             temp_mask = np.zeros(temp_im.shape, temp_im.dtype)
