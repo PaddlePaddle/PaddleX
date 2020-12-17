@@ -207,7 +207,7 @@ def get_default_params(data, workspace, machine_info):
         per_gpu_memory = 0
         gpu_list = None
     else:
-        if gpu_list in data:
+        if 'gpu_list' in data:
             gpu_list = data['gpu_list']
             gpu_num = len(gpu_list)
             per_gpu_memory = None

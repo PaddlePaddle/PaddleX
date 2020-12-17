@@ -741,13 +741,13 @@ info={
 ```
 methods=='GET':#获取demo下载进度
 	Args:
-		prj_type(int):项目类型ProjectType枚举变量的int值
+		prj_type(str):项目类型可以是['classification', 'detection', 'segmentation','instance_segmentation']
 	Return:
 		status
 		attr(dict):demo下载信息
 	Example:
 		#分类项目示例demo下载
-		params = {'prj_type' = 0}
+		params = {'prj_type' = 'classification'}
 		ret = requests.get(url + 'demo', json=params)
 #attr(dict):demo下载信息，包含
 attr={

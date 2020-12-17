@@ -9,7 +9,7 @@ import json
 import sys
 import multiprocessing as mp
 from . import workspace_pb2 as w
-from .utils import CustomEncoder, ShareData, is_pic, get_logger
+from .utils import CustomEncoder, ShareData, is_pic, get_logger, TaskStatus
 import numpy as np
 
 app = Flask(__name__)
@@ -29,10 +29,11 @@ def init(dirname, logger):
     get_system_info(SD.machine_info)
 
 
-@app.errorhandler(Exception)
+'''@app.errorhandler(Exception)
 def handle_exception(e):
     ret = {"status": -1, 'message': repr(e)}
     return ret
+'''
 
 
 @app.route('/workspace', methods=['GET', 'PUT'])
@@ -548,11 +549,13 @@ def task_evaluate():
     if request.method == 'GET':
         from .project.task import get_evaluate_result
         ret = get_evaluate_result(data, SD.workspace)
+        if ret['evaluate_status'] == TaskStatus.XEVALUATED and ret[
+                'result'] is not None:
+            if 'Confusion_Matrix' in ret['result']:
+                ret['result']['Confusion_Matrix'] = ret['result'][
+                    'Confusion_Matrix'].tolist()
+            ret['result'] = CustomEncoder().encode(ret['result'])
         ret['evaluate_status'] = ret['evaluate_status'].value
-        if 'Confusion_Matrix' in ret['result']:
-            ret['result']['Confusion_Matrix'] = ret['result'][
-                'Confusion_Matrix'].tolist()
-        ret['result'] = CustomEncoder().encode(ret['result'])
         return ret
     if request.method == 'POST':
         from .project.task import evaluate_model
@@ -902,4 +905,4 @@ def run(port, workspace_dir):
             os.makedirs(dirname)
     logger = get_logger(osp.join(dirname, "mcessages.log"))
     init(dirname, logger)
-    app.run(host='0.0.0.0', port=port, threaded=True)
+    app.run(host='0.0.0.0', port=port, threaded=True, debug=True)

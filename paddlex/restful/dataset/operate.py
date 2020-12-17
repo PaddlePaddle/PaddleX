@@ -30,6 +30,15 @@ dataset_url_list = [
     'https://bj.bcebos.com/paddlex/demos/xiaoduxiong_ins_det.tar.gz',
     'https://bj.bcebos.com/paddlex/demos/remote_sensing_seg.tar.gz'
 ]
+dataset_url_dict = {
+    'classification':
+    'https://bj.bcebos.com/paddlex/demos/vegetables_cls.tar.gz',
+    'detection': 'https://bj.bcebos.com/paddlex/demos/insect_det.tar.gz',
+    'segmentation':
+    'https://bj.bcebos.com/paddlex/demos/optic_disc_seg.tar.gz',
+    'instance_segmentation':
+    'https://bj.bcebos.com/paddlex/demos/xiaoduxiong_ins_det.tar.gz'
+}
 
 
 def _check_and_copy(dataset, dataset_path, source_path):
