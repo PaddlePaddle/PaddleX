@@ -120,6 +120,25 @@ def arg_parser():
         "-tv",
         default=None,
         help="define the value of test dataset(E.g 0.1)")
+    parser.add_argument(
+        "--start_restful",
+        "-sr",
+        action="store_true",
+        default=False,
+        help="start paddlex restful server")
+    parser.add_argument(
+        "--port",
+        "--pt",
+        type=_text_type,
+        default=None,
+        help="set the port of restful server")
+    parser.add_argument(
+        "--workspace_dir",
+        "--wd",
+        type=_text_type,
+        default=None,
+        help="set the workspace dir of restful server")
+
     return parser
 
 
@@ -225,6 +244,16 @@ def main():
 
         pdx.tools.split.dataset_split(dataset_dir, dataset_format, val_value,
                                       test_value, save_dir)
+
+    if args.start_restful:
+
+        assert args.port is not None, "--port should be defined while start restful server"
+        assert args.workspace_dir, "--workspace_dir should be define while start restful server"
+
+        port = args.port
+        workspace_dir = args.workspace_dir
+
+        pdx.restful.app.run(port, workspace_dir)
 
 
 if __name__ == "__main__":
