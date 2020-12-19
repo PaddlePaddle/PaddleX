@@ -1,6 +1,6 @@
-# API 参考文档
+# RestFUL API 参考文档
 ## API 总览
-![alt](./img/restful_api.png)
+![](./img/restful_api.png)
 图片包含目前PaddleX restful模块提供所有的restful api以及api支持的https请求方式：
 
 - /workspace: 工作空间相关
