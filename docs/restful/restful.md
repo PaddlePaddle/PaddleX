@@ -1,9 +1,9 @@
 # 二次开发简介
-如图，PaddleX Restful主要由数据集(dataset)，项目(project)，任务(task)，模型(model)组成。上述模块数据保存在指定的工作空间(workspace)内，相应的结构化信息通过protobuf保存，[workspace的protobuf消息定义](./data_struct.md)。  
+如图，PaddleX RESTful主要由数据集(dataset)，项目(project)，任务(task)，模型(model)组成。上述模块数据保存在指定的工作空间(workspace)内，相应的结构化信息通过protobuf保存，[workspace的protobuf消息定义](./data_struct.md)。  
 
 ![](./img/framework.png)  
 
-**说明**：后续restful api通过`[Http request method] url`来表示  
+**说明**：后续RESTful API通过`[HTTP request method] url`来表示  
 
 ## 流程介绍
 对于通过RESTtful接口来进行二次开发，主要的流程如下：

@@ -32,7 +32,7 @@ pip install paddlex
 pip install pycuda
 ```
 
-#### step2：开启restful 服务
+#### step2：开启RESTful 服务
 ```
 paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```
@@ -58,7 +58,7 @@ pip install paddlex
 pip install pycuda
 ```
 
-#### step2：开启restful 服务
+#### step2：开启RESTful 服务
 ```
 paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```

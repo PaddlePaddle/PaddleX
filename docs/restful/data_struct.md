@@ -1,5 +1,5 @@
 # 数据结构
-本文档用于说明PaddleX restful模块自定义的数据结构
+本文档用于说明PaddleX RESTful模块自定义的数据结构
 
 ## Protobuf结构化数据
 ```
