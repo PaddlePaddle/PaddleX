@@ -1,11 +1,7 @@
 # RestFUL API 参考文档
 ## API 总览
 ![](./img/restful_api.png)
-<<<<<<< HEAD:docs/gui/restful_api.md
-图片包含目前PaddleX restful模块提供所有的restful api以及api支持的https请求方式：
-=======
 图片包含目前PaddleX RESTful模块提供所有的RESTful API:
->>>>>>> dae8c7c... fix docs:docs/restful/restful_api.md
 
 - /workspace: 工作空间相关
 - /dataset：数据集操作
