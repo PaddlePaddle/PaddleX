@@ -52,13 +52,7 @@ Please refer to the [PaddleX installation](https://paddlex.readthedocs.io/zh_CN/
 
 2. **Padlde GUI(Graphical Ueser Interface) mode:**
 
-<<<<<<< HEAD
 It's a all-in-one client enable develops could implement deep learning projects without code.
-=======
-3. **PaddleX Restful:**  
-  使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
-- 前往[PaddleX RESTful API使用教程](./docs/restful/introduction.md)
->>>>>>> dae8c7c... fix docs
 
 - Go to [PaddleX Official Website](https://www.paddlepaddle.org.cn/paddle/paddlex) to download the all-in-one client.
 
@@ -87,14 +81,7 @@ It's a all-in-one client enable develops could implement deep learning projects 
 
 ### Examples of Online Projects
 
-<<<<<<< HEAD
 To get developers up to speed with the PaddleX API, we've created a complete series of sample tutorials that you can run PaddleX projects online through the **AIStudio** quickly.
-=======
-- [10分钟快速上手系列教程](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
-- [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
-- [PaddleX API接口说明](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
-- [PaddleX RESTful API说明](https://paddlex.readthedocs.io/zh_CN/develop/restful/introduction.html)
->>>>>>> dae8c7c... fix docs
 
 - [PaddleX Quick Start - CV Model Training](https://aistudio.baidu.com/aistudio/projectdetail/450925)
 - [PaddleX Quick Start - MobileNetV3-ssld Cosmetics Classification](https://aistudio.baidu.com/aistudio/projectdetail/450220)
