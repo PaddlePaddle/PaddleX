@@ -472,11 +472,19 @@ var TaskStatus = {
     XPRUNETRAIN:15  //裁剪训练任务运行中
 };
 
+//下载状态
 var DownloadStatus = {
     XDDOWNLOADING:0, //下载中
     XDDOWNLOADFAIL:1, //下载失败
     XDDOWNLOADDONE:2,//下载完成
     XDDECOMPRESSED:3//解压完成
+};
+
+//预测状态
+var PredictStatus = {
+    XPRESTART:0, //预测开始
+    XPREDONE:1,//预测完成
+    XPREFAIL:2 //预测失败
 };
 
 //参数范围
@@ -498,6 +506,13 @@ var Backbone_List = {
     "DeepLabv3p": ["Xception65", "Xception41", "MobileNetV3_large_x1_0_ssld", "MobileNetV2_x0.25",
                    "MobileNetV2_x0.5", "MobileNetV2_x1.0", "MobileNetV2_x1.5","MobileNetV2_x2.0"],
     "MaskRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"]
+}
+
+var Project_Type_Name_Enum = {
+    "classification":"图像分类",
+     "detection":"目标检测",
+     "segmentation":"语义分割",
+     "instance_segmentation":"实例分割"
 }
 
 //显示服务器配置窗口
@@ -2097,7 +2112,7 @@ function fill_table_contents(list_contents, type = "project")
         if(count_prj <= 0)
         {
             var newTd0=newTr.insertCell();
-            var str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"show_download_demo_win_modal(this)\" style=\"width: 510px; height: 90px; align: center\">"
+            var str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"show_download_demo_win_modal(this)\" style=\"width: 510px; height: 90px; align: center\">";
             str_html = str_html + "<br><font color=\"blue\">暂无项目，点击下载示例项目（或点击新建按纽创建新项目）</font>";
   
             str_html = str_html + "</view_item></div>";
@@ -2174,7 +2189,7 @@ function fill_table_contents(list_contents, type = "project")
         if(count_datasets <= 0)
         {
             var newTd0=newTr.insertCell();
-            var str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"show_create_dataset_win_modal(this)\" style=\"width: 260px; height: 90px; align: center\">"
+            var str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"show_create_dataset_win_modal(this)\" style=\"width: 260px; height: 90px; align: center\">";
             str_html = str_html + "<br><font color=\"blue\">暂无数据集，点击创建数据集</font>";
 
             str_html = str_html + "</view_item></div>";
@@ -2262,7 +2277,7 @@ function fill_table_contents(list_contents, type = "project")
             //如果需要获取对象信息，可以在此增加hidden的input
             str_html = str_html + "数据集类型：" + str_type_view + "<br>" + "<input type=\"hidden\" id=\"view_dataset_type_" + str_id + "\" value=\"" + str_dataset_type + "\">";
             str_html = str_html + "数据集描述：" + str_desc + "<br>" + "<input type=\"hidden\" id=\"view_dataset_desc_" + str_id + "\" value=\"" + str_desc + "\">";
-            str_html = str_html + "创建时间：" + str_crttime + "<br>" + "<input type=\"hidden\" id=\"view_dataset_path_" + str_id + "\" value=\"" + str_dataset_path + "\">";	                         
+            str_html = str_html + "创建时间：" + str_crttime + "<br>" + "<input type=\"hidden\" id=\"view_dataset_path_" + str_id + "\" value=\"" + str_dataset_path + "\">";
             
             str_html = str_html + "数据集状态：" + view_status_str + "<br>";
             str_html = str_html + "</view_item></div>";
@@ -2305,13 +2320,13 @@ function fill_table_contents(list_contents, type = "project")
             
             if(document.getElementById("btn_refresh").value == "刷新项目任务信息")
             {     
-                str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"javascript:show_create_task_win_modal(this)\" style=\"width: 340px; height: 90px; align: center\">"
+                str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"javascript:show_create_task_win_modal(this)\" style=\"width: 340px; height: 90px; align: center\">";
                 str_html = str_html + "<br><font color=\"blue\">当前项目无训练任务，点击创建训练任务</font>";
                 str_html = str_html + "</view_item></div>";
             }
             else
             {
-                str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"javascript:void(this)\" style=\"width: 420px; height: 90px; align: center\">"
+                str_html = "<div id=\"draw-border\"><view_item id=\"btn_create\" onclick=\"javascript:void(this)\" style=\"width: 420px; height: 90px; align: center\">";
                 str_html = str_html + "<br><font color=\"blue\">当前无训练任务，请先在对应项目中创建训练任务</font>";
                 str_html = str_html + "</view_item></div>";
             }
@@ -2434,7 +2449,7 @@ function fill_table_contents(list_contents, type = "project")
                 str_type_view = "<font color=\"red\">语义分割</font>";
                 
             //如果需要获取对象信息，可以在此增加hidden的input
-            str_html = str_html + "任务类型：" + str_type_view + "<br>" + "<input type=\"hidden\" id=\"view_task_prj_type_" + str_id + "\" value=\"" + str_type + "\">"
+            str_html = str_html + "任务类型：" + str_type_view + "<br>" + "<input type=\"hidden\" id=\"view_task_prj_type_" + str_id + "\" value=\"" + str_type + "\">";
             str_html = str_html + "所属项目：" + str_pid + "<br><br>" + "<input type=\"hidden\" id=\"view_task_pid_" + str_id + "\" value=\"" + str_pid + "\">";
             str_html = str_html + "创建时间：" + str_crttime + "<br>";
             
@@ -2511,18 +2526,18 @@ function fill_table_contents(list_contents, type = "project")
             else if(str_model_type == "segmentation")
                 str_model_view_type = "<font color=\"red\">语义分割</font>";
             
-            var str_function = "view_model_detail_info";
+            var str_function = "show_model_test_predict_win_modal";
   
             str_html = "<div id=\"draw-border\" style=\"word-wrap: break-word;\"><view_item id=\"" + str_id + "\" style=\"width: 750px;height: 170px;\" onclick=\"javascript:" + str_function + "(this);\" oncontextmenu=\"javascript:show_models_popupmenu(this);\">";
             
-            str_html = str_html + "模型名称：" + str_model_name + " (" + str_id + ")" + "<br>";           
-            str_html = str_html + "模型类型：" + str_model_view_type + "<br>";
-            str_html = str_html + "网络结构：" + str_model + "<br>";
-            str_html = str_html + "所属项目及任务：" + str_model_pid + "-" + str_model_tid + "<br>";
+            str_html = str_html + "模型名称：" + str_model_name + " (" + str_id + ")" + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_name_" + str_id + "\" value=\"" + str_model_name + "\">"; 
+            str_html = str_html + "模型类型：" + str_model_view_type + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_type_" + str_id + "\" value=\"" + str_model_type + "\">";
+            str_html = str_html + "网络结构：" + str_model + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_net_" + str_id + "\" value=\"" + str_model + "\">" ;
+            str_html = str_html + "所属项目及任务：" + str_model_pid + "-" + str_model_tid + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_tid_" + str_id + "\" value=\"" + str_model_tid + "\">";
             
             //如果需要获取对象信息，可以在此增加hidden的input
-            str_html = str_html + "模型路径： <font size=\"1\">" + str_model_path + "</font><br>";
-            str_html = str_html + "导出时间：" + str_model_crttime + "<br>";
+            str_html = str_html + "模型路径： <font size=\"1\">" + str_model_path + "</font><br>" + "<input type=\"hidden\" id=\"view_model_detail_path_" + str_id + "\" value=\"" + str_model_path + "\">"  ;
+            str_html = str_html + "导出时间：" + str_model_crttime + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_pid_" + str_id + "\" value=\"" + str_model_pid + "\">";
 
             str_html = str_html + "</view_item></div>";
             newTd0.innerHTML = str_html;
@@ -3612,7 +3627,28 @@ function delete_task()
     
     http_request.open("DELETE", str_srv_url + "/project/task", true);
     http_request.setRequestHeader("Content-type","application/json");
-    http_request.send(JSON.stringify(data));        
+    http_request.send(JSON.stringify(data));
+}
+
+//任务模型测试
+function test_task_model()
+{
+    document.getElementById('model_test_img_src').src = "";
+
+    document.getElementById('test_model_name_text').value = "NA";
+    document.getElementById('test_model_type_text').value = "NA";
+    document.getElementById('test_model_path_text').value = "NA";
+    
+    table_test_model_info.rows[0].style.display = "none";
+    table_test_model_info.rows[1].style.display = "none";
+    table_test_model_info.rows[2].style.display = "none";
+    document.getElementById('win_model_predict_test').style.height = "450px";
+
+    var on_win_model_predict_test = document.getElementById('win_model_predict_test');
+    var over_win_model_predict_test = document.getElementById('win_model_predict_test_over');
+    
+    on_win_model_predict_test.style.display = "block";
+    over_win_model_predict_test.style.display = "block";
 }
 
 //删除模型
@@ -3648,7 +3684,163 @@ function delete_model()
     
     http_request.open("DELETE", str_srv_url + "/model", true);
     http_request.setRequestHeader("Content-type","application/json");
-    http_request.send(JSON.stringify(data));        
+    http_request.send(JSON.stringify(data));
+}
+
+//显示模型预测窗口
+function show_model_test_predict_win_modal(obj)
+{
+    var str_model_id = obj.id;
+    var str_model_type = document.getElementById('view_model_detail_type_' + str_model_id).value;
+    //保存模型id
+    document.getElementById('predict_test_model_id').value = str_model_id;
+    
+    //模型信息显示
+    table_test_model_info.rows[0].style.display = "table-row";
+    table_test_model_info.rows[1].style.display = "table-row";
+    table_test_model_info.rows[2].style.display = "table-row";
+    document.getElementById('win_model_predict_test').style.height = "540px";
+    
+    var str_model_view_type = Project_Type_Name_Enum[str_model_type];
+    document.getElementById('model_test_img_src').src = "";
+                
+    document.getElementById('test_model_name_text').value = document.getElementById('view_model_detail_name_' + str_model_id).value + "(" + str_model_id + ")";
+    document.getElementById('test_model_type_text').value = str_model_view_type + "-" + document.getElementById('view_model_detail_net_' + str_model_id).value;
+    document.getElementById('test_model_path_text').value = document.getElementById('view_model_detail_path_' + str_model_id).value;
+
+    var on_win_model_predict_test = document.getElementById('win_model_predict_test');
+    var over_win_model_predict_test = document.getElementById('win_model_predict_test_over');
+    
+    on_win_model_predict_test.style.display = "block";
+    over_win_model_predict_test.style.display = "block";
+}
+
+//关闭模型预测窗口
+function hide_model_test_predict_win_modal(obj)
+{
+    document.getElementById('test_model_src_img_path_text').value = "";
+    document.getElementById('model_test_img_src').src = "";
+    document.getElementById('predict_test_model_id').value = "";
+    document.getElementById('model_test_img_result').src = "";
+    
+    var on_win_model_predict_test = document.getElementById('win_model_predict_test');
+    var over_win_model_predict_test = document.getElementById('win_model_predict_test_over');
+    
+    on_win_model_predict_test.style.display = "none";
+    over_win_model_predict_test.style.display = "none";
+}
+
+function load_predict_file_and_preview(file)
+{
+    if (!file.files || !file.files[0])
+    {
+        return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (evt)
+    {
+        document.getElementById('model_test_img_result').src = "";
+        document.getElementById('model_test_img_src').src = evt.target.result;
+        image = evt.target.result;
+    }
+    reader.readAsDataURL(file.files[0]);
+}
+
+//模型预测
+function model_predict_test(obj)
+{
+    var str_img_data = document.getElementById('model_test_img_src').src;
+    
+    if(document.getElementById('test_model_name_text').value == "NA" && document.getElementById('test_model_type_text').value == "NA")
+    {
+        var str_predict_task_id = document.getElementById('evaluate_export_task_id').value;
+    }
+    else
+    {
+        var str_predict_model_id = document.getElementById('predict_test_model_id').value;
+        var str_predict_task_id = document.getElementById("view_model_detail_tid_" + str_predict_model_id).value;
+    }
+    
+    var str_src_file_name = document.getElementById('test_model_src_img_path_text').value;
+    if(str_img_data == "" || str_src_file_name == "")
+    {
+        alert("请先选择要测试的图片！");
+        return;
+    }
+    
+    var http_request;
+    if (window.XMLHttpRequest)
+    {
+        http_request=new XMLHttpRequest();
+    }
+    else
+    {
+        http_request=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var idx_postfix = str_img_data.indexOf("base64,");
+    if(idx_postfix > 0)
+    {
+        str_img_data = str_img_data.substring(idx_postfix + 7,str_img_data.length);
+    }
+
+    var data = {"tid":str_predict_task_id,"image_data":str_img_data};
+    http_request.open("POST", str_srv_url + "/project/task/predict", false);
+    http_request.setRequestHeader("Content-type","application/json");
+    http_request.send(JSON.stringify(data));
+    var obj_json = eval('(' + http_request.responseText + ')');
+    var str_result_path = obj_json["path"];
+    
+    setTimeout(function(){show_predict_result(str_result_path, str_predict_task_id);}, 1000);
+}
+
+//显示预测结果
+var g_predict_wait_times = 0;
+
+function show_predict_result(str_path, str_task_id)
+{
+    //获取预测结果
+    g_predict_wait_times = g_predict_wait_times + 1;
+    var http_request;
+    if (window.XMLHttpRequest)
+    {
+        http_request=new XMLHttpRequest();
+    }
+    else
+    {
+        http_request=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    http_request.open("GET", str_srv_url + "/project/task/predict?tid=" + str_task_id, false);
+    http_request.send(null);
+    
+    var obj_json = eval('(' + http_request.responseText + ')');
+    var str_predict_status = parseInt(obj_json["predict_status"]);
+    
+    if(str_predict_status == PredictStatus.XPREDONE)
+    {
+        var str_result_content = get_img_file_from_server(str_path);
+        var str_b64_type = "data:image/png;base64,";
+        document.getElementById('model_test_img_result').src = str_b64_type + str_result_content;
+        alert("预测完成，请查看右图预测结果（双击可放大）。");
+    }
+    else if(str_predict_status == PredictStatus.XPREFAIL)
+    {
+        alert("预测失败，请检测服务器配置:\n" + http_request.responseText);
+    }
+    else if(str_predict_status == PredictStatus.XPRESTART)
+    {
+        if(g_predict_wait_times <= 30)
+        {
+            setTimeout(function(){show_predict_result(str_path, str_task_id);}, 1000);
+        }
+    }
+    else
+    {
+        if(g_predict_wait_times <= 30)
+        {
+            setTimeout(function(){show_predict_result(str_path, str_task_id);}, 1000);
+        }
+    }
 }
 
 //新建对象
@@ -3854,7 +4046,7 @@ function dispatch_key_press()
 
 <!--All hidden popup windows-->
 <!--服务器配置弹出窗口-->
-<div id="input_win_cfg_server" style="display:none;border:1px solid #cccccc;height:260px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="input_win_cfg_server" style="display:none;border:1px solid #cccccc;height:260px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">配置服务器地址</div><br>
@@ -3884,11 +4076,11 @@ function dispatch_key_press()
   </div>
 </div>
 
-<div id="input_win_cfg_server_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="input_win_cfg_server_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--服务器配置弹出窗口-->
 
 <!--创建项目弹出窗口-->
-<div id="input_win_create_project" style="display:none;border:1px solid #cccccc;height:420px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="input_win_create_project" style="display:none;border:1px solid #cccccc;height:420px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">新 建 项 目</div><br>
@@ -3941,11 +4133,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_create_prj" value="创建" onclick="create_project(this);" /></div>
   </div>
 </div>
-<div id="input_win_create_project_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="input_win_create_project_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--创建项目弹出窗口-->
 
 <!--创建数据集弹出窗口-->
-<div id="input_win_create_dataset" style="display:none;border:1px solid #cccccc;height:370px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="input_win_create_dataset" style="display:none;border:1px solid #cccccc;height:370px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">新 建 数 据 集</div><br>
@@ -3988,11 +4180,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_create_dataset" value="创建" onclick="create_dataset(this);" /></div>
   </div>
 </div>
-<div id="input_win_create_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="input_win_create_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--创建项目弹出窗口-->
 
 <!--数据集导入弹出窗口-->
-<div id="input_win_import_dataset" style="display:none;border:1px solid #cccccc;height:260px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="input_win_import_dataset" style="display:none;border:1px solid #cccccc;height:260px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">导入数据集</div><br>
@@ -4017,11 +4209,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_import_dataset" value="导入" onclick="import_dataset(this);" /></div>
   </div>
 </div>
-<div id="input_win_import_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="input_win_import_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--数据集导入弹出窗口-->
 
 <!--数据集切分弹出窗口-->
-<div id="input_win_split_dataset" style="display:none;border:1px solid #cccccc;height:370px;width:50%;position:absolute;top:24%;left:24%;z-index:15;background:white;">
+<div id="input_win_split_dataset" style="display:none;border:1px solid #cccccc;height:370px;width:50%;position:fixed;top:24%;left:24%;z-index:15;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">切分数据集</div><br>
@@ -4060,11 +4252,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_split_dataset" value="切分" onclick="split_dataset(this);" /></div>
   </div>
 </div>
-<div id="input_win_split_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="input_win_split_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--数据集导入弹出窗口-->
 
 <!--创建任务弹出窗口-->
-<div id="input_win_create_task" style="display:none;border:1px solid #cccccc;height:400px;width:50%;position:absolute;top:24%;left:24%;z-index:15;background:white;">
+<div id="input_win_create_task" style="display:none;border:1px solid #cccccc;height:400px;width:50%;position:fixed;top:24%;left:24%;z-index:15;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">任务详细信息</div><br>
@@ -4097,11 +4289,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_create_task" value="创建并启动训练" onclick="create_task();" /></div>
   </div>
 </div>
-<div id="input_win_create_task_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:14;background: silver;"></div>
+<div id="input_win_create_task_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:14;background: silver;"></div>
 <!--创建任务弹出窗口-->
 
 <!--任务状态窗口-->
-<div id="task_detail_info" style="display:none;border:1px solid #cccccc;height:420px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="task_detail_info" style="display:none;border:1px solid #cccccc;height:420px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">查看任务状态</div><br>
@@ -4156,11 +4348,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_next_task_info" value="关闭" onclick="task_next_step_process(this);" /></div>
   </div>
 </div>
-<div id="task_detail_info_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0;z-index:9;background: silver;"></div>
+<div id="task_detail_info_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0;z-index:9;background: silver;"></div>
 <!--任务状态窗口-->
 
 <!--评估&导出模型窗口-->
-<div id="input_win_evaluate_export_model" style="display:none;border:1px solid #cccccc;height:260px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="input_win_evaluate_export_model" style="display:none;border:1px solid #cccccc;height:260px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">模型评估&导出</div><br>
@@ -4184,16 +4376,18 @@ function dispatch_key_press()
     <!--评估任务-->
     <div class="btn"><input type="button" id="btn_cancel_evaluate_export" style="background:#529EFF;" value="取消" onclick="hide_evaluate_export_win_modal(this);" /></div>
     &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="btn" id="div_btn_test_task_model"><input type="button" id="btn_test_task_model" style="background:#942193;" value="模型测试" onclick="test_task_model(this);" /></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="btn" id="div_btn_evaluate_task"><input type="button" id="btn_evaluate_task_info" style="background:#008F00;" value="启动评估" onclick="evaluate_task(this);" /></div>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="btn"><input type="button" id="btn_close_evaluate_export" value="导出" onclick="export_model(this);" /></div>
   </div>
 </div>
-<div id="input_win_evaluate_export_model_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="input_win_evaluate_export_model_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--评估&导出模型窗口-->
 
 <!--浏览数据集弹出窗口-->
-<div id="win_browse_dataset" style="display:none;border:1px solid #cccccc;height:520px;width:60%;position:absolute;top:16%;left:20%;z-index:10;background:white;">
+<div id="win_browse_dataset" style="display:none;border:1px solid #cccccc;height:520px;width:60%;position:fixed;top:16%;left:20%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">浏 览 数 据 集</div><br>
@@ -4292,10 +4486,11 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_close_browse_dataset" value="关闭" onclick="hide_browse_dataset_win_modal(this);" /></div>
   </div>
 </div>
-<div id="win_browse_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="win_browse_dataset_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
+<!--数据集预览窗口-->
 
 <!--浏览原图弹出窗口-->
-<div id="win_browse_img" onclick="hide_zoom_img(this)" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:absolute;top:15%;left:20%;z-index:15;background:white;">
+<div id="win_browse_img" onclick="hide_zoom_img(this)" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:fixed;top:15%;left:20%;z-index:15;background:white;">
   <table width="100%" align="center" id="table_img">
     <tr>
       <td>
@@ -4304,11 +4499,11 @@ function dispatch_key_press()
     </tr>
   </table>
 </div>
-<div id="win_browse_img_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="win_browse_img_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--浏览原图弹出窗口-->
 
 <!--浏览日志窗口-->
-<div id="win_view_log" onclick="" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:absolute;top:15%;left:20%;z-index:15;background:white;">
+<div id="win_view_log" onclick="" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:fixed;top:15%;left:20%;z-index:15;background:white;">
   <table width="100%" align="center" id="table_log">
     <tr>
       <td>
@@ -4323,14 +4518,14 @@ function dispatch_key_press()
     </tr>
   </table>
 </div>
-<div id="win_view_log_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0; z-index:9;background: silver;"></div>
+<div id="win_view_log_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
 <!--浏览日志窗口-->
 
 <!--数据增强详细信息窗口-->
 <!--数据增强详细信息窗口-->
 
 <!--Demo下载窗口-->
-<div id="demo_download_win" style="display:none;border:1px solid #cccccc;height:390px;width:50%;position:absolute;top:24%;left:24%;z-index:10;background:white;">
+<div id="demo_download_win" style="display:none;border:1px solid #cccccc;height:390px;width:50%;position:fixed;top:24%;left:24%;z-index:10;background:white;">
   <!--title-->
   <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
     <br><div style="font-size: 20px;">下载示例项目</div><br>
@@ -4383,8 +4578,92 @@ function dispatch_key_press()
     <div class="btn"><input type="button" id="btn_download_proc" value="开始下载" onclick="download_win_btn_proc(this);" /></div>
   </div>
 </div>
-<div id="demo_download_win_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:absolute;top:0;left:0;z-index:9;background: silver;"></div>
+<div id="demo_download_win_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0;z-index:9;background: silver;"></div>
 <!--Demo下载窗口-->
+
+<!--模型测试窗口-->
+<div id="win_model_predict_test" style="display:none;border:1px solid #cccccc;height:540px;width:60%;position:fixed;top:16%;left:20%;z-index:10;background:white;">
+  <!--title-->
+  <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
+    <br><div style="font-size: 20px;">模型测试</div><br>
+  </div>
+  <br/>
+  <!--show model informations-->
+  <table width="100%" align="center" id="table_test_model_info">
+  <tr>
+  <td><div style="font-size: 14px;">模型名称:</div></td>
+  <td>
+    <input type="hidden" id="predict_test_model_id" value="">
+    <input id="test_model_name_text" value="" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text" readonly="readonly"/>
+  </td>
+  <td><div style="font-size: 14px;">模型类型及结构:</div></td>
+  <td>
+    <input id="test_model_type_text" value="" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text" readonly="readonly"/>
+  </td>
+  </tr>
+  <td><div style="font-size: 14px;">模型路径:</div></td>
+  <td colspan = "3">
+    <input id="test_model_path_text" style="width:96% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text" readonly="readonly"/>
+  </td>
+  </tr>
+  <tr>
+  <td colspan = "4">
+    <div style="margin-top: 5px; padding: 1px 1px 1px; text-align: right; border-top: 1px solid #e5e5e5;"></div>
+  </td>
+  <tr>
+  <tr>
+    <td><div style="font-size: 14px;">预测图片:</div></td>
+    <td colspan = "3">
+      <input type="file" id="test_model_src_img_path_text" onchange="load_predict_file_and_preview(this)" accept="image/gif,image/jpeg,image/jpg,image/bmp" style="width:96% ;height:20px;" type="text"/>
+    </td>
+  </tr>
+  </table>
+  <!--src and predict view-->
+  <div class="scroll-content">
+  <div>
+    <table width="100%" align="center" id="model_test_predict_head">
+      <tr>
+        <th width="50%">预览原图</th>
+        <th width="50%">预测结果</th>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <table width="100%" align="center" id="table_browse_src_and_result">
+       <tr>
+        <td>
+          <div class="">
+            <table width="100%" align="center" id="table_img_predict_result">
+              <tr>
+                <td><img id="model_test_img_src" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="200" width="200" hspace="0" vspace="0"/></td>
+              </tr>
+            </table>
+          </div>
+        </td>
+        <td>
+          <div class="">
+            <table width="100%" align="center" id="table_img_predict_result">
+              <tr>
+                <td><img id="model_test_img_result" ondblclick="zoom_image(this)" align="center" style="border:1px #D6D6D6 solid;" height="200" width="200" hspace="0" vspace="0"/></td>
+              </tr>
+            </table>
+          </div>
+        </td>
+       </tr>
+    </table>
+  </div>
+  </div>
+  <br>
+  <!--buttons-->
+  <div style="margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5;">
+    <div class="btn"><input type="button" id="btn_hide_model_predict_win" value="取消" onclick="hide_model_test_predict_win_modal(this);" style="background:#529EFF;" /></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="btn"><input type="button" id="btn_model_predict_test" value="预测" onclick="model_predict_test(this);" /></div>
+  </div>
+</div>
+<div id="win_model_predict_test_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
+
+<!--模型测试窗口-->
 
 <div class="btn">
     <input type="button" id="btn_refresh" style="width: 150px; height: 50px; " value="刷新项目信息" onclick="javascript:refresh_contents(this);"/>
