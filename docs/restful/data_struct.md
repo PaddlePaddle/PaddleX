@@ -121,9 +121,10 @@ TaskStatus = Enum('TaskStatus',
 'XPRUNEING', #裁剪分析任务运行中
 'XPRUNETRAIN'#裁剪训练任务运行中
 ),start=0)
-
 ```
 ### ProjectType(项目类型)
+
+```
 ProjectType = Enum('ProjectType',
 ('classification',#分类
 'detection',#检测
@@ -131,16 +132,22 @@ ProjectType = Enum('ProjectType',
 'instance_segmentation',#实例分割
 'remote_segmentation'#摇杆分割
 ),start=0)
+```
 
 ### DownloadStatus(下载状态变量)
+
+```
 DownloadStatus = Enum('DownloadStatus',
 ('XDDOWNLOADING',#下载中
 'XDDOWNLOADFAIL',#下载失败
 'XDDOWNLOADDONE',下载完成
 'XDDECOMPRESSED'解压完成
 ),start=0)
+```
+
 
 ### PruneStatus(裁剪状态变量)
+
 ```
 PruneStatus = Enum('PruneStatus',
 ('XSPRUNESTART',#启动裁剪任务
@@ -152,6 +159,7 @@ PruneStatus = Enum('PruneStatus',
 ```
 
 ### PredictStatus(预测任务状态变量)
+
 ```
 PredictStatus = Enum('PredictStatus',
 ('XPRESTART',#预测开始
@@ -160,12 +168,15 @@ PredictStatus = Enum('PredictStatus',
 ), start=0)
 ```
 ### PretrainedModelStatus(预训练模型状态变量)
+
+```
 PretrainedModelStatus = Enum('PretrainedModelStatus',
 ('XPINIT', #初始化
 'XPSAVING', #正在保存
 'XPSAVEFAIL',#保存失败
 'XPSAVEDONE' #保存完成
 ),start=0)
+```
 
 ### ExportedModelType(模型导出状态变量)
 ```
