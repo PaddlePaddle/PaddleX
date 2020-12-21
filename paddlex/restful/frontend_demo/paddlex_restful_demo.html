@@ -1425,6 +1425,8 @@ function hide_evaluate_export_win_modal(obj)
     var obj_evaluate_export_task_project_id = document.getElementById('evaluate_export_task_project_id');
     obj_evaluate_export_task_project_id.value = "";
     
+    document.getElementById('btn_evaluate_task_info').value = "启动评估";
+    
     var on_win_evaluate_export_model = document.getElementById('input_win_evaluate_export_model');
     var over_win_evaluate_export_model = document.getElementById('input_win_evaluate_export_model_over');
     on_win_evaluate_export_model.style.display = "none";
@@ -1470,6 +1472,12 @@ function show_evaluate_export_win_modal(obj)
 //评估任务
 function evaluate_task(obj)
 {
+    if (document.getElementById('btn_evaluate_task_info').value == "评估中...")
+    {
+        alert("评估进行中，请稍候...");
+        return;
+    }
+    
     var obj_evaluate_task_id = document.getElementById('evaluate_export_task_id');
     var str_evaluate_task_id = obj_evaluate_task_id.value;
 
@@ -1489,14 +1497,14 @@ function evaluate_task(obj)
         {
             if (http_request.status==200)
             {
-                //查看评估报告
-                http_request.open("GET", str_srv_url + "/project/task/evaluate?tid=" + str_evaluate_task_id, false);
-                http_request.send(null);
-                alert("评估完成，评估结果：\n" + http_request.responseText);
+                //查询评估报告
+                document.getElementById('btn_evaluate_task_info').value = "评估中...";
+                g_evaluate_task_wait_times = 0;
+                setTimeout(function(){get_evaluate_result(str_evaluate_task_id);}, 1000);
             }
             else
             {
-                alert("评估失败，请检查服务器配置\n" + http_request.responseText);
+                alert("启动评估失败，请检查服务器配置\n" + http_request.responseText);
             }
         }
     }
@@ -1505,6 +1513,55 @@ function evaluate_task(obj)
     http_request.open("POST", str_srv_url + "/project/task/evaluate", true);
     http_request.setRequestHeader("Content-type","application/json");
     http_request.send(JSON.stringify(data));
+}
+
+//获取任务评估状态和结果
+var g_evaluate_task_wait_times = 0;
+
+function get_evaluate_result(str_task_id)
+{
+    g_evaluate_task_wait_times = g_evaluate_task_wait_times + 1;
+    
+    var http_request;
+    if (window.XMLHttpRequest)
+    {
+        http_request=new XMLHttpRequest();
+    }
+    else
+    {
+        http_request=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    http_request.open("GET", str_srv_url + "/project/task/evaluate?tid=" + str_task_id, false);
+    http_request.send(null);
+    
+    var obj_json = eval('(' + http_request.responseText + ')');
+    var str_evaluate_status = parseInt(obj_json["evaluate_status"]);
+    
+    if(str_evaluate_status == TaskStatus.XEVALUATED)
+    {
+        document.getElementById('btn_evaluate_task_info').value = "启动评估";
+        alert("评估成功，详细信息:\n" + http_request.responseText);
+    }
+    else if(str_evaluate_status == TaskStatus.XEVALUATEFAIL)
+    {
+        document.getElementById('btn_evaluate_task_info').value = "启动评估";
+        alert("评估失败，详细信息:\n" + http_request.responseText);
+    }
+    else if(str_evaluate_status == TaskStatus.XEVALUATING)
+    {
+        if(g_evaluate_task_wait_times <= 10)
+        {
+            setTimeout(function(){get_evaluate_result(str_task_id);}, 3000);
+        }
+    }
+    else
+    {
+        if(g_evaluate_task_wait_times <= 10)
+        {
+            setTimeout(function(){get_evaluate_result(str_task_id);}, 3000);
+        }
+    }
 }
 
 //导出任务模型
@@ -3723,6 +3780,8 @@ function hide_model_test_predict_win_modal(obj)
     document.getElementById('predict_test_model_id').value = "";
     document.getElementById('model_test_img_result').src = "";
     
+    document.getElementById('btn_model_predict_test').value = "预测";
+    
     var on_win_model_predict_test = document.getElementById('win_model_predict_test');
     var over_win_model_predict_test = document.getElementById('win_model_predict_test_over');
     
@@ -3749,6 +3808,11 @@ function load_predict_file_and_preview(file)
 //模型预测
 function model_predict_test(obj)
 {
+    if (document.getElementById('btn_model_predict_test').value == "预测中...")
+    {
+        alert("预测进行中，请稍候...");
+        return;
+    }
     var str_img_data = document.getElementById('model_test_img_src').src;
     
     if(document.getElementById('test_model_name_text').value == "NA" && document.getElementById('test_model_type_text').value == "NA")
@@ -3791,6 +3855,9 @@ function model_predict_test(obj)
     var obj_json = eval('(' + http_request.responseText + ')');
     var str_result_path = obj_json["path"];
     
+    document.getElementById('btn_model_predict_test').value = "预测中...";
+    g_predict_wait_times = 0;
+    
     setTimeout(function(){show_predict_result(str_result_path, str_predict_task_id);}, 1000);
 }
 
@@ -3821,10 +3888,13 @@ function show_predict_result(str_path, str_task_id)
         var str_result_content = get_img_file_from_server(str_path);
         var str_b64_type = "data:image/png;base64,";
         document.getElementById('model_test_img_result').src = str_b64_type + str_result_content;
+        
+        document.getElementById('btn_model_predict_test').value = "预测";
         alert("预测完成，请查看右图预测结果（双击可放大）。");
     }
     else if(str_predict_status == PredictStatus.XPREFAIL)
     {
+        document.getElementById('btn_model_predict_test').value = "预测";
         alert("预测失败，请检测服务器配置:\n" + http_request.responseText);
     }
     else if(str_predict_status == PredictStatus.XPRESTART)
