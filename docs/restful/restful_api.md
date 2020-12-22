@@ -525,6 +525,26 @@ methods=='POST':#异步，创建一个评估任务
 		ret = requests.post(url + '/project/task/evaluate',json=params)
 ```
 
+### /project/task/evaluate/file [GET]
+评估结果生成excel表格  
+- GET请求:评估完成的情况下，在服务器端生成评估结果的excel表格
+
+```
+methods=='GET':#评估结果生成excel表格
+	Args:
+		tid(str):任务id
+	Return:
+		path(str):评估结果excel表格在服务器端的路径
+		message(str):提示信息
+		status
+	Example:
+		#任务id为T0001的任务在服务器端生成评估excel表格
+		params = {'tid': 'T0001'}
+		ret = requests.get(url + '/project/task/evaluate/file',json=params)
+		#显示保存路径
+		print(ret.json()['path'])
+```
+
 ### /project/task/metrics [GET]
 获取训练、评估、剪裁的日志和敏感度与模型裁剪率关系图
 - GET请求：通过type来确定需要获取的内容  

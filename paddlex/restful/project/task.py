@@ -20,7 +20,9 @@ import time
 import pickle
 import json
 import multiprocessing as mp
-from ..utils import set_folder_status, TaskStatus, get_folder_status, is_available, get_ip
+import xlwt
+import numpy as np
+from ..utils import set_folder_status, TaskStatus, get_folder_status, is_available, get_ip, trans_name
 from .train.params import ClsParams, DetParams, SegParams
 
 
@@ -581,6 +583,81 @@ def get_evaluate_result(data, workspace):
         'message': "{}正在评估中，请稍后!".format(tid),
         'result': None
     }
+
+
+def import_evaluate_excel(data, result, workspace):
+    excel_ret = dict()
+    workbook = xlwt.Workbook()
+    labels = None
+    START_ROW = 0
+    sheet = workbook.add_sheet("评估报告")
+    if 'label_list' not in result:
+        pass
+    else:
+        labels = result['label_list']
+    for k, v in result.items():
+        if k == 'label_list':
+            continue
+        if type(v) == np.ndarray:
+            sheet.write(START_ROW + 0, 0, trans_name(k))
+            sheet.write(START_ROW + 1, 1, trans_name("Class"))
+            if labels is None:
+                labels = ["{}".format(x) for x in range(len(v))]
+            for i in range(len(labels)):
+                sheet.write(START_ROW + 1, 2 + i, labels[i])
+                sheet.write(START_ROW + 2 + i, 1, labels[i])
+            for i in range(len(labels)):
+                for j in range(len(labels)):
+                    sheet.write(START_ROW + 2 + i, 2 + j, str(v[i, j]))
+            START_ROW = (START_ROW + 4 + len(labels))
+
+        if type(v) == dict:
+            sheet.write(START_ROW + 0, 0, trans_name(k))
+            multi_row = False
+            Cols = ["Class"]
+            for k1, v1 in v.items():
+                if type(v1) == dict:
+                    multi_row = True
+                    for sub_k, sub_v in v1.items():
+                        Cols.append(sub_k)
+                else:
+                    Cols.append(k)
+                break
+            for i in range(len(Cols)):
+                sheet.write(START_ROW + 1, 1 + i, trans_name(Cols[i]))
+
+            index = 2
+            for k1, v1 in v.items():
+                sheet.write(START_ROW + index, 1, k1)
+                if multi_row:
+                    for sub_k, sub_v in v1.items():
+                        sheet.write(START_ROW + index,
+                                    Cols.index(sub_k) + 1, "nan"
+                                    if (sub_v is None) or sub_v == -1 else
+                                    "{:.4f}".format(sub_v))
+                else:
+                    sheet.write(START_ROW + index, 2, "{}".format(v1))
+                index += 1
+            START_ROW = (START_ROW + index + 2)
+        if type(v) in [float, np.float, np.float32, np.float64, type(None)]:
+            front_str = "{}".format(trans_name(k))
+            if k == "Acck":
+                if "topk" in data:
+                    front_str = front_str.format(data["topk"])
+                else:
+                    front_str = front_str.format(5)
+            sheet.write(START_ROW + 0, 0, front_str)
+            sheet.write(START_ROW + 1, 1, "{:.4f}".format(v)
+                        if v is not None else "nan")
+            START_ROW = (START_ROW + 2 + 2)
+    tid = data['tid']
+    path = workspace.tasks[tid].path
+    final_save = os.path.join(path, 'report-task{}.xls'.format(tid))
+    workbook.save(final_save)
+    excel_ret['status'] = 1
+    excel_ret['path'] = final_save
+    excel_ret['message'] = "成功导出结果到excel"
+    return excel_ret
 
 
 def get_predict_status(data, workspace):
