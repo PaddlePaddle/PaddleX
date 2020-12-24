@@ -922,4 +922,7 @@ def run(port, workspace_dir):
             os.makedirs(dirname)
     logger = get_logger(osp.join(dirname, "mcessages.log"))
     init(dirname, logger)
-    app.run(host='0.0.0.0', port=port, threaded=True)
+    try:
+        app.run(host='0.0.0.0', port=port, threaded=True)
+    except:
+        print("请确保端口号：{}未被防火墙限制".format(port))
