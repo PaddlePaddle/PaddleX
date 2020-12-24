@@ -10,6 +10,8 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。
 
 **paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]**
 
+**注意：请确保启动RESTful的端口未被防火墙限制**
+
 支持RESTful版本的GUI
 ---------------------------------------
 
