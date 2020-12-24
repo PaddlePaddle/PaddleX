@@ -1758,7 +1758,7 @@ function set_server_addr(input_data)
                  str_json = http_request.responseText;
                  var obj_json = eval('(' + str_json + ')');
                  var str_workspace_dir = obj_json["dirname"];
-                 alert("设置成功！\n服务器地址：" + str_srv_url + "\n服务器工作区路径：" + str_workspace_dir); 	   
+                 alert("设置成功！\n服务器地址：" + str_srv_url + "\n服务器工作区路径：" + str_workspace_dir);
                  
                  hide_server_info(null);
                  load_projects();
@@ -1988,7 +1988,7 @@ function load_project_tasks(str_project_id)
             fill_table_with_error();
         }
     }
-    http_request.open("GET",str_srv_url + "/project/task?pid=" + str_project_id,false);
+    http_request.open("GET",str_srv_url + "/project/task?pid=" + str_project_id,true);
     http_request.send(null);
 }
 
@@ -2510,7 +2510,7 @@ function fill_table_contents(list_contents, type = "project")
             str_html = str_html + "所属项目：" + str_pid + "<br><br>" + "<input type=\"hidden\" id=\"view_task_pid_" + str_id + "\" value=\"" + str_pid + "\">";
             str_html = str_html + "创建时间：" + str_crttime + "<br>";
             
-            str_html = str_html + "任务状态：" + view_status_str + "(" + str_status + ")" + "<br>";
+            str_html = str_html + "任务状态：" + view_status_str + "<br>";
             str_html = str_html + "</view_item></div>";
             newTd0.innerHTML = str_html;
       
@@ -2652,6 +2652,9 @@ function show_create_task_win_modal(obj)
     var obj_project_id = document.getElementById('popup_menu_project_id');
     var str_project_id = "";
 
+    //清除原来保存的id
+    document.getElementById('create_task_hidden_task_id').value = "";
+    
     if(obj_project_id.value != "")
     {
         var input_create_task_prj_id = document.getElementById('create_task_project_id');
@@ -2701,6 +2704,9 @@ function hide_create_task_win_modal(obj)
     var on_win_create_task = document.getElementById('input_win_create_task');
     var over_win_create_task = document.getElementById('input_win_create_task_over');
     var input_create_task_prj_id = document.getElementById('create_task_project_id');
+    
+    //清除原来保存的id
+    document.getElementById('create_task_hidden_task_id').value = "";
     
     on_win_create_task.style.display = "none";
     over_win_create_task.style.display = "none";
@@ -2890,13 +2896,13 @@ function add_parms_to_table(str_parms, str_type = "classification")
     newTd0.colSpan="2";
     newTd0.innerText="数据增强策略";
 
-    add_one_task_parm_to_table("brightness", "随机亮度", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("contrast", "随机对比度", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("horizontal_flip", "随机水平翻转", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("vertical_flip", "随机垂直翻转", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("rotate", "随机旋转", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("saturation", "随机饱和度", "off", newTr.id, "switch");
-    add_one_task_parm_to_table("hue", "随机色调", "off", newTr.id, "switch");
+    add_one_task_parm_to_table("brightness", "随机亮度", g_train_task_parms["brightness"], newTr.id, "switch");
+    add_one_task_parm_to_table("contrast", "随机对比度", g_train_task_parms["contrast"], newTr.id, "switch");
+    add_one_task_parm_to_table("horizontal_flip", "随机水平翻转", g_train_task_parms["horizontal_flip"], newTr.id, "switch");
+    add_one_task_parm_to_table("vertical_flip", "随机垂直翻转", g_train_task_parms["vertical_flip"], newTr.id, "switch");
+    add_one_task_parm_to_table("rotate", "随机旋转", g_train_task_parms["rotate"], newTr.id, "switch");
+    add_one_task_parm_to_table("saturation", "随机饱和度", g_train_task_parms["saturation"], newTr.id, "switch");
+    add_one_task_parm_to_table("hue", "随机色调", g_train_task_parms["hue"], newTr.id, "switch");
     
     add_one_task_parm_to_table("augument_details", "数据增强详细设置", "点击设置...", newTr.id, "button");
 }
@@ -2930,7 +2936,12 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
     }
     else if (parm_type == "button")
     {
-        newTd1.innerHTML = "<input type=\"button\" onclick=\"set_augument_detail_parms(this)\" id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\"/>";
+        var str_function = "void";
+        if(str_key == "augument_details")
+        {
+            str_function = "show_augument_detail_parms";
+        }
+        newTd1.innerHTML = "<input type=\"button\" onclick=\"" + str_function + "(this)\" id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\"/>";
     }
     else if (parm_type == "selection")
     {
@@ -3017,12 +3028,12 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
     else if (parm_type == "switch")
     {
         var str_html = "<select id=\"task_detail_parm_" + str_key + "\" value=\"" + str_value + "\"" + "style=\"width:100%;height:20px;Float:left;border:none;outline:none;" + bg_color + "\">";
-        if(str_value == "on")
+        if(str_value == "on" || str_value == true)
             str_html = str_html + "<option value=\"" + "on" + "\" selected=\"selected\">" + "开" + "</option>";
         else
             str_html = str_html + "<option value=\"" + "on" + "\">" + "开" + "</option>";
         
-        if(str_value == "off")
+        if(str_value == "off" || str_value == false)
             str_html = str_html + "<option value=\"" + "off" + "\" selected=\"selected\">" + "关" + "</option>";
         else
             str_html = str_html + "<option value=\"" + "off" + "\">" + "关" + "</option>";
@@ -3032,9 +3043,29 @@ function add_one_task_parm_to_table(str_key, str_view, str_value, parent_key = "
 }
 
 //设置数据增强详细信息
-function set_augument_detail_parms(obj)
+function show_augument_detail_parms(obj)
 {
+    load_data_augument_parms();
     
+    document.getElementById('win_data_augmentation_detail').style.display = "block";
+    document.getElementById('win_data_augmentation_detail_over').style.display = "block";
+}
+
+//关闭数据增强窗口
+function hide_augument_detail_parms(obj)
+{
+    document.getElementById('win_data_augmentation_detail').style.display = "none";
+    document.getElementById('win_data_augmentation_detail_over').style.display = "none";
+}
+
+//保存数据增强参数
+function save_augument_detail_parms(obj)
+{
+    var str_task_id = document.getElementById('create_task_hidden_task_id').value;
+
+    set_data_augument_parms(str_task_id);
+    
+    hide_augument_detail_parms(obj);
 }
 
 //Demo案例下载窗口
@@ -3467,6 +3498,15 @@ function create_task()
          //是否使用GPU
          get_input_task_parm_value("use_gpu","text");
          
+         //数据增强开关
+         get_input_task_parm_value("brightness","bool");
+         get_input_task_parm_value("contrast","bool");
+         get_input_task_parm_value("saturation","bool");
+         get_input_task_parm_value("rotate","bool");
+         get_input_task_parm_value("hue","bool");
+         get_input_task_parm_value("vertical_flip","bool");
+         get_input_task_parm_value("horizontal_flip","bool");
+         
          //调用创建接口创建任务
          //alert(JSON.stringify(g_train_task_parms));
          var data = {"pid":str_project_id,"train":JSON.stringify(g_train_task_parms)};
@@ -3496,6 +3536,17 @@ function get_input_task_parm_value(str_key, str_type="int")
     {
         g_train_task_parms[str_key] = str_value.split(',').map(Number);
     }
+    else if (str_type == "bool")
+    {
+        if(str_value == "on")
+        {
+            g_train_task_parms[str_key] = true;
+        }
+        else
+        {
+            g_train_task_parms[str_key] = false;
+        }
+    }
     else
     {
         if(str_key == "backbone" && str_value == "NA")
@@ -3520,6 +3571,68 @@ function get_input_task_parm_value(str_key, str_type="int")
         }
         g_train_task_parms[str_key] = str_value;
     }
+}
+
+//保存数据增强设置
+function set_data_augument_parms(str_task_id)
+{
+    g_train_task_parms["brightness_prob"] = document.getElementById('brightness_prob').value;
+    g_train_task_parms["brightness_range"] = document.getElementById('brightness_range').value;
+    
+    g_train_task_parms["contrast_prob"] = document.getElementById('contrast_prob').value;
+    g_train_task_parms["contrast_range"] = document.getElementById('contrast_range').value;
+    
+    g_train_task_parms["saturation_prob"] = document.getElementById('saturation_prob').value;
+    g_train_task_parms["saturation_range"] = document.getElementById('saturation_range').value;
+    
+    g_train_task_parms["hue_prob"] = document.getElementById('hue_prob').value;
+    g_train_task_parms["hue_range"] = document.getElementById('hue_range').value;
+    
+    g_train_task_parms["vertical_flip_prob"] = document.getElementById('vertical_flip_prob').value;
+    g_train_task_parms["horizontal_flip_prob"] = document.getElementById('horizontal_flip_prob').value;
+    
+    g_train_task_parms["rotate_prob"] = document.getElementById('rotate_prob').value;
+    g_train_task_parms["rotate_range"] = document.getElementById('rotate_range').value;
+    
+    //保存参数
+    if(str_task_id.length > 0)
+    {
+        var http_request = new XMLHttpRequest();
+        if (window.XMLHttpRequest)
+        {
+            http_request=new XMLHttpRequest();
+        }
+        else
+        {
+            http_request=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var data = {"tid":str_task_id,"train":JSON.stringify(g_train_task_parms)};
+
+        http_request.open("POST", str_srv_url + "/project/task/params", false);
+        http_request.setRequestHeader("Content-type","application/json");
+        http_request.send(JSON.stringify(data));
+    }
+}
+
+function load_data_augument_parms()
+{
+    document.getElementById('brightness_prob').value = g_train_task_parms["brightness_prob"];
+    document.getElementById('brightness_range').value = g_train_task_parms["brightness_range"];
+    
+    document.getElementById('contrast_prob').value = g_train_task_parms["contrast_prob"];
+    document.getElementById('contrast_range').value = g_train_task_parms["contrast_range"];
+    
+    document.getElementById('saturation_prob').value = g_train_task_parms["saturation_prob"];
+    document.getElementById('saturation_range').value = g_train_task_parms["saturation_range"];
+    
+    document.getElementById('hue_prob').value = g_train_task_parms["hue_prob"];
+    document.getElementById('hue_range').value = g_train_task_parms["hue_range"];
+    
+    document.getElementById('vertical_flip_prob').value = g_train_task_parms["vertical_flip_prob"];
+    document.getElementById('horizontal_flip_prob').value = g_train_task_parms["horizontal_flip_prob"];
+    
+    document.getElementById('rotate_prob').value = g_train_task_parms["rotate_prob"];
+    document.getElementById('rotate_range').value = g_train_task_parms["rotate_range"];
 }
 
 //启动训练任务
@@ -4592,6 +4705,91 @@ function dispatch_key_press()
 <!--浏览日志窗口-->
 
 <!--数据增强详细信息窗口-->
+<div id="win_data_augmentation_detail" style="display:none;border:1px solid #cccccc;height:420px;width:55%;position:fixed;top:22%;left:22%;z-index:15;background:white;">
+  <!--title-->
+  <div style="position:relative;background-color: #529EFF;min_height:30px; max-height: 60px;border-bottom: 1px solid #a4acb9;padding:2px 2px;">
+    <br><div style="font-size: 20px;">数据增强设置</div><br>
+  </div>
+  <br/>
+  <!--show model informations-->
+  <table width="100%" align="center" id="table_data_augmentation_info">
+  <tr>
+  <td><div style="font-size: 14px;">随机亮度概率:</div></td>
+  <td>
+    <input type="hidden" id="data_augmentation_task_id" value="">
+    <input id="brightness_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  <td><div style="font-size: 14px;">亮度范围:</div></td>
+  <td>
+    <input id="brightness_range" value="0.9" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  </tr>
+  
+  <tr>
+  <td><div style="font-size: 14px;">随机对比度概率:</div></td>
+  <td>
+    <input id="contrast_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  <td><div style="font-size: 14px;">对比度范围:</div></td>
+  <td>
+    <input id="contrast_range" value="0.9" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  </tr>
+  
+  <tr>
+  <td><div style="font-size: 14px;">随机饱和度概率:</div></td>
+  <td>
+    <input id="saturation_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  <td><div style="font-size: 14px;">饱和度范围:</div></td>
+  <td>
+    <input id="saturation_range" value="0.9" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  </tr>
+  
+  <tr>
+  <td><div style="font-size: 14px;">随机色调概率:</div></td>
+  <td>
+    <input id="hue_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  <td><div style="font-size: 14px;">色调范围:</div></td>
+  <td>
+    <input id="hue_range" value="18" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  </tr>
+  
+  <tr>
+  <td><div style="font-size: 14px;">随机上下翻转概率:</div></td>
+  <td>
+    <input id="vertical_flip_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  <td><div style="font-size: 14px;">随机水平翻转概率:</div></td>
+  <td>
+    <input id="horizontal_flip_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  </tr>
+  
+  <tr>
+  <td><div style="font-size: 14px;">旋转概率:</div></td>
+  <td>
+    <input id="rotate_prob" value="0.5" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  <td><div style="font-size: 14px;">最大旋转角度:</div></td>
+  <td>
+    <input id="rotate_range" value="30" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text"/>
+  </td>
+  </tr>
+  
+  </table>
+  <br>
+  <!--buttons-->
+  <div style="margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5;">
+    <div class="btn"><input type="button" id="btn_hide_model_predict_win" value="取消" onclick="hide_augument_detail_parms(this);" style="background:#529EFF;" /></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="btn"><input type="button" id="btn_model_predict_test" value="保存设置" onclick="save_augument_detail_parms(this);" /></div>
+  </div>
+</div>
+<div id="win_data_augmentation_detail_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:14;background: silver;"></div>
 <!--数据增强详细信息窗口-->
 
 <!--Demo下载窗口-->
@@ -4671,6 +4869,7 @@ function dispatch_key_press()
     <input id="test_model_type_text" value="" style="width:90% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text" readonly="readonly"/>
   </td>
   </tr>
+  <tr>
   <td><div style="font-size: 14px;">模型路径:</div></td>
   <td colspan = "3">
     <input id="test_model_path_text" style="width:96% ;height:20px;Float:left;padding: 4px 8px;margin-left: 4px;" type="text" readonly="readonly"/>
@@ -4680,7 +4879,7 @@ function dispatch_key_press()
   <td colspan = "4">
     <div style="margin-top: 5px; padding: 1px 1px 1px; text-align: right; border-top: 1px solid #e5e5e5;"></div>
   </td>
-  <tr>
+  </tr>
   <tr>
     <td><div style="font-size: 14px;">预测图片:</div></td>
     <td colspan = "3">
@@ -4732,7 +4931,6 @@ function dispatch_key_press()
   </div>
 </div>
 <div id="win_model_predict_test_over" style="display: none;width: 100%;height: 100%;opacity:0.8;filter:alpha(opacity=80);position:fixed;top:0;left:0; z-index:9;background: silver;"></div>
-
 <!--模型测试窗口-->
 
 <div class="btn">
