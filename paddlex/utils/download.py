@@ -16,7 +16,7 @@ def md5check(fullname, md5sum=None):
     if md5sum is None:
         return True
 
-    logger.info("File {} md5 checking...".format(fullname))
+    logging.info("File {} md5 checking...".format(fullname))
     md5 = hashlib.md5()
     with open(fullname, 'rb') as f:
         for chunk in iter(lambda: f.read(4096), b""):
@@ -24,8 +24,8 @@ def md5check(fullname, md5sum=None):
     calc_md5sum = md5.hexdigest()
 
     if calc_md5sum != md5sum:
-        logger.info("File {} md5 check failed, {}(calc) != "
-                    "{}(base)".format(fullname, calc_md5sum, md5sum))
+        logging.info("File {} md5 check failed, {}(calc) != "
+                     "{}(base)".format(fullname, calc_md5sum, md5sum))
         return False
     return True
 
@@ -97,11 +97,11 @@ def download(url, path, md5sum=None):
                     if download_size % 524288 == 0:
                         total_size_m = round(
                             int(total_size) / 1024.0 / 1024.0, 2)
-                        download_size_m = round(
-                            download_size / 1024.0 / 1024.0, 2)
-                        speed = int(
-                            524288 / (time.time() - current_time + 0.01) /
-                            1024.0)
+                        download_size_m = round(download_size / 1024.0 /
+                                                1024.0, 2)
+                        speed = int(524288 /
+                                    (time.time() - current_time + 0.01) /
+                                    1024.0)
                         current_time = time.time()
                         logging.debug(
                             "Downloading: TotalSize={}M, DownloadSize={}M, Speed={}KB/s"
