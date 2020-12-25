@@ -29,11 +29,10 @@ def init(dirname, logger):
     get_system_info(SD.machine_info)
 
 
-'''@app.errorhandler(Exception)
+@app.errorhandler(Exception)
 def handle_exception(e):
     ret = {"status": -1, 'message': repr(e)}
     return ret
-'''
 
 
 @app.route('/workspace', methods=['GET', 'PUT'])
@@ -555,6 +554,7 @@ def task_evaluate():
                 ret['result']['Confusion_Matrix'] = ret['result'][
                     'Confusion_Matrix'].tolist()
             ret['result'] = CustomEncoder().encode(ret['result'])
+            ret['result'] = json.loads(ret['result'])
         ret['evaluate_status'] = ret['evaluate_status'].value
         return ret
     if request.method == 'POST':
@@ -567,8 +567,25 @@ def task_evaluate():
 def task_evaluate_file():
     data = request.get_json()
     if request.method == 'GET':
-        ret = data['path']
-        return send_file(ret)
+        if 'path' in data:
+            ret = data['path']
+            return send_file(ret)
+        else:
+            from .project.task import get_evaluate_result
+            from .project.task import import_evaluate_excel
+            ret = get_evaluate_result(data, SD.workspace)
+            if ret['evaluate_status'] == TaskStatus.XEVALUATED and ret[
+                    'result'] is not None:
+                result = ret['result']
+                excel_ret = dict()
+                excel_ret = import_evaluate_excel(data, result, SD.workspace)
+                return excel_ret
+            else:
+                excel_ret = dict()
+                excel_ret['path'] = None
+                excel_ret['status'] = -1
+                excel_ret['message'] = "评估尚未完成或评估失败"
+                return excel_ret
 
 
 @app.route('/project/task/predict', methods=['GET', 'POST', 'PUT'])
@@ -905,4 +922,7 @@ def run(port, workspace_dir):
             os.makedirs(dirname)
     logger = get_logger(osp.join(dirname, "mcessages.log"))
     init(dirname, logger)
-    app.run(host='0.0.0.0', port=port, threaded=True, debug=True)
+    try:
+        app.run(host='0.0.0.0', port=port, threaded=True)
+    except:
+        print("请确保端口号：{}未被防火墙限制".format(port))

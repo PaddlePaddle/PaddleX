@@ -76,6 +76,60 @@ ExportedModelType = Enum(
                           'XQUANTSERVER', 'XPRUNESERVER', 'XTRAINSERVER'),
     start=0)
 
+translate_chinese_table = {
+    "Confusion_matrix": "各个类别之间的混淆矩阵",
+    "Precision": "精准率",
+    "Accuracy": "准确率",
+    "Recall": "召回率",
+    "Class": "类别",
+    "Topk": "K取值",
+    "Auc": "AUC",
+    "Per_ap": "类别平均精准率",
+    "Map": "类别平均精准率（AP）的均值（mAP）",
+    "Mean_iou": "平均交并比",
+    "Mean_acc": "平均准确率",
+    "Category_iou": "各类别交并比",
+    "Category_acc": "各类别准确率",
+    "Ap": "平均精准率",
+    "F1": "F1-score",
+    "Iou": "交并比"
+}
+
+translate_chinese = {
+    "Confusion_matrix": "混淆矩阵",
+    "Mask_confusion_matrix": "Mask混淆矩阵",
+    "Bbox_confusion_matrix": "Bbox混淆矩阵",
+    "Precision": "精准率（Precision）",
+    "Accuracy": "准确率（Accuracy）",
+    "Recall": "召回率（Recall）",
+    "Class": "类别（Class）",
+    "PRF1": "整体分类评估结果",
+    "PRF1_TOPk": "TopK评估结果",
+    "Topk": "K取值",
+    "AUC": "Area Under Curve",
+    "Auc": "Area Under Curve",
+    "F1": "F1-score",
+    "Iou": "交并比（IoU）",
+    "Per_ap": "各类别的平均精准率（AP）",
+    "mAP": "平均精准率的均值（mAP）",
+    "Mask_mAP": "Mask的平均精准率的均值（mAP）",
+    "BBox_mAP": "Bbox的平均精准率的均值（mAP）",
+    "Mean_iou": "平均交并比（mIoU）",
+    "Mean_acc": "平均准确率（mAcc）",
+    "Ap": "平均精准率（Average Precision)",
+    "Category_iou": "各类别的交并比（IoU）",
+    "Category_acc": "各类别的准确率（Accuracy）",
+    "PRAP": "整体检测评估结果",
+    "BBox_PRAP": "Bbox评估结果",
+    "Mask_PRAP": "Mask评估结果",
+    "Overall": "整体平均指标",
+    "PRF1_average": "整体平均指标",
+    "overall_det": "整体平均指标",
+    "PRIoU": "整体平均指标",
+    "Acc1": "预测Top1的准确率",
+    "Acck": "预测Top{}的准确率"
+}
+
 process_pool = Queue(1000)
 
 
@@ -281,6 +335,22 @@ def download(url, target_path):
         shutil.move(tmp_fullname, fullname)
     set_folder_status(target_path, DownloadStatus.XDDOWNLOADDONE)
     return fullname
+
+
+def trans_name(key, in_table=False):
+    if in_table:
+        if key in translate_chinese_table:
+            key = "{}".format(translate_chinese_table[key])
+        if key.capitalize() in translate_chinese_table:
+            key = "{}".format(translate_chinese_table[key.capitalize()])
+        return key
+    else:
+        if key in translate_chinese:
+            key = "{}".format(translate_chinese[key])
+        if key.capitalize() in translate_chinese:
+            key = "{}".format(translate_chinese[key.capitalize()])
+        return key
+    return key
 
 
 def is_pic(filename):
