@@ -99,7 +99,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 * 工业巡检：
   * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 * 工业质检：
-  * [电池隔膜缺陷检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection/README.html)
+  * [铝材表面缺陷检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection/README.html)
 * 卫星遥感：
   * [RGB遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
   * [多通道遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
