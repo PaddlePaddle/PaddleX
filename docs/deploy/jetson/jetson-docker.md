@@ -63,7 +63,7 @@ sudo docker start paddlex
 sudo docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.sh'
 ```
 **注意**：
-- '`cd /infer/cpp`'表示进入到部署代码目录，用户需要根据实际情况自己修改
+- `cd /infer/cpp`表示进入到部署代码目录，用户需要根据实际情况自己修改
 
 
 ## 部署
