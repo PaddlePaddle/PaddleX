@@ -50,8 +50,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    deploy/export_model.md
    deploy/hub_serving.md
    deploy/server/index
-   deploy/nvidia-jetson.md
-   deploy/jetson-docker.md
+   deploy/jetson/index
    deploy/paddlelite/android.md
    deploy/raspberry/index
    deploy/openvino/index
@@ -75,24 +74,12 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    gui/download.md
    gui/how_to_use.md
    gui/FAQ.md
+   gui/restful/index
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: 8. RESTful API使用
-
-   
-   restful/introduction.md
-   restful/restful.md
-   restful/quick_start.md
-   restful/restful_api.md
-   restful/data_struct.md
-   restful/tree.md
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: 9. 附录
+   :caption: 8. 附录
 
    apis/index.rst
    appendix/model_zoo.md

@@ -23,7 +23,7 @@ docker pull paddlex/jetson:1.0
 docker images
 ```
 可以看到，存在一个REPOSITORY为`paddlex/jetson`、TAG为`1.0`的docker镜像
-![](./images/images.png)  
+![](../images/images.png)  
 
 ### Step2: 容器创建
 创建容器之前，需要先准备好需要编译的部署代码与训练好的PaddleX Inference模型
@@ -42,14 +42,14 @@ cp -r PaddleX/deploy/cpp ~/infer/
 
 **创建容器**：通过如下命令创建容器，同时将HOME目录下包含部署代码的infer文件夹挂载到容器内
  ```
- docker create -it -v ~/infer/:/infer  -e DISPLAY=$DISPLAY --net=host --name paddlex --runtime nvidia paddlex/jetson:1.0 /bin/bash
+ docker create -it -v ~/infer/:/infer -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY --net=host --name paddlex --runtime nvidia paddlex/jetson:1.0 /bin/bash
  ```
 查看创建的容器
  ```
  docker ps -a
  ```  
 
- ![](./images/container.png)  
+ ![](../images/container.png)  
 
 
 创建好容器后需要运行容器
@@ -96,6 +96,11 @@ docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.s
 | show_result | 对视频文件做预测时，是否在屏幕上实时显示预测可视化结果(因加入了延迟处理，故显示结果不能反映真实的帧率)，支持值为0或1(默认值为0) |
 | save_result | 是否将每帧的预测可视结果保存为视频文件，支持值为0或1(默认值为1) |
 | save_dir | 保存可视化结果的路径, 默认值为"output" |
+
+**设置show_result为1之前请执行如下命令确保容器有显示权限**
+```
+sudo xhost +
+```  
 
 **注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
 

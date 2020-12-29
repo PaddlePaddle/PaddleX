@@ -73,12 +73,7 @@ PaddleX RESTful API 二次开发
    download.md
    usage/index
    faq.md
-   introduction.md
-   restful.md
-   quick_start.md
-   restful_api.md
-   data_struct.md
-   tree.md
+   restful/index
 
 
 * PaddleX GUI版本: v1.0
