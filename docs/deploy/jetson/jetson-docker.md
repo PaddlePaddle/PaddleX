@@ -5,6 +5,7 @@
 - 编译PaddleX部署代码：用户可以通过Docker编译PaddleX部署代码
 - 部署PaddleX模型：通过Docker使用编译好的可执行文件部署
 
+**注意**：NVIDIA JetPack在v4.2.1版本以上(含v4.2.1)才能支持通过Docker部署
 
 ## 准备工作
 在编译与运行之前的准备工作，主要是下载Docker与创建容器  
@@ -13,13 +14,13 @@
 运行如下命令下载Docker  
 
 ```
-docker pull paddlex/jetson:1.0
+sudo docker pull paddlex/jetson:1.0
 ```  
 
 下载成功后，通过如下命令查看docker的镜像
 
 ```
-docker images
+sudo docker images
 ```
 可以看到，存在一个REPOSITORY为`paddlex/jetson`、TAG为`1.0`的docker镜像
 ![](../images/images.png)  
@@ -41,11 +42,11 @@ cp -r PaddleX/deploy/cpp ~/infer/
 
 **创建容器**：通过如下命令创建容器，同时将HOME目录下包含部署代码的infer文件夹挂载到容器内
  ```
- docker create -it -v ~/infer/:/infer -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY --net=host --name paddlex --runtime nvidia paddlex/jetson:1.0 /bin/bash
+ sudo docker create -it -v ~/infer/:/infer -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY --net=host --name paddlex --runtime nvidia paddlex/jetson:1.0 /bin/bash
  ```
 查看创建的容器
  ```
- docker ps -a
+ sudo docker ps -a
  ```  
 
  ![](../images/container.png)  
@@ -53,21 +54,20 @@ cp -r PaddleX/deploy/cpp ~/infer/
 
 创建好容器后需要运行容器
 ```
-docker start paddlex
+sudo docker start paddlex
 ```
 
 ## 编译
 通过如下命令可以编译infer文件夹内的部署代码
 ```
-docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.sh'
+sudo docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.sh'
 ```
 **注意**：
-- 对于直接使用容内编译好的可执行文件进行部署的用户不需要进行编译
 - '`cd /infer/cpp`'表示进入到部署代码目录，用户需要根据实际情况自己修改
 
 
 ## 部署
-对于图片预测，编译的可执行文件在`/infer/cpp/build/demo/detector`，`infer/cpp/build/demo/classifier`，`infer/cpp/build/demo/segmenter`,其主要命令参数说明如下：
+对于图片预测，编译的可执行文件在`/infer/cpp/build/demo/detector`，`/infer/cpp/build/demo/classifier`，`/infer/cpp/build/demo/segmenter`,其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -81,7 +81,7 @@ docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.s
 | batch_size | 预测的批量大小，默认为1 |
 | thread_num | 预测的线程数，默认为cpu处理器个数 |  
 
-对于视频预测，编译的可执行文件在`/infer/cpp/build/demo/video_detector`，`infer/cpp/build/demo/video_classifier`，`infer/cpp/build/demo/video_segmenter`,其主要命令参数说明如下：
+对于视频预测，编译的可执行文件在`/infer/cpp/build/demo/video_detector`，`/infer/cpp/build/demo/video_classifier`，`/infer/cpp/build/demo/video_segmenter`,其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -105,7 +105,7 @@ sudo xhost +
 
 **对于使用用户编译的可执行文件进行部署的命令如下：**  
 ```
-docker exec -it paddlex /bin/bash -c 'cd [部署代码目录] && .build/demo/[可执行文件名] [命令参数]'
+sudo docker exec -it paddlex /bin/bash -c 'cd [部署代码目录] && .build/demo/[可执行文件名] [命令参数]'
 ```
 
 ### 样例
@@ -117,5 +117,5 @@ docker exec -it paddlex /bin/bash -c 'cd [部署代码目录] && .build/demo/[�
 - 4)使用如下命令，通过容器进行预测
 
 ```
-docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && ./build/demo/detector --model_dir /infer/yolov3_mobilenetv1_coco --image /infer/yolov3_mobilenetv1_coco/test.jpg --use_gpu 1'
+sudo docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && ./build/demo/detector --model_dir /infer/yolov3_mobilenetv1_coco --image /infer/yolov3_mobilenetv1_coco/test.jpg --use_gpu 1'
 ```
