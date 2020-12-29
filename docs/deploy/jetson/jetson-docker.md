@@ -3,8 +3,7 @@
 
 提供了在Jeston上用于编译或者运行PaddleX部署代码的Docker，主要有如下功能：
 - 编译PaddleX部署代码：用户可以通过Docker编译PaddleX部署代码
-- 部署PaddleX模型：提供了部署代码编译好的可执行文件，用户可以直接使用其进行部署
-
+- 部署PaddleX模型：通过Docker使用编译好的可执行文件部署
 
 
 ## 准备工作
@@ -26,7 +25,7 @@ docker images
 ![](../images/images.png)  
 
 ### Step2: 容器创建
-创建容器之前，需要先准备好需要编译的部署代码与训练好的PaddleX Inference模型
+创建容器之前，需要先准备好需要编译的部署代码与训练好的PaddleX部署模型
 
 建议用户在HOME目录下创建infer文件夹，将需要部署的代码与模型拷贝到该目录下用于挂载到容器内  
 
@@ -68,7 +67,7 @@ docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.s
 
 
 ## 部署
-对于图片预测，Docker提供的部署可执行文件在`/detector`，`/classifier`，`/segmenter`；用户自己编译的可执行文件在`/infer/cpp/build/demo/detector`，`infer/cpp/build/demo/classifier`，`infer/cpp/build/demo/segmenter`,其主要命令参数说明如下：
+对于图片预测，编译的可执行文件在`/infer/cpp/build/demo/detector`，`infer/cpp/build/demo/classifier`，`infer/cpp/build/demo/segmenter`,其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -82,7 +81,7 @@ docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && sh scripts/jetson_build.s
 | batch_size | 预测的批量大小，默认为1 |
 | thread_num | 预测的线程数，默认为cpu处理器个数 |  
 
-对于视频预测，Docker提供的部署可执行文件在`/video_detector`，`/video_classifier`，`/video_segmenter`；用户自己编译的可执行文件在`/infer/cpp/build/demo/video_detector`，`infer/cpp/build/demo/video_classifier`，`infer/cpp/build/demo/video_segmenter`,其主要命令参数说明如下：
+对于视频预测，编译的可执行文件在`/infer/cpp/build/demo/video_detector`，`infer/cpp/build/demo/video_classifier`，`infer/cpp/build/demo/video_segmenter`,其主要命令参数说明如下：
 
 |  参数   | 说明  |
 |  ----  | ----  |
@@ -104,27 +103,19 @@ sudo xhost +
 
 **注意：若系统无GUI，则不要将show_result设置为1。当使用摄像头预测时，按`ESC`键可关闭摄像头并推出预测程序。**
 
-**对于直接使用Docker提供的部署可执行文件进行部署的命令如下：**  
-```
-docker exec -it paddlex /bin/bash -c '/[可执行文件名] [命令参数]'
-```
-
-**对于使用用户自己编译的可执行文件进行部署的命令如下：**  
+**对于使用用户编译的可执行文件进行部署的命令如下：**  
 ```
 docker exec -it paddlex /bin/bash -c 'cd [部署代码目录] && .build/demo/[可执行文件名] [命令参数]'
 ```
 
 ### 样例
-在infer文件夹中放了相应的模型与测试图片  
-模型与测试图片[下载地址](https://paddlex.readthedocs.io/zh_CN/develop/train/prediction.html)  
-下载的模型为预训练模型，需要把模型转换为Inference格式，[请参考](https://paddlex.readthedocs.io/zh_CN/develop/deploy/export_model.html)
+在用户编译完部署代码后，可按如下流程运行测试模型样例
 
-使用Docker提供的部署可执行文件进行部署
-```
-docker exec -it paddlex /bin/bash -c '/detector --model_dir /infer/models/ppyolo/ppyolo_coco_inference/ --image /infer/models/ppyolo/ppyolo_coco/test.jpg --use_gpu 1'
-```
+- 1)下载PaddleX预训练模型及测试图片[下载地址](https://paddlex.readthedocs.io/zh_CN/develop/train/prediction.html)，本文档下载了YOLOv3-MobileNetV1模型与测试图片  
+- 2)将模型导出为部署模型格式 [导出部署模型步骤](https://paddlex.readthedocs.io/zh_CN/develop/deploy/export_model.html)
+- 3)将部署模型和测试图片copy到`~/infer`文件夹
+- 4)使用如下命令，通过容器进行预测
 
-使用用户自己编译的可执行文件进行部
 ```
-docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && ./build/demo/detector --model_dir /infer/models/ppyolo/ppyolo_coco_inference/ --image /infer/models/ppyolo/ppyolo_coco/test.jpg --use_gpu 1'
+docker exec -it paddlex /bin/bash -c 'cd /infer/cpp && ./build/demo/detector --model_dir /infer/yolov3_mobilenetv1_coco --image /infer/yolov3_mobilenetv1_coco/test.jpg --use_gpu 1'
 ```
