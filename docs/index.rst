@@ -51,6 +51,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    deploy/hub_serving.md
    deploy/server/index
    deploy/nvidia-jetson.md
+   deploy/jetson-docker.md
    deploy/paddlelite/android.md
    deploy/raspberry/index
    deploy/openvino/index

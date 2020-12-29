@@ -10,6 +10,7 @@
    hub_serving.md
    server/index
    nvidia-jetson.md
+   jetson-docker.md
    paddlelite/index
    openvino/index
    raspberry/index
