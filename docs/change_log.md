@@ -1,5 +1,25 @@
 # 更新日志
 
+**v1.3.0** 2020.12.20
+
+- 模型更新
+  > - 图像分类模型ResNet50_vd新增10万分类预训练模型 
+  > - 目标检测模型FasterRCNN新增模型裁剪支持
+  > - 目标检测模型新增多通道图像训练支持
+
+- 模型部署更新
+  > - 修复OpenVINO部署C++代码中部分Bug
+  > - 树莓派部署新增Arm V8支持
+
+- 产业案例更新
+ > - 新增工业质检产业案例，提供基于GPU和CPU两种部署场景下的工业质检方案，及与质检相关的优化策略 [详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection)
+
+- **新增RestFUL API模块**
+新增RestFUL API模块，开发者可通过此模块快速开发基于PaddleX的训练平台
+ > - 增加基于RestFUL API的HTML Demo [详情链接](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/introduction.md#paddlex-web-demo)
+ > - 增加基于RestFUL API的Remote版可视化客户端 [详情链接](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/introduction.md#paddlex-remote-gui)
+新增模型通过OpenVINO的部署方案[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
+
 **v1.2.0** 2020.09.07
 - 模型更新
   > - 新增产业最实用目标检测模型PP-YOLO，深入考虑产业应用对精度速度的双重面诉求，COCO数据集精度45.2%，Tesla V100预测速度72.9FPS。[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
