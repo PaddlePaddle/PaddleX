@@ -23,10 +23,16 @@
 
 #include "meter_reader/global.h"
 
+// The size of inputting images of the detector
 std::vector<int> IMAGE_SHAPE = {1920, 1080};
+// The size of visualized prediction
 std::vector<int> RESULT_SHAPE = {1280, 720};
+// The size of inputting images of the segmenter,
+// also the size of circular meters
 std::vector<int> METER_SHAPE = {512, 512};
 
+// The configuration information of a meter,
+// composed of scale value, range, unit
 #define METER_TYPE_NUM 2
 MeterConfig_T meter_config[METER_TYPE_NUM] = {
 {25.0f/50.0f, 25.0f,  "(MPa)"},

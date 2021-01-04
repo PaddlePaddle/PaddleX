@@ -16,15 +16,23 @@
 
 #include <vector>
 
+// The configuration information of a meter, composed of scale value,
+// range, unit.
 typedef struct MeterConfig {
   float scale_value;
   float range;
   char  str[10];
 } MeterConfig_T;
 
+// The size of inputting images of the detector
 extern std::vector<int> IMAGE_SHAPE;
+// The size of visualized prediction
 extern std::vector<int> RESULT_SHAPE;
+// The size of inputting images of the segmenter,
+// also the size of circular meters.
 extern std::vector<int> METER_SHAPE;
 extern MeterConfig_T meter_config[];
-
+// The type of a meter is estimated by a threshold. If the number of scales
+// in a meter is greater than or equal to the threshold, the meter is
+// belong to the former type. Otherwize, the latter.
 #define TYPE_THRESHOLD 40
