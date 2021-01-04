@@ -115,11 +115,11 @@ To get developers up to speed with the PaddleX API, we've created a complete ser
 ## Release Note
 
 > [Complete Release Note](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
+- 2020.12.20 v1.3.0
 - 2020.09.05 v1.2.0
 - 2020.07.13 v1.1.0
 - 2020.07.12 v1.0.8
 - 2020.05.20 v1.0.0
-- 2020.05.17 v0.1.8
 
 
 

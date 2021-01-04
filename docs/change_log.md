@@ -1,15 +1,40 @@
 # Update log
 
-**v1.2.0** 2020.09.07
+**v1.3.0** 2020.12.20
+
 - Model Update
-   > - Add the most practical object detection model PP-YOLO in the industry. Deeply considering the double requirements for precision and speed in the industrial application, the COCO dataset precision is 45.2% and the Tesla V100 inference speed is 72.9 FPS. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
-   > - Add to FasterRCNN, MaskRCNN, YOLOv3, DeepLabv3p and other models a built-in COCO dataset pre-training model which applies to fine-tuned training of small datasets. 
-   > - Add to object detection models FasterRCNN and MaskRCNN backbone HRNet_W18 which applies to application scenarios having high requirements for details inference. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
-   > - Add backbone MobileNetV3_large_ssld to the semantic segmentation model DeepLabv3p. The model volume is 9.3 MB and the Cityscapes dataset precision still is 73.28%. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
+
+  > - Add to image classification model ResNet50_vd 100,000 classification pre-training models. 
+  > - Add to object detection model FasterRCNN new model clipping support.
+  > - Add to target detection model multi-channel image training support.
 
 - Model Deployment Update
-   > - Add a model inference acceleration deployment solution via OpenVINO. Compared with the mkldnn acceleration library, the inference speed increases by about 1.5-2 times on the CPU. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
-   > - Add a model deployment solution on Raspberry Pi and further enrich an edge deployment solution. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
+
+  > - Fix some bugs in OpenVINO deployment C++ code.
+  > - Add to Raspberry Pi deployment Arm V8 support.
+
+- Industrial Case Update
+
+ > - Add a industrial quality inspection case and provide industrial quality inspection solutions based on GPU and CPU deployment scenarios, as well as optimization strategies related to quality inspection [Details link](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection)
+
+- **Add RestFUL API module**
+  Add RestFUL API module, through which developers can quickly develop training platform based on PaddleX.
+
+ > - Add HTML Demo based on RestFUL API [Details link](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/introduction.md#paddlex-web-demo)
+ > - Add Remote visual client based on RestFUL API [Details link](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/introduction.md#paddlex-remote-gui)
+ >   Add model deployment scheme through OpenVINO[Details link](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
+
+**v1.2.0** 2020.09.07
+
+- Model Update
+   > - Add the most practical object detection model PP-YOLO in the industry. Deeply considering the double requirements for precision and speed in the industrial application, the COCO dataset precision is 45.2% and the Tesla V100 inference speed is 72.9 FPS. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-ppyolo)
+   > - Add to FasterRCNN, MaskRCNN, YOLOv3, DeepLabv3p and other models a built-in COCO dataset pre-training model which applies to fine-tuned training of small datasets. 
+   > - Add to object detection models FasterRCNN and MaskRCNN backbone HRNet_W18 which applies to application scenarios having high requirements for details inference. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
+   > - Add backbone MobileNetV3_large_ssld to the semantic segmentation model DeepLabv3p. The model volume is 9.3 MB and the Cityscapes dataset precision still is 73.28%. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
+
+- Model Deployment Update
+   > - Add a model inference acceleration deployment solution via OpenVINO. Compared with the mkldnn acceleration library, the inference speed increases by about 1.5-2 times on the CPU. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
+   > - Add a model deployment solution on Raspberry Pi and further enrich an edge deployment solution. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
    > - Optimize the data preprocessing and postprocessing code performance of PaddleLite Android deployment. The preprocessing speed increases by about 10 times and the postprocessing speed increases by about 4 times.
    > - Optimize C++ deployment codes on the Paddle server and add parameters such as use_mkl. Compared with not starting mkldnn, the inference speed increases by about 10-50 times on the CPU.
 
@@ -20,7 +45,8 @@
 
 
 - Others
-   > - Add the dataset splitting function which supports splitting ImageNet, PascalVOC, MSCOCO and semantic segmentation datasets with one click via command line. [Details link] (https://paddlex.readthedocs.io/zh_CN/develop/data/format/classification.html#id2)
+   
+   > - Add the dataset splitting function which supports splitting ImageNet, PascalVOC, MSCOCO and semantic segmentation datasets with one click via command line. [Details link](https://paddlex.readthedocs.io/zh_CN/develop/data/format/classification.html#id2)
 
 
 **v1.1.0** 2020.07.12
@@ -35,8 +61,8 @@
 > - Add a Jetson and Paddle Lite model deployment and inference solution
 > - Add batch inference in the C++ deployment codes and use OpenMP for parallel acceleration of preprocessing
 - Add two PaddleX Industrial Cases
-> - [Portrait segmentation case] (https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
-> - [Industrial instrument reading case] (https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
+> - [Portrait segmentation case](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
+> - [Industrial instrument reading case](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 - Add the data format conversion function which converts data annotated by LabelMe, Colabeler and the EasyData platform into a data format that PaddleX supports loading
 - Update the PaddleX document by optimizing the document structure
 
