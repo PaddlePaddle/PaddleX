@@ -143,7 +143,7 @@ paddlex.det. YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=None, anchor
 > > -**anchors** (list|tuple): Width and height of the anchor box. When it is none, it indicates using the default
 > >                  [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
 >                   [59, 119], [116, 90], [156, 198], [373, 326]].
-> > - **anchor_masks** (list|tuple): When the YOLOv3 loss is calculated, the mask index of the anchor is used. When it is none, it indicates using the default 
+> > - **anchor_masks** (list|tuple): When the YOLOv3 loss is calculated, the mask index of the anchor is used. When it is none, it indicates using the default
 > >                    [[6, 7, 8], [3, 4, 5], [0, 1, 2]].
 > > -**ignore_threshold** (float): When the YOLOv3 loss is calculated, the confidence of predicted boxes of which the IoU is greater than `ignore_threshold` is ignored. It is 0.7 by default.
 > > -**nms_score_threshold** (float): Confidence score threshold of the detected box. Any box of which the confidence is smaller than the threshold shall be ignored. It is 0.01 by default.
@@ -251,7 +251,7 @@ batch_predict(self, img_file_list, transforms=None)
 ## paddlex.det. FasterRCNN
 
 ```python
-paddlex.det. FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512])
+paddlex.det. FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[32, 64, 128, 256, 512], with_dcn=False, rpn_cls_loss='SigmoidCrossEntropy', rpn_focal_loss_alpha=0.25, rpn_focal_loss_gamma=2, rcnn_bbox_loss='SmoothL1Loss', rcnn_nms='MultiClassNMS', keep_top_k=100, nms_threshold=0.5, score_threshold=0.05, softnms_sigma=0.5, bbox_assigner='BBoxAssigner', fpn_num_channels=256, input_channel=3, rpn_batch_size_per_im=256, rpn_fg_fraction=0.5, test_pre_nms_top_n=None, test_post_nms_top_n=1000)
 ```
 
 > Build a FasterRCNN detector. **Note that num_classes needs to be set to number of classes+background class in FasterRCNN. If an object includes humans and dogs, set num_classes to 3 so that the background class is included**
@@ -259,10 +259,27 @@ paddlex.det. FasterRCNN(num_classes=81, backbone='ResNet50', with_fpn=True, aspe
 > **Parameters**
 
 > > - **num_classes** (int): Number of classes including the background class. It is 81 by default.
-> > - **backbone** (str): FasterRCNN backbone network in a value range of ['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']. It is 'ResNet50' by default.
+> > - **backbone** (str): FasterRCNN backbone network in a value range of ['ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18', 'ResNet50_vd_ssld']. It is 'ResNet50' by default.
 > > -**with_fpn** (bool): Whether to use FPN structure. It is true by default.
 > > -**aspect_ratios** (list): Optional value of the anchor aspect ratio. It is [0.5, 1.0, 2.0] by default.
 > > -**anchor_sizes** (list): Optional value of the anchor size. It is [32, 64, 128, 256, 512] by default.
+> > - **with_dcn** (bool): Whether to use deformable convolution network v2 in the backbone. Default: False.
+> > - **rpn_cls_loss** (str): The classification loss function for RPN in a value range of ['SigmoidCrossEntropy', 'SigmoidFocalLoss']。When there are many false positives in backgorund areas, 'SigmoidFocalLoss' with appropriate `rpn_focal_loss_alpha` and `rpn_focal_loss_gamma` settings may be a better option. Default: 'SigmoidCrossEntropy'.
+> > - **rpn_focal_loss_alpha** (float)：Hyper-parameter to balance the positive and negative examples where 'SigmoidFocalLoss' is set as the lassification loss function for RPN, Default: 0.25. If use 'SigmoidCrossEntropy', `rpn_focal_loss_alpha` has no effect.
+> > - **rpn_focal_loss_gamma** (float): Hyper-parameter to balance the easy and hard examples where 'SigmoidFocalLoss' is set as the lassification loss function for RPN, Default: 2. If use 'SigmoidCrossEntropy', `rpn_focal_loss_gamma` has no effect.
+> > - **rcnn_bbox_loss** (str): The location regression loss function for RCNN in a value range of ['SmoothL1Loss', 'CIoULoss']. Default: 'SmoothL1Loss'.
+> > - **rcnn_nms** (str): The non-maximum suppression(NMS) method for RCNN, in a value range of ['MultiClassNMS', 'MultiClassSoftNMS','MultiClassCiouNMS']. Default: 'MultiClassNMS'. When 'MultiClassNMS' is set, `keep_top_k`, `nms_threshold` and `score_threshold` can be set as 100, 0.5 and 0.05 respectively. When 'MultiClassSoftNMS' is set, `keep_top_k`, `score_threshold` and `softnms_sigma` can be set as 300, 0.01 and 0.5 respectively. When 'MultiClassCiouNMS' is set, `keep_top_k`, `score_threshold` and `nms_threshold` can be set as 100, 0.05 and 0.5 respectively.
+> > - **keep_top_k** (int): The Number of total bouning boxes to be kept per image after NMS step for RCNN. Default: 100.
+> > - **nms_threshold** (float): The IoU threshold to filter out bounding boxes in NMS for RCNN. When `rcnn_nms` is set as `MultiClassSoftNMS`，`nms_threshold` has no effect。Default: 0.5.
+> > - **score_threshold** (float): The confidence score threshold to filter out bounding boxes before nms. Default: 0.05.
+> > - **softnms_sigma** (float): When `rcnn_nms` is set as `MultiClassSoftNMS`, `softnms_sigma` is used to adjust the confidence score of suppressed bounding boxes according to `score = score * weights, weights = exp(-(iou * iou) / softnms_sigma)`. Default: 0.5.
+> > - **bbox_assigner** (str): The method of sampling positive and negative examples during the traing phase, in a value range of ['BBoxAssigner', 'LibraBBoxAssigner']. If the size of objects is a small portion of the image, [LibraRCNN](https://arxiv.org/abs/1904.02701) proposed a IoU-balanced sampling method to abtain more hard-negative examples, namely 'LibraBBoxAssigner'. Default: 'BBoxAssigner'.
+> > - **fpn_num_channels** (int): The number of channels of feature maps in FPN2. Default: 56.
+> > - **input_channel** (int): The number of channels of a input image. Default: 3.
+> > - **rpn_batch_size_per_im** (int): Total number of training examples per image for RPN. Default: 256.
+> > - **rpn_fg_fraction** (float): The fraction of positive examples in total train examples for RPN. Default: 0.5.
+> > - **test_pre_nms_top_n** (int)：The number of predicted bounding boxes fed into NMS step. If set as None, `test_pre_nms_top_n` will be set as 6000 with a FPN or 1000 with no FPN. Default: None.
+> > - **test_post_nms_top_n** (int): The number of predicted bounding boxes kept after NMS step. Default: 1000.
 
 
 
@@ -307,7 +324,7 @@ evaluate(self, eval_dataset, batch_size=1, epoch_id=None, metric=None, return_de
 > FasterRCNN model evaluation API. The index box_map (when metric is set to `VOC`) or box_mmap (when metric is set to COCO) on the validation set is returned after the model is evaluated.
 
 > **Parameters**
-> 
+>
 >> - **eval_dataset** (paddlex.datasets): Validation data reader.
 >> - **batch_size** (int): Validation data batch size. It is 1 by default. Currently, it must be set to 1.
 >> - **epoch_id** (int): Number of training epochs of the current evaluation model.
@@ -354,5 +371,3 @@ batch_predict(self, img_file_list, transforms=None)
 >**Returned value**
 >
 > >- **list**: Each element is a list which indicates prediction results of each image. Each element in the list of prediction results of each image has a dict. The key includes 'bbox', 'category', 'category_id' and 'score' which indicate the box coordinate information, class, class ID and confidence of each predicted object respectively. The box coordinate information is [xmin, ymin, w, h], i.e. the x and y coordinates and the box width and height in the top left corner.
-
-
