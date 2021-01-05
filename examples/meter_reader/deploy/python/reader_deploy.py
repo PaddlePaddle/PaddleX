@@ -23,13 +23,25 @@ import argparse
 from paddlex.seg import transforms
 import paddlex as pdx
 
+# The size of inputting images (METER_SHAPE x METER_SHAPE) of the segmenter,
+# also the size of circular meters.
 METER_SHAPE = 512
+# Center of a circular meter
 CIRCLE_CENTER = [256, 256]
+# Radius of a circular meter
 CIRCLE_RADIUS = 250
 PI = 3.1415926536
+# During the postprocess phase, annulus formed by the radius from
+# 130 to 250 of a circular meter will be converted to a rectangle.
+# So the height of the rectangle is 120.
 LINE_HEIGHT = 120
+# The width of the rectangle is 1570, that is to say the perimeter of a circular meter
 LINE_WIDTH = 1570
+# The type of a meter is estimated by a threshold. If the number of scales in a meter is
+# greater than or equal to the threshold, the meter is belong to the former type.
+# Otherwize, the latter.
 TYPE_THRESHOLD = 40
+# The configuration information of a meter, composed of scale value, range, unit.
 METER_CONFIG = [{
     'scale_value': 25.0 / 50.0,
     'range': 25.0,
@@ -118,6 +130,14 @@ def is_pic(img_name):
 
 
 class MeterReader:
+    """Find the meters in images and provide a digital readout of each meter.
+
+    Args:
+        detector_dir(str): directory of the detector.
+        segmenter_dir(str): directory of the segmenter.
+
+    """
+
     def __init__(self, detector_dir, segmenter_dir):
         if not osp.exists(detector_dir):
             raise Exception("Model path {} does not exist".format(
@@ -138,6 +158,20 @@ class MeterReader:
                 erode_kernel=4,
                 score_threshold=0.5,
                 seg_batch_size=2):
+        """Detect meters in a image, segment scales and points in these meters, the postprocess are
+        done to provide a digital readout according to scale and point location.
+
+        Args:
+            im_file (str):  the path of a image to be predicted.
+            save_dir (str): the directory to save the visual prediction. Default: './'.
+            use_erode (bool, optional): whether to do image erosion by using a specific structuring element for
+                the label map output from the segmenter. Default: True.
+            erode_kernel (int, optional): structuring element used for erosion. Default: 4.
+            score_threshold (float, optional): detected meters whose scores are not lower than `score_threshold`
+                will be fed into the following segmenter. Default: 0.5.
+            seg_batch_size (int, optional): batch size of meters when do segmentation. Default: 2.
+
+        """
         if isinstance(im_file, str):
             im = cv2.imread(im_file).astype('float32')
         else:
@@ -181,9 +215,10 @@ class MeterReader:
             meter_images = list()
             for j in range(i, im_size):
                 meter_images.append(resized_meters[j - i])
+            # Segment scales and point in each meter area
             result = self.segmenter.batch_predict(
-                transforms=self.seg_transforms,
-                img_file_list=meter_images)
+                transforms=self.seg_transforms, img_file_list=meter_images)
+            # Do image erosion for the predicted label map of each meter
             if use_erode:
                 kernel = np.ones((erode_kernel, erode_kernel), np.uint8)
                 for i in range(len(result)):
@@ -192,10 +227,12 @@ class MeterReader:
             seg_results.extend(result)
 
         results = list()
+        # The postprocess are done to get the point location relative to the scales
         for i, seg_result in enumerate(seg_results):
             result = self.read_process(seg_result['label_map'])
             results.append(result)
 
+        # Provide a digital readout according to point location relative to the scales
         meter_values = list()
         for i, result in enumerate(results):
             if result['scale_num'] > TYPE_THRESHOLD:
@@ -205,7 +242,7 @@ class MeterReader:
             meter_values.append(value)
             print("-- Meter {} -- result: {} --\n".format(i, value))
 
-        # visualize the results
+        # Visualize the results
         visual_results = list()
         for i, res in enumerate(filtered_results):
             # Use `score` to represent the meter value
@@ -214,30 +251,68 @@ class MeterReader:
         pdx.det.visualize(im_file, visual_results, -1, save_dir=save_dir)
 
     def read_process(self, label_maps):
-        # Convert the circular meter into rectangular meter
+        """Get the pointer location relative to the scales.
+
+        Args:
+            label_maps (np.array): the label map output from a segmeter for a meter.
+
+        """
+        # Convert the circular meter into a rectangular meter
         line_images = self.creat_line_image(label_maps)
-        # Convert the 2d meter into 1d meter
+        # Get two one-dimension data where 0 represents background and >0 represents
+        # a scale or a pointer
         scale_data, pointer_data = self.convert_1d_data(line_images)
         # Fliter scale data whose value is lower than the mean value
         self.scale_mean_filtration(scale_data)
-        # Get scale_num, scales and ratio of meters
+        # Get the number of scales，the pointer location relative to the scales, the ratio between
+        # the distance from the pointer to the starting scale and distance from the ending scale to the
+        # starting scale.
         result = self.get_meter_reader(scale_data, pointer_data)
         return result
 
     def creat_line_image(self, meter_image):
+        """Convert the circular meter into a rectangular meter.
+
+        The minimum scale value is at the bottom left, the maximum scale value
+        is at the bottom right, so the vertical down axis is the starting axis and
+        rotates around the meter ceneter counterclockwise.
+
+        Args:
+            meter_image (np.array): the label map output from a segmeter for a meter.
+
+        Returns:
+            line_image (np.array): a rectangular meter.
+        """
+
         line_image = np.zeros((LINE_HEIGHT, LINE_WIDTH), dtype=np.uint8)
         for row in range(LINE_HEIGHT):
             for col in range(LINE_WIDTH):
                 theta = PI * 2 / LINE_WIDTH * (col + 1)
                 rho = CIRCLE_RADIUS - row - 1
-                x = int(CIRCLE_CENTER[0] + rho * math.cos(theta) + 0.5)
-                y = int(CIRCLE_CENTER[1] - rho * math.sin(theta) + 0.5)
-                line_image[row, col] = meter_image[x, y]
+                y = int(CIRCLE_CENTER[0] + rho * math.cos(theta) + 0.5)
+                x = int(CIRCLE_CENTER[1] - rho * math.sin(theta) + 0.5)
+                line_image[row, col] = meter_image[y, x]
         return line_image
 
     def convert_1d_data(self, meter_image):
+        """Get two one-dimension data where 0 represents background and >0 represents
+           a scale or a pointer from the rectangular meter.
+
+        Args:
+            meter_image (np.array): the two-dimension rectangular meter output
+                from function creat_line_image().
+
+        Returns:
+            scale_data (np.array): a one-dimension data where 0 represents background and
+                >0 represents scales.
+            pointer_data (np.array): a one-dimension data where 0 represents background and
+                >0 represents a pointer.
+        """
+
         scale_data = np.zeros((LINE_WIDTH), dtype=np.uint8)
         pointer_data = np.zeros((LINE_WIDTH), dtype=np.uint8)
+        # Accumulte the number of positions whose label is 1 along the height axis.
+        # Accumulte the number of positions whose label is 2 along the height axis.
         for col in range(LINE_WIDTH):
             for row in range(LINE_HEIGHT):
                 if meter_image[row, col] == 1:
@@ -247,12 +322,33 @@ class MeterReader:
         return scale_data, pointer_data
 
     def scale_mean_filtration(self, scale_data):
+        """Set the element in the scale data which is lower than its mean value to 0.
+
+        Args:
+            scale_data (np.array): the scale data output from function convert_1d_data().
+        """
         mean_data = np.mean(scale_data)
         for col in range(LINE_WIDTH):
             if scale_data[col] < mean_data:
                 scale_data[col] = 0
 
     def get_meter_reader(self, scale_data, pointer_data):
+        """Calculate the number of scales，the pointer location relative to the scales, the ratio between
+        the distance from the pointer to the starting scale and distance from the ending scale to the
+        starting scale.
+
+        Args:
+            scale_data (np.array): a scale data output from function scale_mean_filtration().
+            pointer_data (np.array): a pointer data output from function convert_1d_data().
+
+        Returns:
+            Dict (keys: 'scale_num', 'scales', 'ratio'):
+                The value of key 'scale_num' (int): the number of scales;
+                The value of 'scales' (float): the pointer location relative to the scales;
+                the value of 'ratio' (float): the ratio between from the pointer to the starting scale and
+                distance from the ending scale to the starting scale.
+
+        """
         scale_flag = False
         pointer_flag = False
         one_scale_start = 0

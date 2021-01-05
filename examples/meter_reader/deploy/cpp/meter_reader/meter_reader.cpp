@@ -59,9 +59,11 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
              const std::string image_path, const bool use_erode,
              const int erode_kernel, const int thread_num,
              const int seg_batch_size, const double threshold) {
+  // Get detection results
   PaddleX::DetResult det_result;
   det_model->predict(input_image, &det_result);
 
+  // Filter bbox whose score is lower than score_threshold
   PaddleX::DetResult filter_result;
   int num_bboxes = det_result.boxes.size();
   for (int i = 0; i < num_bboxes; ++i) {
@@ -90,6 +92,7 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
     int batch_thread_num = std::min(thread_num, im_vec_size - i);
     #pragma omp parallel for num_threads(batch_thread_num)
     for (int j = i; j < im_vec_size; ++j) {
+      // Crop the bbox area
       int left = static_cast<int>(filter_result.boxes[j].coordinate[0]);
       int top = static_cast<int>(filter_result.boxes[j].coordinate[1]);
       int width = static_cast<int>(filter_result.boxes[j].coordinate[2]);
@@ -99,6 +102,7 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
 
       cv::Mat sub_image = input_image(
         cv::Range(top, bottom + 1), cv::Range(left, right + 1));
+      // Resize the image with shape (METER_SHAPE, METER_SHAPE)
       float scale_x =
         static_cast<float>(METER_SHAPE[0]) / static_cast<float>(sub_image.cols);
       float scale_y =
@@ -111,10 +115,12 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
                  cv::INTER_LINEAR);
       meters_image[j - i] = std::move(sub_image);
     }
+    // Segment scales and point in each meter area
     std::vector<PaddleX::SegResult> batch_result(im_vec_size - i);
     seg_model->predict(meters_image, &batch_result, batch_thread_num);
     #pragma omp parallel for num_threads(batch_thread_num)
     for (int j = i; j < im_vec_size; ++j) {
+      // Do image erosion for the predicted label map of each meter
       if (use_erode) {
         cv::Mat kernel(4, 4, CV_8U, cv::Scalar(1));
         std::vector<uint8_t> label_map(
@@ -144,10 +150,13 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
 
   std::vector<READ_RESULT> read_results(meter_num);
   int all_thread_num = std::min(thread_num, meter_num);
+  // The postprocess are done to get the point location relative to the scales
   read_process(seg_result, &read_results, all_thread_num);
 
   cv::Mat output_image = input_image.clone();
   for (int i = 0; i < meter_num; i++) {
+    // Provide a digital readout according to point location relative
+    // to the scales
     float result = 0;;
     if (read_results[i].scale_num > TYPE_THRESHOLD) {
       result = read_results[i].scales * meter_config[0].scale_value;
@@ -158,6 +167,7 @@ void predict(const cv::Mat &input_image, PaddleX::Model *det_model,
               << " -- result: " << result
               << " --" << std::endl;
 
+    // Visualize the results
     int lx = static_cast<int>(filter_result.boxes[i].coordinate[0]);
     int ly = static_cast<int>(filter_result.boxes[i].coordinate[1]);
     int w = static_cast<int>(filter_result.boxes[i].coordinate[2]);

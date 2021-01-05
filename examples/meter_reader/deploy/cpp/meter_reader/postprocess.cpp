@@ -29,12 +29,21 @@
 
 using namespace std::chrono;  // NOLINT
 
+// The size of inputting images (SEG_IMAGE_SIZE x SEG_IMAGE_SIZE) of
+// the segmenter.
 #define SEG_IMAGE_SIZE 512
+// During the postprocess phase, annulus formed by the radius from
+// 130 to 250 of a circular meter will be converted to a rectangle.
+// So the height of the rectangle is 120.
 #define LINE_HEIGHT 120
+// The width of the rectangle is 1570, that is to say the perimeter
+// of a circular meter.
 #define LINE_WIDTH 1570
+// Radius of a circular meter
 #define CIRCLE_RADIUS 250
 
 const float pi = 3.1415926536f;
+// Center of a circular meter
 const int circle_center[] = {256, 256};
 
 
@@ -45,14 +54,17 @@ void creat_line_image(const std::vector<int64_t> &seg_image,
   int image_x;
   int image_y;
 
+  // The minimum scale value is at the bottom left, the maximum scale value
+  // is at the bottom right, so the vertical down axis is the starting axis and
+  // rotates around the meter ceneter counterclockwise.
   for (int row = 0; row < LINE_HEIGHT; row++) {
     for (int col = 0; col < LINE_WIDTH; col++) {
       theta = pi * 2 / LINE_WIDTH * (col + 1);
       rho = CIRCLE_RADIUS - row - 1;
-      image_x = static_cast<int>(circle_center[0] + rho * cos(theta) + 0.5);
-      image_y = static_cast<int>(circle_center[1] - rho * sin(theta) + 0.5);
+      image_y = static_cast<int>(circle_center[0] + rho * cos(theta) + 0.5);
+      image_x = static_cast<int>(circle_center[1] - rho * sin(theta) + 0.5);
       (*output)[row * LINE_WIDTH + col] =
-        seg_image[image_x * SEG_IMAGE_SIZE + image_y];
+        seg_image[image_y * SEG_IMAGE_SIZE + image_x];
     }
   }
 
@@ -62,6 +74,8 @@ void creat_line_image(const std::vector<int64_t> &seg_image,
 void convert_1D_data(const std::vector<unsigned char> &line_image,
                      std::vector<unsigned int> *scale_data,
                      std::vector<unsigned int> *pointer_data) {
+  // Accumulte the number of positions whose label is 1 along the height axis.
+  // Accumulte the number of positions whose label is 2 along the height axis.
   for (int col = 0; col < LINE_WIDTH; col++) {
     (*scale_data)[col] = 0;
     (*pointer_data)[col] = 0;
@@ -172,15 +186,23 @@ void read_process(const std::vector<std::vector<int64_t>> &seg_image,
     int read_num = seg_image.size();
     #pragma omp parallel for num_threads(thread_num)
     for (int i_read = 0; i_read < read_num; i_read++) {
+        // Convert the circular meter into a rectangular meter
         std::vector<unsigned char> line_result(LINE_WIDTH*LINE_HEIGHT, 0);
         creat_line_image(seg_image[i_read], &line_result);
 
+        // Get two one-dimension data where 0 represents background and
+        // >0 represents a scale or a pointer
         std::vector<unsigned int> scale_data(LINE_WIDTH);
         std::vector<unsigned int> pointer_data(LINE_WIDTH);
         convert_1D_data(line_result, &scale_data, &pointer_data);
+        // Fliter scale data whose value is lower than the mean value
         std::vector<unsigned int> scale_mean_data(LINE_WIDTH);
         scale_mean_filtration(scale_data, &scale_mean_data);
 
+        // Get the number of scales，the pointer location relative to the
+        // scales, the ratio between the distance from the pointer to the
+        // starting scale and distance from the ending scale to the
+        // starting scale.
         READ_RESULT result;
         get_meter_reader(scale_mean_data, pointer_data, &result);
 
