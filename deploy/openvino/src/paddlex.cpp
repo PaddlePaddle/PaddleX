@@ -44,7 +44,7 @@ void Model::create_predictor(const std::string& model_dir,
     }
     if (device == "MYRIAD") {
       std::map<std::string, std::string> networkConfig;
-      networkConfig["VPU_HW_STAGES_OPTIMIZATION"] = "ON";
+      networkConfig["VPU_HW_STAGES_OPTIMIZATION"] = "NO";
       executable_network_ = ie.LoadNetwork(network_, device, networkConfig);
     } else {
       executable_network_ = ie.LoadNetwork(network_, device);

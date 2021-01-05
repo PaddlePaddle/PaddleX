@@ -1,4 +1,4 @@
-# Nvidia Jetson开发板
+# Nvidia Jetson开发板本地部署
 
 ## 说明
 本文档在基于Nvidia Jetpack 4.4的`Linux`平台上使用`GCC 7.4`测试过，如需使用不同G++版本，则需要重新编译Paddle预测库，请参考: [NVIDIA Jetson嵌入式硬件预测库源码编译](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12)。

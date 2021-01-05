@@ -86,7 +86,7 @@ class Compose(SegTransform):
             if input_channel == 3:
                 return cv2.imread(img_path)
             else:
-                im = cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
+                return cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
         elif ext == '.npy':
             return np.load(img_path)
         else:

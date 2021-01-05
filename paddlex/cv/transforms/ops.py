@@ -43,9 +43,10 @@ def resize_long(im, long_size=224, interpolation=cv2.INTER_LINEAR):
     resized_width = int(round(im.shape[1] * scale))
     resized_height = int(round(im.shape[0] * scale))
 
+    im_dims = im.ndim
     im = cv2.resize(
         im, (resized_width, resized_height), interpolation=interpolation)
-    if im.ndim < 3:
+    if im_dims >= 3 and im.ndim < 3:
         im = np.expand_dims(im, axis=-1)
     return im
 

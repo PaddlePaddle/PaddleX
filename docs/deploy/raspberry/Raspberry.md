@@ -76,8 +76,8 @@ LITE_DIR=/path/to/Paddle-Lite/inference/lib
 GFLAGS_DIR=$(pwd)/deps/gflags
 # opencv预编译库的路径，若自行编译请指定到对应路径
 OPENCV_DIR=$(pwd)/deps/opencv/
-# arm处理器架构 armv7或者armv8
-ARCH=armv7
+# arm处理器架构 armv7-a或者armv8-a
+ARCH=armv7-a
 # Lite预测库版本 light或者full
 LITE=full
 ```

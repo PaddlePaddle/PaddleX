@@ -1,7 +1,7 @@
-# API 参考文档
+# RestFUL API 参考文档
 ## API 总览
-![alt](./img/restful_api.png)
-图片包含目前PaddleX restful模块提供所有的restful api以及api支持的https请求方式：
+![](./img/restful_api.png)
+图片包含目前PaddleX RESTful模块提供所有的RESTful API:
 
 - /workspace: 工作空间相关
 - /dataset：数据集操作
@@ -12,9 +12,9 @@
 - /demo: 示例
 
 
-## api 接口文档
+## API 接口文档
 **说明**：
-- 后续例子中https请求通过requests完成，url代表运行paddlex restful服务的主机ip
+- 后续例子中HTTP请求通过requests完成，url代表运行PaddleX RESTful服务的主机ip与端口号
 - 所有的请求，通过ret.status_code是否为200，判断是否正确给Server执行
 - 在status_code为200的前提下，如果ret.json()['status']为-1，则表明出错，出错信息在ret.json()['message']里面，如果执行成功， status是1
 
@@ -23,7 +23,7 @@
 主要是对工作空间的结构化信息进行操作，包括修改合和获取工作空间中数据集、项目、任务的属性
 - GET请求：获取workspace中数据集、项目、任务、模型的属性
 - PUT请求：修改workspace中数据集、项目、任务、模型的属性，对于创建项目之后我们需求通过该接口将数据集与项目绑定才能进行训练任务
-对于可以获取和修改的属性请参考[Protobuf结构化数据](./data_struct.md#Protobuf结构化数据)  
+对于可以获取和修改的属性请参考[Protobuf结构化数据](./data_struct.md)  
 
 ```
 methods=='GET':获取工作目录中项目、数据集、任务的属性
@@ -64,15 +64,14 @@ methods=='PUT':修改工作目录中项目、数据集、任务的属性
 
 
 
-### /dataset
+### /dataset [GET,POST,PUT,DELETE]
 对数据集进行操作，包括创建、导入、查询、删除数据集的功能
 - POST请求:创建数据集，创建时需要指定数据集类型可以是['classification', 'detection', 'segmentation','instance_segmentation']中的一种
 - GET请求:创建好数据集后，可以通过GET请求获取数据集信息，目前支持获取单个或者所有数据集的信息
 - PUT请求:导入数据集，创建数据集后并没有真实的数据与数据集关联，需要通过导入功能，将数据导入到工作空间内，需要导入的数据集必须按照
 - DELETE:删除一个数据集  
-DatasetStatus定义了数据集状态，具体请参考[数据集状态变量](./data_struct.md#状态枚举变量)  
+DatasetStatus定义了数据集状态，具体请参考[数据集状态变量](./data_struct.md)  
 
-methods = [GET,POST,PUT,DELETE]
 ```
 methods=='GET':获取所有数据集或者单个数据集的信息
 	Args：
@@ -316,7 +315,7 @@ methods=='DELETE':删除一个项目，以及项目相关的task
 - POST请求:创建一个任务可以是训练任务也可以是剪裁任务，剪裁任务需要指定parent_id
 - GET请求: 获取单个任务、单个项目内所有任务、所有任务的信息，当tid存在时返回指定任务的信息，如果任务状态(TaskStatus)显示任务停止可以通过resume查询任务是否可以恢复训练以及保存的最大epoch；当pid存在时返回该项目下面所有任务信息
 - DELETE请求:删除任务  
-TaskStatus定义了任务状态，具体请参考[任务状态变量](./data_struct.md#状态枚举变量)  
+TaskStatus定义了任务状态，具体请参考[任务状态变量](./data_struct.md)  
 
 ```
 methods=='GET':#获取某个任务的信息或者所有任务的信息
@@ -455,7 +454,7 @@ methods=='PUT':#改变任务训练的状态，即终止训练或者恢复训练
 - GET请求:获取剪裁任务状态信息
 - POST请求:创建剪裁分析任务，异步操作
 - PUT请求:停止正在进行的剪裁分析任务  
-PruneStatus定义了裁剪分析任务状态，具体请参考[裁剪分析状态变量](./data_struct.md#状态枚举变量)  
+PruneStatus定义了裁剪分析任务状态，具体请参考[裁剪分析状态变量](./data_struct.md)  
 
 ```
 methods=='GET':#获取剪裁任务的状态
@@ -526,6 +525,26 @@ methods=='POST':#异步，创建一个评估任务
 		ret = requests.post(url + '/project/task/evaluate',json=params)
 ```
 
+### /project/task/evaluate/file [GET]
+评估结果生成excel表格  
+- GET请求:评估完成的情况下，在服务器端生成评估结果的excel表格
+
+```
+methods=='GET':#评估结果生成excel表格
+	Args:
+		tid(str):任务id
+	Return:
+		path(str):评估结果excel表格在服务器端的路径
+		message(str):提示信息
+		status
+	Example:
+		#任务id为T0001的任务在服务器端生成评估excel表格
+		params = {'tid': 'T0001'}
+		ret = requests.get(url + '/project/task/evaluate/file',json=params)
+		#显示保存路径
+		print(ret.json()['path'])
+```
+
 ### /project/task/metrics [GET]
 获取训练、评估、剪裁的日志和敏感度与模型裁剪率关系图
 - GET请求：通过type来确定需要获取的内容  
@@ -565,7 +584,7 @@ methods=='GET':#获取日志数据
 - POST请求:创建一个预测任务、图片输入需要先进行base64编码、异步操作
 - GET请求:获取预测任务的状态
 - PUT请求:停止一个预测任务
-PredictStatus定义了预测任务状态变量，具体请参考[预测任务状态变量](./data_struct.md#状态枚举变量)  
+PredictStatus定义了预测任务状态变量，具体请参考[预测任务状态变量](./data_struct.md)  
 
 ```
 methods=='GET':#获取预测状态

@@ -6,25 +6,25 @@
 - pycocotools  
 
 
-## 服务端启动PaddleX Restful服务
+## 服务端启动PaddleX RESTful服务
 ```
  paddlex --start_restful --port [端口号] --workspace_dir [工作空间目录]
 ```  
 
-## 客服端请求服务端
+## 客户端请求服务端
 ```
 import requests
 url = "https://127.0.0.1:5000"
 ```
-- url为实际服务端ip
+- url为实际服务端ip与端口
 - 所有的请求，通过ret.status_code是否为200，判断是否正确给Server执行
 - 在status_code为200的前提下，如果ret.json()['status']为-1，则表明出错，出错信息在ret.json()['message']里面，如果执行成功， status是1
 
 ## 创建一个PaddleX的训练任务  
-**下面介绍如何通过api创建一个PaddleX的训练任务，对于每个restful api的详细的输入参数与返回请参考[api 接口文档](./restful_api.md)，对于示例中用到自定的数据结构请参考[数据结构](./data_struct.md)**
+**下面介绍如何通过API完成模型的训练、评估、预测与导出，对于每个RESTful API的详细介绍请参考[API 接口文档](./restful_api.md)，对于示例中用到自定的数据结构请参考[数据结构](./data_struct.md)**
 
 ### 流程
-对于通过restful api创建一个PaddleX的训练任务的主要流程如下
+对于通过RESTful API创建一个PaddleX的训练任务的主要流程如下
 - 1)：创建并导入数据集
 - 2)：创建项目并绑定数据集
 - 3)：获取参数并创建任务

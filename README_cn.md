@@ -29,7 +29,7 @@
 
 **PaddleX提供两种开发模式，满足用户的不同需求：**
 
-1. **Python开发模式：** 
+1. **Python开发模式：**
 
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
@@ -54,7 +54,11 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
 - [PaddleX GUI安装环境说明](./docs/gui/download.md)
-  
+
+3. **PaddleX Restful:**  
+  使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
+- 前往[PaddleX RESTful API使用教程](./docs/gui/restful/introduction.md)  
+
 
 ## 产品模块说明
 
@@ -68,7 +72,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 - **多端安全部署**：内置[PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)模型压缩工具和**模型加密部署模块**，与飞桨原生预测库Paddle Inference及高性能端侧推理引擎[Paddle Lite](https://github.com/PaddlePaddle/Paddle-Lite) 无缝打通，使开发者快速实现模型的多端、高性能、安全部署。
 
-  
+
 
 ## 完整使用文档及API说明
 
@@ -77,6 +81,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - [10分钟快速上手系列教程](https://paddlex.readthedocs.io/zh_CN/develop/quick_start.html)
 - [PaddleX模型训练教程集合](https://paddlex.readthedocs.io/zh_CN/develop/train/index.html)
 - [PaddleX API接口说明](https://paddlex.readthedocs.io/zh_CN/develop/apis/index.html)
+- [PaddleX RESTful API说明](https://paddlex.readthedocs.io/zh_CN/develop/gui/restful/introduction.html)
 
 ### 在线项目示例
 
@@ -94,8 +99,8 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 * 工业巡检：
   * [工业表计读数](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 * 工业质检：
-  * [电池隔膜缺陷检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection/README.html)
-* 卫星遥感： 
+  * [铝材表面缺陷检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection/README.html)
+* 卫星遥感：
   * [RGB遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
   * [多通道遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
   * [地块变化检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
@@ -115,7 +120,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 - 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
 
 - PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
-  
+
   <p align="center">
     <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
   </p>
@@ -125,25 +130,25 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ## 更新日志
 
 > [历史版本及更新内容](https://paddlex.readthedocs.io/zh_CN/develop/change_log.html)
-- **2020.09.07 v1.2.0** 
+- **2020.09.07 v1.2.0**
 
   新增产业最实用目标检测模型PP-YOLO，FasterRCNN、MaskRCNN、YOLOv3、DeepLabv3p等模型新增内置COCO数据集预训练模型，适用于小模型精调。新增多种Backbone，优化体积及预测速度。优化OpenVINO、PaddleLite Android、服务端C++预测部署方案，新增树莓派部署方案等。
 
-- **2020.07.12 v1.1.0** 
+- **2020.07.12 v1.1.0**
 
   新增人像分割、工业标记读数案例。模型新增HRNet、FastSCNN、FasterRCNN，实例分割MaskRCNN新增Backbone HRNet。集成X2Paddle，PaddleX所有分类模型和语义分割模型支持导出为ONNX协议。新增模型加密Windows平台支持。新增Jetson、Paddle Lite模型部署预测方案。
 
-- **2020.05.20 v1.0.0** 
+- **2020.05.20 v1.0.0**
 
   新增C++和Python部署，模型加密部署，分类模型OpenVINO部署。新增模型可解释性接口
 
-- **2020.05.17 v0.1.8** 
+- **2020.05.17 v0.1.8**
 
   新增EasyData平台数据标注格式，支持imgaug数据增强库的pixel-level算子
-  
+
 ## 近期活动更新
 
-- 2020.12.16 
+- 2020.12.16
 
   《直击深度学习部署最后一公里 C#软件部署实战》b站直播中奖用户名单请点击[PaddleX直播中奖名单](./docs/luckydraw.md)查看~
 
@@ -157,8 +162,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 ### 开发者贡献项目
 
-* [工业相机实时目标检测GUI](https://github.com/xmy0916/SoftwareofIndustrialCameraUsePaddle) 
+* [工业相机实时目标检测GUI](https://github.com/xmy0916/SoftwareofIndustrialCameraUsePaddle)
 （windows系统，基于pyqt5开发）
-* [工业相机实时目标检测GUI](https://github.com/LiKangyuLKY/PaddleXCsharp) 
+* [工业相机实时目标检测GUI](https://github.com/LiKangyuLKY/PaddleXCsharp)
 （windows系统，基于C#开发）
-
