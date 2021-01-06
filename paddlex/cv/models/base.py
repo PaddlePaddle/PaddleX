@@ -135,11 +135,13 @@ class BaseAPI:
                            batch_size=1,
                            batch_num=10,
                            cache_dir="./temp"):
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=dataset.transforms,
-            mode='quant')
+            mode='quant',
+            input_channel=input_channel)
         dataset.num_samples = batch_size * batch_num
         try:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
@@ -202,7 +204,7 @@ class BaseAPI:
             if pretrain_weights is not None and not os.path.exists(
                     pretrain_weights):
                 if self.model_type == 'classifier':
-                    if pretrain_weights not in ['IMAGENET']:
+                    if pretrain_weights not in ['IMAGENET', 'BAIDU10W']:
                         logging.warning(
                             "Path of pretrain_weights('{}') is not exists!".
                             format(pretrain_weights))
@@ -258,8 +260,8 @@ class BaseAPI:
             logging.info(
                 "Load pretrain weights from {}.".format(pretrain_weights),
                 use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(self.exe, self.train_prog,
-                                                      pretrain_weights, fuse_bn)
+            paddlex.utils.utils.load_pretrain_weights(
+                self.exe, self.train_prog, pretrain_weights, fuse_bn)
         # 进行裁剪
         if sensitivities_file is not None:
             import paddleslim
@@ -365,7 +367,9 @@ class BaseAPI:
         logging.info("Model saved in {}.".format(save_dir))
 
     def export_inference_model(self, save_dir):
-        test_input_names = [var.name for var in list(self.test_inputs.values())]
+        test_input_names = [
+            var.name for var in list(self.test_inputs.values())
+        ]
         test_outputs = list(self.test_outputs.values())
         save_prog = self.test_prog.clone(for_test=True)
         with fluid.scope_guard(self.scope):
@@ -394,7 +398,8 @@ class BaseAPI:
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info("Model for inference deploy saved in {}.".format(save_dir))
+        logging.info("Model for inference deploy saved in {}.".format(
+            save_dir))
 
     def train_loop(self,
                    num_epochs,
@@ -418,11 +423,13 @@ class BaseAPI:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
         # 给transform添加arrange操作
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=train_dataset.transforms,
-            mode='train')
+            mode='train',
+            input_channel=input_channel)
         # 构建train_data_loader
         self.build_train_data_loader(
             dataset=train_dataset, batch_size=train_batch_size)
@@ -524,11 +531,13 @@ class BaseAPI:
                         eta = ((num_epochs - i) * total_num_steps - step - 1
                                ) * avg_step_time
                     if time_eval_one_epoch is not None:
-                        eval_eta = (total_eval_times - i // save_interval_epochs
-                                    ) * time_eval_one_epoch
+                        eval_eta = (
+                            total_eval_times - i // save_interval_epochs
+                        ) * time_eval_one_epoch
                     else:
-                        eval_eta = (total_eval_times - i // save_interval_epochs
-                                    ) * total_num_steps_eval * avg_step_time
+                        eval_eta = (
+                            total_eval_times - i // save_interval_epochs
+                        ) * total_num_steps_eval * avg_step_time
                     eta_str = seconds_to_hms(eta + eval_eta)
 
                     logging.info(
@@ -577,8 +586,8 @@ class BaseAPI:
                                 if v.size > 1:
                                     continue
                             log_writer.add_scalar(
-                                "{}-Metrics/Eval(Epoch): {}".format(task_id, k),
-                                v, i + 1)
+                                "{}-Metrics/Eval(Epoch): {}".format(
+                                    task_id, k), v, i + 1)
                 self.save_model(save_dir=current_save_dir)
                 if getattr(self, 'use_ema', False):
                     self.exe.run(self.ema.restore_program)

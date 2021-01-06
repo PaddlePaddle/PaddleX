@@ -9,8 +9,8 @@
    export_model.md
    hub_serving.md
    server/index
-   nvidia-jetson.md
    paddlelite/index
    openvino/index
    raspberry/index
+   jetson/index
    opencv.md

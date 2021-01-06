@@ -234,6 +234,12 @@ class Padding : public Transform {
     }
   }
   virtual bool Run(cv::Mat* im, ImageBlob* data);
+  virtual void GeneralPadding(cv::Mat* im,
+                              const std::vector<float> &padding_val,
+                              int padding_w, int padding_h);
+  virtual void MultichannelPadding(cv::Mat* im,
+                                   const std::vector<float> &padding_val,
+                                   int padding_w, int padding_h);
 
  private:
   int coarsest_stride_ = -1;

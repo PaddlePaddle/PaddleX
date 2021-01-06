@@ -15,6 +15,7 @@
 from six import text_type as _text_type
 import argparse
 import sys
+import os
 import os.path as osp
 import paddlex.utils.logging as logging
 
@@ -119,6 +120,25 @@ def arg_parser():
         "-tv",
         default=None,
         help="define the value of test dataset(E.g 0.1)")
+    parser.add_argument(
+        "--start_restful",
+        "-sr",
+        action="store_true",
+        default=False,
+        help="start paddlex restful server")
+    parser.add_argument(
+        "--port",
+        "--pt",
+        type=_text_type,
+        default=None,
+        help="set the port of restful server")
+    parser.add_argument(
+        "--workspace_dir",
+        "--wd",
+        type=_text_type,
+        default=None,
+        help="set the workspace dir of restful server")
+
     return parser
 
 
@@ -169,7 +189,7 @@ def main():
             logging.error(
                 "paddlex --export_inference --model_dir model_path --save_dir infer_model"
             )
-        save_file = os.path.join(args.save_dir, 'paddle2onnx_model.onnx') 
+        save_file = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
         pdx.converter.export_onnx_model(model, save_file, args.onnx_opset)
 
     if args.data_conversion:
@@ -178,6 +198,16 @@ def main():
         assert args.pics is not None, "--pics should be defined to confirm the pictures path"
         assert args.annotations is not None, "--annotations should be defined to confirm the annotations path"
         assert args.save_dir is not None, "--save_dir should be defined to store taregt dataset"
+        if args.source not in ['labelme', 'jingling', 'easydata']:
+            logging.error(
+                "The source format {} is not one of labelme/jingling/easydata".
+                format(args.source),
+                exit=False)
+        if args.to not in ['PascalVOC', 'MSCOCO', 'SEG', 'ImageNet']:
+            logging.error(
+                "The to format {} is not one of PascalVOC/MSCOCO/SEG/ImageNet".
+                format(args.to),
+                exit=False)
         if args.source == 'labelme' and args.to == 'ImageNet':
             logging.error(
                 "The labelme dataset can not convert to the ImageNet dataset.",
@@ -186,6 +216,8 @@ def main():
             logging.error(
                 "The jingling dataset can not convert to the PascalVOC dataset.",
                 exit=False)
+        if not osp.exists(args.save_dir):
+            os.makedirs(args.save_dir)
         pdx.tools.convert.dataset_conversion(args.source, args.to, args.pics,
                                              args.annotations, args.save_dir)
 
@@ -212,6 +244,16 @@ def main():
 
         pdx.tools.split.dataset_split(dataset_dir, dataset_format, val_value,
                                       test_value, save_dir)
+
+    if args.start_restful:
+
+        assert args.port is not None, "--port should be defined while start restful server"
+        assert args.workspace_dir, "--workspace_dir should be define while start restful server"
+
+        port = args.port
+        workspace_dir = args.workspace_dir
+
+        pdx.restful.app.run(port, workspace_dir)
 
 
 if __name__ == "__main__":

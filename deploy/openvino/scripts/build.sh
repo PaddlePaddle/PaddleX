@@ -20,10 +20,21 @@ sh $(pwd)/scripts/install_third-party.sh
 rm -rf build
 mkdir -p build
 cd build
-cmake .. \
-    -DOPENCV_DIR=${OPENCV_DIR} \
-    -DGFLAGS_DIR=${GFLAGS_DIR} \
-    -DOPENVINO_DIR=${OPENVINO_DIR} \
-    -DNGRAPH_LIB=${NGRAPH_LIB} \
-    -DARCH=${ARCH}
-make
+if [ ${ARCH} = "x86" ];then
+  cmake .. \
+      -DOPENCV_DIR=${OPENCV_DIR} \
+      -DGFLAGS_DIR=${GFLAGS_DIR} \
+      -DOPENVINO_DIR=${OPENVINO_DIR} \
+      -DNGRAPH_LIB=${NGRAPH_LIB} \
+      -DARCH=${ARCH}
+  make
+else
+  cmake ..\
+      -DOPENCV_DIR=${OPENCV_DIR} \
+      -DGFLAGS_DIR=${GFLAGS_DIR} \
+      -DOPENVINO_DIR=${OPENVINO_DIR} \
+      -DNGRAPH_LIB=${NGRAPH_LIB} \
+      -DARCH=${ARCH} \
+      -DCMAKE_CXX_FLAGS="-march=armv7-a"
+  make
+fi

@@ -334,6 +334,15 @@ def get_prune_params(model):
         for i in params_not_prune:
             if i in prune_names:
                 prune_names.remove(i)
+    elif 'RCNN' in model_type:
+        for block in program.blocks:
+            for param in block.all_parameters():
+                pd_var = model.scope.find_var(param.name)
+                pd_param = pd_var.get_tensor()
+                if len(np.array(pd_param).shape) == 4:
+                    if 'fpn' in param.name or 'rpn' in param.name or 'fc' in param.name or 'cls' in param.name or 'bbox' in param.name:
+                        continue
+                    prune_names.append(param.name)
     else:
         raise Exception('The {} is not implement yet!'.format(model_type))
     return prune_names

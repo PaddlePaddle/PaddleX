@@ -58,6 +58,7 @@ class PPYOLO(BaseAPI):
         nms_iou_threshold (float): 进行NMS时，用于剔除检测框IOU的阈值。默认为0.45。
         label_smooth (bool): 是否使用label smooth。默认值为False。
         train_random_shapes (list|tuple): 训练时从列表中随机选择图像大小。默认值为[320, 352, 384, 416, 448, 480, 512, 544, 576, 608]。
+        input_channel (int): 输入图像的通道数量。默认为3。
     """
 
     def __init__(
@@ -85,7 +86,8 @@ class PPYOLO(BaseAPI):
             nms_iou_threshold=0.45,
             train_random_shapes=[
                 320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-            ]):
+            ],
+            input_channel=3):
         self.init_params = locals()
         super(PPYOLO, self).__init__('detector')
         backbones = ['ResNet50_vd_ssld']
@@ -123,9 +125,11 @@ class PPYOLO(BaseAPI):
         self.use_matrix_nms = use_matrix_nms
         self.use_ema = False
         self.with_dcn_v2 = with_dcn_v2
+        self.input_channel = input_channel
 
         if paddle.__version__ < '1.8.4' and paddle.__version__ != '0.0.0':
-            raise Exception("PPYOLO requires paddlepaddle or paddlepaddle-gpu >= 1.8.4")
+            raise Exception(
+                "PPYOLO requires paddlepaddle or paddlepaddle-gpu >= 1.8.4")
 
     def _get_backbone(self, backbone_name):
         if backbone_name.startswith('ResNet50_vd'):
@@ -162,8 +166,8 @@ class PPYOLO(BaseAPI):
             use_matrix_nms=self.use_matrix_nms,
             use_fine_grained_loss=self.use_fine_grained_loss,
             use_iou_loss=self.use_iou_loss,
-            batch_size=self.batch_size_per_gpu
-            if hasattr(self, 'batch_size_per_gpu') else 8)
+            batch_size=getattr(self, 'batch_size_per_gpu', None),
+            input_channel=self.input_channel)
         if mode == 'train' and self.use_iou_loss or self.use_iou_aware:
             model.max_height = self.max_height
             model.max_width = self.max_width
@@ -302,8 +306,7 @@ class PPYOLO(BaseAPI):
         self.use_ema = use_ema
         self.ema_decay = ema_decay
 
-        self.batch_size_per_gpu = int(train_batch_size /
-                                      paddlex.env_info['num'])
+        self.batch_size_per_gpu = self._get_single_card_bs(train_batch_size)
         if self.use_fine_grained_loss:
             for transform in train_dataset.transforms.transforms:
                 if isinstance(transform, paddlex.det.transforms.Resize):
@@ -383,14 +386,16 @@ class PPYOLO(BaseAPI):
             tuple (metrics, eval_details) | dict (metrics): 当return_details为True时，返回(metrics, eval_details)，
                 当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，
                 分别表示平均准确率平均值在各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。
-                eval_details为dict，包含关键字：'bbox'，对应元素预测结果列表，每个预测结果由图像id、
-                预测框类别id、预测框坐标、预测框得分；’gt‘：真实标注框相关信息。
+                eval_details为dict，包含bbox和gt两个关键字。其中关键字bbox的键值是一个列表，列表中每个元素代表一个预测结果，
+                一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。而关键字gt的键值是真实标注框的相关信息。
         """
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=eval_dataset.transforms,
-            mode='eval')
+            mode='eval',
+            input_channel=input_channel)
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -451,12 +456,18 @@ class PPYOLO(BaseAPI):
         return evaluate_metrics
 
     @staticmethod
-    def _preprocess(images, transforms, model_type, class_name, thread_pool=None):
+    def _preprocess(images,
+                    transforms,
+                    model_type,
+                    class_name,
+                    thread_pool=None,
+                    input_channel=3):
         arrange_transforms(
             model_type=model_type,
             class_name=class_name,
             transforms=transforms,
-            mode='test')
+            mode='test',
+            input_channel=input_channel)
         if thread_pool is not None:
             batch_data = thread_pool.map(transforms, images)
         else:
@@ -505,8 +516,13 @@ class PPYOLO(BaseAPI):
 
         if transforms is None:
             transforms = self.test_transforms
-        im, im_size = PPYOLO._preprocess(images, transforms, self.model_type,
-                                         self.__class__.__name__)
+        input_channel = getattr(self, 'input_channel', 3)
+        im, im_size = PPYOLO._preprocess(
+            images,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
@@ -546,9 +562,17 @@ class PPYOLO(BaseAPI):
 
         if transforms is None:
             transforms = self.test_transforms
-        im, im_size = PPYOLO._preprocess(img_file_list, transforms,
-                                         self.model_type,
-                                         self.__class__.__name__, self.thread_pool)
+        input_channel = getattr(self, 'input_channel', 3)
+        im, im_size = PPYOLO._preprocess(
+            img_file_list,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            self.thread_pool,
+            input_channel=input_channel)
+        im, im_size = PPYOLO._preprocess(
+            img_file_list, transforms, self.model_type,
+            self.__class__.__name__, self.thread_pool)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

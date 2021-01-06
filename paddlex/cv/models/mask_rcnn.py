@@ -34,10 +34,43 @@ class MaskRCNN(FasterRCNN):
     Args:
         num_classes (int): 包含了背景类的类别数。默认为81。
         backbone (str): MaskRCNN的backbone网络，取值范围为['ResNet18', 'ResNet50',
-            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
+            'ResNet50_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18', 'ResNet50_vd_ssld']。默认为'ResNet50'。
         with_fpn (bool): 是否使用FPN结构。默认为True。
         aspect_ratios (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
         anchor_sizes (list): 生成anchor大小的可选值。默认为[32, 64, 128, 256, 512]。
+        with_dcn (bool): backbone网络中是否使用deformable convolution network v2。默认为False。
+        rpn_cls_loss (str): RPN部分的分类损失函数，取值范围为['SigmoidCrossEntropy', 'SigmoidFocalLoss']。
+            当遇到模型误检了很多背景区域时，可以考虑使用'SigmoidFocalLoss'，并调整适合的`rpn_focal_loss_alpha`
+            和`rpn_focal_loss_gamma`。默认为'SigmoidCrossEntropy'。
+        rpn_focal_loss_alpha (float)：当RPN的分类损失函数设置为'SigmoidFocalLoss'时，用于调整
+            正样本和负样本的比例因子，默认为0.25。当PN的分类损失函数设置为'SigmoidCrossEntropy'时，
+            `rpn_focal_loss_alpha`的设置不生效。
+        rpn_focal_loss_gamma (float): 当RPN的分类损失函数设置为'SigmoidFocalLoss'时，用于调整
+            易分样本和难分样本的比例因子，默认为2。当RPN的分类损失函数设置为'SigmoidCrossEntropy'时，
+            `rpn_focal_loss_gamma`的设置不生效。
+        rcnn_bbox_loss (str): RCNN部分的位置回归损失函数，取值范围为['SmoothL1Loss', 'CIoULoss']。
+            默认为'SmoothL1Loss'。
+        rcnn_nms (str): RCNN部分的非极大值抑制的计算方法，取值范围为['MultiClassNMS', 'MultiClassSoftNMS',
+            'MultiClassCiouNMS']。默认为'MultiClassNMS'。当选择'MultiClassNMS'时，可以将`keep_top_k`设置成100、
+            `nms_threshold`设置成0.5、`score_threshold`设置成0.05。当选择'MultiClassSoftNMS'时，可以将`keep_top_k`设置为300、
+            `score_threshold`设置为0.01、`softnms_sigma`设置为0.5。当选择'MultiClassCiouNMS'时，可以将`keep_top_k`设置为100、
+            `score_threshold`设置成0.05、`nms_threshold`设置成0.5。
+        keep_top_k (int): RCNN部分在进行非极大值抑制计算后，每张图像保留最多保存`keep_top_k`个检测框。默认为100。
+        nms_threshold (float): RCNN部分在进行非极大值抑制时，用于剔除检测框所需的IoU阈值。
+            当`rcnn_nms`设置为`MultiClassSoftNMS`时，`nms_threshold`的设置不生效。默认为0.5。
+        score_threshold (float): RCNN部分在进行非极大值抑制前，用于过滤掉低置信度边界框所需的置信度阈值。默认为0.05。
+        softnms_sigma (float): 当`rcnn_nms`设置为`MultiClassSoftNMS`时，用于调整被抑制的检测框的置信度，
+            调整公式为`score = score * weights, weights = exp(-(iou * iou) / softnms_sigma)`。默认设为0.5。
+        bbox_assigner (str): 训练阶段，RCNN部分生成正负样本的采样方式。可选范围为['BBoxAssigner', 'LibraBBoxAssigner']。
+            当目标物体的区域只占原始图像的一小部分时，使用`LibraBBoxAssigner`采样方式模型效果更佳。默认为'BBoxAssigner'。
+        fpn_num_channels (int): FPN部分特征层的通道数量。默认为256。
+        input_channel (int): 输入图像的通道数量。默认为3。
+        rpn_batch_size_per_im (int): 训练阶段，RPN部分每张图片的正负样本的数量总和。默认为256。
+        rpn_fg_fraction (float): 训练阶段，RPN部分每张图片的正负样本数量总和中正样本的占比。默认为0.5。
+        test_pre_nms_top_n (int)：预测阶段，RPN部分做非极大值抑制计算的候选框的数量。若设置为None,
+            有FPN结构的话，`test_pre_nms_top_n`会被设置成6000, 无FPN结构的话，`test_pre_nms_top_n`会被设置成
+            1000。默认为None。
+        test_post_nms_top_n (int): 预测阶段，RPN部分做完非极大值抑制后保留的候选框的数量。默认为1000。
     """
 
     def __init__(self,
@@ -45,11 +78,28 @@ class MaskRCNN(FasterRCNN):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512]):
+                 anchor_sizes=[32, 64, 128, 256, 512],
+                 with_dcn=False,
+                 rpn_cls_loss='SigmoidCrossEntropy',
+                 rpn_focal_loss_alpha=0.25,
+                 rpn_focal_loss_gamma=2,
+                 rcnn_bbox_loss='SmoothL1Loss',
+                 rcnn_nms='MultiClassNMS',
+                 keep_top_k=100,
+                 nms_threshold=0.5,
+                 score_threshold=0.05,
+                 softnms_sigma=0.5,
+                 bbox_assigner='BBoxAssigner',
+                 fpn_num_channels=256,
+                 input_channel=3,
+                 rpn_batch_size_per_im=256,
+                 rpn_fg_fraction=0.5,
+                 test_pre_nms_top_n=None,
+                 test_post_nms_top_n=1000):
         self.init_params = locals()
         backbones = [
             'ResNet18', 'ResNet50', 'ResNet50_vd', 'ResNet101', 'ResNet101_vd',
-            'HRNet_W18'
+            'HRNet_W18', 'ResNet50_vd_ssld'
         ]
         assert backbone in backbones, "backbone should be one of {}".format(
             backbones)
@@ -57,6 +107,7 @@ class MaskRCNN(FasterRCNN):
         self.backbone = backbone
         self.num_classes = num_classes
         self.with_fpn = with_fpn
+        self.aspect_ratios = aspect_ratios
         self.anchor_sizes = anchor_sizes
         self.labels = None
         if with_fpn:
@@ -64,21 +115,60 @@ class MaskRCNN(FasterRCNN):
         else:
             self.mask_head_resolution = 14
         self.fixed_input_shape = None
+        self.with_dcn = with_dcn
+        rpn_cls_losses = ['SigmoidFocalLoss', 'SigmoidCrossEntropy']
+        assert rpn_cls_loss in rpn_cls_losses, "rpn_cls_loss should be one of {}".format(
+            rpn_cls_losses)
+        self.rpn_cls_loss = rpn_cls_loss
+        self.rpn_focal_loss_alpha = rpn_focal_loss_alpha
+        self.rpn_focal_loss_gamma = rpn_focal_loss_gamma
+        self.rcnn_bbox_loss = rcnn_bbox_loss
+        self.rcnn_nms = rcnn_nms
+        self.keep_top_k = keep_top_k
+        self.nms_threshold = nms_threshold
+        self.score_threshold = score_threshold
+        self.softnms_sigma = softnms_sigma
+        self.bbox_assigner = bbox_assigner
+        self.fpn_num_channels = fpn_num_channels
+        self.input_channel = input_channel
+        self.rpn_batch_size_per_im = rpn_batch_size_per_im
+        self.rpn_fg_fraction = rpn_fg_fraction
+        self.test_pre_nms_top_n = test_pre_nms_top_n
+        self.test_post_nms_top_n = test_post_nms_top_n
 
     def build_net(self, mode='train'):
         train_pre_nms_top_n = 2000 if self.with_fpn else 12000
         test_pre_nms_top_n = 1000 if self.with_fpn else 6000
+        if self.test_pre_nms_top_n is not None:
+            test_pre_nms_top_n = self.test_pre_nms_top_n
         num_convs = 4 if self.with_fpn else 0
         model = paddlex.cv.nets.detection.MaskRCNN(
             backbone=self._get_backbone(self.backbone),
             num_classes=self.num_classes,
             mode=mode,
             with_fpn=self.with_fpn,
+            aspect_ratios=self.aspect_ratios,
+            anchor_sizes=self.anchor_sizes,
             train_pre_nms_top_n=train_pre_nms_top_n,
             test_pre_nms_top_n=test_pre_nms_top_n,
             num_convs=num_convs,
             mask_head_resolution=self.mask_head_resolution,
-            fixed_input_shape=self.fixed_input_shape)
+            fixed_input_shape=self.fixed_input_shape,
+            rpn_cls_loss=self.rpn_cls_loss,
+            rpn_focal_loss_alpha=self.rpn_focal_loss_alpha,
+            rpn_focal_loss_gamma=self.rpn_focal_loss_gamma,
+            rcnn_bbox_loss=self.rcnn_bbox_loss,
+            rcnn_nms=self.rcnn_nms,
+            keep_top_k=self.keep_top_k,
+            nms_threshold=self.nms_threshold,
+            score_threshold=self.score_threshold,
+            softnms_sigma=self.softnms_sigma,
+            bbox_assigner=self.bbox_assigner,
+            fpn_num_channels=self.fpn_num_channels,
+            input_channel=self.input_channel,
+            rpn_batch_size_per_im=self.rpn_batch_size_per_im,
+            rpn_fg_fraction=self.rpn_fg_fraction,
+            test_post_nms_top_n=self.test_post_nms_top_n)
         inputs = model.generate_inputs()
         if mode == 'train':
             model_out = model.build_net(inputs)
@@ -251,15 +341,19 @@ class MaskRCNN(FasterRCNN):
                 当return_details为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'和'segm_mmap'
                 或者’bbox_map‘和'segm_map'，分别表示预测框和分割区域平均准确率平均值在
                 各个IoU阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，
-                包含关键字：'bbox'，对应元素预测框结果列表，每个预测结果由图像id、预测框类别id、
-                预测框坐标、预测框得分；'mask'，对应元素预测区域结果列表，每个预测结果由图像id、
-                预测区域类别id、预测区域坐标、预测区域得分；’gt‘：真实标注框和标注区域相关信息。
+                包含bbox、mask和gt三个关键字。其中关键字bbox的键值是一个列表，列表中每个元素代表一个预测结果，
+                一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。
+                关键字mask的键值是一个列表，列表中每个元素代表各预测框内物体的分割结果，分割结果由图像id、
+                预测框类别id、表示预测框内各像素点是否属于物体的二值图、预测框得分。
+                而关键字gt的键值是真实标注框的相关信息。
         """
+        input_channel = getattr(self, 'input_channel', 3)
         arrange_transforms(
             model_type=self.model_type,
             class_name=self.__class__.__name__,
             transforms=eval_dataset.transforms,
-            mode='eval')
+            mode='eval',
+            input_channel=input_channel)
         if metric is None:
             if hasattr(self, 'metric') and self.metric is not None:
                 metric = self.metric
@@ -381,8 +475,13 @@ class MaskRCNN(FasterRCNN):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            images, transforms, self.model_type, self.__class__.__name__)
+            images,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,
@@ -429,9 +528,14 @@ class MaskRCNN(FasterRCNN):
 
         if transforms is None:
             transforms = self.test_transforms
+        input_channel = getattr(self, 'input_channel', 3)
         im, im_resize_info, im_shape = FasterRCNN._preprocess(
-            img_file_list, transforms, self.model_type,
-            self.__class__.__name__, self.thread_pool)
+            img_file_list,
+            transforms,
+            self.model_type,
+            self.__class__.__name__,
+            self.thread_pool,
+            input_channel=input_channel)
 
         with fluid.scope_guard(self.scope):
             result = self.exe.run(self.test_prog,

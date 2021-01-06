@@ -50,7 +50,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    deploy/export_model.md
    deploy/hub_serving.md
    deploy/server/index
-   deploy/nvidia-jetson.md
+   deploy/jetson/index
    deploy/paddlelite/android.md
    deploy/raspberry/index
    deploy/openvino/index
@@ -64,6 +64,7 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    examples/remote_sensing.md
    examples/multi-channel_remote_sensing/README.md
    examples/change_detection.md
+   examples/industrial_quality_inspection/README.md
 
 .. toctree::
    :maxdepth: 1
@@ -72,6 +73,9 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    gui/introduce.md
    gui/download.md
    gui/how_to_use.md
+   gui/FAQ.md
+   gui/restful/index
+
 
 .. toctree::
    :maxdepth: 1

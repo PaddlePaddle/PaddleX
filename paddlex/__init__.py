@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-__version__ = '1.2.6'
+__version__ = '1.3.3'
 
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
@@ -32,10 +32,7 @@ if version[0] == '1':
         raise Exception(
             'For running paddlex(v{}), Version of paddlepaddle should be greater than 1.8.3'.
             format(__version__))
-elif version[0] == '2':
-    print(
-        "[WARNING] You are using paddlepaddle(v{}) which may not compatible with paddlex(v{}), paddlepaddle==1.8.4 is strongly recommended.".
-        format(paddle.__version__, __version__))
+if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
 
 from .utils.utils import get_environ_info
@@ -47,6 +44,7 @@ from . import slim
 from . import converter
 from . import tools
 from . import deploy
+from . import restful
 
 try:
     import pycocotools

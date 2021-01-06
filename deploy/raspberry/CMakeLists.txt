@@ -4,11 +4,11 @@ project(PaddleX CXX C)
 
 option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   OFF)
 
+
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 SET(LITE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
-SET(NGRAPH_LIB "" CACHE PATH "Location of libraries")
-
+SET(GFLAGS_DIR "" CACHE PATH "Location of libraries")
 
 include(cmake/yaml-cpp.cmake)
 
@@ -16,16 +16,6 @@ include_directories("${CMAKE_SOURCE_DIR}/")
 link_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/src/ext-yaml-cpp/include")
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/lib")
-
-macro(safe_set_static_flag)
-    foreach(flag_var
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-      if(${flag_var} MATCHES "/MD")
-        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-      endif(${flag_var} MATCHES "/MD")
-    endforeach(flag_var)
-endmacro()
 
 if (NOT DEFINED LITE_DIR OR ${LITE_DIR} STREQUAL "")
 	message(FATAL_ERROR "please set LITE_DIR with -LITE_DIR=/path/influence_engine")
@@ -39,9 +29,13 @@ if (NOT DEFINED GFLAGS_DIR OR ${GFLAGS_DIR} STREQUAL "")
     message(FATAL_ERROR "please set GFLAGS_DIR with -DGFLAGS_DIR=/path/gflags")
 endif()
 
+if (NOT DEFINED ARCH OR ${ARCH} STREQUAL "")
+    message(FATAL_ERROR "please set ARCH with ARCH=armv7-a or ARCH=armv8-a")
+endif()
 
-
-
+if (NOT DEFINED LITE OR ${LITE} STREQUAL "")
+    message(FATAL_ERROR "Please set LITE with LITE=light or LITE=full")
+endif()
 
 link_directories("${LITE_DIR}/lib")
 include_directories("${LITE_DIR}/include")
@@ -53,54 +47,33 @@ include_directories("${GFLAGS_DIR}/include")
 
 
 
-
-if (WIN32)
-  find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
-  unset(OpenCV_DIR CACHE)
-else ()
-	find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
-endif ()
-
+find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-if (WIN32)
-    set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} /bigobj /MTd")
-    set(CMAKE_C_FLAGS_RELEASE  "${CMAKE_C_FLAGS_RELEASE} /bigobj /MT")
-    set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} /bigobj /MTd")
-    set(CMAKE_CXX_FLAGS_RELEASE   "${CMAKE_CXX_FLAGS_RELEASE} /bigobj /MT")
-    if (WITH_STATIC_LIB)
-        safe_set_static_flag()
-        add_definitions(-DSTATIC_LIB)
-    endif()
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfloat-abi=hard -mfpu=neon-vfpv4 -g -o2 -fopenmp -std=c++11")
+if (${ARCH} STREQUAL "armv7-a")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -mfloat-abi=hard -mfpu=neon-vfpv4 -g -o2 -fopenmp -std=c++11")
     set(CMAKE_STATIC_LIBRARY_PREFIX "")
-endif()
-
-
-if(WITH_STATIC_LIB)
-	set(DEPS ${LITE_DIR}/lib/libpaddle_full_api_shared${CMAKE_STATIC_LIBRARY_SUFFIX})
+elseif(${ARC}H STREQUAL "armv8-a")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -g -o2 -fopenmp -std=c++11")
+    set(CMAKE_STATIC_LIBRARY_PREFIX "")
 else()
-	set(DEPS ${LITE_DIR}/lib/libpaddle_full_api_shared${CMAKE_SHARED_LIBRARY_SUFFIX})
+    message(FATAL_ERROR "Unknown arch abi ${ARCH}, only support armv8 and armv7")
 endif()
 
-if (NOT WIN32)
-    set(DEPS ${DEPS}
-        gflags yaml-cpp
-        )
+
+if(${LITE} STREQUAL "full")
+    set(DEPS ${LITE_DIR}/lib/libpaddle_full_api_shared${CMAKE_SHARED_LIBRARY_SUFFIX})
+elseif(${LITE} STREQUAL "light")
+    set(DEPS ${LITE_DIR}/lib/libpaddle_light_api_shared${CMAKE_SHARED_LIBRARY_SUFFIX})
 else()
-    set(DEPS ${DEPS}
-        gflags_static libprotobuf zlibstatic xxhash libyaml-cppmt)
-    set(DEPS ${DEPS} libcmt shlwapi)
-endif(NOT WIN32)
-
-
-if (NOT WIN32)
-    set(EXTERNAL_LIB "-ldl -lrt -lgomp -lz -lm -lpthread")
-    set(DEPS ${DEPS} ${EXTERNAL_LIB})
+    message(FATAL_ERROR "Unkown LITE release ${LITE}, only support light and full")
 endif()
 
+set(DEPS ${DEPS} gflags yaml-cpp)
+set(EXTERNAL_LIB "-ldl -lrt -lgomp -lz -lm -lpthread")
+set(DEPS ${DEPS} ${EXTERNAL_LIB})
 set(DEPS ${DEPS} ${OpenCV_LIBS})
+
 add_executable(classifier demo/classifier.cpp src/transforms.cpp src/paddlex.cpp)
 ADD_DEPENDENCIES(classifier ext-yaml-cpp)
 target_link_libraries(classifier ${DEPS})

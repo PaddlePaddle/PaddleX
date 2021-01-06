@@ -18,8 +18,12 @@
 #include <vector>
 
 struct READ_RESULT {
+  // the number of scales
   int scale_num;
+  // the pointer location relative to the scales
   float scales;
+  // the ratio between from the pointer to the starting scale and
+  // distance from the ending scale to the starting scale
   float ratio;
 };
 
