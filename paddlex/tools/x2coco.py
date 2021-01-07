@@ -71,7 +71,7 @@ class X2COCO(object):
         # Convert the image files.
         new_image_dir = osp.join(dataset_save_dir, "JPEGImages")
         if osp.exists(new_image_dir):
-            shutil.rmtree(new_image_dir)
+            raise Exception("The directory {} is already exist, please remove the directory first".format(new_image_dir))
         os.makedirs(new_image_dir)
         for img_name in os.listdir(image_dir):
             if is_pic(img_name):
