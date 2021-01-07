@@ -51,7 +51,7 @@ train(self, num_epochs, train_dataset, train_batch_size=8, eval_dataset=None, sa
 > > -**save_interval_epochs** (int): Model saving interval (unit: number of iteration epochs). It is 20 by default.
 > > -**log_interval_steps** (int): Training log output interval (unit: number of iterations). It is 2 by default.
 > > -**save_dir** (str): Path where models are saved. It is 'output' by default.
-> > -**pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded. If it is none, no pre-training model is used. It is None by default.
+> > -**pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded. If it is none, no pre-training model is used. It is 'IMAGENET' by default.
 > > -**optimizer** (paddle.fluid.optimizer): Optimizer. When this parameter is none, a default optimizer is used: fluid.layers.piecewise_decay attenuation policy, fluid.optimizer. Momentum optimization method.
 > > -**learning_rate** (float): Learning rate of the default optimizer. It is 1.0/8000 by default.
 > > -**warmup_steps** (int): Number of steps to perform the warmup process by the default optimizer. It is 1000 by default.
@@ -171,7 +171,7 @@ train(self, num_epochs, train_dataset, train_batch_size=8, eval_dataset=None, sa
 > > - **save_interval_epochs** (int): Model saving interval (unit: number of iteration epochs). It is 20 by default.
 > > - **log_interval_steps** (int): Training log output interval (unit: number of iterations). It is 2 by default.
 > > - **save_dir** (str): Path where models are saved. It is 'output' by default.
-> > - **pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded. If it is none, no pre-training model is used. It is None by default.
+> > - **pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded. If it is none, no pre-training model is used. It is 'IMAGENET' by default.
 > > - **optimizer** (paddle.fluid.optimizer): Optimizer. When this parameter is none, a default optimizer is used: fluid.layers.piecewise_decay attenuation policy, fluid.optimizer. Momentum optimization method.
 > > - **learning_rate** (float): Learning rate of the default optimizer. It is 1.0/8000 by default.
 > > - **warmup_steps** (int): Number of steps to perform the warmup process by the default optimizer. It is 1000 by default.
@@ -300,7 +300,7 @@ train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, sa
 > > - **save_interval_epochs** (int): Model saving interval (unit: number of iteration epochs). It is 1 by default.
 > > - **log_interval_steps** (int): Training log output interval (unit: number of iterations). It is 2 by default.
 > > - **save_dir** (str): Path where models are saved. It is 'output' by default.
-> > - **pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded (Note: A COCO pre-training model for ResNet18 is unavailable temporarily. If it is none, no pre-training model is used. It is None by default.
+> > - **pretrain_weights** (str): If it is a path, a pre-training model under the path is loaded. If it is a string 'IMAGENET', a model weight pre-trained on ImageNet image data is automatically downloaded. If it is a string 'COCO', a model weight pre-trained on the COCO dataset is automatically downloaded (Note: A COCO pre-training model for ResNet18 is unavailable temporarily. If it is none, no pre-training model is used. It is 'IMAGENET' by default.
 > > - **optimizer** (paddle.fluid.optimizer): Optimizer. When this parameter is none, a default optimizer is used: fluid.layers.piecewise_decay attenuation policy, fluid.optimizer. Momentum optimization method.
 > > - **learning_rate** (float): Initial learning rate of the default optimizer. It is 0.0025 by default.
 > > - **warmup_steps** (int): Number of steps to perform the warmup process by the default optimizer. It is 500 by default.
