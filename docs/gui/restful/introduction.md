@@ -2,8 +2,11 @@
 PaddleX RESTful是基于PaddleX开发的RESTful API。  
 
 对于开发者来说可以通过如下指令启动PaddleX RESTful服务  
-**paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]**  
 
+```
+paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]   
+```
+  
 对于设置workspace在HOME目录的wk文件夹下，RESTful服务端口为8080的命令参考如下：
 ![](./img/start_restful.png)  
 
