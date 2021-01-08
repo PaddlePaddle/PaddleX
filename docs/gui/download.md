@@ -1,6 +1,6 @@
 # 下载安装
 
-下载地址：https://www.paddlepaddle.org.cn/paddle/paddleX 
+下载地址：https://www.paddlepaddle.org.cn/paddle
 
 
 ## 安装方式
