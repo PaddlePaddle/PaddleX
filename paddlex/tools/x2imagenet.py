@@ -17,6 +17,7 @@
 import cv2
 import json
 import os
+import sys
 import os.path as osp
 import shutil
 import numpy as np
@@ -39,23 +40,29 @@ class X2ImageNet(object):
         if not osp.exists(dataset_save_dir):
             os.makedirs(dataset_save_dir)
         assert len(os.listdir(dataset_save_dir)) == 0, "The save folder must be empty!"
-        for img_name in os.listdir(image_dir):
+        img_len = len(os.listdir(image_dir))
+        for img_index, img_name in enumerate(os.listdir(image_dir)):
+            sys.stdout.write("\rConvert the json {}/{} ...     ".format(img_index + 1, img_len))
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
-            if not osp.exists(json_file):
-                continue
-            with open(json_file, mode="r", \
-                              encoding=get_encoding(json_file)) as j:
-                json_info = self.get_json_info(j)
-                for output in json_info:
-                    cls_name = output['name']
-                    new_image_dir = osp.join(dataset_save_dir, cls_name)
-                    if not osp.exists(new_image_dir):
-                        os.makedirs(new_image_dir)
-                    if is_pic(img_name):
-                        shutil.copyfile(
-                                    osp.join(image_dir, img_name),
-                                    osp.join(new_image_dir, img_name))
+            try:
+                if not osp.exists(json_file):
+                    continue
+                with open(json_file, mode="r", \
+                                  encoding=get_encoding(json_file)) as j:
+                    json_info = self.get_json_info(j)
+                    for output in json_info:
+                        cls_name = output['name']
+                        new_image_dir = osp.join(dataset_save_dir, cls_name)
+                        if not osp.exists(new_image_dir):
+                            os.makedirs(new_image_dir)
+                        if is_pic(img_name):
+                            shutil.copyfile(
+                                        osp.join(image_dir, img_name),
+                                        osp.join(new_image_dir, img_name))
+            except:
+                print("The json file {} convert failed!!!".format(json_file))
+                raise
     
 
 class EasyData2ImageNet(X2ImageNet):

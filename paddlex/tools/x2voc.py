@@ -17,6 +17,7 @@
 import cv2
 import json
 import os
+import sys
 import os.path as osp
 import shutil
 import numpy as np
@@ -66,89 +67,95 @@ class LabelMe2VOC(X2VOC):
     def json2xml(self, image_dir, json_dir, xml_dir):
         import xml.dom.minidom as minidom
         i = 0
-        for img_name in os.listdir(image_dir):
+        img_len = len(os.listdir(image_dir))
+        for img_index, img_name in enumerate(os.listdir(image_dir)):
+            sys.stdout.write("\rConvert the json {}/{} ...     ".format(img_index + 1, img_len))
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
-            i += 1
-            if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_name))
-                continue
-            xml_doc = minidom.Document()
-            root = xml_doc.createElement("annotation")
-            xml_doc.appendChild(root)
-            node_folder = xml_doc.createElement("folder")
-            node_folder.appendChild(xml_doc.createTextNode("JPEGImages"))
-            root.appendChild(node_folder)
-            node_filename = xml_doc.createElement("filename")
-            node_filename.appendChild(xml_doc.createTextNode(img_name))
-            root.appendChild(node_filename)
-            with open(json_file, mode="r", \
-                              encoding=get_encoding(json_file)) as j:
-                json_info = json.load(j)
-                if 'imageHeight' in json_info and 'imageWidth' in json_info:
-                    h = json_info["imageHeight"]
-                    w = json_info["imageWidth"]
-                else:
-                    img_file = osp.join(image_dir, img_name)
-                    im_data = cv2.imread(img_file)
-                    h, w, c = im_data.shape
-                node_size = xml_doc.createElement("size")
-                node_width = xml_doc.createElement("width")
-                node_width.appendChild(xml_doc.createTextNode(str(w)))
-                node_size.appendChild(node_width)
-                node_height = xml_doc.createElement("height")
-                node_height.appendChild(xml_doc.createTextNode(str(h)))
-                node_size.appendChild(node_height)
-                node_depth = xml_doc.createElement("depth")
-                node_depth.appendChild(xml_doc.createTextNode(str(3)))
-                node_size.appendChild(node_depth)
-                root.appendChild(node_size)
-                for shape in json_info["shapes"]:
-                    if 'shape_type' in shape:
-                        if shape["shape_type"] != "rectangle":
-                            continue
-                        (xmin, ymin), (xmax, ymax) = shape["points"]
-                        xmin, xmax = sorted([xmin, xmax])
-                        ymin, ymax = sorted([ymin, ymax])
+            try:
+                i += 1
+                if not osp.exists(json_file):
+                    os.remove(osp.join(image_dir, img_name))
+                    continue
+                xml_doc = minidom.Document()
+                root = xml_doc.createElement("annotation")
+                xml_doc.appendChild(root)
+                node_folder = xml_doc.createElement("folder")
+                node_folder.appendChild(xml_doc.createTextNode("JPEGImages"))
+                root.appendChild(node_folder)
+                node_filename = xml_doc.createElement("filename")
+                node_filename.appendChild(xml_doc.createTextNode(img_name))
+                root.appendChild(node_filename)
+                with open(json_file, mode="r", \
+                                  encoding=get_encoding(json_file)) as j:
+                    json_info = json.load(j)
+                    if 'imageHeight' in json_info and 'imageWidth' in json_info:
+                        h = json_info["imageHeight"]
+                        w = json_info["imageWidth"]
                     else:
-                        points = shape["points"]
-                        points_num = len(points)
-                        x = [points[i][0] for i in range(points_num)]
-                        y = [points[i][1] for i in range(points_num)]
-                        xmin = min(x)
-                        xmax = max(x)
-                        ymin = min(y)
-                        ymax = max(y)
-                    label = shape["label"]
-                    node_obj = xml_doc.createElement("object")
-                    node_name = xml_doc.createElement("name")
-                    node_name.appendChild(xml_doc.createTextNode(label))
-                    node_obj.appendChild(node_name)
-                    node_diff = xml_doc.createElement("difficult")
-                    node_diff.appendChild(xml_doc.createTextNode(str(0)))
-                    node_obj.appendChild(node_diff)
-                    node_box = xml_doc.createElement("bndbox")
-                    node_xmin = xml_doc.createElement("xmin")
-                    node_xmin.appendChild(xml_doc.createTextNode(str(xmin)))
-                    node_box.appendChild(node_xmin)
-                    node_ymin = xml_doc.createElement("ymin")
-                    node_ymin.appendChild(xml_doc.createTextNode(str(ymin)))
-                    node_box.appendChild(node_ymin)
-                    node_xmax = xml_doc.createElement("xmax")
-                    node_xmax.appendChild(xml_doc.createTextNode(str(xmax)))
-                    node_box.appendChild(node_xmax)
-                    node_ymax = xml_doc.createElement("ymax")
-                    node_ymax.appendChild(xml_doc.createTextNode(str(ymax)))
-                    node_box.appendChild(node_ymax)
-                    node_obj.appendChild(node_box)
-                    root.appendChild(node_obj)
-            with open(osp.join(xml_dir, img_name_part + ".xml"), 'w') as fxml:
-                xml_doc.writexml(
-                    fxml,
-                    indent='\t',
-                    addindent='\t',
-                    newl='\n',
-                    encoding="utf-8")
+                        img_file = osp.join(image_dir, img_name)
+                        im_data = cv2.imread(img_file)
+                        h, w, c = im_data.shape
+                    node_size = xml_doc.createElement("size")
+                    node_width = xml_doc.createElement("width")
+                    node_width.appendChild(xml_doc.createTextNode(str(w)))
+                    node_size.appendChild(node_width)
+                    node_height = xml_doc.createElement("height")
+                    node_height.appendChild(xml_doc.createTextNode(str(h)))
+                    node_size.appendChild(node_height)
+                    node_depth = xml_doc.createElement("depth")
+                    node_depth.appendChild(xml_doc.createTextNode(str(3)))
+                    node_size.appendChild(node_depth)
+                    root.appendChild(node_size)
+                    for shape in json_info["shapes"]:
+                        if 'shape_type' in shape:
+                            if shape["shape_type"] != "rectangle":
+                                continue
+                            (xmin, ymin), (xmax, ymax) = shape["points"]
+                            xmin, xmax = sorted([xmin, xmax])
+                            ymin, ymax = sorted([ymin, ymax])
+                        else:
+                            points = shape["points"]
+                            points_num = len(points)
+                            x = [points[i][0] for i in range(points_num)]
+                            y = [points[i][1] for i in range(points_num)]
+                            xmin = min(x)
+                            xmax = max(x)
+                            ymin = min(y)
+                            ymax = max(y)
+                        label = shape["label"]
+                        node_obj = xml_doc.createElement("object")
+                        node_name = xml_doc.createElement("name")
+                        node_name.appendChild(xml_doc.createTextNode(label))
+                        node_obj.appendChild(node_name)
+                        node_diff = xml_doc.createElement("difficult")
+                        node_diff.appendChild(xml_doc.createTextNode(str(0)))
+                        node_obj.appendChild(node_diff)
+                        node_box = xml_doc.createElement("bndbox")
+                        node_xmin = xml_doc.createElement("xmin")
+                        node_xmin.appendChild(xml_doc.createTextNode(str(xmin)))
+                        node_box.appendChild(node_xmin)
+                        node_ymin = xml_doc.createElement("ymin")
+                        node_ymin.appendChild(xml_doc.createTextNode(str(ymin)))
+                        node_box.appendChild(node_ymin)
+                        node_xmax = xml_doc.createElement("xmax")
+                        node_xmax.appendChild(xml_doc.createTextNode(str(xmax)))
+                        node_box.appendChild(node_xmax)
+                        node_ymax = xml_doc.createElement("ymax")
+                        node_ymax.appendChild(xml_doc.createTextNode(str(ymax)))
+                        node_box.appendChild(node_ymax)
+                        node_obj.appendChild(node_box)
+                        root.appendChild(node_obj)
+                with open(osp.join(xml_dir, img_name_part + ".xml"), 'w') as fxml:
+                    xml_doc.writexml(
+                        fxml,
+                        indent='\t',
+                        addindent='\t',
+                        newl='\n',
+                        encoding="utf-8")
+            except:
+                    print("The json file {} convert failed!!!".format(json_file))
+                    raise
 
 
 class EasyData2VOC(X2VOC):
@@ -160,70 +167,76 @@ class EasyData2VOC(X2VOC):
 
     def json2xml(self, image_dir, json_dir, xml_dir):
         import xml.dom.minidom as minidom
-        for img_name in os.listdir(image_dir):
+        img_len = len(os.listdir(image_dir))
+        for img_index, img_name in enumerate(os.listdir(image_dir)):
+            sys.stdout.write("\rConvert the json {}/{} ...     ".format(img_index + 1, img_len))
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
-            if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_name))
-                continue
-            xml_doc = minidom.Document()
-            root = xml_doc.createElement("annotation")
-            xml_doc.appendChild(root)
-            node_folder = xml_doc.createElement("folder")
-            node_folder.appendChild(xml_doc.createTextNode("JPEGImages"))
-            root.appendChild(node_folder)
-            node_filename = xml_doc.createElement("filename")
-            node_filename.appendChild(xml_doc.createTextNode(img_name))
-            root.appendChild(node_filename)
-            img = cv2.imread(osp.join(image_dir, img_name))
-            h = img.shape[0]
-            w = img.shape[1]
-            node_size = xml_doc.createElement("size")
-            node_width = xml_doc.createElement("width")
-            node_width.appendChild(xml_doc.createTextNode(str(w)))
-            node_size.appendChild(node_width)
-            node_height = xml_doc.createElement("height")
-            node_height.appendChild(xml_doc.createTextNode(str(h)))
-            node_size.appendChild(node_height)
-            node_depth = xml_doc.createElement("depth")
-            node_depth.appendChild(xml_doc.createTextNode(str(3)))
-            node_size.appendChild(node_depth)
-            root.appendChild(node_size)
-            with open(json_file, mode="r", \
-                              encoding=get_encoding(json_file)) as j:
-                json_info = json.load(j)
-                for shape in json_info["labels"]:
-                    label = shape["name"]
-                    xmin = shape["x1"]
-                    ymin = shape["y1"]
-                    xmax = shape["x2"]
-                    ymax = shape["y2"]
-                    node_obj = xml_doc.createElement("object")
-                    node_name = xml_doc.createElement("name")
-                    node_name.appendChild(xml_doc.createTextNode(label))
-                    node_obj.appendChild(node_name)
-                    node_diff = xml_doc.createElement("difficult")
-                    node_diff.appendChild(xml_doc.createTextNode(str(0)))
-                    node_obj.appendChild(node_diff)
-                    node_box = xml_doc.createElement("bndbox")
-                    node_xmin = xml_doc.createElement("xmin")
-                    node_xmin.appendChild(xml_doc.createTextNode(str(xmin)))
-                    node_box.appendChild(node_xmin)
-                    node_ymin = xml_doc.createElement("ymin")
-                    node_ymin.appendChild(xml_doc.createTextNode(str(ymin)))
-                    node_box.appendChild(node_ymin)
-                    node_xmax = xml_doc.createElement("xmax")
-                    node_xmax.appendChild(xml_doc.createTextNode(str(xmax)))
-                    node_box.appendChild(node_xmax)
-                    node_ymax = xml_doc.createElement("ymax")
-                    node_ymax.appendChild(xml_doc.createTextNode(str(ymax)))
-                    node_box.appendChild(node_ymax)
-                    node_obj.appendChild(node_box)
-                    root.appendChild(node_obj)
-            with open(osp.join(xml_dir, img_name_part + ".xml"), 'w') as fxml:
-                xml_doc.writexml(
-                    fxml,
-                    indent='\t',
-                    addindent='\t',
-                    newl='\n',
-                    encoding="utf-8")
+            try:
+                if not osp.exists(json_file):
+                    os.remove(osp.join(image_dir, img_name))
+                    continue
+                xml_doc = minidom.Document()
+                root = xml_doc.createElement("annotation")
+                xml_doc.appendChild(root)
+                node_folder = xml_doc.createElement("folder")
+                node_folder.appendChild(xml_doc.createTextNode("JPEGImages"))
+                root.appendChild(node_folder)
+                node_filename = xml_doc.createElement("filename")
+                node_filename.appendChild(xml_doc.createTextNode(img_name))
+                root.appendChild(node_filename)
+                img = cv2.imread(osp.join(image_dir, img_name))
+                h = img.shape[0]
+                w = img.shape[1]
+                node_size = xml_doc.createElement("size")
+                node_width = xml_doc.createElement("width")
+                node_width.appendChild(xml_doc.createTextNode(str(w)))
+                node_size.appendChild(node_width)
+                node_height = xml_doc.createElement("height")
+                node_height.appendChild(xml_doc.createTextNode(str(h)))
+                node_size.appendChild(node_height)
+                node_depth = xml_doc.createElement("depth")
+                node_depth.appendChild(xml_doc.createTextNode(str(3)))
+                node_size.appendChild(node_depth)
+                root.appendChild(node_size)
+                with open(json_file, mode="r", \
+                                  encoding=get_encoding(json_file)) as j:
+                    json_info = json.load(j)
+                    for shape in json_info["labels"]:
+                        label = shape["name"]
+                        xmin = shape["x1"]
+                        ymin = shape["y1"]
+                        xmax = shape["x2"]
+                        ymax = shape["y2"]
+                        node_obj = xml_doc.createElement("object")
+                        node_name = xml_doc.createElement("name")
+                        node_name.appendChild(xml_doc.createTextNode(label))
+                        node_obj.appendChild(node_name)
+                        node_diff = xml_doc.createElement("difficult")
+                        node_diff.appendChild(xml_doc.createTextNode(str(0)))
+                        node_obj.appendChild(node_diff)
+                        node_box = xml_doc.createElement("bndbox")
+                        node_xmin = xml_doc.createElement("xmin")
+                        node_xmin.appendChild(xml_doc.createTextNode(str(xmin)))
+                        node_box.appendChild(node_xmin)
+                        node_ymin = xml_doc.createElement("ymin")
+                        node_ymin.appendChild(xml_doc.createTextNode(str(ymin)))
+                        node_box.appendChild(node_ymin)
+                        node_xmax = xml_doc.createElement("xmax")
+                        node_xmax.appendChild(xml_doc.createTextNode(str(xmax)))
+                        node_box.appendChild(node_xmax)
+                        node_ymax = xml_doc.createElement("ymax")
+                        node_ymax.appendChild(xml_doc.createTextNode(str(ymax)))
+                        node_box.appendChild(node_ymax)
+                        node_obj.appendChild(node_box)
+                        root.appendChild(node_obj)
+                with open(osp.join(xml_dir, img_name_part + ".xml"), 'w') as fxml:
+                    xml_doc.writexml(
+                        fxml,
+                        indent='\t',
+                        addindent='\t',
+                        newl='\n',
+                        encoding="utf-8")
+            except:
+                print("The json file {} convert failed!!!".format(json_file))
+                raise

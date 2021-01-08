@@ -18,6 +18,7 @@ import cv2
 import uuid
 import json
 import os
+import sys
 import os.path as osp
 import shutil
 import numpy as np
@@ -224,31 +225,37 @@ class LabelMe2Seg(X2Seg):
                      
     def json2png(self, image_dir, json_dir, png_dir):
         color_map = self.get_color_map_list(256)
-        for img_name in os.listdir(image_dir):
+        img_len = len(os.listdir(image_dir))
+        for img_index, img_name in enumerate(os.listdir(image_dir)):
+            sys.stdout.write("\rConvert the json {}/{} ...     ".format(img_index + 1, img_len))
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
-            if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_name))
-                continue
-            img_file = osp.join(image_dir, img_name)
-            img = np.asarray(PIL.Image.open(img_file))
-            with open(json_file, mode="r", \
-                              encoding=get_encoding(json_file)) as j:
-                json_info = json.load(j)
-            lbl, _ = self.shapes_to_label(
-                img_shape=img.shape,
-                shapes=json_info['shapes'],
-                label_name_to_value=self.labels2ids,
-            )
-            out_png_file = osp.join(png_dir, img_name_part + '.png')
-            if lbl.min() >= 0 and lbl.max() <= 255:
-                lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
-                lbl_pil.putpalette(color_map)
-                lbl_pil.save(out_png_file)
-            else:
-                raise ValueError(
-                    '[%s] Cannot save the pixel-wise class label as PNG. '
-                    'Please consider using the .npy format.' % out_png_file)
+            try:
+                if not osp.exists(json_file):
+                    os.remove(osp.join(image_dir, img_name))
+                    continue
+                img_file = osp.join(image_dir, img_name)
+                img = np.asarray(PIL.Image.open(img_file))
+                with open(json_file, mode="r", \
+                                  encoding=get_encoding(json_file)) as j:
+                    json_info = json.load(j)
+                lbl, _ = self.shapes_to_label(
+                    img_shape=img.shape,
+                    shapes=json_info['shapes'],
+                    label_name_to_value=self.labels2ids,
+                )
+                out_png_file = osp.join(png_dir, img_name_part + '.png')
+                if lbl.min() >= 0 and lbl.max() <= 255:
+                    lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
+                    lbl_pil.putpalette(color_map)
+                    lbl_pil.save(out_png_file)
+                else:
+                    raise ValueError(
+                        '[%s] Cannot save the pixel-wise class label as PNG. '
+                        'Please consider using the .npy format.' % out_png_file)
+            except:
+                print("The json file {} convert failed!!!".format(json_file))
+                raise
                 
                             
 class EasyData2Seg(X2Seg):
@@ -294,41 +301,47 @@ class EasyData2Seg(X2Seg):
     def json2png(self, image_dir, json_dir, png_dir):
         from pycocotools.mask import decode
         color_map = self.get_color_map_list(256)
-        for img_name in os.listdir(image_dir):
+        img_len = len(os.listdir(image_dir))
+        for img_index, img_name in enumerate(os.listdir(image_dir)):
+            sys.stdout.write("\rConvert the json {}/{} ...     ".format(img_index + 1, img_len))
             img_name_part = osp.splitext(img_name)[0]
             json_file = osp.join(json_dir, img_name_part + ".json")
-            if not osp.exists(json_file):
-                os.remove(osp.join(image_dir, img_name))
-                continue
-            img_file = osp.join(image_dir, img_name)
-            img = np.asarray(PIL.Image.open(img_file))
-            img_h = img.shape[0]
-            img_w = img.shape[1]
-            with open(json_file, mode="r", \
-                              encoding=get_encoding(json_file)) as j:
-                json_info = json.load(j)
-                data_shapes = []
-                for shape in json_info['labels']:
-                    mask_dict = {}
-                    mask_dict['size'] = [img_h, img_w]
-                    mask_dict['counts'] = shape['mask'].encode()
-                    mask = decode(mask_dict)
-                    polygon = self.mask2polygon(mask, shape["name"])
-                    data_shapes.extend(polygon)
-            lbl, _ = self.shapes_to_label(
-                img_shape=img.shape,
-                shapes=data_shapes,
-                label_name_to_value=self.labels2ids,
-            )
-            out_png_file = osp.join(png_dir, img_name_part + '.png')
-            if lbl.min() >= 0 and lbl.max() <= 255:
-                lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
-                lbl_pil.putpalette(color_map)
-                lbl_pil.save(out_png_file)
-            else:
-                raise ValueError(
-                    '[%s] Cannot save the pixel-wise class label as PNG. '
-                    'Please consider using the .npy format.' % out_png_file)
+            try:
+                if not osp.exists(json_file):
+                    os.remove(osp.join(image_dir, img_name))
+                    continue
+                img_file = osp.join(image_dir, img_name)
+                img = np.asarray(PIL.Image.open(img_file))
+                img_h = img.shape[0]
+                img_w = img.shape[1]
+                with open(json_file, mode="r", \
+                                  encoding=get_encoding(json_file)) as j:
+                    json_info = json.load(j)
+                    data_shapes = []
+                    for shape in json_info['labels']:
+                        mask_dict = {}
+                        mask_dict['size'] = [img_h, img_w]
+                        mask_dict['counts'] = shape['mask'].encode()
+                        mask = decode(mask_dict)
+                        polygon = self.mask2polygon(mask, shape["name"])
+                        data_shapes.extend(polygon)
+                lbl, _ = self.shapes_to_label(
+                    img_shape=img.shape,
+                    shapes=data_shapes,
+                    label_name_to_value=self.labels2ids,
+                )
+                out_png_file = osp.join(png_dir, img_name_part + '.png')
+                if lbl.min() >= 0 and lbl.max() <= 255:
+                    lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
+                    lbl_pil.putpalette(color_map)
+                    lbl_pil.save(out_png_file)
+                else:
+                    raise ValueError(
+                        '[%s] Cannot save the pixel-wise class label as PNG. '
+                        'Please consider using the .npy format.' % out_png_file)
+            except:
+                print("The json file {} convert failed!!!".format(json_file))
+                raise
             
 
 
