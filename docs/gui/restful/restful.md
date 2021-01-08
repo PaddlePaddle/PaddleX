@@ -18,7 +18,7 @@
 
 通过如下命令启动PaddleX的RESTful服务，同时会初始化工作空间，初始化工作空间主要做载入工作空间内已有的数据集、项目等模块的信息。初始化工作空间后就可以正常调用其他的RESTful API，所有新建的数据集、项目等数据都会保存在此工作空间目录下面  
 ```
- paddlex --start_restful --port [端口号] --workspace_dir [工作空间目录]
+ paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间目录]
 ```  
 
 

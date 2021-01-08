@@ -40,4 +40,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     license='Apache 2.0',
-    entry_points={'console_scripts': ['paddlex=paddlex.command:main', ]})
+    entry_points={'console_scripts': ['paddlex=paddlex.command:main', 'paddlex_restful=paddlex_restful.command:main']})
+
