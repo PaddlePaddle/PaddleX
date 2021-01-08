@@ -10,4 +10,5 @@ paddle2onnx
 paddlepaddle-gpu
 opencv-python
 psutil
+flask_cors
 xlwt
