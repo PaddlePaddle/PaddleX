@@ -8,7 +8,7 @@
 
 ## 服务端启动PaddleX RESTful服务
 ```
- paddlex --start_restful --port [端口号] --workspace_dir [工作空间目录]
+ paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间目录]
 ```  
 
 ## 客户端请求服务端

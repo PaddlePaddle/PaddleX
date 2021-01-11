@@ -11,3 +11,4 @@ paddlepaddle-gpu
 opencv-python
 psutil
 flask_cors
+xlwt

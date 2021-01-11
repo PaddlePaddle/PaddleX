@@ -9,7 +9,7 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。
 同样您还可以根据RESTful API来开发自己的可视化界面。
 
 ```
-paddlex --start_restful --port 8081 --workspace_dir D:\Workspace
+paddlex_restful --start_restful --port 8081 --workspace_dir D:\Workspace
 ```
 
 **注意：请确保启动RESTful的端口未被防火墙限制**
