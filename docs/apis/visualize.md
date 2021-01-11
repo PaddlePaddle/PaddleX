@@ -5,7 +5,7 @@ PaddleX provides a series of visualization functions for model prediction and re
 ## paddlex.det.visualize
 > **Visualization of prediction results for object detection/instance segmentation**
 ```
-paddlex.det.visualize(image, result, threshold=0.5, save_dir='. /')
+paddlex.det.visualize(image, result, threshold=0.5, save_dir='. /', color=None)
 ```
 Visualize a box and mask predicted by object detection/instance segmentation models in the original figure.
 
@@ -14,7 +14,7 @@ Visualize a box and mask predicted by object detection/instance segmentation mod
 > * **result** (str): Model prediction results.
 > * **threshold**(float): Score threshold. Any box of which the confidence is smaller than this threshold is filtered and is not visualized. It is 0.5 by default.
 > * **save_dir**(str): Path where visualized results are saved. If this parameter is None, it indicates that the path does not exist and that this function returns visualized results in the form of np.ndarray. If this parameter is set to a directory path, this function saves visualized results in this directory. It is '. /' by default.
-
+> * **color**(list|tuple|np.array): List of BGR color values of all categories, shape of the list is required to be `Nx3` where `N` is the number of categories and color value should be within [0, 255] range. If set as None, the color values are generated automatically. Default: None.
 
 ### Usage Example
 > Click to download the [model](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz) in the following example
@@ -83,7 +83,7 @@ pdx.det.draw_pr_curve(eval_details_file, save_dir='./insect')
 ```
 import os
 # Choose to use Card 0
-os.environ['CUDA_VISIBLE_DEVICES'] = '0' 
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 from paddlex.det import transforms
 import paddlex as pdx
@@ -143,4 +143,3 @@ Intermediate results can be viewed using VisualDL:
 > * **dataset** (paddlex.datasets): Dataset reader.
 > * **img_count** (int): Number of images which require data preprocessing/enhancement. It is 3 by default.
 > * **save_dir** (str): Path where logs are saved. It is 'vdl_output' by default.
-
