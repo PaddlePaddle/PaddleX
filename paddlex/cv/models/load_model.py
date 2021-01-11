@@ -57,14 +57,15 @@ def load_model(model_dir, fixed_input_shape=None):
 
     if info['Model'].count('RCNN') > 0:
         if info['_init_params']['with_fpn']:
-            if model.fixed_input_shape[0] % 32 > 0:
-                raise Exception(
-                    "The first value in fixed_input_shape must be a multiple of 32, but recieved {}.".
-                    format(model.fixed_input_shape[0]))
-            if model.fixed_input_shape[1] % 32 > 0:
-                raise Exception(
-                    "The second value in fixed_input_shape must be a multiple of 32, but recieved {}.".
-                    format(model.fixed_input_shape[1]))
+            if model.fixed_input_shape is not None:
+                if model.fixed_input_shape[0] % 32 > 0:
+                    raise Exception(
+                        "The first value in fixed_input_shape must be a multiple of 32, but recieved {}.".
+                        format(model.fixed_input_shape[0]))
+                if model.fixed_input_shape[1] % 32 > 0:
+                    raise Exception(
+                        "The second value in fixed_input_shape must be a multiple of 32, but recieved {}.".
+                        format(model.fixed_input_shape[1]))
 
     with fluid.scope_guard(model_scope):
         if status == "Normal" or \
