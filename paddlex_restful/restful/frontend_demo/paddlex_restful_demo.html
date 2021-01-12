@@ -416,6 +416,19 @@ arrow {
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
 }
+
+a:link{
+  color:#000000;
+  text-decoration:none;}
+a:visited{
+  color:#000000;
+  text-decoration:none;}
+a:hover{
+  color:#0433FF;
+  text-decoration:none;}
+a:active{
+  color:#000000;
+  text-decoration:none;}
 </style>
 
 <script type="text/javascript">
@@ -431,6 +444,7 @@ var g_train_task_parms = {};
 //保存刷新项目任务时需要使用的项目id及type
 var g_view_project_task_id = "";
 var g_view_project_task_type = "classification";
+var g_view_project_task_name = "新建项目";
 
 //用于刷新任务定时器句柄
 var g_instance_refresh_clock;
@@ -525,6 +539,14 @@ var Project_Type_Name_Enum = {
     "detection":"目标检测",
     "segmentation":"语义分割",
     "instance_segmentation":"实例分割"
+}
+
+var Nav_Bar_Type_Enum = {
+    "datasets":"全部数据集",
+    "projects":"全部项目",
+    "tasks":"全部任务",
+    "models":"全部模型",
+    "project_tasks":"项目任务"
 }
 
 //显示服务器配置窗口
@@ -1932,6 +1954,7 @@ function get_server_system_info(str_info_type = "machine_info")
 //获取工作区所有项目信息
 function load_projects()
 {
+    update_nav_bar(Nav_Bar_Type_Enum["projects"]);
     var http_request;
     if (window.XMLHttpRequest)
     {
@@ -2040,7 +2063,7 @@ function show_project(data)
 {
     g_view_project_task_id = data.id;
     g_view_project_task_type = document.getElementById("view_project_type_" + g_view_project_task_id).value;
-    
+    g_view_project_task_name = document.getElementById("view_project_name_" + g_view_project_task_id).value;
     //查看项目下的任务
     load_project_tasks(data.id);
 }
@@ -2048,6 +2071,7 @@ function show_project(data)
 //获取工作区所有数据集信息
 function load_datasets()
 {
+    update_nav_bar(Nav_Bar_Type_Enum["datasets"]);
     var http_request;
     if (window.XMLHttpRequest)
     {
@@ -2078,6 +2102,7 @@ function load_tasks()
 {
     document.getElementById("btn_refresh").value = "刷新所有任务信息";
     document.getElementById("table_create_new").style.display = "none";
+    update_nav_bar(Nav_Bar_Type_Enum["tasks"]);
     
     var http_request;
     if (window.XMLHttpRequest)
@@ -2110,6 +2135,7 @@ function load_project_tasks(str_project_id)
     document.getElementById("btn_refresh").value = "刷新项目任务信息";
     document.getElementById("table_create_new").style.display = "block";
     document.getElementById("btn_create_new").value = "新建任务";
+    update_nav_bar(Nav_Bar_Type_Enum["project_tasks"]);
     
     var http_request;
     if (window.XMLHttpRequest)
@@ -2260,6 +2286,8 @@ function split_dataset(obj)
 //获取所有导出模型
 function load_models()
 {
+    update_nav_bar(Nav_Bar_Type_Enum["models"]);
+    
     var http_request;
     if (window.XMLHttpRequest)
     {
@@ -2335,7 +2363,7 @@ function fill_table_contents(list_contents, type = "project")
             var str_html = "";
   
             str_html = "<div id=\"draw-border\" style=\"word-wrap: break-word;\"><view_item onclick=\"show_project(this)\" oncontextmenu=\"javascript:show_project_popupmenu(this);\" id=\"" + str_id + "\">";
-            str_html = str_html + "项目名称：" + str_name + " (" + str_id + ")" + "<br>";
+            str_html = str_html + "项目名称：" + str_name + " (" + str_id + ")" + "<br>" + "<input type=\"hidden\" id=\"view_project_name_" + str_id + "\" value=\"" + str_name + "\">";
             
             if(str_type == "classification")
                 str_type_view = "<font color=\"green\">图像分类</font>";
@@ -4260,6 +4288,37 @@ function change_create_project_type(obj)
     }  
 }
 
+//更新导航栏链接
+function update_nav_bar(str_type = Nav_Bar_Type_Enum["projects"])
+{
+    var str_html = "PaddleX ：";
+    if(str_type == Nav_Bar_Type_Enum["projects"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_projects()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["datasets"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_datasets()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["tasks"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_tasks()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["models"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_models()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["project_tasks"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_projects()\">" + Nav_Bar_Type_Enum["projects"] + "</a>";
+        str_html = str_html + "&nbsp&nbsp>&nbsp&nbsp";
+        str_html = str_html + "<a href=\"javascript:load_project_tasks(g_view_project_task_id)\">";
+        str_html = str_html + g_view_project_task_name + "</a>";
+    }
+            
+    table_nav_bar.rows[0].cells[1].innerHTML = str_html;
+}
+
 //数据集图片预览时前一张及后一张图像
 function img_arrow_click(obj)
 {
@@ -4381,9 +4440,17 @@ function dispatch_key_press()
     <li onclick="contact_us()"><a href='#'>联系我们</a></li>
   </ul>
 </div>
+<!--nav bar-->
+<table width="100%" height="35px" align="center" cellspacing="1px" id="table_nav_bar" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+<tr style="background-color:#EBEBEB">
+  <td style="width: 15px;"></td>
+  <td align="left">PaddleX：<a href="javascript:load_projects()">全部项目</a></td>
+</tr>
+</table>
+<br>
+<!--nav bar-->
 <div style="text-align:center;clear:both;margin-top:10px">
 
-<br>
 <div id="div_demo_title"><h2><font color="#0000cd"> 欢迎使用 PaddleX RestfulAPI</font></h2></div>
 
 <table width="100%" height="40px" align="center" cellspacing="1px" id="table_create_new">
