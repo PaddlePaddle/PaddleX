@@ -314,7 +314,7 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
                                          var_name + "_" + str(iter) + ".npy")
                 save_dir, file_name = os.path.split(save_path)
                 if not os.path.exists(save_dir):
-                    os.mkdirs(save_dir)
+                    os.makedirs(save_dir)
                 np.save(save_path, var_tensor)
         else:
             for var_name in self._quantized_act_var_name:
