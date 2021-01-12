@@ -5,7 +5,7 @@ PaddleX提供了一系列模型预测和结果分析的可视化函数。
 ## paddlex.det.visualize
 > **目标检测/实例分割预测结果可视化**  
 ```
-paddlex.det.visualize(image, result, threshold=0.5, save_dir='./')
+paddlex.det.visualize(image, result, threshold=0.5, save_dir='./', color=None)
 ```
 将目标检测/实例分割模型预测得到的Box框和Mask在原图上进行可视化。
 
@@ -14,6 +14,7 @@ paddlex.det.visualize(image, result, threshold=0.5, save_dir='./')
 > * **result** (str): 模型预测结果。
 > * **threshold**(float): score阈值，将Box置信度低于该阈值的框过滤不进行可视化。默认0.5
 > * **save_dir**(str): 可视化结果保存路径。若为None，则表示不保存，该函数将可视化的结果以np.ndarray的形式返回；若设为目录路径，则将可视化结果保存至该目录下。默认值为'./'。
+> * **color**(list|tuple|np.array): 各类别的BGR颜色值组成的数组，形状为Nx3（N为类别数量），数值范围为[0, 255]。例如针对2个类别的[[255, 0, 0], [0, 255, 0]]。若为None，则自动生成各类别的颜色。默认值为None。
 
 ### 使用示例
 > 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/xiaoduxiong_epoch_12.tar.gz)
