@@ -5,10 +5,13 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 
 ## 前置条件
 * Visual Studio 2019
-* OpenVINO 2021.1+
+* OpenVINO 2020.4或者2021.1+
 * CMake 3.0+
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)  
+**说明**：
+- PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html) 
+- CPU下请使用OpenVINO 2021.1+版本；VPU下请使用OpenVINO 2020.4版本
+
 
 **注意**：安装完OpenVINO后需要手动添加OpenVINO目录到系统环境变量，否则在运行程序时会出现找不到dll的情况。以安装OpenVINO时不改变OpenVINO安装目录情况下为示例，流程如下
 - 我的电脑->属性->高级系统设置->环境变量
