@@ -262,10 +262,12 @@ class PaddleXPostTrainingQuantization(PostTrainingQuantization):
             for var_name in self._quantized_act_var_name:
                 start = time.time()
                 sampling_data = []
-                filenames = [f for f in os.listdir(self._cache_dir) \
-                    if re.match(var_name + '_[0-9]+.npy', f)]
+                file_name = os.path.join(self._cache_dir, var_name)
+                cache_dir, var_name_ = os.path.split(file_name) 
+                filenames = [f for f in os.listdir(cache_dir) \
+                    if re.match(var_name_ + '_[0-9]+.npy', f)]
                 for filename in filenames:
-                    file_path = os.path.join(self._cache_dir, filename)
+                    file_path = os.path.join(cache_dir, filename)
                     sampling_data.append(np.load(file_path))
                     os.remove(file_path)
                 sampling_data = np.concatenate(sampling_data)
