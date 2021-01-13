@@ -921,6 +921,10 @@ def model_file():
         ret = data['path']
         return send_file(ret)
 
+@app.route('/gui', methods=['GET'])
+def gui():
+    if request.method == 'GET':
+        return render_template('/paddlex_restful_demo.html')
 
 def run(port, workspace_dir):
     if workspace_dir is None:

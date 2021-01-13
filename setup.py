@@ -27,6 +27,7 @@ setuptools.setup(
     long_description_content_type="text/plain",
     url="https://github.com/PaddlePaddle/PaddleX",
     packages=setuptools.find_packages(),
+    include_package_data=True,
     setup_requires=['cython', 'numpy'],
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
