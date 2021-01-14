@@ -4,9 +4,9 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。
 对于开发者来说可以通过如下指令启动PaddleX RESTful服务  
 
 ```
-paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]   
+paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]  
 ```
-  
+
 对于设置workspace在HOME目录的wk文件夹下，RESTful服务端口为8080的命令参考如下：
 ![](./img/start_restful.png)  
 
@@ -68,7 +68,10 @@ pip install pycuda
 paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```
 
-#### step3：通过浏览器打开[Demo](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_restful/restful/frontend_demo/paddlex_restful_demo.html)文件
+#### step3：
+- 方法1（推荐）：在浏览器输入开启RESTful服务的机器与端口号如:10.3.12.4:8080，便可以使用WEB GUI，此方法无需step4操作
+- 方法2：通过浏览器打开[Demo](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_restful/restful/frontend_demo/paddlex_restful_demo.html)文件
+
 
 
 #### step4：点击设置服务器信息，填写正确的后端ip与端口

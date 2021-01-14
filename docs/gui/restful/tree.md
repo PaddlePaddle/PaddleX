@@ -51,5 +51,7 @@ restful
 |____workspace.proto	// workspace 结构化信息
 |____frontend_demo // 前端demo
 | |____paddlex_restful_demo.html    //前端demo文件
+|____templates  // flask html文件存放目录
+| |____paddlex_restful_demo.html    //前端demo文件
 
 ```
