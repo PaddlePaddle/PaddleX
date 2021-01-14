@@ -43,6 +43,7 @@ class ShareData():
     workspace_dir = ""
     has_gpu = True
     monitored_processes = mp.Queue(4096)
+    port = 5000
     current_port = 8000
     running_boards = {}
     machine_info = dict()
