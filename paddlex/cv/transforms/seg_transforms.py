@@ -119,6 +119,10 @@ class Compose(SegTransform):
                     label = np.asarray(Image.open(label))
                 except:
                     ValueError('Can\'t read The label file {}!'.format(label))
+                if len(label.shape) != 2:
+                    raise Exception(
+                        "label should be a 1-channel image, but recevied a {}-channel image.".
+                        format(label.shape[2]))
             im_height, im_width, _ = im.shape
             label_height, label_width = label.shape
             if im_height != label_height or im_width != label_width:
