@@ -51,35 +51,41 @@ def arg_parser():
 
 
 def export_openvino_model(model, args):
-
+    #convert paddle inference model to onnx
     onnx_save_file = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
     if model.__class__.__name__ == "YOLOv3":
         pdx.converter.export_onnx_model(model, onnx_save_file)
     else:
         pdx.converter.export_onnx_model(model, onnx_save_file, 11)
-
-    import mo.main as mo
-    from mo.utils.cli_parser import get_onnx_cli_parser
-    onnx_parser = get_onnx_cli_parser()
-    onnx_parser.add_argument("--model_dir", type=_text_type)
-    onnx_parser.add_argument("--save_dir", type=_text_type)
-    onnx_parser.add_argument("--fixed_input_shape")
-    onnx_parser.set_defaults(input_model=onnx_save_file)
-    onnx_parser.set_defaults(output_dir=args.save_dir)
-    shape_list = args.fixed_input_shape[1:-1].split(',')
-    with open(osp.join(args.model_dir, "model.yml")) as f:
-        info = yaml.load(f.read(), Loader=yaml.Loader)
-    input_channel = 3
-    if 'input_channel' in info['_init_params']:
-        input_channel = info['_init_params']['input_channel']
-    shape = '[1,{},' + shape_list[1] + ',' + shape_list[0] + ']'
-    shape = shape.format(input_channel)
-    if model.__class__.__name__ == "YOLOv3":
-        shape = shape + ",[1,2]"
-        inputs = "image,im_size"
-        onnx_parser.set_defaults(input=inputs)
-    onnx_parser.set_defaults(input_shape=shape)
-    mo.main(onnx_parser, 'onnx')
+    
+    #convert onnx to openvino ir
+    try:
+    	import mo.main as mo
+    	from mo.utils.cli_parser import get_onnx_cli_parser
+    except:
+    	print("please init openvino environment first")
+	print("see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md")
+    else:
+        onnx_parser = get_onnx_cli_parser()
+        onnx_parser.add_argument("--model_dir", type=_text_type)
+        onnx_parser.add_argument("--save_dir", type=_text_type)
+        onnx_parser.add_argument("--fixed_input_shape")
+        onnx_parser.set_defaults(input_model=onnx_save_file)
+        onnx_parser.set_defaults(output_dir=args.save_dir)
+        shape_list = args.fixed_input_shape[1:-1].split(',')
+        with open(osp.join(args.model_dir, "model.yml")) as f:
+            info = yaml.load(f.read(), Loader=yaml.Loader)
+        input_channel = 3
+        if 'input_channel' in info['_init_params']:
+            input_channel = info['_init_params']['input_channel']
+        shape = '[1,{},' + shape_list[1] + ',' + shape_list[0] + ']'
+        shape = shape.format(input_channel)
+        if model.__class__.__name__ == "YOLOv3":
+            shape = shape + ",[1,2]"
+            inputs = "image,im_size"
+            onnx_parser.set_defaults(input=inputs)
+        onnx_parser.set_defaults(input_shape=shape)
+        mo.main(onnx_parser, 'onnx')
 
 
 def main():
@@ -90,9 +96,9 @@ def main():
     model = pdx.load_model(args.model_dir)
     if model.status == "Normal" or model.status == "Prune":
         print(
-            "Only support inference model, try to export model first as below,",
-            exit=False)
-    export_openvino_model(model, args)
+            "Only support inference model, try to export inference model first as below,")
+    else:
+	export_openvino_model(model, args)
 
 
 if __name__ == "__main__":
