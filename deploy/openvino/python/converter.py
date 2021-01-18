@@ -60,11 +60,11 @@ def export_openvino_model(model, args):
     
     #convert onnx to openvino ir
     try:
-    	import mo.main as mo
-    	from mo.utils.cli_parser import get_onnx_cli_parser
+        import mo.main as mo
+        from mo.utils.cli_parser import get_onnx_cli_parser
     except:
-    	print("please init openvino environment first")
-	print("see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md")
+        print("please init openvino environment first")
+        print("see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md")
     else:
         onnx_parser = get_onnx_cli_parser()
         onnx_parser.add_argument("--model_dir", type=_text_type)
@@ -98,7 +98,7 @@ def main():
         print(
             "Only support inference model, try to export inference model first as below,")
     else:
-	export_openvino_model(model, args)
+        export_openvino_model(model, args)
 
 
 if __name__ == "__main__":
