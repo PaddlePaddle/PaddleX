@@ -63,7 +63,7 @@ def export_openvino_model(model, args):
         import mo.main as mo
         from mo.utils.cli_parser import get_onnx_cli_parser
     except:
-        print("please init openvino environment first")
+        print("convert failed！please init openvino environment first")
         print("see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md")
     else:
         onnx_parser = get_onnx_cli_parser()
