@@ -58,7 +58,7 @@ It's a all-in-one client enable develops could implement deep learning projects 
 
 - Go to [PaddleX GUI tutorial](./docs/gui/how_to_use.md ) for details of using it.
 
-- [PaddleX GUI Environment Requirements for Installation](. /docs/gui/download.md)
+- [PaddleX GUI Environment Requirements for Installation](./docs/gui/download.md)
 
 
 ## Product Module Description
