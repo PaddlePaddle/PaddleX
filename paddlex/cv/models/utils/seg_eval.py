@@ -170,7 +170,7 @@ class ConfusionMatrix(object):
             else:
                 recall = self.confusion_matrix[c][c] / vij[c]
             if recall + precision <= 1e-06:
-                f1_score = 0
+                f1score = 0
             else:
                 f1score = 2 * precision * recall / (recall + precision)
             f1score_list.append(f1score)
