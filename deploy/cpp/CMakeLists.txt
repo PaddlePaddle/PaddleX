@@ -14,7 +14,7 @@ option(WITH_ENCRYPTION "Compile demo with encryption tool."   OFF)
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
-SET(ENCRYPTION_DIR"" CACHE PATH "Location of libraries")
+SET(ENCRYPTION_DIR "" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 
 if (NOT WIN32)
