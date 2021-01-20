@@ -57,15 +57,19 @@ def export_openvino_model(model, args):
         pdx.converter.export_onnx_model(model, onnx_save_file)
     else:
         pdx.converter.export_onnx_model(model, onnx_save_file, 11)
-    
+
     #convert onnx to openvino ir
     try:
         import mo.main as mo
         from mo.utils.cli_parser import get_onnx_cli_parser
-    except:
-        print("ModuleNotFoundError: No module named 'mo'")
-        print("convert failed！please init openvino environment first")
-        print("see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md")
+    except Exception as e:
+        print("convert failed! ", e)
+        print(
+            "if error is 'no module name mo',please init openvino environment first"
+        )
+        print(
+            "see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md"
+        )
     else:
         onnx_parser = get_onnx_cli_parser()
         onnx_parser.add_argument("--model_dir", type=_text_type)
@@ -97,9 +101,26 @@ def main():
     model = pdx.load_model(args.model_dir)
     if model.status == "Normal" or model.status == "Prune":
         print(
-            "Only support inference model, try to export inference model first as below,")
+            "Only support inference model, try to export inference model first as below,"
+        )
+        print(
+            "see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md"
+        )
+
     else:
-        export_openvino_model(model, args)
+        prog = model.test_prog
+        for var in prog.list_vars():
+            if var.name == "image":
+                shape = list(var.shape)
+                if shape[2] == -1 and shape[3] == -1:
+                    print(
+                        "convert failed, please export paddle inference by fixed_input_shape"
+                    )
+                    print(
+                        "see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md"
+                    )
+                else:
+                    export_openvino_model(model, args)
 
 
 if __name__ == "__main__":
