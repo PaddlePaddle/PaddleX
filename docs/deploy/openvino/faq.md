@@ -29,7 +29,7 @@ setupvars.bat
 **说明**：更多初始化OpenVINO环境的细节请参考[OpenVINO官网](https://docs.openvinotoolkit.org/latest/index.html)
 
 
-## Q2提示"convert failed, please export paddle inference by fixed_input_shape"
+## Q2提示"convert failed, please export paddle inference model by fixed_input_shape"
 原因：该问题是因为在使用paddlex导出inference 模型的时候没有加入--fixed_input_shape参数固定shape  
 解决方案：导出inference 模型的时候加入--fixed_input_shape 参数  
 [导出inference模型参考](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/export_model.md)

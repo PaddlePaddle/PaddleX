@@ -114,7 +114,7 @@ def main():
                 shape = list(var.shape)
                 if shape[2] == -1 and shape[3] == -1:
                     print(
-                        "convert failed, please export paddle inference by fixed_input_shape"
+                        "convert failed, please export paddle inference model by fixed_input_shape"
                     )
                     print(
                         "see https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/deploy/openvino/faq.md"
