@@ -644,24 +644,24 @@ bool Model::predict(const cv::Mat& im, SegResult* result) {
     if (*iter == "padding") {
       auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
       inputs_.im_size_before_resize_.pop_back();
-      auto padding_w = before_shape[0];
-      auto padding_h = before_shape[1];
-      mask_label = mask_label(cv::Rect(0, 0, padding_h, padding_w));
-      mask_score = mask_score(cv::Rect(0, 0, padding_h, padding_w));
+      auto padding_h = before_shape[0];
+      auto padding_w = before_shape[1];
+      mask_label = mask_label(cv::Rect(0, 0, padding_w, padding_h));
+      mask_score = mask_score(cv::Rect(0, 0, padding_w, padding_h));
     } else if (*iter == "resize") {
       auto before_shape = inputs_.im_size_before_resize_[len_postprocess - idx];
       inputs_.im_size_before_resize_.pop_back();
-      auto resize_w = before_shape[0];
-      auto resize_h = before_shape[1];
+      auto resize_h = before_shape[0];
+      auto resize_w = before_shape[1];
       cv::resize(mask_label,
                  mask_label,
-                 cv::Size(resize_h, resize_w),
+                 cv::Size(resize_w, resize_h),
                  0,
                  0,
                  cv::INTER_NEAREST);
       cv::resize(mask_score,
                  mask_score,
-                 cv::Size(resize_h, resize_w),
+                 cv::Size(resize_w, resize_h),
                  0,
                  0,
                  cv::INTER_LINEAR);
@@ -791,25 +791,25 @@ bool Model::predict(const std::vector<cv::Mat>& im_batch,
         auto before_shape =
             inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
         inputs_batch_[i].im_size_before_resize_.pop_back();
-        auto padding_w = before_shape[0];
-        auto padding_h = before_shape[1];
-        mask_label = mask_label(cv::Rect(0, 0, padding_h, padding_w));
-        mask_score = mask_score(cv::Rect(0, 0, padding_h, padding_w));
+        auto padding_h = before_shape[0];
+        auto padding_w = before_shape[1];
+        mask_label = mask_label(cv::Rect(0, 0, padding_w, padding_h));
+        mask_score = mask_score(cv::Rect(0, 0, padding_w, padding_h));
       } else if (*iter == "resize") {
         auto before_shape =
             inputs_batch_[i].im_size_before_resize_[len_postprocess - idx];
         inputs_batch_[i].im_size_before_resize_.pop_back();
-        auto resize_w = before_shape[0];
-        auto resize_h = before_shape[1];
+        auto resize_h = before_shape[0];
+        auto resize_w = before_shape[1];
         cv::resize(mask_label,
                    mask_label,
-                   cv::Size(resize_h, resize_w),
+                   cv::Size(resize_w, resize_h),
                    0,
                    0,
                    cv::INTER_NEAREST);
         cv::resize(mask_score,
                    mask_score,
-                   cv::Size(resize_h, resize_w),
+                   cv::Size(resize_w, resize_h),
                    0,
                    0,
                    cv::INTER_LINEAR);
