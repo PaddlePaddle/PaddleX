@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-__version__ = '1.3.3'
+__version__ = '1.3.4'
 
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
