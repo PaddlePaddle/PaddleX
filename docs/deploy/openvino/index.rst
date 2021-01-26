@@ -11,3 +11,4 @@ OpenVINO部署
    linux.md
    python.md
    export_openvino_model.md 
+   faq.md
