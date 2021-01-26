@@ -24,7 +24,7 @@ cd PaddleX/examples/remote_sensing/
 
 ## Data preparation
 
-In this case, the high-definition remote sensing images provided by the 2015 CCF Big Data competition is used, containing five RGB images with labels with a maximum image size of 7969 × 7939 and a minimum size of 4011 × 2470. The dataset is labeled with a total of 5 categories of objects: background (labeled 0), vegetation (labeled 1), buildings (labeled 2), bodies of water (labeled 3), and roads (labeled 4).
+In this case, the high-definition remote sensing images provided by the 2015 CCF Big Data competition is used, containing five RGB images with labels with a maximum image size of 7969 × 7939 and a minimum size of 4011 × 2470. The dataset is labeled with a total of 5 categories of objects: background (labeled 0), vegetation (labeled 1), road (labeled 2), building (labeled 3), and water (labeled 4).
 
 In this case, the first four images are categorized into the training set and the fifth image is used as the validation set. In order to increase the batch size during training, the first four images are cut with sliding window (1024, 1024) and step (512, 512). In addition to the original four large images, there are 688 images in the training set in total. In order to avoid the occurrence of insufficient display memory in the validation of large-size images during training, the 5th image is cut in the sliding window (769, 769) and step (769, 769) for the validation set to obtain 40 sub-images.
 
