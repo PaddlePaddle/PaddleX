@@ -50,7 +50,7 @@ paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间
 
 ## PaddleX Web Demo
 PaddleX Web Demo是针对PaddleX RESTful开发的Web可视化客户端。  
-[Wed demo传送门](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_resful/restful/frontend_demo/paddlex_restful_demo.html)
+[Wed demo传送门](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_resful/restful/templates/paddlex_restful_demo.html)
 
 ### Web DEMO使用流程
 
