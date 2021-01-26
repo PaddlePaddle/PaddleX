@@ -86,7 +86,7 @@ for h in range(0, H, val_stride[1]):
         val_tile_id += 1
 
 # 生成labels.txt
-label_list = ['background', 'vegetation', 'building', 'water', 'road']
+label_list = ['background', 'vegetation', 'road', 'building', 'water']
 for i, label in enumerate(label_list):
     mode = 'w' if i == 0 else 'a'
     with open('./dataset/labels.txt', 'a') as f:
