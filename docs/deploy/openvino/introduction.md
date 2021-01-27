@@ -32,3 +32,5 @@ The methods of deploying OpenVINO to implement predictions are not completely id
 **[Windows](./windows.md)**: introduces the prediction acceleration by using OpenVINO when PaddleX operates on Windows OS with C++ programming language and hardware platform is CPU or VPU
 
 **[Python](./python.md)**: introduces the prediction acceleration by using OpenVINO when PaddleX operates in Python
+  
+**[FAQ](./faq.md)**:introduces the common problems and how to solve it  

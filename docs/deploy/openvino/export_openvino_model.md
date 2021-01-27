@@ -5,9 +5,9 @@ The document describes how to convert Paddle models to Inference Engine of the O
 
 * ONNX 1.6.0+
 * PaddleX 1.2+
-* OpenVINO 2021.1+
+* OpenVINO 2020.4+
 
-**Note**: For PaddleX installation, refer to [PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) document. For OpenVINO installation, refer to [OpenVINO](https://docs.openvinotoolkit.org/latest/index.html) document. For ONNX, install V1.6.0 or later; otherwise, the conversion error may occur.
+**Note**: For PaddleX installation, refer to [PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) document. For OpenVINO installation, refer to [OpenVINO](https://docs.openvinotoolkit.org/latest/index.html) document,Please set init env after install OpenVINO;otherwise,the error 'No module named mo' may ocuur. For ONNX, install V1.6.0 or later; otherwise, the conversion error may occur.
 
 Make sure that the above basic software is installed on your system. **All the following examples are in the working directory `/root/projects/`**.
 
@@ -40,5 +40,7 @@ The conversion parameters are described as follows:
 | --data type(option) | (Optional) FP32 and FP16. The default value is FP32. IR under VPU needs to be FP16. |
 
 **Note**:
-- Because OpenVINO supports the ONNX resize-11 OP from version 2021.1, make sure to download OpenVINO 2021.1+.
+- Because OpenVINO supports the ONNX resize-11 OP from version 2021.1, make sure to download OpenVINO 2021.1+ when use CPU. 
+- Because OpenVINO not supports Range Layer,make sure to download OpenVINO 2020.4 when use VPU. 
+- Please init OpenVINO env first;otherwise,the error 'No module named mo' may ocuur.See [FAQ](./faq.md)
 - In the deployment of YOLOv3 through OpenVINO, due to the OpenVINO’s limitation support for ONNX OPs, the special processing is performed to the last layer of multiclass_nms to export the ONNX model when the Paddle model of YOLOv3 is exported. The final output Box results include the background category (the Paddle model does not include it). Here, in the deployment codes of OpenVINO, the background category is filtered through post-processing.
