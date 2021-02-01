@@ -6,7 +6,7 @@ pycocotools
 visualdl >= 2.0.0b
 paddleslim == 1.1.1
 shapely
-paddle2onnx
+paddle2onnx==0.4
 paddlepaddle-gpu
 opencv-python
 psutil
