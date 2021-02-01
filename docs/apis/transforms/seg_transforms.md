@@ -153,22 +153,23 @@ paddlex.seg.transforms.RandomScaleAspect(min_scale=0.5, aspect_ratio=0.33)
 ```python
 paddlex.seg.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, contrast_range=0.5, contrast_prob=0.5, saturation_range=0.5, saturation_prob=0.5, hue_range=18, hue_prob=0.5)
 ```
-以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。目前支持多通道的RGB图像，例如支持多张RGB图像沿通道轴做concatenate后的图像数据，不支持通道数量不是3的倍数的图像数据。
+以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。
 
-1.对变换的操作顺序进行随机化操作。
-2.按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+【注意】如果输入是uint8/uint16的RGB图像，该数据增强必须在数据增强Normalize之前使用。如果输入是由多张RGB图像数据沿通道方向做拼接而成的图像数据，则会把每3个通道数据视为一张RGB图像数据，依次对每3个通道数据做随机像素内容变化。
 
-【注意】该数据增强必须在数据增强Normalize之前使用。
+1. 对变换的操作顺序进行随机化操作。
+2. 按照1中的顺序以一定的概率对图像进行随机像素内容变换。  
 
 ### 参数
-* **brightness_range** (float): 明亮度因子的范围。默认为0.5。
+* **brightness_range** (float): 明亮度的缩放系数范围。从[1-`brightness_range`, 1+`brightness_range`]中随机取值作为明亮度缩放因子`scale`，按照公式`image = image * scale`调整图像明亮度。默认值为0.5。
 * **brightness_prob** (float): 随机调整明亮度的概率。默认为0.5。
-* **contrast_range** (float): 对比度因子的范围。默认为0.5。
+* **contrast_range** (float): 对比度的缩放系数范围。从[1-`contrast_range`, 1+`contrast_range`]中随机取值作为对比度缩放因子`scale`，按照公式`image = image * scale + (image_mean + 0.5) * (1 - scale)`调整图像对比度。默认为0.5。
 * **contrast_prob** (float): 随机调整对比度的概率。默认为0.5。
-* **saturation_range** (float): 饱和度因子的范围。默认为0.5。
+* **saturation_range** (float): 饱和度的缩放系数范围。从[1-`saturation_range`, 1+`saturation_range`]中随机取值作为饱和度缩放因子`scale`，按照公式`image = gray * (1 - scale) + image * scale`，其中`gray = R * 299/1000 + G * 587/1000+ B * 114/1000`。默认为0.5。
 * **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
-* **hue_range** (int): 色调因子的范围。默认为18。
+* **hue_range** (int): 调整色相角度的差值取值范围。从[-`hue_range`, `hue_range`]中随机取值作为色相角度调整差值`delta`，按照公式`hue = hue + delta`调整色相角度 。默认为18，取值范围[0, 360]。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+
 
 ## Clip
 ```python

@@ -54,6 +54,7 @@ class Compose(SegTransform):
                             'must be equal or larger than 1!')
         self.transforms = transforms
         self.batch_transforms = None
+        self.data_type = np.uint8
         self.to_rgb = False
         # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
         for op in self.transforms:
@@ -84,7 +85,8 @@ class Compose(SegTransform):
             return im_data.transpose((1, 2, 0))
         elif img_format in ['jpeg', 'bmp', 'png']:
             if input_channel == 3:
-                return cv2.imread(img_path)
+                return cv2.imread(img_path, cv2.IMREAD_ANYDEPTH |
+                                  cv2.IMREAD_ANYCOLOR)
             else:
                 return cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
         elif ext == '.npy':
@@ -102,11 +104,10 @@ class Compose(SegTransform):
             im = im_path
         else:
             try:
-                im = Compose.read_img(im_path, input_channel).astype('float32')
+                im = Compose.read_img(im_path, input_channel)
             except:
                 raise ValueError('Can\'t read The image file {}!'.format(
                     im_path))
-        im = im.astype('float32')
         if label is not None:
             if isinstance(label, np.ndarray):
                 if len(label.shape) != 2:
@@ -145,6 +146,8 @@ class Compose(SegTransform):
 
         input_channel = getattr(self, 'input_channel', 3)
         im, label = self.decode_image(im, label, input_channel)
+        self.data_type = im.dtype
+        im = im.astype('float32')
         if self.to_rgb and input_channel == 3:
             im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         if im_info is None:
@@ -153,6 +156,9 @@ class Compose(SegTransform):
             origin_label = label.copy()
         for op in self.transforms:
             if isinstance(op, SegTransform):
+                if op.__class__.__name__ == 'RandomDistort':
+                    op.to_rgb = self.to_rgb
+                    op.data_type = self.data_type
                 outputs = op(im, im_info, label)
                 im = outputs[0]
                 if len(outputs) >= 2:
@@ -160,7 +166,13 @@ class Compose(SegTransform):
                 if len(outputs) == 3:
                     label = outputs[2]
             else:
-                im = execute_imgaug(op, im)
+                import imgaug.augmenters as iaa
+                if im.shape[-1] != 3:
+                    raise Exception(
+                        "Only the 3-channel RGB image is supported in the imgaug operator, but recieved image channel is {}".
+                        format(im.shape[-1]))
+                if isinstance(op, iaa.Augmenter):
+                    im = execute_imgaug(op, im)
                 if label is not None:
                     outputs = (im, im_info, label)
                 else:
@@ -1059,19 +1071,33 @@ class RandomScaleAspect(SegTransform):
 
 
 class RandomDistort(SegTransform):
-    """对图像进行随机失真。
+    """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作
 
     1. 对变换的操作顺序进行随机化操作。
     2. 按照1中的顺序以一定的概率对图像进行随机像素内容变换。
 
+    【注意】如果输入是uint8/uint16的RGB图像，该数据增强必须在数据增强Normalize之前使用。
+    如果输入是由多张RGB图像数据沿通道方向做拼接而成的图像数据，则会把每3个通道数据视为一张RGB图像数据，
+    依次对每3个通道数据做随机像素内容变化。
+
+
     Args:
-        brightness_range (float): 明亮度因子的范围。默认为0.5。
+        brightness_range (float): 明亮度的缩放系数范围。
+            从[1-`brightness_range`, 1+`brightness_range`]中随机取值作为明亮度缩放因子`scale`，
+            按照公式`image = image * scale`调整图像明亮度。默认值为0.5。
         brightness_prob (float): 随机调整明亮度的概率。默认为0.5。
-        contrast_range (float): 对比度因子的范围。默认为0.5。
+        contrast_range (float): 对比度的缩放系数范围。
+            从[1-`contrast_range`, 1+`contrast_range`]中随机取值作为对比度缩放因子`scale`，
+            按照公式`image = image * scale + (image_mean + 0.5) * (1 - scale)`调整图像对比度。默认为0.5。
         contrast_prob (float): 随机调整对比度的概率。默认为0.5。
-        saturation_range (float): 饱和度因子的范围。默认为0.5。
+        saturation_range (float): 饱和度的缩放系数范围。
+            从[1-`saturation_range`, 1+`saturation_range`]中随机取值作为饱和度缩放因子`scale`，
+            按照公式`image = gray * (1 - scale) + image * scale`，
+            其中`gray = R * 299/1000 + G * 587/1000+ B * 114/1000`。默认为0.5。
         saturation_prob (float): 随机调整饱和度的概率。默认为0.5。
-        hue_range (int): 色调因子的范围。默认为18。
+        hue_range (int): 调整色相角度的差值取值范围。
+            从[-`hue_range`, `hue_range`]中随机取值作为色相角度调整差值`delta`，
+            按照公式`hue = hue + delta`调整色相角度 。默认为18，取值范围[0, 360]。
         hue_prob (float): 随机调整色调的概率。默认为0.5。
     """
 
@@ -1108,6 +1134,16 @@ class RandomDistort(SegTransform):
                 当label不为空时，返回的tuple为(im, im_info, label)，分别对应图像np.ndarray数据、
                 存储与图像相关信息的字典和标注图像np.ndarray数据。
         """
+        if im.shape[-1] % 3 != 0:
+            raise Exception(
+                "Only the 3-channel RGB image or the image array composed by concatenating many 3-channel RGB images along the channel axis is supported in the RandomDistort operator, but recieved image channel is {} which cannot be divided by 3.".
+                format(im.shape[-1]))
+
+        if self.data_type not in [np.uint8, np.uint16, np.float32]:
+            raise Exception(
+                "Only the uint8/uint16/float32 RGB image is supported in the RandomDistort operator, but recieved image data type is {}".
+                format(self.data_type))
+
         brightness_lower = 1 - self.brightness_range
         brightness_upper = 1 + self.brightness_range
         contrast_lower = 1 - self.contrast_range
@@ -1121,19 +1157,25 @@ class RandomDistort(SegTransform):
         params_dict = {
             'brightness': {
                 'brightness_lower': brightness_lower,
-                'brightness_upper': brightness_upper
+                'brightness_upper': brightness_upper,
+                'dtype': self.data_type
             },
             'contrast': {
                 'contrast_lower': contrast_lower,
-                'contrast_upper': contrast_upper
+                'contrast_upper': contrast_upper,
+                'dtype': self.data_type
             },
             'saturation': {
                 'saturation_lower': saturation_lower,
-                'saturation_upper': saturation_upper
+                'saturation_upper': saturation_upper,
+                'is_rgb': self.to_rgb,
+                'dtype': self.data_type
             },
             'hue': {
                 'hue_lower': hue_lower,
-                'hue_upper': hue_upper
+                'hue_upper': hue_upper,
+                'is_rgb': self.to_rgb,
+                'dtype': self.data_type
             }
         }
         prob_dict = {

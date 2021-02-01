@@ -47,6 +47,8 @@ class Compose(ClsTransform):
                             'must be equal or larger than 1!')
         self.transforms = transforms
         self.batch_transforms = None
+        self.data_type = np.uint8
+        self.to_rgb = True
         # 检查transforms里面的操作，目前支持PaddleX定义的或者是imgaug操作
         for op in self.transforms:
             if not isinstance(op, ClsTransform):
@@ -56,7 +58,7 @@ class Compose(ClsTransform):
                         "Elements in transforms should be defined in 'paddlex.cls.transforms' or class of imgaug.augmenters.Augmenter, see docs here: https://paddlex.readthedocs.io/zh_CN/latest/apis/transforms/"
                     )
 
-    def __call__(self, im, label=None):
+    def __call__(self, im_file, label=None):
         """
         Args:
             im (str/np.ndarray): 图像路径/图像np.ndarray数据。
@@ -65,28 +67,43 @@ class Compose(ClsTransform):
             tuple: 根据网络所需字段所组成的tuple；
                 字段由transforms中的最后一个数据预处理操作决定。
         """
-        if isinstance(im, np.ndarray):
-            if len(im.shape) != 3:
+        input_channel = getattr(self, 'input_channel', 3)
+        if isinstance(im_file, np.ndarray):
+            if len(im_file.shape) != 3:
                 raise Exception(
-                    "im should be 3-dimension, but now is {}-dimensions".format(
-                        len(im.shape)))
+                    "im should be 3-dimension, but now is {}-dimensions".
+                    format(len(im_file.shape)))
         else:
             try:
-                im_path = im
-                im = cv2.imread(im).astype('float32')
+                if input_channel == 3:
+                    im = cv2.imread(im_file, cv2.IMREAD_ANYDEPTH |
+                                    cv2.IMREAD_ANYCOLOR)
+                else:
+                    im = cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
+                    if im.ndim < 3:
+                        im = np.expand_dims(im, axis=-1)
             except:
                 raise TypeError('Can\'t read The image file {}!'.format(
-                    im_path))
+                    im_file))
+        self.data_type = im.dtype
         im = im.astype('float32')
-        im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        if input_channel == 3 and self.to_rgb:
+            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         for op in self.transforms:
             if isinstance(op, ClsTransform):
+                if op.__class__.__name__ == 'RandomDistort':
+                    op.to_rgb = self.to_rgb
+                    op.data_type = self.data_type
                 outputs = op(im, label)
                 im = outputs[0]
                 if len(outputs) == 2:
                     label = outputs[1]
             else:
                 import imgaug.augmenters as iaa
+                if im.shape[-1] != 3:
+                    raise Exception(
+                        "Only the 3-channel RGB image is supported in the imgaug operator, but recieved image channel is {}".
+                        format(im.shape[-1]))
                 if isinstance(op, iaa.Augmenter):
                     im = execute_imgaug(op, im)
                 outputs = (im, )
@@ -142,8 +159,8 @@ class RandomCrop(ClsTransform):
             tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
                    当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
         """
-        im = random_crop(im, self.crop_size, self.lower_scale, self.lower_ratio,
-                         self.upper_ratio)
+        im = random_crop(im, self.crop_size, self.lower_scale,
+                         self.lower_ratio, self.upper_ratio)
         if label is None:
             return (im, )
         else:
@@ -208,19 +225,39 @@ class RandomVerticalFlip(ClsTransform):
 
 class Normalize(ClsTransform):
     """对图像进行标准化。
-
-    1. 对图像进行归一化到区间[0.0, 1.0]。
-    2. 对图像进行减均值除以标准差操作。
+    1.像素值减去min_val
+    2.像素值除以(max_val-min_val)
+    3.对图像进行减均值除以标准差操作。
 
     Args:
-        mean (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-        std (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+        mean (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。
+        std (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。
+        min_val (list): 图像数据集的最小值。默认值[0, 0, 0]。
+        max_val (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。
 
+    Raises:
+        ValueError: mean或std不是list对象。std包含0。
     """
 
-    def __init__(self, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
+    def __init__(self,
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225],
+                 min_val=[0, 0, 0],
+                 max_val=[255.0, 255.0, 255.0]):
         self.mean = mean
         self.std = std
+        self.min_val = min_val
+        self.max_val = max_val
+
+        if not (isinstance(self.mean, list) and isinstance(self.std, list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
+        from functools import reduce
+        if reduce(lambda x, y: x * y, self.std) == 0:
+            raise ValueError('{}: std is invalid!'.format(self))
 
     def __call__(self, im, label=None):
         """
@@ -234,7 +271,7 @@ class Normalize(ClsTransform):
         """
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std)
+        im = normalize(im, mean, std, self.min_val, self.max_val)
         if label is None:
             return (im, )
         else:
@@ -273,12 +310,14 @@ class ResizeByShort(ClsTransform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale * im_long_size) > self.max_size:
+        if self.max_size > 0 and np.round(scale *
+                                          im_long_size) > self.max_size:
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im = cv2.resize(
-            im, (resized_width, resized_height), interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height),
+            interpolation=cv2.INTER_LINEAR)
 
         if label is None:
             return (im, )
@@ -351,19 +390,30 @@ class RandomRotate(ClsTransform):
 
 
 class RandomDistort(ClsTransform):
-    """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。
+    """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作
 
     1. 对变换的操作顺序进行随机化操作。
-    2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。
+    2. 按照1中的顺序以一定的概率对图像进行随机像素内容变换。
+
+    【注意】如果输入是uint8/uint16的RGB图像，该数据增强必须在数据增强Normalize之前使用。
 
     Args:
-        brightness_range (float): 明亮度因子的范围。默认为0.9。
+        brightness_range (float): 明亮度的缩放系数范围。
+            从[1-`brightness_range`, 1+`brightness_range`]中随机取值作为明亮度缩放因子`scale`，
+            按照公式`image = image * scale`调整图像明亮度。默认值为0.9。
         brightness_prob (float): 随机调整明亮度的概率。默认为0.5。
-        contrast_range (float): 对比度因子的范围。默认为0.9。
+        contrast_range (float): 对比度的缩放系数范围。
+            从[1-`contrast_range`, 1+`contrast_range`]中随机取值作为对比度缩放因子`scale`，
+            按照公式`image = image * scale + (image_mean + 0.5) * (1 - scale)`调整图像对比度。默认为0.9。
         contrast_prob (float): 随机调整对比度的概率。默认为0.5。
-        saturation_range (float): 饱和度因子的范围。默认为0.9。
+        saturation_range (float): 饱和度的缩放系数范围。
+            从[1-`saturation_range`, 1+`saturation_range`]中随机取值作为饱和度缩放因子`scale`，
+            按照公式`image = gray * (1 - scale) + image * scale`，
+            其中`gray = R * 299/1000 + G * 587/1000+ B * 114/1000`。默认为0.9。
         saturation_prob (float): 随机调整饱和度的概率。默认为0.5。
-        hue_range (int): 色调因子的范围。默认为18。
+        hue_range (int): 调整色相角度的差值取值范围。
+            从[-`hue_range`, `hue_range`]中随机取值作为色相角度调整差值`delta`，
+            按照公式`hue = hue + delta`调整色相角度 。默认为18，取值范围[0, 360]。
         hue_prob (float): 随机调整色调的概率。默认为0.5。
     """
 
@@ -395,6 +445,16 @@ class RandomDistort(ClsTransform):
             tuple: 当label为空时，返回的tuple为(im, )，对应图像np.ndarray数据；
                    当label不为空时，返回的tuple为(im, label)，分别对应图像np.ndarray数据、图像类别id。
         """
+        if im.shape[-1] != 3:
+            raise Exception(
+                "Only the 3-channel RGB image is supported in the RandomDistort operator, but recieved image channel is {}".
+                format(im.shape[-1]))
+
+        if self.data_type not in [np.uint8, np.uint16, np.float32]:
+            raise Exception(
+                "Only the uint8/uint16/float32 RGB image is supported in the RandomDistort operator, but recieved image data type is {}".
+                format(self.data_type))
+
         brightness_lower = 1 - self.brightness_range
         brightness_upper = 1 + self.brightness_range
         contrast_lower = 1 - self.contrast_range
@@ -408,19 +468,25 @@ class RandomDistort(ClsTransform):
         params_dict = {
             'brightness': {
                 'brightness_lower': brightness_lower,
-                'brightness_upper': brightness_upper
+                'brightness_upper': brightness_upper,
+                'dtype': self.data_type
             },
             'contrast': {
                 'contrast_lower': contrast_lower,
-                'contrast_upper': contrast_upper
+                'contrast_upper': contrast_upper,
+                'dtype': self.data_type
             },
             'saturation': {
                 'saturation_lower': saturation_lower,
-                'saturation_upper': saturation_upper
+                'saturation_upper': saturation_upper,
+                'is_rgb': self.to_rgb,
+                'dtype': self.data_type
             },
             'hue': {
                 'hue_lower': hue_lower,
-                'hue_upper': hue_upper
+                'hue_upper': hue_upper,
+                'is_rgb': self.to_rgb,
+                'dtype': self.data_type
             }
         }
         prob_dict = {

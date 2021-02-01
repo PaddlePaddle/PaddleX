@@ -120,39 +120,76 @@ def bgr2rgb(im):
     return im[:, :, ::-1]
 
 
-def hue(im, hue_lower, hue_upper):
+def hue(im, hue_lower, hue_upper, is_rgb=False, dtype=np.uint8):
     delta = np.random.uniform(hue_lower, hue_upper)
-    u = np.cos(delta * np.pi)
-    w = np.sin(delta * np.pi)
-    bt = np.array([[1.0, 0.0, 0.0], [0.0, u, -w], [0.0, w, u]])
-    tyiq = np.array([[0.299, 0.587, 0.114], [0.596, -0.274, -0.321],
-                     [0.211, -0.523, 0.311]])
-    ityiq = np.array([[1.0, 0.956, 0.621], [1.0, -0.272, -0.647],
-                      [1.0, -1.107, 1.705]])
-    t = np.dot(np.dot(ityiq, bt), tyiq).T
-    im = np.dot(im, t)
+    if is_rgb:
+        im = cv2.cvtColor(im, cv2.COLOR_RGB2HSV)
+    else:
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    im[:, :, 0] = im[:, :, 0] + delta
+    im[:, :, 0] = np.clip(im[:, :, 0], 0, 360.)
+    if is_rgb:
+        im = cv2.cvtColor(im, cv2.COLOR_HSV2RGB)
+    else:
+        im = cv2.cvtColor(im, cv2.COLOR_HSV2BGR)
+    if dtype == np.uint8:
+        im = np.clip(im, 0., 255.)
+    elif dtype == np.uint16:
+        im = np.clip(im, 0., 65535.)
+    elif dtype == np.float32:
+        im = np.clip(im, 0., 1.)
     return im
 
 
-def saturation(im, saturation_lower, saturation_upper):
+def saturation(im,
+               saturation_lower,
+               saturation_upper,
+               is_rgb=False,
+               dtype=np.uint8):
+    if is_rgb:
+        gray_scale = np.array([[[0.299, 0.587, 0.114]]], dtype=np.float32)
+    else:
+        gray_scale = np.array([[[0.114, 0.587, 0.299]]], dtype=np.float32)
     delta = np.random.uniform(saturation_lower, saturation_upper)
-    gray = im * np.array([[[0.299, 0.587, 0.114]]], dtype=np.float32)
+    gray = im * gray_scale
     gray = gray.sum(axis=2, keepdims=True)
     gray *= (1.0 - delta)
     im *= delta
     im += gray
+    if dtype == np.uint8:
+        im = np.clip(im, 0., 255.)
+    elif dtype == np.uint16:
+        im = np.clip(im, 0., 65535.)
+    elif dtype == np.float32:
+        im = np.clip(im, 0., 1.)
     return im
 
 
-def contrast(im, contrast_lower, contrast_upper):
+def contrast(im, contrast_lower, contrast_upper, dtype=np.uint8):
     delta = np.random.uniform(contrast_lower, contrast_upper)
+    im_mean = im.mean() + 0.5
+    im1 = np.full_like(im, im_mean)
     im *= delta
+    im += im1 * (1 - delta)
+    if dtype == np.uint8:
+        im = np.clip(im, 0., 255.)
+    elif dtype == np.uint16:
+        im = np.clip(im, 0., 65535.)
+    elif dtype == np.float32:
+        im = np.clip(im, 0., 1.)
     return im
 
 
-def brightness(im, brightness_lower, brightness_upper):
+def brightness(im, brightness_lower, brightness_upper, dtype=np.uint8):
     delta = np.random.uniform(brightness_lower, brightness_upper)
-    im += delta
+    im *= delta
+    if dtype == np.uint8:
+        im = np.clip(im, 0., 255.)
+    elif dtype == np.uint16:
+        im = np.clip(im, 0., 65535.)
+    elif dtype == np.float32:
+        im = np.clip(im, 0., 1.)
+
     return im
 
 
