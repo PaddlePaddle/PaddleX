@@ -137,8 +137,9 @@ The evaluation log for semantic partitioning includes the fields `miou`, `catego
 | -------------- | --------------------------------------------- |
 | mIOU | Average value of each type of IoU |
 | category_iou | Various types of IoU |
-| macc | Average accuracy, that is, the number of pixels correctly predicted / total number of pixels |
+| oacc | Overall accuracy, that is, the number of pixels correctly predicted / total number of pixels |
 | category_acc | Accuracy for each category, that is, the number of pixels correctly predicted for each category / total number of pixels predicted for that category |
-| Kappa | kappa coefficient. It is used for consistency validation. |
+| Kappa | kappa coefficient. It is used for consistency validation |
+| category_F1-score | F1-score for each category, F1-score is 2 * (precision * recall) / (precision + recall)，precision is also the accuracy explained above and recall rate is the number of pixels correctly predicted for each category / total number of pixels of that category |
 
 ![](images/seg_eval.png)
