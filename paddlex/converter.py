@@ -267,7 +267,7 @@ def export_onnx_model(model, save_file, opset_version=10):
         import paddle2onnx 
     except:
         logging.error(
-            "You need to install paddle2onnx first, pip install paddle2onnx")
+            "You need to install paddle2onnx first, pip install paddle2onnx==0.4")
     import paddle2onnx as p2o
     if opset_version == 10 and model.__class__.__name__ == "YOLOv3":
         logging.warning(
