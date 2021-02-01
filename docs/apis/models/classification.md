@@ -99,7 +99,7 @@ batch_predict(self, img_file_list, transforms=None, topk=1)
 
 ## 其它分类模型
 
-PaddleX提供了共计22种分类模型，所有分类模型均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](https://paddlex.readthedocs.io/zh_CN/latest/appendix/model_zoo.html)。
+PaddleX提供了共计22种分类模型，所有分类模型均提供同`ResNet50`相同的训练`train`，评估`evaluate`和预测`predict`接口，各模型效果可参考[模型库](../../appendix/model_zoo.md)。
 
 | 模型              | 接口                    |
 | :---------------- | :---------------------- |
