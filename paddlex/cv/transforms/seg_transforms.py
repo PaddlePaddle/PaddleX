@@ -72,10 +72,13 @@ class Compose(SegTransform):
             try:
                 import gdal
             except:
-                six.reraise(*sys.exc_info())
-                raise Exception(
-                    "Please refer to https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/multi-channel_remote_sensing/README.md to install gdal"
-                )
+                try:
+                    from osgeo import gdal
+                except:
+                    raise Exception(
+                        "Please refer to https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/multi-channel_remote_sensing/README.md to install gdal"
+                    )
+                    six.reraise(*sys.exc_info())
 
             dataset = gdal.Open(img_path)
             if dataset == None:
