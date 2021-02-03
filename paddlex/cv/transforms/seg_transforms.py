@@ -1158,24 +1158,20 @@ class RandomDistort(SegTransform):
             'brightness': {
                 'brightness_lower': brightness_lower,
                 'brightness_upper': brightness_upper,
-                'dtype': self.data_type
             },
             'contrast': {
                 'contrast_lower': contrast_lower,
                 'contrast_upper': contrast_upper,
-                'dtype': self.data_type
             },
             'saturation': {
                 'saturation_lower': saturation_lower,
                 'saturation_upper': saturation_upper,
                 'is_rgb': self.to_rgb,
-                'dtype': self.data_type
             },
             'hue': {
                 'hue_lower': hue_lower,
                 'hue_upper': hue_upper,
                 'is_rgb': self.to_rgb,
-                'dtype': self.data_type
             }
         }
         prob_dict = {
