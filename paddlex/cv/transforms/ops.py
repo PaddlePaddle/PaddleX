@@ -159,7 +159,7 @@ def saturation(im, saturation_lower, saturation_upper, is_rgb=False):
 
 def contrast(im, contrast_lower, contrast_upper):
     delta = np.random.uniform(contrast_lower, contrast_upper)
-    im_mean = im.mean() + 0.5
+    im_mean = im.mean()
     im1 = np.full_like(im, im_mean)
     im *= delta
     im += im1 * (1 - delta)
