@@ -130,7 +130,7 @@ ProjectType = Enum('ProjectType',
 'detection',#检测
 'segmentation',#分割
 'instance_segmentation',#实例分割
-'remote_segmentation'#摇杆分割
+'remote_segmentation'#遥感分割
 ),start=0)
 ```
 
