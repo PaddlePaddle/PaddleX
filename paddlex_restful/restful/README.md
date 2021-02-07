@@ -1,9 +1,9 @@
 # RESTful API
 本目录为PaddleX RESTful API的代码，使用教程请参考
-- [简介](../../docs/gui/introduction_restful.md)
-- [快速开始](../../docs/gui/quick_start.md)
-- [api详细介绍](../../docs/gui/restful_api.md)
-- [自定义数据结构](../../docs/gui/data_struct.md)
+- [简介](../../docs/gui/restful/introduction_restful.md)
+- [快速开始](../../docs/gui/restful/quick_start.md)
+- [api详细介绍](../../docs/gui/restful/restful_api.md)
+- [自定义数据结构](../../docs/gui/restful/data_struct.md)
 
 ## 文档目录结构
 
