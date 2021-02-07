@@ -3,11 +3,12 @@
 
 ## 环境依赖
 
+* Paddle2ONNX 0.4
 * ONNX 1.6.0+
-* PaddleX 1.2+
+* PaddleX 1.3+
 * OpenVINO 2020.4+
 
-**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，ONNX请安装1.6.0以上版本否则会出现转模型错误。  
+**说明**：PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO](https://docs.openvinotoolkit.org/latest/index.html)，ONNX请安装1.6.0以上版本否则会出现转模型错误, Paddle2ONNX请安装0.4版本。  
 **注意**：安装OpenVINO时请务必安装官网教程初始化OpenVINO运行环境，并安装相关依赖,否则会出现"No module named mo"等问题  
 
 请确保系统已经安装好上述基本软件，**下面所有示例以工作目录 `/root/projects/`演示**。
