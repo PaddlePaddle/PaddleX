@@ -143,13 +143,14 @@ class BaseAPI:
             mode='quant',
             input_channel=input_channel)
         dataset.num_samples = batch_size * batch_num
-        try:
+        import paddle
+        version = paddle.__version__.strip().split('.')
+        if version[0] == '2' or (version[0] == '0' and
+                                 hasattr(paddle, 'enable_static')):
+            from .slim.post_quantization import PaddleXPostTrainingQuantizationV2 as PaddleXPostTrainingQuantization
+        else:
             from .slim.post_quantization import PaddleXPostTrainingQuantization
             PaddleXPostTrainingQuantization._collect_target_varnames
-        except:
-            raise Exception(
-                "Model Quantization is not available, try to upgrade your paddlepaddle>=1.8.0"
-            )
         is_use_cache_file = True
         if cache_dir is None:
             is_use_cache_file = False
