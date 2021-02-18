@@ -63,7 +63,7 @@
 
 ### 模型训练
 
-[环境前置依赖](./gpu_solution.md#%E5%89%8D%E7%BD%AE%E4%BE%9D%E8%B5%96)、[下载PaddleX源码](./gpu_solution.md#1-%E4%B8%8B%E8%BD%BDpaddlex%E6%BA%90%E7%A0%81)、[下载数据集](./gpu_solution.md#2-%E4%B8%8B%E8%BD%BD%E6%95%B0%E6%8D%AE%E9%9B%86)与GPU端是一样的，可点击文档[GPU端最终解决方案](./gpu_solution.md)查看，在此不做赘述。
+[环境前置依赖](./gpu_solution.html#id1)、[下载PaddleX源码](./gpu_solution.html#paddlex)、[下载数据集](./gpu_solution.html#id3)与GPU端是一样的，可点击文档[GPU端最终解决方案](./gpu_solution.md)查看，在此不做赘述。
 
 如果不想再次训练模型，可以直接下载已经训练好的模型完成后面的模型测试和部署推理：
 
@@ -92,7 +92,7 @@ python params_analysis.py
 python train_pruned_yolov3.py
 ```
 
-[分析预测错误的原因](./gpu_solution.md#4-%E5%88%86%E6%9E%90%E9%A2%84%E6%B5%8B%E9%94%99%E8%AF%AF%E7%9A%84%E5%8E%9F%E5%9B%A0)、[统计图片级召回率和误检率](./gpu_solution.md#5-%E7%BB%9F%E8%AE%A1%E5%9B%BE%E7%89%87%E7%BA%A7%E5%8F%AC%E5%9B%9E%E7%8E%87%E5%92%8C%E8%AF%AF%E6%A3%80%E7%8E%87)、[模型测试](./gpu_solution.md#6-%E6%A8%A1%E5%9E%8B%E6%B5%8B%E8%AF%95)这些步骤与GPU端是一样的，可点击文档[GPU端最终解决方案](./gpu_solution.md)查看，在此不做赘述。
+[分析预测错误的原因](./gpu_solution.html#id6)、[统计图片级召回率和误检率](./gpu_solution.html#id7)、[模型测试](./gpu_solution.html#id8)这些步骤与GPU端是一样的，可点击文档[GPU端最终解决方案](./gpu_solution.md)查看，在此不做赘述。
 
 ### 推理部署
 
