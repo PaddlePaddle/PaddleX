@@ -34,10 +34,17 @@ if version[0] == '1':
             format(__version__))
     import paddlehub as hub
     if hub.__version__.strip().split('.')[0] > '1':
-        raise Exception("Try to reinstall Paddlehub by 'pip install paddlehub==1.8.2' while paddlepaddle < 2.0")
+        raise Exception(
+            "Try to reinstall Paddlehub by 'pip install paddlehub==1.8.2' while paddlepaddle < 2.0"
+        )
 
 if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
+
+# matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+# or matplotlib.backends is imported for the first time
+import matplotlib
+matplotlib.use('Agg')
 
 from .utils.utils import get_environ_info
 from . import cv
