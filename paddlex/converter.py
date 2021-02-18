@@ -267,8 +267,14 @@ def export_onnx_model(model, save_file, opset_version=10):
         import paddle2onnx 
     except:
         logging.error(
-            "You need to install paddle2onnx first, pip install paddle2onnx")
+            "You need to install paddle2onnx first, pip install paddle2onnx==0.4")
+
     import paddle2onnx as p2o
+
+    if p2o.__version__ != '0.4':
+        logging.error(
+            "You need install paddle2onnx==0.4, but the version of paddle2onnx is {}".format(p2o.__version__))
+
     if opset_version == 10 and model.__class__.__name__ == "YOLOv3":
         logging.warning(
             "Export for openVINO by default, the output of multiclass_nms exported to onnx will contains background. If you need onnx completely consistent with paddle, please use paddle2onnx to export"

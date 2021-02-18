@@ -44,6 +44,8 @@ The design of PaddleX Python API taking into account of comprehensive functions,
 > - cython
 > - pycocotools
 
+You shuould use command of python3 and pip3 instead if you have python2 installed.
+
 ```
 pip install paddlex -i https://mirror.baidu.com/pypi/simple
 ```

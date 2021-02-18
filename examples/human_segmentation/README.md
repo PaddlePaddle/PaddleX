@@ -72,6 +72,8 @@ python data/download_data.py
 * Python >= 3.5
 * PaddleX >= 1.0.0
 
+推荐用python3.8.7，如果已经安装了python2，下面的所有python及pip命令请用python3及pip3替代，否则会失败。
+
 安装的相关问题参考[PaddleX安装](../../docs/install.md)
 
 * 下载PaddleX源码：
