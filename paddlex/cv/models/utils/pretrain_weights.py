@@ -267,10 +267,10 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
                 "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
                 format(url),
                 exit=False)
-            if isinstance(hub.ResourceNotFoundError):
+            if isinstance(e, hub.ResourceNotFoundError):
                 raise Exception("Resource for backbone {} not found".format(
                     backbone))
-            elif isinstance(hub.ServerConnectionError):
+            elif isinstance(e, hub.ServerConnectionError):
                 raise Exception(
                     "Cannot get reource for backbone {}, please check your internet connection"
                     .format(backbone))
@@ -300,10 +300,10 @@ def get_pretrain_weights(flag, class_name, backbone, save_dir):
                 "Couldn't download pretrain weight, you can download it manualy from {} (decompress the file if it is a compressed file), and set pretrain weights by your self".
                 format(url),
                 exit=False)
-            if isinstance(hub.ResourceNotFoundError):
+            if isinstance(e, hub.ResourceNotFoundError):
                 raise Exception("Resource for backbone {} not found".format(
                     backbone))
-            elif isinstance(hub.ServerConnectionError):
+            elif isinstance(e, hub.ServerConnectionError):
                 raise Exception(
                     "Cannot get reource for backbone {}, please check your internet connection"
                     .format(backbone))
