@@ -168,6 +168,11 @@ class EasyDataDet(VOCDetection):
         logging.info("{} samples in file {}".format(
             len(self.file_list), file_list))
         self.num_samples = len(self.file_list)
+        # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+        # or matplotlib.backends is imported for the first time
+        # pycocotools import matplotlib
+        import matplotlib
+        matplotlib.use('Agg')
         from pycocotools.coco import COCO
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations

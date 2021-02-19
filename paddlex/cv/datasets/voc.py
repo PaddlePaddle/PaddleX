@@ -54,6 +54,11 @@ class VOCDetection(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
+        # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+        # or matplotlib.backends is imported for the first time
+        # pycocotools import matplotlib
+        import matplotlib
+        matplotlib.use('Agg')
         from pycocotools.coco import COCO
         super(VOCDetection, self).__init__(
             transforms=transforms,
