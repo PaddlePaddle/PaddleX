@@ -107,6 +107,11 @@ def coco_bbox_eval(results,
                    with_background=True,
                    is_bbox_normalized=False):
     assert 'bbox' in results[0]
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
 
     cat_ids = coco_gt.getCatIds()
@@ -139,6 +144,11 @@ def loadRes(coco_obj, anns):
     :param   resFile (str)     : file name of result file
     :return: res (obj)         : result api object
     """
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
     import pycocotools.mask as maskUtils
     import time
@@ -198,6 +208,11 @@ def loadRes(coco_obj, anns):
 
 def mask_eval(results, coco_gt, resolution, thresh_binarize=0.5):
     assert 'mask' in results[0]
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
 
     clsid2catid = {i + 1: v for i, v in enumerate(coco_gt.getCatIds())}
@@ -229,6 +244,11 @@ def cocoapi_eval(anns,
         max_dets: COCO evaluation maxDets.
     """
     assert coco_gt != None or anno_file != None
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
 
@@ -340,6 +360,11 @@ def bbox2out(results, clsid2catid, is_bbox_normalized=False):
 
 
 def mask2out(results, clsid2catid, resolution, thresh_binarize=0.5):
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     import pycocotools.mask as mask_util
     scale = (resolution + 2.0) / resolution
 
@@ -465,6 +490,11 @@ def voc_bbox_eval(results,
     assert 'bbox' in results[0]
 
     logging.debug("Start evaluate...")
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
 
     cat_ids = coco_gt.getCatIds()
@@ -843,6 +873,11 @@ def analyze_individual_category(k, cocoDt, cocoGt, catId, iou_type):
 
     """
 
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
 
@@ -922,6 +957,11 @@ def coco_error_analysis(eval_details_file=None,
     """
 
     import multiprocessing as mp
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
 
@@ -972,7 +1012,8 @@ def coco_error_analysis(eval_details_file=None,
         thread_pool = mp.pool.ThreadPool(thread_num)
         args = [(k, cocoDt, cocoGt, catId, iou_type)
                 for k, catId in enumerate(catIds)]
-        analyze_results = thread_pool.starmap(analyze_individual_category, args)
+        analyze_results = thread_pool.starmap(analyze_individual_category,
+                                              args)
         for k, catId in enumerate(catIds):
             nm = cocoGt.loadCats(catId)[0]
             logging.info('--------------saving {}-{}---------------'.format(
@@ -1001,6 +1042,11 @@ def coco_error_analysis(eval_details_file=None,
     coco_gt = COCO()
     coco_gt.dataset = gt
     coco_gt.createIndex()
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     from pycocotools.cocoeval import COCOeval
     if pred_bbox is not None:
         coco_dt = loadRes(coco_gt, pred_bbox)

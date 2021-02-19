@@ -15,12 +15,18 @@
 import os.path as osp
 import random
 import json
-from pycocotools.coco import COCO
+
 from .utils import MyEncoder
 import paddlex.utils.logging as logging
 
 
 def split_coco_dataset(dataset_dir, val_percent, test_percent, save_dir):
+    # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+    # or matplotlib.backends is imported for the first time
+    # pycocotools import matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
+    from pycocotools.coco import COCO
     if not osp.exists(osp.join(dataset_dir, "annotations.json")):
         logging.error("\'annotations.json\' is not found in {}!".format(
             dataset_dir))
