@@ -15,7 +15,6 @@
 import numpy as np
 import os.path as osp
 import paddle.fluid as fluid
-#import paddlehub as hub
 import paddlex
 
 sensitivities_data = {
@@ -130,25 +129,26 @@ def get_sensitivities(flag, model, save_dir):
             model_type)
         url = sensitivities_data[model_type]
         fname = osp.split(url)[-1]
-        paddlex.utils.download(url, path=save_dir)
-        return osp.join(save_dir, fname)
+        if getattr(paddlex, 'gui_mode', False):
+            paddlex.utils.download(url, path=save_dir)
+            return osp.join(save_dir, fname)
 
-#        try:
-#            hub.download(fname, save_path=save_dir)
-#        except Exception as e:
-#            if isinstance(e, hub.ResourceNotFoundError):
-#                raise Exception(
-#                    "Resource for model {}(key='{}') not found".format(
-#                        model_type, fname))
-#            elif isinstance(e, hub.ServerConnectionError):
-#                raise Exception(
-#                    "Cannot get reource for model {}(key='{}'), please check your internet connection"
-#                    .format(model_type, fname))
-#            else:
-#                raise Exception(
-#                    "Unexpected error, please make sure paddlehub >= 1.6.2 {}".
-#                    format(str(e)))
-#        return osp.join(save_dir, fname)
+        import paddlehub as hub
+        try:
+            hub.download(fname, save_path=save_dir)
+        except Exception as e:
+            if isinstance(e, hub.ResourceNotFoundError):
+                raise Exception("Resource for model {}(key='{}') not found".
+                                format(model_type, fname))
+            elif isinstance(e, hub.ServerConnectionError):
+                raise Exception(
+                    "Cannot get reource for model {}(key='{}'), please check your internet connection"
+                    .format(model_type, fname))
+            else:
+                raise Exception(
+                    "Unexpected error, please make sure paddlehub >= 1.6.2 {}".
+                    format(str(e)))
+        return osp.join(save_dir, fname)
     else:
         raise Exception(
             "sensitivities need to be defined as directory path or `DEFAULT`(download sensitivities automatically)."

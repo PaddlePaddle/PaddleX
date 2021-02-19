@@ -14,7 +14,8 @@
 
 from __future__ import absolute_import
 
-__version__ = '1.3.5'
+__version__ = '1.3.6'
+gui_mode = True
 
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
@@ -32,11 +33,9 @@ if version[0] == '1':
         raise Exception(
             'For running paddlex(v{}), Version of paddlepaddle should be greater than 1.8.3'.
             format(__version__))
-    import paddlehub as hub
-    if hub.__version__.strip().split('.')[0] > '1':
-        raise Exception(
-            "Try to reinstall Paddlehub by 'pip install paddlehub==1.8.2' while paddlepaddle < 2.0"
-        )
+    #import paddlehub as hub
+    #if hub.__version__.strip().split('.')[0] > '1':
+    #    raise Exception("Try to reinstall Paddlehub by 'pip install paddlehub==1.8.2' while paddlepaddle < 2.0")
 
 if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
