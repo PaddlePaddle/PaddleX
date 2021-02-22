@@ -39,7 +39,7 @@ eval_dataset = pdx.datasets.ImageNet(
 # 可使用VisualDL查看训练指标，参考https://paddlex.readthedocs.io/zh_CN/develop/train/visualdl.html
 model = pdx.cls.MobileNetV3_small_ssld(num_classes=len(train_dataset.labels))
 
-# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-imagenet
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/classification.html#train
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=10,
