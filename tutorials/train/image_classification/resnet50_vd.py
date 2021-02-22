@@ -37,7 +37,7 @@ eval_dataset = pdx.datasets.ImageNet(
 
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://paddlex.readthedocs.io/zh_CN/develop/train/visualdl.html
-model = pdx.cls.MobileNetV3_small_ssld(num_classes=len(train_dataset.labels))
+model = pdx.cls.ResNet50_vd(num_classes=len(train_dataset.labels))
 
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/classification.html#train
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
@@ -48,5 +48,5 @@ model.train(
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.025,
-    save_dir='output/mobilenetv3_small_ssld',
+    save_dir='output/resnet50_vd_ssld',
     use_vdl=True)

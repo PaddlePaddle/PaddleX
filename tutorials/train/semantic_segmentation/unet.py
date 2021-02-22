@@ -40,7 +40,7 @@ eval_dataset = pdx.datasets.SegDataset(
 # 可使用VisualDL查看训练指标，参考https://paddlex.readthedocs.io/zh_CN/develop/train/visualdl.html
 num_classes = len(train_dataset.labels)
 
-# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p
+# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-unet
 model = pdx.seg.UNet(num_classes=num_classes)
 
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#train
