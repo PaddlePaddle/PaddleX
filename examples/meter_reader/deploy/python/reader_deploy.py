@@ -214,7 +214,7 @@ class MeterReader:
             im_size = min(meter_num, i + seg_batch_size)
             meter_images = list()
             for j in range(i, im_size):
-                meter_images.append(resized_meters[j - i])
+                meter_images.append(resized_meters[j])
             # Segment scales and point in each meter area
             result = self.segmenter.batch_predict(
                 transforms=self.seg_transforms, img_file_list=meter_images)
