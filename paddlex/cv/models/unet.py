@@ -154,7 +154,7 @@ class UNet(BaseModel):
                     "set pretrained_weights to be None.")
                 pretrained_weights = 'COCO'
         pretrained_dir = osp.join(save_dir, 'pretrain')
-        pretrained_dir = osp.join(save_dir, self.__class__.__name__)
+        pretrained_dir = osp.join(pretrained_dir, self.__class__.__name__)
         self.net_initialize(
             pretrained_weights=pretrained_weights, save_dir=pretrained_dir)
 
