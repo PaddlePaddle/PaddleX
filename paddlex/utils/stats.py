@@ -60,6 +60,16 @@ class TrainingStats(object):
 
         return stats
 
+    def get_numeric(self, extras=None):
+        stats = collections.OrderedDict()
+        if extras:
+            for k, v in extras.items():
+                stats[k] = v
+        for k, v in self.meters.items():
+            stats[k] = v.avg()
+
+        return stats
+
     def log(self, extras=None):
         d = self.get(extras)
         strs = []

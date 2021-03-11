@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .unet import UNet
+from .cls import BaseClassifier

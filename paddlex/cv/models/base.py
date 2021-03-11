@@ -16,9 +16,7 @@ import os
 import os.path as osp
 import time
 import copy
-import json
 import math
-import numpy as np
 from collections import OrderedDict
 import yaml
 import paddle
@@ -27,7 +25,7 @@ import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            get_pretrained_weights, load_pretrained_weights,
-                           SmoothedValue, TrainingStats)
+                           SmoothedValue, TrainingStats, EarlyStop)
 import paddlex.utils.logging as logging
 
 
@@ -44,12 +42,16 @@ class BaseModel:
         self.train_data_loader = None
         self.eval_data_loader = None
         self.eval_metrics = None
+        self.test_transforms = None
+        # 是否使用多卡间同步BatchNorm均值和方差
+        self.sync_bn = False
         self.status = 'Normal'
+        # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
 
     def net_initialize(self, pretrained_weights=None, save_dir='.'):
         if pretrained_weights is not None and \
-            not os.path.exists(pretrained_weights):
+                not os.path.exists(pretrained_weights):
             if not os.path.isdir(save_dir):
                 if os.path.exists(save_dir):
                     os.remove(save_dir)
@@ -125,7 +127,7 @@ class BaseModel:
         logging.info("Model saved in {}.".format(save_dir))
 
     def build_data_loader(self, dataset, batch_size, mode='train'):
-        batch_size_each_card = get_single_card_bs(batch_size)
+        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         if mode == 'eval':
             batch_size = batch_size_each_card * paddlex.env_info['num']
             total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
@@ -134,7 +136,7 @@ class BaseModel:
                 format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(
-                'The amount of datset({}) must be larger than batch size({}).'
+                'The volume of datset({}) must be larger than batch size({}).'
                 .format(dataset.num_samples, batch_size))
 
         # TODO detection eval阶段需做判断
@@ -143,13 +145,14 @@ class BaseModel:
             batch_size=batch_size_each_card,
             shuffle=dataset.shuffle,
             drop_last=mode == 'train')
-        train_data_loader = DataLoader(
+        loader = DataLoader(
             dataset,
             batch_sampler=batch_sampler,
             collate_fn=dataset.batch_transforms,
             num_workers=dataset.num_workers,
             return_list=True)
-        return train_data_loader
+
+        return loader
 
     def train_loop(self,
                    num_epochs,
@@ -159,7 +162,6 @@ class BaseModel:
                    save_interval_epochs=1,
                    log_interval_steps=10,
                    save_dir='output',
-                   use_vdl=False,
                    early_stop=False,
                    early_stop_patience=5):
         arrange_transforms(
@@ -167,7 +169,6 @@ class BaseModel:
             transforms=train_dataset.transforms,
             mode='train')
 
-        self.net.train()
         nranks = paddle.distributed.ParallelEnv().nranks
         local_rank = paddle.distributed.ParallelEnv().local_rank
         if nranks > 1:
@@ -179,14 +180,17 @@ class BaseModel:
             else:
                 ddp_net = paddle.DataParallel(self.net)
 
-        # 构建train_data_loader
+        thresh = .0001
+        if early_stop:
+            earlystop = EarlyStop(early_stop_patience, thresh)
+
         self.train_data_loader = self.build_data_loader(
-            train_dataset, train_batch_size, 'train')
+            train_dataset, batch_size=train_batch_size, mode='train')
+
         if eval_dataset is not None:
             self.test_transforms = copy.deepcopy(eval_dataset.transforms)
 
         start_epoch = self.completed_epochs
-
         train_step_time = SmoothedValue(log_interval_steps)
         train_step_each_epoch = math.floor(train_dataset.num_samples /
                                            train_batch_size)
@@ -200,8 +204,10 @@ class BaseModel:
         best_model_epoch = -1
         current_step = 0
         for i in range(start_epoch, num_epochs):
+            self.net.train()
             train_avg_metrics = TrainingStats()
             step_time_tic = time.time()
+
             for step, data in enumerate(self.train_data_loader()):
                 if nranks > 1:
                     outputs = self.run(ddp_net, data, mode='train')
@@ -210,11 +216,11 @@ class BaseModel:
                 loss = outputs['loss']
                 loss.backward()
                 self.optimizer.step()
+                self.optimizer.clear_grad()
                 lr = self.optimizer.get_lr()
                 if isinstance(self.optimizer._learning_rate,
                               paddle.optimizer.lr.LRScheduler):
                     self.optimizer._learning_rate.step()
-                self.net.clear_gradients()
 
                 train_avg_metrics.update(outputs)
                 outputs['lr'] = lr
@@ -244,22 +250,23 @@ class BaseModel:
                                 train_step_each_epoch,
                                 dict2str(train_step_metrics),
                                 round(avg_step_time, 2), seconds_to_hms(eta)))
-            logging.info('[TRAIN] Epoch {} finished, {} .'.format(
-                i + 1, train_avg_metrics.log()))
-            self.completed_epochs += 1
-            current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
-            if local_rank == 0:
-                self.save_model(save_dir=current_save_dir)
 
+            logging.info('[TRAIN] Epoch {} finished, {} .'
+                         .format(i + 1, train_avg_metrics.log()))
+            self.completed_epochs += 1
+
+            # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
-                    self.eval_metrics = self.evaluate(
-                        eval_dataset=eval_dataset, batch_size=eval_batch_size)
-                    self.net.train()
+                    self.eval_metrics, eval_details = self.evaluate(
+                        eval_dataset,
+                        batch_size=eval_batch_size,
+                        epoch_id=i + 1,
+                        return_details=True)
                     logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                         i + 1, dict2str(self.eval_metrics)))
-
+                    # 保存最优模型
                     if local_rank == 0:
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
                         current_accuracy = self.eval_metrics[best_accuracy_key]
@@ -274,3 +281,11 @@ class BaseModel:
                                 .format(best_model_epoch, best_accuracy_key,
                                         best_accuracy))
                     eval_epoch_time = time.time() - eval_epoch_tic
+
+                current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
+                if local_rank == 0:
+                    self.save_model(save_dir=current_save_dir)
+
+                    if early_stop:
+                        if earlystop(current_accuracy):
+                            break

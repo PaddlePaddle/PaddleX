@@ -17,6 +17,7 @@ __version__ = '2.0.0'
 from .utils.env import get_environ_info
 from . import cv
 from . import seg
+from . import cls
 
 env_info = get_environ_info()
 datasets = cv.datasets
