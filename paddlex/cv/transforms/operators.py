@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@ import numpy as np
 import cv2
 import copy
 import random
+import math
 from PIL import Image
 try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
 
-from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop, random_crop
+from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop
 
 interp_list = [
     cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC, cv2.INTER_AREA,
@@ -95,14 +96,10 @@ class Compose(Transform):
             mask = outputs['mask']
 
         if self.arrange_outputs is not None:
-            if self.arrange_outputs.__class__.__name__ == 'ArrangeSegmenter':
-                if self.apply_im_only:
-                    mask = mask_backup
-                outputs = self.arrange_outputs(im, mask)
-            elif self.arrange_outputs.__class__.__name__ == 'ArrangeClassifier':
-                outputs = self.arrange_outputs(im)
-            else:
-                pass
+            if self.apply_im_only:
+                outputs['mask'] = mask_backup
+            outputs = self.arrange_outputs(outputs)
+
         return outputs
 
 
@@ -195,8 +192,7 @@ class ResizeByShort(Transform):
         im_short_size = min(im.shape[0], im.shape[1])
         im_long_size = max(im.shape[0], im.shape[1])
         scale = float(self.short_size) / im_short_size
-        if self.max_size > 0 and np.round(scale *
-                                          im_long_size) > self.max_size:
+        if 0 < self.max_size < np.round(scale * im_long_size):
             scale = float(self.max_size) / float(im_long_size)
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
@@ -369,16 +365,46 @@ class RandomCrop(Transform):
         self.lower_scale = lower_scale
         self.lower_ratio = lower_ratio
         self.upper_ratio = upper_ratio
+        self.w = None
+        self.h = None
+        self.i = None
+        self.j = None
+
+    def generate_crop_info(self,
+                           im,
+                           lower_scale=0.08,
+                           lower_ratio=3. / 4,
+                           upper_ratio=4. / 3):
+        scale = [lower_scale, 1.0]
+        ratio = [lower_ratio, upper_ratio]
+        aspect_ratio = math.sqrt(np.random.uniform(*ratio))
+        w = 1. * aspect_ratio
+        h = 1. / aspect_ratio
+        bound = min((float(im.shape[0]) / im.shape[1]) / (h**2),
+                    (float(im.shape[1]) / im.shape[0]) / (w**2))
+        scale_max = min(scale[1], bound)
+        scale_min = min(scale[0], bound)
+        target_area = im.shape[0] * im.shape[1] * np.random.uniform(scale_min,
+                                                                    scale_max)
+        target_size = math.sqrt(target_area)
+        self.w = int(target_size * w)
+        self.h = int(target_size * h)
+        self.i = np.random.randint(0, im.shape[0] - h + 1)
+        self.j = np.random.randint(0, im.shape[1] - w + 1)
 
     def apply_im(self, im):
-        im = random_crop(im, self.crop_size, self.lower_scale,
-                         self.lower_ratio, self.upper_ratio)
+        im = im[self.i:self.i + self.h, self.j:self.j + self.w, :]
+        im = cv2.resize(im, (self.crop_size, self.crop_size))
         return im
 
-    def apply_mask(self, mask, parameters=None):
+    def apply_mask(self, mask):
+        mask = mask[self.i:self.i + self.h, self.j:self.j + self.w, :]
+        mask = cv2.resize(mask, (self.crop_size, self.crop_size))
         return mask
 
     def __call__(self, im, mask=None):
+        self.generate_crop_info(im, self.lower_scale, self.lower_ratio,
+                                self.upper_ratio)
         im = self.apply_im(im)
 
         if mask is not None:
@@ -397,7 +423,9 @@ class ArrangeSegmenter(Transform):
             )
         self.mode = mode
 
-    def __call__(self, im, mask=None):
+    def __call__(self, outputs):
+        im, mask = outputs['im'], outputs['mask']
+
         im = permute(im, False)
         if self.mode == 'train':
             mask = mask[np.newaxis, :, :].astype('int64')
@@ -418,6 +446,7 @@ class ArrangeClassifier(Transform):
             )
         self.mode = mode
 
-    def __call__(self, im):
+    def __call__(self, outputs):
+        im = outputs['im']
         im = permute(im, False)
         return im,

@@ -20,7 +20,7 @@ import math
 from collections import OrderedDict
 import yaml
 import paddle
-from paddle.io import Dataset, DataLoader, DistributedBatchSampler
+from paddle.io import DataLoader, DistributedBatchSampler
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -286,6 +286,6 @@ class BaseModel:
                 if local_rank == 0:
                     self.save_model(save_dir=current_save_dir)
 
-                    if early_stop:
+                    if eval_dataset is not None and early_stop:
                         if earlystop(current_accuracy):
                             break

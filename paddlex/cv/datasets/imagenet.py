@@ -25,7 +25,7 @@ class ImageNet(Dataset):
         data_dir (str): 数据集所在的目录路径。
         file_list (str): 描述数据集图片文件和类别id的文件路径（文本内每行路径为相对data_dir的相对路）。
         label_list (str): 描述数据集包含的类别信息文件路径。
-        transforms (paddlex.cls.transforms): 数据集中每个样本的预处理/增强算子。
+        transforms (paddlex.transforms): 数据集中每个样本的预处理/增强算子。
         num_workers (int|str): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据
             系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核
             数的一半。

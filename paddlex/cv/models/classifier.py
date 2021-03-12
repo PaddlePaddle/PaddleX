@@ -13,17 +13,17 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-import paddle
-from paddlex.utils import logging, TrainingStats
+import os.path as osp
 from collections import OrderedDict
+import numpy as np
+import paddle
+from paddle import to_tensor
+import paddle.nn.functional as F
+from paddlex.utils import logging, TrainingStats
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.nets.ppcls.modeling import architectures
 from paddlex.cv.nets.ppcls.modeling.loss import CELoss
-import paddle.nn.functional as F
-from paddle import to_tensor
 from paddlex.cv.transforms import arrange_transforms
-import numpy as np
-import os.path as osp
 
 
 class BaseClassifier(BaseModel):
@@ -209,7 +209,7 @@ class BaseClassifier(BaseModel):
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
-            mode='train')
+            mode='eval')
 
         self.net.eval()
         nranks = paddle.distributed.ParallelEnv().nranks
@@ -219,7 +219,7 @@ class BaseClassifier(BaseModel):
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
             ):
                 paddle.distributed.init_parallel_env()
-        self.eval_dataloader = self.build_data_loader(
+        self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
         eval_metrics = TrainingStats()
         eval_details = None
@@ -227,14 +227,14 @@ class BaseClassifier(BaseModel):
             eval_details = list()
 
         with paddle.no_grad():
-            for step, data in enumerate(self.eval_dataloader()):
+            for step, data in enumerate(self.eval_data_loader()):
                 outputs = self.run(self.net, data, mode='eval')
                 if return_details:
                     eval_details.append(outputs['prediction'].numpy())
                 outputs.pop('prediction')
                 eval_metrics.update(outputs)
 
-        return eval_metrics.get_numeric(), eval_details
+        return eval_metrics.get(), eval_details
 
     @staticmethod
     def _preprocess(images, transforms, model_type):
@@ -263,7 +263,7 @@ class BaseClassifier(BaseModel):
 
     def predict(self, img_file, transforms=None, topk=1):
         true_topk = min(self.num_classes, topk)
-        if isinstance(img_file, str):
+        if isinstance(img_file, (str, np.ndarray)):
             images = [img_file]
         else:
             images = img_file

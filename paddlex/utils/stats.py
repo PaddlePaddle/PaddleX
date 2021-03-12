@@ -56,16 +56,6 @@ class TrainingStats(object):
             for k, v in extras.items():
                 stats[k] = v
         for k, v in self.meters.items():
-            stats[k] = format(v.avg(), '.6f')
-
-        return stats
-
-    def get_numeric(self, extras=None):
-        stats = collections.OrderedDict()
-        if extras:
-            for k, v in extras.items():
-                stats[k] = v
-        for k, v in self.meters.items():
             stats[k] = v.avg()
 
         return stats
@@ -74,5 +64,5 @@ class TrainingStats(object):
         d = self.get(extras)
         strs = []
         for k, v in d.items():
-            strs.append("{}={}".format(k, str(v)))
+            strs.append("{}={}".format(k, str(v).format('8.6f')))
         return self.delimiter.join(strs)

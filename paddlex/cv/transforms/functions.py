@@ -38,32 +38,6 @@ def permute(im, to_bgr=False):
     return im
 
 
-def random_crop(im,
-                crop_size=224,
-                lower_scale=0.08,
-                lower_ratio=3. / 4,
-                upper_ratio=4. / 3):
-    scale = [lower_scale, 1.0]
-    ratio = [lower_ratio, upper_ratio]
-    aspect_ratio = math.sqrt(np.random.uniform(*ratio))
-    w = 1. * aspect_ratio
-    h = 1. / aspect_ratio
-    bound = min((float(im.shape[0]) / im.shape[1]) / (h**2),
-                (float(im.shape[1]) / im.shape[0]) / (w**2))
-    scale_max = min(scale[1], bound)
-    scale_min = min(scale[0], bound)
-    target_area = im.shape[0] * im.shape[1] * np.random.uniform(scale_min,
-                                                                scale_max)
-    target_size = math.sqrt(target_area)
-    w = int(target_size * w)
-    h = int(target_size * h)
-    i = np.random.randint(0, im.shape[0] - h + 1)
-    j = np.random.randint(0, im.shape[1] - w + 1)
-    im = im[i:i + h, j:j + w, :]
-    im = cv2.resize(im, (crop_size, crop_size))
-    return im
-
-
 def center_crop(im, crop_size=224):
     height, width = im.shape[:2]
     w_start = (width - crop_size) // 2

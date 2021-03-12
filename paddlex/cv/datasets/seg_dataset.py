@@ -13,16 +13,10 @@
 # limitations under the License.
 
 import os.path as osp
-import random
 import copy
-import numpy as np
-from PIL import Image
 
-import paddle
 from paddle.io import Dataset
-import paddlex.utils.logging as logging
-from paddlex.utils.env import get_num_workers
-from paddlex.utils.utils import get_encoding
+from paddlex.utils import logging, get_num_workers, get_encoding, path_normalization, is_pic
 
 
 class SegDataset(Dataset):
@@ -32,8 +26,8 @@ class SegDataset(Dataset):
         data_dir (str): 数据集所在的目录路径。
         file_list (str): 描述数据集图片文件和对应标注文件的文件路径（文本内每行路径为相对data_dir的相对路）。
         label_list (str): 描述数据集包含的类别信息文件路径。默认值为None。
-        transforms (list): 数据集中每个样本的预处理/增强算子。
-        num_workers (int): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。
+        transforms (paddlex.transforms): 数据集中每个样本的预处理/增强算子。
+        num_workers (int|str): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
 
@@ -68,6 +62,10 @@ class SegDataset(Dataset):
                         "A space is defined as the delimiter to separate the image and label path, " \
                         "so the space cannot be in the image or label path, but the line[{}] of " \
                         " file_list[{}] has a space in the image or label path.".format(line, file_list))
+                items[0] = path_normalization(items[0])
+                items[1] = path_normalization(items[1])
+                if not is_pic(items[0]) or not is_pic(items[1]):
+                    continue
                 full_path_im = osp.join(data_dir, items[0])
                 full_path_label = osp.join(data_dir, items[1])
                 if not osp.exists(full_path_im):
