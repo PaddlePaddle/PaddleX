@@ -50,10 +50,10 @@ def dict2str(dict_input):
     out = ''
     for k, v in dict_input.items():
         try:
-            v = round(float(v), 6)
+            v = '{:8.6f}'.format(v)
         except:
             pass
-        out = out + '{}={:8.6f}, '.format(k, v)
+        out = out + '{}={}, '.format(k, v)
     return out.strip(', ')
 
 

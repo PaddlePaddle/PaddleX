@@ -166,7 +166,7 @@ class UNet(BaseModel):
             log_interval_steps=log_interval_steps,
             save_dir=save_dir)
 
-    def evaluate(self, eval_dataset, batch_size=1):
+    def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
@@ -242,7 +242,7 @@ class UNet(BaseModel):
                 'miou', 'category_iou', 'oacc', 'category_acc', 'kappa',
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
-        return eval_metrics
+        return eval_metrics, None
 
     def predict(self, img_file, transforms=None):
         if transforms is None and not hasattr(self, 'test_transforms'):
