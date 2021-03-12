@@ -50,7 +50,7 @@ def dict2str(dict_input):
     out = ''
     for k, v in dict_input.items():
         try:
-            v = '{:8.6f}'.format(v)
+            v = '{:8.6f}'.format(float(v))
         except:
             pass
         out = out + '{}={}, '.format(k, v)

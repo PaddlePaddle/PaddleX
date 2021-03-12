@@ -269,3 +269,33 @@ class BaseClassifier(BaseModel):
                                                  self.labels)
 
         return prediction
+
+
+class ResNet18(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet18, self).__init__(
+            model_name='ResNet18', num_classes=num_classes)
+
+
+class ResNet34(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet34, self).__init__(
+            model_name='ResNet34', num_classes=num_classes)
+
+
+class ResNet50(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet50, self).__init__(
+            model_name='ResNet50', num_classes=num_classes)
+
+
+class ResNet101(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet101, self).__init__(
+            model_name='ResNet101', num_classes=num_classes)
+
+
+class ResNet152(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet152, self).__init__(
+            model_name='ResNet152', num_classes=num_classes)

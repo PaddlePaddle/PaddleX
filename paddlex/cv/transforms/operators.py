@@ -365,10 +365,7 @@ class RandomCrop(Transform):
         self.lower_scale = lower_scale
         self.lower_ratio = lower_ratio
         self.upper_ratio = upper_ratio
-        self.w = None
-        self.h = None
-        self.i = None
-        self.j = None
+        self.w, self.h, self.i, self.j = None, None, None, None
 
     def generate_crop_info(self,
                            im,
@@ -398,7 +395,7 @@ class RandomCrop(Transform):
         return im
 
     def apply_mask(self, mask):
-        mask = mask[self.i:self.i + self.h, self.j:self.j + self.w, :]
+        mask = mask[self.i:self.i + self.h, self.j:self.j + self.w, ...]
         mask = cv2.resize(mask, (self.crop_size, self.crop_size))
         return mask
 

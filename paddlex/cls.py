@@ -12,34 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .cv.models import BaseClassifier
+from . import cv
 
-
-class ResNet18(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(ResNet18, self).__init__(
-            model_name='ResNet18', num_classes=num_classes)
-
-
-class ResNet34(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(ResNet34, self).__init__(
-            model_name='ResNet34', num_classes=num_classes)
-
-
-class ResNet50(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(ResNet50, self).__init__(
-            model_name='ResNet50', num_classes=num_classes)
-
-
-class ResNet101(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(ResNet101, self).__init__(
-            model_name='ResNet101', num_classes=num_classes)
-
-
-class ResNet152(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(ResNet152, self).__init__(
-            model_name='ResNet152', num_classes=num_classes)
+ResNet18 = cv.models.ResNet18
+ResNet34 = cv.models.ResNet34
+ResNet50 = cv.models.ResNet50
+ResNet101 = cv.models.ResNet101
+ResNet152 = cv.models.ResNet152
