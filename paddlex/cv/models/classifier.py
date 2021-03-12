@@ -54,18 +54,16 @@ class BaseClassifier(BaseModel):
         ]
         return net, test_inputs
 
-    def run(self, net, inputs, mode, use_mix=False):
+    def run(self, net, inputs, mode):
+        net_out = net(inputs[0])
+        softmax_out = F.softmax(net_out)
         if mode == 'test':
-            net_out = net(inputs)
-            softmax_out = F.softmax(net_out)
             outputs = OrderedDict([('prediction', softmax_out)])
             self.interpretation_feats = OrderedDict([('logits', net_out)])
 
         elif mode == 'eval':
-            net_out = net(inputs[0])
             labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
                                                                          1))
-            softmax_out = F.softmax(net_out)
             acc1 = paddle.metric.accuracy(softmax_out, label=labels)
             k = min(5, self.num_classes)
             acck = paddle.metric.accuracy(softmax_out, label=labels, k=k)
@@ -83,11 +81,8 @@ class BaseClassifier(BaseModel):
 
         else:
             # mode == 'train'
-            net_out = net(inputs[0])
             labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
                                                                          1))
-            softmax_out = F.softmax(net_out)
-
             loss = CELoss(class_dim=self.num_classes)
             loss = loss(net_out, inputs[1])
             acc1 = paddle.metric.accuracy(softmax_out, label=labels, k=1)
@@ -246,7 +241,7 @@ class BaseClassifier(BaseModel):
 
         batch_data = to_tensor(batch_data)
 
-        return batch_data
+        return batch_data,
 
     @staticmethod
     def _postprocess(results, true_topk, labels):

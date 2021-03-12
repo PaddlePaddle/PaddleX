@@ -53,7 +53,7 @@ def dict2str(dict_input):
             v = round(float(v), 6)
         except:
             pass
-        out = out + '{}={}, '.format(k, v)
+        out = out + '{}={:8.6f}, '.format(k, v)
     return out.strip(', ')
 
 
