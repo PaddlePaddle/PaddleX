@@ -34,7 +34,7 @@ class BaseClassifier(BaseModel):
         num_classes (int): 类别数。默认为1000。
     """
 
-    def __init__(self, model_name='ResNet50', num_classes=1000, sync_bn=True):
+    def __init__(self, model_name='ResNet50', num_classes=1000):
         self.init_params = locals()
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
@@ -43,7 +43,6 @@ class BaseClassifier(BaseModel):
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
-        self.sync_bn = sync_bn
 
     def build_net(self):
         net = architectures.__dict__[self.model_name](
@@ -151,9 +150,6 @@ class BaseClassifier(BaseModel):
 
         # build net
         self.net, self.test_inputs = self.build_net()
-
-        if self.sync_bn:
-            self.net = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(self.net)
 
         # build optimizer if not defined
         if self.optimizer is None:

@@ -44,7 +44,6 @@ class BaseModel:
         self.eval_metrics = None
         self.test_transforms = None
         # 是否使用多卡间同步BatchNorm均值和方差
-        self.sync_bn = False
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
@@ -262,7 +261,6 @@ class BaseModel:
                     self.eval_metrics, eval_details = self.evaluate(
                         eval_dataset,
                         batch_size=eval_batch_size,
-                        epoch_id=i + 1,
                         return_details=True)
                     logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                         i + 1, dict2str(self.eval_metrics)))
