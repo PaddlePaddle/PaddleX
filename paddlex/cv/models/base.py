@@ -162,7 +162,8 @@ class BaseModel:
                    log_interval_steps=10,
                    save_dir='output',
                    early_stop=False,
-                   early_stop_patience=5):
+                   early_stop_patience=5,
+                   use_vdl=True):
         arrange_transforms(
             model_type=self.model_type,
             transforms=train_dataset.transforms,
@@ -178,6 +179,14 @@ class BaseModel:
                 ddp_net = paddle.DataParallel(self.net)
             else:
                 ddp_net = paddle.DataParallel(self.net)
+
+        if use_vdl:
+            from visualdl import LogWriter
+            vdl_logdir = osp.join(save_dir, 'vdl_log')
+            log_writer = LogWriter(vdl_logdir)
+        # task_id: 目前由PaddleX GUI赋值
+        # 用于在VisualDL日志中注明所属任务id
+        task_id = getattr(paddlex, "task_id", "")
 
         thresh = .0001
         if early_stop:
@@ -230,6 +239,8 @@ class BaseModel:
 
                 # 每间隔log_interval_steps，输出loss信息
                 if current_step % log_interval_steps == 0 and local_rank == 0:
+                    # if use_vdl:
+
                     # 估算剩余时间
                     avg_step_time = train_step_time.avg()
                     eta = avg_step_time * (train_total_step - current_step)
