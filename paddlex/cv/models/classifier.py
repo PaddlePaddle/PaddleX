@@ -58,7 +58,6 @@ class BaseClassifier(BaseModel):
         softmax_out = F.softmax(net_out)
         if mode == 'test':
             outputs = OrderedDict([('prediction', softmax_out)])
-            self.interpretation_feats = OrderedDict([('logits', net_out)])
 
         elif mode == 'eval':
             labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
