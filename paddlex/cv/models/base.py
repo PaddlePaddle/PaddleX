@@ -256,13 +256,12 @@ class BaseModel:
                                 eval_dataset.num_samples / eval_batch_size)
                         else:
                             eta += eval_epoch_time * eval_num_epochs
-                    train_step_metrics = OrderedDict(
-                        zip(list(outputs.keys()), outputs.values()))
+
                     logging.info(
                         "[TRAIN] Epoch={}/{}, Step={}/{}, {}, time_each_step={}s, eta={}"
                         .format(i + 1, num_epochs, step + 1,
                                 train_step_each_epoch,
-                                dict2str(train_step_metrics),
+                                dict2str(outputs),
                                 round(avg_step_time, 2), seconds_to_hms(eta)))
 
             logging.info('[TRAIN] Epoch {} finished, {} .'
