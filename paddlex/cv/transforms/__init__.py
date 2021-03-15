@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .operators import Compose
-from .operators import Resize, RandomHorizontalFlip, Normalize
-from .operators import ArrangeSegmenter
+from .operators import *
 
 
 def arrange_transforms(model_type, transforms, mode='train'):
@@ -25,6 +23,8 @@ def arrange_transforms(model_type, transforms, mode='train'):
         else:
             transforms.apply_im_only = False
         arrange_transform = ArrangeSegmenter(mode)
+    elif model_type == 'classifier':
+        arrange_transform = ArrangeClassifier(mode)
     else:
-        raise Exception("Unrecognized model type: {}".format(self.model_type))
+        raise Exception("Unrecognized model type: {}".format(model_type))
     transforms.arrange_outputs = arrange_transform

@@ -13,19 +13,39 @@
 # limitations under the License.
 
 import cv2
+import math
 import numpy as np
 
 
-def normalize(im, mean, std, min_value=[0, 0, 0],
-              max_value=[255., 255., 255.]):
+def normalize(im, mean, std, min_value=[0, 0, 0], max_value=[255, 255, 255]):
     # Rescaling (min-max normalization)
-    range_value = [max_value[i] - min_value[i] for i in range(len(max_value))]
-    im = (im - min_value) / range_value
+    range_value = np.asarray(
+        [1. / (max_value[i] - min_value[i]) for i in range(len(max_value))],
+        dtype=np.float32)
+    im = (im - np.asarray(min_value, dtype=np.float32)) * range_value
 
     # Standardization (Z-score Normalization)
     im -= mean
     im /= std
-    return im.astype('float32')
+    return im
+
+
+def permute(im, to_bgr=False):
+    im = np.swapaxes(im, 1, 2)
+    im = np.swapaxes(im, 1, 0)
+    if to_bgr:
+        im = im[[2, 1, 0], :, :]
+    return im
+
+
+def center_crop(im, crop_size=224):
+    height, width = im.shape[:2]
+    w_start = (width - crop_size) // 2
+    h_start = (height - crop_size) // 2
+    w_end = w_start + crop_size
+    h_end = h_start + crop_size
+    im = im[h_start:h_end, w_start:w_end, :]
+    return im
 
 
 def horizontal_flip(im):
@@ -36,9 +56,9 @@ def horizontal_flip(im):
     return im
 
 
-def permute(im, to_bgr=False):
-    im = np.swapaxes(im, 1, 2)
-    im = np.swapaxes(im, 1, 0)
-    if to_bgr:
-        im = im[[2, 1, 0], :, :]
+def vertical_flip(im):
+    if len(im.shape) == 3:
+        im = im[::-1, :, :]
+    elif len(im.shape) == 2:
+        im = im[::-1, :]
     return im

@@ -24,6 +24,19 @@ coco_weights = {
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams'
 }
 
+imagenet_weights = {
+    'ResNet18_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet18_pretrained.pdparams',
+    'ResNet34_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet34_pretrained.pdparams',
+    'ResNet50_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_pretrained.pdparams',
+    'ResNet101_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams',
+    'ResNet152_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams'
+}
+
 
 def get_pretrained_weights(flag, class_name, save_dir):
     if flag is None:
@@ -36,7 +49,12 @@ def get_pretrained_weights(flag, class_name, save_dir):
     # TODO: check flag
     new_save_dir = save_dir
     weights_key = "{}_{}".format(class_name, flag)
-    url = coco_weights[weights_key]
+    if flag == 'COCO':
+        url = coco_weights[weights_key]
+    elif flag == 'IMAGENET':
+        url = imagenet_weights[weights_key]
+    else:
+        pass
     fname = download_and_decompress(url, path=new_save_dir)
     return fname
 

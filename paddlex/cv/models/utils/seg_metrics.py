@@ -155,6 +155,8 @@ def f1_score(intersect_area, pred_area, label_area):
     for i in range(len(intersect_area)):
         if pred_area[i] + label_area[i] == 0:
             f1_sco = 0
+        elif pred_area[i] == 0:
+            f1_sco = 0
         else:
             prec = intersect_area[i] / pred_area[i]
             rec = intersect_area[i] / label_area[i]

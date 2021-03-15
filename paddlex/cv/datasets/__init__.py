@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .seg_dataset import SegDataset
+from .imagenet import ImageNet

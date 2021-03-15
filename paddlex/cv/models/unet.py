@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
@@ -167,7 +166,7 @@ class UNet(BaseModel):
             log_interval_steps=log_interval_steps,
             save_dir=save_dir)
 
-    def evaluate(self, eval_dataset, batch_size=1):
+    def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
