@@ -184,19 +184,21 @@ class UNet(BaseModel):
         batch_size_each_card = get_single_card_bs(batch_size)
         if batch_size_each_card > 1:
             batch_size_each_card = 1
+            batch_size = batch_size_each_card * paddlex.env_info['num']
             logging.warning(
                 "Segmenter supports batch_size=1 for each gpu/cpu card " \
                 "only during evaluating, so batch_size " \
                 "is forced to be set to {}.".format(batch_size))
-            batch_size = batch_size_each_card * paddlex.env_info['num']
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
 
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        if return_details:
+            eval_details = list()
         with paddle.no_grad():
-            for iter, data in enumerate(self.eval_data_loader):
+            for step, data in enumerate(self.eval_data_loader):
                 data.append(eval_dataset.transforms.transforms)
                 outputs = self.run(self.net, data, 'eval')
                 pred_area = outputs['pred_area']
@@ -213,8 +215,8 @@ class UNet(BaseModel):
                     paddle.distributed.all_gather(label_area_list, label_area)
 
                     # Some image has been evaluated and should be eliminated in last iter
-                    if (iter + 1) * nranks > len(eval_dataset):
-                        valid = len(eval_dataset) - iter * nranks
+                    if (step + 1) * nranks > len(eval_dataset):
+                        valid = len(eval_dataset) - step * nranks
                         intersect_area_list = intersect_area_list[:valid]
                         pred_area_list = pred_area_list[:valid]
                         label_area_list = label_area_list[:valid]
