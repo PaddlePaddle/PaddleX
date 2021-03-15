@@ -130,7 +130,7 @@ class UNet(BaseModel):
               save_interval_epochs=1,
               log_interval_steps=2,
               save_dir='output',
-              pretrained_weights='COCO',
+              pretrained_weights='CITYSCAPES',
               learning_rate=0.01,
               lr_decay_power=0.9):
         self.labels = train_dataset.labels
@@ -143,15 +143,15 @@ class UNet(BaseModel):
                 num_steps_each_epoch, lr_decay_power)
         if pretrained_weights is not None and not osp.exists(
                 pretrained_weights):
-            if pretrained_weights not in ['COCO']:
+            if pretrained_weights not in ['CITYSCAPES']:
                 logging.warning(
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
                 logging.warning(
-                    "Pretrained_weights will be forced to set as 'COCO'. " +
-                    "If don't want to use pretrained weights, " +
+                    "Pretrained_weights will be forced to set as 'CITYSCAPES'. "
+                    + "If don't want to use pretrained weights, " +
                     "set pretrained_weights to be None.")
-                pretrained_weights = 'COCO'
+                pretrained_weights = 'CITYSCAPES'
         pretrained_dir = osp.join(save_dir, 'pretrain')
         pretrained_dir = osp.join(pretrained_dir, self.__class__.__name__)
         self.net_initialize(
