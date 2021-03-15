@@ -239,7 +239,11 @@ class BaseModel:
 
                 # 每间隔log_interval_steps，输出loss信息
                 if current_step % log_interval_steps == 0 and local_rank == 0:
-                    # if use_vdl:
+                    if use_vdl:
+                        for k, v in outputs.items():
+                            log_writer.add_scalar(
+                                '{}-Metrics/Training(Step): {}'.format(
+                                    task_id, k), v, current_step)
 
                     # 估算剩余时间
                     avg_step_time = train_step_time.avg()
