@@ -212,7 +212,8 @@ class UNet(BaseModel):
                 label_area = outputs['label_area']
                 intersect_area = outputs['intersect_area']
                 conf_mat = outputs['conf_mat']
-                confusion_matrix += conf_mat
+                if return_details:
+                    confusion_matrix += conf_mat
                 # Gather from all ranks
                 if nranks > 1:
                     intersect_area_list = []
