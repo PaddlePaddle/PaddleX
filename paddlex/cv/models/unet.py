@@ -95,11 +95,17 @@ class UNet(BaseModel):
             # TODO: 替换cv2后postprocess移出run
             pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
 
+            conf_mat = metrics.fast_hist(
+                label=label.numpy(),
+                pred=pred.numpy(),
+                num_classes=self.num_classes)
+
             intersect_area, pred_area, label_area = metrics.calculate_area(
                 pred, label, self.num_classes)
             outputs['intersect_area'] = intersect_area
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
+            outputs['conf_mat'] = conf_mat
         if mode == 'train':
             compute_loss = losses.CrossEntropyLoss()
             loss = compute_loss(net_out[0], inputs[1])
@@ -196,7 +202,8 @@ class UNet(BaseModel):
         pred_area_all = 0
         label_area_all = 0
         if return_details:
-            eval_details = list()
+            confusion_matrix = np.zeros(
+                (self.num_classes, self.num_classes), dtype=int)
         with paddle.no_grad():
             for step, data in enumerate(self.eval_data_loader):
                 data.append(eval_dataset.transforms.transforms)
@@ -204,6 +211,8 @@ class UNet(BaseModel):
                 pred_area = outputs['pred_area']
                 label_area = outputs['label_area']
                 intersect_area = outputs['intersect_area']
+                conf_mat = outputs['conf_mat']
+                confusion_matrix += conf_mat
                 # Gather from all ranks
                 if nranks > 1:
                     intersect_area_list = []
@@ -244,6 +253,8 @@ class UNet(BaseModel):
                 'miou', 'category_iou', 'oacc', 'category_acc', 'kappa',
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
+        if return_details:
+            return eval_metrics, confusion_matrix
         return eval_metrics
 
     def predict(self, img_file, transforms=None):

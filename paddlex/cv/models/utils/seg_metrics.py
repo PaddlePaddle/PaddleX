@@ -163,3 +163,10 @@ def f1_score(intersect_area, pred_area, label_area):
             f1_sco = 2 * prec * rec / (prec + rec)
         class_f1_sco.append(f1_sco)
     return np.array(class_f1_sco)
+
+
+def fast_hist(label, pred, num_classes):
+    k = (label >= 0) & (label < num_classes)
+    return np.bincount(
+        num_classes * label[k].astype(int) + pred[k], minlength=num_classes
+        **2).reshape(num_classes, num_classes)
