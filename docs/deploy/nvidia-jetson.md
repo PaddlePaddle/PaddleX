@@ -1,10 +1,10 @@
 # Nvidia Jetson Development Board
 
 ## Description
-This document describes the test with `GCC 7.4` on the `Linux` platform based on Nvidia Jetpack 4.4. If you want to use a different G++ version, you need to recompile the Paddle prediction library. For details, see the compiling of [NVIDIA Jetson embedded hardware prediction library source codes] (https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/advanced_guide/inference_deployment/inference/build_and_install_lib_cn.html#id12).
+This document describes the test with `GCC 7.4` on the `Linux` platform based on Nvidia Jetpack 4.4. If you want to use a different G++ version, you need to recompile the Paddle prediction library. For details, see the compiling of [NVIDIA Jetson embedded hardware prediction library source codes] (https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/guides/05_inference_deployment/inference/build_and_install_lib_cn.html).
 
 ## Pre-conditions
-* G++ 7.4 
+* G++ 7.4
 * CUDA 10.0 / CUDNN 8 (required only if using the prediction library in GPU version)
 * CMake 3.0+
 
@@ -29,9 +29,9 @@ The directory `/root/projects/fluid_inference` after downloading and decompressi
 ```
 fluid_inference
 ├── paddle # paddle core library and header files
-| 
+|
 ├──third_party # third-party dependency library and header files
-| 
+|
 └── version.txt # version and compilation information
 ```
 
@@ -39,7 +39,7 @@ fluid_inference
 
 The command to compile `cmake` is in `scripts/jetson_build.sh`. Modify the main parameters as required. Its main content is described as follows:
 ```
-# Whether GPU is used (i.e., whether CUDA is used) 
+# Whether GPU is used (i.e., whether CUDA is used)
 WITH_GPU=OFF
 # Use MKL or openblas
 WITH_MKL=OFF
@@ -73,7 +73,7 @@ cmake . . \
     -DCUDNN_LIB=${CUDNN_LIB}
 make
 ```
-**Note: **When compiling in Linux environment, YAML is automatically downloaded. If the Internet is not available in the compiling environment, you can run the following to download manually: 
+**Note: **When compiling in Linux environment, YAML is automatically downloaded. If the Internet is not available in the compiling environment, you can run the following to download manually:
 
 - [yaml-cpp.zip ](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)
 
