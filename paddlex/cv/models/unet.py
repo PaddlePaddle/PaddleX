@@ -242,7 +242,7 @@ class UNet(BaseModel):
                 'miou', 'category_iou', 'oacc', 'category_acc', 'kappa',
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
-        return eval_metrics, None
+        return eval_metrics
 
     def predict(self, img_file, transforms=None):
         if transforms is None and not hasattr(self, 'test_transforms'):

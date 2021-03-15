@@ -223,8 +223,10 @@ class BaseClassifier(BaseModel):
                     eval_details.append(outputs['prediction'].numpy())
                 outputs.pop('prediction')
                 eval_metrics.update(outputs)
-
-        return eval_metrics.get(), eval_details
+        if return_details:
+            return eval_metrics.get(), eval_details
+        else:
+            return eval_metrics.get()
 
     @staticmethod
     def _preprocess(images, transforms, model_type):

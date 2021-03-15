@@ -197,8 +197,7 @@ class ResizeByShort(Transform):
         resized_width = int(round(im.shape[1] * scale))
         resized_height = int(round(im.shape[0] * scale))
         im = cv2.resize(
-            im, (resized_width, resized_height),
-            interpolation=cv2.INTER_LINEAR)
+            im, (resized_width, resized_height), interpolation=interp)
         return im
 
     def __call__(self, im, mask=None):

@@ -48,11 +48,10 @@ class ImageNet(Dataset):
         self.file_list = list()
         self.labels = list()
 
-        if label_list is not None:
-            with open(label_list, encoding=get_encoding(label_list)) as f:
-                for line in f:
-                    item = line.strip()
-                    self.labels.append(item)
+        with open(label_list, encoding=get_encoding(label_list)) as f:
+            for line in f:
+                item = line.strip()
+                self.labels.append(item)
         logging.info("Starting to read file list from dataset...")
         with open(file_list, encoding=get_encoding(file_list)) as f:
             for line in f:
