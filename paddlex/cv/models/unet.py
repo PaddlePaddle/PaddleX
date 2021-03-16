@@ -255,6 +255,8 @@ class UNet(BaseModel):
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
         if return_details:
+            # Normalize the confusion_matrix
+            confusion_matrix /= np.sum(confusion_matrix)
             return eval_metrics, confusion_matrix
         return eval_metrics
 
