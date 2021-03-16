@@ -16,6 +16,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import paddle
 import paddle.nn.functional as F
+from scipy.sparse import csr_matrix
 
 
 def calculate_area(pred, label, num_classes, ignore_index=255):
@@ -165,8 +166,17 @@ def f1_score(intersect_area, pred_area, label_area):
     return np.array(class_f1_sco)
 
 
-def fast_hist(label, pred, num_classes):
-    k = (label >= 0) & (label < num_classes)
-    return np.bincount(
-        num_classes * label[k].astype(int) + pred[k], minlength=num_classes
-        **2).reshape(num_classes, num_classes)
+def confusion_matrix(pred, label, num_classes, ignore_index=255):
+    label = np.transpose(label, (0, 2, 3, 1))
+    pred = np.transpose(pred, (0, 2, 3, 1))
+    ignore = label != ignore_index
+    mask = np.array(ignore) == 1
+
+    label = np.asarray(label)[mask]
+    pred = np.asarray(pred)[mask]
+    one = np.ones_like(pred)
+    # Accumuate ([row=label, col=pred], 1) into sparse matrix
+    spm = csr_matrix((one, (label, pred)), shape=(num_classes, num_classes))
+    spm = spm.todense()
+
+    return spm

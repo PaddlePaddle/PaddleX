@@ -15,7 +15,7 @@
 import os
 import os.path as osp
 import paddle
-import paddlex
+from paddle.static import load_program_state
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
@@ -59,13 +59,30 @@ def get_pretrained_weights(flag, class_name, save_dir):
     return fname
 
 
-def load_pretrained_weights(model, pretrained_weights=None):
+def load_pretrained_weights(model,
+                            pretrained_weights=None,
+                            load_static_weights=False):
     if pretrained_weights is not None:
         logging.info(
             'Loading pretrained model from {}'.format(pretrained_weights),
             use_color=True)
+
         if os.path.exists(pretrained_weights):
-            para_state_dict = paddle.load(pretrained_weights)
+            if load_static_weights:
+                para_state_dict = load_program_state(pretrained_weights)
+                # param_state_dict = {}
+                # model_state_dict = model.state_dict()
+                # for k in model_state_dict:
+                #     weight_name = model_state_dict[k].name
+                #     if weight_name in para_state_dict:
+                #         logging.info('Load weight: {}, shape: {}'.format(
+                #             weight_name, para_state_dict[weight_name].shape))
+                #         param_state_dict[k] = para_state_dict[weight_name]
+                #     else:
+                #         param_state_dict[k] = model_state_dict[k]
+                # model.set_dict(param_state_dict)
+            else:
+                para_state_dict = paddle.load(pretrained_weights)
             model_state_dict = model.state_dict()
             keys = model_state_dict.keys()
             num_params_loaded = 0

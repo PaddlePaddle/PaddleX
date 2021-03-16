@@ -95,9 +95,9 @@ class UNet(BaseModel):
             # TODO: 替换cv2后postprocess移出run
             pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
 
-            conf_mat = metrics.fast_hist(
-                label=label.numpy(),
+            conf_mat = metrics.confusion_matrix(
                 pred=pred.numpy(),
+                label=label.numpy(),
                 num_classes=self.num_classes)
 
             intersect_area, pred_area, label_area = metrics.calculate_area(
