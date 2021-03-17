@@ -19,3 +19,4 @@ ResNet34 = cv.models.ResNet34
 ResNet50 = cv.models.ResNet50
 ResNet101 = cv.models.ResNet101
 ResNet152 = cv.models.ResNet152
+AlexNet = cv.models.AlexNet

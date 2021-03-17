@@ -300,3 +300,9 @@ class ResNet152(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ResNet152, self).__init__(
             model_name='ResNet152', num_classes=num_classes)
+
+
+class AlexNet(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(AlexNet, self).__init__(
+            model_name='AlexNet', num_classes=num_classes)
