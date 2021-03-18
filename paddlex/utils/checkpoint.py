@@ -51,6 +51,11 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams'
 }
 
+baidu10w_weights = {
+    'ResNet_vd_BAIDU10W':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet50_vd_10w_pretrained.tar'
+}
+
 
 def get_pretrained_weights(flag, class_name, save_dir):
     if flag is None:
@@ -67,36 +72,22 @@ def get_pretrained_weights(flag, class_name, save_dir):
         url = cityscapes_weights[weights_key]
     elif flag == 'IMAGENET':
         url = imagenet_weights[weights_key]
+    elif flag == 'BAIDU10W':
+        url = baidu10w_weights[weights_key]
     else:
         pass
     fname = download_and_decompress(url, path=new_save_dir)
     return fname
 
 
-def load_pretrained_weights(model,
-                            pretrained_weights=None,
-                            load_static_weights=False):
+def load_pretrained_weights(model, pretrained_weights=None):
     if pretrained_weights is not None:
         logging.info(
             'Loading pretrained model from {}'.format(pretrained_weights),
             use_color=True)
 
         if os.path.exists(pretrained_weights):
-            if load_static_weights:
-                para_state_dict = load_program_state(pretrained_weights)
-                # param_state_dict = {}
-                # model_state_dict = model.state_dict()
-                # for k in model_state_dict:
-                #     weight_name = model_state_dict[k].name
-                #     if weight_name in para_state_dict:
-                #         logging.info('Load weight: {}, shape: {}'.format(
-                #             weight_name, para_state_dict[weight_name].shape))
-                #         param_state_dict[k] = para_state_dict[weight_name]
-                #     else:
-                #         param_state_dict[k] = model_state_dict[k]
-                # model.set_dict(param_state_dict)
-            else:
-                para_state_dict = paddle.load(pretrained_weights)
+            para_state_dict = paddle.load(pretrained_weights)
             model_state_dict = model.state_dict()
             keys = model_state_dict.keys()
             num_params_loaded = 0
