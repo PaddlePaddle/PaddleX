@@ -19,8 +19,8 @@ import paddlex
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
-coco_weights = {
-    'UNet_COCO':
+cityscapes_weights = {
+    'UNet_CITYSCAPES':
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams'
 }
 
@@ -49,8 +49,8 @@ def get_pretrained_weights(flag, class_name, save_dir):
     # TODO: check flag
     new_save_dir = save_dir
     weights_key = "{}_{}".format(class_name, flag)
-    if flag == 'COCO':
-        url = coco_weights[weights_key]
+    if flag == 'CITYSCAPES':
+        url = cityscapes_weights[weights_key]
     elif flag == 'IMAGENET':
         url = imagenet_weights[weights_key]
     else:

@@ -130,7 +130,7 @@ class UNet(BaseModel):
               save_interval_epochs=1,
               log_interval_steps=2,
               save_dir='output',
-              pretrained_weights='COCO',
+              pretrained_weights='CITYSCAPES',
               learning_rate=0.01,
               lr_decay_power=0.9):
         self.labels = train_dataset.labels
@@ -143,15 +143,15 @@ class UNet(BaseModel):
                 num_steps_each_epoch, lr_decay_power)
         if pretrained_weights is not None and not osp.exists(
                 pretrained_weights):
-            if pretrained_weights not in ['COCO']:
+            if pretrained_weights not in ['CITYSCAPES']:
                 logging.warning(
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
                 logging.warning(
-                    "Pretrained_weights will be forced to set as 'COCO'. " +
-                    "If don't want to use pretrained weights, " +
+                    "Pretrained_weights will be forced to set as 'CITYSCAPES'. "
+                    + "If don't want to use pretrained weights, " +
                     "set pretrained_weights to be None.")
-                pretrained_weights = 'COCO'
+                pretrained_weights = 'CITYSCAPES'
         pretrained_dir = osp.join(save_dir, 'pretrain')
         pretrained_dir = osp.join(pretrained_dir, self.__class__.__name__)
         self.net_initialize(
@@ -184,19 +184,21 @@ class UNet(BaseModel):
         batch_size_each_card = get_single_card_bs(batch_size)
         if batch_size_each_card > 1:
             batch_size_each_card = 1
+            batch_size = batch_size_each_card * paddlex.env_info['num']
             logging.warning(
                 "Segmenter supports batch_size=1 for each gpu/cpu card " \
                 "only during evaluating, so batch_size " \
                 "is forced to be set to {}.".format(batch_size))
-            batch_size = batch_size_each_card * paddlex.env_info['num']
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
 
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        if return_details:
+            eval_details = list()
         with paddle.no_grad():
-            for iter, data in enumerate(self.eval_data_loader):
+            for step, data in enumerate(self.eval_data_loader):
                 data.append(eval_dataset.transforms.transforms)
                 outputs = self.run(self.net, data, 'eval')
                 pred_area = outputs['pred_area']
@@ -213,8 +215,8 @@ class UNet(BaseModel):
                     paddle.distributed.all_gather(label_area_list, label_area)
 
                     # Some image has been evaluated and should be eliminated in last iter
-                    if (iter + 1) * nranks > len(eval_dataset):
-                        valid = len(eval_dataset) - iter * nranks
+                    if (step + 1) * nranks > len(eval_dataset):
+                        valid = len(eval_dataset) - step * nranks
                         intersect_area_list = intersect_area_list[:valid]
                         pred_area_list = pred_area_list[:valid]
                         label_area_list = label_area_list[:valid]
