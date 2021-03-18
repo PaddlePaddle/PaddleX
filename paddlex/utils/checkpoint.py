@@ -34,7 +34,21 @@ imagenet_weights = {
     'ResNet101_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams',
     'ResNet152_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams'
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams',
+    'ResNet18_vd_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet18_vd_pretrained.pdparams',
+    'ResNet34_vd_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet34_vd_pretrained.pdparams',
+    'ResNet50_vd_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_vd_pretrained.pdparams',
+    'ResNet101_vd_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_vd_pretrained.pdparams',
+    'ResNet152_vd_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet152_vd_pretrained.pdparams',
+    'ResNet200_vd_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet200_vd_pretrained.pdparams',
+    'AlexNet_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams'
 }
 
 

@@ -342,3 +342,9 @@ class AlexNet(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(AlexNet, self).__init__(
             model_name='AlexNet', num_classes=num_classes)
+
+
+class DarkNet53(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DarkNet53, self).__init__(
+            model_name='DarkNet53', num_classes=num_classes)
