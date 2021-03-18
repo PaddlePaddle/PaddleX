@@ -302,6 +302,42 @@ class ResNet152(BaseClassifier):
             model_name='ResNet152', num_classes=num_classes)
 
 
+class ResNet18_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet18_vd, self).__init__(
+            model_name='ResNet18_vd', num_classes=num_classes)
+
+
+class ResNet34_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet34_vd, self).__init__(
+            model_name='ResNet34_vd', num_classes=num_classes)
+
+
+class ResNet50_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet50_vd, self).__init__(
+            model_name='ResNet50_vd', num_classes=num_classes)
+
+
+class ResNet101_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet101_vd, self).__init__(
+            model_name='ResNet101_vd', num_classes=num_classes)
+
+
+class ResNet152_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet152_vd, self).__init__(
+            model_name='ResNet152_vd', num_classes=num_classes)
+
+
+class ResNet200_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet200_vd, self).__init__(
+            model_name='ResNet200_vd', num_classes=num_classes)
+
+
 class AlexNet(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(AlexNet, self).__init__(
