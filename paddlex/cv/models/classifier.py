@@ -25,6 +25,20 @@ from paddlex.cv.nets.ppcls.modeling import architectures
 from paddlex.cv.nets.ppcls.modeling.loss import CELoss
 from paddlex.cv.transforms import arrange_transforms
 
+__all__ = [
+    "ResNet18", "ResNet34", "ResNet50", "ResNet101", "ResNet152",
+    "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet101_vd",
+    "ResNet152_vd", "ResNet200_vd", "AlexNet", "DarkNet53", "MobileNetV1",
+    "MobileNetV1_x0_25", "MobileNetV1_x0_5", "MobileNetV1_x0_75",
+    "MobileNetV2", "MobileNetV2_x0_25", "MobileNetV2_x0_5",
+    "MobileNetV2_x0_75", "MobileNetV2_x1_5", "MobileNetV2_x2_0",
+    "MobileNetV3_small_x0_35", "MobileNetV3_small_x0_5",
+    "MobileNetV3_small_x0_75", "MobileNetV3_small_x1_0",
+    "MobileNetV3_small_x1_25", "MobileNetV3_large_x0_35",
+    "MobileNetV3_large_x0_5", "MobileNetV3_large_x0_75",
+    "MobileNetV3_large_x1_0", "MobileNetV3_large_x1_25"
+]
+
 
 class BaseClassifier(BaseModel):
     """构建分类器，并实现其训练、评估、预测和模型导出。
@@ -348,3 +362,123 @@ class DarkNet53(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(DarkNet53, self).__init__(
             model_name='DarkNet53', num_classes=num_classes)
+
+
+class MobileNetV1(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV1, self).__init__(
+            model_name='MobileNetV1', num_classes=num_classes)
+
+
+class MobileNetV1_x0_25(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV1_x0_25, self).__init__(
+            model_name='MobileNetV1_x0_25', num_classes=num_classes)
+
+
+class MobileNetV1_x0_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV1_x0_5, self).__init__(
+            model_name='MobileNetV1_x0_5', num_classes=num_classes)
+
+
+class MobileNetV1_x0_75(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV1_x0_75, self).__init__(
+            model_name='MobileNetV1_x0_75', num_classes=num_classes)
+
+
+class MobileNetV2(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV2, self).__init__(
+            model_name='MobileNetV2', num_classes=num_classes)
+
+
+class MobileNetV2_x0_25(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV2_x0_25, self).__init__(
+            model_name='MobileNetV2_x0_25', num_classes=num_classes)
+
+
+class MobileNetV2_x0_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV2_x0_5, self).__init__(
+            model_name='MobileNetV2_x0_5', num_classes=num_classes)
+
+
+class MobileNetV2_x0_75(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV2_x0_75, self).__init__(
+            model_name='MobileNetV2_x0_75', num_classes=num_classes)
+
+
+class MobileNetV2_x1_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV2_x1_5, self).__init__(
+            model_name='MobileNetV2_x1_5', num_classes=num_classes)
+
+
+class MobileNetV2_x2_0(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV2_x2_0, self).__init__(
+            model_name='MobileNetV2_x2_0', num_classes=num_classes)
+
+
+class MobileNetV3_small_x0_35(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_small_x0_35, self).__init__(
+            model_name='MobileNetV3_small_x0_35', num_classes=num_classes)
+
+
+class MobileNetV3_small_x0_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_small_x0_5, self).__init__(
+            model_name='MobileNetV3_small_x0_5', num_classes=num_classes)
+
+
+class MobileNetV3_small_x0_75(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_small_x0_75, self).__init__(
+            model_name='MobileNetV3_small_x0_75', num_classes=num_classes)
+
+
+class MobileNetV3_small_x1_0(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_small_x1_0, self).__init__(
+            model_name='MobileNetV3_small_x1_0', num_classes=num_classes)
+
+
+class MobileNetV3_small_x1_25(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_small_x1_25, self).__init__(
+            model_name='MobileNetV3_small_x1_25', num_classes=num_classes)
+
+
+class MobileNetV3_large_x0_35(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_x0_35, self).__init__(
+            model_name='MobileNetV3_large_x0_35', num_classes=num_classes)
+
+
+class MobileNetV3_large_x0_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_x0_5, self).__init__(
+            model_name='MobileNetV3_large_x0_5', num_classes=num_classes)
+
+
+class MobileNetV3_large_x0_75(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_x0_75, self).__init__(
+            model_name='MobileNetV3_large_x0_75', num_classes=num_classes)
+
+
+class MobileNetV3_large_x1_0(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_x1_0, self).__init__(
+            model_name='MobileNetV3_large_x1_0', num_classes=num_classes)
+
+
+class MobileNetV3_large_x1_25(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_x1_25, self).__init__(
+            model_name='MobileNetV3_large_x1_25', num_classes=num_classes)

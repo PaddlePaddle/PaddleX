@@ -12,7 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
 from .alexnet import AlexNet
-from .resnet_vd import ResNet18_vd, ResNet34_vd, ResNet50_vd, ResNet101_vd, ResNet152_vd, ResNet200_vd
 from .darknet import DarkNet53
+from .mobilenet_v1 import *
+from .mobilenet_v2 import *
+from .mobilenet_v3 import *
+from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
+from .resnet_vd import ResNet18_vd, ResNet34_vd, ResNet50_vd, ResNet101_vd, ResNet152_vd, ResNet200_vd
