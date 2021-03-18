@@ -52,7 +52,7 @@ imagenet_weights = {
 }
 
 baidu10w_weights = {
-    'ResNet_vd_BAIDU10W':
+    'ResNet50_vd_BAIDU10W':
     'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet50_vd_10w_pretrained.tar'
 }
 
@@ -75,7 +75,8 @@ def get_pretrained_weights(flag, class_name, save_dir):
     elif flag == 'BAIDU10W':
         url = baidu10w_weights[weights_key]
     else:
-        pass
+        raise ValueError('Given pretrained weights {} is undefined.'.format(
+            flag))
     fname = download_and_decompress(url, path=new_save_dir)
     return fname
 
