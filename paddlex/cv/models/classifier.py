@@ -57,6 +57,7 @@ class BaseClassifier(BaseModel):
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
+        self.net, self.test_inputs = self.build_net()
 
     def build_net(self):
         net = architectures.__dict__[self.model_name](
@@ -160,9 +161,6 @@ class BaseClassifier(BaseModel):
               early_stop=False,
               early_stop_patience=5):
         self.labels = train_dataset.labels
-
-        # build net
-        self.net, self.test_inputs = self.build_net()
 
         # build optimizer if not defined
         if self.optimizer is None:
