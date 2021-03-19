@@ -126,6 +126,7 @@ class UNet(BaseModel):
               train_dataset,
               train_batch_size=2,
               eval_dataset=None,
+              optimizer=None,
               save_interval_epochs=1,
               log_interval_steps=2,
               save_dir='output',
@@ -135,11 +136,13 @@ class UNet(BaseModel):
         self.labels = train_dataset.labels
 
         self.net, self.test_inputs = self.build_net()
-        if self.optimizer is None:
+        if optimizer is None:
             num_steps_each_epoch = train_dataset.num_samples // train_batch_size
             self.optimizer = self.default_optimizer(
                 self.net.parameters(), learning_rate, num_epochs,
                 num_steps_each_epoch, lr_decay_power)
+        else:
+            self.optimizer = optimizer
         if pretrained_weights is not None and not osp.exists(
                 pretrained_weights):
             if pretrained_weights not in ['CITYSCAPES']:

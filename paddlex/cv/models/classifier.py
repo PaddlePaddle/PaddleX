@@ -149,6 +149,7 @@ class BaseClassifier(BaseModel):
               train_dataset,
               train_batch_size=64,
               eval_dataset=None,
+              optimizer=None,
               save_interval_epochs=1,
               log_interval_steps=10,
               save_dir='output',
@@ -163,7 +164,7 @@ class BaseClassifier(BaseModel):
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
-        if self.optimizer is None:
+        if optimizer is None:
             num_steps_each_epoch = len(train_dataset) // train_batch_size
             self.optimizer = self.default_optimizer(
                 parameters=self.net.parameters(),
@@ -173,6 +174,8 @@ class BaseClassifier(BaseModel):
                 lr_decay_epochs=lr_decay_epochs,
                 lr_decay_gamma=lr_decay_gamma,
                 num_steps_each_epoch=num_steps_each_epoch)
+        else:
+            self.optimizer = optimizer
 
         # initiate weights
         if pretrained_weights is not None and not osp.exists(
