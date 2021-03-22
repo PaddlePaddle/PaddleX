@@ -483,3 +483,33 @@ class MobileNetV3_large_x1_25(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(MobileNetV3_large_x1_25, self).__init__(
             model_name='MobileNetV3_large_x1_25', num_classes=num_classes)
+
+
+class DenseNet121(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet121, self).__init__(
+            model_name='DenseNet121', num_classes=num_classes)
+
+
+class DenseNet161(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet161, self).__init__(
+            model_name='DenseNet161', num_classes=num_classes)
+
+
+class DenseNet169(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet169, self).__init__(
+            model_name='DenseNet169', num_classes=num_classes)
+
+
+class DenseNet201(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet201, self).__init__(
+            model_name='DenseNet201', num_classes=num_classes)
+
+
+class DenseNet264(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet264, self).__init__(
+            model_name='DenseNet264', num_classes=num_classes)
