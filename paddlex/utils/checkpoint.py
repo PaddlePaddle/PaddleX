@@ -138,8 +138,6 @@ def get_pretrained_weights(flag, class_name, save_dir):
         url = cityscapes_weights[weights_key]
     elif flag == 'IMAGENET':
         url = imagenet_weights[weights_key]
-    elif flag == 'BAIDU10W':
-        url = baidu10w_weights[weights_key]
     else:
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))
