@@ -163,19 +163,3 @@ def f1_score(intersect_area, pred_area, label_area):
             f1_sco = 2 * prec * rec / (prec + rec)
         class_f1_sco.append(f1_sco)
     return np.array(class_f1_sco)
-
-
-def confusion_matrix(pred, label, num_classes, ignore_index=255):
-    label = np.transpose(label, (0, 2, 3, 1))
-    pred = np.transpose(pred, (0, 2, 3, 1))
-    ignore = label != ignore_index
-    mask = np.array(ignore) == 1
-
-    label = np.asarray(label)[mask]
-    pred = np.asarray(pred)[mask]
-    one = np.ones_like(pred)
-    # Accumuate ([row=label, col=pred], 1) into sparse matrix
-    spm = csr_matrix((one, (label, pred)), shape=(num_classes, num_classes))
-    spm = spm.todense()
-
-    return spm
