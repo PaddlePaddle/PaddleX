@@ -38,7 +38,6 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=32,
     eval_dataset=eval_dataset,
-    pretrained_weights=None,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.01,
     save_dir='output/DarkNet53')

@@ -15,7 +15,6 @@
 import os
 import os.path as osp
 import paddle
-from paddle.static import load_program_state
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
@@ -47,13 +46,80 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet152_vd_pretrained.pdparams',
     'ResNet200_vd_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet200_vd_pretrained.pdparams',
+    'MobileNetV1_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_pretrained.pdparams',
+    'MobileNetV1_x0_25_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_25_pretrained.pdparams',
+    'MobileNetV1_x0_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_5_pretrained.pdparams',
+    'MobileNetV1_x0_75_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_75_pretrained.pdparams',
+    'MobileNetV2_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_pretrained.pdparams',
+    'MobileNetV2_x0_25_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_25_pretrained.pdparams',
+    'MobileNetV2_x0_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_5_pretrained.pdparams',
+    'MobileNetV2_x0_75_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_75_pretrained.pdparams',
+    'MobileNetV2_x1_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x1_5_pretrained.pdparams',
+    'MobileNetV2_x2_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x2_0_pretrained.pdparams',
+    'MobileNetV3_small_x0_35_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_35_pretrained.pdparams',
+    'MobileNetV3_small_x0_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_5_pretrained.pdparams',
+    'MobileNetV3_small_x0_75_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_75_pretrained.pdparams',
+    'MobileNetV3_small_x1_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x1_0_pretrained.pdparams',
+    'MobileNetV3_small_x1_25_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x1_25_pretrained.pdparams',
+    'MobileNetV3_large_x0_35_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x0_35_pretrained.pdparams',
+    'MobileNetV3_large_x0_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x0_5_pretrained.pdparams',
+    'MobileNetV3_large_x0_75_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x0_75_pretrained.pdparams',
+    'MobileNetV3_large_x1_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_pretrained.pdparams',
+    'MobileNetV3_large_x1_25_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_25_pretrained.pdparams',
     'AlexNet_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams'
-}
-
-baidu10w_weights = {
-    'ResNet50_vd_BAIDU10W':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/ResNet50_vd_10w_pretrained.tar'
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams',
+    'DarkNet53_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DarkNet53_pretrained.pdparams',
+    'DenseNet121_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DenseNet121_pretrained.pdparams',
+    'DenseNet161_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DenseNet161_pretrained.pdparams',
+    'DenseNet169_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DenseNet169_pretrained.pdparams',
+    'DenseNet201_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DenseNet201_pretrained.pdparams',
+    'DenseNet264_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DenseNet264_pretrained.pdparams',
+    'HRNet_W18_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W18_C_pretrained.pdparams',
+    'HRNet_W30_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W30_C_pretrained.pdparams',
+    'HRNet_W32_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W32_C_pretrained.pdparams',
+    'HRNet_W40_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W40_C_pretrained.pdparams',
+    'HRNet_W44_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W44_C_pretrained.pdparams',
+    'HRNet_W48_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W48_C_pretrained.pdparams',
+    'HRNet_W64_C_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W64_C_pretrained.pdparams',
+    'Xception41_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception41_pretrained.pdparams',
+    'Xception65_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception65_pretrained.pdparams',
+    'Xception71_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception71_pretrained.pdparams'
 }
 
 

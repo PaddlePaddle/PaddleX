@@ -16,7 +16,6 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import paddle
 import paddle.nn.functional as F
-from scipy.sparse import csr_matrix
 
 
 def calculate_area(pred, label, num_classes, ignore_index=255):
