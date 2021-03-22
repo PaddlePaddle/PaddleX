@@ -40,7 +40,9 @@ __all__ = [
     "MobileNetV3_large_x1_25", "DenseNet121", "DenseNet161", "DenseNet169",
     "DenseNet201", "DenseNet264", "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C",
     "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W64_C", "Xception41",
-    "Xception65", "Xception71"
+    "Xception65", "Xception71", "ShuffleNetV2_x0_25", "ShuffleNetV2_x0_33",
+    "ShuffleNetV2_x0_5", "ShuffleNetV2_x1_0", "ShuffleNetV2_x1_5",
+    "ShuffleNetV2_x2_0", "ShuffleNetV2_swish"
 ]
 
 
@@ -589,3 +591,45 @@ class Xception71(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(Xception71, self).__init__(
             model_name='Xception71', num_classes=num_classes)
+
+
+class ShuffleNetV2_x0_25(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_x0_25, self).__init__(
+            model_name='ShuffleNetV2_x0_25', num_classes=num_classes)
+
+
+class ShuffleNetV2_x0_33(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_x0_33, self).__init__(
+            model_name='ShuffleNetV2_x0_33', num_classes=num_classes)
+
+
+class ShuffleNetV2_x0_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_x0_5, self).__init__(
+            model_name='ShuffleNetV2_x0_5', num_classes=num_classes)
+
+
+class ShuffleNetV2_x1_0(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_x1_0, self).__init__(
+            model_name='ShuffleNetV2_x1_0', num_classes=num_classes)
+
+
+class ShuffleNetV2_x1_5(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_x1_5, self).__init__(
+            model_name='ShuffleNetV2_x1_5', num_classes=num_classes)
+
+
+class ShuffleNetV2_x2_0(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_x2_0, self).__init__(
+            model_name='ShuffleNetV2_x2_0', num_classes=num_classes)
+
+
+class ShuffleNetV2_swish(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_swish, self).__init__(
+            model_name='ShuffleNetV2_x1_5', num_classes=num_classes)
