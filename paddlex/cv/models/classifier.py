@@ -36,7 +36,8 @@ __all__ = [
     "MobileNetV3_small_x0_75", "MobileNetV3_small_x1_0",
     "MobileNetV3_small_x1_25", "MobileNetV3_large_x0_35",
     "MobileNetV3_large_x0_5", "MobileNetV3_large_x0_75",
-    "MobileNetV3_large_x1_0", "MobileNetV3_large_x1_25"
+    "MobileNetV3_large_x1_0", "MobileNetV3_large_x1_25", "DenseNet121",
+    "DenseNet161", "DenseNet169", "DenseNet201", "DenseNet264"
 ]
 
 
