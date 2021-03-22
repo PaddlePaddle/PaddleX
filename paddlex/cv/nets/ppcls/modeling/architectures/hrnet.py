@@ -34,16 +34,7 @@ __all__ = [
     "HRNet_W40_C",
     "HRNet_W44_C",
     "HRNet_W48_C",
-    "HRNet_W60_C",
     "HRNet_W64_C",
-    "SE_HRNet_W18_C",
-    "SE_HRNet_W30_C",
-    "SE_HRNet_W32_C",
-    "SE_HRNet_W40_C",
-    "SE_HRNet_W44_C",
-    "SE_HRNet_W48_C",
-    "SE_HRNet_W60_C",
-    "SE_HRNet_W64_C",
 ]
 
 
@@ -692,51 +683,6 @@ def HRNet_W48_C(**args):
     return model
 
 
-def HRNet_W60_C(**args):
-    model = HRNet(width=60, **args)
-    return model
-
-
 def HRNet_W64_C(**args):
     model = HRNet(width=64, **args)
-    return model
-
-
-def SE_HRNet_W18_C(**args):
-    model = HRNet(width=18, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W30_C(**args):
-    model = HRNet(width=30, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W32_C(**args):
-    model = HRNet(width=32, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W40_C(**args):
-    model = HRNet(width=40, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W44_C(**args):
-    model = HRNet(width=44, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W48_C(**args):
-    model = HRNet(width=48, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W60_C(**args):
-    model = HRNet(width=60, has_se=True, **args)
-    return model
-
-
-def SE_HRNet_W64_C(**args):
-    model = HRNet(width=64, has_se=True, **args)
     return model

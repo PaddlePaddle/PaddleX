@@ -39,10 +39,8 @@ __all__ = [
     "MobileNetV3_large_x0_75", "MobileNetV3_large_x1_0",
     "MobileNetV3_large_x1_25", "DenseNet121", "DenseNet161", "DenseNet169",
     "DenseNet201", "DenseNet264", "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C",
-    "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W60_C", "HRNet_W64_C",
-    "SE_HRNet_W18_C", "SE_HRNet_W30_C", "SE_HRNet_W32_C", "SE_HRNet_W40_C",
-    "SE_HRNet_W44_C", "SE_HRNet_W48_C", "SE_HRNet_W60_C", "SE_HRNet_W64_C",
-    "Xception41", "Xception65", "Xception71"
+    "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W64_C", "Xception41",
+    "Xception65", "Xception71"
 ]
 
 
@@ -569,64 +567,10 @@ class HRNet_W48_C(BaseClassifier):
             model_name='HRNet_W48_C', num_classes=num_classes)
 
 
-class HRNet_W60_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(HRNet_W60_C, self).__init__(
-            model_name='HRNet_W60_C', num_classes=num_classes)
-
-
 class HRNet_W64_C(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(HRNet_W64_C, self).__init__(
             model_name='HRNet_W64_C', num_classes=num_classes)
-
-
-class SE_HRNet_W18_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W18_C, self).__init__(
-            model_name='SE_HRNet_W18_C', num_classes=num_classes)
-
-
-class SE_HRNet_W30_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W30_C, self).__init__(
-            model_name='SE_HRNet_W30_C', num_classes=num_classes)
-
-
-class SE_HRNet_W32_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W32_C, self).__init__(
-            model_name='SE_HRNet_W32_C', num_classes=num_classes)
-
-
-class SE_HRNet_W40_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W40_C, self).__init__(
-            model_name='SE_HRNet_W40_C', num_classes=num_classes)
-
-
-class SE_HRNet_W44_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W44_C, self).__init__(
-            model_name='SE_HRNet_W44_C', num_classes=num_classes)
-
-
-class SE_HRNet_W48_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W48_C, self).__init__(
-            model_name='SE_HRNet_W48_C', num_classes=num_classes)
-
-
-class SE_HRNet_W60_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W60_C, self).__init__(
-            model_name='SE_HRNet_W60_C', num_classes=num_classes)
-
-
-class SE_HRNet_W64_C(BaseClassifier):
-    def __init__(self, num_classes=1000):
-        super(SE_HRNet_W64_C, self).__init__(
-            model_name='SE_HRNet_W64_C', num_classes=num_classes)
 
 
 class Xception41(BaseClassifier):
