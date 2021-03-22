@@ -39,14 +39,14 @@ train_batch_size = 64
 num_steps_each_epoch = len(train_dataset) // train_batch_size
 num_epochs = 10
 scheduler = paddle.optimizer.lr.CosineAnnealingDecay(
-    learning_rate=1.3, T_max=num_steps_each_epoch * num_epochs)
+    learning_rate=.001, T_max=num_steps_each_epoch * num_epochs)
 warmup_epoch = 5
 warmup_steps = warmup_epoch * num_steps_each_epoch
 scheduler = paddle.optimizer.lr.LinearWarmup(
     learning_rate=scheduler,
     warmup_steps=warmup_steps,
     start_lr=0.0,
-    end_lr=1.3)
+    end_lr=.001)
 custom_optimizer = paddle.optimizer.Momentum(
     learning_rate=scheduler,
     momentum=.9,
