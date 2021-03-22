@@ -27,22 +27,22 @@ from paddlex.cv.transforms import arrange_transforms
 
 __all__ = [
     "ResNet18", "ResNet34", "ResNet50", "ResNet101", "ResNet152",
-    "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet101_vd",
-    "ResNet152_vd", "ResNet200_vd", "AlexNet", "DarkNet53", "MobileNetV1",
-    "MobileNetV1_x0_25", "MobileNetV1_x0_5", "MobileNetV1_x0_75",
-    "MobileNetV2", "MobileNetV2_x0_25", "MobileNetV2_x0_5",
-    "MobileNetV2_x0_75", "MobileNetV2_x1_5", "MobileNetV2_x2_0",
-    "MobileNetV3_small_x0_35", "MobileNetV3_small_x0_5",
-    "MobileNetV3_small_x0_75", "MobileNetV3_small_x1_0",
-    "MobileNetV3_small_x1_25", "MobileNetV3_large_x0_35",
-    "MobileNetV3_large_x0_5", "MobileNetV3_large_x0_75",
-    "MobileNetV3_large_x1_0", "MobileNetV3_large_x1_25", "DenseNet121",
-    "DenseNet161", "DenseNet169", "DenseNet201", "DenseNet264", "HRNet_W18_C",
-    "HRNet_W30_C", "HRNet_W32_C", "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C",
-    "HRNet_W60_C", "HRNet_W64_C", "SE_HRNet_W18_C", "SE_HRNet_W30_C",
-    "SE_HRNet_W32_C", "SE_HRNet_W40_C", "SE_HRNet_W44_C", "SE_HRNet_W48_C",
-    "SE_HRNet_W60_C", "SE_HRNet_W64_C", "Xception41", "Xception65",
-    "Xception71"
+    "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet50_vd_ssld",
+    "ResNet101_vd", "ResNet101_vd_ssld", "ResNet152_vd", "ResNet200_vd",
+    "AlexNet", "DarkNet53", "MobileNetV1", "MobileNetV1_x0_25",
+    "MobileNetV1_x0_5", "MobileNetV1_x0_75", "MobileNetV2",
+    "MobileNetV2_x0_25", "MobileNetV2_x0_5", "MobileNetV2_x0_75",
+    "MobileNetV2_x1_5", "MobileNetV2_x2_0", "MobileNetV3_small_x0_35",
+    "MobileNetV3_small_x0_5", "MobileNetV3_small_x0_75",
+    "MobileNetV3_small_x1_0", "MobileNetV3_small_x1_25",
+    "MobileNetV3_large_x0_35", "MobileNetV3_large_x0_5",
+    "MobileNetV3_large_x0_75", "MobileNetV3_large_x1_0",
+    "MobileNetV3_large_x1_25", "DenseNet121", "DenseNet161", "DenseNet169",
+    "DenseNet201", "DenseNet264", "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C",
+    "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W60_C", "HRNet_W64_C",
+    "SE_HRNet_W18_C", "SE_HRNet_W30_C", "SE_HRNet_W32_C", "SE_HRNet_W40_C",
+    "SE_HRNet_W44_C", "SE_HRNet_W48_C", "SE_HRNet_W60_C", "SE_HRNet_W64_C",
+    "Xception41", "Xception65", "Xception71"
 ]
 
 
@@ -341,10 +341,22 @@ class ResNet50_vd(BaseClassifier):
             model_name='ResNet50_vd', num_classes=num_classes)
 
 
+class ResNet50_vd_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet50_vd_ssld, self).__init__(
+            model_name='ResNet50_vd_ssld', num_classes=num_classes)
+
+
 class ResNet101_vd(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ResNet101_vd, self).__init__(
             model_name='ResNet101_vd', num_classes=num_classes)
+
+
+class ResNet101_vd_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet101_vd_ssld, self).__init__(
+            model_name='ResNet101_vd_ssld', num_classes=num_classes)
 
 
 class ResNet152_vd(BaseClassifier):

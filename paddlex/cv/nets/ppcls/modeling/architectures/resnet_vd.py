@@ -27,8 +27,8 @@ from paddle.nn.initializer import Uniform
 import math
 
 __all__ = [
-    "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet101_vd",
-    "ResNet152_vd", "ResNet200_vd"
+    "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet50_vd_ssld",
+    "ResNet101_vd", "ResNet101_vd_ssld", "ResNet152_vd", "ResNet200_vd"
 ]
 
 
@@ -351,4 +351,14 @@ def ResNet152_vd(**args):
 
 def ResNet200_vd(**args):
     model = ResNet_vd(layers=200, **args)
+    return model
+
+
+def ResNet50_vd_ssld(**args):
+    model = ResNet_vd(layers=50, lr_mult_list=[.1, .1, .2, .2, .3], **args)
+    return model
+
+
+def ResNet101_vd_ssld(**args):
+    model = ResNet_vd(layers=101, lr_mult_list=[.1, .1, .2, .2, .3], **args)
     return model
