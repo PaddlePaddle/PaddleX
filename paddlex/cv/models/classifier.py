@@ -41,7 +41,8 @@ __all__ = [
     "HRNet_W30_C", "HRNet_W32_C", "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C",
     "HRNet_W60_C", "HRNet_W64_C", "SE_HRNet_W18_C", "SE_HRNet_W30_C",
     "SE_HRNet_W32_C", "SE_HRNet_W40_C", "SE_HRNet_W44_C", "SE_HRNet_W48_C",
-    "SE_HRNet_W60_C", "SE_HRNet_W64_C"
+    "SE_HRNet_W60_C", "SE_HRNet_W64_C", "Xception41", "Xception65",
+    "Xception71"
 ]
 
 
@@ -614,3 +615,21 @@ class SE_HRNet_W64_C(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(SE_HRNet_W64_C, self).__init__(
             model_name='SE_HRNet_W64_C', num_classes=num_classes)
+
+
+class Xception41(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(Xception41, self).__init__(
+            model_name='Xception41', num_classes=num_classes)
+
+
+class Xception65(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(Xception65, self).__init__(
+            model_name='Xception65', num_classes=num_classes)
+
+
+class Xception71(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(Xception71, self).__init__(
+            model_name='Xception71', num_classes=num_classes)

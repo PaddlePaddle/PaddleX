@@ -21,3 +21,4 @@ from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
 from .resnet_vd import ResNet18_vd, ResNet34_vd, ResNet50_vd, ResNet101_vd, ResNet152_vd, ResNet200_vd
 from .densenet import DenseNet121, DenseNet161, DenseNet169, DenseNet201, DenseNet264
 from .hrnet import *
+from .xception import Xception41, Xception65, Xception71

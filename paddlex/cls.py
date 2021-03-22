@@ -68,3 +68,6 @@ SE_HRNet_W44_C = cv.models.SE_HRNet_W44_C
 SE_HRNet_W48_C = cv.models.SE_HRNet_W48_C
 SE_HRNet_W60_C = cv.models.SE_HRNet_W60_C
 SE_HRNet_W64_C = cv.models.SE_HRNet_W64_C
+Xception41 = cv.models.Xception41
+Xception65 = cv.models.Xception65
+Xception71 = cv.models.Xception71
