@@ -25,6 +25,25 @@ from paddlex.cv.nets.ppcls.modeling import architectures
 from paddlex.cv.nets.ppcls.modeling.loss import CELoss
 from paddlex.cv.transforms import arrange_transforms
 
+__all__ = [
+    "ResNet18", "ResNet34", "ResNet50", "ResNet101", "ResNet152",
+    "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet50_vd_ssld",
+    "ResNet101_vd", "ResNet101_vd_ssld", "ResNet152_vd", "ResNet200_vd",
+    "AlexNet", "DarkNet53", "MobileNetV1", "MobileNetV2", "MobileNetV3_small",
+    "MobileNetV3_large", "DenseNet121", "DenseNet161", "DenseNet169",
+    "DenseNet201", "DenseNet264", "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C",
+    "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W64_C", "Xception41",
+    "Xception65", "Xception71", "ShuffleNetV2", "ShuffleNetV2_swish"
+]
+
+scale_dict = {
+    "MobileNetV1": [.25, .5, .75, 1.0],
+    "MobileNetV2": [.25, .5, .75, 1.0, 1.5, 2.0],
+    "MobileNetV3_small": [.35, .5, .75, 1.0, 1.25],
+    "MobileNetV3_large": [.35, .5, .75, 1.0, 1.25],
+    "ShuffleNetV2": [.25, .33, .5, 1.0, 1.5, 2.0]
+}
+
 
 class BaseClassifier(BaseModel):
     """构建分类器，并实现其训练、评估、预测和模型导出。
@@ -34,19 +53,35 @@ class BaseClassifier(BaseModel):
         num_classes (int): 类别数。默认为1000。
     """
 
-    def __init__(self, model_name='ResNet50', num_classes=1000):
+    def __init__(self, model_name='ResNet50', num_classes=1000, scale=None):
         self.init_params = locals()
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
+
+        if scale is not None:
+            # check whether specified scale is supported by the model
+            supported_scale = scale_dict[model_name]
+            if scale not in supported_scale:
+                logging.warning("scale={} is not supported by {}, "
+                                "scale is forcibly set to 1.0"
+                                .format(scale, model_name))
+                scale = 1.0
+
+        self.scale = scale
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
+        self.net, self.test_inputs = self.build_net()
 
     def build_net(self):
-        net = architectures.__dict__[self.model_name](
-            class_dim=self.num_classes)
+        if self.scale is not None:
+            net = architectures.__dict__[self.model_name](
+                class_dim=self.num_classes, scale=self.scale)
+        else:
+            net = architectures.__dict__[self.model_name](
+                class_dim=self.num_classes)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -134,6 +169,7 @@ class BaseClassifier(BaseModel):
               train_dataset,
               train_batch_size=64,
               eval_dataset=None,
+              optimizer=None,
               save_interval_epochs=1,
               log_interval_steps=10,
               save_dir='output',
@@ -147,11 +183,8 @@ class BaseClassifier(BaseModel):
               early_stop_patience=5):
         self.labels = train_dataset.labels
 
-        # build net
-        self.net, self.test_inputs = self.build_net()
-
         # build optimizer if not defined
-        if self.optimizer is None:
+        if optimizer is None:
             num_steps_each_epoch = len(train_dataset) // train_batch_size
             self.optimizer = self.default_optimizer(
                 parameters=self.net.parameters(),
@@ -161,6 +194,8 @@ class BaseClassifier(BaseModel):
                 lr_decay_epochs=lr_decay_epochs,
                 lr_decay_gamma=lr_decay_gamma,
                 num_steps_each_epoch=num_steps_each_epoch)
+        else:
+            self.optimizer = optimizer
 
         # initiate weights
         if pretrained_weights is not None and not osp.exists(
@@ -300,3 +335,193 @@ class ResNet152(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ResNet152, self).__init__(
             model_name='ResNet152', num_classes=num_classes)
+
+
+class ResNet18_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet18_vd, self).__init__(
+            model_name='ResNet18_vd', num_classes=num_classes)
+
+
+class ResNet34_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet34_vd, self).__init__(
+            model_name='ResNet34_vd', num_classes=num_classes)
+
+
+class ResNet50_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet50_vd, self).__init__(
+            model_name='ResNet50_vd', num_classes=num_classes)
+
+
+class ResNet50_vd_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet50_vd_ssld, self).__init__(
+            model_name='ResNet50_vd_ssld', num_classes=num_classes)
+
+
+class ResNet101_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet101_vd, self).__init__(
+            model_name='ResNet101_vd', num_classes=num_classes)
+
+
+class ResNet101_vd_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet101_vd_ssld, self).__init__(
+            model_name='ResNet101_vd_ssld', num_classes=num_classes)
+
+
+class ResNet152_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet152_vd, self).__init__(
+            model_name='ResNet152_vd', num_classes=num_classes)
+
+
+class ResNet200_vd(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ResNet200_vd, self).__init__(
+            model_name='ResNet200_vd', num_classes=num_classes)
+
+
+class AlexNet(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(AlexNet, self).__init__(
+            model_name='AlexNet', num_classes=num_classes)
+
+
+class DarkNet53(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DarkNet53, self).__init__(
+            model_name='DarkNet53', num_classes=num_classes)
+
+
+class MobileNetV1(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        super(MobileNetV1, self).__init__(
+            model_name='MobileNetV1', num_classes=num_classes, scale=scale)
+
+
+class MobileNetV2(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        super(MobileNetV2, self).__init__(
+            model_name='MobileNetV2', num_classes=num_classes, scale=scale)
+
+
+class MobileNetV3_small(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        super(MobileNetV3_small, self).__init__(
+            model_name='MobileNetV3_small',
+            num_classes=num_classes,
+            scale=scale)
+
+
+class MobileNetV3_large(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        super(MobileNetV3_large, self).__init__(
+            model_name='MobileNetV3_large',
+            num_classes=num_classes,
+            scale=scale)
+
+
+class DenseNet121(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet121, self).__init__(
+            model_name='DenseNet121', num_classes=num_classes)
+
+
+class DenseNet161(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet161, self).__init__(
+            model_name='DenseNet161', num_classes=num_classes)
+
+
+class DenseNet169(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet169, self).__init__(
+            model_name='DenseNet169', num_classes=num_classes)
+
+
+class DenseNet201(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet201, self).__init__(
+            model_name='DenseNet201', num_classes=num_classes)
+
+
+class DenseNet264(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(DenseNet264, self).__init__(
+            model_name='DenseNet264', num_classes=num_classes)
+
+
+class HRNet_W18_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W18_C, self).__init__(
+            model_name='HRNet_W18_C', num_classes=num_classes)
+
+
+class HRNet_W30_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W30_C, self).__init__(
+            model_name='HRNet_W30_C', num_classes=num_classes)
+
+
+class HRNet_W32_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W32_C, self).__init__(
+            model_name='HRNet_W32_C', num_classes=num_classes)
+
+
+class HRNet_W40_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W40_C, self).__init__(
+            model_name='HRNet_W40_C', num_classes=num_classes)
+
+
+class HRNet_W44_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W44_C, self).__init__(
+            model_name='HRNet_W44_C', num_classes=num_classes)
+
+
+class HRNet_W48_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W48_C, self).__init__(
+            model_name='HRNet_W48_C', num_classes=num_classes)
+
+
+class HRNet_W64_C(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(HRNet_W64_C, self).__init__(
+            model_name='HRNet_W64_C', num_classes=num_classes)
+
+
+class Xception41(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(Xception41, self).__init__(
+            model_name='Xception41', num_classes=num_classes)
+
+
+class Xception65(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(Xception65, self).__init__(
+            model_name='Xception65', num_classes=num_classes)
+
+
+class Xception71(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(Xception71, self).__init__(
+            model_name='Xception71', num_classes=num_classes)
+
+
+class ShuffleNetV2(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        super(ShuffleNetV2, self).__init__(
+            model_name='ShuffleNetV2', num_classes=num_classes, scale=scale)
+
+
+class ShuffleNetV2_swish(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(ShuffleNetV2_swish, self).__init__(
+            model_name='ShuffleNetV2_x1_5', num_classes=num_classes)

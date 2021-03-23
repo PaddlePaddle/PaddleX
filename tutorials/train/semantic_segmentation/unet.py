@@ -22,7 +22,7 @@ eval_transforms = transforms.Compose([
 
 train_dataset = pdx.datasets.SegDataset(
     data_dir='optic_disc_seg',
-    file_list='optic_disc_seg/test_list.txt',
+    file_list='optic_disc_seg/train_list.txt',
     label_list='optic_disc_seg/labels.txt',
     transforms=train_transforms,
     num_workers=0,
@@ -30,7 +30,7 @@ train_dataset = pdx.datasets.SegDataset(
 
 eval_dataset = pdx.datasets.SegDataset(
     data_dir='optic_disc_seg',
-    file_list='optic_disc_seg/test_list.txt',
+    file_list='optic_disc_seg/val_list.txt',
     label_list='optic_disc_seg/labels.txt',
     transforms=eval_transforms,
     num_workers=0,

@@ -31,14 +31,13 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.cls.ResNet50(num_classes=num_classes)
+model = pdx.cls.DenseNet121(num_classes=num_classes)
 
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
     train_batch_size=32,
     eval_dataset=eval_dataset,
-    pretrained_weights=None,
     lr_decay_epochs=[4, 6, 8],
-    learning_rate=0.025,
-    save_dir='output/ResNet50')
+    learning_rate=0.01,
+    save_dir='output/DenseNet121')

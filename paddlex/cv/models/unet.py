@@ -94,7 +94,6 @@ class UNet(BaseModel):
             origin_shape = label.shape[-2:]
             # TODO: 替换cv2后postprocess移出run
             pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
-
             intersect_area, pred_area, label_area = metrics.calculate_area(
                 pred, label, self.num_classes)
             outputs['intersect_area'] = intersect_area
@@ -127,6 +126,7 @@ class UNet(BaseModel):
               train_dataset,
               train_batch_size=2,
               eval_dataset=None,
+              optimizer=None,
               save_interval_epochs=1,
               log_interval_steps=2,
               save_dir='output',
@@ -136,11 +136,13 @@ class UNet(BaseModel):
         self.labels = train_dataset.labels
 
         self.net, self.test_inputs = self.build_net()
-        if self.optimizer is None:
+        if optimizer is None:
             num_steps_each_epoch = train_dataset.num_samples // train_batch_size
             self.optimizer = self.default_optimizer(
                 self.net.parameters(), learning_rate, num_epochs,
                 num_steps_each_epoch, lr_decay_power)
+        else:
+            self.optimizer = optimizer
         if pretrained_weights is not None and not osp.exists(
                 pretrained_weights):
             if pretrained_weights not in ['CITYSCAPES']:
@@ -188,15 +190,13 @@ class UNet(BaseModel):
             logging.warning(
                 "Segmenter supports batch_size=1 for each gpu/cpu card " \
                 "only during evaluating, so batch_size " \
-                "is forced to be set to {}.".format(batch_size))
+                "is forcibly set to {}.".format(batch_size))
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
 
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
-        if return_details:
-            eval_details = list()
         with paddle.no_grad():
             for step, data in enumerate(self.eval_data_loader):
                 data.append(eval_dataset.transforms.transforms)
@@ -204,6 +204,7 @@ class UNet(BaseModel):
                 pred_area = outputs['pred_area']
                 label_area = outputs['label_area']
                 intersect_area = outputs['intersect_area']
+
                 # Gather from all ranks
                 if nranks > 1:
                     intersect_area_list = []
@@ -244,6 +245,7 @@ class UNet(BaseModel):
                 'miou', 'category_iou', 'oacc', 'category_acc', 'kappa',
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
+
         return eval_metrics
 
     def predict(self, img_file, transforms=None):

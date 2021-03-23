@@ -277,12 +277,12 @@ class Normalize(Transform):
         from functools import reduce
         if reduce(lambda x, y: x * y, std) == 0:
             raise ValueError(
-                'Std should not have 0, but recieved is {}'.format(std))
+                'Std should not have 0, but received is {}'.format(std))
         if is_scale:
             if reduce(lambda x, y: x * y,
                       [a - b for a, b in zip(max_val, min_val)]) == 0:
                 raise ValueError(
-                    '(max_val - min_val) should not have 0, but recieved is {}'.
+                    '(max_val - min_val) should not have 0, but received is {}'.
                     format(max_val - min_val))
 
         self.mean = mean
