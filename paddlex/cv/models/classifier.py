@@ -36,11 +36,6 @@ __all__ = [
     "Xception65", "Xception71", "ShuffleNetV2", "ShuffleNetV2_swish"
 ]
 
-scalable_nets = [
-    "MobileNetV1", "MobileNetV2", "MobileNetV3_small", "MobileNetV3_large",
-    "ShuffleNetV2"
-]
-
 scale_dict = {
     "MobileNetV1": [.25, .5, .75, 1.0],
     "MobileNetV2": [.25, .5, .75, 1.0, 1.5, 2.0],
@@ -66,22 +61,12 @@ class BaseClassifier(BaseModel):
                 model_name))
 
         if scale is not None:
-            # check whether specified model is scalable
-            if model_name not in scalable_nets:
-                logging.warning(
-                    "{} does not support scaling, scale is forcibly set to None"
-                    .format(model_name))
-                scale = None
-            else:
-                # check whether specified scale is supported by the model
-                supported_scale = scale_dict[model_name]
-                if scale not in supported_scale:
-                    logging.warning("scale={} is not supported by {}, "
-                                    "scale is forcibly set to 1.0"
-                                    .format(scale, model_name))
-                    scale = 1.0
-        else:
-            if model_name in scalable_nets:
+            # check whether specified scale is supported by the model
+            supported_scale = scale_dict[model_name]
+            if scale not in supported_scale:
+                logging.warning("scale={} is not supported by {}, "
+                                "scale is forcibly set to 1.0"
+                                .format(scale, model_name))
                 scale = 1.0
 
         self.scale = scale
