@@ -31,7 +31,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.cls.ShuffleNetV2_x1_0(num_classes=num_classes)
+model = pdx.cls.ShuffleNetV2(num_classes=num_classes)
 
 model.train(
     num_epochs=10,
@@ -40,4 +40,4 @@ model.train(
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.01,
-    save_dir='output/ShuffleNetV2_x1_0')
+    save_dir='output/ShuffleNetV2')

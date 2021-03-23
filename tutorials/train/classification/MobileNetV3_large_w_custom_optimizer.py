@@ -32,7 +32,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.cls.MobileNetV3_large_x1_0(num_classes=num_classes)
+model = pdx.cls.MobileNetV3_large(num_classes=num_classes)
 
 # Create a customized optimizer with CosineAnnealingDecay and warmup steps
 train_batch_size = 64
@@ -58,4 +58,4 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=train_batch_size,
     eval_dataset=eval_dataset,
-    save_dir='output/MobileNetV3_large_x1_0')
+    save_dir='output/MobileNetV3_large')

@@ -25,13 +25,7 @@ from paddle.nn import Conv2D, BatchNorm, Linear, Dropout
 from paddle.nn import AdaptiveAvgPool2D, MaxPool2D, AvgPool2D
 from paddle.regularizer import L2Decay
 
-__all__ = [
-    "MobileNetV3_small_x0_35", "MobileNetV3_small_x0_5",
-    "MobileNetV3_small_x0_75", "MobileNetV3_small_x1_0",
-    "MobileNetV3_small_x1_25", "MobileNetV3_large_x0_35",
-    "MobileNetV3_large_x0_5", "MobileNetV3_large_x0_75",
-    "MobileNetV3_large_x1_0", "MobileNetV3_large_x1_25"
-]
+__all__ = ["MobileNetV3_small", "MobileNetV3_large"]
 
 
 def make_divisible(v, divisor=8, min_value=None):
@@ -306,51 +300,11 @@ class SEModule(nn.Layer):
         return paddle.multiply(x=inputs, y=outputs)
 
 
-def MobileNetV3_small_x0_35(**args):
-    model = MobileNetV3(model_name="small", scale=0.35, **args)
+def MobileNetV3_small(scale=1.0, **args):
+    model = MobileNetV3(model_name="small", scale=scale, **args)
     return model
 
 
-def MobileNetV3_small_x0_5(**args):
-    model = MobileNetV3(model_name="small", scale=0.5, **args)
-    return model
-
-
-def MobileNetV3_small_x0_75(**args):
-    model = MobileNetV3(model_name="small", scale=0.75, **args)
-    return model
-
-
-def MobileNetV3_small_x1_0(**args):
-    model = MobileNetV3(model_name="small", scale=1.0, **args)
-    return model
-
-
-def MobileNetV3_small_x1_25(**args):
-    model = MobileNetV3(model_name="small", scale=1.25, **args)
-    return model
-
-
-def MobileNetV3_large_x0_35(**args):
-    model = MobileNetV3(model_name="large", scale=0.35, **args)
-    return model
-
-
-def MobileNetV3_large_x0_5(**args):
-    model = MobileNetV3(model_name="large", scale=0.5, **args)
-    return model
-
-
-def MobileNetV3_large_x0_75(**args):
-    model = MobileNetV3(model_name="large", scale=0.75, **args)
-    return model
-
-
-def MobileNetV3_large_x1_0(**args):
-    model = MobileNetV3(model_name="large", scale=1.0, **args)
-    return model
-
-
-def MobileNetV3_large_x1_25(**args):
-    model = MobileNetV3(model_name="large", scale=1.25, **args)
+def MobileNetV3_large(scale=1.0, **args):
+    model = MobileNetV3(model_name="large", scale=scale, **args)
     return model

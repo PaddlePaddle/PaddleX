@@ -23,10 +23,7 @@ import paddle.nn.functional as F
 from paddle.nn import Conv2D, BatchNorm, Linear, Dropout
 from paddle.nn import AdaptiveAvgPool2D, MaxPool2D, AvgPool2D
 
-__all__ = [
-    "MobileNetV2_x0_25", "MobileNetV2_x0_5", "MobileNetV2_x0_75",
-    "MobileNetV2", "MobileNetV2_x1_5", "MobileNetV2_x2_0"
-]
+__all__ = ["MobileNetV2"]
 
 
 class ConvBNLayer(nn.Layer):
@@ -215,31 +212,6 @@ class MobileNet(nn.Layer):
         return y
 
 
-def MobileNetV2_x0_25(**args):
-    model = MobileNet(scale=0.25, **args)
-    return model
-
-
-def MobileNetV2_x0_5(**args):
-    model = MobileNet(scale=0.5, **args)
-    return model
-
-
-def MobileNetV2_x0_75(**args):
-    model = MobileNet(scale=0.75, **args)
-    return model
-
-
-def MobileNetV2(**args):
-    model = MobileNet(scale=1.0, **args)
-    return model
-
-
-def MobileNetV2_x1_5(**args):
-    model = MobileNet(scale=1.5, **args)
-    return model
-
-
-def MobileNetV2_x2_0(**args):
-    model = MobileNet(scale=2.0, **args)
+def MobileNetV2(scale=1.0, **args):
+    model = MobileNet(scale=scale, **args)
     return model

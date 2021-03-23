@@ -190,7 +190,7 @@ class UNet(BaseModel):
             logging.warning(
                 "Segmenter supports batch_size=1 for each gpu/cpu card " \
                 "only during evaluating, so batch_size " \
-                "is forced to be set to {}.".format(batch_size))
+                "is forcibly set to {}.".format(batch_size))
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
 

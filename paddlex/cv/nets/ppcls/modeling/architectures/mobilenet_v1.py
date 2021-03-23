@@ -23,9 +23,7 @@ from paddle.nn import Conv2D, BatchNorm, Linear, Dropout
 from paddle.nn import AdaptiveAvgPool2D, MaxPool2D, AvgPool2D
 from paddle.nn.initializer import KaimingNormal
 
-__all__ = [
-    "MobileNetV1_x0_25", "MobileNetV1_x0_5", "MobileNetV1_x0_75", "MobileNetV1"
-]
+__all__ = ["MobileNetV1"]
 
 
 class ConvBNLayer(nn.Layer):
@@ -243,21 +241,6 @@ class MobileNet(nn.Layer):
         return y
 
 
-def MobileNetV1_x0_25(**args):
-    model = MobileNet(scale=0.25, **args)
-    return model
-
-
-def MobileNetV1_x0_5(**args):
-    model = MobileNet(scale=0.5, **args)
-    return model
-
-
-def MobileNetV1_x0_75(**args):
-    model = MobileNet(scale=0.75, **args)
-    return model
-
-
-def MobileNetV1(**args):
-    model = MobileNet(scale=1.0, **args)
+def MobileNetV1(scale=1.0, **args):
+    model = MobileNet(scale=scale, **args)
     return model

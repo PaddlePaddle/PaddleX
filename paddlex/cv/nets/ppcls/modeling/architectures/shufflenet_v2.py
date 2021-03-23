@@ -22,11 +22,7 @@ from paddle.nn import Layer, Conv2D, MaxPool2D, AdaptiveAvgPool2D, BatchNorm, Li
 from paddle.nn.initializer import KaimingNormal
 from paddle.nn.functional import swish
 
-__all__ = [
-    "ShuffleNetV2_x0_25", "ShuffleNetV2_x0_33", "ShuffleNetV2_x0_5",
-    "ShuffleNetV2_x1_0", "ShuffleNetV2_x1_5", "ShuffleNetV2_x2_0",
-    "ShuffleNetV2_swish"
-]
+__all__ = ["ShuffleNetV2", "ShuffleNetV2_swish"]
 
 
 def channel_shuffle(x, groups):
@@ -285,33 +281,8 @@ class ShuffleNet(Layer):
         return y
 
 
-def ShuffleNetV2_x0_25(**args):
-    model = ShuffleNet(scale=0.25, **args)
-    return model
-
-
-def ShuffleNetV2_x0_33(**args):
-    model = ShuffleNet(scale=0.33, **args)
-    return model
-
-
-def ShuffleNetV2_x0_5(**args):
-    model = ShuffleNet(scale=0.5, **args)
-    return model
-
-
-def ShuffleNetV2_x1_0(**args):
-    model = ShuffleNet(scale=1.0, **args)
-    return model
-
-
-def ShuffleNetV2_x1_5(**args):
-    model = ShuffleNet(scale=1.5, **args)
-    return model
-
-
-def ShuffleNetV2_x2_0(**args):
-    model = ShuffleNet(scale=2.0, **args)
+def ShuffleNetV2(scale=1.0, **args):
+    model = ShuffleNet(scale=scale, **args)
     return model
 
 
