@@ -55,8 +55,15 @@ class BaseModel:
                 if os.path.exists(save_dir):
                     os.remove(save_dir)
                 os.makedirs(save_dir)
-            pretrained_weights = get_pretrained_weights(
-                pretrained_weights, self.__class__.__name__, save_dir)
+            if self.model_type == 'classifier':
+                pretrained_weights = get_pretrained_weights(
+                    pretrained_weights,
+                    self.__class__.__name__,
+                    save_dir,
+                    scale=self.scale)
+            else:
+                pretrained_weights = get_pretrained_weights(
+                    pretrained_weights, self.__class__.__name__, save_dir)
         if pretrained_weights is not None:
             load_pretrained_weights(self.net, pretrained_weights)
 
