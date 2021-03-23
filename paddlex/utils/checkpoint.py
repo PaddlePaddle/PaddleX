@@ -40,13 +40,17 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet34_vd_pretrained.pdparams',
     'ResNet50_vd_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_vd_pretrained.pdparams',
+    'ResNet50_vd_ssld_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_vd_ssld_pretrained.pdparams',
     'ResNet101_vd_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_vd_pretrained.pdparams',
+    'ResNet101_vd_ssld_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_vd_ssld_pretrained.pdparams',
     'ResNet152_vd_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet152_vd_pretrained.pdparams',
     'ResNet200_vd_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet200_vd_pretrained.pdparams',
-    'MobileNetV1_IMAGENET':
+    'MobileNetV1_x1_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_pretrained.pdparams',
     'MobileNetV1_x0_25_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_25_pretrained.pdparams',
@@ -54,7 +58,7 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_5_pretrained.pdparams',
     'MobileNetV1_x0_75_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_75_pretrained.pdparams',
-    'MobileNetV2_IMAGENET':
+    'MobileNetV2_x1_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_pretrained.pdparams',
     'MobileNetV2_x0_25_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_25_pretrained.pdparams',
@@ -119,11 +123,23 @@ imagenet_weights = {
     'Xception65_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception65_pretrained.pdparams',
     'Xception71_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception71_pretrained.pdparams'
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception71_pretrained.pdparams',
+    'ShuffleNetV2_x0_25_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x0_25_pretrained.pdparams',
+    'ShuffleNetV2_x0_33_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x0_33_pretrained.pdparams',
+    'ShuffleNetV2_x0_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x0_5_pretrained.pdparams',
+    'ShuffleNetV2_x1_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_0_pretrained.pdparams',
+    'ShuffleNetV2_x1_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
+    'ShuffleNetV2_x2_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams'
 }
 
 
-def get_pretrained_weights(flag, class_name, save_dir):
+def get_pretrained_weights(flag, class_name, save_dir, scale=None):
     if flag is None:
         return None
     elif osp.isdir(flag):
@@ -133,7 +149,12 @@ def get_pretrained_weights(flag, class_name, save_dir):
 
     # TODO: check flag
     new_save_dir = save_dir
-    weights_key = "{}_{}".format(class_name, flag)
+    if scale is not None:
+        weights_key = "{}_x{}_{}".format(class_name,
+                                         str(float(scale)).replace('.', '_'),
+                                         flag)
+    else:
+        weights_key = "{}_{}".format(class_name, flag)
     if flag == 'CITYSCAPES':
         url = cityscapes_weights[weights_key]
     elif flag == 'IMAGENET':
