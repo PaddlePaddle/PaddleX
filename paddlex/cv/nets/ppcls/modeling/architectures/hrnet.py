@@ -28,13 +28,8 @@ from paddle.nn.initializer import Uniform
 import math
 
 __all__ = [
-    "HRNet_W18_C",
-    "HRNet_W30_C",
-    "HRNet_W32_C",
-    "HRNet_W40_C",
-    "HRNet_W44_C",
-    "HRNet_W48_C",
-    "HRNet_W64_C",
+    "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C", "HRNet_W40_C", "HRNet_W44_C",
+    "HRNet_W48_C", "HRNet_W64_C"
 ]
 
 
