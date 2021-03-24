@@ -292,4 +292,4 @@ class UNet(BaseSegmenter):
     def __init__(self, num_classes=2, use_deconv=False, align_corners=False):
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
-            model_name='segmenter', num_classes=num_classes, **params)
+            model_name='UNet', num_classes=num_classes, **params)
