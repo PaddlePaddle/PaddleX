@@ -42,7 +42,6 @@ class BaseModel:
         self.train_data_loader = None
         self.eval_data_loader = None
         self.eval_metrics = None
-        self.test_transforms = None
         # 是否使用多卡间同步BatchNorm均值和方差
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数

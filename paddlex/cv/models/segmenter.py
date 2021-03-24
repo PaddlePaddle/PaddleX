@@ -27,14 +27,16 @@ from .base import BaseModel
 from .utils import seg_metrics as metrics
 
 
-class UNet(BaseModel):
-    def __init__(self, num_classes=2, use_deconv=False):
+class BaseSegmenter(BaseModel):
+    def __init__(self, model_name='UNet', num_classes=2):
         self.init_params = locals()
-        super(UNet, self).__init__('segmenter')
+        super(BaseSegmenter, self).__init__('segmenter')
+        if not hasattr(models, model_name):
+            raise Exception("ERROR: There's no model named {}.".format(
+                model_name))
         self.num_classes = num_classes
-        self.use_deconv = use_deconv
-        self.loss_type = 'CrossEntropyLoss'
         self.labels = None
+        self.net, self.test_inputs = self.build_net()
 
     def build_net(self):
         net = models.__dict__[self.__class__.__name__](
@@ -45,50 +47,17 @@ class UNet(BaseModel):
         ]
         return net, test_inputs
 
-    @staticmethod
-    def _preprocess(image, transforms, model_type):
-        arrange_transforms(
-            model_type=model_type, transforms=transforms, mode='test')
-        im = transforms(image)[0]
-        ori_shape = im.shape[1:3]
-        im = im[np.newaxis, ...]
-        return im, ori_shape
-
-    @staticmethod
-    def get_reverse_list(ori_shape, transforms):
-        reverse_list = []
-        h, w = ori_shape[0], ori_shape[1]
-        for op in transforms:
-            if op.__class__.__name__ in ['Resize']:
-                reverse_list.append(('resize', (h, w)))
-                h, w = op.height, op.width
-        return reverse_list
-
-    @staticmethod
-    def _postprocess(pred, origin_shape, transforms):
-        reverse_list = UNet.get_reverse_list(origin_shape, transforms)
-        for item in reverse_list[::-1]:
-            # TODO: 替换成cv2的interpolate（部署阶段无法使用paddle op）
-            if item[0] == 'resize':
-                h, w = item[1][0], item[1][1]
-                pred = F.interpolate(pred, (h, w), mode='nearest')
-        return pred
-
     def run(self, net, inputs, mode):
         net_out = net(inputs[0])
+        logit = net_out[0]
         outputs = OrderedDict()
         if mode == 'test':
-            im = paddle.to_tensor(inputs[0])
-            net_out = net(im)
-            logit = net_out[0]
             pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
             origin_shape = inputs[1]
             pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
             pred = paddle.squeeze(pred)
             outputs = {'pred': pred}
         if mode == 'eval':
-            net_out = net(inputs[0])
-            logit = net_out[0]
             pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
             label = inputs[1]
             origin_shape = label.shape[-2:]
@@ -101,7 +70,7 @@ class UNet(BaseModel):
             outputs['label_area'] = label_area
         if mode == 'train':
             compute_loss = losses.CrossEntropyLoss()
-            loss = compute_loss(net_out[0], inputs[1])
+            loss = compute_loss(logit, inputs[1])
             outputs['loss'] = loss
         return outputs
 
@@ -132,7 +101,9 @@ class UNet(BaseModel):
               save_dir='output',
               pretrained_weights='CITYSCAPES',
               learning_rate=0.01,
-              lr_decay_power=0.9):
+              lr_decay_power=0.9,
+              early_stop=False,
+              early_stop_patience=5):
         self.labels = train_dataset.labels
 
         self.net, self.test_inputs = self.build_net()
@@ -150,12 +121,11 @@ class UNet(BaseModel):
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
                 logging.warning(
-                    "Pretrained_weights will be forced to set as 'CITYSCAPES'. "
-                    + "If don't want to use pretrained weights, " +
+                    "Pretrained_weights is forcibly set to 'CITYSCAPES'. "
+                    "If don't want to use pretrained weights, "
                     "set pretrained_weights to be None.")
                 pretrained_weights = 'CITYSCAPES'
         pretrained_dir = osp.join(save_dir, 'pretrain')
-        pretrained_dir = osp.join(pretrained_dir, self.__class__.__name__)
         self.net_initialize(
             pretrained_weights=pretrained_weights, save_dir=pretrained_dir)
 
@@ -166,7 +136,9 @@ class UNet(BaseModel):
             eval_dataset=eval_dataset,
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
-            save_dir=save_dir)
+            save_dir=save_dir,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         arrange_transforms(
@@ -253,11 +225,73 @@ class UNet(BaseModel):
             raise Exception("transforms need to be defined, now is None.")
         if transforms is None:
             transforms = self.test_transforms
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
+        else:
+            images = img_file
+        batch_im, batch_origin_shape = BaseSegmenter._preprocess(
+            images, transforms, self.model_type)
         self.net.eval()
-        im, origin_shape = UNet._preprocess(img_file, transforms,
-                                            self.model_type)
-        data = (im, origin_shape, transforms.transforms)
+        data = (batch_im, batch_origin_shape, transforms.transforms)
         outputs = self.run(self.net, data, 'test')
         pred = outputs['pred']
         pred = pred.numpy().astype('uint8')
-        return {'label_map', pred}
+        return {'label_map': pred}
+
+    @staticmethod
+    def _preprocess(images, transforms, model_type):
+        arrange_transforms(
+            model_type=model_type, transforms=transforms, mode='test')
+        batch_im = list()
+        batch_ori_shape = list()
+        for im in images:
+            ori_shape = im.shape[1:3]
+            im = transforms(im)[0]
+            batch_im.append(im)
+            batch_ori_shape.append(ori_shape)
+
+        return batch_im, batch_ori_shape
+
+    @staticmethod
+    def get_batch_restore_list(batch_ori_shape, transforms):
+        batch_restore_list = list()
+        for ori_shape in batch_ori_shape:
+            restore_list = list()
+            h, w = ori_shape[0], ori_shape[1]
+            for op in transforms:
+                if op.__class__.__name__ in ['Resize', 'ResizeByShort']:
+                    restore_list.append(('resize', (h, w)))
+                    h, w = op.target_h, op.target_w
+                if op.__class__.__name__ in ['Padding']:
+                    restore_list.append(('padding', (h, w)))
+                    h, w = op.target_h, op.target_w
+            batch_restore_list.append(restore_list)
+        return batch_restore_list
+
+    @staticmethod
+    def _postprocess(batch_pred, batch_origin_shape, transforms):
+        batch_restore_list = BaseSegmenter.get_batch_restore_list(
+            batch_origin_shape, transforms)
+        for i in range(len(batch_pred)):
+            pred, restore_list = batch_pred[i], batch_restore_list[i]
+            for item in restore_list[::-1]:
+                # TODO: 替换成cv2的interpolate（部署阶段无法使用paddle op）
+                h, w = item[1][0], item[1][1]
+                if item[0] == 'resize':
+                    pred = F.interpolate(pred, (h, w), mode='nearest')
+                elif item[0] == 'padding':
+                    pred = pred[:, :, 0:h, 0:w]
+                else:
+                    pass
+            batch_pred[i] = pred
+        return batch_pred
+
+
+class UNet(BaseSegmenter):
+    def __init__(self, num_classes=2, use_deconv=False):
+        self.init_params = locals()
+        super(UNet, self).__init__(
+            model_name='segmenter', num_classes=num_classes)
+        self.use_deconv = use_deconv
+        self.loss_type = 'CrossEntropyLoss'
+        self.labels = None

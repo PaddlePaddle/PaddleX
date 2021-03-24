@@ -155,17 +155,19 @@ class Decode(Transform):
 
 class Resize(Transform):
     def __init__(self, height, width, interp=cv2.INTER_LINEAR):
-        self.height = height
-        self.width = width
+        self.target_h = height
+        self.target_w = width
         self.interp = interp
 
     def apply_im(self, im, interp):
-        im = cv2.resize(im, (self.width, self.height), interpolation=interp)
+        im = cv2.resize(
+            im, (self.target_w, self.target_h), interpolation=interp)
         return im
 
     def apply_mask(self, mask):
         mask = cv2.resize(
-            mask, (self.width, self.height), interpolation=cv2.INTER_NEAREST)
+            mask, (self.target_w, self.target_h),
+            interpolation=cv2.INTER_NEAREST)
         return mask
 
     def __call__(self, im, mask=None):
@@ -187,6 +189,8 @@ class ResizeByShort(Transform):
         self.short_size = short_size
         self.max_size = max_size
         self.interp = interp
+        self.target_h = None
+        self.target_w = None
 
     def apply_im(self, im, interp):
         im_short_size = min(im.shape[0], im.shape[1])
@@ -194,10 +198,10 @@ class ResizeByShort(Transform):
         scale = float(self.short_size) / im_short_size
         if 0 < self.max_size < np.round(scale * im_long_size):
             scale = float(self.max_size) / float(im_long_size)
-        resized_width = int(round(im.shape[1] * scale))
-        resized_height = int(round(im.shape[0] * scale))
+        self.target_w = int(round(im.shape[1] * scale))
+        self.target_h = int(round(im.shape[0] * scale))
         im = cv2.resize(
-            im, (resized_width, resized_height), interpolation=interp)
+            im, (self.target_w, self.target_h), interpolation=interp)
         return im
 
     def __call__(self, im, mask=None):
@@ -408,6 +412,69 @@ class RandomCrop(Transform):
 
         outputs = {'im': im, 'mask': mask}
 
+        return outputs
+
+
+class Padding(Transform):
+    def __init__(self,
+                 height,
+                 width,
+                 target_size,
+                 im_padding_value=(127.5, 127.5, 127.5),
+                 label_padding_value=255):
+        if isinstance(target_size, list) or isinstance(target_size, tuple):
+            if len(target_size) != 2:
+                raise ValueError(
+                    '`target_size` should include 2 elements, but it is {}'.
+                    format(target_size))
+        else:
+            raise TypeError(
+                "Type of target_size is invalid. It should be list or tuple, now is {}"
+                .format(type(target_size)))
+        self.target_h = height
+        self.target_w = width
+        self.target_size = target_size
+        self.im_padding_value = im_padding_value
+        self.label_padding_value = label_padding_value
+
+    def apply_im(self, im):
+        im_height, im_width = im.shape[0], im.shape[1]
+        pad_height = self.target_h - im_height
+        pad_width = self.target_w - im_width
+        if pad_height < 0 or pad_width < 0:
+            raise ValueError(
+                "The size of image should be less than 'target_size', "
+                "but the size of image ({}, {}) is larger than `target_size` ({}, {})"
+                .format(im_width, im_height, self.target_w, self.target_h))
+        im = cv2.copyMakeBorder(
+            im,
+            0,
+            pad_height,
+            0,
+            pad_width,
+            cv2.BORDER_CONSTANT,
+            value=self.im_padding_value)
+        return im
+
+    def apply_mask(self, mask):
+        mask_height, mask_width = mask.shape[0], mask.shape[1]
+        pad_height = self.target_h - mask_height
+        pad_width = self.target_w - mask_width
+        mask = cv2.copyMakeBorder(
+            mask,
+            0,
+            pad_height,
+            0,
+            pad_width,
+            cv2.BORDER_CONSTANT,
+            value=self.label_padding_value)
+        return mask
+
+    def __call__(self, im, mask=None):
+        im = self.apply_im(im)
+        if mask is not None:
+            mask = self.apply_mask(mask)
+        outputs = {'im': im, 'mask': mask}
         return outputs
 
 

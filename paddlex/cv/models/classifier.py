@@ -205,8 +205,8 @@ class BaseClassifier(BaseModel):
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
                 logging.warning(
-                    "Pretrained_weights will be forced to set as 'IMAGENET'. "
-                    + "If don't want to use pretrained weights, " +
+                    "Pretrained_weights is forcibly set to 'IMAGENET'. "
+                    "If don't want to use pretrained weights, "
                     "set pretrained_weights to be None.")
                 pretrained_weights = 'IMAGENET'
         pretrained_dir = osp.join(save_dir, 'pretrain')
@@ -263,13 +263,33 @@ class BaseClassifier(BaseModel):
         else:
             return eval_metrics.get()
 
+    def predict(self, img_file, transforms=None, topk=1):
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+        if transforms is None:
+            transforms = self.test_transforms
+        true_topk = min(self.num_classes, topk)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
+        else:
+            images = img_file
+        im = BaseClassifier._preprocess(images, transforms, self.model_type)
+        self.net.eval()
+        with paddle.no_grad():
+            outputs = self.run(self.net, im, mode='test')
+        prediction = outputs['prediction'].numpy()
+        prediction = BaseClassifier._postprocess(prediction, true_topk,
+                                                 self.labels)
+
+        return prediction
+
     @staticmethod
     def _preprocess(images, transforms, model_type):
         arrange_transforms(
             model_type=model_type, transforms=transforms, mode='test')
         batch_data = list()
-        for image in images:
-            batch_data.append(transforms(image)[0])
+        for im in images:
+            batch_data.append(transforms(im)[0])
 
         batch_data = to_tensor(batch_data)
 
@@ -287,24 +307,6 @@ class BaseClassifier(BaseModel):
             } for l in pred_label])
 
         return preds
-
-    def predict(self, img_file, transforms=None, topk=1):
-        true_topk = min(self.num_classes, topk)
-        if isinstance(img_file, (str, np.ndarray)):
-            images = [img_file]
-        else:
-            images = img_file
-        if transforms is None:
-            transforms = self.test_transforms
-        im = BaseClassifier._preprocess(images, transforms, self.model_type)
-        self.net.eval()
-        with paddle.no_grad():
-            outputs = self.run(self.net, im, mode='test')
-        prediction = outputs['prediction'].numpy()
-        prediction = BaseClassifier._postprocess(prediction, true_topk,
-                                                 self.labels)
-
-        return prediction
 
 
 class ResNet18(BaseClassifier):
