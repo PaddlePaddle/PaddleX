@@ -28,7 +28,7 @@ from .utils import seg_metrics as metrics
 
 
 class BaseSegmenter(BaseModel):
-    def __init__(self, model_name='UNet', num_classes=2):
+    def __init__(self, model_name='UNet', num_classes=2, **params):
         self.init_params = locals()
         super(BaseSegmenter, self).__init__('segmenter')
         if not hasattr(models, model_name):
@@ -36,11 +36,11 @@ class BaseSegmenter(BaseModel):
                 model_name))
         self.num_classes = num_classes
         self.labels = None
-        self.net, self.test_inputs = self.build_net()
+        self.net, self.test_inputs = self.build_net(**params)
 
-    def build_net(self):
+    def build_net(self, **params):
         net = models.__dict__[self.__class__.__name__](
-            num_classes=self.num_classes, use_deconv=self.use_deconv)
+            num_classes=self.num_classes, **params)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -288,10 +288,9 @@ class BaseSegmenter(BaseModel):
 
 
 class UNet(BaseSegmenter):
-    def __init__(self, num_classes=2, use_deconv=False):
-        self.init_params = locals()
+    def __init__(self, num_classes=2, use_deconv=False, align_corners=False):
+        params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
-            model_name='segmenter', num_classes=num_classes)
-        self.use_deconv = use_deconv
+            model_name='segmenter', num_classes=num_classes, **params)
         self.loss_type = 'CrossEntropyLoss'
         self.labels = None
