@@ -246,10 +246,11 @@ class BaseSegmenter(BaseModel):
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
-            ori_shape = im.shape[1:3]
+            ori_shape = im.shape[:2]
             im = transforms(im)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)
+        batch_im = paddle.to_tensor(batch_im)
 
         return batch_im, batch_ori_shape
 
@@ -273,8 +274,9 @@ class BaseSegmenter(BaseModel):
     def _postprocess(batch_pred, batch_origin_shape, transforms):
         batch_restore_list = BaseSegmenter.get_batch_restore_list(
             batch_origin_shape, transforms)
-        for i in range(len(batch_pred)):
-            pred, restore_list = batch_pred[i], batch_restore_list[i]
+        results = list()
+        for pred, restore_list in zip(batch_pred, batch_restore_list):
+            pred = paddle.unsqueeze(pred, axis=0)
             for item in restore_list[::-1]:
                 # TODO: 替换成cv2的interpolate（部署阶段无法使用paddle op）
                 h, w = item[1][0], item[1][1]
@@ -284,7 +286,8 @@ class BaseSegmenter(BaseModel):
                     pred = pred[:, :, 0:h, 0:w]
                 else:
                     pass
-            batch_pred[i] = pred
+            results.append(pred)
+        batch_pred = paddle.concat(results, axis=0)
         return batch_pred
 
 
