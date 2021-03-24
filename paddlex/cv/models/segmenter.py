@@ -19,12 +19,12 @@ import paddle
 import paddle.nn.functional as F
 import paddlex
 from paddlex.cv.nets.paddleseg import models
-from paddlex.cv.nets.paddleseg.models import losses
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import get_single_card_bs
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
+from paddlex.cv.nets.paddleseg.cvlibs import manager
 
 
 class BaseSegmenter(BaseModel):
@@ -47,7 +47,7 @@ class BaseSegmenter(BaseModel):
         ]
         return net, test_inputs
 
-    def run(self, net, inputs, mode):
+    def run(self, net, inputs, mode, loss_type='CrossEntropyLoss'):
         net_out = net(inputs[0])
         logit = net_out[0]
         outputs = OrderedDict()
@@ -69,7 +69,8 @@ class BaseSegmenter(BaseModel):
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
         if mode == 'train':
-            compute_loss = losses.CrossEntropyLoss()
+            loss = manager.LOSSES[loss_type]
+            compute_loss = loss()
             loss = compute_loss(logit, inputs[1])
             outputs['loss'] = loss
         return outputs
@@ -292,5 +293,3 @@ class UNet(BaseSegmenter):
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
             model_name='segmenter', num_classes=num_classes, **params)
-        self.loss_type = 'CrossEntropyLoss'
-        self.labels = None
