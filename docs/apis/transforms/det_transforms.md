@@ -174,6 +174,8 @@ paddlex.det.transforms.CLAHE(clip_limit=2., tile_grid_size=(8, 8))
 ```
 对图像进行对比度增强。
 
+【注意】该数据增强只适用于灰度图。
+
 ### 参数
 
 * **clip_limit** (int|float): 颜色对比度的阈值，默认值为2.。

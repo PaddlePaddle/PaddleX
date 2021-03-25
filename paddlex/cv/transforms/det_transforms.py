@@ -1070,7 +1070,7 @@ class CLAHE(DetTransform):
         """
         if im.shape[-1] != 1:
             raise Exception(
-                "Only the one-channel image is supported in the CLAHE operator, but recieved image channel is {}".
+                "Only the one-channel image is supported in the CLAHE transform, but recieved image channel is {}".
                 format(im.shape[-1]))
         clahe = cv2.createCLAHE(
             clipLimit=self.clip_limit, tileGridSize=self.tile_grid_size)
