@@ -302,7 +302,7 @@ class UNet(BaseSegmenter):
 class DeepLabV3P(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
-                 backbone='Resnet50_vd',
+                 backbone='ResNet50_vd',
                  output_stride=8,
                  backbone_indices=(0, 3),
                  aspp_ratios=(1, 6, 12, 18),
