@@ -47,7 +47,7 @@ num_classes = len(train_dataset.labels) + 1
 # API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn
 model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='ResNet18')
 
-# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#id1
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#id5
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=12,

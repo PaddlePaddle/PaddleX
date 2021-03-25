@@ -50,7 +50,7 @@ num_classes = len(train_dataset.labels)
 # API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-yolov3
 model = pdx.det.YOLOv3(num_classes=num_classes, backbone='MobileNetV1')
 
-# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#train
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#id1
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=270,

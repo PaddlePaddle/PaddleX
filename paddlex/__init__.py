@@ -14,8 +14,7 @@
 
 from __future__ import absolute_import
 
-__version__ = '1.3.6'
-gui_mode = True
+__version__ = '1.3.7'
 
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
@@ -29,6 +28,7 @@ if "CUDA_VISIBLE_DEVICES" in os.environ:
 import paddle
 version = paddle.__version__.strip().split('.')
 if version[0] == '1':
+    gui_mode = True
     if version[1] != '8':
         raise Exception(
             'For running paddlex(v{}), Version of paddlepaddle should be greater than 1.8.3'.
@@ -39,6 +39,7 @@ if version[0] == '1':
 
 if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
+    gui_mode = False
 
 from .utils.utils import get_environ_info
 from . import cv

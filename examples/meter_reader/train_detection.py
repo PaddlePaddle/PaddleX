@@ -44,7 +44,7 @@ eval_dataset = pdx.datasets.CocoDetection(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 
-# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/models/detection.html#yolov3
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-yolov3
 num_classes = len(train_dataset.labels)
 model = pdx.det.YOLOv3(
     num_classes=num_classes, backbone='DarkNet53', label_smooth=True)
