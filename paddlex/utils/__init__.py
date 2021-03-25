@@ -20,3 +20,4 @@ from .checkpoint import get_pretrained_weights, load_pretrained_weights
 from .env import get_environ_info, get_num_workers
 from .download import download_and_decompress
 from .stats import SmoothedValue, TrainingStats
+from .shm import _get_shared_memory_size_in_M
