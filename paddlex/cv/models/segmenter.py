@@ -309,11 +309,11 @@ class DeepLabV3P(BaseSegmenter):
                  aspp_out_channels=256,
                  align_corners=False):
         if backbone not in [
-                'Resnet50_vd', 'Resnet101_vd', 'Xception65_deeplab'
+                'ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('Resnet50_vd', 'Resnet101_vd', 'Xception65_deeplab')".format(
+                "('ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab')".format(
                     backbone))
         backbone = manager.BACKBONES[backbone](output_stride=output_stride)
         params = {
