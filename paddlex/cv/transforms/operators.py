@@ -422,7 +422,7 @@ class Padding(Transform):
                  target_size,
                  im_padding_value=(127.5, 127.5, 127.5),
                  label_padding_value=255):
-        if isinstance(target_size, list) or isinstance(target_size, tuple):
+        if isinstance(target_size, (list, tuple)):
             if len(target_size) != 2:
                 raise ValueError(
                     '`target_size` should include 2 elements, but it is {}'.
@@ -438,7 +438,7 @@ class Padding(Transform):
         self.label_padding_value = label_padding_value
 
     def apply_im(self, im):
-        im_height, im_width = im.shape[0], im.shape[1]
+        im_height, im_width = im.shape[0:2]
         pad_height = self.target_h - im_height
         pad_width = self.target_w - im_width
         if pad_height < 0 or pad_width < 0:
@@ -457,7 +457,7 @@ class Padding(Transform):
         return im
 
     def apply_mask(self, mask):
-        mask_height, mask_width = mask.shape[0], mask.shape[1]
+        mask_height, mask_width = mask.shape[0:2]
         pad_height = self.target_h - mask_height
         pad_width = self.target_w - mask_width
         mask = cv2.copyMakeBorder(

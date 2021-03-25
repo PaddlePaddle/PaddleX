@@ -256,7 +256,7 @@ class BaseSegmenter(BaseModel):
         return batch_im, batch_ori_shape
 
     @staticmethod
-    def get_batch_restore_list(batch_ori_shape, transforms):
+    def get_transforms_shape_info(batch_ori_shape, transforms):
         batch_restore_list = list()
         for ori_shape in batch_ori_shape:
             restore_list = list()
@@ -273,7 +273,7 @@ class BaseSegmenter(BaseModel):
 
     @staticmethod
     def _postprocess(batch_pred, batch_origin_shape, transforms):
-        batch_restore_list = BaseSegmenter.get_batch_restore_list(
+        batch_restore_list = BaseSegmenter.get_transforms_shape_info(
             batch_origin_shape, transforms)
         results = list()
         for pred, restore_list in zip(batch_pred, batch_restore_list):
