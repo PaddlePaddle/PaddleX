@@ -55,11 +55,15 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
+                if hasattr(self.net, 'scale'):
+                    scale = self.net.scale
+                else:
+                    scale = None
                 pretrained_weights = get_pretrained_weights(
                     pretrained_weights,
                     self.__class__.__name__,
                     save_dir,
-                    scale=self.net.scale)
+                    scale=scale)
             else:
                 pretrained_weights = get_pretrained_weights(
                     pretrained_weights, self.__class__.__name__, save_dir)
