@@ -34,13 +34,14 @@ class BaseSegmenter(BaseModel):
         if not hasattr(models, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
+        self.model_name = model_name
         self.num_classes = num_classes
         self.labels = None
         self.net, self.test_inputs = self.build_net(**params)
 
     def build_net(self, **params):
-        net = models.__dict__[self.__class__.__name__](
-            num_classes=self.num_classes, **params)
+        net = models.__dict__[self.model_name](num_classes=self.num_classes,
+                                               **params)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -296,3 +297,31 @@ class UNet(BaseSegmenter):
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
             model_name='UNet', num_classes=num_classes, **params)
+
+
+class DeepLabV3P(BaseSegmenter):
+    def __init__(self,
+                 num_classes=2,
+                 backbone='Resnet50_vd',
+                 output_stride=8,
+                 backbone_indices=(0, 3),
+                 aspp_ratios=(1, 6, 12, 18),
+                 aspp_out_channels=256,
+                 align_corners=False):
+        if backbone not in [
+                'Resnet50_vd', 'Resnet101_vd', 'Xception65_deeplab'
+        ]:
+            raise ValueError(
+                "backbone: {} is not supported. Please choose one of "
+                "('Resnet50_vd', 'Resnet101_vd', 'Xception65_deeplab')".format(
+                    backbone))
+        backbone = manager.BACKBONES[backbone](output_stride=output_stride)
+        params = {
+            'backbone': backbone,
+            'backbone_indices': backbone_indices,
+            'aspp_ratios': aspp_ratios,
+            'aspp_out_channels': aspp_out_channels,
+            'align_corners': align_corners
+        }
+        super(DeepLabV3P, self).__init__(
+            model_name='DeepLabV3P', num_classes=num_classes, **params)

@@ -59,7 +59,7 @@ class BaseModel:
                     pretrained_weights,
                     self.__class__.__name__,
                     save_dir,
-                    scale=self.scale)
+                    scale=self.net.scale)
             else:
                 pretrained_weights = get_pretrained_weights(
                     pretrained_weights, self.__class__.__name__, save_dir)
