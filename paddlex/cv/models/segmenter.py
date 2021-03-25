@@ -61,7 +61,7 @@ class BaseSegmenter(BaseModel):
         if mode == 'eval':
             pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
             label = inputs[1]
-            origin_shape = label.shape[-2:]
+            origin_shape = [label.shape[-2:]]
             # TODO: 替换cv2后postprocess移出run
             pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
             intersect_area, pred_area, label_area = metrics.calculate_area(
