@@ -108,7 +108,6 @@ class BaseSegmenter(BaseModel):
               early_stop_patience=5):
         self.labels = train_dataset.labels
 
-        self.net, self.test_inputs = self.build_net()
         if optimizer is None:
             num_steps_each_epoch = train_dataset.num_samples // train_batch_size
             self.optimizer = self.default_optimizer(
