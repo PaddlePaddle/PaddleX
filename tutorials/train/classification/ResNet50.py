@@ -40,4 +40,4 @@ model.train(
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.025,
-    save_dir='output/ResNet50')
+    save_dir='output/resnet50')
