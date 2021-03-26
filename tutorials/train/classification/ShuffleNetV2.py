@@ -40,4 +40,4 @@ model.train(
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.01,
-    save_dir='output/ShuffleNetV2')
+    save_dir='output/shufflenetv2')

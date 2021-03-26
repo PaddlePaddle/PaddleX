@@ -36,14 +36,6 @@ __all__ = [
     "Xception65", "Xception71", "ShuffleNetV2", "ShuffleNetV2_swish"
 ]
 
-scale_dict = {
-    "MobileNetV1": [.25, .5, .75, 1.0],
-    "MobileNetV2": [.25, .5, .75, 1.0, 1.5, 2.0],
-    "MobileNetV3_small": [.35, .5, .75, 1.0, 1.25],
-    "MobileNetV3_large": [.35, .5, .75, 1.0, 1.25],
-    "ShuffleNetV2": [.25, .33, .5, 1.0, 1.5, 2.0]
-}
-
 
 class BaseClassifier(BaseModel):
     """构建分类器，并实现其训练、评估、预测和模型导出。
@@ -53,35 +45,21 @@ class BaseClassifier(BaseModel):
         num_classes (int): 类别数。默认为1000。
     """
 
-    def __init__(self, model_name='ResNet50', num_classes=1000, scale=None):
+    def __init__(self, model_name='ResNet50', num_classes=1000, **params):
         self.init_params = locals()
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
 
-        if scale is not None:
-            # check whether specified scale is supported by the model
-            supported_scale = scale_dict[model_name]
-            if scale not in supported_scale:
-                logging.warning("scale={} is not supported by {}, "
-                                "scale is forcibly set to 1.0"
-                                .format(scale, model_name))
-                scale = 1.0
-
-        self.scale = scale
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
-        self.net, self.test_inputs = self.build_net()
+        self.net, self.test_inputs = self.build_net(**params)
 
-    def build_net(self):
-        if self.scale is not None:
-            net = architectures.__dict__[self.model_name](
-                class_dim=self.num_classes, scale=self.scale)
-        else:
-            net = architectures.__dict__[self.model_name](
-                class_dim=self.num_classes)
+    def build_net(self, **params):
+        net = architectures.__dict__[self.model_name](
+            class_dim=self.num_classes, **params)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -205,8 +183,8 @@ class BaseClassifier(BaseModel):
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
                 logging.warning(
-                    "Pretrained_weights will be forced to set as 'IMAGENET'. "
-                    + "If don't want to use pretrained weights, " +
+                    "Pretrained_weights is forcibly set to 'IMAGENET'. "
+                    "If don't want to use pretrained weights, "
                     "set pretrained_weights to be None.")
                 pretrained_weights = 'IMAGENET'
         pretrained_dir = osp.join(save_dir, 'pretrain')
@@ -263,13 +241,33 @@ class BaseClassifier(BaseModel):
         else:
             return eval_metrics.get()
 
+    def predict(self, img_file, transforms=None, topk=1):
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+        if transforms is None:
+            transforms = self.test_transforms
+        true_topk = min(self.num_classes, topk)
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
+        else:
+            images = img_file
+        im = BaseClassifier._preprocess(images, transforms, self.model_type)
+        self.net.eval()
+        with paddle.no_grad():
+            outputs = self.run(self.net, im, mode='test')
+        prediction = outputs['prediction'].numpy()
+        prediction = BaseClassifier._postprocess(prediction, true_topk,
+                                                 self.labels)
+
+        return prediction
+
     @staticmethod
     def _preprocess(images, transforms, model_type):
         arrange_transforms(
             model_type=model_type, transforms=transforms, mode='test')
         batch_data = list()
-        for image in images:
-            batch_data.append(transforms(image)[0])
+        for im in images:
+            batch_data.append(transforms(im)[0])
 
         batch_data = to_tensor(batch_data)
 
@@ -287,24 +285,6 @@ class BaseClassifier(BaseModel):
             } for l in pred_label])
 
         return preds
-
-    def predict(self, img_file, transforms=None, topk=1):
-        true_topk = min(self.num_classes, topk)
-        if isinstance(img_file, (str, np.ndarray)):
-            images = [img_file]
-        else:
-            images = img_file
-        if transforms is None:
-            transforms = self.test_transforms
-        im = BaseClassifier._preprocess(images, transforms, self.model_type)
-        self.net.eval()
-        with paddle.no_grad():
-            outputs = self.run(self.net, im, mode='test')
-        prediction = outputs['prediction'].numpy()
-        prediction = BaseClassifier._postprocess(prediction, true_topk,
-                                                 self.labels)
-
-        return prediction
 
 
 class ResNet18(BaseClassifier):
@@ -399,30 +379,50 @@ class DarkNet53(BaseClassifier):
 
 class MobileNetV1(BaseClassifier):
     def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.25, .5, .75, 1.0]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by MobileNetV1, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        params = {'scale': scale}
         super(MobileNetV1, self).__init__(
-            model_name='MobileNetV1', num_classes=num_classes, scale=scale)
+            model_name='MobileNetV1', num_classes=num_classes, **params)
 
 
 class MobileNetV2(BaseClassifier):
     def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.25, .5, .75, 1.0, 1.5, 2.0]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by MobileNetV2, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        params = {'scale': scale}
         super(MobileNetV2, self).__init__(
-            model_name='MobileNetV2', num_classes=num_classes, scale=scale)
+            model_name='MobileNetV2', num_classes=num_classes, **params)
 
 
 class MobileNetV3_small(BaseClassifier):
     def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.35, .5, .75, 1.0, 1.25]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by MobileNetV3_small, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        params = {'scale': scale}
         super(MobileNetV3_small, self).__init__(
-            model_name='MobileNetV3_small',
-            num_classes=num_classes,
-            scale=scale)
+            model_name='MobileNetV3_small', num_classes=num_classes, **params)
 
 
 class MobileNetV3_large(BaseClassifier):
     def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.35, .5, .75, 1.0, 1.25]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by MobileNetV3_large, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        params = {'scale': scale}
         super(MobileNetV3_large, self).__init__(
-            model_name='MobileNetV3_large',
-            num_classes=num_classes,
-            scale=scale)
+            model_name='MobileNetV3_large', num_classes=num_classes, **params)
 
 
 class DenseNet121(BaseClassifier):
@@ -517,8 +517,14 @@ class Xception71(BaseClassifier):
 
 class ShuffleNetV2(BaseClassifier):
     def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.25, .33, .5, 1.0, 1.5, 2.0]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by ShuffleNetV2, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        params = {'scale': scale}
         super(ShuffleNetV2, self).__init__(
-            model_name='ShuffleNetV2', num_classes=num_classes, scale=scale)
+            model_name='ShuffleNetV2', num_classes=num_classes, **params)
 
 
 class ShuffleNetV2_swish(BaseClassifier):

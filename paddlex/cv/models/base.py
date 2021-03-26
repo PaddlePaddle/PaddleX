@@ -25,7 +25,8 @@ import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            get_pretrained_weights, load_pretrained_weights,
-                           SmoothedValue, TrainingStats, EarlyStop)
+                           SmoothedValue, TrainingStats,
+                           _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
 
 
@@ -42,7 +43,6 @@ class BaseModel:
         self.train_data_loader = None
         self.eval_data_loader = None
         self.eval_metrics = None
-        self.test_transforms = None
         # 是否使用多卡间同步BatchNorm均值和方差
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
@@ -56,11 +56,12 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
+                scale = getattr(self.net, 'scale', None)
                 pretrained_weights = get_pretrained_weights(
                     pretrained_weights,
                     self.__class__.__name__,
                     save_dir,
-                    scale=self.scale)
+                    scale=scale)
             else:
                 pretrained_weights = get_pretrained_weights(
                     pretrained_weights, self.__class__.__name__, save_dir)
@@ -151,12 +152,20 @@ class BaseModel:
             batch_size=batch_size_each_card,
             shuffle=dataset.shuffle,
             drop_last=mode == 'train')
+
+        shm_size = _get_shared_memory_size_in_M()
+        if shm_size is None or shm_size < 1024.:
+            use_shared_memory = False
+        else:
+            use_shared_memory = True
+
         loader = DataLoader(
             dataset,
             batch_sampler=batch_sampler,
             collate_fn=dataset.batch_transforms,
             num_workers=dataset.num_workers,
-            return_list=True)
+            return_list=True,
+            use_shared_memory=use_shared_memory)
 
         return loader
 

@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .unet import UNet
+from .segmenter import UNet, DeepLabV3P
 from .classifier import *
