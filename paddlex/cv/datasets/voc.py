@@ -54,11 +54,6 @@ class VOCDetection(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
-        # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
-        # or matplotlib.backends is imported for the first time
-        # pycocotools import matplotlib
-        import matplotlib
-        matplotlib.use('Agg')
         from pycocotools.coco import COCO
         super(VOCDetection, self).__init__(
             transforms=transforms,
@@ -109,13 +104,8 @@ class VOCDetection(Dataset):
                 if not osp.isfile(xml_file):
                     continue
                 if not osp.exists(img_file):
-                    logging.warning('The image file {} is not exist!'.format(
+                    raise IOError('The image file {} is not exist!'.format(
                         img_file))
-                    continue
-                if not osp.exists(xml_file):
-                    logging.warning('The annotation file {} is not exist!'.
-                                    format(xml_file))
-                    continue
                 tree = ET.parse(xml_file)
                 if tree.find('id') is None:
                     im_id = np.array([ct])
@@ -131,16 +121,21 @@ class VOCDetection(Dataset):
                 objs = tree.findall(obj_tag)
                 pattern = re.compile('<size>', re.IGNORECASE)
                 size_tag = pattern.findall(
-                    str(ET.tostringlist(tree.getroot())))[0][1:-1]
-                size_element = tree.find(size_tag)
-                pattern = re.compile('<width>', re.IGNORECASE)
-                width_tag = pattern.findall(
-                    str(ET.tostringlist(size_element)))[0][1:-1]
-                im_w = float(size_element.find(width_tag).text)
-                pattern = re.compile('<height>', re.IGNORECASE)
-                height_tag = pattern.findall(
-                    str(ET.tostringlist(size_element)))[0][1:-1]
-                im_h = float(size_element.find(height_tag).text)
+                    str(ET.tostringlist(tree.getroot())))
+                if len(size_tag) > 0:
+                    size_tag = size_tag[0][1:-1]
+                    size_element = tree.find(size_tag)
+                    pattern = re.compile('<width>', re.IGNORECASE)
+                    width_tag = pattern.findall(
+                        str(ET.tostringlist(size_element)))[0][1:-1]
+                    im_w = float(size_element.find(width_tag).text)
+                    pattern = re.compile('<height>', re.IGNORECASE)
+                    height_tag = pattern.findall(
+                        str(ET.tostringlist(size_element)))[0][1:-1]
+                    im_h = float(size_element.find(height_tag).text)
+                else:
+                    im_h = 0
+                    im_w = 0
                 gt_bbox = np.zeros((len(objs), 4), dtype=np.float32)
                 gt_class = np.zeros((len(objs), 1), dtype=np.int32)
                 gt_score = np.ones((len(objs), 1), dtype=np.float32)
@@ -148,8 +143,8 @@ class VOCDetection(Dataset):
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
-                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
-                        1:-1]
+                    name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][1:
+                                                                             -1]
                     cname = obj.find(name_tag).text.strip()
                     gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
@@ -192,6 +187,14 @@ class VOCDetection(Dataset):
                     if im_w > 0.5 and im_h > 0.5:
                         x2 = min(im_w - 1, x2)
                         y2 = min(im_h - 1, y2)
+                    # 处理点的顺序问题
+                    if x1 >= x2 and y1 >= y2:
+                        tmp0 = x1
+                        tmp1 = y1
+                        x1 = x2
+                        y1 = y2
+                        x2 = tmp0
+                        y2 = tmp1
                     gt_bbox[i] = [x1, y1, x2, y2]
                     is_crowd[i][0] = 0
                     difficult[i][0] = _difficult
@@ -239,12 +242,6 @@ class VOCDetection(Dataset):
         self.coco_gt.createIndex()
 
     def add_negative_samples(self, image_dir):
-        """将背景图片加入训练
-
-        Args:
-            image_dir (str)：背景图片所在的文件夹目录。
-
-        """
         import cv2
         if not osp.exists(image_dir):
             raise Exception("{} background images directory does not exist.".
@@ -264,7 +261,7 @@ class VOCDetection(Dataset):
 
             max_img_id += 1
             im_fname = osp.join(image_dir, image)
-            img_data = cv2.imread(im_fname, cv2.IMREAD_UNCHANGED)
+            img_data = cv2.imread(im_fname)
             im_h, im_w, im_c = img_data.shape
             im_info = {
                 'im_id': np.array([max_img_id]).astype('int32'),
