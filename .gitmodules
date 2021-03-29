@@ -1,0 +1,3 @@
+[submodule "PaddleSeg"]
+	path = PaddleSeg
+	url = https://github.com/PaddlePaddle/PaddleSeg/
