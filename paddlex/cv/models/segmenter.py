@@ -302,7 +302,7 @@ class DeepLabV3P(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  backbone='ResNet50_vd',
-                 output_stride=8,
+                 output_stride=16,
                  backbone_indices=(0, 3),
                  aspp_ratios=(1, 6, 12, 18),
                  aspp_out_channels=256,

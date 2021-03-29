@@ -1,4 +1,4 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .mixed_loss import MixedLoss
 from .cross_entropy_loss import CrossEntropyLoss
 from .binary_cross_entropy_loss import BCELoss
-from .lovasz_loss import LovaszSoftmaxLoss, LovaszHingeLoss
 from .gscnn_dual_task_loss import DualTaskLoss
 from .edge_attention_loss import EdgeAttentionLoss
 from .bootstrapped_cross_entropy import BootstrappedCrossEntropyLoss
 from .dice_loss import DiceLoss
-from .ohem_cross_entropy_loss import OhemCrossEntropyLoss
-from .decoupledsegnet_relax_boundary_loss import RelaxBoundaryLoss
-from .ohem_edge_attention_loss import OhemEdgeAttentionLoss

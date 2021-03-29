@@ -30,8 +30,8 @@ class Config(object):
         batch_size: The number of samples per gpu.
         iters: The total training steps.
         train_dataset: A training data config including type/data_root/transforms/mode.
-            For data type, please refer to paddlex.cv.nets.paddleseg.datasets.
-            For specific transforms, please refer to paddlex.cv.nets.paddleseg.transforms.transforms.
+            For data type, please refer to paddleseg.datasets.
+            For specific transforms, please refer to paddleseg.transforms.transforms.
         val_dataset: A validation data config including type/data_root/transforms/mode.
         optimizer: A optimizer config, but currently PaddleSeg only supports sgd with momentum in config file.
             In addition, weight_decay could be set as a regularization.
@@ -42,15 +42,15 @@ class Config(object):
             model outputs, and there could be only one loss type if using the same loss type among the outputs, otherwise the number of
             loss type must be consistent with coef.
         model: A model config including type/backbone and model-dependent arguments.
-            For model type, please refer to paddlex.cv.nets.paddleseg.models.
-            For backbone, please refer to paddlex.cv.nets.paddleseg.models.backbones.
+            For model type, please refer to paddleseg.models.
+            For backbone, please refer to paddleseg.models.backbones.
 
     Args:
         path (str) : The path of config file, supports yaml format only.
 
     Examples:
 
-        from paddlex.cv.nets.paddleseg.cvlibs.config import Config
+        from paddleseg.cvlibs.config import Config
 
         # Create a cfg object with yaml file path.
         cfg = Config(yaml_cfg_path)
@@ -210,9 +210,7 @@ class Config(object):
                 if key == 'types':
                     self._losses['types'] = []
                     for item in args['types']:
-                        if item['type'] != 'MixedLoss':
-                            item['ignore_index'] = \
-                                self.train_dataset.ignore_index
+                        item['ignore_index'] = self.train_dataset.ignore_index
                         self._losses['types'].append(self._load_object(item))
                 else:
                     self._losses[key] = val
@@ -226,33 +224,24 @@ class Config(object):
     @property
     def model(self) -> paddle.nn.Layer:
         model_cfg = self.dic.get('model').copy()
+        model_cfg['num_classes'] = self.train_dataset.num_classes
+
         if not model_cfg:
             raise RuntimeError('No model specified in the configuration file.')
-        if not 'num_classes' in model_cfg:
-            if self.train_dataset and hasattr(self.train_dataset,
-                                              'num_classes'):
-                model_cfg['num_classes'] = self.train_dataset.num_classes
-            elif self.val_dataset and hasattr(self.val_dataset, 'num_classes'):
-                model_cfg['num_classes'] = self.val_dataset.num_classes
-            else:
-                raise ValueError(
-                    '`num_classes` is not found. Please set it in model, train_dataset or val_dataset'
-                )
-
         if not self._model:
             self._model = self._load_object(model_cfg)
         return self._model
 
     @property
     def train_dataset(self) -> paddle.io.Dataset:
-        _train_dataset = self.dic.get('train_dataset', {}).copy()
+        _train_dataset = self.dic.get('train_dataset').copy()
         if not _train_dataset:
             return None
         return self._load_object(_train_dataset)
 
     @property
     def val_dataset(self) -> paddle.io.Dataset:
-        _val_dataset = self.dic.get('val_dataset', {}).copy()
+        _val_dataset = self.dic.get('val_dataset').copy()
         if not _val_dataset:
             return None
         return self._load_object(_val_dataset)

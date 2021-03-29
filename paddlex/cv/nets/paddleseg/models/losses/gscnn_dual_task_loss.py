@@ -1,6 +1,3 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -16,7 +13,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from paddlex.cv.nets.paddleseg.cvlibs import manager
+from paddleseg.cvlibs import manager
 
 
 @manager.LOSSES.add_component

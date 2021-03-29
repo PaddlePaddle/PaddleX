@@ -24,7 +24,7 @@ def constant_init(param, **kwargs):
 
     Examples:
 
-        from paddlex.cv.nets.paddleseg.cvlibs import param_init
+        from paddleseg.cvlibs import param_init
         import paddle.nn as nn
 
         linear = nn.Linear(2, 4)
@@ -46,7 +46,7 @@ def normal_init(param, **kwargs):
 
     Examples:
 
-        from paddlex.cv.nets.paddleseg.cvlibs import param_init
+        from paddleseg.cvlibs import param_init
         import paddle.nn as nn
 
         linear = nn.Linear(2, 4)
@@ -79,7 +79,7 @@ def kaiming_normal_init(param, **kwargs):
 
     Examples:
 
-        from paddlex.cv.nets.paddleseg.cvlibs import param_init
+        from paddleseg.cvlibs import param_init
         import paddle.nn as nn
 
         linear = nn.Linear(2, 4)

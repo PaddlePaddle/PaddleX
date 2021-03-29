@@ -20,7 +20,7 @@ import paddle.nn.functional as F
 
 from paddlex.cv.nets.paddleseg.models import layers
 from paddlex.cv.nets.paddleseg.cvlibs import manager
-from paddlex.cv.nets.paddleseg.utils import utils
+from ppaddlex.cv.nets.addleseg.utils import utils
 
 
 @manager.MODELS.add_component

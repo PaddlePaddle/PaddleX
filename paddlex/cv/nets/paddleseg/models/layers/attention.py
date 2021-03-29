@@ -16,7 +16,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from paddlex.cv.nets.paddleseg.models import layers
+from paddleseg.models import layers
 
 
 class AttentionBlock(nn.Layer):

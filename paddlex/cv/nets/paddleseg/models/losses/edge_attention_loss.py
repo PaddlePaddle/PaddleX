@@ -1,4 +1,4 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@ import paddle
 from paddle import nn
 import paddle.nn.functional as F
 
-from paddlex.cv.nets.paddleseg.cvlibs import manager
-from paddlex.cv.nets.paddleseg.models import losses
+from paddleseg.cvlibs import manager
+from paddleseg.models import losses
 
 
 @manager.LOSSES.add_component
@@ -35,8 +35,7 @@ class EdgeAttentionLoss(nn.Layer):
         super().__init__()
         self.edge_threshold = edge_threshold
         self.ignore_index = ignore_index
-        self.EPS = 1e-10
-        self.mean_mask = 1
+        self.EPS = 1e-5
 
     def forward(self, logits, label):
         """
@@ -70,8 +69,6 @@ class EdgeAttentionLoss(nn.Layer):
         mask = paddle.cast(mask, 'float32')
         loss = loss * mask
         avg_loss = paddle.mean(loss) / (paddle.mean(mask) + self.EPS)
-        if paddle.mean(mask) < self.mean_mask:
-            self.mean_mask = paddle.mean(mask)
 
         label.stop_gradient = True
         mask.stop_gradient = True
