@@ -68,7 +68,7 @@ class BaseModel:
                     pretrained_weights,
                     self.__class__.__name__,
                     save_dir,
-                    backbone=backbone_name)
+                    backbone_name=backbone_name)
         if pretrained_weights is not None:
             load_pretrained_weights(self.net, pretrained_weights)
 
