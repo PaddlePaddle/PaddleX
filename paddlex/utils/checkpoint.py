@@ -20,7 +20,11 @@ from .download import download_and_decompress
 
 cityscapes_weights = {
     'UNet_CITYSCAPES':
-    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams'
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams',
+    'DeepLabV3P_ResNet50_vd_CITYSCAPES':
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet50_os8_cityscapes_1024x512_80k/model.pdparams',
+    'DeepLabV3P_ResNet101_vd_CITYSCAPES':
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet101_os8_cityscapes_769x769_80k/model.pdparams'
 }
 
 imagenet_weights = {
@@ -138,8 +142,19 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams'
 }
 
+pascalvoc_weights = {
+    'DeepLabV3P_ResNet50_vd_PascalVOC':
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet50_os8_voc12aug_512x512_40k/model.pdparams',
+    'DeepLabV3P_ResNet101_vd_PascalVOC':
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams'
+}
 
-def get_pretrained_weights(flag, class_name, save_dir, scale=None):
+
+def get_pretrained_weights(flag,
+                           class_name,
+                           save_dir,
+                           scale=None,
+                           backbone_name=None):
     if flag is None:
         return None
     elif osp.isdir(flag):
@@ -153,12 +168,16 @@ def get_pretrained_weights(flag, class_name, save_dir, scale=None):
         weights_key = "{}_x{}_{}".format(class_name,
                                          str(float(scale)).replace('.', '_'),
                                          flag)
+    elif backbone_name is not None:
+        weights_key = "{}_{}_{}".format(class_name, backbone_name, flag)
     else:
         weights_key = "{}_{}".format(class_name, flag)
     if flag == 'CITYSCAPES':
         url = cityscapes_weights[weights_key]
     elif flag == 'IMAGENET':
         url = imagenet_weights[weights_key]
+    elif flag == 'PascalVOC':
+        url = pascalvoc_weights[weights_key]
     else:
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))

@@ -63,8 +63,12 @@ class BaseModel:
                     save_dir,
                     scale=scale)
             else:
+                backbone_name = getattr(self, 'backbone_name', None)
                 pretrained_weights = get_pretrained_weights(
-                    pretrained_weights, self.__class__.__name__, save_dir)
+                    pretrained_weights,
+                    self.__class__.__name__,
+                    save_dir,
+                    backbone=backbone_name)
         if pretrained_weights is not None:
             load_pretrained_weights(self.net, pretrained_weights)
 

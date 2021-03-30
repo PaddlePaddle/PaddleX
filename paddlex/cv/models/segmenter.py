@@ -24,6 +24,7 @@ from paddlex.utils import get_single_card_bs
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
+from .utils import pretrained_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 
 
@@ -117,15 +118,18 @@ class BaseSegmenter(BaseModel):
             self.optimizer = optimizer
         if pretrained_weights is not None and not osp.exists(
                 pretrained_weights):
-            if pretrained_weights not in ['CITYSCAPES']:
+            if pretrained_weights not in pretrained_weights_dict[
+                    self.model_name]:
                 logging.warning(
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
-                logging.warning(
-                    "Pretrained_weights is forcibly set to 'CITYSCAPES'. "
-                    "If don't want to use pretrained weights, "
-                    "set pretrained_weights to be None.")
-                pretrained_weights = 'CITYSCAPES'
+                logging.warning("Pretrained_weights is forcibly set to '{}'. "
+                                "If don't want to use pretrained weights, "
+                                "set pretrained_weights to be None.".format(
+                                    pretrained_weights_dict[self.model_name][
+                                        0]))
+                pretrained_weights = pretrained_weights_dict[self.model_name][
+                    0]
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrained_weights=pretrained_weights, save_dir=pretrained_dir)
@@ -307,9 +311,8 @@ class DeepLabV3P(BaseSegmenter):
                  aspp_ratios=(1, 6, 12, 18),
                  aspp_out_channels=256,
                  align_corners=False):
-        if backbone not in [
-                'ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab'
-        ]:
+        self.backbone_name = backbone
+        if backbone not in ['ResNet50_vd', 'ResNet101_vd']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab')".format(
