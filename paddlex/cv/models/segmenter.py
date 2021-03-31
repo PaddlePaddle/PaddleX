@@ -309,10 +309,10 @@ class UNet(BaseSegmenter):
             ]
             coef = [.8, .2]
             loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
-            loss_coef = 1.0
+            loss_coef = [1.0]
         else:
             loss_type = [manager.LOSSES['CrossEntropyLoss']()]
-            loss_coef = 1.0
+            loss_coef = [1.0]
         losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
@@ -347,10 +347,10 @@ class DeepLabV3P(BaseSegmenter):
             ]
             coef = [.8, .2]
             loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
-            loss_coef = 1.0
+            loss_coef = [1.0]
         else:
             loss_type = [manager.LOSSES['CrossEntropyLoss']()]
-            loss_coef = 1.0
+            loss_coef = [1.0]
         losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {
