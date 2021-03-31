@@ -303,14 +303,15 @@ class UNet(BaseSegmenter):
                  use_deconv=False,
                  align_corners=False):
         if use_mix_loss:
-            loss_type = list(manager.LOSSES['MixedLoss'](losses=[
-                manager.LOSSES['CrossEntropyLoss'](), manager.LOSSES[
-                    'LovaszSoftmaxLoss']()
-            ],
-                                                         coef=[.8, .2]))
+            losses = [
+                manager.LOSSES['CrossEntropyLoss'](),
+                manager.LOSSES['LovaszSoftmaxLoss']()
+            ]
+            coef = [.8, .2]
+            loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
             loss_coef = 1.0
         else:
-            loss_type = list(manager.LOSSES['CrossEntropyLoss']())
+            loss_type = [manager.LOSSES['CrossEntropyLoss']()]
             loss_coef = 1.0
         losses = {'types': loss_type, 'coef': loss_coef}
 
@@ -340,14 +341,15 @@ class DeepLabV3P(BaseSegmenter):
         backbone = manager.BACKBONES[backbone](output_stride=output_stride)
 
         if use_mix_loss:
-            loss_type = list(manager.LOSSES['MixedLoss'](losses=[
-                manager.LOSSES['CrossEntropyLoss'](), manager.LOSSES[
-                    'LovaszSoftmaxLoss']()
-            ],
-                                                         coef=[.8, .2]))
+            losses = [
+                manager.LOSSES['CrossEntropyLoss'](),
+                manager.LOSSES['LovaszSoftmaxLoss']()
+            ]
+            coef = [.8, .2]
+            loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
             loss_coef = 1.0
         else:
-            loss_type = list(manager.LOSSES['CrossEntropyLoss']())
+            loss_type = [manager.LOSSES['CrossEntropyLoss']()]
             loss_coef = 1.0
         losses = {'types': loss_type, 'coef': loss_coef}
 
