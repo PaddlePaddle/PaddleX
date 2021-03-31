@@ -312,7 +312,7 @@ class UNet(BaseSegmenter):
         else:
             loss_type = manager.LOSSES['CrossEntropyLoss']()
             loss_coef = 1.0
-        losses = {'type': loss_type, 'coef': loss_coef}
+        losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
@@ -349,7 +349,7 @@ class DeepLabV3P(BaseSegmenter):
         else:
             loss_type = manager.LOSSES['CrossEntropyLoss']()
             loss_coef = 1.0
-        losses = {'type': loss_type, 'coef': loss_coef}
+        losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {
             'backbone': backbone,
@@ -369,7 +369,7 @@ class FastSCNN(BaseSegmenter):
     def __init__(self, num_classes=2, align_corners=False):
         params = {'align_corners': align_corners}
         losses = {
-            'type': [manager.LOSSES['CrossEntropyLoss']()] * 2,
+            'types': [manager.LOSSES['CrossEntropyLoss']()] * 2,
             'coef': [1.0, 0.4]
         }
         super(FastSCNN, self).__init__(
