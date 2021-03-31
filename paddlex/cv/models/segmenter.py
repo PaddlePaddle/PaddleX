@@ -369,7 +369,7 @@ class FastSCNN(BaseSegmenter):
     def __init__(self, num_classes=2, align_corners=False):
         params = {'align_corners': align_corners}
         losses = {
-            'type': ['CrossEntropyLoss', 'CrossEntropyLoss'],
+            'type': [manager.LOSSES['CrossEntropyLoss']()] * 2,
             'coef': [1.0, 0.4]
         }
         super(FastSCNN, self).__init__(
