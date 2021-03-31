@@ -310,7 +310,7 @@ class UNet(BaseSegmenter):
                                                          coef=[.8, .2]))
             loss_coef = 1.0
         else:
-            loss_type = manager.LOSSES['CrossEntropyLoss']()
+            loss_type = list(manager.LOSSES['CrossEntropyLoss']())
             loss_coef = 1.0
         losses = {'types': loss_type, 'coef': loss_coef}
 
@@ -347,7 +347,7 @@ class DeepLabV3P(BaseSegmenter):
                                                          coef=[.8, .2]))
             loss_coef = 1.0
         else:
-            loss_type = manager.LOSSES['CrossEntropyLoss']()
+            loss_type = list(manager.LOSSES['CrossEntropyLoss']())
             loss_coef = 1.0
         losses = {'types': loss_type, 'coef': loss_coef}
 
