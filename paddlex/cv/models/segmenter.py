@@ -327,3 +327,16 @@ class DeepLabV3P(BaseSegmenter):
         }
         super(DeepLabV3P, self).__init__(
             model_name='DeepLabV3P', num_classes=num_classes, **params)
+
+
+class FastSCNN(BaseSegmenter):
+    def __init__(self,
+                 num_classes=2,
+                 enable_auxiliary_loss=True,
+                 align_corners=False):
+        params = {
+            'enable_auxiliary_loss': enable_auxiliary_loss,
+            'align_corners': align_corners
+        }
+        super(FastSCNN, self).__init__(
+            model_name='FastSCNN', num_classes=num_classes, **params)
