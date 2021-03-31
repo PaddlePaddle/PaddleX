@@ -29,7 +29,7 @@ from paddlex.cv.nets.paddleseg.cvlibs import manager
 
 
 class BaseSegmenter(BaseModel):
-    def __init__(self, model_name='UNet', num_classes=2, **params):
+    def __init__(self, model_name, num_classes=2, losses=None, **params):
         self.init_params = locals()
         super(BaseSegmenter, self).__init__('segmenter')
         if not hasattr(models, model_name):
@@ -37,6 +37,7 @@ class BaseSegmenter(BaseModel):
                 model_name))
         self.model_name = model_name
         self.num_classes = num_classes
+        self.losses = losses
         self.labels = None
         self.net, self.test_inputs = self.build_net(**params)
 
@@ -49,7 +50,7 @@ class BaseSegmenter(BaseModel):
         ]
         return net, test_inputs
 
-    def run(self, net, inputs, mode, loss_type='CrossEntropyLoss'):
+    def run(self, net, inputs, mode):
         net_out = net(inputs[0])
         logit = net_out[0]
         outputs = OrderedDict()
@@ -71,9 +72,9 @@ class BaseSegmenter(BaseModel):
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
         if mode == 'train':
-            loss = manager.LOSSES[loss_type]
-            compute_loss = loss()
-            loss = compute_loss(logit, inputs[1])
+            loss_list = metrics.loss_computation(
+                logits_list=net_out, labels=inputs[1], losses=self.losses)
+            loss = sum(loss_list)
             outputs['loss'] = loss
         return outputs
 
@@ -296,28 +297,60 @@ class BaseSegmenter(BaseModel):
 
 
 class UNet(BaseSegmenter):
-    def __init__(self, num_classes=2, use_deconv=False, align_corners=False):
+    def __init__(self,
+                 num_classes=2,
+                 use_mix_loss=False,
+                 use_deconv=False,
+                 align_corners=False):
+        if use_mix_loss:
+            loss_type = manager.LOSSES['MixedLoss'](losses=[
+                manager.LOSSES['CrossEntropyLoss'](),
+                manager.LOSSES['LovaszSoftmaxLoss']()
+            ],
+                                                    coef=[.8, .2])
+            loss_coef = 1.0
+        else:
+            loss_type = manager.LOSSES['CrossEntropyLoss']()
+            loss_coef = 1.0
+        losses = {'type': loss_type, 'coef': loss_coef}
+
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
-            model_name='UNet', num_classes=num_classes, **params)
+            model_name='UNet',
+            num_classes=num_classes,
+            losses=losses,
+            **params)
 
 
 class DeepLabV3P(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  backbone='ResNet50_vd',
-                 output_stride=16,
+                 use_mix_loss=False,
+                 output_stride=8,
                  backbone_indices=(0, 3),
-                 aspp_ratios=(1, 6, 12, 18),
+                 aspp_ratios=(1, 12, 24, 36),
                  aspp_out_channels=256,
                  align_corners=False):
         self.backbone_name = backbone
         if backbone not in ['ResNet50_vd', 'ResNet101_vd']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab')".format(
-                    backbone))
+                "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
         backbone = manager.BACKBONES[backbone](output_stride=output_stride)
+
+        if use_mix_loss:
+            loss_type = manager.LOSSES['MixedLoss'](losses=[
+                manager.LOSSES['CrossEntropyLoss'](),
+                manager.LOSSES['LovaszSoftmaxLoss']()
+            ],
+                                                    coef=[.8, .2])
+            loss_coef = 1.0
+        else:
+            loss_type = manager.LOSSES['CrossEntropyLoss']()
+            loss_coef = 1.0
+        losses = {'type': loss_type, 'coef': loss_coef}
+
         params = {
             'backbone': backbone,
             'backbone_indices': backbone_indices,
@@ -326,17 +359,21 @@ class DeepLabV3P(BaseSegmenter):
             'align_corners': align_corners
         }
         super(DeepLabV3P, self).__init__(
-            model_name='DeepLabV3P', num_classes=num_classes, **params)
+            model_name='DeepLabV3P',
+            num_classes=num_classes,
+            losses=losses,
+            **params)
 
 
 class FastSCNN(BaseSegmenter):
-    def __init__(self,
-                 num_classes=2,
-                 enable_auxiliary_loss=True,
-                 align_corners=False):
-        params = {
-            'enable_auxiliary_loss': enable_auxiliary_loss,
-            'align_corners': align_corners
+    def __init__(self, num_classes=2, align_corners=False):
+        params = {'align_corners': align_corners}
+        losses = {
+            'type': ['CrossEntropyLoss', 'CrossEntropyLoss'],
+            'coef': [1.0, 0.4]
         }
         super(FastSCNN, self).__init__(
-            model_name='FastSCNN', num_classes=num_classes, **params)
+            model_name='FastSCNN',
+            num_classes=num_classes,
+            losses=losses,
+            **params)
