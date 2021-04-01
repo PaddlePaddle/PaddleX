@@ -299,10 +299,10 @@ class BaseSegmenter(BaseModel):
 class UNet(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
-                 use_mix_loss=False,
+                 use_mixed_loss=False,
                  use_deconv=False,
                  align_corners=False):
-        if use_mix_loss:
+        if use_mixed_loss:
             losses = [
                 manager.LOSSES['CrossEntropyLoss'](),
                 manager.LOSSES['LovaszSoftmaxLoss']()
@@ -327,7 +327,7 @@ class DeepLabV3P(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  backbone='ResNet50_vd',
-                 use_mix_loss=False,
+                 use_mixed_loss=False,
                  output_stride=8,
                  backbone_indices=(0, 3),
                  aspp_ratios=(1, 12, 24, 36),
@@ -340,7 +340,7 @@ class DeepLabV3P(BaseSegmenter):
                 "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
         backbone = manager.BACKBONES[backbone](output_stride=output_stride)
 
-        if use_mix_loss:
+        if use_mixed_loss:
             losses = [
                 manager.LOSSES['CrossEntropyLoss'](),
                 manager.LOSSES['LovaszSoftmaxLoss']()
