@@ -27,7 +27,7 @@ from .utils import seg_metrics as metrics
 from .utils import pretrained_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 
-__all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet"]
+__all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
 
 class BaseSegmenter(BaseModel):
@@ -414,3 +414,18 @@ class HRNet(BaseSegmenter):
         super(HRNet, self).__init__(
             model_name='FCN', num_classes=num_classes, losses=losses, **params)
         self.model_name = 'HRNet'
+
+
+class BiSeNetV2(BaseSegmenter):
+    def __init__(self, num_classes=2, align_corners=False):
+        losses = {
+            'types': [manager.LOSSES['CrossEntropyLoss']()] * 5,
+            'coef': [1.0] * 5
+        }
+
+        params = {'align_corners': align_corners}
+        super(BiSeNetV2, self).__init__(
+            model_name='BiSeNetV2',
+            num_classes=num_classes,
+            losses=losses,
+            **params)
