@@ -14,5 +14,7 @@
 
 pretrained_weights_dict = {
     'UNet': ['CITYSCAPES'],
-    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC']
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
+    'FastSCNN': ['CITYSCAPES'],
+    'HRNet': ['CITYSCAPES', 'PascalVOC']
 }

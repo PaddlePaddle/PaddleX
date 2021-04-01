@@ -24,7 +24,11 @@ cityscapes_weights = {
     'DeepLabV3P_ResNet50_vd_CITYSCAPES':
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet50_os8_cityscapes_1024x512_80k/model.pdparams',
     'DeepLabV3P_ResNet101_vd_CITYSCAPES':
-    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet101_os8_cityscapes_769x769_80k/model.pdparams'
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet101_os8_cityscapes_769x769_80k/model.pdparams',
+    'HRNet_HRNet_W18_CITYSCAPES':
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw18_cityscapes_1024x512_80k/model.pdparams',
+    'HRNet_HRNet_W48_CITYSCAPES':
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw48_cityscapes_1024x512_80k/model.pdparams'
 }
 
 imagenet_weights = {
@@ -146,7 +150,11 @@ pascalvoc_weights = {
     'DeepLabV3P_ResNet50_vd_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet50_os8_voc12aug_512x512_40k/model.pdparams',
     'DeepLabV3P_ResNet101_vd_PascalVOC':
-    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams'
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams',
+    'FCN_HRNet_W18_PascalVOC':
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw18_voc12aug_512x512_40k/model.pdparams',
+    'FCN_HRNet_W48_PascalVOC':
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams'
 }
 
 

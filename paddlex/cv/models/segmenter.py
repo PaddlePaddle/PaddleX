@@ -27,6 +27,8 @@ from .utils import seg_metrics as metrics
 from .utils import pretrained_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 
+__all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet"]
+
 
 class BaseSegmenter(BaseModel):
     def __init__(self, model_name, num_classes=2, losses=None, **params):
@@ -379,3 +381,36 @@ class FastSCNN(BaseSegmenter):
             num_classes=num_classes,
             losses=losses,
             **params)
+
+
+class HRNet(BaseSegmenter):
+    def __init__(self,
+                 num_classes=2,
+                 width=48,
+                 use_mixed_loss=False,
+                 align_corners=False):
+        if width not in (18, 48):
+            raise ValueError(
+                "width={} is not supported, please choose from [18, 48]".
+                format(width))
+        self.backbone_name = 'HRNet_W{}'.format(width)
+        backbone = manager.BACKBONES[self.backbone_name](
+            align_corners=align_corners)
+
+        if use_mixed_loss:
+            losses = [
+                manager.LOSSES['CrossEntropyLoss'](),
+                manager.LOSSES['LovaszSoftmaxLoss']()
+            ]
+            coef = [.8, .2]
+            loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
+            loss_coef = [1.0]
+        else:
+            loss_type = [manager.LOSSES['CrossEntropyLoss']()]
+            loss_coef = [1.0]
+        losses = {'types': loss_type, 'coef': loss_coef}
+
+        params = {'backbone': backbone, 'align_corners': align_corners}
+        super(HRNet, self).__init__(
+            model_name='FCN', num_classes=num_classes, losses=losses, **params)
+        self.model_name = 'HRNet'
