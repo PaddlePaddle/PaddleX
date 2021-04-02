@@ -318,9 +318,9 @@ class UNet(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
             losses, coef = list(zip(*use_mixed_loss))
+            losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
-                manager.LOSSES['MixedLoss'](losses=list(losses),
-                                            coef=list(coef))
+                manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
             ]
         loss_coef = [1.0]
         losses = {'types': loss_type, 'coef': loss_coef}
@@ -364,7 +364,7 @@ class DeepLabV3P(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
             losses, coef = list(zip(*use_mixed_loss))
-            losses = [manager.LOSSES[loss] for loss in losses]
+            losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
             ]
@@ -405,7 +405,7 @@ class FastSCNN(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()] * 2
         else:
             losses, coef = list(zip(*use_mixed_loss))
-            losses = [manager.LOSSES[loss] for loss in losses]
+            losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
             ] * 2
@@ -446,7 +446,7 @@ class HRNet(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
             losses, coef = list(zip(*use_mixed_loss))
-            losses = [manager.LOSSES[loss] for loss in losses]
+            losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
             ]
@@ -478,7 +478,7 @@ class BiSeNetV2(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()] * 2
         else:
             losses, coef = list(zip(*use_mixed_loss))
-            losses = [manager.LOSSES[loss] for loss in losses]
+            losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
             ] * 5
