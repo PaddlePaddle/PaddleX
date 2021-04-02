@@ -318,6 +318,11 @@ class UNet(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
             losses, coef = list(zip(*use_mixed_loss))
+            if not set(losses).issubset(
+                ['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']):
+                raise ValueError(
+                    "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
+                )
             losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
@@ -364,6 +369,11 @@ class DeepLabV3P(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
             losses, coef = list(zip(*use_mixed_loss))
+            if not set(losses).issubset(
+                ['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']):
+                raise ValueError(
+                    "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
+                )
             losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
@@ -405,6 +415,11 @@ class FastSCNN(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()] * 2
         else:
             losses, coef = list(zip(*use_mixed_loss))
+            if not set(losses).issubset(
+                ['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']):
+                raise ValueError(
+                    "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
+                )
             losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
@@ -446,6 +461,11 @@ class HRNet(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
             losses, coef = list(zip(*use_mixed_loss))
+            if not set(losses).issubset(
+                ['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']):
+                raise ValueError(
+                    "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
+                )
             losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
@@ -478,6 +498,11 @@ class BiSeNetV2(BaseSegmenter):
                 loss_type = [manager.LOSSES['CrossEntropyLoss']()] * 2
         else:
             losses, coef = list(zip(*use_mixed_loss))
+            if not set(losses).issubset(
+                ['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']):
+                raise ValueError(
+                    "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
+                )
             losses = [manager.LOSSES[loss]() for loss in losses]
             loss_type = [
                 manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
