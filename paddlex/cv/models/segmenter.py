@@ -304,17 +304,25 @@ class UNet(BaseSegmenter):
                  use_mixed_loss=False,
                  use_deconv=False,
                  align_corners=False):
-        if use_mixed_loss:
-            losses = [
-                manager.LOSSES['CrossEntropyLoss'](),
-                manager.LOSSES['LovaszSoftmaxLoss']()
-            ]
-            coef = [.8, .2]
-            loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
-            loss_coef = [1.0]
+        if isinstance(use_mixed_loss, bool):
+            if use_mixed_loss:
+                losses = [
+                    manager.LOSSES['CrossEntropyLoss'](),
+                    manager.LOSSES['LovaszSoftmaxLoss']()
+                ]
+                coef = [.8, .2]
+                loss_type = [
+                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                ]
+            else:
+                loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
-            loss_type = [manager.LOSSES['CrossEntropyLoss']()]
-            loss_coef = [1.0]
+            losses, coef = list(zip(*use_mixed_loss))
+            loss_type = [
+                manager.LOSSES['MixedLoss'](losses=list(losses),
+                                            coef=list(coef))
+            ]
+        loss_coef = [1.0]
         losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
@@ -342,17 +350,25 @@ class DeepLabV3P(BaseSegmenter):
                 "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
         backbone = manager.BACKBONES[backbone](output_stride=output_stride)
 
-        if use_mixed_loss:
-            losses = [
-                manager.LOSSES['CrossEntropyLoss'](),
-                manager.LOSSES['LovaszSoftmaxLoss']()
-            ]
-            coef = [.8, .2]
-            loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
-            loss_coef = [1.0]
+        if isinstance(use_mixed_loss, bool):
+            if use_mixed_loss:
+                losses = [
+                    manager.LOSSES['CrossEntropyLoss'](),
+                    manager.LOSSES['LovaszSoftmaxLoss']()
+                ]
+                coef = [.8, .2]
+                loss_type = [
+                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                ]
+            else:
+                loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
-            loss_type = [manager.LOSSES['CrossEntropyLoss']()]
-            loss_coef = [1.0]
+            losses, coef = list(zip(*use_mixed_loss))
+            loss_type = [
+                manager.LOSSES['MixedLoss'](losses=list(losses),
+                                            coef=list(coef))
+            ]
+        loss_coef = [1.0]
         losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {
@@ -370,12 +386,31 @@ class DeepLabV3P(BaseSegmenter):
 
 
 class FastSCNN(BaseSegmenter):
-    def __init__(self, num_classes=2, align_corners=False):
+    def __init__(self,
+                 num_classes=2,
+                 use_mixed_loss=False,
+                 align_corners=False):
         params = {'align_corners': align_corners}
-        losses = {
-            'types': [manager.LOSSES['CrossEntropyLoss']()] * 2,
-            'coef': [1.0, 0.4]
-        }
+        if isinstance(use_mixed_loss, bool):
+            if use_mixed_loss:
+                losses = [
+                    manager.LOSSES['CrossEntropyLoss'](),
+                    manager.LOSSES['LovaszSoftmaxLoss']()
+                ]
+                coef = [.8, .2]
+                loss_type = [
+                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                ] * 2
+            else:
+                loss_type = [manager.LOSSES['CrossEntropyLoss']()] * 2
+        else:
+            losses, coef = list(zip(*use_mixed_loss))
+            loss_type = [
+                manager.LOSSES['MixedLoss'](losses=list(losses),
+                                            coef=list(coef))
+            ] * 2
+        loss_coef = [1.0, 0.4]
+        losses = {'types': loss_type, 'coef': loss_coef}
         super(FastSCNN, self).__init__(
             model_name='FastSCNN',
             num_classes=num_classes,
@@ -397,17 +432,25 @@ class HRNet(BaseSegmenter):
         backbone = manager.BACKBONES[self.backbone_name](
             align_corners=align_corners)
 
-        if use_mixed_loss:
-            losses = [
-                manager.LOSSES['CrossEntropyLoss'](),
-                manager.LOSSES['LovaszSoftmaxLoss']()
-            ]
-            coef = [.8, .2]
-            loss_type = [manager.LOSSES['MixedLoss'](losses=losses, coef=coef)]
-            loss_coef = [1.0]
+        if isinstance(use_mixed_loss, bool):
+            if use_mixed_loss:
+                losses = [
+                    manager.LOSSES['CrossEntropyLoss'](),
+                    manager.LOSSES['LovaszSoftmaxLoss']()
+                ]
+                coef = [.8, .2]
+                loss_type = [
+                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                ]
+            else:
+                loss_type = [manager.LOSSES['CrossEntropyLoss']()]
         else:
-            loss_type = [manager.LOSSES['CrossEntropyLoss']()]
-            loss_coef = [1.0]
+            losses, coef = list(zip(*use_mixed_loss))
+            loss_type = [
+                manager.LOSSES['MixedLoss'](losses=list(losses),
+                                            coef=list(coef))
+            ]
+        loss_coef = [1.0]
         losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {'backbone': backbone, 'align_corners': align_corners}
@@ -417,11 +460,30 @@ class HRNet(BaseSegmenter):
 
 
 class BiSeNetV2(BaseSegmenter):
-    def __init__(self, num_classes=2, align_corners=False):
-        losses = {
-            'types': [manager.LOSSES['CrossEntropyLoss']()] * 5,
-            'coef': [1.0] * 5
-        }
+    def __init__(self,
+                 num_classes=2,
+                 use_mixed_loss=False,
+                 align_corners=False):
+        if isinstance(use_mixed_loss, bool):
+            if use_mixed_loss:
+                losses = [
+                    manager.LOSSES['CrossEntropyLoss'](),
+                    manager.LOSSES['LovaszSoftmaxLoss']()
+                ]
+                coef = [.8, .2]
+                loss_type = [
+                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                ] * 5
+            else:
+                loss_type = [manager.LOSSES['CrossEntropyLoss']()] * 2
+        else:
+            losses, coef = list(zip(*use_mixed_loss))
+            loss_type = [
+                manager.LOSSES['MixedLoss'](losses=list(losses),
+                                            coef=list(coef))
+            ] * 5
+        loss_coef = [1.0] * 5
+        losses = {'types': loss_type, 'coef': loss_coef}
 
         params = {'align_corners': align_corners}
         super(BiSeNetV2, self).__init__(

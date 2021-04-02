@@ -34,11 +34,8 @@ eval_dataset = pdx.datasets.SegDataset(
     transforms=eval_transforms,
     shuffle=False)
 
-deeplabv3p_backbone_list = ['ResNet50_vd', 'ResNet101_vd']
-
 num_classes = len(train_dataset.labels)
-model = pdx.seg.DeepLabV3P(
-    num_classes=num_classes, backbone=deeplabv3p_backbone_list[0])
+model = pdx.seg.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd')
 
 model.train(
     num_epochs=10,
