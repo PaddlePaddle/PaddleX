@@ -424,7 +424,6 @@ class BiSeNetV2(BaseSegmenter):
                  num_classes=2,
                  use_mixed_loss=False,
                  align_corners=False):
-
         params = {'align_corners': align_corners}
         super(BiSeNetV2, self).__init__(
             model_name='BiSeNetV2',
