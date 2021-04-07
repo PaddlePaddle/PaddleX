@@ -295,7 +295,8 @@ class BaseSegmenter(BaseModel):
         batch_ori_shape = list()
         for im in images:
             ori_shape = im.shape[:2]
-            im = transforms(im)[0]
+            sample = {'im': im}
+            im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)
         batch_im = paddle.to_tensor(batch_im)

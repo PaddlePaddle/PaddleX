@@ -267,7 +267,8 @@ class BaseClassifier(BaseModel):
             model_type=model_type, transforms=transforms, mode='test')
         batch_data = list()
         for im in images:
-            batch_data.append(transforms(im)[0])
+            sample = {'im': im}
+            batch_data.append(transforms(sample)[0])
 
         batch_data = to_tensor(batch_data)
 
