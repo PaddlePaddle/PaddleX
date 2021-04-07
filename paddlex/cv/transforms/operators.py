@@ -464,7 +464,8 @@ class ArrangeSegmenter(Transform):
         self.mode = mode
 
     def __call__(self, outputs):
-        im, mask = outputs['im'], outputs['mask']
+        im = outputs['im']
+        mask = outputs['mask'] is 'mask' in outputs
 
         im = permute(im, False)
         if self.mode == 'train':
