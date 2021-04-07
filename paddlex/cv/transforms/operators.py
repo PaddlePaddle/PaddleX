@@ -135,7 +135,7 @@ class Decode(Transform):
         if 'mask' in sample:
             mask = sample['mask']
             sample['mask'] = self.apply_mask(mask)
-            im_height, im_width, _ = im.shape
+            im_height, im_width, _ = sample['im'].shape
             se_height, se_width = sample['mask'].shape
             if im_height != se_height or im_width != se_width:
                 raise Exception(
