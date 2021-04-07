@@ -14,6 +14,7 @@
 
 import os.path as osp
 import numpy as np
+import cv2
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
@@ -294,6 +295,13 @@ class BaseSegmenter(BaseModel):
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
+            if isinstance(im, str):
+                try:
+                    im = cv2.imread(im, cv2.IMREAD_ANYDEPTH |
+                                    cv2.IMREAD_ANYCOLOR)
+                except:
+                    raise ValueError('Cannot read the image file {}!'.format(
+                        im))
             ori_shape = im.shape[:2]
             sample = {'im': im}
             im = transforms(sample)[0]

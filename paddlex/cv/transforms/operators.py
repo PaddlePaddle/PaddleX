@@ -109,7 +109,8 @@ class Decode(Transform):
             try:
                 im = self.read_img(im_path)
             except:
-                raise ValueError('Cannot read the im file {}!'.format(im_path))
+                raise ValueError('Cannot read the image file {}!'.format(
+                    im_path))
         else:
             im = im_path
 
