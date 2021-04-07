@@ -75,7 +75,8 @@ class ImageNet(Dataset):
 
     def __getitem__(self, idx):
         image_path, label = self.file_list[idx]
-        outputs = self.transforms(im=image_path)
+        sample = {'im': image_path}
+        outputs = self.transforms(sample)
 
         return outputs + (label, )
 

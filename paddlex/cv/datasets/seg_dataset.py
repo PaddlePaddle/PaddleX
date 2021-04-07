@@ -81,7 +81,8 @@ class SegDataset(Dataset):
 
     def __getitem__(self, idx):
         image_path, label_path = self.file_list[idx]
-        outputs = self.transforms(im=image_path, mask=label_path)
+        sample = {'im': image_path, 'mask': label_path}
+        outputs = self.transforms(sample)
         return outputs
 
     def __len__(self):
