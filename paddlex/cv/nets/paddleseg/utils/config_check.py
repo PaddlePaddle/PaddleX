@@ -20,7 +20,7 @@ def config_check(cfg, train_dataset=None, val_dataset=None):
     To check config。
 
     Args:
-        cfg (paddlex.cv.nets.paddleseg.cvlibs.Config): An object of paddlex.cv.nets.paddleseg.cvlibs.Config.
+        cfg (paddleseg.cvlibs.Config): An object of paddleseg.cvlibs.Config.
         train_dataset (paddle.io.Dataset): Used to read and process training datasets.
         val_dataset (paddle.io.Dataset, optional): Used to read and process validation datasets.
     """

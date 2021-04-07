@@ -35,12 +35,12 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.seg.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd')
+model = pdx.seg.FastSCNN(num_classes=num_classes)
 
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
-    learning_rate=0.01,
-    save_dir='output/deeplabv3p')
+    learning_rate=0.05,
+    save_dir='output/fastscnn')

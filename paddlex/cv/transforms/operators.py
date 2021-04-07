@@ -491,7 +491,7 @@ class ArrangeSegmenter(Transform):
 
         im = permute(im, False)
         if self.mode == 'train':
-            mask = mask[np.newaxis, :, :].astype('int64')
+            mask = mask.astype('int64')
             return im, mask
         if self.mode == 'eval':
             mask = np.asarray(Image.open(mask))

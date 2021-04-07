@@ -14,7 +14,7 @@
 
 import codecs
 import os
-from typing import Any
+from typing import Any, Dict, Generic
 
 import paddle
 import yaml
@@ -30,8 +30,8 @@ class Config(object):
         batch_size: The number of samples per gpu.
         iters: The total training steps.
         train_dataset: A training data config including type/data_root/transforms/mode.
-            For data type, please refer to paddlex.cv.nets.paddleseg.datasets.
-            For specific transforms, please refer to paddlex.cv.nets.paddleseg.transforms.transforms.
+            For data type, please refer to paddleseg.datasets.
+            For specific transforms, please refer to paddleseg.transforms.transforms.
         val_dataset: A validation data config including type/data_root/transforms/mode.
         optimizer: A optimizer config, but currently PaddleSeg only supports sgd with momentum in config file.
             In addition, weight_decay could be set as a regularization.
@@ -42,15 +42,15 @@ class Config(object):
             model outputs, and there could be only one loss type if using the same loss type among the outputs, otherwise the number of
             loss type must be consistent with coef.
         model: A model config including type/backbone and model-dependent arguments.
-            For model type, please refer to paddlex.cv.nets.paddleseg.models.
-            For backbone, please refer to paddlex.cv.nets.paddleseg.models.backbones.
+            For model type, please refer to paddleseg.models.
+            For backbone, please refer to paddleseg.models.backbones.
 
     Args:
         path (str) : The path of config file, supports yaml format only.
 
     Examples:
 
-        from paddlex.cv.nets.paddleseg.cvlibs.config import Config
+        from paddleseg.cvlibs.config import Config
 
         # Create a cfg object with yaml file path.
         cfg = Config(yaml_cfg_path)
@@ -149,8 +149,11 @@ class Config(object):
         if decay_type == 'poly':
             lr = _learning_rate
             return paddle.optimizer.lr.PolynomialDecay(lr, **args)
+        elif decay_type == 'piecewise':
+            values = _learning_rate
+            return paddle.optimizer.lr.PiecewiseDecay(values=values, **args)
         else:
-            raise RuntimeError('Only poly decay support.')
+            raise RuntimeError('Only poly and piecewise decay support.')
 
     @property
     def optimizer(self) -> paddle.optimizer.Optimizer:
@@ -229,30 +232,57 @@ class Config(object):
         if not model_cfg:
             raise RuntimeError('No model specified in the configuration file.')
         if not 'num_classes' in model_cfg:
-            if self.train_dataset and hasattr(self.train_dataset,
-                                              'num_classes'):
-                model_cfg['num_classes'] = self.train_dataset.num_classes
-            elif self.val_dataset and hasattr(self.val_dataset, 'num_classes'):
-                model_cfg['num_classes'] = self.val_dataset.num_classes
-            else:
+            num_classes = None
+            if self.train_dataset_config:
+                if hasattr(self.train_dataset_class, 'NUM_CLASSES'):
+                    num_classes = self.train_dataset_class.NUM_CLASSES
+                elif hasattr(self.train_dataset, 'num_classes'):
+                    num_classes = self.train_dataset.num_classes
+            elif self.val_dataset_config:
+                if hasattr(self.val_dataset_class, 'NUM_CLASSES'):
+                    num_classes = self.val_dataset_class.NUM_CLASSES
+                elif hasattr(self.val_dataset, 'num_classes'):
+                    num_classes = self.val_dataset.num_classes
+
+            if not num_classes:
                 raise ValueError(
                     '`num_classes` is not found. Please set it in model, train_dataset or val_dataset'
                 )
+
+            model_cfg['num_classes'] = num_classes
 
         if not self._model:
             self._model = self._load_object(model_cfg)
         return self._model
 
     @property
+    def train_dataset_config(self) -> Dict:
+        return self.dic.get('train_dataset', {}).copy()
+
+    @property
+    def val_dataset_config(self) -> Dict:
+        return self.dic.get('val_dataset', {}).copy()
+
+    @property
+    def train_dataset_class(self) -> Generic:
+        dataset_type = self.train_dataset_config['type']
+        return self._load_component(dataset_type)
+
+    @property
+    def val_dataset_class(self) -> Generic:
+        dataset_type = self.val_dataset_config['type']
+        return self._load_component(dataset_type)
+
+    @property
     def train_dataset(self) -> paddle.io.Dataset:
-        _train_dataset = self.dic.get('train_dataset', {}).copy()
+        _train_dataset = self.train_dataset_config
         if not _train_dataset:
             return None
         return self._load_object(_train_dataset)
 
     @property
     def val_dataset(self) -> paddle.io.Dataset:
-        _val_dataset = self.dic.get('val_dataset', {}).copy()
+        _val_dataset = self.val_dataset_config
         if not _val_dataset:
             return None
         return self._load_object(_val_dataset)
@@ -290,6 +320,10 @@ class Config(object):
                 params[key] = val
 
         return component(**params)
+
+    @property
+    def export_config(self) -> Dict:
+        return self.dic.get('export', {})
 
     def _is_meta_type(self, item: Any) -> bool:
         return isinstance(item, dict) and 'type' in item

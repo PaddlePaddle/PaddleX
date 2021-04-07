@@ -15,6 +15,7 @@
 import paddle.nn as nn
 import paddle.nn.functional as F
 
+import paddle
 from paddlex.cv.nets.paddleseg import utils
 from paddlex.cv.nets.paddleseg.cvlibs import manager, param_init
 from paddlex.cv.nets.paddleseg.models import layers
@@ -68,7 +69,7 @@ class FCN(nn.Layer):
         return [
             F.interpolate(
                 logit,
-                x.shape[2:],
+                paddle.shape(x)[2:],
                 mode='bilinear',
                 align_corners=self.align_corners) for logit in logit_list
         ]

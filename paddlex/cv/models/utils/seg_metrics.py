@@ -13,9 +13,18 @@
 # limitations under the License.
 
 import numpy as np
-from scipy.sparse import csr_matrix
 import paddle
 import paddle.nn.functional as F
+
+
+def loss_computation(logits_list, labels, losses):
+    loss_list = []
+    for i in range(len(logits_list)):
+        logits = logits_list[i]
+        loss_i = losses['types'][i]
+        loss_list.append(losses['coef'][i] * loss_i(logits, labels))
+
+    return loss_list
 
 
 def calculate_area(pred, label, num_classes, ignore_index=255):

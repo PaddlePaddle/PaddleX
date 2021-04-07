@@ -35,7 +35,7 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.seg.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd')
+model = pdx.seg.HRNet(num_classes=num_classes, width=48)
 
 model.train(
     num_epochs=10,
@@ -43,4 +43,4 @@ model.train(
     train_batch_size=4,
     eval_dataset=eval_dataset,
     learning_rate=0.01,
-    save_dir='output/deeplabv3p')
+    save_dir='output/hrnet')

@@ -33,7 +33,7 @@ class Activation(nn.Layer):
 
     Examples:
 
-        from paddlex.cv.nets.paddleseg.models.common.activation import Activation
+        from paddleseg.models.common.activation import Activation
 
         relu = Activation("relu")
         print(relu)

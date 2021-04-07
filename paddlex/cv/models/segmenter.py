@@ -24,11 +24,18 @@ from paddlex.utils import get_single_card_bs
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
+from .utils import pretrained_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
+
+__all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
 
 class BaseSegmenter(BaseModel):
-    def __init__(self, model_name='UNet', num_classes=2, **params):
+    def __init__(self,
+                 model_name,
+                 num_classes=2,
+                 use_mixed_loss=False,
+                 **params):
         self.init_params = locals()
         super(BaseSegmenter, self).__init__('segmenter')
         if not hasattr(models, model_name):
@@ -36,6 +43,8 @@ class BaseSegmenter(BaseModel):
                 model_name))
         self.model_name = model_name
         self.num_classes = num_classes
+        self.use_mixed_loss = use_mixed_loss
+        self.losses = None
         self.labels = None
         self.net, self.test_inputs = self.build_net(**params)
 
@@ -48,7 +57,7 @@ class BaseSegmenter(BaseModel):
         ]
         return net, test_inputs
 
-    def run(self, net, inputs, mode, loss_type='CrossEntropyLoss'):
+    def run(self, net, inputs, mode):
         net_out = net(inputs[0])
         logit = net_out[0]
         outputs = OrderedDict()
@@ -70,11 +79,46 @@ class BaseSegmenter(BaseModel):
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
         if mode == 'train':
-            loss = manager.LOSSES[loss_type]
-            compute_loss = loss()
-            loss = compute_loss(logit, inputs[1])
+            loss_list = metrics.loss_computation(
+                logits_list=net_out, labels=inputs[1], losses=self.losses)
+            loss = sum(loss_list)
             outputs['loss'] = loss
         return outputs
+
+    def default_loss(self):
+        if isinstance(self.use_mixed_loss, bool):
+            if self.use_mixed_loss:
+                losses = [
+                    manager.LOSSES['CrossEntropyLoss'](),
+                    manager.LOSSES['LovaszSoftmaxLoss']()
+                ]
+                coef = [.8, .2]
+                loss_type = [
+                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                ]
+            else:
+                loss_type = [manager.LOSSES['CrossEntropyLoss']()]
+        else:
+            losses, coef = list(zip(*self.use_mixed_loss))
+            if not set(losses).issubset(
+                ['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']):
+                raise ValueError(
+                    "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
+                )
+            losses = [manager.LOSSES[loss]() for loss in losses]
+            loss_type = [
+                manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
+            ]
+        if self.model_name == 'FastSCNN':
+            loss_type *= 2
+            loss_coef = [1.0, 0.4]
+        elif self.model_name == 'BiSeNetV2':
+            loss_type *= 5
+            loss_coef = [1.0] * 5
+        else:
+            loss_coef = [1.0]
+        losses = {'types': loss_type, 'coef': loss_coef}
+        return losses
 
     def default_optimizer(self,
                           parameters,
@@ -107,7 +151,8 @@ class BaseSegmenter(BaseModel):
               early_stop=False,
               early_stop_patience=5):
         self.labels = train_dataset.labels
-
+        if self.losses is None:
+            self.losses = self.default_loss()
         if optimizer is None:
             num_steps_each_epoch = train_dataset.num_samples // train_batch_size
             self.optimizer = self.default_optimizer(
@@ -117,15 +162,18 @@ class BaseSegmenter(BaseModel):
             self.optimizer = optimizer
         if pretrained_weights is not None and not osp.exists(
                 pretrained_weights):
-            if pretrained_weights not in ['CITYSCAPES']:
+            if pretrained_weights not in pretrained_weights_dict[
+                    self.model_name]:
                 logging.warning(
                     "Path of pretrained_weights('{}') does not exist!".format(
                         pretrained_weights))
-                logging.warning(
-                    "Pretrained_weights is forcibly set to 'CITYSCAPES'. "
-                    "If don't want to use pretrained weights, "
-                    "set pretrained_weights to be None.")
-                pretrained_weights = 'CITYSCAPES'
+                logging.warning("Pretrained_weights is forcibly set to '{}'. "
+                                "If don't want to use pretrained weights, "
+                                "set pretrained_weights to be None.".format(
+                                    pretrained_weights_dict[self.model_name][
+                                        0]))
+                pretrained_weights = pretrained_weights_dict[self.model_name][
+                    0]
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrained_weights=pretrained_weights, save_dir=pretrained_dir)
@@ -292,28 +340,34 @@ class BaseSegmenter(BaseModel):
 
 
 class UNet(BaseSegmenter):
-    def __init__(self, num_classes=2, use_deconv=False, align_corners=False):
+    def __init__(self,
+                 num_classes=2,
+                 use_mixed_loss=False,
+                 use_deconv=False,
+                 align_corners=False):
         params = {'use_deconv': use_deconv, 'align_corners': align_corners}
         super(UNet, self).__init__(
-            model_name='UNet', num_classes=num_classes, **params)
+            model_name='UNet',
+            num_classes=num_classes,
+            use_mixed_loss=use_mixed_loss,
+            **params)
 
 
 class DeepLabV3P(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  backbone='ResNet50_vd',
+                 use_mixed_loss=False,
                  output_stride=8,
                  backbone_indices=(0, 3),
-                 aspp_ratios=(1, 6, 12, 18),
+                 aspp_ratios=(1, 12, 24, 36),
                  aspp_out_channels=256,
                  align_corners=False):
-        if backbone not in [
-                'ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab'
-        ]:
+        self.backbone_name = backbone
+        if backbone not in ['ResNet50_vd', 'ResNet101_vd']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50_vd', 'ResNet101_vd', 'Xception65_deeplab')".format(
-                    backbone))
+                "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
         backbone = manager.BACKBONES[backbone](output_stride=output_stride)
         params = {
             'backbone': backbone,
@@ -323,4 +377,56 @@ class DeepLabV3P(BaseSegmenter):
             'align_corners': align_corners
         }
         super(DeepLabV3P, self).__init__(
-            model_name='DeepLabV3P', num_classes=num_classes, **params)
+            model_name='DeepLabV3P',
+            num_classes=num_classes,
+            use_mixed_loss=use_mixed_loss,
+            **params)
+
+
+class FastSCNN(BaseSegmenter):
+    def __init__(self,
+                 num_classes=2,
+                 use_mixed_loss=False,
+                 align_corners=False):
+        params = {'align_corners': align_corners}
+        super(FastSCNN, self).__init__(
+            model_name='FastSCNN',
+            num_classes=num_classes,
+            use_mixed_loss=use_mixed_loss,
+            **params)
+
+
+class HRNet(BaseSegmenter):
+    def __init__(self,
+                 num_classes=2,
+                 width=48,
+                 use_mixed_loss=False,
+                 align_corners=False):
+        if width not in (18, 48):
+            raise ValueError(
+                "width={} is not supported, please choose from [18, 48]".
+                format(width))
+        self.backbone_name = 'HRNet_W{}'.format(width)
+        backbone = manager.BACKBONES[self.backbone_name](
+            align_corners=align_corners)
+
+        params = {'backbone': backbone, 'align_corners': align_corners}
+        super(HRNet, self).__init__(
+            model_name='FCN',
+            num_classes=num_classes,
+            use_mixed_loss=use_mixed_loss,
+            **params)
+        self.model_name = 'HRNet'
+
+
+class BiSeNetV2(BaseSegmenter):
+    def __init__(self,
+                 num_classes=2,
+                 use_mixed_loss=False,
+                 align_corners=False):
+        params = {'align_corners': align_corners}
+        super(BiSeNetV2, self).__init__(
+            model_name='BiSeNetV2',
+            num_classes=num_classes,
+            use_mixed_loss=use_mixed_loss,
+            **params)

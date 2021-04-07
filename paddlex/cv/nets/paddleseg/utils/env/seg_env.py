@@ -1,10 +1,10 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021  PaddlePaddle Authors. All Rights Reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the "License"
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,7 +14,7 @@
 """
 This module is used to store environmental parameters in PaddleSeg.
 
-SEG_HOME : Root directory for storing PaddleSeg related data. Default to ~/.paddlex.cv.nets.paddleseg.
+SEG_HOME : Root directory for storing PaddleSeg related data. Default to ~/.paddleseg.
            Users can change the default value through the SEG_HOME environment variable.
 DATA_HOME : The directory to store the automatically downloaded dataset, e.g ADE20K.
 PRETRAINED_MODEL_HOME : The directory to store the automatically downloaded pretrained model.
@@ -39,7 +39,7 @@ def _get_seg_home():
                 logger.warning('SEG_HOME {} is a file!'.format(home_path))
         else:
             return home_path
-    return os.path.join(_get_user_home(), '.paddlex.cv.nets.paddleseg')
+    return os.path.join(_get_user_home(), '.paddleseg')
 
 
 def _get_sub_home(directory):

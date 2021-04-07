@@ -16,3 +16,6 @@ from . import cv
 
 UNet = cv.models.UNet
 DeepLabV3P = cv.models.DeepLabV3P
+FastSCNN = cv.models.FastSCNN
+HRNet = cv.models.HRNet
+BiSeNetV2 = cv.models.BiSeNetV2

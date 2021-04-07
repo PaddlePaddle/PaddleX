@@ -43,5 +43,4 @@ model.train(
     train_batch_size=4,
     eval_dataset=eval_dataset,
     learning_rate=0.01,
-    log_interval_steps=1,
     save_dir='output/unet')
