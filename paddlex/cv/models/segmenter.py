@@ -27,6 +27,7 @@ from .base import BaseModel
 from .utils import seg_metrics as metrics
 from .utils import pretrained_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
+from paddlex.cv.transforms import Decode
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
@@ -295,15 +296,10 @@ class BaseSegmenter(BaseModel):
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
-            if isinstance(im, str):
-                try:
-                    im = cv2.imread(im, cv2.IMREAD_ANYDEPTH |
-                                    cv2.IMREAD_ANYCOLOR)
-                except:
-                    raise ValueError('Cannot read the image file {}!'.format(
-                        im))
-            ori_shape = im.shape[:2]
             sample = {'im': im}
+            if isinstance(sample['im'], str):
+                sample = Decode()(sample)
+            ori_shape = sample['im'].shape[:2]
             im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)

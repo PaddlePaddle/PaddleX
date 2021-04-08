@@ -265,14 +265,14 @@ class BaseClassifier(BaseModel):
     def _preprocess(images, transforms, model_type):
         arrange_transforms(
             model_type=model_type, transforms=transforms, mode='test')
-        batch_data = list()
+        batch_im = list()
         for im in images:
             sample = {'im': im}
-            batch_data.append(transforms(sample)[0])
+            batch_im.append(transforms(sample)[0])
 
-        batch_data = to_tensor(batch_data)
+        batch_im = to_tensor(batch_im)
 
-        return batch_data,
+        return batch_im,
 
     @staticmethod
     def _postprocess(results, true_topk, labels):
