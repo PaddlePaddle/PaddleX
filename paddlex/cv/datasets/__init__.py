@@ -14,3 +14,5 @@
 
 from .seg_dataset import SegDataset
 from .imagenet import ImageNet
+from .voc import VOCDetection
+from .coco import CocoDetection
