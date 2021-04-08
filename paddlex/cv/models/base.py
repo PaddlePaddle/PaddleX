@@ -24,7 +24,7 @@ from paddle.io import DataLoader, DistributedBatchSampler
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
-                           get_pretrained_weights, load_pretrained_weights,
+                           get_pretrain_weights, load_pretrain_weights,
                            SmoothedValue, TrainingStats,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
@@ -48,29 +48,29 @@ class BaseModel:
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
 
-    def net_initialize(self, pretrained_weights=None, save_dir='.'):
-        if pretrained_weights is not None and \
-                not os.path.exists(pretrained_weights):
+    def net_initialize(self, pretrain_weights=None, save_dir='.'):
+        if pretrain_weights is not None and \
+                not os.path.exists(pretrain_weights):
             if not os.path.isdir(save_dir):
                 if os.path.exists(save_dir):
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
                 scale = getattr(self.net, 'scale', None)
-                pretrained_weights = get_pretrained_weights(
-                    pretrained_weights,
+                pretrain_weights = get_pretrain_weights(
+                    pretrain_weights,
                     self.__class__.__name__,
                     save_dir,
                     scale=scale)
             else:
                 backbone_name = getattr(self, 'backbone_name', None)
-                pretrained_weights = get_pretrained_weights(
-                    pretrained_weights,
+                pretrain_weights = get_pretrain_weights(
+                    pretrain_weights,
                     self.__class__.__name__,
                     save_dir,
                     backbone_name=backbone_name)
-        if pretrained_weights is not None:
-            load_pretrained_weights(self.net, pretrained_weights)
+        if pretrain_weights is not None:
+            load_pretrain_weights(self.net, pretrain_weights)
 
     def get_model_info(self):
         info = dict()
