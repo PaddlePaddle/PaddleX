@@ -44,16 +44,12 @@ class Transform:
     def apply_mask(self, mask):
         pass
 
-    def __call(self, im, mask=None):
-        self.apply_im(im)
-        if mask is not None:
-            self.apply_mask(mask)
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
+    def __call__(self, sample):
+        sample['im'] = self.apply_im(sample['im'])
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
 
-        return outputs
+        return sample
 
 
 class Compose(Transform):
@@ -80,27 +76,22 @@ class Compose(Transform):
         self.arrange_outputs = None
         self.apply_im_only = False
 
-    def __call__(self, im, mask=None):
-        if self.apply_im_only:
-            mask_backup = copy.deepcopy(mask)
-            mask = None
+    def __call__(self, sample):
+        if self.apply_im_only and 'mask' in sample:
+            mask_backup = copy.deepcopy(sample['mask'])
+            del sample['mask']
 
-        outputs = self.decode_image(im, mask)
-
-        im = outputs['im']
-        mask = outputs['mask']
+        sample = self.decode_image(sample)
 
         for op in self.transforms:
-            outputs = op(im, mask)
-            im = outputs['im']
-            mask = outputs['mask']
+            sample = op(sample)
 
         if self.arrange_outputs is not None:
             if self.apply_im_only:
-                outputs['mask'] = mask_backup
-            outputs = self.arrange_outputs(outputs)
+                sample['mask'] = mask_backup
+            sample = self.arrange_outputs(sample)
 
-        return outputs
+        return sample
 
 
 class Decode(Transform):
@@ -115,7 +106,8 @@ class Decode(Transform):
             try:
                 im = self.read_img(im_path)
             except:
-                raise ValueError('Cannot read the im file {}!'.format(im_path))
+                raise ValueError('Cannot read the image file {}!'.format(
+                    im_path))
         else:
             im = im_path
 
@@ -135,22 +127,16 @@ class Decode(Transform):
                 format(mask.shape[2]))
         return mask
 
-    def __call__(self, im, mask=None):
-        im = self.apply_im(im)
-        if mask is not None:
-            mask = self.apply_mask(mask)
-            im_height, im_width, _ = im.shape
-            se_height, se_width = mask.shape
+    def __call__(self, sample):
+        sample['im'] = self.apply_im(sample['im'])
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
+            im_height, im_width, _ = sample['im'].shape
+            se_height, se_width = sample['mask'].shape
             if im_height != se_height or im_width != se_width:
                 raise Exception(
                     "The height or width of the im is not same as the mask")
-
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
-
-        return outputs
+        return sample
 
 
 class Resize(Transform):
@@ -170,18 +156,15 @@ class Resize(Transform):
             interpolation=cv2.INTER_NEAREST)
         return mask
 
-    def __call__(self, im, mask=None):
+    def __call__(self, sample):
         interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
-        im = self.apply_im(im, interp)
-        if mask is not None:
-            mask = self.apply_mask(mask)
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
-        return outputs
+        sample['im'] = self.apply_im(sample['im'], interp)
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
+
+        return sample
 
 
 class ResizeByShort(Transform):
@@ -204,18 +187,15 @@ class ResizeByShort(Transform):
             im, (self.target_w, self.target_h), interpolation=interp)
         return im
 
-    def __call__(self, im, mask=None):
+    def __call__(self, sample):
         interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
-        im = self.apply_im(im, interp)
-        if mask is not None:
-            mask = self.apply_mask(mask)
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
-        return outputs
+        sample['im'] = self.apply_im(sample['im'], interp)
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
+
+        return sample
 
 
 class RandomHorizontalFlip(Transform):
@@ -230,17 +210,12 @@ class RandomHorizontalFlip(Transform):
         mask = horizontal_flip(mask)
         return mask
 
-    def __call__(self, im, mask=None):
+    def __call__(self, sample):
         if random.random() < self.prob:
-            im = self.apply_im(im)
-            if mask is not None:
-                mask = self.apply_mask(mask)
-
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
-        return outputs
+            sample['im'] = self.apply_im(sample['im'])
+            if 'mask' in sample:
+                sample['mask'] = self.apply_mask(sample['mask'])
+        return sample
 
 
 class RandomVerticalFlip(Transform):
@@ -260,15 +235,12 @@ class RandomVerticalFlip(Transform):
         mask = vertical_flip(mask)
         return mask
 
-    def __call__(self, im, mask=None):
+    def __call__(self, sample):
         if random.random() < self.prob:
-            im = self.apply_im(im)
-            if mask is not None:
-                mask = self.apply_mask(mask)
-
-        outputs = {'im': im, 'mask': mask}
-
-        return outputs
+            sample['im'] = self.apply_im(sample['im'])
+            if 'mask' in sample:
+                sample['mask'] = self.apply_mask(sample['mask'])
+        return sample
 
 
 class Normalize(Transform):
@@ -303,14 +275,10 @@ class Normalize(Transform):
         im = normalize(im, mean, std, self.min_val, self.max_val)
         return im
 
-    def __call__(self, im, mask=None):
-        im = self.apply_im(im)
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
+    def __call__(self, sample):
+        sample['im'] = self.apply_im(sample['im'])
 
-        return outputs
+        return sample
 
 
 class CenterCrop(Transform):
@@ -333,17 +301,11 @@ class CenterCrop(Transform):
         mask = center_crop(mask)
         return mask
 
-    def __call__(self, im, mask=None):
-        im = self.apply_im(im)
-        if mask is not None:
-            mask = self.apply_mask(mask)
-
-        outputs = {
-            'im': im,
-            'mask': mask,
-        }
-
-        return outputs
+    def __call__(self, sample):
+        sample['im'] = self.apply_im(sample['im'])
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
+        return sample
 
 
 class RandomCrop(Transform):
@@ -402,17 +364,14 @@ class RandomCrop(Transform):
         mask = cv2.resize(mask, (self.crop_size, self.crop_size))
         return mask
 
-    def __call__(self, im, mask=None):
-        self.generate_crop_info(im, self.lower_scale, self.lower_ratio,
-                                self.upper_ratio)
-        im = self.apply_im(im)
+    def __call__(self, sample):
+        self.generate_crop_info(sample['im'], self.lower_scale,
+                                self.lower_ratio, self.upper_ratio)
+        sample['im'] = self.apply_im(sample['im'])
 
-        if mask is not None:
-            mask = self.apply_mask(mask)
-
-        outputs = {'im': im, 'mask': mask}
-
-        return outputs
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
+        return sample
 
 
 class Padding(Transform):
@@ -470,12 +429,11 @@ class Padding(Transform):
             value=self.label_padding_value)
         return mask
 
-    def __call__(self, im, mask=None):
-        im = self.apply_im(im)
-        if mask is not None:
-            mask = self.apply_mask(mask)
-        outputs = {'im': im, 'mask': mask}
-        return outputs
+    def __call__(self, sample):
+        sample['im'] = self.apply_im(sample['im'])
+        if 'mask' in sample:
+            sample['mask'] = self.apply_mask(sample['mask'])
+        return sample
 
 
 class ArrangeSegmenter(Transform):
@@ -487,7 +445,9 @@ class ArrangeSegmenter(Transform):
         self.mode = mode
 
     def __call__(self, outputs):
-        im, mask = outputs['im'], outputs['mask']
+        im = outputs['im']
+        if 'mask' in outputs:
+            mask = outputs['mask']
 
         im = permute(im, False)
         if self.mode == 'train':
@@ -512,4 +472,4 @@ class ArrangeClassifier(Transform):
     def __call__(self, outputs):
         im = outputs['im']
         im = permute(im, False)
-        return im,
+        return im, outputs['label']

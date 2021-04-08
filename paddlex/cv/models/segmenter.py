@@ -14,6 +14,7 @@
 
 import os.path as osp
 import numpy as np
+import cv2
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
@@ -26,6 +27,7 @@ from .base import BaseModel
 from .utils import seg_metrics as metrics
 from .utils import pretrained_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
+from paddlex.cv.transforms import Decode
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
@@ -294,8 +296,11 @@ class BaseSegmenter(BaseModel):
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
-            ori_shape = im.shape[:2]
-            im = transforms(im)[0]
+            sample = {'im': im}
+            if isinstance(sample['im'], str):
+                sample = Decode()(sample)
+            ori_shape = sample['im'].shape[:2]
+            im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)
         batch_im = paddle.to_tensor(batch_im)

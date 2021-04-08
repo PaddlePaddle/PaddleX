@@ -68,16 +68,19 @@ class ImageNet(Dataset):
                 if not osp.exists(full_path):
                     raise IOError('The image file {} does not exist!'.format(
                         full_path))
-                self.file_list.append([full_path, int(items[1])])
+                self.file_list.append({
+                    'im': full_path,
+                    'label': int(items[1])
+                })
         self.num_samples = len(self.file_list)
         logging.info("{} samples in file {}".format(
             len(self.file_list), file_list))
 
     def __getitem__(self, idx):
-        image_path, label = self.file_list[idx]
-        outputs = self.transforms(im=image_path)
+        sample = self.file_list[idx]
+        outputs = self.transforms(sample)
 
-        return outputs + (label, )
+        return outputs
 
     def __len__(self):
         return len(self.file_list)
