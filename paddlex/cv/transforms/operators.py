@@ -21,7 +21,7 @@ try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
-
+from numbers import Number
 from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop
 
 interp_list = [
@@ -531,66 +531,135 @@ class RandomCrop(Transform):
         return sample
 
 
-class Padding(Transform):
+class RandomExpand(Transform):
     def __init__(self,
-                 height,
-                 width,
-                 target_size,
+                 upper_ratio=4.,
+                 prob=.5,
                  im_padding_value=(127.5, 127.5, 127.5),
                  label_padding_value=255):
+        super(RandomExpand, self).__init__()
+        assert upper_ratio > 1.01, "expand ratio must be larger than 1.01"
+        self.upper_ratio = upper_ratio
+        self.prob = prob
+        assert isinstance(im_padding_value, (Number, Sequence)), \
+            "fill value must be either float or sequence"
+        if isinstance(im_padding_value, Number):
+            im_padding_value = (im_padding_value, ) * 3
+        if not isinstance(im_padding_value, tuple):
+            im_padding_value = tuple(im_padding_value)
+        self.im_padding_value = im_padding_value
+        self.label_padding_value = label_padding_value
+
+    def __call__(self, sample):
+        if random.random() < self.prob:
+            im_h, im_w = sample['im'].shape[:2]
+            ratio = np.random.uniform(1., self.upper_ratio)
+            h = int(im_h * ratio)
+            w = int(im_w * ratio)
+            if h > im_h and w > im_w:
+                y = np.random.randint(0, h - im_h)
+                x = np.random.randint(0, w - im_w)
+                target_size = (h, w)
+                offsets = (x, y)
+                sample = Padding(
+                    target_size=target_size,
+                    pad_mode=-1,
+                    offsets=offsets,
+                    im_padding_value=self.im_padding_value,
+                    label_padding_value=self.label_padding_value)(sample)
+        return sample
+
+
+class Padding(Transform):
+    def __init__(self,
+                 target_size=None,
+                 pad_mode=0,
+                 offsets=None,
+                 im_padding_value=(127.5, 127.5, 127.5),
+                 label_padding_value=255):
+        """
+        Pad image to a specified size or multiple of size_divisor. random target_size and interpolation method
+        Args:
+            target_size (int, Sequence): image target size, if None, pad to multiple of size_divisor, default None
+            pad_mode (int): pad mode, currently only supports four modes [-1, 0, 1, 2]. if -1, use specified offsets
+                if 0, only pad to right and bottom. if 1, pad according to center. if 2, only pad left and top
+            im_padding_value (Sequence): rgb value of pad area, default (127.5, 127.5, 127.5)
+        """
         super(Padding, self).__init__()
         if isinstance(target_size, (list, tuple)):
             if len(target_size) != 2:
                 raise ValueError(
                     '`target_size` should include 2 elements, but it is {}'.
                     format(target_size))
-        else:
-            raise TypeError(
-                "Type of target_size is invalid. It should be list or tuple, now is {}"
-                .format(type(target_size)))
-        self.target_h = height
-        self.target_w = width
+        if isinstance(target_size, int):
+            target_size = [target_size] * 2
+
+        assert pad_mode in [
+            -1, 0, 1, 2
+        ], 'currently only supports four modes [-1, 0, 1, 2]'
+        if pad_mode == -1:
+            assert offsets, 'if pad_mode is -1, offsets should not be None'
+
         self.target_size = target_size
+        self.size_divisor = 32
+        self.pad_mode = pad_mode
+        self.offsets = offsets
         self.im_padding_value = im_padding_value
         self.label_padding_value = label_padding_value
 
-    def apply_im(self, im):
-        im_height, im_width = im.shape[0:2]
-        pad_height = self.target_h - im_height
-        pad_width = self.target_w - im_width
-        if pad_height < 0 or pad_width < 0:
-            raise ValueError(
-                "The size of image should be less than 'target_size', "
-                "but the size of image ({}, {}) is larger than `target_size` ({}, {})"
-                .format(im_width, im_height, self.target_w, self.target_h))
-        im = cv2.copyMakeBorder(
-            im,
-            0,
-            pad_height,
-            0,
-            pad_width,
-            cv2.BORDER_CONSTANT,
-            value=self.im_padding_value)
-        return im
+    def apply_im(self, im, offsets):
+        x, y = offsets
+        im_h, im_w = im.shape[:2]
+        h, w = self.target_size
+        canvas = np.ones((h, w, 3), dtype=np.float32)
+        canvas *= np.array(self.im_padding_value, dtype=np.float32)
+        canvas[y:y + im_h, x:x + im_w, :] = im.astype(np.float32)
+        return canvas
 
-    def apply_mask(self, mask):
-        mask_height, mask_width = mask.shape[0:2]
-        pad_height = self.target_h - mask_height
-        pad_width = self.target_w - mask_width
-        mask = cv2.copyMakeBorder(
-            mask,
-            0,
-            pad_height,
-            0,
-            pad_width,
-            cv2.BORDER_CONSTANT,
-            value=self.label_padding_value)
-        return mask
+    def apply_mask(self, mask, offsets):
+        x, y = offsets
+        im_h, im_w = mask.shape[:2]
+        h, w = self.target_size
+        canvas = np.ones((h, w), dtype=np.float32)
+        canvas *= np.array(self.label_padding_value, dtype=np.float32)
+        canvas[y:y + im_h, x:x + im_w] = mask.astype(np.float32)
+        return canvas
+
+    def apply_bbox(self, bbox, offsets):
+        return bbox + np.array(offsets * 2, dtype=np.float32)
 
     def __call__(self, sample):
-        sample['im'] = self.apply_im(sample['im'])
+        im_h, im_w = sample['im'].shape[:2]
+        if self.target_size:
+            h, w = self.target_size
+            assert (
+                    im_h <= h and im_w <= w
+            ), 'target size ({}, {}) cannot be less than image size ({}, {})'\
+                .format(h, w, im_h, im_w)
+        else:
+            h = (np.ceil(im_h // self.size_divisor) *
+                 self.size_divisor).astype(int)
+            w = (np.ceil(im_w / self.size_divisor) *
+                 self.size_divisor).astype(int)
+            self.target_size = [h, w]
+
+        if h == im_h and w == im_w:
+            return sample
+
+        if self.pad_mode == -1:
+            offsets = self.offsets
+        elif self.pad_mode == 0:
+            offsets = [0, 0]
+        elif self.pad_mode == 1:
+            offsets = [(h - im_h) // 2, (w - im_w) // 2]
+        else:
+            offsets = [h - im_h, w - im_w]
+
+        sample['im'] = self.apply_im(sample['im'], offsets)
         if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'])
+            sample['mask'] = self.apply_mask(sample['mask'], offsets)
+        if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
+            sample['gt_poly'] = self.apply_bbox(sample['gt_bbox'], offsets)
         return sample
 
 
