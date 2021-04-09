@@ -745,11 +745,10 @@ class ArrangeSegmenter(Transform):
         self.mode = mode
 
     def __call__(self, sample):
-        image = sample['image']
         if 'mask' in sample:
             mask = sample['mask']
 
-        image = permute(image, False)
+        image = permute(sample['image'], False)
         if self.mode == 'train':
             mask = mask.astype('int64')
             return image, mask
@@ -771,6 +770,19 @@ class ArrangeClassifier(Transform):
         self.mode = mode
 
     def __call__(self, sample):
-        image = sample['image']
-        image = permute(image, False)
+        image = permute(sample['image'], False)
         return image, sample['label']
+
+
+class ArrangeDetector(Transform):
+    def __init__(self, mode):
+        super(ArrangeDetector, self).__init__()
+        if mode not in ['train', 'eval', 'test', 'quant']:
+            raise ValueError(
+                "mode should be defined as one of ['train', 'eval', 'test', 'quant']!"
+            )
+        self.mode = mode
+
+    def __call__(self, sample):
+        sample['image'] = permute(sample['image'], False)
+        return sample
