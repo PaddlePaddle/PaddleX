@@ -16,7 +16,6 @@ import numpy as np
 import cv2
 import copy
 import random
-import math
 from PIL import Image
 try:
     from collections.abc import Sequence
@@ -390,48 +389,84 @@ class RandomCrop(Transform):
     """
 
     def __init__(self,
-                 crop_size=224,
-                 lower_scale=0.08,
-                 lower_ratio=3. / 4,
-                 upper_ratio=4. / 3,
+                 crop_size=None,
+                 aspect_ratio=[.5, 2.],
                  thresholds=[.0, .1, .3, .5, .7, .9],
+                 scaling=[.3, 1.],
                  num_attempts=50,
                  allow_no_crop=True,
                  cover_all_box=False):
         super(RandomCrop, self).__init__()
         self.crop_size = crop_size
-        self.lower_scale = lower_scale
-        self.lower_ratio = lower_ratio
-        self.upper_ratio = upper_ratio
-        self.w, self.h, self.i, self.j = None, None, None, None
-
-        # attributes for detection task
+        self.aspect_ratio = aspect_ratio
         self.thresholds = thresholds
+        self.scaling = scaling
         self.num_attempts = num_attempts
         self.allow_no_crop = allow_no_crop
         self.cover_all_box = cover_all_box
+        self.crop_box = None
+        self.cropped_box = None
+        self.valid_ids = None
+        self.found = False
 
-    def _generate_crop_info(self,
-                            im,
-                            lower_scale=0.08,
-                            lower_ratio=3. / 4,
-                            upper_ratio=4. / 3):
-        scale = [lower_scale, 1.0]
-        ratio = [lower_ratio, upper_ratio]
-        aspect_ratio = math.sqrt(np.random.uniform(*ratio))
-        w = 1. * aspect_ratio
-        h = 1. / aspect_ratio
-        bound = min((float(im.shape[0]) / im.shape[1]) / (h**2),
-                    (float(im.shape[1]) / im.shape[0]) / (w**2))
-        scale_max = min(scale[1], bound)
-        scale_min = min(scale[0], bound)
-        target_area = im.shape[0] * im.shape[1] * np.random.uniform(scale_min,
-                                                                    scale_max)
-        target_size = math.sqrt(target_area)
-        self.w = int(target_size * w)
-        self.h = int(target_size * h)
-        self.i = np.random.randint(0, im.shape[0] - h + 1)
-        self.j = np.random.randint(0, im.shape[1] - w + 1)
+    def _generate_crop_info(self, sample):
+        im_h, im_w = sample['im'].shape[:2]
+        gt_bbox = sample['gt_bbox']
+        thresholds = self.thresholds
+        if thresholds is not None:
+            if self.allow_no_crop:
+                thresholds.append('no_crop')
+            np.random.shuffle(thresholds)
+            for thresh in thresholds:
+                if thresh == 'no_crop':
+                    break
+                for i in range(self.num_attempts):
+                    crop_box = self._get_crop_box(im_h, im_w)
+                    if crop_box is None:
+                        continue
+                    self.crop_box = crop_box
+                    iou = self._iou_matrix(
+                        gt_bbox, np.array(
+                            [self.crop_box], dtype=np.float32))
+                    if iou.max() < thresh:
+                        continue
+                    if self.cover_all_box and iou.min() < thresh:
+                        continue
+                    self.cropped_box, self.valid_ids = self._crop_box_with_center_constraint(
+                        gt_bbox, np.array(
+                            self.crop_box, dtype=np.float32))
+                    if self.valid_ids.size > 0:
+                        self.found = True
+                        break
+        else:
+            for i in range(self.num_attempts):
+                crop_box = self._get_crop_box(im_h, im_w)
+                if crop_box is None:
+                    continue
+                self.crop_box = crop_box
+                self.found = True
+
+    def _get_crop_box(self, im_h, im_w):
+        scale = np.random.uniform(*self.scaling)
+        if self.aspect_ratio is not None:
+            min_ar, max_ar = self.aspect_ratio
+            aspect_ratio = np.random.uniform(
+                max(min_ar, scale**2), min(max_ar, scale**-2))
+            h_scale = scale / np.sqrt(aspect_ratio)
+            w_scale = scale * np.sqrt(aspect_ratio)
+        else:
+            h_scale = np.random.uniform(*self.scaling)
+            w_scale = np.random.uniform(*self.scaling)
+        crop_h = im_h * h_scale
+        crop_w = im_w * w_scale
+        if self.aspect_ratio is None:
+            if crop_h / crop_w < 0.5 or crop_h / crop_w > 2.0:
+                return None
+        crop_h = int(crop_h)
+        crop_w = int(crop_w)
+        crop_y = np.random.randint(0, im_h - crop_h)
+        crop_x = np.random.randint(0, im_w - crop_w)
+        return [crop_x, crop_y, crop_x + crop_w, crop_y + crop_h]
 
     def _iou_matrix(self, a, b):
         tl_i = np.maximum(a[:, np.newaxis, :2], b[:, :2])
@@ -459,51 +494,39 @@ class RandomCrop(Transform):
 
         return cropped_box, np.where(valid)[0]
 
-    def apply_im(self, im):
-        im = im[self.i:self.i + self.h, self.j:self.j + self.w, :]
-        im = cv2.resize(im, (self.crop_size, self.crop_size))
-        return im
+    def apply_im(self, im, crop):
+        x1, y1, x2, y2 = crop
+        return im[y1:y2, x1:x2, :]
 
-    def apply_mask(self, mask):
-        mask = mask[self.i:self.i + self.h, self.j:self.j + self.w, ...]
-        mask = cv2.resize(mask, (self.crop_size, self.crop_size))
-        return mask
-
-    # def __call__(self, sample):
-    #     if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-    #         gt_bbox = sample['gt_bbox']
-    #         thresholds = self.thresholds
-    #         if self.allow_no_crop:
-    #             thresholds.append('no_crop')
-    #         np.random.shuffle(thresholds)
-    #         for thresh in thresholds:
-    #             if thresh == 'no_crop':
-    #                 break
-    #             found = False
-    #             for i in range(self.num_attempts):
-    #
-    #     else:
+    def apply_mask(self, mask, crop):
+        x1, y1, x2, y2 = crop
+        return mask[y1:y2, x1:x2, :]
 
     def __call__(self, sample):
-        self._generate_crop_info(sample['im'], self.lower_scale,
-                                 self.lower_ratio, self.upper_ratio)
-        im_h, im_w = sample['im'].shape[:2]
-        sample['im'] = self.apply_im(sample['im'])
-        if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'])
-        # if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-        #     gt_bbox = sample['gt_bbox']
-        #     thresholds = list(self.thresholds)
-        #     if self.allow_no_crop:
-        #         thresholds.append('no_crop')
-        #     np.random.shuffle(thresholds)
-        #
-        #     for thresh in thresholds:
-        #         if thresh == 'no_crop':
-        #             break
-        #
-        #         found = False
-        #         for i in range(self.num_attempts):
+        if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
+            self._generate_crop_info(sample)
+            if self.found:
+                sample['im'] = self.apply_im(sample['image'], self.crop_box)
+                sample['gt_bbox'] = np.take(
+                    self.cropped_box, self.valid_ids, axis=0)
+                sample['gt_class'] = np.take(
+                    sample['gt_class'], self.valid_ids, axis=0)
+                if 'gt_score' in sample:
+                    sample['gt_score'] = np.take(
+                        sample['gt_score'], self.valid_ids, axis=0)
+                if 'is_crowd' in sample:
+                    sample['is_crowd'] = np.take(
+                        sample['is_crowd'], self.valid_ids, axis=0)
+        else:
+            self.thresholds = None
+            self._generate_crop_info(sample)
+            if self.found:
+                sample['im'] = self.apply_im(sample['image'], self.crop_box)
+                if 'mask' in sample:
+                    sample['mask'] = self.apply_mask(sample['mask'])
+
+        if self.crop_size is not None:
+            sample = Resize(self.crop_size, self.crop_size)(sample)
 
         return sample
 
