@@ -225,7 +225,7 @@ class VOCDetection(Dataset):
                 }
                 if len(objs) != 0:
                     self.file_list.append({
-                        'im': img_file,
+                        'image': img_file,
                         **
                         im_info,
                         **
@@ -287,7 +287,13 @@ class VOCDetection(Dataset):
                 'difficult': difficult,
                 'gt_poly': gt_poly
             }
-            self.file_list.append({'im': im_fname, ** im_info, ** label_info})
+            self.file_list.append({
+                'image': im_fname,
+                **
+                im_info,
+                **
+                label_info
+            })
         self.num_samples = len(self.file_list)
 
     def __getitem__(self, idx):

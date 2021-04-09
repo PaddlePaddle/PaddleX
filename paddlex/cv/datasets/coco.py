@@ -130,7 +130,7 @@ class CocoDetection(VOCDetection):
                 del label_info['gt_poly']
 
             self.file_list.append(({
-                'im': im_fname,
+                'image': im_fname,
                 **
                 im_info,
                 **

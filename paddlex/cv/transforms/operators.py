@@ -37,7 +37,7 @@ class Transform:
     def __init__(self):
         pass
 
-    def apply_im(self, im):
+    def apply_im(self, image):
         pass
 
     def apply_mask(self, mask):
@@ -47,7 +47,7 @@ class Transform:
         pass
 
     def __call__(self, sample):
-        sample['im'] = self.apply_im(sample['im'])
+        sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
         if 'gt_bbox' in sample:
@@ -110,17 +110,17 @@ class Decode(Transform):
     def apply_im(self, im_path):
         if isinstance(im_path, str):
             try:
-                im = self.read_img(im_path)
+                image = self.read_img(im_path)
             except:
                 raise ValueError('Cannot read the image file {}!'.format(
                     im_path))
         else:
-            im = im_path
+            image = im_path
 
         if self.to_rgb:
-            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        return im
+        return image
 
     def apply_mask(self, mask):
         try:
@@ -134,10 +134,10 @@ class Decode(Transform):
         return mask
 
     def __call__(self, sample):
-        sample['im'] = self.apply_im(sample['im'])
+        sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
-            im_height, im_width, _ = sample['im'].shape
+            im_height, im_width, _ = sample['image'].shape
             se_height, se_width = sample['mask'].shape
             if im_height != se_height or im_width != se_width:
                 raise Exception(
@@ -152,10 +152,10 @@ class Resize(Transform):
         self.target_w = width
         self.interp = interp
 
-    def apply_im(self, im, interp):
-        im = cv2.resize(
-            im, (self.target_w, self.target_h), interpolation=interp)
-        return im
+    def apply_im(self, image, interp):
+        image = cv2.resize(
+            image, (self.target_w, self.target_h), interpolation=interp)
+        return image
 
     def apply_mask(self, mask):
         mask = cv2.resize(
@@ -175,8 +175,8 @@ class Resize(Transform):
         interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
-        im_h, im_w = sample['im'].shape[:2]
-        sample['im'] = self.apply_im(sample['im'], interp)
+        im_h, im_w = sample['image'].shape[:2]
+        sample['image'] = self.apply_im(sample['image'], interp)
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
@@ -197,17 +197,17 @@ class ResizeByShort(Transform):
         self.target_h = None
         self.target_w = None
 
-    def apply_im(self, im, interp):
-        im_short_size = min(im.shape[0], im.shape[1])
-        im_long_size = max(im.shape[0], im.shape[1])
+    def apply_im(self, image, interp):
+        im_short_size = min(image.shape[0], image.shape[1])
+        im_long_size = max(image.shape[0], image.shape[1])
         scale = float(self.short_size) / im_short_size
         if 0 < self.max_size < np.round(scale * im_long_size):
             scale = float(self.max_size) / float(im_long_size)
-        self.target_w = int(round(im.shape[1] * scale))
-        self.target_h = int(round(im.shape[0] * scale))
-        im = cv2.resize(
-            im, (self.target_w, self.target_h), interpolation=interp)
-        return im
+        self.target_w = int(round(image.shape[1] * scale))
+        self.target_h = int(round(image.shape[0] * scale))
+        image = cv2.resize(
+            image, (self.target_w, self.target_h), interpolation=interp)
+        return image
 
     def apply_mask(self, mask):
         mask = cv2.resize(
@@ -227,8 +227,8 @@ class ResizeByShort(Transform):
         interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
-        im_h, im_w = sample['im'].shape[:2]
-        sample['im'] = self.apply_im(sample['im'], interp)
+        im_h, im_w = sample['image'].shape[:2]
+        sample['image'] = self.apply_im(sample['image'], interp)
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
@@ -245,9 +245,9 @@ class RandomHorizontalFlip(Transform):
         super(RandomHorizontalFlip, self).__init__()
         self.prob = prob
 
-    def apply_im(self, im):
-        im = horizontal_flip(im)
-        return im
+    def apply_im(self, image):
+        image = horizontal_flip(image)
+        return image
 
     def apply_mask(self, mask):
         mask = horizontal_flip(mask)
@@ -262,8 +262,8 @@ class RandomHorizontalFlip(Transform):
 
     def __call__(self, sample):
         if random.random() < self.prob:
-            _, im_w = sample['im'].shape[:2]
-            sample['im'] = self.apply_im(sample['im'])
+            _, im_w = sample['image'].shape[:2]
+            sample['image'] = self.apply_im(sample['image'])
             if 'mask' in sample:
                 sample['mask'] = self.apply_mask(sample['mask'])
             if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
@@ -281,9 +281,9 @@ class RandomVerticalFlip(Transform):
         super(RandomVerticalFlip, self).__init__()
         self.prob = prob
 
-    def apply_im(self, im):
-        im = vertical_flip(im)
-        return im
+    def apply_im(self, image):
+        image = vertical_flip(image)
+        return image
 
     def apply_mask(self, mask):
         mask = vertical_flip(mask)
@@ -298,8 +298,8 @@ class RandomVerticalFlip(Transform):
 
     def __call__(self, sample):
         if random.random() < self.prob:
-            im_h, _ = sample['im'].shape[:2]
-            sample['im'] = self.apply_im(sample['im'])
+            im_h, _ = sample['image'].shape[:2]
+            sample['image'] = self.apply_im(sample['image'])
             if 'mask' in sample:
                 sample['mask'] = self.apply_mask(sample['mask'])
             if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
@@ -333,16 +333,16 @@ class Normalize(Transform):
         self.max_val = max_val
         self.is_scale = is_scale
 
-    def apply_im(self, im):
-        im = im.astype(np.float32)
+    def apply_im(self, image):
+        image = image.astype(np.float32)
         mean = np.asarray(
             self.mean, dtype=np.float32)[np.newaxis, np.newaxis, :]
         std = np.asarray(self.std, dtype=np.float32)[np.newaxis, np.newaxis, :]
-        im = normalize(im, mean, std, self.min_val, self.max_val)
-        return im
+        image = normalize(image, mean, std, self.min_val, self.max_val)
+        return image
 
     def __call__(self, sample):
-        sample['im'] = self.apply_im(sample['im'])
+        sample['image'] = self.apply_im(sample['image'])
 
         return sample
 
@@ -359,17 +359,17 @@ class CenterCrop(Transform):
         super(CenterCrop, self).__init__()
         self.crop_size = crop_size
 
-    def apply_im(self, im):
-        im = center_crop(im, self.crop_size)
+    def apply_im(self, image):
+        image = center_crop(image, self.crop_size)
 
-        return im
+        return image
 
     def apply_mask(self, mask):
         mask = center_crop(mask)
         return mask
 
     def __call__(self, sample):
-        sample['im'] = self.apply_im(sample['im'])
+        sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
         return sample
@@ -410,7 +410,7 @@ class RandomCrop(Transform):
         self.found = False
 
     def _generate_crop_info(self, sample):
-        im_h, im_w = sample['im'].shape[:2]
+        im_h, im_w = sample['image'].shape[:2]
         gt_bbox = sample['gt_bbox']
         thresholds = self.thresholds
         if thresholds is not None:
@@ -494,9 +494,9 @@ class RandomCrop(Transform):
 
         return cropped_box, np.where(valid)[0]
 
-    def apply_im(self, im, crop):
+    def apply_im(self, image, crop):
         x1, y1, x2, y2 = crop
-        return im[y1:y2, x1:x2, :]
+        return image[y1:y2, x1:x2, :]
 
     def apply_mask(self, mask, crop):
         x1, y1, x2, y2 = crop
@@ -506,7 +506,7 @@ class RandomCrop(Transform):
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             self._generate_crop_info(sample)
             if self.found:
-                sample['im'] = self.apply_im(sample['image'], self.crop_box)
+                sample['image'] = self.apply_im(sample['image'], self.crop_box)
                 sample['gt_bbox'] = np.take(
                     self.cropped_box, self.valid_ids, axis=0)
                 sample['gt_class'] = np.take(
@@ -521,7 +521,7 @@ class RandomCrop(Transform):
             self.thresholds = None
             self._generate_crop_info(sample)
             if self.found:
-                sample['im'] = self.apply_im(sample['image'], self.crop_box)
+                sample['image'] = self.apply_im(sample['image'], self.crop_box)
                 if 'mask' in sample:
                     sample['mask'] = self.apply_mask(sample['mask'])
 
@@ -552,7 +552,7 @@ class RandomExpand(Transform):
 
     def __call__(self, sample):
         if random.random() < self.prob:
-            im_h, im_w = sample['im'].shape[:2]
+            im_h, im_w = sample['image'].shape[:2]
             ratio = np.random.uniform(1., self.upper_ratio)
             h = int(im_h * ratio)
             w = int(im_w * ratio)
@@ -607,13 +607,13 @@ class Padding(Transform):
         self.im_padding_value = im_padding_value
         self.label_padding_value = label_padding_value
 
-    def apply_im(self, im, offsets):
+    def apply_im(self, image, offsets):
         x, y = offsets
-        im_h, im_w = im.shape[:2]
+        im_h, im_w = image.shape[:2]
         h, w = self.target_size
         canvas = np.ones((h, w, 3), dtype=np.float32)
         canvas *= np.array(self.im_padding_value, dtype=np.float32)
-        canvas[y:y + im_h, x:x + im_w, :] = im.astype(np.float32)
+        canvas[y:y + im_h, x:x + im_w, :] = image.astype(np.float32)
         return canvas
 
     def apply_mask(self, mask, offsets):
@@ -629,7 +629,7 @@ class Padding(Transform):
         return bbox + np.array(offsets * 2, dtype=np.float32)
 
     def __call__(self, sample):
-        im_h, im_w = sample['im'].shape[:2]
+        im_h, im_w = sample['image'].shape[:2]
         if self.target_size:
             h, w = self.target_size
             assert (
@@ -655,7 +655,7 @@ class Padding(Transform):
         else:
             offsets = [h - im_h, w - im_w]
 
-        sample['im'] = self.apply_im(sample['im'], offsets)
+        sample['image'] = self.apply_im(sample['image'], offsets)
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'], offsets)
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
@@ -678,14 +678,14 @@ class MixupImage(Transform):
         if self.beta <= 0.0:
             raise ValueError("beta should be positive in {}".format(self))
 
-    def apply_im(self, im1, im2, factor):
-        h = max(im1.shape[0], im2.shape[0])
-        w = max(im1.shape[1], im2.shape[1])
-        img = np.zeros((h, w, im1.shape[2]), 'float32')
-        img[:im1.shape[0], :im1.shape[1], :] = \
-            im1.astype('float32') * factor
-        img[:im2.shape[0], :im2.shape[1], :] += \
-            im2.astype('float32') * (1.0 - factor)
+    def apply_im(self, image1, image2, factor):
+        h = max(image1.shape[0], image2.shape[0])
+        w = max(image1.shape[1], image2.shape[1])
+        img = np.zeros((h, w, image1.shape[2]), 'float32')
+        img[:image1.shape[0], :image1.shape[1], :] = \
+            image1.astype('float32') * factor
+        img[:image2.shape[0], :image2.shape[1], :] += \
+            image2.astype('float32') * (1.0 - factor)
         return img.astype('uint8')
 
     def __call__(self, sample):
@@ -700,9 +700,9 @@ class MixupImage(Transform):
             return sample[0]
         if factor <= 0.0:
             return sample[1]
-        im = self.apply_im(sample[0]['im'], sample[1]['im'], factor)
+        image = self.apply_im(sample[0]['image'], sample[1]['image'], factor)
         result = copy.deepcopy(sample[0])
-        result['im'] = im
+        result['image'] = image
         # apply bbox and score
         if 'gt_bbox' in sample[0]:
             gt_bbox1 = sample[0]['gt_bbox']
@@ -745,20 +745,20 @@ class ArrangeSegmenter(Transform):
         self.mode = mode
 
     def __call__(self, sample):
-        im = sample['im']
+        image = sample['image']
         if 'mask' in sample:
             mask = sample['mask']
 
-        im = permute(im, False)
+        image = permute(image, False)
         if self.mode == 'train':
             mask = mask.astype('int64')
-            return im, mask
+            return image, mask
         if self.mode == 'eval':
             mask = np.asarray(Image.open(mask))
             mask = mask[np.newaxis, :, :].astype('int64')
-            return im, mask
+            return image, mask
         if self.mode == 'test':
-            return im,
+            return image,
 
 
 class ArrangeClassifier(Transform):
@@ -771,6 +771,6 @@ class ArrangeClassifier(Transform):
         self.mode = mode
 
     def __call__(self, sample):
-        im = sample['im']
-        im = permute(im, False)
-        return im, sample['label']
+        image = sample['image']
+        image = permute(image, False)
+        return image, sample['label']
