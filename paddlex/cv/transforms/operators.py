@@ -743,6 +743,111 @@ class MixupImage(Transform):
         return result
 
 
+class RandomDistort(Transform):
+    def __init__(self,
+                 brightness_range=0.5,
+                 brightness_prob=0.5,
+                 contrast_range=0.5,
+                 contrast_prob=0.5,
+                 saturation_range=0.5,
+                 saturation_prob=0.5,
+                 hue_range=18,
+                 hue_prob=0.5,
+                 random_apply=True,
+                 count=4,
+                 shuffle_channel=False):
+        super(RandomDistort, self).__init__()
+        self.brightness_range = brightness_range
+        self.brightness_prob = brightness_prob
+        self.contrast_range = contrast_range
+        self.contrast_prob = contrast_prob
+        self.saturation_range = saturation_range
+        self.saturation_prob = saturation_prob
+        self.hue_range = hue_range
+        self.hue_prob = hue_prob
+        self.random_apply = random_apply
+        self.count = count
+        self.shuffle_channel = shuffle_channel
+
+    def apply_hue(self, image):
+        low, high = self.hue_range
+        if np.random.uniform(0., 1.) < self.hue_prob:
+            return image
+
+        image = image.astype(np.float32)
+        # it works, but result differ from HSV version
+        delta = np.random.uniform(low, high)
+        u = np.cos(delta * np.pi)
+        w = np.sin(delta * np.pi)
+        bt = np.array([[1.0, 0.0, 0.0], [0.0, u, -w], [0.0, w, u]])
+        tyiq = np.array([[0.299, 0.587, 0.114], [0.596, -0.274, -0.321],
+                         [0.211, -0.523, 0.311]])
+        ityiq = np.array([[1.0, 0.956, 0.621], [1.0, -0.272, -0.647],
+                          [1.0, -1.107, 1.705]])
+        t = np.dot(np.dot(ityiq, bt), tyiq).T
+        image = np.dot(image, t)
+        return image
+
+    def apply_saturation(self, image):
+        low, high = self.saturation_range
+        if np.random.uniform(0., 1.) < self.saturation_prob:
+            return image
+        delta = np.random.uniform(low, high)
+        image = image.astype(np.float32)
+        # it works, but result differ from HSV version
+        gray = image * np.array([[[0.299, 0.587, 0.114]]], dtype=np.float32)
+        gray = gray.sum(axis=2, keepdims=True)
+        gray *= (1.0 - delta)
+        image *= delta
+        image += gray
+        return image
+
+    def apply_contrast(self, image):
+        low, high = self.contrast_range
+        if np.random.uniform(0., 1.) < self.contrast_prob:
+            return image
+        delta = np.random.uniform(low, high)
+        image = image.astype(np.float32)
+        image *= delta
+        return image
+
+    def apply_brightness(self, image):
+        low, high = self.brightness_range
+        if np.random.uniform(0., 1.) < self.brightness_prob:
+            return image
+        delta = np.random.uniform(low, high)
+        image = image.astype(np.float32)
+        image += delta
+        return image
+
+    def __call__(self, sample):
+        if self.random_apply:
+            functions = [
+                self.apply_brightness, self.apply_contrast,
+                self.apply_saturation, self.apply_hue
+            ]
+            distortions = np.random.permutation(functions)[:self.count]
+            for func in distortions:
+                sample['image'] = func(sample['image'])
+            return sample
+
+        sample['image'] = self.apply_brightness(sample['image'])
+        mode = np.random.randint(0, 2)
+        if mode:
+            sample['image'] = self.apply_contrast(sample['image'])
+        sample['image'] = self.apply_saturation(sample['image'])
+        sample['image'] = self.apply_hue(sample['image'])
+        if not mode:
+            sample['image'] = self.apply_contrast(sample['image'])
+
+        if self.shuffle_channel:
+            if np.random.randint(0, 2):
+                sample['image'] = sample['image'][..., np.random.permutation(
+                    3)]
+
+        return sample
+
+
 class PadBox(Transform):
     def __init__(self, num_max_boxes=50):
         """
@@ -783,6 +888,22 @@ class PadBox(Transform):
             if gt_num > 0:
                 pad_crowd[:gt_num] = sample['is_crowd'][:gt_num, 0]
             sample['is_crowd'] = pad_crowd
+        return sample
+
+
+class _BboxXYXY2XYWH(Transform):
+    """
+    Convert bbox XYXY format to XYWH format.
+    """
+
+    def __init__(self):
+        super(_BboxXYXY2XYWH, self).__init__()
+
+    def __call__(self, sample):
+        bbox = sample['gt_bbox']
+        bbox[:, 2:4] = bbox[:, 2:4] - bbox[:, :2]
+        bbox[:, :2] = bbox[:, :2] + bbox[:, 2:4] / 2.
+        sample['gt_bbox'] = bbox
         return sample
 
 
