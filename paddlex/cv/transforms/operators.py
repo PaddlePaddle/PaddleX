@@ -404,7 +404,6 @@ class RandomCrop(Transform):
         self.num_attempts = num_attempts
         self.allow_no_crop = allow_no_crop
         self.cover_all_box = cover_all_box
-        self.crop_box = None
         self.cropped_box = None
         self.valid_ids = None
         self.found = False
@@ -412,39 +411,37 @@ class RandomCrop(Transform):
     def _generate_crop_info(self, sample):
         im_h, im_w = sample['image'].shape[:2]
         gt_bbox = sample['gt_bbox']
-        thresholds = self.thresholds
-        if thresholds is not None:
+        if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
+            thresholds = self.thresholds
             if self.allow_no_crop:
                 thresholds.append('no_crop')
             np.random.shuffle(thresholds)
             for thresh in thresholds:
                 if thresh == 'no_crop':
-                    break
+                    return None
                 for i in range(self.num_attempts):
                     crop_box = self._get_crop_box(im_h, im_w)
                     if crop_box is None:
                         continue
-                    self.crop_box = crop_box
                     iou = self._iou_matrix(
                         gt_bbox, np.array(
-                            [self.crop_box], dtype=np.float32))
+                            [crop_box], dtype=np.float32))
                     if iou.max() < thresh:
                         continue
                     if self.cover_all_box and iou.min() < thresh:
                         continue
-                    self.cropped_box, self.valid_ids = self._crop_box_with_center_constraint(
+                    cropped_box, valid_ids = self._crop_box_with_center_constraint(
                         gt_bbox, np.array(
-                            self.crop_box, dtype=np.float32))
+                            crop_box, dtype=np.float32))
                     if self.valid_ids.size > 0:
-                        self.found = True
-                        break
+                        return crop_box, cropped_box, valid_ids
         else:
             for i in range(self.num_attempts):
                 crop_box = self._get_crop_box(im_h, im_w)
                 if crop_box is None:
                     continue
-                self.crop_box = crop_box
-                self.found = True
+                return crop_box, None, None
+        return None
 
     def _get_crop_box(self, im_h, im_w):
         scale = np.random.uniform(*self.scaling)
@@ -503,27 +500,23 @@ class RandomCrop(Transform):
         return mask[y1:y2, x1:x2, :]
 
     def __call__(self, sample):
-        if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-            self._generate_crop_info(sample)
-            if self.found:
-                sample['image'] = self.apply_im(sample['image'], self.crop_box)
-                sample['gt_bbox'] = np.take(
-                    self.cropped_box, self.valid_ids, axis=0)
+        crop_info = self._generate_crop_info(sample)
+        if crop_info is not None:
+            crop_box, cropped_box, valid_ids = crop_info
+            sample['image'] = self.apply_im(sample['image'], crop_box)
+            if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
+                sample['gt_bbox'] = np.take(cropped_box, valid_ids, axis=0)
                 sample['gt_class'] = np.take(
-                    sample['gt_class'], self.valid_ids, axis=0)
+                    sample['gt_class'], valid_ids, axis=0)
                 if 'gt_score' in sample:
                     sample['gt_score'] = np.take(
-                        sample['gt_score'], self.valid_ids, axis=0)
+                        sample['gt_score'], valid_ids, axis=0)
                 if 'is_crowd' in sample:
                     sample['is_crowd'] = np.take(
-                        sample['is_crowd'], self.valid_ids, axis=0)
-        else:
-            self.thresholds = None
-            self._generate_crop_info(sample)
-            if self.found:
-                sample['image'] = self.apply_im(sample['image'], self.crop_box)
-                if 'mask' in sample:
-                    sample['mask'] = self.apply_mask(sample['mask'])
+                        sample['is_crowd'], valid_ids, axis=0)
+
+            if 'mask' in sample:
+                sample['mask'] = self.apply_mask(sample['mask'], crop_box)
 
         if self.crop_size is not None:
             sample = Resize(self.crop_size, self.crop_size)(sample)
@@ -607,19 +600,19 @@ class Padding(Transform):
         self.im_padding_value = im_padding_value
         self.label_padding_value = label_padding_value
 
-    def apply_im(self, image, offsets):
+    def apply_im(self, image, offsets, target_size):
         x, y = offsets
         im_h, im_w = image.shape[:2]
-        h, w = self.target_size
+        h, w = target_size
         canvas = np.ones((h, w, 3), dtype=np.float32)
         canvas *= np.array(self.im_padding_value, dtype=np.float32)
         canvas[y:y + im_h, x:x + im_w, :] = image.astype(np.float32)
         return canvas
 
-    def apply_mask(self, mask, offsets):
+    def apply_mask(self, mask, offsets, target_size):
         x, y = offsets
         im_h, im_w = mask.shape[:2]
-        h, w = self.target_size
+        h, w = target_size
         canvas = np.ones((h, w), dtype=np.float32)
         canvas *= np.array(self.label_padding_value, dtype=np.float32)
         canvas[y:y + im_h, x:x + im_w] = mask.astype(np.float32)
@@ -641,7 +634,6 @@ class Padding(Transform):
                  self.size_divisor).astype(int)
             w = (np.ceil(im_w / self.size_divisor) *
                  self.size_divisor).astype(int)
-            self.target_size = [h, w]
 
         if h == im_h and w == im_w:
             return sample
@@ -655,9 +647,9 @@ class Padding(Transform):
         else:
             offsets = [h - im_h, w - im_w]
 
-        sample['image'] = self.apply_im(sample['image'], offsets)
+        sample['image'] = self.apply_im(sample['image'], offsets, (h, w))
         if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'], offsets)
+            sample['mask'] = self.apply_mask(sample['mask'], offsets, (h, w))
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             sample['gt_poly'] = self.apply_bbox(sample['gt_bbox'], offsets)
         return sample
