@@ -141,9 +141,3 @@ class CocoDetection(VOCDetection):
         logging.info("{} samples in file {}".format(
             len(self.file_list), ann_file))
         self.num_samples = len(self.file_list)
-
-    def __getitem__(self, idx):
-        files = copy.deepcopy(self.file_list)
-        sample = files[idx]
-        sample = self.transforms(sample)
-        return sample
