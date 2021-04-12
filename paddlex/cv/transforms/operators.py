@@ -70,11 +70,11 @@ class Compose(Transform):
         super(Compose, self).__init__()
         if not isinstance(transforms, list):
             raise TypeError(
-                'Type of transforms is invalid. Must be List, but recieved is {}'
+                'Type of transforms is invalid. Must be List, but received is {}'
                 .format(type(transforms)))
         if len(transforms) < 1:
             raise ValueError(
-                'Length of transforms must not be less than 1, but recieved is {}'
+                'Length of transforms must not be less than 1, but received is {}'
                 .format(len(transforms)))
         self.transforms = transforms
         self.decode_image = Decode()
@@ -888,6 +888,21 @@ class PadBox(Transform):
             if gt_num > 0:
                 pad_crowd[:gt_num] = sample['is_crowd'][:gt_num, 0]
             sample['is_crowd'] = pad_crowd
+        return sample
+
+
+class NormalizeBox(Transform):
+    def __init__(self):
+        super(NormalizeBox, self).__init__()
+
+    def __call__(self, sample):
+        height, width = sample['image'].shape[:2]
+        for i in range(sample['gt_bbox'].shape[0]):
+            sample['gt_bbox'][i][0] = sample['gt_bbox'][i][0] / width
+            sample['gt_bbox'][i][1] = sample['gt_bbox'][i][1] / height
+            sample['gt_bbox'][i][2] = sample['gt_bbox'][i][2] / width
+            sample['gt_bbox'][i][3] = sample['gt_bbox'][i][3] / height
+
         return sample
 
 

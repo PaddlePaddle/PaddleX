@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import multiprocessing as mp
 import numpy as np
 import cv2
 try:
@@ -20,6 +22,57 @@ except Exception:
     from collections import Sequence
 from .operators import Transform, Resize
 from .box_utils import jaccard_overlap
+
+MAIN_PID = os.getpid()
+
+
+class BatchCompose(Transform):
+    def __init__(self, batch_transforms):
+        super(BatchCompose, self).__init__()
+        if not isinstance(batch_transforms, list):
+            raise TypeError(
+                'Type of transforms is invalid. Must be List, but received is {}'
+                .format(type(batch_transforms)))
+        if len(batch_transforms) < 1:
+            raise ValueError(
+                'Length of transforms must not be less than 1, but received is {}'
+                .format(len(batch_transforms)))
+        self.batch_transforms = batch_transforms
+        self.lock = mp.Lock()
+
+    def __call__(self, samples):
+        for op in self.batch_transforms:
+            samples = op(samples)
+
+        # accessing ListProxy in main process (no worker subprocess)
+        # may incur errors in some enviroments, ListProxy back to
+        # list if no worker process start, while this `__call__`
+        # will be called in main process
+        global MAIN_PID
+        if os.getpid() == MAIN_PID and \
+                isinstance(self.output_fields, mp.managers.ListProxy):
+            self.output_fields = []
+
+        # parse output fields by first sample
+        # **this shoule be fixed if paddle.io.DataLoader support**
+        # For paddle.io.DataLoader not support dict currently,
+        # we need to parse the key from the first sample,
+        # BatchCompose.__call__ will be called in each worker
+        # process, so lock is need here.
+        if len(self.output_fields) == 0:
+            self.lock.acquire()
+            if len(self.output_fields) == 0:
+                for k, v in samples[0].items():
+                    # FIXME(dkp): for more elegent coding
+                    if k not in ['flipped', 'h', 'w']:
+                        self.output_fields.append(k)
+            self.lock.release()
+        samples = [[samples[i][k] for k in self.output_fields]
+                   for i in range(len(samples))]
+        samples = list(zip(*samples))
+        samples = [np.stack(d, axis=0) for d in samples]
+
+        return samples
 
 
 class BatchRandomResize(Transform):

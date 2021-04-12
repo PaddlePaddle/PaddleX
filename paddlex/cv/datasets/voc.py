@@ -45,6 +45,7 @@ class VOCDetection(Dataset):
                  file_list,
                  label_list,
                  transforms=None,
+                 batch_transforms=None,
                  num_workers='auto',
                  shuffle=False):
         # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
@@ -63,7 +64,7 @@ class VOCDetection(Dataset):
                     self.mixup_op = self.transforms.transforms.pop(i)
                     self.use_mix = True
 
-        self.batch_transforms = None
+        self.batch_transforms = batch_transforms
         self.num_workers = get_num_workers(num_workers)
         self.shuffle = shuffle
         self.file_list = list()
