@@ -171,7 +171,8 @@ class VOCDetection(Dataset):
                     box_tag = pattern.findall(str(ET.tostringlist(obj)))
                     if len(box_tag) == 0:
                         logging.warning(
-                            "There's no field '<bndbox>' in one of object, so this object will be ignored. xml file: {}".
+                            "There's no field '<bndbox>' in one of object, "
+                            "so this object will be ignored. xml file: {}".
                             format(xml_file))
                         continue
                     box_tag = box_tag[0][1:-1]
@@ -197,6 +198,18 @@ class VOCDetection(Dataset):
                     if im_w > 0.5 and im_h > 0.5:
                         x2 = min(im_w - 1, x2)
                         y2 = min(im_h - 1, y2)
+
+                    if not (x2 >= x1 and y2 >= y1):
+                        gt_bbox = np.delete(gt_bbox, i, axis=0)
+                        gt_class = np.delete(gt_class, i, axis=0)
+                        gt_score = np.delete(gt_score, i, axis=0)
+                        is_crowd = np.delete(is_crowd, i, axis=0)
+                        difficult = np.delete(difficult, i, axis=0)
+                        logging.warning(
+                            "Bounding box for object {} does not satisfy x1 <= x2 and y1 <= y2, "
+                            "so this object is skipped".format(i))
+                        continue
+
                     gt_bbox[i] = [x1, y1, x2, y2]
                     is_crowd[i][0] = 0
                     difficult[i][0] = _difficult
