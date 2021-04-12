@@ -151,6 +151,7 @@ class VOCDetection(Dataset):
                 gt_score = np.ones((len(objs), 1), dtype=np.float32)
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
+                skipped_indices = list()
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
@@ -200,11 +201,7 @@ class VOCDetection(Dataset):
                         y2 = min(im_h - 1, y2)
 
                     if not (x2 >= x1 and y2 >= y1):
-                        gt_bbox = np.delete(gt_bbox, i, axis=0)
-                        gt_class = np.delete(gt_class, i, axis=0)
-                        gt_score = np.delete(gt_score, i, axis=0)
-                        is_crowd = np.delete(is_crowd, i, axis=0)
-                        difficult = np.delete(difficult, i, axis=0)
+                        skipped_indices.append(i)
                         logging.warning(
                             "Bounding box for object {} does not satisfy x1 <= x2 and y1 <= y2, "
                             "so this object is skipped".format(i))
@@ -224,6 +221,13 @@ class VOCDetection(Dataset):
                     })
                     ann_ct += 1
 
+                if skipped_indices:
+                    gt_bbox = np.delete(gt_bbox, skipped_indices, axis=0)
+                    gt_class = np.delete(gt_class, skipped_indices, axis=0)
+                    gt_score = np.delete(gt_score, skipped_indices, axis=0)
+                    is_crowd = np.delete(is_crowd, skipped_indices, axis=0)
+                    difficult = np.delete(difficult, skipped_indices, axis=0)
+
                 im_info = {
                     'im_id': im_id,
                     'image_shape': np.array([im_h, im_w]).astype('int32'),
@@ -235,7 +239,8 @@ class VOCDetection(Dataset):
                     'gt_score': gt_score,
                     'difficult': difficult
                 }
-                if len(objs) != 0:
+
+                if gt_bbox.size != 0:
                     self.file_list.append({
                         'image': img_file,
                         **
