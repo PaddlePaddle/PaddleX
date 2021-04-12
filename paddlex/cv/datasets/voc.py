@@ -233,7 +233,6 @@ class VOCDetection(Dataset):
                     'gt_class': gt_class,
                     'gt_bbox': gt_bbox,
                     'gt_score': gt_score,
-                    'gt_poly': [],
                     'difficult': difficult
                 }
                 if len(objs) != 0:

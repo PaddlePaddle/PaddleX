@@ -20,6 +20,7 @@ import sys
 import numpy as np
 from paddlex.utils import logging, is_pic
 from .voc import VOCDetection
+from paddlex.cv.transforms import MixupImage
 
 
 class CocoDetection(VOCDetection):
@@ -55,6 +56,14 @@ class CocoDetection(VOCDetection):
 
         super(VOCDetection, self).__init__()
         self.transforms = copy.deepcopy(transforms)
+        self.use_mix = False
+        if self.transforms is not None:
+            for i, op in enumerate(self.transforms.transforms):
+                if isinstance(op, MixupImage):
+                    self.mixup_op = self.transforms.transforms.pop(i)
+                    self.use_mix = True
+
+        self.batch_transforms = None
         self.num_workers = num_workers
         self.shuffle = shuffle
         self.file_list = list()

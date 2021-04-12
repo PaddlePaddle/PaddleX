@@ -422,13 +422,9 @@ class RandomCrop(Transform):
         self.num_attempts = num_attempts
         self.allow_no_crop = allow_no_crop
         self.cover_all_box = cover_all_box
-        self.cropped_box = None
-        self.valid_ids = None
-        self.found = False
 
     def _generate_crop_info(self, sample):
         im_h, im_w = sample['image'].shape[:2]
-        gt_bbox = sample['gt_bbox']
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             thresholds = self.thresholds
             if self.allow_no_crop:
@@ -442,14 +438,16 @@ class RandomCrop(Transform):
                     if crop_box is None:
                         continue
                     iou = self._iou_matrix(
-                        gt_bbox, np.array(
+                        sample['gt_bbox'],
+                        np.array(
                             [crop_box], dtype=np.float32))
                     if iou.max() < thresh:
                         continue
                     if self.cover_all_box and iou.min() < thresh:
                         continue
                     cropped_box, valid_ids = self._crop_box_with_center_constraint(
-                        gt_bbox, np.array(
+                        sample['gt_bbox'],
+                        np.array(
                             crop_box, dtype=np.float32))
                     if self.valid_ids.size > 0:
                         return crop_box, cropped_box, valid_ids
