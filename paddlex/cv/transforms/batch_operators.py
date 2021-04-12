@@ -50,13 +50,13 @@ class BatchRandomResize(Transform):
 
     def __call__(self, samples):
         if self.random_size:
-            height, width = np.random.choice(self.target_size)
+            target_size = np.random.choice(self.target_size)
         else:
-            height, width = self.target_size
+            target_size = self.target_size
 
         resizer = Resize(
-            height=height,
-            width=width,
+            height=target_size,
+            width=target_size,
             keep_ratio=self.keep_ratio,
             interp=self.interp)
 

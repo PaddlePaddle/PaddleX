@@ -743,6 +743,49 @@ class MixupImage(Transform):
         return result
 
 
+class PadBox(Transform):
+    def __init__(self, num_max_boxes=50):
+        """
+        Pad zeros to bboxes if number of bboxes is less than num_max_boxes.
+        Args:
+            num_max_boxes (int): the max number of bboxes
+        """
+        self.num_max_boxes = num_max_boxes
+        super(PadBox, self).__init__()
+
+    def __call__(self, sample):
+        gt_num = min(self.num_max_boxes, len(sample['gt_bbox']))
+        num_max = self.num_max_boxes
+        pad_bbox = np.zeros((num_max, 4), dtype=np.float32)
+        if gt_num > 0:
+            pad_bbox[:gt_num, :] = sample['gt_bbox'][:gt_num, :]
+        sample['gt_bbox'] = pad_bbox
+        if 'gt_class' in sample:
+            pad_class = np.zeros((num_max, ), dtype=np.int32)
+            if gt_num > 0:
+                pad_class[:gt_num] = sample['gt_class'][:gt_num, 0]
+            sample['gt_class'] = pad_class
+        if 'gt_score' in sample:
+            pad_score = np.zeros((num_max, ), dtype=np.float32)
+            if gt_num > 0:
+                pad_score[:gt_num] = sample['gt_score'][:gt_num, 0]
+            sample['gt_score'] = pad_score
+        # in training, for example in op ExpandImage,
+        # the bbox and gt_class is expanded, but the difficult is not,
+        # so, judging by it's length
+        if 'difficult' in sample:
+            pad_diff = np.zeros((num_max, ), dtype=np.int32)
+            if gt_num > 0:
+                pad_diff[:gt_num] = sample['difficult'][:gt_num, 0]
+            sample['difficult'] = pad_diff
+        if 'is_crowd' in sample:
+            pad_crowd = np.zeros((num_max, ), dtype=np.int32)
+            if gt_num > 0:
+                pad_crowd[:gt_num] = sample['is_crowd'][:gt_num, 0]
+            sample['is_crowd'] = pad_crowd
+        return sample
+
+
 class ArrangeSegmenter(Transform):
     def __init__(self, mode):
         super(ArrangeSegmenter, self).__init__()
