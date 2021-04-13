@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .segmenter import *
-from .classifier import *
-from .detector import *
+from . import cv
+
+YOLOv3 = cv.models.YOLOv3

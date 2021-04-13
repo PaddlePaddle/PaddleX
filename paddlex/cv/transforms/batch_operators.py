@@ -23,6 +23,8 @@ except Exception:
 from .operators import Transform, Resize
 from .box_utils import jaccard_overlap
 
+__all__ = ["BatchCompose", "BatchRandomResize", "Gt2YoloTarget"]
+
 MAIN_PID = os.getpid()
 
 
@@ -37,6 +39,7 @@ class BatchCompose(Transform):
             raise ValueError(
                 'Length of transforms must not be less than 1, but received is {}'
                 .format(len(batch_transforms)))
+        self.output_fields = mp.Manager().list([])
         self.batch_transforms = batch_transforms
         self.lock = mp.Lock()
 
@@ -54,7 +57,7 @@ class BatchCompose(Transform):
             self.output_fields = []
 
         # parse output fields by first sample
-        # **this shoule be fixed if paddle.io.DataLoader support**
+        # **this should be fixed if paddle.io.DataLoader support**
         # For paddle.io.DataLoader not support dict currently,
         # we need to parse the key from the first sample,
         # BatchCompose.__call__ will be called in each worker
@@ -63,14 +66,13 @@ class BatchCompose(Transform):
             self.lock.acquire()
             if len(self.output_fields) == 0:
                 for k, v in samples[0].items():
-                    # FIXME(dkp): for more elegent coding
-                    if k not in ['flipped', 'h', 'w']:
-                        self.output_fields.append(k)
+                    self.output_fields.append(k)
             self.lock.release()
         samples = [[samples[i][k] for k in self.output_fields]
                    for i in range(len(samples))]
         samples = list(zip(*samples))
         samples = [np.stack(d, axis=0) for d in samples]
+        print(self.output_fields)
 
         return samples
 
@@ -114,7 +116,7 @@ class BatchRandomResize(Transform):
             keep_ratio=self.keep_ratio,
             interp=self.interp)
 
-        return [resizer(sample) for sample in samples]
+        return resizer(samples)
 
 
 class Gt2YoloTarget(Transform):
@@ -140,10 +142,9 @@ class Gt2YoloTarget(Transform):
         assert len(self.anchor_masks) == len(self.downsample_ratios), \
             "anchor_masks', and 'downsample_ratios' should have same length."
 
-        h, w = samples[0]['image'].shape[1:3]
+        h, w = samples[0]['image'].shape[:2]
         an_hw = np.array(self.anchors) / np.array([[w, h]])
         for sample in samples:
-            # im, gt_bbox, gt_class, gt_score = sample
             im = sample['image']
             gt_bbox = sample['gt_bbox']
             gt_class = sample['gt_class']
@@ -223,7 +224,7 @@ class Gt2YoloTarget(Transform):
                                 target[idx, 5, gj, gi] = score
 
                                 # classification
-                                target[idx, 6 + cls, gj, gi] = 1.
+                                target[idx, 5 + cls, gj, gi] = 1.
                 sample['target{}'.format(i)] = target
 
             # remove useless gt_class and gt_score after target calculated

@@ -44,13 +44,16 @@ class BaseDetector(BaseModel):
         return net, test_inputs
 
     def _get_backbone(self, backbone_name, **params):
-        if backbone_name == 'MobileNetV1':
+        if backbone_name == 'MobileNet':
             backbone = backbones.MobileNet(norm_type='sync_bn')
 
         return backbone
 
     def run(self, net, inputs, mode):
-        net_out = net(inputs)
+        # print(self.train_output_fields)
+        if mode == 'train':
+            inputs = {k: v for k, v in zip(self.train_output_fields, inputs)}
+            net_out = net(inputs)
 
         return net_out
 
@@ -164,8 +167,7 @@ class YOLOv3(BaseDetector):
                  label_smooth=False,
                  train_random_shapes=[
                      320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ],
-                 input_channel=3):
+                 ]):
         if backbone not in ['MobileNet']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "

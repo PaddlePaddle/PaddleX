@@ -76,7 +76,7 @@ class VOCDetection(Dataset):
         annotations['annotations'] = list()
 
         cname2cid = OrderedDict()
-        label_id = 1
+        label_id = 0
         with open(label_list, 'r', encoding=get_encoding(label_list)) as f:
             for line in f.readlines():
                 cname2cid[line.strip()] = label_id

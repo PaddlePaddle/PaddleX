@@ -171,7 +171,11 @@ class BaseModel:
             return_list=True,
             use_shared_memory=use_shared_memory)
 
-        return loader
+        output_fields = getattr(dataset.batch_transforms, "output_fields",
+                                None)
+        print(dataset.batch_transforms.output_fields)
+
+        return loader, output_fields
 
     def train_loop(self,
                    num_epochs,
@@ -212,7 +216,7 @@ class BaseModel:
         if early_stop:
             earlystop = EarlyStop(early_stop_patience, thresh)
 
-        self.train_data_loader = self.build_data_loader(
+        self.train_data_loader, self.train_output_fields = self.build_data_loader(
             train_dataset, batch_size=train_batch_size, mode='train')
 
         if eval_dataset is not None:

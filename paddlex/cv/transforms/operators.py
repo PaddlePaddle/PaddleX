@@ -24,6 +24,14 @@ except Exception:
 from numbers import Number
 from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop
 
+__all__ = [
+    "Compose", "Decode", "Resize", "ResizeByShort", "RandomHorizontalFlip",
+    "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
+    "RandomExpand", "Padding", "MixupImage", "RandomDistort", "PadBox",
+    "NormalizeBox", "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector",
+    "_BboxXYXY2XYWH"
+]
+
 interp_list = [
     cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC, cv2.INTER_AREA,
     cv2.INTER_LANCZOS4
@@ -46,12 +54,20 @@ class Transform(object):
     def apply_bbox(self, bbox):
         pass
 
-    def __call__(self, sample):
+    def apply(self, sample):
         sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
         if 'gt_bbox' in sample:
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'])
+
+        return sample
+
+    def __call__(self, sample):
+        if isinstance(sample, Sequence):
+            sample = [self.apply(s) for s in sample]
+        else:
+            sample = self.apply(sample)
 
         return sample
 
@@ -133,7 +149,7 @@ class Decode(Transform):
                 format(mask.shape[2]))
         return mask
 
-    def __call__(self, sample):
+    def apply(self, sample):
         sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
@@ -176,7 +192,7 @@ class Resize(Transform):
         bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, self.target_h)
         return bbox
 
-    def __call__(self, sample):
+    def apply(self, sample):
         interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
@@ -241,7 +257,7 @@ class ResizeByShort(Transform):
         bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, self.target_h)
         return bbox
 
-    def __call__(self, sample):
+    def apply(self, sample):
         interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
@@ -278,7 +294,7 @@ class RandomHorizontalFlip(Transform):
         bbox[:, 2] = width - oldx1
         return bbox
 
-    def __call__(self, sample):
+    def apply(self, sample):
         if random.random() < self.prob:
             _, im_w = sample['image'].shape[:2]
             sample['image'] = self.apply_im(sample['image'])
@@ -314,7 +330,7 @@ class RandomVerticalFlip(Transform):
         bbox[:, 2] = height - oldy1
         return bbox
 
-    def __call__(self, sample):
+    def apply(self, sample):
         if random.random() < self.prob:
             im_h, _ = sample['image'].shape[:2]
             sample['image'] = self.apply_im(sample['image'])
@@ -359,7 +375,7 @@ class Normalize(Transform):
         image = normalize(image, mean, std, self.min_val, self.max_val)
         return image
 
-    def __call__(self, sample):
+    def apply(self, sample):
         sample['image'] = self.apply_im(sample['image'])
 
         return sample
@@ -386,7 +402,7 @@ class CenterCrop(Transform):
         mask = center_crop(mask)
         return mask
 
-    def __call__(self, sample):
+    def apply(self, sample):
         sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
@@ -449,7 +465,7 @@ class RandomCrop(Transform):
                         sample['gt_bbox'],
                         np.array(
                             crop_box, dtype=np.float32))
-                    if self.valid_ids.size > 0:
+                    if valid_ids.size > 0:
                         return crop_box, cropped_box, valid_ids
         else:
             for i in range(self.num_attempts):
@@ -515,7 +531,7 @@ class RandomCrop(Transform):
         x1, y1, x2, y2 = crop
         return mask[y1:y2, x1:x2, :]
 
-    def __call__(self, sample):
+    def apply(self, sample):
         crop_info = self._generate_crop_info(sample)
         if crop_info is not None:
             crop_box, cropped_box, valid_ids = crop_info
@@ -559,7 +575,7 @@ class RandomExpand(Transform):
         self.im_padding_value = im_padding_value
         self.label_padding_value = label_padding_value
 
-    def __call__(self, sample):
+    def apply(self, sample):
         if random.random() < self.prob:
             im_h, im_w = sample['image'].shape[:2]
             ratio = np.random.uniform(1., self.upper_ratio)
@@ -637,7 +653,7 @@ class Padding(Transform):
     def apply_bbox(self, bbox, offsets):
         return bbox + np.array(offsets * 2, dtype=np.float32)
 
-    def __call__(self, sample):
+    def apply(self, sample):
         im_h, im_w = sample['image'].shape[:2]
         if self.target_size:
             h, w = self.target_size
@@ -820,7 +836,7 @@ class RandomDistort(Transform):
         image += delta
         return image
 
-    def __call__(self, sample):
+    def apply(self, sample):
         if self.random_apply:
             functions = [
                 self.apply_brightness, self.apply_contrast,
@@ -858,7 +874,7 @@ class PadBox(Transform):
         self.num_max_boxes = num_max_boxes
         super(PadBox, self).__init__()
 
-    def __call__(self, sample):
+    def apply(self, sample):
         gt_num = min(self.num_max_boxes, len(sample['gt_bbox']))
         num_max = self.num_max_boxes
         pad_bbox = np.zeros((num_max, 4), dtype=np.float32)
@@ -895,7 +911,7 @@ class NormalizeBox(Transform):
     def __init__(self):
         super(NormalizeBox, self).__init__()
 
-    def __call__(self, sample):
+    def apply(self, sample):
         height, width = sample['image'].shape[:2]
         for i in range(sample['gt_bbox'].shape[0]):
             sample['gt_bbox'][i][0] = sample['gt_bbox'][i][0] / width
@@ -914,7 +930,7 @@ class _BboxXYXY2XYWH(Transform):
     def __init__(self):
         super(_BboxXYXY2XYWH, self).__init__()
 
-    def __call__(self, sample):
+    def apply(self, sample):
         bbox = sample['gt_bbox']
         bbox[:, 2:4] = bbox[:, 2:4] - bbox[:, :2]
         bbox[:, :2] = bbox[:, :2] + bbox[:, 2:4] / 2.
@@ -931,7 +947,7 @@ class ArrangeSegmenter(Transform):
             )
         self.mode = mode
 
-    def __call__(self, sample):
+    def apply(self, sample):
         if 'mask' in sample:
             mask = sample['mask']
 
@@ -956,7 +972,7 @@ class ArrangeClassifier(Transform):
             )
         self.mode = mode
 
-    def __call__(self, sample):
+    def apply(self, sample):
         image = permute(sample['image'], False)
         return image, sample['label']
 
@@ -970,6 +986,6 @@ class ArrangeDetector(Transform):
             )
         self.mode = mode
 
-    def __call__(self, sample):
-        sample['image'] = permute(sample['image'], False)
+    def apply(self, sample):
+        # sample['image'] = permute(sample['image'], False)
         return sample
