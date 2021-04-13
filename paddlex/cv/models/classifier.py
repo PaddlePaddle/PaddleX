@@ -221,7 +221,7 @@ class BaseClassifier(BaseModel):
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
             ):
                 paddle.distributed.init_parallel_env()
-        self.eval_data_loader, _ = self.build_data_loader(
+        self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
         eval_metrics = TrainingStats()
         eval_details = None

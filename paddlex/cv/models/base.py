@@ -17,12 +17,11 @@ import os.path as osp
 import time
 import copy
 import math
-from collections import OrderedDict
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 import paddlex
-from paddlex.cv.transforms import arrange_transforms
+from paddlex.cv.transforms import arrange_transforms, BatchCompose
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            get_pretrain_weights, load_pretrain_weights,
                            SmoothedValue, TrainingStats,
@@ -171,11 +170,7 @@ class BaseModel:
             return_list=True,
             use_shared_memory=use_shared_memory)
 
-        output_fields = getattr(dataset.batch_transforms, "output_fields",
-                                None)
-        print(dataset.batch_transforms.output_fields)
-
-        return loader, output_fields
+        return loader
 
     def train_loop(self,
                    num_epochs,
@@ -216,7 +211,7 @@ class BaseModel:
         if early_stop:
             earlystop = EarlyStop(early_stop_patience, thresh)
 
-        self.train_data_loader, self.train_output_fields = self.build_data_loader(
+        self.train_data_loader = self.build_data_loader(
             train_dataset, batch_size=train_batch_size, mode='train')
 
         if eval_dataset is not None:

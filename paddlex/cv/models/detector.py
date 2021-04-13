@@ -14,12 +14,17 @@
 
 from __future__ import absolute_import
 import os.path as osp
+import math
 import paddle
+from paddle.io import DistributedBatchSampler
+import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.nets.ppdet.modeling import architectures, backbones, necks, heads, losses
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS
+from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from .base import BaseModel
+from .utils.det_dataloader import BaseDataLoader
 
 
 class BaseDetector(BaseModel):
@@ -43,17 +48,47 @@ class BaseDetector(BaseModel):
         ]
         return net, test_inputs
 
-    def _get_backbone(self, backbone_name, **params):
-        if backbone_name == 'MobileNet':
+    def _get_backbone(self, backbone_name):
+        if backbone_name == 'MobileNetV1':
             backbone = backbones.MobileNet(norm_type='sync_bn')
 
         return backbone
 
+    def build_data_loader(self, dataset, batch_size, mode='train'):
+        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
+        if mode == 'eval':
+            batch_size = batch_size_each_card * paddlex.env_info['num']
+            total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
+            logging.info(
+                "Start to evaluating(total_samples={}, total_steps={})...".
+                format(dataset.num_samples, total_steps))
+        if dataset.num_samples < batch_size:
+            raise Exception(
+                'The volume of datset({}) must be larger than batch size({}).'
+                .format(dataset.num_samples, batch_size))
+
+        # TODO detection eval阶段需做判断
+        batch_sampler = DistributedBatchSampler(
+            dataset,
+            batch_size=batch_size_each_card,
+            shuffle=dataset.shuffle,
+            drop_last=mode == 'train')
+
+        shm_size = _get_shared_memory_size_in_M()
+        if shm_size is None or shm_size < 1024.:
+            use_shared_memory = False
+        else:
+            use_shared_memory = True
+
+        loader = BaseDataLoader(
+            dataset,
+            batch_sampler=batch_sampler,
+            use_shared_memory=use_shared_memory)
+
+        return loader
+
     def run(self, net, inputs, mode):
-        # print(self.train_output_fields)
-        if mode == 'train':
-            inputs = {k: v for k, v in zip(self.train_output_fields, inputs)}
-            net_out = net(inputs)
+        net_out = net(inputs)
 
         return net_out
 
@@ -156,7 +191,7 @@ class BaseDetector(BaseModel):
 class YOLOv3(BaseDetector):
     def __init__(self,
                  num_classes=80,
-                 backbone='MobileNet',
+                 backbone='MobileNetV1',
                  anchors=None,
                  anchor_masks=None,
                  ignore_threshold=0.7,
@@ -164,11 +199,8 @@ class YOLOv3(BaseDetector):
                  nms_topk=1000,
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45,
-                 label_smooth=False,
-                 train_random_shapes=[
-                     320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-                 ]):
-        if backbone not in ['MobileNet']:
+                 label_smooth=False):
+        if backbone not in ['MobileNetV1']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('MobileNetV1')".format(backbone))

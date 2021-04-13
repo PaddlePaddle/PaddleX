@@ -210,7 +210,7 @@ class BaseSegmenter(BaseModel):
                 "Segmenter supports batch_size=1 for each gpu/cpu card " \
                 "only during evaluating, so batch_size " \
                 "is forcibly set to {}.".format(batch_size))
-        self.eval_data_loader, _ = self.build_data_loader(
+        self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
 
         intersect_area_all = 0

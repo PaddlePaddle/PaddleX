@@ -47,21 +47,11 @@ class BatchCompose(Transform):
         for op in self.batch_transforms:
             samples = op(samples)
 
-        # accessing ListProxy in main process (no worker subprocess)
-        # may incur errors in some enviroments, ListProxy back to
-        # list if no worker process start, while this `__call__`
-        # will be called in main process
         global MAIN_PID
         if os.getpid() == MAIN_PID and \
                 isinstance(self.output_fields, mp.managers.ListProxy):
             self.output_fields = []
 
-        # parse output fields by first sample
-        # **this should be fixed if paddle.io.DataLoader support**
-        # For paddle.io.DataLoader not support dict currently,
-        # we need to parse the key from the first sample,
-        # BatchCompose.__call__ will be called in each worker
-        # process, so lock is need here.
         if len(self.output_fields) == 0:
             self.lock.acquire()
             if len(self.output_fields) == 0:
@@ -72,7 +62,6 @@ class BatchCompose(Transform):
                    for i in range(len(samples))]
         samples = list(zip(*samples))
         samples = [np.stack(d, axis=0) for d in samples]
-        print(self.output_fields)
 
         return samples
 
