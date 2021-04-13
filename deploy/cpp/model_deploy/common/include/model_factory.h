@@ -52,6 +52,7 @@ class Register {
    private:                                                       \
     static Register reg_;                                         \
   };                                                              \
-  Register class_name##Register::reg_(#model_type, class_name##Register::newInstance);
+  Register class_name##Register::reg_(#model_type,                \
+                class_name##Register::newInstance);
 
 }  // namespace PaddleDeploy

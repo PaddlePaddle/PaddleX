@@ -23,7 +23,7 @@
 #include "model_deploy/common/include/base_model.h"
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/engine/include/engine.h"
-#include "paddle_inference_api.h"  // NOLINT
+#include "paddle/include/paddle_inference_api.h"  // NOLINT
 
 namespace PaddleDeploy {
 

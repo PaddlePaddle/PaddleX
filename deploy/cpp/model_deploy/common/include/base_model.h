@@ -22,7 +22,6 @@
 #include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/engine/include/engine.h"
 #include "model_deploy/common/include/output_struct.h"
-#include "paddle_inference_api.h"
 #include "yaml-cpp/yaml.h"
 
 namespace PaddleDeploy {
@@ -78,6 +77,7 @@ class Model {
       return false;
     }
 
+    results_.clear();
     std::vector<cv::Mat> imgs_clone(imgs.size());
     for (auto i = 0; i < imgs.size(); ++i) {
       imgs[i].copyTo(imgs_clone[i]);
@@ -127,6 +127,7 @@ class Model {
   virtual void PostPrecess(const std::vector<DataBlob>& outputs,
                            const std::vector<ShapeInfo>& shape_infos,
                            int thread_num = 1) {
+    results_.clear();
     if (!postprocess_) {
       std::cerr << "No PostPrecess, No post Init. model_type="
                 << model_type_ << std::endl;

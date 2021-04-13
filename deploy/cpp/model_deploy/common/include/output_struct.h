@@ -102,9 +102,9 @@ struct Box {
   Mask<int> mask;
 
   friend std::ostream &operator<<(std::ostream & stream, const Box& b) {
-    stream << "Box(" << b.category_id << " " << b.category << " " << b.score;
+    stream << "Box(" << b.category_id << "\t" << b.category << "\t" << b.score;
     for (auto i = 0; i < b.coordinate.size(); ++i) {
-        stream << " " << b.coordinate[i];
+        stream << "\t" << b.coordinate[i];
     }
     if (b.mask.data.size() != 0) {
       stream << " MaskNotShown";
@@ -120,8 +120,8 @@ struct ClasResult {
   std::string category;
   double score;
   friend std::ostream &operator<<(std::ostream & stream, const ClasResult& c) {
-    stream << "Classify(" << c.category_id << " "
-           << c.category << " " << c.score;
+    stream << "Classify(" << c.category_id << "\t"
+           << c.category << "\t" << c.score;
     return stream;
   }
 };
@@ -135,9 +135,6 @@ struct DetResult {
   }
   friend std::ostream &operator<<(std::ostream & stream, const DetResult& d) {
     for (auto i = 0; i < d.boxes.size(); ++i) {
-      if (d.boxes[i].score < 0.3) {
-        continue;
-      }
       stream << d.boxes[i];
       if (i != d.boxes.size() - 1) {
         stream << "\n";

@@ -48,7 +48,7 @@ endif()
 
 #paddle inference third party
 include_directories("${PADDLE_DIR}")
-include_directories("${PADDLE_DIR}/paddle/include")
+include_directories("${PADDLE_DIR}")
 include_directories("${PADDLE_DIR}/third_party/install/protobuf/include")
 include_directories("${PADDLE_DIR}/third_party/install/glog/include")
 include_directories("${PADDLE_DIR}/third_party/install/gflags/include")
