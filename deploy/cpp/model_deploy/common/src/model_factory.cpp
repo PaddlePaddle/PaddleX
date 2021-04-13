@@ -17,6 +17,9 @@ namespace PaddleDeploy {
 
 std::map<std::string, NewInstance> ModelFactory::model_map_;
 
+// regist class (model_type, class_name)
+REGISTER_CLASS(det, DetModel);
+
 std::shared_ptr<Model> ModelFactory::CreateObject(const std::string &name) {
   std::map<std::string, NewInstance>::const_iterator it;
   it = model_map_.find(name);

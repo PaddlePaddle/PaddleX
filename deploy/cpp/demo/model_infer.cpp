@@ -36,30 +36,32 @@ DEFINE_bool(use_cpu_nms, false, "whether postprocess with NMS");
 int main(int argc, char** argv) {
   // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
-  std::cout << "ParseCommandLineFlags:FLAGS_model_type="
-            << FLAGS_model_type << " model_filename="
-            << FLAGS_model_filename << std::endl;
+  std::cout << "ParseCommandLineFlags:FLAGS_model_type=" << FLAGS_model_type
+            << " model_filename=" << FLAGS_model_filename << std::endl;
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
-        PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
+      PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
   if (!model) {
-    std::cout << "no model_type: " << FLAGS_model_type
-              << "  model=" << model << std::endl;
+    std::cout << "no model_type: " << FLAGS_model_type << "  model=" << model
+              << std::endl;
     return 0;
   }
   std::cout << "start model init " << std::endl;
 
   // model init
-  model->Init(FLAGS_cfg_file, FLAGS_use_cpu_nms);
+  if (!model->Init(FLAGS_cfg_file, FLAGS_use_cpu_nms)) {
+    std::cerr << "model Init error" << std::endl;
+    return 0;
+  }
   std::cout << "start engine init " << std::endl;
 
   // inference engine int
-  model->PaddleEngineInit(FLAGS_model_filename,
-                          FLAGS_params_filename,
-                          FLAGS_use_gpu,
-                          FLAGS_gpu_id,
-                          FLAGS_use_mkl);
+  if (!model->PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
+                               FLAGS_use_gpu, FLAGS_gpu_id, FLAGS_use_mkl)) {
+    std::cerr << "Paddle Engine Init error" << std::endl;
+    return 0;
+  }
 
   // read image
   std::vector<cv::Mat> imgs;
@@ -69,10 +71,12 @@ int main(int argc, char** argv) {
 
   std::cout << "start model predict " << std::endl;
   // infer
-  model->Predict(imgs);
+  if (!model->Predict(imgs)) {
+    return 0;
+  }
   // model->Predict(imgs, FLAGS_batch_size, FLAGS_thread_num);
   model->PrintResult();
 
-  model->Predict(imgs, 1);
+  model->Predict(imgs, FLAGS_thread_num);
   model->PrintResult();
 }

@@ -29,7 +29,7 @@ namespace PaddleDeploy {
 
 class PaddleInferenceEngine : public InferEngine {
  public:
-  virtual void Init(const std::string &model_filename,
+  virtual bool Init(const std::string &model_filename,
                     const std::string &params_filename,
                     const InferenceConfig &engine_config);
 

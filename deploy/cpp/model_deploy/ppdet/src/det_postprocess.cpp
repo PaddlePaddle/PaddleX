@@ -16,21 +16,24 @@
 
 namespace PaddleDeploy {
 
-void DetPostProcess::Init(const YAML::Node &yaml_config, bool use_cpu_nms) {
+bool DetPostProcess::Init(const YAML::Node& yaml_config, bool use_cpu_nms) {
   use_cpu_nms_ = use_cpu_nms;
+  if (!yaml_config["model_name"].IsDefined()) {
+    std::cerr << "Yaml file no model_name" << std::endl;
+    return false;
+  }
   model_arch_ = yaml_config["model_name"].as<std::string>();
   labels_.clear();
   for (auto item : yaml_config["labels"]) {
     std::string label = item.as<std::string>();
     labels_.push_back(label);
   }
+  return true;
 }
 
-bool DetPostProcess::ProcessBbox(
-        const std::vector<DataBlob>& outputs,
-        const std::vector<ShapeInfo>& shape_infos,
-        std::vector<Result>* results,
-        int thread_num) {
+bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
+                                 const std::vector<ShapeInfo>& shape_infos,
+                                 std::vector<Result>* results, int thread_num) {
   const float* data = reinterpret_cast<const float*>(outputs[0].data.data());
 
   std::vector<int> num_bboxes_each_sample;
@@ -74,11 +77,9 @@ bool DetPostProcess::ProcessBbox(
   return true;
 }
 
-bool DetPostProcess::Run(
-        const std::vector<DataBlob>& outputs,
-        const std::vector<ShapeInfo>& shape_infos,
-        std::vector<Result>* results,
-        int thread_num) {
+bool DetPostProcess::Run(const std::vector<DataBlob>& outputs,
+                         const std::vector<ShapeInfo>& shape_infos,
+                         std::vector<Result>* results, int thread_num) {
   results->clear();
 
   results->resize(shape_infos.size());
@@ -86,13 +87,13 @@ bool DetPostProcess::Run(
     std::cerr << "Error happend while process bboxes" << std::endl;
     return false;
   }
-// TODO(jiangjiajun): MaskRCNN is not implement
-//  if (outputs.size() == 2) {
-//    if ((!ProcessMask(outputs, shape_infos, results, thread_num)) {
-//      std::cerr << "Error happend while process masks" << std::endl;
-//      return false;
-//    }
-//  }
+  // TODO(jiangjiajun): MaskRCNN is not implement
+  //  if (outputs.size() == 2) {
+  //    if ((!ProcessMask(outputs, shape_infos, results, thread_num)) {
+  //      std::cerr << "Error happend while process masks" << std::endl;
+  //      return false;
+  //    }
+  //  }
   return true;
 }
 

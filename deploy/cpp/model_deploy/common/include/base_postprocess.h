@@ -24,8 +24,7 @@ class BasePostProcess {
  public:
   bool use_cpu_nms_;
 
-  virtual void Init(const YAML::Node &yaml_config,
-                    bool use_cpu_nms = false) {
+  virtual bool Init(const YAML::Node& yaml_config, bool use_cpu_nms = false) {
     use_cpu_nms_ = use_cpu_nms;
   }
 
