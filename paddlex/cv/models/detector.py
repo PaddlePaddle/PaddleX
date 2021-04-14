@@ -99,7 +99,7 @@ class BaseDetector(BaseModel):
         if mode == 'train':
             outputs = net(inputs)
         elif mode == 'eval':
-            net_out = net(inputs)
+            outputs = net(inputs)
         else:
             pass
 
