@@ -291,10 +291,10 @@ class BaseSegmenter(BaseModel):
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
-            sample = {'im': im}
-            if isinstance(sample['im'], str):
+            sample = {'image': im}
+            if isinstance(sample['image'], str):
                 sample = Decode()(sample)
-            ori_shape = sample['im'].shape[:2]
+            ori_shape = sample['image'].shape[:2]
             im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)

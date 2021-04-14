@@ -48,6 +48,8 @@ class BaseDetector(BaseModel):
 
     def build_net(self, **params):
         net = architectures.__dict__[self.model_name](**params)
+        if self.sync_bn:
+            net = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(net)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -200,7 +202,7 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience)
 
     def evaluate(self, eval_dataset, batch_size, return_details=False):
-        self._arrange_batch_transforms(eval_dataset, mode='eval')
+        self._arrange_batch_transform(eval_dataset, mode='eval')
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
@@ -228,7 +230,7 @@ class BaseDetector(BaseModel):
             if eval_dataset.batch_transforms is not None:
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
-                    for t in eval_dataset.batch_transforms)
+                    for t in eval_dataset.batch_transforms.batch_transforms)
             eval_metrics = [
                 VOCMetric(
                     labels=eval_dataset.labels,
@@ -266,11 +268,11 @@ class YOLOv3(BaseDetector):
                 "('MobileNetV1')".format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
-            norm_type = 'sync_bn'
+            self.sync_bn = True
         else:
-            norm_type = 'bn'
-        backbone = self._get_backbone(backbone, norm_type)
-        neck = necks.YOLOv3FPN(norm_type=norm_type)
+            self.sync_bn = False
+        backbone = self._get_backbone(backbone)
+        neck = necks.YOLOv3FPN()
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
@@ -309,8 +311,7 @@ class YOLOv3(BaseDetector):
             ]
         elif mode == 'eval':
             batch_transforms = [_Permute()]
-        else:
-            return
+
         for i, op in enumerate(dataset.transforms.transforms):
             if isinstance(op, BatchRandomResize):
                 batch_transforms.insert(0,
