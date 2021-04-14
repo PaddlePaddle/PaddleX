@@ -212,18 +212,21 @@ class Resize(Transform):
             self.target_h = im_scale * float(im_h)
             self.target_w = im_scale * float(im_w)
 
+            im_scale_x = im_scale
+            im_scale_y = im_scale
+        else:
+            im_scale_y = self.target_h / im_h
+            im_scale_x = self.target_w / im_w
+
         sample['image'] = self.apply_im(sample['image'], interp)
 
-        im_scale_y = self.target_h / im_h
-        im_scale_x = self.target_w / im_w
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
                                                 [im_scale_x, im_scale_y])
-        if 'im_shape' in sample:
-            sample['im_shape'] = np.asarray(
-                [self.target_h, self.target_w], dtype=np.float32)
+        sample['im_shape'] = np.asarray(
+            [self.target_h, self.target_w], dtype=np.float32)
         if 'scale_factor' in sample:
             scale_factor = sample['scale_factor']
             sample['scale_factor'] = np.asarray(
@@ -283,9 +286,8 @@ class ResizeByShort(Transform):
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
                                                 [im_scale_x, im_scale_y])
-        if 'im_shape' in sample:
-            sample['im_shape'] = np.asarray(
-                [self.target_h, self.target_w], dtype=np.float32)
+        sample['im_shape'] = np.asarray(
+            [self.target_h, self.target_w], dtype=np.float32)
         if 'scale_factor' in sample:
             scale_factor = sample['scale_factor']
             sample['scale_factor'] = np.asarray(
@@ -568,19 +570,6 @@ class RandomCrop(Transform):
                 if 'is_crowd' in sample:
                     sample['is_crowd'] = np.take(
                         sample['is_crowd'], valid_ids, axis=0)
-            if 'im_shape' in sample:
-                sample['im_shape'] = np.asarray(
-                    sample['image'].shape[:2], dtype=np.float32)
-            if 'scale_factor' in sample:
-                im_scale_y = sample['image'].shape[0] / im_h
-                im_scale_x = sample['image'].shape[1] / im_w
-                scale_factor = sample['scale_factor']
-                sample['scale_factor'] = np.asarray(
-                    [
-                        scale_factor[0] * im_scale_y,
-                        scale_factor[1] * im_scale_x
-                    ],
-                    dtype=np.float32)
 
             if 'mask' in sample:
                 sample['mask'] = self.apply_mask(sample['mask'], crop_box)
