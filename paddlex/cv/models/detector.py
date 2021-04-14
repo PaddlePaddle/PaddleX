@@ -316,5 +316,5 @@ class YOLOv3(BaseDetector):
                 batch_transforms.insert(0,
                                         dataset.transforms.transforms.pop(i))
                 break
-        if batch_transforms:
-            dataset.batch_transforms = BatchCompose(batch_transforms)
+
+        dataset.batch_transforms = BatchCompose(batch_transforms)

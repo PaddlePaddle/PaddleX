@@ -34,10 +34,6 @@ class BatchCompose(Transform):
             raise TypeError(
                 'Type of transforms is invalid. Must be List, but received is {}'
                 .format(type(batch_transforms)))
-        if len(batch_transforms) < 1:
-            raise ValueError(
-                'Length of transforms must not be less than 1, but received is {}'
-                .format(len(batch_transforms)))
         self.output_fields = mp.Manager().list([])
         self.batch_transforms = batch_transforms
         self.lock = mp.Lock()
