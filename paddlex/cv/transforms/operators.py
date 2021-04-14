@@ -938,6 +938,15 @@ class _BboxXYXY2XYWH(Transform):
         return sample
 
 
+class _Permute(Transform):
+    def __init__(self):
+        super(_Permute, self).__init__()
+
+    def apply(self, sample):
+        sample['image'] = permute(sample['image'], False)
+        return sample
+
+
 class ArrangeSegmenter(Transform):
     def __init__(self, mode):
         super(ArrangeSegmenter, self).__init__()

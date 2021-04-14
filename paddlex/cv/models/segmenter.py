@@ -14,7 +14,6 @@
 
 import os.path as osp
 import numpy as np
-import cv2
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F

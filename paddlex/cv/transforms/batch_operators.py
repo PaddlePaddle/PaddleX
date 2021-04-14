@@ -20,7 +20,7 @@ try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
-from .operators import Transform, Resize
+from .operators import Transform, Resize, _Permute
 from .box_utils import jaccard_overlap
 
 __all__ = ["BatchCompose", "BatchRandomResize", "Gt2YoloTarget"]
@@ -46,6 +46,8 @@ class BatchCompose(Transform):
     def __call__(self, samples):
         for op in self.batch_transforms:
             samples = op(samples)
+
+        samples = _Permute()(samples)
 
         global MAIN_PID
         if os.getpid() == MAIN_PID and \

@@ -48,9 +48,9 @@ class BaseDetector(BaseModel):
         ]
         return net, test_inputs
 
-    def _get_backbone(self, backbone_name):
+    def _get_backbone(self, backbone_name, norm_type):
         if backbone_name == 'MobileNetV1':
-            backbone = backbones.MobileNet(norm_type='sync_bn')
+            backbone = backbones.MobileNet(norm_type=norm_type)
 
         return backbone
 
@@ -204,8 +204,14 @@ class YOLOv3(BaseDetector):
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('MobileNetV1')".format(backbone))
-        backbone = self._get_backbone(backbone)
-        neck = necks.YOLOv3FPN(norm_type='sync_bn')
+
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+            norm_type = 'sync_bn'
+        else:
+            norm_type = 'bn'
+
+        backbone = self._get_backbone(backbone, norm_type)
+        neck = necks.YOLOv3FPN(norm_type=norm_type)
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,

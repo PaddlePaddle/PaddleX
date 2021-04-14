@@ -21,7 +21,7 @@ import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 import paddlex
-from paddlex.cv.transforms import arrange_transforms, BatchCompose
+from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            get_pretrain_weights, load_pretrain_weights,
                            SmoothedValue, TrainingStats,
