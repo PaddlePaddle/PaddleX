@@ -14,6 +14,7 @@
 
 import os
 import multiprocessing as mp
+import random
 import numpy as np
 import cv2
 try:
@@ -22,8 +23,6 @@ except Exception:
     from collections import Sequence
 from .operators import Transform, Resize, _Permute
 from .box_utils import jaccard_overlap
-
-__all__ = ["BatchCompose", "BatchRandomResize", "Gt2YoloTarget"]
 
 MAIN_PID = os.getpid()
 
@@ -72,45 +71,36 @@ class BatchRandomResize(Transform):
     """
     Resize image to target size randomly. random target_size and interpolation method
     Args:
-        target_size (int, list, tuple): image target size, if random size is True, must be list or tuple
+        target_size (list): image target size, must be list of (int or list)
         keep_ratio (bool): whether keep_raio or not, default true
         interp (int): the interpolation method
-        random_size (bool): whether random select target size of image
     """
 
-    def __init__(self,
-                 target_size,
-                 keep_ratio,
-                 interp=cv2.INTER_NEAREST,
-                 random_size=True):
+    def __init__(self, target_size, keep_ratio, interp=cv2.INTER_NEAREST):
         super(BatchRandomResize, self).__init__()
         self.keep_ratio = keep_ratio
         self.interp = interp
-        assert isinstance(target_size, (
-            int, Sequence)), "target_size must be int, list or tuple"
-        if random_size and not isinstance(target_size, list):
-            raise TypeError(
-                "Type of target_size is invalid when random_size is True. Must be List, now is {}".
-                format(type(target_size)))
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
         self.target_size = target_size
-        self.random_size = random_size
 
     def __call__(self, samples):
-        if self.random_size:
-            target_size = np.random.choice(self.target_size)
-        else:
-            target_size = self.target_size
+        height, width = random.choice(self.target_size)
 
         resizer = Resize(
-            height=target_size,
-            width=target_size,
+            height=height,
+            width=width,
             keep_ratio=self.keep_ratio,
             interp=self.interp)
+        samples = resizer(samples)
 
-        return resizer(samples)
+        return samples
 
 
-class Gt2YoloTarget(Transform):
+class _Gt2YoloTarget(Transform):
     """
     Generate YOLOv3 targets by groud truth data, this operator is only used in
     fine grained YOLOv3 loss mode
@@ -122,7 +112,7 @@ class Gt2YoloTarget(Transform):
                  downsample_ratios,
                  num_classes=80,
                  iou_thresh=1.):
-        super(Gt2YoloTarget, self).__init__()
+        super(_Gt2YoloTarget, self).__init__()
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios

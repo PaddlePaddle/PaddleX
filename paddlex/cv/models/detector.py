@@ -23,6 +23,8 @@ from paddlex.cv.nets.ppdet.modeling import architectures, backbones, necks, head
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
+from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 
@@ -144,6 +146,7 @@ class BaseDetector(BaseModel):
               lr_decay_gamma=0.1,
               early_stop=False,
               early_stop_patience=5):
+        self._arrange_batch_transform(train_dataset, mode='train')
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -209,7 +212,6 @@ class YOLOv3(BaseDetector):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
-
         backbone = self._get_backbone(backbone, norm_type)
         neck = necks.YOLOv3FPN(norm_type=norm_type)
         loss = losses.YOLOv3Loss(
@@ -236,3 +238,20 @@ class YOLOv3(BaseDetector):
         }
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
+        self.anchors = anchors
+        self.anchors_masks = anchor_masks
+
+    def _arrange_batch_transform(self, dataset, mode='train'):
+        if mode == 'train':
+            batch_transforms = BatchCompose([
+                _NormalizeBox(), _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
+                    anchor_masks=self.anchors_masks,
+                    anchors=self.anchors,
+                    downsample_ratios=[32, 16, 8],
+                    num_classes=6)
+            ])
+            for i, op in enumerate(dataset.transforms.transforms):
+                if isinstance(op, BatchRandomResize):
+                    batch_transforms.batch_transforms.insert(
+                        0, dataset.transforms.transforms.pop(i))
+        dataset.batch_transforms = batch_transforms

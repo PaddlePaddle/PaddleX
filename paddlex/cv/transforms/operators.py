@@ -27,9 +27,9 @@ from .functions import normalize, horizontal_flip, permute, vertical_flip, cente
 __all__ = [
     "Compose", "Decode", "Resize", "ResizeByShort", "RandomHorizontalFlip",
     "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
-    "RandomExpand", "Padding", "MixupImage", "RandomDistort", "PadBox",
-    "NormalizeBox", "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector",
-    "_BboxXYXY2XYWH"
+    "RandomExpand", "Padding", "MixupImage", "RandomDistort", "_PadBox",
+    "_NormalizeBox", "ArrangeSegmenter", "ArrangeClassifier",
+    "ArrangeDetector", "_BboxXYXY2XYWH"
 ]
 
 interp_list = [
@@ -864,7 +864,7 @@ class RandomDistort(Transform):
         return sample
 
 
-class PadBox(Transform):
+class _PadBox(Transform):
     def __init__(self, num_max_boxes=50):
         """
         Pad zeros to bboxes if number of bboxes is less than num_max_boxes.
@@ -872,7 +872,7 @@ class PadBox(Transform):
             num_max_boxes (int): the max number of bboxes
         """
         self.num_max_boxes = num_max_boxes
-        super(PadBox, self).__init__()
+        super(_PadBox, self).__init__()
 
     def apply(self, sample):
         gt_num = min(self.num_max_boxes, len(sample['gt_bbox']))
@@ -907,9 +907,9 @@ class PadBox(Transform):
         return sample
 
 
-class NormalizeBox(Transform):
+class _NormalizeBox(Transform):
     def __init__(self):
-        super(NormalizeBox, self).__init__()
+        super(_NormalizeBox, self).__init__()
 
     def apply(self, sample):
         height, width = sample['image'].shape[:2]
