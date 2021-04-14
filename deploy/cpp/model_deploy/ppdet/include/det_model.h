@@ -16,10 +16,12 @@
 #include <iostream>
 #include <string>
 
+#include "yaml-cpp/yaml.h"
+
 #include "model_deploy/common/include/base_model.h"
 #include "model_deploy/ppdet/include/det_postprocess.h"
 #include "model_deploy/ppdet/include/det_preprocess.h"
-#include "yaml-cpp/yaml.h"
+
 
 namespace PaddleDeploy {
 class DetModel : public Model {

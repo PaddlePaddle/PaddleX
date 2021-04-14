@@ -15,8 +15,9 @@
 
 #include <vector>
 
-#include "model_deploy/common/include/output_struct.h"
 #include "yaml-cpp/yaml.h"
+
+#include "model_deploy/common/include/output_struct.h"
 
 namespace PaddleDeploy {
 

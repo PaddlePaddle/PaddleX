@@ -18,9 +18,10 @@
 #include <string>
 #include <vector>
 
+#include "yaml-cpp/yaml.h"
+
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/common/include/transforms.h"
-#include "yaml-cpp/yaml.h"
 
 namespace PaddleDeploy {
 
