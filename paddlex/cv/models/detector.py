@@ -56,9 +56,9 @@ class BaseDetector(BaseModel):
         ]
         return net, test_inputs
 
-    def _get_backbone(self, backbone_name, norm_type):
+    def _get_backbone(self, backbone_name):
         if backbone_name == 'MobileNetV1':
-            backbone = backbones.MobileNet(norm_type=norm_type)
+            backbone = backbones.MobileNet()
 
         return backbone
 
