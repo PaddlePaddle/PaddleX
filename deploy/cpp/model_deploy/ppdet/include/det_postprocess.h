@@ -17,16 +17,17 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include "yaml-cpp/yaml.h"
+
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/output_struct.h"
-#include "yaml-cpp/yaml.h"
 
 namespace PaddleDeploy {
 

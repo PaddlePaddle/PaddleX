@@ -43,8 +43,9 @@ bool DetModel::DetParserTransforms(const YAML::Node& preprocess_op) {
     }
   } else if (preprocess_op_type == "Resize") {
     int max_size = preprocess_op["max_size"].as<int>();
-    if (max_size != 0 && (yaml_config_["model_name"].as<std::string>() == "RCNN" ||
-                          yaml_config_["model_name"].as<std::string>() == "RetinaNet")) {
+    if (max_size != 0 && (
+        yaml_config_["model_name"].as<std::string>() == "RCNN" ||
+        yaml_config_["model_name"].as<std::string>() == "RetinaNet")) {
       yaml_config_["transforms"]["ResizeByShort"]["target_size"] =
           preprocess_op["target_size"].as<int>();
       yaml_config_["transforms"]["ResizeByShort"]["max_size"] = max_size;

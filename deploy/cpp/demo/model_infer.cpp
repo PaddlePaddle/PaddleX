@@ -11,12 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+#include <omp.h>
 #include <memory>
 #include <string>
-#include <omp.h>
 
 #include <glog/logging.h>
+
 #include "common/include/model_factory.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
