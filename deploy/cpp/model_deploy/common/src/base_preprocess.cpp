@@ -38,7 +38,6 @@ bool BasePreProcess::ShapeInfer(const std::vector<cv::Mat>& imgs,
                                 std::vector<ShapeInfo>* shape_infos,
                                 int thread_num) {
   int batch_size = imgs.size();
-  bool success = true;
   thread_num = std::min(thread_num, batch_size);
   shape_infos->resize(batch_size);
 
