@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
+import collections
 import os.path as osp
 import math
 import paddle
@@ -28,6 +30,7 @@ from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResiz
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
+from .utils.det_metrics import VOCMetric
 
 
 class BaseDetector(BaseModel):
@@ -91,9 +94,14 @@ class BaseDetector(BaseModel):
         return loader
 
     def run(self, net, inputs, mode):
-        net_out = net(inputs)
+        if mode == 'train':
+            outputs = net(inputs)
+        elif mode == 'eval':
+            net_out = net(inputs)
+        else:
+            pass
 
-        return net_out
+        return outputs
 
     def default_optimizer(self, parameters, learning_rate, warmup_steps,
                           warmup_start_lr, lr_decay_epochs, lr_decay_gamma,
@@ -191,13 +199,53 @@ class BaseDetector(BaseModel):
             early_stop=early_stop,
             early_stop_patience=early_stop_patience)
 
-    # def evaluate(self, eval_dataset, batch_size, return_details=False):
-    #     self._arrange_batch_transforms(eval_dataset, mode='eval')
-    #     arrange_transforms(model_type=self.model_type,
-    #                        transforms=eval_dataset.transforms,
-    #                        mode='eval')
-    #
-    #     self.net.eval()
+    def evaluate(self, eval_dataset, batch_size, return_details=False):
+        self._arrange_batch_transforms(eval_dataset, mode='eval')
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=eval_dataset.transforms,
+            mode='eval')
+
+        self.net.eval()
+        nranks = paddle.distributed.ParallelEnv().nranks
+        local_rank = paddle.distributed.ParallelEnv().local_rank
+        if nranks > 1:
+            # Initialize parallel environment if not done.
+            if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
+            ):
+                paddle.distributed.init_parallel_env()
+
+        if batch_size > 1:
+            logging.warning(
+                "Detector only supports single card evaluation with batch_size=1 "
+                "during evaluation, so batch_size is forcibly set to 1")
+            batch_size = 1
+
+        if nranks < 2 or local_rank == 0:
+            self.eval_data_loader = self.build_data_loader(
+                eval_dataset, batch_size=batch_size, mode='eval')
+            is_bbox_normalized = False
+            if eval_dataset.batch_transforms is not None:
+                is_bbox_normalized = any(
+                    isinstance(t, _NormalizeBox)
+                    for t in eval_dataset.batch_transforms)
+            eval_metrics = [
+                VOCMetric(
+                    labels=eval_dataset.labels,
+                    is_bbox_normalized=is_bbox_normalized,
+                    classwise=False)
+            ]
+            scores = collections.OrderedDict()
+            with paddle.no_grad():
+                for step, data in enumerate(self.eval_data_loader):
+                    outputs = self.run(self.net, data, 'eval')
+                    for metric in eval_metrics:
+                        metric.update(data, outputs)
+                for metric in eval_metrics:
+                    metric.accumulate()
+                    scores.update(metric.get())
+                    metric.reset()
+            return scores
 
 
 class YOLOv3(BaseDetector):

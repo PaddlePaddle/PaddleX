@@ -206,8 +206,8 @@ class BaseSegmenter(BaseModel):
             batch_size_each_card = 1
             batch_size = batch_size_each_card * paddlex.env_info['num']
             logging.warning(
-                "Segmenter supports batch_size=1 for each gpu/cpu card " \
-                "only during evaluating, so batch_size " \
+                "Segmenter only supports batch_size=1 for each gpu/cpu card " \
+                "during evaluation, so batch_size " \
                 "is forcibly set to {}.".format(batch_size))
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
