@@ -27,9 +27,8 @@ from .functions import normalize, horizontal_flip, permute, vertical_flip, cente
 __all__ = [
     "Compose", "Decode", "Resize", "ResizeByShort", "RandomHorizontalFlip",
     "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
-    "RandomExpand", "Padding", "MixupImage", "RandomDistort", "_PadBox",
-    "_NormalizeBox", "ArrangeSegmenter", "ArrangeClassifier",
-    "ArrangeDetector", "_BboxXYXY2XYWH"
+    "RandomExpand", "Padding", "MixupImage", "RandomDistort",
+    "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector"
 ]
 
 interp_list = [
@@ -996,5 +995,4 @@ class ArrangeDetector(Transform):
         self.mode = mode
 
     def apply(self, sample):
-        # sample['image'] = permute(sample['image'], False)
         return sample

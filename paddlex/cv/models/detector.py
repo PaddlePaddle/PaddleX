@@ -25,6 +25,7 @@ from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget
+from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 
@@ -190,6 +191,14 @@ class BaseDetector(BaseModel):
             early_stop=early_stop,
             early_stop_patience=early_stop_patience)
 
+    # def evaluate(self, eval_dataset, batch_size, return_details=False):
+    #     self._arrange_batch_transforms(eval_dataset, mode='eval')
+    #     arrange_transforms(model_type=self.model_type,
+    #                        transforms=eval_dataset.transforms,
+    #                        mode='eval')
+    #
+    #     self.net.eval()
+
 
 class YOLOv3(BaseDetector):
     def __init__(self,
@@ -243,15 +252,21 @@ class YOLOv3(BaseDetector):
 
     def _arrange_batch_transform(self, dataset, mode='train'):
         if mode == 'train':
-            batch_transforms = BatchCompose([
+            batch_transforms = [
                 _NormalizeBox(), _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
                     anchor_masks=self.anchors_masks,
                     anchors=self.anchors,
                     downsample_ratios=[32, 16, 8],
                     num_classes=6)
-            ])
-            for i, op in enumerate(dataset.transforms.transforms):
-                if isinstance(op, BatchRandomResize):
-                    batch_transforms.batch_transforms.insert(
-                        0, dataset.transforms.transforms.pop(i))
-        dataset.batch_transforms = batch_transforms
+            ]
+        elif mode == 'eval':
+            batch_transforms = []
+        else:
+            return
+        for i, op in enumerate(dataset.transforms.transforms):
+            if isinstance(op, BatchRandomResize):
+                batch_transforms.insert(0,
+                                        dataset.transforms.transforms.pop(i))
+                break
+        if batch_transforms:
+            dataset.batch_transforms = batch_transforms
