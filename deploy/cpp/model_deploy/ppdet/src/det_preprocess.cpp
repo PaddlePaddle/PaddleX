@@ -67,7 +67,7 @@ bool DetPreProcess::PrepareInputsForYOLO(
   im_size.Resize({batch, 2}, INT32);
 
   int sample_shape = 3 * h * w;
-#pragma omp parallel for num_threads(thread_num)
+  #pragma omp parallel for num_threads(thread_num)
   for (auto i = 0; i < batch; ++i) {
     memcpy(im.data.data() + i * sample_shape * sizeof(float), imgs[i].data,
            sample_shape * sizeof(float));
@@ -97,7 +97,7 @@ bool DetPreProcess::PrepareInputsForRCNN(
   im_shape.Resize({batch, 3}, sizeof(float));
 
   int sample_shape = 3 * h * w;
-#pragma omp parallel for num_threads(thread_num)
+  #pragma omp parallel for num_threads(thread_num)
   for (auto i = 0; i < batch; ++i) {
     int shapes_num = shape_infos[i].shapes.size();
     float origin_w = static_cast<float>(shape_infos[i].shapes[0][0]);

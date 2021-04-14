@@ -42,9 +42,7 @@ bool BasePreProcess::ShapeInfer(const std::vector<cv::Mat>& imgs,
   shape_infos->resize(batch_size);
 
   std::vector<int> success(batch_size, 1);
-  // clang-format off
   #pragma omp parallel for num_threads(thread_num)
-  // clang-format on
   for (auto i = 0; i < batch_size; ++i) {
     int h = imgs[i].rows;
     int w = imgs[i].cols;
@@ -93,9 +91,7 @@ bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
 
   std::vector<int> success(batch_size, 1);
 
-  // clang-format off
   #pragma omp parallel for num_threads(thread_num)
-  // clang-format on
   for (auto i = 0; i < batch_size; ++i) {
     for (auto j = 0; j < transforms_.size(); ++j) {
       if (!transforms_[j]->Run(&(*imgs)[i])) {
