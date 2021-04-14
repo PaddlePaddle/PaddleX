@@ -26,7 +26,7 @@ from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget, _Permute
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
@@ -305,10 +305,10 @@ class YOLOv3(BaseDetector):
                     anchor_masks=self.anchors_masks,
                     anchors=self.anchors,
                     downsample_ratios=[32, 16, 8],
-                    num_classes=6)
+                    num_classes=6), _Permute()
             ]
         elif mode == 'eval':
-            batch_transforms = []
+            batch_transforms = [_Permute()]
         else:
             return
         for i, op in enumerate(dataset.transforms.transforms):

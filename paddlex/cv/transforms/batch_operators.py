@@ -42,8 +42,6 @@ class BatchCompose(Transform):
         for op in self.batch_transforms:
             samples = op(samples)
 
-        samples = _Permute()(samples)
-
         global MAIN_PID
         if os.getpid() == MAIN_PID and \
                 isinstance(self.output_fields, mp.managers.ListProxy):
