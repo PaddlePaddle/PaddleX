@@ -797,13 +797,13 @@ class RandomDistort(Transform):
                  count=4,
                  shuffle_channel=False):
         super(RandomDistort, self).__init__()
-        self.brightness_range = brightness_range
+        self.brightness_range = [1 - brightness_range, 1 + brightness_range]
         self.brightness_prob = brightness_prob
-        self.contrast_range = contrast_range
+        self.contrast_range = [1 - contrast_range, 1 + contrast_range]
         self.contrast_prob = contrast_prob
-        self.saturation_range = saturation_range
+        self.saturation_range = [1 - saturation_range, 1 + saturation_range]
         self.saturation_prob = saturation_prob
-        self.hue_range = hue_range
+        self.hue_range = [1 - hue_range, 1 + hue_range]
         self.hue_prob = hue_prob
         self.random_apply = random_apply
         self.count = count
