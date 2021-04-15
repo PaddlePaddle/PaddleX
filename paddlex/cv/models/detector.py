@@ -180,15 +180,14 @@ class BaseDetector(BaseModel):
 
         # initiate weights
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
-            if pretrain_weights not in ['IMAGENET']:
+            if pretrain_weights not in ['COCO', 'PascalVOC']:
                 logging.warning(
                     "Path of pretrain_weights('{}') does not exist!".format(
                         pretrain_weights))
-                logging.warning(
-                    "Pretrain_weights is forcibly set to 'IMAGENET'. "
-                    "If don't want to use pretrain weights, "
-                    "set pretrain_weights to be None.")
-                pretrain_weights = 'IMAGENET'
+                logging.warning("Pretrain_weights is forcibly set to 'COCO'. "
+                                "If don't want to use pretrain weights, "
+                                "set pretrain_weights to be None.")
+                pretrain_weights = 'COCO'
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
