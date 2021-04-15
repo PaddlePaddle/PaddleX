@@ -707,7 +707,7 @@ class Padding(Transform):
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'], offsets, (h, w))
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-            sample['gt_poly'] = self.apply_bbox(sample['gt_bbox'], offsets)
+            sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'], offsets)
         return sample
 
 
