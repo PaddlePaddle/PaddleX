@@ -317,6 +317,8 @@ class YOLOv3(BaseDetector):
             ]
         elif mode == 'eval':
             batch_transforms = [_Permute()]
+        else:
+            return
 
         for i, op in enumerate(dataset.transforms.transforms):
             if isinstance(op, BatchRandomResize):
