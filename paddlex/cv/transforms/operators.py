@@ -712,19 +712,20 @@ class Padding(Transform):
 
 
 class MixupImage(Transform):
-    def __init__(self, alpha=1.5, beta=1.5):
+    def __init__(self, alpha=1.5, beta=1.5, mixup_epoch=-1):
         """ Mixup image and gt_bbbox/gt_score
         Args:
             alpha (float): alpha parameter of beta distribute
             beta (float): beta parameter of beta distribute
         """
         super(MixupImage, self).__init__()
+        if alpha <= 0.0:
+            raise ValueError("alpha should be positive in {}".format(self))
+        if beta <= 0.0:
+            raise ValueError("beta should be positive in {}".format(self))
         self.alpha = alpha
         self.beta = beta
-        if self.alpha <= 0.0:
-            raise ValueError("alpha should be positive in {}".format(self))
-        if self.beta <= 0.0:
-            raise ValueError("beta should be positive in {}".format(self))
+        self.mixup_epoch = mixup_epoch
 
     def apply_im(self, image1, image2, factor):
         h = max(image1.shape[0], image2.shape[0])

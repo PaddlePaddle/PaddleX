@@ -265,10 +265,13 @@ class VOCDetection(Dataset):
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
 
+        self._epoch = 0
+
     def __getitem__(self, idx):
         files = copy.deepcopy(self.file_list)
         sample = files[idx]
-        if self.use_mix:
+        if self.use_mix and (self.mixup_op.mixup_epoch == -1 or
+                             self._epoch < self.mixup_op.mixup_epoch):
             if self.num_samples > 1:
                 mix_idx = random.randint(1, self.num_samples - 1)
                 mix_pos = (mix_idx + idx) % self.num_samples
@@ -282,3 +285,6 @@ class VOCDetection(Dataset):
 
     def __len__(self):
         return self.num_samples
+
+    def set_epoch(self, epoch_id):
+        self._epoch = epoch_id

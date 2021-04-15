@@ -150,3 +150,5 @@ class CocoDetection(VOCDetection):
         logging.info("{} samples in file {}".format(
             len(self.file_list), ann_file))
         self.num_samples = len(self.file_list)
+
+        self._epoch = 0
