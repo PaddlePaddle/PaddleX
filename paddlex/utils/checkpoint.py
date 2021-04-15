@@ -195,6 +195,8 @@ def get_pretrain_weights(flag,
         url = imagenet_weights[weights_key]
     elif flag == 'PascalVOC':
         url = pascalvoc_weights[weights_key]
+    elif flag == 'COCO':
+        url = coco_weights[weights_key]
     else:
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))
