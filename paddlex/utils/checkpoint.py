@@ -145,7 +145,7 @@ imagenet_weights = {
     'ShuffleNetV2_x1_5_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
     'ShuffleNetV2_x2_0_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams'
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams',
 }
 
 pascalvoc_weights = {
@@ -156,7 +156,14 @@ pascalvoc_weights = {
     'HRNet_HRNet_W18_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw18_voc12aug_512x512_40k/model.pdparams',
     'HRNet_HRNet_W48_PascalVOC':
-    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams'
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams',
+    'YOLOv3_MobileNetV1_PascalVOC':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams'
+}
+
+coco_weights = {
+    'YOLOv3_MobileNetV1_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams'
 }
 
 

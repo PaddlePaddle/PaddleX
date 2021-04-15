@@ -209,8 +209,8 @@ class Resize(Transform):
             im_scale = min(target_size_min / im_size_min,
                            target_size_max / im_size_max)
 
-            self.target_h = im_scale * float(im_h)
-            self.target_w = im_scale * float(im_w)
+            self.target_h = int(im_scale * float(im_h))
+            self.target_w = int(im_scale * float(im_w))
 
             im_scale_x = im_scale
             im_scale_y = im_scale

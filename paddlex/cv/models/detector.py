@@ -60,6 +60,9 @@ class BaseDetector(BaseModel):
     def _get_backbone(self, backbone_name):
         if backbone_name == 'MobileNetV1':
             backbone = backbones.MobileNet()
+        else:
+            raise ValueError("There is no backbone for {} named {}".format(
+                self.__class__.__name__, backbone_name))
 
         return backbone
 
@@ -150,7 +153,7 @@ class BaseDetector(BaseModel):
               save_interval_epochs=1,
               log_interval_steps=10,
               save_dir='output',
-              pretrain_weights='IMAGENET',
+              pretrain_weights='COCO',
               learning_rate=.001,
               warmup_steps=0,
               warmup_start_lr=0.0,
@@ -274,6 +277,8 @@ class YOLOv3(BaseDetector):
         else:
             self.sync_bn = False
 
+        self.backbone_name = backbone
+        backbone = self._get_backbone(backbone)
         neck = necks.YOLOv3FPN()
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
