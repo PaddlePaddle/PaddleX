@@ -21,12 +21,12 @@ class BaseDataLoader(object):
     def __init__(self, dataset, batch_sampler, use_shared_memory):
         self._batch_transforms = dataset.batch_transforms
         self._batch_sampler = batch_sampler
-
+        self.dataset = dataset
         self.dataloader = DataLoader(
-            dataset=dataset,
+            dataset=self.dataset,
             batch_sampler=self._batch_sampler,
             collate_fn=self._batch_transforms,
-            num_workers=dataset.num_workers,
+            num_workers=self.dataset.num_workers,
             return_list=True,
             use_shared_memory=use_shared_memory)
         self.loader = iter(self.dataloader)
