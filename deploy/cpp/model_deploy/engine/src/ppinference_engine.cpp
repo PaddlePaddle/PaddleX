@@ -15,20 +15,18 @@
 #include "model_deploy/engine/include/ppinference_engine.h"
 
 namespace PaddleDeploy {
-void Model::PaddleEngineInit(const std::string &model_filename,
-                             const std::string &params_filename,
-                             bool use_gpu,
-                             int gpu_id,
-                             bool use_mkl) {
+bool Model::PaddleEngineInit(const std::string &model_filename,
+                             const std::string &params_filename, bool use_gpu,
+                             int gpu_id, bool use_mkl) {
   infer_engine_ = std::make_shared<PaddleInferenceEngine>();
   InferenceConfig ppi_config;
   ppi_config.use_gpu = use_gpu;
   ppi_config.gpu_id = gpu_id;
   ppi_config.use_mkl = use_mkl;
-  infer_engine_->Init(model_filename, params_filename, ppi_config);
+  return infer_engine_->Init(model_filename, params_filename, ppi_config);
 }
 
-void PaddleInferenceEngine::Init(const std::string &model_filename,
+bool PaddleInferenceEngine::Init(const std::string &model_filename,
                                  const std::string &params_filename,
                                  const InferenceConfig &engine_config) {
   paddle_infer::Config config;
@@ -40,7 +38,6 @@ void PaddleInferenceEngine::Init(const std::string &model_filename,
   }
   if (engine_config.use_gpu) {
     config.EnableUseGpu(100, engine_config.gpu_id);
-    std::cout << "------GPU ID:=====:" << config.gpu_device_id() << std::endl;
   } else {
     config.DisableGpu();
   }
@@ -62,16 +59,18 @@ void PaddleInferenceEngine::Init(const std::string &model_filename,
       precision = paddle_infer::PrecisionType::kInt8;
     } else {
       std::cerr << "Can not support the set precision" << std::endl;
+      return false;
     }
     config.EnableTensorRtEngine(
         1 << 10 /* workspace_size*/,
         engine_config.batch_size /* max_batch_size*/,
         engine_config.min_subgraph_size /* min_subgraph_size*/,
-        precision /* precision*/,
+        precision /* precision*/, 
         engine_config.use_static /* use_static*/,
         engine_config.use_calib_mode /* use_calib_mode*/);
   }
   predictor_ = std::move(paddle_infer::CreatePredictor(config));
+  return true;
 }
 
 bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
@@ -97,8 +96,8 @@ bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
       im_tensor_data = (uint8_t *)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
     } else {
-      std::cerr << "There's unexpected input dtype: "
-                << inputs[i].dtype << std::endl;
+      std::cerr << "There's unexpected input dtype: " << inputs[i].dtype
+                << std::endl;
       return false;
     }
   }
@@ -124,15 +123,13 @@ bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
       output_tensor->CopyToCpu(reinterpret_cast<float *>(output.data.data()));
     } else if (output.dtype == 1) {
       output.data.resize(size * sizeof(int64_t));
-      output_tensor->CopyToCpu(
-          reinterpret_cast<int64_t *>(output.data.data()));
+      output_tensor->CopyToCpu(reinterpret_cast<int64_t *>(output.data.data()));
     } else if (output.dtype == 2) {
       output.data.resize(size * sizeof(int));
       output_tensor->CopyToCpu(reinterpret_cast<int *>(output.data.data()));
     } else if (output.dtype == 3) {
       output.data.resize(size * sizeof(uint8_t));
-      output_tensor->CopyToCpu(
-          reinterpret_cast<uint8_t *>(output.data.data()));
+      output_tensor->CopyToCpu(reinterpret_cast<uint8_t *>(output.data.data()));
     }
     outputs->push_back(std::move(output));
   }

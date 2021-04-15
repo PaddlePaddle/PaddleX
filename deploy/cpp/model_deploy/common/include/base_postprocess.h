@@ -15,8 +15,9 @@
 
 #include <vector>
 
-#include "model_deploy/common/include/output_struct.h"
 #include "yaml-cpp/yaml.h"
+
+#include "model_deploy/common/include/output_struct.h"
 
 namespace PaddleDeploy {
 
@@ -24,8 +25,7 @@ class BasePostProcess {
  public:
   bool use_cpu_nms_;
 
-  virtual void Init(const YAML::Node &yaml_config,
-                    bool use_cpu_nms = false) {
+  virtual bool Init(const YAML::Node& yaml_config, bool use_cpu_nms = false) {
     use_cpu_nms_ = use_cpu_nms;
   }
 

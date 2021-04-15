@@ -24,23 +24,22 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include "yaml-cpp/yaml.h"
 
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/output_struct.h"
-#include "yaml-cpp/yaml.h"
 
 namespace PaddleDeploy {
 
 template <class T>
-bool SortScorePairDescend(const std::pair<float, T> &pair1,
-                          const std::pair<float, T> &pair2) {
+bool SortScorePairDescend(const std::pair<float, T>& pair1,
+                          const std::pair<float, T>& pair2) {
   return pair1.first > pair2.first;
 }
 
 class DetPostProcess : public BasePostProcess {
  public:
-  void Init(const YAML::Node &yaml_config,
-            bool use_cpu_nms);
+  bool Init(const YAML::Node& yaml_config, bool use_cpu_nms);
 
   virtual bool ProcessBbox(const std::vector<DataBlob>& outputs,
                            const std::vector<ShapeInfo>& shape_infos,

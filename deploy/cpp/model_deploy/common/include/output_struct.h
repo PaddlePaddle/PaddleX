@@ -22,6 +22,7 @@
 #include <vector>
 #include <cassert>
 #include <functional>
+#include <numeric>
 
 namespace PaddleDeploy {
 

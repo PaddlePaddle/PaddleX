@@ -15,9 +15,6 @@
 
 namespace PaddleDeploy {
 
-// regist class (model_type, class_name)
-REGISTER_CLASS(det, DetModel);
-
 bool DetModel::DetParserTransforms(const YAML::Node& preprocess_op) {
   if (!preprocess_op["type"].IsDefined()) {
     std::cerr << "preprocess no type" << std::endl;
@@ -28,9 +25,9 @@ bool DetModel::DetParserTransforms(const YAML::Node& preprocess_op) {
   if (preprocess_op_type == "Normalize") {
     yaml_config_["transforms"]["Convert"]["dtype"] = "float";
     std::vector<float> mean =
-            preprocess_op["mean"].as<std::vector<float>>();
+        preprocess_op["mean"].as<std::vector<float>>();
     std::vector<float> std_value =
-            preprocess_op["std"].as<std::vector<float>>();
+        preprocess_op["std"].as<std::vector<float>>();
     yaml_config_["transforms"]["Normalize"]["is_scale"] =
         preprocess_op["is_scale"].as<bool>();
     for (int i = 0; i < mean.size(); i++) {
@@ -78,19 +75,19 @@ bool DetModel::DetParserTransforms(const YAML::Node& preprocess_op) {
   return true;
 }
 
-void DetModel::YamlConfigInit(const std::string& cfg_file) {
+bool DetModel::YamlConfigInit(const std::string& cfg_file) {
   YAML::Node det_config = YAML::LoadFile(cfg_file);
 
   yaml_config_["model_format"] = "Paddle";
   // arch support value:YOLO, SSD, RetinaNet, RCNN, Face
   if (!det_config["arch"].IsDefined()) {
     std::cerr << "Fail to find arch in PaddleDection yaml file" << std::endl;
-    return;
+    return false;
   } else if (!det_config["label_list"].IsDefined()) {
     std::cerr << "Fail to find label_list in "
               << "PaddleDection yaml file"
               << std::endl;
-    return;
+    return false;
   }
   yaml_config_["model_name"] = det_config["arch"].as<std::string>();
   yaml_config_["toolkit"] = "PaddleDetection";
@@ -110,27 +107,33 @@ void DetModel::YamlConfigInit(const std::string& cfg_file) {
         std::cerr << "Fail to parser PaddleDetection "
                   << "transforms of config.yaml"
                   << std::endl;
-        return;
+        return false;
       }
     }
   } else {
     std::cerr << "No Preprocess in  PaddleDection yaml file"
               << std::endl;
+    return false;
   }
+  return true;
 }
 
 // void DetModel::Init(const std::string &cfg_file){
 
 // }
 
-void DetModel::PreProcessInit() {
+bool DetModel::PreProcessInit() {
   preprocess_ = std::make_shared<DetPreProcess>();
-  preprocess_->Init(yaml_config_);
+  if (!preprocess_->Init(yaml_config_))
+    return false;
+  return true;
 }
 
-void DetModel::PostProcessInit(bool use_cpu_nms) {
+bool DetModel::PostProcessInit(bool use_cpu_nms) {
   postprocess_ = std::make_shared<DetPostProcess>();
-  postprocess_->Init(yaml_config_, use_cpu_nms);
+  if (!postprocess_->Init(yaml_config_, use_cpu_nms))
+    return false;
+  return true;
 }
 
 }  // namespace PaddleDeploy

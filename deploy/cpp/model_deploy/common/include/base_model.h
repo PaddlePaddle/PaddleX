@@ -18,11 +18,12 @@
 #include <string>
 #include <vector>
 
+#include "yaml-cpp/yaml.h"
+
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/base_preprocess.h"
-#include "model_deploy/engine/include/engine.h"
 #include "model_deploy/common/include/output_struct.h"
-#include "yaml-cpp/yaml.h"
+#include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {
 
@@ -47,28 +48,33 @@ class Model {
   // Init model_type.
   explicit Model(const std::string model_type) : model_type_(model_type) {}
 
-  virtual void Init(const std::string& cfg_file, bool use_cpu_nms) {
-    YamlConfigInit(cfg_file);
-    PreProcessInit();
-    PostProcessInit(use_cpu_nms);
+  virtual bool Init(const std::string& cfg_file, bool use_cpu_nms) {
+    if (!YamlConfigInit(cfg_file)) return false;
+    if (!PreProcessInit()) return false;
+    if (!PostProcessInit(use_cpu_nms)) return false;
+    return true;
   }
 
-  virtual void YamlConfigInit(const std::string& cfg_file) {
+  virtual bool YamlConfigInit(const std::string& cfg_file) {
     YAML::Node yaml_config_ = YAML::LoadFile(cfg_file);
+    return true;
   }
 
-  virtual void PreProcessInit() {
+  virtual bool PreProcessInit() {
     preprocess_ = nullptr;
+    std::cerr << "model no PreProcess!" << std::endl;
+    return false;
   }
 
-  void PaddleEngineInit(const std::string& model_filename,
+  bool PaddleEngineInit(const std::string& model_filename,
                         const std::string& params_filename,
-                        bool use_gpu = false,
-                        int gpu_id = 0,
+                        bool use_gpu = false, int gpu_id = 0,
                         bool use_mkl = true);
 
-  virtual void PostProcessInit(bool use_cpu_nms) {
+  virtual bool PostProcessInit(bool use_cpu_nms) {
     postprocess_ = nullptr;
+    std::cerr << "model no PostProcess!" << std::endl;
+    return false;
   }
 
   virtual bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1) {
@@ -87,9 +93,12 @@ class Model {
     std::vector<DataBlob> inputs;
     std::vector<DataBlob> outputs;
 
-    preprocess_->Run(&imgs_clone, &inputs, &shape_infos, thread_num);
-    infer_engine_->Infer(inputs, &outputs);
-    postprocess_->Run(outputs, shape_infos, &results_, thread_num);
+    if (!preprocess_->Run(&imgs_clone, &inputs, &shape_infos, thread_num))
+      return false;
+    if (!infer_engine_->Infer(inputs, &outputs))
+      return false;
+    if (!postprocess_->Run(outputs, shape_infos, &results_, thread_num))
+      return false;
     return true;
   }
 
@@ -100,14 +109,14 @@ class Model {
     }
   }
 
-  virtual void PrePrecess(const std::vector<cv::Mat>& imgs,
+  virtual bool PrePrecess(const std::vector<cv::Mat>& imgs,
                           std::vector<DataBlob>* inputs,
                           std::vector<ShapeInfo>* shape_infos,
                           int thread_num = 1) {
     if (!preprocess_) {
-      std::cerr << "No PrePrecess, No pre Init. model_type="
-                << model_type_ << std::endl;
-      return;
+      std::cerr << "No PrePrecess, No pre Init. model_type=" << model_type_
+                << std::endl;
+      return false;
     }
 
     std::vector<cv::Mat> imgs_clone(imgs.size());
@@ -115,8 +124,9 @@ class Model {
       imgs[i].copyTo(imgs_clone[i]);
     }
 
-
-    preprocess_->Run(&imgs_clone, inputs, shape_infos, thread_num);
+    if (!preprocess_->Run(&imgs_clone, inputs, shape_infos, thread_num))
+      return false;
+    return true;
   }
 
   virtual void Infer(const std::vector<DataBlob>& inputs,
@@ -124,16 +134,18 @@ class Model {
     infer_engine_->Infer(inputs, outputs);
   }
 
-  virtual void PostPrecess(const std::vector<DataBlob>& outputs,
+  virtual bool PostPrecess(const std::vector<DataBlob>& outputs,
                            const std::vector<ShapeInfo>& shape_infos,
                            int thread_num = 1) {
     results_.clear();
     if (!postprocess_) {
-      std::cerr << "No PostPrecess, No post Init. model_type="
-                << model_type_ << std::endl;
-      return;
+      std::cerr << "No PostPrecess, No post Init. model_type=" << model_type_
+                << std::endl;
+      return false;
     }
-    postprocess_->Run(outputs, shape_infos, &results_, thread_num);
+    if (postprocess_->Run(outputs, shape_infos, &results_, thread_num))
+      return false;
+    return true;
   }
 };
 

@@ -19,49 +19,59 @@
 namespace PaddleDeploy {
 
 bool BasePreProcess::BuildTransform(const YAML::Node& yaml_config) {
-  transforms.clear();
+  transforms_.clear();
   YAML::Node transforms_node = yaml_config["transforms"];
   for (YAML::const_iterator it = transforms_node.begin();
        it != transforms_node.end(); ++it) {
     std::string name = it->first.as<std::string>();
     std::shared_ptr<Transform> transform = CreateTransform(name);
+    if (!transform) {
+      return false;
+    }
     transform->Init(it->second);
-    transforms.push_back(transform);
+    transforms_.push_back(transform);
   }
+  return true;
 }
 
-bool BasePreProcess::ShapeInfer(
-                const std::vector<cv::Mat>& imgs,
-                std::vector<ShapeInfo>* shape_infos,
-                int thread_num) {
+bool BasePreProcess::ShapeInfer(const std::vector<cv::Mat>& imgs,
+                                std::vector<ShapeInfo>* shape_infos,
+                                int thread_num) {
   int batch_size = imgs.size();
-  bool success = true;
   thread_num = std::min(thread_num, batch_size);
   shape_infos->resize(batch_size);
 
+  std::vector<int> success(batch_size, 1);
   #pragma omp parallel for num_threads(thread_num)
   for (auto i = 0; i < batch_size; ++i) {
     int h = imgs[i].rows;
     int w = imgs[i].cols;
     (*shape_infos)[i].Insert("Origin", w, h);
-    for (auto j = 0; j < transforms.size(); ++j) {
+    for (auto j = 0; j < transforms_.size(); ++j) {
       std::vector<int> out_shape;
-      if (!transforms[j]->ShapeInfer((*shape_infos)[i].shapes[j], &out_shape)) {
+      if (!transforms_[j]->ShapeInfer((*shape_infos)[i].shapes[j],
+                                      &out_shape)) {
         std::cerr << "Run transforms ShapeInfer failed!" << std::endl;
+        success[i] = 0;
+        continue;
       }
-      (*shape_infos)[i].Insert(transforms[j]->Name(),
-                            out_shape[0], out_shape[1]);
+      (*shape_infos)[i].Insert(transforms_[j]->Name(), out_shape[0],
+                               out_shape[1]);
     }
   }
+  if (std::accumulate(success.begin(), success.end(), 0) < batch_size) {
+    return false;
+  }
+
   // get max shape
   int max_w = 0;
   int max_h = 0;
   for (auto i = 0; i < shape_infos->size(); ++i) {
     if ((*shape_infos)[i].shapes.back()[0] > max_w) {
-      max_w = (*shape_infos)[i].shapes[transforms.size()][0];
+      max_w = (*shape_infos)[i].shapes[transforms_.size()][0];
     }
     if ((*shape_infos)[i].shapes.back()[1] > max_h) {
-      max_h = (*shape_infos)[i].shapes[transforms.size()][1];
+      max_h = (*shape_infos)[i].shapes[transforms_.size()][1];
     }
   }
   for (auto i = 0; i < shape_infos->size(); ++i) {
@@ -70,9 +80,9 @@ bool BasePreProcess::ShapeInfer(
   return true;
 }
 
-bool BasePreProcess::PreprocessImages(
-            const std::vector<ShapeInfo>& shape_infos,
-            std::vector<cv::Mat>* imgs, int thread_num) {
+bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
+                                      std::vector<cv::Mat>* imgs,
+                                      int thread_num) {
   int batch_size = imgs->size();
   thread_num = std::min(thread_num, batch_size);
 
@@ -80,12 +90,14 @@ bool BasePreProcess::PreprocessImages(
   int max_h = shape_infos[0].shapes.back()[1];
 
   std::vector<int> success(batch_size, 1);
+
   #pragma omp parallel for num_threads(thread_num)
   for (auto i = 0; i < batch_size; ++i) {
-    for (auto j = 0; j < transforms.size(); ++j) {
-      if (!transforms[j]->Run(&(*imgs)[i])) {
+    for (auto j = 0; j < transforms_.size(); ++j) {
+      if (!transforms_[j]->Run(&(*imgs)[i])) {
         std::cerr << "Run transforms to image failed!" << std::endl;
         success[i] = 0;
+        continue;
       }
     }
     if (!batch_padding_.Run(&(*imgs)[i], max_w, max_h)) {
@@ -100,9 +112,8 @@ bool BasePreProcess::PreprocessImages(
   return true;
 }
 
-
 std::shared_ptr<Transform> BasePreProcess::CreateTransform(
-    const std::string &transform_name) {
+    const std::string& transform_name) {
   if (transform_name == "Normalize") {
     return std::make_shared<Normalize>();
   } else if (transform_name == "ResizeByShort") {
@@ -132,7 +143,7 @@ std::shared_ptr<Transform> BasePreProcess::CreateTransform(
   } else {
     std::cerr << "There's unexpected transform(name='" << transform_name
               << "')." << std::endl;
-    exit(-1);
+    return nullptr;
   }
 }
 

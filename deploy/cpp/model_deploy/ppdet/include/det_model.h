@@ -13,32 +13,32 @@
 // limitations under the License.
 #pragma once
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include "yaml-cpp/yaml.h"
 
 #include "model_deploy/common/include/base_model.h"
-#include "model_deploy/common/include/model_factory.h"
-#include "model_deploy/ppdet/include/det_preprocess.h"
 #include "model_deploy/ppdet/include/det_postprocess.h"
+#include "model_deploy/ppdet/include/det_preprocess.h"
+
 
 namespace PaddleDeploy {
-class DetModel : public Model{
+class DetModel : public Model {
  private:
   const std::string model_type;
   bool DetParserTransforms(const YAML::Node &preprocess_op);
 
  public:
-  explicit DetModel(const std::string model_type): model_type(model_type) {
-    std::cout<< "init DetModel,model_type=" << model_type << std::endl;
+  explicit DetModel(const std::string model_type) : model_type(model_type) {
+    std::cout << "init DetModel,model_type=" << model_type << std::endl;
   }
 
-  void YamlConfigInit(const std::string &cfg_file);
+  bool YamlConfigInit(const std::string &cfg_file);
 
-  void PreProcessInit();
+  bool PreProcessInit();
 
-  void PostProcessInit(bool use_cpu_nms);
+  bool PostProcessInit(bool use_cpu_nms);
 };
 
 }  // namespace PaddleDeploy

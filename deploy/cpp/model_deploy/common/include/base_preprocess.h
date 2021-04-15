@@ -18,16 +18,19 @@
 #include <string>
 #include <vector>
 
+#include "yaml-cpp/yaml.h"
+
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/common/include/transforms.h"
-#include "yaml-cpp/yaml.h"
 
 namespace PaddleDeploy {
 
 class BasePreProcess {
  public:
   virtual bool Init(const YAML::Node& yaml_config) {
-    BuildTransform(yaml_config);
+    if (!BuildTransform(yaml_config))
+      return false;
+    return true;
   }
 
   bool PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
@@ -47,7 +50,7 @@ class BasePreProcess {
 
  protected:
   bool BuildTransform(const YAML::Node& yaml_config);
-  std::vector<std::shared_ptr<Transform>> transforms;
+  std::vector<std::shared_ptr<Transform>> transforms_;
 
  private:
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
