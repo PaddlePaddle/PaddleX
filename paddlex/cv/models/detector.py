@@ -35,7 +35,8 @@ from .utils.det_metrics import VOCMetric
 
 class BaseDetector(BaseModel):
     def __init__(self, model_name, num_classes=80, **params):
-        self.init_params = locals()
+        self.init_params.update(locals())
+        del self.init_params['params']
         super(BaseDetector, self).__init__('detector')
         if not hasattr(architectures, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -262,6 +263,7 @@ class YOLOv3(BaseDetector):
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45,
                  label_smooth=False):
+        self.init_params = locals()
         if backbone not in ['MobileNetV1']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
@@ -271,7 +273,7 @@ class YOLOv3(BaseDetector):
             self.sync_bn = True
         else:
             self.sync_bn = False
-        backbone = self._get_backbone(backbone)
+
         neck = necks.YOLOv3FPN()
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
