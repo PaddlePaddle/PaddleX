@@ -162,7 +162,7 @@ pascalvoc_weights = {
 }
 
 coco_weights = {
-    'YOLOv3_MobileNetV1_IMAGENET':
+    'YOLOv3_MobileNetV1_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams'
 }
 
