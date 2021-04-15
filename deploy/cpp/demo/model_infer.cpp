@@ -45,14 +45,14 @@ int main(int argc, char** argv) {
   if (!model) {
     std::cout << "no model_type: " << FLAGS_model_type << "  model=" << model
               << std::endl;
-    return 0;
+    return -1;
   }
   std::cout << "start model init " << std::endl;
 
   // model init
   if (!model->Init(FLAGS_cfg_file, FLAGS_use_cpu_nms)) {
     std::cerr << "model Init error" << std::endl;
-    return 0;
+    return -1;
   }
   std::cout << "start engine init " << std::endl;
 
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
   if (!model->PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
                                FLAGS_use_gpu, FLAGS_gpu_id, FLAGS_use_mkl)) {
     std::cerr << "Paddle Engine Init error" << std::endl;
-    return 0;
+    return -1;
   }
 
   // read image
@@ -72,11 +72,13 @@ int main(int argc, char** argv) {
   std::cout << "start model predict " << std::endl;
   // infer
   if (!model->Predict(imgs)) {
-    return 0;
+    return -1;
   }
   // model->Predict(imgs, FLAGS_batch_size, FLAGS_thread_num);
   model->PrintResult();
 
-  model->Predict(imgs, FLAGS_thread_num);
+  if (!model->Predict(imgs, FLAGS_thread_num)) {
+    return -1;
+  };
   model->PrintResult();
 }

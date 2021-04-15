@@ -65,7 +65,8 @@ bool PaddleInferenceEngine::Init(const std::string &model_filename,
         1 << 10 /* workspace_size*/,
         engine_config.batch_size /* max_batch_size*/,
         engine_config.min_subgraph_size /* min_subgraph_size*/,
-        precision /* precision*/, engine_config.use_static /* use_static*/,
+        precision /* precision*/, 
+        engine_config.use_static /* use_static*/,
         engine_config.use_calib_mode /* use_calib_mode*/);
   }
   predictor_ = std::move(paddle_infer::CreatePredictor(config));

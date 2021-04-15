@@ -112,8 +112,8 @@ bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
   return true;
 }
 
-std::shared_ptr<Transform>
-BasePreProcess::CreateTransform(const std::string& transform_name) {
+std::shared_ptr<Transform> BasePreProcess::CreateTransform(
+    const std::string& transform_name) {
   if (transform_name == "Normalize") {
     return std::make_shared<Normalize>();
   } else if (transform_name == "ResizeByShort") {

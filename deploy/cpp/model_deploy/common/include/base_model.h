@@ -93,9 +93,12 @@ class Model {
     std::vector<DataBlob> inputs;
     std::vector<DataBlob> outputs;
 
-    preprocess_->Run(&imgs_clone, &inputs, &shape_infos, thread_num);
-    infer_engine_->Infer(inputs, &outputs);
-    postprocess_->Run(outputs, shape_infos, &results_, thread_num);
+    if (!preprocess_->Run(&imgs_clone, &inputs, &shape_infos, thread_num))
+      return false;
+    if (!infer_engine_->Infer(inputs, &outputs))
+      return false;
+    if (!postprocess_->Run(outputs, shape_infos, &results_, thread_num))
+      return false;
     return true;
   }
 
@@ -121,7 +124,8 @@ class Model {
       imgs[i].copyTo(imgs_clone[i]);
     }
 
-    preprocess_->Run(&imgs_clone, inputs, shape_infos, thread_num);
+    if (!preprocess_->Run(&imgs_clone, inputs, shape_infos, thread_num))
+      return false;
     return true;
   }
 
@@ -139,7 +143,8 @@ class Model {
                 << std::endl;
       return false;
     }
-    postprocess_->Run(outputs, shape_infos, &results_, thread_num);
+    if (postprocess_->Run(outputs, shape_infos, &results_, thread_num))
+      return false;
     return true;
   }
 };
