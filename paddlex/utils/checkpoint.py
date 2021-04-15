@@ -153,9 +153,9 @@ pascalvoc_weights = {
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet50_os8_voc12aug_512x512_40k/model.pdparams',
     'DeepLabV3P_ResNet101_vd_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams',
-    'FCN_HRNet_W18_PascalVOC':
+    'HRNet_HRNet_W18_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw18_voc12aug_512x512_40k/model.pdparams',
-    'FCN_HRNet_W48_PascalVOC':
+    'HRNet_HRNet_W48_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams'
 }
 
