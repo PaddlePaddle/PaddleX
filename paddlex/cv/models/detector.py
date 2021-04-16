@@ -49,7 +49,7 @@ class BaseDetector(BaseModel):
 
     def build_net(self, **params):
         net = architectures.__dict__[self.model_name](**params)
-        if self.sync_bn:
+        if getattr(self, 'sync_bn', False):
             net = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(net)
         test_inputs = [
             paddle.static.InputSpec(
@@ -127,11 +127,7 @@ class BaseDetector(BaseModel):
                     "See this doc for more information: "
                     "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
                     exit=False)
-                logging.error(
-                    "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, "
-                    "please modify 'lr_decay_epochs' or 'warmup_steps' in train function".
-                    format(lr_decay_epochs[0] * num_steps_each_epoch,
-                           warmup_steps // num_steps_each_epoch))
+
             scheduler = paddle.optimizer.lr.LinearWarmup(
                 learning_rate=scheduler,
                 warmup_steps=warmup_steps,

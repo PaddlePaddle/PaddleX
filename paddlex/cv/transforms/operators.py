@@ -164,15 +164,10 @@ class Decode(Transform):
 
 
 class Resize(Transform):
-    def __init__(self,
-                 height,
-                 width,
-                 keep_ratio=False,
-                 interp=cv2.INTER_LINEAR):
+    def __init__(self, height, width, interp=cv2.INTER_LINEAR):
         super(Resize, self).__init__()
         self.target_h = height
         self.target_w = width
-        self.keep_ratio = keep_ratio
         self.interp = interp
 
     def apply_im(self, image, interp):
@@ -199,24 +194,9 @@ class Resize(Transform):
         if self.interp == "RANDOM":
             interp = random.choice(interp_list)
         im_h, im_w = sample['image'].shape[:2]
-        if self.keep_ratio:
-            im_size_min = np.min((im_h, im_w))
-            im_size_max = np.max((im_h, im_w))
 
-            target_size_min = np.min((self.target_h, self.target_w))
-            target_size_max = np.max((self.target_h, self.target_w))
-
-            im_scale = min(target_size_min / im_size_min,
-                           target_size_max / im_size_max)
-
-            self.target_h = int(im_scale * float(im_h))
-            self.target_w = int(im_scale * float(im_w))
-
-            im_scale_x = im_scale
-            im_scale_y = im_scale
-        else:
-            im_scale_y = self.target_h / im_h
-            im_scale_x = self.target_w / im_w
+        im_scale_y = self.target_h / im_h
+        im_scale_x = self.target_w / im_w
 
         sample['image'] = self.apply_im(sample['image'], interp)
 
@@ -287,7 +267,7 @@ class ResizeByShort(Transform):
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
                                                 [im_scale_x, im_scale_y])
         sample['im_shape'] = np.asarray(
-            [self.target_h, self.target_w], dtype=np.float32)
+            sample['image'].shape[:2], dtype=np.float32)
         if 'scale_factor' in sample:
             scale_factor = sample['scale_factor']
             sample['scale_factor'] = np.asarray(

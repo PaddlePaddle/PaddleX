@@ -69,7 +69,7 @@ class YOLOv3Loss(nn.Layer):
 
         iou = iou_similarity(pbox, gbox)
         iou.stop_gradient = True
-        iou_max = iou.max(2)  # [N, M1]
+        iou_max = iou.max(2)  # [N, M1
         iou_mask = paddle.cast(iou_max <= self.ignore_thresh, dtype=pbox.dtype)
         iou_mask.stop_gradient = True
 
