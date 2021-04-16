@@ -65,7 +65,7 @@ bool PaddleInferenceEngine::Init(const std::string &model_filename,
         1 << 10 /* workspace_size*/,
         engine_config.batch_size /* max_batch_size*/,
         engine_config.min_subgraph_size /* min_subgraph_size*/,
-        precision /* precision*/, 
+        precision /* precision*/,
         engine_config.use_static /* use_static*/,
         engine_config.use_calib_mode /* use_calib_mode*/);
   }
@@ -75,25 +75,25 @@ bool PaddleInferenceEngine::Init(const std::string &model_filename,
 
 bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
                                   std::vector<DataBlob> *outputs) {
+  auto input_names = predictor_->GetInputNames();
   for (int i = 0; i < inputs.size(); i++) {
-    auto input_names = predictor_->GetInputNames();
     auto in_tensor = predictor_->GetInputHandle(input_names[i]);
     in_tensor->Reshape(inputs[i].shape);
-    if (inputs[i].dtype == 0) {
+    if (inputs[i].dtype == FLOAT32) {
       float *im_tensor_data;
-      im_tensor_data = (float *)(inputs[i].data.data());  // NOLINT
+      im_tensor_data = (float*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
-    } else if (inputs[i].dtype == 1) {
+    } else if (inputs[i].dtype == INT64) {
       int64_t *im_tensor_data;
-      im_tensor_data = (int64_t *)(inputs[i].data.data());  // NOLINT
+      im_tensor_data = (int64_t*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
-    } else if (inputs[i].dtype == 2) {
+    } else if (inputs[i].dtype == INT32) {
       int *im_tensor_data;
-      im_tensor_data = (int *)(inputs[i].data.data());  // NOLINT
+      im_tensor_data = (int*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
-    } else if (inputs[i].dtype == 3) {
+    } else if (inputs[i].dtype == INT8) {
       uint8_t *im_tensor_data;
-      im_tensor_data = (uint8_t *)(inputs[i].data.data());  // NOLINT
+      im_tensor_data = (uint8_t*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
     } else {
       std::cerr << "There's unexpected input dtype: " << inputs[i].dtype

@@ -63,6 +63,7 @@ bool DetModel::DetParserTransforms(const YAML::Node& preprocess_op) {
       yaml_config_["transforms"]["Resize"]["interp"] =
           preprocess_op["interp"].as<int>();
       yaml_config_["transforms"]["Resize"]["max_size"] = max_size;
+      yaml_config_["transforms"]["Resize"]["use_scale"] = false;
     }
   } else if (preprocess_op_type == "PadStride") {
     yaml_config_["transforms"]["Padding"]["stride"] =

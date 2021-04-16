@@ -46,7 +46,7 @@ class Register {
   class class_name##Register {                                    \
    public:                                                        \
     static std::shared_ptr<Model> newInstance() {                 \
-      std::cout << "REGISTER_CLASS:" << #model_type << std::endl; \
+      std::cerr << "REGISTER_CLASS:" << #model_type << std::endl; \
       return std::make_shared<class_name>(#model_type);           \
     }                                                             \
                                                                   \

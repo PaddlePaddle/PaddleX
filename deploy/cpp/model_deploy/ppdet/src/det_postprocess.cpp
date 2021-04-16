@@ -53,6 +53,10 @@ bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
     for (auto j = 0; j < num_bboxes_each_sample[i]; ++j) {
       Box box;
       box.category_id = static_cast<int>(round(data[idx * 6]));
+      if (box.category_id < 0) {
+        std::cerr << "Compute category id is less than 0" << std::endl;
+        return false;
+      }
       if (box.category_id >= labels_.size()) {
         std::cerr << "Compute category id is greater than labels "
                   << "in your config file" << std::endl;

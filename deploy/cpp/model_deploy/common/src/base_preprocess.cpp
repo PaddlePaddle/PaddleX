@@ -93,7 +93,13 @@ bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
 
   #pragma omp parallel for num_threads(thread_num)
   for (auto i = 0; i < batch_size; ++i) {
+    bool to_chw = false;
     for (auto j = 0; j < transforms_.size(); ++j) {
+      // Permute will put to the last step to apply
+      if (transforms_[j]->Name() == "Permute") {
+        to_chw = true;
+        continue;
+      }
       if (!transforms_[j]->Run(&(*imgs)[i])) {
         std::cerr << "Run transforms to image failed!" << std::endl;
         success[i] = 0;
@@ -103,6 +109,14 @@ bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
     if (!batch_padding_.Run(&(*imgs)[i], max_w, max_h)) {
       std::cerr << "Run BatchPadding to image failed!" << std::endl;
       success[i] = 0;
+    }
+
+    // apply permute hwc->chw
+    if (to_chw) {
+      if (!permute_.Run(&(*imgs)[i])) {
+        std::cerr << "Run Permute to image failed!" << std::endl;
+        success[i] == 0;
+      }
     }
   }
 

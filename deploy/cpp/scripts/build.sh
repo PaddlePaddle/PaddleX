@@ -23,10 +23,6 @@ CUDNN_LIB=/usr/lib/x86_64-linux-gnu
     exit -1
 }
 
-# 是否加载加密后的模型
-WITH_ENCRYPTION=OFF
-# 加密工具的路径, 如果使用自带预编译版本可不修改
-ENCRYPTION_DIR=$(pwd)/paddlex-encryption
 # OPENCV 路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv3.4.6gcc4.8ffmpeg/
 
@@ -38,12 +34,10 @@ cmake .. \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
-    -DWITH_ENCRYPTION=${WITH_ENCRYPTION} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
-    -DENCRYPTION_DIR=${ENCRYPTION_DIR} \
     -DOPENCV_DIR=${OPENCV_DIR}
 make -j16
