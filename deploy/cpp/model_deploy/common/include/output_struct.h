@@ -73,10 +73,10 @@ struct DataBlob {
 
 struct ShapeInfo {
   std::vector<std::vector<int>> shapes;
-  std::vector<std::string> transform_names;
+  std::vector<std::string> transforms;
   bool has_batch_padding = false;
   void Insert(const std::string& name, int width, int height) {
-    transform_names.push_back(name);
+    transforms.push_back(name);
     shapes.push_back({width, height});
   }
 };

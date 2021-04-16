@@ -11,11 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include <glog/logging.h>
 #include <omp.h>
 #include <memory>
 #include <string>
-
-#include <glog/logging.h>
+#include <fstream>
 
 #include "common/include/model_factory.h"
 
@@ -23,7 +24,6 @@ DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
-DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
@@ -36,49 +36,50 @@ DEFINE_bool(use_cpu_nms, false, "whether postprocess with NMS");
 int main(int argc, char** argv) {
   // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
-  std::cout << "ParseCommandLineFlags:FLAGS_model_type=" << FLAGS_model_type
-            << " model_filename=" << FLAGS_model_filename << std::endl;
+  std::cout << "ParseCommandLineFlags:FLAGS_model_type="
+            << FLAGS_model_type << " model_filename="
+            << FLAGS_model_filename << std::endl;
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
-      PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
+        PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
   if (!model) {
-    std::cout << "no model_type: " << FLAGS_model_type << "  model=" << model
-              << std::endl;
-    return -1;
+    std::cout << "no model_type: " << FLAGS_model_type
+              << "  model=" << model << std::endl;
+    return 0;
   }
   std::cout << "start model init " << std::endl;
 
   // model init
-  if (!model->Init(FLAGS_cfg_file, FLAGS_use_cpu_nms)) {
-    std::cerr << "model Init error" << std::endl;
-    return -1;
-  }
+  model->Init(FLAGS_cfg_file, FLAGS_use_cpu_nms);
   std::cout << "start engine init " << std::endl;
 
-  // inference engine int
-  if (!model->PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
-                               FLAGS_use_gpu, FLAGS_gpu_id, FLAGS_use_mkl)) {
-    std::cerr << "Paddle Engine Init error" << std::endl;
+  // inference engine in
+  model->PaddleEngineInit(FLAGS_model_filename,
+                          FLAGS_params_filename,
+                          FLAGS_use_gpu,
+                          FLAGS_gpu_id,
+                          FLAGS_use_mkl);
+
+  if (FLAGS_image_list != "") {
+    std::ifstream inf(FLAGS_image_list);
+    if (!inf) {
+      std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
+      return -1;
+    }
+    std::string path;
+    while (getline(inf, path)) {
+      std::vector<cv::Mat> ims;
+      ims.push_back(std::move(cv::imread(path, 1)));
+      model->Predict(ims);
+      std::cout << "image\t" << path << "\t"
+                << model->results_[0].det_result->boxes.size()
+                << std::endl;
+      model->PrintResult();
+    }
+  } else {
+    std::cerr << "image_list should be defined" << std::endl;
     return -1;
   }
-
-  // read image
-  std::vector<cv::Mat> imgs;
-  cv::Mat img;
-  img = cv::imread(FLAGS_image, 1);
-  imgs.push_back(std::move(img));
-
-  std::cout << "start model predict " << std::endl;
-  // infer
-  if (!model->Predict(imgs)) {
-    return -1;
-  }
-  // model->Predict(imgs, FLAGS_batch_size, FLAGS_thread_num);
-  model->PrintResult();
-
-  if (!model->Predict(imgs, FLAGS_thread_num)) {
-    return -1;
-  };
-  model->PrintResult();
+  return 0;
 }

@@ -31,7 +31,7 @@ class DetModel : public Model {
 
  public:
   explicit DetModel(const std::string model_type) : model_type(model_type) {
-    std::cout << "init DetModel,model_type=" << model_type << std::endl;
+    std::cerr << "init DetModel,model_type=" << model_type << std::endl;
   }
 
   bool YamlConfigInit(const std::string &cfg_file);

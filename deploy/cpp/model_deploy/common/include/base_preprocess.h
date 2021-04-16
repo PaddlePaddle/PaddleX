@@ -55,6 +55,7 @@ class BasePreProcess {
  private:
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
   Padding batch_padding_;
+  Permute permute_;
 };
 
 }  // namespace PaddleDeploy

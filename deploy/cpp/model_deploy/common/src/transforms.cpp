@@ -67,9 +67,13 @@ bool ResizeByShort::Run(cv::Mat *im) {
   int origin_w = im->cols;
   int origin_h = im->rows;
   float scale = GenerateScale(origin_w, origin_h);
-  int width = static_cast<int>(round(scale * im->cols));
-  int height = static_cast<int>(round(scale * im->rows));
-  cv::resize(*im, *im, cv::Size(width, height), 0, 0, interp_);
+  if (use_scale_) {
+    cv::resize(*im, *im, cv::Size(), scale, scale, interp_);
+  } else {
+    int width = static_cast<int>(round(scale * im->cols));
+    int height = static_cast<int>(round(scale * im->rows));
+    cv::resize(*im, *im, cv::Size(width, height), 0, 0, interp_);
+  }
   return true;
 }
 
@@ -151,7 +155,13 @@ bool Resize::Run(cv::Mat *im) {
               << std::endl;
     return false;
   }
-  cv::resize(*im, *im, cv::Size(width_, height_), 0, 0, interp_);
+  if (use_scale_) {
+    float scale_w = width_ / static_cast<float>(im->cols);
+    float scale_h = height_ / static_cast<float>(im->rows);
+    cv::resize(*im, *im, cv::Size(), scale_w, scale_h, interp_);
+  } else {
+    cv::resize(*im, *im, cv::Size(width_, height_), 0, 0, interp_);
+  }
   return true;
 }
 
@@ -286,9 +296,21 @@ bool Padding::Run(cv::Mat *im, int max_w, int max_h) {
 bool Padding::ShapeInfer(
         const std::vector<int>& in_shape,
         std::vector<int>* out_shape) {
+  int new_w = 0;
+  int new_h = 0;
+  if (width_ > 1 & height_ > 1) {
+    new_w = width_;
+    new_h = height_;
+  } else {
+    int w = in_shape[0];
+    int h = in_shape[1];
+    new_w = ceil(w * 1.0 / stride_) * stride_;
+    new_h = ceil(h * 1.0 / stride_) * stride_;
+  }
+  assert(new_w >= in_shape[0] && new_h >= in_shape[1]);
   out_shape->clear();
-  out_shape->push_back(width_);
-  out_shape->push_back(height_);
+  out_shape->push_back(new_w);
+  out_shape->push_back(new_h);
   return true;
 }
 

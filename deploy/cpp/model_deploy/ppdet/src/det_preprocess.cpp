@@ -92,9 +92,9 @@ bool DetPreProcess::PrepareInputsForRCNN(
   int w = shape_infos[0].shapes.back()[0];
   int h = shape_infos[0].shapes.back()[1];
 
-  im.Resize({batch, 3, h, w}, sizeof(float));
-  im_info.Resize({batch, 3}, sizeof(float));
-  im_shape.Resize({batch, 3}, sizeof(float));
+  im.Resize({batch, 3, h, w}, FLOAT32);
+  im_info.Resize({batch, 3}, FLOAT32);
+  im_shape.Resize({batch, 3}, FLOAT32);
 
   int sample_shape = 3 * h * w;
   #pragma omp parallel for num_threads(thread_num)
@@ -102,8 +102,14 @@ bool DetPreProcess::PrepareInputsForRCNN(
     int shapes_num = shape_infos[i].shapes.size();
     float origin_w = static_cast<float>(shape_infos[i].shapes[0][0]);
     float origin_h = static_cast<float>(shape_infos[i].shapes[0][1]);
-    float resize_w =
-        static_cast<float>(shape_infos[shapes_num - 2].shapes[0][0]);
+    float resize_w = origin_w;
+    for (auto j = shapes_num - 1; j > 1; --j) {
+      if (shape_infos[i].transforms[j] == "Padding") {
+        continue;
+      }
+      resize_w = static_cast<float>(shape_infos[i].shapes[j][0]);
+      break;
+    }
     float scale = resize_w / origin_w;
     float im_info_data[] = {static_cast<float>(h), static_cast<float>(w),
                             scale};

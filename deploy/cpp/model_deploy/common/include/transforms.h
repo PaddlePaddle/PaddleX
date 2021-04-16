@@ -74,12 +74,6 @@ class Normalize : public Transform {
   std::vector<float> max_val_;
 };
 
-/*interp_: std::vector<int> interpolations = {
-    cv::INTER_LINEAR,
-    cv::INTER_NEAREST,
-    cv::INTER_AREA,
-    cv::INTER_CUBIC,
-    cv::INTER_LANCZOS4}*/
 class ResizeByShort : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
@@ -88,6 +82,11 @@ class ResizeByShort : public Transform {
       interp_ = item["interp"].as<int>();
     } else {
       interp_ = 1;
+    }
+    if (item["use_scale"].IsDefined()) {
+      use_scale_ = item["use_scale"].as<bool>();
+    } else {
+      use_scale_ = true;
     }
     if (item["max_size"].IsDefined()) {
       max_size_ = item["max_size"].as<int>();
@@ -105,6 +104,7 @@ class ResizeByShort : public Transform {
   int target_size_;
   int max_size_;
   int interp_;
+  bool use_scale_;
 };
 
 class ResizeByLong : public Transform {
@@ -149,6 +149,11 @@ class Resize : public Transform {
     } else {
       interp_ = 1;
     }
+    if (item["use_scale"].IsDefined()) {
+      use_scale_ = item["use_scale"].as<bool>();
+    } else {
+      use_scale_ = true;
+    }
     height_ = item["height"].as<int>();
     width_ = item["width"].as<int>();
     if (height_ <= 0 || width_ <= 0) {
@@ -166,6 +171,7 @@ class Resize : public Transform {
   int height_;
   int width_;
   int interp_;
+  bool use_scale_;
 };
 
 class BGR2RGB : public Transform {
