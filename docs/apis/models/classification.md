@@ -3,7 +3,7 @@
 ## paddlex.cls.ResNet50
 
 ```python
-paddlex.cls.ResNet50(num_classes=1000)
+paddlex.cls.ResNet50(num_classes=1000, input_channel=3)
 ```
 
 > 构建ResNet50分类器，并实现其训练、评估和预测。  
@@ -11,6 +11,7 @@ paddlex.cls.ResNet50(num_classes=1000)
 **参数**
 
 > - **num_classes** (int): 类别数。默认为1000。  
+> - **input_channel** (int): 输入图像的通道数量。默认为3。
 
 ### train
 
@@ -103,26 +104,26 @@ PaddleX提供了共计22种分类模型，所有分类模型均提供同`ResNet5
 
 | 模型              | 接口                    |
 | :---------------- | :---------------------- |
-| ResNet18          | paddlex.cls.ResNet18(num_classes=1000) |
-| ResNet34          | paddlex.cls.ResNet34(num_classes=1000) |
-| ResNet50          | paddlex.cls.ResNet50(num_classes=1000) |
-| ResNet50_vd       | paddlex.cls.ResNet50_vd(num_classes=1000) |
-| ResNet50_vd_ssld    | paddlex.cls.ResNet50_vd_ssld(num_classes=1000) |
-| ResNet101          | paddlex.cls.ResNet101(num_classes=1000) |
-| ResNet101_vd        | paddlex.cls.ResNet101_vd(num_classes=1000) |
-| ResNet101_vd_ssld      | paddlex.cls.ResNet101_vd_ssld(num_classes=1000) |
-| DarkNet53      | paddlex.cls.DarkNet53(num_classes=1000) |
-| MobileNetV1         | paddlex.cls.MobileNetV1(num_classes=1000) |
-| MobileNetV2       | paddlex.cls.MobileNetV2(num_classes=1000) |
-| MobileNetV3_small       | paddlex.cls.MobileNetV3_small(num_classes=1000) |
-| MobileNetV3_small_ssld  | paddlex.cls.MobileNetV3_small_ssld(num_classes=1000) |
-| MobileNetV3_large   | paddlex.cls.MobileNetV3_large(num_classes=1000) |
-| MobileNetV3_large_ssld | paddlex.cls.MobileNetV3_large_ssld(num_classes=1000) |
-| Xception65     | paddlex.cls.Xception65(num_classes=1000) |
-| Xception71     | paddlex.cls.Xception71(num_classes=1000) |
-| ShuffleNetV2     | paddlex.cls.ShuffleNetV2(num_classes=1000) |
-| DenseNet121      | paddlex.cls.DenseNet121(num_classes=1000) |
-| DenseNet161       | paddlex.cls.DenseNet161(num_classes=1000) |
-| DenseNet201       | paddlex.cls.DenseNet201(num_classes=1000) |
-| HRNet_W18       | paddlex.cls.HRNet_W18(num_classes=1000) |
-| AlexNet         | paddlex.cls.AlexNet(num_classes=1000) |
+| ResNet18          | paddlex.cls.ResNet18(num_classes=1000, input_channel=3) |
+| ResNet34          | paddlex.cls.ResNet34(num_classes=1000, input_channel=3) |
+| ResNet50          | paddlex.cls.ResNet50(num_classes=1000, input_channel=3) |
+| ResNet50_vd       | paddlex.cls.ResNet50_vd(num_classes=1000, input_channel=3) |
+| ResNet50_vd_ssld    | paddlex.cls.ResNet50_vd_ssld(num_classes=1000, input_channel=3) |
+| ResNet101          | paddlex.cls.ResNet101(num_classes=1000, input_channel=3) |
+| ResNet101_vd        | paddlex.cls.ResNet101_vd(num_classes=1000, input_channel=3) |
+| ResNet101_vd_ssld      | paddlex.cls.ResNet101_vd_ssld(num_classes=1000, input_channel=3) |
+| DarkNet53      | paddlex.cls.DarkNet53(num_classes=1000, input_channel=3) |
+| MobileNetV1         | paddlex.cls.MobileNetV1(num_classes=1000, input_channel=3) |
+| MobileNetV2       | paddlex.cls.MobileNetV2(num_classes=1000, input_channel=3) |
+| MobileNetV3_small       | paddlex.cls.MobileNetV3_small(num_classes=1000, input_channel=3) |
+| MobileNetV3_small_ssld  | paddlex.cls.MobileNetV3_small_ssld(num_classes=1000, input_channel=3) |
+| MobileNetV3_large   | paddlex.cls.MobileNetV3_large(num_classes=1000, input_channel=3) |
+| MobileNetV3_large_ssld | paddlex.cls.MobileNetV3_large_ssld(num_classes=1000, input_channel=3) |
+| Xception65     | paddlex.cls.Xception65(num_classes=1000, input_channel=3) |
+| Xception71     | paddlex.cls.Xception71(num_classes=1000, input_channel=3) |
+| ShuffleNetV2     | paddlex.cls.ShuffleNetV2(num_classes=1000, input_channel=3) |
+| DenseNet121      | paddlex.cls.DenseNet121(num_classes=1000, input_channel=3) |
+| DenseNet161       | paddlex.cls.DenseNet161(num_classes=1000, input_channel=3) |
+| DenseNet201       | paddlex.cls.DenseNet201(num_classes=1000, input_channel=3) |
+| HRNet_W18       | paddlex.cls.HRNet_W18(num_classes=1000, input_channel=3) |
+| AlexNet         | paddlex.cls.AlexNet(num_classes=1000, input_channel=3) |

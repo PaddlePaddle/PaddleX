@@ -22,7 +22,6 @@ import os.path as osp
 import numpy as np
 
 import cv2
-from PIL import Image, ImageEnhance
 
 from .imgaug_support import execute_imgaug
 from .ops import *
@@ -57,6 +56,8 @@ class Compose(DetTransform):
         self.transforms = transforms
         self.batch_transforms = None
         self.use_mixup = False
+        self.data_type = np.uint8
+        self.to_rgb = True
         for t in self.transforms:
             if type(t).__name__ == 'MixupImage':
                 self.use_mixup = True
@@ -110,17 +111,18 @@ class Compose(DetTransform):
             else:
                 try:
                     if input_channel == 3:
-                        im = cv2.imread(im_file).astype('float32')
+                        im = cv2.imread(im_file, cv2.IMREAD_ANYDEPTH |
+                                        cv2.IMREAD_ANYCOLOR)
                     else:
-                        im = cv2.imread(im_file,
-                                        cv2.IMREAD_UNCHANGED).astype('float32')
+                        im = cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
                         if im.ndim < 3:
                             im = np.expand_dims(im, axis=-1)
                 except:
                     raise TypeError('Can\'t read The image file {}!'.format(
                         im_file))
+            self.data_type = im.dtype
             im = im.astype('float32')
-            if input_channel == 3:
+            if input_channel == 3 and self.to_rgb:
                 im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             # make default im_info with [h, w, 1]
             im_info['im_resize_info'] = np.array(
@@ -135,7 +137,8 @@ class Compose(DetTransform):
                 im_info['mixup'] = \
                   decode_image(im_info['mixup'][0],
                                im_info['mixup'][1],
-                               im_info['mixup'][2])
+                               im_info['mixup'][2],
+                               input_channel)
             if label_info is None:
                 return (im, im_info)
             else:
@@ -151,14 +154,19 @@ class Compose(DetTransform):
             if im is None:
                 return None
             if isinstance(op, DetTransform):
+                if op.__class__.__name__ == 'RandomDistort':
+                    op.to_rgb = self.to_rgb
+                    op.data_type = self.data_type
                 outputs = op(im, im_info, label_info)
                 im = outputs[0]
             else:
+                import imgaug.augmenters as iaa
                 if im.shape[-1] != 3:
                     raise Exception(
                         "Only the 3-channel RGB image is supported in the imgaug operator, but recieved image channel is {}".
                         format(im.shape[-1]))
-                im = execute_imgaug(op, im)
+                if isinstance(op, iaa.Augmenter):
+                    im = execute_imgaug(op, im)
                 if label_info is not None:
                     outputs = (im, im_info, label_info)
                 else:
@@ -515,22 +523,37 @@ class RandomHorizontalFlip(DetTransform):
 class Normalize(DetTransform):
     """对图像进行标准化。
 
-    1. 归一化图像到到区间[0.0, 1.0]。
-    2. 对图像进行减均值除以标准差操作。
+    1.像素值减去min_val
+    2.像素值除以(max_val-min_val)
+    3.对图像进行减均值除以标准差操作。
 
     Args:
-        mean (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-        std (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+        mean (list): 图像数据集的均值。默认值[0.5, 0.5, 0.5]。
+        std (list): 图像数据集的标准差。默认值[0.5, 0.5, 0.5]。
+        min_val (list): 图像数据集的最小值。默认值[0, 0, 0]。
+        max_val (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。
 
     Raises:
         TypeError: 形参数据类型不满足需求。
     """
 
-    def __init__(self, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
+    def __init__(self,
+                 mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225],
+                 min_val=[0, 0, 0],
+                 max_val=[255.0, 255.0, 255.0]):
         self.mean = mean
         self.std = std
+        self.min_val = min_val
+        self.max_val = max_val
+
         if not (isinstance(self.mean, list) and isinstance(self.std, list)):
             raise TypeError("NormalizeImage: input type is invalid.")
+
+        if not (isinstance(self.min_val, list) and isinstance(self.max_val,
+                                                              list)):
+            raise ValueError("{}: input type is invalid.".format(self))
+
         from functools import reduce
         if reduce(lambda x, y: x * y, self.std) == 0:
             raise TypeError('NormalizeImage: std is invalid!')
@@ -549,9 +572,7 @@ class Normalize(DetTransform):
         """
         mean = np.array(self.mean)[np.newaxis, np.newaxis, :]
         std = np.array(self.std)[np.newaxis, np.newaxis, :]
-        min_val = [0] * im.shape[-1]
-        max_val = [255] * im.shape[-1]
-        im = normalize(im, mean, std, min_val, max_val)
+        im = normalize(im, mean, std, self.min_val, self.max_val)
         if label_info is None:
             return (im, im_info)
         else:
@@ -562,16 +583,27 @@ class RandomDistort(DetTransform):
     """以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作
 
     1. 对变换的操作顺序进行随机化操作。
-    2. 按照1中的顺序以一定的概率在范围[-range, range]对图像进行随机像素内容变换。
+    2. 按照1中的顺序以一定的概率对图像进行随机像素内容变换。
+
+    【注意】如果输入是uint8/uint16的RGB图像，该数据增强必须在数据增强Normalize之前使用。
 
     Args:
-        brightness_range (float): 明亮度因子的范围。默认为0.5。
+        brightness_range (float): 明亮度的缩放系数范围。
+            从[1-`brightness_range`, 1+`brightness_range`]中随机取值作为明亮度缩放因子`scale`，
+            按照公式`image = image * scale`调整图像明亮度。默认值为0.5。
         brightness_prob (float): 随机调整明亮度的概率。默认为0.5。
-        contrast_range (float): 对比度因子的范围。默认为0.5。
+        contrast_range (float): 对比度的缩放系数范围。
+            从[1-`contrast_range`, 1+`contrast_range`]中随机取值作为对比度缩放因子`scale`，
+            按照公式`image = image * scale + (image_mean + 0.5) * (1 - scale)`调整图像对比度。默认为0.5。
         contrast_prob (float): 随机调整对比度的概率。默认为0.5。
-        saturation_range (float): 饱和度因子的范围。默认为0.5。
+        saturation_range (float): 饱和度的缩放系数范围。
+            从[1-`saturation_range`, 1+`saturation_range`]中随机取值作为饱和度缩放因子`scale`，
+            按照公式`image = gray * (1 - scale) + image * scale`，
+            其中`gray = R * 299/1000 + G * 587/1000+ B * 114/1000`。默认为0.5。
         saturation_prob (float): 随机调整饱和度的概率。默认为0.5。
-        hue_range (int): 色调因子的范围。默认为18。
+        hue_range (int): 调整色相角度的差值取值范围。
+            从[-`hue_range`, `hue_range`]中随机取值作为色相角度调整差值`delta`，
+            按照公式`hue = hue + delta`调整色相角度 。默认为18，取值范围[0, 360]。
         hue_prob (float): 随机调整色调的概率。默认为0.5。
     """
 
@@ -610,6 +642,11 @@ class RandomDistort(DetTransform):
                 "Only the 3-channel RGB image is supported in the RandomDistort operator, but recieved image channel is {}".
                 format(im.shape[-1]))
 
+        if self.data_type not in [np.uint8, np.uint16, np.float32]:
+            raise Exception(
+                "Only the uint8/uint16/float32 RGB image is supported in the RandomDistort operator, but recieved image data type is {}".
+                format(self.data_type))
+
         brightness_lower = 1 - self.brightness_range
         brightness_upper = 1 + self.brightness_range
         contrast_lower = 1 - self.contrast_range
@@ -623,19 +660,21 @@ class RandomDistort(DetTransform):
         params_dict = {
             'brightness': {
                 'brightness_lower': brightness_lower,
-                'brightness_upper': brightness_upper
+                'brightness_upper': brightness_upper,
             },
             'contrast': {
                 'contrast_lower': contrast_lower,
-                'contrast_upper': contrast_upper
+                'contrast_upper': contrast_upper,
             },
             'saturation': {
                 'saturation_lower': saturation_lower,
-                'saturation_upper': saturation_upper
+                'saturation_upper': saturation_upper,
+                'is_rgb': self.to_rgb,
             },
             'hue': {
                 'hue_lower': hue_lower,
-                'hue_upper': hue_upper
+                'hue_upper': hue_upper,
+                'is_rgb': self.to_rgb,
             }
         }
         prob_dict = {

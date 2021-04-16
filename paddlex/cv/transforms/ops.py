@@ -120,7 +120,13 @@ def bgr2rgb(im):
     return im[:, :, ::-1]
 
 
-def hue(im, hue_lower, hue_upper):
+def rgb2bgr(im):
+    return im[:, :, ::-1]
+
+
+def hue(im, hue_lower, hue_upper, is_rgb=False):
+    if not is_rgb:
+        im = bgr2rgb(im)
     delta = np.random.uniform(hue_lower, hue_upper)
     u = np.cos(delta * np.pi)
     w = np.sin(delta * np.pi)
@@ -131,12 +137,19 @@ def hue(im, hue_lower, hue_upper):
                       [1.0, -1.107, 1.705]])
     t = np.dot(np.dot(ityiq, bt), tyiq).T
     im = np.dot(im, t)
+    if not is_rgb:
+        im = rgb2bgr(im)
+
     return im
 
 
-def saturation(im, saturation_lower, saturation_upper):
+def saturation(im, saturation_lower, saturation_upper, is_rgb=False):
+    if is_rgb:
+        gray_scale = np.array([[[0.299, 0.587, 0.114]]], dtype=np.float32)
+    else:
+        gray_scale = np.array([[[0.114, 0.587, 0.299]]], dtype=np.float32)
     delta = np.random.uniform(saturation_lower, saturation_upper)
-    gray = im * np.array([[[0.299, 0.587, 0.114]]], dtype=np.float32)
+    gray = im * gray_scale
     gray = gray.sum(axis=2, keepdims=True)
     gray *= (1.0 - delta)
     im *= delta
@@ -146,13 +159,17 @@ def saturation(im, saturation_lower, saturation_upper):
 
 def contrast(im, contrast_lower, contrast_upper):
     delta = np.random.uniform(contrast_lower, contrast_upper)
+    im_mean = im.mean()
+    im1 = np.full_like(im, im_mean)
     im *= delta
+    im += im1 * (1 - delta)
     return im
 
 
 def brightness(im, brightness_lower, brightness_upper):
     delta = np.random.uniform(brightness_lower, brightness_upper)
-    im += delta
+    im *= delta
+
     return im
 
 
