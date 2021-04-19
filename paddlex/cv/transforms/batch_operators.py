@@ -21,7 +21,7 @@ try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
-from .operators import Transform, Resize, _Permute
+from .operators import Transform, Resize, ResizeByShort, _Permute
 from .box_utils import jaccard_overlap
 
 MAIN_PID = os.getpid()
@@ -83,12 +83,13 @@ class BatchRandomResize(Transform):
 
     def __call__(self, samples):
         height, width = random.choice(self.target_size)
-
-        resizer = Resize(
-            height=height,
-            width=width,
-            keep_ratio=self.keep_ratio,
-            interp=self.interp)
+        if self.keep_ratio:
+            resizer = ResizeByShort(
+                short_size=min(height, width),
+                max_size=max(height, width),
+                interp=self.interp)
+        else:
+            resizer = Resize(height=height, width=width, interp=self.interp)
         samples = resizer(samples)
 
         return samples

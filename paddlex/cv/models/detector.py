@@ -17,6 +17,7 @@ from __future__ import absolute_import
 import collections
 import os.path as osp
 import math
+import numpy as np
 import paddle
 from paddle.io import DistributedBatchSampler
 import paddlex
@@ -100,12 +101,15 @@ class BaseDetector(BaseModel):
         return loader
 
     def run(self, net, inputs, mode):
-        if mode == 'train':
-            outputs = net(inputs)
-        elif mode == 'eval':
-            outputs = net(inputs)
+        net_out = net(inputs)
+        if mode in ['train', 'eval']:
+            outputs = net_out
         else:
-            pass
+            for key in ['im_shape', 'scale_factor', 'im_id']:
+                net_out[key] = inputs[key]
+            outputs = dict()
+            for key in net_out:
+                outputs[key] = net_out[key].numpy()
 
         return outputs
 
@@ -247,6 +251,81 @@ class BaseDetector(BaseModel):
                     scores.update(metric.get())
                     metric.reset()
             return scores
+
+    def predict(self, img_file, transforms=None):
+        if transforms is None and not hasattr(self, 'test_transforms'):
+            raise Exception("transforms need to be defined, now is None.")
+        if transforms is None:
+            transforms = self.test_transforms
+        if isinstance(img_file, (str, np.ndarray)):
+            images = [img_file]
+        else:
+            images = img_file
+        batch_samples = BaseDetector._preprocess(images, transforms,
+                                                 self.model_type)
+        self.net.eval()
+        outputs = self.run(self.net, batch_samples, 'test')
+        pred = BaseDetector._postprocess(outputs)
+
+        return pred
+
+    @staticmethod
+    def _preprocess(images, transforms, model_type):
+        arrange_transforms(
+            model_type=model_type, transforms=transforms, mode='test')
+        batch_samples = list()
+        for ct, im in enumerate(images):
+            sample = {'im_id': np.array([ct]), 'image': im}
+            batch_samples.append(transforms(sample))
+        batch_transforms = BatchCompose([_Permute()])
+        batch_samples = batch_transforms(batch_samples)
+        batch_samples = [paddle.to_tensor(item) for item in batch_samples]
+        batch_samples = {
+            k: v
+            for k, v in zip(batch_transforms.output_fields, batch_samples)
+        }
+        return batch_samples
+
+    @staticmethod
+    def _postprocess(batch_pred):
+        if 'bbox' in batch_pred:
+            bboxes = batch_pred['bbox']
+            bbox_nums = batch_pred['bbox_num']
+            image_id = batch_pred['im_id']
+            det_res = []
+            k = 0
+            for i in range(len(bbox_nums)):
+                cur_image_id = int(image_id[i][0])
+                det_nums = bbox_nums[i]
+                for j in range(det_nums):
+                    dt = bboxes[k]
+                    k = k + 1
+                    num_id, score, xmin, ymin, xmax, ymax = dt.tolist()
+                    if int(num_id) < 0:
+                        continue
+                    category_id = int(num_id)
+                    w = xmax - xmin
+                    h = ymax - ymin
+                    bbox = [xmin, ymin, w, h]
+                    dt_res = {
+                        'category_id': category_id,
+                        'bbox': bbox,
+                        'score': score
+                    }
+                    det_res.append(dt_res)
+            batch_pred['bbox'] = det_res
+
+        result = dict()
+        bbox_num = batch_pred['bbox_num']
+        start = 0
+        for i, im_id in enumerate(batch_pred['im_id']):
+            end = start + bbox_num[i]
+            if 'bbox' in batch_pred:
+                bbox_res = batch_pred['bbox'][start:end]
+            result[int(im_id)] = bbox_res
+            start = end
+
+        return result
 
 
 class YOLOv3(BaseDetector):
