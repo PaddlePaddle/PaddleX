@@ -62,11 +62,16 @@ class BaseDetector(BaseModel):
         if backbone_name == 'MobileNetV1':
             backbone = backbones.MobileNet()
         elif backbone_name == 'MobileNetV3':
-            backbone = backbones.MobileNetV3()
+            backbone = backbones.MobileNetV3(feature_maps=[7, 13, 16])
         elif backbone_name == 'DarkNet53':
             backbone = backbones.DarkNet()
         elif backbone_name == 'ResNet50_vd':
-            backbone = backbones.ResNet(variant='d')
+            backbone = backbones.ResNet(
+                variant='d',
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
+                freeze_at=-1,
+                freeze_norm=False)
         else:
             raise ValueError("There is no backbone for {} named {}".format(
                 self.__class__.__name__, backbone_name))
