@@ -24,7 +24,7 @@ from paddlex.utils import get_single_card_bs
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
-from .utils import pretrain_weights_dict
+from .utils import seg_pretrain_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 from paddlex.cv.transforms import Decode
 
@@ -162,15 +162,18 @@ class BaseSegmenter(BaseModel):
         else:
             self.optimizer = optimizer
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
-            if pretrain_weights not in pretrain_weights_dict[self.model_name]:
+            if pretrain_weights not in seg_pretrain_weights_dict[
+                    self.model_name]:
                 logging.warning(
                     "Path of pretrain_weights('{}') does not exist!".format(
                         pretrain_weights))
                 logging.warning("Pretrain_weights is forcibly set to '{}'. "
                                 "If don't want to use pretrain weights, "
                                 "set pretrain_weights to be None.".format(
-                                    pretrain_weights_dict[self.model_name][0]))
-                pretrain_weights = pretrain_weights_dict[self.model_name][0]
+                                    seg_pretrain_weights_dict[self.model_name][
+                                        0]))
+                pretrain_weights = seg_pretrain_weights_dict[self.model_name][
+                    0]
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrain_weights=pretrain_weights, save_dir=pretrained_dir)

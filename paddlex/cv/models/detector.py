@@ -61,6 +61,12 @@ class BaseDetector(BaseModel):
     def _get_backbone(self, backbone_name):
         if backbone_name == 'MobileNetV1':
             backbone = backbones.MobileNet()
+        elif backbone_name == 'MobileNetV3':
+            backbone = backbones.MobileNetV3()
+        elif backbone_name == 'DarkNet53':
+            backbone = backbones.DarkNet()
+        elif backbone_name == 'ResNet50_vd':
+            backbone = backbones.ResNet(variant='d')
         else:
             raise ValueError("There is no backbone for {} named {}".format(
                 self.__class__.__name__, backbone_name))
@@ -341,10 +347,13 @@ class YOLOv3(BaseDetector):
                  nms_iou_threshold=0.45,
                  label_smooth=False):
         self.init_params = locals()
-        if backbone not in ['MobileNetV1']:
+        if backbone not in [
+                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd'
+        ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1')".format(backbone))
+                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd')".
+                format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
             self.sync_bn = True
