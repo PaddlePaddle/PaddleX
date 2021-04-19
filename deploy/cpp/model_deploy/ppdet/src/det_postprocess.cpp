@@ -54,8 +54,9 @@ bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
       Box box;
       box.category_id = static_cast<int>(round(data[idx * 6]));
       if (box.category_id < 0) {
-        std::cerr << "Compute category id is less than 0" << std::endl;
-        return false;
+        std::cerr << "Compute category id is less than 0"
+                  << "(Maybe no object detected)" << std::endl;
+        return true;
       }
       if (box.category_id >= labels_.size()) {
         std::cerr << "Compute category id is greater than labels "
