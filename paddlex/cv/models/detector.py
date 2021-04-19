@@ -22,9 +22,10 @@ import paddle
 from paddle.io import DistributedBatchSampler
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.nets.ppdet.modeling import architectures, backbones, necks, heads, losses
+from paddlex.cv.nets.ppdet.modeling import architectures, backbones, necks, heads, losses, proposal_generator
+from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner
 from paddlex.cv.nets.ppdet.modeling.post_process import *
-from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS
+from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget, _Permute
@@ -50,7 +51,7 @@ class BaseDetector(BaseModel):
 
     def build_net(self, **params):
         net = architectures.__dict__[self.model_name](**params)
-        if getattr(self, 'sync_bn', False):
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
             net = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(net)
         test_inputs = [
             paddle.static.InputSpec(
@@ -58,20 +59,15 @@ class BaseDetector(BaseModel):
         ]
         return net, test_inputs
 
-    def _get_backbone(self, backbone_name):
+    def _get_backbone(self, backbone_name, **params):
         if backbone_name == 'MobileNetV1':
-            backbone = backbones.MobileNet()
+            backbone = backbones.MobileNet(**params)
         elif backbone_name == 'MobileNetV3':
-            backbone = backbones.MobileNetV3(feature_maps=[7, 13, 16])
+            backbone = backbones.MobileNetV3(**params)
         elif backbone_name == 'DarkNet53':
-            backbone = backbones.DarkNet()
+            backbone = backbones.DarkNet(**params)
         elif backbone_name == 'ResNet50_vd':
-            backbone = backbones.ResNet(
-                variant='d',
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
-                freeze_at=-1,
-                freeze_norm=False)
+            backbone = backbones.ResNet(**params)
         else:
             raise ValueError("There is no backbone for {} named {}".format(
                 self.__class__.__name__, backbone_name))
@@ -361,13 +357,30 @@ class YOLOv3(BaseDetector):
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
-            self.sync_bn = True
+            norm_type = 'sync_bn'
         else:
-            self.sync_bn = False
+            norm_type = 'bn'
 
         self.backbone_name = backbone
-        backbone = self._get_backbone(backbone)
-        neck = necks.YOLOv3FPN()
+        if backbone == 'MobileNetV1':
+            norm_type = 'bn'
+            backbone = self._get_backbone(backbone, norm_type=norm_type)
+        elif backbone == 'MobileNetV3':
+            backbone = self._get_backbone(
+                backbone, norm_type=norm_type, feature_maps=[7, 13, 16])
+        elif backbone == 'ResNet50_vd':
+            backbone = self._get_backbone(
+                backbone,
+                norm_type=norm_type,
+                variant='d',
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
+                freeze_at=-1,
+                freeze_norm=False)
+        else:
+            backbone = self._get_backbone(backbone, norm_type=norm_type)
+
+        neck = necks.YOLOv3FPN(norm_type=norm_type)
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
@@ -416,3 +429,138 @@ class YOLOv3(BaseDetector):
                 break
 
         dataset.batch_transforms = BatchCompose(batch_transforms)
+
+
+class FasterRCNN(BaseDetector):
+    def __init__(self,
+                 num_classes=80,
+                 backbone='ResNet50',
+                 with_fpn=True,
+                 aspect_ratios=[0.5, 1.0, 2.0],
+                 anchor_sizes=[32, 64, 128, 256, 512],
+                 keep_top_k=100,
+                 nms_threshold=0.5,
+                 score_threshold=0.05,
+                 fpn_num_channels=256,
+                 rpn_batch_size_per_im=256,
+                 rpn_fg_fraction=0.5,
+                 test_pre_nms_top_n=None,
+                 test_post_nms_top_n=1000):
+        self.init_params = locals()
+        if backbone not in ['ResNet50']:
+            raise ValueError(
+                "backbone: {} is not supported. Please choose one of "
+                "('ResNet50')".format(backbone))
+
+        self.backbone_name = backbone
+        if backbone == 'ResNet50':
+            if with_fpn:
+                backbone = self._get_backbone(
+                    backbone,
+                    freeze_at=0,
+                    return_idx=[0, 1, 2, 3],
+                    num_stages=4)
+            else:
+                backbone = self._get_backbone(
+                    backbone, freeze_at=0, return_idx=[2], num_stages=3)
+        else:
+            backbone = self._get_backbone(backbone)
+
+        if with_fpn:
+            neck = necks.FPN(in_channels=backbone._out_channels,
+                             out_channel=[fpn_num_channels])
+            anchor_generator_cfg = {
+                'aspect_ratios': aspect_ratios,
+                'anchor_sizes': anchor_sizes,
+                'strides': [4, 8, 16, 32, 64]
+            }
+            train_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 2000,
+                'post_nms_top_n': 1000,
+                'topk_after_collect': True
+            }
+            test_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 1000
+                if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                'post_nms_top_n': test_post_nms_top_n
+            }
+            head = heads.TwoFCHead(out_channel=1024)
+            roi_extractor_cfg = {
+                'resolution': 7,
+                'sampling_ratio': 0,
+                'aligned': True
+            }
+            with_pool = False
+
+        else:
+            neck = None
+            anchor_generator_cfg = {
+                'aspect_ratios': aspect_ratios,
+                'anchor_sizes': anchor_sizes,
+                'strides': [16]
+            }
+            train_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 12000,
+                'post_nms_top_n': 2000,
+                'topk_after_collect': False
+            }
+            test_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 6000
+                if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                'post_nms_top_n': test_post_nms_top_n
+            }
+            head = backbones.Res5Head()
+            roi_extractor_cfg = {
+                'resolution': 14,
+                'sampling_ratio': 0,
+                'aligned': True
+            }
+            with_pool = True
+
+        rpn_target_assign_cfg = {
+            'batch_size_per_im': rpn_batch_size_per_im,
+            'fg_fraction': rpn_fg_fraction,
+            'negative_overlap': .3,
+            'positive_overlap': .7,
+            'use_random': True
+        }
+
+        rpn_head = proposal_generator.RPNHead(
+            anchor_generator=anchor_generator_cfg,
+            rpn_target_assign=rpn_target_assign_cfg,
+            train_proposal=train_proposal_cfg,
+            test_proposal=test_proposal_cfg)
+
+        bbox_assigner = BBoxAssigner(num_classes=num_classes)
+
+        bbox_head = heads.BBoxHead(
+            head=head,
+            roi_extractor=roi_extractor_cfg,
+            with_pool=with_pool,
+            bbox_assigner=bbox_assigner)
+
+        bbox_post_process = BBoxPostProcess(
+            num_classes=num_classes,
+            decode=RCNNBox(num_classes=num_classes),
+            nms=MultiClassNMS(
+                score_threshold=score_threshold,
+                keep_top_k=keep_top_k,
+                nms_threshold=nms_threshold))
+
+        params = {
+            'backbone': backbone,
+            'neck': neck,
+            'rpn_head': rpn_head,
+            'bbox_head': bbox_head,
+            'bbox_post_process': bbox_post_process
+        }
+        super(FasterRCNN, self).__init__(
+            model_name='FasterRCNN', num_classes=num_classes, **params)
