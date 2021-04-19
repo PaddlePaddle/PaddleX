@@ -31,21 +31,18 @@
 
 namespace PaddleDeploy {
 
-class DetPostProcess : public BasePostProcess {
+class SegPostProcess : public BasePostProcess {
  public:
-  bool Init(const YAML::Node& yaml_config, bool use_cpu_nms = false);
+  bool Init(const YAML::Node& yaml_config);
 
-  virtual bool ProcessBbox(const std::vector<DataBlob>& outputs,
-                           const std::vector<ShapeInfo>& shape_infos,
-                           std::vector<Result>* results, int thread_num = 1);
+  void RestoreResult(const float* data,
+                     const std::vector<int>& shape,
+                     const ShapeInfo& shape_info,
+                     SegResult* result);
 
   virtual bool Run(const std::vector<DataBlob>& outputs,
                    const std::vector<ShapeInfo>& shape_infos,
                    std::vector<Result>* results, int thread_num = 1);
-
- private:
-  std::string model_arch_;
-  std::vector<std::string> labels_;
 };
 
 }  // namespace PaddleDeploy

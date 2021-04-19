@@ -81,15 +81,49 @@ struct ShapeInfo {
   }
 };
 
+template<typename T>
+void cal_mean_std(const std::vector<T>& values, double* mean, double* std) {
+  *mean = 0;
+  *std = 0;
+  for (auto i = 0; i < values.size(); ++i) {
+    (*mean) += static_cast<double>(values[i]);
+  }
+  (*mean) = (*mean) / static_cast<double>(values.size());
+
+  if (values.size() < 2) {
+    *std = 0.0;
+  } else {
+    double tmp = 0.0;
+    for (auto i = 0; i < values.size(); ++i) {
+      tmp += (values[i] - (*mean)) * (values[i] - (*mean));
+    }
+    *std = tmp / (values.size() - 1);
+  }
+}
+
 template <class T>
 struct Mask {
   // raw data of mask
   std::vector<T> data;
   // the shape of mask
   std::vector<int> shape;
-  void clear() {
+  void Resize(const std::vector<int>& new_shape) {
+    int total_size = std::accumulate(new_shape.begin(),
+                new_shape.end(), 1, std::multiplies<int>());
+    data.resize(total_size);
+    shape.clear();
+    shape.assign(new_shape.begin(), new_shape.end());
+  }
+  void Clear() {
     data.clear();
     shape.clear();
+  }
+  friend std::ostream &operator<<(std::ostream & stream, const Mask<T>& mask) {
+    double m;
+    double d;
+    cal_mean_std<T>(mask.data, &m, &d);
+    stream << "Mask(mean:\t" << m << "\tstd:\t" << d << ")";
+    return stream;
   }
 };
 
@@ -155,9 +189,13 @@ struct OcrResult {
 
 struct SegResult {
   // represent label of each pixel on image matrix
-  Mask<int64_t> label_map;
+  Mask<uint8_t> label_map;
   // represent score of each pixel on image matrix
   Mask<float> score_map;
+  friend std::ostream &operator<<(std::ostream & stream, const SegResult& s) {
+    stream << "Score" << s.score_map << "\tLabel" << s.label_map;
+    return stream;
+  }
 };
 
 struct Result {
@@ -191,6 +229,8 @@ struct Result {
       } else {
         stream << *(r.clas_result);
       }
+    } else if ("seg" == r.model_type) {
+      stream << *(r.seg_result);
     } else {
       stream << "Result is not support to print";
     }

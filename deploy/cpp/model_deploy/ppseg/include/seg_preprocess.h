@@ -13,33 +13,26 @@
 // limitations under the License.
 #pragma once
 
-#include <iostream>
 #include <string>
+#include <vector>
 
 #include "yaml-cpp/yaml.h"
 
-#include "model_deploy/common/include/base_model.h"
-#include "model_deploy/ppdet/include/det_postprocess.h"
-#include "model_deploy/ppdet/include/det_preprocess.h"
-
+#include "model_deploy/common/include/base_preprocess.h"
+#include "model_deploy/common/include/output_struct.h"
 
 namespace PaddleDeploy {
-class DetModel : public Model {
- private:
-  const std::string model_type;
-
+class SegPreProcess : public BasePreProcess {
  public:
-  explicit DetModel(const std::string model_type) : model_type(model_type) {
-    std::cerr << "init DetModel,model_type=" << model_type << std::endl;
-  }
+  bool Init(const YAML::Node &yaml_config);
 
-  bool GenerateTransformsConfig(const YAML::Node &node);
-
-  bool YamlConfigInit(const std::string &cfg_file);
-
-  bool PreProcessInit();
-
-  bool PostProcessInit(bool use_cpu_nms);
+  virtual bool PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
+                             std::vector<cv::Mat>* imgs,
+                             std::vector<DataBlob>* inputs,
+                             int thread_num = 1);
+  virtual bool Run(std::vector<cv::Mat>* imgs,
+                   std::vector<DataBlob>* inputs,
+                   std::vector<ShapeInfo>* shape_info,
+                   int thread_num = 1);
 };
-
 }  // namespace PaddleDeploy

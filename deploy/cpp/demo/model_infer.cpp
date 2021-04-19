@@ -31,7 +31,6 @@ DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of infering");
 DEFINE_string(toolkit, "det", "Type of PaddleToolKit");
-DEFINE_bool(use_cpu_nms, false, "whether postprocess with NMS");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -51,7 +50,7 @@ int main(int argc, char** argv) {
   std::cout << "start model init " << std::endl;
 
   // model init
-  model->Init(FLAGS_cfg_file, FLAGS_use_cpu_nms);
+  model->Init(FLAGS_cfg_file);
   std::cout << "start engine init " << std::endl;
 
   // inference engine in

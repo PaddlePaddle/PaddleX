@@ -20,6 +20,7 @@
 
 #include "model_deploy/common/include/base_model.h"
 #include "model_deploy/ppdet/include/det_model.h"
+#include "model_deploy/ppseg/include/seg_model.h"
 
 namespace PaddleDeploy {
 

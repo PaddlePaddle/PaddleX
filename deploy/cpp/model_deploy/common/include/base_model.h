@@ -48,10 +48,10 @@ class Model {
   // Init model_type.
   explicit Model(const std::string model_type) : model_type_(model_type) {}
 
-  virtual bool Init(const std::string& cfg_file, bool use_cpu_nms) {
+  virtual bool Init(const std::string& cfg_file) {
     if (!YamlConfigInit(cfg_file)) return false;
     if (!PreProcessInit()) return false;
-    if (!PostProcessInit(use_cpu_nms)) return false;
+    if (!PostProcessInit()) return false;
     return true;
   }
 
@@ -71,7 +71,7 @@ class Model {
                         bool use_gpu = false, int gpu_id = 0,
                         bool use_mkl = true);
 
-  virtual bool PostProcessInit(bool use_cpu_nms) {
+  virtual bool PostProcessInit() {
     postprocess_ = nullptr;
     std::cerr << "model no PostProcess!" << std::endl;
     return false;
