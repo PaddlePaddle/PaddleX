@@ -72,15 +72,15 @@ class BatchPadding(Transform):
         max_shape = np.array([data['image'].shape for data in samples]).max(
             axis=0)
         if coarsest_stride > 0:
+            max_shape[0] = int(
+                np.ceil(max_shape[0] / coarsest_stride) * coarsest_stride)
             max_shape[1] = int(
                 np.ceil(max_shape[1] / coarsest_stride) * coarsest_stride)
-            max_shape[2] = int(
-                np.ceil(max_shape[2] / coarsest_stride) * coarsest_stride)
         for data in samples:
             im = data['image']
-            im_c, im_h, im_w = im.shape[:]
+            im_h, im_w, im_c = im.shape[:]
             padding_im = np.zeros(
-                (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
+                (max_shape[0], max_shape[1], im_c), dtype=np.float32)
             padding_im[:im_h, :im_w, :] = im
             data['image'] = padding_im
 
