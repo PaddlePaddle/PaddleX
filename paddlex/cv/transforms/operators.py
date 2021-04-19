@@ -25,9 +25,9 @@ from numbers import Number
 from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop
 
 __all__ = [
-    "Compose", "Decode", "Resize", "ResizeByShort", "RandomHorizontalFlip",
-    "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
-    "RandomExpand", "Padding", "MixupImage", "RandomDistort",
+    "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
+    "RandomHorizontalFlip", "RandomVerticalFlip", "Normalize", "CenterCrop",
+    "RandomCrop", "RandomExpand", "Padding", "MixupImage", "RandomDistort",
     "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector"
 ]
 

@@ -423,11 +423,15 @@ class YOLOv3(BaseDetector):
         else:
             return
 
+        custom_batch_transform = []
         for i, op in enumerate(dataset.transforms.transforms):
             if isinstance(op, BatchRandomResize):
-                batch_transforms.insert(0,
-                                        dataset.transforms.transforms.pop(i))
-                break
+                custom_batch_transform.insert(
+                    0, dataset.transforms.transforms.pop(i))
+            elif isinstance(op, BatchPadding):
+                custom_batch_transform.insert(
+                    -1, dataset.transforms.transforms.pop(i))
+        batch_transforms = custom_batch_transform + batch_transforms
 
         dataset.batch_transforms = BatchCompose(batch_transforms)
 
@@ -584,10 +588,14 @@ class FasterRCNN(BaseDetector):
         else:
             return
 
+        custom_batch_transform = []
         for i, op in enumerate(dataset.transforms.transforms):
             if isinstance(op, BatchRandomResize):
-                batch_transforms.insert(0,
-                                        dataset.transforms.transforms.pop(i))
-                break
+                custom_batch_transform.insert(
+                    0, dataset.transforms.transforms.pop(i))
+            elif isinstance(op, BatchPadding):
+                custom_batch_transform.insert(
+                    -1, dataset.transforms.transforms.pop(i))
+        batch_transforms = custom_batch_transform + batch_transforms
 
         dataset.batch_transforms = BatchCompose(batch_transforms)
