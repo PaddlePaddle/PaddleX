@@ -34,6 +34,8 @@ from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric
 
+__all__ = ["YOLOv3", "FasterRCNN"]
+
 
 class BaseDetector(BaseModel):
     def __init__(self, model_name, num_classes=80, **params):
