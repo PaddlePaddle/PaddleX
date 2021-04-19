@@ -16,19 +16,16 @@ from __future__ import absolute_import
 
 import collections
 import os.path as osp
-import math
-import numpy as np
-import paddle
 from paddle.io import DistributedBatchSampler
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.nets.ppdet.modeling import architectures, backbones, necks, heads, losses, proposal_generator
 from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner
+from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget, _Permute
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchPadding, _Gt2YoloTarget, _Permute
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
@@ -69,6 +66,8 @@ class BaseDetector(BaseModel):
         elif backbone_name == 'DarkNet53':
             backbone = backbones.DarkNet(**params)
         elif backbone_name == 'ResNet50_vd':
+            backbone = backbones.ResNet(**params)
+        elif backbone_name == 'ResNet50':
             backbone = backbones.ResNet(**params)
         else:
             raise ValueError("There is no backbone for {} named {}".format(
@@ -468,9 +467,14 @@ class FasterRCNN(BaseDetector):
         else:
             backbone = self._get_backbone(backbone)
 
+        rpn_in_channel = backbone.out_shape[0].channels
+
         if with_fpn:
-            neck = necks.FPN(in_channels=backbone._out_channels,
-                             out_channel=[fpn_num_channels])
+            neck = necks.FPN(
+                in_channels=[i.channels for i in backbone.out_shape],
+                out_channel=fpn_num_channels,
+                spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
+            rpn_in_channel = neck.out_shape[0].channels
             anchor_generator_cfg = {
                 'aspect_ratios': aspect_ratios,
                 'anchor_sizes': anchor_sizes,
@@ -535,16 +539,18 @@ class FasterRCNN(BaseDetector):
             'use_random': True
         }
 
-        rpn_head = proposal_generator.RPNHead(
+        rpn_head = RPNHead(
             anchor_generator=anchor_generator_cfg,
             rpn_target_assign=rpn_target_assign_cfg,
             train_proposal=train_proposal_cfg,
-            test_proposal=test_proposal_cfg)
+            test_proposal=test_proposal_cfg,
+            in_channel=rpn_in_channel)
 
         bbox_assigner = BBoxAssigner(num_classes=num_classes)
 
         bbox_head = heads.BBoxHead(
             head=head,
+            in_channel=head.out_shape[0].channels,
             roi_extractor=roi_extractor_cfg,
             with_pool=with_pool,
             bbox_assigner=bbox_assigner)
@@ -566,3 +572,22 @@ class FasterRCNN(BaseDetector):
         }
         super(FasterRCNN, self).__init__(
             model_name='FasterRCNN', num_classes=num_classes, **params)
+
+    def _arrange_batch_transform(self, dataset, mode='train'):
+        if mode == 'train':
+            batch_transforms = [
+                BatchPadding(
+                    pad_to_stride=32, pad_gt=True), _Permute()
+            ]
+        elif mode == 'eval':
+            batch_transforms = [BatchPadding(pad_to_stride=-1., pad_gt=False)]
+        else:
+            return
+
+        for i, op in enumerate(dataset.transforms.transforms):
+            if isinstance(op, BatchRandomResize):
+                batch_transforms.insert(0,
+                                        dataset.transforms.transforms.pop(i))
+                break
+
+        dataset.batch_transforms = BatchCompose(batch_transforms)

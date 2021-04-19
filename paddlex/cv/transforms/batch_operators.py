@@ -61,6 +61,48 @@ class BatchCompose(Transform):
         return samples
 
 
+class BatchPadding(Transform):
+    def __init__(self, pad_to_stride=0, pad_gt=False):
+        super(BatchPadding, self).__init__()
+        self.pad_to_stride = pad_to_stride
+        self.pad_gt = pad_gt
+
+    def __call__(self, samples):
+        coarsest_stride = self.pad_to_stride
+        max_shape = np.array([data['image'].shape for data in samples]).max(
+            axis=0)
+        if coarsest_stride > 0:
+            max_shape[1] = int(
+                np.ceil(max_shape[1] / coarsest_stride) * coarsest_stride)
+            max_shape[2] = int(
+                np.ceil(max_shape[2] / coarsest_stride) * coarsest_stride)
+        for data in samples:
+            im = data['image']
+            im_c, im_h, im_w = im.shape[:]
+            padding_im = np.zeros(
+                (im_c, max_shape[1], max_shape[2]), dtype=np.float32)
+            padding_im[:im_h, :im_w, :] = im
+            data['image'] = padding_im
+
+        if self.pad_gt:
+            gt_num = []
+            for data in samples:
+                gt_num.append(data['gt_bbox'].shape[0])
+            gt_num_max = max(gt_num)
+            for i, data in enumerate(samples):
+                gt_box_data = -np.ones([gt_num_max, 4], dtype=np.float32)
+                gt_class_data = -np.ones([gt_num_max], dtype=np.int32)
+
+                gt_num = data['gt_bbox'].shape[0]
+                gt_box_data[0:gt_num, :] = data['gt_bbox']
+                gt_class_data[0:gt_num] = np.squeeze(data['gt_class'])
+
+                data['gt_bbox'] = gt_box_data
+                data['gt_class'] = gt_class_data
+
+        return samples
+
+
 class BatchRandomResize(Transform):
     """
     Resize image to target size randomly. random target_size and interpolation method

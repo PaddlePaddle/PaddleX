@@ -216,6 +216,25 @@ class Resize(Transform):
         return sample
 
 
+class RandomResize(Transform):
+    def __init__(self, target_size, interp=cv2.INTER_LINEAR):
+        super(RandomResize, self).__init__()
+        self.interp = interp
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
+        self.target_size = target_size
+
+    def apply(self, sample):
+        height, width = random.choice(self.target_size)
+        resizer = Resize(height=height, width=width, interp=self.interp)
+        sample = resizer(sample)
+
+        return sample
+
+
 class ResizeByShort(Transform):
     def __init__(self, short_size=256, max_size=-1, interp=cv2.INTER_LINEAR):
         super(ResizeByShort, self).__init__()
