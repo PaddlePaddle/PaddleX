@@ -12,66 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "model_deploy/ppdet/include/det_model.h"
+#include "model_deploy/ppdet/include/det_standard_config.h"
 
 namespace PaddleDeploy {
 
-bool DetModel::DetParserTransforms(const YAML::Node& preprocess_op) {
-  if (!preprocess_op["type"].IsDefined()) {
-    std::cerr << "preprocess no type" << std::endl;
-    return false;
-  }
-
-  std::string preprocess_op_type = preprocess_op["type"].as<std::string>();
-  if (preprocess_op_type == "Normalize") {
-    yaml_config_["transforms"]["Convert"]["dtype"] = "float";
-    std::vector<float> mean =
-        preprocess_op["mean"].as<std::vector<float>>();
-    std::vector<float> std_value =
-        preprocess_op["std"].as<std::vector<float>>();
-    yaml_config_["transforms"]["Normalize"]["is_scale"] =
-        preprocess_op["is_scale"].as<bool>();
-    for (int i = 0; i < mean.size(); i++) {
-      yaml_config_["transforms"]["Normalize"]["mean"].push_back(mean[i]);
-      yaml_config_["transforms"]["Normalize"]["std"].push_back(std_value[i]);
-      yaml_config_["transforms"]["Normalize"]["min_val"].push_back(0);
-      yaml_config_["transforms"]["Normalize"]["max_val"].push_back(255);
-    }
-  } else if (preprocess_op_type == "Permute") {
-    yaml_config_["transforms"]["Permute"]["is_permute"] = true;
-    if (preprocess_op["to_bgr"].as<bool>() == true) {
-      yaml_config_["transforms"]["RGB2BGR"]["is_rgb2bgr"] = true;
-    }
-  } else if (preprocess_op_type == "Resize") {
-    int max_size = preprocess_op["max_size"].as<int>();
-    if (max_size != 0 && (
-        yaml_config_["model_name"].as<std::string>() == "RCNN" ||
-        yaml_config_["model_name"].as<std::string>() == "RetinaNet")) {
-      yaml_config_["transforms"]["ResizeByShort"]["target_size"] =
-          preprocess_op["target_size"].as<int>();
-      yaml_config_["transforms"]["ResizeByShort"]["max_size"] = max_size;
-      yaml_config_["transforms"]["ResizeByShort"]["interp"] =
-          preprocess_op["interp"].as<int>();
-      if (preprocess_op["image_shape"].IsDefined()) {
-        yaml_config_["transforms"]["Padding"]["width"] = max_size;
-        yaml_config_["transforms"]["Padding"]["height"] = max_size;
-      }
+bool DetModel::GenerateTransformsConfig(const YAML::Node& src) {
+  assert(src["Preprocess"].IsDefined());
+  assert(src["arch"].IsDefined());
+  std::string model_arch = src["arch"].as<std::string>();
+//  yaml_config_["transforms"]["BGR2RGB"]["null"] = true;
+  for (const auto& op : src["Preprocess"]) {
+    assert(op["type"].IsDefined());
+    std::string op_name = op["type"].as<std::string>();
+    if (op_name == "Normalize") {
+      DetNormalize(op, &yaml_config_);
+    } else if (op_name == "Permute") {
+      DetPermute(op, &yaml_config_);
+    } else if (op_name == "Resize") {
+      DetResize(op, &yaml_config_, model_arch);
+    } else if (op_name == "PadStride") {
+      DetPadStride(op, &yaml_config_);
     } else {
-      yaml_config_["transforms"]["Resize"]["width"] =
-          preprocess_op["target_size"].as<int>();
-      yaml_config_["transforms"]["Resize"]["height"] =
-          preprocess_op["target_size"].as<int>();
-      yaml_config_["transforms"]["Resize"]["interp"] =
-          preprocess_op["interp"].as<int>();
-      yaml_config_["transforms"]["Resize"]["max_size"] = max_size;
-      yaml_config_["transforms"]["Resize"]["use_scale"] = false;
+      std::cerr << "Unexpected transforms op name: '"
+                << op_name << "'" << std::endl;
+      return false;
     }
-  } else if (preprocess_op_type == "PadStride") {
-    yaml_config_["transforms"]["Padding"]["stride"] =
-        preprocess_op["stride"].as<int>();
-  } else {
-    std::cerr << preprocess_op["type"].as<std::string>()
-              << " :Can't parser" << std::endl;
-    return false;
   }
   return true;
 }
@@ -100,28 +65,14 @@ bool DetModel::YamlConfigInit(const std::string& cfg_file) {
     i++;
   }
 
-  // Preprocess support Normalize, Permute, Resize, PadStride, Convert
-  if (det_config["Preprocess"].IsDefined()) {
-    YAML::Node preprocess_info = det_config["Preprocess"];
-    for (const auto& preprocess_op : preprocess_info) {
-      if (!DetParserTransforms(preprocess_op)) {
-        std::cerr << "Fail to parser PaddleDetection "
-                  << "transforms of config.yaml"
-                  << std::endl;
-        return false;
-      }
-    }
-  } else {
-    std::cerr << "No Preprocess in  PaddleDection yaml file"
-              << std::endl;
+  // Generate Standard Transforms Configuration
+  if (!GenerateTransformsConfig(det_config)) {
+    std::cerr << "Fail to generate standard configuration "
+              << "of tranforms" << std::endl;
     return false;
   }
   return true;
 }
-
-// void DetModel::Init(const std::string &cfg_file){
-
-// }
 
 bool DetModel::PreProcessInit() {
   preprocess_ = std::make_shared<DetPreProcess>();
