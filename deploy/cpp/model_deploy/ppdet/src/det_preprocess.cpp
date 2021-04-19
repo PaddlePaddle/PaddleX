@@ -31,11 +31,6 @@ bool DetPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
                                   std::vector<DataBlob>* inputs,
                                   int thread_num) {
   inputs->clear();
-
-  for (auto i = 0; i < imgs->size(); ++i) {
-    cv::cvtColor((*imgs)[i], (*imgs)[i], cv::COLOR_BGR2RGB);
-  }
-
   if (!PreprocessImages(shape_infos, imgs, thread_num = thread_num)) {
     std::cerr << "Error happend while execute function "
               << "DetPreProcess::Run" << std::endl;

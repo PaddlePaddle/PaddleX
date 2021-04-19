@@ -20,7 +20,7 @@ bool DetModel::GenerateTransformsConfig(const YAML::Node& src) {
   assert(src["Preprocess"].IsDefined());
   assert(src["arch"].IsDefined());
   std::string model_arch = src["arch"].as<std::string>();
-//  yaml_config_["transforms"]["BGR2RGB"]["null"] = true;
+  yaml_config_["transforms"]["BGR2RGB"]["null"] = true;
   for (const auto& op : src["Preprocess"]) {
     assert(op["type"].IsDefined());
     std::string op_name = op["type"].as<std::string>();
