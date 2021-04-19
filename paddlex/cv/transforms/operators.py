@@ -206,7 +206,7 @@ class Resize(Transform):
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
                                                 [im_scale_x, im_scale_y])
         sample['im_shape'] = np.asarray(
-            [self.target_h, self.target_w], dtype=np.float32)
+            sample['image'].shape[:2], dtype=np.float32)
         if 'scale_factor' in sample:
             scale_factor = sample['scale_factor']
             sample['scale_factor'] = np.asarray(
