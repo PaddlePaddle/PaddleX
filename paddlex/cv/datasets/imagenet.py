@@ -69,7 +69,7 @@ class ImageNet(Dataset):
                     raise IOError('The image file {} does not exist!'.format(
                         full_path))
                 self.file_list.append({
-                    'im': full_path,
+                    'image': full_path,
                     'label': int(items[1])
                 })
         self.num_samples = len(self.file_list)

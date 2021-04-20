@@ -151,7 +151,7 @@ class BaseClassifier(BaseModel):
               save_interval_epochs=1,
               log_interval_steps=10,
               save_dir='output',
-              pretrained_weights='IMAGENET',
+              pretrain_weights='IMAGENET',
               learning_rate=.025,
               warmup_steps=0,
               warmup_start_lr=0.0,
@@ -176,20 +176,19 @@ class BaseClassifier(BaseModel):
             self.optimizer = optimizer
 
         # initiate weights
-        if pretrained_weights is not None and not osp.exists(
-                pretrained_weights):
-            if pretrained_weights not in ['IMAGENET']:
+        if pretrain_weights is not None and not osp.exists(pretrain_weights):
+            if pretrain_weights not in ['IMAGENET']:
                 logging.warning(
-                    "Path of pretrained_weights('{}') does not exist!".format(
-                        pretrained_weights))
+                    "Path of pretrain_weights('{}') does not exist!".format(
+                        pretrain_weights))
                 logging.warning(
-                    "Pretrained_weights is forcibly set to 'IMAGENET'. "
-                    "If don't want to use pretrained weights, "
-                    "set pretrained_weights to be None.")
-                pretrained_weights = 'IMAGENET'
+                    "Pretrain_weights is forcibly set to 'IMAGENET'. "
+                    "If don't want to use pretrain weights, "
+                    "set pretrain_weights to be None.")
+                pretrain_weights = 'IMAGENET'
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
-            pretrained_weights=pretrained_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
 
         # start train loop
         self.train_loop(
@@ -267,7 +266,7 @@ class BaseClassifier(BaseModel):
             model_type=model_type, transforms=transforms, mode='test')
         batch_im = list()
         for im in images:
-            sample = {'im': im}
+            sample = {'image': im}
             batch_im.append(transforms(sample)[0])
 
         batch_im = to_tensor(batch_im)

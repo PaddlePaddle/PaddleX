@@ -14,7 +14,6 @@
 
 import os.path as osp
 import numpy as np
-import cv2
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
@@ -25,7 +24,7 @@ from paddlex.utils import get_single_card_bs
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
-from .utils import pretrained_weights_dict
+from .utils import pretrain_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 from paddlex.cv.transforms import Decode
 
@@ -147,7 +146,7 @@ class BaseSegmenter(BaseModel):
               save_interval_epochs=1,
               log_interval_steps=2,
               save_dir='output',
-              pretrained_weights='CITYSCAPES',
+              pretrain_weights='CITYSCAPES',
               learning_rate=0.01,
               lr_decay_power=0.9,
               early_stop=False,
@@ -162,23 +161,19 @@ class BaseSegmenter(BaseModel):
                 num_steps_each_epoch, lr_decay_power)
         else:
             self.optimizer = optimizer
-        if pretrained_weights is not None and not osp.exists(
-                pretrained_weights):
-            if pretrained_weights not in pretrained_weights_dict[
-                    self.model_name]:
+        if pretrain_weights is not None and not osp.exists(pretrain_weights):
+            if pretrain_weights not in pretrain_weights_dict[self.model_name]:
                 logging.warning(
-                    "Path of pretrained_weights('{}') does not exist!".format(
-                        pretrained_weights))
-                logging.warning("Pretrained_weights is forcibly set to '{}'. "
-                                "If don't want to use pretrained weights, "
-                                "set pretrained_weights to be None.".format(
-                                    pretrained_weights_dict[self.model_name][
-                                        0]))
-                pretrained_weights = pretrained_weights_dict[self.model_name][
-                    0]
+                    "Path of pretrain_weights('{}') does not exist!".format(
+                        pretrain_weights))
+                logging.warning("Pretrain_weights is forcibly set to '{}'. "
+                                "If don't want to use pretrain weights, "
+                                "set pretrain_weights to be None.".format(
+                                    pretrain_weights_dict[self.model_name][0]))
+                pretrain_weights = pretrain_weights_dict[self.model_name][0]
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
-            pretrained_weights=pretrained_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
 
         self.train_loop(
             num_epochs=num_epochs,
@@ -211,8 +206,8 @@ class BaseSegmenter(BaseModel):
             batch_size_each_card = 1
             batch_size = batch_size_each_card * paddlex.env_info['num']
             logging.warning(
-                "Segmenter supports batch_size=1 for each gpu/cpu card " \
-                "only during evaluating, so batch_size " \
+                "Segmenter only supports batch_size=1 for each gpu/cpu card " \
+                "during evaluation, so batch_size " \
                 "is forcibly set to {}.".format(batch_size))
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
@@ -296,10 +291,10 @@ class BaseSegmenter(BaseModel):
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
-            sample = {'im': im}
-            if isinstance(sample['im'], str):
+            sample = {'image': im}
+            if isinstance(sample['image'], str):
                 sample = Decode()(sample)
-            ori_shape = sample['im'].shape[:2]
+            ori_shape = sample['image'].shape[:2]
             im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)

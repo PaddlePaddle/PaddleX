@@ -62,3 +62,7 @@ def vertical_flip(im):
     elif len(im.shape) == 2:
         im = im[::-1, :]
     return im
+
+
+def rgb2bgr(im):
+    return im[:, :, ::-1]

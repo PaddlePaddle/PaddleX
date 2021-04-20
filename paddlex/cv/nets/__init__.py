@@ -14,3 +14,4 @@
 
 from . import paddleseg
 from . import ppcls
+from . import ppdet

@@ -145,7 +145,7 @@ imagenet_weights = {
     'ShuffleNetV2_x1_5_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
     'ShuffleNetV2_x2_0_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams'
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams',
 }
 
 pascalvoc_weights = {
@@ -153,18 +153,25 @@ pascalvoc_weights = {
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet50_os8_voc12aug_512x512_40k/model.pdparams',
     'DeepLabV3P_ResNet101_vd_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams',
-    'FCN_HRNet_W18_PascalVOC':
+    'HRNet_HRNet_W18_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw18_voc12aug_512x512_40k/model.pdparams',
-    'FCN_HRNet_W48_PascalVOC':
-    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams'
+    'HRNet_HRNet_W48_PascalVOC':
+    'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams',
+    'YOLOv3_MobileNetV1_PascalVOC':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams'
+}
+
+coco_weights = {
+    'YOLOv3_MobileNetV1_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams'
 }
 
 
-def get_pretrained_weights(flag,
-                           class_name,
-                           save_dir,
-                           scale=None,
-                           backbone_name=None):
+def get_pretrain_weights(flag,
+                         class_name,
+                         save_dir,
+                         scale=None,
+                         backbone_name=None):
     if flag is None:
         return None
     elif osp.isdir(flag):
@@ -188,6 +195,8 @@ def get_pretrained_weights(flag,
         url = imagenet_weights[weights_key]
     elif flag == 'PascalVOC':
         url = pascalvoc_weights[weights_key]
+    elif flag == 'COCO':
+        url = coco_weights[weights_key]
     else:
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))
@@ -195,14 +204,14 @@ def get_pretrained_weights(flag,
     return fname
 
 
-def load_pretrained_weights(model, pretrained_weights=None):
-    if pretrained_weights is not None:
+def load_pretrain_weights(model, pretrain_weights=None):
+    if pretrain_weights is not None:
         logging.info(
-            'Loading pretrained model from {}'.format(pretrained_weights),
+            'Loading pretrained model from {}'.format(pretrain_weights),
             use_color=True)
 
-        if os.path.exists(pretrained_weights):
-            para_state_dict = paddle.load(pretrained_weights)
+        if os.path.exists(pretrain_weights):
+            para_state_dict = paddle.load(pretrain_weights)
             model_state_dict = model.state_dict()
             keys = model_state_dict.keys()
             num_params_loaded = 0
@@ -224,7 +233,7 @@ def load_pretrained_weights(model, pretrained_weights=None):
                 len(model_state_dict), model.__class__.__name__))
         else:
             raise ValueError('The pretrained model directory is not Found: {}'.
-                             format(pretrained_weights))
+                             format(pretrain_weights))
     else:
         logging.info(
             'No pretrained model to load, {} will be trained from scratch.'.

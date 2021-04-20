@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-pretrained_weights_dict = {
+pretrain_weights_dict = {
     'UNet': ['CITYSCAPES'],
     'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
     'FastSCNN': ['CITYSCAPES'],

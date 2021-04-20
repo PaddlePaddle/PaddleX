@@ -75,7 +75,7 @@ class SegDataset(Dataset):
                     raise IOError('Label file {} does not exist!'.format(
                         full_path_label))
                 self.file_list.append({
-                    'im': full_path_im,
+                    'image': full_path_im,
                     'mask': full_path_label
                 })
         self.num_samples = len(self.file_list)

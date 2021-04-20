@@ -18,6 +18,7 @@ from .utils.env import get_environ_info
 from . import cv
 from . import seg
 from . import cls
+from . import det
 
 env_info = get_environ_info()
 datasets = cv.datasets

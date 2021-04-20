@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from .operators import *
+from .batch_operators import BatchRandomResize
 
 
 def arrange_transforms(model_type, transforms, mode='train'):
@@ -25,6 +26,8 @@ def arrange_transforms(model_type, transforms, mode='train'):
         arrange_transform = ArrangeSegmenter(mode)
     elif model_type == 'classifier':
         arrange_transform = ArrangeClassifier(mode)
+    elif model_type == 'detector':
+        arrange_transform = ArrangeDetector(mode)
     else:
         raise Exception("Unrecognized model type: {}".format(model_type))
     transforms.arrange_outputs = arrange_transform
