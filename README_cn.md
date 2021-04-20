@@ -108,7 +108,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 * 模型多端安全部署
   * [CPU/GPU(加密)部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/server/index.html)
   * [OpenVINO加速部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
-  * [Nvidia Jetson开发板部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/nvidia-jetson.html)
+  * [Nvidia Jetson开发板部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/jetson/index.html)
   * [树莓派部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/raspberry/index.html)
 
 * [模型可解释性](https://paddlex.readthedocs.io/zh_CN/develop/appendix/interpret.html)
