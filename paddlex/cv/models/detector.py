@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 
 import collections
+import copy
 import os.path as osp
 import math
 import numpy as np
@@ -176,7 +177,8 @@ class BaseDetector(BaseModel):
               lr_decay_gamma=0.1,
               early_stop=False,
               early_stop_patience=5):
-        self._arrange_batch_transform(train_dataset, mode='train')
+        train_dataset.batch_transforms = self._compose_batch_transform(
+            train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -220,7 +222,8 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience)
 
     def evaluate(self, eval_dataset, batch_size, return_details=False):
-        self._arrange_batch_transform(eval_dataset, mode='eval')
+        eval_dataset.batch_transforms = self._compose_batch_transform(
+            eval_dataset.transforms, mode='eval')
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
@@ -276,33 +279,31 @@ class BaseDetector(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        batch_samples = BaseDetector._preprocess(images, transforms,
-                                                 self.model_type)
+
+        batch_samples = self._preprocess(images, transforms)
         self.net.eval()
         outputs = self.run(self.net, batch_samples, 'test')
-        pred = BaseDetector._postprocess(outputs)
+        pred = self._postprocess(outputs)
 
         return pred
 
-    @staticmethod
-    def _preprocess(images, transforms, model_type):
+    def _preprocess(self, images, transforms):
         arrange_transforms(
-            model_type=model_type, transforms=transforms, mode='test')
+            model_type=self.model_type, transforms=transforms, mode='test')
         batch_samples = list()
         for ct, im in enumerate(images):
             sample = {'image': im}
             batch_samples.append(transforms(sample))
-        batch_transforms = BatchCompose([_Permute()])
+        batch_transforms = self._compose_batch_transform(transforms, 'test')
         batch_samples = batch_transforms(batch_samples)
-        batch_samples = [paddle.to_tensor(item) for item in batch_samples]
+        batch_samples = list(map(paddle.to_tensor, batch_samples))
         batch_samples = {
             k: v
             for k, v in zip(batch_transforms.output_fields, batch_samples)
         }
         return batch_samples
 
-    @staticmethod
-    def _postprocess(batch_pred):
+    def _postprocess(self, batch_pred):
         if 'bbox' in batch_pred:
             bboxes = batch_pred['bbox']
             bbox_nums = batch_pred['bbox_num']
@@ -398,24 +399,23 @@ class YOLOv3(BaseDetector):
         self.anchors = anchors
         self.anchors_masks = anchor_masks
 
-    def _arrange_batch_transform(self, dataset, mode='train'):
+    def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
-            batch_transforms = [
+            default_batch_transforms = [
                 _NormalizeBox(), _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
                     anchor_masks=self.anchors_masks,
                     anchors=self.anchors,
                     downsample_ratios=[32, 16, 8],
-                    num_classes=6), _Permute()
+                    num_classes=6)
             ]
-        elif mode == 'eval':
-            batch_transforms = [_Permute()]
         else:
-            return
+            default_batch_transforms = []
 
-        for i, op in enumerate(dataset.transforms.transforms):
+        custom_batch_transforms = []
+        for i, op in enumerate(transforms.transforms):
             if isinstance(op, BatchRandomResize):
-                batch_transforms.insert(0,
-                                        dataset.transforms.transforms.pop(i))
-                break
+                custom_batch_transforms.insert(0, copy.deepcopy(op))
+        batch_transforms = BatchCompose(custom_batch_transforms +
+                                        default_batch_transforms)
 
-        dataset.batch_transforms = BatchCompose(batch_transforms)
+        return batch_transforms

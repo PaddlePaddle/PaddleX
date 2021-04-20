@@ -28,19 +28,18 @@ MAIN_PID = os.getpid()
 
 
 class BatchCompose(Transform):
-    def __init__(self, batch_transforms):
+    def __init__(self, batch_transforms=None):
         super(BatchCompose, self).__init__()
-        if not isinstance(batch_transforms, list):
-            raise TypeError(
-                'Type of transforms is invalid. Must be List, but received is {}'
-                .format(type(batch_transforms)))
         self.output_fields = mp.Manager().list([])
         self.batch_transforms = batch_transforms
         self.lock = mp.Lock()
 
     def __call__(self, samples):
-        for op in self.batch_transforms:
-            samples = op(samples)
+        if self.batch_transforms is not None:
+            for op in self.batch_transforms:
+                samples = op(samples)
+
+        samples = _Permute()(samples)
 
         global MAIN_PID
         if os.getpid() == MAIN_PID and \
@@ -136,7 +135,6 @@ class _Gt2YoloTarget(Transform):
         h, w = samples[0]['image'].shape[:2]
         an_hw = np.array(self.anchors) / np.array([[w, h]])
         for sample in samples:
-            im = sample['image']
             gt_bbox = sample['gt_bbox']
             gt_class = sample['gt_class']
             if 'gt_score' not in sample:
