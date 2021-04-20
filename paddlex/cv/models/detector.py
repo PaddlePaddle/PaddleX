@@ -67,19 +67,9 @@ class BaseDetector(BaseModel):
         elif backbone_name == 'DarkNet53':
             backbone = backbones.DarkNet(**params)
         elif backbone_name == 'ResNet50_vd':
-            backbone = backbones.ResNet(
-                variant='d',
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[-1],
-                freeze_at=-1,
-                freeze_norm=False)
+            backbone = backbones.ResNet(**params)
         elif backbone_name == 'ResNet50_vd_dcn':
-            backbone = backbones.ResNet(
-                variant='d',
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
-                freeze_at=-1,
-                freeze_norm=False)
+            backbone = backbones.ResNet(**params)
         elif backbone_name == 'ResNet50':
             backbone = backbones.ResNet()
         else:
