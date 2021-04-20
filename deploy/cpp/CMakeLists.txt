@@ -60,7 +60,7 @@ link_directories("${PADDLE_DIR}/third_party/install/protobuf/lib")
 link_directories("${PADDLE_DIR}/third_party/install/glog/lib")
 link_directories("${PADDLE_DIR}/third_party/install/gflags/lib")
 link_directories("${PADDLE_DIR}/third_party/install/xxhash/lib")
-link_directories("${PADDLE_DIR}/third_party/install/cryptopp/lib") 
+link_directories("${PADDLE_DIR}/third_party/install/cryptopp/lib")
 
 if (WIN32)
   if (WITH_STATIC_LIB)
@@ -127,7 +127,7 @@ endif ()
 set(DEPS ${DEPS} ${OpenCV_LIBS})
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-#set GPU 
+#set GPU
 if(WITH_GPU)
   if (NOT DEFINED CUDA_LIB OR ${CUDA_LIB} STREQUAL "")
     message(FATAL_ERROR "please set CUDA_LIB with -DCUDA_LIB=/path/cuda/lib64")
@@ -140,7 +140,7 @@ if(WITH_GPU)
 
     if (WITH_TENSORRT)
       include_directories("${TENSORRT_DIR}/include")
-      link_directories("${TENSORRT_DIR}/lib") 
+      link_directories("${TENSORRT_DIR}/lib")
 
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -203,6 +203,8 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/engine/src ENGINE_SRC)
 #detector
 include_directories("${PROJECT_ROOT_DIR}/model_deploy")
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppdet/src DETECTOR_SRC)
+aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
+
 
 add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)

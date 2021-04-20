@@ -19,18 +19,18 @@
 #include "yaml-cpp/yaml.h"
 
 #include "model_deploy/common/include/base_model.h"
-#include "model_deploy/ppdet/include/det_postprocess.h"
-#include "model_deploy/ppdet/include/det_preprocess.h"
+#include "model_deploy/ppseg/include/seg_postprocess.h"
+#include "model_deploy/ppseg/include/seg_preprocess.h"
 
 
 namespace PaddleDeploy {
-class DetModel : public Model {
+class SegModel : public Model {
  private:
   const std::string model_type;
 
  public:
-  explicit DetModel(const std::string model_type) : model_type(model_type) {
-    std::cerr << "init DetModel,model_type=" << model_type << std::endl;
+  explicit SegModel(const std::string model_type) : model_type(model_type) {
+    std::cerr << "init SegModel,model_type=" << model_type << std::endl;
   }
 
   bool GenerateTransformsConfig(const YAML::Node &node);
@@ -39,7 +39,7 @@ class DetModel : public Model {
 
   bool PreProcessInit();
 
-  bool PostProcessInit(bool use_cpu_nms);
+  bool PostProcessInit();
 };
 
 }  // namespace PaddleDeploy
