@@ -60,22 +60,7 @@ class BaseDetector(BaseModel):
         return net, test_inputs
 
     def _get_backbone(self, backbone_name, **params):
-        if backbone_name == 'MobileNetV1':
-            backbone = backbones.MobileNet(**params)
-        elif backbone_name == 'MobileNetV3':
-            backbone = backbones.MobileNetV3(**params)
-        elif backbone_name == 'DarkNet53':
-            backbone = backbones.DarkNet(**params)
-        elif backbone_name == 'ResNet50_vd':
-            backbone = backbones.ResNet(**params)
-        elif backbone_name == 'ResNet50_vd_dcn':
-            backbone = backbones.ResNet(**params)
-        elif backbone_name == 'ResNet50':
-            backbone = backbones.ResNet()
-        else:
-            raise ValueError("There is no backbone for {} named {}".format(
-                self.__class__.__name__, backbone_name))
-
+        backbone = backbones.__dict__[backbone_name](**params)
         return backbone
 
     def build_data_loader(self, dataset, batch_size, mode='train'):
@@ -365,16 +350,25 @@ class YOLOv3(BaseDetector):
         else:
             norm_type = 'bn'
 
-        self.backbone_name = backbone
+        self.backbone_name = backbone.strip('_dcn')
         if backbone == 'MobileNetV1':
             norm_type = 'bn'
-            backbone = self._get_backbone(backbone, norm_type=norm_type)
+            backbone = self._get_backbone('MobileNet', norm_type=norm_type)
         elif backbone == 'MobileNetV3':
             backbone = self._get_backbone(
-                backbone, norm_type=norm_type, feature_maps=[7, 13, 16])
+                'MobileNetV3', norm_type=norm_type, feature_maps=[7, 13, 16])
         elif backbone == 'ResNet50_vd':
             backbone = self._get_backbone(
-                backbone,
+                'ResNet50',
+                norm_type=norm_type,
+                variant='d',
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[-1],
+                freeze_at=-1,
+                freeze_norm=False)
+        elif backbone == 'ResNet50_vd_dcn':
+            backbone = self._get_backbone(
+                'ResNet50',
                 norm_type=norm_type,
                 variant='d',
                 return_idx=[1, 2, 3],
@@ -382,7 +376,7 @@ class YOLOv3(BaseDetector):
                 freeze_at=-1,
                 freeze_norm=False)
         else:
-            backbone = self._get_backbone(backbone, norm_type=norm_type)
+            backbone = self._get_backbone('DarkNet', norm_type=norm_type)
 
         neck = necks.YOLOv3FPN(norm_type=norm_type)
         loss = losses.YOLOv3Loss(
