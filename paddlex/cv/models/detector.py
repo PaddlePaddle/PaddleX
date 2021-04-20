@@ -80,6 +80,8 @@ class BaseDetector(BaseModel):
                 dcn_v2_stages=[3],
                 freeze_at=-1,
                 freeze_norm=False)
+        elif backbone_name == 'ResNet50':
+            backbone = backbones.ResNet()
         else:
             raise ValueError("There is no backbone for {} named {}".format(
                 self.__class__.__name__, backbone_name))
