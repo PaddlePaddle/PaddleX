@@ -59,7 +59,7 @@ class BaseDetector(BaseModel):
         ]
         return net, test_inputs
 
-    def _get_backbone(self, backbone_name, **params):
+    def _get_backbone(self, backbone_name):
         if backbone_name == 'MobileNetV1':
             backbone = backbones.MobileNet()
         elif backbone_name == 'MobileNetV3':
@@ -67,14 +67,17 @@ class BaseDetector(BaseModel):
         elif backbone_name == 'DarkNet53':
             backbone = backbones.DarkNet()
         elif backbone_name == 'ResNet50_vd':
-            if params['with_dcn_v2']:
-                dcn_v2_stages = [3]
-            else:
-                dcn_v2_stages = [-1]
             backbone = backbones.ResNet(
                 variant='d',
                 return_idx=[1, 2, 3],
-                dcn_v2_stages=dcn_v2_stages,
+                dcn_v2_stages=[-1],
+                freeze_at=-1,
+                freeze_norm=False)
+        elif backbone_name == 'ResNet50_vd_dcn':
+            backbone = backbones.ResNet(
+                variant='d',
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
                 freeze_at=-1,
                 freeze_norm=False)
         else:
@@ -346,7 +349,6 @@ class YOLOv3(BaseDetector):
     def __init__(self,
                  num_classes=80,
                  backbone='MobileNetV1',
-                 with_dcn_v2=True,
                  anchors=None,
                  anchor_masks=None,
                  ignore_threshold=0.7,
@@ -357,11 +359,12 @@ class YOLOv3(BaseDetector):
                  label_smooth=False):
         self.init_params = locals()
         if backbone not in [
-                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd'
+                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd',
+                'ResNet50_vd_dcn'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd')".
+                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd', 'ResNet50_vd_dcn')".
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
@@ -370,7 +373,7 @@ class YOLOv3(BaseDetector):
             self.sync_bn = False
 
         self.backbone_name = backbone
-        backbone = self._get_backbone(backbone, with_dcn_v2=with_dcn_v2)
+        backbone = self._get_backbone(backbone)
         neck = necks.YOLOv3FPN()
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
