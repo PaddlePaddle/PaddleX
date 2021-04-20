@@ -99,6 +99,7 @@ class BatchPadding(Transform):
 
                 data['gt_bbox'] = gt_box_data
                 data['gt_class'] = gt_class_data
+                print(gt_class_data.shape)
 
         return samples
 
