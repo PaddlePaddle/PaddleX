@@ -58,7 +58,7 @@ class BaseDetector(BaseModel):
         ]
         return net, test_inputs
 
-    def _get_backbone(self, backbone_name):
+    def _get_backbone(self, backbone_name, **params):
         if backbone_name == 'MobileNetV1':
             backbone = backbones.MobileNet()
         elif backbone_name == 'MobileNetV3':
@@ -66,10 +66,14 @@ class BaseDetector(BaseModel):
         elif backbone_name == 'DarkNet53':
             backbone = backbones.DarkNet()
         elif backbone_name == 'ResNet50_vd':
+            if params['with_dcn_v2']:
+                dcn_v2_stages = [3]
+            else:
+                dcn_v2_stages = [-1]
             backbone = backbones.ResNet(
                 variant='d',
                 return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
+                dcn_v2_stages=dcn_v2_stages,
                 freeze_at=-1,
                 freeze_norm=False)
         else:
@@ -116,7 +120,7 @@ class BaseDetector(BaseModel):
         if mode in ['train', 'eval']:
             outputs = net_out
         else:
-            for key in ['im_shape', 'scale_factor', 'im_id']:
+            for key in ['im_shape', 'scale_factor']:
                 net_out[key] = inputs[key]
             outputs = dict()
             for key in net_out:
@@ -286,7 +290,7 @@ class BaseDetector(BaseModel):
             model_type=model_type, transforms=transforms, mode='test')
         batch_samples = list()
         for ct, im in enumerate(images):
-            sample = {'im_id': np.array([ct]), 'image': im}
+            sample = {'image': im}
             batch_samples.append(transforms(sample))
         batch_transforms = BatchCompose([_Permute()])
         batch_samples = batch_transforms(batch_samples)
@@ -302,11 +306,9 @@ class BaseDetector(BaseModel):
         if 'bbox' in batch_pred:
             bboxes = batch_pred['bbox']
             bbox_nums = batch_pred['bbox_num']
-            image_id = batch_pred['im_id']
             det_res = []
             k = 0
             for i in range(len(bbox_nums)):
-                cur_image_id = int(image_id[i][0])
                 det_nums = bbox_nums[i]
                 for j in range(det_nums):
                     dt = bboxes[k]
@@ -326,14 +328,14 @@ class BaseDetector(BaseModel):
                     det_res.append(dt_res)
             batch_pred['bbox'] = det_res
 
-        result = dict()
+        result = []
         bbox_num = batch_pred['bbox_num']
         start = 0
-        for i, im_id in enumerate(batch_pred['im_id']):
-            end = start + bbox_num[i]
+        for num in bbox_num:
+            end = start + num
             if 'bbox' in batch_pred:
                 bbox_res = batch_pred['bbox'][start:end]
-            result[int(im_id)] = bbox_res
+            result.append(bbox_res)
             start = end
 
         return result
@@ -343,6 +345,7 @@ class YOLOv3(BaseDetector):
     def __init__(self,
                  num_classes=80,
                  backbone='MobileNetV1',
+                 with_dcn_v2=True,
                  anchors=None,
                  anchor_masks=None,
                  ignore_threshold=0.7,
@@ -366,7 +369,7 @@ class YOLOv3(BaseDetector):
             self.sync_bn = False
 
         self.backbone_name = backbone
-        backbone = self._get_backbone(backbone)
+        backbone = self._get_backbone(backbone, with_dcn_v2=with_dcn_v2)
         neck = necks.YOLOv3FPN()
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,

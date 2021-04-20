@@ -66,13 +66,11 @@ class BatchRandomResize(Transform):
     Resize image to target size randomly. random target_size and interpolation method
     Args:
         target_size (list): image target size, must be list of (int or list)
-        keep_ratio (bool): whether keep_raio or not, default true
         interp (int): the interpolation method
     """
 
-    def __init__(self, target_size, keep_ratio, interp=cv2.INTER_NEAREST):
+    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
         super(BatchRandomResize, self).__init__()
-        self.keep_ratio = keep_ratio
         self.interp = interp
         assert isinstance(target_size, list), \
             "target_size must be List"
@@ -83,13 +81,30 @@ class BatchRandomResize(Transform):
 
     def __call__(self, samples):
         height, width = random.choice(self.target_size)
-        if self.keep_ratio:
-            resizer = ResizeByShort(
-                short_size=min(height, width),
-                max_size=max(height, width),
-                interp=self.interp)
-        else:
-            resizer = Resize(height=height, width=width, interp=self.interp)
+        resizer = Resize(height=height, width=width, interp=self.interp)
+        samples = resizer(samples)
+
+        return samples
+
+
+class BatchRandomResizeByShort(Transform):
+    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+        super(BatchRandomResizeByShort, self).__init__()
+        self.interp = interp
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
+        self.target_size = target_size
+
+    def __call__(self, samples):
+        height, width = random.choice(self.target_size)
+        resizer = ResizeByShort(
+            short_size=min(height, width),
+            max_size=max(height, width),
+            interp=self.interp)
+
         samples = resizer(samples)
 
         return samples
