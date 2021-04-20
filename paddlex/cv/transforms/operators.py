@@ -17,7 +17,6 @@ import cv2
 import copy
 import random
 from PIL import Image
-
 import paddlex
 
 try:

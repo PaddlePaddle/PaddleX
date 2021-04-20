@@ -67,9 +67,19 @@ class BaseDetector(BaseModel):
         elif backbone_name == 'DarkNet53':
             backbone = backbones.DarkNet(**params)
         elif backbone_name == 'ResNet50_vd':
-            backbone = backbones.ResNet(**params)
-        elif backbone_name == 'ResNet50':
-            backbone = backbones.ResNet(**params)
+            backbone = backbones.ResNet(
+                variant='d',
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[-1],
+                freeze_at=-1,
+                freeze_norm=False)
+        elif backbone_name == 'ResNet50_vd_dcn':
+            backbone = backbones.ResNet(
+                variant='d',
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
+                freeze_at=-1,
+                freeze_norm=False)
         else:
             raise ValueError("There is no backbone for {} named {}".format(
                 self.__class__.__name__, backbone_name))
@@ -114,7 +124,7 @@ class BaseDetector(BaseModel):
         if mode in ['train', 'eval']:
             outputs = net_out
         else:
-            for key in ['im_shape', 'scale_factor', 'im_id']:
+            for key in ['im_shape', 'scale_factor']:
                 net_out[key] = inputs[key]
             outputs = dict()
             for key in net_out:
@@ -170,7 +180,8 @@ class BaseDetector(BaseModel):
               lr_decay_gamma=0.1,
               early_stop=False,
               early_stop_patience=5):
-        self._arrange_batch_transform(train_dataset, mode='train')
+        train_dataset.batch_transforms = self._compose_batch_transform(
+            train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -214,7 +225,8 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience)
 
     def evaluate(self, eval_dataset, batch_size, return_details=False):
-        self._arrange_batch_transform(eval_dataset, mode='eval')
+        eval_dataset.batch_transforms = self._compose_batch_transform(
+            eval_dataset.transforms, mode='eval')
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
@@ -270,41 +282,37 @@ class BaseDetector(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        batch_samples = BaseDetector._preprocess(images, transforms,
-                                                 self.model_type)
+
+        batch_samples = self._preprocess(images, transforms)
         self.net.eval()
         outputs = self.run(self.net, batch_samples, 'test')
-        pred = BaseDetector._postprocess(outputs)
+        pred = self._postprocess(outputs)
 
         return pred
 
-    @staticmethod
-    def _preprocess(images, transforms, model_type):
+    def _preprocess(self, images, transforms):
         arrange_transforms(
-            model_type=model_type, transforms=transforms, mode='test')
+            model_type=self.model_type, transforms=transforms, mode='test')
         batch_samples = list()
         for ct, im in enumerate(images):
-            sample = {'im_id': np.array([ct]), 'image': im}
+            sample = {'image': im}
             batch_samples.append(transforms(sample))
-        batch_transforms = BatchCompose([_Permute()])
+        batch_transforms = self._compose_batch_transform(transforms, 'test')
         batch_samples = batch_transforms(batch_samples)
-        batch_samples = [paddle.to_tensor(item) for item in batch_samples]
+        batch_samples = list(map(paddle.to_tensor, batch_samples))
         batch_samples = {
             k: v
             for k, v in zip(batch_transforms.output_fields, batch_samples)
         }
         return batch_samples
 
-    @staticmethod
-    def _postprocess(batch_pred):
+    def _postprocess(self, batch_pred):
         if 'bbox' in batch_pred:
             bboxes = batch_pred['bbox']
             bbox_nums = batch_pred['bbox_num']
-            image_id = batch_pred['im_id']
             det_res = []
             k = 0
             for i in range(len(bbox_nums)):
-                cur_image_id = int(image_id[i][0])
                 det_nums = bbox_nums[i]
                 for j in range(det_nums):
                     dt = bboxes[k]
@@ -324,14 +332,14 @@ class BaseDetector(BaseModel):
                     det_res.append(dt_res)
             batch_pred['bbox'] = det_res
 
-        result = dict()
+        result = []
         bbox_num = batch_pred['bbox_num']
         start = 0
-        for i, im_id in enumerate(batch_pred['im_id']):
-            end = start + bbox_num[i]
+        for num in bbox_num:
+            end = start + num
             if 'bbox' in batch_pred:
                 bbox_res = batch_pred['bbox'][start:end]
-            result[int(im_id)] = bbox_res
+            result.append(bbox_res)
             start = end
 
         return result
@@ -341,8 +349,9 @@ class YOLOv3(BaseDetector):
     def __init__(self,
                  num_classes=80,
                  backbone='MobileNetV1',
-                 anchors=None,
-                 anchor_masks=None,
+                 anchors=[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+                          [59, 119], [116, 90], [156, 198], [373, 326]],
+                 anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]],
                  ignore_threshold=0.7,
                  nms_score_threshold=0.01,
                  nms_topk=1000,
@@ -351,11 +360,12 @@ class YOLOv3(BaseDetector):
                  label_smooth=False):
         self.init_params = locals()
         if backbone not in [
-                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd'
+                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd',
+                'ResNet50_vd_dcn'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd')".
+                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd', 'ResNet50_vd_dcn')".
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
@@ -410,31 +420,28 @@ class YOLOv3(BaseDetector):
         self.anchors = anchors
         self.anchors_masks = anchor_masks
 
-    def _arrange_batch_transform(self, dataset, mode='train'):
+    def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
-            batch_transforms = [
+            default_batch_transforms = [
                 _NormalizeBox(), _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
                     anchor_masks=self.anchors_masks,
                     anchors=self.anchors,
                     downsample_ratios=[32, 16, 8],
-                    num_classes=6), _Permute()
+                    num_classes=6)
             ]
-        elif mode == 'eval':
-            batch_transforms = [_Permute()]
         else:
-            return
+            default_batch_transforms = []
 
-        custom_batch_transform = []
-        for i, op in enumerate(dataset.transforms.transforms):
+        custom_batch_transforms = []
+        for i, op in enumerate(transforms.transforms):
             if isinstance(op, BatchRandomResize):
-                custom_batch_transform.insert(
-                    0, dataset.transforms.transforms.pop(i))
+                custom_batch_transforms.insert(0, copy.deepcopy(op))
             elif isinstance(op, BatchPadding):
-                custom_batch_transform.insert(
-                    -1, dataset.transforms.transforms.pop(i))
-        batch_transforms = custom_batch_transform + batch_transforms
+                custom_batch_transforms.insert(-1, copy.deepcopy(op))
+        batch_transforms = BatchCompose(custom_batch_transforms +
+                                        default_batch_transforms)
 
-        dataset.batch_transforms = BatchCompose(batch_transforms)
+        return batch_transforms
 
 
 class FasterRCNN(BaseDetector):
@@ -580,14 +587,14 @@ class FasterRCNN(BaseDetector):
         super(FasterRCNN, self).__init__(
             model_name='FasterRCNN', num_classes=num_classes, **params)
 
-    def _arrange_batch_transform(self, dataset, mode='train'):
-        batch_transforms = [_Permute()]
-        custom_batch_transform = []
-        for i, op in enumerate(dataset.transforms.transforms):
+    def _arrange_batch_transform(self, transforms, mode='train'):
+        custom_batch_transforms = []
+        for i, op in enumerate(transforms.transforms):
             if isinstance(op, BatchRandomResize):
-                custom_batch_transform.insert(0, copy.deepcopy(op))
+                custom_batch_transforms.insert(0, copy.deepcopy(op))
             elif isinstance(op, BatchPadding):
-                custom_batch_transform.insert(-1, copy.deepcopy(op))
-        batch_transforms = custom_batch_transform + batch_transforms
+                custom_batch_transforms.insert(-1, copy.deepcopy(op))
 
-        dataset.batch_transforms = BatchCompose(batch_transforms)
+        batch_transforms = BatchCompose(custom_batch_transforms)
+
+        return batch_transforms
