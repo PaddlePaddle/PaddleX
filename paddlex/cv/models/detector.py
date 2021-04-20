@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 
 import collections
+import copy
 import os.path as osp
 from paddle.io import DistributedBatchSampler
 import paddlex
@@ -580,24 +581,13 @@ class FasterRCNN(BaseDetector):
             model_name='FasterRCNN', num_classes=num_classes, **params)
 
     def _arrange_batch_transform(self, dataset, mode='train'):
-        if mode == 'train':
-            batch_transforms = [
-                BatchPadding(
-                    pad_to_stride=32, pad_gt=True), _Permute()
-            ]
-        elif mode == 'eval':
-            batch_transforms = [BatchPadding(pad_to_stride=-1., pad_gt=False)]
-        else:
-            return
-
+        batch_transforms = [_Permute()]
         custom_batch_transform = []
         for i, op in enumerate(dataset.transforms.transforms):
             if isinstance(op, BatchRandomResize):
-                custom_batch_transform.insert(
-                    0, dataset.transforms.transforms.pop(i))
+                custom_batch_transform.insert(0, copy.deepcopy(op))
             elif isinstance(op, BatchPadding):
-                custom_batch_transform.insert(
-                    -1, dataset.transforms.transforms.pop(i))
+                custom_batch_transform.insert(-1, copy.deepcopy(op))
         batch_transforms = custom_batch_transform + batch_transforms
 
         dataset.batch_transforms = BatchCompose(batch_transforms)
