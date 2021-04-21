@@ -171,7 +171,11 @@ coco_weights = {
     'YOLOv3_ResNet50_vd_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams',
     'YOLOv3_MobileNetV3_COCO':
-    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams',
+    'FasterRCNN_ResNet50_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_fpn_1x_coco.pdparams',
+    'FasterRCNN_ResNet50_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_1x_coco.pdparams'
 }
 
 

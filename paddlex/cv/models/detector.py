@@ -156,7 +156,8 @@ class BaseDetector(BaseModel):
               lr_decay_epochs=(216, 243),
               lr_decay_gamma=0.1,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              use_vdl=True):
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
@@ -199,7 +200,8 @@ class BaseDetector(BaseModel):
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
             early_stop=early_stop,
-            early_stop_patience=early_stop_patience)
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
 
     def evaluate(self, eval_dataset, batch_size, return_details=False):
         eval_dataset.batch_transforms = self._compose_batch_transform(
@@ -428,7 +430,7 @@ class FasterRCNN(BaseDetector):
                  backbone='ResNet50',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
-                 anchor_sizes=[32, 64, 128, 256, 512],
+                 anchor_sizes=[[32], [64], [128], [256], [512]],
                  keep_top_k=100,
                  nms_threshold=0.5,
                  score_threshold=0.05,
@@ -443,7 +445,7 @@ class FasterRCNN(BaseDetector):
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50')".format(backbone))
 
-        self.backbone_name = backbone
+        self.backbone_name = backbone + '_fpn' if with_fpn else backbone
         if backbone == 'ResNet50':
             if with_fpn:
                 backbone = self._get_backbone(

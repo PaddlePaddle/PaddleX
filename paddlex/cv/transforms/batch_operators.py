@@ -91,13 +91,26 @@ class BatchPadding(Transform):
             for i, data in enumerate(samples):
                 gt_box_data = -np.ones([gt_num_max, 4], dtype=np.float32)
                 gt_class_data = -np.ones([gt_num_max], dtype=np.int32)
+                is_crowd_data = np.ones([gt_num_max], dtype=np.int32)
 
                 gt_num = data['gt_bbox'].shape[0]
                 gt_box_data[0:gt_num, :] = data['gt_bbox']
                 gt_class_data[0:gt_num] = np.squeeze(data['gt_class'])
+                is_crowd_data[0:gt_num] = np.squeeze(data['is_crowd'])
 
                 data['gt_bbox'] = gt_box_data
                 data['gt_class'] = gt_class_data
+                data['is_crowd'] = is_crowd_data
+
+                if 'gt_score' in data:
+                    gt_score_data = np.zeros([gt_num_max], dtype=np.float32)
+                    gt_score_data[0:gt_num] = data['gt_score'][:gt_num, 0]
+                    data['gt_score'] = gt_score_data
+
+                if 'difficult' in data:
+                    diff_data = np.zeros([gt_num_max], dtype=np.int32)
+                    diff_data[0:gt_num] = data['difficult'][:gt_num, 0]
+                    data['difficult'] = diff_data
 
         return samples
 
