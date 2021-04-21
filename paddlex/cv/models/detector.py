@@ -337,12 +337,11 @@ class YOLOv3(BaseDetector):
                  label_smooth=False):
         self.init_params = locals()
         if backbone not in [
-                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd',
-                'ResNet50_vd_dcn'
+                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd', 'ResNet50_vd_dcn')".
+                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn')".
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
@@ -350,8 +349,6 @@ class YOLOv3(BaseDetector):
         else:
             norm_type = 'bn'
 
-        if backbone.endswith('_dcn'):
-            backbone = backbone[:-4]
         self.backbone_name = backbone
         if backbone == 'MobileNetV1':
             norm_type = 'bn'
@@ -359,15 +356,6 @@ class YOLOv3(BaseDetector):
         elif backbone == 'MobileNetV3':
             backbone = self._get_backbone(
                 'MobileNetV3', norm_type=norm_type, feature_maps=[7, 13, 16])
-        elif backbone == 'ResNet50_vd':
-            backbone = self._get_backbone(
-                'ResNet',
-                norm_type=norm_type,
-                variant='d',
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[-1],
-                freeze_at=-1,
-                freeze_norm=False)
         elif backbone == 'ResNet50_vd_dcn':
             backbone = self._get_backbone(
                 'ResNet',
