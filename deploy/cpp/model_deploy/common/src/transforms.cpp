@@ -23,10 +23,6 @@
 namespace PaddleDeploy {
 
 bool Normalize::Run(cv::Mat *im) {
-  std::vector<float> range_val;
-  for (int c = 0; c < im->channels(); c++) {
-    range_val.push_back(max_val_[c] - min_val_[c]);
-  }
   std::vector<cv::Mat> split_im;
   cv::split(*im, split_im);
   for (int c = 0; c < im->channels(); c++) {
