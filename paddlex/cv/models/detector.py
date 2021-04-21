@@ -349,6 +349,7 @@ class YOLOv3(BaseDetector):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
+
         if backbone.endswith('_dcn'):
             backbone = backbone[:-4]
         self.backbone_name = backbone
