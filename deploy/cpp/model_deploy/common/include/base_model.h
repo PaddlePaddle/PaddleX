@@ -78,7 +78,7 @@ class Model {
   }
 
   virtual bool Predict(const std::vector<cv::Mat>& imgs,
-                       int thread_num = 1 int img_start = 0, int img_end = -1) {
+                       int thread_num = 1, int img_start = 0, int img_end = -1) {
     if (!preprocess_ || !postprocess_ || !infer_engine_) {
       std::cerr << "No init,cann't predict" << std::endl;
       return false;

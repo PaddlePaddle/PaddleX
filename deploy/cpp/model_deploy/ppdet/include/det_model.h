@@ -39,7 +39,7 @@ class DetModel : public Model {
 
   bool PreProcessInit();
 
-  bool PostProcessInit(bool use_cpu_nms);
+  bool PostProcessInit();
 };
 
 }  // namespace PaddleDeploy

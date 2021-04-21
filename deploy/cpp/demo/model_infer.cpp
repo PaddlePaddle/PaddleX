@@ -97,8 +97,9 @@ int main(int argc, char** argv) {
       batch_size = imgs_size - img_start;
     }
     model.Predict(std::ref(imgs), FLAGS_thread_num,
-                  img_start img_start + batch_size);
+                  img_start, img_start + batch_size);
     model.PrintResult();
+    img_start += batch_size;
   }
 
   return 0;

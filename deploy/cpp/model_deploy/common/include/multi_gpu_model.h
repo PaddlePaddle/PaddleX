@@ -28,7 +28,7 @@ class MultiGPUModel {
   bool Init(const std::string& model_type, const std::string& cfg_file,
             const std::string& model_filename,
             const std::string& params_filename, const std::vector<int> gpu_ids,
-            bool use_cpu_nms, bool use_gpu, bool use_mkl) {
+            bool use_gpu, bool use_mkl) {
     int model_num = static_cast<int>(gpu_ids.size());
     for (auto i = 0; i < model_num; ++i) {
       std::shared_ptr<Model> model =
@@ -39,7 +39,7 @@ class MultiGPUModel {
         return false;
       }
 
-      if (!model->Init(cfg_file, use_cpu_nms)) {
+      if (!model->Init(cfg_file)) {
         std::cerr << "model Init error" << std::endl;
         return false;
       }
@@ -57,14 +57,15 @@ class MultiGPUModel {
                int imgs_start = 0, int imgs_end = -1) {
     run_id_.clear();
 
-    if (imgs_end == -1) {
+    if (imgs_end < 0) {
       imgs_end = imgs.size();
     }
-    int imgs_size = imgs.end - imgs_start;
+    int imgs_size = imgs_end - imgs_start;
     if (imgs_size == 0) {
       std::cerr << "predict no image !" << std::endl;
       return true;
     }
+    int model_num = models_.size();
     int remainder = imgs_size % model_num;
     int thread_imgs_size = static_cast<int>(imgs_size / model_num);
 
