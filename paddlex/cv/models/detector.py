@@ -552,7 +552,8 @@ class FasterRCNN(BaseDetector):
             in_channel=head.out_shape[0].channels,
             roi_extractor=roi_extractor_cfg,
             with_pool=with_pool,
-            bbox_assigner=bbox_assigner)
+            bbox_assigner=bbox_assigner,
+            num_classes=num_classes)
 
         bbox_post_process = BBoxPostProcess(
             num_classes=num_classes,
