@@ -350,7 +350,9 @@ class YOLOv3(BaseDetector):
         else:
             norm_type = 'bn'
 
-        self.backbone_name = backbone.strip('_dcn')
+        if backbone.endswith('_dcn'):
+            backbone = backbone[:-4]
+        self.backbone_name = backbone
         if backbone == 'MobileNetV1':
             norm_type = 'bn'
             backbone = self._get_backbone('MobileNet', norm_type=norm_type)
@@ -359,7 +361,7 @@ class YOLOv3(BaseDetector):
                 'MobileNetV3', norm_type=norm_type, feature_maps=[7, 13, 16])
         elif backbone == 'ResNet50_vd':
             backbone = self._get_backbone(
-                'ResNet50',
+                'ResNet',
                 norm_type=norm_type,
                 variant='d',
                 return_idx=[1, 2, 3],
@@ -368,7 +370,7 @@ class YOLOv3(BaseDetector):
                 freeze_norm=False)
         elif backbone == 'ResNet50_vd_dcn':
             backbone = self._get_backbone(
-                'ResNet50',
+                'ResNet',
                 norm_type=norm_type,
                 variant='d',
                 return_idx=[1, 2, 3],
@@ -378,7 +380,9 @@ class YOLOv3(BaseDetector):
         else:
             backbone = self._get_backbone('DarkNet', norm_type=norm_type)
 
-        neck = necks.YOLOv3FPN()
+        neck = necks.YOLOv3FPN(
+            norm_type=norm_type,
+            in_channels=[i.channels for i in backbone.out_shape])
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
