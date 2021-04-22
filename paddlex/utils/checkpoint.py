@@ -158,12 +158,20 @@ pascalvoc_weights = {
     'HRNet_HRNet_W48_PascalVOC':
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams',
     'YOLOv3_MobileNetV1_PascalVOC':
-    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams'
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams',
+    'YOLOv3_MobileNetV3_PascalVOC':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_voc.pdparams'
 }
 
 coco_weights = {
     'YOLOv3_MobileNetV1_COCO':
-    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams',
+    'YOLOv3_DarkNet53_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams',
+    'YOLOv3_ResNet50_vd_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams',
+    'YOLOv3_MobileNetV3_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams'
 }
 
 

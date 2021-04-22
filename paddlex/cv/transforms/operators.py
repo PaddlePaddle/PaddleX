@@ -17,6 +17,8 @@ import cv2
 import copy
 import random
 from PIL import Image
+import paddlex
+
 try:
     from collections.abc import Sequence
 except Exception:
@@ -104,6 +106,11 @@ class Compose(Transform):
         sample = self.decode_image(sample)
 
         for op in self.transforms:
+            # skip batch transforms amd mixup
+            if isinstance(op,
+                          (paddlex.transforms.BatchPadding,
+                           paddlex.transforms.BatchRandomResize, MixupImage)):
+                continue
             sample = op(sample)
 
         if self.arrange_outputs is not None:

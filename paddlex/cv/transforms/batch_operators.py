@@ -21,26 +21,25 @@ try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
-from .operators import Transform, Resize, _Permute
+from .operators import Transform, Resize, ResizeByShort, _Permute
 from .box_utils import jaccard_overlap
 
 MAIN_PID = os.getpid()
 
 
 class BatchCompose(Transform):
-    def __init__(self, batch_transforms):
+    def __init__(self, batch_transforms=None):
         super(BatchCompose, self).__init__()
-        if not isinstance(batch_transforms, list):
-            raise TypeError(
-                'Type of transforms is invalid. Must be List, but received is {}'
-                .format(type(batch_transforms)))
         self.output_fields = mp.Manager().list([])
         self.batch_transforms = batch_transforms
         self.lock = mp.Lock()
 
     def __call__(self, samples):
-        for op in self.batch_transforms:
-            samples = op(samples)
+        if self.batch_transforms is not None:
+            for op in self.batch_transforms:
+                samples = op(samples)
+
+        samples = _Permute()(samples)
 
         global MAIN_PID
         if os.getpid() == MAIN_PID and \
@@ -66,13 +65,11 @@ class BatchRandomResize(Transform):
     Resize image to target size randomly. random target_size and interpolation method
     Args:
         target_size (list): image target size, must be list of (int or list)
-        keep_ratio (bool): whether keep_raio or not, default true
         interp (int): the interpolation method
     """
 
-    def __init__(self, target_size, keep_ratio, interp=cv2.INTER_NEAREST):
+    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
         super(BatchRandomResize, self).__init__()
-        self.keep_ratio = keep_ratio
         self.interp = interp
         assert isinstance(target_size, list), \
             "target_size must be List"
@@ -83,12 +80,30 @@ class BatchRandomResize(Transform):
 
     def __call__(self, samples):
         height, width = random.choice(self.target_size)
+        resizer = Resize(height=height, width=width, interp=self.interp)
+        samples = resizer(samples)
 
-        resizer = Resize(
-            height=height,
-            width=width,
-            keep_ratio=self.keep_ratio,
+        return samples
+
+
+class BatchRandomResizeByShort(Transform):
+    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+        super(BatchRandomResizeByShort, self).__init__()
+        self.interp = interp
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
+        self.target_size = target_size
+
+    def __call__(self, samples):
+        height, width = random.choice(self.target_size)
+        resizer = ResizeByShort(
+            short_size=min(height, width),
+            max_size=max(height, width),
             interp=self.interp)
+
         samples = resizer(samples)
 
         return samples
@@ -120,7 +135,6 @@ class _Gt2YoloTarget(Transform):
         h, w = samples[0]['image'].shape[:2]
         an_hw = np.array(self.anchors) / np.array([[w, h]])
         for sample in samples:
-            im = sample['image']
             gt_bbox = sample['gt_bbox']
             gt_class = sample['gt_class']
             if 'gt_score' not in sample:
