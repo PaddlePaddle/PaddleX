@@ -14,9 +14,7 @@ train_transforms = transforms.Compose([
                      [768, 1333], [800, 1333]],
         interp=cv2.INTER_CUBIC), transforms.RandomHorizontalFlip(),
     transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]), transforms._BatchPadding(
-            pad_to_stride=32, pad_gt=True)
+        mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 eval_transforms = transforms.Compose([
