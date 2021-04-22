@@ -39,6 +39,8 @@ class MultiGPUModel {
         return false;
       }
 
+      std::cout << gpu_ids[i] << " gpu model start init" << std::endl;
+
       if (!model->Init(cfg_file)) {
         std::cerr << "model Init error" << std::endl;
         return false;
@@ -51,6 +53,7 @@ class MultiGPUModel {
       }
       models_.push_back(model);
     }
+    return true;
   }
 
   bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1,
@@ -61,19 +64,19 @@ class MultiGPUModel {
       imgs_end = imgs.size();
     }
     int imgs_size = imgs_end - imgs_start;
-    if (imgs_size == 0) {
-      std::cerr << "predict no image !" << std::endl;
-      return true;
-    }
     int model_num = models_.size();
     int remainder = imgs_size % model_num;
     int thread_imgs_size = static_cast<int>(imgs_size / model_num);
 
-    int start = 0;
+    int start = imgs_start;
     int img_num;
     std::vector<std::thread> threads;
     for (int i = 0; i < model_num; ++i) {
       img_num = (i < remainder) ? thread_imgs_size + 1 : thread_imgs_size;
+      //imgs.size < model_.size
+      if (img_num <= 0) {
+        break;
+      }
       run_id_.push_back(i);
       threads.push_back(std::thread(&PaddleDeploy::Model::Predict, models_[i],
                                     std::ref(imgs), thread_num, start,
@@ -93,8 +96,11 @@ class MultiGPUModel {
   void PrintResult() {
     int i = 0;
     for (u_int id : run_id_) {
-      std::cout << "result for sample " << i << std::endl;
+      std::cout << "image " << i << std::endl;
       for (auto result : models_[id]->results_) {
+        std::cout << "boxes num:"
+                  << result.det_result->boxes.size()
+                  << std::endl;
         std::cout << result << std::endl;
         i += 1;
       }

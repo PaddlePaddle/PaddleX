@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
                                 gpu_ids, FLAGS_use_gpu, FLAGS_use_mkl);
 
   if (!init_result) {
-    std::cerr << "model init error " << std::endl;
+    std::cerr << "gpu model init error " << std::endl;
     return -1;
   }
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
 
   std::cout << "start model predict " << imgs.size() << std::endl;
   //infer
-  size_t batch_size = FLAGS_batch_size * gpu_ids.size();
+  size_t batch_size = FLAGS_batch_size;
   int img_start = 0;
   size_t imgs_size = imgs.size();
   while (img_start < imgs_size) {
@@ -98,6 +98,7 @@ int main(int argc, char** argv) {
     }
     model.Predict(std::ref(imgs), FLAGS_thread_num,
                   img_start, img_start + batch_size);
+    std::cout << img_start / batch_size << " group" << std::endl;
     model.PrintResult();
     img_start += batch_size;
   }
