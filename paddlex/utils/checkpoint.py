@@ -168,7 +168,7 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams',
     'YOLOv3_DarkNet53_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams',
-    'YOLOv3_ResNet50_vd_COCO':
+    'YOLOv3_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams',
     'YOLOv3_MobileNetV3_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams',

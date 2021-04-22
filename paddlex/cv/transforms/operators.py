@@ -978,6 +978,16 @@ class _Permute(Transform):
         return sample
 
 
+class _OffsetLabel(Transform):
+    def __init__(self):
+        super(_OffsetLabel, self).__init__()
+
+    def apply(self, sample):
+        if 'gt_class' in sample:
+            sample['gt_class'] = sample['gt_class'] - 1
+        return sample
+
+
 class ArrangeSegmenter(Transform):
     def __init__(self, mode):
         super(ArrangeSegmenter, self).__init__()
