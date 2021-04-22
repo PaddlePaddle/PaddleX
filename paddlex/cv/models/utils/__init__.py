@@ -23,6 +23,14 @@ seg_pretrain_weights_dict = {
 det_pretrain_weights_dict = {
     'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC'],
     'YOLOv3_DarkNet53': ['COCO'],
-    'YOLOv3_ResNet50_vd': ['COCO'],
-    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC']
+    'YOLOv3_ResNet50_vd_dcn': ['COCO'],
+    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC'],
+    'FasterRCNN_ResNet50_vd': ['COCO'],
+    'FasterRCNN_ResNet50_vd_fpn': ['COCO'],
+    'FasterRCNN_ResNet50': ['COCO'],
+    'FasterRCNN_ResNet50_fpn': ['COCO'],
+    'FasterRCNN_ResNet34_fpn': ['COCO'],
+    'FasterRCNN_ResNet34_vd_fpn': ['COCO'],
+    'FasterRCNN_ResNet101_fpn': ['COCO'],
+    'FasterRCNN_ResNet101_vd_fpn': ['COCO']
 }

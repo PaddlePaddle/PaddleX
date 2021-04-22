@@ -173,9 +173,21 @@ coco_weights = {
     'YOLOv3_MobileNetV3_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams',
     'FasterRCNN_ResNet50_fpn_COCO':
-    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_fpn_1x_coco.pdparams',
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_fpn_2x_coco.pdparams',
     'FasterRCNN_ResNet50_COCO':
-    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_1x_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_1x_coco.pdparams',
+    'FasterRCNN_ResNet50_vd_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_1x_coco.pdparams',
+    'FasterRCNN_ResNet50_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_2x_coco.pdparams',
+    'FasterRCNN_ResNet34_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_vd_fpn_1x_coco.pdparams',
+    'FasterRCNN_ResNet34_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_fpn_1x_coco.pdparams',
+    'FasterRCNN_ResNet101_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_fpn_2x_coco.pdparams',
+    'FasterRCNN_ResNet101_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams'
 }
 
 

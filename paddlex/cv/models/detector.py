@@ -31,6 +31,7 @@ from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric
+from .utils import det_pretrain_weights_dict
 
 __all__ = ["YOLOv3", "FasterRCNN"]
 
@@ -178,7 +179,8 @@ class BaseDetector(BaseModel):
 
         # initiate weights
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
-            if pretrain_weights not in ['COCO', 'PascalVOC']:
+            if pretrain_weights not in det_pretrain_weights_dict[
+                    self.model_name + self.backbone_name]:
                 logging.warning(
                     "Path of pretrain_weights('{}') does not exist!".format(
                         pretrain_weights))
@@ -440,16 +442,20 @@ class FasterRCNN(BaseDetector):
                  test_pre_nms_top_n=None,
                  test_post_nms_top_n=1000):
         self.init_params = locals()
-        if backbone not in ['ResNet50']:
+        if backbone not in [
+                'ResNet50', 'ResNet50_vd', 'ResNet34', 'ResNet34_vd',
+                'ResNet101', 'ResNet101_vd'
+        ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50')".format(backbone))
+                "('ResNet50', 'ResNet50_vd', 'ResNet34', 'ResNet34_vd', "
+                "'ResNet101', 'ResNet101_vd')".format(backbone))
 
-        self.backbone_name = backbone + '_fpn' if with_fpn else backbone
-        if backbone == 'ResNet50':
+        if 'ResNet50' in backbone:
             if with_fpn:
                 backbone = self._get_backbone(
                     'ResNet',
+                    variant='d' if 'vd' in backbone else 'b',
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
@@ -457,12 +463,41 @@ class FasterRCNN(BaseDetector):
             else:
                 backbone = self._get_backbone(
                     'ResNet',
+                    variant='d' if 'vd' in backbone else 'b',
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[2],
                     num_stages=3)
+        elif 'ResNet34' in backbone:
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn, fpn enabled.".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=34,
+                variant='d' if 'vd' in backbone else 'b',
+                norm_type='bn',
+                freeze_at=0,
+                return_idx=[0, 1, 2, 3],
+                num_stages=4)
         else:
-            backbone = self._get_backbone(backbone)
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn, fpn enabled.".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=101,
+                variant='d' if 'vd' in backbone else 'b',
+                norm_type='bn',
+                freeze_at=0,
+                return_idx=[0, 1, 2, 3],
+                num_stages=4)
+
+        self.backbone_name = backbone + '_fpn' if with_fpn else backbone
 
         rpn_in_channel = backbone.out_shape[0].channels
 
