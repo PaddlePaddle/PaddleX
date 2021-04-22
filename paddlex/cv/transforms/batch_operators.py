@@ -98,11 +98,9 @@ class BatchRandomResizeByShort(Transform):
         self.target_size = target_size
 
     def __call__(self, samples):
-        height, width = random.choice(self.target_size)
+        short_size, max_size = random.choice(self.target_size)
         resizer = ResizeByShort(
-            short_size=min(height, width),
-            max_size=max(height, width),
-            interp=self.interp)
+            short_size=short_size, max_size=max_size, interp=self.interp)
 
         samples = resizer(samples)
 
@@ -117,6 +115,8 @@ class _BatchPadding(Transform):
 
     def __call__(self, samples):
         coarsest_stride = self.pad_to_stride
+        if coarsest_stride <= 0 and len(samples) == 1:
+            return samples
         max_shape = np.array([data['image'].shape for data in samples]).max(
             axis=0)
         if coarsest_stride > 0:

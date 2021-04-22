@@ -18,6 +18,29 @@ import paddle
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
+seg_pretrain_weights_dict = {
+    'UNet': ['CITYSCAPES'],
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
+    'FastSCNN': ['CITYSCAPES'],
+    'HRNet': ['CITYSCAPES', 'PascalVOC'],
+    'BiSeNetV2': ['CITYSCAPES']
+}
+
+det_pretrain_weights_dict = {
+    'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC'],
+    'YOLOv3_DarkNet53': ['COCO'],
+    'YOLOv3_ResNet50_vd_dcn': ['COCO'],
+    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC'],
+    'FasterRCNN_ResNet50_vd': ['COCO'],
+    'FasterRCNN_ResNet50_vd_fpn': ['COCO'],
+    'FasterRCNN_ResNet50': ['COCO'],
+    'FasterRCNN_ResNet50_fpn': ['COCO'],
+    'FasterRCNN_ResNet34_fpn': ['COCO'],
+    'FasterRCNN_ResNet34_vd_fpn': ['COCO'],
+    'FasterRCNN_ResNet101_fpn': ['COCO'],
+    'FasterRCNN_ResNet101_vd_fpn': ['COCO']
+}
+
 cityscapes_weights = {
     'UNet_CITYSCAPES':
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams',

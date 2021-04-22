@@ -25,13 +25,13 @@ from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
-from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, _OffsetLabel
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _BatchPadding, _Gt2YoloTarget, _Permute
+from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, _LabelMinusOne
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget, _Permute
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric
-from .utils import det_pretrain_weights_dict
+from paddlex.utils.checkpoint import det_pretrain_weights_dict
 
 __all__ = ["YOLOv3", "FasterRCNN"]
 
@@ -52,8 +52,6 @@ class BaseDetector(BaseModel):
 
     def build_net(self, **params):
         net = architectures.__dict__[self.model_name](**params)
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
-            net = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(net)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -421,10 +419,10 @@ class YOLOv3(BaseDetector):
 
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
-            if isinstance(op, BatchRandomResize):
+            if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose([_OffsetLabel(
+        batch_transforms = BatchCompose([_LabelMinusOne(
         )] + custom_batch_transforms + default_batch_transforms)
 
         return batch_transforms
@@ -475,7 +473,7 @@ class FasterRCNN(BaseDetector):
         elif 'ResNet34' in backbone:
             if not with_fpn:
                 logging.warning(
-                    "Backbone {} should be used along with fpn, fpn enabled.".
+                    "Backbone {} should be used along with fpn enabled.".
                     format(backbone))
                 with_fpn = True
             backbone = self._get_backbone(
@@ -489,7 +487,7 @@ class FasterRCNN(BaseDetector):
         else:
             if not with_fpn:
                 logging.warning(
-                    "Backbone {} should be used along with fpn, fpn enabled.".
+                    "Backbone {} should be used along with fpn enabled.".
                     format(backbone))
                 with_fpn = True
             backbone = self._get_backbone(
@@ -625,10 +623,8 @@ class FasterRCNN(BaseDetector):
             ]
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
-            if isinstance(op, BatchRandomResize):
+            if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
-            elif isinstance(op, _BatchPadding):
-                custom_batch_transforms.insert(-1, copy.deepcopy(op))
 
         batch_transforms = BatchCompose(custom_batch_transforms +
                                         default_batch_transforms)
