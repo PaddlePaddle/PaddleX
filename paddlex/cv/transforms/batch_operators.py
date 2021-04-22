@@ -60,9 +60,58 @@ class BatchCompose(Transform):
         return samples
 
 
-class BatchPadding(Transform):
+class BatchRandomResize(Transform):
+    """
+    Resize image to target size randomly. random target_size and interpolation method
+    Args:
+        target_size (list): image target size, must be list of (int or list)
+        interp (int): the interpolation method
+    """
+
+    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+        super(BatchRandomResize, self).__init__()
+        self.interp = interp
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
+        self.target_size = target_size
+
+    def __call__(self, samples):
+        height, width = random.choice(self.target_size)
+        resizer = Resize(height=height, width=width, interp=self.interp)
+        samples = resizer(samples)
+
+        return samples
+
+
+class BatchRandomResizeByShort(Transform):
+    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+        super(BatchRandomResizeByShort, self).__init__()
+        self.interp = interp
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
+        self.target_size = target_size
+
+    def __call__(self, samples):
+        height, width = random.choice(self.target_size)
+        resizer = ResizeByShort(
+            short_size=min(height, width),
+            max_size=max(height, width),
+            interp=self.interp)
+
+        samples = resizer(samples)
+
+        return samples
+
+
+class _BatchPadding(Transform):
     def __init__(self, pad_to_stride=0, pad_gt=False):
-        super(BatchPadding, self).__init__()
+        super(_BatchPadding, self).__init__()
         self.pad_to_stride = pad_to_stride
         self.pad_gt = pad_gt
 
@@ -111,55 +160,6 @@ class BatchPadding(Transform):
                     diff_data = np.zeros([gt_num_max], dtype=np.int32)
                     diff_data[0:gt_num] = data['difficult'][:gt_num, 0]
                     data['difficult'] = diff_data
-
-        return samples
-
-
-class BatchRandomResize(Transform):
-    """
-    Resize image to target size randomly. random target_size and interpolation method
-    Args:
-        target_size (list): image target size, must be list of (int or list)
-        interp (int): the interpolation method
-    """
-
-    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
-        super(BatchRandomResize, self).__init__()
-        self.interp = interp
-        assert isinstance(target_size, list), \
-            "target_size must be List"
-        for i, item in enumerate(target_size):
-            if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
-
-    def __call__(self, samples):
-        height, width = random.choice(self.target_size)
-        resizer = Resize(height=height, width=width, interp=self.interp)
-        samples = resizer(samples)
-
-        return samples
-
-
-class BatchRandomResizeByShort(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
-        super(BatchRandomResizeByShort, self).__init__()
-        self.interp = interp
-        assert isinstance(target_size, list), \
-            "target_size must be List"
-        for i, item in enumerate(target_size):
-            if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
-
-    def __call__(self, samples):
-        height, width = random.choice(self.target_size)
-        resizer = ResizeByShort(
-            short_size=min(height, width),
-            max_size=max(height, width),
-            interp=self.interp)
-
-        samples = resizer(samples)
 
         return samples
 

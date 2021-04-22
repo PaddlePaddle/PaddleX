@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .operators import *
-from .batch_operators import BatchRandomResize, BatchRandomResizeByShort, BatchPadding
+from .batch_operators import BatchRandomResize, BatchRandomResizeByShort, _BatchPadding
 
 
 def arrange_transforms(model_type, transforms, mode='train'):
