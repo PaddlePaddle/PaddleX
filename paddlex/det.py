@@ -16,3 +16,4 @@ from . import cv
 
 YOLOv3 = cv.models.YOLOv3
 FasterRCNN = cv.models.FasterRCNN
+PPYOLO = cv.models.PPYOLO

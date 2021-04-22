@@ -38,7 +38,9 @@ det_pretrain_weights_dict = {
     'FasterRCNN_ResNet34_fpn': ['COCO'],
     'FasterRCNN_ResNet34_vd_fpn': ['COCO'],
     'FasterRCNN_ResNet101_fpn': ['COCO'],
-    'FasterRCNN_ResNet101_vd_fpn': ['COCO']
+    'FasterRCNN_ResNet101_vd_fpn': ['COCO'],
+    'PPYOLO_ResNet50_vd_dcn': ['COCO'],
+    'PPYOLO_ResNet18_vd': ['COCO']
 }
 
 cityscapes_weights = {
@@ -210,7 +212,11 @@ coco_weights = {
     'FasterRCNN_ResNet101_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_fpn_2x_coco.pdparams',
     'FasterRCNN_ResNet101_vd_fpn_COCO':
-    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams',
+    'PPYOLO_ResNet50_vd_dcn':
+    'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
+    'PPYOLO_ResNet18_vd':
+    'https://paddledet.bj.bcebos.com/models/ppyolo_r18vd_coco.pdparams'
 }
 
 
