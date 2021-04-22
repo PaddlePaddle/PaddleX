@@ -45,10 +45,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 num_classes = len(train_dataset.labels) + 1
 
 model = pdx.det.FasterRCNN(
-    num_classes=num_classes,
-    backbone='ResNet50',
-    with_fpn=True,
-    anchor_sizes=[[32], [64], [128], [256], [512]])
+    num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
 model.train(
     num_epochs=12,
