@@ -28,9 +28,10 @@ from .functions import normalize, horizontal_flip, permute, vertical_flip, cente
 
 __all__ = [
     "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
-    "RandomHorizontalFlip", "RandomVerticalFlip", "Normalize", "CenterCrop",
-    "RandomCrop", "RandomExpand", "Padding", "MixupImage", "RandomDistort",
-    "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector"
+    "RandomResizeByShort", "RandomHorizontalFlip", "RandomVerticalFlip",
+    "Normalize", "CenterCrop", "RandomCrop", "RandomExpand", "Padding",
+    "MixupImage", "RandomDistort", "ArrangeSegmenter", "ArrangeClassifier",
+    "ArrangeDetector"
 ]
 
 interp_list = [
