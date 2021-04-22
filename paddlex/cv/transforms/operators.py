@@ -108,9 +108,9 @@ class Compose(Transform):
 
         for op in self.transforms:
             # skip batch transforms amd mixup
-            if isinstance(op,
-                          (paddlex.transforms._BatchPadding,
-                           paddlex.transforms.BatchRandomResize, MixupImage)):
+            if isinstance(op, (paddlex.transforms.BatchRandomResize,
+                               paddlex.transforms.BatchRandomResizeByShort,
+                               MixupImage)):
                 continue
             sample = op(sample)
 

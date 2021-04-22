@@ -144,6 +144,7 @@ class _BatchPadding(Transform):
 
                 gt_num = data['gt_bbox'].shape[0]
                 gt_box_data[0:gt_num, :] = data['gt_bbox']
+                print(data['gt_class'])
                 gt_class_data[0:gt_num] = np.squeeze(data['gt_class'])
                 is_crowd_data[0:gt_num] = np.squeeze(data['is_crowd'])
 

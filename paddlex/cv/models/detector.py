@@ -177,8 +177,8 @@ class BaseDetector(BaseModel):
 
         # initiate weights
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
-            if pretrain_weights not in det_pretrain_weights_dict[
-                    self.model_name + self.backbone_name]:
+            if pretrain_weights not in det_pretrain_weights_dict['_'.join(
+                [self.model_name, self.backbone_name])]:
                 logging.warning(
                     "Path of pretrain_weights('{}') does not exist!".format(
                         pretrain_weights))
@@ -398,18 +398,18 @@ class YOLOv3(BaseDetector):
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
-        self.anchors_masks = anchor_masks
+        self.anchor_masks = anchor_masks
 
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=-1, pad_gt=True), _NormalizeBox(),
+                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
                 _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
-                    anchor_masks=self.anchors_masks,
+                    anchor_masks=self.anchor_masks,
                     anchors=self.anchors,
                     downsample_ratios=[32, 16, 8],
-                    num_classes=6)
+                    num_classes=self.num_classes)
             ]
         else:
             default_batch_transforms = [
@@ -657,7 +657,7 @@ class PPYOLO(BaseDetector):
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd_dcn', 'ResNet18_vd')".format(backbone))
-
+        self.backbone_name = backbone
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
             norm_type = 'sync_bn'
         else:
@@ -688,7 +688,8 @@ class PPYOLO(BaseDetector):
             norm_type=norm_type,
             in_channels=[i.channels for i in backbone.out_shape],
             coord_conv=use_coord_conv,
-            drop_block=use_drop_block, )
+            drop_block=use_drop_block,
+            spp=use_spp)
 
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
@@ -706,8 +707,7 @@ class PPYOLO(BaseDetector):
             anchor_masks=anchor_masks,
             num_classes=num_classes,
             loss=loss,
-            iou_aware=use_iou_aware,
-            spp=use_spp)
+            iou_aware=use_iou_aware)
 
         post_process = BBoxPostProcess(
             decode=YOLOBox(
@@ -731,25 +731,28 @@ class PPYOLO(BaseDetector):
         }
 
         super(PPYOLO, self).__init__(
-            model_name='PPYOLO', num_classes=num_classes, **params)
+            model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors,
         self.anchor_masks = anchor_masks
+        self.model_name = 'PPYOLO'
 
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=-1, pad_gt=True), _NormalizeBox(),
+                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
                 _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
                     anchors=self.anchors,
-                    downsample_ratios=[32, 16, 8])
+                    downsample_ratios=[32, 16, 8],
+                    num_classes=self.num_classes)
             ]
         else:
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=-1, pad_gt=True)
+                    pad_to_stride=-1, pad_gt=False)
             ]
+
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):

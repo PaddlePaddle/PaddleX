@@ -213,9 +213,9 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_fpn_2x_coco.pdparams',
     'FasterRCNN_ResNet101_vd_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams',
-    'PPYOLO_ResNet50_vd_dcn':
+    'PPYOLO_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
-    'PPYOLO_ResNet18_vd':
+    'PPYOLO_ResNet18_vd_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolo_r18vd_coco.pdparams'
 }
 
