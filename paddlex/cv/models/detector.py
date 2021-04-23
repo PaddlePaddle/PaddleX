@@ -740,7 +740,8 @@ class PPYOLO(BaseDetector):
             coord_conv=use_coord_conv,
             drop_block=use_drop_block,
             spp=use_spp,
-            conv_block_num=0 if 'MobileNetV3' in self.backbone_name else 2)
+            conv_block_num=0 if ('MobileNetV3' in self.backbone_name or
+                                 self.backbone_name == 'ResNet18_vd') else 2)
 
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
