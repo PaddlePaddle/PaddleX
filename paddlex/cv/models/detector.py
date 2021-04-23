@@ -717,11 +717,11 @@ class PPYOLO(BaseDetector):
                 score_threshold=nms_score_threshold,
                 post_threshold=.01,
                 nms_top_k=nms_topk,
-                background_label=-1)) if use_matrix_nms else MultiClassNMS(
+                background_label=-1) if use_matrix_nms else MultiClassNMS(
                     score_threshold=nms_score_threshold,
                     nms_top_k=nms_topk,
                     keep_top_k=nms_keep_topk,
-                    nms_threshold=nms_iou_threshold)
+                    nms_threshold=nms_iou_threshold))
 
         params = {
             'backbone': backbone,
@@ -732,7 +732,7 @@ class PPYOLO(BaseDetector):
 
         super(PPYOLO, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
-        self.anchors = anchors,
+        self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.model_name = 'PPYOLO'
 
