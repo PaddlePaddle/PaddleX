@@ -27,20 +27,21 @@ seg_pretrain_weights_dict = {
 }
 
 det_pretrain_weights_dict = {
-    'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC'],
-    'YOLOv3_DarkNet53': ['COCO'],
-    'YOLOv3_ResNet50_vd_dcn': ['COCO'],
-    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC'],
-    'FasterRCNN_ResNet50_vd': ['COCO'],
-    'FasterRCNN_ResNet50_vd_fpn': ['COCO'],
-    'FasterRCNN_ResNet50': ['COCO'],
-    'FasterRCNN_ResNet50_fpn': ['COCO'],
-    'FasterRCNN_ResNet34_fpn': ['COCO'],
-    'FasterRCNN_ResNet34_vd_fpn': ['COCO'],
-    'FasterRCNN_ResNet101_fpn': ['COCO'],
-    'FasterRCNN_ResNet101_vd_fpn': ['COCO'],
-    'PPYOLO_ResNet50_vd_dcn': ['COCO'],
-    'PPYOLO_ResNet18_vd': ['COCO']
+    'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC', 'IMAGENET'],
+    'YOLOv3_DarkNet53': ['COCO', 'IMAGENET'],
+    'YOLOv3_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
+    'YOLOv3_ResNet34': ['COCO', 'IMAGENET'],
+    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC', 'IMAGENET'],
+    'FasterRCNN_ResNet50_vd': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50_vd_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet34_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet34_vd_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET'],
+    'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
+    'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET']
 }
 
 cityscapes_weights = {
@@ -171,6 +172,36 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
     'ShuffleNetV2_x2_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams',
+    'FasterRCNN_ResNet50_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
+    'FasterRCNN_ResNet50_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
+    'FasterRCNN_ResNet50_vd_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet50_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet34_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet34_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_pretrained.pdparams',
+    'FasterRCNN_ResNet101_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
+    'FasterRCNN_ResNet101_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
+    'YOLOv3_ResNet50_vd_dcn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
+    'YOLOv3_ResNet34_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_pretrained.pdparams',
+    'YOLOv3_MobileNetV1_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV1_pretrained.pdparams',
+    'YOLOv3_MobileNetV3_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'YOLOv3_DarkNet53_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/DarkNet53_pretrained.pdparams',
+    'PPYOLO_ResNet50_vd_dcn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
+    'PPYOLO_ResNet18_vd_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams'
 }
 
 pascalvoc_weights = {
@@ -195,6 +226,8 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams',
     'YOLOv3_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams',
+    'YOLOv3_ResNet34_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_r34_270e_coco.pdparams',
     'YOLOv3_MobileNetV3_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams',
     'FasterRCNN_ResNet50_fpn_COCO':
