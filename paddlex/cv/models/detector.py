@@ -653,10 +653,14 @@ class PPYOLO(BaseDetector):
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45):
         self.init_params = locals()
-        if backbone not in ['ResNet50_vd_dcn', 'ResNet18_vd']:
+        if backbone not in [
+                'ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large',
+                'MobileNetV3_small'
+        ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50_vd_dcn', 'ResNet18_vd')".format(backbone))
+                "('ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small')".
+                format(backbone))
         self.backbone_name = backbone
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
             norm_type = 'sync_bn'
@@ -684,17 +688,38 @@ class PPYOLO(BaseDetector):
                 freeze_norm=False,
                 norm_decay=0.)
 
+        elif backbone == 'MobileNetV3_large':
+            backbone = self._get_backbone(
+                'MobileNetV3',
+                model_name='large',
+                norm_type=norm_type,
+                scale=1,
+                with_extra_blocks=False,
+                extra_block_filters=[],
+                feature_maps=[13, 16])
+
+        elif backbone == 'MobileNetV3_small':
+            backbone = self._get_backbone(
+                'MobileNetV3',
+                model_name='small',
+                norm_type=norm_type,
+                scale=1,
+                with_extra_blocks=False,
+                extra_block_filters=[],
+                feature_maps=[9, 12])
+
         neck = necks.PPYOLOFPN(
             norm_type=norm_type,
             in_channels=[i.channels for i in backbone.out_shape],
             coord_conv=use_coord_conv,
             drop_block=use_drop_block,
-            spp=use_spp)
+            spp=use_spp,
+            conv_block_num=0 if 'MobileNetV3' in backbone else 2)
 
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
-            downsample=[32, 16, 8],
+            downsample=[32, 16] if 'MobileNetV3' in backbone else [32, 16, 8],
             label_smooth=label_smooth,
             scale_x_y=scale_x_y,
             iou_loss=losses.IouLoss(
@@ -711,11 +736,13 @@ class PPYOLO(BaseDetector):
 
         post_process = BBoxPostProcess(
             decode=YOLOBox(
-                num_classes=num_classes, conf_thresh=.01, scale_x_y=scale_x_y),
+                num_classes=num_classes,
+                conf_thresh=.005 if 'MobileNetV3' in backbone else .01,
+                scale_x_y=scale_x_y),
             nms=MatrixNMS(
                 keep_top_k=nms_keep_topk,
                 score_threshold=nms_score_threshold,
-                post_threshold=.01,
+                post_threshold=.05 if 'MobileNetV3' in backbone else .01,
                 nms_top_k=nms_topk,
                 background_label=-1) if use_matrix_nms else MultiClassNMS(
                     score_threshold=nms_score_threshold,
