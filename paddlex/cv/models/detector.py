@@ -636,9 +636,8 @@ class PPYOLO(BaseDetector):
     def __init__(self,
                  num_classes=80,
                  backbone='ResNet50_vd_dcn',
-                 anchors=[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
-                          [59, 119], [116, 90], [156, 198], [373, 326]],
-                 anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]],
+                 anchors=None,
+                 anchor_masks=None,
                  use_coord_conv=True,
                  use_iou_aware=True,
                  use_spp=True,
@@ -666,6 +665,15 @@ class PPYOLO(BaseDetector):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
+        if anchors is None and anchor_masks is None:
+            if 'MobileNetV3' in backbone:
+                anchors = [[11, 18], [34, 47], [51, 126], [115, 71],
+                           [120, 195], [254, 235]]
+                anchor_masks = [[3, 4, 5], [0, 1, 2]]
+            else:
+                anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+                           [59, 119], [116, 90], [156, 198], [373, 326]]
+                anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
 
         if backbone == 'ResNet50_vd_dcn':
             backbone = self._get_backbone(
@@ -677,6 +685,7 @@ class PPYOLO(BaseDetector):
                 freeze_at=-1,
                 freeze_norm=False,
                 norm_decay=0.)
+
         elif backbone == 'ResNet18_vd':
             backbone = self._get_backbone(
                 'ResNet',
