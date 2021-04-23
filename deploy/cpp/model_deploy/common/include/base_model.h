@@ -78,18 +78,15 @@ class Model {
   }
 
   virtual bool Predict(const std::vector<cv::Mat>& imgs,
-                       int thread_num = 1, int img_start = 0, int img_end = -1) {
+                       int thread_num = 1) {
     if (!preprocess_ || !postprocess_ || !infer_engine_) {
       std::cerr << "No init,cann't predict" << std::endl;
       return false;
     }
 
     results_.clear();
-    if (img_end < 0) {
-      img_end = static_cast<int>(imgs.size());
-    }
     std::vector<cv::Mat> imgs_clone;
-    for (auto i = img_start; i < img_end; ++i) {
+    for (auto i = 0; i < imgs.size(); ++i) {
       imgs_clone.push_back(imgs[i].clone());
     }
 

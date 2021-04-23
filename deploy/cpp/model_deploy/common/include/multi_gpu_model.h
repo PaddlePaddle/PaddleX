@@ -25,12 +25,10 @@ class MultiGPUModel {
   std::vector<u_int> run_id_;
 
  public:
-  bool Init(const std::string& model_type, const std::string& cfg_file,
-            const std::string& model_filename,
-            const std::string& params_filename, const std::vector<int> gpu_ids,
-            bool use_gpu, bool use_mkl) {
-    int model_num = static_cast<int>(gpu_ids.size());
-    for (auto i = 0; i < model_num; ++i) {
+  bool Init(const std::string& model_type,
+            const std::string& cfg_file, size_t gpu_num = 1) {
+    models_.clear();
+    for (auto i = 0; i < gpu_num; ++i) {
       std::shared_ptr<Model> model =
           PaddleDeploy::ModelFactory::CreateObject(model_type);
 
@@ -39,49 +37,70 @@ class MultiGPUModel {
         return false;
       }
 
-      std::cout << gpu_ids[i] << " gpu model start init" << std::endl;
+      std::cout << i + 1 << " model start init" << std::endl;
 
       if (!model->Init(cfg_file)) {
         std::cerr << "model Init error" << std::endl;
         return false;
       }
 
-      if (!model->PaddleEngineInit(model_filename, params_filename, use_gpu,
-                                   gpu_ids[i], use_mkl)) {
-        std::cerr << "Paddle Engine Init error" << std::endl;
-        return false;
-      }
       models_.push_back(model);
     }
     return true;
   }
 
-  bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1,
-               int imgs_start = 0, int imgs_end = -1) {
-    run_id_.clear();
-
-    if (imgs_end < 0) {
-      imgs_end = imgs.size();
+  bool PaddleEngineInit(const std::string& model_filename,
+                        const std::string& params_filename,
+                        const std::vector<int> gpu_ids,
+                        bool use_gpu = false, bool use_mkl = true) {
+    for (auto i = 0; i < gpu_ids.size(); ++i){
+      if (!models_[i]->PaddleEngineInit(model_filename,
+                                        params_filename,
+                                        use_gpu, gpu_ids[i],
+                                        use_mkl)) {
+        std::cerr << "Paddle Engine Init error:" << gpu_ids[i] << std::endl;
+        return false;
+      }
     }
-    int imgs_size = imgs_end - imgs_start;
-    int model_num = models_.size();
-    int remainder = imgs_size % model_num;
-    int thread_imgs_size = static_cast<int>(imgs_size / model_num);
+    return true;
+  }
 
-    int start = imgs_start;
-    int img_num;
+  bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1) {
+    run_id_.clear();
+    int model_num = models_.size();
+    if (model_num <= 0) {
+      std::cerr << "Please Init before Predict!" << std::endl;
+      return false;
+    }
+
+    int imgs_size = imgs.size();
+    if (imgs_size == 1) {
+      models_[0]->Predict(imgs);
+      run_id_.push_back(0);
+      return true;
+    }
+
+    int start = 0;
     std::vector<std::thread> threads;
+    std::vector<std::vector<cv::Mat>> split_imgs;
     for (int i = 0; i < model_num; ++i) {
-      img_num = (i < remainder) ? thread_imgs_size + 1 : thread_imgs_size;
-      //imgs.size < model_.size
-      if (img_num <= 0) {
+      int img_num = static_cast<int>(imgs_size / model_num);
+      if (i < imgs_size % model_num) {
+        img_num += 1;
+      } else if (img_num <= 0) {
+        //imgs.size < model_.size
         break;
       }
       run_id_.push_back(i);
-      threads.push_back(std::thread(&PaddleDeploy::Model::Predict, models_[i],
-                                    std::ref(imgs), thread_num, start,
-                                    start + img_num));
+      std::vector<cv::Mat> new_imgs(imgs.begin() + start,
+                                    imgs.begin() + start + img_num);
+      split_imgs.push_back(new_imgs);
       start += img_num;
+    }
+
+    for (int i = 0; i < model_num; ++i) {
+      threads.push_back(std::thread(&PaddleDeploy::Model::Predict, models_[i],
+                                    std::ref(split_imgs[i]), thread_num));
     }
 
     for (auto& thread : threads) {
