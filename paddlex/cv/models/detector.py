@@ -681,11 +681,16 @@ class PPYOLO(BaseDetector):
                            [120, 195], [254, 235]]
                 anchor_masks = [[3, 4, 5], [0, 1, 2]]
                 downsample_ratios = [32, 16]
-            else:
+            elif backbone == 'ResNet50_vd_dcn':
                 anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                            [59, 119], [116, 90], [156, 198], [373, 326]]
                 anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
                 downsample_ratios = [32, 16, 8]
+            else:
+                anchors = [[10, 14], [23, 27], [37, 58], [81, 82], [135, 169],
+                           [344, 319]]
+                anchor_masks = [[3, 4, 5], [0, 1, 2]]
+                downsample_ratios = [32, 16]
 
         if backbone == 'ResNet50_vd_dcn':
             backbone = self._get_backbone(
