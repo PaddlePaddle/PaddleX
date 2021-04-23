@@ -257,7 +257,7 @@ def get_pretrain_weights(flag,
     return fname
 
 
-def load_pretrain_weights(model, pretrain_weights=None):
+def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
     if pretrain_weights is not None:
         logging.info(
             'Loading pretrained model from {}'.format(pretrain_weights),
@@ -282,12 +282,11 @@ def load_pretrain_weights(model, pretrain_weights=None):
                     num_params_loaded += 1
             model.set_dict(model_state_dict)
             logging.info("There are {}/{} variables loaded into {}.".format(
-                num_params_loaded,
-                len(model_state_dict), model.__class__.__name__))
+                num_params_loaded, len(model_state_dict), model_name))
         else:
             raise ValueError('The pretrained model directory is not Found: {}'.
                              format(pretrain_weights))
     else:
         logging.info(
             'No pretrained model to load, {} will be trained from scratch.'.
-            format(model.__class__.__name__))
+            format(model_name))

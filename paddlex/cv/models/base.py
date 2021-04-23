@@ -70,7 +70,8 @@ class BaseModel:
                     save_dir,
                     backbone_name=backbone_name)
         if pretrain_weights is not None:
-            load_pretrain_weights(self.net, pretrain_weights)
+            load_pretrain_weights(
+                self.net, pretrain_weights, model_name=self.model_name)
 
     def get_model_info(self):
         info = dict()
