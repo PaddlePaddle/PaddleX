@@ -28,6 +28,7 @@ class BasePostProcess {
   virtual bool Init(const YAML::Node& yaml_config, bool use_cpu_nms = false) {
     // TODO(jiangjiajun): use_cpu_nms is useless now
     use_cpu_nms_ = use_cpu_nms;
+    return true;
   }
 
   virtual bool Run(const std::vector<DataBlob>& outputs,

@@ -1,0 +1,54 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Release",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "inheritEnvironments": [
+        "msvc_x64_x64"
+      ],
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "OPENCV_DIR",
+          "value": "xx\\opencv",
+          "type": "PATH"
+        },
+        {
+          "name": "PADDLE_DIR",
+          "value": "xx\\paddle_inference_install_dir",
+          "type": "PATH"
+        },
+        {
+          "name": "CUDA_LIB",
+          "value": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\lib\\x64",
+          "type": "PATH"
+        },
+        {
+          "name": "WITH_STATIC_LIB",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "WITH_MKL",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "WITH_GPU",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "WITH_TENSORRT",
+          "value": "False",
+          "type": "BOOL"
+        }
+      ]
+    }
+  ]
+}

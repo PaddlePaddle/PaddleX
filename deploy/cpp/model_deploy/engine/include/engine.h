@@ -64,10 +64,10 @@ class InferEngine {
  public:
   virtual bool Init(const std::string &model_filename,
                     const std::string &params_filename,
-                    const InferenceConfig &engine_config) {}
+                    const InferenceConfig &engine_config) = 0;
 
   virtual bool Infer(const std::vector<DataBlob> &inputs,
-                     std::vector<DataBlob> *outputs) {}
+                     std::vector<DataBlob> *outputs) = 0;
 };
 
 }  // namespace PaddleDeploy
