@@ -747,7 +747,8 @@ class PPYOLO(BaseDetector):
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
             downsample=[32, 16]
-            if 'MobileNetV3' in self.backbone_name else [32, 16, 8],
+            if ('MobileNetV3' in self.backbone_name or
+                self.backbone_name == 'ResNet18_vd') else [32, 16, 8],
             label_smooth=label_smooth,
             scale_x_y=scale_x_y,
             iou_loss=losses.IouLoss(
