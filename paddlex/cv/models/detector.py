@@ -418,7 +418,8 @@ class YOLOv3(BaseDetector):
                 _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
                     anchors=self.anchors,
-                    downsample_ratios=[32, 16, 8],
+                    downsample_ratios=getattr(self, 'downsample_ratios',
+                                              [32, 16, 8]),
                     num_classes=self.num_classes)
             ]
         else:
@@ -641,7 +642,7 @@ class FasterRCNN(BaseDetector):
         return batch_transforms
 
 
-class PPYOLO(BaseDetector):
+class PPYOLO(YOLOv3):
     def __init__(self,
                  num_classes=80,
                  backbone='ResNet50_vd_dcn',
@@ -749,9 +750,7 @@ class PPYOLO(BaseDetector):
         loss = losses.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
-            downsample=[32, 16]
-            if ('MobileNetV3' in self.backbone_name or
-                self.backbone_name == 'ResNet18_vd') else [32, 16, 8],
+            downsample=downsample_ratios,
             label_smooth=label_smooth,
             scale_x_y=scale_x_y,
             iou_loss=losses.IouLoss(
@@ -766,23 +765,28 @@ class PPYOLO(BaseDetector):
             loss=loss,
             iou_aware=use_iou_aware)
 
+        if use_matrix_nms:
+            nms = MatrixNMS(
+                keep_top_k=nms_keep_topk,
+                score_threshold=nms_score_threshold,
+                post_threshold=.05
+                if 'MobileNetV3' in self.backbone_name else .01,
+                nms_top_k=nms_topk,
+                background_label=-1)
+        else:
+            nms = MultiClassNMS(
+                score_threshold=nms_score_threshold,
+                nms_top_k=nms_topk,
+                keep_top_k=nms_keep_topk,
+                nms_threshold=nms_iou_threshold)
+
         post_process = BBoxPostProcess(
             decode=YOLOBox(
                 num_classes=num_classes,
                 conf_thresh=.005
                 if 'MobileNetV3' in self.backbone_name else .01,
                 scale_x_y=scale_x_y),
-            nms=MatrixNMS(
-                keep_top_k=nms_keep_topk,
-                score_threshold=nms_score_threshold,
-                post_threshold=.05
-                if 'MobileNetV3' in self.backbone_name else .01,
-                nms_top_k=nms_topk,
-                background_label=-1) if use_matrix_nms else MultiClassNMS(
-                    score_threshold=nms_score_threshold,
-                    nms_top_k=nms_topk,
-                    keep_top_k=nms_keep_topk,
-                    nms_threshold=nms_iou_threshold))
+            nms=nms)
 
         params = {
             'backbone': backbone,
@@ -791,36 +795,9 @@ class PPYOLO(BaseDetector):
             'post_process': post_process
         }
 
-        super(PPYOLO, self).__init__(
+        super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
         self.model_name = 'PPYOLO'
-
-    def _compose_batch_transform(self, transforms, mode='train'):
-        if mode == 'train':
-            default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
-                _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
-                    anchor_masks=self.anchor_masks,
-                    anchors=self.anchors,
-                    downsample_ratios=self.downsample_ratios,
-                    num_classes=self.num_classes)
-            ]
-        else:
-            default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False)
-            ]
-
-        custom_batch_transforms = []
-        for i, op in enumerate(transforms.transforms):
-            if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
-                custom_batch_transforms.insert(0, copy.deepcopy(op))
-
-        batch_transforms = BatchCompose([_LabelMinusOne(
-        )] + custom_batch_transforms + default_batch_transforms)
-
-        return batch_transforms

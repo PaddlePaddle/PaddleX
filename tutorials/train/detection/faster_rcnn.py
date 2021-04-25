@@ -10,8 +10,8 @@ pdx.utils.download_and_decompress(dataset, path='./')
 
 train_transforms = transforms.Compose([
     transforms.RandomResizeByShort(
-        target_size=[[640, 1333], [672, 1333], [704, 1333], [736, 1333],
-                     [768, 1333], [800, 1333]],
+        short_sizes=[640, 672, 704, 736, 768, 800],
+        max_size=1333,
         interp=cv2.INTER_CUBIC), transforms.RandomHorizontalFlip(),
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])

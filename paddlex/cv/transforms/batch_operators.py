@@ -87,20 +87,19 @@ class BatchRandomResize(Transform):
 
 
 class BatchRandomResizeByShort(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+    def __init__(self, short_sizes, max_size=-1, interp=cv2.INTER_NEAREST):
         super(BatchRandomResizeByShort, self).__init__()
         self.interp = interp
-        assert isinstance(target_size, list), \
-            "target_size must be List"
-        for i, item in enumerate(target_size):
-            if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
+        assert isinstance(short_sizes, list), \
+            "short_sizes must be List"
+
+        self.short_sizes = short_sizes
+        self.max_size = max_size
 
     def __call__(self, samples):
-        short_size, max_size = random.choice(self.target_size)
+        short_size = random.choice(self.short_sizes)
         resizer = ResizeByShort(
-            short_size=short_size, max_size=max_size, interp=self.interp)
+            short_size=short_size, max_size=self.max_size, interp=self.interp)
 
         samples = resizer(samples)
 

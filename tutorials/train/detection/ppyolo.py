@@ -12,11 +12,10 @@ train_transforms = transforms.Compose([
     transforms.MixupImage(mixup_epoch=250), transforms.RandomDistort(),
     transforms.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]),
     transforms.RandomCrop(), transforms.RandomHorizontalFlip(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]), transforms.BatchRandomResize(
-            target_size=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608],
-            interp='RANDOM')
+    transforms.BatchRandomResize(
+        target_size=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608],
+        interp='RANDOM'), transforms.Normalize(
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 eval_transforms = transforms.Compose([
