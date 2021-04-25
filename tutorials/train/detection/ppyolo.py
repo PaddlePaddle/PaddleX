@@ -48,4 +48,4 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
-    save_dir='output/ppyolo')
+    save_dir='output/ppyolo_r50_vd_dcn')
