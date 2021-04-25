@@ -33,7 +33,7 @@ from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric
 from paddlex.utils.checkpoint import det_pretrain_weights_dict
 
-__all__ = ["YOLOv3", "FasterRCNN", "PPYOLO"]
+__all__ = ["YOLOv3", "FasterRCNN", "PPYOLO", "PPYOLOv2"]
 
 
 class BaseDetector(BaseModel):
