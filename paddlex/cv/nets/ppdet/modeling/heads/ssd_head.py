@@ -28,8 +28,7 @@ class SepConvLayer(nn.Layer):
                  out_channels,
                  kernel_size=3,
                  padding=1,
-                 conv_decay=0,
-                 name=None):
+                 conv_decay=0):
         super(SepConvLayer, self).__init__()
         self.dw_conv = nn.Conv2D(
             in_channels=in_channels,
@@ -38,16 +37,13 @@ class SepConvLayer(nn.Layer):
             stride=1,
             padding=padding,
             groups=in_channels,
-            weight_attr=ParamAttr(
-                name=name + "_dw_weights", regularizer=L2Decay(conv_decay)),
+            weight_attr=ParamAttr(regularizer=L2Decay(conv_decay)),
             bias_attr=False)
 
         self.bn = nn.BatchNorm2D(
             in_channels,
-            weight_attr=ParamAttr(
-                name=name + "_bn_scale", regularizer=L2Decay(0.)),
-            bias_attr=ParamAttr(
-                name=name + "_bn_offset", regularizer=L2Decay(0.)))
+            weight_attr=ParamAttr(regularizer=L2Decay(0.)),
+            bias_attr=ParamAttr(regularizer=L2Decay(0.)))
 
         self.pw_conv = nn.Conv2D(
             in_channels=in_channels,
@@ -55,8 +51,7 @@ class SepConvLayer(nn.Layer):
             kernel_size=1,
             stride=1,
             padding=0,
-            weight_attr=ParamAttr(
-                name=name + "_pw_weights", regularizer=L2Decay(conv_decay)),
+            weight_attr=ParamAttr(regularizer=L2Decay(conv_decay)),
             bias_attr=False)
 
     def forward(self, x):
@@ -68,6 +63,20 @@ class SepConvLayer(nn.Layer):
 
 @register
 class SSDHead(nn.Layer):
+    """
+    SSDHead
+
+    Args:
+        num_classes (int): Number of classes
+        in_channels (list): Number of channels per input feature
+        anchor_generator (dict): Configuration of 'AnchorGeneratorSSD' instance
+        kernel_size (int): Conv kernel size
+        padding (int): Conv padding
+        use_sepconv (bool): Use SepConvLayer if true
+        conv_decay (float): Conv regularization coeff
+        loss (object): 'SSDLoss' instance
+    """
+
     __shared__ = ['num_classes']
     __inject__ = ['anchor_generator', 'loss']
 
@@ -111,8 +120,7 @@ class SSDHead(nn.Layer):
                         out_channels=num_prior * 4,
                         kernel_size=kernel_size,
                         padding=padding,
-                        conv_decay=conv_decay,
-                        name=box_conv_name))
+                        conv_decay=conv_decay))
             self.box_convs.append(box_conv)
 
             score_conv_name = "scores{}".format(i)
@@ -132,8 +140,7 @@ class SSDHead(nn.Layer):
                         out_channels=num_prior * self.num_classes,
                         kernel_size=kernel_size,
                         padding=padding,
-                        conv_decay=conv_decay,
-                        name=score_conv_name))
+                        conv_decay=conv_decay))
             self.score_convs.append(score_conv)
 
     @classmethod

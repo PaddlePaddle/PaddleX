@@ -43,4 +43,4 @@ model.train(
     train_batch_size=4,
     eval_dataset=eval_dataset,
     learning_rate=0.01,
-    save_dir='output/deeplabv3p')
+    save_dir='output/deeplabv3p_r50vd')

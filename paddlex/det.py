@@ -17,3 +17,5 @@ from . import cv
 YOLOv3 = cv.models.YOLOv3
 FasterRCNN = cv.models.FasterRCNN
 PPYOLO = cv.models.PPYOLO
+PPYOLOTiny = cv.models.PPYOLOTiny
+PPYOLOv2 = cv.models.PPYOLOv2
