@@ -823,7 +823,7 @@ class PPYOLOTiny(YOLOv3):
                  nms_topk=1000,
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45):
-        # self.init_params = locals()
+        self.init_params = locals()
         if backbone != 'MobileNetV3':
             logging.warning(
                 "PPYOLOTiny only supports MobileNetV3 as backbone. "
