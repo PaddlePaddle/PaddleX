@@ -415,7 +415,8 @@ class YOLOv3(BaseDetector):
             default_batch_transforms = [
                 _BatchPadding(
                     pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
-                _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
+                _PadBox(getattr(self, 'num_max_boxes', 50)), _BboxXYXY2XYWH(),
+                _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
                     anchors=self.anchors,
                     downsample_ratios=getattr(self, 'downsample_ratios',
@@ -801,3 +802,125 @@ class PPYOLO(YOLOv3):
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
         self.model_name = 'PPYOLO'
+
+
+class PPYOLOv2(YOLOv3):
+    def __init__(self,
+                 num_classes=80,
+                 backbone='ResNet50_vd_dcn',
+                 anchors=[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+                          [59, 119], [116, 90], [156, 198], [373, 326]],
+                 anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]],
+                 use_iou_aware=True,
+                 use_spp=True,
+                 use_drop_block=True,
+                 scale_x_y=1.05,
+                 ignore_threshold=0.7,
+                 label_smooth=False,
+                 use_iou_loss=True,
+                 use_matrix_nms=True,
+                 nms_score_threshold=0.01,
+                 nms_topk=-1,
+                 nms_keep_topk=100,
+                 nms_iou_threshold=0.45):
+        self.init_params = locals()
+        if backbone not in ['ResNet50_vd_dcn', 'ResNet101_vd_dcn']:
+            raise ValueError(
+                "backbone: {} is not supported. Please choose one of "
+                "('ResNet50_vd_dcn', 'ResNet18_vd')".format(backbone))
+        self.backbone_name = backbone
+
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+            norm_type = 'sync_bn'
+        else:
+            norm_type = 'bn'
+
+        if backbone == 'ResNet50_vd_dcn':
+            backbone = self._get_backbone(
+                'ResNet',
+                variant='d',
+                norm_type=norm_type,
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
+                freeze_at=-1,
+                freeze_norm=False,
+                norm_decay=0.)
+            downsample_ratios = [32, 16, 8]
+
+        elif backbone == 'ResNet101_vd_dcn':
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=101,
+                variant='d',
+                norm_type=norm_type,
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
+                freeze_at=-1,
+                freeze_norm=False,
+                norm_decay=0.)
+            downsample_ratios = [32, 16, 8]
+
+        neck = necks.PPYOLOPAN(
+            norm_type=norm_type,
+            in_channels=[i.channels for i in backbone.out_shape],
+            drop_block=use_drop_block,
+            block_size=3,
+            keep_prob=.9,
+            spp=use_spp)
+
+        loss = losses.YOLOv3Loss(
+            num_classes=num_classes,
+            ignore_thresh=ignore_threshold,
+            downsample=downsample_ratios,
+            label_smooth=label_smooth,
+            scale_x_y=scale_x_y,
+            iou_loss=losses.IouLoss(
+                loss_weight=2.5, loss_square=True) if use_iou_loss else None,
+            iou_aware_loss=losses.IouAwareLoss(loss_weight=1.0)
+            if use_iou_aware else None)
+
+        yolo_head = heads.YOLOv3Head(
+            anchors=anchors,
+            anchor_masks=anchor_masks,
+            num_classes=num_classes,
+            loss=loss,
+            iou_aware=use_iou_aware,
+            iou_aware_factor=.5)
+
+        if use_matrix_nms:
+            nms = MatrixNMS(
+                keep_top_k=nms_keep_topk,
+                score_threshold=nms_score_threshold,
+                post_threshold=.01,
+                nms_top_k=nms_topk,
+                background_label=-1)
+        else:
+            nms = MultiClassNMS(
+                score_threshold=nms_score_threshold,
+                nms_top_k=nms_topk,
+                keep_top_k=nms_keep_topk,
+                nms_threshold=nms_iou_threshold)
+
+        post_process = BBoxPostProcess(
+            decode=YOLOBox(
+                num_classes=num_classes,
+                conf_thresh=.01,
+                downsample_ratio=32,
+                clip_bbox=True,
+                scale_x_y=scale_x_y),
+            nms=nms)
+
+        params = {
+            'backbone': backbone,
+            'neck': neck,
+            'yolo_head': yolo_head,
+            'post_process': post_process
+        }
+
+        super(YOLOv3, self).__init__(
+            model_name='YOLOv3', num_classes=num_classes, **params)
+        self.anchors = anchors
+        self.anchor_masks = anchor_masks
+        self.downsample_ratios = downsample_ratios
+        self.num_max_boxes = 100
+        self.model_name = 'PPYOLOv2'
