@@ -86,7 +86,10 @@ bool DetPostProcess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();
-
+  if (outputs.size() == 0) {
+    std::cerr << "empty input image on DetPostProcess" << std::endl;
+    return true;
+  }
   results->resize(shape_infos.size());
   if (!ProcessBbox(outputs, shape_infos, results, thread_num)) {
     std::cerr << "Error happend while process bboxes" << std::endl;

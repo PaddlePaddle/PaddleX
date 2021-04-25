@@ -127,6 +127,10 @@ bool DetPreProcess::PrepareInputsForRCNN(
 bool DetPreProcess::Run(std::vector<cv::Mat>* imgs,
                         std::vector<DataBlob>* inputs,
                         std::vector<ShapeInfo>* shape_infos, int thread_num) {
+  if ((*imgs).size() == 0) {
+    std::cerr << "empty input image on DetPreProcess" << std::endl;
+    return true;
+  }
   if (!ShapeInfer(*imgs, shape_infos, thread_num)) {
     std::cerr << "ShapeInfer failed while call DetPreProcess::Run" << std::endl;
     return false;

@@ -103,6 +103,10 @@ class Model {
     return true;
   }
 
+  void ClearResult() {
+    results_.clear();
+  }
+
   virtual void PrintResult() {
     for (auto i = 0; i < results_.size(); ++i) {
       std::cout << "result for sample " << i << std::endl;

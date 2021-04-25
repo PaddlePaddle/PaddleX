@@ -15,14 +15,12 @@
 #include <string>
 #include <thread>
 
-#include "common/include/model_factory.h"
+#include "model_deploy/common/include/model_factory.h"
 
 namespace PaddleDeploy {
 class MultiGPUModel {
  private:
   std::vector<std::shared_ptr<Model>> models_;
-  //record predict id
-  std::vector<u_int> run_id_;
 
  public:
   bool Init(const std::string& model_type,
@@ -65,8 +63,14 @@ class MultiGPUModel {
     return true;
   }
 
+  void ClearResult() {
+    for (auto model : models_) {
+      model->ClearResult();
+    }
+  }
+
   bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1) {
-    run_id_.clear();
+    ClearResult();
     int model_num = models_.size();
     if (model_num <= 0) {
       std::cerr << "Please Init before Predict!" << std::endl;
@@ -76,7 +80,6 @@ class MultiGPUModel {
     int imgs_size = imgs.size();
     if (imgs_size == 1) {
       models_[0]->Predict(imgs);
-      run_id_.push_back(0);
       return true;
     }
 
@@ -91,14 +94,13 @@ class MultiGPUModel {
         //imgs.size < model_.size
         break;
       }
-      run_id_.push_back(i);
       std::vector<cv::Mat> new_imgs(imgs.begin() + start,
                                     imgs.begin() + start + img_num);
       split_imgs.push_back(new_imgs);
       start += img_num;
     }
 
-    for (int i = 0; i < model_num; ++i) {
+    for (int i = 0; i < split_imgs.size(); ++i) {
       threads.push_back(std::thread(&PaddleDeploy::Model::Predict, models_[i],
                                     std::ref(split_imgs[i]), thread_num));
     }
@@ -114,9 +116,9 @@ class MultiGPUModel {
 
   void PrintResult() {
     int i = 0;
-    for (u_int id : run_id_) {
+    for (auto model : models_) {
       std::cout << "image " << i << std::endl;
-      for (auto result : models_[id]->results_) {
+      for (auto result : model->results_) {
         std::cout << "boxes num:"
                   << result.det_result->boxes.size()
                   << std::endl;

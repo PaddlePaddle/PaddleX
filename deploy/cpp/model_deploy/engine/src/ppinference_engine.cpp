@@ -75,6 +75,10 @@ bool PaddleInferenceEngine::Init(const std::string &model_filename,
 
 bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
                                   std::vector<DataBlob> *outputs) {
+  if (inputs.size() == 0) {
+    std::cerr << "empty input image on PaddleInferenceEngine" << std::endl;
+    return true;
+  }
   auto input_names = predictor_->GetInputNames();
   for (int i = 0; i < inputs.size(); i++) {
     auto in_tensor = predictor_->GetInputHandle(input_names[i]);
