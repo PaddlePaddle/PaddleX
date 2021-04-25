@@ -15,14 +15,14 @@
 #include <string>
 #include <thread>
 
-#include "common/include/model_factory.h"
+#include "model_deploy/common/include/model_factory.h"
 
 namespace PaddleDeploy {
 class MultiGPUModel {
  private:
   std::vector<std::shared_ptr<Model>> models_;
   //record predict id
-  std::vector<u_int> run_id_;
+  std::vector<int> run_id_;
 
  public:
   bool Init(const std::string& model_type,

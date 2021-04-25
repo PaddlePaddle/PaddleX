@@ -18,7 +18,7 @@
 #include <string>
 #include <fstream>
 
-#include "common/include/model_factory.h"
+#include "model_deploy/common/include/model_factory.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");

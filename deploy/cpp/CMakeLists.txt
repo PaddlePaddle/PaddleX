@@ -187,7 +187,7 @@ endif()
 message("-----DEPS = ${DEPS}")
 
 #project
-include_directories("${PROJECT_ROOT_DIR}/model_deploy")
+include_directories("${PROJECT_ROOT_DIR}")
 
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/common/src SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/engine/src ENGINE_SRC)
