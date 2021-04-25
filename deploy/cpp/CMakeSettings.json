@@ -15,12 +15,12 @@
       "variables": [
         {
           "name": "OPENCV_DIR",
-          "value": "xx\\opencv",
+          "value": "path\\to\\opencv",
           "type": "PATH"
         },
         {
           "name": "PADDLE_DIR",
-          "value": "xx\\paddle_inference_install_dir",
+          "value": "path\\to\\paddle_inference_install_dir",
           "type": "PATH"
         },
         {
