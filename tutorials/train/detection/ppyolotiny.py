@@ -13,14 +13,14 @@ train_transforms = transforms.Compose([
     transforms.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]),
     transforms.RandomCrop(), transforms.RandomHorizontalFlip(),
     transforms.BatchRandomResize(
-        target_size=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608],
+        target_size=[192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512],
         interp='RANDOM'), transforms.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 eval_transforms = transforms.Compose([
     transforms.Resize(
-        608, 608, interp=cv2.INTER_CUBIC), transforms.Normalize(
+        320, 320, interp=cv2.INTER_CUBIC), transforms.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
@@ -39,13 +39,13 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.det.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
+model = pdx.det.PPYOLOTiny(num_classes=num_classes)
 
 model.train(
     num_epochs=270,
     train_dataset=train_dataset,
-    train_batch_size=8,
+    train_batch_size=16,
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
-    save_dir='output/yolov3_darknet53')
+    save_dir='output/ppyolotiny')

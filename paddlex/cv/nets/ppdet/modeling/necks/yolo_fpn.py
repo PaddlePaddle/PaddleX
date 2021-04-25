@@ -22,7 +22,7 @@ import numpy as np
 
 from ..shape_spec import ShapeSpec
 
-__all__ = ['YOLOv3FPN', 'PPYOLOFPN', 'PPYOLOPAN']
+__all__ = ['YOLOv3FPN', 'PPYOLOFPN', 'PPYOLOPAN', 'PPYOLOTinyFPN']
 
 
 def add_coord(x, data_format):
