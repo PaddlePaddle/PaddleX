@@ -17,22 +17,23 @@ from __future__ import absolute_import
 import collections
 import copy
 import os.path as osp
-import math
-import numpy as np
-import paddle
 from paddle.io import DistributedBatchSampler
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.nets.ppdet.modeling import architectures, backbones, necks, heads, losses
+from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner
+from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
-from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS
+from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
-from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, _Gt2YoloTarget, _Permute
+from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, _LabelMinusOne
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget, _Permute
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric
+from paddlex.utils.checkpoint import det_pretrain_weights_dict
+
+__all__ = ["YOLOv3", "FasterRCNN", "PPYOLO"]
 
 
 class BaseDetector(BaseModel):
@@ -51,8 +52,6 @@ class BaseDetector(BaseModel):
 
     def build_net(self, **params):
         net = architectures.__dict__[self.model_name](**params)
-        if getattr(self, 'sync_bn', False):
-            net = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(net)
         test_inputs = [
             paddle.static.InputSpec(
                 shape=[None, 3, None, None], dtype='float32')
@@ -156,7 +155,8 @@ class BaseDetector(BaseModel):
               lr_decay_epochs=(216, 243),
               lr_decay_gamma=0.1,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              use_vdl=True):
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
@@ -177,7 +177,8 @@ class BaseDetector(BaseModel):
 
         # initiate weights
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
-            if pretrain_weights not in ['COCO', 'PascalVOC']:
+            if pretrain_weights not in det_pretrain_weights_dict['_'.join(
+                [self.model_name, self.backbone_name])]:
                 logging.warning(
                     "Path of pretrain_weights('{}') does not exist!".format(
                         pretrain_weights))
@@ -199,7 +200,8 @@ class BaseDetector(BaseModel):
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
             early_stop=early_stop,
-            early_stop_patience=early_stop_patience)
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
 
     def evaluate(self, eval_dataset, batch_size, return_details=False):
         eval_dataset.batch_transforms = self._compose_batch_transform(
@@ -221,7 +223,7 @@ class BaseDetector(BaseModel):
         if batch_size > 1:
             logging.warning(
                 "Detector only supports single card evaluation with batch_size=1 "
-                "during evaluation, so batch_size is forcibly set to 1")
+                "during evaluation, so batch_size is forcibly set to 1.")
             batch_size = 1
 
         if nranks < 2 or local_rank == 0:
@@ -337,11 +339,12 @@ class YOLOv3(BaseDetector):
                  label_smooth=False):
         self.init_params = locals()
         if backbone not in [
-                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn'
+                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn',
+                'ResNet34'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn')".
+                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34')".
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
@@ -365,6 +368,15 @@ class YOLOv3(BaseDetector):
                 dcn_v2_stages=[3],
                 freeze_at=-1,
                 freeze_norm=False)
+        elif backbone == 'ResNet34':
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=34,
+                norm_type=norm_type,
+                return_idx=[1, 2, 3],
+                freeze_at=-1,
+                freeze_norm=False,
+                norm_decay=0.)
         else:
             backbone = self._get_backbone('DarkNet', norm_type=norm_type)
 
@@ -396,25 +408,396 @@ class YOLOv3(BaseDetector):
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
-        self.anchors_masks = anchor_masks
+        self.anchor_masks = anchor_masks
 
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _NormalizeBox(), _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
-                    anchor_masks=self.anchors_masks,
+                _BatchPadding(
+                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
+                _PadBox(50), _BboxXYXY2XYWH(), _Gt2YoloTarget(
+                    anchor_masks=self.anchor_masks,
                     anchors=self.anchors,
-                    downsample_ratios=[32, 16, 8],
-                    num_classes=6)
+                    downsample_ratios=getattr(self, 'downsample_ratios',
+                                              [32, 16, 8]),
+                    num_classes=self.num_classes)
             ]
         else:
-            default_batch_transforms = []
+            default_batch_transforms = [
+                _BatchPadding(
+                    pad_to_stride=-1, pad_gt=False)
+            ]
 
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
-            if isinstance(op, BatchRandomResize):
+            if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
+
+        batch_transforms = BatchCompose([_LabelMinusOne(
+        )] + custom_batch_transforms + default_batch_transforms)
+
+        return batch_transforms
+
+
+class FasterRCNN(BaseDetector):
+    def __init__(self,
+                 num_classes=80,
+                 backbone='ResNet50',
+                 with_fpn=True,
+                 aspect_ratios=[0.5, 1.0, 2.0],
+                 anchor_sizes=[[32], [64], [128], [256], [512]],
+                 keep_top_k=100,
+                 nms_threshold=0.5,
+                 score_threshold=0.05,
+                 fpn_num_channels=256,
+                 rpn_batch_size_per_im=256,
+                 rpn_fg_fraction=0.5,
+                 test_pre_nms_top_n=None,
+                 test_post_nms_top_n=1000):
+        self.init_params = locals()
+        if backbone not in [
+                'ResNet50', 'ResNet50_vd', 'ResNet34', 'ResNet34_vd',
+                'ResNet101', 'ResNet101_vd'
+        ]:
+            raise ValueError(
+                "backbone: {} is not supported. Please choose one of "
+                "('ResNet50', 'ResNet50_vd', 'ResNet34', 'ResNet34_vd', "
+                "'ResNet101', 'ResNet101_vd')".format(backbone))
+        self.backbone_name = backbone + '_fpn' if with_fpn else backbone
+
+        if 'ResNet50' in backbone:
+            if with_fpn:
+                backbone = self._get_backbone(
+                    'ResNet',
+                    variant='d' if 'vd' in backbone else 'b',
+                    norm_type='bn',
+                    freeze_at=0,
+                    return_idx=[0, 1, 2, 3],
+                    num_stages=4)
+            else:
+                backbone = self._get_backbone(
+                    'ResNet',
+                    variant='d' if 'vd' in backbone else 'b',
+                    norm_type='bn',
+                    freeze_at=0,
+                    return_idx=[2],
+                    num_stages=3)
+        elif 'ResNet34' in backbone:
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn enabled.".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=34,
+                variant='d' if 'vd' in backbone else 'b',
+                norm_type='bn',
+                freeze_at=0,
+                return_idx=[0, 1, 2, 3],
+                num_stages=4)
+        else:
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn enabled.".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=101,
+                variant='d' if 'vd' in backbone else 'b',
+                norm_type='bn',
+                freeze_at=0,
+                return_idx=[0, 1, 2, 3],
+                num_stages=4)
+
+        rpn_in_channel = backbone.out_shape[0].channels
+
+        if with_fpn:
+            neck = necks.FPN(
+                in_channels=[i.channels for i in backbone.out_shape],
+                out_channel=fpn_num_channels,
+                spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
+            rpn_in_channel = neck.out_shape[0].channels
+            anchor_generator_cfg = {
+                'aspect_ratios': aspect_ratios,
+                'anchor_sizes': anchor_sizes,
+                'strides': [4, 8, 16, 32, 64]
+            }
+            train_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 2000,
+                'post_nms_top_n': 1000,
+                'topk_after_collect': True
+            }
+            test_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 1000
+                if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                'post_nms_top_n': test_post_nms_top_n
+            }
+            head = heads.TwoFCHead(out_channel=1024)
+            roi_extractor_cfg = {
+                'resolution': 7,
+                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
+                'sampling_ratio': 0,
+                'aligned': True
+            }
+            with_pool = False
+
+        else:
+            neck = None
+            anchor_generator_cfg = {
+                'aspect_ratios': aspect_ratios,
+                'anchor_sizes': anchor_sizes,
+                'strides': [16]
+            }
+            train_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 12000,
+                'post_nms_top_n': 2000,
+                'topk_after_collect': False
+            }
+            test_proposal_cfg = {
+                'min_size': 0.0,
+                'nms_thresh': .7,
+                'pre_nms_top_n': 6000
+                if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                'post_nms_top_n': test_post_nms_top_n
+            }
+            head = backbones.Res5Head()
+            roi_extractor_cfg = {
+                'resolution': 14,
+                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
+                'sampling_ratio': 0,
+                'aligned': True
+            }
+            with_pool = True
+
+        rpn_target_assign_cfg = {
+            'batch_size_per_im': rpn_batch_size_per_im,
+            'fg_fraction': rpn_fg_fraction,
+            'negative_overlap': .3,
+            'positive_overlap': .7,
+            'use_random': True
+        }
+
+        rpn_head = RPNHead(
+            anchor_generator=anchor_generator_cfg,
+            rpn_target_assign=rpn_target_assign_cfg,
+            train_proposal=train_proposal_cfg,
+            test_proposal=test_proposal_cfg,
+            in_channel=rpn_in_channel)
+
+        bbox_assigner = BBoxAssigner(num_classes=num_classes)
+
+        bbox_head = heads.BBoxHead(
+            head=head,
+            in_channel=head.out_shape[0].channels,
+            roi_extractor=roi_extractor_cfg,
+            with_pool=with_pool,
+            bbox_assigner=bbox_assigner,
+            num_classes=num_classes)
+
+        bbox_post_process = BBoxPostProcess(
+            num_classes=num_classes,
+            decode=RCNNBox(num_classes=num_classes),
+            nms=MultiClassNMS(
+                score_threshold=score_threshold,
+                keep_top_k=keep_top_k,
+                nms_threshold=nms_threshold))
+
+        params = {
+            'backbone': backbone,
+            'neck': neck,
+            'rpn_head': rpn_head,
+            'bbox_head': bbox_head,
+            'bbox_post_process': bbox_post_process
+        }
+        super(FasterRCNN, self).__init__(
+            model_name='FasterRCNN', num_classes=num_classes, **params)
+
+    def _compose_batch_transform(self, transforms, mode='train'):
+        if mode == 'train':
+            default_batch_transforms = [
+                _BatchPadding(
+                    pad_to_stride=32, pad_gt=True)
+            ]
+        else:
+            default_batch_transforms = [
+                _BatchPadding(
+                    pad_to_stride=32, pad_gt=False)
+            ]
+        custom_batch_transforms = []
+        for i, op in enumerate(transforms.transforms):
+            if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
+                custom_batch_transforms.insert(0, copy.deepcopy(op))
+
         batch_transforms = BatchCompose(custom_batch_transforms +
                                         default_batch_transforms)
 
         return batch_transforms
+
+
+class PPYOLO(YOLOv3):
+    def __init__(self,
+                 num_classes=80,
+                 backbone='ResNet50_vd_dcn',
+                 anchors=None,
+                 anchor_masks=None,
+                 use_coord_conv=True,
+                 use_iou_aware=True,
+                 use_spp=True,
+                 use_drop_block=True,
+                 scale_x_y=1.05,
+                 ignore_threshold=0.7,
+                 label_smooth=False,
+                 use_iou_loss=True,
+                 use_matrix_nms=True,
+                 nms_score_threshold=0.01,
+                 nms_topk=-1,
+                 nms_keep_topk=100,
+                 nms_iou_threshold=0.45):
+        self.init_params = locals()
+        if backbone not in [
+                'ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large',
+                'MobileNetV3_small'
+        ]:
+            raise ValueError(
+                "backbone: {} is not supported. Please choose one of "
+                "('ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small')".
+                format(backbone))
+        self.backbone_name = backbone
+
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+            norm_type = 'sync_bn'
+        else:
+            norm_type = 'bn'
+        if anchors is None and anchor_masks is None:
+            if 'MobileNetV3' in backbone:
+                anchors = [[11, 18], [34, 47], [51, 126], [115, 71],
+                           [120, 195], [254, 235]]
+                anchor_masks = [[3, 4, 5], [0, 1, 2]]
+            elif backbone == 'ResNet50_vd_dcn':
+                anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+                           [59, 119], [116, 90], [156, 198], [373, 326]]
+                anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
+            else:
+                anchors = [[10, 14], [23, 27], [37, 58], [81, 82], [135, 169],
+                           [344, 319]]
+                anchor_masks = [[3, 4, 5], [0, 1, 2]]
+        elif anchors is None or anchor_masks is None:
+            raise ValueError("Please define both anchors and anchor_masks.")
+
+        if backbone == 'ResNet50_vd_dcn':
+            backbone = self._get_backbone(
+                'ResNet',
+                variant='d',
+                norm_type=norm_type,
+                return_idx=[1, 2, 3],
+                dcn_v2_stages=[3],
+                freeze_at=-1,
+                freeze_norm=False,
+                norm_decay=0.)
+            downsample_ratios = [32, 16, 8]
+
+        elif backbone == 'ResNet18_vd':
+            backbone = self._get_backbone(
+                'ResNet',
+                depth=18,
+                variant='d',
+                norm_type=norm_type,
+                return_idx=[2, 3],
+                freeze_at=-1,
+                freeze_norm=False,
+                norm_decay=0.)
+            downsample_ratios = [32, 16, 8]
+
+        elif backbone == 'MobileNetV3_large':
+            backbone = self._get_backbone(
+                'MobileNetV3',
+                model_name='large',
+                norm_type=norm_type,
+                scale=1,
+                with_extra_blocks=False,
+                extra_block_filters=[],
+                feature_maps=[13, 16])
+            downsample_ratios = [32, 16]
+
+        elif backbone == 'MobileNetV3_small':
+            backbone = self._get_backbone(
+                'MobileNetV3',
+                model_name='small',
+                norm_type=norm_type,
+                scale=1,
+                with_extra_blocks=False,
+                extra_block_filters=[],
+                feature_maps=[9, 12])
+            downsample_ratios = [32, 16]
+
+        neck = necks.PPYOLOFPN(
+            norm_type=norm_type,
+            in_channels=[i.channels for i in backbone.out_shape],
+            coord_conv=use_coord_conv,
+            drop_block=use_drop_block,
+            spp=use_spp,
+            conv_block_num=0 if ('MobileNetV3' in self.backbone_name or
+                                 self.backbone_name == 'ResNet18_vd') else 2)
+
+        loss = losses.YOLOv3Loss(
+            num_classes=num_classes,
+            ignore_thresh=ignore_threshold,
+            downsample=downsample_ratios,
+            label_smooth=label_smooth,
+            scale_x_y=scale_x_y,
+            iou_loss=losses.IouLoss(
+                loss_weight=2.5, loss_square=True) if use_iou_loss else None,
+            iou_aware_loss=losses.IouAwareLoss(loss_weight=1.0)
+            if use_iou_aware else None)
+
+        yolo_head = heads.YOLOv3Head(
+            anchors=anchors,
+            anchor_masks=anchor_masks,
+            num_classes=num_classes,
+            loss=loss,
+            iou_aware=use_iou_aware)
+
+        if use_matrix_nms:
+            nms = MatrixNMS(
+                keep_top_k=nms_keep_topk,
+                score_threshold=nms_score_threshold,
+                post_threshold=.05
+                if 'MobileNetV3' in self.backbone_name else .01,
+                nms_top_k=nms_topk,
+                background_label=-1)
+        else:
+            nms = MultiClassNMS(
+                score_threshold=nms_score_threshold,
+                nms_top_k=nms_topk,
+                keep_top_k=nms_keep_topk,
+                nms_threshold=nms_iou_threshold)
+
+        post_process = BBoxPostProcess(
+            decode=YOLOBox(
+                num_classes=num_classes,
+                conf_thresh=.005
+                if 'MobileNetV3' in self.backbone_name else .01,
+                scale_x_y=scale_x_y),
+            nms=nms)
+
+        params = {
+            'backbone': backbone,
+            'neck': neck,
+            'yolo_head': yolo_head,
+            'post_process': post_process
+        }
+
+        super(YOLOv3, self).__init__(
+            model_name='YOLOv3', num_classes=num_classes, **params)
+        self.anchors = anchors
+        self.anchor_masks = anchor_masks
+        self.downsample_ratios = downsample_ratios
+        self.model_name = 'PPYOLO'

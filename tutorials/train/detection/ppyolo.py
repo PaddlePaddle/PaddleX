@@ -10,8 +10,9 @@ pdx.utils.download_and_decompress(dataset, path='./')
 
 train_transforms = transforms.Compose([
     transforms.MixupImage(mixup_epoch=250), transforms.RandomDistort(),
-    transforms.RandomExpand(), transforms.RandomCrop(),
-    transforms.RandomHorizontalFlip(), transforms.BatchRandomResize(
+    transforms.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]),
+    transforms.RandomCrop(), transforms.RandomHorizontalFlip(),
+    transforms.BatchRandomResize(
         target_size=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608],
         interp='RANDOM'), transforms.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
@@ -38,7 +39,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.det.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
+model = pdx.det.PPYOLO(num_classes=num_classes, backbone='ResNet50_vd_dcn')
 
 model.train(
     num_epochs=270,
@@ -47,4 +48,4 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.000125,
     lr_decay_epochs=[210, 240],
-    save_dir='output/yolov3_darknet53')
+    save_dir='output/ppyolo')

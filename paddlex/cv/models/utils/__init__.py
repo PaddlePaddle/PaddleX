@@ -11,18 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-seg_pretrain_weights_dict = {
-    'UNet': ['CITYSCAPES'],
-    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
-    'FastSCNN': ['CITYSCAPES'],
-    'HRNet': ['CITYSCAPES', 'PascalVOC'],
-    'BiSeNetV2': ['CITYSCAPES']
-}
-
-det_pretrain_weights_dict = {
-    'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC'],
-    'YOLOv3_DarkNet53': ['COCO'],
-    'YOLOv3_ResNet50_vd': ['COCO'],
-    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC']
-}

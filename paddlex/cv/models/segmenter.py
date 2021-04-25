@@ -24,7 +24,7 @@ from paddlex.utils import get_single_card_bs
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
-from .utils import seg_pretrain_weights_dict
+from paddlex.utils.checkpoint import seg_pretrain_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 from paddlex.cv.transforms import Decode
 
@@ -150,7 +150,8 @@ class BaseSegmenter(BaseModel):
               learning_rate=0.01,
               lr_decay_power=0.9,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              use_vdl=True):
         self.labels = train_dataset.labels
         if self.losses is None:
             self.losses = self.default_loss()
@@ -187,7 +188,8 @@ class BaseSegmenter(BaseModel):
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
             early_stop=early_stop,
-            early_stop_patience=early_stop_patience)
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         arrange_transforms(

@@ -158,7 +158,8 @@ class BaseClassifier(BaseModel):
               lr_decay_epochs=(30, 60, 90),
               lr_decay_gamma=0.1,
               early_stop=False,
-              early_stop_patience=5):
+              early_stop_patience=5,
+              use_vdl=True):
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -200,7 +201,8 @@ class BaseClassifier(BaseModel):
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
             early_stop=early_stop,
-            early_stop_patience=early_stop_patience)
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
 
     def evaluate(self,
                  eval_dataset,

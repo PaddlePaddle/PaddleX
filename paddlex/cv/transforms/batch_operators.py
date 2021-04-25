@@ -87,24 +87,78 @@ class BatchRandomResize(Transform):
 
 
 class BatchRandomResizeByShort(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+    def __init__(self, short_sizes, max_size=-1, interp=cv2.INTER_NEAREST):
         super(BatchRandomResizeByShort, self).__init__()
         self.interp = interp
-        assert isinstance(target_size, list), \
-            "target_size must be List"
-        for i, item in enumerate(target_size):
-            if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
+        assert isinstance(short_sizes, list), \
+            "short_sizes must be List"
+
+        self.short_sizes = short_sizes
+        self.max_size = max_size
 
     def __call__(self, samples):
-        height, width = random.choice(self.target_size)
+        short_size = random.choice(self.short_sizes)
         resizer = ResizeByShort(
-            short_size=min(height, width),
-            max_size=max(height, width),
-            interp=self.interp)
+            short_size=short_size, max_size=self.max_size, interp=self.interp)
 
         samples = resizer(samples)
+
+        return samples
+
+
+class _BatchPadding(Transform):
+    def __init__(self, pad_to_stride=0, pad_gt=False):
+        super(_BatchPadding, self).__init__()
+        self.pad_to_stride = pad_to_stride
+        self.pad_gt = pad_gt
+
+    def __call__(self, samples):
+        coarsest_stride = self.pad_to_stride
+        if coarsest_stride <= 0 and len(samples) == 1:
+            return samples
+        max_shape = np.array([data['image'].shape for data in samples]).max(
+            axis=0)
+        if coarsest_stride > 0:
+            max_shape[0] = int(
+                np.ceil(max_shape[0] / coarsest_stride) * coarsest_stride)
+            max_shape[1] = int(
+                np.ceil(max_shape[1] / coarsest_stride) * coarsest_stride)
+        for data in samples:
+            im = data['image']
+            im_h, im_w, im_c = im.shape[:]
+            padding_im = np.zeros(
+                (max_shape[0], max_shape[1], im_c), dtype=np.float32)
+            padding_im[:im_h, :im_w, :] = im
+            data['image'] = padding_im
+
+        if self.pad_gt:
+            gt_num = []
+            for data in samples:
+                gt_num.append(data['gt_bbox'].shape[0])
+            gt_num_max = max(gt_num)
+            for i, data in enumerate(samples):
+                gt_box_data = -np.ones([gt_num_max, 4], dtype=np.float32)
+                gt_class_data = -np.ones([gt_num_max], dtype=np.int32)
+                is_crowd_data = np.ones([gt_num_max], dtype=np.int32)
+
+                gt_num = data['gt_bbox'].shape[0]
+                gt_box_data[0:gt_num, :] = data['gt_bbox']
+                gt_class_data[0:gt_num] = np.squeeze(data['gt_class'])
+                is_crowd_data[0:gt_num] = np.squeeze(data['is_crowd'])
+
+                data['gt_bbox'] = gt_box_data
+                data['gt_class'] = gt_class_data
+                data['is_crowd'] = is_crowd_data
+
+                if 'gt_score' in data:
+                    gt_score_data = np.zeros([gt_num_max], dtype=np.float32)
+                    gt_score_data[0:gt_num] = data['gt_score'][:gt_num, 0]
+                    data['gt_score'] = gt_score_data
+
+                if 'difficult' in data:
+                    diff_data = np.zeros([gt_num_max], dtype=np.int32)
+                    diff_data[0:gt_num] = data['difficult'][:gt_num, 0]
+                    data['difficult'] = diff_data
 
         return samples
 

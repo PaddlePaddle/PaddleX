@@ -27,10 +27,11 @@ from numbers import Number
 from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop
 
 __all__ = [
-    "Compose", "Decode", "Resize", "ResizeByShort", "RandomHorizontalFlip",
-    "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
-    "RandomExpand", "Padding", "MixupImage", "RandomDistort",
-    "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector"
+    "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
+    "RandomResizeByShort", "RandomHorizontalFlip", "RandomVerticalFlip",
+    "Normalize", "CenterCrop", "RandomCrop", "RandomExpand", "Padding",
+    "MixupImage", "RandomDistort", "ArrangeSegmenter", "ArrangeClassifier",
+    "ArrangeDetector"
 ]
 
 interp_list = [
@@ -107,9 +108,9 @@ class Compose(Transform):
 
         for op in self.transforms:
             # skip batch transforms amd mixup
-            if isinstance(op,
-                          (paddlex.transforms.BatchPadding,
-                           paddlex.transforms.BatchRandomResize, MixupImage)):
+            if isinstance(op, (paddlex.transforms.BatchRandomResize,
+                               paddlex.transforms.BatchRandomResizeByShort,
+                               MixupImage)):
                 continue
             sample = op(sample)
 
@@ -223,6 +224,25 @@ class Resize(Transform):
         return sample
 
 
+class RandomResize(Transform):
+    def __init__(self, target_size, interp=cv2.INTER_LINEAR):
+        super(RandomResize, self).__init__()
+        self.interp = interp
+        assert isinstance(target_size, list), \
+            "target_size must be List"
+        for i, item in enumerate(target_size):
+            if isinstance(item, int):
+                target_size[i] = (item, item)
+        self.target_size = target_size
+
+    def apply(self, sample):
+        height, width = random.choice(self.target_size)
+        resizer = Resize(height=height, width=width, interp=self.interp)
+        sample = resizer(sample)
+
+        return sample
+
+
 class ResizeByShort(Transform):
     def __init__(self, short_size=256, max_size=-1, interp=cv2.INTER_LINEAR):
         super(ResizeByShort, self).__init__()
@@ -280,6 +300,25 @@ class ResizeByShort(Transform):
             sample['scale_factor'] = np.asarray(
                 [scale_factor[0] * im_scale_y, scale_factor[1] * im_scale_x],
                 dtype=np.float32)
+
+        return sample
+
+
+class RandomResizeByShort(Transform):
+    def __init__(self, short_sizes, max_size=-1, interp=cv2.INTER_LINEAR):
+        super(RandomResizeByShort, self).__init__()
+        self.interp = interp
+        assert isinstance(short_sizes, list), \
+            "short_sizes must be List"
+
+        self.short_sizes = short_sizes
+        self.max_size = max_size
+
+    def apply(self, sample):
+        short_size = random.choice(self.short_sizes)
+        resizer = ResizeByShort(
+            short_size=short_size, max_size=self.max_size, interp=self.interp)
+        sample = resizer(sample)
 
         return sample
 
@@ -956,6 +995,16 @@ class _Permute(Transform):
 
     def apply(self, sample):
         sample['image'] = permute(sample['image'], False)
+        return sample
+
+
+class _LabelMinusOne(Transform):
+    def __init__(self):
+        super(_LabelMinusOne, self).__init__()
+
+    def apply(self, sample):
+        if 'gt_class' in sample:
+            sample['gt_class'] = sample['gt_class'] - 1
         return sample
 
 

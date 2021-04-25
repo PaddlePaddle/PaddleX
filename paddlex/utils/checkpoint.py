@@ -18,6 +18,32 @@ import paddle
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
+seg_pretrain_weights_dict = {
+    'UNet': ['CITYSCAPES'],
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
+    'FastSCNN': ['CITYSCAPES'],
+    'HRNet': ['CITYSCAPES', 'PascalVOC'],
+    'BiSeNetV2': ['CITYSCAPES']
+}
+
+det_pretrain_weights_dict = {
+    'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC', 'IMAGENET'],
+    'YOLOv3_DarkNet53': ['COCO', 'IMAGENET'],
+    'YOLOv3_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
+    'YOLOv3_ResNet34': ['COCO', 'IMAGENET'],
+    'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC', 'IMAGENET'],
+    'FasterRCNN_ResNet50_vd': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50_vd_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet34_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet34_vd_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET'],
+    'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
+    'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET']
+}
+
 cityscapes_weights = {
     'UNet_CITYSCAPES':
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams',
@@ -146,6 +172,36 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
     'ShuffleNetV2_x2_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams',
+    'FasterRCNN_ResNet50_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
+    'FasterRCNN_ResNet50_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
+    'FasterRCNN_ResNet50_vd_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet50_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet34_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet34_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_pretrained.pdparams',
+    'FasterRCNN_ResNet101_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
+    'FasterRCNN_ResNet101_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
+    'YOLOv3_ResNet50_vd_dcn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
+    'YOLOv3_ResNet34_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_pretrained.pdparams',
+    'YOLOv3_MobileNetV1_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV1_pretrained.pdparams',
+    'YOLOv3_MobileNetV3_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'YOLOv3_DarkNet53_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/DarkNet53_pretrained.pdparams',
+    'PPYOLO_ResNet50_vd_dcn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
+    'PPYOLO_ResNet18_vd_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams'
 }
 
 pascalvoc_weights = {
@@ -168,10 +224,32 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams',
     'YOLOv3_DarkNet53_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams',
-    'YOLOv3_ResNet50_vd_COCO':
+    'YOLOv3_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams',
+    'YOLOv3_ResNet34_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_r34_270e_coco.pdparams',
     'YOLOv3_MobileNetV3_COCO':
-    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams',
+    'FasterRCNN_ResNet50_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_fpn_2x_coco.pdparams',
+    'FasterRCNN_ResNet50_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_1x_coco.pdparams',
+    'FasterRCNN_ResNet50_vd_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_1x_coco.pdparams',
+    'FasterRCNN_ResNet50_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_2x_coco.pdparams',
+    'FasterRCNN_ResNet34_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_vd_fpn_1x_coco.pdparams',
+    'FasterRCNN_ResNet34_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_fpn_1x_coco.pdparams',
+    'FasterRCNN_ResNet101_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_fpn_2x_coco.pdparams',
+    'FasterRCNN_ResNet101_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams',
+    'PPYOLO_ResNet50_vd_dcn_COCO':
+    'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
+    'PPYOLO_ResNet18_vd_COCO':
+    'https://paddledet.bj.bcebos.com/models/ppyolo_r18vd_coco.pdparams'
 }
 
 
@@ -212,7 +290,7 @@ def get_pretrain_weights(flag,
     return fname
 
 
-def load_pretrain_weights(model, pretrain_weights=None):
+def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
     if pretrain_weights is not None:
         logging.info(
             'Loading pretrained model from {}'.format(pretrain_weights),
@@ -237,12 +315,11 @@ def load_pretrain_weights(model, pretrain_weights=None):
                     num_params_loaded += 1
             model.set_dict(model_state_dict)
             logging.info("There are {}/{} variables loaded into {}.".format(
-                num_params_loaded,
-                len(model_state_dict), model.__class__.__name__))
+                num_params_loaded, len(model_state_dict), model_name))
         else:
             raise ValueError('The pretrained model directory is not Found: {}'.
                              format(pretrain_weights))
     else:
         logging.info(
             'No pretrained model to load, {} will be trained from scratch.'.
-            format(model.__class__.__name__))
+            format(model_name))
