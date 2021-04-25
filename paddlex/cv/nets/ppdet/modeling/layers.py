@@ -1,4 +1,4 @@
-#   Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#   Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ from paddlex.cv.nets.ppdet.modeling.bbox_utils import delta2bbox
 from . import ops
 
 from paddle.vision.ops import DeformConv2D
-from paddle.fluid.initializer import NumpyArrayInitializer
 
 
 def _to_list(l):

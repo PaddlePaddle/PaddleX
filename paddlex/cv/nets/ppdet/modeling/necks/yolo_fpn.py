@@ -22,7 +22,7 @@ import numpy as np
 
 from ..shape_spec import ShapeSpec
 
-__all__ = ['YOLOv3FPN', 'PPYOLOFPN', 'PPYOLOPAN', 'PPYOLOTinyFPN']
+__all__ = ['YOLOv3FPN', 'PPYOLOFPN']
 
 
 def add_coord(x, data_format):
@@ -309,7 +309,7 @@ class PPYOLOTinyDetBlock(nn.Layer):
         ]
         for cfg in cfgs:
             conv_name, conv_ch_in, conv_ch_out, filter_size, stride, padding, \
-            groups = cfg
+                    groups = cfg
             self.conv_module.add_sublayer(
                 name + conv_name,
                 ConvBNLayer(
