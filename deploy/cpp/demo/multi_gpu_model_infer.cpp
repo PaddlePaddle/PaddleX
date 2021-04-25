@@ -18,7 +18,7 @@
 #include <string>
 #include <fstream>
 
-#include "common/include/multi_gpu_model.h"
+#include "model_deploy/common/include/multi_gpu_model.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
