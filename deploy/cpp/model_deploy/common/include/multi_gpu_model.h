@@ -11,9 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#pragma once
 #include <memory>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include "model_deploy/common/include/model_factory.h"
 
@@ -51,7 +53,7 @@ class MultiGPUModel {
                         const std::string& params_filename,
                         const std::vector<int> gpu_ids,
                         bool use_gpu = false, bool use_mkl = true) {
-    for (auto i = 0; i < gpu_ids.size(); ++i){
+    for (auto i = 0; i < gpu_ids.size(); ++i) {
       if (!models_[i]->PaddleEngineInit(model_filename,
                                         params_filename,
                                         use_gpu, gpu_ids[i],
@@ -91,7 +93,7 @@ class MultiGPUModel {
       if (i < imgs_size % model_num) {
         img_num += 1;
       } else if (img_num <= 0) {
-        //imgs.size < model_.size
+        // imgs.size < model_.size
         break;
       }
       std::vector<cv::Mat> new_imgs(imgs.begin() + start,
