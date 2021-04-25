@@ -680,17 +680,16 @@ class PPYOLO(BaseDetector):
                 anchors = [[11, 18], [34, 47], [51, 126], [115, 71],
                            [120, 195], [254, 235]]
                 anchor_masks = [[3, 4, 5], [0, 1, 2]]
-                downsample_ratios = [32, 16]
             elif backbone == 'ResNet50_vd_dcn':
                 anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
                            [59, 119], [116, 90], [156, 198], [373, 326]]
                 anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
-                downsample_ratios = [32, 16, 8]
             else:
                 anchors = [[10, 14], [23, 27], [37, 58], [81, 82], [135, 169],
                            [344, 319]]
                 anchor_masks = [[3, 4, 5], [0, 1, 2]]
-                downsample_ratios = [32, 16]
+        elif anchors is None or anchor_masks is None:
+            raise ValueError("Please define both anchors and anchor_masks.")
 
         if backbone == 'ResNet50_vd_dcn':
             backbone = self._get_backbone(
@@ -702,6 +701,7 @@ class PPYOLO(BaseDetector):
                 freeze_at=-1,
                 freeze_norm=False,
                 norm_decay=0.)
+            downsample_ratios = [32, 16, 8]
 
         elif backbone == 'ResNet18_vd':
             backbone = self._get_backbone(
@@ -713,6 +713,7 @@ class PPYOLO(BaseDetector):
                 freeze_at=-1,
                 freeze_norm=False,
                 norm_decay=0.)
+            downsample_ratios = [32, 16, 8]
 
         elif backbone == 'MobileNetV3_large':
             backbone = self._get_backbone(
@@ -723,6 +724,7 @@ class PPYOLO(BaseDetector):
                 with_extra_blocks=False,
                 extra_block_filters=[],
                 feature_maps=[13, 16])
+            downsample_ratios = [32, 16]
 
         elif backbone == 'MobileNetV3_small':
             backbone = self._get_backbone(
@@ -733,6 +735,7 @@ class PPYOLO(BaseDetector):
                 with_extra_blocks=False,
                 extra_block_filters=[],
                 feature_maps=[9, 12])
+            downsample_ratios = [32, 16]
 
         neck = necks.PPYOLOFPN(
             norm_type=norm_type,
