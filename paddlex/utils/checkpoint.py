@@ -41,7 +41,9 @@ det_pretrain_weights_dict = {
     'FasterRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
-    'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET']
+    'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET'],
+    'PPYOLOv2_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
+    'PPYOLOv2_ResNet101_vd_dcn': ['COCO', 'IMAGENET']
 }
 
 cityscapes_weights = {
@@ -201,7 +203,11 @@ imagenet_weights = {
     'PPYOLO_ResNet50_vd_dcn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
     'PPYOLO_ResNet18_vd_IMAGENET':
-    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams'
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams',
+    'PPYOLOv2_ResNet50_vd_dcn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
+    'PPYOLOv2_ResNet101_vd_dcn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_ssld_pretrained.pdparams'
 }
 
 pascalvoc_weights = {
@@ -249,7 +255,11 @@ coco_weights = {
     'PPYOLO_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
     'PPYOLO_ResNet18_vd_COCO':
-    'https://paddledet.bj.bcebos.com/models/ppyolo_r18vd_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/ppyolo_r18vd_coco.pdparams',
+    'PPYOLOv2_ResNet50_vd_dcn_COCO':
+    'https://paddledet.bj.bcebos.com/models/ppyolov2_r50vd_dcn_365e_coco.pdparams',
+    'PPYOLOv2_ResNet101_vd_dcn_COCO':
+    'https://paddledet.bj.bcebos.com/models/ppyolov2_r101vd_dcn_365e_coco.pdparams'
 }
 
 
