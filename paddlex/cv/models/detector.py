@@ -388,6 +388,7 @@ class YOLOv3(BaseDetector):
             ignore_thresh=ignore_threshold,
             label_smooth=label_smooth)
         yolo_head = heads.YOLOv3Head(
+            in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
             num_classes=num_classes,
@@ -760,6 +761,7 @@ class PPYOLO(YOLOv3):
             if use_iou_aware else None)
 
         yolo_head = heads.YOLOv3Head(
+            in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
             num_classes=num_classes,
@@ -862,6 +864,7 @@ class PPYOLOTiny(YOLOv3):
             if use_iou_aware else None)
 
         yolo_head = heads.YOLOv3Head(
+            in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
             num_classes=num_classes,
@@ -983,6 +986,7 @@ class PPYOLOv2(YOLOv3):
             if use_iou_aware else None)
 
         yolo_head = heads.YOLOv3Head(
+            in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
             num_classes=num_classes,
