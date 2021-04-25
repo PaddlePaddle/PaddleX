@@ -77,16 +77,17 @@ class Model {
     return false;
   }
 
-  virtual bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1) {
+  virtual bool Predict(const std::vector<cv::Mat>& imgs,
+                       int thread_num = 1) {
     if (!preprocess_ || !postprocess_ || !infer_engine_) {
       std::cerr << "No init,cann't predict" << std::endl;
       return false;
     }
 
     results_.clear();
-    std::vector<cv::Mat> imgs_clone(imgs.size());
+    std::vector<cv::Mat> imgs_clone;
     for (auto i = 0; i < imgs.size(); ++i) {
-      imgs[i].copyTo(imgs_clone[i]);
+      imgs_clone.push_back(imgs[i].clone());
     }
 
     std::vector<ShapeInfo> shape_infos;
@@ -100,6 +101,10 @@ class Model {
     if (!postprocess_->Run(outputs, shape_infos, &results_, thread_num))
       return false;
     return true;
+  }
+
+  void ClearResult() {
+    results_.clear();
   }
 
   virtual void PrintResult() {

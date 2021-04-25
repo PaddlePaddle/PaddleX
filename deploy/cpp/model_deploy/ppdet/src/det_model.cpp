@@ -81,9 +81,9 @@ bool DetModel::PreProcessInit() {
   return true;
 }
 
-bool DetModel::PostProcessInit(bool use_cpu_nms) {
+bool DetModel::PostProcessInit() {
   postprocess_ = std::make_shared<DetPostProcess>();
-  if (!postprocess_->Init(yaml_config_, use_cpu_nms))
+  if (!postprocess_->Init(yaml_config_))
     return false;
   return true;
 }

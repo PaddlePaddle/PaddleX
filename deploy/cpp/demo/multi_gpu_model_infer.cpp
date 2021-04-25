@@ -18,7 +18,7 @@
 #include <string>
 #include <fstream>
 
-#include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/common/include/multi_gpu_model.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
@@ -27,11 +27,10 @@ DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
-DEFINE_int32(gpu_id, 0, "GPU card id");
+DEFINE_string(gpu_id, "0", "GPU card id, example: 0,2,3");
 DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of infering");
-DEFINE_string(toolkit, "det", "Type of PaddleToolKit");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -40,27 +39,28 @@ int main(int argc, char** argv) {
             << FLAGS_model_type << " model_filename="
             << FLAGS_model_filename << std::endl;
 
-  // create model
-  std::shared_ptr<PaddleDeploy::Model> model =
-        PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
-  if (!model) {
-    std::cout << "no model_type: " << FLAGS_model_type
-              << "  model=" << model << std::endl;
-    return 0;
+  std::vector<int> gpu_ids;
+  std::stringstream gpu_ids_str(FLAGS_gpu_id);
+  std::string temp;
+  while (getline(gpu_ids_str, temp, ',')) {
+    gpu_ids.push_back(std::stoi(temp));
   }
-  std::cout << "start model init " << std::endl;
 
-  // model init
-  model->Init(FLAGS_cfg_file);
-  std::cout << "start engine init " << std::endl;
+  for (auto gpu_id : gpu_ids) {
+    std::cout << "gpu_id:" << gpu_id << std::endl;
+  }
 
-  // inference engine in
-  model->PaddleEngineInit(FLAGS_model_filename,
-                          FLAGS_params_filename,
-                          FLAGS_use_gpu,
-                          FLAGS_gpu_id,
-                          FLAGS_use_mkl);
+  std::cout << "start create model" << std::endl;
+  // create model
+  PaddleDeploy::MultiGPUModel model;
+  if(!model.Init(FLAGS_model_type, FLAGS_cfg_file, gpu_ids.size())) {
+    return -1;
+  }
 
+  if(!model.PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
+                             gpu_ids, FLAGS_use_gpu, FLAGS_use_mkl)) {
+    return -1;
+  }
   // Mini-batch
   std::vector<std::string> image_paths;
   if (FLAGS_image_list != "") {
@@ -91,9 +91,9 @@ int main(int argc, char** argv) {
     for (int j = i; j < im_vec_size; ++j) {
       im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
     }
-    model->Predict(im_vec, FLAGS_thread_num);
+    model.Predict(im_vec, FLAGS_thread_num);
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
-    model->PrintResult();
+    model.PrintResult();
   }
   return 0;
 }

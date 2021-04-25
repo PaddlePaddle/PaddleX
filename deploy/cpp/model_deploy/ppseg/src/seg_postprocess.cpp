@@ -82,6 +82,10 @@ bool SegPostProcess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();
+  if (outputs.size() == 0) {
+    std::cerr << "empty input image on DetPreProcess" << std::endl;
+    return true;
+  }
   int batch_size = shape_infos.size();
   results->resize(batch_size);
 

@@ -48,7 +48,6 @@ endif()
 
 #paddle inference third party
 include_directories("${PADDLE_DIR}")
-include_directories("${PADDLE_DIR}")
 include_directories("${PADDLE_DIR}/third_party/install/protobuf/include")
 include_directories("${PADDLE_DIR}/third_party/install/glog/include")
 include_directories("${PADDLE_DIR}/third_party/install/gflags/include")
@@ -63,12 +62,8 @@ link_directories("${PADDLE_DIR}/third_party/install/xxhash/lib")
 link_directories("${PADDLE_DIR}/third_party/install/cryptopp/lib")
 
 if (WIN32)
-  if (WITH_STATIC_LIB)
-    set(DEPS ${PADDLE_DIR}/paddle/lib/paddle_inference${CMAKE_STATIC_LIBRARY_SUFFIX})
-  else()
-    set(DEPS ${PADDLE_DIR}/paddle/lib/paddle_inference${CMAKE_SHARED_LIBRARY_SUFFIX})
-  endif()
-  set(DEPS ${DEPS} glog gflags_static libprotobuf xxhash cryptopp-static libyaml-cppmt)
+  set(DEPS ${DEPS} ${PADDLE_DIR}/paddle/lib/paddle_inference.lib)
+  set(DEPS ${DEPS} glog gflags_static libprotobuf xxhash cryptopp-static libyaml-cppmt shlwapi)
 else()
   if (WITH_STATIC_LIB)
     set(DEPS ${PADDLE_DIR}/paddle/lib/libpaddle_inference${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -193,19 +188,23 @@ message("-----DEPS = ${DEPS}")
 
 #project
 include_directories("${PROJECT_ROOT_DIR}")
-include_directories("${PROJECT_ROOT_DIR}")
-include_directories("${PROJECT_ROOT_DIR}")
-message("PROJECT_ROOT_DIR == ${PROJECT_ROOT_DIR}")
 
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/common/src SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/engine/src ENGINE_SRC)
 
-#detector
-include_directories("${PROJECT_ROOT_DIR}/model_deploy")
+#detector seg
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppdet/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
-
 
 add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
+
+if(WIN32)
+  add_custom_command(TARGET model_infer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll  ${CMAKE_BINARY_DIR}/paddle_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/paddle/lib/paddle_inference.dll ${CMAKE_BINARY_DIR}/paddle_deploy 
+  )
+endif()

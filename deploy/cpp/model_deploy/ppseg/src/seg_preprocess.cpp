@@ -54,6 +54,10 @@ bool SegPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
 bool SegPreProcess::Run(std::vector<cv::Mat>* imgs,
                         std::vector<DataBlob>* inputs,
                         std::vector<ShapeInfo>* shape_infos, int thread_num) {
+  if ((*imgs).size() == 0) {
+    std::cerr << "empty input image on SegPreProcess" << std::endl;
+    return true;
+  }
   if (!ShapeInfer(*imgs, shape_infos, thread_num)) {
     std::cerr << "ShapeInfer failed while call SegPreProcess::Run" << std::endl;
     return false;
