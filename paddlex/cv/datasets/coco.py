@@ -18,7 +18,7 @@ import os.path as osp
 import six
 import sys
 import numpy as np
-from paddlex.utils import logging, is_pic
+from paddlex.utils import logging, is_pic, get_num_workers
 from .voc import VOCDetection
 from paddlex.cv.transforms import MixupImage
 
@@ -65,7 +65,7 @@ class CocoDetection(VOCDetection):
                     break
 
         self.batch_transforms = None
-        self.num_workers = num_workers
+        self.num_workers = get_num_workers(num_workers)
         self.shuffle = shuffle
         self.file_list = list()
         self.labels = list()

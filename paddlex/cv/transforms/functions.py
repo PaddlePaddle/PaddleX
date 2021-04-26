@@ -179,7 +179,7 @@ def expand_rle(rle, x, y, height, width, h, w):
 
 
 def resize_poly(poly, im_scale_x, im_scale_y):
-    resized_poly = np.array(poly)
+    resized_poly = np.array(poly, dtype=np.float32)
     resized_poly[0::2] *= im_scale_x
     resized_poly[1::2] *= im_scale_y
     return resized_poly.tolist()
