@@ -35,14 +35,13 @@ class SegPostProcess : public BasePostProcess {
  public:
   bool Init(const YAML::Node& yaml_config);
 
-  void RestoreResult(const float* data,
-                     const std::vector<int>& shape,
-                     const ShapeInfo& shape_info,
-                     SegResult* result);
-
   virtual bool Run(const std::vector<DataBlob>& outputs,
                    const std::vector<ShapeInfo>& shape_infos,
                    std::vector<Result>* results, int thread_num = 1);
+  void RestoreSegMap(const ShapeInfo& shape_info,
+                     cv::Mat* label_mat,
+                     cv::Mat* score_mat,
+                     SegResult* result);
 };
 
 }  // namespace PaddleDeploy

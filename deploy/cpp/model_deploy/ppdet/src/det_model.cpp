@@ -59,6 +59,11 @@ bool DetModel::YamlConfigInit(const std::string& cfg_file) {
   yaml_config_["toolkit"] = "PaddleDetection";
   yaml_config_["toolkit_version"] = "Unknown";
 
+  if (det_config["mask_resolution"].IsDefined()) {
+      yaml_config_["mask_resolution"] =
+        det_config["mask_resolution"].as<int>();
+  }
+
   int i = 0;
   for (const auto& label : det_config["label_list"]) {
     yaml_config_["labels"][i] = label.as<std::string>();

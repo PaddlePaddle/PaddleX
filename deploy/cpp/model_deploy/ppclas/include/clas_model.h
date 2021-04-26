@@ -19,22 +19,19 @@
 #include "yaml-cpp/yaml.h"
 
 #include "model_deploy/common/include/base_model.h"
-#include "model_deploy/ppdet/include/det_postprocess.h"
-#include "model_deploy/ppdet/include/det_preprocess.h"
+#include "model_deploy/ppclas/include/clas_postprocess.h"
+#include "model_deploy/ppclas/include/clas_preprocess.h"
 
 
 namespace PaddleDeploy {
-class DetModel : public Model {
+class ClasModel : public Model {
  private:
-  std::string model_type;
-  int mask_resolution;
+  const std::string model_type;
 
  public:
-  explicit DetModel(const std::string model_type) : model_type(model_type) {
-    std::cerr << "init DetModel,model_type=" << model_type << std::endl;
+  explicit ClasModel(const std::string model_type) : model_type(model_type) {
+    std::cerr << "init ClasModel,model_type=" << model_type << std::endl;
   }
-
-  bool GenerateTransformsConfig(const YAML::Node &node);
 
   bool YamlConfigInit(const std::string &cfg_file);
 

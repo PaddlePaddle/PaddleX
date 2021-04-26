@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <time.h>
+
 #include "model_deploy/ppseg/include/seg_postprocess.h"
 
 namespace PaddleDeploy {
@@ -20,85 +22,81 @@ bool SegPostProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-void SegPostProcess::RestoreResult(
-                    const float* ptr,
-                    const std::vector<int>& shape,
-                    const ShapeInfo& shape_info,
-                    SegResult* result) {
-  result->score_map.Resize(shape_info.shapes[0]);
-  result->label_map.Resize(shape_info.shapes[0]);
+void SegPostProcess::RestoreSegMap(const ShapeInfo& shape_info,
+                                   cv::Mat* label_mat,
+                                   cv::Mat*  score_mat,
+                                   SegResult* result) {
+  int ori_h = shape_info.shapes[0][1];
+  int ori_w = shape_info.shapes[0][0];
+  result->label_map.Resize({ori_h, ori_w});
+  result->score_map.Resize({ori_h, ori_w});
 
-  // read result from memory buffer
-  // convert to label_map and score_map
-  int num_pixels = shape[2] * shape[3];
-  std::vector<float> score_map(num_pixels);
-  std::vector<float> label_map(num_pixels);
-  for (int i = 0; i < num_pixels; ++i) {
-    std::vector<float> pixel_score(shape[1]);
-    for (int j = 0; j < shape[1]; ++j) {
-      pixel_score[j] = *(ptr + i + j * num_pixels);
-    }
-    int index = std::max_element(pixel_score.begin(),
-                    pixel_score.end()) - pixel_score.begin();
-    label_map[i] = index;
-    score_map[i] = pixel_score[index];
-  }
-
-  // recover label map and score map to align origin image
-  bool need_recover = false;
-  if (shape_info.shapes[0][0] != shape_info.shapes.back()[0] ||
-      shape_info.shapes[0][1] != shape_info.shapes.back()[1]) {
-    need_recover = true;
-  }
-  if (need_recover) {
-    cv::Mat mask_label(shape[2], shape[3], CV_8UC1, label_map.data());
-    cv::Mat mask_score(shape[2], shape[1], CV_32FC1, score_map.data());
-    for (int j = shape_info.shapes.size() - 1; j >= 0; --j) {
-      if (shape_info.transforms[j] == "Padding") {
-          std::vector<int> last_shape = shape_info.shapes[j - 1];
-          mask_label = mask_label(cv::Rect(0, 0, last_shape[0], last_shape[1]));
-          mask_score = mask_score(cv::Rect(0, 0, last_shape[0], last_shape[1]));
-      } else if (shape_info.transforms[j] == "Resize") {
-          std::vector<int> last_shape = shape_info.shapes[j - 1];
-          cv::resize(mask_label, mask_label,
-                    cv::Size(last_shape[0], last_shape[1]),
-                    0, 0, cv::INTER_NEAREST);
-          cv::resize(mask_score, mask_score,
-                    cv::Size(last_shape[0], last_shape[1]),
-                    0, 0, cv::INTER_LINEAR);
+  for (int j = shape_info.transforms.size() - 1; j > 0; --j) {
+    std::vector<int> last_shape = shape_info.shapes[j - 1];
+    std::vector<int> cur_shape = shape_info.shapes[j];
+    if (shape_info.transforms[j] == "Resize" ||
+        shape_info.transforms[j] == "ResizeByShort" ||
+        shape_info.transforms[j] == "ResizeByLong") {
+      if (last_shape[0] != label_mat->cols ||
+            last_shape[1] != label_mat->rows) {
+        cv::resize(*label_mat, *label_mat,
+                cv::Size(last_shape[0], last_shape[1]),
+                0, 0, cv::INTER_NEAREST);
+        cv::resize(*score_mat, *score_mat,
+                cv::Size(last_shape[0], last_shape[1]),
+                0, 0, cv::INTER_LINEAR);
+      }
+    } else if (shape_info.transforms[j] == "Padding") {
+      if (last_shape[0] < label_mat->cols || last_shape[1] < label_mat->rows) {
+        *label_mat = (*label_mat)(cv::Rect(0, 0, last_shape[0], last_shape[1]));
+        *score_mat = (*score_mat)(cv::Rect(0, 0, last_shape[0], last_shape[1]));
       }
     }
-    result->label_map.data.assign(mask_label.begin<uint8_t>(),
-                        mask_label.end<uint8_t>());
-    result->score_map.data.assign(mask_score.begin<float>(),
-                        mask_score.end<float>());
-  } else {
-    result->label_map.data.assign(label_map.begin(), label_map.end());
-    result->score_map.data.assign(score_map.begin(), score_map.end());
   }
+  result->label_map.data.assign(
+    label_mat->begin<uint8_t>(), label_mat->end<uint8_t>());
+  result->score_map.data.assign(
+    score_mat->begin<float>(), score_mat->end<float>());
 }
 
 bool SegPostProcess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();
-  if (outputs.size() == 0) {
-    std::cerr << "empty input image on DetPreProcess" << std::endl;
-    return true;
-  }
   int batch_size = shape_infos.size();
   results->resize(batch_size);
 
-  std::vector<int> score_map_shape = outputs[0].shape;
+  // tricks for PaddleX, which segmentation model has two outputs
+  int index = 0;
+  if (outputs.size() == 2) {
+    index = 1;
+  }
+  std::vector<int> score_map_shape = outputs[index].shape;
   int score_map_size = std::accumulate(score_map_shape.begin() + 1,
                     score_map_shape.end(), 1, std::multiplies<int>());
-  const float* data = reinterpret_cast<const float*>(outputs[0].data.data());
+  const float* score_map_data =
+        reinterpret_cast<const float*>(outputs[index].data.data());
+  int num_map_pixels = score_map_shape[2] * score_map_shape[3];
 
   for (int i = 0; i < batch_size; ++i) {
     (*results)[i].model_type = "seg";
     (*results)[i].seg_result = new SegResult();
-    RestoreResult(data + i * score_map_size, score_map_shape,
-                shape_infos[i], (*results)[i].seg_result);
+    const float* current_start_ptr = score_map_data + i * score_map_size;
+    cv::Mat ori_score_mat(score_map_shape[1],
+            score_map_shape[2] * score_map_shape[3],
+            CV_32FC1, const_cast<float*>(current_start_ptr));
+    ori_score_mat = ori_score_mat.t();
+    cv::Mat score_mat(score_map_shape[2], score_map_shape[3], CV_32FC1);
+    cv::Mat label_mat(score_map_shape[2], score_map_shape[3], CV_8UC1);
+    for (int j = 0; j < ori_score_mat.rows; ++j) {
+      double max_value;
+      cv::Point max_id;
+      minMaxLoc(ori_score_mat.row(j), 0, &max_value, 0, &max_id);
+      score_mat.at<float>(j) = max_value;
+      label_mat.at<uchar>(j) = max_id.x;
+    }
+    RestoreSegMap(shape_infos[i], &label_mat,
+                &score_mat, (*results)[i].seg_result);
   }
   return true;
 }

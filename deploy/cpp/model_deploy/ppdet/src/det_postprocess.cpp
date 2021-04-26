@@ -16,13 +16,7 @@
 
 namespace PaddleDeploy {
 
-bool DetPostProcess::Init(const YAML::Node& yaml_config, bool use_cpu_nms) {
-  use_cpu_nms_ = use_cpu_nms;
-  if (!yaml_config["model_name"].IsDefined()) {
-    std::cerr << "Yaml file no model_name" << std::endl;
-    return false;
-  }
-  model_arch_ = yaml_config["model_name"].as<std::string>();
+bool DetPostProcess::Init(const YAML::Node& yaml_config) {
   labels_.clear();
   for (auto item : yaml_config["labels"]) {
     std::string label = item.as<std::string>();

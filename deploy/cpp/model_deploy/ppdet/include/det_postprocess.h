@@ -33,17 +33,18 @@ namespace PaddleDeploy {
 
 class DetPostProcess : public BasePostProcess {
  public:
-  bool Init(const YAML::Node& yaml_config, bool use_cpu_nms = false);
+  bool Init(const YAML::Node& yaml_config);
 
-  virtual bool ProcessBbox(const std::vector<DataBlob>& outputs,
-                           const std::vector<ShapeInfo>& shape_infos,
-                           std::vector<Result>* results, int thread_num = 1);
+  bool ProcessBbox(const std::vector<DataBlob>& outputs,
+                   const std::vector<ShapeInfo>& shape_infos,
+                   std::vector<Result>* results, int thread_num = 1);
 
   virtual bool Run(const std::vector<DataBlob>& outputs,
                    const std::vector<ShapeInfo>& shape_infos,
                    std::vector<Result>* results, int thread_num = 1);
 
  private:
+  int mask_resolution_;
   std::string model_arch_;
   std::vector<std::string> labels_;
 };

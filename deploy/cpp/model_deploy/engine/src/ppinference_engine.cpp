@@ -43,11 +43,7 @@ bool PaddleInferenceEngine::Init(const std::string &model_filename,
   }
   config.SwitchUseFeedFetchOps(false);
   config.SwitchSpecifyInputNames(true);
-#if defined(__arm__) || defined(__aarch64__)
-  config.SwitchIrOptim(false);
-#else
   config.SwitchIrOptim(engine_config.use_ir_optim);
-#endif
   config.EnableMemoryOptim();
   if (engine_config.use_trt && engine_config.use_gpu) {
     paddle_infer::PrecisionType precision;
