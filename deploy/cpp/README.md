@@ -1,14 +1,28 @@
-## 编译方法
+## PaddlePaddle模型部署
 
-1. 进入当前目录,即`PaddleX/deploy/cpp`
-2. 下载Linux预测库 [下载地址](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/05_inference_deployment/inference/build_and_install_lib_cn.html)(需高于2.0版本)
-3. 执行编译脚本`sh script/build.sh`
+本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署
 
-## 待做事项
-1. 代码目录待整理
-- 删除cmake目录
-- 单独提供方法编译生成lib
-- 单独提供依赖lib的demo，提供两种方式编译demo
-- 大量函数缺少错误处理返回
+## 模型套件支持
+- PaddleDetection(release/0.5)
+- PaddleSeg(release/2.0)
+- PaddleClas(release/2.1)
+- PaddleX(v1.3.7)
+
+## 硬件支持
+- CPU(linux/windows)
+- GPU(linux/windows)
+- Jetson(TX2/Nano/Xavier)
+
+## 文档
+### 编译说明
+- [Linux编译指南](./docs/compile/paddle/linux.md)
+- [Windows编译指南](./docs/compile/paddle/windows.md)
+- [Jetson编译指南](./docs/compile/paddle/jetson.md)
+
+## 模型部署说明
+- [PaddleX部署指南](./docs/models/paddlex.md)
+- [PaddleDetection部署指南](./docs/models/paddledetection.md)
+- [PaddleSeg部署指南](./docs/models/paddleseg.md)
+- [PaddleClas部署指南](./docs/models/paddleclas.md)
 
 
