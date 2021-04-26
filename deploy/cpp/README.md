@@ -3,9 +3,9 @@
 本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署
 
 ## 模型套件支持
-- PaddleDetection(release/0.5)
-- PaddleSeg(release/2.0)
-- PaddleClas(release/2.1)
+- PaddleDetection([release/0.5](https://github.com/PaddlePaddle/PaddleDetection/tree/release/0.5))
+- PaddleSeg([release/2.0](https://github.com/PaddlePaddle/PaddleSeg/tree/release/v2.0))
+- PaddleClas([release/2.1](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.1))
 - PaddleX(v1.3.7)
 
 ## 硬件支持
