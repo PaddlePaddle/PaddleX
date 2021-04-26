@@ -30,7 +30,7 @@ from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResiz
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
-from .utils.det_metrics import VOCMetric
+from .utils.det_metrics import VOCMetric, COCOMetric
 from paddlex.utils.checkpoint import det_pretrain_weights_dict
 
 __all__ = [
@@ -236,12 +236,18 @@ class BaseDetector(BaseModel):
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
-            eval_metrics = [
-                VOCMetric(
-                    labels=eval_dataset.labels,
-                    is_bbox_normalized=is_bbox_normalized,
-                    classwise=False)
-            ]
+            if eval_dataset.__class__.__name__ == 'VOCDetection':
+                eval_metrics = [
+                    VOCMetric(
+                        labels=eval_dataset.labels,
+                        is_bbox_normalized=is_bbox_normalized,
+                        classwise=False)
+                ]
+            elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                eval_metrics = [
+                    COCOMetric(
+                        coco_gt=eval_dataset.coco_gt, classwise=False)
+                ]
             scores = collections.OrderedDict()
             with paddle.no_grad():
                 for step, data in enumerate(self.eval_data_loader):
@@ -621,6 +627,8 @@ class FasterRCNN(BaseDetector):
             'bbox_head': bbox_head,
             'bbox_post_process': bbox_post_process
         }
+
+        self.with_fpn = with_fpn
         super(FasterRCNN, self).__init__(
             model_name='FasterRCNN', num_classes=num_classes, **params)
 
@@ -628,12 +636,12 @@ class FasterRCNN(BaseDetector):
         if mode == 'train':
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=32, pad_gt=True)
+                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
             ]
         else:
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=32, pad_gt=False)
+                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
             ]
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
@@ -1226,7 +1234,7 @@ class MaskRCNN(BaseDetector):
             'bbox_post_process': bbox_post_process,
             'mask_post_process': mask_post_process
         }
-
+        self.with_fpn = with_fpn
         super(MaskRCNN, self).__init__(
             model_name='MaskRCNN', num_classes=num_classes, **params)
 
@@ -1234,12 +1242,12 @@ class MaskRCNN(BaseDetector):
         if mode == 'train':
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=32, pad_gt=True)
+                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
             ]
         else:
             default_batch_transforms = [
                 _BatchPadding(
-                    pad_to_stride=32, pad_gt=False)
+                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
             ]
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):

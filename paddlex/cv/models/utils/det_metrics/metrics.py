@@ -17,13 +17,16 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import sys
 import paddle
 import numpy as np
+import json
 
 from .map_utils import prune_zero_padding, DetectionMAP
+from .coco_utils import get_infer_results, cocoapi_eval
 import paddlex.utils.logging as logging
 
-__all__ = ['Metric', 'VOCMetric']
+__all__ = ['Metric', 'VOCMetric', 'COCOMetric']
 
 
 class Metric(paddle.metric.Metric):
@@ -128,3 +131,75 @@ class VOCMetric(Metric):
             map_stat
         }
         return stats
+
+
+class COCOMetric(Metric):
+    def __init__(self, coco_gt, classwise=False):
+        self.clsid2catid = {
+            i + 1: cat['id']
+            for i, cat in enumerate(coco_gt.loadCats(coco_gt.getCatIds()))
+        }
+        self.classwise = classwise
+        self.bias = 0
+        self.reset()
+
+    def reset(self):
+        # only bbox and mask evaluation support currently
+        self.results = {'bbox': [], 'mask': []}
+        self.eval_results = {}
+
+    def update(self, inputs, outputs):
+        outs = {}
+        # outputs Tensor -> numpy.ndarray
+        for k, v in outputs.items():
+            outs[k] = v.numpy() if isinstance(v, paddle.Tensor) else v
+
+        im_id = inputs['im_id']
+        outs['im_id'] = im_id.numpy() if isinstance(im_id,
+                                                    paddle.Tensor) else im_id
+
+        infer_results = get_infer_results(
+            outs, self.clsid2catid, bias=self.bias)
+        self.results['bbox'] += infer_results[
+            'bbox'] if 'bbox' in infer_results else []
+        self.results['mask'] += infer_results[
+            'mask'] if 'mask' in infer_results else []
+
+    def accumulate(self):
+        if len(self.results['bbox']) > 0:
+            output = "bbox.json"
+            if self.output_eval:
+                output = os.path.join(self.output_eval, output)
+            with open(output, 'w') as f:
+                json.dump(self.results['bbox'], f)
+                logging.info('The bbox result is saved to bbox.json.')
+
+            bbox_stats = cocoapi_eval(
+                output,
+                'bbox',
+                anno_file=self.anno_file,
+                classwise=self.classwise)
+            self.eval_results['bbox'] = bbox_stats
+            sys.stdout.flush()
+
+        if len(self.results['mask']) > 0:
+            output = "mask.json"
+            if self.output_eval:
+                output = os.path.join(self.output_eval, output)
+            with open(output, 'w') as f:
+                json.dump(self.results['mask'], f)
+                logging.info('The mask result is saved to mask.json.')
+
+            seg_stats = cocoapi_eval(
+                output,
+                'segm',
+                anno_file=self.anno_file,
+                classwise=self.classwise)
+            self.eval_results['mask'] = seg_stats
+            sys.stdout.flush()
+
+    def log(self):
+        pass
+
+    def get(self):
+        return self.eval_results
