@@ -45,7 +45,9 @@ det_pretrain_weights_dict = {
     'PPYOLOv2_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLOv2_ResNet101_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLOTiny_MobileNetV3': ['COCO', 'IMAGENET'],
-    'MaskRCNN_ResNet50': ['COCO', 'IMAGENET']
+    'MaskRCNN_ResNet50': ['COCO', 'IMAGENET'],
+    'MaskRCNN_ResNet50_fpn': ['COCO', 'IMAGENET'],
+    'MaskRCNN_ResNet50_vd_fpn': ['COCO', 'IMAGENET']
 }
 
 cityscapes_weights = {
