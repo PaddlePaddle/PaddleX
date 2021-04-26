@@ -1,4 +1,4 @@
-//   Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+// Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,25 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#pragma once
-
-#include <vector>
-
-#include "yaml-cpp/yaml.h"
-
-#include "model_deploy/common/include/output_struct.h"
+#include "model_deploy/ppclas/include/clas_model.h"
 
 namespace PaddleDeploy {
 
-class BasePostProcess {
- public:
-  virtual bool Init(const YAML::Node& yaml_config) {
-    return true;
-  }
+bool ClasModel::YamlConfigInit(const std::string& cfg_file) {
+  yaml_config_ = YAML::LoadFile(cfg_file);
+  return true;
+}
 
-  virtual bool Run(const std::vector<DataBlob>& outputs,
-                   const std::vector<ShapeInfo>& shape_infos,
-                   std::vector<Result>* results, int thread_num = 1) = 0;
-};
+bool ClasModel::PreProcessInit() {
+  preprocess_ = std::make_shared<ClasPreProcess>();
+  if (!preprocess_->Init(yaml_config_)) {
+    return false;
+  }
+  return true;
+}
+
+bool ClasModel::PostProcessInit() {
+  postprocess_ = std::make_shared<ClasPostProcess>();
+  if (!postprocess_->Init(yaml_config_))
+    return false;
+  return true;
+}
 
 }  // namespace PaddleDeploy

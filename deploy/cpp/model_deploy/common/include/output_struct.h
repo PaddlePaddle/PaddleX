@@ -134,7 +134,7 @@ struct Box {
   // confidence score
   float score;
   std::vector<float> coordinate;
-  Mask<int> mask;
+  Mask<uint8_t> mask;
 
   friend std::ostream &operator<<(std::ostream & stream, const Box& b) {
     stream << "Box(" << b.category_id << "\t" << b.category << "\t" << b.score;
@@ -156,7 +156,7 @@ struct ClasResult {
   double score;
   friend std::ostream &operator<<(std::ostream & stream, const ClasResult& c) {
     stream << "Classify(" << c.category_id << "\t"
-           << c.category << "\t" << c.score;
+           << c.category << "\t" << c.score << ")";
     return stream;
   }
 };
