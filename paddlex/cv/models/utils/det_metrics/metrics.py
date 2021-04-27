@@ -136,7 +136,7 @@ class VOCMetric(Metric):
 class COCOMetric(Metric):
     def __init__(self, coco_gt, classwise=False):
         self.clsid2catid = {
-            i + 1: cat['id']
+            i: cat['id']
             for i, cat in enumerate(coco_gt.loadCats(coco_gt.getCatIds()))
         }
         self.classwise = classwise

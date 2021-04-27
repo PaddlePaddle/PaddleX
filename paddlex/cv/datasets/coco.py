@@ -74,7 +74,7 @@ class CocoDetection(VOCDetection):
         self.coco_gt = coco
         img_ids = coco.getImgIds()
         cat_ids = coco.getCatIds()
-        catid2clsid = dict({catid: i + 1 for i, catid in enumerate(cat_ids)})
+        catid2clsid = dict({catid: i for i, catid in enumerate(cat_ids)})
         cname2cid = dict({
             coco.loadCats(catid)[0]['name']: clsid
             for catid, clsid in catid2clsid.items()
@@ -115,13 +115,19 @@ class CocoDetection(VOCDetection):
             difficult = np.zeros((num_bbox, 1), dtype=np.int32)
             gt_poly = [None] * num_bbox
 
+            has_segmentation = False
             for i, box in enumerate(bboxes):
                 catid = box['category_id']
                 gt_class[i][0] = catid2clsid[catid]
                 gt_bbox[i, :] = box['clean_bbox']
                 is_crowd[i][0] = box['iscrowd']
-                if 'segmentation' in box:
+                if 'segmentation' in box and box['iscrowd'] == 1:
+                    gt_poly[i] = [[0.0, 0.0], ]
+                elif 'segmentation' in box and box['segmentation']:
                     gt_poly[i] = box['segmentation']
+                    has_segmentation = True
+            if has_segmentation and not any(gt_poly):
+                continue
 
             im_info = {
                 'im_id': np.array([img_id]).astype('int32'),
