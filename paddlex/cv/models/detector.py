@@ -17,6 +17,7 @@ from __future__ import absolute_import
 import collections
 import copy
 import os.path as osp
+import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
 import paddlex
 import paddlex.utils.logging as logging
@@ -294,6 +295,7 @@ class BaseDetector(BaseModel):
         return batch_samples
 
     def _postprocess(self, batch_pred):
+        infer_result = {}
         if 'bbox' in batch_pred:
             bboxes = batch_pred['bbox']
             bbox_nums = batch_pred['bbox_num']
@@ -307,7 +309,7 @@ class BaseDetector(BaseModel):
                     num_id, score, xmin, ymin, xmax, ymax = dt.tolist()
                     if int(num_id) < 0:
                         continue
-                    category_id = int(num_id)
+                    category_id = int(num_id) + 1
                     w = xmax - xmin
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
@@ -317,16 +319,51 @@ class BaseDetector(BaseModel):
                         'score': score
                     }
                     det_res.append(dt_res)
-            batch_pred['bbox'] = det_res
+            infer_result['bbox'] = det_res
 
-        result = []
+        if 'mask' in batch_pred:
+            masks = batch_pred['mask']
+            bboxes = batch_pred['bbox']
+            mask_nums = batch_pred['bbox_num']
+            seg_res = []
+            k = 0
+            for i in range(len(mask_nums)):
+                det_nums = mask_nums[i]
+                for j in range(det_nums):
+                    mask = masks[k].astype(np.uint8)
+                    score = float(bboxes[k][1])
+                    label = int(bboxes[k][0])
+                    k = k + 1
+                    if label == -1:
+                        continue
+                    category_id = int(label) + 1
+                    rle = mask_util.encode(
+                        np.array(
+                            mask[:, :, None], order="F", dtype="uint8"))[0]
+                    if six.PY3:
+                        if 'counts' in rle:
+                            rle['counts'] = rle['counts'].decode("utf8")
+                    sg_res = {
+                        'category_id': category_id,
+                        'segmentation': rle,
+                        'score': score
+                    }
+                    seg_res.append(sg_res)
+            infer_result['mask'] = seg_res
+
         bbox_num = batch_pred['bbox_num']
+        result = []
         start = 0
         for num in bbox_num:
+            curr_result = {}
             end = start + num
-            if 'bbox' in batch_pred:
-                bbox_res = batch_pred['bbox'][start:end]
-            result.append(bbox_res)
+            if 'bbox' in infer_result:
+                bbox_res = infer_result['bbox'][start:end]
+                curr_result['bboxes'] = bbox_res
+            if 'mask' in infer_result:
+                mask_res = infer_result['mask'][start:end]
+                curr_result['masks'] = mask_res
+            result.append(curr_result)
             start = end
 
         return result

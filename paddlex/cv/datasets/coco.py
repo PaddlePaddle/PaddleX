@@ -58,7 +58,7 @@ class CocoDetection(VOCDetection):
         self.transforms = copy.deepcopy(transforms)
         self.use_mix = False
         if self.transforms is not None:
-            for i, op in enumerate(self.transforms.transforms):
+            for op in self.transforms.transforms:
                 if isinstance(op, MixupImage):
                     self.mixup_op = copy.deepcopy(op)
                     self.use_mix = True
