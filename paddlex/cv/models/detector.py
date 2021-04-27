@@ -1250,7 +1250,8 @@ class MaskRCNN(BaseDetector):
             head=m_head,
             roi_extractor=m_roi_extractor_cfg,
             mask_assigner=mask_assigner,
-            share_bbox_feat=share_bbox_feat)
+            share_bbox_feat=share_bbox_feat,
+            num_classes=num_classes)
 
         bbox_post_process = BBoxPostProcess(
             num_classes=num_classes,
