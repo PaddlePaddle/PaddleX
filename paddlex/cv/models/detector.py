@@ -1083,7 +1083,7 @@ class PPYOLOv2(YOLOv3):
 class MaskRCNN(BaseDetector):
     def __init__(self,
                  num_classes=81,
-                 backbone='ResNet50',
+                 backbone='ResNet50_vd',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
                  anchor_sizes=[[32], [64], [128], [256], [512]],
@@ -1207,7 +1207,7 @@ class MaskRCNN(BaseDetector):
             }
             with_pool = True
             m_head = heads.MaskFeat(
-                in_channel=backbone.out_shape[0].channels,
+                in_channel=bb_head.out_shape[0].channels,
                 out_channel=256,
                 num_convs=0)
             mask_assigner = MaskAssigner(
