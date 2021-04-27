@@ -1192,4 +1192,6 @@ class ArrangeDetector(Transform):
         self.mode = mode
 
     def apply(self, sample):
+        if self.mode == 'eval' and 'gt_poly' in sample:
+            del sample['gt_poly']
         return sample
