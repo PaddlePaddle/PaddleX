@@ -86,7 +86,7 @@ class Compose(SegTransform):
                 raise Exception('Can not open', img_path)
             im_data = dataset.ReadAsArray()
             return im_data.transpose((1, 2, 0))
-        elif img_format in ['jpeg', 'bmp', 'png']:
+        elif img_format in ['jpeg', 'bmp', 'png', 'jpg']:
             if input_channel == 3:
                 return cv2.imread(img_path, cv2.IMREAD_ANYDEPTH |
                                   cv2.IMREAD_ANYCOLOR)
