@@ -115,10 +115,10 @@ images/xiaoduxiongn.jpeg
 使用`GPU`的第0,1两张卡预测多个图片，batch_size为4。假设有个`images/image_list.txt`文件，image_list.txt内容的格式如下：
 
 ```
-images/xiaoduxiong1.jpeg
-images/xiaoduxiong2.jpeg
+images/image1.jpeg
+images/image2.jpeg
 ...
-images/xiaoduxiongn.jpeg
+images/imagen.jpeg
 ```
 
 ```sh

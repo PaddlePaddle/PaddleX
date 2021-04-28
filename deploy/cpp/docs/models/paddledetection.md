@@ -89,10 +89,10 @@ python tools/export_model.py -c configs/yolov3_darknet.yml \
 使用`GPU`预测多个图片，batch_size为2。假设有个`images/image_list.txt`文件，image_list.txt内容的格式如下：
 
 ```
-images/xiaoduxiong1.jpeg
-images/xiaoduxiong2.jpeg
+images/image1.jpeg
+images/image2.jpeg
 ...
-images/xiaoduxiongn.jpeg
+images/imagen.jpeg
 ```
 
 ```sh

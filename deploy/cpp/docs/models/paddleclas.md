@@ -41,8 +41,6 @@ cd PaddleClas
 
 ```python
 pip install --upgrade -r requirements.txt -i https://mirror.baidu.com/pypi/simple
-#visualdl可能出现安装失败，请尝试
-pip install --upgrade visualdl -i https://mirror.baidu.com/pypi/simple
 ```
 
 ## PaddleClas模型导出
@@ -61,24 +59,15 @@ wget https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_pretrain
 cd ../
 ```
 
-也可以用模型训练/微调代码，训练一个自己的模型(可参考[文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/docs/zh_CN/tutorials/getting_started.md))，默认输出目录为output. **注意：**需要修改yaml文件中的data_dir数据集路径为自己的数据集
+也可以用模型训练/微调代码，训练一个自己的模型(可参考[文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/docs/zh_CN/tutorials/getting_started.md))。
+
+2. 导出部署模型
 
 ```python
-python tools/train.py \
-    -c configs/ResNet/ResNet50.yaml \
-    -o pretrained_model="" \
-    -o use_gpu=True
-# 基于预训练模型微调
-python tools/train.py \
-    -c configs/ResNet/ResNet50.yaml \
-    -o pretrained_model ./models/ResNet50_pretrained \
-    -o use_gpu=True
-```
-
-2. 基于预训练模型导出
-
-```
+# 基于下载的预训练模型
 python tools/export_model.py --model ResNet50 --output_path ./inference/ResNet50 --pretrained_model ./models/ResNet50_pretrained
+# 如果是自己的模型，只需将pretrained_model参数替换成自己的模型
+python tools/export_model.py --model ResNet50 --output_path ./inference/ResNet50 --pretrained_model ./mymodel/mymodel_name
 ```
 
 模型会默认导出到所填写的目录，上面例子会导出到inference/ResNet50下。
@@ -92,11 +81,11 @@ ResNet50
   └── model.pdmodel          # 静态图模型文件
 ```
 
-3. PaddleClas导出是没有yaml文件的，使用PaddleX部署需要手动补上这个配置文件。在`PaddleX/deploy/resources`目录下有个`resnet50_imagenet.yml`的样例，可以参照这个例子写自己的配置文件。
+3. PaddleClas导出是没有yaml文件的，使用PaddleX部署需要手动补上这个配置文件。可以参照我们写好的[resnet50_imagenet.yml](./../../../resources/resnet50_imagenet.yml)例子写自己的配置文件。
+
+​       在这个例子中我们直接将这个`resnet50_imagenet.yml`文件拷贝到ResNet50目录下，即可进行后续的推理部署。
 
 ​       yaml配置文件详细介绍可看:  [配置文件讲解](../compile/apis/yaml.md)
-
-​       在这个例子中我们直接将`PaddleX/deploy/resources/resnet50_imagenet.yml`文件拷贝到ResNet50目录下，进行后续的推理部署。
 
 ## PaddleX cpp部署
 
@@ -126,10 +115,10 @@ ResNet50
 使用`GPU`预测多个图片，batch_size为2。假设有个`images/image_list.txt`文件，image_list.txt内容的格式如下：
 
 ```
-images/xiaoduxiong1.jpeg
-images/xiaoduxiong2.jpeg
+images/image1.jpeg
+images/image2.jpeg
 ...
-images/xiaoduxiongn.jpeg
+images/imagen.jpeg
 ```
 
 ```sh
@@ -142,10 +131,10 @@ images/xiaoduxiongn.jpeg
 使用`GPU`的第0,1两张卡预测多个图片，batch_size为4。假设有个`images/image_list.txt`文件，image_list.txt内容的格式如下：
 
 ```
-images/xiaoduxiong1.jpeg
-images/xiaoduxiong2.jpeg
+images/image1.jpeg
+images/image2.jpeg
 ...
-images/xiaoduxiongn.jpeg
+images/imagen.jpeg
 ```
 
 ```sh
