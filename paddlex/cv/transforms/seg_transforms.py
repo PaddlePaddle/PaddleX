@@ -89,9 +89,10 @@ class Compose(SegTransform):
         elif img_format in ['jpeg', 'bmp', 'png', 'jpg']:
             if input_channel == 3:
                 return cv2.imread(img_path, cv2.IMREAD_ANYDEPTH |
-                                  cv2.IMREAD_ANYCOLOR)
+                                  cv2.IMREAD_ANYCOLOR | cv2.IMREAD_COLOR)
             else:
-                return cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
+                return cv2.imread(im_file, cv2.IMREAD_ANYDEPTH |
+                                  cv2.IMREAD_ANYCOLOR)
         elif ext == '.npy':
             return np.load(img_path)
         else:
