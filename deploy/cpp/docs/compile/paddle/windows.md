@@ -27,7 +27,7 @@ git checkout deploykit
 **说明**：其中`C++`预测代码在`PaddleX\deploy\cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，而示例demo代码为`demo/model_infer.cpp`。
 
 
-### Step2: 下载PaddlePaddle C++ 预测库 paddle_inference
+### Step2: 下载PaddlePaddle C++ 预测库 
 
 PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX支持Paddle预测库2.0+，最新2.0.2版本下载链接如下所示:
 
@@ -120,26 +120,26 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 | --------------- | ------------------------------------------------------------ | ------------------ |
 | model_filename  | 导出的预测模型 模型(model)的路径,例如`D:/ppyolo/__model__`   | 必填               |
 | params_filename | 导出的预测模型 参数(params)的路径，例如`D:/ppyolo/__params__` | 必填               |
-| cfg_file        | 导出的预测模型 配置文件(yml)的路径，例如`D:/ppyolo/infer_cfg.yml | 必填               |
-| model_type      | 导出预测模型所用的框架，比如det(PaddleDetection)、seg(PaddleSeg) | 必填               |
+| cfg_file        | 导出的预测模型 配置文件(yml)的路径，例如`D:/ppyolo/infer_cfg.yml` | 必填               |
+| model_type      | 导出预测模型所用的框架。当前支持的套件为[PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection)、[PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg)、[PaddleClas](https://github.com/PaddlePaddle/PaddleClas)、[PaddleX](https://github.com/PaddlePaddle/PaddleX)对应的model_type分别为 det、seg、clas、paddlex | 必填               |
 | image           | 要预测的图片文件路径                                         | 跟image_list二选一 |
 | image_list      | 按行存储图片路径的.txt文件                                   | 跟image二选一      |
 | use_gpu         | 是否使用 GPU 预测, 使用为1                                   | 默认为 0           |
 | use_mkl         | 是否使用 MKL加速CPU预测, 使用为1                             | 默认为 1           |
-| thread_num      | MKL推理的线程数，默认为1                                     | 默认为 1           |
+| thread_num      | openmp对batch并行的线程数，默认为1                           | 默认为 1           |
 | batch_size      | 预测的批量大小，默认为1                                      | 默认为 1           |
 | gpu_id          | GPU 设备ID,默认为0                                           | 默认为0            |
 
 
 
-## 样例
+## 推理运行样例
 
 例如我们使用[[PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection)] release/0.5中导出的[yolov3_darknet](https://bj.bcebos.com/paddlex/deploy/models//yolov3_darknet.tar.gz)模型进行预测, 例如导出到`D:\projects`，模型解压路径为`D:\projects\yolov3_darknet`。用PaddleDetection套件导出的模型，所以model_type参数必须为det。
 
 > 关于预测速度的说明：加载模型后前几张图片的预测速度会较慢，这是因为运行启动时涉及到内存显存初始化等步骤，通常在预测20-30张图片后模型的预测速度达到稳定。
 
 
-### 样例一：(型对单张图像做预测)
+### 样例一：(对单张图像做预测)
 
 不使用`GPU`测试图片  `D:\images\xiaoduxiong.jpeg`  
 
@@ -156,10 +156,10 @@ cd D:\projects\PaddleX\deploy\cpp\out\build\x64-Release
 使用`GPU`预测多个图片，batch_size为2。假设有个`D:\images\image_list.txt`文件，image_list.txt内容的格式如下：
 
 ```
-D:\images\xiaoduxiong1.jpeg
-D:\images\xiaoduxiong2.jpeg
+images/image1.jpeg
+images/image2.jpeg
 ...
-D:\images\xiaoduxiongn.jpeg
+images/imagen.jpeg
 ```
 
 ```shell
@@ -168,7 +168,7 @@ D:\images\xiaoduxiongn.jpeg
 
 
 
-## 多卡部署
+## 多卡上运行
 
 当前支持单机多卡部署，暂时不支持跨机器多卡。多卡部署必须使用`paddlex_inference\multi_gpu_model_infer.exe`进行预测，将每个batch的数据均摊到每张卡上进行并行加速。多卡的gpu_id设置几个GPU的id，就会在那几个GPU上进行预测,每个gpu_id之间用英文逗号隔开。注意：**单卡的`model_infer.exe`只能设置一个GPU的id。**
 
