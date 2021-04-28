@@ -3,8 +3,7 @@ toolkit: PaddleClas
 toolkit_version: unknown
 input_tensor_name: inputs
 transforms:
-  BGR2RGB:
-    "null": true
+  BGR2RGB: ~
   ResizeByShort:
     target_size: 256
     interp: 1
@@ -23,8 +22,7 @@ transforms:
       - 0.229
       - 0.224
       - 0.225
-  Permute:
-    "null": true
+  Permute: ~
 labels:
   - kit_fox
   - English_setter
