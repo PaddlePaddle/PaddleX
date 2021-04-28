@@ -112,9 +112,10 @@ class Compose(DetTransform):
                 try:
                     if input_channel == 3:
                         im = cv2.imread(im_file, cv2.IMREAD_ANYDEPTH |
-                                        cv2.IMREAD_ANYCOLOR)
+                                        cv2.IMREAD_ANYCOLOR | cv2.IMREAD_COLOR)
                     else:
-                        im = cv2.imread(im_file, cv2.IMREAD_UNCHANGED)
+                        im = cv2.imread(im_file, cv2.IMREAD_ANYDEPTH |
+                                        cv2.IMREAD_ANYCOLOR)
                         if im.ndim < 3:
                             im = np.expand_dims(im, axis=-1)
                 except:
