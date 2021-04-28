@@ -53,11 +53,11 @@ int main(int argc, char** argv) {
   std::cout << "start create model" << std::endl;
   // create model
   PaddleDeploy::MultiGPUModel model;
-  if(!model.Init(FLAGS_model_type, FLAGS_cfg_file, gpu_ids.size())) {
+  if (!model.Init(FLAGS_model_type, FLAGS_cfg_file, gpu_ids.size())) {
     return -1;
   }
 
-  if(!model.PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
+  if (!model.PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
                              gpu_ids, FLAGS_use_gpu, FLAGS_use_mkl)) {
     return -1;
   }
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
   }
 
   std::cout << "start model predict " << image_paths.size() << std::endl;
-  //infer
+  // infer
   for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
     // Read image
     int im_vec_size =
