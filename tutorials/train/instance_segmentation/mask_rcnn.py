@@ -22,17 +22,14 @@ eval_transforms = transforms.Compose([
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-train_dataset = pdx.datasets.VOCDetection(
-    data_dir='insect_det',
-    file_list='insect_det/train_list.txt',
-    label_list='insect_det/labels.txt',
+train_dataset = pdx.datasets.CocoDetection(
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/train.json',
     transforms=train_transforms,
     shuffle=True)
-
-eval_dataset = pdx.datasets.VOCDetection(
-    data_dir='insect_det',
-    file_list='insect_det/val_list.txt',
-    label_list='insect_det/labels.txt',
+eval_dataset = pdx.datasets.CocoDetection(
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/val.json',
     transforms=eval_transforms,
     shuffle=False)
 
