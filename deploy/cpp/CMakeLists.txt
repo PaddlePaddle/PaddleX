@@ -202,6 +202,10 @@ add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENG
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
 
+add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
+target_link_libraries(multi_gpu_model_infer ${DEPS})
+
 if(WIN32)
   add_custom_command(TARGET model_infer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ${CMAKE_BINARY_DIR}/paddle_deploy

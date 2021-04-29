@@ -31,7 +31,6 @@ DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of infering");
-DEFINE_string(toolkit, "det", "Type of PaddleToolKit");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -81,7 +80,7 @@ int main(int argc, char** argv) {
   }
 
   std::cout << "start model predict " << image_paths.size() << std::endl;
-  //infer
+  // infer
   for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
     // Read image
     int im_vec_size =
