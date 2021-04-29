@@ -92,7 +92,9 @@ transform里具体的操作说明如下
 
 作用：将BGR格式图片数据转为RGB格式。 
 
-参数:  无输入参数。c++ yaml文件`~`代表空，也可以使用`null`(例如BGR2RGB:  ~ 、BGR2RGB:  null )。
+参数:
+
+    无输入参数。c++ yaml文件 ~ 代表空，也可以使用 null(例如BGR2RGB:  ~ 、BGR2RGB:  null)。
 
 详细描述: 其他预处理操作和模型推理只能处理RGB格式，如果输入数据为BGR格式就需要在预处理的最开始用BGR2RGB。例如：用opencv的imread读取图片默认格式为BGR
 
@@ -102,7 +104,9 @@ transform里具体的操作说明如下
 
 作用：将RGB格式图片数据转为GBR格式。 
 
-参数:  无输入参数
+参数:  
+
+    无输入参数
 
 详细描述: 有时我们想要最终的结果为BGR格式，那可以在后处理的最后使用这个操作将RGB格式的结果转为BGR。
 
@@ -113,6 +117,7 @@ transform里具体的操作说明如下
 作用：转换图片的数据格式
 
 参数: 
+
     dtype        string类型,转换后的数据类型。当前只支持float
 
 详细描述: 用opencv读取图片的格式为uint8，进行浮点数计算(比如Normalize操作)之前，为了减少计算误差可以先将数据转为float。
@@ -134,6 +139,7 @@ transform里具体的操作说明如下
 作用：调整图片大小 
 
 参数: 
+
     height        int类型,调整后图片的高
     width         int类型,调整后图片的宽
     interp        int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
@@ -148,6 +154,7 @@ transform里具体的操作说明如下
 作用：按图片最短边跟目标大小的比例，调整图片大小。 
 
 参数: 
+
     target_size    int类型，调整后图片最短边大小
     interp            int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
     max_size       int类型,   图片的最大长度
@@ -164,6 +171,7 @@ transform里具体的操作说明如下
 作用：按图片最长边跟目标大小的比例，调整图片大小。 
 
 参数: 
+
     target_size    int类型，调整后图片最长边大小
     interp             int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
     max_size       int类型,   图片的最大长度
@@ -180,6 +188,7 @@ transform里具体的操作说明如下
 作用：将图片进行归一化。 
 
 参数: 
+
     mean        float数组，元素个数为channel数。归一化公示中的mean
     std             float数组，元素个数为channel数。归一化公示中的std
     min_val     float数组，元素个数为channel数。缩放公式中的min_val
@@ -195,6 +204,7 @@ transform里具体的操作说明如下
 作用：将图片填充到某个固定的大小
 
 参数: 
+
     height        int类型,  填充后图片的高
     width         int类型,  填充后图片的宽
     stride         int类型，默认值为1. 填充后必须为stride的倍数，主要用于fpn结构
@@ -209,6 +219,7 @@ transform里具体的操作说明如下
 作用：取图片中心区域截取某个固定的大小图片
 
 参数: 
+
     height        int类型,截取图片的高
     width         int类型,截取图片的宽
 
