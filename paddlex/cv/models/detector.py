@@ -1164,7 +1164,7 @@ class MaskRCNN(BaseDetector):
                 in_channel=neck.out_shape[0].channels, out_channel=1024)
             bb_roi_extractor_cfg = {
                 'resolution': 7,
-                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
+                'spatial_scale': [1. / i.stride for i in neck.out_shape],
                 'sampling_ratio': 0,
                 'aligned': True
             }
@@ -1173,6 +1173,12 @@ class MaskRCNN(BaseDetector):
                 in_channel=neck.out_shape[0].channels,
                 out_channel=256,
                 num_convs=4)
+            m_roi_extractor_cfg = {
+                'resolution': 14,
+                'spatial_scale': [1. / i.stride for i in neck.out_shape],
+                'sampling_ratio': 0,
+                'aligned': True
+            }
             mask_assigner = MaskAssigner(
                 num_classes=num_classes, mask_resolution=28)
             share_bbox_feat = False
@@ -1210,6 +1216,12 @@ class MaskRCNN(BaseDetector):
                 in_channel=bb_head.out_shape[0].channels,
                 out_channel=256,
                 num_convs=0)
+            m_roi_extractor_cfg = {
+                'resolution': 14,
+                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
+                'sampling_ratio': 0,
+                'aligned': True
+            }
             mask_assigner = MaskAssigner(
                 num_classes=num_classes, mask_resolution=14)
             share_bbox_feat = True
@@ -1238,13 +1250,6 @@ class MaskRCNN(BaseDetector):
             with_pool=with_pool,
             bbox_assigner=bbox_assigner,
             num_classes=num_classes)
-
-        m_roi_extractor_cfg = {
-            'resolution': 14,
-            'spatial_scale': [1. / i.stride for i in backbone.out_shape],
-            'sampling_ratio': 0,
-            'aligned': True
-        }
 
         mask_head = heads.MaskHead(
             head=m_head,

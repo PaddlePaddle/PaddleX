@@ -97,8 +97,8 @@ class CocoDetection(VOCDetection):
                 x, y, box_w, box_h = inst['bbox']
                 x1 = max(0, x)
                 y1 = max(0, y)
-                x2 = min(im_w - 1, x1 + max(0, box_w - 1))
-                y2 = min(im_h - 1, y1 + max(0, box_h - 1))
+                x2 = min(im_w - 1, x1 + max(0, box_w))
+                y2 = min(im_h - 1, y1 + max(0, box_h))
                 if inst['area'] > 0 and x2 >= x1 and y2 >= y1:
                     inst['clean_bbox'] = [x1, y1, x2, y2]
                     bboxes.append(inst)
