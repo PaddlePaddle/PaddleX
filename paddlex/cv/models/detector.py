@@ -588,7 +588,7 @@ class FasterRCNN(BaseDetector):
             head = heads.TwoFCHead(out_channel=1024)
             roi_extractor_cfg = {
                 'resolution': 7,
-                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
+                'spatial_scale': [1. / i.stride for i in neck.out_shape],
                 'sampling_ratio': 0,
                 'aligned': True
             }
