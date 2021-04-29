@@ -36,7 +36,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     transforms=eval_transforms,
     shuffle=False)
 
-num_classes = len(train_dataset.labels) + 1
+num_classes = len(train_dataset.labels)
 
 model = pdx.det.MaskRCNN(
     num_classes=num_classes, backbone='ResNet50_vd', with_fpn=True)

@@ -185,10 +185,12 @@ class BaseDetector(BaseModel):
                 logging.warning(
                     "Path of pretrain_weights('{}') does not exist!".format(
                         pretrain_weights))
-                logging.warning("Pretrain_weights is forcibly set to 'COCO'. "
+                pretrain_weights = det_pretrain_weights_dict['_'.join(
+                    [self.model_name, self.backbone_name])][0]
+                logging.warning("Pretrain_weights is forcibly set to '{}'. "
                                 "If don't want to use pretrain weights, "
-                                "set pretrain_weights to be None.")
-                pretrain_weights = 'COCO'
+                                "set pretrain_weights to be None.".format(
+                                    pretrain_weights))
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
@@ -384,12 +386,12 @@ class YOLOv3(BaseDetector):
                  label_smooth=False):
         self.init_params = locals()
         if backbone not in [
-                'MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn',
-                'ResNet34'
+                'MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3',
+                'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1', 'MobileNetV3', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34')".
+                "('MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3', 'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34')".
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
@@ -398,10 +400,10 @@ class YOLOv3(BaseDetector):
             norm_type = 'bn'
 
         self.backbone_name = backbone
-        if backbone == 'MobileNetV1':
+        if 'MobileNetV1' in backbone:
             norm_type = 'bn'
             backbone = self._get_backbone('MobileNet', norm_type=norm_type)
-        elif backbone == 'MobileNetV3':
+        elif 'MobileNetV3' in backbone:
             backbone = self._get_backbone(
                 'MobileNetV3', norm_type=norm_type, feature_maps=[7, 13, 16])
         elif backbone == 'ResNet50_vd_dcn':
@@ -503,16 +505,29 @@ class FasterRCNN(BaseDetector):
                  test_post_nms_top_n=1000):
         self.init_params = locals()
         if backbone not in [
-                'ResNet50', 'ResNet50_vd', 'ResNet34', 'ResNet34_vd',
-                'ResNet101', 'ResNet101_vd'
+                'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34',
+                'ResNet34_vd', 'ResNet101', 'ResNet101_vd'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50', 'ResNet50_vd', 'ResNet34', 'ResNet34_vd', "
+                "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', "
                 "'ResNet101', 'ResNet101_vd')".format(backbone))
         self.backbone_name = backbone + '_fpn' if with_fpn else backbone
-
-        if 'ResNet50' in backbone:
+        if backbone == 'ResNet50_vd_ssld':
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'ResNet',
+                variant='d',
+                norm_type='bn',
+                freeze_at=0,
+                return_idx=[0, 1, 2, 3],
+                num_stages=4,
+                lr_mult_list=[0.05, 0.05, 0.1, 0.15])
+        elif 'ResNet50' in backbone:
             if with_fpn:
                 backbone = self._get_backbone(
                     'ResNet',
@@ -1082,7 +1097,7 @@ class PPYOLOv2(YOLOv3):
 
 class MaskRCNN(BaseDetector):
     def __init__(self,
-                 num_classes=81,
+                 num_classes=80,
                  backbone='ResNet50_vd',
                  with_fpn=True,
                  aspect_ratios=[0.5, 1.0, 2.0],
@@ -1096,10 +1111,14 @@ class MaskRCNN(BaseDetector):
                  test_pre_nms_top_n=None,
                  test_post_nms_top_n=1000):
         self.init_params = locals()
-        if backbone not in ['ResNet50', 'ResNet50_vd']:
+        if backbone not in [
+                'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet101',
+                'ResNet101_vd'
+        ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50', 'ResNet50_vd')".format(backbone))
+                "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet101', 'ResNet101_vd')".
+                format(backbone))
 
         self.backbone_name = backbone + '_fpn' if with_fpn else backbone
 
@@ -1119,7 +1138,7 @@ class MaskRCNN(BaseDetector):
                     return_idx=[2],
                     num_stages=3)
 
-        elif backbone == 'ResNet50_vd':
+        elif 'ResNet50_vd' in backbone:
             if not with_fpn:
                 logging.warning(
                     "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
@@ -1128,6 +1147,23 @@ class MaskRCNN(BaseDetector):
             backbone = self._get_backbone(
                 'ResNet',
                 variant='d',
+                norm_type='bn',
+                freeze_at=0,
+                return_idx=[0, 1, 2, 3],
+                num_stages=4,
+                lr_mult_list=[0.05, 0.05, 0.1, 0.15]
+                if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0])
+
+        else:
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'ResNet',
+                variant='d' if '_vd' in backbone else 'b',
+                depth=101,
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],

@@ -28,10 +28,12 @@ seg_pretrain_weights_dict = {
 
 det_pretrain_weights_dict = {
     'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC', 'IMAGENET'],
+    'YOLOv3_MobileNetV1_ssld': ['COCO', 'PascalVOC', 'IMAGENET'],
     'YOLOv3_DarkNet53': ['COCO', 'IMAGENET'],
     'YOLOv3_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'YOLOv3_ResNet34': ['COCO', 'IMAGENET'],
     'YOLOv3_MobileNetV3': ['COCO', 'PascalVOC', 'IMAGENET'],
+    'YOLOv3_MobileNetV3_ssld': ['PascalVOC', 'IMAGENET'],
     'FasterRCNN_ResNet50_vd': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet50_vd_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet50': ['COCO', 'IMAGENET'],
@@ -40,6 +42,7 @@ det_pretrain_weights_dict = {
     'FasterRCNN_ResNet34_vd_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_ResNet50_vd_ssld_fpn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET'],
     'PPYOLOv2_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
@@ -47,7 +50,10 @@ det_pretrain_weights_dict = {
     'PPYOLOTiny_MobileNetV3': ['COCO', 'IMAGENET'],
     'MaskRCNN_ResNet50': ['COCO', 'IMAGENET'],
     'MaskRCNN_ResNet50_fpn': ['COCO', 'IMAGENET'],
-    'MaskRCNN_ResNet50_vd_fpn': ['COCO', 'IMAGENET']
+    'MaskRCNN_ResNet50_vd_fpn': ['COCO', 'IMAGENET'],
+    'MaskRCNN_ResNet50_vd_ssld_fpn': ['COCO', 'IMAGENET'],
+    'MaskRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
+    'MaskRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET']
 }
 
 cityscapes_weights = {
@@ -186,6 +192,8 @@ imagenet_weights = {
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
     'FasterRCNN_ResNet50_vd_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
+    'FasterRCNN_ResNet50_vd_ssld_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_v2_pretrained.pdparams',
     'FasterRCNN_ResNet34_vd_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_vd_pretrained.pdparams',
     'FasterRCNN_ResNet34_fpn_IMAGENET':
@@ -200,7 +208,11 @@ imagenet_weights = {
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet34_pretrained.pdparams',
     'YOLOv3_MobileNetV1_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV1_pretrained.pdparams',
+    'YOLOv3_MobileNetV1_ssld_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV1_ssld_pretrained.pdparams',
     'YOLOv3_MobileNetV3_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'YOLOv3_MobileNetV3_ssld_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
     'YOLOv3_DarkNet53_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/DarkNet53_pretrained.pdparams',
@@ -219,7 +231,13 @@ imagenet_weights = {
     'MaskRCNN_ResNet50_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
     'MaskRCNN_ResNet50_vd_fpn_IMAGENET':
-    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams'
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_pretrained.pdparams',
+    'MaskRCNN_ResNet50_vd_ssld_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_v2_pretrained.pdparams',
+    'MaskRCNN_ResNet101_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
+    'MaskRCNN_ResNet101_vd_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams'
 }
 
 pascalvoc_weights = {
@@ -233,13 +251,19 @@ pascalvoc_weights = {
     'https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/fcn_hrnetw48_voc12aug_512x512_40k/model.pdparams',
     'YOLOv3_MobileNetV1_PascalVOC':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams',
+    'YOLOv3_MobileNetV1_ssld_PascalVOC':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_voc.pdparams',
     'YOLOv3_MobileNetV3_PascalVOC':
-    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_voc.pdparams'
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_voc.pdparams',
+    'YOLOv3_MobileNetV3_ssld_PascalVOC':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_ssld_270e_voc.pdparams'
 }
 
 coco_weights = {
     'YOLOv3_MobileNetV1_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams',
+    'YOLOv3_MobileNetV1_ssld_COCO':
+    'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_coco.pdparams',
     'YOLOv3_DarkNet53_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams',
     'YOLOv3_ResNet50_vd_dcn_COCO':
@@ -256,6 +280,8 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_1x_coco.pdparams',
     'FasterRCNN_ResNet50_vd_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_2x_coco.pdparams',
+    'FasterRCNN_ResNet50_vd_ssld_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_ssld_fpn_2x_coco.pdparams',
     'FasterRCNN_ResNet34_vd_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_vd_fpn_1x_coco.pdparams',
     'FasterRCNN_ResNet34_fpn_COCO':
@@ -279,7 +305,13 @@ coco_weights = {
     'MaskRCNN_ResNet50_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_fpn_2x_coco.pdparams',
     'MaskRCNN_ResNet50_vd_fpn_COCO':
-    'https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_2x_coco.pdparams'
+    'https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_2x_coco.pdparams',
+    'MaskRCNN_ResNet50_vd_ssld_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_ssld_2x_coco.pdparams',
+    'MaskRCNN_ResNet101_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/mask_rcnn_r101_fpn_1x_coco.pdparams',
+    'MaskRCNN_ResNet101_vd_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/mask_rcnn_r101_vd_fpn_1x_coco.pdparams'
 }
 
 
