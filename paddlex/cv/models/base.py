@@ -234,7 +234,9 @@ class BaseModel:
         current_step = 0
         for i in range(start_epoch, num_epochs):
             self.net.train()
-            if callable(getattr(self.train_data_loader.dataset, 'set_epoch')):
+            if callable(
+                    getattr(self.train_data_loader.dataset, 'set_epoch',
+                            None)):
                 self.train_data_loader.dataset.set_epoch(i)
             train_avg_metrics = TrainingStats()
             step_time_tic = time.time()
