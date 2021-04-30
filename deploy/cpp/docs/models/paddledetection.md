@@ -1,6 +1,6 @@
 # PaddleDetection模型部署
 
-当前支持PaddleDetection release-0.5分支导出的模型进行部署（仅支持FasterRCNN/MaskRCNN/PPYOLO/YOLOv3)。PaddleDetection相关详细文档可以查看官网文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/README_cn.md)https://github.com/PaddlePaddle/PaddleDetection/tree/release/0.5。
+当前支持PaddleDetection release-0.5分支导出的模型进行部署（仅支持FasterRCNN/MaskRCNN/PPYOLO/YOLOv3)。PaddleDetection相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleDetection/tree/release/0.5)。
 
 下面主要以YoloV3为例，讲解从模型导出到部署的整个流程。
 
@@ -37,8 +37,8 @@ python -m pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 
 ```shell
 git clone https://github.com/PaddlePaddle/PaddleDetection.git
-git checkout release/0.5
 cd PaddleDetection
+git checkout release/0.5
 ```
 
 3.安装PaddleDetection依赖
@@ -73,11 +73,11 @@ python tools/export_model.py -c configs/yolov3_darknet.yml \
 
 ### 样例一：(对单张图像做预测)
 
-不使用`GPU`,测试图片为  `images/xiaoduxiong.jpeg`  
+不使用`GPU`,测试图片为  `images/image1.jpeg`  
 
 ```shell
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/model_infer --model_filename=PaddleDetection/inference_model/yolov3_darknet/__model__ --params_filename=PaddleDetection/inference_model/yolov3_darknet/__params__ --cfg_file=PaddleDetection/inference_model/yolov3_darknet/infer_cfg.yml --model_type=det --image=images/xiaoduxiong.jpeg --use_gpu=0
+./build/demo/model_infer --model_filename=PaddleDetection/inference_model/yolov3_darknet/__model__ --params_filename=PaddleDetection/inference_model/yolov3_darknet/__params__ --cfg_file=PaddleDetection/inference_model/yolov3_darknet/infer_cfg.yml --model_type=det --image=images/image1.jpeg --use_gpu=0
 
 ```
 
@@ -97,6 +97,6 @@ images/imagen.jpeg
 
 ```sh
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/model_infer --model_filename=PaddleDetection/inference_model/yolov3_darknet/__model__ --params_filename=PaddleDetection/inference_model/yolov3_darknet/__params__ --cfg_file=PaddleDetection/inference_model/yolov3_darknet/infer_cfg.yml --model_type=det --image=images/xiaoduxiong.jpeg --use_gpu=1 --batch_size=2 --thread_num=2
+./build/demo/model_infer --model_filename=PaddleDetection/inference_model/yolov3_darknet/__model__ --params_filename=PaddleDetection/inference_model/yolov3_darknet/__params__ --cfg_file=PaddleDetection/inference_model/yolov3_darknet/infer_cfg.yml --model_type=det --image_list=images/image_list.txt --use_gpu=1 --batch_size=2 --thread_num=2
 ```
 

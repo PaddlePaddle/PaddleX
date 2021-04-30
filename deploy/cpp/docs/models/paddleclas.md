@@ -99,11 +99,11 @@ ResNet50
 
 ### 样例一：(对单张图像做预测)
 
-不使用`GPU`,测试图片为  `images/xiaoduxiong.jpeg`  
+不使用`GPU`,测试图片为  `images/image1.jpeg`  
 
 ```shell
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/model_infer --model_filename=PaddleClas/inference/ResNet50/model.pdmodel --params_filename=PaddleClas/inference/ResNet50/model.pdiparams --cfg_file=PaddleClas/inference/ResNet50/resnet50_imagenet.yml --model_type=clas --image=images/xiaoduxiong.jpeg --use_gpu=0
+./build/demo/model_infer --model_filename=PaddleClas/inference/ResNet50/model.pdmodel --params_filename=PaddleClas/inference/ResNet50/model.pdiparams --cfg_file=PaddleClas/inference/ResNet50/resnet50_imagenet.yml --model_type=clas --image=images/image1.jpeg --use_gpu=0
 
 ```
 
@@ -123,7 +123,7 @@ images/imagen.jpeg
 
 ```sh
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/model_infer --model_filename=PaddleClas/inference/ResNet50/model.pdmodel --params_filename=PaddleClas/inference/ResNet50/model.pdiparams --cfg_file=PaddleClas/inference/ResNet50/resnet50_imagenet.yml --model_type=clas --image=images/xiaoduxiong.jpeg --use_gpu=1 --batch_size=2 --thread_num=2
+./build/demo/model_infer --model_filename=PaddleClas/inference/ResNet50/model.pdmodel --params_filename=PaddleClas/inference/ResNet50/model.pdiparams --cfg_file=PaddleClas/inference/ResNet50/resnet50_imagenet.yml --model_type=clas --image_list=images/image_list.txt --use_gpu=1 --batch_size=2 --thread_num=2
 ```
 
 ### 样例三：(使用多卡对图像列表做预测)
@@ -139,6 +139,6 @@ images/imagen.jpeg
 
 ```sh
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/multi_gpu_model_infer --model_filename=PaddleClas/inference/ResNet50/model.pdmodel --params_filename=PaddleClas/inference/ResNet50/model.pdiparams --cfg_file=PaddleClas/inference/ResNet50/resnet50_imagenet.yml --model_type=clas --image=images/xiaoduxiong.jpeg --use_gpu=1 --batch_size=4 --thread_num=2 --gpu_id=0,1
+./build/demo/multi_gpu_model_infer --model_filename=PaddleClas/inference/ResNet50/model.pdmodel --params_filename=PaddleClas/inference/ResNet50/model.pdiparams --cfg_file=PaddleClas/inference/ResNet50/resnet50_imagenet.yml --model_type=clas --image_list=images/image_list.txt --use_gpu=1 --batch_size=4 --thread_num=2 --gpu_id=0,1
 ```
 

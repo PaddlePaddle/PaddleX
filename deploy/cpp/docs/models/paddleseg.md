@@ -42,7 +42,7 @@ cd PaddleSeg
 ```python
 # 通过pip形式安装paddleseg库，不仅安装了代码运行的环境依赖，也安装了PaddleSeg的API
 pip install paddleseg
-@ 部署也可治安装依赖
+# 只是部署也可只安装依赖
 pip install -r requirements.txt
 ```
 
@@ -83,11 +83,11 @@ output
 
 ### 样例一：(对单张图像做预测)
 
-不使用`GPU`,测试图片为  `images/xiaoduxiong.jpeg`  
+不使用`GPU`,测试图片为  `images/image1.jpeg`  
 
 ```shell
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/model_infer --model_filename=PaddleSeg/output/model.pdmodel --params_filename=PaddleSeg/output/model.pdiparams --cfg_file=PaddleSeg/output/deploy.yaml --model_type=seg --image=images/xiaoduxiong.jpeg --use_gpu=0
+./build/demo/model_infer --model_filename=PaddleSeg/output/model.pdmodel --params_filename=PaddleSeg/output/model.pdiparams --cfg_file=PaddleSeg/output/deploy.yaml --model_type=seg --image=images/image1.jpeg --use_gpu=0
 
 ```
 
@@ -107,7 +107,7 @@ images/xiaoduxiongn.jpeg
 
 ```sh
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/model_infer --model_filename=PaddleSeg/output/model.pdmodel --params_filename=PaddleSeg/output/model.pdiparams --cfg_file=PaddleSeg/output/deploy.yaml --model_type=seg --image=images/xiaoduxiong.jpeg --use_gpu=1 --batch_size=2 --thread_num=2
+./build/demo/model_infer --model_filename=PaddleSeg/output/model.pdmodel --params_filename=PaddleSeg/output/model.pdiparams --cfg_file=PaddleSeg/output/deploy.yaml --model_type=seg --image=images/image_list.txt --use_gpu=1 --batch_size=2 --thread_num=2
 ```
 
 ### 样例三：(使用多卡对图像列表做预测)
@@ -123,6 +123,6 @@ images/imagen.jpeg
 
 ```sh
 # windows为.\paddlex_inference\model_infer.exe
-./build/demo/multi_gpu_model_infer --model_filename=PaddleSeg/output/model.pdmodel --params_filename=PaddleSeg/output/model.pdiparams --cfg_file=PaddleSeg/output/deploy.yaml --model_type=seg --image=images/xiaoduxiong.jpeg --use_gpu=1 --batch_size=4 --thread_num=2 --gpu_id=0,1
+./build/demo/multi_gpu_model_infer --model_filename=PaddleSeg/output/model.pdmodel --params_filename=PaddleSeg/output/model.pdiparams --cfg_file=PaddleSeg/output/deploy.yaml --model_type=seg --image=images/image_list.txt --use_gpu=1 --batch_size=4 --thread_num=2 --gpu_id=0,1
 ```
 
