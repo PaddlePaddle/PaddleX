@@ -100,7 +100,7 @@ class ResizeByShort : public Transform {
   virtual std::string Name() { return "ResizeByShort"; }
 
  private:
-  float GenerateScale(const int origin_w, const int origin_h);
+  double GenerateScale(const int origin_w, const int origin_h);
   int target_size_;
   int max_size_;
   int interp_;
@@ -134,7 +134,7 @@ class ResizeByLong : public Transform {
 
 
  private:
-  float GenerateScale(const int origin_w, const int origin_h);
+  double GenerateScale(const int origin_w, const int origin_h);
   int target_size_;
   int max_size_;
   int interp_;
