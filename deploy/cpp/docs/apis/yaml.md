@@ -85,17 +85,17 @@ transform里具体的操作说明如下
 参数:
 
 ```
-    无输入参数。c++ yaml文件 ~ 代表空，也可以使用 null(例如BGR2RGB:  ~ 、BGR2RGB:  null)。
+  无输入参数。c++ yaml文件 ~ 代表空，也可以使用 null(例如BGR2RGB:  ~ 、BGR2RGB:  null)。
 ```
 详细描述: 其他预处理操作和模型推理只能处理RGB格式，如果输入数据为BGR格式就需要在预处理的最开始用BGR2RGB。例如：用opencv的imread读取图片默认格式为BGR  
 
 
 
 **RGB2BGR**  
-作用：将RGB格式图片数据转为GBR格式。 
+作用：将RGB格式图片数据转为GBR格式。  
 参数:  
 ```
-    无输入参数
+  无输入参数
 ```
 详细描述: 有时我们想要最终的结果为BGR格式，那可以在后处理的最后使用这个操作将RGB格式的结果转为BGR。
 
@@ -105,7 +105,7 @@ transform里具体的操作说明如下
 作用：转换图片的数据格式  
 参数: 
 ```
-    dtype        string类型,转换后的数据类型。当前只支持float
+  dtype      string类型,转换后的数据类型。当前只支持float
 ```
 详细描述: 用opencv读取图片的格式为uint8，进行浮点数计算(比如Normalize操作)之前，为了减少计算误差可以先将数据转为float。
 
@@ -115,7 +115,7 @@ transform里具体的操作说明如下
 作用：改变图片的排列格式，从hwc格式转为chw格式  
 参数:  
 ```
-    无输入参数
+  无输入参数
 ```
 详细描述: Paddle推理引擎默认处理的图片格式为chw。 用opencv读取图片的格式为hwc,在进入推理前需要用Permute转为chw格式。
 
@@ -125,10 +125,10 @@ transform里具体的操作说明如下
 作用：调整图片大小  
 参数: 
 ```
-    height        int类型,调整后图片的高
-    width         int类型,调整后图片的宽
-    interp        int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
-    use_scale  bool类型，是否使用比列缩放到指定大小，默认为true。
+  height        int类型,调整后图片的高
+  width         int类型,调整后图片的宽
+  interp        int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
+  use_scale     bool类型，是否使用比列缩放到指定大小，默认为true。
 ```
 详细描述: 等比例缩放图片的大小，可用于将各尺寸图片都调整为模型输入需要的图片大小。
 
@@ -138,10 +138,10 @@ transform里具体的操作说明如下
 作用：按图片最短边跟目标大小的比例，调整图片大小。 
 参数: 
 ```
-    target_size    int类型，调整后图片最短边大小
-    interp            int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
-    max_size       int类型,   图片的最大长度
-    use_scale      bool类型，是否将target_size换算成系数来缩放,默认为true。
+  target_size    int类型，调整后图片最短边大小
+  interp         int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
+  max_size       int类型,   图片的最大长度
+  use_scale      bool类型，是否将target_size换算成系数来缩放,默认为true。
 ```
 详细描述:  
 例如原始图片的高和宽为(100,200)，目标大小为300，则转换后图片的高和宽为(300,  300/100200)=>(300, 600)。  
@@ -154,10 +154,10 @@ transform里具体的操作说明如下
 作用：按图片最长边跟目标大小的比例，调整图片大小.  
 参数: 
 ```
-    target_size    int类型，调整后图片最长边大小
-    interp             int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
-    max_size       int类型,   图片的最大长度
-    use_scale      bool类型，是否使用比列缩放到指定大小，默认为true。
+  target_size    int类型，调整后图片最长边大小
+  interp         int类型，图像缩放的差值算法类型，默认为1(线性插值)。对应opencv::resize中的interpolation参数
+  max_size       int类型,   图片的最大长度
+  use_scale      bool类型，是否使用比列缩放到指定大小，默认为true。
 ```
 详细描述:  
 例如原始图片的高和宽为(100,200)，目标大小为300，则转换后图片的高和宽为(300/200*100,  300)=>(150, 300)。  
@@ -170,11 +170,11 @@ transform里具体的操作说明如下
 作用：将图片进行归一化.  
 参数: 
 ```
-    mean        float数组，元素个数为channel数。归一化公示中的mean
-    std             float数组，元素个数为channel数。归一化公示中的std
-    min_val     float数组，元素个数为channel数。缩放公式中的min_val
-    max_val     float数组，元素个数为channel数。缩放公式中的max_val
-    is_scale     bool类型，是否进行缩放，默认为false。
+  mean        float数组，元素个数为channel数。归一化公示中的mean
+  std         float数组，元素个数为channel数。归一化公示中的std
+  min_val     float数组，元素个数为channel数。缩放公式中的min_val
+  max_val     float数组，元素个数为channel数。缩放公式中的max_val
+  is_scale    bool类型，是否进行缩放，默认为false。
 ```
 详细描述: 默认归一化公式为 (input[channel] - mean[channel]) / std[channel]， 如果is_scale为true会先进行缩放  (input[channel] - min_val[channel]) / (max_val[channel] - min_val[channel]) 然后再进行归一化。
 
@@ -184,10 +184,10 @@ transform里具体的操作说明如下
 作用：将图片填充到某个固定的大小  
 参数: 
 ```
-    height        int类型,  填充后图片的高
-    width         int类型,  填充后图片的宽
-    stride         int类型，默认值为1. 填充后必须为stride的倍数，主要用于fpn结构
-    im_padding_value  float数组，元素个数为channel数，默认为0.0。指定填充的值
+  height      int类型,  填充后图片的高
+  width       int类型,  填充后图片的宽
+  stride      int类型，默认值为1. 填充后必须为stride的倍数，主要用于fpn结构
+  im_padding_value  float数组，元素个数为channel数，默认为0.0。指定填充的值
 ```
 详细描述:  用某个值( im_padding_value)将图片填充到固定的大小。如果是fpn结构等对输出大小有倍数要求，则需要设定 stride参数
 
@@ -197,8 +197,8 @@ transform里具体的操作说明如下
 作用：取图片中心区域截取某个固定的大小图片  
 参数: 
 ```
-    height        int类型,截取图片的高
-    width         int类型,截取图片的宽
+  height      int类型,截取图片的高
+  width       int类型,截取图片的宽
 ```
 详细描述: 图片的大小为(200,400)，设置高(height)为100,宽(width)为200。则会从中心区域(即高[50,150]的区间，宽[100,300]的区间)截取出大小为(100,200)的图片。
 
