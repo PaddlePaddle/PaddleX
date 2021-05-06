@@ -109,7 +109,7 @@ class Model {
 
   void GetResult(std::vector<Result>* results) {
     results->clear();
-    results->insert(results->end(), results_.start(), results_.end());
+    results->insert(results->end(), results_.begin(), results_.end());
   }
 
   virtual void PrintResult() {

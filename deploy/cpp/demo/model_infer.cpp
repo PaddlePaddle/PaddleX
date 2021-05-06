@@ -96,11 +96,11 @@ int main(int argc, char** argv) {
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
     model->PrintResult();
     // get result
-    std::vector<PaddleDeploy::Result> result;
-    model.GetResult(&result);
-    for (auto i = 0; i < results.size(); ++i) {
-      std::cout << "GetResult for sample " << i << std::endl;
-      std::cout << results[i] << std::endl;
+    std::vector<PaddleDeploy::Result> results;
+    model->GetResult(&results);
+    for (auto j = 0; j < results.size(); ++j) {
+      std::cout << "GetResult for sample " << j << std::endl;
+      std::cout << results[j] << std::endl;
     }
   }
   return 0;

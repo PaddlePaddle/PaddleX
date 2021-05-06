@@ -54,7 +54,7 @@ class MultiGPUModel {
                         const std::vector<int> gpu_ids) {
     if (gpu_ids.size() != models_.size()) {
       std::cerr << "Paddle Engine Init gpu_ids != MultiGPUModel Init gpu_num"
-                << gpu_ids.size() << " != " models_.size()
+                << gpu_ids.size() << " != " << models_.size()
                 << std::endl;
       return false;
     }
@@ -125,7 +125,7 @@ class MultiGPUModel {
     results->clear();
     for (auto model : models_) {
       results->insert(results->end(),
-                      model->results_.start(), model->results_.end());
+                      model->results_.begin(), model->results_.end());
     }
   }
 
