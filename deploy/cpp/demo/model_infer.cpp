@@ -18,7 +18,7 @@
 #include <string>
 #include <fstream>
 
-#include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/common/include/paddle_deploy.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
@@ -30,7 +30,8 @@ DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
-DEFINE_int32(thread_num, 1, "thread num of infering");
+DEFINE_int32(thread_num, 1, "thread num of preprocessing");
+DEFINE_int32(mkl_thread_num, 8, "thread num of mkldnn");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -58,7 +59,8 @@ int main(int argc, char** argv) {
                           FLAGS_params_filename,
                           FLAGS_use_gpu,
                           FLAGS_gpu_id,
-                          FLAGS_use_mkl);
+                          FLAGS_use_mkl,
+                          FLAGS_mkl_thread_num);
 
   // Mini-batch
   std::vector<std::string> image_paths;

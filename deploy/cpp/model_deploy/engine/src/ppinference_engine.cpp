@@ -17,12 +17,13 @@
 namespace PaddleDeploy {
 bool Model::PaddleEngineInit(const std::string &model_filename,
                              const std::string &params_filename, bool use_gpu,
-                             int gpu_id, bool use_mkl) {
+                             int gpu_id, bool use_mkl, int mkl_thread_num) {
   infer_engine_ = std::make_shared<PaddleInferenceEngine>();
   InferenceConfig ppi_config;
   ppi_config.use_gpu = use_gpu;
   ppi_config.gpu_id = gpu_id;
   ppi_config.use_mkl = use_mkl;
+  ppi_config.mkl_thread_num = mkl_thread_num;
   return infer_engine_->Init(model_filename, params_filename, ppi_config);
 }
 

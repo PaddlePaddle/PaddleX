@@ -91,10 +91,12 @@ double ResizeByLong::GenerateScale(const int origin_w, const int origin_h) {
   double scale = 1.0f;
   if (target_size_ == -1) {
     if (im_size_max > max_size_) {
-      scale = static_cast<double>(max_size_) / static_cast<double>(im_size_max);
+      scale = static_cast<double>(max_size_) /
+                static_cast<double>(im_size_max);
     }
   } else {
-    scale = static_cast<double>(target_size_) / static_cast<double>(im_size_max);
+    scale = static_cast<double>(target_size_) /
+                static_cast<double>(im_size_max);
   }
   return scale;
 }

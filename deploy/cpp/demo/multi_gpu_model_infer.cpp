@@ -30,7 +30,7 @@ DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_string(gpu_id, "0", "GPU card id, example: 0,2,3");
 DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
-DEFINE_int32(thread_num, 1, "thread num of infering");
+DEFINE_int32(thread_num, 1, "thread num of preprocessing");
 
 int main(int argc, char** argv) {
   // Parsing command-line
