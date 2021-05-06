@@ -24,11 +24,8 @@ DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
-DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
-DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_string(gpu_id, "0", "GPU card id, example: 0,2,3");
-DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of preprocessing");
 
@@ -57,27 +54,25 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if (!model.PaddleEngineInit(FLAGS_model_filename, FLAGS_params_filename,
-                             gpu_ids, FLAGS_use_gpu, FLAGS_use_mkl)) {
+  if (!model.PaddleEngineInit(FLAGS_model_filename,
+                              FLAGS_params_filename,
+                              gpu_ids)) {
     return -1;
   }
   // Mini-batch
-  std::vector<std::string> image_paths;
-  if (FLAGS_image_list != "") {
-    std::ifstream inf(FLAGS_image_list);
-    if (!inf) {
-      std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
-      return -1;
-    }
-    std::string image_path;
-    while (getline(inf, image_path)) {
-      image_paths.push_back(image_path);
-    }
-  } else if (FLAGS_image != "") {
-    image_paths.push_back(FLAGS_image);
-  } else {
-    std::cerr << "image_list or image should be defined" << std::endl;
+  if (FLAGS_image_list == "") {
+    std::cerr << "image_list should be defined" << std::endl;
     return -1;
+  }
+  std::vector<std::string> image_paths;
+  std::ifstream inf(FLAGS_image_list);
+  if (!inf) {
+    std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
+    return -1;
+  }
+  std::string image_path;
+  while (getline(inf, image_path)) {
+    image_paths.push_back(image_path);
   }
 
   std::cout << "start model predict " << image_paths.size() << std::endl;

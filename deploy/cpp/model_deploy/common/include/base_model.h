@@ -107,6 +107,11 @@ class Model {
     results_.clear();
   }
 
+  void GetResult(std::vector<Result>* results) {
+    results->clear();
+    results->insert(results->end(), results_.start(), results_.end());
+  }
+
   virtual void PrintResult() {
     for (auto i = 0; i < results_.size(); ++i) {
       std::cout << "result for sample " << i << std::endl;

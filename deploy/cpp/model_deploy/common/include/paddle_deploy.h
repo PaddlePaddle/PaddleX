@@ -14,3 +14,4 @@
 #pragma once
 
 #include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/common/include/output_struct.h"

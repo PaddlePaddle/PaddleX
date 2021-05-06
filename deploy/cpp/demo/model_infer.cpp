@@ -95,6 +95,13 @@ int main(int argc, char** argv) {
     model->Predict(im_vec, FLAGS_thread_num);
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
     model->PrintResult();
+    // get result
+    std::vector<PaddleDeploy::Result> result;
+    model.GetResult(&result);
+    for (auto i = 0; i < results.size(); ++i) {
+      std::cout << "GetResult for sample " << i << std::endl;
+      std::cout << results[i] << std::endl;
+    }
   }
   return 0;
 }

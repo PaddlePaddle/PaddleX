@@ -51,13 +51,18 @@ class MultiGPUModel {
 
   bool PaddleEngineInit(const std::string& model_filename,
                         const std::string& params_filename,
-                        const std::vector<int> gpu_ids,
-                        bool use_gpu = false, bool use_mkl = true) {
+                        const std::vector<int> gpu_ids) {
+    if (gpu_ids.size() != models_.size()) {
+      std::cerr << "Paddle Engine Init gpu_ids != MultiGPUModel Init gpu_num"
+                << gpu_ids.size() << " != " models_.size()
+                << std::endl;
+      return false;
+    }
     for (auto i = 0; i < gpu_ids.size(); ++i) {
       if (!models_[i]->PaddleEngineInit(model_filename,
                                         params_filename,
-                                        use_gpu, gpu_ids[i],
-                                        use_mkl)) {
+                                        true, gpu_ids[i],
+                                        true)) {
         std::cerr << "Paddle Engine Init error:" << gpu_ids[i] << std::endl;
         return false;
       }
@@ -114,6 +119,14 @@ class MultiGPUModel {
     }
 
     return true;
+  }
+
+  void GetResult(std::vector<Result>* results) {
+    results->clear();
+    for (auto model : models_) {
+      results->insert(results->end(),
+                      model->results_.start(), model->results_.end());
+    }
   }
 
   void PrintResult() {
