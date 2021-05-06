@@ -14,7 +14,7 @@
 
 from functools import partial
 import paddle
-from paddleslim.dygraph import FilterPruner
+from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex.utils.logging as logging
 
 
@@ -23,7 +23,11 @@ def _eval_fn(model, eval_dataset, batch_size=8):
     return metric[list(metric.keys())[0]]
 
 
-def analysis(model, dataset, batch_size=8, save_file='./model.sensi.data'):
+def analysis(model,
+             dataset,
+             batch_size=8,
+             criterion='l1_norm',
+             save_file='./model.sensi.data'):
     if model.model_type == 'segmenter':
         inputs = [1] + list(dataset[0][0].shape)
     elif model.model_type == 'detector':
@@ -35,5 +39,8 @@ def analysis(model, dataset, batch_size=8, save_file='./model.sensi.data'):
             "scale_factor": paddle.ones(
                 shape=[1, 2], dtype='float32')
         }]
-    pruner = FilterPruner(model.net, inputs=inputs)
+    if criterion == 'l1_norm':
+        pruner = L1NormFilterPruner(model.net, inputs=inputs)
+    elif criterion == 'fpgm':
+        pruner = FPGMFilterPruner(model.net, inputs=inputs)
     pruner.sensitive(eval_func=partial(_eval_fn, model, dataset, batch_size))
