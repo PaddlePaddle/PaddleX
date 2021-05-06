@@ -17,7 +17,7 @@
 namespace PaddleDeploy {
 
 bool SegModel::GenerateTransformsConfig(const YAML::Node& src) {
-  yaml_config_["transforms"]["BGR2RGB"]["null"] = true;
+  yaml_config_["transforms"]["BGR2RGB"] = YAML::Null;
   yaml_config_["transforms"]["Convert"]["dtype"] = "float";
   for (const auto& op : src) {
     assert(op["type"].IsDefined());
@@ -34,7 +34,7 @@ bool SegModel::GenerateTransformsConfig(const YAML::Node& src) {
       return false;
     }
   }
-  yaml_config_["transforms"]["Permute"]["null"] = true;
+  yaml_config_["transforms"]["Permute"] = YAML::Null;
   return true;
 }
 

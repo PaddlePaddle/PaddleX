@@ -44,7 +44,6 @@ class DetPostProcess : public BasePostProcess {
                    std::vector<Result>* results, int thread_num = 1);
 
  private:
-  int mask_resolution_;
   std::string model_arch_;
   std::string version_;
   std::vector<std::string> labels_;

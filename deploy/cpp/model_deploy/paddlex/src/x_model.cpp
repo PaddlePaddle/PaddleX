@@ -40,7 +40,7 @@ bool PaddleXModel::GenerateTransformsConfig(const YAML::Node& src) {
       return false;
     }
   }
-  yaml_config_["transforms"]["Permute"]["null"] = true;
+  yaml_config_["transforms"]["Permute"] = YAML::Null;
   return true;
 }
 
