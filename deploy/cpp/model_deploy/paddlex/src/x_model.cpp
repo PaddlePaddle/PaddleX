@@ -49,7 +49,7 @@ bool PaddleXModel::YamlConfigInit(const std::string& cfg_file) {
 
   yaml_config_["model_format"] = "Paddle";
   yaml_config_["toolkit"] = "PaddleX";
-  yaml_config_["toolkit_version"] = x_config["version"].as<std::string>();
+  yaml_config_["version"] = x_config["version"].as<std::string>();
   yaml_config_["model_type"] =
         x_config["_Attributes"]["model_type"].as<std::string>();
   yaml_config_["model_name"] = x_config["Model"].as<std::string>();

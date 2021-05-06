@@ -45,6 +45,7 @@ class DetPostProcess : public BasePostProcess {
 
  private:
   std::string model_arch_;
+  std::string version_;
   std::vector<std::string> labels_;
 };
 
