@@ -136,7 +136,7 @@ class Model {
                 << std::endl;
       return false;
     }
-    if (postprocess_->Run(outputs, shape_infos, &results, thread_num))
+    if (postprocess_->Run(outputs, shape_infos, results, thread_num))
       return false;
     return true;
   }

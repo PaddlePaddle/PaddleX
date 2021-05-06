@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
     for (int j = i; j < im_vec_size; ++j) {
       im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
     }
-    model.Predict(im_vec, results, FLAGS_thread_num);
+    model.Predict(im_vec, &results, FLAGS_thread_num);
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;

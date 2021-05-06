@@ -70,12 +70,6 @@ class MultiGPUModel {
     return true;
   }
 
-  void ClearResult() {
-    for (auto model : models_) {
-      model->ClearResult();
-    }
-  }
-
   bool Predict(const std::vector<cv::Mat>& imgs,
                std::vector<Result>* results,
                int thread_num = 1) {
@@ -109,7 +103,7 @@ class MultiGPUModel {
     for (int i = 0; i < split_imgs.size(); ++i) {
       threads.push_back(std::thread(&PaddleDeploy::Model::Predict, models_[i],
                                     std::ref(split_imgs[i]),
-                                    std::ref(model_results[i]), thread_num));
+                                    &model_results[i], thread_num));
     }
 
     for (auto& thread : threads) {
