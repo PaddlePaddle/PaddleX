@@ -13,6 +13,9 @@
 // limitations under the License.
 #pragma once
 
+#include <memory>
+#include <string>
+
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/common/include/model_factory.h"
 
