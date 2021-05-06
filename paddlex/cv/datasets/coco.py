@@ -18,7 +18,7 @@ import os.path as osp
 import six
 import sys
 import numpy as np
-from paddlex.utils import logging, is_pic
+from paddlex.utils import logging, is_pic, get_num_workers
 from .voc import VOCDetection
 from paddlex.cv.transforms import MixupImage
 
@@ -58,14 +58,14 @@ class CocoDetection(VOCDetection):
         self.transforms = copy.deepcopy(transforms)
         self.use_mix = False
         if self.transforms is not None:
-            for i, op in enumerate(self.transforms.transforms):
+            for op in self.transforms.transforms:
                 if isinstance(op, MixupImage):
                     self.mixup_op = copy.deepcopy(op)
                     self.use_mix = True
                     break
 
         self.batch_transforms = None
-        self.num_workers = num_workers
+        self.num_workers = get_num_workers(num_workers)
         self.shuffle = shuffle
         self.file_list = list()
         self.labels = list()
@@ -74,7 +74,7 @@ class CocoDetection(VOCDetection):
         self.coco_gt = coco
         img_ids = coco.getImgIds()
         cat_ids = coco.getCatIds()
-        catid2clsid = dict({catid: i + 1 for i, catid in enumerate(cat_ids)})
+        catid2clsid = dict({catid: i for i, catid in enumerate(cat_ids)})
         cname2cid = dict({
             coco.loadCats(catid)[0]['name']: clsid
             for catid, clsid in catid2clsid.items()
@@ -97,8 +97,8 @@ class CocoDetection(VOCDetection):
                 x, y, box_w, box_h = inst['bbox']
                 x1 = max(0, x)
                 y1 = max(0, y)
-                x2 = min(im_w - 1, x1 + max(0, box_w - 1))
-                y2 = min(im_h - 1, y1 + max(0, box_h - 1))
+                x2 = min(im_w - 1, x1 + max(0, box_w))
+                y2 = min(im_h - 1, y1 + max(0, box_h))
                 if inst['area'] > 0 and x2 >= x1 and y2 >= y1:
                     inst['clean_bbox'] = [x1, y1, x2, y2]
                     bboxes.append(inst)
@@ -115,13 +115,19 @@ class CocoDetection(VOCDetection):
             difficult = np.zeros((num_bbox, 1), dtype=np.int32)
             gt_poly = [None] * num_bbox
 
+            has_segmentation = False
             for i, box in enumerate(bboxes):
                 catid = box['category_id']
                 gt_class[i][0] = catid2clsid[catid]
                 gt_bbox[i, :] = box['clean_bbox']
                 is_crowd[i][0] = box['iscrowd']
-                if 'segmentation' in box:
+                if 'segmentation' in box and box['iscrowd'] == 1:
+                    gt_poly[i] = [[0.0, 0.0], ]
+                elif 'segmentation' in box and box['segmentation']:
                     gt_poly[i] = box['segmentation']
+                    has_segmentation = True
+            if has_segmentation and not any(gt_poly):
+                continue
 
             im_info = {
                 'im_id': np.array([img_id]).astype('int32'),

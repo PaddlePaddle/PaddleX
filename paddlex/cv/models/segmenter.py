@@ -65,7 +65,7 @@ class BaseSegmenter(BaseModel):
         if mode == 'test':
             pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
             origin_shape = inputs[1]
-            pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
+            pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
             pred = paddle.squeeze(pred)
             outputs = {'pred': pred}
         if mode == 'eval':
@@ -73,7 +73,7 @@ class BaseSegmenter(BaseModel):
             label = inputs[1]
             origin_shape = [label.shape[-2:]]
             # TODO: 替换cv2后postprocess移出run
-            pred = UNet._postprocess(pred, origin_shape, transforms=inputs[2])
+            pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
             intersect_area, pred_area, label_area = metrics.calculate_area(
                 pred, label, self.num_classes)
             outputs['intersect_area'] = intersect_area
@@ -289,8 +289,7 @@ class BaseSegmenter(BaseModel):
         pred = pred.numpy().astype('uint8')
         return {'label_map': pred}
 
-    @staticmethod
-    def _preprocess(images, transforms, model_type):
+    def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
             model_type=model_type, transforms=transforms, mode='test')
         batch_im = list()
@@ -323,8 +322,7 @@ class BaseSegmenter(BaseModel):
             batch_restore_list.append(restore_list)
         return batch_restore_list
 
-    @staticmethod
-    def _postprocess(batch_pred, batch_origin_shape, transforms):
+    def _postprocess(self, batch_pred, batch_origin_shape, transforms):
         batch_restore_list = BaseSegmenter.get_transforms_shape_info(
             batch_origin_shape, transforms)
         results = list()

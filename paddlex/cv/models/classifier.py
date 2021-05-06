@@ -252,18 +252,16 @@ class BaseClassifier(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        im = BaseClassifier._preprocess(images, transforms, self.model_type)
+        im = self._preprocess(images, transforms, self.model_type)
         self.net.eval()
         with paddle.no_grad():
             outputs = self.run(self.net, im, mode='test')
         prediction = outputs['prediction'].numpy()
-        prediction = BaseClassifier._postprocess(prediction, true_topk,
-                                                 self.labels)
+        prediction = self._postprocess(prediction, true_topk, self.labels)
 
         return prediction
 
-    @staticmethod
-    def _preprocess(images, transforms, model_type):
+    def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
             model_type=model_type, transforms=transforms, mode='test')
         batch_im = list()
@@ -275,8 +273,7 @@ class BaseClassifier(BaseModel):
 
         return batch_im,
 
-    @staticmethod
-    def _postprocess(results, true_topk, labels):
+    def _postprocess(self, results, true_topk, labels):
         preds = list()
         for i, pred in enumerate(results):
             pred_label = np.argsort(pred)[::-1][:true_topk]
