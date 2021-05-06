@@ -13,5 +13,11 @@
 // limitations under the License.
 #pragma once
 
-#include "model_deploy/common/include/model_factory.h"
 #include "model_deploy/common/include/output_struct.h"
+#include "model_deploy/common/include/model_factory.h"
+
+namespace PaddleDeploy {
+inline std::shared_ptr<Model> CreateModel(const std::string &name) {
+  return PaddleDeploy::ModelFactory::CreateObject(name);
+}
+}  // namespace PaddleDeploy

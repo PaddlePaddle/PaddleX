@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
-        PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
+        PaddleDeploy::CreateModel(FLAGS_model_type);
   if (!model) {
     std::cout << "no model_type: " << FLAGS_model_type
               << "  model=" << model << std::endl;
