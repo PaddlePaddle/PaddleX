@@ -16,7 +16,7 @@
 
 namespace PaddleDeploy {
 
-bool DetPostProcess::Init(const YAML::Node& yaml_config) {
+bool DetPostprocess::Init(const YAML::Node& yaml_config) {
   labels_.clear();
   for (auto item : yaml_config["labels"]) {
     std::string label = item.as<std::string>();
@@ -26,7 +26,7 @@ bool DetPostProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
+bool DetPostprocess::ProcessBbox(const std::vector<DataBlob>& outputs,
                                  const std::vector<ShapeInfo>& shape_infos,
                                  std::vector<Result>* results, int thread_num) {
   const float* data = reinterpret_cast<const float*>(outputs[0].data.data());
@@ -77,19 +77,14 @@ bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
   return true;
 }
 
-bool DetPostProcess::ProcessMask(const std::vector<DataBlob>& outputs,
+bool DetPostprocess::ProcessMask(const std::vector<DataBlob>& outputs,
                                  const std::vector<ShapeInfo>& shape_infos,
                                  std::vector<Result>* results, int thread_num) {
   DataBlob mask_blob = outputs[1];
   std::vector<int> output_mask_shape = mask_blob.shape;
   float *mask_data = reinterpret_cast<float*>(mask_blob.data.data());
-  int masks_size = 1;
-  for (const auto& i : output_mask_shape) {
-    masks_size *= i;
-  }
   int mask_pixels = output_mask_shape[2] * output_mask_shape[3];
   int classes = output_mask_shape[1];
-  int mask_idx = 0;
   for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
     (*results)[i].det_result->mask_resolution = output_mask_shape[2];
     for (int j = 0; j < (*results)[i].det_result->boxes.size(); ++j) {
@@ -110,17 +105,16 @@ bool DetPostProcess::ProcessMask(const std::vector<DataBlob>& outputs,
       auto mask_int_end =
         mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
       box->mask.data.assign(mask_int_begin, mask_int_end);
-      mask_idx++;
     }
   }  
 }
 
-bool DetPostProcess::Run(const std::vector<DataBlob>& outputs,
+bool DetPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();
   if (outputs.size() == 0) {
-    std::cerr << "empty input image on DetPostProcess" << std::endl;
+    std::cerr << "empty input image on DetPostprocess" << std::endl;
     return true;
   }
   results->resize(shape_infos.size());

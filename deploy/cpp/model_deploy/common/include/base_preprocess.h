@@ -25,7 +25,7 @@
 
 namespace PaddleDeploy {
 
-class BasePreProcess {
+class BasePreprocess {
  public:
   virtual bool Init(const YAML::Node& yaml_config) {
     if (!BuildTransform(yaml_config))

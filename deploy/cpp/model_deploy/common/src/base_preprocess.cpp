@@ -18,7 +18,7 @@
 
 namespace PaddleDeploy {
 
-bool BasePreProcess::BuildTransform(const YAML::Node& yaml_config) {
+bool BasePreprocess::BuildTransform(const YAML::Node& yaml_config) {
   transforms_.clear();
   YAML::Node transforms_node = yaml_config["transforms"];
   for (YAML::const_iterator it = transforms_node.begin();
@@ -34,7 +34,7 @@ bool BasePreProcess::BuildTransform(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool BasePreProcess::ShapeInfer(const std::vector<cv::Mat>& imgs,
+bool BasePreprocess::ShapeInfer(const std::vector<cv::Mat>& imgs,
                                 std::vector<ShapeInfo>* shape_infos,
                                 int thread_num) {
   int batch_size = imgs.size();
@@ -80,7 +80,7 @@ bool BasePreProcess::ShapeInfer(const std::vector<cv::Mat>& imgs,
   return true;
 }
 
-bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
+bool BasePreprocess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
                                       std::vector<cv::Mat>* imgs,
                                       int thread_num) {
   int batch_size = imgs->size();
@@ -126,7 +126,7 @@ bool BasePreProcess::PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
   return true;
 }
 
-std::shared_ptr<Transform> BasePreProcess::CreateTransform(
+std::shared_ptr<Transform> BasePreprocess::CreateTransform(
     const std::string& transform_name) {
   if (transform_name == "Normalize") {
     return std::make_shared<Normalize>();

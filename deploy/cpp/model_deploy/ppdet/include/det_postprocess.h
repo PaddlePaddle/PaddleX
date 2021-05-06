@@ -31,7 +31,7 @@
 
 namespace PaddleDeploy {
 
-class DetPostProcess : public BasePostProcess {
+class DetPostprocess : public BasePostprocess {
  public:
   bool Init(const YAML::Node& yaml_config);
 

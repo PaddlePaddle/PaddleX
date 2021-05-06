@@ -34,7 +34,7 @@
 
 namespace PaddleDeploy {
 
-class XPostProcess : public BasePostProcess {
+class XPostprocess : public BasePostprocess {
  public:
   bool Init(const YAML::Node& yaml_config);
 
@@ -44,9 +44,9 @@ class XPostProcess : public BasePostProcess {
 
  private:
   std::string model_type_;
-  SegPostProcess seg_post_process;
-  DetPostProcess det_post_process;
-  ClasPostProcess clas_post_process;
+  SegPostprocess seg_post_process;
+  DetPostprocess det_post_process;
+  ClasPostprocess clas_post_process;
 //  std::vector<std::string> labels_;
 };
 

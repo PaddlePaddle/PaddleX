@@ -18,7 +18,7 @@
 #include <string>
 #include <fstream>
 
-#include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/common/include/paddle_deploy.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
@@ -30,7 +30,8 @@ DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 DEFINE_bool(use_mkl, true, "Infering with mkl");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
-DEFINE_int32(thread_num, 1, "thread num of infering");
+DEFINE_int32(thread_num, 1, "thread num of preprocessing");
+DEFINE_int32(mkl_thread_num, 8, "thread num of mkldnn");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -41,7 +42,7 @@ int main(int argc, char** argv) {
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
-        PaddleDeploy::ModelFactory::CreateObject(FLAGS_model_type);
+        PaddleDeploy::CreateModel(FLAGS_model_type);
   if (!model) {
     std::cout << "no model_type: " << FLAGS_model_type
               << "  model=" << model << std::endl;
@@ -58,7 +59,8 @@ int main(int argc, char** argv) {
                           FLAGS_params_filename,
                           FLAGS_use_gpu,
                           FLAGS_gpu_id,
-                          FLAGS_use_mkl);
+                          FLAGS_use_mkl,
+                          FLAGS_mkl_thread_num);
 
   // Mini-batch
   std::vector<std::string> image_paths;
@@ -81,6 +83,7 @@ int main(int argc, char** argv) {
 
   std::cout << "start model predict " << image_paths.size() << std::endl;
   // infer
+  std::vector<PaddleDeploy::Result> results;
   for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
     // Read image
     int im_vec_size =
@@ -90,9 +93,13 @@ int main(int argc, char** argv) {
     for (int j = i; j < im_vec_size; ++j) {
       im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
     }
-    model->Predict(im_vec, FLAGS_thread_num);
+
+    model->Predict(im_vec, &results, FLAGS_thread_num);
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
-    model->PrintResult();
+    for (auto j = 0; j < results.size(); ++j) {
+      std::cout << "Result for sample " << j << std::endl;
+      std::cout << results[j] << std::endl;
+    }
   }
   return 0;
 }
