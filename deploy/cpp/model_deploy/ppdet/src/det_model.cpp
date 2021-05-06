@@ -20,7 +20,7 @@ bool DetModel::GenerateTransformsConfig(const YAML::Node& src) {
   assert(src["Preprocess"].IsDefined());
   assert(src["arch"].IsDefined());
   std::string model_arch = src["arch"].as<std::string>();
-  yaml_config_["transforms"]["BGR2RGB"]["null"] = true;
+  yaml_config_["transforms"]["BGR2RGB"] = YAML::Null;
   for (const auto& op : src["Preprocess"]) {
     assert(op["type"].IsDefined());
     std::string op_name = op["type"].as<std::string>();
@@ -65,11 +65,6 @@ bool DetModel::YamlConfigInit(const std::string& cfg_file) {
     yaml_config_["version"] = "0.5";
   } else if (!det_config["use_python_inference"].IsDefined()) {
     yaml_config_["version"] = "2.0";
-  }
-
-  if (det_config["mask_resolution"].IsDefined()) {
-      yaml_config_["mask_resolution"] =
-        det_config["mask_resolution"].as<int>();
   }
 
   int i = 0;

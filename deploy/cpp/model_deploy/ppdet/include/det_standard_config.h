@@ -43,10 +43,10 @@ void DetNormalize(const YAML::Node& src, YAML::Node* dst) {
 
 void DetPermute(const YAML::Node& src, YAML::Node* dst) {
   // check data format
-  (*dst)["transforms"]["Permute"]["null"] = true;
+  (*dst)["transforms"]["Permute"] = YAML::Null;;
   if (src["to_bgr"].IsDefined()) {
     if (src["to_bgr"].as<bool>()) {
-      (*dst)["transforms"]["RGB2BGR"]["null"] = true;
+      (*dst)["transforms"]["RGB2BGR"] = YAML::Null;;
     }
   }
 }

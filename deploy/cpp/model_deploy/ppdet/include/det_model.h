@@ -27,7 +27,6 @@ namespace PaddleDeploy {
 class DetModel : public Model {
  private:
   std::string model_type;
-  int mask_resolution;
 
  public:
   explicit DetModel(const std::string model_type) : model_type(model_type) {

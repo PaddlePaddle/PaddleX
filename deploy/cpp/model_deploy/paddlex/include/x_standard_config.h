@@ -26,7 +26,7 @@ void XEssential(const YAML::Node& src, YAML::Node* dst) {
   if (src["TransformsMode"].IsDefined()) {
     std::string mode = src["TransformsMode"].as<std::string>();
     if (mode == "RGB") {
-      (*dst)["transforms"]["BGR2RGB"]["null"] = true;
+      (*dst)["transforms"]["BGR2RGB"] = YAML::Null;
     } else if (mode != "BGR") {
       std::cerr << "[Error] Only support RGB or BGR of "
                 << "TransformsMode" << std::endl;
