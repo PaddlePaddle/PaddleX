@@ -18,11 +18,11 @@
 
 namespace PaddleDeploy {
 
-bool SegPostProcess::Init(const YAML::Node& yaml_config) {
+bool SegPostprocess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-void SegPostProcess::RestoreSegMap(const ShapeInfo& shape_info,
+void SegPostprocess::RestoreSegMap(const ShapeInfo& shape_info,
                                    cv::Mat* label_mat,
                                    cv::Mat*  score_mat,
                                    SegResult* result) {
@@ -59,7 +59,7 @@ void SegPostProcess::RestoreSegMap(const ShapeInfo& shape_info,
     score_mat->begin<float>(), score_mat->end<float>());
 }
 
-bool SegPostProcess::Run(const std::vector<DataBlob>& outputs,
+bool SegPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();

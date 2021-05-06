@@ -16,21 +16,21 @@
 
 namespace PaddleDeploy {
 
-bool SegPreProcess::Init(const YAML::Node& yaml_config) {
+bool SegPreprocess::Init(const YAML::Node& yaml_config) {
   if (!BuildTransform(yaml_config)) {
     return false;
   }
   return true;
 }
 
-bool SegPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
+bool SegPreprocess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
                                   std::vector<cv::Mat>* imgs,
                                   std::vector<DataBlob>* inputs,
                                   int thread_num) {
   inputs->clear();
   if (!PreprocessImages(shape_infos, imgs, thread_num = thread_num)) {
     std::cerr << "Error happend while execute function "
-              << "SegPreProcess::Run" << std::endl;
+              << "SegPreprocess::Run" << std::endl;
     return false;
   }
 
@@ -51,20 +51,20 @@ bool SegPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
   return true;
 }
 
-bool SegPreProcess::Run(std::vector<cv::Mat>* imgs,
+bool SegPreprocess::Run(std::vector<cv::Mat>* imgs,
                         std::vector<DataBlob>* inputs,
                         std::vector<ShapeInfo>* shape_infos, int thread_num) {
   if ((*imgs).size() == 0) {
-    std::cerr << "empty input image on SegPreProcess" << std::endl;
+    std::cerr << "empty input image on SegPreprocess" << std::endl;
     return true;
   }
   if (!ShapeInfer(*imgs, shape_infos, thread_num)) {
-    std::cerr << "ShapeInfer failed while call SegPreProcess::Run" << std::endl;
+    std::cerr << "ShapeInfer failed while call SegPreprocess::Run" << std::endl;
     return false;
   }
   if (!PrepareInputs(*shape_infos, imgs, inputs, thread_num)) {
     std::cerr << "PrepareInputs failed while call "
-              << "SegPreProcess::PrepareInputs" << std::endl;
+              << "SegPreprocess::PrepareInputs" << std::endl;
     return false;
   }
   return true;

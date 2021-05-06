@@ -16,7 +16,7 @@
 
 namespace PaddleDeploy {
 
-bool XPostProcess::Init(const YAML::Node& yaml_config) {
+bool XPostprocess::Init(const YAML::Node& yaml_config) {
   model_type_ = yaml_config["model_type"].as<std::string>();
   if (model_type_ == "segmenter") {
     seg_post_process.Init(yaml_config);
@@ -33,7 +33,7 @@ bool XPostProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool XPostProcess::Run(const std::vector<DataBlob>& outputs,
+bool XPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();

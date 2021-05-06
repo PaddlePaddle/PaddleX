@@ -22,7 +22,7 @@
 #include "model_deploy/common/include/output_struct.h"
 
 namespace PaddleDeploy {
-class SegPreProcess : public BasePreProcess {
+class SegPreprocess : public BasePreprocess {
  public:
   bool Init(const YAML::Node &yaml_config);
 

@@ -16,7 +16,7 @@
 
 namespace PaddleDeploy {
 
-bool ClasPreProcess::Init(const YAML::Node& yaml_config) {
+bool ClasPreprocess::Init(const YAML::Node& yaml_config) {
   if (!BuildTransform(yaml_config)) {
     return false;
   }
@@ -25,14 +25,14 @@ bool ClasPreProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool ClasPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
+bool ClasPreprocess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
                                   std::vector<cv::Mat>* imgs,
                                   std::vector<DataBlob>* inputs,
                                   int thread_num) {
   inputs->clear();
   if (!PreprocessImages(shape_infos, imgs, thread_num = thread_num)) {
     std::cerr << "Error happend while execute function "
-              << "ClasPreProcess::Run" << std::endl;
+              << "ClasPreprocess::Run" << std::endl;
     return false;
   }
 
@@ -53,17 +53,17 @@ bool ClasPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
   return true;
 }
 
-bool ClasPreProcess::Run(std::vector<cv::Mat>* imgs,
+bool ClasPreprocess::Run(std::vector<cv::Mat>* imgs,
                         std::vector<DataBlob>* inputs,
                         std::vector<ShapeInfo>* shape_infos, int thread_num) {
   if (!ShapeInfer(*imgs, shape_infos, thread_num)) {
     std::cerr << "ShapeInfer failed while call"
-              << " ClasPreProcess::Run" << std::endl;
+              << " ClasPreprocess::Run" << std::endl;
     return false;
   }
   if (!PrepareInputs(*shape_infos, imgs, inputs, thread_num)) {
     std::cerr << "PrepareInputs failed while call "
-              << "ClasPreProcess::PrepareInputs" << std::endl;
+              << "ClasPreprocess::PrepareInputs" << std::endl;
     return false;
   }
   return true;
