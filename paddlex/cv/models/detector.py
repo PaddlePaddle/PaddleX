@@ -26,7 +26,7 @@ from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
-from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, _LabelMinusOne
+from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget, _Permute
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
@@ -284,7 +284,7 @@ class BaseDetector(BaseModel):
         arrange_transforms(
             model_type=self.model_type, transforms=transforms, mode='test')
         batch_samples = list()
-        for ct, im in enumerate(images):
+        for im in images:
             sample = {'image': im}
             batch_samples.append(transforms(sample))
         batch_transforms = self._compose_batch_transform(transforms, 'test')
@@ -311,7 +311,7 @@ class BaseDetector(BaseModel):
                     num_id, score, xmin, ymin, xmax, ymax = dt.tolist()
                     if int(num_id) < 0:
                         continue
-                    category_id = int(num_id) + 1
+                    category_id = int(num_id)
                     w = xmax - xmin
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
@@ -338,7 +338,7 @@ class BaseDetector(BaseModel):
                     k = k + 1
                     if label == -1:
                         continue
-                    category_id = int(label) + 1
+                    category_id = int(label)
                     rle = mask_util.encode(
                         np.array(
                             mask[:, :, None], order="F", dtype="uint8"))[0]
@@ -482,8 +482,8 @@ class YOLOv3(BaseDetector):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose([_LabelMinusOne(
-        )] + custom_batch_transforms + default_batch_transforms)
+        batch_transforms = BatchCompose(custom_batch_transforms +
+                                        default_batch_transforms)
 
         return batch_transforms
 
