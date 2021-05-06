@@ -39,6 +39,10 @@ class DetPostProcess : public BasePostProcess {
                    const std::vector<ShapeInfo>& shape_infos,
                    std::vector<Result>* results, int thread_num = 1);
 
+  bool ProcessMask(const std::vector<DataBlob>& outputs,
+                   const std::vector<ShapeInfo>& shape_infos,
+                   std::vector<Result>* results, int thread_num = 1);
+
   virtual bool Run(const std::vector<DataBlob>& outputs,
                    const std::vector<ShapeInfo>& shape_infos,
                    std::vector<Result>* results, int thread_num = 1);

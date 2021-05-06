@@ -77,6 +77,44 @@ bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
   return true;
 }
 
+bool DetPostProcess::ProcessMask(const std::vector<DataBlob>& outputs,
+                                 const std::vector<ShapeInfo>& shape_infos,
+                                 std::vector<Result>* results, int thread_num) {
+  DataBlob mask_blob = outputs[1];
+  std::vector<int> output_mask_shape = mask_blob.shape;
+  float *mask_data = reinterpret_cast<float*>(mask_blob.data.data());
+  int masks_size = 1;
+  for (const auto& i : output_mask_shape) {
+    masks_size *= i;
+  }
+  int mask_pixels = output_mask_shape[2] * output_mask_shape[3];
+  int classes = output_mask_shape[1];
+  int mask_idx = 0;
+  for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
+    (*results)[i].det_result->mask_resolution = output_mask_shape[2];
+    for (int j = 0; j < (*results)[i].det_result->boxes.size(); ++j) {
+      Box *box = &(*results)[i].det_result->boxes[i];
+      int category_id = box->category_id;
+      box->mask.shape = {static_cast<int>(box->coordinate[2]),
+                      static_cast<int>(box->coordinate[3])};
+      auto begin_mask =
+        mask_data + (i * classes + box->category_id) * mask_pixels;
+      cv::Mat bin_mask(output_mask_shape[2],
+                      output_mask_shape[2],
+                      CV_32FC1,
+                      begin_mask);
+      cv::resize(bin_mask, bin_mask, cv::Size(box->mask.shape[0],
+                box->mask.shape[1]));
+      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
+      auto mask_int_begin = reinterpret_cast<float*>(bin_mask.data);
+      auto mask_int_end =
+        mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
+      box->mask.data.assign(mask_int_begin, mask_int_end);
+      mask_idx++;
+    }
+  }  
+}
+
 bool DetPostProcess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
@@ -91,12 +129,12 @@ bool DetPostProcess::Run(const std::vector<DataBlob>& outputs,
     return false;
   }
   // TODO(jiangjiajun): MaskRCNN is not implement
-  //  if (outputs.size() == 2) {
-  //    if ((!ProcessMask(outputs, shape_infos, results, thread_num)) {
-  //      std::cerr << "Error happend while process masks" << std::endl;
-  //      return false;
-  //    }
-  //  }
+  if (outputs.size() == 2) {
+    if ((!ProcessMask(outputs, shape_infos, results, thread_num)) {
+      std::cerr << "Error happend while process masks" << std::endl;
+      return false;
+    }
+  }
   return true;
 }
 
