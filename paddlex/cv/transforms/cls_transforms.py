@@ -73,6 +73,7 @@ class Compose(ClsTransform):
                 raise Exception(
                     "im should be 3-dimension, but now is {}-dimensions".
                     format(len(im_file.shape)))
+            im = im_file
         else:
             try:
                 if input_channel == 3:
