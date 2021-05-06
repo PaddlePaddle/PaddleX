@@ -30,6 +30,10 @@ class DetPreProcess : public BasePreProcess {
                              std::vector<cv::Mat>* imgs,
                              std::vector<DataBlob>* inputs,
                              int thread_num = 1);
+  bool PrepareInputsForV2(const std::vector<cv::Mat>& imgs,
+                            const std::vector<ShapeInfo>& shape_infos,
+                            std::vector<DataBlob>* inputs,
+                            int thread_num = 1);
   bool PrepareInputsForRCNN(const std::vector<cv::Mat>& imgs,
                             const std::vector<ShapeInfo>& shape_infos,
                             std::vector<DataBlob>* inputs,
@@ -45,5 +49,6 @@ class DetPreProcess : public BasePreProcess {
 
  private:
   std::string model_arch_;
+  std::string version_;
 };
 }  // namespace PaddleDeploy

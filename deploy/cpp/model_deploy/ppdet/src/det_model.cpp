@@ -26,6 +26,8 @@ bool DetModel::GenerateTransformsConfig(const YAML::Node& src) {
     std::string op_name = op["type"].as<std::string>();
     if (op_name == "Normalize") {
       DetNormalize(op, &yaml_config_);
+    } else if (op_name == "NormalizeImage") {
+      DetNormalize(op, &yaml_config_);
     } else if (op_name == "Permute") {
       DetPermute(op, &yaml_config_);
     } else if (op_name == "Resize") {
@@ -57,7 +59,13 @@ bool DetModel::YamlConfigInit(const std::string& cfg_file) {
   }
   yaml_config_["model_name"] = det_config["arch"].as<std::string>();
   yaml_config_["toolkit"] = "PaddleDetection";
-  yaml_config_["toolkit_version"] = "Unknown";
+  if (det_config["version"].IsDefined()) {
+    yaml_config_["version"] = det_config["version"].as<std::string>();
+  } else if (det_config["use_python_inference"].IsDefined()) {
+    yaml_config_["version"] = "0.5";
+  } else if (!det_config["use_python_inference"].IsDefined()) {
+    yaml_config_["version"] = "2.0";
+  }
 
   if (det_config["mask_resolution"].IsDefined()) {
       yaml_config_["mask_resolution"] =

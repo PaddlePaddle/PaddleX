@@ -43,17 +43,51 @@ void DetNormalize(const YAML::Node& src, YAML::Node* dst) {
 
 void DetPermute(const YAML::Node& src, YAML::Node* dst) {
   // check data format
-  assert(src["to_bgr"].IsDefined());
-
   (*dst)["transforms"]["Permute"]["null"] = true;
-  if (src["to_bgr"].as<bool>()) {
-    (*dst)["transforms"]["RGB2BGR"]["null"] = true;
+  if (src["to_bgr"].IsDefined()) {
+    if (src["to_bgr"].as<bool>()) {
+      (*dst)["transforms"]["RGB2BGR"]["null"] = true;
+    }
+  }
+}
+
+// Resize OP for PaddleDetection release/2.0
+void DetResize2(const YAML::Node& src,
+               YAML::Node* dst) {
+  // check data format
+  assert(src["target_size"].IsDefined());
+  assert(src["interp"].IsDefined());
+  assert(src["target_size"].IsSequence());
+
+  bool keep_ratio = src["keep_ratio"].as<bool>();
+  std::vector<int> target_size = src["target_size"].as<std::vector<int>>();
+  int interp = src["interp"].as<int>();
+  assert(interp >= 0 && interp < 5);
+
+  if (keep_ratio) {
+    (*dst)["transforms"]["ResizeByShort"]["max_size"] = target_size[1];
+    (*dst)["transforms"]["ResizeByShort"]["target_size"] = target_size[0];
+    (*dst)["transforms"]["ResizeByShort"]["interp"] = interp;
+    if (src["image_shape"].IsDefined()) {
+      std::vector<int> image_shape = src["image_shape"].as<std::vector<int>>();
+      (*dst)["transforms"]["Padding"]["width"] = image_shape[2];
+      (*dst)["transforms"]["Padding"]["height"] = image_shape[1];
+    }
+  } else {
+    (*dst)["transforms"]["Resize"]["width"] = target_size[0];
+    (*dst)["transforms"]["Resize"]["height"] = target_size[0];
+    (*dst)["transforms"]["Resize"]["interp"] = interp;
+    (*dst)["transforms"]["Resize"]["use_scale"] = false;
   }
 }
 
 void DetResize(const YAML::Node& src,
                YAML::Node* dst,
                const std::string& model_arch) {
+  if (src["keep_ratio"].IsDefined()) {
+    DetResize2(src, dst);
+    return;
+  }
   // check data format
   assert(src["max_size"].IsDefined());
   assert(src["target_size"].IsDefined());
@@ -69,10 +103,6 @@ void DetResize(const YAML::Node& src,
     (*dst)["transforms"]["ResizeByShort"]["max_size"] = max_size;
     (*dst)["transforms"]["ResizeByShort"]["target_size"] = target_size;
     (*dst)["transforms"]["ResizeByShort"]["interp"] = interp;
-    if (src["image_shape"].IsDefined()) {
-      (*dst)["transforms"]["Padding"]["width"] = max_size;
-      (*dst)["transforms"]["Padding"]["height"] = max_size;
-    }
   } else {
     (*dst)["transforms"]["Resize"]["width"] = target_size;
     (*dst)["transforms"]["Resize"]["height"] = target_size;
@@ -84,6 +114,9 @@ void DetResize(const YAML::Node& src,
 void DetPadStride(const YAML::Node& src, YAML::Node* dst) {
   // check data format
   assert(src["stride"].IsDefined());
+  if (src["stride"].as<int>() < 0) {
+    return;
+  }
   (*dst)["transforms"]["Padding"]["stride"] = src["stride"].as<int>();
 }
 

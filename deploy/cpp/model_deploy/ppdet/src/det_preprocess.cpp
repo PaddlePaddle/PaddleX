@@ -22,6 +22,7 @@ bool DetPreProcess::Init(const YAML::Node& yaml_config) {
     std::cerr << "Yaml file no model_name" << std::endl;
     return false;
   }
+  version_ = yaml_config["version"].as<std::string>();
   model_arch_ = yaml_config["model_name"].as<std::string>();
   return true;
 }
@@ -37,6 +38,10 @@ bool DetPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
     return false;
   }
 
+  if (version_ >= "2.0") {
+    return PrepareInputsForV2(*imgs, shape_infos, inputs, thread_num);
+  }
+
   if (model_arch_ == "YOLO") {
     return PrepareInputsForYOLO(*imgs, shape_infos, inputs, thread_num);
   }
@@ -46,6 +51,59 @@ bool DetPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
   std::cerr << "Unsupported model type of '" << model_arch_ << "' "
             << std::endl;
   return false;
+}
+
+bool DetPreProcess::PrepareInputsForV2(
+    const std::vector<cv::Mat>& imgs, const std::vector<ShapeInfo>& shape_infos,
+    std::vector<DataBlob>* inputs, int thread_num) {
+  DataBlob scale_factor("scale_factor");
+  DataBlob image("image");
+  DataBlob im_shape("im_shape");
+  // TODO(jiangjiajun): only 3 channel supported
+  int batch = imgs.size();
+  int w = shape_infos[0].shapes.back()[0];
+  int h = shape_infos[0].shapes.back()[1];
+
+  scale_factor.Resize({batch, 2}, FLOAT32);
+  image.Resize({batch, 3, h, w}, FLOAT32);
+  im_shape.Resize({batch, 2}, FLOAT32);
+
+  int sample_shape = 3 * h * w;
+  #pragma omp parallel for num_threads(thread_num)
+  for (auto i = 0; i < batch; ++i) {
+    int shapes_num = shape_infos[i].shapes.size();
+    float origin_w = static_cast<float>(shape_infos[i].shapes[0][0]);
+    float origin_h = static_cast<float>(shape_infos[i].shapes[0][1]);
+    float resize_w = origin_w;
+    float resize_h = origin_h;
+    for (auto j = shapes_num - 1; j > 1; --j) {
+      if (shape_infos[i].transforms[j] == "Padding") {
+        continue;
+      }
+      resize_w = static_cast<float>(shape_infos[i].shapes[j][0]);
+      resize_h = static_cast<float>(shape_infos[i].shapes[j][1]);
+      break;
+    }
+    std::cout << "Scale " << resize_w << " " << origin_w << " " <<std::endl;
+    float scale_x = resize_w / origin_w;
+    float scale_y = resize_h / origin_h;
+    float scale_factor_data[] = {scale_y, scale_x};
+    float im_shape_data[] = {resize_h, resize_w};
+    std::cout << "Prepare " << scale_y << " " << scale_x << " " << resize_h << " " << resize_w << std::endl;
+    memcpy(image.data.data() + i * sample_shape * sizeof(float), imgs[i].data,
+           sample_shape * sizeof(float));
+    memcpy(im_shape.data.data() + i * 2 * sizeof(float), im_shape_data,
+           2 * sizeof(float));
+    memcpy(scale_factor.data.data() + i * 2 * sizeof(float), scale_factor_data,
+           2 * sizeof(float));
+
+  }
+
+  inputs->clear();
+  inputs->push_back(std::move(im_shape));
+  inputs->push_back(std::move(image));
+  inputs->push_back(std::move(scale_factor));
+  return true;
 }
 
 bool DetPreProcess::PrepareInputsForYOLO(
