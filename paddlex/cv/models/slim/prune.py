@@ -43,4 +43,6 @@ def analysis(model,
         pruner = L1NormFilterPruner(model.net, inputs=inputs)
     elif criterion == 'fpgm':
         pruner = FPGMFilterPruner(model.net, inputs=inputs)
-    pruner.sensitive(eval_func=partial(_eval_fn, model, dataset, batch_size))
+    pruner.sensitive(
+        eval_func=partial(_eval_fn, model, dataset, batch_size),
+        sen_file=save_file)
