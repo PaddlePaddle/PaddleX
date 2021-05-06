@@ -25,3 +25,5 @@ datasets = cv.datasets
 transforms = cv.transforms
 
 log_level = 2
+
+load_model = cv.models.load_model

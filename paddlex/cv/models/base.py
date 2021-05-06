@@ -56,7 +56,7 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
-                scale = getattr(self.net, 'scale', None)
+                scale = getattr(self, 'scale', None)
                 pretrain_weights = get_pretrain_weights(
                     pretrain_weights,
                     self.__class__.__name__,
@@ -84,6 +84,8 @@ class BaseModel:
             del self.init_params['__class__']
         if 'model_name' in self.init_params:
             del self.init_params['model_name']
+        if 'params' in self.init_params:
+            del self.init_params['params']
 
         info['_init_params'] = self.init_params
 
@@ -100,12 +102,6 @@ class BaseModel:
             pass
 
         if hasattr(self, 'test_transforms'):
-            if hasattr(self.test_transforms, 'to_rgb'):
-                if self.test_transforms.to_rgb:
-                    info['TransformsMode'] = 'RGB'
-                else:
-                    info['TransformsMode'] = 'BGR'
-
             if self.test_transforms is not None:
                 info['Transforms'] = list()
                 for op in self.test_transforms.transforms:
@@ -234,7 +230,8 @@ class BaseModel:
         current_step = 0
         for i in range(start_epoch, num_epochs):
             self.net.train()
-            self.train_data_loader.dataset.set_epoch(i)
+            if hasattr(self.train_data_loader.dataset, 'set_epoch'):
+                self.train_data_loader.dataset.set_epoch(i)
             train_avg_metrics = TrainingStats()
             step_time_tic = time.time()
 

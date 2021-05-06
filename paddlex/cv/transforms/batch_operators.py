@@ -80,7 +80,7 @@ class BatchRandomResize(Transform):
 
     def __call__(self, samples):
         height, width = random.choice(self.target_size)
-        resizer = Resize(height=height, width=width, interp=self.interp)
+        resizer = Resize((height, width), interp=self.interp)
         samples = resizer(samples)
 
         return samples

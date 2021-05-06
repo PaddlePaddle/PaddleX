@@ -46,6 +46,8 @@ class BaseClassifier(BaseModel):
     """
 
     def __init__(self, model_name='ResNet50', num_classes=1000, **params):
+        for k, v in params.items():
+            setattr(self, k, v)
         self.init_params = locals()
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
