@@ -14,7 +14,7 @@
 #pragma once
 #include <memory>
 #include <string>
-#include <thread>
+#include <thread> // NOLINT
 #include <vector>
 
 #include "model_deploy/common/include/model_factory.h"
@@ -33,11 +33,11 @@ class MultiGPUModel {
           PaddleDeploy::ModelFactory::CreateObject(model_type);
 
       if (!model) {
-        std::cout << "no model_type: " << model_type << std::endl;
+        std::cerr << "no model_type: " << model_type << std::endl;
         return false;
       }
 
-      std::cout << i + 1 << " model start init" << std::endl;
+      std::cerr << i + 1 << " model start init" << std::endl;
 
       if (!model->Init(cfg_file)) {
         std::cerr << "model Init error" << std::endl;

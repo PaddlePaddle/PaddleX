@@ -69,7 +69,7 @@ class Model {
   bool PaddleEngineInit(const std::string& model_filename,
                         const std::string& params_filename,
                         bool use_gpu = false, int gpu_id = 0,
-                        bool use_mkl = true);
+                        bool use_mkl = true, int mkl_thread_num = 8);
 
   virtual bool PostProcessInit() {
     postprocess_ = nullptr;

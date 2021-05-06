@@ -26,7 +26,7 @@ struct InferenceConfig {
   bool use_mkl = true;
 
   //  The number of threads set when using mkldnn accelerator
-  int mkl_thread_num = 1;
+  int mkl_thread_num = 8;
 
   //  Whether to use GPU
   bool use_gpu = false;

@@ -84,19 +84,16 @@ bool DetPreProcess::PrepareInputsForV2(
       resize_h = static_cast<float>(shape_infos[i].shapes[j][1]);
       break;
     }
-    std::cout << "Scale " << resize_w << " " << origin_w << " " <<std::endl;
     float scale_x = resize_w / origin_w;
     float scale_y = resize_h / origin_h;
     float scale_factor_data[] = {scale_y, scale_x};
     float im_shape_data[] = {resize_h, resize_w};
-    std::cout << "Prepare " << scale_y << " " << scale_x << " " << resize_h << " " << resize_w << std::endl;
     memcpy(image.data.data() + i * sample_shape * sizeof(float), imgs[i].data,
            sample_shape * sizeof(float));
     memcpy(im_shape.data.data() + i * 2 * sizeof(float), im_shape_data,
            2 * sizeof(float));
     memcpy(scale_factor.data.data() + i * 2 * sizeof(float), scale_factor_data,
            2 * sizeof(float));
-
   }
 
   inputs->clear();
