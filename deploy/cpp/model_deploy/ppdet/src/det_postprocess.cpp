@@ -22,6 +22,7 @@ bool DetPostProcess::Init(const YAML::Node& yaml_config) {
     std::string label = item.as<std::string>();
     labels_.push_back(label);
   }
+  version_ = yaml_config["version"].as<std::string>();
   return true;
 }
 
