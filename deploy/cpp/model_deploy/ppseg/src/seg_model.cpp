@@ -54,15 +54,15 @@ bool SegModel::YamlConfigInit(const std::string& cfg_file) {
   return true;
 }
 
-bool SegModel::PreProcessInit() {
-  preprocess_ = std::make_shared<SegPreProcess>();
+bool SegModel::PreprocessInit() {
+  preprocess_ = std::make_shared<SegPreprocess>();
   if (!preprocess_->Init(yaml_config_))
     return false;
   return true;
 }
 
-bool SegModel::PostProcessInit() {
-  postprocess_ = std::make_shared<SegPostProcess>();
+bool SegModel::PostprocessInit() {
+  postprocess_ = std::make_shared<SegPostprocess>();
   if (!postprocess_->Init(yaml_config_))
     return false;
   return true;

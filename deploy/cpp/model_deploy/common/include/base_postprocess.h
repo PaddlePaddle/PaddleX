@@ -21,7 +21,7 @@
 
 namespace PaddleDeploy {
 
-class BasePostProcess {
+class BasePostprocess {
  public:
   virtual bool Init(const YAML::Node& yaml_config) {
     return true;

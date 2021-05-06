@@ -16,7 +16,7 @@
 
 namespace PaddleDeploy {
 
-bool DetPostProcess::Init(const YAML::Node& yaml_config) {
+bool DetPostprocess::Init(const YAML::Node& yaml_config) {
   labels_.clear();
   for (auto item : yaml_config["labels"]) {
     std::string label = item.as<std::string>();
@@ -26,7 +26,7 @@ bool DetPostProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
+bool DetPostprocess::ProcessBbox(const std::vector<DataBlob>& outputs,
                                  const std::vector<ShapeInfo>& shape_infos,
                                  std::vector<Result>* results, int thread_num) {
   const float* data = reinterpret_cast<const float*>(outputs[0].data.data());
@@ -77,12 +77,12 @@ bool DetPostProcess::ProcessBbox(const std::vector<DataBlob>& outputs,
   return true;
 }
 
-bool DetPostProcess::Run(const std::vector<DataBlob>& outputs,
+bool DetPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();
   if (outputs.size() == 0) {
-    std::cerr << "empty input image on DetPostProcess" << std::endl;
+    std::cerr << "empty input image on DetPostprocess" << std::endl;
     return true;
   }
   results->resize(shape_infos.size());

@@ -18,7 +18,7 @@
 
 namespace PaddleDeploy {
 
-bool ClasPostProcess::Init(const YAML::Node& yaml_config) {
+bool ClasPostprocess::Init(const YAML::Node& yaml_config) {
   labels_.clear();
   for (auto item : yaml_config["labels"]) {
     std::string label = item.as<std::string>();
@@ -27,7 +27,7 @@ bool ClasPostProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool ClasPostProcess::Run(const std::vector<DataBlob>& outputs,
+bool ClasPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
   results->clear();

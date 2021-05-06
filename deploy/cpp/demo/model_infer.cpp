@@ -83,6 +83,7 @@ int main(int argc, char** argv) {
 
   std::cout << "start model predict " << image_paths.size() << std::endl;
   // infer
+  std::vector<PaddleDeploy::Result> results;
   for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
     // Read image
     int im_vec_size =
@@ -92,14 +93,11 @@ int main(int argc, char** argv) {
     for (int j = i; j < im_vec_size; ++j) {
       im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
     }
-    model->Predict(im_vec, FLAGS_thread_num);
+
+    model->Predict(im_vec, &results, FLAGS_thread_num);
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
-    model->PrintResult();
-    // get result
-    std::vector<PaddleDeploy::Result> results;
-    model->GetResult(&results);
     for (auto j = 0; j < results.size(); ++j) {
-      std::cout << "GetResult for sample " << j << std::endl;
+      std::cout << "Result for sample " << j << std::endl;
       std::cout << results[j] << std::endl;
     }
   }

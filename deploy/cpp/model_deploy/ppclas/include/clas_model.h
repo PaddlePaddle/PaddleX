@@ -35,9 +35,9 @@ class ClasModel : public Model {
 
   bool YamlConfigInit(const std::string &cfg_file);
 
-  bool PreProcessInit();
+  bool PreprocessInit();
 
-  bool PostProcessInit();
+  bool PostprocessInit();
 };
 
 }  // namespace PaddleDeploy

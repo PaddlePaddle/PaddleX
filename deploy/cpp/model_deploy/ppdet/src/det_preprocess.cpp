@@ -16,7 +16,7 @@
 
 namespace PaddleDeploy {
 
-bool DetPreProcess::Init(const YAML::Node& yaml_config) {
+bool DetPreprocess::Init(const YAML::Node& yaml_config) {
   if (!BuildTransform(yaml_config)) return false;
   if (!yaml_config["model_name"].IsDefined()) {
     std::cerr << "Yaml file no model_name" << std::endl;
@@ -27,14 +27,14 @@ bool DetPreProcess::Init(const YAML::Node& yaml_config) {
   return true;
 }
 
-bool DetPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
+bool DetPreprocess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
                                   std::vector<cv::Mat>* imgs,
                                   std::vector<DataBlob>* inputs,
                                   int thread_num) {
   inputs->clear();
   if (!PreprocessImages(shape_infos, imgs, thread_num = thread_num)) {
     std::cerr << "Error happend while execute function "
-              << "DetPreProcess::Run" << std::endl;
+              << "DetPreprocess::Run" << std::endl;
     return false;
   }
 
@@ -53,7 +53,7 @@ bool DetPreProcess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
   return false;
 }
 
-bool DetPreProcess::PrepareInputsForV2(
+bool DetPreprocess::PrepareInputsForV2(
     const std::vector<cv::Mat>& imgs, const std::vector<ShapeInfo>& shape_infos,
     std::vector<DataBlob>* inputs, int thread_num) {
   DataBlob scale_factor("scale_factor");
@@ -103,7 +103,7 @@ bool DetPreProcess::PrepareInputsForV2(
   return true;
 }
 
-bool DetPreProcess::PrepareInputsForYOLO(
+bool DetPreprocess::PrepareInputsForYOLO(
     const std::vector<cv::Mat>& imgs, const std::vector<ShapeInfo>& shape_infos,
     std::vector<DataBlob>* inputs, int thread_num) {
   DataBlob im("image");
@@ -131,7 +131,7 @@ bool DetPreProcess::PrepareInputsForYOLO(
   return true;
 }
 
-bool DetPreProcess::PrepareInputsForRCNN(
+bool DetPreprocess::PrepareInputsForRCNN(
     const std::vector<cv::Mat>& imgs, const std::vector<ShapeInfo>& shape_infos,
     std::vector<DataBlob>* inputs, int thread_num) {
   DataBlob im("image");
@@ -179,20 +179,20 @@ bool DetPreProcess::PrepareInputsForRCNN(
   return true;
 }
 
-bool DetPreProcess::Run(std::vector<cv::Mat>* imgs,
+bool DetPreprocess::Run(std::vector<cv::Mat>* imgs,
                         std::vector<DataBlob>* inputs,
                         std::vector<ShapeInfo>* shape_infos, int thread_num) {
   if ((*imgs).size() == 0) {
-    std::cerr << "empty input image on DetPreProcess" << std::endl;
+    std::cerr << "empty input image on DetPreprocess" << std::endl;
     return true;
   }
   if (!ShapeInfer(*imgs, shape_infos, thread_num)) {
-    std::cerr << "ShapeInfer failed while call DetPreProcess::Run" << std::endl;
+    std::cerr << "ShapeInfer failed while call DetPreprocess::Run" << std::endl;
     return false;
   }
   if (!PrepareInputs(*shape_infos, imgs, inputs, thread_num)) {
     std::cerr << "PrepareInputs failed while call "
-              << "DetPreProcess::PrepareInputs" << std::endl;
+              << "DetPreprocess::PrepareInputs" << std::endl;
     return false;
   }
   return true;

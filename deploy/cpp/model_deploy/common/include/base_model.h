@@ -35,13 +35,11 @@ class Model {
   /*store the data after the YAML file has been parsed */
   YAML::Node yaml_config_;
   /* preprocess */
-  std::shared_ptr<BasePreProcess> preprocess_;
+  std::shared_ptr<BasePreprocess> preprocess_;
   /* inference */
   std::shared_ptr<InferEngine> infer_engine_;
   /* postprocess */
-  std::shared_ptr<BasePostProcess> postprocess_;
-  /*postprocess result*/
-  std::vector<Result> results_;
+  std::shared_ptr<BasePostprocess> postprocess_;
 
   Model() {}
 
@@ -50,8 +48,8 @@ class Model {
 
   virtual bool Init(const std::string& cfg_file) {
     if (!YamlConfigInit(cfg_file)) return false;
-    if (!PreProcessInit()) return false;
-    if (!PostProcessInit()) return false;
+    if (!PreprocessInit()) return false;
+    if (!PostprocessInit()) return false;
     return true;
   }
 
@@ -60,9 +58,9 @@ class Model {
     return true;
   }
 
-  virtual bool PreProcessInit() {
+  virtual bool PreprocessInit() {
     preprocess_ = nullptr;
-    std::cerr << "model no PreProcess!" << std::endl;
+    std::cerr << "model no Preprocess!" << std::endl;
     return false;
   }
 
@@ -71,20 +69,21 @@ class Model {
                         bool use_gpu = false, int gpu_id = 0,
                         bool use_mkl = true, int mkl_thread_num = 8);
 
-  virtual bool PostProcessInit() {
+  virtual bool PostprocessInit() {
     postprocess_ = nullptr;
-    std::cerr << "model no PostProcess!" << std::endl;
+    std::cerr << "model no Postprocess!" << std::endl;
     return false;
   }
 
   virtual bool Predict(const std::vector<cv::Mat>& imgs,
+                       std::vector<Result>* results,
                        int thread_num = 1) {
     if (!preprocess_ || !postprocess_ || !infer_engine_) {
       std::cerr << "No init,cann't predict" << std::endl;
       return false;
     }
 
-    results_.clear();
+    results->clear();
     std::vector<cv::Mat> imgs_clone;
     for (auto i = 0; i < imgs.size(); ++i) {
       imgs_clone.push_back(imgs[i].clone());
@@ -98,25 +97,9 @@ class Model {
       return false;
     if (!infer_engine_->Infer(inputs, &outputs))
       return false;
-    if (!postprocess_->Run(outputs, shape_infos, &results_, thread_num))
+    if (!postprocess_->Run(outputs, shape_infos, results, thread_num))
       return false;
     return true;
-  }
-
-  void ClearResult() {
-    results_.clear();
-  }
-
-  void GetResult(std::vector<Result>* results) {
-    results->clear();
-    results->insert(results->end(), results_.begin(), results_.end());
-  }
-
-  virtual void PrintResult() {
-    for (auto i = 0; i < results_.size(); ++i) {
-      std::cout << "result for sample " << i << std::endl;
-      std::cout << results_[i] << std::endl;
-    }
   }
 
   virtual bool PrePrecess(const std::vector<cv::Mat>& imgs,
@@ -146,14 +129,14 @@ class Model {
 
   virtual bool PostPrecess(const std::vector<DataBlob>& outputs,
                            const std::vector<ShapeInfo>& shape_infos,
+                           std::vector<Result>* results,
                            int thread_num = 1) {
-    results_.clear();
     if (!postprocess_) {
       std::cerr << "No PostPrecess, No post Init. model_type=" << model_type_
                 << std::endl;
       return false;
     }
-    if (postprocess_->Run(outputs, shape_infos, &results_, thread_num))
+    if (postprocess_->Run(outputs, shape_infos, &results, thread_num))
       return false;
     return true;
   }

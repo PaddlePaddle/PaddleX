@@ -69,16 +69,16 @@ bool PaddleXModel::YamlConfigInit(const std::string& cfg_file) {
   return true;
 }
 
-bool PaddleXModel::PreProcessInit() {
-  preprocess_ = std::make_shared<XPreProcess>();
+bool PaddleXModel::PreprocessInit() {
+  preprocess_ = std::make_shared<XPreprocess>();
   if (!preprocess_->Init(yaml_config_)) {
     return false;
   }
   return true;
 }
 
-bool PaddleXModel::PostProcessInit() {
-  postprocess_ = std::make_shared<XPostProcess>();
+bool PaddleXModel::PostprocessInit() {
+  postprocess_ = std::make_shared<XPostprocess>();
   if (!postprocess_->Init(yaml_config_)) {
     return false;
   }

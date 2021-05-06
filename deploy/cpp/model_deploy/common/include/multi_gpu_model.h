@@ -76,8 +76,10 @@ class MultiGPUModel {
     }
   }
 
-  bool Predict(const std::vector<cv::Mat>& imgs, int thread_num = 1) {
-    ClearResult();
+  bool Predict(const std::vector<cv::Mat>& imgs,
+               std::vector<Result>* results,
+               int thread_num = 1) {
+    results->clear();
     int model_num = models_.size();
     if (model_num <= 0) {
       std::cerr << "Please Init before Predict!" << std::endl;
@@ -85,14 +87,10 @@ class MultiGPUModel {
     }
 
     int imgs_size = imgs.size();
-    if (imgs_size == 1) {
-      models_[0]->Predict(imgs);
-      return true;
-    }
-
     int start = 0;
     std::vector<std::thread> threads;
     std::vector<std::vector<cv::Mat>> split_imgs;
+    std::vector<std::vector<Result>> model_results;
     for (int i = 0; i < model_num; ++i) {
       int img_num = static_cast<int>(imgs_size / model_num);
       if (i < imgs_size % model_num) {
@@ -107,9 +105,11 @@ class MultiGPUModel {
       start += img_num;
     }
 
+    model_results.resize(split_imgs.size());
     for (int i = 0; i < split_imgs.size(); ++i) {
       threads.push_back(std::thread(&PaddleDeploy::Model::Predict, models_[i],
-                                    std::ref(split_imgs[i]), thread_num));
+                                    std::ref(split_imgs[i]),
+                                    std::ref(model_results[i]), thread_num));
     }
 
     for (auto& thread : threads) {
@@ -118,29 +118,13 @@ class MultiGPUModel {
       }
     }
 
-    return true;
-  }
-
-  void GetResult(std::vector<Result>* results) {
-    results->clear();
-    for (auto model : models_) {
+    // merge result
+    for (auto model_result : model_results) {
       results->insert(results->end(),
-                      model->results_.begin(), model->results_.end());
+                      model_result.begin(), model_result.end());
     }
-  }
 
-  void PrintResult() {
-    int i = 0;
-    for (auto model : models_) {
-      std::cout << "image " << i << std::endl;
-      for (auto result : model->results_) {
-        std::cout << "boxes num:"
-                  << result.det_result->boxes.size()
-                  << std::endl;
-        std::cout << result << std::endl;
-        i += 1;
-      }
-    }
+    return true;
   }
 };
 }  // namespace PaddleDeploy

@@ -82,15 +82,15 @@ bool DetModel::YamlConfigInit(const std::string& cfg_file) {
   return true;
 }
 
-bool DetModel::PreProcessInit() {
-  preprocess_ = std::make_shared<DetPreProcess>();
+bool DetModel::PreprocessInit() {
+  preprocess_ = std::make_shared<DetPreprocess>();
   if (!preprocess_->Init(yaml_config_))
     return false;
   return true;
 }
 
-bool DetModel::PostProcessInit() {
-  postprocess_ = std::make_shared<DetPostProcess>();
+bool DetModel::PostprocessInit() {
+  postprocess_ = std::make_shared<DetPostprocess>();
   if (!postprocess_->Init(yaml_config_))
     return false;
   return true;

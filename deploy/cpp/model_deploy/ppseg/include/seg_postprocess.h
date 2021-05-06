@@ -31,7 +31,7 @@
 
 namespace PaddleDeploy {
 
-class SegPostProcess : public BasePostProcess {
+class SegPostprocess : public BasePostprocess {
  public:
   bool Init(const YAML::Node& yaml_config);
 

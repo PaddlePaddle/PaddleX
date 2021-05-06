@@ -20,16 +20,16 @@ bool ClasModel::YamlConfigInit(const std::string& cfg_file) {
   return true;
 }
 
-bool ClasModel::PreProcessInit() {
-  preprocess_ = std::make_shared<ClasPreProcess>();
+bool ClasModel::PreprocessInit() {
+  preprocess_ = std::make_shared<ClasPreprocess>();
   if (!preprocess_->Init(yaml_config_)) {
     return false;
   }
   return true;
 }
 
-bool ClasModel::PostProcessInit() {
-  postprocess_ = std::make_shared<ClasPostProcess>();
+bool ClasModel::PostprocessInit() {
+  postprocess_ = std::make_shared<ClasPostprocess>();
   if (!postprocess_->Init(yaml_config_))
     return false;
   return true;
