@@ -20,17 +20,17 @@ git checkout realease/2.0
 
 ```sh
 python tools/export_models.py -c configs/yolov3_darknet.yml \
-															-o weights=https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar \
-															--output_dir=inference_model
+                              -o weights=https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar \
+                              --output_dir=inference_model
 ```
 
 **如果你需要使用TensorRT进行部署预测**，则需要在导出模型时固定输入shape，命令如下
 
 ```sh
 python tools/export_models.py -c configs/yolov3_darknet.yml \
-															-o weights=https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar \
-															TestReader.inputs_def.image_shape=[3,640,640] \
-															--output_dir=inference_model
+                              -o weights=https://paddlemodels.bj.bcebos.com/object_detection/yolov3_darknet.tar \
+                              TestReader.inputs_def.image_shape=[3,640,640] \
+                              --output_dir=inference_model
 ```
 
 导出的部署模型会保存在`inference_model/yolov3_darknet`目录，其结构如下
@@ -60,10 +60,10 @@ yolov3_darknet
 
 ```
 ./build/demo/model_infer --model_filename=inference_model/yolov3_darknet/model.pdmodel \
-											 	 --params_filename=inference_model/yolov3_darknet/model.pdiparams \
-											   --cfg_file=inference_model/yolov3_darknet/infer_cfg.yml \
-											   --image=test.jpg \
-											   --model_type=det
+                         --params_filename=inference_model/yolov3_darknet/model.pdiparams \
+                         --cfg_file=inference_model/yolov3_darknet/infer_cfg.yml \
+                         --image=test.jpg \
+                         --model_type=det
 ```
 
 输出结果如下(分别为类别id， 类别标签，置信度，xmin, ymin, width, height)
