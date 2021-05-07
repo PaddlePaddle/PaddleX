@@ -22,10 +22,10 @@
 
 ```
 build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
-		               --params_filename=yolov3_mbv1/model/model.pdiparams \
-					   --cfg_file=yolov3_mbv1/model/infer_cfg.yml \
-					   --image=yolov3_mbv1/images/000000010583.jpg \
-					   --model_type=det
+                       --params_filename=yolov3_mbv1/model/model.pdiparams \
+                       --cfg_file=yolov3_mbv1/model/infer_cfg.yml \
+                       --image=yolov3_mbv1/images/000000010583.jpg \
+                       --model_type=det
 ```
 输出结果如下(分别为类别id、标签、置信度、xmin、ymin、w, h)
 ```
