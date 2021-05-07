@@ -198,6 +198,7 @@ bool Model::Preprocess(const std::vector<cv::Mat>& imgs,
 ```c++
 bool Model::Infer(const std::vector<DataBlob>& inputs,
                   std::vector<DataBlob>* outputs)
+```
 
 > 接收预处理后的数据输入`std::vector<PaddleDeploy::DataBlob>`，使用推理引擎进行推理，此接口为`PaddleDeploy::Model::Predict`中的第二步
 
