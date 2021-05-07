@@ -20,7 +20,6 @@
 - [Jetson编译指南](./docs/compile/paddle/jetson.md)
 
 ### 模型部署说明
-- [PaddleX部署指南](./docs/models/paddlex.md)
 - [PaddleDetection部署指南](./docs/models/paddledetection.md)
 - [PaddleSeg部署指南](./docs/models/paddleseg.md)
 - [PaddleClas部署指南](./docs/models/paddleclas.md)
