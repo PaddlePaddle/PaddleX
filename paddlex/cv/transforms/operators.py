@@ -319,7 +319,7 @@ class ResizeByShort(Transform):
         im_h, im_w = sample['image'].shape[:2]
         im_short_size = min(im_h, im_w)
         im_long_size = max(im_h, im_w)
-        scale = float(self.short_size) / im_short_size
+        scale = float(self.short_size) / float(im_short_size)
         if 0 < self.max_size < np.round(scale * im_long_size):
             scale = float(self.max_size) / float(im_long_size)
         target_w = int(round(im_w * scale))
