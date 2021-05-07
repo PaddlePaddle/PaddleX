@@ -23,6 +23,7 @@
 #include <cassert>
 #include <functional>
 #include <numeric>
+#include <iomanip>
 
 namespace PaddleDeploy {
 
@@ -220,6 +221,8 @@ struct Result {
   }
 
   friend std::ostream &operator<<(std::ostream & stream, const Result& r) {
+    std::cout.setf(std::ios::fixed);
+    std::cout << std::setprecision(8);
     if ("det" == r.model_type) {
       if (nullptr == r.det_result) {
         stream << "det_result is not initialized";

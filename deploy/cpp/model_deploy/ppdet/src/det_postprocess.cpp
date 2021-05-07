@@ -77,30 +77,72 @@ bool DetPostprocess::ProcessBbox(const std::vector<DataBlob>& outputs,
   return true;
 }
 
-bool DetPostprocess::ProcessMask(const DataBlob& mask_blob,
+bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
                                  const std::vector<ShapeInfo>& shape_infos,
                                  std::vector<Result>* results, int thread_num) {
-  std::vector<int> output_mask_shape = mask_blob.shape;
-  float *mask_data = reinterpret_cast<float*>(mask_blob.data.data());
+  std::vector<int> output_mask_shape = mask_blob->shape;
+  float *mask_data = reinterpret_cast<float*>(mask_blob->data.data());
   int mask_pixels = output_mask_shape[2] * output_mask_shape[3];
   int classes = output_mask_shape[1];
+  auto begin_mask_data = mask_data;
   for (int i = 0; i < results->size(); ++i) {
     (*results)[i].det_result->mask_resolution = output_mask_shape[2];
     for (int j = 0; j < (*results)[i].det_result->boxes.size(); ++j) {
       Box *box = &(*results)[i].det_result->boxes[j];
       int category_id = box->category_id;
-      box->mask.shape = {static_cast<int>(box->coordinate[2]),
-                      static_cast<int>(box->coordinate[3])};
-      auto begin_mask =
-        mask_data + (i * classes + box->category_id) * mask_pixels;
-      cv::Mat bin_mask(output_mask_shape[2],
-                      output_mask_shape[2],
-                      CV_32FC1,
-                      begin_mask);
-      cv::resize(bin_mask, bin_mask, cv::Size(box->mask.shape[0],
-                box->mask.shape[1]));
-      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
-      auto mask_int_begin = reinterpret_cast<float*>(bin_mask.data);
+      auto begin_mask = begin_mask_data + box->category_id * mask_pixels;
+      cv::Mat begin_mask(output_mask_shape[2],
+                         output_mask_shape[3],
+                         CV_32FC1,
+                         begin_mask);
+      cv::resize(begin_mask, begin_mask, 
+                 cv::Size(box->coordinate[2], box->coordinate[3]));
+      
+      cv::threshold(begin_mask, begin_mask, 0.5, 1, cv::THRESH_BINARY);
+      bin_mask.convertTo(bin_mask, CV_8UC1);
+      int max_w = shape_infos[i].shapes[0][0];
+      int max_h = shape_infos[i].shapes[0][1];
+      int padding_top = max_h - box->coordinate[1] - box->coordinate[3];
+      int padding_bottom = box->coordinate[1];
+      int padding_left = box->coordinate[0]
+      int padding_right = max_w - box->coordinate[0] - box->coordinate[2];
+      cv::Scalar value = cv::Scalar(0.0);
+      cv::copyMakeBorder(begin_mask, begin_mask,
+                         padding_top,
+                         padding_bottom,
+                         padding_left,
+                         padding_right,
+                         cv2.BORDER_CONSTANT,
+                         value=value)
+      box->mask.shape = {max_w, max_h};
+      auto mask_int_begin = reinterpret_cast<u_int8_t*>(bin_mask.data);
+      auto mask_int_end =
+        mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
+      box->mask.data.assign(mask_int_begin, mask_int_end);
+      begin_mask_data += classes * mask_pixels;
+    }
+  }
+  return true;
+}
+
+bool DetPostprocess::ProcessMaskV2(DataBlob* mask_blob,
+                                 const std::vector<ShapeInfo>& shape_infos,
+                                 std::vector<Result>* results, int thread_num) {
+  std::vector<int> output_mask_shape = mask_blob->shape;
+  float *mask_data = reinterpret_cast<float*>(mask_blob->data.data());
+  int mask_pixels = output_mask_shape[1] * output_mask_shape[2];
+  for (int i = 0; i < results->size(); ++i) {
+    for (int j = 0; j < (*results)[i].det_result->boxes.size(); ++j) {
+      Box *box = &(*results)[i].det_result->boxes[j];
+      box->mask.shape = {static_cast<int>(output_mask_shape[1]),
+                      static_cast<int>(output_mask_shape[2])};
+      auto begin_mask = mask_data + j * mask_pixels;
+      cv::Mat bin_mask(output_mask_shape[1],
+                       output_mask_shape[2],
+                       CV_32SC1,
+                       begin_mask);
+      bin_mask.convertTo(bin_mask, CV_8UC1);
+      auto mask_int_begin = reinterpret_cast<u_int8_t*>(bin_mask.data);
       auto mask_int_end =
         mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
       box->mask.data.assign(mask_int_begin, mask_int_end);
@@ -124,12 +166,14 @@ bool DetPostprocess::Run(const std::vector<DataBlob>& outputs,
   }
   // TODO(jiangjiajun): MaskRCNN is not implement
   if (version_ < "2.0" && outputs.size() == 2) {
-    if (!ProcessMask(outputs[1], shape_infos, results, thread_num)) {
+    DataBlob mask_blob = outputs[1];
+    if (!ProcessMask(&mask_blob, shape_infos, results, thread_num)) {
       std::cerr << "Error happend while process masks" << std::endl;
       return false;
     }
   } else if (version_ >= "2.0" && outputs.size() == 3) {
-    if (!ProcessMask(outputs[2], shape_infos, results, thread_num)) {
+    DataBlob mask_blob = outputs[2];
+    if (!ProcessMaskV2(&mask_blob, shape_infos, results, thread_num)) {
       std::cerr << "Error happend while process masks" << std::endl;
       return false;
     }
