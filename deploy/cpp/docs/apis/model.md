@@ -381,11 +381,7 @@ struct Mask {
 #include <iostream>
 #include "model_deploy/common/include/paddle_deploy.h"
 int main() {
-<<<<<<< HEAD
-  std::shared_ptr<PaddleDeploy::Model> model = 
-=======
   std::shared_ptr<PaddleDeploy::Model> model =
->>>>>>> d195f28b06895deba9e8d4cc278152a13a7ea150
                     PaddleDeploy::ModelFactory::CreateObject("det");
   model->Init("yolov3_mbv1/model/infer_cfg.yml");
   model->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel",
