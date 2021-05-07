@@ -113,7 +113,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 
 ## 3.模型预测
 
-推理过程包括输入数据的预处理、推理引擎的inference、inference结果的后处理3个步骤，在部署代码中，三个步骤分别对应`PaddleDeploy::Model::PreProcess()`、`PaddleDeploy::Model::Infer()`、`PaddleDeploy::Model::PostProcess()`。
+推理过程包括输入数据的预处理、推理引擎的inference、inference结果的后处理3个步骤，在部署代码中，三个步骤分别对应`PaddleDeploy::Model::Preprocess()`、`PaddleDeploy::Model::Infer()`、`PaddleDeploy::Model::Postprocess()`。
 
 为了更便于开发者使用，此三个步骤被封装为`PaddleDeploy::Model::Predict()`一个接口内，用户可根据自行需求进行调用，一般情况下，推荐使用`PaddleDeploy::Model::Predict()`接口即可一步完成预测需求。
 
@@ -381,7 +381,11 @@ struct Mask {
 #include <iostream>
 #include "model_deploy/common/include/paddle_deploy.h"
 int main() {
+<<<<<<< HEAD
   std::shared_ptr<PaddleDeploy::Model> model = 
+=======
+  std::shared_ptr<PaddleDeploy::Model> model =
+>>>>>>> d195f28b06895deba9e8d4cc278152a13a7ea150
                     PaddleDeploy::ModelFactory::CreateObject("det");
   model->Init("yolov3_mbv1/model/infer_cfg.yml");
   model->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel",
@@ -402,10 +406,17 @@ int main() {
     // 第二层循环为每张样本中的box数量
     for (auto j = 0; j < (results[i].det_results->boxes).size(); ++j) {
       std::cout << (results[i].det_results->boxes)[j].coordinate[0] << " "
+<<<<<<< HEAD
                         << (results[i].det_results->boxes)[j].coordinate[1] << " "
                         << (results[i].det_results->boxes)[j].coordinate[2] << " "
                         << (results[i].det_results->boxes)[j].coordinate[3]
                         << std::endl;
+=======
+                << (results[i].det_results->boxes)[j].coordinate[1] << " "
+                << (results[i].det_results->boxes)[j].coordinate[2] << " "
+                << (results[i].det_results->boxes)[j].coordinate[3]
+                << std::endl;
+>>>>>>> d195f28b06895deba9e8d4cc278152a13a7ea150
     }
   }
 }
