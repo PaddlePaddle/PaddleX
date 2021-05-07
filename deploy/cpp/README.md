@@ -1,4 +1,4 @@
-## PaddlePaddle模型部署
+## PaddlePaddle模型C++部署
 
 本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署
 
