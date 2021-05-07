@@ -113,7 +113,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 
 ## 3.模型预测
 
-推理过程包括输入数据的预处理、推理引擎的inference、inference结果的后处理3个步骤，在部署代码中，三个步骤分别对应`PaddleDeploy::Model::PreProcess()`、`PaddleDeploy::Model::Infer()`、`PaddleDeploy::Model::PostProcess()`。
+推理过程包括输入数据的预处理、推理引擎的inference、inference结果的后处理3个步骤，在部署代码中，三个步骤分别对应`PaddleDeploy::Model::Preprocess()`、`PaddleDeploy::Model::Infer()`、`PaddleDeploy::Model::Postprocess()`。
 
 为了更便于开发者使用，此三个步骤被封装为`PaddleDeploy::Model::Predict()`一个接口内，用户可根据自行需求进行调用，一般情况下，推荐使用`PaddleDeploy::Model::Predict()`接口即可一步完成预测需求。
 
