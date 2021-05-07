@@ -23,6 +23,8 @@
 - [PaddleSeg导出模型](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/docs/model_export.md)
 - [PaddleClas导出模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/docs/zh_CN/tutorials/getting_started.md#4-%E4%BD%BF%E7%94%A8inference%E6%A8%A1%E5%9E%8B%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86)
 - [PaddleX导出模型](https://paddlex.readthedocs.io/zh_CN/develop/deploy/server/python.html#python)
+
+
   用户也可直接下载本教程中从PaddleDetection中导出的YOLOv3模型进行测试，[点击下载](https://bj.bcebos.com/paddlex/deploy2/models/yolov3_mbv1.tar.gz)。
 
 ## 步骤三、使用编译好的可执行文件预测
@@ -31,12 +33,12 @@
 
 ```
 build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
-											 --params_filename=yolov3_mbv1/model/model.pdiparams \
-											 --cfg_file=yolov3_mbv1/model/infer_cfg.yml \
-											 --image=yolov3_mbv1/file_list.txt \
-											 --gpu_id=0,1 \
-											 --batch_size=4 \
-											 --model_type=det
+					   --params_filename=yolov3_mbv1/model/model.pdiparams \
+					   --cfg_file=yolov3_mbv1/model/infer_cfg.yml \
+					   --image=yolov3_mbv1/file_list.txt \
+					   --gpu_id=0,1 \
+					   --batch_size=4 \
+					   --model_type=det
 ```
 
 输出结果如下(分别为类别id、标签、置信度、xmin、ymin、w, h)
