@@ -41,7 +41,7 @@ setuptools.setup(
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
         'paddleslim==1.1.1', 'visualdl>=2.0.0', 'paddlehub==2.0.1',
         'shapely>=1.7.0', 'opencv-python', 'flask_cors', 'sklearn', 'psutil',
-        'xlwt', 'paddle2onnx==0.4'
+        'xlwt'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
