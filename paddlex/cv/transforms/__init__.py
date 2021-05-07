@@ -14,7 +14,7 @@
 
 from .operators import *
 from .batch_operators import BatchRandomResize, BatchRandomResizeByShort, _BatchPadding
-from . import operators as T
+import paddlex.cv.transforms as T
 
 
 def arrange_transforms(model_type, transforms, mode='train'):
