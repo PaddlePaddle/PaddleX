@@ -77,18 +77,17 @@ bool DetPostprocess::ProcessBbox(const std::vector<DataBlob>& outputs,
   return true;
 }
 
-bool DetPostprocess::ProcessMask(const std::vector<DataBlob>& outputs,
+bool DetPostprocess::ProcessMask(const DataBlob& mask_blob,
                                  const std::vector<ShapeInfo>& shape_infos,
                                  std::vector<Result>* results, int thread_num) {
-  DataBlob mask_blob = outputs[1];
   std::vector<int> output_mask_shape = mask_blob.shape;
   float *mask_data = reinterpret_cast<float*>(mask_blob.data.data());
   int mask_pixels = output_mask_shape[2] * output_mask_shape[3];
   int classes = output_mask_shape[1];
-  for (int i = 0; i < lod_vector[0].size() - 1; ++i) {
+  for (int i = 0; i < results->size(); ++i) {
     (*results)[i].det_result->mask_resolution = output_mask_shape[2];
     for (int j = 0; j < (*results)[i].det_result->boxes.size(); ++j) {
-      Box *box = &(*results)[i].det_result->boxes[i];
+      Box *box = &(*results)[i].det_result->boxes[j];
       int category_id = box->category_id;
       box->mask.shape = {static_cast<int>(box->coordinate[2]),
                       static_cast<int>(box->coordinate[3])};
@@ -106,7 +105,8 @@ bool DetPostprocess::ProcessMask(const std::vector<DataBlob>& outputs,
         mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
       box->mask.data.assign(mask_int_begin, mask_int_end);
     }
-  }  
+  }
+  return true;
 }
 
 bool DetPostprocess::Run(const std::vector<DataBlob>& outputs,
@@ -123,8 +123,13 @@ bool DetPostprocess::Run(const std::vector<DataBlob>& outputs,
     return false;
   }
   // TODO(jiangjiajun): MaskRCNN is not implement
-  if (outputs.size() == 2) {
-    if ((!ProcessMask(outputs, shape_infos, results, thread_num)) {
+  if (version_ < "2.0" && outputs.size() == 2) {
+    if (!ProcessMask(outputs[1], shape_infos, results, thread_num)) {
+      std::cerr << "Error happend while process masks" << std::endl;
+      return false;
+    }
+  } else if (version_ >= "2.0" && outputs.size() == 3) {
+    if (!ProcessMask(outputs[2], shape_infos, results, thread_num)) {
       std::cerr << "Error happend while process masks" << std::endl;
       return false;
     }

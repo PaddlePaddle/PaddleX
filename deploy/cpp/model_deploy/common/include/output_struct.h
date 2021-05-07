@@ -141,10 +141,13 @@ struct Box {
     for (auto i = 0; i < b.coordinate.size(); ++i) {
         stream << "\t" << b.coordinate[i];
     }
-    if (b.mask.data.size() != 0) {
-      stream << " MaskNotShown";
-    }
     stream << ")";
+    if (b.mask.data.size() != 0) {
+      stream << "\n" << b.mask;
+      for (auto shape : b.mask.shape) {
+        stream << "\t" << shape;
+      }
+    }
     return stream;
   }
 };
