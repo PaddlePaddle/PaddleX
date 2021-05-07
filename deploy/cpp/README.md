@@ -28,4 +28,3 @@
 ### API说明
 
 - [部署相关API说明](./docs/apis/model.md)
-- [模型配置文件详细说明](./docs/apis/yaml.md)
