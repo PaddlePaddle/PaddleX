@@ -91,28 +91,28 @@ bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
       Box *box = &(*results)[i].det_result->boxes[j];
       int category_id = box->category_id;
       auto begin_mask = begin_mask_data + box->category_id * mask_pixels;
-      cv::Mat begin_mask(output_mask_shape[2],
-                         output_mask_shape[3],
-                         CV_32FC1,
-                         begin_mask);
-      cv::resize(begin_mask, begin_mask, 
+      cv::Mat bin_mask(output_mask_shape[2],
+                      output_mask_shape[3],
+                      CV_32FC1,
+                      begin_mask);
+      cv::resize(bin_mask, bin_mask, 
                  cv::Size(box->coordinate[2], box->coordinate[3]));
       
-      cv::threshold(begin_mask, begin_mask, 0.5, 1, cv::THRESH_BINARY);
+      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
       bin_mask.convertTo(bin_mask, CV_8UC1);
       int max_w = shape_infos[i].shapes[0][0];
       int max_h = shape_infos[i].shapes[0][1];
       int padding_top = max_h - box->coordinate[1] - box->coordinate[3];
       int padding_bottom = box->coordinate[1];
-      int padding_left = box->coordinate[0]
+      int padding_left = box->coordinate[0];
       int padding_right = max_w - box->coordinate[0] - box->coordinate[2];
       cv::Scalar value = cv::Scalar(0.0);
-      cv::copyMakeBorder(begin_mask, begin_mask,
+      cv::copyMakeBorder(bin_mask, bin_mask,
                          padding_top,
                          padding_bottom,
                          padding_left,
                          padding_right,
-                         cv2.BORDER_CONSTANT,
+                         cv::BORDER_CONSTANT,
                          value=value)
       box->mask.shape = {max_w, max_h};
       auto mask_int_begin = reinterpret_cast<u_int8_t*>(bin_mask.data);
