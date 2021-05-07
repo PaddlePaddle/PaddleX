@@ -19,7 +19,7 @@ long_description = "PaddlePaddle Entire Process Development Toolkit"
 
 setuptools.setup(
     name="paddlex",
-    version='1.3.8',
+    version='1.3.9',
     author="paddlex",
     author_email="paddlex@baidu.com",
     description=long_description,
@@ -41,7 +41,7 @@ setuptools.setup(
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
         'paddleslim==1.1.1', 'visualdl>=2.0.0', 'paddlehub==2.0.1',
         'shapely>=1.7.0', 'opencv-python', 'flask_cors', 'sklearn', 'psutil',
-        'xlwt'
+        'xlwt', 'paddle2onnx==0.4'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
