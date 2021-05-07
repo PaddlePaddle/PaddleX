@@ -45,6 +45,8 @@ det_pretrain_weights_dict = {
     'FasterRCNN_ResNet50_vd_ssld_fpn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET'],
+    'PPYOLO_MobileNetV3_large': ['COCO', 'IMAGENET'],
+    'PPYOLO_MobileNetV3_small': ['COCO', 'IMAGENET'],
     'PPYOLOv2_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLOv2_ResNet101_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLOTiny_MobileNetV3': ['COCO', 'IMAGENET'],
@@ -220,6 +222,10 @@ imagenet_weights = {
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
     'PPYOLO_ResNet18_vd_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams',
+    'PPYOLO_MobileNetV3_large_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'PPYOLO_MobileNetV3_small_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_small_x1_0_ssld_pretrained.pdparams',
     'PPYOLOv2_ResNet50_vd_dcn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
     'PPYOLOv2_ResNet101_vd_dcn_IMAGENET':
@@ -294,6 +300,10 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
     'PPYOLO_ResNet18_vd_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolo_r18vd_coco.pdparams',
+    'PPYOLO_MobileNetV3_large_COCO':
+    'https://paddledet.bj.bcebos.com/models/ppyolo_mbv3_large_coco.pdparams',
+    'PPYOLO_MobileNetV3_small_COCO':
+    'https://paddledet.bj.bcebos.com/models/ppyolo_mbv3_small_coco.pdparams',
     'PPYOLOv2_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolov2_r50vd_dcn_365e_coco.pdparams',
     'PPYOLOv2_ResNet101_vd_dcn_COCO':

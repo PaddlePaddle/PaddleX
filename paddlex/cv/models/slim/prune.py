@@ -28,14 +28,16 @@ def analysis(model,
              batch_size=8,
              criterion='l1_norm',
              save_file='./model.sensi.data'):
-    if model.model_type == 'segmenter':
+    if model.model_type == 'segmenter' or model.model_type == 'classifier':
+        model.net.train()
         inputs = [1] + list(dataset[0][0].shape)
     elif model.model_type == 'detector':
         inputs = [{
             "image": paddle.ones(
                 shape=[1, 3] + list(dataset[0]["image"].shape[:2]),
                 dtype='float32'),
-            "im_shape": dataset[0]["im_shape"],
+            "im_shape": paddle.to_tensor(
+                dataset[0]["im_shape"], dtype='float32'),
             "scale_factor": paddle.ones(
                 shape=[1, 2], dtype='float32')
         }]
@@ -43,6 +45,8 @@ def analysis(model,
         pruner = L1NormFilterPruner(model.net, inputs=inputs)
     elif criterion == 'fpgm':
         pruner = FPGMFilterPruner(model.net, inputs=inputs)
-    pruner.sensitive(
+    sensitivities = pruner.sensitive(
         eval_func=partial(_eval_fn, model, dataset, batch_size),
         sen_file=save_file)
+
+    return sensitivities
