@@ -29,8 +29,8 @@ cd ..
 
 ```sh
 python tools/export_model.py --model ResNet50 \
-														 --pretrained_model ./models/ResNet50_pretrained \
-														 --output_path ./ResNet50_infer
+                             --pretrained_model ./models/ResNet50_pretrained \
+                             --output_path ./ResNet50_infer
 ```
 
 导出的部署模型会保存在`./ResNet50_infer`目录，其结构如下
@@ -67,10 +67,10 @@ ResNet50
 
 ```
 ./build/demo/model_infer --model_filename=ResNet50_infer/model.pdmodel \
-											 	 --params_filename=ResNet50_infer/model.pdiparams \
-											   --cfg_file=ResNet50_infer/resnet50_imagenet.yml \
-											   --image=test.jpg \
-											   --model_type=clas
+                         --params_filename=ResNet50_infer/model.pdiparams \
+                         --cfg_file=ResNet50_infer/resnet50_imagenet.yml \
+                         --image=test.jpg \
+                         --model_type=clas
 ```
 
 输出结果如下(分别为类别id， 类别标签，置信度)

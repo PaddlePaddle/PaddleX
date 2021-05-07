@@ -21,8 +21,8 @@ git checkout realease/v2.0
 wget https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet101_os8_cityscapes_769x769_80k/model.pdparams
 # 导出部署模型
 python export.py --config configs/deeplabv3p/deeplabv3p_resnet101_os8_cityscapes_769x769_80k.yml \
-								 --model_path ./model.pdparams \
-								 --save_dir output
+                 --model_path ./model.pdparams \
+                 --save_dir output
 ```
 
 导出的部署模型会保存在`output`目录，其结构如下
@@ -52,10 +52,10 @@ output
 
 ```
 ./build/demo/model_infer --model_filename=output/model.pdmodel \
-											 	 --params_filename=output/model.pdiparams \
-											   --cfg_file=output/deploy.yaml \
-											   --image=test.jpg \
-											   --model_type=seg
+                         --params_filename=output/model.pdiparams \
+                         --cfg_file=output/deploy.yaml \
+                         --image=test.jpg \
+                         --model_type=seg
 ```
 
 输出结果如下(由于分割结果的score_map和label_map不便于直接输出，因此在demo程序中仅输出这两个mask的均值和方差)
