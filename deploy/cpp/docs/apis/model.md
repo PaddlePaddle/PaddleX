@@ -381,7 +381,7 @@ struct Mask {
 #include <iostream>
 #include "model_deploy/common/include/paddle_deploy.h"
 int main() {
-  std::shared_ptr<PaddleDeploy::Model> model = 
+  std::shared_ptr<PaddleDeploy::Model> model =
                     PaddleDeploy::ModelFactory::CreateObject("det");
   model->Init("yolov3_mbv1/model/infer_cfg.yml");
   model->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel",
@@ -402,10 +402,10 @@ int main() {
     // 第二层循环为每张样本中的box数量
     for (auto j = 0; j < (results[i].det_results->boxes).size(); ++j) {
       std::cout << (results[i].det_results->boxes)[j].coordinate[0] << " "
-                        << (results[i].det_results->boxes)[j].coordinate[1] << " "
-                        << (results[i].det_results->boxes)[j].coordinate[2] << " "
-                        << (results[i].det_results->boxes)[j].coordinate[3]
-                        << std::endl;
+                << (results[i].det_results->boxes)[j].coordinate[1] << " "
+                << (results[i].det_results->boxes)[j].coordinate[2] << " "
+                << (results[i].det_results->boxes)[j].coordinate[3]
+                << std::endl;
     }
   }
 }

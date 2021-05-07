@@ -25,7 +25,7 @@
 - [PaddleX导出模型](https://paddlex.readthedocs.io/zh_CN/develop/deploy/server/python.html#python)
 
 
-  用户也可直接下载本教程中从PaddleDetection中导出的YOLOv3模型进行测试，[点击下载](https://bj.bcebos.com/paddlex/deploy2/models/yolov3_mbv1.tar.gz)。
+ 用户也可直接下载本教程中从PaddleDetection中导出的YOLOv3模型进行测试，[点击下载](https://bj.bcebos.com/paddlex/deploy2/models/yolov3_mbv1.tar.gz)。
 
 ## 步骤三、使用编译好的可执行文件预测
 
