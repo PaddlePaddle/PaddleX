@@ -39,7 +39,7 @@ setuptools.setup(
     setup_requires=['cython', 'numpy'],
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
-        'paddleslim==1.1.1', 'visualdl>=2.0.0', 'paddlehub==2.0.1',
+        'paddleslim==1.1.1', 'visualdl>=2.0.0', 'paddlehub==2.1.0',
         'shapely>=1.7.0', 'opencv-python', 'flask_cors', 'sklearn', 'psutil',
         'xlwt'
     ],
