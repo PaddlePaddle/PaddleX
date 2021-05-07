@@ -70,11 +70,11 @@ bool Model::Init(const std::string& cfg_file)
 
 ```c++
 bool Model::PaddleEngineInit(const std::string& model_filename,
-														 const std::string& params_filename,
-														 bool use_gpu = false,
-														 int gpu_id = 0, 
-														 bool use_mkl = true,
-														 int mkl_thread_num = 8);
+                             const std::string& params_filename,
+                             bool use_gpu = false,
+                             int gpu_id = 0, 
+                             bool use_mkl = true,
+                             int mkl_thread_num = 8)
 ```
 
 > 初始化Paddle 推理引擎,  创建Model或者其子类对象后必须先调用它初始化，才能调推理接口。
@@ -103,7 +103,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 > if (!modle->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel", 
 >                              "yolov3_mbv1/model/model.pdiparams",
 >                              true, 0)) {
->     std::cerr << "Fail to execute model->PaddleEngineInit()" << std::endl;
+>   std::cerr << "Fail to execute model->PaddleEngineInit()" << std::endl;
 > }
 > ```
 
@@ -123,8 +123,8 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 
 ```c++
  bool Model::Predict(const std::vector<cv::Mat>& imgs,
- 						 				 vector<PaddleDeploy::Result>* results,
- 						 				 int thread_num = 1)
+                     vector<PaddleDeploy::Result>* results,
+                     int thread_num = 1)
 ```
 
 > 对传入的图像进行预处理、inference、后处理，最终结果写回到`results`结构体内
@@ -148,7 +148,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 > std::vector<PaddleDeploy::Result> results;
 > inputs.push_back(cv::imread("test.jpg", 1));
 > if (!model->Predict(inputs, &results)) {
->     std::cerr << "Fail to execute model->Predict()" << std::endl;
+>   std::cerr << "Fail to execute model->Predict()" << std::endl;
 > }
 > ```
 
@@ -187,7 +187,7 @@ bool Model::Preprocess(const std::vector<cv::Mat>& imgs,
 > std::vector<PaddleDeploy::ShapeInfo> shape_infos;
 > inputs.push_back(cv::imread("test.jpg"), 1);
 > if (!model->Preprocess(imgs, &inputs, &shape_infos)) {
->     std::cerr << "Fail to execute model->Preprocess()" << std::endl;
+>   std::cerr << "Fail to execute model->Preprocess()" << std::endl;
 > }
 > ```
 
@@ -196,7 +196,8 @@ bool Model::Preprocess(const std::vector<cv::Mat>& imgs,
 ### 3.3 推理接口
 
 ```c++
-bool Model::Infer(const std::vector<DataBlob>& inputs,  std::vector<DataBlob>* outputs)
+bool Model::Infer(const std::vector<DataBlob>& inputs,
+                  std::vector<DataBlob>* outputs)
 
 > 接收预处理后的数据输入`std::vector<PaddleDeploy::DataBlob>`，使用推理引擎进行推理，此接口为`PaddleDeploy::Model::Predict`中的第二步
 
@@ -236,7 +237,7 @@ if (!model->Infer(inputs, &outputs)) {
 
 ```c++
 bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
-												const std::vector<PaddleDeploy::ShapeInfo>& shape_infos,
+                        const std::vector<PaddleDeploy::ShapeInfo>& shape_infos,
                         std::vector<PaddleDeploy::Result>* results,
                         int thread_num = 1)
 ```
@@ -380,7 +381,7 @@ struct Mask {
 #include "model_deploy/common/include/paddle_deploy.h"
 int main() {
   std::shared_ptr<PaddleDeploy::Model> model = 
-    				PaddleDeploy::ModelFactory::CreateObject("det");
+                    PaddleDeploy::ModelFactory::CreateObject("det");
   model->Init("yolov3_mbv1/model/infer_cfg.yml");
   model->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel",
                           "yolov3_mbv1/model/model.pdiparams",
@@ -400,10 +401,10 @@ int main() {
     // 第二层循环为每张样本中的box数量
     for (auto j = 0; j < (results[i].det_results->boxes).size(); ++j) {
       std::cout << (results[i].det_results->boxes)[j].coordinate[0] << " "
-        				<< (results[i].det_results->boxes)[j].coordinate[1] << " "
-        				<< (results[i].det_results->boxes)[j].coordinate[2] << " "
-        				<< (results[i].det_results->boxes)[j].coordinate[3]
-        				<< std::endl;
+                        << (results[i].det_results->boxes)[j].coordinate[1] << " "
+                        << (results[i].det_results->boxes)[j].coordinate[2] << " "
+                        << (results[i].det_results->boxes)[j].coordinate[3]
+                        << std::endl;
     }
   }
 }
