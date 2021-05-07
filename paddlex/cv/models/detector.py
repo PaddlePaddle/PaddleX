@@ -425,7 +425,6 @@ class YOLOv3(BaseDetector):
                 freeze_norm=False,
                 norm_decay=0.)
         else:
-            print('norm_type', norm_type)
             backbone = self._get_backbone('DarkNet', norm_type=norm_type)
 
         neck = necks.YOLOv3FPN(
