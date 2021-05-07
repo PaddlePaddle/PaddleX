@@ -405,18 +405,11 @@ int main() {
   for (auto i = 0; i < results.size(); ++i) {
     // 第二层循环为每张样本中的box数量
     for (auto j = 0; j < (results[i].det_results->boxes).size(); ++j) {
-      std::cout << (results[i].det_results->boxes)[j].coordinate[0] << " "
-<<<<<<< HEAD
-                        << (results[i].det_results->boxes)[j].coordinate[1] << " "
-                        << (results[i].det_results->boxes)[j].coordinate[2] << " "
-                        << (results[i].det_results->boxes)[j].coordinate[3]
-                        << std::endl;
-=======
+      std::cout << (results[i].det_results->boxes)[j].coordinate[0] << " "\
                 << (results[i].det_results->boxes)[j].coordinate[1] << " "
                 << (results[i].det_results->boxes)[j].coordinate[2] << " "
                 << (results[i].det_results->boxes)[j].coordinate[3]
                 << std::endl;
->>>>>>> d195f28b06895deba9e8d4cc278152a13a7ea150
     }
   }
 }
