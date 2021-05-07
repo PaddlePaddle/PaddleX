@@ -38,7 +38,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     transforms=eval_transforms,
     shuffle=False)
 
-num_classes = len(train_dataset.labels) + 1
+num_classes = len(train_dataset.labels)
 
 model = pdx.det.FasterRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
@@ -50,4 +50,7 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.0025,
     lr_decay_epochs=[8, 11],
-    save_dir='output/faster_rcnn_r50_fpn')
+    warmup_steps=500,
+    warmup_start_lr=0.00025,
+    save_dir='output/faster_rcnn_r50_fpn',
+    use_vdl=True)

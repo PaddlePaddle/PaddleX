@@ -46,9 +46,9 @@ class BaseClassifier(BaseModel):
     """
 
     def __init__(self, model_name='ResNet50', num_classes=1000, **params):
-        for k, v in params.items():
-            setattr(self, k, v)
         self.init_params = locals()
+        self.init_params.update(params)
+        del self.init_params['params']
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -57,6 +57,8 @@ class BaseClassifier(BaseModel):
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
+        for k, v in params.items():
+            setattr(self, k, v)
         self.net, self.test_inputs = self.build_net(**params)
 
     def build_net(self, **params):
@@ -254,31 +256,28 @@ class BaseClassifier(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        im = BaseClassifier._preprocess(images, transforms, self.model_type)
+        im = self._preprocess(images, transforms, self.model_type)
         self.net.eval()
         with paddle.no_grad():
             outputs = self.run(self.net, im, mode='test')
         prediction = outputs['prediction'].numpy()
-        prediction = BaseClassifier._postprocess(prediction, true_topk,
-                                                 self.labels)
+        prediction = self._postprocess(prediction, true_topk, self.labels)
 
         return prediction
 
-    @staticmethod
-    def _preprocess(images, transforms, model_type):
+    def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
             model_type=model_type, transforms=transforms, mode='test')
         batch_im = list()
         for im in images:
             sample = {'image': im}
-            batch_im.append(transforms(sample)[0])
+            batch_im.append(transforms(sample))
 
         batch_im = to_tensor(batch_im)
 
         return batch_im,
 
-    @staticmethod
-    def _postprocess(results, true_topk, labels):
+    def _postprocess(self, results, true_topk, labels):
         preds = list()
         for i, pred in enumerate(results):
             pred_label = np.argsort(pred)[::-1][:true_topk]

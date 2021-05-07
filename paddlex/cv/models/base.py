@@ -137,7 +137,7 @@ class BaseModel:
     def build_data_loader(self, dataset, batch_size, mode='train'):
         batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         if mode == 'eval':
-            batch_size = batch_size_each_card * paddlex.env_info['num']
+            batch_size = batch_size_each_card
             total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
             logging.info(
                 "Start to evaluating(total_samples={}, total_steps={})...".
@@ -230,7 +230,9 @@ class BaseModel:
         current_step = 0
         for i in range(start_epoch, num_epochs):
             self.net.train()
-            if hasattr(self.train_data_loader.dataset, 'set_epoch'):
+            if callable(
+                    getattr(self.train_data_loader.dataset, 'set_epoch',
+                            None)):
                 self.train_data_loader.dataset.set_epoch(i)
             train_avg_metrics = TrainingStats()
             step_time_tic = time.time()

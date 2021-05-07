@@ -19,3 +19,4 @@ FasterRCNN = cv.models.FasterRCNN
 PPYOLO = cv.models.PPYOLO
 PPYOLOTiny = cv.models.PPYOLOTiny
 PPYOLOv2 = cv.models.PPYOLOv2
+MaskRCNN = cv.models.MaskRCNN

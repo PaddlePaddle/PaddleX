@@ -24,7 +24,9 @@ try:
 except Exception:
     from collections import Sequence
 from numbers import Number
-from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop
+from .functions import normalize, horizontal_flip, permute, vertical_flip, center_crop, is_poly, \
+    horizontal_flip_poly, horizontal_flip_rle, vertical_flip_poly, vertical_flip_rle, crop_poly, \
+    crop_rle, expand_poly, expand_rle, resize_poly, resize_rle
 
 __all__ = [
     "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
@@ -54,6 +56,9 @@ class Transform(object):
         pass
 
     def apply_bbox(self, bbox):
+        pass
+
+    def apply_segm(self, segms):
         pass
 
     def apply(self, sample):
@@ -128,7 +133,8 @@ class Decode(Transform):
         self.to_rgb = True
 
     def read_img(self, img_path):
-        return cv2.imread(img_path, cv2.IMREAD_ANYDEPTH | cv2.IMREAD_ANYCOLOR)
+        return cv2.imread(img_path, cv2.IMREAD_ANYDEPTH | cv2.IMREAD_ANYCOLOR |
+                          cv2.IMREAD_COLOR)
 
     def apply_im(self, im_path):
         if isinstance(im_path, str):
@@ -200,6 +206,23 @@ class Resize(Transform):
         bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, self.target_size[0])
         return bbox
 
+    def apply_segm(self, segms, im_size, scale):
+        im_h, im_w = im_size
+        im_scale_x, im_scale_y = scale
+        resized_segms = []
+        for segm in segms:
+            if is_poly(segm):
+                # Polygon format
+                resized_segms.append([
+                    resize_poly(poly, im_scale_x, im_scale_y) for poly in segm
+                ])
+            else:
+                # RLE format
+                resized_segms.append(
+                    resize_rle(segm, im_h, im_w, im_scale_x, im_scale_y))
+
+        return resized_segms
+
     def apply(self, sample):
         interp = self.interp
         if self.interp == "RANDOM":
@@ -216,6 +239,9 @@ class Resize(Transform):
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
                                                 [im_scale_x, im_scale_y])
+        if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
+            sample['gt_poly'] = self.apply_segm(
+                sample['gt_poly'], [im_h, im_w], [im_scale_x, im_scale_y])
         sample['im_shape'] = np.asarray(
             sample['image'].shape[:2], dtype=np.float32)
         if 'scale_factor' in sample:
@@ -257,19 +283,34 @@ class ResizeByShort(Transform):
         image = cv2.resize(image, target_size, interpolation=interp)
         return image
 
-    def apply_mask(self, mask):
-        mask = cv2.resize(
-            mask, (self.target_w, self.target_h),
-            interpolation=cv2.INTER_NEAREST)
+    def apply_mask(self, mask, target_size):
+        mask = cv2.resize(mask, target_size, interpolation=cv2.INTER_NEAREST)
         return mask
 
-    def apply_bbox(self, bbox, scale):
+    def apply_bbox(self, bbox, scale, target_size):
         im_scale_x, im_scale_y = scale
         bbox[:, 0::2] *= im_scale_x
         bbox[:, 1::2] *= im_scale_y
-        bbox[:, 0::2] = np.clip(bbox[:, 0::2], 0, self.target_w)
-        bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, self.target_h)
+        bbox[:, 0::2] = np.clip(bbox[:, 0::2], 0, target_size[1])
+        bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, target_size[0])
         return bbox
+
+    def apply_segm(self, segms, im_size, scale):
+        im_h, im_w = im_size
+        im_scale_x, im_scale_y = scale
+        resized_segms = []
+        for segm in segms:
+            if is_poly(segm):
+                # Polygon format
+                resized_segms.append([
+                    resize_poly(poly, im_scale_x, im_scale_y) for poly in segm
+                ])
+            else:
+                # RLE format
+                resized_segms.append(
+                    resize_rle(segm, im_h, im_w, im_scale_x, im_scale_y))
+
+        return resized_segms
 
     def apply(self, sample):
         interp = self.interp
@@ -283,16 +324,19 @@ class ResizeByShort(Transform):
             scale = float(self.max_size) / float(im_long_size)
         target_w = int(round(im_w * scale))
         target_h = int(round(im_h * scale))
+        target_size = (target_w, target_h)
 
-        sample['image'] = self.apply_im(sample['image'], interp,
-                                        (target_w, target_h))
+        sample['image'] = self.apply_im(sample['image'], interp, target_size)
         im_scale_y = target_h / im_h
         im_scale_x = target_w / im_w
         if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'])
+            sample['mask'] = self.apply_mask(sample['mask'], target_size)
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-            sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
-                                                [im_scale_x, im_scale_y])
+            sample['gt_bbox'] = self.apply_bbox(
+                sample['gt_bbox'], [im_scale_x, im_scale_y], target_size)
+        if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
+            sample['gt_poly'] = self.apply_segm(
+                sample['gt_poly'], [im_h, im_w], [im_scale_x, im_scale_y])
         sample['im_shape'] = np.asarray(
             sample['image'].shape[:2], dtype=np.float32)
         if 'scale_factor' in sample:
@@ -319,7 +363,6 @@ class RandomResizeByShort(Transform):
         resizer = ResizeByShort(
             short_size=short_size, max_size=self.max_size, interp=self.interp)
         sample = resizer(sample)
-
         return sample
 
 
@@ -343,14 +386,29 @@ class RandomHorizontalFlip(Transform):
         bbox[:, 2] = width - oldx1
         return bbox
 
+    def apply_segm(self, segms, height, width):
+        flipped_segms = []
+        for segm in segms:
+            if is_poly(segm):
+                # Polygon format
+                flipped_segms.append(
+                    [horizontal_flip_poly(poly, width) for poly in segm])
+            else:
+                # RLE format
+                flipped_segms.append(horizontal_flip_rle(segm, height, width))
+        return flipped_segms
+
     def apply(self, sample):
         if random.random() < self.prob:
-            _, im_w = sample['image'].shape[:2]
+            im_h, im_w = sample['image'].shape[:2]
             sample['image'] = self.apply_im(sample['image'])
             if 'mask' in sample:
                 sample['mask'] = self.apply_mask(sample['mask'])
             if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
                 sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'], im_w)
+            if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
+                sample['gt_poly'] = self.apply_segm(sample['gt_poly'], im_h,
+                                                    im_w)
         return sample
 
 
@@ -379,14 +437,29 @@ class RandomVerticalFlip(Transform):
         bbox[:, 2] = height - oldy1
         return bbox
 
+    def apply_segm(self, segms, height, width):
+        flipped_segms = []
+        for segm in segms:
+            if is_poly(segm):
+                # Polygon format
+                flipped_segms.append(
+                    [vertical_flip_poly(poly, height) for poly in segm])
+            else:
+                # RLE format
+                flipped_segms.append(vertical_flip_rle(segm, height, width))
+        return flipped_segms
+
     def apply(self, sample):
         if random.random() < self.prob:
-            im_h, _ = sample['image'].shape[:2]
+            im_h, im_w = sample['image'].shape[:2]
             sample['image'] = self.apply_im(sample['image'])
             if 'mask' in sample:
                 sample['mask'] = self.apply_mask(sample['mask'])
             if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
                 sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'], im_h)
+            if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
+                sample['gt_poly'] = self.apply_segm(sample['gt_poly'], im_h,
+                                                    im_w)
         return sample
 
 
@@ -572,6 +645,19 @@ class RandomCrop(Transform):
 
         return cropped_box, np.where(valid)[0]
 
+    def _crop_segm(self, segms, valid_ids, crop, height, width):
+        crop_segms = []
+        for id in valid_ids:
+            segm = segms[id]
+            if is_poly(segm):
+                # Polygon format
+                crop_segms.append(crop_poly(segm, crop))
+            else:
+                # RLE format
+                crop_segms.append(crop_rle(segm, crop, height, width))
+
+        return crop_segms
+
     def apply_im(self, image, crop):
         x1, y1, x2, y2 = crop
         return image[y1:y2, x1:x2, :]
@@ -586,6 +672,29 @@ class RandomCrop(Transform):
             crop_box, cropped_box, valid_ids = crop_info
             im_h, im_w = sample['image'].shape[:2]
             sample['image'] = self.apply_im(sample['image'], crop_box)
+            if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
+                crop_polys = self._crop_segm(
+                    sample['gt_poly'],
+                    valid_ids,
+                    np.array(
+                        crop_box, dtype=np.int64),
+                    im_h,
+                    im_w)
+                if [] in crop_polys:
+                    delete_id = list()
+                    valid_polys = list()
+                    for idx, poly in enumerate(crop_polys):
+                        if not crop_poly:
+                            delete_id.append(idx)
+                        else:
+                            valid_polys.append(poly)
+                    valid_ids = np.delete(valid_ids, delete_id)
+                    if not valid_polys:
+                        return sample
+                    sample['gt_poly'] = valid_polys
+                else:
+                    sample['gt_poly'] = crop_polys
+
             if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
                 sample['gt_bbox'] = np.take(cropped_box, valid_ids, axis=0)
                 sample['gt_class'] = np.take(
@@ -703,6 +812,22 @@ class Padding(Transform):
     def apply_bbox(self, bbox, offsets):
         return bbox + np.array(offsets * 2, dtype=np.float32)
 
+    def apply_segm(self, segms, offsets, im_size, size):
+        x, y = offsets
+        height, width = im_size
+        h, w = size
+        expanded_segms = []
+        for segm in segms:
+            if is_poly(segm):
+                # Polygon format
+                expanded_segms.append(
+                    [expand_poly(poly, x, y) for poly in segm])
+            else:
+                # RLE format
+                expanded_segms.append(
+                    expand_rle(segm, x, y, height, width, h, w))
+        return expanded_segms
+
     def apply(self, sample):
         im_h, im_w = sample['image'].shape[:2]
         if self.target_size:
@@ -734,6 +859,9 @@ class Padding(Transform):
             sample['mask'] = self.apply_mask(sample['mask'], offsets, (h, w))
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
             sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'], offsets)
+        if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
+            sample['gt_poly'] = self.apply_segm(
+                sample['gt_poly'], offsets, im_size=[im_h, im_w], size=[h, w])
         return sample
 
 
@@ -784,6 +912,11 @@ class MixupImage(Transform):
             gt_bbox2 = sample[1]['gt_bbox']
             gt_bbox = np.concatenate((gt_bbox1, gt_bbox2), axis=0)
             result['gt_bbox'] = gt_bbox
+        if 'gt_poly' in sample[0]:
+            gt_poly1 = sample[0]['gt_poly']
+            gt_poly2 = sample[1]['gt_poly']
+            gt_poly = gt_poly1 + gt_poly2
+            result['gt_poly'] = gt_poly
         if 'gt_class' in sample[0]:
             gt_class1 = sample[0]['gt_class']
             gt_class2 = sample[1]['gt_class']
@@ -998,16 +1131,6 @@ class _Permute(Transform):
         return sample
 
 
-class _LabelMinusOne(Transform):
-    def __init__(self):
-        super(_LabelMinusOne, self).__init__()
-
-    def apply(self, sample):
-        if 'gt_class' in sample:
-            sample['gt_class'] = sample['gt_class'] - 1
-        return sample
-
-
 class ArrangeSegmenter(Transform):
     def __init__(self, mode):
         super(ArrangeSegmenter, self).__init__()
@@ -1060,4 +1183,6 @@ class ArrangeDetector(Transform):
         self.mode = mode
 
     def apply(self, sample):
+        if self.mode == 'eval' and 'gt_poly' in sample:
+            del sample['gt_poly']
         return sample

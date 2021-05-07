@@ -58,7 +58,7 @@ class VOCDetection(Dataset):
 
         self.use_mix = False
         if self.transforms is not None:
-            for i, op in enumerate(self.transforms.transforms):
+            for op in self.transforms.transforms:
                 if isinstance(op, MixupImage):
                     self.mixup_op = copy.deepcopy(op)
                     self.use_mix = True
@@ -76,7 +76,7 @@ class VOCDetection(Dataset):
         annotations['annotations'] = list()
 
         cname2cid = OrderedDict()
-        label_id = 1
+        label_id = 0
         with open(label_list, 'r', encoding=get_encoding(label_list)) as f:
             for line in f.readlines():
                 cname2cid[line.strip()] = label_id
