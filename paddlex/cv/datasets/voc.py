@@ -268,8 +268,8 @@ class VOCDetection(Dataset):
         self._epoch = 0
 
     def __getitem__(self, idx):
-        files = copy.deepcopy(self.file_list)
-        sample = files[idx]
+        # files = copy.deepcopy(self.file_list)
+        sample = copy.deepcopy(self.file_list[idx])
         if self.use_mix and (self.mixup_op.mixup_epoch == -1 or
                              self._epoch < self.mixup_op.mixup_epoch):
             if self.num_samples > 1:
@@ -277,7 +277,7 @@ class VOCDetection(Dataset):
                 mix_pos = (mix_idx + idx) % self.num_samples
             else:
                 mix_pos = 0
-            sample_mix = files[mix_pos]
+            sample_mix = copy.deepcopy(self.file_list[mix_pos])
             sample = self.mixup_op(
                 sample=[Decode()(sample), Decode()(sample_mix)])
         sample = self.transforms(sample)
