@@ -83,7 +83,7 @@ class SegDataset(Dataset):
             len(self.file_list), file_list))
 
     def __getitem__(self, idx):
-        sample = self.file_list[idx]
+        sample = copy.deepcopy(self.file_list[idx])
         outputs = self.transforms(sample)
         return outputs
 
