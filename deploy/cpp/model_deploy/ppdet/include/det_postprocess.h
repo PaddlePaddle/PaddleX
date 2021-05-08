@@ -41,7 +41,7 @@ class DetPostprocess : public BasePostprocess {
 
   bool ProcessMask(DataBlob* mask_blob,
                    const std::vector<ShapeInfo>& shape_infos,
-                   std::vector<Result>* results, float threshold);
+                   std::vector<Result>* results, float threshold = 0.5);
 
   bool ProcessMaskV2(DataBlob* mask_blob,
                    const std::vector<ShapeInfo>& shape_infos,
