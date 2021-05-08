@@ -140,7 +140,7 @@ bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
                          cv::BORDER_CONSTANT,
                          value = value);
 
-      box-mask.Clear();
+      box->mask.Clear();
       box->mask.shape = {max_h, max_w};
       if (mask_mat.isContinuous()) {
         box->mask.data.assign(mask_mat.datastart, mask_mat.dataend);
@@ -174,10 +174,10 @@ bool DetPostprocess::ProcessMaskV2(DataBlob* mask_blob,
                        begin_mask);
       bin_mask.convertTo(bin_mask, CV_8UC1);
 
-      box-mask.Clear();
+      box->mask.Clear();
       box->mask.shape = {static_cast<int>(output_mask_shape[1]),
                       static_cast<int>(output_mask_shape[2])};
-      if (mask_mat.isContinuous()) {
+      if (bin_mask.isContinuous()) {
         box->mask.data.assign(bin_mask.datastart, bin_mask.dataend);
       } else {
         for (auto i = 0; i < bin_mask.rows; ++i) {
