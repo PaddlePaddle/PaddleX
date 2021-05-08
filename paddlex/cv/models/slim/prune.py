@@ -15,7 +15,7 @@
 from functools import partial
 import paddle
 from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
-import paddlex.utils.logging as logging
+from paddlex.cv.transforms import arrange_transforms
 
 
 def _eval_fn(model, eval_dataset, batch_size=8):
@@ -28,6 +28,10 @@ def analysis(model,
              batch_size=8,
              criterion='l1_norm',
              save_file='./model.sensi.data'):
+    arrange_transforms(
+        model_type=model.model_type,
+        transforms=dataset.transforms,
+        mode='eval')
     if model.model_type == 'segmenter' or model.model_type == 'classifier':
         model.net.train()
         inputs = [1] + list(dataset[0][0].shape)
