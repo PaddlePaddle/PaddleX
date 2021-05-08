@@ -95,14 +95,14 @@ bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
                       output_mask_shape[3],
                       CV_32FC1,
                       begin_mask);
-      
+
       cv::Scalar value = cv::Scalar(0.0);
       cv::copyMakeBorder(bin_mask, bin_mask,
                          1, 1, 1, 1,
                          cv::BORDER_CONSTANT,
-                         value=value);
+                         value = value);
 
-      //expand box
+      // expand box
       int max_w = shape_infos[i].shapes[0][0];
       int max_h = shape_infos[i].shapes[0][1];
       double scale = (output_mask_shape[2] + 2.0) / output_mask_shape[2];
@@ -117,30 +117,31 @@ bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
       int y_min = static_cast<int>(y_c - h_half);
       int y_max = static_cast<int>(y_c + h_half);
 
-      cv::resize(bin_mask, bin_mask, 
-                 cv::Size(std::max(x_max - x_min + 1, 1), 
+      cv::resize(bin_mask, bin_mask,
+                 cv::Size(std::max(x_max - x_min + 1, 1),
                           std::max(y_max - y_min + 1, 1)));
-      
-      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
 
+      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
       bin_mask.convertTo(bin_mask, CV_8UC1);
 
       int x0 = std::min(std::max(x_min, 0), max_w);
       int x1 = std::min(std::max(x_max + 1, 0), max_w);
       int y0 = std::min(std::max(y_min, 0), max_h);
       int y1 = std::min(std::max(y_max + 1, 0), max_h);
-      bin_mask = bin_mask(cv::Range(x0 - x_min, x1 - x_min), 
-                          cv::Range(y0 - y_min, y1 - y_min));
-      cv::copyMakeBorder(bin_mask, bin_mask,
+
+      cv::Mat mask_mat = bin_mask(cv::Range(y0 - y_min, y1 - y_min),
+                                  cv::Range(x0 - x_min, x1 - x_min));
+      // expand image
+      cv::copyMakeBorder(mask_mat, mask_mat,
                          max_h - y1,
                          y0,
                          x0,
                          max_w - x1,
                          cv::BORDER_CONSTANT,
-                         value=value);
+                         value = value);
 
       box->mask.shape = {max_h, max_w};
-      auto mask_int_begin = reinterpret_cast<u_int8_t*>(bin_mask.data);
+      auto mask_int_begin = reinterpret_cast<u_int8_t*>(mask_mat.data);
       auto mask_int_end =
         mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
       box->mask.data.assign(mask_int_begin, mask_int_end);
