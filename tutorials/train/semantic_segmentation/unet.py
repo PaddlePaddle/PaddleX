@@ -8,14 +8,14 @@ optic_dataset = 'https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz'
 pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 train_transforms = transforms.Compose([
-    transforms.Resize(512, 512),
+    transforms.Resize(target_size=512),
     transforms.RandomHorizontalFlip(),
     transforms.Normalize(
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.Resize(512, 512),
+    transforms.Resize(target_size=512),
     transforms.Normalize(
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
