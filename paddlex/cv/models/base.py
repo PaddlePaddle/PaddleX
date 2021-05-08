@@ -56,7 +56,7 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
-                scale = getattr(self.net, 'scale', None)
+                scale = getattr(self, 'scale', None)
                 pretrain_weights = get_pretrain_weights(
                     pretrain_weights,
                     self.__class__.__name__,
@@ -84,6 +84,8 @@ class BaseModel:
             del self.init_params['__class__']
         if 'model_name' in self.init_params:
             del self.init_params['model_name']
+        if 'params' in self.init_params:
+            del self.init_params['params']
 
         info['_init_params'] = self.init_params
 
@@ -100,12 +102,6 @@ class BaseModel:
             pass
 
         if hasattr(self, 'test_transforms'):
-            if hasattr(self.test_transforms, 'to_rgb'):
-                if self.test_transforms.to_rgb:
-                    info['TransformsMode'] = 'RGB'
-                else:
-                    info['TransformsMode'] = 'BGR'
-
             if self.test_transforms is not None:
                 info['Transforms'] = list()
                 for op in self.test_transforms.transforms:
@@ -141,7 +137,7 @@ class BaseModel:
     def build_data_loader(self, dataset, batch_size, mode='train'):
         batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         if mode == 'eval':
-            batch_size = batch_size_each_card * paddlex.env_info['num']
+            batch_size = batch_size_each_card
             total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
             logging.info(
                 "Start to evaluating(total_samples={}, total_steps={})...".

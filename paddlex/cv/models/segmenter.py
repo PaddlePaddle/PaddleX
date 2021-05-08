@@ -315,10 +315,10 @@ class BaseSegmenter(BaseModel):
             for op in transforms:
                 if op.__class__.__name__ in ['Resize', 'ResizeByShort']:
                     restore_list.append(('resize', (h, w)))
-                    h, w = op.target_h, op.target_w
+                    h, w = op.target_size
                 if op.__class__.__name__ in ['Padding']:
                     restore_list.append(('padding', (h, w)))
-                    h, w = op.target_h, op.target_w
+                    h, w = op.target_size
             batch_restore_list.append(restore_list)
         return batch_restore_list
 

@@ -151,7 +151,7 @@ class BaseDetector(BaseModel):
               save_interval_epochs=1,
               log_interval_steps=10,
               save_dir='output',
-              pretrain_weights='COCO',
+              pretrain_weights='IMAGENET',
               learning_rate=.001,
               warmup_steps=0,
               warmup_start_lr=0.0,
@@ -480,6 +480,11 @@ class YOLOv3(BaseDetector):
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
+                if mode != 'train':
+                    raise Exception(
+                        "{} cannot be present in the {} transforms. ".format(
+                            op.__class__.__name__, mode) +
+                        "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
         batch_transforms = BatchCompose(custom_batch_transforms +
@@ -698,6 +703,11 @@ class FasterRCNN(BaseDetector):
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
+                if mode != 'train':
+                    raise Exception(
+                        "{} cannot be present in the {} transforms. ".format(
+                            op.__class__.__name__, mode) +
+                        "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
         batch_transforms = BatchCompose(custom_batch_transforms +
@@ -1331,6 +1341,11 @@ class MaskRCNN(BaseDetector):
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
+                if mode != 'train':
+                    raise Exception(
+                        "{} cannot be present in the {} transforms. ".format(
+                            op.__class__.__name__, mode) +
+                        "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
         batch_transforms = BatchCompose(custom_batch_transforms +

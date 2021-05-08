@@ -68,7 +68,9 @@ cityscapes_weights = {
     'HRNet_HRNet_W48_CITYSCAPES':
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw48_cityscapes_1024x512_80k/model.pdparams',
     'BiSeNetV2_CITYSCAPES':
-    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/bisenet_cityscapes_1024x1024_160k/model.pdparams'
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/bisenet_cityscapes_1024x1024_160k/model.pdparams',
+    'FastSCNN_CITYSCAPES':
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fastscnn_cityscapes_1024x1024_160k/model.pdparams'
 }
 
 imagenet_weights = {

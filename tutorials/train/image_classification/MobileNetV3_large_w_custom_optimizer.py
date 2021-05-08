@@ -58,4 +58,6 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=train_batch_size,
     eval_dataset=eval_dataset,
-    save_dir='output/mobilenetv3_large')
+    optimizer=custom_optimizer,
+    save_dir='output/mobilenetv3_large',
+    use_vdl=True)

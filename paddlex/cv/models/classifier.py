@@ -47,6 +47,8 @@ class BaseClassifier(BaseModel):
 
     def __init__(self, model_name='ResNet50', num_classes=1000, **params):
         self.init_params = locals()
+        self.init_params.update(params)
+        del self.init_params['params']
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -55,6 +57,8 @@ class BaseClassifier(BaseModel):
         self.model_name = model_name
         self.labels = None
         self.num_classes = num_classes
+        for k, v in params.items():
+            setattr(self, k, v)
         self.net, self.test_inputs = self.build_net(**params)
 
     def build_net(self, **params):
@@ -267,7 +271,7 @@ class BaseClassifier(BaseModel):
         batch_im = list()
         for im in images:
             sample = {'image': im}
-            batch_im.append(transforms(sample)[0])
+            batch_im.append(transforms(sample))
 
         batch_im = to_tensor(batch_im)
 
