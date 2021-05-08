@@ -95,26 +95,51 @@ bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
                       output_mask_shape[3],
                       CV_32FC1,
                       begin_mask);
-      cv::resize(bin_mask, bin_mask, 
-                 cv::Size(box->coordinate[2], box->coordinate[3]));
       
-      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
-      bin_mask.convertTo(bin_mask, CV_8UC1);
-      int max_w = shape_infos[i].shapes[0][0];
-      int max_h = shape_infos[i].shapes[0][1];
-      int padding_top = max_h - box->coordinate[1] - box->coordinate[3];
-      int padding_bottom = box->coordinate[1];
-      int padding_left = box->coordinate[0];
-      int padding_right = max_w - box->coordinate[0] - box->coordinate[2];
       cv::Scalar value = cv::Scalar(0.0);
       cv::copyMakeBorder(bin_mask, bin_mask,
-                         padding_top,
-                         padding_bottom,
-                         padding_left,
-                         padding_right,
+                         1, 1, 1, 1,
                          cv::BORDER_CONSTANT,
-                         value=value)
-      box->mask.shape = {max_w, max_h};
+                         value=value);
+
+      //expand box
+      int max_w = shape_infos[i].shapes[0][0];
+      int max_h = shape_infos[i].shapes[0][1];
+      double scale = (output_mask_shape[2] + 2.0) / output_mask_shape[2];
+      double w_half = static_cast<double>(box->coordinate[2]) * 0.5;
+      double h_half = static_cast<double>(box->coordinate[3]) * 0.5;
+      double x_c = static_cast<double>(box->coordinate[0]) + w_half;
+      double y_c = static_cast<double>(box->coordinate[1]) + h_half;
+      w_half *= scale;
+      h_half *= scale;
+      int x_min = static_cast<int>(x_c - w_half);
+      int x_max = static_cast<int>(x_c + w_half);
+      int y_min = static_cast<int>(y_c - h_half);
+      int y_max = static_cast<int>(y_c + h_half);
+
+      cv::resize(bin_mask, bin_mask, 
+                 cv::Size(std::max(x_max - x_min + 1, 1), 
+                          std::max(y_max - y_min + 1, 1)));
+      
+      cv::threshold(bin_mask, bin_mask, 0.5, 1, cv::THRESH_BINARY);
+
+      bin_mask.convertTo(bin_mask, CV_8UC1);
+
+      int x0 = std::min(std::max(x_min, 0), max_w);
+      int x1 = std::min(std::max(x_max + 1, 0), max_w);
+      int y0 = std::min(std::max(y_min, 0), max_h);
+      int y1 = std::min(std::max(y_max + 1, 0), max_h);
+      bin_mask = bin_mask(cv::Range(x0 - x_min, x1 - x_min), 
+                          cv::Range(y0 - y_min, y1 - y_min));
+      cv::copyMakeBorder(bin_mask, bin_mask,
+                         max_h - y1,
+                         y0,
+                         x0,
+                         max_w - x1,
+                         cv::BORDER_CONSTANT,
+                         value=value);
+
+      box->mask.shape = {max_h, max_w};
       auto mask_int_begin = reinterpret_cast<u_int8_t*>(bin_mask.data);
       auto mask_int_end =
         mask_int_begin + box->mask.shape[0] * box->mask.shape[1];
