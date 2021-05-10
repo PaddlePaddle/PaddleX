@@ -15,10 +15,12 @@
 from __future__ import absolute_import
 import os.path as osp
 from collections import OrderedDict
+from functools import partial
 import numpy as np
 import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
+from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 from paddlex.utils import logging, TrainingStats
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.nets.ppcls.modeling import architectures
@@ -260,6 +262,36 @@ class BaseClassifier(BaseModel):
         prediction = self._postprocess(prediction, true_topk, self.labels)
 
         return prediction
+
+    def analyze_sensitivity(self,
+                            dataset,
+                            batch_size,
+                            criterion='l1_norm',
+                            save_dir='output'):
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=dataset.transforms,
+            mode='eval')
+        self.net.train()
+        inputs = [1] + list(dataset[0][0].shape)
+        if criterion == 'l1_norm':
+            pruner = L1NormFilterPruner(self.net, inputs=inputs)
+        elif criterion == 'fpgm':
+            pruner = FPGMFilterPruner(self.net, inputs=inputs)
+
+        def _eval_fn(dataset, batch_size=8):
+            metric = self.evaluate(
+                dataset, batch_size=batch_size, return_details=False)
+            return metric[list(metric.keys())[0]]
+
+        sen_file = osp.join(save_dir, 'model.sensi.data')
+        sensitivities = pruner.sensitive(
+            eval_func=partial(_eval_fn, dataset, batch_size),
+            sen_file=sen_file)
+        logging.info(
+            'Sensitivity analysis is complete. The result is saved at {}.'.
+            format(sen_file))
+        return sensitivities
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(

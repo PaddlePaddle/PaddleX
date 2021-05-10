@@ -15,8 +15,10 @@
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
+from functools import partial
 import paddle
 import paddle.nn.functional as F
+from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.nets.paddleseg import models
 from paddlex.cv.transforms import arrange_transforms
@@ -288,6 +290,36 @@ class BaseSegmenter(BaseModel):
         pred = outputs['pred']
         pred = pred.numpy().astype('uint8')
         return {'label_map': pred}
+
+    def analyze_sensitivity(self,
+                            dataset,
+                            batch_size,
+                            criterion='l1_norm',
+                            save_dir='output'):
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=dataset.transforms,
+            mode='eval')
+        self.net.train()
+        inputs = [1] + list(dataset[0][0].shape)
+        if criterion == 'l1_norm':
+            pruner = L1NormFilterPruner(self.net, inputs=inputs)
+        elif criterion == 'fpgm':
+            pruner = FPGMFilterPruner(self.net, inputs=inputs)
+
+        def _eval_fn(dataset, batch_size=8):
+            metric = self.evaluate(
+                dataset, batch_size=batch_size, return_details=False)
+            return metric[list(metric.keys())[0]]
+
+        sen_file = osp.join(save_dir, 'model.sensi.data')
+        sensitivities = pruner.sensitive(
+            eval_func=partial(_eval_fn, dataset, batch_size),
+            sen_file=sen_file)
+        logging.info(
+            'Sensitivity analysis is complete. The result is saved at {}.'.
+            format(sen_file))
+        return sensitivities
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
