@@ -153,17 +153,18 @@ class BaseSegmenter(BaseModel):
               lr_decay_power=0.9,
               early_stop=False,
               early_stop_patience=5,
-              use_vdl=True,
-              pruned_flops=None,
-              pruning_criterion='l1_norm'):
-        if pruned_flops is not None:
-            assert pretrain_weights is not None, \
-                "To do pruning, 'pretrain_weights' has to be specified."
-            assert pruning_criterion in ['l1_norm', 'fpgm'], \
-                "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
+              use_vdl=True):
         self.labels = train_dataset.labels
         if self.losses is None:
             self.losses = self.default_loss()
+
+        if optimizer is None:
+            num_steps_each_epoch = train_dataset.num_samples // train_batch_size
+            self.optimizer = self.default_optimizer(
+                self.net.parameters(), learning_rate, num_epochs,
+                num_steps_each_epoch, lr_decay_power)
+        else:
+            self.optimizer = optimizer
 
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
             if pretrain_weights not in seg_pretrain_weights_dict[
@@ -181,39 +182,6 @@ class BaseSegmenter(BaseModel):
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
-
-        if pruned_flops is not None:
-            # sensitivity analysis
-            pruning_dir = osp.join(save_dir, 'prune')
-            if not osp.isdir(pruning_dir):
-                os.makedirs(pruning_dir)
-            self._analyze_sensitivity(
-                dataset=eval_dataset,
-                batch_size=1,
-                criterion=pruning_criterion,
-                save_dir=pruning_dir)
-            # do pruning
-            pre_pruning_flops = flops(self.net, self.pruner.inputs)
-            logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
-                pre_pruning_flops))
-            skip_vars = []
-            for param in self.net.parameters():
-                if param.shape[0] <= 8:
-                    skip_vars.append(param.name)
-            self.pruner.sensitive_prune(pruned_flops, skip_vars=skip_vars)
-            post_pruning_flops = flops(self.net, self.pruner.inputs)
-            logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
-                post_pruning_flops))
-            save_dir = osp.join(save_dir, 'pruned')
-            logging.info("Start retraining the pruned model...")
-
-        if optimizer is None:
-            num_steps_each_epoch = train_dataset.num_samples // train_batch_size
-            self.optimizer = self.default_optimizer(
-                self.net.parameters(), learning_rate, num_epochs,
-                num_steps_each_epoch, lr_decay_power)
-        else:
-            self.optimizer = optimizer
 
         self.train_loop(
             num_epochs=num_epochs,

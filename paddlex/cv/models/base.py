@@ -22,6 +22,7 @@ import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
+from paddleslim.analysis import dygraph_flops as flops
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -327,11 +328,13 @@ class BaseModel:
                         if earlystop(current_accuracy):
                             break
 
-    def _analyze_sensitivity(self,
-                             dataset,
-                             batch_size=1,
-                             criterion='l1_norm',
-                             save_dir='output'):
+    def analyze_sensitivity(self,
+                            dataset,
+                            batch_size=8,
+                            criterion='l1_norm',
+                            save_dir='output'):
+        assert criterion in ['l1_norm', 'fpgm'], \
+            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
         arrange_transforms(
             model_type=self.model_type,
             transforms=dataset.transforms,
@@ -347,7 +350,7 @@ class BaseModel:
         else:
             self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
 
-        sen_file = osp.join(save_dir, 'model.sensi.data')
+        sen_file = osp.join(save_dir, 'prune', 'model.sensi.data')
         logging.info('Sensitivity analysis of model parameters starts...')
         self.pruner.sensitive(
             eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
@@ -355,3 +358,22 @@ class BaseModel:
         logging.info(
             'Sensitivity analysis is complete. The result is saved at {}.'.
             format(sen_file))
+
+    def prune(self, pruned_flops, save_dir=None):
+        pre_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
+            pre_pruning_flops))
+        skip_vars = []
+        for param in self.net.parameters():
+            if param.shape[0] <= 8:
+                skip_vars.append(param.name)
+        self.pruner.sensitive_prune(pruned_flops, skip_vars=skip_vars)
+        post_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
+            post_pruning_flops))
+        logging.warning("Pruning the model may hurt its performance, "
+                        "retraining is highly recommended")
+
+        if save_dir is not None:
+            self.save_model(save_dir)
+            logging.info("Pruned model is saved at {}".format(save_dir))
