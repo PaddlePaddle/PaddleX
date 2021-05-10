@@ -328,13 +328,11 @@ class BaseModel:
                         if earlystop(current_accuracy):
                             break
 
-    def analyze_sensitivity(self,
-                            dataset,
-                            batch_size=1,
-                            criterion='l1_norm',
-                            save_dir='output'):
-        assert criterion in ['l1_norm', 'fpgm'], \
-            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
+    def _analyze_sensitivity(self,
+                             dataset,
+                             batch_size=1,
+                             criterion='l1_norm',
+                             save_dir='output'):
         arrange_transforms(
             model_type=self.model_type,
             transforms=dataset.transforms,
@@ -358,62 +356,3 @@ class BaseModel:
         logging.info(
             'Sensitivity analysis is complete. The result is saved at {}.'.
             format(sen_file))
-
-    def prune_retrain(self,
-                      pruned_flops,
-                      num_epochs,
-                      train_dataset,
-                      train_batch_size,
-                      eval_dataset=None,
-                      optimizer=None,
-                      save_interval_epochs=1,
-                      log_interval_steps=10,
-                      save_dir='output',
-                      learning_rate=.025,
-                      warmup_steps=0,
-                      warmup_start_lr=0.0,
-                      lr_decay_epochs=(30, 60, 90),
-                      lr_decay_gamma=0.1,
-                      early_stop=False,
-                      early_stop_patience=5,
-                      use_vdl=True):
-        pre_pruning_flops = flops(self.net, self.pruner.inputs)
-        logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
-            pre_pruning_flops))
-        skip_vars = []
-        for param in self.net.parameters():
-            if param.shape[0] <= 8:
-                skip_vars.append(param.name)
-        self.pruner.sensitive_prune(pruned_flops, skip_vars=skip_vars)
-        post_pruning_flops = flops(self.net, self.pruner.inputs)
-        logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
-            post_pruning_flops))
-
-        if optimizer is None:
-            num_steps_each_epoch = len(train_dataset) // train_batch_size
-            self.optimizer = self.default_optimizer(
-                parameters=self.net.parameters(),
-                learning_rate=learning_rate,
-                warmup_steps=warmup_steps,
-                warmup_start_lr=warmup_start_lr,
-                lr_decay_epochs=lr_decay_epochs,
-                lr_decay_gamma=lr_decay_gamma,
-                num_steps_each_epoch=num_steps_each_epoch)
-        else:
-            self.optimizer = optimizer
-        logging.info("Start retraining the pruned model...")
-        self.train_loop(
-            num_epochs=num_epochs,
-            train_dataset=train_dataset,
-            train_batch_size=train_batch_size,
-            eval_dataset=eval_dataset,
-            save_interval_epochs=save_interval_epochs,
-            log_interval_steps=log_interval_steps,
-            save_dir=save_dir,
-            early_stop=early_stop,
-            early_stop_patience=early_stop_patience,
-            use_vdl=use_vdl)
-
-        pruned_model_dir = osp.join(save_dir, 'pruned_model')
-        self.save_model(pruned_model_dir)
-        logging.info("Pruned model is saved in {}".format(pruned_model_dir))
