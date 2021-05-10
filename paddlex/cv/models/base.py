@@ -47,6 +47,7 @@ class BaseModel:
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
+        self.pruner = None
 
     def net_initialize(self, pretrain_weights=None, save_dir='.'):
         if pretrain_weights is not None and \
