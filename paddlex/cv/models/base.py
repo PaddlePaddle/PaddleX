@@ -359,5 +359,15 @@ class BaseModel:
             'Sensitivity analysis is complete. The result is saved at {}.'.
             format(sen_file))
 
-    def prune(self):
+    def prune(self, pruned_flops=.2):
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pre-pruning FLOPs: {}".format(pre_pruning_flops))
+        logging.info("Pruning starts...")
+        skip_vars = []
+        for param in self.net.parameters():
+            if param.shape[0] <= 8:
+                skip_vars.append(param.name)
+        self.pruner.sensitive_prune(pruned_flops, skip_vars=skip_vars)
+        post_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
+            post_pruning_flops))
