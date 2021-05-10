@@ -361,8 +361,8 @@ class BaseModel:
 
     def prune(self, pruned_flops=.2):
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
-        logging.info("Pre-pruning FLOPs: {}".format(pre_pruning_flops))
-        logging.info("Pruning starts...")
+        logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
+            pre_pruning_flops))
         skip_vars = []
         for param in self.net.parameters():
             if param.shape[0] <= 8:
