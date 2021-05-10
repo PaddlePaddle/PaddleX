@@ -22,6 +22,7 @@ import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
+from paddleslim.analysis import dygraph_flops as flops
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -338,7 +339,10 @@ class BaseModel:
             model_type=self.model_type,
             transforms=dataset.transforms,
             mode='eval')
-        self.net.train()
+        if self.model_type == 'detector':
+            self.net.eval()
+        else:
+            self.net.train()
         inputs = _pruner_template_input(
             sample=dataset[0], model_type=self.model_type)
         if criterion == 'l1_norm':
@@ -354,3 +358,6 @@ class BaseModel:
         logging.info(
             'Sensitivity analysis is complete. The result is saved at {}.'.
             format(sen_file))
+
+    def prune(self):
+        pre_pruning_flops = flops(self.net, self.pruner.inputs)
