@@ -19,19 +19,22 @@ bool Model::PaddleEngineInit(const std::string &model_filename,
                              const std::string &params_filename, bool use_gpu,
                              int gpu_id, bool use_mkl, int mkl_thread_num) {
   infer_engine_ = std::make_shared<PaddleInferenceEngine>();
-  InferenceConfig ppi_config;
-  ppi_config.use_gpu = use_gpu;
-  ppi_config.gpu_id = gpu_id;
-  ppi_config.use_mkl = use_mkl;
-  ppi_config.mkl_thread_num = mkl_thread_num;
-  return infer_engine_->Init(model_filename, params_filename, ppi_config);
+  InferenceConfig config("paddle");
+  config.paddle_config = new PaddleEngineConfig();
+  config.paddle_config->model_filename = model_filename;
+  config.paddle_config->params_filename = params_filename;
+  config.paddle_config->use_gpu = use_gpu;
+  config.paddle_config->gpu_id = gpu_id;
+  config.paddle_config->use_mkl = use_mkl;
+  config.paddle_config->mkl_thread_num = mkl_thread_num;
+  return infer_engine_->Init(config);
 }
 
-bool PaddleInferenceEngine::Init(const std::string &model_filename,
-                                 const std::string &params_filename,
-                                 const InferenceConfig &engine_config) {
+bool PaddleInferenceEngine::Init(const InferenceConfig &infer_config) {
+  const PaddleEngineConfig& engine_config = *infer_config.paddle_config;
   paddle_infer::Config config;
-  config.SetModel(model_filename, params_filename);
+  config.SetModel(engine_config.model_filename,
+                  engine_config.params_filename);
   if (engine_config.use_mkl && !engine_config.use_gpu) {
     config.EnableMKLDNN();
     config.SetCpuMathLibraryNumThreads(engine_config.mkl_thread_num);

@@ -69,6 +69,11 @@ class Model {
                         bool use_gpu = false, int gpu_id = 0,
                         bool use_mkl = true, int mkl_thread_num = 8);
 
+  bool TritonEngineInit(const std::string& url,
+                        const std::string& model_name,
+                        const std::string& model_version,
+                        bool verbose = false)
+
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;
     std::cerr << "model no Postprocess!" << std::endl;
