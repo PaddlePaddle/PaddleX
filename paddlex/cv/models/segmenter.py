@@ -15,10 +15,8 @@
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
-from functools import partial
 import paddle
 import paddle.nn.functional as F
-from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.nets.paddleseg import models
 from paddlex.cv.transforms import arrange_transforms
@@ -29,7 +27,6 @@ from .utils import seg_metrics as metrics
 from paddlex.utils.checkpoint import seg_pretrain_weights_dict
 from paddlex.cv.nets.paddleseg.cvlibs import manager
 from paddlex.cv.transforms import Decode
-from .slim.prune import _pruner_eval_fn
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
@@ -291,33 +288,6 @@ class BaseSegmenter(BaseModel):
         pred = outputs['pred']
         pred = pred.numpy().astype('uint8')
         return {'label_map': pred}
-
-    def analyze_sensitivity(self,
-                            dataset,
-                            batch_size=1,
-                            criterion='l1_norm',
-                            save_dir='output'):
-        assert criterion in ['l1_norm', 'fpgm'], \
-            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
-        arrange_transforms(
-            model_type=self.model_type,
-            transforms=dataset.transforms,
-            mode='eval')
-        self.net.train()
-        inputs = [1] + list(dataset[0][0].shape)
-        if criterion == 'l1_norm':
-            self.pruner = L1NormFilterPruner(self.net, inputs=inputs)
-        else:
-            self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
-
-        sen_file = osp.join(save_dir, 'model.sensi.data')
-        logging.info('Sensitivity analysis of model parameters starts...')
-        self.pruner.sensitive(
-            eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
-            sen_file=sen_file)
-        logging.info(
-            'Sensitivity analysis is complete. The result is saved at {}.'.
-            format(sen_file))
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(

@@ -17,10 +17,8 @@ from __future__ import absolute_import
 import collections
 import copy
 import os.path as osp
-from functools import partial
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
-from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
@@ -35,7 +33,6 @@ from .base import BaseModel
 from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric, COCOMetric
 from paddlex.utils.checkpoint import det_pretrain_weights_dict
-from .slim.prune import _pruner_eval_fn
 
 __all__ = [
     "YOLOv3", "FasterRCNN", "PPYOLO", "PPYOLOTiny", "PPYOLOv2", "MaskRCNN"
@@ -282,41 +279,6 @@ class BaseDetector(BaseModel):
         pred = self._postprocess(outputs)
 
         return pred
-
-    def analyze_sensitivity(self,
-                            dataset,
-                            batch_size=1,
-                            criterion='l1_norm',
-                            save_dir='output'):
-        assert criterion in ['l1_norm', 'fpgm'], \
-            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
-        arrange_transforms(
-            model_type=self.model_type,
-            transforms=dataset.transforms,
-            mode='eval')
-        self.net.eval()
-        inputs = [{
-            "image": paddle.ones(
-                shape=[1, 3] + list(dataset[0]["image"].shape[:2]),
-                dtype='float32'),
-            "im_shape": paddle.full(
-                [1, 2], 640, dtype='float32'),
-            "scale_factor": paddle.ones(
-                shape=[1, 2], dtype='float32')
-        }]
-        if criterion == 'l1_norm':
-            self.pruner = L1NormFilterPruner(self.net, inputs=inputs)
-        else:
-            self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
-
-        sen_file = osp.join(save_dir, 'model.sensi.data')
-        logging.info('Sensitivity analysis of model parameters starts...')
-        self.pruner.sensitive(
-            eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
-            sen_file=sen_file)
-        logging.info(
-            'Sensitivity analysis is complete. The result is saved at {}.'.
-            format(sen_file))
 
     def _preprocess(self, images, transforms):
         arrange_transforms(

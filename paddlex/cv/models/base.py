@@ -14,12 +14,14 @@
 
 import os
 import os.path as osp
+from functools import partial
 import time
 import copy
 import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
+from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -27,6 +29,7 @@ from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            SmoothedValue, TrainingStats,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
+from .slim.prune import _pruner_eval_fn, _pruner_template_input
 
 
 class BaseModel:
@@ -323,3 +326,31 @@ class BaseModel:
                     if eval_dataset is not None and early_stop:
                         if earlystop(current_accuracy):
                             break
+
+    def analyze_sensitivity(self,
+                            dataset,
+                            batch_size=1,
+                            criterion='l1_norm',
+                            save_dir='output'):
+        assert criterion in ['l1_norm', 'fpgm'], \
+            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=dataset.transforms,
+            mode='eval')
+        self.net.train()
+        inputs = _pruner_template_input(
+            sample=dataset[0], model_type=self.model_type)
+        if criterion == 'l1_norm':
+            self.pruner = L1NormFilterPruner(self.net, inputs=inputs)
+        else:
+            self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
+
+        sen_file = osp.join(save_dir, 'model.sensi.data')
+        logging.info('Sensitivity analysis of model parameters starts...')
+        self.pruner.sensitive(
+            eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
+            sen_file=sen_file)
+        logging.info(
+            'Sensitivity analysis is complete. The result is saved at {}.'.
+            format(sen_file))
