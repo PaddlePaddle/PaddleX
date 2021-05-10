@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+import os
 import os.path as osp
 from collections import OrderedDict
 import numpy as np
@@ -174,20 +175,6 @@ class BaseClassifier(BaseModel):
                 "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
         self.labels = train_dataset.labels
 
-        # build optimizer if not defined
-        if optimizer is None:
-            num_steps_each_epoch = len(train_dataset) // train_batch_size
-            self.optimizer = self.default_optimizer(
-                parameters=self.net.parameters(),
-                learning_rate=learning_rate,
-                warmup_steps=warmup_steps,
-                warmup_start_lr=warmup_start_lr,
-                lr_decay_epochs=lr_decay_epochs,
-                lr_decay_gamma=lr_decay_gamma,
-                num_steps_each_epoch=num_steps_each_epoch)
-        else:
-            self.optimizer = optimizer
-
         # initiate weights
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
             if pretrain_weights not in ['IMAGENET']:
@@ -205,11 +192,14 @@ class BaseClassifier(BaseModel):
 
         if pruned_flops is not None:
             # sensitivity analysis
+            pruning_dir = osp.join(save_dir, 'prune')
+            if not osp.isdir(pruning_dir):
+                os.makedirs(pruning_dir)
             self._analyze_sensitivity(
                 dataset=eval_dataset,
                 batch_size=train_batch_size,
                 criterion=pruning_criterion,
-                save_dir=osp.join(save_dir, 'model.sensi.data'))
+                save_dir=pruning_dir)
             # do pruning
             pre_pruning_flops = flops(self.net, self.pruner.inputs)
             logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
@@ -224,6 +214,20 @@ class BaseClassifier(BaseModel):
                 post_pruning_flops))
             save_dir = osp.join(save_dir, 'pruned')
             logging.info("Start retraining the pruned model...")
+
+        # build optimizer if not defined
+        if optimizer is None:
+            num_steps_each_epoch = len(train_dataset) // train_batch_size
+            self.optimizer = self.default_optimizer(
+                parameters=self.net.parameters(),
+                learning_rate=learning_rate,
+                warmup_steps=warmup_steps,
+                warmup_start_lr=warmup_start_lr,
+                lr_decay_epochs=lr_decay_epochs,
+                lr_decay_gamma=lr_decay_gamma,
+                num_steps_each_epoch=num_steps_each_epoch)
+        else:
+            self.optimizer = optimizer
 
         # start train loop
         self.train_loop(

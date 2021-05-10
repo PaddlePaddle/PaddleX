@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
@@ -163,13 +164,7 @@ class BaseSegmenter(BaseModel):
         self.labels = train_dataset.labels
         if self.losses is None:
             self.losses = self.default_loss()
-        if optimizer is None:
-            num_steps_each_epoch = train_dataset.num_samples // train_batch_size
-            self.optimizer = self.default_optimizer(
-                self.net.parameters(), learning_rate, num_epochs,
-                num_steps_each_epoch, lr_decay_power)
-        else:
-            self.optimizer = optimizer
+
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
             if pretrain_weights not in seg_pretrain_weights_dict[
                     self.model_name]:
@@ -189,11 +184,14 @@ class BaseSegmenter(BaseModel):
 
         if pruned_flops is not None:
             # sensitivity analysis
+            pruning_dir = osp.join(save_dir, 'prune')
+            if not osp.isdir(pruning_dir):
+                os.makedirs(pruning_dir)
             self._analyze_sensitivity(
                 dataset=eval_dataset,
                 batch_size=1,
                 criterion=pruning_criterion,
-                save_dir=osp.join(save_dir, 'model.sensi.data'))
+                save_dir=pruning_dir)
             # do pruning
             pre_pruning_flops = flops(self.net, self.pruner.inputs)
             logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
@@ -208,6 +206,14 @@ class BaseSegmenter(BaseModel):
                 post_pruning_flops))
             save_dir = osp.join(save_dir, 'pruned')
             logging.info("Start retraining the pruned model...")
+
+        if optimizer is None:
+            num_steps_each_epoch = train_dataset.num_samples // train_batch_size
+            self.optimizer = self.default_optimizer(
+                self.net.parameters(), learning_rate, num_epochs,
+                num_steps_each_epoch, lr_decay_power)
+        else:
+            self.optimizer = optimizer
 
         self.train_loop(
             num_epochs=num_epochs,
