@@ -23,6 +23,7 @@
 #include <cassert>
 #include <functional>
 #include <numeric>
+#include <iomanip>
 
 namespace PaddleDeploy {
 
@@ -141,10 +142,13 @@ struct Box {
     for (auto i = 0; i < b.coordinate.size(); ++i) {
         stream << "\t" << b.coordinate[i];
     }
-    if (b.mask.data.size() != 0) {
-      stream << " MaskNotShown";
-    }
     stream << ")";
+    if (b.mask.data.size() != 0) {
+      stream << "\n" << b.mask;
+      for (auto shape : b.mask.shape) {
+        stream << "\t" << shape;
+      }
+    }
     return stream;
   }
 };
@@ -217,6 +221,8 @@ struct Result {
   }
 
   friend std::ostream &operator<<(std::ostream & stream, const Result& r) {
+    std::cout.setf(std::ios::fixed);
+    std::cout << std::setprecision(8);
     if ("det" == r.model_type) {
       if (nullptr == r.det_result) {
         stream << "det_result is not initialized";
