@@ -72,7 +72,7 @@ class Model {
   bool TritonEngineInit(const std::string& url,
                         const std::string& model_name,
                         const std::string& model_version,
-                        bool verbose = false)
+                        bool verbose = false);
 
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;

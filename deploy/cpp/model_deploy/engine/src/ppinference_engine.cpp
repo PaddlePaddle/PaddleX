@@ -15,8 +15,8 @@
 #include "model_deploy/engine/include/ppinference_engine.h"
 
 namespace PaddleDeploy {
-bool Model::PaddleEngineInit(const std::string &model_filename,
-                             const std::string &params_filename, bool use_gpu,
+bool Model::PaddleEngineInit(const std::string& model_filename,
+                             const std::string& params_filename, bool use_gpu,
                              int gpu_id, bool use_mkl, int mkl_thread_num) {
   infer_engine_ = std::make_shared<PaddleInferenceEngine>();
   InferenceConfig config("paddle");
@@ -30,7 +30,7 @@ bool Model::PaddleEngineInit(const std::string &model_filename,
   return infer_engine_->Init(config);
 }
 
-bool PaddleInferenceEngine::Init(const InferenceConfig &infer_config) {
+bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
   const PaddleEngineConfig& engine_config = *infer_config.paddle_config;
   paddle_infer::Config config;
   config.SetModel(engine_config.model_filename,
@@ -73,8 +73,8 @@ bool PaddleInferenceEngine::Init(const InferenceConfig &infer_config) {
   return true;
 }
 
-bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
-                                  std::vector<DataBlob> *outputs) {
+bool PaddleInferenceEngine::Infer(const std::vector<DataBlob>& inputs,
+                                  std::vector<DataBlob>* outputs) {
   if (inputs.size() == 0) {
     std::cerr << "empty input image on PaddleInferenceEngine" << std::endl;
     return true;
@@ -84,19 +84,19 @@ bool PaddleInferenceEngine::Infer(const std::vector<DataBlob> &inputs,
     auto in_tensor = predictor_->GetInputHandle(input_names[i]);
     in_tensor->Reshape(inputs[i].shape);
     if (inputs[i].dtype == FLOAT32) {
-      float *im_tensor_data;
+      float* im_tensor_data;
       im_tensor_data = (float*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
     } else if (inputs[i].dtype == INT64) {
-      int64_t *im_tensor_data;
+      int64_t* im_tensor_data;
       im_tensor_data = (int64_t*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
     } else if (inputs[i].dtype == INT32) {
-      int *im_tensor_data;
+      int* im_tensor_data;
       im_tensor_data = (int*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
     } else if (inputs[i].dtype == INT8) {
-      uint8_t *im_tensor_data;
+      uint8_t* im_tensor_data;
       im_tensor_data = (uint8_t*)(inputs[i].data.data());  // NOLINT
       in_tensor->CopyFromCpu(im_tensor_data);
     } else {

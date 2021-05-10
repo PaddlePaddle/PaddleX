@@ -20,10 +20,10 @@ namespace PaddleDeploy {
 
 struct PaddleEngineConfig {
   //  model file path
-  std::string &model_filename;
+  std::string model_filename = "";
 
   //  model params file path
-  std::string &params_filename;
+  std::string params_filename = "";
 
   //  Whether to use mkdnn accelerator library when deploying on CPU
   bool use_mkl = true;
@@ -130,7 +130,7 @@ struct InferenceConfig {
     paddle_config = nullptr;
   }
 
-  explicit InferenceConfig(const std::string engine_type) {
+  explicit InferenceConfig(std::string engine_type) {
     engine_type = engine_type;
     paddle_config = nullptr;
   }
@@ -146,7 +146,7 @@ struct InferenceConfig {
     }
   }
 
-  ~Result() {
+  ~InferenceConfig() {
     if ("paddle" == engine_type) {
       delete paddle_config;
       paddle_config = NULL;
