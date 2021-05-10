@@ -359,7 +359,7 @@ class BaseModel:
             'Sensitivity analysis is complete. The result is saved at {}.'.
             format(sen_file))
 
-    def prune(self, pruned_flops=.2):
+    def prune(self, pruned_flops=.2, save_dir='output'):
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
             pre_pruning_flops))
@@ -371,3 +371,7 @@ class BaseModel:
         post_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
             post_pruning_flops))
+
+        pruned_model_dir = osp.join(save_dir, 'pruned_model')
+        self.save_model(pruned_model_dir)
+        logging.info("Pruned model is saved in {}".format(pruned_model_dir))
