@@ -24,10 +24,10 @@ namespace PaddleDeploy {
 
 class InferEngine {
  public:
-  virtual bool Init(const InferenceConfig &engine_config) = 0;
+  virtual bool Init(const InferenceConfig& engine_config) = 0;
 
-  virtual bool Infer(const std::vector<DataBlob> &inputs,
-                     std::vector<DataBlob> *outputs) = 0;
+  virtual bool Infer(const std::vector<DataBlob>& inputs,
+                     std::vector<DataBlob>* outputs) = 0;
 };
 
 }  // namespace PaddleDeploy

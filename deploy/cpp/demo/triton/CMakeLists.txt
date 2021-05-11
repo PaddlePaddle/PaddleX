@@ -12,7 +12,7 @@ SET(GLOG_DIR "" CACHE PATH "Location of libraries")
 SET(GFLAGS_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 
-SET(PROJECT_ROOT_DIR  "." CACHE PATH  "root directory of project.")
+SET(PROJECT_ROOT_DIR  "../../" CACHE PATH  "root directory of project.")
 
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -125,7 +125,7 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
-add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/triton/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
 

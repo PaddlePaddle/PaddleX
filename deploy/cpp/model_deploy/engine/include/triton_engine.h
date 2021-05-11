@@ -39,9 +39,9 @@ class TritonInferenceEngine : public InferEngine {
 
   TritonInferenceEngine() : options_("") {}
 
-  void Init(const InferenceConfig& engine_configs);
+  bool Init(const InferenceConfig& engine_configs);
 
-  void Infer(const std::vector<DataBlob>& input_blobs,
+  bool Infer(const std::vector<DataBlob>& input_blobs,
              std::vector<DataBlob>* output_blobs);
 
  private:

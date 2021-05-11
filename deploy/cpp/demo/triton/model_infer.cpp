@@ -34,8 +34,8 @@ int main(int argc, char** argv) {
   // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
   std::cout << "ParseCommandLineFlags:FLAGS_model_type="
-            << FLAGS_model_type << " model_filename="
-            << FLAGS_model_filename << std::endl;
+            << FLAGS_model_type << " model_name="
+            << FLAGS_model_name << std::endl;
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
@@ -76,14 +76,20 @@ int main(int argc, char** argv) {
   std::cout << "start model predict " << image_paths.size() << std::endl;
   // infer
   std::vector<PaddleDeploy::Result> results;
+  std::vector<cv::Mat> imgs;
+  cv::Mat img;
   for (auto i = 0; i < image_paths.size(); ++i) {
-    std::Mat img = cv::imread(image_paths[i]);
+    img = cv::imread(image_paths[i]);
     if (img.empty()) {
       std::cerr << "Fail to read image: " << i << std::endl;
       return -1;
     }
-    model->Predict(img, &results, FLAGS_thread_num);
-    std::cout << << "image: " << i + 1 << std::endl;
+    imgs.clear();
+    imgs.push_back(std::move(img));
+
+    model->Predict(imgs, &results, FLAGS_thread_num);
+    
+    std::cout << "image: " << image_paths[i] << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;
       std::cout << results[j] << std::endl;

@@ -57,12 +57,7 @@ struct DataBlob {
   }
   void Resize(const std::vector<int>& new_shape, int data_type) {
     assert(data_type >= 0 && data_type < 4);
-    int unit = 32;
-    if (data_type == INT64) {
-      unit = 64;
-    } else if (data_type == INT8) {
-      unit = 8;
-    }
+    int unit = sizeof(data_type);
     int total_size = std::accumulate(new_shape.begin(),
                 new_shape.end(), 1, std::multiplies<int>());
     data.resize(total_size * unit);
