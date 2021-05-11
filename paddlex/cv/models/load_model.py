@@ -15,6 +15,7 @@
 import os.path as osp
 import copy
 import yaml
+import paddle
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
@@ -28,29 +29,32 @@ def load_model(model_dir):
     with open(osp.join(model_dir, "model.yml")) as f:
         info = yaml.load(f.read(), Loader=yaml.Loader)
 
-    if 'status' in info:
-        status = info['status']
+    status = info['status']
 
     if not hasattr(paddlex.cv.models, info['Model']):
         raise Exception("There's no attribute {} in paddlex.cv.models".format(
             info['Model']))
     if 'model_name' in info['_init_params']:
         del info['_init_params']['model_name']
-    model = getattr(paddlex.cv.models, info['Model'])(**info['_init_params'])
 
-    if 'Transforms' in info:
-        model.test_transforms = build_transforms(info['Transforms'])
+    with paddle.utils.unique_name.guard():
+        model = getattr(paddlex.cv.models, info['Model'])(
+            **info['_init_params'])
 
-    if '_Attributes' in info:
-        for k, v in info['_Attributes'].items():
-            if k in model.__dict__:
-                model.__dict__[k] = v
+        if 'Transforms' in info:
+            model.test_transforms = build_transforms(info['Transforms'])
 
-    # load weights
-    model.net_initialize(pretrain_weights=osp.join(model_dir,
-                                                   'model.pdparams'))
+        if '_Attributes' in info:
+            for k, v in info['_Attributes'].items():
+                if k in model.__dict__:
+                    model.__dict__[k] = v
 
-    logging.info("Model[{}] loaded.".format(info['Model']))
-    model.trainable = False
-    model.status = status
+        if status == 'Infer':
+            net_state_dict = paddle.load(osp.join(model_dir, 'model'))
+        else:
+            net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
+        model.net.set_state_dict(net_state_dict)
+
+        logging.info("Model[{}] loaded.".format(info['Model']))
+        model.status = status
     return model

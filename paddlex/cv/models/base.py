@@ -20,6 +20,7 @@ import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
+from paddle.jit import to_static
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -322,3 +323,22 @@ class BaseModel:
                     if eval_dataset is not None and early_stop:
                         if earlystop(current_accuracy):
                             break
+
+    def export_inference_model(self, save_dir, image_shape=[-1, -1]):
+        self.net.eval()
+        self.test_inputs = self.get_test_inputs(image_shape)
+        static_net = paddle.jit.to_static(
+            self.net, input_spec=self.test_inputs)
+        paddle.jit.save(static_net, osp.join(save_dir, 'model'))
+
+        model_info = self.get_model_info()
+        model_info['status'] = 'Infer'
+        with open(
+                osp.join(save_dir, 'model.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(model_info, f)
+
+        # 模型保存成功的标志
+        open(osp.join(save_dir, '.success'), 'w').close()
+        logging.info("The model for the inference deployment is saved in {}.".
+                     format(save_dir))

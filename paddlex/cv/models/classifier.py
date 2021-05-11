@@ -19,6 +19,7 @@ import numpy as np
 import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
+from paddle.static import InputSpec
 from paddlex.utils import logging, TrainingStats
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.nets.ppcls.modeling import architectures
@@ -59,16 +60,20 @@ class BaseClassifier(BaseModel):
         self.num_classes = num_classes
         for k, v in params.items():
             setattr(self, k, v)
-        self.net, self.test_inputs = self.build_net(**params)
+        self.net = self.build_net(**params)
 
     def build_net(self, **params):
-        net = architectures.__dict__[self.model_name](
-            class_dim=self.num_classes, **params)
-        test_inputs = [
-            paddle.static.InputSpec(
-                shape=[None, 3, None, None], dtype='float32')
+        with paddle.utils.unique_name.guard():
+            net = architectures.__dict__[self.model_name](
+                class_dim=self.num_classes, **params)
+        return net
+
+    def get_test_inputs(self, image_shape):
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, dtype='float32')
         ]
-        return net, test_inputs
+        return input_spec
 
     def run(self, net, inputs, mode):
         net_out = net(inputs[0])
@@ -373,6 +378,19 @@ class AlexNet(BaseClassifier):
         super(AlexNet, self).__init__(
             model_name='AlexNet', num_classes=num_classes)
 
+    def get_test_inputs(self, image_shape):
+        if image_shape == [-1, -1]:
+            image_shape = [224, 224]
+            logging.info('When exporting inference model for {},'.format(
+                self.__class__.__name__
+            ) + ' if image_shape is [-1, -1], it will be set as [224, 224] forcibly'
+                         )
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, dtype='float32')
+        ]
+        return input_spec
+
 
 class DarkNet53(BaseClassifier):
     def __init__(self, num_classes=1000):
@@ -529,8 +547,34 @@ class ShuffleNetV2(BaseClassifier):
         super(ShuffleNetV2, self).__init__(
             model_name='ShuffleNetV2', num_classes=num_classes, **params)
 
+    def get_test_inputs(self, image_shape):
+        if image_shape == [-1, -1]:
+            image_shape = [224, 224]
+            logging.info('When exporting inference model for {},'.format(
+                self.__class__.__name__
+            ) + ' if image_shape is [-1, -1], it will be set as [224, 224] forcibly'
+                         )
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, dtype='float32')
+        ]
+        return input_spec
+
 
 class ShuffleNetV2_swish(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ShuffleNetV2_swish, self).__init__(
             model_name='ShuffleNetV2_x1_5', num_classes=num_classes)
+
+    def get_test_inputs(self, image_shape):
+        if image_shape == [-1, -1]:
+            image_shape = [224, 224]
+            logging.info('When exporting inference model for {},'.format(
+                self.__class__.__name__
+            ) + ' if image_shape is [-1, -1], it will be set as [224, 224] forcibly'
+                         )
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, dtype='float32')
+        ]
+        return input_spec
