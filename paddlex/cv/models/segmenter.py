@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
-from paddleslim.analysis import dygraph_flops as flops
 import paddlex
 from paddlex.cv.nets.paddleseg import models
 from paddlex.cv.transforms import arrange_transforms

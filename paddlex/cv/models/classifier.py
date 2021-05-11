@@ -13,14 +13,12 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-import os
 import os.path as osp
 from collections import OrderedDict
 import numpy as np
 import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
-from paddleslim.analysis import dygraph_flops as flops
 from paddlex.utils import logging, TrainingStats
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.nets.ppcls.modeling import architectures

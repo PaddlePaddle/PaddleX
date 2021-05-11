@@ -16,7 +16,6 @@ from __future__ import absolute_import
 
 import collections
 import copy
-import os
 import os.path as osp
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
