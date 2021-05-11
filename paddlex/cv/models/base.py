@@ -147,7 +147,7 @@ class BaseModel:
                 mode='w') as f:
             yaml.dump(model_info, f)
 
-        if self.status == 'Pruned':
+        if self.status == 'Pruned' and self.pruner is not None:
             pruning_info = self.get_pruning_info()
             with open(
                     osp.join(save_dir, 'prune.yml'), encoding='utf-8',
