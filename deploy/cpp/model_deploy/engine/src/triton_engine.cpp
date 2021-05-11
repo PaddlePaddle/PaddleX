@@ -80,8 +80,6 @@ void TritonInferenceEngine::ParseConfigs(
 
 bool TritonInferenceEngine::Init(const InferenceConfig& configs) {
   const TritonInferenceConfigs& triton_configs = *(configs.triton_config);
-  headers_ = nic::Headers();
-  query_params_ = nic::Parameters();
   ParseConfigs(triton_configs);
   FAIL_IF_ERR(nic::InferenceServerHttpClient::Create(&client_,
                                                      triton_configs.url_,
@@ -172,10 +170,8 @@ bool TritonInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
 
     // TODO(my_username): set output.lod when batch_size >1;
 
-    int size = 1;
-    for (const auto &i : output_blob.shape) {
-      size *= i;
-    }
+    int size = std::accumulate(output_blob.begin(),
+                    output_blob.end(), 1, std::multiplies<int>());
     size_t output_byte_size;
     uint8_t* output_data;
     results->RawData(output_blob.name, (const uint8_t**)&output_data,
