@@ -20,7 +20,7 @@ import yaml
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
-from .slim.prune import L1NormFilterPruner, FPGMFilterPruner
+from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 
 
 def load_model(model_dir):
