@@ -350,7 +350,7 @@ class BaseModel:
         else:
             self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
 
-        sen_file = osp.join(save_dir, 'prune', 'model.sensi.data')
+        sen_file = osp.join(save_dir, 'slim', 'model.sensi.data')
         logging.info('Sensitivity analysis of model parameters starts...')
         self.pruner.sensitive(
             eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
