@@ -21,7 +21,7 @@ import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
-from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
+from .slim.prune import L1NormFilterPruner, FPGMFilterPruner
 from paddleslim.analysis import dygraph_flops as flops
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
@@ -52,6 +52,7 @@ class BaseModel:
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
         self.pruner = None
+        self.pruning_ratios = None
 
     def net_initialize(self, pretrain_weights=None, save_dir='.'):
         if pretrain_weights is not None and \
@@ -118,6 +119,17 @@ class BaseModel:
         info['completed_epochs'] = self.completed_epochs
         return info
 
+    def get_pruning_info(self):
+        info = dict()
+        if self.pruner.__class__.__name__ == 'L1NormFilterPruner':
+            criterion = 'l1_norm'
+        else:
+            criterion = 'fpgm'
+        info['criterion'] = criterion
+        info['pruning_ratios'] = self.pruning_ratios
+        info['pruner_inputs'] = self.pruner.inputs
+        return info
+
     def save_model(self, save_dir):
         if not osp.isdir(save_dir):
             if osp.exists(save_dir):
@@ -134,6 +146,13 @@ class BaseModel:
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
+        if self.status == 'Pruned':
+            pruning_info = self.get_pruning_info()
+            with open(
+                    osp.join(save_dir, 'prune.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(pruning_info, f)
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
@@ -369,12 +388,14 @@ class BaseModel:
         for param in self.net.parameters():
             if param.shape[0] <= 8:
                 skip_vars.append(param.name)
-        self.pruner.sensitive_prune(pruned_flops, skip_vars=skip_vars)
+        _, self.pruning_ratios = self.pruner._sensitive_prune(
+            pruned_flops, skip_vars=skip_vars)
         post_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
             post_pruning_flops))
         logging.warning("Pruning the model may hurt its performance, "
                         "retraining is highly recommended")
+        self.status = 'Pruned'
 
         if save_dir is not None:
             self.save_model(save_dir)
