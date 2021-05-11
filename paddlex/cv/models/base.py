@@ -21,8 +21,8 @@ import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
-from .slim.prune import L1NormFilterPruner, FPGMFilterPruner
 from paddleslim.analysis import dygraph_flops as flops
+from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -30,7 +30,7 @@ from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            SmoothedValue, TrainingStats,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
-from .slim.prune import _pruner_eval_fn, _pruner_template_input
+from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
 
 
 class BaseModel:
@@ -388,8 +388,8 @@ class BaseModel:
         for param in self.net.parameters():
             if param.shape[0] <= 8:
                 skip_vars.append(param.name)
-        _, self.pruning_ratios = self.pruner._sensitive_prune(
-            pruned_flops, skip_vars=skip_vars)
+        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops,
+                                                 skip_vars)
         post_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
             post_pruning_flops))
