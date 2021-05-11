@@ -47,5 +47,6 @@ model.train(
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.025,
+    pretrain_weights=None,
     save_dir='output/mobilenet_v2/prune',
     use_vdl=True)
