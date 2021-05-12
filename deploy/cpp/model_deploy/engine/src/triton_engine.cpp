@@ -170,8 +170,8 @@ bool TritonInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
 
     // TODO(my_username): set output.lod when batch_size >1;
 
-    int size = std::accumulate(output_blob.begin(),
-                    output_blob.end(), 1, std::multiplies<int>());
+    int size = std::accumulate(output_blob.shape.begin(),
+                    output_blob.shape.end(), 1, std::multiplies<int>());
     size_t output_byte_size;
     uint8_t* output_data;
     results->RawData(output_blob.name, (const uint8_t**)&output_data,
