@@ -53,12 +53,6 @@ def load_model(model_dir):
                 if k in model.__dict__:
                     model.__dict__[k] = v
 
-        if status == 'Infer':
-            net_state_dict = paddle.load(osp.join(model_dir, 'model'))
-        else:
-            net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
-        model.net.set_state_dict(net_state_dict)
-
         if status == 'Pruned':
             with open(osp.join(model_dir, "prune.yml")) as f:
                 pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
@@ -69,6 +63,12 @@ def load_model(model_dir):
                 pruner.prune_vars(
                     ratios=pruning_ratios,
                     axis=paddleslim.dygraph.filter_pruner.FILTER_DIM)
+
+        if status == 'Infer':
+            net_state_dict = paddle.load(osp.join(model_dir, 'model'))
+        else:
+            net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
+        model.net.set_state_dict(net_state_dict)
 
         logging.info("Model[{}] loaded.".format(model_info['Model']))
         model.status = status
