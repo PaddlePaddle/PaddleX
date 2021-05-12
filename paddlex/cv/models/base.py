@@ -21,6 +21,7 @@ import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
+from paddle.jit import to_static
 from paddleslim.analysis import dygraph_flops as flops
 from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
@@ -121,11 +122,7 @@ class BaseModel:
 
     def get_pruning_info(self):
         info = dict()
-        if self.pruner.__class__.__name__ == 'L1NormFilterPruner':
-            criterion = 'l1_norm'
-        else:
-            criterion = 'fpgm'
-        info['criterion'] = criterion
+        info['pruner'] = self.pruner.__class__.__name__
         info['pruning_ratios'] = self.pruning_ratios
         info['pruner_inputs'] = self.pruner.inputs
         return info

@@ -19,6 +19,7 @@ import copy
 import os.path as osp
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
+from paddle.static import InputSpec
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
@@ -51,15 +52,12 @@ class BaseDetector(BaseModel):
         self.model_name = model_name
         self.num_classes = num_classes
         self.labels = None
-        self.net, self.test_inputs = self.build_net(**params)
+        self.net = self.build_net(**params)
 
     def build_net(self, **params):
-        net = architectures.__dict__[self.model_name](**params)
-        test_inputs = [
-            paddle.static.InputSpec(
-                shape=[None, 3, None, None], dtype='float32')
-        ]
-        return net, test_inputs
+        with paddle.utils.unique_name.guard():
+            net = architectures.__dict__[self.model_name](**params)
+        return net
 
     def _get_backbone(self, backbone_name, **params):
         backbone = backbones.__dict__[backbone_name](**params)

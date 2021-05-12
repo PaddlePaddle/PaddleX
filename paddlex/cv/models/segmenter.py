@@ -17,6 +17,7 @@ import numpy as np
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
+from paddle.static import InputSpec
 import paddlex
 from paddlex.cv.nets.paddleseg import models
 from paddlex.cv.transforms import arrange_transforms
@@ -47,16 +48,13 @@ class BaseSegmenter(BaseModel):
         self.use_mixed_loss = use_mixed_loss
         self.losses = None
         self.labels = None
-        self.net, self.test_inputs = self.build_net(**params)
+        self.net = self.build_net(**params)
 
     def build_net(self, **params):
-        net = models.__dict__[self.model_name](num_classes=self.num_classes,
-                                               **params)
-        test_inputs = [
-            paddle.static.InputSpec(
-                shape=[None, 3, None, None], dtype='float32')
-        ]
-        return net, test_inputs
+        with paddle.utils.unique_name.guard():
+            net = models.__dict__[self.model_name](
+                num_classes=self.num_classes, **params)
+        return net
 
     def run(self, net, inputs, mode):
         net_out = net(inputs[0])
