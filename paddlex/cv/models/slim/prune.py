@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import paddle
-import paddleslim.filter_pruner
+import paddleslim
 
-FILTER_DIM = paddleslim.filter_pruner.FILTER_DIM
+FILTER_DIM = paddleslim.dygraph.prune.filter_pruner.FILTER_DIM
 
 
 def _pruner_eval_fn(model, eval_dataset, batch_size):
