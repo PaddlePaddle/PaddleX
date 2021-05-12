@@ -13,11 +13,10 @@
 # limitations under the License.
 
 import os.path as osp
-import copy
 
 import yaml
 import paddle
-import paddleslim.filter_pruner
+import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
@@ -61,7 +60,7 @@ def load_model(model_dir):
                 pruning_ratios = pruning_info['pruning_ratios']
                 pruner.prune_vars(
                     ratios=pruning_ratios,
-                    axis=paddleslim.filter_pruner.FILTER_DIM)
+                    axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
         if status == 'Infer':
             net_state_dict = paddle.load(osp.join(model_dir, 'model'))
