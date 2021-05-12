@@ -21,9 +21,8 @@ import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
-from paddle.jit import to_static
-from paddleslim.analysis import dygraph_flops as flops
-from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
+from paddleslim.analysis import flops
+from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,

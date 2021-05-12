@@ -17,11 +17,10 @@ import copy
 
 import yaml
 import paddle
-import paddleslim.dygraph.filter_pruner
+import paddleslim.filter_pruner
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
-from paddleslim.dygraph import L1NormFilterPruner, FPGMFilterPruner
 
 
 def load_model(model_dir):
@@ -57,12 +56,12 @@ def load_model(model_dir):
             with open(osp.join(model_dir, "prune.yml")) as f:
                 pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
                 inputs = pruning_info['pruner_inputs']
-                pruner = getattr(paddleslim.dygraph, pruning_info['pruner'])(
+                pruner = getattr(paddleslim, pruning_info['pruner'])(
                     model.net, inputs=inputs)
                 pruning_ratios = pruning_info['pruning_ratios']
                 pruner.prune_vars(
                     ratios=pruning_ratios,
-                    axis=paddleslim.dygraph.filter_pruner.FILTER_DIM)
+                    axis=paddleslim.filter_pruner.FILTER_DIM)
 
         if status == 'Infer':
             net_state_dict = paddle.load(osp.join(model_dir, 'model'))
