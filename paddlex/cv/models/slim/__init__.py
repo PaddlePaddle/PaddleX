@@ -11,20 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-__version__ = '2.0.0'
-
-from .utils.env import get_environ_info
-from . import cv
-from . import seg
-from . import cls
-from . import det
-from . import slim
-
-env_info = get_environ_info()
-datasets = cv.datasets
-transforms = cv.transforms
-
-log_level = 2
-
-load_model = cv.models.load_model

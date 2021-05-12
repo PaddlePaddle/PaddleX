@@ -19,6 +19,7 @@ import numpy as np
 import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
+from paddle.static import InputSpec
 from paddlex.utils import logging, TrainingStats
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.nets.ppcls.modeling import architectures
@@ -59,16 +60,13 @@ class BaseClassifier(BaseModel):
         self.num_classes = num_classes
         for k, v in params.items():
             setattr(self, k, v)
-        self.net, self.test_inputs = self.build_net(**params)
+        self.net = self.build_net(**params)
 
     def build_net(self, **params):
-        net = architectures.__dict__[self.model_name](
-            class_dim=self.num_classes, **params)
-        test_inputs = [
-            paddle.static.InputSpec(
-                shape=[None, 3, None, None], dtype='float32')
-        ]
-        return net, test_inputs
+        with paddle.utils.unique_name.guard():
+            net = architectures.__dict__[self.model_name](
+                class_dim=self.num_classes, **params)
+        return net
 
     def run(self, net, inputs, mode):
         net_out = net(inputs[0])
@@ -208,11 +206,7 @@ class BaseClassifier(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
-    def evaluate(self,
-                 eval_dataset,
-                 batch_size=1,
-                 epoch_id=None,
-                 return_details=False):
+    def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         # 给transform添加arrange操作
         arrange_transforms(
             model_type=self.model_type,
