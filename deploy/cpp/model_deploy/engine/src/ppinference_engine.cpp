@@ -31,7 +31,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 }
 
 bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
-  const PaddleEngineConfig& engine_config = *infer_config.paddle_config;
+  const PaddleEngineConfig& engine_config = *(infer_config.paddle_config);
   paddle_infer::Config config;
   config.SetModel(engine_config.model_filename,
                   engine_config.params_filename);

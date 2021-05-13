@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   // inference engine init
   model->TritonEngineInit(FLAGS_url, FLAGS_model_name, FLAGS_model_version);
 
-
+  // prepare data
   std::vector<std::string> image_paths;
   if (FLAGS_image_list != "") {
     std::ifstream inf(FLAGS_image_list);
