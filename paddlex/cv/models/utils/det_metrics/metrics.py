@@ -18,6 +18,7 @@ from __future__ import print_function
 
 import os
 import sys
+from collections import OrderedDict
 import paddle
 import numpy as np
 import json
@@ -134,12 +135,14 @@ class VOCMetric(Metric):
 
 
 class COCOMetric(Metric):
-    def __init__(self, coco_gt, classwise=False):
+    def __init__(self, coco_gt, **kwargs):
         self.clsid2catid = {
             i: cat['id']
             for i, cat in enumerate(coco_gt.loadCats(coco_gt.getCatIds()))
         }
-        self.classwise = classwise
+        self.coco_gt = coco_gt
+        self.output_eval = kwargs.get('output_eval', None)
+        self.classwise = kwargs.get('classwise', False)
         self.bias = 0
         self.reset()
 
@@ -175,10 +178,7 @@ class COCOMetric(Metric):
                 logging.info('The bbox result is saved to bbox.json.')
 
             bbox_stats = cocoapi_eval(
-                output,
-                'bbox',
-                anno_file=self.anno_file,
-                classwise=self.classwise)
+                output, 'bbox', coco_gt=self.coco_gt, classwise=self.classwise)
             self.eval_results['bbox'] = bbox_stats
             sys.stdout.flush()
 
@@ -191,10 +191,7 @@ class COCOMetric(Metric):
                 logging.info('The mask result is saved to mask.json.')
 
             seg_stats = cocoapi_eval(
-                output,
-                'segm',
-                anno_file=self.anno_file,
-                classwise=self.classwise)
+                output, 'segm', coco_gt=self.coco_gt, classwise=self.classwise)
             self.eval_results['mask'] = seg_stats
             sys.stdout.flush()
 
@@ -202,4 +199,6 @@ class COCOMetric(Metric):
         pass
 
     def get(self):
-        return self.eval_results
+        return OrderedDict(
+            zip(['bbox_mmap', 'segm_mmap'],
+                [self.eval_results['bbox'][0], self.eval_results['mask'][0]]))
