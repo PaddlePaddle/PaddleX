@@ -15,6 +15,7 @@
 import math
 import chardet
 import json
+import numpy as np
 import paddlex
 from . import logging
 import platform
