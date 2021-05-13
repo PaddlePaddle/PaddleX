@@ -27,8 +27,6 @@ DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
-DEFINE_int32(thread_num, 1, "thread num of preprocessing");
-DEFINE_int32(mkl_thread_num, 8, "thread num of mkldnn");
 
 int main(int argc, char** argv) {
   // Parsing command-line
