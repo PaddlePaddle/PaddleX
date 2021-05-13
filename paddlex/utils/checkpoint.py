@@ -60,7 +60,7 @@ det_pretrain_weights_dict = {
 
 cityscapes_weights = {
     'UNet_CITYSCAPES':
-    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_80k/model.pdparams',
+    'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_160k/model.pdparams',
     'DeepLabV3P_ResNet50_vd_CITYSCAPES':
     'https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet50_os8_cityscapes_1024x512_80k/model.pdparams',
     'DeepLabV3P_ResNet101_vd_CITYSCAPES':

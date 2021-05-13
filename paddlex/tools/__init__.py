@@ -14,4 +14,3 @@
 
 from .split import dataset_split
 from .convert import dataset_conversion
-from .dataset_generation import paste_objects
