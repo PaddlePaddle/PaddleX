@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .dataset_conversion import EasyData2ImageNet, JingLing2ImageNet, JingLing2Seg, LabelMe2Seg, EasyData2Seg, LabelMe2VOC, EasyData2VOC, LabelMe2COCO, EasyData2COCO, JingLing2COCO
+from .dataset_conversion import *
 
 easydata2imagenet = EasyData2ImageNet().convert
 jingling2imagenet = JingLing2ImageNet().convert
