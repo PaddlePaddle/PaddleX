@@ -14,6 +14,8 @@
 
 import math
 import chardet
+import json
+import numpy as np
 import paddlex
 from . import logging
 import platform
@@ -73,6 +75,18 @@ def is_pic(img_name):
     if suffix not in valid_suffix:
         return False
     return True
+
+
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(MyEncoder, self).default(obj)
 
 
 class EarlyStop:
