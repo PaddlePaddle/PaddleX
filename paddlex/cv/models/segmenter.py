@@ -286,7 +286,7 @@ class BaseSegmenter(BaseModel):
         data = (batch_im, batch_origin_shape, transforms.transforms)
         outputs = self.run(self.net, data, 'test')
         pred = outputs['pred'].numpy().astype('uint8')
-        if len(pred.shape) == 2:
+        if isinstance(img_file, (str, np.ndarray)):
             return {'label_map': pred}
         result = []
         for label_map in pred:
