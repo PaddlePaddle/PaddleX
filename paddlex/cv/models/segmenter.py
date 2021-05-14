@@ -285,9 +285,13 @@ class BaseSegmenter(BaseModel):
         self.net.eval()
         data = (batch_im, batch_origin_shape, transforms.transforms)
         outputs = self.run(self.net, data, 'test')
-        pred = outputs['pred']
-        pred = pred.numpy().astype('uint8')
-        return {'label_map': pred}
+        pred = outputs['pred'].numpy().astype('uint8')
+        if len(pred.shape) == 2:
+            return {'label_map': pred}
+        result = []
+        for label_map in pred:
+            result.append({'label_map': label_map})
+        return result
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
