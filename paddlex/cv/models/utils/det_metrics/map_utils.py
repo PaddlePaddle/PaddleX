@@ -24,16 +24,16 @@ import itertools
 import paddlex.utils.logging as logging
 
 __all__ = [
-    'draw_pr_curve', 'bbox_area', 'jaccard_overlap', 'prune_zero_padding',
+    '_draw_pr_curve', 'bbox_area', 'jaccard_overlap', 'prune_zero_padding',
     'DetectionMAP'
 ]
 
 
-def draw_pr_curve(precision,
-                  recall,
-                  iou=0.5,
-                  out_dir='pr_curve',
-                  file_name='precision_recall_curve.jpg'):
+def _draw_pr_curve(precision,
+                   recall,
+                   iou=0.5,
+                   out_dir='pr_curve',
+                   file_name='precision_recall_curve.jpg'):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
     output_path = os.path.join(out_dir, file_name)
@@ -266,7 +266,7 @@ class DetectionMAP(object):
                 results_per_category.append(
                     (str(eval_result['class']),
                      '{:0.3f}'.format(float(eval_result['ap']))))
-                draw_pr_curve(
+                _draw_pr_curve(
                     eval_result['precision'],
                     eval_result['recall'],
                     out_dir='voc_pr_curve',
