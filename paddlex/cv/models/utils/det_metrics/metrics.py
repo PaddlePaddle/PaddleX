@@ -195,6 +195,14 @@ class COCOMetric(Metric):
             self.eval_results['mask'] = seg_stats
             sys.stdout.flush()
 
+        output_path = 'eval_result.json'
+        if self.output_eval:
+            output_path = os.path.join(self.output_eval, output_path)
+        with open(output_path, 'w') as f:
+            json.dump(self.results, f)
+            logging.info('The evaluation result is saved at {}.'.format(
+                output_path))
+
     def log(self):
         pass
 

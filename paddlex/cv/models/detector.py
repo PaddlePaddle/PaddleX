@@ -208,7 +208,11 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
-    def evaluate(self, eval_dataset, batch_size, return_details=False):
+    def evaluate(self,
+                 eval_dataset,
+                 batch_size,
+                 metric=None,
+                 return_details=False):
         eval_dataset.batch_transforms = self._compose_batch_transform(
             eval_dataset.transforms, mode='eval')
         arrange_transforms(
@@ -239,28 +243,34 @@ class BaseDetector(BaseModel):
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
-            if eval_dataset.__class__.__name__ == 'VOCDetection':
-                eval_metrics = [
-                    VOCMetric(
+            if metric is None:
+                if eval_dataset.__class__.__name__ == 'VOCDetection':
+                    eval_metric = VOCMetric(
                         labels=eval_dataset.labels,
                         is_bbox_normalized=is_bbox_normalized,
                         classwise=False)
-                ]
-            elif eval_dataset.__class__.__name__ == 'CocoDetection':
-                eval_metrics = [
-                    COCOMetric(
+                elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                    eval_metric = COCOMetric(
                         coco_gt=eval_dataset.coco_gt, classwise=False)
-                ]
+            else:
+                assert metric.lower() in ['coco', 'voc'], \
+                    "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
+                if metric.lower() == 'coco':
+                    eval_metric = COCOMetric(
+                        coco_gt=eval_dataset.coco_gt, classwise=False)
+                else:
+                    eval_metric = VOCMetric(
+                        labels=eval_dataset.labels,
+                        is_bbox_normalized=is_bbox_normalized,
+                        classwise=False)
             scores = collections.OrderedDict()
             with paddle.no_grad():
                 for step, data in enumerate(self.eval_data_loader):
                     outputs = self.run(self.net, data, 'eval')
-                    for metric in eval_metrics:
-                        metric.update(data, outputs)
-                for metric in eval_metrics:
-                    metric.accumulate()
-                    scores.update(metric.get())
-                    metric.reset()
+                    eval_metric.update(data, outputs)
+                eval_metric.accumulate()
+                scores.update(eval_metric.get())
+                eval_metric.reset()
             return scores
 
     def predict(self, img_file, transforms=None):
