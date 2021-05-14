@@ -75,11 +75,11 @@ class CocoDetection(VOCDetection):
         img_ids = coco.getImgIds()
         cat_ids = coco.getCatIds()
         catid2clsid = dict({catid: i for i, catid in enumerate(cat_ids)})
-        cname2cid = dict({
+        cname2clsid = dict({
             coco.loadCats(catid)[0]['name']: clsid
             for catid, clsid in catid2clsid.items()
         })
-        for label, cid in sorted(cname2cid.items(), key=lambda d: d[1]):
+        for label, cid in sorted(cname2clsid.items(), key=lambda d: d[1]):
             self.labels.append(label)
         logging.info("Starting to read file list from dataset...")
         for img_id in img_ids:

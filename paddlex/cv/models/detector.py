@@ -309,12 +309,12 @@ class BaseDetector(BaseModel):
                     num_id, score, xmin, ymin, xmax, ymax = dt.tolist()
                     if int(num_id) < 0:
                         continue
-                    category_id = int(num_id)
+                    category = self.labels[int(num_id)]
                     w = xmax - xmin
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
-                        'category_id': category_id,
+                        'category': category,
                         'bbox': bbox,
                         'score': score
                     }
@@ -336,7 +336,7 @@ class BaseDetector(BaseModel):
                     k = k + 1
                     if label == -1:
                         continue
-                    category_id = int(label)
+                    category = self.labels[int(label)]
                     rle = mask_util.encode(
                         np.array(
                             mask[:, :, None], order="F", dtype="uint8"))[0]
@@ -344,7 +344,7 @@ class BaseDetector(BaseModel):
                         if 'counts' in rle:
                             rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
-                        'category_id': category_id,
+                        'category': category,
                         'segmentation': rle,
                         'score': score
                     }
@@ -352,21 +352,19 @@ class BaseDetector(BaseModel):
             infer_result['mask'] = seg_res
 
         bbox_num = batch_pred['bbox_num']
-        result = []
+        results = []
         start = 0
         for num in bbox_num:
-            curr_result = {}
             end = start + num
-            if 'bbox' in infer_result:
-                bbox_res = infer_result['bbox'][start:end]
-                curr_result['bboxes'] = bbox_res
+            curr_res = infer_result['bbox'][start:end]
             if 'mask' in infer_result:
                 mask_res = infer_result['mask'][start:end]
-                curr_result['masks'] = mask_res
-            result.append(curr_result)
+                for box, mask in zip(curr_res, mask_res):
+                    box.update(mask)
+            results.append(curr_res)
             start = end
 
-        return result
+        return results
 
 
 class YOLOv3(BaseDetector):
