@@ -74,6 +74,12 @@ class Model {
                         const std::string& model_version,
                         bool verbose = false);
 
+  bool TensorRTInit(const std::string& model_dir,
+                    std::string trt_cache_file = "",
+                    int max_workspace_size = 1<<28,
+                    int max_batch_size = 1
+                    );
+
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;
     std::cerr << "model no Postprocess!" << std::endl;

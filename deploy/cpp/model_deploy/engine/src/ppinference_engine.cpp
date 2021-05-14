@@ -20,7 +20,6 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
                              int gpu_id, bool use_mkl, int mkl_thread_num) {
   infer_engine_ = std::make_shared<PaddleInferenceEngine>();
   InferenceConfig config("paddle");
-  config.paddle_config = new PaddleEngineConfig();
   config.paddle_config->model_filename = model_filename;
   config.paddle_config->params_filename = params_filename;
   config.paddle_config->use_gpu = use_gpu;

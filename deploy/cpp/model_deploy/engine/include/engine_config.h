@@ -15,6 +15,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <map>
 
 namespace PaddleDeploy {
 
@@ -63,8 +65,8 @@ struct PaddleEngineConfig {
   bool use_calib_mode = false;
 };
 
-struct TritonInferenceConfigs {
-  TritonInferenceConfigs() : model_name_(""), model_version_(""),
+struct TritonEngineConfig {
+  TritonEngineConfig() : model_name_(""), model_version_(""),
         request_id_(""), sequence_id_(0), sequence_start_(false),
         sequence_end_(false), priority_(0), server_timeout_(0),
         client_timeout_(0) {}
@@ -119,11 +121,32 @@ struct TritonInferenceConfigs {
   std::string url_;
 };
 
+struct TensorRTEngineConfig {
+  std::string model_dir_;
+  int max_workspace_size_;
+  int max_batch_size_;
+  std::string trt_cache_file_ = "";
+
+  std::map<std::string, std::vector<int>> min_input_shape_;
+  std::map<std::string, std::vector<int>> max_input_shape_;
+  std::map<std::string, std::vector<int>> optim_input_shape_;
+
+  void SetTRTDynamicShapeInfo(std::string input_name,
+                            std::vector<int> min_input_shape,
+                            std::vector<int> max_input_shape,
+                            std::vector<int> optim_input_shape) {
+    min_input_shape_[input_name] = min_input_shape;
+    max_input_shape_[input_name] = max_input_shape;
+    optim_input_shape_[input_name] = optim_input_shape;
+  }
+};
+
 struct InferenceConfig {
   std::string engine_type;
   union {
     PaddleEngineConfig* paddle_config;
-    TritonInferenceConfigs* triton_config;
+    TritonEngineConfig* triton_config;
+    TensorRTEngineConfig* tensorrt_config;
   };
 
   InferenceConfig() {
@@ -132,7 +155,13 @@ struct InferenceConfig {
 
   explicit InferenceConfig(std::string engine_type) {
     engine_type = engine_type;
-    paddle_config = nullptr;
+    if ("paddle" == engine_type) {
+      paddle_config = new PaddleEngineConfig();
+    } else if ("triton" == engine_type) {
+      triton_config = new TritonEngineConfig();
+    } else if ("tensorrt" == engine_type) {
+      tensorrt_config = new TensorRTEngineConfig();
+    }
   }
 
   InferenceConfig(const InferenceConfig& config) {
@@ -141,8 +170,11 @@ struct InferenceConfig {
       paddle_config = new PaddleEngineConfig();
       *paddle_config = *(config.paddle_config);
     } else if ("triton" == engine_type) {
-      triton_config = new TritonInferenceConfigs();
+      triton_config = new TritonEngineConfig();
       *triton_config = *(config.triton_config);
+    } else if ("tensorrt" == engine_type) {
+      tensorrt_config = new TensorRTEngineConfig();
+      *tensorrt_config = *(config.tensorrt_config);
     }
   }
 
@@ -153,6 +185,9 @@ struct InferenceConfig {
     } else if ("triton" == engine_type) {
       delete triton_config;
       triton_config = NULL;
+    } else if ("tensorrt" == engine_type) {
+      delete tensorrt_config;
+      tensorrt_config = NULL;
     }
   }
 };

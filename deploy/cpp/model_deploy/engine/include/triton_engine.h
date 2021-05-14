@@ -49,7 +49,7 @@ class TritonInferenceEngine : public InferEngine {
   nic::Headers headers_;
   nic::Parameters query_params_;
 
-  void ParseConfigs(const TritonInferenceConfigs& configs);
+  void ParseConfigs(const TritonEngineConfig& configs);
 
   void CreateInput(const std::vector<DataBlob>& input_blobs,
                    std::vector<nic::InferInput* >* inputs);
