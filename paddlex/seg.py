@@ -13,9 +13,12 @@
 # limitations under the License.
 
 from . import cv
+from paddlex.cv.models.utils.visualize import visualize_segmentation
 
 UNet = cv.models.UNet
 DeepLabV3P = cv.models.DeepLabV3P
 FastSCNN = cv.models.FastSCNN
 HRNet = cv.models.HRNet
 BiSeNetV2 = cv.models.BiSeNetV2
+
+visualize = visualize_segmentation
