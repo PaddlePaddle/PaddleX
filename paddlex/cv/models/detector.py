@@ -17,6 +17,8 @@ from __future__ import absolute_import
 import collections
 import copy
 import os.path as osp
+
+import numpy as np
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
 from paddle.static import InputSpec
@@ -274,9 +276,11 @@ class BaseDetector(BaseModel):
         batch_samples = self._preprocess(images, transforms)
         self.net.eval()
         outputs = self.run(self.net, batch_samples, 'test')
-        pred = self._postprocess(outputs)
+        prediction = self._postprocess(outputs)
 
-        return pred
+        if isinstance(img_file, (str, np.ndarray)):
+            prediction = prediction[0]
+        return prediction
 
     def _preprocess(self, images, transforms):
         arrange_transforms(

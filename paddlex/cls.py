@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from . import cv
+from paddlex.cv.models.utils.visualize import visualize_segmentation
 
 ResNet18 = cv.models.ResNet18
 ResNet34 = cv.models.ResNet34
@@ -58,3 +59,5 @@ Xception71 = cv.models.Xception71
 
 ShuffleNetV2 = cv.models.ShuffleNetV2
 ShuffleNetV2_swish = cv.models.ShuffleNetV2_swish
+
+visualize = visualize_segmentation()

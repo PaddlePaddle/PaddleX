@@ -256,6 +256,8 @@ class BaseClassifier(BaseModel):
             outputs = self.run(self.net, im, mode='test')
         prediction = outputs['prediction'].numpy()
         prediction = self._postprocess(prediction, true_topk, self.labels)
+        if isinstance(img_file, (str, np.ndarray)):
+            prediction = prediction[0]
 
         return prediction
 
