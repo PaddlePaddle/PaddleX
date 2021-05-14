@@ -280,8 +280,8 @@ class BaseSegmenter(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        batch_im, batch_origin_shape = BaseSegmenter._preprocess(
-            images, transforms, self.model_type)
+        batch_im, batch_origin_shape = self._preprocess(images, transforms,
+                                                        self.model_type)
         self.net.eval()
         data = (batch_im, batch_origin_shape, transforms.transforms)
         outputs = self.run(self.net, data, 'test')
