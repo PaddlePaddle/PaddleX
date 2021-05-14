@@ -269,8 +269,12 @@ class BaseDetector(BaseModel):
                     outputs = self.run(self.net, data, 'eval')
                     eval_metric.update(data, outputs)
                 eval_metric.accumulate()
+                eval_details = eval_metric.results
                 scores.update(eval_metric.get())
                 eval_metric.reset()
+
+            if return_details:
+                return scores, eval_details
             return scores
 
     def predict(self, img_file, transforms=None):

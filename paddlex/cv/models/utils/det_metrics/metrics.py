@@ -77,6 +77,7 @@ class VOCMetric(Metric):
         self.reset()
 
     def reset(self):
+        self.results = {'bbox': []}
         self.detection_map.reset()
 
     def update(self, inputs, outputs):
@@ -112,6 +113,19 @@ class VOCMetric(Metric):
             self.detection_map.update(bbox, score, label, gt_box, gt_label,
                                       difficult)
             bbox_idx += bbox_num
+
+            for b in bbox:
+                clsid, score, xmin, ymin, xmax, ymax = b.tolist()
+                w = xmax - xmin
+                h = ymax - ymin
+                bbox = [xmin, ymin, w, h]
+                coco_res = {
+                    'image_id': inputs['im_id'],
+                    'category_id': clsid + 1,
+                    'bbox': bbox,
+                    'score': score
+                }
+                self.results['bbox'].append(coco_res)
 
     def accumulate(self):
         logging.info("Accumulating evaluatation results...")
