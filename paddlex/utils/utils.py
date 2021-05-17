@@ -42,6 +42,9 @@ def get_single_card_bs(batch_size):
     place = paddlex.env_info['place']
     if batch_size % card_num == 0:
         return int(batch_size // card_num)
+    elif batch_size == 1:
+        # Evaluation of detection task only supports single card with batch size 1
+        return batch_size
     else:
         raise Exception("Please support correct batch_size, \
                         which can be divided by available cards({}) in {}"

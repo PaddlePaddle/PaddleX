@@ -221,6 +221,10 @@ class COCOMetric(Metric):
         pass
 
     def get(self):
-        return OrderedDict(
-            zip(['bbox_mmap', 'segm_mmap'],
-                [self.eval_results['bbox'][0], self.eval_results['mask'][0]]))
+        if 'mask' in self.eval_results:
+            return OrderedDict(
+                zip(['bbox_mmap', 'segm_mmap'], [
+                    self.eval_results['bbox'][0], self.eval_results['mask'][0]
+                ]))
+        else:
+            return {'bbox_mmap': self.eval_results['bbox'][0]}
