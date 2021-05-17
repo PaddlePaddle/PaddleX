@@ -59,6 +59,17 @@ class BaseDetector(BaseModel):
             net = architectures.__dict__[self.model_name](**params)
         return net
 
+    def get_test_inputs(self, image_shape):
+        input_spec = [{
+            "image": InputSpec(
+                shape=[None, 3] + image_shape, name='image', dtype='float32'),
+            "im_shape": InputSpec(
+                shape=[None, 2], name='im_shape', dtype='float32'),
+            "scale_factor": InputSpec(
+                shape=[None, 2], name='scale_factor', dtype='float32')
+        }]
+        return input_spec
+
     def _get_backbone(self, backbone_name, **params):
         backbone = backbones.__dict__[backbone_name](**params)
         return backbone
@@ -315,6 +326,7 @@ class BaseDetector(BaseModel):
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
                         'category_id': category_id,
+                        'category': self.labels[category_id],
                         'bbox': bbox,
                         'score': score
                     }

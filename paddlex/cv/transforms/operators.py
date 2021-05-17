@@ -128,9 +128,9 @@ class Compose(Transform):
 
 
 class Decode(Transform):
-    def __init__(self):
+    def __init__(self, to_rgb=True):
         super(Decode, self).__init__()
-        self.to_rgb = True
+        self.to_rgb = to_rgb
 
     def read_img(self, img_path):
         return cv2.imread(img_path, cv2.IMREAD_ANYDEPTH | cv2.IMREAD_ANYCOLOR |

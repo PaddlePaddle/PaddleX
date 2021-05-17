@@ -21,6 +21,7 @@ import math
 import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
+from paddle.jit import to_static
 from paddleslim.analysis import flops
 from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
@@ -396,3 +397,23 @@ class BaseModel:
         if save_dir is not None:
             self.save_model(save_dir)
             logging.info("Pruned model is saved at {}".format(save_dir))
+
+    def export_inference_model(self, save_dir, image_shape=[-1, -1]):
+        save_dir = osp.join(save_dir, 'inference_model')
+        self.net.eval()
+        self.test_inputs = self.get_test_inputs(image_shape)
+        static_net = paddle.jit.to_static(
+            self.net, input_spec=self.test_inputs)
+        paddle.jit.save(static_net, osp.join(save_dir, 'model'))
+
+        model_info = self.get_model_info()
+        model_info['status'] = 'Infer'
+        with open(
+                osp.join(save_dir, 'model.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(model_info, f)
+
+        # 模型保存成功的标志
+        open(osp.join(save_dir, '.success'), 'w').close()
+        logging.info("The model for the inference deployment is saved in {}.".
+                     format(save_dir))
