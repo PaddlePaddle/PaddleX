@@ -54,6 +54,7 @@ class VOCDetection(Dataset):
         matplotlib.use('Agg')
         from pycocotools.coco import COCO
         super(VOCDetection, self).__init__()
+        self.data_fields = None
         self.transforms = copy.deepcopy(transforms)
 
         self.use_mix = False
@@ -269,6 +270,8 @@ class VOCDetection(Dataset):
 
     def __getitem__(self, idx):
         sample = copy.deepcopy(self.file_list[idx])
+        if self.data_fields is not None:
+            sample = {k: sample[k] for k in self.data_fields}
         if self.use_mix and (self.mixup_op.mixup_epoch == -1 or
                              self._epoch < self.mixup_op.mixup_epoch):
             if self.num_samples > 1:
@@ -277,6 +280,8 @@ class VOCDetection(Dataset):
             else:
                 mix_pos = 0
             sample_mix = copy.deepcopy(self.file_list[mix_pos])
+            if self.data_fields is not None:
+                sample_mix = {k: sample_mix[k] for k in self.data_fields}
             sample = self.mixup_op(
                 sample=[Decode()(sample), Decode()(sample_mix)])
         sample = self.transforms(sample)

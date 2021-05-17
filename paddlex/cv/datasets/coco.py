@@ -55,6 +55,7 @@ class CocoDetection(VOCDetection):
             six.reraise(*sys.exc_info())
 
         super(VOCDetection, self).__init__()
+        self.data_fields = None
         self.transforms = copy.deepcopy(transforms)
         self.use_mix = False
         if self.transforms is not None:

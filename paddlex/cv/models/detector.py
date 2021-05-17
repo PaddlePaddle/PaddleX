@@ -18,10 +18,8 @@ import collections
 import copy
 import os.path as osp
 
-import numpy as np
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
-from paddle.static import InputSpec
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
@@ -160,6 +158,19 @@ class BaseDetector(BaseModel):
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True):
+        if train_dataset.__class__.__name__ == 'VOCDetection':
+            train_dataset.data_fields = {
+                'image', 'gt_bbox', 'gt_class', 'difficult'
+            }
+        elif train_dataset.__class__.__name__ == 'CocoDetection':
+            if self.__class__.__name__ == 'MaskRCNN':
+                train_dataset.data_fields = {
+                    'image', 'gt_bbox', 'gt_class', 'gt_poly', 'is_crowd'
+                }
+            else:
+                train_dataset.data_fields = {
+                    'image', 'gt_bbox', 'gt_class', 'is_crowd'
+                }
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
@@ -213,6 +224,19 @@ class BaseDetector(BaseModel):
                  batch_size,
                  metric=None,
                  return_details=False):
+        if eval_dataset.__class__.__name__ == 'VOCDetection':
+            eval_dataset.data_fields = {
+                'image', 'gt_bbox', 'gt_class', 'difficult'
+            }
+        elif eval_dataset.__class__.__name__ == 'CocoDetection':
+            if self.__class__.__name__ == 'MaskRCNN':
+                eval_dataset.data_fields = {
+                    'image', 'gt_bbox', 'gt_class', 'gt_poly', 'is_crowd'
+                }
+            else:
+                eval_dataset.data_fields = {
+                    'image', 'gt_bbox', 'gt_class', 'is_crowd'
+                }
         eval_dataset.batch_transforms = self._compose_batch_transform(
             eval_dataset.transforms, mode='eval')
         arrange_transforms(
