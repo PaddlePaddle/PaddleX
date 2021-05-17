@@ -14,13 +14,14 @@
 
 __version__ = '2.0.0'
 
-from .utils.env import get_environ_info
+from .utils.env import get_environ_info, init_parallel_env
 from . import cv
 from . import seg
 from . import cls
 from . import det
 from . import slim
 
+init_parallel_env()
 env_info = get_environ_info()
 datasets = cv.datasets
 transforms = cv.transforms

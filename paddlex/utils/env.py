@@ -16,6 +16,7 @@ import sys
 import glob
 import os
 import os.path as osp
+import random
 import numpy as np
 import multiprocessing as mp
 import paddle
@@ -49,3 +50,15 @@ def get_num_workers(num_workers):
     if num_workers == 'auto':
         num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
     return num_workers
+
+
+def init_parallel_env():
+    env = os.environ
+    dist = 'PADDLE_TRAINER_ID' in env and 'PADDLE_TRAINERS_NUM' in env
+    if dist:
+        trainer_id = int(env['PADDLE_TRAINER_ID'])
+        local_seed = (99 + trainer_id)
+        random.seed(local_seed)
+        np.random.seed(local_seed)
+
+    paddle.distributed.init_parallel_env()
