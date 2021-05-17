@@ -190,7 +190,7 @@ message("-----DEPS = ${DEPS}")
 include_directories("${PROJECT_ROOT_DIR}")
 
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/common/src SRC)
-aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/engine/src ENGINE_SRC)
+set(ENGINE_SRC ${PROJECT_ROOT_DIR}/model_deploy/engine/src/ppinference_engine.cpp)
 
 #detector seg
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppdet/src DETECTOR_SRC)

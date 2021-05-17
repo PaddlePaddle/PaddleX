@@ -29,12 +29,10 @@ namespace PaddleDeploy {
 
 class PaddleInferenceEngine : public InferEngine {
  public:
-  virtual bool Init(const std::string &model_filename,
-                    const std::string &params_filename,
-                    const InferenceConfig &engine_config);
+  virtual bool Init(const InferenceConfig& engine_config);
 
-  virtual bool Infer(const std::vector<DataBlob> &inputs,
-                     std::vector<DataBlob> *outputs);
+  virtual bool Infer(const std::vector<DataBlob>& inputs,
+                     std::vector<DataBlob>* outputs);
 
  private:
   std::shared_ptr<paddle_infer::Predictor> predictor_;

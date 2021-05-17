@@ -33,7 +33,10 @@ bool DetPostprocess::ProcessBbox(const std::vector<DataBlob>& outputs,
 
   std::vector<int> num_bboxes_each_sample;
   if (outputs[0].lod.empty()) {
-    num_bboxes_each_sample.push_back(outputs[0].data.size() / sizeof(float));
+    for (auto i = 0; i < shape_infos.size(); ++i) {
+      num_bboxes_each_sample.push_back(
+          outputs[0].shape[0]/static_cast<int>(shape_infos.size()));
+    }
   } else {
     for (auto i = 0; i < outputs[0].lod[0].size() - 1; ++i) {
       int num = outputs[0].lod[0][i + 1] - outputs[0].lod[0][i];
