@@ -213,11 +213,7 @@ class BaseClassifier(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
-    def evaluate(self,
-                 eval_dataset,
-                 batch_size=1,
-                 epoch_id=None,
-                 return_details=False):
+    def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         # 给transform添加arrange操作
         arrange_transforms(
             model_type=self.model_type,

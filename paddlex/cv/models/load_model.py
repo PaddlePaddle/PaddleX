@@ -13,9 +13,10 @@
 # limitations under the License.
 
 import os.path as osp
-import copy
+
 import yaml
 import paddle
+import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
@@ -27,27 +28,39 @@ def load_model(model_dir):
     if not osp.exists(osp.join(model_dir, "model.yml")):
         raise Exception("There's no model.yml in {}".format(model_dir))
     with open(osp.join(model_dir, "model.yml")) as f:
-        info = yaml.load(f.read(), Loader=yaml.Loader)
+        model_info = yaml.load(f.read(), Loader=yaml.Loader)
+    f.close()
 
-    status = info['status']
+    status = model_info['status']
 
-    if not hasattr(paddlex.cv.models, info['Model']):
+    if not hasattr(paddlex.cv.models, model_info['Model']):
         raise Exception("There's no attribute {} in paddlex.cv.models".format(
-            info['Model']))
-    if 'model_name' in info['_init_params']:
-        del info['_init_params']['model_name']
+            model_info['Model']))
+    if 'model_name' in model_info['_init_params']:
+        del model_info['_init_params']['model_name']
 
     with paddle.utils.unique_name.guard():
-        model = getattr(paddlex.cv.models, info['Model'])(
-            **info['_init_params'])
+        model = getattr(paddlex.cv.models, model_info['Model'])(
+            **model_info['_init_params'])
 
-        if 'Transforms' in info:
-            model.test_transforms = build_transforms(info['Transforms'])
+        if 'Transforms' in model_info:
+            model.test_transforms = build_transforms(model_info['Transforms'])
 
-        if '_Attributes' in info:
-            for k, v in info['_Attributes'].items():
+        if '_Attributes' in model_info:
+            for k, v in model_info['_Attributes'].items():
                 if k in model.__dict__:
                     model.__dict__[k] = v
+
+        if status == 'Pruned':
+            with open(osp.join(model_dir, "prune.yml")) as f:
+                pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
+                inputs = pruning_info['pruner_inputs']
+                pruner = getattr(paddleslim, pruning_info['pruner'])(
+                    model.net, inputs=inputs)
+                pruning_ratios = pruning_info['pruning_ratios']
+                pruner.prune_vars(
+                    ratios=pruning_ratios,
+                    axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
         if status == 'Infer':
             net_state_dict = paddle.load(osp.join(model_dir, 'model'))
@@ -55,6 +68,6 @@ def load_model(model_dir):
             net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
         model.net.set_state_dict(net_state_dict)
 
-        logging.info("Model[{}] loaded.".format(info['Model']))
+        logging.info("Model[{}] loaded.".format(model_info['Model']))
         model.status = status
     return model

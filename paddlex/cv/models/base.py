@@ -14,6 +14,7 @@
 
 import os
 import os.path as osp
+from functools import partial
 import time
 import copy
 import math
@@ -21,6 +22,8 @@ import yaml
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 from paddle.jit import to_static
+from paddleslim.analysis import flops
+from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
@@ -28,6 +31,7 @@ from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            SmoothedValue, TrainingStats,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
+from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
 
 
 class BaseModel:
@@ -48,6 +52,8 @@ class BaseModel:
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
+        self.pruner = None
+        self.pruning_ratios = None
 
     def net_initialize(self, pretrain_weights=None, save_dir='.'):
         if pretrain_weights is not None and \
@@ -114,6 +120,13 @@ class BaseModel:
         info['completed_epochs'] = self.completed_epochs
         return info
 
+    def get_pruning_info(self):
+        info = dict()
+        info['pruner'] = self.pruner.__class__.__name__
+        info['pruning_ratios'] = self.pruning_ratios
+        info['pruner_inputs'] = self.pruner.inputs
+        return info
+
     def save_model(self, save_dir):
         if not osp.isdir(save_dir):
             if osp.exists(save_dir):
@@ -130,6 +143,13 @@ class BaseModel:
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
+        if self.status == 'Pruned' and self.pruner is not None:
+            pruning_info = self.get_pruning_info()
+            with open(
+                    osp.join(save_dir, 'prune.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(pruning_info, f)
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
@@ -323,6 +343,60 @@ class BaseModel:
                     if eval_dataset is not None and early_stop:
                         if earlystop(current_accuracy):
                             break
+
+    def analyze_sensitivity(self,
+                            dataset,
+                            batch_size=8,
+                            criterion='l1_norm',
+                            save_dir='output'):
+        assert criterion in ['l1_norm', 'fpgm'], \
+            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=dataset.transforms,
+            mode='eval')
+        if self.model_type == 'detector':
+            self.net.eval()
+        else:
+            self.net.train()
+        inputs = _pruner_template_input(
+            sample=dataset[0], model_type=self.model_type)
+        if criterion == 'l1_norm':
+            self.pruner = L1NormFilterPruner(self.net, inputs=inputs)
+        else:
+            self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
+
+        if not osp.isdir(save_dir):
+            os.makedirs(save_dir)
+        sen_file = osp.join(save_dir, 'model.sensi.data')
+        logging.info('Sensitivity analysis of model parameters starts...')
+        self.pruner.sensitive(
+            eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
+            sen_file=sen_file)
+        logging.info(
+            'Sensitivity analysis is complete. The result is saved at {}.'.
+            format(sen_file))
+
+    def prune(self, pruned_flops, save_dir=None):
+        pre_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
+            pre_pruning_flops))
+        skip_vars = []
+        for param in self.net.parameters():
+            if param.shape[0] <= 8:
+                skip_vars.append(param.name)
+        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops,
+                                                 skip_vars)
+        post_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
+            post_pruning_flops))
+        logging.warning("Pruning the model may hurt its performance, "
+                        "retraining is highly recommended")
+        self.status = 'Pruned'
+
+        if save_dir is not None:
+            self.save_model(save_dir)
+            logging.info("Pruned model is saved at {}".format(save_dir))
 
     def export_inference_model(self, save_dir, image_shape=[-1, -1]):
         self.net.eval()

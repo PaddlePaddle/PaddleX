@@ -22,7 +22,7 @@ import numpy as np
 import itertools
 
 from .json_results import get_det_res, get_det_poly_res, get_seg_res, get_solov2_segm_res
-from .map_utils import draw_pr_curve
+from .map_utils import _draw_pr_curve
 
 import paddlex.utils.logging as logging
 
@@ -78,11 +78,11 @@ def cocoapi_eval(jsonfile,
         max_dets (tuple): COCO evaluation maxDets.
         classwise (bool): Whether per-category AP and draw P-R Curve or not.
     """
-    assert coco_gt != None or anno_file != None
+    assert coco_gt is not None or anno_file is not None
     from pycocotools.coco import COCO
     from pycocotools.cocoeval import COCOeval
 
-    if coco_gt == None:
+    if coco_gt is None:
         coco_gt = COCO(anno_file)
     logging.info("Start evaluate...")
     coco_dt = coco_gt.loadRes(jsonfile)
@@ -123,7 +123,7 @@ def cocoapi_eval(jsonfile,
                 (str(nm["name"]), '{:0.3f}'.format(float(ap))))
             pr_array = precisions[0, :, idx, 0, 2]
             recall_array = np.arange(0.0, 1.01, 0.01)
-            draw_pr_curve(
+            _draw_pr_curve(
                 pr_array,
                 recall_array,
                 out_dir=style + '_pr_curve',

@@ -164,6 +164,7 @@ class BaseSegmenter(BaseModel):
         self.labels = train_dataset.labels
         if self.losses is None:
             self.losses = self.default_loss()
+
         if optimizer is None:
             num_steps_each_epoch = train_dataset.num_samples // train_batch_size
             self.optimizer = self.default_optimizer(
@@ -171,6 +172,7 @@ class BaseSegmenter(BaseModel):
                 num_steps_each_epoch, lr_decay_power)
         else:
             self.optimizer = optimizer
+
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
             if pretrain_weights not in seg_pretrain_weights_dict[
                     self.model_name]:
