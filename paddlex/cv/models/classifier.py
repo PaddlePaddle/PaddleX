@@ -379,7 +379,7 @@ class AlexNet(BaseClassifier):
             image_shape = [224, 224]
             logging.info('When exporting inference model for {},'.format(
                 self.__class__.__name__
-            ) + ' if image_shape is [-1, -1], it will be set as [224, 224] forcibly'
+            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
                          )
         input_spec = [
             InputSpec(
@@ -548,7 +548,7 @@ class ShuffleNetV2(BaseClassifier):
             image_shape = [224, 224]
             logging.info('When exporting inference model for {},'.format(
                 self.__class__.__name__
-            ) + ' if image_shape is [-1, -1], it will be set as [224, 224] forcibly'
+            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
                          )
         input_spec = [
             InputSpec(
@@ -567,7 +567,7 @@ class ShuffleNetV2_swish(BaseClassifier):
             image_shape = [224, 224]
             logging.info('When exporting inference model for {},'.format(
                 self.__class__.__name__
-            ) + ' if image_shape is [-1, -1], it will be set as [224, 224] forcibly'
+            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
                          )
         input_spec = [
             InputSpec(
