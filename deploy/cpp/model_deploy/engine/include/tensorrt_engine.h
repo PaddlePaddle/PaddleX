@@ -45,8 +45,6 @@ struct InferDeleter {
   }
 };
 
-template <typename T> using InferUniquePtr = std::unique_ptr<T, InferDeleter>;
-
 // A logger for create TensorRT infer builder.
 class NaiveLogger : public nvinfer1::ILogger {
  public:
@@ -56,16 +54,22 @@ class NaiveLogger : public nvinfer1::ILogger {
   void log(nvinfer1::ILogger::Severity severity, const char *msg) override {
     switch (severity) {
     case Severity::kINFO:
-      VLOG(3) << msg;
+      LOG(INFO) << msg;
       break;
     case Severity::kWARNING:
       LOG(WARNING) << msg;
       break;
     case Severity::kINTERNAL_ERROR:
+      std::cout << "kINTERNAL_ERROR:" << msg << std::endl;
+      break;
     case Severity::kERROR:
       LOG(ERROR) << msg;
       break;
+    case Severity::kVERBOSE:
+      std::cout << "kVERBOSE:" << msg << std::endl;
+      break;
     default:
+      //std::cout << "default:" << msg << std::endl;
       break;
     }
   }
@@ -81,6 +85,9 @@ class NaiveLogger : public nvinfer1::ILogger {
 };
 
 class TensorRTInferenceEngine : public InferEngine {
+  template <typename T>
+  using InferUniquePtr = std::unique_ptr<T, InferDeleter>;
+
  public:
   bool Init(const InferenceConfig& engine_config);
 
@@ -88,8 +95,8 @@ class TensorRTInferenceEngine : public InferEngine {
              std::vector<DataBlob>* output_blobs);
 
   // InferUniquePtr<nvinfer1::ICudaEngine> engine_;
-  std::shared_ptr<nvinfer1::ICudaEngine> engine_;
-  NaiveLogger& logger_ = NaiveLogger::Global();
+  std::shared_ptr<nvinfer1::ICudaEngine> engine_{nullptr};
+  NaiveLogger logger_;
 
  private:
   void FeedInput(const std::vector<DataBlob>& input_blobs,

@@ -35,20 +35,19 @@ bool Model::TensorRTInit(const std::string& model_dir,
 
 bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   const TensorRTEngineConfig& tensorrt_config = *engine_config.tensorrt_config;
-  std::ifstream engine_file(tensorrt_config.trt_cache_file_, std::ios::binary);
-  if (engine_file) {
-    std::cout << "load cached optimized tensorrt file." << std::endl;
-    engine_ = std::shared_ptr<nvinfer1::ICudaEngine>(
-        LoadEngine(tensorrt_config.trt_cache_file_, logger_), InferDeleter());
-    // nvinfer1::ICudaEngine* engine = LoadEngine(trt_cache_file_,
-    // logger_);
+
+  nvinfer1::IBuilder* builder = InferUniquePtr<nvinfer1::IBuilder>(
+                     nvinfer1::createInferBuilder(logger_));
+  if (!builder) {
     return false;
   }
 
-  auto builder = InferUniquePtr<nvinfer1::IBuilder>(
-                     nvinfer1::createInferBuilder(logger_));
   auto config = InferUniquePtr<nvinfer1::IBuilderConfig>(
                      builder->createBuilderConfig());
+  if (!config) {
+    return false;
+  }
+
   auto profile = builder->createOptimizationProfile();
 
   for (auto input_shape : tensorrt_config.min_input_shape_) {
@@ -88,40 +87,61 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
           nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH);
 
   auto network = InferUniquePtr<nvinfer1::INetworkDefinition>(
-      builder->createNetworkV2(explicitBatch));
+                     builder->createNetworkV2(explicitBatch));
+  if (!network) {
+    return false;
+  }
 
   auto parser = InferUniquePtr<nvonnxparser::IParser>(
-      nvonnxparser::createParser(*network, logger_));
+                    nvonnxparser::createParser(*network, logger_));
+  if (!parser) {
+    return false;
+  }
+
   auto parsed = parser->parseFromFile(
-      tensorrt_config.model_dir_.c_str(),
-      static_cast<int>(logger_.mReportableSeverity));
+                    tensorrt_config.model_dir_.c_str(),
+                    static_cast<int>(logger_.mReportableSeverity));
 
   engine_ = std::shared_ptr<nvinfer1::ICudaEngine>(
-      builder->buildEngineWithConfig(*network, *config), InferDeleter());
-  SaveEngine(*(engine_.get()), tensorrt_config.trt_cache_file_);
+                    builder->buildEngineWithConfig(*network,
+                                                   *config),
+                    InferDeleter());
+
+  // SaveEngine(*(engine_.get()), tensorrt_config.trt_cache_file_);
   return true;
 }
 
 void TensorRTInferenceEngine::FeedInput(
-    const std::vector<DataBlob>& input_blobs,
-    const TensorRT::BufferManager& buffers) {
+         const std::vector<DataBlob>& input_blobs,
+         const TensorRT::BufferManager& buffers) {
+  int size = std::accumulate(input_blobs.shape.begin(),
+                    input_blobs.shape.end(), 1, std::multiplies<int>());
   for (auto input_blob : input_blobs) {
     if (input_blob.dtype == 0) {
-      float *hostDataBuffer =
+      float* hostDataBuffer =
           reinterpret_cast<float*>(buffers.getHostBuffer(input_blob.name));
-      hostDataBuffer =  reinterpret_cast<float*>(input_blob.data.data());
+      memcpy(hostDataBuffer,
+             reinterpret_cast<float*>(input_blob.data.data()),
+             size * sizeof(float));
+      hostDataBuffer =  ;
     } else if (input_blob.dtype == 1) {
-      int64_t *hostDataBuffer =
+      int64_t* hostDataBuffer =
           reinterpret_cast<int64_t*>(buffers.getHostBuffer(input_blob.name));
-      hostDataBuffer = reinterpret_cast<int64_t*>(input_blob.data.data());
+      memcpy(hostDataBuffer,
+             reinterpret_cast<int64_t*>(input_blob.data.data()),
+             size * sizeof(int64_t));
     } else if (input_blob.dtype == 2) {
-      int *hostDataBuffer =
+      int* hostDataBuffer =
           reinterpret_cast<int*>(buffers.getHostBuffer(input_blob.name));
-      hostDataBuffer =  reinterpret_cast<int*>(input_blob.data.data());
+      memcpy(hostDataBuffer,
+             reinterpret_cast<int*>(input_blob.data.data()),
+             size * sizeof(int));
     } else if (input_blob.dtype == 3) {
-      uint8_t *hostDataBuffer =
+      uint8_t* hostDataBuffer =
           reinterpret_cast<uint8_t*>(buffers.getHostBuffer(input_blob.name));
-      hostDataBuffer =  reinterpret_cast<uint8_t*>(input_blob.data.data());
+      memcpy(hostDataBuffer,
+             reinterpret_cast<uint8_t>(input_blob.data.data()),
+             size * sizeof(uint8_t));
     }
   }
 }
@@ -177,18 +197,22 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
                                     std::vector<DataBlob>* output_blobs) {
   auto context = InferUniquePtr<nvinfer1::IExecutionContext>(
                      engine_->createExecutionContext());
+  if (!context) {
+    return false;
+  }
+
   int input_index = 0;
   for (auto input_blob : input_blobs) {
     nvinfer1::Dims input_dims;
     input_dims.nbDims = input_blob.shape.size();
-    for (int i = 0; i < input_blob.shape.size(); i++) {
+    for (auto i = 0; i < input_blob.shape.size(); i++) {
       input_dims.d[i] = input_blob.shape[i];
     }
     context->setBindingDimensions(input_index, input_dims);
     input_index++;
   }
   // const int batch_size = 0;
-  TensorRT::BufferManager buffers(engine_, 0, context.get());
+  TensorRT::BufferManager buffers(engine_, 1, context.get());
   FeedInput(input_blobs, buffers);
   buffers.copyInputToDevice();
   bool status = context->executeV2(buffers.getDeviceBindings().data());
