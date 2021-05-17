@@ -51,9 +51,8 @@ class BaseSegmenter(BaseModel):
         self.net = self.build_net(**params)
 
     def build_net(self, **params):
-        with paddle.utils.unique_name.guard():
-            net = models.__dict__[self.model_name](
-                num_classes=self.num_classes, **params)
+        net = models.__dict__[self.model_name](num_classes=self.num_classes,
+                                               **params)
         return net
 
     def run(self, net, inputs, mode):
