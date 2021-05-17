@@ -15,7 +15,20 @@
 #include "model_deploy/engine/include/tensorrt_engine.h"
 
 namespace PaddleDeploy {
+int DtypeToInt(const std::string& dtype) {
+  if (dtype == "TYPE_FP32") {
+    return 0;
+  } else if (dtype == "TYPE_INT64") {
+    return 1;
+  } else if (dtype == "TYPE_INT32") {
+    return 2;
+  } else if (dtype == "TYPE_UINT8") {
+    return 3;
+  }
+}
+
 bool Model::TensorRTInit(const std::string& model_dir,
+                         const std::string& cfg_file,
                          std::string trt_cache_file,
                          int max_workspace_size,
                          int max_batch_size) {
@@ -25,67 +38,34 @@ bool Model::TensorRTInit(const std::string& model_dir,
   config.tensorrt_config->max_workspace_size_ = max_workspace_size;
   config.tensorrt_config->max_batch_size_ = max_batch_size;
   config.tensorrt_config->trt_cache_file_ = trt_cache_file;
-  // init input ?
-  // config.tensorrt_config->SetTRTDynamicShapeInfo("inputs",
-  //                                                 {1, 3, 224, 224},
-  //                                                 {1, 3, 224, 224},
-  //                                                 {1, 3, 224, 224});
-  infer_engine_->Init(config);
+  config.tensorrt_config->yaml_config_ = YAML::LoadFile(cfg_file);
+  if (!config.tensorrt_config->yaml_config_["input"].IsDefined()) {
+    std::cout << "Fail to find input in yaml file!" << std::endl;
+    return false;
+  }
+  if (!config.tensorrt_config->yaml_config_["output"].IsDefined()) {
+    std::cout << "Fail to find output in yaml file!" << std::endl;
+    return false;
+  }
+  return infer_engine_->Init(config);
 }
 
 bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   const TensorRTEngineConfig& tensorrt_config = *engine_config.tensorrt_config;
 
-  nvinfer1::IBuilder* builder = InferUniquePtr<nvinfer1::IBuilder>(
+  TensorRT::setCudaDevice(tensorrt_config.gpu_id_);
+
+  auto builder = InferUniquePtr<nvinfer1::IBuilder>(
                      nvinfer1::createInferBuilder(logger_));
   if (!builder) {
     return false;
   }
-
-  auto config = InferUniquePtr<nvinfer1::IBuilderConfig>(
-                     builder->createBuilderConfig());
-  if (!config) {
-    return false;
-  }
-
-  auto profile = builder->createOptimizationProfile();
-
-  for (auto input_shape : tensorrt_config.min_input_shape_) {
-    nvinfer1::Dims input_dims;
-    input_dims.nbDims = input_shape.second.size();
-    for (int i = 0; i < input_shape.second.size(); i++) {
-      input_dims.d[i] = input_shape.second[i];
-    }
-    profile->setDimensions(input_shape.first.c_str(),
-                           nvinfer1::OptProfileSelector::kMIN, input_dims);
-  }
-  for (auto input_shape : tensorrt_config.max_input_shape_) {
-    nvinfer1::Dims input_dims;
-    input_dims.nbDims = input_shape.second.size();
-    for (int i = 0; i < input_shape.second.size(); i++) {
-      input_dims.d[i] = input_shape.second[i];
-    }
-    profile->setDimensions(input_shape.first.c_str(),
-                           nvinfer1::OptProfileSelector::kMAX, input_dims);
-  }
-  for (auto input_shape : tensorrt_config.optim_input_shape_) {
-    nvinfer1::Dims input_dims;
-    input_dims.nbDims = input_shape.second.size();
-    for (int i = 0; i < input_shape.second.size(); i++) {
-      input_dims.d[i] = input_shape.second[i];
-    }
-    profile->setDimensions(input_shape.first.c_str(),
-                           nvinfer1::OptProfileSelector::kOPT, input_dims);
-  }
-
-  config->addOptimizationProfile(profile);
-
-  config->setMaxWorkspaceSize(tensorrt_config.max_workspace_size_);
+  // Currently only support batch_size = 1
+  builder->setMaxBatchSize(1);
 
   const auto explicitBatch =
       tensorrt_config.max_batch_size_ << static_cast<uint32_t>(
           nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH);
-
   auto network = InferUniquePtr<nvinfer1::INetworkDefinition>(
                      builder->createNetworkV2(explicitBatch));
   if (!network) {
@@ -97,10 +77,37 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   if (!parser) {
     return false;
   }
-
-  auto parsed = parser->parseFromFile(
+  if(!parser->parseFromFile(
                     tensorrt_config.model_dir_.c_str(),
-                    static_cast<int>(logger_.mReportableSeverity));
+                    static_cast<int>(logger_.mReportableSeverity))) {
+    return false;
+  }
+
+  auto config = InferUniquePtr<nvinfer1::IBuilderConfig>(
+                     builder->createBuilderConfig());
+  if (!config) {
+    return false;
+  }
+
+  config->setMaxWorkspaceSize(tensorrt_config.max_workspace_size_);
+
+  // set shape
+  yaml_config_ = tensorrt_config.yaml_config_["output"]
+  auto profile = builder->createOptimizationProfile();
+  for (const auto& input : tensorrt_config.yaml_config_["input"]) {
+    nvinfer1::Dims input_dims;
+    nput_dims.nbDims = input["dims"].size();
+    for (auto i = 0; i < input["dims"].size(); ++i) {
+      input_dims.d[i] = input["dims"][i].as<int>();
+    }
+    profile->setDimensions(input["name"].as<std::string>().c_str(),
+                          nvinfer1::OptProfileSelector::kMIN, input_dims);
+    profile->setDimensions(input["name"].as<std::string>().c_str(),
+                          nvinfer1::OptProfileSelector::kMAX, input_dims);
+    profile->setDimensions(input["name"].as<std::string>().c_str(),
+                          nvinfer1::OptProfileSelector::kOPT, input_dims);
+  }
+  config->addOptimizationProfile(profile);
 
   engine_ = std::shared_ptr<nvinfer1::ICudaEngine>(
                     builder->buildEngineWithConfig(*network,
@@ -114,16 +121,15 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
 void TensorRTInferenceEngine::FeedInput(
          const std::vector<DataBlob>& input_blobs,
          const TensorRT::BufferManager& buffers) {
-  int size = std::accumulate(input_blobs.shape.begin(),
-                    input_blobs.shape.end(), 1, std::multiplies<int>());
   for (auto input_blob : input_blobs) {
+    int size = std::accumulate(input_blob.shape.begin(),
+                    input_blob.shape.end(), 1, std::multiplies<int>());
     if (input_blob.dtype == 0) {
       float* hostDataBuffer =
           reinterpret_cast<float*>(buffers.getHostBuffer(input_blob.name));
       memcpy(hostDataBuffer,
              reinterpret_cast<float*>(input_blob.data.data()),
              size * sizeof(float));
-      hostDataBuffer =  ;
     } else if (input_blob.dtype == 1) {
       int64_t* hostDataBuffer =
           reinterpret_cast<int64_t*>(buffers.getHostBuffer(input_blob.name));
@@ -140,7 +146,7 @@ void TensorRTInferenceEngine::FeedInput(
       uint8_t* hostDataBuffer =
           reinterpret_cast<uint8_t*>(buffers.getHostBuffer(input_blob.name));
       memcpy(hostDataBuffer,
-             reinterpret_cast<uint8_t>(input_blob.data.data()),
+             reinterpret_cast<uint8_t*>(input_blob.data.data()),
              size * sizeof(uint8_t));
     }
   }
@@ -201,22 +207,58 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
     return false;
   }
 
-  int input_index = 0;
-  for (auto input_blob : input_blobs) {
-    nvinfer1::Dims input_dims;
-    input_dims.nbDims = input_blob.shape.size();
-    for (auto i = 0; i < input_blob.shape.size(); i++) {
-      input_dims.d[i] = input_blob.shape[i];
-    }
-    context->setBindingDimensions(input_index, input_dims);
-    input_index++;
-  }
+  // int input_index = 0;
+  // for (auto input_blob : input_blobs) {
+  //   nvinfer1::Dims input_dims;
+  //   input_dims.nbDims = input_blob.shape.size();
+  //   for (auto i = 0; i < input_blob.shape.size(); i++) {
+  //     input_dims.d[i] = input_blob.shape[i];
+  //   }
+  //   context->setBindingDimensions(input_index, input_dims);
+  //   input_index++;
+  // }
+  
   // const int batch_size = 0;
-  TensorRT::BufferManager buffers(engine_, 1, context.get());
+  TensorRT::BufferManager buffers(engine_);
   FeedInput(input_blobs, buffers);
   buffers.copyInputToDevice();
   bool status = context->executeV2(buffers.getDeviceBindings().data());
-  buffers.copyOutputToHostAsync();
+  buffers.copyOutputToHost();
+  // buffers.copyOutputToHostAsync();
+
+  for (const auto& output_config : yaml_config_) {
+    std::string output_name = output_config["name"].as<std::string>();
+    std::string output_dtype = output_config["data_type"].as<std::string>();
+
+    DataBlob output_blob;
+    output_blob.name = output_name;
+    output_blob.dtype = DtypeToInt(output_dtype);
+    for (auto shape : output_config["dims"]) {
+      output_blob.shape.push_back(shape.as<int>());
+    }
+    
+    int size = std::accumulate(output_blob.shape.begin(),
+                    output_blob.shape.end(), 1, std::multiplies<int>());
+    if (output_blob.dtype == 0) {
+      float* output = static_cast<float*>(buffers.getHostBuffer(output_name));
+      output_blob.data.resize(size * sizeof(float));
+      memcpy(output_blob.data.data(), output, size * sizeof(float));
+    } else if (output_blob.dtype == 1) {
+      int64_t* output = static_cast<int64_t*>(buffers.getHostBuffer(output_name));
+      output_blob.data.resize(size * sizeof(int64_t));
+      memcpy(output_blob.data.data(), output, size * sizeof(int64_t));
+    } else if (output_blob.dtype == 2) {
+      int* output = static_cast<int*>(buffers.getHostBuffer(output_name));
+      output_blob.data.resize(size * sizeof(int));
+      memcpy(output_blob.data.data(), output, size * sizeof(int));
+    } else if (output_blob.dtype == 3) {
+      uint8_t* output = static_cast<uint8_t*>(buffers.getHostBuffer(output_name));
+      output_blob.data.resize(size * sizeof(uint8_t));
+      memcpy(output_blob.data.data(), output, size * sizeof(uint8_t));
+    }
+
+    output_blobs->push_back(std::move(output_blob));
+  }
   return status;
 }
 

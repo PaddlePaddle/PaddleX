@@ -112,6 +112,8 @@ class TensorRTInferenceEngine : public InferEngine {
   // *outputs);
 
   void ParseONNXModel(const std::string& model_dir);
+
+  YAML::Node yaml_config_;
 };
 
 }  //  namespace PaddleDeploy

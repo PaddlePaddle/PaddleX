@@ -34,6 +34,10 @@
 
 namespace PaddleDeploy {
 namespace TensorRT {
+inline void setCudaDevice(int device)
+{
+    cudaCheck(cudaSetDevice(device));
+}
 
 //!
 //! \brief  The GenericBuffer class is a templated class for buffers.
@@ -357,9 +361,11 @@ class BufferManager {
       if ((copyInput && mEngine->bindingIsInput(i)) ||
           (!copyInput && !mEngine->bindingIsInput(i))) {
         if (async)
-          CHECK(cudaMemcpyAsync(dstPtr, srcPtr, byteSize, memcpyType, stream));
+          // CHECK(cudaMemcpyAsync(dstPtr, srcPtr, byteSize, memcpyType, stream));
+          cudaMemcpyAsync(dstPtr, srcPtr, byteSize, memcpyType, stream)
         else
-          CHECK(cudaMemcpy(dstPtr, srcPtr, byteSize, memcpyType));
+          // CHECK(cudaMemcpy(dstPtr, srcPtr, byteSize, memcpyType));
+          cudaMemcpy(dstPtr, srcPtr, byteSize, memcpyType)
       }
     }
   }

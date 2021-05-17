@@ -18,6 +18,8 @@
 #include <vector>
 #include <map>
 
+#include "yaml-cpp/yaml.h"
+
 namespace PaddleDeploy {
 
 struct PaddleEngineConfig {
@@ -125,20 +127,9 @@ struct TensorRTEngineConfig {
   std::string model_dir_;
   int max_workspace_size_;
   int max_batch_size_;
+  int gpu_id_ = 4;
   std::string trt_cache_file_ = "";
-
-  std::map<std::string, std::vector<int>> min_input_shape_;
-  std::map<std::string, std::vector<int>> max_input_shape_;
-  std::map<std::string, std::vector<int>> optim_input_shape_;
-
-  void SetTRTDynamicShapeInfo(std::string input_name,
-                            std::vector<int> min_input_shape,
-                            std::vector<int> max_input_shape,
-                            std::vector<int> optim_input_shape) {
-    min_input_shape_[input_name] = min_input_shape;
-    max_input_shape_[input_name] = max_input_shape;
-    optim_input_shape_[input_name] = optim_input_shape;
-  }
+  YAML::Node yaml_config_;
 };
 
 struct InferenceConfig {

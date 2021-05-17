@@ -49,7 +49,9 @@ int main(int argc, char** argv) {
   std::cout << "start engine init " << std::endl;
 
   // inference engine init
-  model->TensorRTInit(FLAGS_model_dir, FLAGS_trt_cache_file);
+  model->TensorRTInit(FLAGS_model_dir,
+                      FLAGS_cfg_file,
+                      FLAGS_trt_cache_file);
 
   // prepare data
   std::vector<std::string> image_paths;
