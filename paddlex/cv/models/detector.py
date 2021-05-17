@@ -62,11 +62,11 @@ class BaseDetector(BaseModel):
     def get_test_inputs(self, image_shape):
         input_spec = [{
             "image": InputSpec(
-                shape=[None, 3] + image_shape, name='image'),
+                shape=[None, 3] + image_shape, name='image', dtype='float32'),
             "im_shape": InputSpec(
-                shape=[None, 2], name='im_shape'),
+                shape=[None, 2], name='im_shape', dtype='float32'),
             "scale_factor": InputSpec(
-                shape=[None, 2], name='scale_factor')
+                shape=[None, 2], name='scale_factor', dtype='float32')
         }]
         return input_spec
 
@@ -326,6 +326,7 @@ class BaseDetector(BaseModel):
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
                         'category_id': category_id,
+                        'category': self.labels[category_id],
                         'bbox': bbox,
                         'score': score
                     }

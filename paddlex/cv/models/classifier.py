@@ -71,7 +71,7 @@ class BaseClassifier(BaseModel):
     def get_test_inputs(self, image_shape):
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, dtype='float32')
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -387,7 +387,7 @@ class AlexNet(BaseClassifier):
                          )
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, dtype='float32')
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -556,7 +556,7 @@ class ShuffleNetV2(BaseClassifier):
                          )
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, dtype='float32')
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -575,6 +575,6 @@ class ShuffleNetV2_swish(BaseClassifier):
                          )
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, dtype='float32')
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
         ]
         return input_spec

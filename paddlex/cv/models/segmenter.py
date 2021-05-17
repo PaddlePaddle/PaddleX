@@ -51,15 +51,16 @@ class BaseSegmenter(BaseModel):
         self.net = self.build_net(**params)
 
     def build_net(self, **params):
-        with paddle.utils.unique_name.guard():
-            net = models.__dict__[self.model_name](
-                num_classes=self.num_classes, **params)
+        # TODO: when using paddle.utils.unique_name.guard,
+        # DeepLabv3p and HRNet will raise a error
+        net = models.__dict__[self.model_name](num_classes=self.num_classes,
+                                               **params)
         return net
 
     def get_test_inputs(self, image_shape):
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, dtype='float32')
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -68,11 +69,14 @@ class BaseSegmenter(BaseModel):
         logit = net_out[0]
         outputs = OrderedDict()
         if mode == 'test':
-            pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
             origin_shape = inputs[1]
-            pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
-            pred = paddle.squeeze(pred)
-            outputs = {'pred': pred}
+            score_map = self._postprocess(
+                logit, origin_shape, transforms=inputs[2])
+            label_map = paddle.argmax(
+                score_map, axis=1, keepdim=True, dtype='int32')
+            score_map = paddle.squeeze(score_map)
+            label_map = paddle.squeeze(label_map)
+            outputs = {'label_map': label_map, 'score_map': score_map}
         if mode == 'eval':
             pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
             label = inputs[1]
@@ -285,14 +289,16 @@ class BaseSegmenter(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        batch_im, batch_origin_shape = BaseSegmenter._preprocess(
-            images, transforms, self.model_type)
+        batch_im, batch_origin_shape = self._preprocess(images, transforms,
+                                                        self.model_type)
         self.net.eval()
         data = (batch_im, batch_origin_shape, transforms.transforms)
         outputs = self.run(self.net, data, 'test')
-        pred = outputs['pred']
-        pred = pred.numpy().astype('uint8')
-        return {'label_map': pred}
+        label_map = outputs['label_map']
+        label_map = label_map.numpy().astype('uint8')
+        score_map = outputs['score_map']
+        score_map = score_map.numpy().astype('float32')
+        return {'label_map': label_map, 'score_map': score_map}
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
@@ -302,7 +308,7 @@ class BaseSegmenter(BaseModel):
         for im in images:
             sample = {'image': im}
             if isinstance(sample['image'], str):
-                sample = Decode()(sample)
+                sample = Decode(to_rgb=False)(sample)
             ori_shape = sample['image'].shape[:2]
             im = transforms(sample)[0]
             batch_im.append(im)
