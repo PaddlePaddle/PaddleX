@@ -16,6 +16,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import copy
 import os
 import sys
 from collections import OrderedDict
@@ -55,13 +56,14 @@ class Metric(paddle.metric.Metric):
 class VOCMetric(Metric):
     def __init__(self,
                  labels,
+                 coco_gt,
                  overlap_thresh=0.5,
                  map_type='11point',
                  is_bbox_normalized=False,
                  evaluate_difficult=False,
                  classwise=False):
-
         self.cid2cname = {i: name for i, name in enumerate(labels)}
+        self.coco_gt = coco_gt
         self.overlap_thresh = overlap_thresh
         self.map_type = map_type
         self.evaluate_difficult = evaluate_difficult
@@ -77,7 +79,7 @@ class VOCMetric(Metric):
         self.reset()
 
     def reset(self):
-        self.results = {'bbox': []}
+        self.details = {'gt': self.coco_gt, 'bbox': []}
         self.detection_map.reset()
 
     def update(self, inputs, outputs):
@@ -114,18 +116,18 @@ class VOCMetric(Metric):
                                       difficult)
             bbox_idx += bbox_num
 
-            for b in bbox:
-                clsid, score, xmin, ymin, xmax, ymax = b.tolist()
+            for l, s, b in zip(label, score, bbox):
+                xmin, ymin, xmax, ymax = b.tolist()
                 w = xmax - xmin
                 h = ymax - ymin
                 bbox = [xmin, ymin, w, h]
                 coco_res = {
                     'image_id': inputs['im_id'],
-                    'category_id': clsid + 1,
+                    'category_id': int(l + 1),
                     'bbox': bbox,
-                    'score': score
+                    'score': s
                 }
-                self.results['bbox'].append(coco_res)
+                self.details['bbox'].append(coco_res)
 
     def accumulate(self):
         logging.info("Accumulating evaluatation results...")
@@ -162,8 +164,8 @@ class COCOMetric(Metric):
 
     def reset(self):
         # only bbox and mask evaluation support currently
-        self.results = {'bbox': [], 'mask': []}
-        self.eval_results = {}
+        self.details = {'gt': self.coco_gt, 'bbox': [], 'mask': []}
+        self.eval_stats = {}
 
     def update(self, inputs, outputs):
         outs = {}
@@ -177,43 +179,43 @@ class COCOMetric(Metric):
 
         infer_results = get_infer_results(
             outs, self.clsid2catid, bias=self.bias)
-        self.results['bbox'] += infer_results[
+        self.details['bbox'] += infer_results[
             'bbox'] if 'bbox' in infer_results else []
-        self.results['mask'] += infer_results[
+        self.details['mask'] += infer_results[
             'mask'] if 'mask' in infer_results else []
 
     def accumulate(self):
-        if len(self.results['bbox']) > 0:
+        if len(self.details['bbox']) > 0:
             output = "bbox.json"
             if self.output_eval:
                 output = os.path.join(self.output_eval, output)
             with open(output, 'w') as f:
-                json.dump(self.results['bbox'], f)
+                json.dump(self.details['bbox'], f)
                 logging.info('The bbox result is saved to bbox.json.')
 
             bbox_stats = cocoapi_eval(
                 output, 'bbox', coco_gt=self.coco_gt, classwise=self.classwise)
-            self.eval_results['bbox'] = bbox_stats
+            self.eval_stats['bbox'] = bbox_stats
             sys.stdout.flush()
 
-        if len(self.results['mask']) > 0:
+        if len(self.details['mask']) > 0:
             output = "mask.json"
             if self.output_eval:
                 output = os.path.join(self.output_eval, output)
             with open(output, 'w') as f:
-                json.dump(self.results['mask'], f)
+                json.dump(self.details['mask'], f)
                 logging.info('The mask result is saved to mask.json.')
 
             seg_stats = cocoapi_eval(
                 output, 'segm', coco_gt=self.coco_gt, classwise=self.classwise)
-            self.eval_results['mask'] = seg_stats
+            self.eval_stats['mask'] = seg_stats
             sys.stdout.flush()
 
         output_path = 'eval_result.json'
         if self.output_eval:
             output_path = os.path.join(self.output_eval, output_path)
         with open(output_path, 'w') as f:
-            json.dump(self.results, f)
+            json.dump(self.details, f)
             logging.info('The evaluation result is saved at {}.'.format(
                 output_path))
 
@@ -221,10 +223,9 @@ class COCOMetric(Metric):
         pass
 
     def get(self):
-        if 'mask' in self.eval_results:
+        if 'mask' in self.eval_stats:
             return OrderedDict(
-                zip(['bbox_mmap', 'segm_mmap'], [
-                    self.eval_results['bbox'][0], self.eval_results['mask'][0]
-                ]))
+                zip(['bbox_mmap', 'segm_mmap'],
+                    [self.eval_stats['bbox'][0], self.eval_stats['mask'][0]]))
         else:
-            return {'bbox_mmap': self.eval_results['bbox'][0]}
+            return {'bbox_mmap': self.eval_stats['bbox'][0]}

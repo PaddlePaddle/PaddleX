@@ -160,16 +160,19 @@ class BaseDetector(BaseModel):
               use_vdl=True):
         if train_dataset.__class__.__name__ == 'VOCDetection':
             train_dataset.data_fields = {
-                'image', 'gt_bbox', 'gt_class', 'difficult'
+                'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                'difficult'
             }
         elif train_dataset.__class__.__name__ == 'CocoDetection':
             if self.__class__.__name__ == 'MaskRCNN':
                 train_dataset.data_fields = {
-                    'image', 'gt_bbox', 'gt_class', 'gt_poly', 'is_crowd'
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'gt_poly', 'is_crowd'
                 }
             else:
                 train_dataset.data_fields = {
-                    'image', 'gt_bbox', 'gt_class', 'is_crowd'
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'is_crowd'
                 }
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
@@ -226,16 +229,19 @@ class BaseDetector(BaseModel):
                  return_details=False):
         if eval_dataset.__class__.__name__ == 'VOCDetection':
             eval_dataset.data_fields = {
-                'image', 'gt_bbox', 'gt_class', 'difficult'
+                'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                'difficult'
             }
         elif eval_dataset.__class__.__name__ == 'CocoDetection':
             if self.__class__.__name__ == 'MaskRCNN':
                 eval_dataset.data_fields = {
-                    'image', 'gt_bbox', 'gt_class', 'gt_poly', 'is_crowd'
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'gt_poly', 'is_crowd'
                 }
             else:
                 eval_dataset.data_fields = {
-                    'image', 'gt_bbox', 'gt_class', 'is_crowd'
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'is_crowd'
                 }
         eval_dataset.batch_transforms = self._compose_batch_transform(
             eval_dataset.transforms, mode='eval')
@@ -271,17 +277,20 @@ class BaseDetector(BaseModel):
                 if eval_dataset.__class__.__name__ == 'VOCDetection':
                     eval_metric = VOCMetric(
                         labels=eval_dataset.labels,
+                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
                         is_bbox_normalized=is_bbox_normalized,
                         classwise=False)
                 elif eval_dataset.__class__.__name__ == 'CocoDetection':
                     eval_metric = COCOMetric(
-                        coco_gt=eval_dataset.coco_gt, classwise=False)
+                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                        classwise=False)
             else:
                 assert metric.lower() in ['coco', 'voc'], \
                     "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
                 if metric.lower() == 'coco':
                     eval_metric = COCOMetric(
-                        coco_gt=eval_dataset.coco_gt, classwise=False)
+                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                        classwise=False)
                 else:
                     eval_metric = VOCMetric(
                         labels=eval_dataset.labels,
@@ -293,7 +302,7 @@ class BaseDetector(BaseModel):
                     outputs = self.run(self.net, data, 'eval')
                     eval_metric.update(data, outputs)
                 eval_metric.accumulate()
-                eval_details = eval_metric.results
+                eval_details = eval_metric.details
                 scores.update(eval_metric.get())
                 eval_metric.reset()
 
