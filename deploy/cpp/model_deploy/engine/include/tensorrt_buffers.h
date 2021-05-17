@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef DEPLOYKIT_CPP_INCLUDE_DEPLOY_ENGINE_TENSORRT_BUFFERS_H_
-#define DEPLOYKIT_CPP_INCLUDE_DEPLOY_ENGINE_TENSORRT_BUFFERS_H_
-
+#pragma once
 
 #include <cassert>
 #include <iostream>
@@ -34,9 +32,8 @@
 
 namespace PaddleDeploy {
 namespace TensorRT {
-inline void setCudaDevice(int device)
-{
-    cudaCheck(cudaSetDevice(device));
+inline void setCudaDevice(int device) {
+    cudaSetDevice(device);
 }
 
 //!
@@ -249,7 +246,7 @@ class BufferManager {
         vol *= scalarsPerVec;
       }
       vol *= volume(dims);
-      std::cout << "input-" << i << " initial byteSize:" << vol << std::endl;
+      // std::cout << "input-" << i << " initial byteSize:" << vol << std::endl;
 
       std::unique_ptr<ManagedBuffer> manBuf{new ManagedBuffer()};
       manBuf->deviceBuffer = DeviceBuffer(vol, type);
@@ -351,21 +348,19 @@ class BufferManager {
                                : mManagedBuffers[i]->hostBuffer.data();
 
       const size_t byteSize = mManagedBuffers[i]->hostBuffer.nbBytes();
-      std::cout << "input-host-" << i << " runtime byteSize:"
-                << mManagedBuffers[i]->hostBuffer.nbBytes() << std::endl;
-      std::cout << "input-device-" << i << " runtime byteSize:"
-                << mManagedBuffers[i]->deviceBuffer.nbBytes() << std::endl;
+      // std::cout << "input-host-" << i << " runtime byteSize:"
+      //           << mManagedBuffers[i]->hostBuffer.nbBytes() << std::endl;
+      // std::cout << "input-device-" << i << " runtime byteSize:"
+      //           << mManagedBuffers[i]->deviceBuffer.nbBytes() << std::endl;
 
       const cudaMemcpyKind memcpyType =
           deviceToHost ? cudaMemcpyDeviceToHost : cudaMemcpyHostToDevice;
       if ((copyInput && mEngine->bindingIsInput(i)) ||
           (!copyInput && !mEngine->bindingIsInput(i))) {
         if (async)
-          // CHECK(cudaMemcpyAsync(dstPtr, srcPtr, byteSize, memcpyType, stream));
-          cudaMemcpyAsync(dstPtr, srcPtr, byteSize, memcpyType, stream)
+          cudaMemcpyAsync(dstPtr, srcPtr, byteSize, memcpyType, stream);
         else
-          // CHECK(cudaMemcpy(dstPtr, srcPtr, byteSize, memcpyType));
-          cudaMemcpy(dstPtr, srcPtr, byteSize, memcpyType)
+          cudaMemcpy(dstPtr, srcPtr, byteSize, memcpyType);
       }
     }
   }

@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
     imgs.push_back(std::move(img));
 
     model->Predict(imgs, &results);
-    
+
     std::cout << "image: " << image_paths[i] << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;

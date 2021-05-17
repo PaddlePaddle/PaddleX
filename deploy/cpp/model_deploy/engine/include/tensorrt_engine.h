@@ -66,10 +66,10 @@ class NaiveLogger : public nvinfer1::ILogger {
       LOG(ERROR) << msg;
       break;
     case Severity::kVERBOSE:
-      std::cout << "kVERBOSE:" << msg << std::endl;
+      // std::cout << "kVERBOSE:" << msg << std::endl;
       break;
     default:
-      //std::cout << "default:" << msg << std::endl;
+      // std::cout << "default:" << msg << std::endl;
       break;
     }
   }
@@ -94,7 +94,6 @@ class TensorRTInferenceEngine : public InferEngine {
   bool Infer(const std::vector<DataBlob>& input_blobs,
              std::vector<DataBlob>* output_blobs);
 
-  // InferUniquePtr<nvinfer1::ICudaEngine> engine_;
   std::shared_ptr<nvinfer1::ICudaEngine> engine_{nullptr};
   NaiveLogger logger_;
 
@@ -107,9 +106,6 @@ class TensorRTInferenceEngine : public InferEngine {
 
   nvinfer1::ICudaEngine* LoadEngine(const std::string& engine,
                                     NaiveLogger logger, int DLACore = -1);
-
-  // void FetchOutput(c std::vector<const nic::InferRequestedOutput *>
-  // *outputs);
 
   void ParseONNXModel(const std::string& model_dir);
 

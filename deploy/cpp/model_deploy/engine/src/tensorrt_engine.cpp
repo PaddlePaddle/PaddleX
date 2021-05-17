@@ -77,9 +77,8 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   if (!parser) {
     return false;
   }
-  if(!parser->parseFromFile(
-                    tensorrt_config.model_dir_.c_str(),
-                    static_cast<int>(logger_.mReportableSeverity))) {
+  if (!parser->parseFromFile(tensorrt_config.model_dir_.c_str(),
+                             static_cast<int>(logger_.mReportableSeverity))) {
     return false;
   }
 
@@ -92,12 +91,12 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   config->setMaxWorkspaceSize(tensorrt_config.max_workspace_size_);
 
   // set shape
-  yaml_config_ = tensorrt_config.yaml_config_["output"]
+  yaml_config_ = tensorrt_config.yaml_config_["output"];
   auto profile = builder->createOptimizationProfile();
   for (const auto& input : tensorrt_config.yaml_config_["input"]) {
     nvinfer1::Dims input_dims;
-    nput_dims.nbDims = input["dims"].size();
-    for (auto i = 0; i < input["dims"].size(); ++i) {
+    input_dims.nbDims = static_cast<int>(input["dims"].size());
+    for (int i = 0; i < input_dims.nbDims; ++i) {
       input_dims.d[i] = input["dims"][i].as<int>();
     }
     profile->setDimensions(input["name"].as<std::string>().c_str(),
@@ -154,7 +153,7 @@ void TensorRTInferenceEngine::FeedInput(
 
 nvinfer1::ICudaEngine* TensorRTInferenceEngine::LoadEngine(
                                             const std::string& engine,
-                                            NaiveLogger logger, 
+                                            NaiveLogger logger,
                                             int DLACore) {
   std::ifstream engine_file(engine, std::ios::binary);
   if (!engine_file) {
@@ -217,7 +216,7 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
   //   context->setBindingDimensions(input_index, input_dims);
   //   input_index++;
   // }
-  
+
   // const int batch_size = 0;
   TensorRT::BufferManager buffers(engine_);
   FeedInput(input_blobs, buffers);
@@ -236,7 +235,7 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
     for (auto shape : output_config["dims"]) {
       output_blob.shape.push_back(shape.as<int>());
     }
-    
+
     int size = std::accumulate(output_blob.shape.begin(),
                     output_blob.shape.end(), 1, std::multiplies<int>());
     if (output_blob.dtype == 0) {
@@ -244,7 +243,8 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
       output_blob.data.resize(size * sizeof(float));
       memcpy(output_blob.data.data(), output, size * sizeof(float));
     } else if (output_blob.dtype == 1) {
-      int64_t* output = static_cast<int64_t*>(buffers.getHostBuffer(output_name));
+      int64_t* output = static_cast<int64_t*>(
+                            buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(int64_t));
       memcpy(output_blob.data.data(), output, size * sizeof(int64_t));
     } else if (output_blob.dtype == 2) {
@@ -252,7 +252,8 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
       output_blob.data.resize(size * sizeof(int));
       memcpy(output_blob.data.data(), output, size * sizeof(int));
     } else if (output_blob.dtype == 3) {
-      uint8_t* output = static_cast<uint8_t*>(buffers.getHostBuffer(output_name));
+      uint8_t* output = static_cast<uint8_t*>(
+                            buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(uint8_t));
       memcpy(output_blob.data.data(), output, size * sizeof(uint8_t));
     }
