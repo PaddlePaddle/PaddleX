@@ -15,10 +15,13 @@
 #pragma once
 
 #include <string>
+<<<<<<< HEAD
 #include <vector>
 #include <map>
 
 #include "yaml-cpp/yaml.h"
+=======
+>>>>>>> upstream/deploykit
 
 namespace PaddleDeploy {
 
@@ -67,8 +70,13 @@ struct PaddleEngineConfig {
   bool use_calib_mode = false;
 };
 
+<<<<<<< HEAD
 struct TritonEngineConfig {
   TritonEngineConfig() : model_name_(""), model_version_(""),
+=======
+struct TritonInferenceConfigs {
+  TritonInferenceConfigs() : model_name_(""), model_version_(""),
+>>>>>>> upstream/deploykit
         request_id_(""), sequence_id_(0), sequence_start_(false),
         sequence_end_(false), priority_(0), server_timeout_(0),
         client_timeout_(0) {}

@@ -33,7 +33,7 @@
 以步骤二中下载的YOLOv3模型为例，执行如下命令即可进行模型加载和预测
 
 ```
-build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
+build/demo/multi_gpu_model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
                        --params_filename=yolov3_mbv1/model/model.pdiparams \
                        --cfg_file=yolov3_mbv1/model/infer_cfg.yml \
                        --image=yolov3_mbv1/file_list.txt \
