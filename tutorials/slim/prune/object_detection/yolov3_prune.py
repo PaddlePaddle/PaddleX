@@ -42,7 +42,9 @@ model = pdx.load_model('output/yolov3_darknet53/best_model')
 
 # Step 1/3: Analyze the sensitivities of parameters
 model.analyze_sensitivity(
-    dataset=eval_dataset, save_dir='output/yolov3_darknet53/prune')
+    dataset=eval_dataset,
+    batch_size=1,
+    save_dir='output/yolov3_darknet53/prune')
 
 # Step 2/3: Prune the model by the specified ratio of FLOPs to be pruned
 model.prune(pruned_flops=.2)

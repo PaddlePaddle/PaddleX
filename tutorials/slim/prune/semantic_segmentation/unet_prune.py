@@ -37,7 +37,8 @@ eval_dataset = pdx.datasets.SegDataset(
 model = pdx.load_model('output/unet/best_model')
 
 # Step 1/3: Analyze the sensitivities of parameters
-model.analyze_sensitivity(dataset=eval_dataset, save_dir='output/unet/prune')
+model.analyze_sensitivity(
+    dataset=eval_dataset, batch_size=1, save_dir='output/unet/prune')
 
 # Step 2/3: Prune the model by the specified ratio of FLOPs to be pruned
 model.prune(pruned_flops=.2)
