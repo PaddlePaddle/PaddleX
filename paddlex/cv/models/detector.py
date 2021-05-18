@@ -18,7 +18,6 @@ import collections
 import copy
 import os.path as osp
 
-import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
 from paddle.static import InputSpec
 import paddlex
@@ -398,6 +397,7 @@ class BaseDetector(BaseModel):
                     if label == -1:
                         continue
                     category = self.labels[int(label)]
+                    import pycocotools.mask as mask_util
                     rle = mask_util.encode(
                         np.array(
                             mask[:, :, None], order="F", dtype="uint8"))[0]
