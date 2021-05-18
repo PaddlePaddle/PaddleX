@@ -66,8 +66,8 @@ class BaseDetector(BaseModel):
     def build_data_loader(self, dataset, batch_size, mode='train'):
         batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         if mode == 'eval':
-            batch_size = batch_size_each_card * paddlex.env_info['num']
-            total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
+            # detector only supports single card eval with batch size 1
+            total_steps = dataset.num_samples
             logging.info(
                 "Start to evaluating(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))
