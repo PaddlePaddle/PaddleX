@@ -41,7 +41,6 @@ class BaseModel:
         self.num_classes = None
         self.labels = None
         self.version = paddlex.__version__
-        paddle.set_device(paddlex.env_info['place'])
         self.net = None
         self.optimizer = None
         self.test_inputs = None

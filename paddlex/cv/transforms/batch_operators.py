@@ -21,43 +21,33 @@ try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
+from paddle.fluid.dataloader.collate import default_collate_fn
 from .operators import Transform, Resize, ResizeByShort, _Permute
 from .box_utils import jaccard_overlap
-
-MAIN_PID = os.getpid()
 
 
 class BatchCompose(Transform):
     def __init__(self, batch_transforms=None):
         super(BatchCompose, self).__init__()
-        self.output_fields = mp.Manager().list([])
         self.batch_transforms = batch_transforms
         self.lock = mp.Lock()
 
     def __call__(self, samples):
         if self.batch_transforms is not None:
             for op in self.batch_transforms:
-                samples = op(samples)
+                try:
+                    samples = op(samples)
+                except Exception as e:
+                    stack_info = traceback.format_exc()
+                    logger.warn("fail to map batch transform [{}] "
+                                "with error: {} and stack:\n{}".format(
+                                    op, e, str(stack_info)))
+                    raise e
 
         samples = _Permute()(samples)
 
-        global MAIN_PID
-        if os.getpid() == MAIN_PID and \
-                isinstance(self.output_fields, mp.managers.ListProxy):
-            self.output_fields = []
-
-        if len(self.output_fields) == 0:
-            self.lock.acquire()
-            if len(self.output_fields) == 0:
-                for k, v in samples[0].items():
-                    self.output_fields.append(k)
-            self.lock.release()
-        samples = [[samples[i][k] for k in self.output_fields]
-                   for i in range(len(samples))]
-        samples = list(zip(*samples))
-        samples = [np.stack(d, axis=0) for d in samples]
-
-        return samples
+        batch_data = default_collate_fn(samples)
+        return batch_data
 
 
 class BatchRandomResize(Transform):
