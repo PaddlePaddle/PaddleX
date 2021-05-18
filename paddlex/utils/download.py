@@ -175,8 +175,8 @@ def url2dir(url, path):
 
 
 def download_and_decompress(url, path='.'):
-    nranks = paddle.distributed.ParallelEnv().nranks
-    local_rank = paddle.distributed.ParallelEnv().local_rank
+    nranks = paddle.distributed.get_world_size()
+    local_rank = paddle.distributed.get_rank()
     fname = osp.split(url)[-1]
     fullname = osp.join(path, fname)
     if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
