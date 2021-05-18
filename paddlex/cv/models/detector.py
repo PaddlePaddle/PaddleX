@@ -17,6 +17,7 @@ from __future__ import absolute_import
 import collections
 import copy
 import os.path as osp
+
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
 from paddle.static import InputSpec
@@ -77,8 +78,8 @@ class BaseDetector(BaseModel):
     def build_data_loader(self, dataset, batch_size, mode='train'):
         batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         if mode == 'eval':
-            batch_size = batch_size_each_card * paddlex.env_info['num']
-            total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
+            # detector only supports single card eval with batch size 1
+            total_steps = dataset.num_samples
             logging.info(
                 "Start to evaluating(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))
@@ -169,6 +170,22 @@ class BaseDetector(BaseModel):
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True):
+        if train_dataset.__class__.__name__ == 'VOCDetection':
+            train_dataset.data_fields = {
+                'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                'difficult'
+            }
+        elif train_dataset.__class__.__name__ == 'CocoDetection':
+            if self.__class__.__name__ == 'MaskRCNN':
+                train_dataset.data_fields = {
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'gt_poly', 'is_crowd'
+                }
+            else:
+                train_dataset.data_fields = {
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'is_crowd'
+                }
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
@@ -217,7 +234,27 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
-    def evaluate(self, eval_dataset, batch_size, return_details=False):
+    def evaluate(self,
+                 eval_dataset,
+                 batch_size,
+                 metric=None,
+                 return_details=False):
+        if eval_dataset.__class__.__name__ == 'VOCDetection':
+            eval_dataset.data_fields = {
+                'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                'difficult'
+            }
+        elif eval_dataset.__class__.__name__ == 'CocoDetection':
+            if self.__class__.__name__ == 'MaskRCNN':
+                eval_dataset.data_fields = {
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'gt_poly', 'is_crowd'
+                }
+            else:
+                eval_dataset.data_fields = {
+                    'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
+                    'is_crowd'
+                }
         eval_dataset.batch_transforms = self._compose_batch_transform(
             eval_dataset.transforms, mode='eval')
         arrange_transforms(
@@ -248,28 +285,41 @@ class BaseDetector(BaseModel):
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
-            if eval_dataset.__class__.__name__ == 'VOCDetection':
-                eval_metrics = [
-                    VOCMetric(
+            if metric is None:
+                if eval_dataset.__class__.__name__ == 'VOCDetection':
+                    eval_metric = VOCMetric(
+                        labels=eval_dataset.labels,
+                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                        is_bbox_normalized=is_bbox_normalized,
+                        classwise=False)
+                elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                    eval_metric = COCOMetric(
+                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                        classwise=False)
+            else:
+                assert metric.lower() in ['coco', 'voc'], \
+                    "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
+                if metric.lower() == 'coco':
+                    eval_metric = COCOMetric(
+                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                        classwise=False)
+                else:
+                    eval_metric = VOCMetric(
                         labels=eval_dataset.labels,
                         is_bbox_normalized=is_bbox_normalized,
                         classwise=False)
-                ]
-            elif eval_dataset.__class__.__name__ == 'CocoDetection':
-                eval_metrics = [
-                    COCOMetric(
-                        coco_gt=eval_dataset.coco_gt, classwise=False)
-                ]
             scores = collections.OrderedDict()
             with paddle.no_grad():
                 for step, data in enumerate(self.eval_data_loader):
                     outputs = self.run(self.net, data, 'eval')
-                    for metric in eval_metrics:
-                        metric.update(data, outputs)
-                for metric in eval_metrics:
-                    metric.accumulate()
-                    scores.update(metric.get())
-                    metric.reset()
+                    eval_metric.update(data, outputs)
+                eval_metric.accumulate()
+                self.eval_details = eval_metric.details
+                scores.update(eval_metric.get())
+                eval_metric.reset()
+
+            if return_details:
+                return scores, self.eval_details
             return scores
 
     def predict(self, img_file, transforms=None):
@@ -285,9 +335,11 @@ class BaseDetector(BaseModel):
         batch_samples = self._preprocess(images, transforms)
         self.net.eval()
         outputs = self.run(self.net, batch_samples, 'test')
-        pred = self._postprocess(outputs)
+        prediction = self._postprocess(outputs)
 
-        return pred
+        if isinstance(img_file, (str, np.ndarray)):
+            prediction = prediction[0]
+        return prediction
 
     def _preprocess(self, images, transforms):
         arrange_transforms(
@@ -320,13 +372,13 @@ class BaseDetector(BaseModel):
                     num_id, score, xmin, ymin, xmax, ymax = dt.tolist()
                     if int(num_id) < 0:
                         continue
-                    category_id = int(num_id)
+                    category = self.labels[int(num_id)]
                     w = xmax - xmin
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
-                        'category_id': category_id,
-                        'category': self.labels[category_id],
+                        'category_id': int(num_id),
+                        'category': category,
                         'bbox': bbox,
                         'score': score
                     }
@@ -348,7 +400,7 @@ class BaseDetector(BaseModel):
                     k = k + 1
                     if label == -1:
                         continue
-                    category_id = int(label)
+                    category = self.labels[int(label)]
                     rle = mask_util.encode(
                         np.array(
                             mask[:, :, None], order="F", dtype="uint8"))[0]
@@ -356,7 +408,7 @@ class BaseDetector(BaseModel):
                         if 'counts' in rle:
                             rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
-                        'category_id': category_id,
+                        'category': category,
                         'segmentation': rle,
                         'score': score
                     }
@@ -364,21 +416,19 @@ class BaseDetector(BaseModel):
             infer_result['mask'] = seg_res
 
         bbox_num = batch_pred['bbox_num']
-        result = []
+        results = []
         start = 0
         for num in bbox_num:
-            curr_result = {}
             end = start + num
-            if 'bbox' in infer_result:
-                bbox_res = infer_result['bbox'][start:end]
-                curr_result['bboxes'] = bbox_res
+            curr_res = infer_result['bbox'][start:end]
             if 'mask' in infer_result:
                 mask_res = infer_result['mask'][start:end]
-                curr_result['masks'] = mask_res
-            result.append(curr_result)
+                for box, mask in zip(curr_res, mask_res):
+                    box.update(mask)
+            results.append(curr_res)
             start = end
 
-        return result
+        return results
 
 
 class YOLOv3(BaseDetector):
