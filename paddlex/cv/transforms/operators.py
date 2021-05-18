@@ -36,14 +36,17 @@ __all__ = [
     "ArrangeDetector"
 ]
 
-interp_list = [
-    cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC, cv2.INTER_AREA,
-    cv2.INTER_LANCZOS4
-]
+interp_dict = {
+    'NEAREST': cv2.INTER_NEAREST,
+    'LINEAR': cv2.INTER_LINEAR,
+    'CUBIC': cv2.INTER_CUBIC,
+    'AREA': cv2.INTER_AREA,
+    'LANCZOS4': cv2.INTER_LANCZOS4
+}
 
 
 class Transform(object):
-    """分类Transform的基类
+    """Parent class of all data augmentation operations
     """
 
     def __init__(self):
@@ -80,13 +83,14 @@ class Transform(object):
 
 
 class Compose(Transform):
-    """根据数据预处理/增强算子对输入数据进行操作。
-       所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
+    """
+        Apply a series of data augmentation to the input.
+        All input images are in Height-Width-Channel ([H, W, C]) format.
     Args:
-        transforms (list): 数据预处理/增强算子。
+        transforms (list of [paddlex.transforms.Transform]): List of data augmentations.
     Raises:
-        TypeError: 形参数据类型不满足需求。
-        ValueError: 数据长度不匹配。
+        TypeError: Invalid type of transforms.
+        ValueError: Invalid length of transforms.
     """
 
     def __init__(self, transforms):
@@ -128,6 +132,11 @@ class Compose(Transform):
 
 
 class Decode(Transform):
+    """Decode image(s) in input.
+    Args:
+        to_rgb (bool): If True, convert input images from BGR format to RGB format.
+    """
+
     def __init__(self, to_rgb=True):
         super(Decode, self).__init__()
         self.to_rgb = to_rgb
@@ -163,6 +172,15 @@ class Decode(Transform):
         return mask
 
     def apply(self, sample):
+        """
+
+        Args:
+            sample (dict): Input sample, containing 'image' at least.
+
+        Returns:
+            dict: Decoded sample.
+
+        """
         sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
@@ -178,10 +196,35 @@ class Decode(Transform):
 
 
 class Resize(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_LINEAR):
+    """Resize image(s) in input.
+
+    - If target_size is an int，resize the image(s) to (target_size, target_size).
+    - If target_size is a list or tuple, resize the image(s) to target_size.
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        target_size (int/list/tuple): Target size.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}): Interpolation method of resize,
+        'LINEAR' is used by default.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+    """
+
+    def __init__(self, target_size, interp='LINEAR'):
         super(Resize, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         if isinstance(target_size, int):
             target_size = (target_size, target_size)
+        else:
+            if not (isinstance(target_size,
+                               (list, tuple)) and len(target_size) == 2):
+                raise TypeError(
+                    "target_size should be an int or a list of length 2, but received {}".
+                    format(target_size))
         # (height, width)
         self.target_size = target_size
         self.interp = interp
@@ -224,9 +267,10 @@ class Resize(Transform):
         return resized_segms
 
     def apply(self, sample):
-        interp = self.interp
         if self.interp == "RANDOM":
-            interp = random.choice(interp_list)
+            interp = random.choice(list(interp_dict.values()))
+        else:
+            interp = self.interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
 
         im_scale_y = self.target_size[0] / im_h
@@ -254,15 +298,41 @@ class Resize(Transform):
 
 
 class RandomResize(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_LINEAR):
+    """Resize image(s) in input to random sizes.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        target_sizes (list): Multiple target sizes, each target size is an int or list/tuple.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}): Interpolation method of resize,
+        'LINEAR' is used by default.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+    """
+
+    # The interpolation mode
+    interp_dict = {
+        'NEAREST': cv2.INTER_NEAREST,
+        'LINEAR': cv2.INTER_LINEAR,
+        'CUBIC': cv2.INTER_CUBIC,
+        'AREA': cv2.INTER_AREA,
+        'LANCZOS4': cv2.INTER_LANCZOS4
+    }
+
+    def __init__(self, target_sizes, interp='LINEAR'):
         super(RandomResize, self).__init__()
+        if not (interp == "RANDOM" or interp in self.interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                self.interp_dict.keys()))
         self.interp = interp
-        assert isinstance(target_size, list), \
+        assert isinstance(target_sizes, list), \
             "target_size must be List"
-        for i, item in enumerate(target_size):
+        for i, item in enumerate(target_sizes):
             if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
+                target_sizes[i] = (item, item)
+        self.target_size = target_sizes
 
     def apply(self, sample):
         height, width = random.choice(self.target_size)
@@ -273,7 +343,24 @@ class RandomResize(Transform):
 
 
 class ResizeByShort(Transform):
-    def __init__(self, short_size=256, max_size=-1, interp=cv2.INTER_LINEAR):
+    """Resize image(s) in input with keeping the aspect ratio.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        short_size (int): Target size of the shorter side of the image(s).
+        max_size (int): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}): Interpolation method of resize,
+        'LINEAR' is used by default.
+
+    Raises:
+        ValueError: Invalid interpolation method.
+    """
+
+    def __init__(self, short_size=256, max_size=-1, interp='LINEAR'):
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         super(ResizeByShort, self).__init__()
         self.short_size = short_size
         self.max_size = max_size
@@ -315,7 +402,7 @@ class ResizeByShort(Transform):
     def apply(self, sample):
         interp = self.interp
         if self.interp == "RANDOM":
-            interp = random.choice(interp_list)
+            interp = random.choice(list(interp_dict.values()))
         im_h, im_w = sample['image'].shape[:2]
         im_short_size = min(im_h, im_w)
         im_long_size = max(im_h, im_w)
@@ -349,8 +436,29 @@ class ResizeByShort(Transform):
 
 
 class RandomResizeByShort(Transform):
-    def __init__(self, short_sizes, max_size=-1, interp=cv2.INTER_LINEAR):
+    """Resize image(s) in input to random sizes with keeping the aspect ratio.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        short_sizes (int): Target size of the shorter side of the image(s).
+        max_size (int): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}): Interpolation method of resize,
+        'LINEAR' is used by default.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+
+    See Also:
+        ResizeByShort: Resize image(s) in input with keeping the aspect ratio.
+    """
+
+    def __init__(self, short_sizes, max_size=-1, interp='LINEAR'):
         super(RandomResizeByShort, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         self.interp = interp
         assert isinstance(short_sizes, list), \
             "short_sizes must be List"
@@ -367,6 +475,12 @@ class RandomResizeByShort(Transform):
 
 
 class RandomHorizontalFlip(Transform):
+    """Randomly flip the input image(s) horizontally.
+
+    Args:
+        prob(float): Probability of flipping the image(s).
+    """
+
     def __init__(self, prob=0.5):
         super(RandomHorizontalFlip, self).__init__()
         self.prob = prob
@@ -413,9 +527,10 @@ class RandomHorizontalFlip(Transform):
 
 
 class RandomVerticalFlip(Transform):
-    """以一定的概率对图像进行随机垂直翻转，模型训练时的数据增强操作。
+    """Randomly flip the input image(s) vertically.
+
     Args:
-        prob (float): 随机垂直翻转的概率。默认为0.5。
+        prob(float): Probability of flipping the image(s).
     """
 
     def __init__(self, prob=0.5):
@@ -464,6 +579,15 @@ class RandomVerticalFlip(Transform):
 
 
 class Normalize(Transform):
+    """Apply min-max normalization to the image(s) in input.
+
+    Args:
+        mean(list/tuple): Mean of input image(s).
+        std(list/tuple): Standard deviation of input image(s).
+        min_val(list/tuple): Minimum value of input image(s).
+        max_val(list/tuple): Max val8ue of input image(s).
+    """
+
     def __init__(self,
                  mean=[0.485, 0.456, 0.406],
                  std=[0.229, 0.224, 0.225],
@@ -504,11 +628,12 @@ class Normalize(Transform):
 
 
 class CenterCrop(Transform):
-    """以图像中心点扩散裁剪长宽为`crop_size`的正方形
-    1. 计算剪裁的起始点。
-    2. 剪裁图像。
+    """Crop the input image(s) at the center.
+    1. Locate the center of the image.
+    2. Crop the image.
+
     Args:
-        crop_size (int): 裁剪的目标边长。默认为224。
+        crop_size(int): target size of the cropped image(s), 224 by default.
     """
 
     def __init__(self, crop_size=224):
