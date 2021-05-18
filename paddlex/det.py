@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from . import cv
-from paddlex.cv.models.utils.visualize import visualize_detection
+from paddlex.cv.models.utils.visualize import visualize_detection, draw_pr_curve
 
 YOLOv3 = cv.models.YOLOv3
 FasterRCNN = cv.models.FasterRCNN
@@ -23,3 +23,4 @@ PPYOLOv2 = cv.models.PPYOLOv2
 MaskRCNN = cv.models.MaskRCNN
 
 visualize = visualize_detection
+draw_pr_curve = draw_pr_curve

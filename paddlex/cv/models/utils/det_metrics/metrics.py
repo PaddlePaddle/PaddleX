@@ -79,7 +79,7 @@ class VOCMetric(Metric):
         self.reset()
 
     def reset(self):
-        self.details = {'gt': self.coco_gt, 'bbox': []}
+        self.details = {'gt': copy.deepcopy(self.coco_gt.dataset), 'bbox': []}
         self.detection_map.reset()
 
     def update(self, inputs, outputs):
@@ -157,14 +157,17 @@ class COCOMetric(Metric):
             for i, cat in enumerate(coco_gt.loadCats(coco_gt.getCatIds()))
         }
         self.coco_gt = coco_gt
-        self.output_eval = kwargs.get('output_eval', None)
         self.classwise = kwargs.get('classwise', False)
         self.bias = 0
         self.reset()
 
     def reset(self):
         # only bbox and mask evaluation support currently
-        self.details = {'gt': self.coco_gt, 'bbox': [], 'mask': []}
+        self.details = {
+            'gt': copy.deepcopy(self.coco_gt.dataset),
+            'bbox': [],
+            'mask': []
+        }
         self.eval_stats = {}
 
     def update(self, inputs, outputs):
@@ -186,38 +189,22 @@ class COCOMetric(Metric):
 
     def accumulate(self):
         if len(self.details['bbox']) > 0:
-            output = "bbox.json"
-            if self.output_eval:
-                output = os.path.join(self.output_eval, output)
-            with open(output, 'w') as f:
-                json.dump(self.details['bbox'], f)
-                logging.info('The bbox result is saved to bbox.json.')
-
             bbox_stats = cocoapi_eval(
-                output, 'bbox', coco_gt=self.coco_gt, classwise=self.classwise)
+                copy.deepcopy(self.details['bbox']),
+                'bbox',
+                coco_gt=self.coco_gt,
+                classwise=self.classwise)
             self.eval_stats['bbox'] = bbox_stats
             sys.stdout.flush()
 
         if len(self.details['mask']) > 0:
-            output = "mask.json"
-            if self.output_eval:
-                output = os.path.join(self.output_eval, output)
-            with open(output, 'w') as f:
-                json.dump(self.details['mask'], f)
-                logging.info('The mask result is saved to mask.json.')
-
             seg_stats = cocoapi_eval(
-                output, 'segm', coco_gt=self.coco_gt, classwise=self.classwise)
+                copy.deepcopy(self.details['mask']),
+                'segm',
+                coco_gt=self.coco_gt,
+                classwise=self.classwise)
             self.eval_stats['mask'] = seg_stats
             sys.stdout.flush()
-
-        output_path = 'eval_result.json'
-        if self.output_eval:
-            output_path = os.path.join(self.output_eval, output_path)
-        with open(output_path, 'w') as f:
-            json.dump(self.details, f)
-            logging.info('The evaluation result is saved at {}.'.format(
-                output_path))
 
     def log(self):
         pass
