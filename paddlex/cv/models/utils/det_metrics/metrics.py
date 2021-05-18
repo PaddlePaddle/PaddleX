@@ -122,10 +122,10 @@ class VOCMetric(Metric):
                 h = ymax - ymin
                 bbox = [xmin, ymin, w, h]
                 coco_res = {
-                    'image_id': inputs['im_id'],
+                    'image_id': int(inputs['im_id']),
                     'category_id': int(l + 1),
                     'bbox': bbox,
-                    'score': s
+                    'score': float(s)
                 }
                 self.details['bbox'].append(coco_res)
 
