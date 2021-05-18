@@ -26,13 +26,13 @@ int DtypeConver(const nvinfer1::DataType& dtype) {
     case nvinfer1::DataType::kINT8:
       return 3;
   }
-  std::cerr << "Fail trt dtype:" << dtype << std::endl;
+  std::cerr << "Fail trt dtype";
   return -1;
 }
 
 bool Model::TensorRTInit(const std::string& model_file,
                          const std::string& cfg_file,
-                         const int gpu_id = 0,
+                         const int gpu_id,
                          const bool save_engine,
                          std::string trt_cache_file) {
   infer_engine_ = std::make_shared<TensorRTInferenceEngine>();
@@ -90,7 +90,7 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   if (!parser) {
     return false;
   }
-  if (!parser->parseFromFile(tensorrt_config.model_dir_.c_str(),
+  if (!parser->parseFromFile(tensorrt_config.model_file_.c_str(),
                              static_cast<int>(logger_.mReportableSeverity))) {
     return false;
   }
