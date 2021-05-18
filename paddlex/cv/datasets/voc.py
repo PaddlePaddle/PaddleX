@@ -282,8 +282,9 @@ class VOCDetection(Dataset):
             sample_mix = copy.deepcopy(self.file_list[mix_pos])
             if self.data_fields is not None:
                 sample_mix = {k: sample_mix[k] for k in self.data_fields}
-            sample = self.mixup_op(
-                sample=[Decode()(sample), Decode()(sample_mix)])
+            sample = self.mixup_op(sample=[
+                Decode(to_rgb=False)(sample), Decode(to_rgb=False)(sample_mix)
+            ])
         sample = self.transforms(sample)
         return sample
 
