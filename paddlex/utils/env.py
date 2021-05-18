@@ -48,7 +48,7 @@ def get_environ_info():
 
 def get_num_workers(num_workers):
     if num_workers == 'auto':
-        num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
+        num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 2 else 2
     return num_workers
 
 
