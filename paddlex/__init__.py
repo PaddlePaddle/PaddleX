@@ -14,7 +14,9 @@
 
 __version__ = '2.0.0'
 
-from .utils.env import get_environ_info
+from .utils.env import get_environ_info, init_parallel_env
+init_parallel_env()
+
 from . import cv
 from . import seg
 from . import cls
