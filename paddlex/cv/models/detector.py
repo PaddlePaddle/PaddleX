@@ -263,8 +263,8 @@ class BaseDetector(BaseModel):
             mode='eval')
 
         self.net.eval()
-        nranks = paddle.distributed.ParallelEnv().nranks
-        local_rank = paddle.distributed.ParallelEnv().local_rank
+        nranks = paddle.distributed.get_world_size()
+        local_rank = paddle.distributed.get_rank()
         if nranks > 1:
             # Initialize parallel environment if not done.
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
