@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import traceback
 import multiprocessing as mp
 import random
 import numpy as np
-import cv2
 try:
     from collections.abc import Sequence
 except Exception:
@@ -24,6 +23,7 @@ except Exception:
 from paddle.fluid.dataloader.collate import default_collate_fn
 from .operators import Transform, Resize, ResizeByShort, _Permute
 from .box_utils import jaccard_overlap
+from paddlex.utils import logging
 
 
 class BatchCompose(Transform):
@@ -39,9 +39,9 @@ class BatchCompose(Transform):
                     samples = op(samples)
                 except Exception as e:
                     stack_info = traceback.format_exc()
-                    logger.warn("fail to map batch transform [{}] "
-                                "with error: {} and stack:\n{}".format(
-                                    op, e, str(stack_info)))
+                    logging.warn("fail to map batch transform [{}] "
+                                 "with error: {} and stack:\n{}".format(
+                                     op, e, str(stack_info)))
                     raise e
 
         samples = _Permute()(samples)
@@ -58,7 +58,7 @@ class BatchRandomResize(Transform):
         interp (int): the interpolation method
     """
 
-    def __init__(self, target_size, interp=cv2.INTER_NEAREST):
+    def __init__(self, target_size, interp='NEAREST'):
         super(BatchRandomResize, self).__init__()
         self.interp = interp
         assert isinstance(target_size, list), \
@@ -77,7 +77,7 @@ class BatchRandomResize(Transform):
 
 
 class BatchRandomResizeByShort(Transform):
-    def __init__(self, short_sizes, max_size=-1, interp=cv2.INTER_NEAREST):
+    def __init__(self, short_sizes, max_size=-1, interp='NEAREST'):
         super(BatchRandomResizeByShort, self).__init__()
         self.interp = interp
         assert isinstance(short_sizes, list), \
