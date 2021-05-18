@@ -21,7 +21,6 @@ from . import cv
 from . import seg
 from . import cls
 from . import det
-from . import slim
 
 env_info = get_environ_info()
 datasets = cv.datasets

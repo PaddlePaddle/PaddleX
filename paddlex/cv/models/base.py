@@ -166,7 +166,7 @@ class BaseModel:
             batch_size = batch_size_each_card
             total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
             logging.info(
-                "Start to evaluating(total_samples={}, total_steps={})...".
+                "Start to evaluate(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(
@@ -212,8 +212,8 @@ class BaseModel:
             transforms=train_dataset.transforms,
             mode='train')
 
-        nranks = paddle.distributed.ParallelEnv().nranks
-        local_rank = paddle.distributed.ParallelEnv().local_rank
+        nranks = paddle.distributed.get_world_size()
+        local_rank = paddle.distributed.get_rank()
         if nranks > 1:
             # Initialize parallel environment if not done.
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(

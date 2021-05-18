@@ -17,12 +17,10 @@ from __future__ import division
 from __future__ import print_function
 
 import copy
-import os
 import sys
 from collections import OrderedDict
 import paddle
 import numpy as np
-import json
 
 from .map_utils import prune_zero_padding, DetectionMAP
 from .coco_utils import get_infer_results, cocoapi_eval
