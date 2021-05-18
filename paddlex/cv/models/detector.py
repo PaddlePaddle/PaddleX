@@ -20,6 +20,7 @@ import os.path as osp
 
 import pycocotools.mask as mask_util
 from paddle.io import DistributedBatchSampler
+from paddle.static import InputSpec
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
@@ -58,6 +59,17 @@ class BaseDetector(BaseModel):
         with paddle.utils.unique_name.guard():
             net = architectures.__dict__[self.model_name](**params)
         return net
+
+    def get_test_inputs(self, image_shape):
+        input_spec = [{
+            "image": InputSpec(
+                shape=[None, 3] + image_shape, name='image', dtype='float32'),
+            "im_shape": InputSpec(
+                shape=[None, 2], name='im_shape', dtype='float32'),
+            "scale_factor": InputSpec(
+                shape=[None, 2], name='scale_factor', dtype='float32')
+        }]
+        return input_spec
 
     def _get_backbone(self, backbone_name, **params):
         backbone = backbones.__dict__[backbone_name](**params)
@@ -365,6 +377,7 @@ class BaseDetector(BaseModel):
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
+                        'category_id': int(num_id),
                         'category': category,
                         'bbox': bbox,
                         'score': score

@@ -68,6 +68,13 @@ class BaseClassifier(BaseModel):
                 class_dim=self.num_classes, **params)
         return net
 
+    def get_test_inputs(self, image_shape):
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
+        ]
+        return input_spec
+
     def run(self, net, inputs, mode):
         net_out = net(inputs[0])
         softmax_out = F.softmax(net_out)
@@ -369,6 +376,19 @@ class AlexNet(BaseClassifier):
         super(AlexNet, self).__init__(
             model_name='AlexNet', num_classes=num_classes)
 
+    def get_test_inputs(self, image_shape):
+        if image_shape == [-1, -1]:
+            image_shape = [224, 224]
+            logging.info('When exporting inference model for {},'.format(
+                self.__class__.__name__
+            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
+                         )
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
+        ]
+        return input_spec
+
 
 class DarkNet53(BaseClassifier):
     def __init__(self, num_classes=1000):
@@ -525,8 +545,34 @@ class ShuffleNetV2(BaseClassifier):
         super(ShuffleNetV2, self).__init__(
             model_name='ShuffleNetV2', num_classes=num_classes, **params)
 
+    def get_test_inputs(self, image_shape):
+        if image_shape == [-1, -1]:
+            image_shape = [224, 224]
+            logging.info('When exporting inference model for {},'.format(
+                self.__class__.__name__
+            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
+                         )
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
+        ]
+        return input_spec
+
 
 class ShuffleNetV2_swish(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ShuffleNetV2_swish, self).__init__(
             model_name='ShuffleNetV2_x1_5', num_classes=num_classes)
+
+    def get_test_inputs(self, image_shape):
+        if image_shape == [-1, -1]:
+            image_shape = [224, 224]
+            logging.info('When exporting inference model for {},'.format(
+                self.__class__.__name__
+            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
+                         )
+        input_spec = [
+            InputSpec(
+                shape=[None, 3] + image_shape, name='image', dtype='float32')
+        ]
+        return input_spec
