@@ -74,11 +74,11 @@ class Model {
                         const std::string& model_version,
                         bool verbose = false);
 
-  bool TensorRTInit(const std::string& model_dir,
+  bool TensorRTInit(const std::string& model_file,
                     const std::string& cfg_file,
-                    std::string trt_cache_file = "",
-                    int max_workspace_size = 1<<28,
-                    int max_batch_size = 1);
+                    const int gpu_id = 0,
+                    const bool save_engine = false,
+                    std::string trt_cache_file = "");
 
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;

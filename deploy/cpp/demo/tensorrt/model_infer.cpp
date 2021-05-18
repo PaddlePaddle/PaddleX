@@ -26,6 +26,8 @@ DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
 DEFINE_string(trt_cache_file, "", "Cache path to store optimized trt file");
+DEFINE_bool(save_engine, false, "Save Trt Engine");
+DEFINE_int32(gpu_id, 0, "GPU card id");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -51,6 +53,8 @@ int main(int argc, char** argv) {
   // inference engine init
   model->TensorRTInit(FLAGS_model_dir,
                       FLAGS_cfg_file,
+                      FLAGS_gpu_id,
+                      FLAGS_save_engine,
                       FLAGS_trt_cache_file);
 
   // prepare data

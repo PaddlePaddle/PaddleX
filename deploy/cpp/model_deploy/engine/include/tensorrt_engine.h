@@ -105,7 +105,7 @@ class TensorRTInferenceEngine : public InferEngine {
                   const std::string& fileName);
 
   nvinfer1::ICudaEngine* LoadEngine(const std::string& engine,
-                                    NaiveLogger logger, int DLACore = -1);
+                                    int DLACore = -1);
 
   void ParseONNXModel(const std::string& model_dir);
 

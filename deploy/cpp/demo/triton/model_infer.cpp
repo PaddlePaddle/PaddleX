@@ -20,7 +20,7 @@
 
 #include "model_deploy/common/include/paddle_deploy.h"
 
-DEFINE_string(model_name, "", "Path of inference model");
+DEFINE_string(model_name, "", "Name of inference model");
 DEFINE_string(url, "", "url of triton server");
 DEFINE_string(model_version, "", "model version of triton server");
 DEFINE_string(cfg_file, "", "Path of yaml file");
@@ -85,8 +85,8 @@ int main(int argc, char** argv) {
     imgs.clear();
     imgs.push_back(std::move(img));
 
-    model->Predict(imgs, &results, FLAGS_thread_num);
-    
+    model->Predict(imgs, &results);
+
     std::cout << "image: " << image_paths[i] << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;

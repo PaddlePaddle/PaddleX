@@ -253,8 +253,8 @@ class BufferManager {
       manBuf->hostBuffer = HostBuffer(vol, type);
       mDeviceBindings.emplace_back(manBuf->deviceBuffer.data());
       mManagedBuffers.emplace_back(std::move(manBuf));
-      // std::cout <<  "buffer-"<< i << " initial byteSize:" <<
-      // manBuf->hostBuffer.nbBytes() << std::endl;
+      // std::cout << "buffer-"<< i << " initial byteSize:"
+      //           << manBuf->hostBuffer.nbBytes() << std::endl;
     }
   }
 
@@ -380,5 +380,3 @@ class BufferManager {
 };
 }  // namespace TensorRT
 }  // namespace PaddleDeploy
-
-#endif  // DEPLOYKIT_CPP_INCLUDE_DEPLOY_ENGINE_TENSORRT_BUFFERS_H_

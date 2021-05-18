@@ -124,11 +124,21 @@ struct TritonEngineConfig {
 };
 
 struct TensorRTEngineConfig {
-  std::string model_dir_;
-  int max_workspace_size_;
-  int max_batch_size_;
-  int gpu_id_ = 4;
+  // onnx model path
+  std::string model_file_;
+
+  // GPU workspace size
+  int max_workspace_size_ = 1<<28;
+
+  int max_batch_size_ = 1;
+
+  int gpu_id_ = 0;
+
+  bool save_engine_ = false;
+
   std::string trt_cache_file_ = "";
+
+  // input and output info
   YAML::Node yaml_config_;
 };
 

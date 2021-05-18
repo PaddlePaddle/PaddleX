@@ -15,28 +15,31 @@
 #include "model_deploy/engine/include/tensorrt_engine.h"
 
 namespace PaddleDeploy {
-int DtypeToInt(const std::string& dtype) {
-  if (dtype == "TYPE_FP32") {
-    return 0;
-  } else if (dtype == "TYPE_INT64") {
-    return 1;
-  } else if (dtype == "TYPE_INT32") {
-    return 2;
-  } else if (dtype == "TYPE_UINT8") {
-    return 3;
+int DtypeConver(const nvinfer1::DataType& dtype) {
+  switch (dtype) {
+    case nvinfer1::DataType::kINT32:
+      return 2;
+    case nvinfer1::DataType::kFLOAT:
+      return 0;
+    case nvinfer1::DataType::kBOOL:
+      return 3;
+    case nvinfer1::DataType::kINT8:
+      return 3;
   }
+  std::cerr << "Fail trt dtype:" << dtype << std::endl;
+  return -1;
 }
 
-bool Model::TensorRTInit(const std::string& model_dir,
+bool Model::TensorRTInit(const std::string& model_file,
                          const std::string& cfg_file,
-                         std::string trt_cache_file,
-                         int max_workspace_size,
-                         int max_batch_size) {
+                         const int gpu_id = 0,
+                         const bool save_engine,
+                         std::string trt_cache_file) {
   infer_engine_ = std::make_shared<TensorRTInferenceEngine>();
   InferenceConfig config("tensorrt");
-  config.tensorrt_config->model_dir_ = model_dir;
-  config.tensorrt_config->max_workspace_size_ = max_workspace_size;
-  config.tensorrt_config->max_batch_size_ = max_batch_size;
+  config.tensorrt_config->model_file_ = model_file;
+  config.tensorrt_config->gpu_id_ = gpu_id;
+  config.tensorrt_config->save_engine_ = save_engine;
   config.tensorrt_config->trt_cache_file_ = trt_cache_file;
   config.tensorrt_config->yaml_config_ = YAML::LoadFile(cfg_file);
   if (!config.tensorrt_config->yaml_config_["input"].IsDefined()) {
@@ -55,17 +58,27 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
 
   TensorRT::setCudaDevice(tensorrt_config.gpu_id_);
 
+  std::ifstream engine_file(tensorrt_config.trt_cache_file_, std::ios::binary);
+  if (engine_file) {
+    std::cout << "Start load cached optimized tensorrt file." << std::endl;
+    engine_ = std::shared_ptr<nvinfer1::ICudaEngine>(
+                             LoadEngine(tensorrt_config.trt_cache_file_),
+                             InferDeleter());
+    if (!engine_) {
+      std::cerr << "Fail load cached optimized tensorrt" << std::endl;
+      return false;
+    }
+    return true;
+  }
+
   auto builder = InferUniquePtr<nvinfer1::IBuilder>(
                      nvinfer1::createInferBuilder(logger_));
   if (!builder) {
     return false;
   }
-  // Currently only support batch_size = 1
-  builder->setMaxBatchSize(1);
 
-  const auto explicitBatch =
-      tensorrt_config.max_batch_size_ << static_cast<uint32_t>(
-          nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH);
+  const auto explicitBatch = 1U << static_cast<uint32_t>(
+                 nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH);
   auto network = InferUniquePtr<nvinfer1::INetworkDefinition>(
                      builder->createNetworkV2(explicitBatch));
   if (!network) {
@@ -90,7 +103,7 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
 
   config->setMaxWorkspaceSize(tensorrt_config.max_workspace_size_);
 
-  // set shape
+  // set shape.  Currently don't support dynamic shapes
   yaml_config_ = tensorrt_config.yaml_config_["output"];
   auto profile = builder->createOptimizationProfile();
   for (const auto& input : tensorrt_config.yaml_config_["input"]) {
@@ -98,6 +111,10 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
     input_dims.nbDims = static_cast<int>(input["dims"].size());
     for (int i = 0; i < input_dims.nbDims; ++i) {
       input_dims.d[i] = input["dims"][i].as<int>();
+      if (input_dims.d[i] < 0) {
+        std::cerr << "Fail input shape on yaml file" << std::endl;
+        return false;
+      }
     }
     profile->setDimensions(input["name"].as<std::string>().c_str(),
                           nvinfer1::OptProfileSelector::kMIN, input_dims);
@@ -113,7 +130,12 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
                                                    *config),
                     InferDeleter());
 
-  // SaveEngine(*(engine_.get()), tensorrt_config.trt_cache_file_);
+  if (tensorrt_config.save_engine_) {
+    if (!SaveEngine(*(engine_.get()), tensorrt_config.trt_cache_file_)) {
+      std::cout << "Fail save Trt Engine to "
+                << tensorrt_config.trt_cache_file_ << std::endl;
+    }
+  }
   return true;
 }
 
@@ -153,7 +175,6 @@ void TensorRTInferenceEngine::FeedInput(
 
 nvinfer1::ICudaEngine* TensorRTInferenceEngine::LoadEngine(
                                             const std::string& engine,
-                                            NaiveLogger logger,
                                             int DLACore) {
   std::ifstream engine_file(engine, std::ios::binary);
   if (!engine_file) {
@@ -173,7 +194,7 @@ nvinfer1::ICudaEngine* TensorRTInferenceEngine::LoadEngine(
   }
 
   InferUniquePtr<nvinfer1::IRuntime> runtime{
-      nvinfer1::createInferRuntime(logger)};
+      nvinfer1::createInferRuntime(logger_)};
 
   if (DLACore != -1) {
     runtime->setDLACore(DLACore);
@@ -206,38 +227,30 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
     return false;
   }
 
-  // int input_index = 0;
-  // for (auto input_blob : input_blobs) {
-  //   nvinfer1::Dims input_dims;
-  //   input_dims.nbDims = input_blob.shape.size();
-  //   for (auto i = 0; i < input_blob.shape.size(); i++) {
-  //     input_dims.d[i] = input_blob.shape[i];
-  //   }
-  //   context->setBindingDimensions(input_index, input_dims);
-  //   input_index++;
-  // }
-
-  // const int batch_size = 0;
   TensorRT::BufferManager buffers(engine_);
   FeedInput(input_blobs, buffers);
   buffers.copyInputToDevice();
   bool status = context->executeV2(buffers.getDeviceBindings().data());
+  if (!status) {
+    return false;
+  }
   buffers.copyOutputToHost();
-  // buffers.copyOutputToHostAsync();
 
   for (const auto& output_config : yaml_config_) {
     std::string output_name = output_config["name"].as<std::string>();
-    std::string output_dtype = output_config["data_type"].as<std::string>();
+    int index = engine_->getBindingIndex(output_name.c_str());
+    nvinfer1::DataType dtype = engine_->getBindingDataType(index);
 
     DataBlob output_blob;
     output_blob.name = output_name;
-    output_blob.dtype = DtypeToInt(output_dtype);
+    output_blob.dtype = DtypeConver(dtype);
     for (auto shape : output_config["dims"]) {
       output_blob.shape.push_back(shape.as<int>());
     }
 
-    int size = std::accumulate(output_blob.shape.begin(),
-                    output_blob.shape.end(), 1, std::multiplies<int>());
+    size_t size = std::accumulate(output_blob.shape.begin(),
+                    output_blob.shape.end(), 1, std::multiplies<size_t>());
+    assert(size == buffers.size(output_name));
     if (output_blob.dtype == 0) {
       float* output = static_cast<float*>(buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(float));
@@ -260,7 +273,7 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
 
     output_blobs->push_back(std::move(output_blob));
   }
-  return status;
+  return true;
 }
 
 }  //  namespace PaddleDeploy
