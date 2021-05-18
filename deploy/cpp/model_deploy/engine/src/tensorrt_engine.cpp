@@ -250,21 +250,24 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
 
     size_t size = std::accumulate(output_blob.shape.begin(),
                     output_blob.shape.end(), 1, std::multiplies<size_t>());
-    assert(size == buffers.size(output_name));
     if (output_blob.dtype == 0) {
+      assert(size * sizeof(float) == buffers.size(output_name));
       float* output = static_cast<float*>(buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(float));
       memcpy(output_blob.data.data(), output, size * sizeof(float));
     } else if (output_blob.dtype == 1) {
+      assert(size * sizeof(int64_t) == buffers.size(output_name));
       int64_t* output = static_cast<int64_t*>(
                             buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(int64_t));
       memcpy(output_blob.data.data(), output, size * sizeof(int64_t));
     } else if (output_blob.dtype == 2) {
+      assert(size * sizeof(int) == buffers.size(output_name));
       int* output = static_cast<int*>(buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(int));
       memcpy(output_blob.data.data(), output, size * sizeof(int));
     } else if (output_blob.dtype == 3) {
+      assert(size * sizeof(uint8_t) == buffers.size(output_name));
       uint8_t* output = static_cast<uint8_t*>(
                             buffers.getHostBuffer(output_name));
       output_blob.data.resize(size * sizeof(uint8_t));

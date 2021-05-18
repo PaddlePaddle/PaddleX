@@ -20,7 +20,7 @@
 
 #include "model_deploy/common/include/paddle_deploy.h"
 
-DEFINE_string(model_dir, "", "Path of inference model");
+DEFINE_string(model_file, "", "Path of inference model");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
   // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
   std::cout << "ParseCommandLineFlags:FLAGS_model_type="
-            << FLAGS_model_type << " model_dir="
-            << FLAGS_model_dir << std::endl;
+            << FLAGS_model_type << " model_file="
+            << FLAGS_model_file << std::endl;
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
   std::cout << "start engine init " << std::endl;
 
   // inference engine init
-  model->TensorRTInit(FLAGS_model_dir,
+  model->TensorRTInit(FLAGS_model_file,
                       FLAGS_cfg_file,
                       FLAGS_gpu_id,
                       FLAGS_save_engine,
