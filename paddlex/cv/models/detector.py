@@ -167,6 +167,7 @@ class BaseDetector(BaseModel):
               warmup_start_lr=0.0,
               lr_decay_epochs=(216, 243),
               lr_decay_gamma=0.1,
+              metric=None,
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True):
@@ -186,6 +187,17 @@ class BaseDetector(BaseModel):
                     'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
                     'is_crowd'
                 }
+
+        if metric is None:
+            if eval_dataset.__class__.__name__ == 'VOCDetection':
+                self.metric = 'voc'
+            elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                self.metric = 'coco'
+        else:
+            assert metric.lower() in ['coco', 'voc'], \
+                "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
+            self.metric = metric.lower()
+
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
         self.labels = train_dataset.labels
@@ -286,16 +298,28 @@ class BaseDetector(BaseModel):
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
             if metric is None:
-                if eval_dataset.__class__.__name__ == 'VOCDetection':
-                    eval_metric = VOCMetric(
-                        labels=eval_dataset.labels,
-                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                        is_bbox_normalized=is_bbox_normalized,
-                        classwise=False)
-                elif eval_dataset.__class__.__name__ == 'CocoDetection':
-                    eval_metric = COCOMetric(
-                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                        classwise=False)
+                if getattr(self, 'metric', None) is not None:
+                    if self.metric == 'voc':
+                        eval_metric = VOCMetric(
+                            labels=eval_dataset.labels,
+                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                            is_bbox_normalized=is_bbox_normalized,
+                            classwise=False)
+                    else:
+                        eval_metric = COCOMetric(
+                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                            classwise=False)
+                else:
+                    if eval_dataset.__class__.__name__ == 'VOCDetection':
+                        eval_metric = VOCMetric(
+                            labels=eval_dataset.labels,
+                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                            is_bbox_normalized=is_bbox_normalized,
+                            classwise=False)
+                    elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                        eval_metric = COCOMetric(
+                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                            classwise=False)
             else:
                 assert metric.lower() in ['coco', 'voc'], \
                     "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
