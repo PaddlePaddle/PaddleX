@@ -350,11 +350,8 @@ class BaseDetector(BaseModel):
             batch_samples.append(transforms(sample))
         batch_transforms = self._compose_batch_transform(transforms, 'test')
         batch_samples = batch_transforms(batch_samples)
-        batch_samples = list(map(paddle.to_tensor, batch_samples))
-        batch_samples = {
-            k: v
-            for k, v in zip(batch_transforms.output_fields, batch_samples)
-        }
+        for k, v in batch_samples.items():
+            batch_samples[k] = paddle.to_tensor(v)
         return batch_samples
 
     def _postprocess(self, batch_pred):

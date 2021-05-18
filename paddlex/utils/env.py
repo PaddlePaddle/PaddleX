@@ -32,7 +32,7 @@ def get_environ_info():
     compiled_with_cuda = paddle.is_compiled_with_cuda()
     if compiled_with_cuda:
         if 'gpu' in paddle.get_device():
-            gpu_nums = paddle.distributed.ParallelEnv().nranks
+            gpu_nums = paddle.distributed.get_world_size()
         else:
             gpu_nums = 0
         if gpu_nums == 0:
@@ -48,7 +48,7 @@ def get_environ_info():
 
 def get_num_workers(num_workers):
     if num_workers == 'auto':
-        num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 8 else 8
+        num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 2 else 2
     return num_workers
 
 

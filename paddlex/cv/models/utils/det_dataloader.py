@@ -41,15 +41,8 @@ class BaseDataLoader(object):
         return self
 
     def __next__(self):
-        # pack {filed_name: field_data} here
-        # looking forward to support dictionary
-        # data structure in paddle.io.DataLoader
         try:
-            data = next(self.loader)
-            return {
-                k: v
-                for k, v in zip(self._batch_transforms.output_fields, data)
-            }
+            return next(self.loader)
         except StopIteration:
             self.loader = iter(self.dataloader)
             six.reraise(*sys.exc_info())
