@@ -19,6 +19,7 @@ import time
 import copy
 import math
 import yaml
+import json
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 from paddle.jit import to_static
@@ -142,6 +143,11 @@ class BaseModel:
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
+        # 评估结果保存
+        if hasattr(self, 'eval_details'):
+            with open(osp.join(save_dir, 'eval_details.json'), 'w') as f:
+                json.dump(self.eval_details, f)
 
         if self.status == 'Pruned' and self.pruner is not None:
             pruning_info = self.get_pruning_info()

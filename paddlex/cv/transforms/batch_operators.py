@@ -158,11 +158,12 @@ class _BatchPadding(Transform):
                 gt_num = data['gt_bbox'].shape[0]
                 gt_box_data[0:gt_num, :] = data['gt_bbox']
                 gt_class_data[0:gt_num] = np.squeeze(data['gt_class'])
-                is_crowd_data[0:gt_num] = np.squeeze(data['is_crowd'])
+                if 'is_crowd' in data:
+                    is_crowd_data[0:gt_num] = np.squeeze(data['is_crowd'])
+                    data['is_crowd'] = is_crowd_data
 
                 data['gt_bbox'] = gt_box_data
                 data['gt_class'] = gt_class_data
-                data['is_crowd'] = is_crowd_data
 
                 if pad_mask:
                     for j, poly in enumerate(data['gt_poly']):
