@@ -51,15 +51,14 @@ class BatchCompose(Transform):
 
 
 class BatchRandomResize(Transform):
-    """Resize a batch of input to random sizes.
+    """
+    Resize a batch of input to random sizes.
 
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_sizes (list): Multiple target sizes, each target size is an int or list/tuple.
-        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}): Interpolation method of resize,
-        'LINEAR' is used by default.
-
+        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]): Multiple target sizes, each target size is an int or list/tuple.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
     Raises:
         TypeError: Invalid type of target_size.
         ValueError: Invalid interpolation method.
@@ -92,10 +91,9 @@ class BatchRandomResizeByShort(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        short_sizes (int): Target size of the shorter side of the image(s).
-        max_size (int): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied.
-        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}): Interpolation method of resize,
-        'LINEAR' is used by default.
+        short_sizes (List[int]): Target sizes of the shorter side of the image(s).
+        max_size (int, optional): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied. Defaults to -1.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
 
     Raises:
         TypeError: Invalid type of target_size.
