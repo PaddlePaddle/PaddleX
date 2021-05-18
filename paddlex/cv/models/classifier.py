@@ -39,11 +39,10 @@ __all__ = [
 
 
 class BaseClassifier(BaseModel):
-    """构建分类器，并实现其训练、评估、预测和模型导出。
+    """Parent class of all classification models.
     Args:
-        model_name (str): 分类器的模型名字，取值范围为['ResNet18',
-                          'ResNet34', 'ResNet50', 'ResNet101'。
-        num_classes (int): 类别数。默认为1000。
+        model_name (str): Name of classification model.
+        num_classes (int): The number of target classes.
     """
 
     def __init__(self, model_name='ResNet50', num_classes=1000, **params):
@@ -169,6 +168,28 @@ class BaseClassifier(BaseModel):
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True):
+        """
+        Train the model.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddle.io.Dataset): Training dataset.
+            train_batch_size(int): Total batch size among all workers used in training, default 64.
+            eval_dataset(paddle.io.Dataset): Evaluation dataset.
+            optimizer(paddle.optimizer.Optimizer): Optimizer used in training. If None, a default optimizer is used. Default None.
+            save_interval_epochs(int): Epoch interval for saving the model, default 1.
+            log_interval_steps(int): Step interval for printing training information, default 10.
+            save_dir(str): Directory to save the model, default 'output'.
+            pretrain_weights(str or None): None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaultr 'IMAGENET'.
+            learning_rate(float): Learning rate for training, default .025.
+            warmup_steps(int): The number of steps of warm-up training, default 0.
+            warmup_start_lr(float): Start learning rate of warm-up training, default 0..
+            lr_decay_epochs(list or tuple): Epoch milestones for learning rate decay, default (20, 60, 90).
+            lr_decay_gamma(float): Gamma coefficient of learning rate decay, default .1.
+            early_stop(bool): Whether to adopt early stop strategy, default False.
+            early_stop_patience(int): Early stop patience, default 5.
+            use_vdl: Whether to use VisualDL to monitor the training process, default True.
+
+        """
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -214,6 +235,17 @@ class BaseClassifier(BaseModel):
             use_vdl=use_vdl)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
+        """
+        Evaluate the model.
+        Args:
+            eval_dataset(paddle.io.Dataset): Evaluation dataset.
+            batch_size(int): Total batch size among all workers used for evaluation, default 1.
+            return_details(bool): Whether to return evaluation details, default False.
+
+        Returns:
+            dict: Evaluation metrics.
+
+        """
         # 给transform添加arrange操作
         arrange_transforms(
             model_type=self.model_type,
@@ -248,6 +280,17 @@ class BaseClassifier(BaseModel):
             return eval_metrics.get()
 
     def predict(self, img_file, transforms=None, topk=1):
+        """
+        Do inference.
+        Args:
+            img_file(list or str): Input image paths or arrays in BGR format.
+            transforms(paddlex.transforms.Compose or None): Transforms for inputs. If None, the transforms for evaluation process will be used. Default None.
+            topk(int): Keep topk results in prediction, default 1.
+
+        Returns:
+            dict or list of dict: The prediction results.
+
+        """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
         if transforms is None:

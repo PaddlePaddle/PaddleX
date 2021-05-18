@@ -161,6 +161,25 @@ class BaseSegmenter(BaseModel):
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True):
+        """
+        Train the model.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddle.io.Dataset): Training dataset.
+            train_batch_size(int): Total batch size among all workers used in training, default 64.
+            eval_dataset(paddle.io.Dataset): Evaluation dataset.
+            optimizer(paddle.optimizer.Optimizer): Optimizer used in training. If None, a default optimizer is used. Default None.
+            save_interval_epochs(int): Epoch interval for saving the model, default 1.
+            log_interval_steps(int): Step interval for printing training information, default 10.
+            save_dir(str): Directory to save the model, default 'output'.
+            pretrain_weights(str or None): None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaultr 'IMAGENET'.
+            learning_rate(float): Learning rate for training, default .025.
+            lr_decay_power(float): Learning decay power, default .9.
+            early_stop(bool): Whether to adopt early stop strategy, default False.
+            early_stop_patience(int): Early stop patience, default 5.
+            use_vdl: Whether to use VisualDL to monitor the training process, default True.
+
+        """
         self.labels = train_dataset.labels
         if self.losses is None:
             self.losses = self.default_loss()
@@ -203,6 +222,17 @@ class BaseSegmenter(BaseModel):
             use_vdl=use_vdl)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
+        """
+        Evaluate the model.
+        Args:
+            eval_dataset(paddle.io.Dataset): Evaluation dataset.
+            batch_size(int): Total batch size among all workers used for evaluation, default 1.
+            return_details(bool): Whether to return evaluation details, default False.
+
+        Returns:
+            dict: Evaluation metrics.
+
+        """
         arrange_transforms(
             model_type=self.model_type,
             transforms=eval_dataset.transforms,
@@ -283,6 +313,16 @@ class BaseSegmenter(BaseModel):
         return eval_metrics
 
     def predict(self, img_file, transforms=None):
+        """
+        Do inference.
+        Args:
+            img_file(list or str): Input image paths or arrays in BGR format.
+            transforms(paddlex.transforms.Compose or None): Transforms for inputs. If None, the transforms for evaluation process will be used. Default None.
+
+        Returns:
+            dict or list of dict: The prediction results.
+
+        """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
         if transforms is None:

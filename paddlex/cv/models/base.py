@@ -354,6 +354,15 @@ class BaseModel:
                             batch_size=8,
                             criterion='l1_norm',
                             save_dir='output'):
+        """
+
+        Args:
+            dataset: Dataset used for evaluation during sensitivity analysis.
+            batch_size(int): Batch size used in evaluation.
+            criterion{'l1_norm', 'fpgm'}: Pruning criterion.
+            save_dir: The directory to save sensitivity file of the model.
+
+        """
         assert criterion in ['l1_norm', 'fpgm'], \
             "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
         arrange_transforms(
@@ -383,6 +392,14 @@ class BaseModel:
             format(sen_file))
 
     def prune(self, pruned_flops, save_dir=None):
+        """
+
+        Args:
+            pruned_flops(float): Ratio of FLOPs to be pruned.
+            save_dir{None, str}: If None, the pruned model will not be saved.
+            Otherwise, the pruned model will be saved at save_dir. Default None.
+
+        """
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
             pre_pruning_flops))

@@ -12,7 +12,7 @@ train_transforms = transforms.Compose([
     transforms.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]),
     transforms.RandomCrop(), transforms.RandomHorizontalFlip(),
     transforms.BatchRandomResize(
-        target_size=[
+        target_sizes=[
             320, 352, 384, 416, 448, 480, 512, 544, 576, 608, 640, 672, 704,
             736, 768
         ],
