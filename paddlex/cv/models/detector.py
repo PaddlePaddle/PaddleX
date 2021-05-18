@@ -81,7 +81,7 @@ class BaseDetector(BaseModel):
             # detector only supports single card eval with batch size 1
             total_steps = dataset.num_samples
             logging.info(
-                "Start to evaluating(total_samples={}, total_steps={})...".
+                "Start to evaluate(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(

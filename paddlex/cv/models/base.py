@@ -166,7 +166,7 @@ class BaseModel:
             batch_size = batch_size_each_card
             total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
             logging.info(
-                "Start to evaluating(total_samples={}, total_steps={})...".
+                "Start to evaluate(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(
