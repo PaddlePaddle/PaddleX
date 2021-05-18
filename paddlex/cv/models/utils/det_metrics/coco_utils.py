@@ -152,6 +152,12 @@ def loadRes(coco_obj, anns):
     :param   resFile (str)     : file name of result file
     :return: res (obj)         : result api object
     """
+
+    # This function has the same functionality as pycocotools.COCO.loadRes,
+    # except that the input anns is list of results rather than a json file.
+    # Refer to
+    # https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/coco.py#L305,
+
     # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
     # or matplotlib.backends is imported for the first time
     # pycocotools import matplotlib
