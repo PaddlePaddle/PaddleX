@@ -21,7 +21,6 @@ from . import cv
 from . import seg
 from . import cls
 from . import det
-from . import slim
 from . import models
 from . import tools
 

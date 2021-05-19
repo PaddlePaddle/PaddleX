@@ -1,22 +1,19 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
-from paddlex import transforms
+from paddlex import transforms as T
 
 optic_dataset = 'https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz'
 pdx.utils.download_and_decompress(optic_dataset, path='./')
 
-train_transforms = transforms.Compose([
-    transforms.Resize(target_size=512),
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize(
+train_transforms = T.Compose([
+    T.Resize(target_size=512),
+    T.RandomHorizontalFlip(),
+    T.Normalize(
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 
-eval_transforms = transforms.Compose([
-    transforms.Resize(target_size=512),
-    transforms.Normalize(
+eval_transforms = T.Compose([
+    T.Resize(target_size=512),
+    T.Normalize(
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 

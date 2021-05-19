@@ -1,21 +1,20 @@
 import paddlex as pdx
-from paddlex import transforms
+from paddlex import transforms as T
 
 dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
-train_transforms = transforms.Compose([
-    transforms.RandomResizeByShort(
+train_transforms = T.Compose([
+    T.RandomResizeByShort(
         short_sizes=[640, 672, 704, 736, 768, 800],
         max_size=1333,
-        interp='CUBIC'), transforms.RandomHorizontalFlip(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        interp='CUBIC'), T.RandomHorizontalFlip(), T.Normalize(
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(
-        short_size=800, max_size=1333, interp='CUBIC'), transforms.Normalize(
+eval_transforms = T.Compose([
+    T.ResizeByShort(
+        short_size=800, max_size=1333, interp='CUBIC'), T.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
