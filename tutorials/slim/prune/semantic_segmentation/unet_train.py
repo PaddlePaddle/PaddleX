@@ -1,5 +1,5 @@
 import paddlex as pdx
-from paddlex import transforms
+from paddlex import transforms as T
 
 # 下载和解压视盘分割数据集
 optic_dataset = 'https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz'
@@ -7,16 +7,16 @@ pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 # 定义训练和验证时的transforms
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
-train_transforms = transforms.Compose([
-    transforms.Resize(target_size=512),
-    transforms.RandomHorizontalFlip(),
-    transforms.Normalize(
+train_transforms = T.Compose([
+    T.Resize(target_size=512),
+    T.RandomHorizontalFlip(),
+    T.Normalize(
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 
-eval_transforms = transforms.Compose([
-    transforms.Resize(target_size=512),
-    transforms.Normalize(
+eval_transforms = T.Compose([
+    T.Resize(target_size=512),
+    T.Normalize(
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 
