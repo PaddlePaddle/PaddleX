@@ -42,8 +42,7 @@ python image_classification/mobilenetv2.py
 * 若需使用多张GPU卡进行训练，例如使用2张卡时执行：
 
 ```
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-python -m paddle.distributed.launch --gpus 0,1 image_classification/mobilenetv2.py
+python -m paddle.distributed.launch --gpus 0,1 image_classification/mobilenetv3_small.py
 ```
 使用多卡时，参考[训练参数调整](https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html)调整学习率和批量大小。
 
