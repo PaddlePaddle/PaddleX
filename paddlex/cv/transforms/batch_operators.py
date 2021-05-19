@@ -39,9 +39,9 @@ class BatchCompose(Transform):
                     samples = op(samples)
                 except Exception as e:
                     stack_info = traceback.format_exc()
-                    logging.warn("fail to map batch transform [{}] "
-                                 "with error: {} and stack:\n{}".format(
-                                     op, e, str(stack_info)))
+                    logging.warning("fail to map batch transform [{}] "
+                                    "with error: {} and stack:\n{}".format(
+                                        op, e, str(stack_info)))
                     raise e
 
         samples = _Permute()(samples)
@@ -57,7 +57,7 @@ class BatchRandomResize(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]): Multiple target sizes, each target size is an int or list/tuple.
+        target_sizes (List[int], List[list or tuple] or Tuple[list or tuple]): Multiple target sizes, each target size is an int or list/tuple.
         interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
     Raises:
         TypeError: Invalid type of target_size.

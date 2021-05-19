@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import cv2
-import math
 import numpy as np
 import pycocotools.mask as mask_util
 import shapely.ops
