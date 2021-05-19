@@ -1,19 +1,21 @@
 import paddlex as pdx
-from paddlex import transforms
+from paddlex import transforms as T
 
+# 下载和解压蔬菜分类数据集
 veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
 pdx.utils.download_and_decompress(veg_dataset, path='./')
 
-train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224), transforms.RandomHorizontalFlip(),
-    transforms.Normalize()
+# 定义训练和验证时的transforms
+# API说明https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
+train_transforms = T.Compose(
+    [T.RandomCrop(crop_size=224), T.RandomHorizontalFlip(), T.Normalize()])
+
+eval_transforms = T.Compose([
+    T.ResizeByShort(short_size=256), T.CenterCrop(crop_size=224), T.Normalize()
 ])
 
-eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224), transforms.Normalize()
-])
-
+# 定义训练和验证所用的数据集
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/datasets/imagenet.py#L21
 train_dataset = pdx.datasets.ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/train_list.txt',
@@ -27,16 +29,21 @@ eval_dataset = pdx.datasets.ImageNet(
     label_list='vegetables_cls/labels.txt',
     transforms=eval_transforms)
 
+# 加载模型
 model = pdx.load_model('output/mobilenet_v2/best_model')
 
-# Step 1/3: Analyze the sensitivities of parameters
+# Step 1/3: 分析模型各层参数在不同的剪裁比例下的敏感度
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/95c53dec89ab0f3769330fa445c6d9213986ca5f/paddlex/cv/models/base.py#L352
 model.analyze_sensitivity(
     dataset=eval_dataset, save_dir='output/mobilenet_v2/prune')
 
-# Step 2/3: Prune the model by the specified ratio of FLOPs to be pruned
+# Step 2/3: 根据选择的FLOPs减小比例对模型进行剪裁
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/95c53dec89ab0f3769330fa445c6d9213986ca5f/paddlex/cv/models/base.py#L394
 model.prune(pruned_flops=.2)
 
-# Step 3/3: Retrain the model
+# Step 3/3: 对剪裁后的模型重新训练
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/95c53dec89ab0f3769330fa445c6d9213986ca5f/paddlex/cv/models/classifier.py#L153
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
