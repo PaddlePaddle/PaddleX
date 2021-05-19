@@ -383,6 +383,9 @@ class BaseModel:
             format(sen_file))
 
     def prune(self, pruned_flops, save_dir=None):
+        if self.status == "Pruned":
+            raise Exception(
+                "A pruned model cannot be done model pruning again!")
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
             pre_pruning_flops))
@@ -410,6 +413,13 @@ class BaseModel:
         static_net = paddle.jit.to_static(
             self.net, input_spec=self.test_inputs)
         paddle.jit.save(static_net, osp.join(save_dir, 'model'))
+
+        if self.status == 'Pruned':
+            pruning_info = self.get_pruning_info()
+            with open(
+                    osp.join(save_dir, 'prune.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(pruning_info, f)
 
         model_info = self.get_model_info()
         model_info['status'] = 'Infer'

@@ -31,6 +31,12 @@ def load_model(model_dir):
         model_info = yaml.load(f.read(), Loader=yaml.Loader)
     f.close()
 
+    version = model_info['version']
+    if int(version.split('.')[0]) < 2:
+        raise Exception(
+            'Current version is {}, a model trained by PaddleX={} cannot be load.'.
+            format(paddlex.version, version))
+
     status = model_info['status']
 
     if not hasattr(paddlex.cv.models, model_info['Model']):
@@ -51,19 +57,25 @@ def load_model(model_dir):
                 if k in model.__dict__:
                     model.__dict__[k] = v
 
-        if status == 'Pruned':
+        if status == 'Pruned' or osp.exists(osp.join(model_dir, "prune.yml")):
             with open(osp.join(model_dir, "prune.yml")) as f:
                 pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
                 inputs = pruning_info['pruner_inputs']
-                pruner = getattr(paddleslim, pruning_info['pruner'])(
+                model.pruner = getattr(paddleslim, pruning_info['pruner'])(
                     model.net, inputs=inputs)
-                pruning_ratios = pruning_info['pruning_ratios']
-                pruner.prune_vars(
-                    ratios=pruning_ratios,
+                model.pruning_ratios = pruning_info['pruning_ratios']
+                model.pruner.prune_vars(
+                    ratios=model.pruning_ratios,
                     axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
         if status == 'Infer':
-            net_state_dict = paddle.load(osp.join(model_dir, 'model'))
+            if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
+                net_state_dict = paddle.load(
+                    model_dir,
+                    params_filename='model.pdiparams',
+                    model_filename='model.pdmodel')
+            else:
+                net_state_dict = paddle.load(osp.join(model_dir, 'model'))
         else:
             net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
         model.net.set_state_dict(net_state_dict)
