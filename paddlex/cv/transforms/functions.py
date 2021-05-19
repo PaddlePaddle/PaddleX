@@ -14,7 +14,7 @@
 
 import cv2
 import numpy as np
-import pycocotools.mask as mask_util
+
 import shapely.ops
 from shapely.geometry import Polygon, MultiPolygon, GeometryCollection
 import copy
@@ -84,6 +84,7 @@ def horizontal_flip_poly(poly, width):
 
 
 def horizontal_flip_rle(rle, height, width):
+    import pycocotools.mask as mask_util
     if 'counts' in rle and type(rle['counts']) == list:
         rle = mask_util.frPyObjects(rle, height, width)
     mask = mask_util.decode(rle)
@@ -99,6 +100,7 @@ def vertical_flip_poly(poly, height):
 
 
 def vertical_flip_rle(rle, height, width):
+    import pycocotools.mask as mask_util
     if 'counts' in rle and type(rle['counts']) == list:
         rle = mask_util.frPyObjects(rle, height, width)
     mask = mask_util.decode(rle)
@@ -152,6 +154,7 @@ def crop_poly(segm, crop):
 
 
 def crop_rle(rle, crop, height, width):
+    import pycocotools.mask as mask_util
     if 'counts' in rle and type(rle['counts']) == list:
         rle = mask_util.frPyObjects(rle, height, width)
     mask = mask_util.decode(rle)
@@ -168,6 +171,7 @@ def expand_poly(poly, x, y):
 
 
 def expand_rle(rle, x, y, height, width, h, w):
+    import pycocotools.mask as mask_util
     if 'counts' in rle and type(rle['counts']) == list:
         rle = mask_util.frPyObjects(rle, height, width)
     mask = mask_util.decode(rle)
@@ -185,6 +189,7 @@ def resize_poly(poly, im_scale_x, im_scale_y):
 
 
 def resize_rle(rle, im_h, im_w, im_scale_x, im_scale_y, interp):
+    import pycocotools.mask as mask_util
     if 'counts' in rle and type(rle['counts']) == list:
         rle = mask_util.frPyObjects(rle, im_h, im_w)
     mask = mask_util.decode(rle)
