@@ -534,7 +534,8 @@ class YOLOv3(BaseDetector):
                 "('MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3', 'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34')".
                 format(backbone))
 
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
@@ -886,7 +887,8 @@ class PPYOLO(YOLOv3):
                 format(backbone))
         self.backbone_name = backbone
 
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
@@ -1043,7 +1045,8 @@ class PPYOLOTiny(YOLOv3):
                 "PPYOLOTiny only supports MobileNetV3 as backbone. "
                 "Backbone is forcibly set to MobileNetV3.")
         self.backbone_name = 'MobileNetV3'
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
@@ -1148,7 +1151,8 @@ class PPYOLOv2(YOLOv3):
                 "('ResNet50_vd_dcn', 'ResNet18_vd')".format(backbone))
         self.backbone_name = backbone
 
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info['num'] > 1:
+        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'

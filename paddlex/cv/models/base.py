@@ -423,7 +423,7 @@ class BaseModel:
             self.save_model(save_dir)
             logging.info("Pruned model is saved at {}".format(save_dir))
 
-    def export_inference_model(self, save_dir, image_shape=[-1, -1]):
+    def _export_inference_model(self, save_dir, image_shape=[-1, -1]):
         save_dir = osp.join(save_dir, 'inference_model')
         self.net.eval()
         self.test_inputs = self.get_test_inputs(image_shape)

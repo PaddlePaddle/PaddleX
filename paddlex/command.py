@@ -140,12 +140,16 @@ def main():
             assert len(
                 fixed_input_shape
             ) == 2, "len of fixed input shape must == 2, such as [224,224]"
+            # input fixed_input_shape is [w,h]
+            # export_inference_model needs [h,w]
             fixed_input_shape = fixed_input_shape[-1::-1]
         else:
-            fixed_input_shape = None
+            fixed_input_shape = [-1, -1]
 
+        os.environ['PADDLEX_EXPORT_STAGE'] = 'True'
+        os.environ['PADDLESEG_EXPORT_STAGE'] = 'True'
         model = pdx.load_model(args.model_dir)
-        model.export_inference_model(args.save_dir, fixed_input_shape)
+        model._export_inference_model(args.save_dir, fixed_input_shape)
 
     if args.data_conversion:
         assert args.source is not None, "--source should be defined while converting dataset"
