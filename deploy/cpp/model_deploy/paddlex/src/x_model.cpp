@@ -23,6 +23,9 @@ bool PaddleXModel::GenerateTransformsConfig(const YAML::Node& src) {
   for (const auto& op : src["Transforms"]) {
     std::string op_name = op.begin()->first.as<std::string>();
     if (op_name == "Normalize") {
+      if (src["version"].as<std::string>() >= "2.0.0") {
+        yaml_config_["transforms"]["Convert"]["dtype"] = "float";
+      }
       XNormalize(op.begin()->second, &yaml_config_);
     } else if (op_name == "ResizeByShort") {
       XResizeByShort(op.begin()->second, &yaml_config_);
