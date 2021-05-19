@@ -274,7 +274,7 @@ class Resize(Transform):
         if self.interp == "RANDOM":
             interp = random.choice(list(interp_dict.values()))
         else:
-            interp = self.interp_dict[self.interp]
+            interp = interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
 
         im_scale_y = self.target_size[0] / im_h
@@ -316,20 +316,11 @@ class RandomResize(Transform):
         ValueError: Invalid interpolation method.
     """
 
-    # The interpolation mode
-    interp_dict = {
-        'NEAREST': cv2.INTER_NEAREST,
-        'LINEAR': cv2.INTER_LINEAR,
-        'CUBIC': cv2.INTER_CUBIC,
-        'AREA': cv2.INTER_AREA,
-        'LANCZOS4': cv2.INTER_LANCZOS4
-    }
-
     def __init__(self, target_sizes, interp='LINEAR'):
         super(RandomResize, self).__init__()
-        if not (interp == "RANDOM" or interp in self.interp_dict):
+        if not (interp == "RANDOM" or interp in interp_dict):
             raise ValueError("interp should be one of {}".format(
-                self.interp_dict.keys()))
+                interp_dict.keys()))
         self.interp = interp
         assert isinstance(target_sizes, list), \
             "target_size must be List"
