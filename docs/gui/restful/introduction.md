@@ -2,7 +2,10 @@
 PaddleX RESTful是基于PaddleX开发的RESTful API。  
 
 对于开发者来说可以通过如下指令启动PaddleX RESTful服务  
-**paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]**  
+
+```
+paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]  
+```
 
 对于设置workspace在HOME目录的wk文件夹下，RESTful服务端口为8080的命令参考如下：
 ![](./img/start_restful.png)  
@@ -36,7 +39,7 @@ pip install pycuda
 
 #### step2：开启RESTful 服务
 ```
-paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]
+paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```
 
 #### setp3：根据上面的链接下载支持RESTful版本的GUI
@@ -47,7 +50,7 @@ paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]
 
 ## PaddleX Web Demo
 PaddleX Web Demo是针对PaddleX RESTful开发的Web可视化客户端。  
-[Wed demo传送门](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/restful/frontend_demo/paddlex_restful_demo.html)
+[Wed demo传送门](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_restful/restful/templates/paddlex_restful_demo.html)
 
 ### Web DEMO使用流程
 
@@ -62,10 +65,13 @@ pip install pycuda
 
 #### step2：开启RESTful 服务
 ```
-paddlex --start_restful --port [端口号] --workspace_dir [工作空间地址]
+paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```
 
-#### step3：通过浏览器打开[Demo](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/restful/frontend_demo/paddlex_restful_demo.html)文件
+#### step3：
+- 方法1（推荐）：在浏览器输入开启RESTful服务的机器与端口号如:10.3.12.4:8080，便可以使用WEB GUI，此方法无需step4操作
+- 方法2：通过浏览器打开[Demo](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_restful/restful/templates/paddlex_restful_demo.html)文件
+
 
 
 #### step4：点击设置服务器信息，填写正确的后端ip与端口

@@ -71,7 +71,7 @@ class Compose(SegTransform):
                 raise Exception('Can not open', img_path)
             im_data = dataset.ReadAsArray()
             return im_data.transpose((1, 2, 0))
-        elif img_format in ['jpeg', 'bmp', 'png']:
+        elif img_format in ['jpeg', 'bmp', 'png', 'jpg']:
             return cv2.imread(img_path)
         elif ext == '.npy':
             return np.load(img_path)

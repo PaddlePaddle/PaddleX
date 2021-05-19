@@ -54,6 +54,11 @@ class VOCDetection(Dataset):
                  buffer_size=100,
                  parallel_method='process',
                  shuffle=False):
+        # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+        # or matplotlib.backends is imported for the first time
+        # pycocotools import matplotlib
+        import matplotlib
+        matplotlib.use('Agg')
         from pycocotools.coco import COCO
         super(VOCDetection, self).__init__(
             transforms=transforms,
@@ -126,16 +131,21 @@ class VOCDetection(Dataset):
                 objs = tree.findall(obj_tag)
                 pattern = re.compile('<size>', re.IGNORECASE)
                 size_tag = pattern.findall(
-                    str(ET.tostringlist(tree.getroot())))[0][1:-1]
-                size_element = tree.find(size_tag)
-                pattern = re.compile('<width>', re.IGNORECASE)
-                width_tag = pattern.findall(
-                    str(ET.tostringlist(size_element)))[0][1:-1]
-                im_w = float(size_element.find(width_tag).text)
-                pattern = re.compile('<height>', re.IGNORECASE)
-                height_tag = pattern.findall(
-                    str(ET.tostringlist(size_element)))[0][1:-1]
-                im_h = float(size_element.find(height_tag).text)
+                    str(ET.tostringlist(tree.getroot())))
+                if len(size_tag) > 0:
+                    size_tag = size_tag[0][1:-1]
+                    size_element = tree.find(size_tag)
+                    pattern = re.compile('<width>', re.IGNORECASE)
+                    width_tag = pattern.findall(
+                        str(ET.tostringlist(size_element)))[0][1:-1]
+                    im_w = float(size_element.find(width_tag).text)
+                    pattern = re.compile('<height>', re.IGNORECASE)
+                    height_tag = pattern.findall(
+                        str(ET.tostringlist(size_element)))[0][1:-1]
+                    im_h = float(size_element.find(height_tag).text)
+                else:
+                    im_w = 0
+                    im_h = 0
                 gt_bbox = np.zeros((len(objs), 4), dtype=np.float32)
                 gt_class = np.zeros((len(objs), 1), dtype=np.int32)
                 gt_score = np.ones((len(objs), 1), dtype=np.float32)

@@ -21,7 +21,7 @@ eval_transforms = transforms.Compose([
     transforms.Normalize(),
 ])
 # 定义训练和验证所用的数据集
-# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/datasets/semantic_segmentation.html#segdataset
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-segdataset
 train_dataset = pdx.datasets.SegDataset(
     data_dir='meter_seg/',
     file_list='meter_seg/train.txt',
@@ -40,7 +40,7 @@ eval_dataset = pdx.datasets.SegDataset(
 # 浏览器打开 https://0.0.0.0:8001即可
 # 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
 #
-# API说明: https://paddlex.readthedocs.io/zh_CN/latest/apis/models/semantic_segmentation.html#deeplabv3p
+# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p
 model = pdx.seg.DeepLabv3p(
     num_classes=len(train_dataset.labels), backbone='Xception65')
 model.train(

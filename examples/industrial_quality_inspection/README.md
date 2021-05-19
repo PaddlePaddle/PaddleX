@@ -58,8 +58,8 @@
 
 | 模型 | VOC mAP (%) | Inference Speed (ms/image)
 | -- | -- | -- |
-| YOLOv3-MobileNetv3_ssld | 78.52 | 56.71 |
-| pruned YOLOv3-MobileNetv3_ssld | 79.02 | 34.50 |
+| YOLOv3-MobileNetv3_ssld | 81.31 | 56.71 |
+| pruned YOLOv3-MobileNetv3_ssld | 78.60 | 34.50 |
 
 ### 模型训练
 

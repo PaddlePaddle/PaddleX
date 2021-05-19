@@ -61,7 +61,7 @@ python train_rcnn.py
 python error_analysis.py
 ```
 
-可参考[性能优化部分的模型效果分析](./accuracy_improvement.md#2-%E6%A8%A1%E5%9E%8B%E6%95%88%E6%9E%9C%E5%88%86%E6%9E%90)来理解当前模型预测错误的原因。
+可参考[性能优化部分的模型效果分析](./accuracy_improvement.html#id3)来理解当前模型预测错误的原因。
 
 运行以下代码，生成可视化真值和预测结果的对比图以进一步理解模型效果，代码中的置信度阈值可根据实际情况进行调整。
 
@@ -75,7 +75,7 @@ python compare.py
 
 ### (6) 统计图片级召回率和误检率
 
-模型迭代完成后，计算不同置信度阈值下[图片级召回率](./accuracy_improvement.md#6-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%8A%A0%E5%85%A5)和[图片级误检率](./accuracy_improvement.md#6-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%8A%A0%E5%85%A5)，找到符合要求的召回率和误检率，对应的置信度阈值用于后续模型预测阶段。
+模型迭代完成后，计算不同置信度阈值下[图片级召回率](./accuracy_improvement.html#id7)和[图片级误检率](./accuracy_improvement.html#id7)，找到符合要求的召回率和误检率，对应的置信度阈值用于后续模型预测阶段。
 
 ```
 python cal_tp_fp.py

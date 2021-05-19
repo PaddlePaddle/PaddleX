@@ -6,7 +6,7 @@ PaddleX支持在树莓派上插入NCS2(神经计算棒2代)通过OpenVINO部署P
 ## 前置条件  
 * OS: Raspbian OS 
 * PaddleX 1.0+
-* OpenVINO 2020.3+  
+* OpenVINO 2020.4  
 
 - Raspbian OS:树莓派操作操作系统下载与安装请参考[树莓派系统安装与环境配置](./Raspberry.md#硬件环境配置)  
 - PaddleX: PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html)  

@@ -50,6 +50,11 @@
                     "name": "ENCRYPTION_DIR",
                     "value": "",
                     "type": "PATH"
+                },
+                {
+                    "name": "WITH_TENSORRT",
+                    "value": "False",
+                    "type": "BOOL"
                 }
             ]
         }

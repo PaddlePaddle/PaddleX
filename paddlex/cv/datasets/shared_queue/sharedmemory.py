@@ -221,7 +221,10 @@ class PageAllocator(object):
 
         start = self.s_allocator_header
         end = start + self._page_size * hpages
-        alloc_flags = self._base[start:end].tostring()
+        try:
+            alloc_flags = self._base[start:end].tobytes()
+        except:
+            alloc_flags = self._base[start:end].tostring()
         info = {
             'magic_num': self._magic_num,
             'header_pages': hpages,
@@ -250,7 +253,10 @@ class PageAllocator(object):
     def header(self):
         """ get header info of this allocator
         """
-        header_str = self._base[0:self.s_allocator_header].tostring()
+        try:
+            header_str = self._base[0:self.s_allocator_header].tobytes()
+        except:
+            header_str = self._base[0:self.s_allocator_header].tostring()
         magic, pos, used = struct.unpack(str('III'), header_str)
 
         assert magic == self._magic_num, \
@@ -297,7 +303,10 @@ class PageAllocator(object):
         end = start + page_num
         assert start >= 0 and end <= self._header_size, 'invalid end[%d] of pages '\
             'in allocator[%s]' % (end, str(self))
-        status = self._base[start:end].tostring().decode()
+        try:
+            status = self._base[start:end].tobytes().decode()
+        except:
+            status = self._base[start:end].tostring().decode()
         if ret_flag:
             return status
 
@@ -515,7 +524,10 @@ class SharedMemoryMgr(object):
         if no_copy:
             return self._base[start:start + size]
         else:
-            return self._base[start:start + size].tostring()
+            try:
+                return self._base[start:start + size].tobytes()
+            except:
+                return self._base[start:start + size].tostring()
 
     def __str__(self):
         return 'SharedMemoryMgr:{id:%d, %s}' % (self._id, str(self._allocator))

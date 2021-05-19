@@ -1,3 +1,17 @@
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from flask import Flask, request, render_template, send_from_directory, jsonify, session, send_file
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -9,7 +23,7 @@ import json
 import sys
 import multiprocessing as mp
 from . import workspace_pb2 as w
-from .utils import CustomEncoder, ShareData, is_pic, get_logger, TaskStatus
+from .utils import CustomEncoder, ShareData, is_pic, get_logger, TaskStatus, get_ip
 import numpy as np
 
 app = Flask(__name__)
@@ -908,6 +922,26 @@ def model_file():
         return send_file(ret)
 
 
+@app.route('/', methods=['GET'])
+def gui():
+    if request.method == 'GET':
+        file_path = osp.join(
+            osp.dirname(__file__), 'templates', 'paddlex_restful_demo.html')
+        ip = get_ip()
+        url = 'var str_srv_url = "http://' + ip + ':' + str(SD.port) + '";'
+        f = open(file_path, 'r+')
+        lines = f.readlines()
+        for i, line in enumerate(lines):
+            if '0.0.0.0:8080' in line:
+                lines[i] = url
+                break
+        f.close()
+        f = open(file_path, 'w+')
+        f.writelines(lines)
+        f.close()
+        return render_template('/paddlex_restful_demo.html')
+
+
 def run(port, workspace_dir):
     if workspace_dir is None:
         user_home = os.path.expanduser('~')
@@ -922,7 +956,11 @@ def run(port, workspace_dir):
             os.makedirs(dirname)
     logger = get_logger(osp.join(dirname, "mcessages.log"))
     init(dirname, logger)
+    SD.port = port
+    ip = get_ip()
+    url = ip + ':' + str(port)
     try:
+        logger.info("RESTful服务启动成功后，您可以在浏览器打开 {} 使用WEB版本GUI".format(url))
         app.run(host='0.0.0.0', port=port, threaded=True)
     except:
-        print("请确保端口号：{}未被防火墙限制".format(port))
+        print("服务启动不成功，请确保端口号：{}未被防火墙限制".format(port))

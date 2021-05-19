@@ -3,9 +3,7 @@ WITH_GPU=ON
 # 使用MKL or openblas
 WITH_MKL=OFF
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
-WITH_TENSORRT=OFF
-# TensorRT 的路径，如果需要集成TensorRT，需修改为您实际安装的TensorRT路径
-TENSORRT_DIR=/root/projects/TensorRT/
+WITH_TENSORRT=ON
 # Paddle 预测库路径, 请修改为您实际安装的预测库路径
 PADDLE_DIR=/root/projects/paddle_inference
 # Paddle 的预测库是否使用静态库来编译

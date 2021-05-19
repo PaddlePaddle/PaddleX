@@ -14,16 +14,21 @@ paddlex.det.transforms.Compose(transforms)
 
 ## Normalize
 ```python
-paddlex.det.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+paddlex.det.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], min_val=[0., 0., 0.], max_val=[255., 255., 255.])
 ```
 
 对图像进行标准化。  
-1. 归一化图像到到区间[0.0, 1.0]。  
-2. 对图像进行减均值除以标准差操作。
+1.像素值减去min_val
+2.像素值除以(max_val-min_val), 归一化到区间 [0.0, 1.0]。
+3.对图像进行减均值除以标准差操作。
+
 
 ### 参数
-* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。
-* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。
+* **mean** (list): 图像数据集的均值。默认为[0.485, 0.456, 0.406]。长度应与图像通道数量相同。
+* **std** (list): 图像数据集的标准差。默认为[0.229, 0.224, 0.225]。长度应与图像通道数量相同。
+* **min_val** (list): 图像数据集的最小值。默认值[0, 0, 0]。长度应与图像通道数量相同。
+* **max_val** (list): 图像数据集的最大值。默认值[255.0, 255.0, 255.0]。长度应与图像通道数量相同。
+
 
 ## ResizeByShort
 ```python
@@ -85,19 +90,20 @@ paddlex.det.transforms.RandomDistort(brightness_range=0.5, brightness_prob=0.5, 
 
 以一定的概率对图像进行随机像素内容变换，模型训练时的数据增强操作。  
 1. 对变换的操作顺序进行随机化操作。
-2. 按照1中的顺序以一定的概率对图像在范围[-range, range]内进行随机像素内容变换。  
+2. 按照1中的顺序以一定的概率对图像进行随机像素内容变换。  
 
-【注意】该数据增强必须在数据增强Normalize之前使用。
+【注意】如果输入是uint8/uint16的RGB图像，该数据增强必须在数据增强Normalize之前使用。
 
 ### 参数
-* **brightness_range** (float): 明亮度因子的范围。默认为0.5。
+* **brightness_range** (float): 明亮度的缩放系数范围。从[1-`brightness_range`, 1+`brightness_range`]中随机取值作为明亮度缩放因子`scale`，按照公式`image = image * scale`调整图像明亮度。默认值为0.5。
 * **brightness_prob** (float): 随机调整明亮度的概率。默认为0.5。
-* **contrast_range** (float): 对比度因子的范围。默认为0.5。
+* **contrast_range** (float): 对比度的缩放系数范围。从[1-`contrast_range`, 1+`contrast_range`]中随机取值作为对比度缩放因子`scale`，按照公式`image = image * scale + (image_mean + 0.5) * (1 - scale)`调整图像对比度。默认为0.5。
 * **contrast_prob** (float): 随机调整对比度的概率。默认为0.5。
-* **saturation_range** (float): 饱和度因子的范围。默认为0.5。
+* **saturation_range** (float): 饱和度的缩放系数范围。从[1-`saturation_range`, 1+`saturation_range`]中随机取值作为饱和度缩放因子`scale`，按照公式`image = gray * (1 - scale) + image * scale`，其中`gray = R * 299/1000 + G * 587/1000+ B * 114/1000`。默认为0.5。
 * **saturation_prob** (float): 随机调整饱和度的概率。默认为0.5。
-* **hue_range** (int): 色调因子的范围。默认为18。
+* **hue_range** (int): 调整色相角度的差值取值范围。从[-`hue_range`, `hue_range`]中随机取值作为色相角度调整差值`delta`，按照公式`hue = hue + delta`调整色相角度 。默认为18，取值范围[0, 360]。
 * **hue_prob** (float): 随机调整色调的概率。默认为0.5。
+
 
 ## MixupImage
 ```python
@@ -173,6 +179,8 @@ paddlex.det.transforms.RandomCrop(aspect_ratio=[.5, 2.], thresholds=[.0, .1, .3,
 paddlex.det.transforms.CLAHE(clip_limit=2., tile_grid_size=(8, 8))
 ```
 对图像进行对比度增强。
+
+【注意】该数据增强只适用于灰度图。
 
 ### 参数
 

@@ -41,7 +41,7 @@ class X2VOC(object):
         # Convert the image files.
         new_image_dir = osp.join(dataset_save_dir, "JPEGImages")
         if osp.exists(new_image_dir):
-            shutil.rmtree(new_image_dir)
+            raise Exception("The directory {} is already exist, please remove the directory first".format(new_image_dir))
         os.makedirs(new_image_dir)
         for img_name in os.listdir(image_dir):
             if is_pic(img_name):
@@ -51,7 +51,7 @@ class X2VOC(object):
         # Convert the json files.
         xml_dir = osp.join(dataset_save_dir, "Annotations")
         if osp.exists(xml_dir):
-            shutil.rmtree(xml_dir)
+            raise Exception("The directory {} is already exist, please remove the directory first".format(xml_dir))
         os.makedirs(xml_dir)
         self.json2xml(new_image_dir, json_dir, xml_dir)
 

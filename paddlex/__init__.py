@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-__version__ = '1.3.1'
+__version__ = '1.3.10'
 
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
@@ -28,16 +28,18 @@ if "CUDA_VISIBLE_DEVICES" in os.environ:
 import paddle
 version = paddle.__version__.strip().split('.')
 if version[0] == '1':
+    gui_mode = True
     if version[1] != '8':
         raise Exception(
             'For running paddlex(v{}), Version of paddlepaddle should be greater than 1.8.3'.
             format(__version__))
-elif version[0] == '2':
-    print(
-        "[WARNING] You are using paddlepaddle(v{}) which may not compatible with paddlex(v{}), paddlepaddle==1.8.4 is strongly recommended.".
-        format(paddle.__version__, __version__))
+    #import paddlehub as hub
+    #if hub.__version__.strip().split('.')[0] > '1':
+    #    raise Exception("Try to reinstall Paddlehub by 'pip install paddlehub==1.8.2' while paddlepaddle < 2.0")
+
 if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
+    gui_mode = False
 
 from .utils.utils import get_environ_info
 from . import cv
@@ -48,7 +50,6 @@ from . import slim
 from . import converter
 from . import tools
 from . import deploy
-from . import restful
 
 try:
     import pycocotools

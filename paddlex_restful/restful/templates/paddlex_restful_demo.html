@@ -178,14 +178,12 @@ h1{
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 10vh;
 }
 
 view_item {
   border: 1px solid;
   background: none;
   width: 300px;
-  height:170px;
   text-transform: uppercase;
   text-align:left;
   color: #4361ee;
@@ -198,6 +196,16 @@ view_item {
   cursor: pointer;
   value: "";
 }
+
+view_item .hide_del_button {
+  float: right;
+  font-size: 15px;
+  font-family: helvetica;
+  color: red;
+  z-index:15;
+  display:none;
+}
+
 view_item::before, view_item::after {
   box-sizing: inherit;
   position: absolute;
@@ -215,6 +223,7 @@ view_item::before {
   top: 0;
   left: 0;
 }
+view_item:hover .hide_del_button {display:block;}
 view_item:hover::before, view_item:hover::after {
   width: 100%;
   height: 100%;
@@ -350,7 +359,7 @@ body { background: #f6f6f6;}
   background: #eee;
   position: absolute;
   width: 200px;
-  height: 140px;
+  height: 50px;
   display: none;
   z-index:8;
 }
@@ -404,6 +413,33 @@ body { background: #f6f6f6;}
 
 .table-dataset-imgs{width:100%; height:210px; border:1px solid #D6D6D6; overflow-y:scroll;}
 
+arrow {
+  border: solid blue;
+  border-width: 0 6px 6px 0;
+  display: inline-block;
+  padding: 10px;
+}
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+a:link{
+  color:#000000;
+  text-decoration:none;}
+a:visited{
+  color:#000000;
+  text-decoration:none;}
+a:hover{
+  color:#0433FF;
+  text-decoration:none;}
+a:active{
+  color:#000000;
+  text-decoration:none;}
 </style>
 
 <script type="text/javascript">
@@ -419,6 +455,7 @@ var g_train_task_parms = {};
 //保存刷新项目任务时需要使用的项目id及type
 var g_view_project_task_id = "";
 var g_view_project_task_type = "classification";
+var g_view_project_task_name = "新建项目";
 
 //用于刷新任务定时器句柄
 var g_instance_refresh_clock;
@@ -510,9 +547,17 @@ var Backbone_List = {
 
 var Project_Type_Name_Enum = {
     "classification":"图像分类",
-     "detection":"目标检测",
-     "segmentation":"语义分割",
-     "instance_segmentation":"实例分割"
+    "detection":"目标检测",
+    "segmentation":"语义分割",
+    "instance_segmentation":"实例分割"
+}
+
+var Nav_Bar_Type_Enum = {
+    "datasets":"全部数据集",
+    "projects":"全部项目",
+    "tasks":"全部任务",
+    "models":"全部模型",
+    "project_tasks":"项目任务"
 }
 
 //显示服务器配置窗口
@@ -637,6 +682,7 @@ function hide_import_dataset_win_modal(obj)
     input_import_dataset_id.value = "";
 }
 
+//重新切分数据集
 function re_split_dataset(obj)
 {
     var on_win_split_dataset = document.getElementById('input_win_split_dataset');
@@ -816,6 +862,106 @@ function get_log_file_from_server(str_log_file_name)
     return http_request.responseText;
 }
 
+//从服务器获取一张图片数据，用于数据集图片预览向前及向后
+var g_curr_img_file_idx = 0;
+var g_dbl_clk_img_frame_id = "dataset_img_1";
+
+function get_one_img_file(str_dir = "next")
+{
+    var lst_img_files = g_dataset_files[g_current_dataset_lable_name];
+     
+    if (g_b_show_dataset_type == "all")
+    {
+        lst_img_files = g_dataset_files[g_current_dataset_lable_name];
+    }
+    else if (g_b_show_dataset_type == "train")
+    {
+        lst_img_files = g_dataset_train_files[g_current_dataset_lable_name];
+    }
+    else if (g_b_show_dataset_type == "evaluate")
+    {
+        lst_img_files = g_dataset_evaluate_files[g_current_dataset_lable_name];
+    }
+    else if (g_b_show_dataset_type == "test")
+    {
+        lst_img_files = g_dataset_test_files[g_current_dataset_lable_name];
+    }
+     
+    //数据集ID
+    var str_dataset_id = document.getElementById('browse_dataset_id').value;
+    //获取数据集路径
+    var str_dataset_path = document.getElementById('view_dataset_path_' + str_dataset_id).value;
+    
+    var idx_img_frame_postfix = g_dbl_clk_img_frame_id.lastIndexOf("_");
+    var idx_img_frame = 0;
+    if(idx_img_frame_postfix >= 0)
+    {
+        idx_img_frame = parseInt(g_dbl_clk_img_frame_id.substring(idx_img_frame_postfix + 1,g_dbl_clk_img_frame_id.length)) - 1;
+    }
+    
+    if (g_curr_img_file_idx == 0)
+    {
+        g_curr_img_file_idx = g_const_imgs_per_page * (g_current_dataset_page - 1) + idx_img_frame;
+    }
+
+    if(str_dir == "next")
+    {
+        g_curr_img_file_idx++;
+        document.getElementById('arrow_pre_img').style.borderColor='blue';
+    }
+    else
+    {
+        g_curr_img_file_idx--;
+        document.getElementById('arrow_next_img').style.borderColor='blue';
+    }
+
+     
+    if(g_curr_img_file_idx <= 0)
+    {
+        g_curr_img_file_idx = 0;
+        document.getElementById('arrow_pre_img').style.borderColor='gray';
+    }
+    if(g_curr_img_file_idx >= lst_img_files.length)
+    {
+        g_curr_img_file_idx = lst_img_files.length;
+        document.getElementById('arrow_next_img').style.borderColor='gray';
+    }
+     
+    var str_img_file_name = lst_img_files[g_curr_img_file_idx];
+    var str_img_file = str_dataset_path + "/" + str_img_file_name;
+    //是否显示标注
+    var str_img_file_content = "";
+    if(g_b_show_img_labels == true)
+    {
+        str_img_file_content = get_img_file_from_server(str_img_file, str_dataset_id);
+    }
+    else
+    {
+        str_img_file_content = get_img_file_from_server(str_img_file);
+    }
+    //更新img框内容
+    var obj_img = document.getElementById('dataset_browse_img');
+    var idx_file_postfix = str_img_file_name.lastIndexOf(".");
+    var str_file_type = "jpeg";
+    if(idx_file_postfix >= 0)
+    {
+        str_file_type = str_img_file_name.substring(idx_file_postfix + 1,str_img_file_name.length);
+    }
+         
+    str_file_type = str_file_type.toLowerCase();
+         
+    var str_b64_type = "data:image/jpeg;base64,";
+         
+    if(str_file_type == "jpg" || str_file_type == "jpeg")
+        str_b64_type = "data:image/jpeg;base64,";
+    else if (str_file_type == "bmp")
+        str_b64_type = "data:image/jpeg;base64,";
+    else if (str_file_type == "png")
+        str_b64_type = "data:image/png;base64,";
+         
+    obj_img.src = str_b64_type + str_img_file_content;
+}
+
 //刷新翻页按纽
 function refresh_dataset_page_buttons()
 {
@@ -971,7 +1117,6 @@ function show_browse_dataset_win_modal(obj)
     //刷新翻页按纽
     refresh_dataset_page_buttons();
     
-    
     on_win_browse_dataset.style.display = "block";
     over_win_browse_dataset.style.display = "block";
 }
@@ -994,6 +1139,21 @@ function hide_browse_dataset_win_modal(obj)
 //双击放大图像
 function zoom_image(obj)
 {
+    g_curr_img_file_idx = 0;
+    g_dbl_clk_img_frame_id = obj.id;
+    
+    if(g_dbl_clk_img_frame_id.indexOf("dataset") >= 0)
+    {
+
+        document.getElementById('arrow_pre_img').style.borderColor='blue';
+        document.getElementById('arrow_next_img').style.borderColor='blue';
+    }
+    else
+    {
+        document.getElementById('arrow_pre_img').style.borderColor='gray';
+        document.getElementById('arrow_next_img').style.borderColor='gray';
+    }
+    
     if(obj.src != "")
     {
         document.getElementById('dataset_browse_img').src = obj.src;
@@ -1008,6 +1168,8 @@ function zoom_image(obj)
 //关闭放大预览图片窗口
 function hide_zoom_img(obj)
 {
+    g_curr_img_file_idx = 0;
+    
     var on_win_browse_img = document.getElementById('win_browse_img');
     var over_win_browse_img = document.getElementById('win_browse_img_over');
     
@@ -1226,7 +1388,6 @@ function update_task_detail_info_ui(str_view_task_id, b_get_task_parms = false)
         //启动定时器，用于定时刷新任务状态
         if(b_get_task_parms)
         {
-            
             g_instance_refresh_clock = self.setInterval("refresh_task_detail_info_win()",1000);
         }
     }
@@ -1374,7 +1535,14 @@ function task_next_step_process(obj)
         
         start_task(str_start_tid);
         
-        load_tasks();
+        if (document.getElementById('btn_refresh').value == "刷新项目任务信息")
+        {
+            load_project_tasks(g_view_project_task_id);
+        }
+        else
+        {
+            load_tasks();
+        }
         //隐藏原来窗口
         hide_task_detail_info_win_modal();  
     }
@@ -1628,19 +1796,29 @@ function contact_us()
 function refresh_contents(obj)
 {
      if(obj.value == "刷新项目信息")
+     {
          load_projects(obj);
+     }
      else if (obj.value == "刷新数据集信息")
+     {
          load_datasets(obj);
+     }
      else if (obj.value == "刷新所有任务信息")
+     {
          load_tasks(obj);
+     }
      else if (obj.value == "刷新项目任务信息")
      {
          load_project_tasks(g_view_project_task_id);
      }
      else if (obj.value == "刷新模型信息")
+     {
          load_models(obj);
+     }
      else
+     {
          load_projects(obj);
+     }
 }
 
 //项目对象右键弹出菜单
@@ -1732,7 +1910,6 @@ document.onclick = function()
     obj_model_id.value = "";
 }
 
-//PaddleX RestfulAPI Demo Code
 //设置远端服务器地址
 function set_server_addr(input_data)
 {
@@ -1788,6 +1965,7 @@ function get_server_system_info(str_info_type = "machine_info")
 //获取工作区所有项目信息
 function load_projects()
 {
+    update_nav_bar(Nav_Bar_Type_Enum["projects"]);
     var http_request;
     if (window.XMLHttpRequest)
     {
@@ -1896,7 +2074,7 @@ function show_project(data)
 {
     g_view_project_task_id = data.id;
     g_view_project_task_type = document.getElementById("view_project_type_" + g_view_project_task_id).value;
-    
+    g_view_project_task_name = document.getElementById("view_project_name_" + g_view_project_task_id).value;
     //查看项目下的任务
     load_project_tasks(data.id);
 }
@@ -1904,6 +2082,7 @@ function show_project(data)
 //获取工作区所有数据集信息
 function load_datasets()
 {
+    update_nav_bar(Nav_Bar_Type_Enum["datasets"]);
     var http_request;
     if (window.XMLHttpRequest)
     {
@@ -1925,7 +2104,7 @@ function load_datasets()
             fill_table_with_error();
         }
     }
-    http_request.open("GET",str_srv_url + "/dataset",false);
+    http_request.open("GET",str_srv_url + "/dataset",true);
     http_request.send(null);
 }
 
@@ -1934,6 +2113,7 @@ function load_tasks()
 {
     document.getElementById("btn_refresh").value = "刷新所有任务信息";
     document.getElementById("table_create_new").style.display = "none";
+    update_nav_bar(Nav_Bar_Type_Enum["tasks"]);
     
     var http_request;
     if (window.XMLHttpRequest)
@@ -1956,7 +2136,7 @@ function load_tasks()
             fill_table_with_error();
         }
     }
-    http_request.open("GET",str_srv_url + "/project/task",false);
+    http_request.open("GET",str_srv_url + "/project/task",true);
     http_request.send(null);
 }
 
@@ -1966,6 +2146,7 @@ function load_project_tasks(str_project_id)
     document.getElementById("btn_refresh").value = "刷新项目任务信息";
     document.getElementById("table_create_new").style.display = "block";
     document.getElementById("btn_create_new").value = "新建任务";
+    update_nav_bar(Nav_Bar_Type_Enum["project_tasks"]);
     
     var http_request;
     if (window.XMLHttpRequest)
@@ -2116,6 +2297,8 @@ function split_dataset(obj)
 //获取所有导出模型
 function load_models()
 {
+    update_nav_bar(Nav_Bar_Type_Enum["models"]);
+    
     var http_request;
     if (window.XMLHttpRequest)
     {
@@ -2137,7 +2320,7 @@ function load_models()
             fill_table_with_error();
         }
     }
-    http_request.open("GET",str_srv_url + "/model?type=exported",false);
+    http_request.open("GET",str_srv_url + "/model?type=exported",true);
     http_request.send(null);
 }
 
@@ -2191,7 +2374,9 @@ function fill_table_contents(list_contents, type = "project")
             var str_html = "";
   
             str_html = "<div id=\"draw-border\" style=\"word-wrap: break-word;\"><view_item onclick=\"show_project(this)\" oncontextmenu=\"javascript:show_project_popupmenu(this);\" id=\"" + str_id + "\">";
-            str_html = str_html + "项目名称：" + str_name + " (" + str_id + ")" + "<br>";
+            //str_html = str_html + "<div class=\"hide_del_button\" id=\"" + str_id + "\" onclick=\"javascript:delete_project()\">删除</div>";
+            
+            str_html = str_html + "项目名称：" + str_name + " (" + str_id + ")" + "<br>" + "<input type=\"hidden\" id=\"view_project_name_" + str_id + "\" value=\"" + str_name + "\">";
             
             if(str_type == "classification")
                 str_type_view = "<font color=\"green\">图像分类</font>";
@@ -2307,6 +2492,7 @@ function fill_table_contents(list_contents, type = "project")
             var str_html = "";
   
             str_html = "<div id=\"draw-border\" style=\"word-wrap: break-word;\"><view_item id=\"" + str_id + "\" onclick=\"javascript:" + str_function + "(this);\" oncontextmenu=\"javascript:show_dataset_popupmenu(this);\">";
+            //str_html = str_html + "<div class=\"hide_del_button\" onclick=\"delete_dataset()\" id=\"" + str_id + "\">删除</div>";
             
             str_html = str_html + "数据集名称：" + str_name + " (" + str_id + ")" + "<br>" + "<input type=\"hidden\" id=\"view_dataset_name_" + str_id + "\" value=\"" + str_name + "\">";
             
@@ -2369,7 +2555,7 @@ function fill_table_contents(list_contents, type = "project")
         count_tasks = Object.keys(obj_tasks).length;
         col_count = 1;
 
-        //数据集为空
+        //任务为空
         if(count_tasks <= 0)
         {
             var newTd0=newTr.insertCell();
@@ -2401,6 +2587,7 @@ function fill_table_contents(list_contents, type = "project")
             str_path = obj_tasks[p].path;
             str_crttime = obj_tasks[p].create_time;
             str_status = obj_tasks[p].status;
+            str_type = obj_tasks[p].type;
 
             //增加状态显示以及对应的操作
             var view_status_str = "初始化";
@@ -2488,13 +2675,11 @@ function fill_table_contents(list_contents, type = "project")
 
             var newTd0=newTr.insertCell();
             var str_html = "";
-            var str_type = "classification";
   
             str_html = "<div id=\"draw-border\" style=\"word-wrap: break-word;\"><view_item id=\"" + str_id + "\" onclick=\"javascript:" + str_function + "(this);\" oncontextmenu=\"javascript:show_task_popupmenu(this);\">";
-            
+            //str_html = str_html + "<div class=\"hide_del_button\" onclick=\"delete_task();\" id=\"" + str_id + "\">删除</div>";
+
             str_html = str_html + "任务ID：" + str_id + "<br>";
-            
-            str_type = get_project_type(str_pid);
             
             if(str_type == "classification")
                 str_type_view = "<font color=\"green\">图像分类</font>";
@@ -2546,7 +2731,7 @@ function fill_table_contents(list_contents, type = "project")
         count_models = Object.keys(obj_models).length;
         col_count = 1;
 
-        //数据集为空
+        //模型为空
         if(count_models <= 0)
         {
             var newTd0=newTr.insertCell();
@@ -2586,7 +2771,7 @@ function fill_table_contents(list_contents, type = "project")
             var str_function = "show_model_test_predict_win_modal";
   
             str_html = "<div id=\"draw-border\" style=\"word-wrap: break-word;\"><view_item id=\"" + str_id + "\" style=\"width: 750px;height: 170px;\" onclick=\"javascript:" + str_function + "(this);\" oncontextmenu=\"javascript:show_models_popupmenu(this);\">";
-            
+            //str_html = str_html + "<div class=\"hide_del_button\" onclick=\"delete_model()\" id=\"" + str_id + "\">删除</div>";
             str_html = str_html + "模型名称：" + str_model_name + " (" + str_id + ")" + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_name_" + str_id + "\" value=\"" + str_model_name + "\">"; 
             str_html = str_html + "模型类型：" + str_model_view_type + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_type_" + str_id + "\" value=\"" + str_model_type + "\">";
             str_html = str_html + "网络结构：" + str_model + "<br>" + "<input type=\"hidden\" id=\"view_model_detail_net_" + str_id + "\" value=\"" + str_model + "\">" ;
@@ -2635,23 +2820,12 @@ function fill_table_with_error()
     newTd0.innerHTML = str_html;
 }
 
-//获取项目任务类型
-function get_project_type(str_pid)
-{
-    var http_request = new XMLHttpRequest();
-    http_request.open("GET", str_srv_url + "/project?id=" + str_pid, false);
-    http_request.send(null);
-    
-    var obj_json = eval('(' + http_request.responseText + ')');
-    return obj_json["attr"]["type"];
-}
-
 //显示创建任务弹出窗口
 function show_create_task_win_modal(obj)
 {
     var obj_project_id = document.getElementById('popup_menu_project_id');
     var str_project_id = "";
-
+    
     //清除原来保存的id
     document.getElementById('create_task_hidden_task_id').value = "";
     
@@ -2678,7 +2852,7 @@ function show_create_task_win_modal(obj)
     {
         str_task_type = g_view_project_task_type;
     }
-
+    
     //取出默认参数
     var http_request = new XMLHttpRequest();
     http_request.open("GET", str_srv_url + "/project/task/params?pid=" + str_project_id, false);
@@ -3447,7 +3621,14 @@ function create_task()
         
         start_task(str_start_tid);
         
-        load_tasks();
+        if (document.getElementById('btn_refresh').value == "刷新项目任务信息")
+        {
+            load_project_tasks(g_view_project_task_id);
+        }
+        else
+        {
+            load_tasks();
+        }
         
         hide_create_task_win_modal(null);
     }
@@ -3469,7 +3650,14 @@ function create_task()
 
                      start_task(str_new_tid);
                  
-                     load_tasks();
+                     if (document.getElementById('btn_refresh').value == "刷新项目任务信息")
+                     {
+                         load_project_tasks(g_view_project_task_id);
+                     }
+                     else
+                     {
+                         load_tasks();
+                     }
                      
                      hide_create_task_win_modal(null);
                 }
@@ -3614,6 +3802,7 @@ function set_data_augument_parms(str_task_id)
     }
 }
 
+//加载任务数据增强配置参数信息
 function load_data_augument_parms()
 {
     document.getElementById('brightness_prob').value = g_train_task_parms["brightness_prob"];
@@ -3748,7 +3937,15 @@ function stop_task()
             {
                  alert("任务：" + str_stop_task_id + "中止成功!\n" +  http_request.responseText);
                  hide_task_detail_info_win_modal();
-                 load_tasks();
+                 
+                 if (document.getElementById('btn_refresh').value == "刷新项目任务信息")
+                 {
+                     load_project_tasks(g_view_project_task_id);
+                 }
+                 else
+                 {
+                     load_tasks();
+                 }
             }
             else
             {
@@ -3784,7 +3981,14 @@ function delete_task()
             if (http_request.status==200)
             {
                  alert("删除任务：" + str_del_task_id + "删除成功!\n" +  http_request.responseText);
-                 load_tasks();
+                 if (document.getElementById('btn_refresh').value == "刷新项目任务信息")
+                 {
+                     load_project_tasks(g_view_project_task_id);
+                 }
+                 else
+                 {
+                     load_tasks();
+                 }
             }
             else
             {
@@ -3902,6 +4106,7 @@ function hide_model_test_predict_win_modal(obj)
     over_win_model_predict_test.style.display = "none";
 }
 
+//加载预测原图像并预览
 function load_predict_file_and_preview(file)
 {
     if (!file.files || !file.files[0])
@@ -3974,9 +4179,10 @@ function model_predict_test(obj)
     setTimeout(function(){show_predict_result(str_result_path, str_predict_task_id);}, 1000);
 }
 
-//显示预测结果
+//显示预测结果等待次数
 var g_predict_wait_times = 0;
 
+//显示预测结果
 function show_predict_result(str_path, str_task_id)
 {
     //获取预测结果
@@ -4097,6 +4303,55 @@ function change_create_project_type(obj)
     }  
 }
 
+//更新导航栏链接
+function update_nav_bar(str_type = Nav_Bar_Type_Enum["projects"])
+{
+    var str_html = "PaddleX ：";
+    if(str_type == Nav_Bar_Type_Enum["projects"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_projects()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["datasets"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_datasets()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["tasks"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_tasks()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["models"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_models()\">" + str_type + "</a>";
+    }
+    else if(str_type == Nav_Bar_Type_Enum["project_tasks"])
+    {
+        str_html = str_html + "<a href=\"javascript:load_projects()\">" + Nav_Bar_Type_Enum["projects"] + "</a>";
+        str_html = str_html + "&nbsp&nbsp>&nbsp&nbsp";
+        str_html = str_html + "<a href=\"javascript:load_project_tasks(g_view_project_task_id)\">";
+        str_html = str_html + g_view_project_task_name + "</a>";
+    }
+            
+    table_nav_bar.rows[0].cells[1].innerHTML = str_html;
+}
+
+//数据集图片预览时前一张及后一张图像
+function img_arrow_click(obj)
+{
+    if(obj.style.borderColor == "gray")
+    {
+        return;
+    }
+
+    if(obj.id == "arrow_pre_img")
+    {
+        get_one_img_file("pre");
+    }
+    else
+    {
+        get_one_img_file("next");
+    }
+}
+
 //ESC to close browse img window
 function dispatch_key_press()
 {
@@ -4121,12 +4376,6 @@ function dispatch_key_press()
     <input type="hidden" id="popup_menu_project_id">
     <!--<input type="hidden" id="popup_menu_project_type">-->
     <table border="0" width="100%" height="100%" cellspacing="0">
-    <tr>
-    <td style="cursor:default; border:solid #ccc 1px;" align="center" onclick="show_create_task_win_modal(this)">创建任务</td>
-    </tr>
-    <tr>
-    <td style="cursor:default; border:solid #ccc 1px;" align="center" onclick="view_project_tasks()">查看任务</td>
-    </tr>
     <tr>
     <td style="cursor:default; border:solid #ccc 1px;" align="center" onclick="delete_project()">删除项目</td>
     </tr>
@@ -4200,9 +4449,17 @@ function dispatch_key_press()
     <li onclick="contact_us()"><a href='#'>联系我们</a></li>
   </ul>
 </div>
+<!--nav bar-->
+<table width="100%" height="35px" align="center" cellspacing="1px" id="table_nav_bar" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+<tr style="background-color:#EBEBEB">
+  <td style="width: 15px;"></td>
+  <td align="left">PaddleX：<a href="javascript:load_projects()">全部项目</a></td>
+</tr>
+</table>
+<br>
+<!--nav bar-->
 <div style="text-align:center;clear:both;margin-top:10px">
 
-<br>
 <div id="div_demo_title"><h2><font color="#0000cd"> 欢迎使用 PaddleX RestfulAPI</font></h2></div>
 
 <table width="100%" height="40px" align="center" cellspacing="1px" id="table_create_new">
@@ -4217,7 +4474,7 @@ function dispatch_key_press()
 </table>
 
 <!--show projects/tasks/datasets/models information-->
-<table width="100%" height="100%" align="center" cellspacing="20px" id="table_contents" style="font-size:18px; border:0px border-collapse:separate; border-spacing:10px 90px; solid #cad9ea;">
+<table width="100%" height="100%" align="center" cellspacing="20px" id="table_contents" style="font-size:18px; border:0px; solid #cad9ea;">
 <tr>
 <td>
   <div id="draw-border">
@@ -4673,12 +4930,14 @@ function dispatch_key_press()
 <!--数据集预览窗口-->
 
 <!--浏览原图弹出窗口-->
-<div id="win_browse_img" onclick="hide_zoom_img(this)" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:fixed;top:15%;left:20%;z-index:15;background:white;">
+<div id="win_browse_img" style="display:none;border:1px solid #cccccc;height:610px;width:60%;position:fixed;top:15%;left:20%;z-index:15;background:white;">
   <table width="100%" align="center" id="table_img">
     <tr>
-      <td>
+    	<td width="15%" align="center"><arrow class="left" id="arrow_pre_img" onclick="img_arrow_click(this)"></arrow></td>
+      <td width="70%">
         <img id="dataset_browse_img" onclick="hide_zoom_img(this)" src="" align="center" style="border:1px #D6D6D6 solid;" height="600" width="600" hspace="0" vspace="0"/>
       </td>
+      <td width="15%" align="center"><arrow class="right" id="arrow_next_img" onclick="img_arrow_click(this)"></arrow></td>
     </tr>
   </table>
 </div>
