@@ -1,36 +1,38 @@
-# 图像分类模型剪裁
+# 语义分割模型剪裁
 
 
-## 第一步 正常训练图像分类模型
+## 第一步 正常训练语义分割模型
 
 ```
-python mobilenetv2_train.py
+python unet_train.py
 ```
 
-在此步骤中，训练的模型会保存在`output/mobilenet_v2`目录下
+在此步骤中，训练的模型会保存在`output/unet`目录下
 
 
 ## 第二步 模型剪裁
 
 ```
-python mobilenetv2_prune.py
+python unet_prune.py
 ```
 
-`mobilenetv2_prune.py`中主要执行了以下API：
+`unet_prune.py`中主要执行了以下API：
 
 step 1: 分析模型各层参数在不同的剪裁比例下的敏感度
 
 主要由两个API完成:
 
 ```
-model = pdx.load_model('output/mobilenet_v2/best_model')
+model = pdx.load_model('output/unet/best_model')
 model.analyze_sensitivity(
-    dataset=eval_dataset, save_dir='output/mobilenet_v2/prune')
+    dataset=eval_dataset,
+    batch_size=1,
+    save_dir='output/unet/prune')
 ```
 
-参数分析完后，`output/mobilenet_v2/prune`目录下会得到`model.sensi.data`文件，此文件保存了不同剪裁比例下各层参数的敏感度信息。
+参数分析完后，`output/unet/prune`目录下会得到`model.sensi.data`文件，此文件保存了不同剪裁比例下各层参数的敏感度信息。
 
-**注意：** 如果之前运行过该步骤，第二次运行时会自动加载已有的`output/mobilenet_v2/prune/model.sensi.data`，不再进行敏感度分析。
+**注意：** 如果之前运行过该步骤，第二次运行时会自动加载已有的`output/unet/prune/model.sensi.data`，不再进行敏感度分析。
 
 step 2: 根据选择的FLOPs减小比例对模型进行剪裁
 
@@ -52,10 +54,10 @@ model.train(
     lr_decay_epochs=[4, 6, 8],
     learning_rate=0.025,
     pretrain_weights=None,
-    save_dir='output/mobilenet_v2/prune',
+    save_dir='output/unet/prune',
     use_vdl=True)
 ```
 
-重新训练后的模型保存在`output/mobilenet_v2/prune`。
+重新训练后的模型保存在`output/unet/prune`。
 
 **注意：** 重新训练时需将`pretrain_weights`设置为`None`，否则模型会加载`pretrain_weights`指定的预训练模型参数。

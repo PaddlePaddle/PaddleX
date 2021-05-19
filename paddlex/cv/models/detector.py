@@ -16,6 +16,7 @@ from __future__ import absolute_import
 
 import collections
 import copy
+import os
 import os.path as osp
 
 from paddle.io import DistributedBatchSampler
