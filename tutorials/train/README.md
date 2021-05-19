@@ -58,4 +58,4 @@ visualdl --logdir output/mobilenetv3_small/vdl_log --port 8001
 
 ## 版本升级
 
-由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.9版本。如果安装PaddleX 2.0.0，请使用本目录下的训练脚本。
+由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.10版本。如果安装PaddleX 2.0.0，请使用本目录下的训练脚本。
