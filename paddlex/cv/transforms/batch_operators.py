@@ -21,7 +21,7 @@ try:
 except Exception:
     from collections import Sequence
 from paddle.fluid.dataloader.collate import default_collate_fn
-from .operators import Transform, Resize, ResizeByShort, _Permute
+from .operators import Transform, Resize, ResizeByShort, _Permute, interp_dict
 from .box_utils import jaccard_overlap
 from paddlex.utils import logging
 
@@ -39,9 +39,9 @@ class BatchCompose(Transform):
                     samples = op(samples)
                 except Exception as e:
                     stack_info = traceback.format_exc()
-                    logging.warn("fail to map batch transform [{}] "
-                                 "with error: {} and stack:\n{}".format(
-                                     op, e, str(stack_info)))
+                    logging.warning("fail to map batch transform [{}] "
+                                    "with error: {} and stack:\n{}".format(
+                                        op, e, str(stack_info)))
                     raise e
 
         samples = _Permute()(samples)
@@ -52,21 +52,35 @@ class BatchCompose(Transform):
 
 class BatchRandomResize(Transform):
     """
-    Resize image to target size randomly. random target_size and interpolation method
+    Resize a batch of input to random sizes.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
     Args:
-        target_size (list): image target size, must be list of (int or list)
-        interp (int): the interpolation method
+        target_sizes (List[int], List[list or tuple] or Tuple[list or tuple]):
+            Multiple target sizes, each target size is an int or list/tuple of length 2.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+
+    See Also:
+        RandomResize: Resize input to random sizes.
     """
 
-    def __init__(self, target_size, interp='NEAREST'):
+    def __init__(self, target_sizes, interp='NEAREST'):
         super(BatchRandomResize, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         self.interp = interp
-        assert isinstance(target_size, list), \
+        assert isinstance(target_sizes, list), \
             "target_size must be List"
-        for i, item in enumerate(target_size):
+        for i, item in enumerate(target_sizes):
             if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
+                target_sizes[i] = (item, item)
+        self.target_size = target_sizes
 
     def __call__(self, samples):
         height, width = random.choice(self.target_size)
@@ -77,8 +91,30 @@ class BatchRandomResize(Transform):
 
 
 class BatchRandomResizeByShort(Transform):
+    """Resize a batch of input to random sizes with keeping the aspect ratio.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        short_sizes (List[int], Tuple[int]): Target sizes of the shorter side of the image(s).
+        max_size (int, optional): The upper bound of longer side of the image(s).
+            If max_size is -1, no upper bound is applied. Defaults to -1.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+
+    See Also:
+        RandomResizeByShort: Resize input to random sizes with keeping the aspect ratio.
+    """
+
     def __init__(self, short_sizes, max_size=-1, interp='NEAREST'):
         super(BatchRandomResizeByShort, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         self.interp = interp
         assert isinstance(short_sizes, list), \
             "short_sizes must be List"

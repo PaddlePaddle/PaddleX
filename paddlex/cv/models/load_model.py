@@ -23,6 +23,14 @@ from paddlex.cv.transforms import build_transforms
 
 
 def load_model(model_dir):
+    """
+    Load saved model from a given directory.
+    Args:
+        model_dir(str): The directory where the model is saved.
+
+    Returns:
+        The model loaded from the directory.
+    """
     if not osp.exists(model_dir):
         logging.error("model_dir '{}' does not exists!".format(model_dir))
     if not osp.exists(osp.join(model_dir, "model.yml")):
