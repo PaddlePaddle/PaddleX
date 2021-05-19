@@ -1,6 +1,3 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddle
 import paddlex as pdx
 from paddlex import transforms

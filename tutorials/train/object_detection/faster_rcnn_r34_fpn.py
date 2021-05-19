@@ -1,9 +1,5 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
 from paddlex import transforms
-import cv2
 
 dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
@@ -12,16 +8,15 @@ train_transforms = transforms.Compose([
     transforms.RandomResizeByShort(
         short_sizes=[640, 672, 704, 736, 768, 800],
         max_size=1333,
-        interp=cv2.INTER_CUBIC), transforms.RandomHorizontalFlip(),
+        interp='CUBIC'), transforms.RandomHorizontalFlip(),
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 eval_transforms = transforms.Compose([
     transforms.ResizeByShort(
-        short_size=800, max_size=1333, interp=cv2.INTER_CUBIC),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        short_size=800, max_size=1333, interp='CUBIC'), transforms.Normalize(
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 train_dataset = pdx.datasets.VOCDetection(
