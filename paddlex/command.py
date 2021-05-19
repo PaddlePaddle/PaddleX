@@ -144,7 +144,7 @@ def main():
             # export_inference_model needs [h,w]
             fixed_input_shape = fixed_input_shape[-1::-1]
         else:
-            fixed_input_shape = None
+            fixed_input_shape = [-1, -1]
 
         os.environ['PADDLEX_EXPORT_STAGE'] = 'True'
         os.environ['PADDLESEG_EXPORT_STAGE'] = 'True'

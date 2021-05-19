@@ -452,7 +452,7 @@ class YOLOv3(BaseDetector):
                 format(backbone))
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and os.environ.get('PADDLEX_EXPORT_STAGE'):
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
@@ -805,7 +805,7 @@ class PPYOLO(YOLOv3):
         self.backbone_name = backbone
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and os.environ.get('PADDLEX_EXPORT_STAGE'):
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
@@ -963,7 +963,7 @@ class PPYOLOTiny(YOLOv3):
                 "Backbone is forcibly set to MobileNetV3.")
         self.backbone_name = 'MobileNetV3'
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and os.environ.get('PADDLEX_EXPORT_STAGE'):
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
@@ -1069,7 +1069,7 @@ class PPYOLOv2(YOLOv3):
         self.backbone_name = backbone
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and os.environ.get('PADDLEX_EXPORT_STAGE'):
+                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
             norm_type = 'sync_bn'
         else:
             norm_type = 'bn'
