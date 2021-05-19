@@ -38,7 +38,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.models.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
+model = pdx.det.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
 
 model.train(
     num_epochs=270,

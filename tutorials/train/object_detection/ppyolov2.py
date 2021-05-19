@@ -3,7 +3,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 import paddlex as pdx
 from paddlex import transforms
-import cv2
 
 dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
@@ -13,7 +12,7 @@ train_transforms = transforms.Compose([
     transforms.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]),
     transforms.RandomCrop(), transforms.RandomHorizontalFlip(),
     transforms.BatchRandomResize(
-        target_size=[
+        target_sizes=[
             320, 352, 384, 416, 448, 480, 512, 544, 576, 608, 640, 672, 704,
             736, 768
         ],
@@ -23,7 +22,7 @@ train_transforms = transforms.Compose([
 
 eval_transforms = transforms.Compose([
     transforms.Resize(
-        target_size=640, interp=cv2.INTER_CUBIC), transforms.Normalize(
+        target_size=640, interp='CUBIC'), transforms.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 

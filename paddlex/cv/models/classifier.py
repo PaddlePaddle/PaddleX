@@ -39,11 +39,10 @@ __all__ = [
 
 
 class BaseClassifier(BaseModel):
-    """构建分类器，并实现其训练、评估、预测和模型导出。
+    """Parent class of all classification models.
     Args:
-        model_name (str): 分类器的模型名字，取值范围为['ResNet18',
-                          'ResNet34', 'ResNet50', 'ResNet101'。
-        num_classes (int): 类别数。默认为1000。
+        model_name (str, optional): Name of classification model. Defaults to 'ResNet50'.
+        num_classes (int, optional): The number of target classes. Defaults to 1000.
     """
 
     def __init__(self, model_name='ResNet50', num_classes=1000, **params):
@@ -169,6 +168,32 @@ class BaseClassifier(BaseModel):
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True):
+        """
+        Train the model.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            pretrain_weights(str or None, optional):
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .025.
+            warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
+            warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
+            lr_decay_epochs(List[int] or Tuple[int], optional):
+                Epoch milestones for learning rate decay. Defaults to (20, 60, 90).
+            lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay, default .1.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+
+        """
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -214,6 +239,17 @@ class BaseClassifier(BaseModel):
             use_vdl=use_vdl)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
+        """
+        Evaluate the model.
+        Args:
+            eval_dataset(paddlex.dataset): Evaluation dataset.
+            batch_size(int, optional): Total batch size among all cards used for evaluation. Defaults to 1.
+            return_details(bool, optional): Whether to return evaluation details. Defaults to False.
+
+        Returns:
+            collections.OrderedDict with key-value pairs: {"acc1": `top 1 accuracy`, "acc5": `top 5 accuracy`}.
+
+        """
         # 给transform添加arrange操作
         arrange_transforms(
             model_type=self.model_type,
@@ -221,8 +257,8 @@ class BaseClassifier(BaseModel):
             mode='eval')
 
         self.net.eval()
-        nranks = paddle.distributed.ParallelEnv().nranks
-        local_rank = paddle.distributed.ParallelEnv().local_rank
+        nranks = paddle.distributed.get_world_size()
+        local_rank = paddle.distributed.get_rank()
         if nranks > 1:
             # Initialize parallel environment if not done.
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
@@ -248,6 +284,25 @@ class BaseClassifier(BaseModel):
             return eval_metrics.get()
 
     def predict(self, img_file, transforms=None, topk=1):
+        """
+        Do inference.
+        Args:
+            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+                Image path or decoded image data in a BGR format, which also could constitute a list,
+                meaning all images to be predicted as a mini-batch.
+            transforms(paddlex.transforms.Compose or None, optional):
+                Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
+            topk(int, optional): Keep topk results in prediction. Defaults to 1.
+
+        Returns:
+            If img_file is a string or np.array, the result is a dict with key-value pairs:
+            {"category_id": `category_id`, "category": `category`, "score": `score`}.
+            If img_file is a list, the result is a list composed of dicts with the corresponding fields:
+            category_id(int): the predicted category ID
+            category(str): category name
+            score(float): confidence
+
+        """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
         if transforms is None:

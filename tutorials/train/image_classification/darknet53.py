@@ -31,7 +31,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.models.DarkNet53(num_classes=num_classes)
+model = pdx.cls.DarkNet53(num_classes=num_classes)
 
 model.train(
     num_epochs=10,

@@ -36,14 +36,18 @@ __all__ = [
     "ArrangeDetector"
 ]
 
-interp_list = [
-    cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC, cv2.INTER_AREA,
-    cv2.INTER_LANCZOS4
-]
+interp_dict = {
+    'NEAREST': cv2.INTER_NEAREST,
+    'LINEAR': cv2.INTER_LINEAR,
+    'CUBIC': cv2.INTER_CUBIC,
+    'AREA': cv2.INTER_AREA,
+    'LANCZOS4': cv2.INTER_LANCZOS4
+}
 
 
 class Transform(object):
-    """分类Transform的基类
+    """
+    Parent class of all data augmentation operations
     """
 
     def __init__(self):
@@ -80,13 +84,15 @@ class Transform(object):
 
 
 class Compose(Transform):
-    """根据数据预处理/增强算子对输入数据进行操作。
-       所有操作的输入图像流形状均是[H, W, C]，其中H为图像高，W为图像宽，C为图像通道数。
+    """
+    Apply a series of data augmentation to the input.
+    All input images are in Height-Width-Channel ([H, W, C]) format.
+
     Args:
-        transforms (list): 数据预处理/增强算子。
+        transforms (List[paddlex.transforms.Transform]): List of data preprocess or augmentations.
     Raises:
-        TypeError: 形参数据类型不满足需求。
-        ValueError: 数据长度不匹配。
+        TypeError: Invalid type of transforms.
+        ValueError: Invalid length of transforms.
     """
 
     def __init__(self, transforms):
@@ -128,6 +134,13 @@ class Compose(Transform):
 
 
 class Decode(Transform):
+    """
+    Decode image(s) in input.
+
+    Args:
+        to_rgb (bool, optional): If True, convert input images from BGR format to RGB format. Defaults to True.
+    """
+
     def __init__(self, to_rgb=True):
         super(Decode, self).__init__()
         self.to_rgb = to_rgb
@@ -163,6 +176,15 @@ class Decode(Transform):
         return mask
 
     def apply(self, sample):
+        """
+
+        Args:
+            sample (dict): Input sample, containing 'image' at least.
+
+        Returns:
+            dict: Decoded sample.
+
+        """
         sample['image'] = self.apply_im(sample['image'])
         if 'mask' in sample:
             sample['mask'] = self.apply_mask(sample['mask'])
@@ -178,10 +200,37 @@ class Decode(Transform):
 
 
 class Resize(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_LINEAR):
+    """
+    Resize input.
+
+    - If target_size is an int，resize the image(s) to (target_size, target_size).
+    - If target_size is a list or tuple, resize the image(s) to target_size.
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        target_size (int, List[int] or Tuple[int]): Target size. If int, the height and width share the same target_size.
+            Otherwise, target_size represents [target height, target width].
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+    """
+
+    def __init__(self, target_size, interp='LINEAR'):
         super(Resize, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         if isinstance(target_size, int):
             target_size = (target_size, target_size)
+        else:
+            if not (isinstance(target_size,
+                               (list, tuple)) and len(target_size) == 2):
+                raise TypeError(
+                    "target_size should be an int or a list of length 2, but received {}".
+                    format(target_size))
         # (height, width)
         self.target_size = target_size
         self.interp = interp
@@ -224,9 +273,10 @@ class Resize(Transform):
         return resized_segms
 
     def apply(self, sample):
-        interp = self.interp
         if self.interp == "RANDOM":
-            interp = random.choice(interp_list)
+            interp = random.choice(list(interp_dict.values()))
+        else:
+            interp = interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
 
         im_scale_y = self.target_size[0] / im_h
@@ -254,15 +304,37 @@ class Resize(Transform):
 
 
 class RandomResize(Transform):
-    def __init__(self, target_size, interp=cv2.INTER_LINEAR):
+    """
+    Resize input to random sizes.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]):
+            Multiple target sizes, each target size is an int or list/tuple.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+
+    See Also:
+        Resize input to a specific size.
+    """
+
+    def __init__(self, target_sizes, interp='LINEAR'):
         super(RandomResize, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         self.interp = interp
-        assert isinstance(target_size, list), \
+        assert isinstance(target_sizes, list), \
             "target_size must be List"
-        for i, item in enumerate(target_size):
+        for i, item in enumerate(target_sizes):
             if isinstance(item, int):
-                target_size[i] = (item, item)
-        self.target_size = target_size
+                target_sizes[i] = (item, item)
+        self.target_size = target_sizes
 
     def apply(self, sample):
         height, width = random.choice(self.target_size)
@@ -273,7 +345,24 @@ class RandomResize(Transform):
 
 
 class ResizeByShort(Transform):
-    def __init__(self, short_size=256, max_size=-1, interp=cv2.INTER_LINEAR):
+    """
+    Resize input with keeping the aspect ratio.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        short_size (int): Target size of the shorter side of the image(s).
+        max_size (int, optional): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied. Defaults to -1.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
+
+    Raises:
+        ValueError: Invalid interpolation method.
+    """
+
+    def __init__(self, short_size=256, max_size=-1, interp='LINEAR'):
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         super(ResizeByShort, self).__init__()
         self.short_size = short_size
         self.max_size = max_size
@@ -313,9 +402,10 @@ class ResizeByShort(Transform):
         return resized_segms
 
     def apply(self, sample):
-        interp = self.interp
         if self.interp == "RANDOM":
-            interp = random.choice(interp_list)
+            interp = random.choice(list(interp_dict.values()))
+        else:
+            interp = interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
         im_short_size = min(im_h, im_w)
         im_long_size = max(im_h, im_w)
@@ -349,8 +439,29 @@ class ResizeByShort(Transform):
 
 
 class RandomResizeByShort(Transform):
-    def __init__(self, short_sizes, max_size=-1, interp=cv2.INTER_LINEAR):
+    """
+    Resize input to random sizes with keeping the aspect ratio.
+
+    Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
+
+    Args:
+        short_sizes (int): Target size of the shorter side of the image(s).
+        max_size (int, optional): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied. Defaults to -1.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
+
+    Raises:
+        TypeError: Invalid type of target_size.
+        ValueError: Invalid interpolation method.
+
+    See Also:
+        ResizeByShort: Resize image(s) in input with keeping the aspect ratio.
+    """
+
+    def __init__(self, short_sizes, max_size=-1, interp='LINEAR'):
         super(RandomResizeByShort, self).__init__()
+        if not (interp == "RANDOM" or interp in interp_dict):
+            raise ValueError("interp should be one of {}".format(
+                interp_dict.keys()))
         self.interp = interp
         assert isinstance(short_sizes, list), \
             "short_sizes must be List"
@@ -367,6 +478,13 @@ class RandomResizeByShort(Transform):
 
 
 class RandomHorizontalFlip(Transform):
+    """
+    Randomly flip the input horizontally.
+
+    Args:
+        prob(float, optional): Probability of flipping the input. Defaults to .5.
+    """
+
     def __init__(self, prob=0.5):
         super(RandomHorizontalFlip, self).__init__()
         self.prob = prob
@@ -413,9 +531,11 @@ class RandomHorizontalFlip(Transform):
 
 
 class RandomVerticalFlip(Transform):
-    """以一定的概率对图像进行随机垂直翻转，模型训练时的数据增强操作。
+    """
+    Randomly flip the input vertically.
+
     Args:
-        prob (float): 随机垂直翻转的概率。默认为0.5。
+        prob(float, optional): Probability of flipping the input. Defaults to .5.
     """
 
     def __init__(self, prob=0.5):
@@ -464,6 +584,20 @@ class RandomVerticalFlip(Transform):
 
 
 class Normalize(Transform):
+    """
+    Apply min-max normalization to the image(s) in input.
+    1. im = (im - min_value) * 1 / (max_value - min_value)
+    2. im = im - mean
+    3. im = im / std
+
+    Args:
+        mean(List[float] or Tuple[float], optional): Mean of input image(s). Defaults to [0.485, 0.456, 0.406].
+        std(List[float] or Tuple[float], optional): Standard deviation of input image(s). Defaults to [0.229, 0.224, 0.225].
+        min_val(List[float] or Tuple[float], optional): Minimum value of input image(s). Defaults to [0, 0, 0, ].
+        max_val(List[float] or Tuple[float], optional): Max value of input image(s). Defaults to [255., 255., 255.].
+        is_scale(bool, optional): If True, the image pixel values will be divided by 255.
+    """
+
     def __init__(self,
                  mean=[0.485, 0.456, 0.406],
                  std=[0.229, 0.224, 0.225],
@@ -504,11 +638,13 @@ class Normalize(Transform):
 
 
 class CenterCrop(Transform):
-    """以图像中心点扩散裁剪长宽为`crop_size`的正方形
-    1. 计算剪裁的起始点。
-    2. 剪裁图像。
+    """
+    Crop the input at the center.
+    1. Locate the center of the image.
+    2. Crop the sample.
+
     Args:
-        crop_size (int): 裁剪的目标边长。默认为224。
+        crop_size(int, optional): target size of the cropped image(s). Defaults to 224.
     """
 
     def __init__(self, crop_size=224):
@@ -532,16 +668,23 @@ class CenterCrop(Transform):
 
 
 class RandomCrop(Transform):
-    """对图像进行随机剪裁，模型训练时的数据增强操作。
-    1. 根据lower_scale、lower_ratio、upper_ratio计算随机剪裁的高、宽。
-    2. 根据随机剪裁的高、宽随机选取剪裁的起始点。
-    3. 剪裁图像。
-    4. 调整剪裁后的图像的大小到crop_size*crop_size。
+    """
+    Randomly crop the input.
+    1. Compute the height and width of cropped area according to aspect_ratio and scaling.
+    2. Locate the upper left corner of cropped area randomly.
+    3. Crop the image(s).
+    4. Resize the cropped area to crop_size by crop_size.
+
     Args:
-        crop_size (int): 随机裁剪后重新调整的目标边长。默认为224。
-        lower_scale (float): 裁剪面积相对原面积比例的最小限制。默认为0.08。
-        lower_ratio (float): 宽变换比例的最小限制。默认为3. / 4。
-        upper_ratio (float): 宽变换比例的最大限制。默认为4. / 3。
+        crop_size(int or None, optional): Target size of the cropped area. If None, the cropped area will not be resized. Defaults to None.
+        aspect_ratio (List[float], optional): Aspect ratio of cropped region.
+            in [min, max] format. Defaults to [.5, .2].
+        thresholds (List[float], optional): Iou thresholds to decide a valid bbox crop. Defaults to [.0, .1, .3, .5, .7, .9].
+        scaling (List[float], optional): Ratio between the cropped region and the original image.
+             in [min, max] format, default [.3, 1.].
+        num_attempts (int, optional): The number of tries before giving up. Defaults to 50.
+        allow_no_crop (bool, optional): Whether returning without doing crop is allowed. Defaults to True.
+        cover_all_box (bool, optional): Whether to ensure all bboxes are covered in the final crop. Defaults to False.
     """
 
     def __init__(self,
@@ -716,6 +859,16 @@ class RandomCrop(Transform):
 
 
 class RandomExpand(Transform):
+    """
+    Randomly expand the input by padding to the lower right side of the image(s) in input.
+
+    Args:
+        upper_ratio(float, optional): The maximum ratio to which the original image is expanded. Defaults to 4..
+        prob(float, optional): The probability of apply expanding. Defaults to .5.
+        im_padding_value(List[float] or Tuple[float], optional): RGB filling value for the image. Defaults to (127.5, 127.5, 127.5).
+        label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
+    """
+
     def __init__(self,
                  upper_ratio=4.,
                  prob=.5,
@@ -762,12 +915,14 @@ class Padding(Transform):
                  im_padding_value=(127.5, 127.5, 127.5),
                  label_padding_value=255):
         """
-        Pad image to a specified size or multiple of size_divisor. random target_size and interpolation method
+        Pad image to a specified size or multiple of size_divisor.
+
         Args:
-            target_size (int, Sequence): image target size, if None, pad to multiple of size_divisor, default None
-            pad_mode (int): pad mode, currently only supports four modes [-1, 0, 1, 2]. if -1, use specified offsets
-                if 0, only pad to right and bottom. if 1, pad according to center. if 2, only pad left and top
-            im_padding_value (Sequence): rgb value of pad area, default (127.5, 127.5, 127.5)
+            target_size(int, Sequence, optional): Image target size, if None, pad to multiple of size_divisor. Defaults to None.
+            pad_mode({-1, 0, 1, 2}, optional): Pad mode, currently only supports four modes [-1, 0, 1, 2]. if -1, use specified offsets
+                if 0, only pad to right and bottom. If 1, pad according to center. If 2, only pad left and top. Defaults to 0.
+            im_padding_value(Sequence[float]): RGB value of pad area. Defaults to (127.5, 127.5, 127.5).
+            label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
         """
         super(Padding, self).__init__()
         if isinstance(target_size, (list, tuple)):
@@ -867,10 +1022,12 @@ class Padding(Transform):
 
 class MixupImage(Transform):
     def __init__(self, alpha=1.5, beta=1.5, mixup_epoch=-1):
-        """ Mixup image and gt_bbbox/gt_score
+        """
+        Mixup two images and their gt_bbbox/gt_score.
+
         Args:
-            alpha (float): alpha parameter of beta distribute
-            beta (float): beta parameter of beta distribute
+            alpha (float, optional): Alpha parameter of beta distribution. Defaults to 1.5.
+            beta (float, optional): Beta parameter of beta distribution. Defaults to 1.5.
         """
         super(MixupImage, self).__init__()
         if alpha <= 0.0:
@@ -944,6 +1101,24 @@ class MixupImage(Transform):
 
 
 class RandomDistort(Transform):
+    """
+    Random color distortion.
+
+    Args:
+        brightness_range(float, optional): Range of brightness distortion. Defaults to .5.
+        brightness_prob(float, optional): Probability of brightness distortion. Defaults to .5.
+        contrast_range(float, optional): Range of contrast distortion. Defaults to .5.
+        contrast_prob(float, optional): Probability of contrast distortion. Defaults to .5.
+        saturation_range(float, optional): Range of saturation distortion. Defaults to .5.
+        saturation_prob(float, optional): Probability of saturation distortion. Defaults to .5.
+        hue_range(float, optional): Range of hue distortion. Defaults to .5.
+        hue_prob(float, optional): Probability of hue distortion. Defaults to .5.
+        random_apply (bool, optional): whether to apply in random (yolo) or fixed (SSD)
+            order. Defaults to True.
+        count (int, optional): the number of doing distortion. Defaults to 4.
+        shuffle_channel (bool, optional): whether to swap channels randomly. Defaults to False.
+    """
+
     def __init__(self,
                  brightness_range=0.5,
                  brightness_prob=0.5,
@@ -1052,8 +1227,9 @@ class _PadBox(Transform):
     def __init__(self, num_max_boxes=50):
         """
         Pad zeros to bboxes if number of bboxes is less than num_max_boxes.
+
         Args:
-            num_max_boxes (int): the max number of bboxes
+            num_max_boxes (int, optional): the max number of bboxes. Defaults to 50.
         """
         self.num_max_boxes = num_max_boxes
         super(_PadBox, self).__init__()

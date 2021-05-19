@@ -166,7 +166,7 @@ class BaseModel:
             batch_size = batch_size_each_card
             total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
             logging.info(
-                "Start to evaluating(total_samples={}, total_steps={})...".
+                "Start to evaluate(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(
@@ -212,8 +212,8 @@ class BaseModel:
             transforms=train_dataset.transforms,
             mode='train')
 
-        nranks = paddle.distributed.ParallelEnv().nranks
-        local_rank = paddle.distributed.ParallelEnv().local_rank
+        nranks = paddle.distributed.get_world_size()
+        local_rank = paddle.distributed.get_rank()
         if nranks > 1:
             # Initialize parallel environment if not done.
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
@@ -354,6 +354,15 @@ class BaseModel:
                             batch_size=8,
                             criterion='l1_norm',
                             save_dir='output'):
+        """
+
+        Args:
+            dataset(paddlex.dataset): Dataset used for evaluation during sensitivity analysis.
+            batch_size(int, optional): Batch size used in evaluation. Defaults to 8.
+            criterion({'l1_norm', 'fpgm'}, optional): Pruning criterion. Defaults to 'l1_norm'.
+            save_dir(str, optional): The directory to save sensitivity file of the model. Defaults to 'output'.
+
+        """
         assert criterion in ['l1_norm', 'fpgm'], \
             "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
         arrange_transforms(
@@ -383,6 +392,14 @@ class BaseModel:
             format(sen_file))
 
     def prune(self, pruned_flops, save_dir=None):
+        """
+
+        Args:
+            pruned_flops(float): Ratio of FLOPs to be pruned.
+            save_dir(None or str, optional): If None, the pruned model will not be saved
+            Otherwise, the pruned model will be saved at save_dir. Defaults to None.
+
+        """
         if self.status == "Pruned":
             raise Exception(
                 "A pruned model cannot be done model pruning again!")

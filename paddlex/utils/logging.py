@@ -25,7 +25,7 @@ levels = {0: 'ERROR', 1: 'WARNING', 2: 'INFO', 3: 'DEBUG'}
 
 
 def log(level=2, message="", use_color=False):
-    if paddle.distributed.ParallelEnv().local_rank == 0:
+    if paddle.distributed.get_rank() == 0:
         current_time = time.time()
         time_array = time.localtime(current_time)
         current_time = time.strftime("%Y-%m-%d %H:%M:%S", time_array)

@@ -17,7 +17,6 @@ import time
 
 import numpy as np
 import paddle
-from paddle.distributed.parallel import ParallelEnv
 from visualdl import LogWriter
 from paddlex.cv.nets.paddleseg.utils.progbar import Progbar
 import paddlex.cv.nets.paddleseg.utils.logger as logger
@@ -133,7 +132,7 @@ class BaseLogger(Callback):
             else:
                 self.totals[k] = v
 
-        if iter % self.period == 0 and ParallelEnv().local_rank == 0:
+        if iter % self.period == 0 and paddle.distributed.get_rank() == 0:
 
             for k in self.totals:
                 logs[k] = self.totals[k] / self.period
@@ -157,7 +156,7 @@ class TrainLogger(Callback):
 
     def on_iter_end(self, iter, logs=None):
 
-        if iter % self.log_freq == 0 and ParallelEnv().local_rank == 0:
+        if iter % self.log_freq == 0 and paddle.distributed.get_rank() == 0:
             total_iters = self.params["total_iters"]
             iters_per_epoch = self.params["iters_per_epoch"]
             remaining_iters = total_iters - iter
@@ -245,7 +244,7 @@ class ModelCheckpoint(Callback):
         current_save_dir = os.path.abspath(current_save_dir)
         #if self.iters_since_last_save % self.period and ParallelEnv().local_rank == 0:
         #self.iters_since_last_save = 0
-        if iter % self.period == 0 and ParallelEnv().local_rank == 0:
+        if iter % self.period == 0 and paddle.distributed.get_rank() == 0:
             if self.verbose > 0:
                 print("iter {iter_num}: saving model to {path}".format(
                     iter_num=iter, path=current_save_dir))
@@ -269,7 +268,7 @@ class VisualDL(Callback):
 
     def on_iter_end(self, iter, logs=None):
         logs = logs or {}
-        if iter % self.freq == 0 and ParallelEnv().local_rank == 0:
+        if iter % self.freq == 0 and paddle.distributed.get_rank() == 0:
             for k, v in logs.items():
                 self.writer.add_scalar("Train/{}".format(k), v, iter)
 
