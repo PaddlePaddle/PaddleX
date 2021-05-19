@@ -18,21 +18,21 @@ python mobilenetv2_prune.py
 
 `mobilenetv2_prune.py`中主要执行了以下API：
 
-step 1: 分析模型各层参数对不同模型FLOPS剪裁比例下的敏感度
+step 1: 分析模型各层参数对于不同的模型FLOPs减小比例下的敏感度
 
 主要由两个API完成:
+
 ```
 model = pdx.load_model('output/mobilenet_v2/best_model')
 model.analyze_sensitivity(
     dataset=eval_dataset, save_dir='output/mobilenet_v2/prune')
-
 ```
 
-参数分析完后，`output/mobilenet_v2`目录下会得到`model.sensi.data`文件，此文件保存了不同剪裁比例下各层参数的敏感度信息。
+参数分析完后，`output/mobilenet_v2/prune`目录下会得到`model.sensi.data`文件，此文件保存了不同剪裁比例下各层参数的敏感度信息。
 
-**注意：** 如果之前运行过该步骤，第二次运行时会自动加载已有的`output/mobilenet_v2/model.sensi.data`，不再进行敏感度分析。
+**注意：** 如果之前运行过该步骤，第二次运行时会自动加载已有的`output/mobilenet_v2/prune/model.sensi.data`，不再进行敏感度分析。
 
-step 2: 根据选择的FLOPS剪裁比例对模型进行剪裁
+step 2: 根据选择的FLOPs减小比例对模型进行剪裁
 
 ```
 model.prune(pruned_flops=.2, save_dir=None)

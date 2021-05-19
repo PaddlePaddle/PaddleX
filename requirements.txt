@@ -1,4 +1,5 @@
 tqdm
+scipy
 colorama
 cython
 pycocotools
