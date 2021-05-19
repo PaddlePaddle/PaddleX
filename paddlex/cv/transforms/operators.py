@@ -395,9 +395,10 @@ class ResizeByShort(Transform):
         return resized_segms
 
     def apply(self, sample):
-        interp = self.interp
         if self.interp == "RANDOM":
             interp = random.choice(list(interp_dict.values()))
+        else:
+            interp = interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
         im_short_size = min(im_h, im_w)
         im_long_size = max(im_h, im_w)
