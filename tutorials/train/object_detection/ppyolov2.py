@@ -42,7 +42,8 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.det.PPYOLOv2(num_classes=num_classes, backbone='ResNet50_vd_dcn')
+model = pdx.models.PPYOLOv2(
+    num_classes=num_classes, backbone='ResNet50_vd_dcn')
 
 model.train(
     num_epochs=365,

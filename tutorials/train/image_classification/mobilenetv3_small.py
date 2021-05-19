@@ -1,6 +1,7 @@
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+import paddle
 import paddlex as pdx
 from paddlex import transforms
 
@@ -31,7 +32,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.models.MobileNetV3_large(num_classes=num_classes)
+model = pdx.models.MobileNetV3_small(num_classes=num_classes)
 
 model.train(
     num_epochs=10,
@@ -39,6 +40,6 @@ model.train(
     train_batch_size=32,
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
-    learning_rate=0.025,
-    save_dir='output/mobilenet_v2',
+    learning_rate=0.01,
+    save_dir='output/mobilenetv3_small',
     use_vdl=True)

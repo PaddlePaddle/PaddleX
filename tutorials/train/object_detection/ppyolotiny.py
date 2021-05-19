@@ -39,7 +39,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.det.PPYOLOTiny(num_classes=num_classes)
+model = pdx.models.PPYOLOTiny(num_classes=num_classes)
 
 model.train(
     num_epochs=650,

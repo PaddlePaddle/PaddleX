@@ -35,7 +35,7 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.seg.HRNet(num_classes=num_classes, width=48)
+model = pdx.models.HRNet(num_classes=num_classes, width=48)
 
 model.train(
     num_epochs=10,

@@ -35,7 +35,7 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.seg.UNet(num_classes=num_classes)
+model = pdx.models.UNet(num_classes=num_classes)
 
 model.train(
     num_epochs=10,

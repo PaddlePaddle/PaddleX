@@ -1,6 +1,7 @@
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+import paddle
 import paddlex as pdx
 from paddlex import transforms
 
@@ -33,12 +34,30 @@ eval_dataset = pdx.datasets.ImageNet(
 num_classes = len(train_dataset.labels)
 model = pdx.models.MobileNetV3_large(num_classes=num_classes)
 
+# Create a customized optimizer with CosineAnnealingDecay and warmup steps
+train_batch_size = 64
+num_steps_each_epoch = len(train_dataset) // train_batch_size
+num_epochs = 10
+scheduler = paddle.optimizer.lr.CosineAnnealingDecay(
+    learning_rate=.001, T_max=num_steps_each_epoch * num_epochs)
+warmup_epoch = 5
+warmup_steps = warmup_epoch * num_steps_each_epoch
+scheduler = paddle.optimizer.lr.LinearWarmup(
+    learning_rate=scheduler,
+    warmup_steps=warmup_steps,
+    start_lr=0.0,
+    end_lr=.001)
+custom_optimizer = paddle.optimizer.Momentum(
+    learning_rate=scheduler,
+    momentum=.9,
+    weight_decay=paddle.regularizer.L2Decay(coeff=.00002),
+    parameters=model.net.parameters())
+
 model.train(
-    num_epochs=10,
+    num_epochs=num_epochs,
     train_dataset=train_dataset,
-    train_batch_size=32,
+    train_batch_size=train_batch_size,
     eval_dataset=eval_dataset,
-    lr_decay_epochs=[4, 6, 8],
-    learning_rate=0.025,
-    save_dir='output/mobilenet_v2',
+    optimizer=custom_optimizer,
+    save_dir='output/mobilenetv3_large',
     use_vdl=True)
