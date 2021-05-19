@@ -1,9 +1,12 @@
 import paddlex as pdx
 from paddlex import transforms as T
 
+# 下载和解压昆虫检测数据集
 dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
+# 定义训练和验证时的transforms
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
 train_transforms = T.Compose([
     T.MixupImage(mixup_epoch=250), T.RandomDistort(),
     T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
@@ -19,6 +22,8 @@ eval_transforms = T.Compose([
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+# 定义训练和验证所用的数据集
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/datasets/voc.py#L29
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -33,9 +38,13 @@ eval_dataset = pdx.datasets.VOCDetection(
     transforms=eval_transforms,
     shuffle=False)
 
+# 初始化模型，并进行训练
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
 model = pdx.models.PPYOLO(num_classes=num_classes, backbone='ResNet50_vd_dcn')
 
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L154
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=405,
     train_dataset=train_dataset,

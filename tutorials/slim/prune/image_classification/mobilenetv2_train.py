@@ -1,17 +1,14 @@
 import paddlex as pdx
-from paddlex import transforms
+from paddlex import transforms as T
 
 veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
 pdx.utils.download_and_decompress(veg_dataset, path='./')
 
-train_transforms = transforms.Compose([
-    transforms.RandomCrop(crop_size=224), transforms.RandomHorizontalFlip(),
-    transforms.Normalize()
-])
+train_transforms = T.Compose(
+    [T.RandomCrop(crop_size=224), T.RandomHorizontalFlip(), T.Normalize()])
 
-eval_transforms = transforms.Compose([
-    transforms.ResizeByShort(short_size=256),
-    transforms.CenterCrop(crop_size=224), transforms.Normalize()
+eval_transforms = T.Compose([
+    T.ResizeByShort(short_size=256), T.CenterCrop(crop_size=224), T.Normalize()
 ])
 
 train_dataset = pdx.datasets.ImageNet(

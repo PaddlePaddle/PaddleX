@@ -445,7 +445,7 @@ class RandomResizeByShort(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        short_sizes (int): Target size of the shorter side of the image(s).
+        short_sizes (List[int]): Target size of the shorter side of the image(s).
         max_size (int, optional): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied. Defaults to -1.
         interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
 
