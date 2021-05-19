@@ -57,11 +57,16 @@ class BatchRandomResize(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_sizes (List[int], List[list or tuple] or Tuple[list or tuple]): Multiple target sizes, each target size is an int or list/tuple.
-        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
+        target_sizes (List[int], List[list or tuple] or Tuple[list or tuple]):
+            Multiple target sizes, each target size is an int or list/tuple of length 2.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
     Raises:
         TypeError: Invalid type of target_size.
         ValueError: Invalid interpolation method.
+
+    See Also:
+        RandomResize: Resize input to random sizes.
     """
 
     def __init__(self, target_sizes, interp='NEAREST'):
@@ -91,16 +96,18 @@ class BatchRandomResizeByShort(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        short_sizes (List[int]): Target sizes of the shorter side of the image(s).
-        max_size (int, optional): The upper bound of longer side of the image(s). If max_size is -1, no upper bound is applied. Defaults to -1.
-        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
+        short_sizes (List[int], Tuple[int]): Target sizes of the shorter side of the image(s).
+        max_size (int, optional): The upper bound of longer side of the image(s).
+            If max_size is -1, no upper bound is applied. Defaults to -1.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
 
     Raises:
         TypeError: Invalid type of target_size.
         ValueError: Invalid interpolation method.
 
     See Also:
-        ResizeByShort: Resize image(s) in input with keeping the aspect ratio.
+        RandomResizeByShort: Resize input to random sizes with keeping the aspect ratio.
     """
 
     def __init__(self, short_sizes, max_size=-1, interp='NEAREST'):

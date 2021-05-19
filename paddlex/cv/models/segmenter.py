@@ -166,13 +166,16 @@ class BaseSegmenter(BaseModel):
         Args:
             num_epochs(int): The number of epochs.
             train_dataset(paddlex.dataset): Training dataset.
-            train_batch_size(int, optional): Total batch size among all workers used in training. Defaults to 2.
-            eval_dataset(paddlex.dataset, optional): Evaluation dataset. If None, the model will not be evaluated furing training process. Defaults to None.
-            optimizer(paddle.optimizer.Optimizer or None, optional): Optimizer used in training. If None, a default optimizer is used. Defaults to None.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 2.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated furing training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used in training. If None, a default optimizer is used. Defaults to None.
             save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
-            pretrain_weights(str or None, optional): None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+            pretrain_weights(str or None, optional):
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
             learning_rate(float, optional): Learning rate for training. Defaults to .025.
             lr_decay_power(float, optional): Learning decay power. Defaults to .9.
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
@@ -226,11 +229,17 @@ class BaseSegmenter(BaseModel):
         Evaluate the model.
         Args:
             eval_dataset(paddlex.dataset): Evaluation dataset.
-            batch_size(int, optional): Total batch size among all workers used for evaluation. Defaults to 1.
+            batch_size(int, optional): Total batch size among all cards used for evaluation. Defaults to 1.
             return_details(bool, optional): Whether to return evaluation details. Defaults to False.
 
         Returns:
-            dict: Evaluation metrics.
+            collections.OrderedDict with key-value pairs:
+                {"miou": `mean intersection over union`,
+                 "category_iou": `category-wise mean intersection over union`,
+                 "oacc": `overall accuracy`,
+                 "category_acc": `category-wise accuracy`,
+                 "kappa": ` kappa coefficient`,
+                 "category_F1-score": `F1 score`}.
 
         """
         arrange_transforms(
@@ -316,11 +325,19 @@ class BaseSegmenter(BaseModel):
         """
         Do inference.
         Args:
-            img_file(list or str): Input image paths or arrays in BGR format.
-            transforms(paddlex.transforms.Compose or None, optional): Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
+            Args:
+            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+                Image path or decoded image data in a BGR format, which also could constitute a list,
+                meaning all images to be predicted as a mini-batch.
+            transforms(paddlex.transforms.Compose or None, optional):
+                Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
 
         Returns:
-            dict or list of dict: The prediction results.
+            If img_file is a string or np.array, the result is a dict with key-value pairs:
+            {"label map": `label map`, "score_map": `score map`}.
+            If img_file is a list, the result is a list composed of dicts with the corresponding fields:
+            label_map(np.ndarray): the predicted label map
+            score_map(np.ndarray): the prediction score map
 
         """
         if transforms is None and not hasattr(self, 'test_transforms'):

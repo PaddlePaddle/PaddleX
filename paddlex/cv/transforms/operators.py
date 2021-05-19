@@ -89,7 +89,7 @@ class Compose(Transform):
     All input images are in Height-Width-Channel ([H, W, C]) format.
 
     Args:
-        transforms (List[paddlex.transforms.Transform]): List of data augmentations.
+        transforms (List[paddlex.transforms.Transform]): List of data preprocess or augmentations.
     Raises:
         TypeError: Invalid type of transforms.
         ValueError: Invalid length of transforms.
@@ -208,8 +208,10 @@ class Resize(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_size (int, List[int] or Tuple[int]): Target size.
-        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
+        target_size (int, List[int] or Tuple[int]): Target size. If int, the height and width share the same target_size.
+            Otherwise, target_size represents [target height, target width].
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
 
     Raises:
         TypeError: Invalid type of target_size.
@@ -308,12 +310,17 @@ class RandomResize(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]): Multiple target sizes, each target size is an int or list/tuple.
-        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional): Interpolation method of resize. Defaults to 'LINEAR'.
+        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]):
+            Multiple target sizes, each target size is an int or list/tuple.
+        interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
+            Interpolation method of resize. Defaults to 'LINEAR'.
 
     Raises:
         TypeError: Invalid type of target_size.
         ValueError: Invalid interpolation method.
+
+    See Also:
+        Resize input to a specific size.
     """
 
     def __init__(self, target_sizes, interp='LINEAR'):
@@ -579,12 +586,16 @@ class RandomVerticalFlip(Transform):
 class Normalize(Transform):
     """
     Apply min-max normalization to the image(s) in input.
+    1. im = (im - min_value) * 1 / (max_value - min_value)
+    2. im = im - mean
+    3. im = im / std
 
     Args:
         mean(List[float] or Tuple[float], optional): Mean of input image(s). Defaults to [0.485, 0.456, 0.406].
         std(List[float] or Tuple[float], optional): Standard deviation of input image(s). Defaults to [0.229, 0.224, 0.225].
         min_val(List[float] or Tuple[float], optional): Minimum value of input image(s). Defaults to [0, 0, 0, ].
         max_val(List[float] or Tuple[float], optional): Max value of input image(s). Defaults to [255., 255., 255.].
+        is_scale(bool, optional): If True, the image pixel values will be divided by 255.
     """
 
     def __init__(self,

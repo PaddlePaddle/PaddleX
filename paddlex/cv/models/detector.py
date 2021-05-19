@@ -176,19 +176,23 @@ class BaseDetector(BaseModel):
         Args:
             num_epochs(int): The number of epochs.
             train_dataset(paddlex.dataset): Training dataset.
-            train_batch_size(int, optional): Total batch size among all workers used in training. Defaults to 64.
-            eval_dataset(paddlex.dataset, optional): Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
-            optimizer(paddle.optimizer.Optimizer or None, optional): Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
             save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
-            pretrain_weights(str or None, optional): None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+            pretrain_weights(str or None, optional):
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
             learning_rate(float, optional): Learning rate for training. Defaults to .001.
             warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
             warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
             lr_decay_epochs(list or tuple, optional): Epoch milestones for learning rate decay. Defaults to (216, 243).
             lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay. Defaults to .1.
-            metric({'VOC', 'COCO', None}, optional): Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
+            metric({'VOC', 'COCO', None}, optional):
+                Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
@@ -278,12 +282,13 @@ class BaseDetector(BaseModel):
         Evaluate the model.
         Args:
             eval_dataset(paddlex.dataset): Evaluation dataset.
-            batch_size(int, optional): Total batch size among all workers used for evaluation. Defaults to 1.
-            metric({'VOC', 'COCO', None}, optional): Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
+            batch_size(int, optional): Total batch size among all cards used for evaluation. Defaults to 1.
+            metric({'VOC', 'COCO', None}, optional):
+                Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
             return_details(bool, optional): Whether to return evaluation details. Defaults to False.
 
         Returns:
-            dict: Evaluation metrics.
+            collections.OrderedDict with key-value pairs: {"mAP(0.50, 11point)":`mean average precision`}.
 
         """
         if eval_dataset.__class__.__name__ == 'VOCDetection':
@@ -385,11 +390,20 @@ class BaseDetector(BaseModel):
         """
         Do inference.
         Args:
-            img_file(list or str): Input image paths or arrays in BGR format.
-            transforms(paddlex.transforms.Compose or None, optional): Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
+            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+                Image path or decoded image data in a BGR format, which also could constitute a list,
+                meaning all images to be predicted as a mini-batch.
+            transforms(paddlex.transforms.Compose or None, optional):
+                Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
 
         Returns:
-            dict or list of dict: The prediction results.
+            If img_file is a string or np.array, the result is a list of dict with key-value pairs:
+            {"category_id": `category_id`, "category": `category`, "bbox": `[x, y, w, h]`, "score": `score`}.
+            If img_file is a list, the result is a list composed of dicts with the corresponding fields:
+            category_id(int): the predicted category ID
+            category(str): category name
+            bbox(list): bounding box in [x, y, w, h] format
+            score(str): confidence
 
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
