@@ -1,6 +1,6 @@
 # PaddleX全面升级动态图，2.0.0-rc发布！
 
-> 原版本代码分支在[release/1.3](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3)，也可以通过pip安装1.3.9版本进行使用。
+> 原版本代码分支在[release/1.3](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3)，也可以通过pip安装1.3.10版本进行使用。
 
 
 <p align="center">
