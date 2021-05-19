@@ -31,10 +31,11 @@ void XEssential(const YAML::Node& src, YAML::Node* dst) {
       std::cerr << "[Error] Only support RGB or BGR of "
                 << "TransformsMode" << std::endl;
     }
+  } else if ((*dst)["version"].as<std::string>() >= "2.0.0") {
+    (*dst)["transforms"]["BGR2RGB"] = YAML::Null;
   }
   (*dst)["transforms"]["Convert"]["dtype"] = "float";
 }
-
 
 void XNormalize(const YAML::Node& src, YAML::Node* dst) {
   // check data format

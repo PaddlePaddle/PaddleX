@@ -57,7 +57,6 @@ bool Model::TritonEngineInit(const std::string& url,
                              bool verbose) {
   infer_engine_ = std::make_shared<TritonInferenceEngine>();
   InferenceConfig config("triton");
-  config.triton_config = new TritonInferenceConfigs();
   config.triton_config->url_ = url;
   config.triton_config->model_name_ = model_name;
   config.triton_config->model_version_ = model_version;
@@ -66,7 +65,7 @@ bool Model::TritonEngineInit(const std::string& url,
 }
 
 void TritonInferenceEngine::ParseConfigs(
-     const TritonInferenceConfigs& configs) {
+     const TritonEngineConfig& configs) {
   options_.model_name_ = configs.model_name_;
   options_.model_version_ = configs.model_version_;
   options_.request_id_ = configs.request_id_;
@@ -79,7 +78,7 @@ void TritonInferenceEngine::ParseConfigs(
 }
 
 bool TritonInferenceEngine::Init(const InferenceConfig& configs) {
-  const TritonInferenceConfigs& triton_configs = *(configs.triton_config);
+  const TritonEngineConfig& triton_configs = *(configs.triton_config);
   ParseConfigs(triton_configs);
   FAIL_IF_ERR(nic::InferenceServerHttpClient::Create(&client_,
                                                      triton_configs.url_,
@@ -93,8 +92,7 @@ nic::Error TritonInferenceEngine::GetModelMetaData(
   std::string model_metadata_str;
   FAIL_IF_ERR(client_->ModelMetadata(&model_metadata_str,
                                      options_.model_name_,
-                                     options_.model_version_,
-                                     headers_),
+                                     options_.model_version_),
               "error: failed to get model metadata.");
   model_metadata->Parse(model_metadata_str.c_str(), model_metadata_str.size());
   if (model_metadata->HasParseError()) {

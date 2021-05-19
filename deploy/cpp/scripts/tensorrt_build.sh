@@ -2,31 +2,49 @@
 
 for i in "$@"; do
     case $i in
-        --triton_client=*)
-         TRITON_CLIENT="${i#*=}"
+        --tensorrt_dir=*)
+         TENSORRT_DIR="${i#*=}"
+         shift
+         ;;
+        --tensorrt_header=*)
+         TENSORRT_HEADER="${i#*=}"
+         shift
+         ;;
+        --cuda_dir=*)
+         CUDA_DIR="${i#*=}"
          shift
          ;;
         *)
-         echo "unknown option $i"
+         # unknown option
          exit 1
          ;;
     esac
 done
 
-if [ $TRITON_CLIENT ];then
-	echo "TRITON_CLIENT = $TRITON_CLIENT"
+if [ $TENSORRT_DIR ];then
+	echo "TENSORRT_DIR = $TENSORRT_DIR"
 else
-	echo "TRITON_CLIENT is not exist, please set by --triton_client"
+	echo "TENSORRT_DIR is not exist, please set by --tensorrt_dir"
     exit 1
 fi
 
-# install relayed library
-sh $(pwd)/scripts/triton_env.sh 
+if [ $CUDA_DIR ];then
+	echo "CUDA_DIR = $CUDA_DIR"
+else
+	echo "CUDA_DIR is not exist, please set by --cuda_dir"
+    exit 1
+fi
 
+if [ $TENSORRT_HEADER ];then
+	echo " TENSORRT_HEADER= $TENSORRT_HEADER"
+else
+	echo "TENSORRT_HEADER is not exist, please set by --tensorrt_header"
+    exit 1
+fi
 # download opencv library
 OPENCV_DIR=$(pwd)/deps/opencv3.4.6gcc4.8ffmpeg/
 {
-    bash $(pwd)/scripts/bootstrap.sh ${OPENCV_DIR}
+    bash $(pwd)/scripts/bootstrap.sh ${OPENCV_DIR} # 下载预编译版本的加密工具和opencv依赖库
 } || {
     echo "Fail to execute script/bootstrap.sh"
     exit -1
@@ -77,11 +95,15 @@ if [  $? -ne 0  ];then
     apt install libjasper1 libjasper-dev
 fi
 
+rm -rf log
+
 rm -rf build
 mkdir -p build
 cd build
-cmake ../demo/triton/ \
-    -DTRITON_CLIENT=${TRITON_CLIENT} \
+cmake ../demo/tensorrt/ \
+    -DTENSORRT_DIR=${TENSORRT_DIR} \
+    -DTENSORRT_HEADER=${TENSORRT_HEADER} \
+    -DCUDA_DIR=${CUDA_DIR} \
     -DOPENCV_DIR=${OPENCV_DIR}  \
     -DGLOG_DIR=${GLOG_DIR} \
     -DGFLAGS_DIR=${GFLAGS_DIR}
