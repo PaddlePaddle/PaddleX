@@ -1,3 +1,4 @@
+import paddle
 import paddlex as pdx
 from paddlex import transforms as T
 
