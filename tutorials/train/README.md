@@ -35,6 +35,7 @@
 * 在安装PaddleX后，使用如下命令开始训练，代码会自动下载训练数据, 并均使用单张GPU卡进行训练。
 
 ```
+export CUDA_VISIBLE_DEVICES=0
 python image_classification/mobilenetv3_small.py
 ```
 
