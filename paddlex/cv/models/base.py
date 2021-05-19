@@ -363,6 +363,10 @@ class BaseModel:
             save_dir(str, optional): The directory to save sensitivity file of the model. Defaults to 'output'.
 
         """
+        if self.__class__.__name__ in ['FasterRCNN', 'MaskRCNN']:
+            raise Exception("{} does not support pruning currently!".format(
+                self.__class__.__name__))
+
         assert criterion in ['l1_norm', 'fpgm'], \
             "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
         arrange_transforms(

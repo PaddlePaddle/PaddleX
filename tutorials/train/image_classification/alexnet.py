@@ -6,7 +6,7 @@ veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
 pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
 train_transforms = T.Compose(
     [T.RandomCrop(crop_size=224), T.RandomHorizontalFlip(), T.Normalize()])
 

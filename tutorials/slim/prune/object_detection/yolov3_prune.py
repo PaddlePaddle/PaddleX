@@ -1,28 +1,29 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
-from paddlex import transforms
+from paddlex import transforms as T
 
+# 下载和解压昆虫检测数据集
 dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
-train_transforms = transforms.Compose([
-    transforms.MixupImage(mixup_epoch=250), transforms.RandomDistort(),
-    transforms.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]),
-    transforms.RandomCrop(), transforms.RandomHorizontalFlip(),
-    transforms.BatchRandomResize(
+# 定义训练和验证时的transforms
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
+train_transforms = T.Compose([
+    T.MixupImage(mixup_epoch=250), T.RandomDistort(),
+    T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
+    T.RandomHorizontalFlip(), T.BatchRandomResize(
         target_sizes=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608],
-        interp='RANDOM'), transforms.Normalize(
+        interp='RANDOM'), T.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-eval_transforms = transforms.Compose([
-    transforms.Resize(
-        608, interp='CUBIC'), transforms.Normalize(
+eval_transforms = T.Compose([
+    T.Resize(
+        608, interp='CUBIC'), T.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+# 定义训练和验证所用的数据集
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/datasets/voc.py#L29
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -37,6 +38,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     transforms=eval_transforms,
     shuffle=False)
 
+# 加载模型
 model = pdx.load_model('output/yolov3_darknet53/best_model')
 
 # Step 1/3: 分析模型各层参数在不同的剪裁比例下的敏感度
@@ -50,7 +52,9 @@ model.analyze_sensitivity(
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/95c53dec89ab0f3769330fa445c6d9213986ca5f/paddlex/cv/models/base.py#L394
 model.prune(pruned_flops=.2)
 
-# Step 3/3: Retrain the model
+# Step 3/3: 对剪裁后的模型重新训练
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L154
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=270,
     train_dataset=train_dataset,
