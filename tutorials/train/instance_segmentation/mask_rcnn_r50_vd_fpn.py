@@ -1,10 +1,7 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
 from paddlex import transforms
 
-xiaoduxiong_dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz'
+xiaoduxiong_dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_dataset.tar.gz'
 pdx.utils.download_and_decompress(xiaoduxiong_dataset, path='./')
 
 train_transforms = transforms.Compose([
@@ -20,19 +17,19 @@ eval_transforms = transforms.Compose([
 ])
 
 train_dataset = pdx.datasets.CocoDetection(
-    data_dir='xiaoduxiong_ins_det/JPEGImages',
-    ann_file='xiaoduxiong_ins_det/train.json',
+    data_dir='xiaoduxiong_dataset/JPEGImages',
+    ann_file='xiaoduxiong_dataset/val.json',
     transforms=train_transforms,
     shuffle=True)
 eval_dataset = pdx.datasets.CocoDetection(
-    data_dir='xiaoduxiong_ins_det/JPEGImages',
-    ann_file='xiaoduxiong_ins_det/val.json',
+    data_dir='xiaoduxiong_dataset/JPEGImages',
+    ann_file='xiaoduxiong_dataset/val.json',
     transforms=eval_transforms,
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
 
-model = pdx.det.MaskRCNN(
+model = pdx.models.MaskRCNN(
     num_classes=num_classes, backbone='ResNet50_vd', with_fpn=True)
 
 model.train(

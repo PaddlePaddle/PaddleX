@@ -32,12 +32,12 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.models.BiSeNetV2(num_classes=num_classes)
+model = pdx.models.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd')
 
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
-    learning_rate=0.05,
-    save_dir='output/bisenet')
+    learning_rate=0.01,
+    save_dir='output/deeplabv3p_r50vd')

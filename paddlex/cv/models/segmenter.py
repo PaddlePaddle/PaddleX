@@ -74,6 +74,7 @@ class BaseSegmenter(BaseModel):
                 logit, origin_shape, transforms=inputs[2])
             label_map = paddle.argmax(
                 score_map, axis=1, keepdim=True, dtype='int32')
+            score_map = paddle.max(score_map, axis=1, keepdim=True)
             score_map = paddle.squeeze(score_map)
             label_map = paddle.squeeze(label_map)
             outputs = {'label_map': label_map, 'score_map': score_map}

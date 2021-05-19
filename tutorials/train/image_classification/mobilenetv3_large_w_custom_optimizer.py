@@ -1,6 +1,3 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddle
 import paddlex as pdx
 from paddlex import transforms
@@ -32,7 +29,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.cls.MobileNetV3_large(num_classes=num_classes)
+model = pdx.models.MobileNetV3_large(num_classes=num_classes)
 
 # Create a customized optimizer with CosineAnnealingDecay and warmup steps
 train_batch_size = 64

@@ -54,6 +54,8 @@ def get_num_workers(num_workers):
 
 def init_parallel_env():
     env = os.environ
+    if 'FLAGS_allocator_strategy' not in os.environ:
+        os.environ['FLAGS_allocator_strategy'] = 'auto_growth'
     dist = 'PADDLE_TRAINER_ID' in env and 'PADDLE_TRAINERS_NUM' in env
     if dist:
         trainer_id = int(env['PADDLE_TRAINER_ID'])

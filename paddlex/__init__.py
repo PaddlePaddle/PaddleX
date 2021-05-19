@@ -21,6 +21,11 @@ from . import cv
 from . import seg
 from . import cls
 from . import det
+from . import models
+from . import tools
+
+from .cv.models.utils.visualize import visualize_detection
+from .cv.models.utils.visualize import visualize_segmentation
 
 env_info = get_environ_info()
 datasets = cv.datasets
@@ -29,3 +34,6 @@ transforms = cv.transforms
 log_level = 2
 
 load_model = cv.models.load_model
+
+visualize_det = visualize_detection
+visualize_seg = visualize_segmentation

@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import cv
-from paddlex.cv.models.utils.visualize import visualize_detection, draw_pr_curve
+import sys
+message = 'Your running script needs PaddleX<2.0.0, please refer to {} to solve this issue.'.format(
+    'https://github.com/PaddlePaddle/PaddleX/tree/dygraph/tutorials/train#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0'
+)
 
-YOLOv3 = cv.models.YOLOv3
-FasterRCNN = cv.models.FasterRCNN
-PPYOLO = cv.models.PPYOLO
-PPYOLOTiny = cv.models.PPYOLOTiny
-PPYOLOv2 = cv.models.PPYOLOv2
-MaskRCNN = cv.models.MaskRCNN
 
-visualize = visualize_detection
-draw_pr_curve = draw_pr_curve
+def __getattr__(attr):
+    if attr == 'transforms':
+
+        print("\033[1;31;40m{}\033[0m".format(message).encode("utf-8")
+              .decode("latin1"))
+        sys.exit(-1)
