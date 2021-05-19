@@ -42,10 +42,10 @@ bool DetPreprocess::PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
     return PrepareInputsForV2(*imgs, shape_infos, inputs, thread_num);
   }
 
-  if (model_arch_ == "YOLO") {
+  if (model_arch_.find("YOLO") != std::string::npos) {
     return PrepareInputsForYOLO(*imgs, shape_infos, inputs, thread_num);
   }
-  if (model_arch_ == "RCNN") {
+  if (model_arch_.find("RCNN") != std::string::npos) {
     return PrepareInputsForRCNN(*imgs, shape_infos, inputs, thread_num);
   }
   std::cerr << "Unsupported model type of '" << model_arch_ << "' "
