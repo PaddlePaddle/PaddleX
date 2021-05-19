@@ -18,7 +18,6 @@
 |object_detection/ppyolotiny.py | 目标检测PPYOLOTiny | 昆虫检测 |
 |object_detection/ppyolov2.py | 目标检测PPYOLOv2 | 昆虫检测 |
 |object_detection/yolov3_darknet53.py | 目标检测YOLOv3 | 昆虫检测 |
-|instance_segmentation/mask_rcnn_r50_fpn.py | 实例分割MaskRCNN | 小度熊分拣 |
 |semantic_segmentation/deeplabv3p_resnet50_vd.py | 语义分割DeepLabV3 | 视盘分割 |
 |semantic_segmentation/bisenetv2.py | 语义分割BiSeNetV2 | 视盘分割 |
 |semantic_segmentation/fast_scnn.py | 语义分割FastSCNN | 视盘分割 |
