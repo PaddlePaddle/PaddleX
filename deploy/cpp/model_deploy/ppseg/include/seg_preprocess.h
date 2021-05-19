@@ -26,10 +26,11 @@ class SegPreprocess : public BasePreprocess {
  public:
   bool Init(const YAML::Node &yaml_config);
 
-  virtual bool PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
+  bool PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
                              std::vector<cv::Mat>* imgs,
                              std::vector<DataBlob>* inputs,
                              int thread_num = 1);
+
   virtual bool Run(std::vector<cv::Mat>* imgs,
                    std::vector<DataBlob>* inputs,
                    std::vector<ShapeInfo>* shape_info,

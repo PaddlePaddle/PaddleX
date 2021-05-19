@@ -36,13 +36,11 @@ class BasePreprocess {
   bool PreprocessImages(const std::vector<ShapeInfo>& shape_infos,
                         std::vector<cv::Mat>* imgs,
                         int thread_num = 1);
+
   bool ShapeInfer(const std::vector<cv::Mat>& imgs,
                   std::vector<ShapeInfo>* shape_infos,
                   int thread_num = 1);
-  virtual bool PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
-                             std::vector<cv::Mat>* imgs,
-                             std::vector<DataBlob>* inputs,
-                             int thread_num = 1) = 0;
+
   virtual bool Run(std::vector<cv::Mat>* imgs,
                    std::vector<DataBlob>* inputs,
                    std::vector<ShapeInfo>* shape_info,

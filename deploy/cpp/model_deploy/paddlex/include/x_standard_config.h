@@ -34,7 +34,9 @@ void XEssential(const YAML::Node& src, YAML::Node* dst) {
   } else if ((*dst)["version"].as<std::string>() >= "2.0.0") {
     (*dst)["transforms"]["BGR2RGB"] = YAML::Null;
   }
-  (*dst)["transforms"]["Convert"]["dtype"] = "float";
+  if ((*dst)["version"].as<std::string>() < "2.0.0") {
+    (*dst)["transforms"]["Convert"]["dtype"] = "float";
+  }
 }
 
 void XNormalize(const YAML::Node& src, YAML::Node* dst) {

@@ -20,8 +20,11 @@ bool ClasPreprocess::Init(const YAML::Node& yaml_config) {
   if (!BuildTransform(yaml_config)) {
     return false;
   }
-  assert(yaml_config["input_tensor_name"].IsDefined());
-  input_name_ = yaml_config["input_tensor_name"].as<std::string>();
+  if (yaml_config["input_tensor_name"].IsDefined()) {
+    input_name_ = yaml_config["input_tensor_name"].as<std::string>();
+  } else {
+    input_name_ = "inputs";
+  }
   return true;
 }
 

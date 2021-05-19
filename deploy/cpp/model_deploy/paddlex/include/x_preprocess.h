@@ -18,38 +18,16 @@
 
 #include "yaml-cpp/yaml.h"
 
-#include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/common/include/output_struct.h"
+#include "model_deploy/common/include/base_preprocess.h"
+#include "model_deploy/ppseg/include/seg_preprocess.h"
+#include "model_deploy/ppdet/include/det_preprocess.h"
+#include "model_deploy/ppclas/include/clas_preprocess.h"
 
 namespace PaddleDeploy {
 class XPreprocess : public BasePreprocess {
  public:
-  bool Init(const YAML::Node &yaml_config);
-
-  virtual bool PrepareInputs(const std::vector<ShapeInfo>& shape_infos,
-                             std::vector<cv::Mat>* imgs,
-                             std::vector<DataBlob>* inputs,
-                             int thread_num = 1);
-  bool PrepareInputsForSegmenter(const std::vector<cv::Mat>& imgs,
-                            const std::vector<ShapeInfo>& shape_infos,
-                            std::vector<DataBlob>* inputs,
-                            int thread_num = 1);
-  bool PrepareInputsForClassifier(const std::vector<cv::Mat>& imgs,
-                            const std::vector<ShapeInfo>& shape_infos,
-                            std::vector<DataBlob>* inputs,
-                            int thread_num = 1);
-  bool PrepareInputsForDetector(const std::vector<cv::Mat>& imgs,
-                            const std::vector<ShapeInfo>& shape_infos,
-                            std::vector<DataBlob>* inputs,
-                            int thread_num = 1);
-  bool PrepareInputsForRCNN(const std::vector<cv::Mat>& imgs,
-                            const std::vector<ShapeInfo>& shape_infos,
-                            std::vector<DataBlob>* inputs,
-                            int thread_num = 1);
-  bool PrepareInputsForYOLO(const std::vector<cv::Mat>& imgs,
-                            const std::vector<ShapeInfo>& shape_infos,
-                            std::vector<DataBlob>* inputs,
-                            int thread_num = 1);
+  bool Init(const YAML::Node& yaml_config);
 
   virtual bool Run(std::vector<cv::Mat>* imgs,
                    std::vector<DataBlob>* inputs,
@@ -59,5 +37,8 @@ class XPreprocess : public BasePreprocess {
  private:
   std::string model_type_;
   std::string model_name_;
+  SegPreprocess seg_preprocess;
+  DetPreprocess det_preprocess;
+  ClasPreprocess clas_preprocess;
 };
 }  // namespace PaddleDeploy
