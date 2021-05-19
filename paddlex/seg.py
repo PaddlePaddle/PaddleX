@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import cv
-from paddlex.cv.models.utils.visualize import visualize_segmentation
+import sys
+message = 'Your running script needs PaddleX<2.0.0, please refer to {} to solve this issue.'.format(
+    'https://github.com/PaddlePaddle/PaddleX/tree/dygraph/tutorials/train#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0'
+)
 
-UNet = cv.models.UNet
-DeepLabV3P = cv.models.DeepLabV3P
-FastSCNN = cv.models.FastSCNN
-HRNet = cv.models.HRNet
-BiSeNetV2 = cv.models.BiSeNetV2
 
-visualize = visualize_segmentation
+def __getattr__(attr):
+    if attr == 'transforms':
+
+        print("\033[1;31;40m{}\033[0m".format(message).encode("utf-8")
+              .decode("latin1"))
+        sys.exit(-1)

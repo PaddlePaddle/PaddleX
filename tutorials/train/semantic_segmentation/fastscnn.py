@@ -1,6 +1,3 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
 from paddlex import transforms
 
@@ -35,7 +32,7 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.seg.FastSCNN(num_classes=num_classes)
+model = pdx.models.FastSCNN(num_classes=num_classes)
 
 model.train(
     num_epochs=10,

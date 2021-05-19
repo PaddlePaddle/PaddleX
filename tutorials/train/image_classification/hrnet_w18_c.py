@@ -1,6 +1,3 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
 from paddlex import transforms
 
@@ -31,7 +28,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 num_classes = len(train_dataset.labels)
-model = pdx.cls.HRNet_W18_C(num_classes=num_classes)
+model = pdx.models.HRNet_W18_C(num_classes=num_classes)
 
 model.train(
     num_epochs=10,

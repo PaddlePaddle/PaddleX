@@ -1,6 +1,3 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
 from paddlex import transforms
 
@@ -38,7 +35,7 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 num_classes = len(train_dataset.labels)
-model = pdx.det.PPYOLOTiny(num_classes=num_classes)
+model = pdx.models.PPYOLOTiny(num_classes=num_classes)
 
 model.train(
     num_epochs=650,
