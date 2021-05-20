@@ -18,7 +18,6 @@
 |object_detection/ppyolotiny.py | 目标检测PPYOLOTiny | 昆虫检测 |
 |object_detection/ppyolov2.py | 目标检测PPYOLOv2 | 昆虫检测 |
 |object_detection/yolov3_darknet53.py | 目标检测YOLOv3 | 昆虫检测 |
-|instance_segmentation/mask_rcnn_r50_fpn.py | 实例分割MaskRCNN | 小度熊分拣 |
 |semantic_segmentation/deeplabv3p_resnet50_vd.py | 语义分割DeepLabV3 | 视盘分割 |
 |semantic_segmentation/bisenetv2.py | 语义分割BiSeNetV2 | 视盘分割 |
 |semantic_segmentation/fast_scnn.py | 语义分割FastSCNN | 视盘分割 |
@@ -36,7 +35,8 @@
 * 在安装PaddleX后，使用如下命令开始训练，代码会自动下载训练数据, 并均使用单张GPU卡进行训练。
 
 ```
-python image_classification/mobilenetv2.py
+export CUDA_VISIBLE_DEVICES=0
+python image_classification/mobilenetv3_small.py
 ```
 
 * 若需使用多张GPU卡进行训练，例如使用2张卡时执行：
@@ -58,4 +58,4 @@ visualdl --logdir output/mobilenetv3_small/vdl_log --port 8001
 
 ## 版本升级
 
-由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.9版本。如果安装PaddleX 2.0.0，请使用本目录下的训练脚本。
+由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.10版本。如果安装PaddleX 2.0.0，请使用本目录下的训练脚本。
