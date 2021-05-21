@@ -12,7 +12,7 @@
  ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
 
 
-# PaddleX全面升级动态图，目前默认使用静态图版本，动态图版本位于[dygraph](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph)中。pip安装1.3.10版本对应使用静态图版本，pip安装2.0.0rc0即使用动态图版本。
+## PaddleX全面升级动态图，目前默认使用静态图版本，动态图版本位于[dygraph](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph)中。pip安装1.3.10版本对应使用静态图版本，pip安装2.0.0rc0即使用动态图版本。
 
 :hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
 
