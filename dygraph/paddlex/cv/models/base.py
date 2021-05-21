@@ -63,12 +63,8 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
-                scale = getattr(self, 'scale', None)
                 pretrain_weights = get_pretrain_weights(
-                    pretrain_weights,
-                    self.__class__.__name__,
-                    save_dir,
-                    scale=scale)
+                    pretrain_weights, self.model_name, save_dir)
             else:
                 backbone_name = getattr(self, 'backbone_name', None)
                 pretrain_weights = get_pretrain_weights(
@@ -163,8 +159,12 @@ class BaseModel:
     def build_data_loader(self, dataset, batch_size, mode='train'):
         batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         if mode == 'eval':
-            batch_size = batch_size_each_card
-            total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
+            if self.model_type == 'detector':
+                # detector only supports single card eval with batch size 1
+                total_steps = dataset.num_samples
+            else:
+                batch_size = batch_size_each_card
+                total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
             logging.info(
                 "Start to evaluate(total_samples={}, total_steps={})...".
                 format(dataset.num_samples, total_steps))

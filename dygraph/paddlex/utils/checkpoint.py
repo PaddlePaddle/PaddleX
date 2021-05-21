@@ -102,7 +102,7 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet152_vd_pretrained.pdparams',
     'ResNet200_vd_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet200_vd_pretrained.pdparams',
-    'MobileNetV1_x1_0_IMAGENET':
+    'MobileNetV1_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_pretrained.pdparams',
     'MobileNetV1_x0_25_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_25_pretrained.pdparams',
@@ -110,7 +110,7 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_5_pretrained.pdparams',
     'MobileNetV1_x0_75_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_75_pretrained.pdparams',
-    'MobileNetV2_x1_0_IMAGENET':
+    'MobileNetV2_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_pretrained.pdparams',
     'MobileNetV2_x0_25_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_25_pretrained.pdparams',
@@ -327,11 +327,7 @@ coco_weights = {
 }
 
 
-def get_pretrain_weights(flag,
-                         class_name,
-                         save_dir,
-                         scale=None,
-                         backbone_name=None):
+def get_pretrain_weights(flag, class_name, save_dir, backbone_name=None):
     if flag is None:
         return None
     elif osp.isdir(flag):
@@ -341,11 +337,7 @@ def get_pretrain_weights(flag,
 
     # TODO: check flag
     new_save_dir = save_dir
-    if scale is not None:
-        weights_key = "{}_x{}_{}".format(class_name,
-                                         str(float(scale)).replace('.', '_'),
-                                         flag)
-    elif backbone_name is not None:
+    if backbone_name is not None:
         weights_key = "{}_{}_{}".format(class_name, backbone_name, flag)
     else:
         weights_key = "{}_{}".format(class_name, flag)
