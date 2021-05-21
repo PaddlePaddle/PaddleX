@@ -1,0 +1,9 @@
+[submodule "PaddleSeg"]
+	path = PaddleSeg
+	url = https://github.com/PaddlePaddle/PaddleSeg.git
+[submodule "PaddleDetection"]
+	path = PaddleDetection
+	url = https://github.com/PaddlePaddle/PaddleDetection.git
+[submodule "PaddleClas"]
+	path = PaddleClas
+	url = https://github.com/PaddlePaddle/PaddleClas.git
