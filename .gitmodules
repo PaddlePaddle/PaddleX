@@ -1,0 +1,3 @@
+[submodule "dygraph/PaddleClas"]
+	path = dygraph/PaddleClas
+	url = https://github.com/PaddlePaddle/PaddleClas
