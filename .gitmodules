@@ -4,3 +4,6 @@
 [submodule "dygraph/PaddleDetection"]
 	path = dygraph/PaddleDetection
 	url = https://github.com/PaddlePaddle/PaddleDetection
+[submodule "dygraph/PaddleSeg"]
+	path = dygraph/PaddleSeg
+	url = https://github.com/PaddlePaddle/PaddleSeg
