@@ -107,7 +107,7 @@ labels:
 
 当前TensorRT部署只支持固定的输入输出，不支持动态形状(shape)。如果转换后的onnx模型的输入是动态输入，需要在配置文件的预处理transforms中加入Resize操作，将所有不同形状的图片转换为固定的形状。
 
-例如[PaddleSeg模型部署指南](../../models/paddleseg.md) 中导出的DeepLabv3p模型，转换为onnx后是形状为[-1, 3,  -1, -1]的动态输入。修改配置文件如下，可将输入固化成[1, 3, 1024, 2048]形状:
+例如[PaddleSeg模型部署指南](../../models/paddleseg.md) 中导出的DeepLabv3p模型，转换为onnx后是形状为[-1, 3, -1, -1]的动态输入。修改配置文件如下，可将输入固化成[1, 3, 1024, 2048]形状:
 
 ```
 Deploy:
