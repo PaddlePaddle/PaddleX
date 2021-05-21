@@ -1,6 +1,6 @@
 # 基于Docker快速上手TensorRT部署
 
-本文档将介绍如何基于Docker快速使用TensorRT部署Paddle转换的ONNX模型。 并以ResNet50模型为例， 讲述整个流程。[点击下载模型](https://bj.bcebos.com/paddlex/deploy2/models/resnet50_trt.tar.gz)
+本文档将介绍如何基于Docker快速使用TensorRT部署Paddle转换的ONNX模型。并以ResNet50模型为例，讲述整个流程。[点击下载模型](https://bj.bcebos.com/paddlex/deploy2/models/resnet50_trt.tar.gz)
 
 ## 1 配置TensorRT Docker环境
 拉取TensorRT Docker镜像之前，首先需要安装[Docker](https://docs.docker.com/engine/install/)，如果需要使用GPU预测请安装[NVIDIA Container Toolkit](https://github.com/NVIDIA/nvidia-docker)。
@@ -107,7 +107,7 @@ labels:
 
 当前TensorRT部署只支持固定的输入输出，不支持动态形状(shape)。如果转换后的onnx模型的输入是动态输入，需要在配置文件的预处理transforms中加入Resize操作，将所有不同形状的图片转换为固定的形状。
 
-例如[PaddleDetection模型部署指南](../../models/paddledetection.md) 中导出的DeepLabv3p模型，转换为onnx后是形状为[-1, 3,  -1, -1]的动态输入。修改配置文件如下，可将输入固化成[1, 3, 1024, 2048]形状:
+例如[PaddleSeg模型部署指南](../../models/paddleseg.md) 中导出的DeepLabv3p模型，转换为onnx后是形状为[-1, 3,  -1, -1]的动态输入。修改配置文件如下，可将输入固化成[1, 3, 1024, 2048]形状:
 
 ```
 Deploy:
@@ -177,4 +177,4 @@ Classify(65	Saluki	0.91879153)
 | image_list | 待预测的图片路径列表文件路径，列表里每一行是一张图片的文件路径 |
 | model_type | 模型来源，det/seg/clas/paddlex，分别表示模型来源于PaddleDetection、PaddleSeg、PaddleClas和PaddleX |
 | gpu_id     | 使用GPU预测时的设备ID，默认为0                               |
-|            |                                                              |
+
