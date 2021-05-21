@@ -19,7 +19,6 @@ import copy
 import os
 import os.path as osp
 
-from paddle.io import DistributedBatchSampler, DataLoader
 from paddle.static import InputSpec
 import paddlex
 import paddlex.utils.logging as logging
@@ -27,7 +26,6 @@ from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxA
 from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
-from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget, _Permute
 from paddlex.cv.transforms import arrange_transforms
