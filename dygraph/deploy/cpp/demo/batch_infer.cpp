@@ -12,61 +12,85 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <fstream>
+#include <glog/logging.h>
+#include <omp.h>
+#include <memory>
 #include <string>
-#include <vector>
+#include <fstream>
 
 #include "model_deploy/common/include/paddle_deploy.h"
 
+DEFINE_string(model_filename, "", "Path of det inference model");
+DEFINE_string(params_filename, "", "Path of det inference params");
+DEFINE_string(cfg_file, "", "Path of yaml file");
+DEFINE_string(model_type, "", "model type");
+DEFINE_string(image, "", "Path of test image file");
+DEFINE_string(image_list, "", "Path of test image file");
+DEFINE_int32(batch_size, 1, "Batch size of infering");
+DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
+DEFINE_int32(gpu_id, 0, "GPU card id");
+
 int main(int argc, char** argv) {
+  // Parsing command-line
+  google::ParseCommandLineFlags(&argc, &argv, true);
+  std::cout << "model_type=" << FLAGS_model_type << std::endl;
+
   // create model
-  std::string model_type = "clas";
   std::shared_ptr<PaddleDeploy::Model> model =
-          PaddleDeploy::CreateModel(model_type);
+        PaddleDeploy::CreateModel(FLAGS_model_type);
 
+  std::cout << "start model init " << std::endl;
   // model init
-  std::string cfg_file = "resnet50/deploy.yml";
-  model->Init(cfg_file);
+  model->Init(FLAGS_cfg_file);
 
+  std::cout << "start engine init " << std::endl;
   // inference engine init
   PaddleDeploy::PaddleEngineConfig engine_config;
-  engine_config.model_filename = "resnet50/inference.pdmodel";
-  engine_config.params_filename = "resnet50/inference.pdiparams";
-  engine_config.use_gpu = true;
-  engine_config.max_batch_size = 8;
+  engine_config.model_filename = FLAGS_model_filename;
+  engine_config.params_filename = FLAGS_params_filename;
+  engine_config.use_gpu = FLAGS_use_gpu;
+  engine_config.gpu_id = FLAGS_gpu_id;
   model->PaddleEngineInit(engine_config);
 
-  // prepare data
-  std::string image_list = "resnet50/file_list.txt";
-  std::vector<cv::Mat> imgs;
-  if (image_list != "") {
-    std::ifstream inf(image_list);
+  // Mini-batch
+  std::vector<std::string> image_paths;
+  if (FLAGS_image_list != "") {
+    std::ifstream inf(FLAGS_image_list);
     if (!inf) {
-      std::cerr << "Fail to open file " << image_list << std::endl;
+      std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
       return -1;
     }
     std::string image_path;
     while (getline(inf, image_path)) {
-      imgs.push_back(std::move(cv::imread(image_path)));
+      image_paths.push_back(image_path);
     }
+  } else if (FLAGS_image != "") {
+    image_paths.push_back(FLAGS_image);
+  } else {
+    std::cerr << "image_list or image should be defined" << std::endl;
+    return -1;
   }
 
-  // batch predict
+  std::cout << "start model predict " << image_paths.size() << std::endl;
+  // infer
   std::vector<PaddleDeploy::Result> results;
-  int batch_size = 8;
-  for (int i = 0; i < imgs.size(); i += batch_size) {
-    int im_vec_size = std::min(static_cast<int>(imgs.size()), i + batch_size);
-    std::vector<cv::Mat> im_vec(imgs.begin() + i,
-                                imgs.begin() + im_vec_size);
+  for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
+    // Read image
+    int im_vec_size =
+        std::min(static_cast<int>(image_paths.size()), i + FLAGS_batch_size);
+    std::vector<cv::Mat> im_vec(im_vec_size - i);
+    #pragma omp parallel for num_threads(im_vec_size - i)
+    for (int j = i; j < im_vec_size; ++j) {
+      im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
+    }
 
-    model->Predict(im_vec, &results, 8);
+    model->Predict(im_vec, &results, FLAGS_thread_num);
 
-    // print result
+    std::cout << i / FLAGS_batch_size << " group" << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;
       std::cout << results[j] << std::endl;
     }
-    results.clear();
   }
 
   return 0;

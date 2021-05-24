@@ -12,34 +12,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <glog/logging.h>
+#include <omp.h>
+#include <memory>
 #include <string>
-#include <vector>
+#include <fstream>
 
 #include "model_deploy/common/include/paddle_deploy.h"
 
+DEFINE_string(model_filename, "", "Path of det inference model");
+DEFINE_string(params_filename, "", "Path of det inference params");
+DEFINE_string(cfg_file, "", "Path of yaml file");
+DEFINE_string(model_type, "", "model type");
+DEFINE_string(image, "", "Path of test image file");
+DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
+DEFINE_int32(gpu_id, 0, "GPU card id");
+DEFINE_bool(use_trt, false, "Infering with TensorRT");
+
 int main(int argc, char** argv) {
+  // Parsing command-line
+  google::ParseCommandLineFlags(&argc, &argv, true);
+  std::cout << "model_type=" << FLAGS_model_type << std::endl;
+
   // create model
-  std::string model_type = "clas";
   std::shared_ptr<PaddleDeploy::Model> model =
-          PaddleDeploy::CreateModel(model_type);
+        PaddleDeploy::CreateModel(FLAGS_model_type);
 
+  std::cout << "start model init " << std::endl;
   // model init
-  std::string cfg_file = "resnet50/deploy.yml";
-  model->Init(cfg_file);
+  model->Init(FLAGS_cfg_file);
 
+  std::cout << "start engine init " << std::endl;
   // inference engine init
   PaddleDeploy::PaddleEngineConfig engine_config;
-  engine_config.model_filename = "resnet50/inference.pdmodel";
-  engine_config.params_filename = "resnet50/inference.pdiparams";
-  engine_config.use_gpu = true;
-  engine_config.use_trt = true;
-  engine_config.precision = 0;
+  engine_config.model_filename = FLAGS_model_filename;
+  engine_config.params_filename = FLAGS_params_filename;
+  engine_config.use_gpu = FLAGS_use_gpu;
+  engine_config.gpu_id = FLAGS_gpu_id;
+  engine_config.use_trt = FLAGS_use_trt;
+  if (FLAGS_use_trt) {
+    engine_config.precision = 0;
+  }
   model->PaddleEngineInit(engine_config);
 
   // prepare data
-  std::string image_path = "resnet50/test.jpeg";
   std::vector<cv::Mat> imgs;
-  imgs.push_back(std::move(cv::imread(image_path)));
+  imgs.push_back(std::move(cv::imread(FLAGS_image)));
 
   // predict
   std::vector<PaddleDeploy::Result> results;
@@ -49,6 +67,5 @@ int main(int argc, char** argv) {
     std::cout << "Result for sample " << j << std::endl;
     std::cout << results[j] << std::endl;
   }
-
   return 0;
 }

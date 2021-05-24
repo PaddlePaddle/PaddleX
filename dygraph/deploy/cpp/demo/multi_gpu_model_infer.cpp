@@ -18,70 +18,62 @@
 #include <string>
 #include <fstream>
 
-#include "model_deploy/common/include/paddle_deploy.h"
+#include "model_deploy/common/include/multi_gpu_model.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
-DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
-DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
-DEFINE_int32(gpu_id, 0, "GPU card id");
-DEFINE_bool(use_mkl, true, "Infering with mkl");
+DEFINE_string(gpu_id, "0", "GPU card id, example: 0,2,3");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of preprocessing");
-DEFINE_int32(mkl_thread_num, 8, "thread num of mkldnn");
 
 int main(int argc, char** argv) {
-  // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
-  std::cout << "ParseCommandLineFlags:FLAGS_model_type="
-            << FLAGS_model_type << " model_filename="
-            << FLAGS_model_filename << std::endl;
 
-  // create model
-  std::shared_ptr<PaddleDeploy::Model> model =
-        PaddleDeploy::CreateModel(FLAGS_model_type);
-  if (!model) {
-    std::cout << "no model_type: " << FLAGS_model_type
-              << "  model=" << model << std::endl;
-    return 0;
+  std::vector<int> gpu_ids;
+  std::stringstream gpu_ids_str(FLAGS_gpu_id);
+  std::string temp;
+  while (getline(gpu_ids_str, temp, ',')) {
+    gpu_ids.push_back(std::stoi(temp));
   }
-  std::cout << "start model init " << std::endl;
 
-  // model init
-  model->Init(FLAGS_cfg_file);
-  std::cout << "start engine init " << std::endl;
+  for (auto gpu_id : gpu_ids) {
+    std::cout << "gpu_id:" << gpu_id << std::endl;
+  }
 
-  // inference engine init
+  std::cout << "start create model" << std::endl;
+  // create model
+  PaddleDeploy::MultiGPUModel model;
+  if (!model.Init(FLAGS_model_type, FLAGS_cfg_file, gpu_ids.size())) {
+    return -1;
+  }
+
+  // engine init
   PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = FLAGS_model_filename;
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.use_gpu = FLAGS_use_gpu;
-  engine_config.gpu_id = FLAGS_gpu_id;
-  engine_config.use_mkl = FLAGS_use_mkl;
-  engine_config.mkl_thread_num = FLAGS_mkl_thread_num;
   engine_config.max_batch_size = FLAGS_batch_size;
-  model->PaddleEngineInit(engine_config);
+  if (!model.PaddleEngineInit(engine_config, gpu_ids)) {
+    return -1;
+  }
 
   // Mini-batch
-  std::vector<std::string> image_paths;
-  if (FLAGS_image_list != "") {
-    std::ifstream inf(FLAGS_image_list);
-    if (!inf) {
-      std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
-      return -1;
-    }
-    std::string image_path;
-    while (getline(inf, image_path)) {
-      image_paths.push_back(image_path);
-    }
-  } else if (FLAGS_image != "") {
-    image_paths.push_back(FLAGS_image);
-  } else {
-    std::cerr << "image_list or image should be defined" << std::endl;
+  if (FLAGS_image_list == "") {
+    std::cerr << "image_list should be defined" << std::endl;
     return -1;
+  }
+  std::vector<std::string> image_paths;
+  std::ifstream inf(FLAGS_image_list);
+  if (!inf) {
+    std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
+    return -1;
+  }
+  std::string image_path;
+  while (getline(inf, image_path)) {
+    image_paths.push_back(image_path);
   }
 
   std::cout << "start model predict " << image_paths.size() << std::endl;
@@ -96,8 +88,7 @@ int main(int argc, char** argv) {
     for (int j = i; j < im_vec_size; ++j) {
       im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
     }
-
-    model->Predict(im_vec, &results, FLAGS_thread_num);
+    model.Predict(im_vec, &results, FLAGS_thread_num);
     std::cout << i / FLAGS_batch_size << " group" << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;
