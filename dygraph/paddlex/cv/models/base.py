@@ -63,12 +63,8 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
-                scale = getattr(self, 'scale', None)
                 pretrain_weights = get_pretrain_weights(
-                    pretrain_weights,
-                    self.__class__.__name__,
-                    save_dir,
-                    scale=scale)
+                    pretrain_weights, self.model_name, save_dir)
             else:
                 backbone_name = getattr(self, 'backbone_name', None)
                 pretrain_weights = get_pretrain_weights(
@@ -161,18 +157,11 @@ class BaseModel:
         logging.info("Model saved in {}.".format(save_dir))
 
     def build_data_loader(self, dataset, batch_size, mode='train'):
-        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
-        if mode == 'eval':
-            batch_size = batch_size_each_card
-            total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
-            logging.info(
-                "Start to evaluate(total_samples={}, total_steps={})...".
-                format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(
-                'The volume of datset({}) must be larger than batch size({}).'
+                'The volume of dataset({}) must be larger than batch size({}).'
                 .format(dataset.num_samples, batch_size))
-
+        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         # TODO detection eval阶段需做判断
         batch_sampler = DistributedBatchSampler(
             dataset,

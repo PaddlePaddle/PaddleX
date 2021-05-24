@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
@@ -271,6 +272,10 @@ class BaseSegmenter(BaseModel):
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        logging.info(
+            "Start to evaluate(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples,
+                math.ceil(eval_dataset.num_samples * 1.0 / batch_size)))
         with paddle.no_grad():
             for step, data in enumerate(self.eval_data_loader):
                 data.append(eval_dataset.transforms.transforms)

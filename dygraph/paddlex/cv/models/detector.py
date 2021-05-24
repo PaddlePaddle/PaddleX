@@ -19,7 +19,6 @@ import copy
 import os
 import os.path as osp
 
-from paddle.io import DistributedBatchSampler
 from paddle.static import InputSpec
 import paddlex
 import paddlex.utils.logging as logging
@@ -27,12 +26,10 @@ from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxA
 from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
-from paddlex.utils import get_single_card_bs, _get_shared_memory_size_in_M
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget, _Permute
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
-from .utils.det_dataloader import BaseDataLoader
 from .utils.det_metrics import VOCMetric, COCOMetric
 from paddlex.utils.checkpoint import det_pretrain_weights_dict
 
@@ -74,39 +71,6 @@ class BaseDetector(BaseModel):
     def _get_backbone(self, backbone_name, **params):
         backbone = backbones.__dict__[backbone_name](**params)
         return backbone
-
-    def build_data_loader(self, dataset, batch_size, mode='train'):
-        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
-        if mode == 'eval':
-            # detector only supports single card eval with batch size 1
-            total_steps = dataset.num_samples
-            logging.info(
-                "Start to evaluate(total_samples={}, total_steps={})...".
-                format(dataset.num_samples, total_steps))
-        if dataset.num_samples < batch_size:
-            raise Exception(
-                'The volume of datset({}) must be larger than batch size({}).'
-                .format(dataset.num_samples, batch_size))
-
-        # TODO detection eval阶段需做判断
-        batch_sampler = DistributedBatchSampler(
-            dataset,
-            batch_size=batch_size_each_card,
-            shuffle=dataset.shuffle,
-            drop_last=mode == 'train')
-
-        shm_size = _get_shared_memory_size_in_M()
-        if shm_size is None or shm_size < 1024.:
-            use_shared_memory = False
-        else:
-            use_shared_memory = True
-
-        loader = BaseDataLoader(
-            dataset,
-            batch_sampler=batch_sampler,
-            use_shared_memory=use_shared_memory)
-
-        return loader
 
     def run(self, net, inputs, mode):
         net_out = net(inputs)
@@ -373,6 +337,9 @@ class BaseDetector(BaseModel):
                         is_bbox_normalized=is_bbox_normalized,
                         classwise=False)
             scores = collections.OrderedDict()
+            logging.info(
+                "Start to evaluate(total_samples={}, total_steps={})...".
+                format(eval_dataset.num_samples, eval_dataset.num_samples))
             with paddle.no_grad():
                 for step, data in enumerate(self.eval_data_loader):
                     outputs = self.run(self.net, data, 'eval')
