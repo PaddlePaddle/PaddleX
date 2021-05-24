@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   std::cout << "start engine init " << std::endl;
 
   // inference engine init
-  TritonEngineConfig engine_config;
+  PaddleDeploy::TritonEngineConfig engine_config;
   engine_config.url_ = FLAGS_url;
   engine_config.model_name_ = FLAGS_model_name;
   engine_config.model_version_ = FLAGS_model_version;

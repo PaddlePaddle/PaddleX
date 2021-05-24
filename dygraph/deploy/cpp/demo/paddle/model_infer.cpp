@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
   std::cout << "start engine init " << std::endl;
 
   // inference engine init
-  PaddleEngineConfig engine_config;
+  PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = FLAGS_model_filename;
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.use_gpu = FLAGS_use_gpu;

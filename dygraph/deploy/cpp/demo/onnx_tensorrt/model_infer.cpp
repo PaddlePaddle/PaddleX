@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
   std::cout << "start engine init " << std::endl;
 
   // inference engine init
-  TensorRTEngineConfig engine_config;
+  PaddleDeploy::TensorRTEngineConfig engine_config;
   engine_config.model_file_ = FLAGS_model_file;
   engine_config.cfg_file_ = FLAGS_cfg_file;
   engine_config.gpu_id_ = FLAGS_gpu_id;

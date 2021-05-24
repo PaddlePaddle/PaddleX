@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -28,7 +29,7 @@ int main(int argc, char** argv) {
   model->Init(cfg_file);
 
   // inference engine init
-  PaddleEngineConfig engine_config;
+  PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = "resnet50/inference.pdmodel";
   engine_config.params_filename = "resnet50/inference.pdiparams";
   engine_config.use_gpu = true;
@@ -36,12 +37,12 @@ int main(int argc, char** argv) {
   model->PaddleEngineInit(engine_config);
 
   // prepare data
-  std::string image_path = "resnet50/file_list.txt"
+  std::string image_list = "resnet50/file_list.txt";
   std::vector<cv::Mat> imgs;
-  if (FLAGS_image_list != "") {
-    std::ifstream inf(FLAGS_image_list);
+  if (image_list != "") {
+    std::ifstream inf(image_list);
     if (!inf) {
-      std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
+      std::cerr << "Fail to open file " << image_list << std::endl;
       return -1;
     }
     std::string image_path;

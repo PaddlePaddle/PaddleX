@@ -28,16 +28,16 @@ int main(int argc, char** argv) {
   model->Init(cfg_file);
 
   // inference engine init
-  PaddleEngineConfig engine_config;
+  PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = "resnet50/inference.pdmodel";
   engine_config.params_filename = "resnet50/inference.pdiparams";
   engine_config.use_gpu = true;
   model->PaddleEngineInit(engine_config);
 
   // prepare data
-  std::string image_path = "resnet50/test.jpg"
+  std::string image_path = "resnet50/test.jpg";
   std::vector<cv::Mat> imgs;
-  imgs.push_back(std::move(cv::imread(image_paths[j])));
+  imgs.push_back(std::move(cv::imread(image_path)));
 
   // predict
   std::vector<PaddleDeploy::Result> results;
