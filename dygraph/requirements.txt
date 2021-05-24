@@ -9,3 +9,5 @@ shapely
 paddlepaddle-gpu==2.1.0
 opencv-python
 -r PaddleClas/requirements.txt
+-r ./PaddleSeg/requirements.txt
+./PaddleSeg
