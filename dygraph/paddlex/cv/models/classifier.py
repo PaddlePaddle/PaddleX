@@ -21,11 +21,13 @@ import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
 from paddle.static import InputSpec
-from paddlex.utils import logging, TrainingStats
+from paddlex.utils import logging, TrainingStats, DisablePrint
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.transforms import arrange_transforms
-from PaddleClas.ppcls.modeling import architectures
-from PaddleClas.ppcls.modeling.loss import CELoss
+
+with DisablePrint():
+    from PaddleClas.ppcls.modeling import architectures
+    from PaddleClas.ppcls.modeling.loss import CELoss
 
 __all__ = [
     "ResNet18", "ResNet34", "ResNet50", "ResNet101", "ResNet152",
