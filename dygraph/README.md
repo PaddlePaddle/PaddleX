@@ -1,10 +1,9 @@
 # PaddleX全面升级动态图，2.0.0-rc发布！
 
-> 原版本代码分支在[release/1.3](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3)，也可以通过pip安装1.3.10版本进行使用。
 
 
 <p align="center">
-  <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
+  <img src="../docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
@@ -21,7 +20,7 @@
 
 
 
-![](./docs/gui/images/paddlexoverview.png)
+![](../docs/gui/images/paddlexoverview.png)
 
 
 
@@ -50,13 +49,13 @@ pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
 
 - 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载PaddleX GUI一键绿色安装包。
 
-- 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
+- 前往[PaddleX GUI使用教程](../docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
 
-- [PaddleX GUI安装环境说明](./docs/gui/download.md)
+- [PaddleX GUI安装环境说明](../docs/gui/download.md)
 
 3. **PaddleX Restful:**  
   使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
-- 前往[PaddleX RESTful API使用教程](./docs/gui/restful/introduction.md)  
+- 前往[PaddleX RESTful API使用教程](../docs/gui/restful/introduction.md)  
 
 
 ## 使用教程
@@ -65,7 +64,7 @@ pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
 - [模型剪裁教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
 
 
-## :question:[FAQ](./docs/gui/faq.md):question:
+## :question:[FAQ](../docs/gui/faq.md):question:
 
 ## 交流与反馈
 
@@ -74,7 +73,7 @@ pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
 - PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
 
   <p align="center">
-    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
+    <img src="../docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
   </p>
 
 
