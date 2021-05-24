@@ -312,10 +312,10 @@ class BaseModel:
                         eval_dataset,
                         batch_size=eval_batch_size,
                         return_details=False)
-                    logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
-                        i + 1, dict2str(self.eval_metrics)))
                     # 保存最优模型
                     if local_rank == 0:
+                        logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
+                            i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
                         current_accuracy = self.eval_metrics[best_accuracy_key]
                         if current_accuracy > best_accuracy:
