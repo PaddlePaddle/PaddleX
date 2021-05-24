@@ -20,21 +20,20 @@
 
 #include "model_deploy/common/include/paddle_deploy.h"
 
-DEFINE_string(model_file, "", "Path of inference model");
+DEFINE_string(model_name, "", "Name of inference model");
+DEFINE_string(url, "", "url of triton server");
+DEFINE_string(model_version, "", "model version of triton server");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
-DEFINE_string(trt_cache_file, "", "Cache path to store optimized trt file");
-DEFINE_bool(save_engine, false, "Save Trt Engine");
-DEFINE_int32(gpu_id, 0, "GPU card id");
 
 int main(int argc, char** argv) {
   // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
   std::cout << "ParseCommandLineFlags:FLAGS_model_type="
-            << FLAGS_model_type << " model_file="
-            << FLAGS_model_file << std::endl;
+            << FLAGS_model_type << " model_name="
+            << FLAGS_model_name << std::endl;
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
@@ -51,11 +50,11 @@ int main(int argc, char** argv) {
   std::cout << "start engine init " << std::endl;
 
   // inference engine init
-  model->TensorRTInit(FLAGS_model_file,
-                      FLAGS_cfg_file,
-                      FLAGS_gpu_id,
-                      FLAGS_save_engine,
-                      FLAGS_trt_cache_file);
+  TritonEngineConfig engine_config;
+  engine_config.url_ = FLAGS_url;
+  engine_config.model_name_ = FLAGS_model_name;
+  engine_config.model_version_ = FLAGS_model_version;
+  model->TritonEngineInit(engine_config);
 
   // prepare data
   std::vector<std::string> image_paths;

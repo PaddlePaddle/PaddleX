@@ -30,26 +30,21 @@ int DtypeConver(const nvinfer1::DataType& dtype) {
   return -1;
 }
 
-bool Model::TensorRTInit(const std::string& model_file,
-                         const std::string& cfg_file,
-                         const int gpu_id,
-                         const bool save_engine,
-                         std::string trt_cache_file) {
+bool Model::TensorRTInit(const TensorRTEngineConfig& engine_config) {
   infer_engine_ = std::make_shared<TensorRTInferenceEngine>();
   InferenceConfig config("tensorrt");
-  config.tensorrt_config->model_file_ = model_file;
-  config.tensorrt_config->gpu_id_ = gpu_id;
-  config.tensorrt_config->save_engine_ = save_engine;
-  config.tensorrt_config->trt_cache_file_ = trt_cache_file;
-  config.tensorrt_config->yaml_config_ = YAML::LoadFile(cfg_file);
-  if (!config.tensorrt_config->yaml_config_["input"].IsDefined()) {
+
+  YAML::Node node  = YAML::LoadFile(cfg_file);
+  if (!node["input"].IsDefined()) {
     std::cout << "Fail to find input in yaml file!" << std::endl;
     return false;
   }
-  if (!config.tensorrt_config->yaml_config_["output"].IsDefined()) {
+  if (!node["output"].IsDefined()) {
     std::cout << "Fail to find output in yaml file!" << std::endl;
     return false;
   }
+
+  config.tensorrt_config->yaml_config_ = node;
   return infer_engine_->Init(config);
 }
 

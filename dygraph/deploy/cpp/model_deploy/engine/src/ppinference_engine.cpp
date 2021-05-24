@@ -15,17 +15,10 @@
 #include "model_deploy/engine/include/ppinference_engine.h"
 
 namespace PaddleDeploy {
-bool Model::PaddleEngineInit(const std::string& model_filename,
-                             const std::string& params_filename, bool use_gpu,
-                             int gpu_id, bool use_mkl, int mkl_thread_num) {
+bool Model::PaddleEngineInit(const PaddleEngineConfig& engine_config) {
   infer_engine_ = std::make_shared<PaddleInferenceEngine>();
   InferenceConfig config("paddle");
-  config.paddle_config->model_filename = model_filename;
-  config.paddle_config->params_filename = params_filename;
-  config.paddle_config->use_gpu = use_gpu;
-  config.paddle_config->gpu_id = gpu_id;
-  config.paddle_config->use_mkl = use_mkl;
-  config.paddle_config->mkl_thread_num = mkl_thread_num;
+  *(config.paddle_config) = engine_config;
   return infer_engine_->Init(config);
 }
 
@@ -61,8 +54,8 @@ bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
       return false;
     }
     config.EnableTensorRtEngine(
-        1 << 10 /* workspace_size*/,
-        engine_config.batch_size /* max_batch_size*/,
+        engine_config.max_workspace_size /* workspace_size*/,
+        engine_config.max_batch_size /* max_batch_size*/,
         engine_config.min_subgraph_size /* min_subgraph_size*/,
         precision /* precision*/,
         engine_config.use_static /* use_static*/,

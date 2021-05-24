@@ -54,11 +54,16 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if (!model.PaddleEngineInit(FLAGS_model_filename,
-                              FLAGS_params_filename,
-                              gpu_ids)) {
+  // engine init
+  PaddleEngineConfig engine_config;
+  engine_config.model_filename = FLAGS_model_filename;
+  engine_config.params_filename = FLAGS_params_filename;
+  engine_config.use_gpu = FLAGS_use_gpu;
+  engine_config.max_batch_size = FLAGS_batch_size;
+  if (!model.PaddleEngineInit(engine_config, gpu_ids)) {
     return -1;
   }
+
   // Mini-batch
   if (FLAGS_image_list == "") {
     std::cerr << "image_list should be defined" << std::endl;
