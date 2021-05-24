@@ -27,7 +27,7 @@ from paddlex.cv.nets.ppdet.modeling import *
 from paddlex.cv.nets.ppdet.modeling.post_process import *
 from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget, _Permute
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_metrics import VOCMetric, COCOMetric
@@ -337,6 +337,9 @@ class BaseDetector(BaseModel):
                         is_bbox_normalized=is_bbox_normalized,
                         classwise=False)
             scores = collections.OrderedDict()
+            logging.info(
+                "Start to evaluate(total_samples={}, total_steps={})...".
+                format(eval_dataset.num_samples, eval_dataset.num_samples))
             with paddle.no_grad():
                 for step, data in enumerate(self.eval_data_loader):
                     outputs = self.run(self.net, data, 'eval')

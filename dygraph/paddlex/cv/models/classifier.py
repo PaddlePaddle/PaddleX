@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+import math
 import os.path as osp
 from collections import OrderedDict
 import numpy as np
@@ -271,6 +272,10 @@ class BaseClassifier(BaseModel):
         if return_details:
             eval_details = list()
 
+        logging.info(
+            "Start to evaluate(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples,
+                math.ceil(eval_dataset.num_samples * 1.0 / batch_size)))
         with paddle.no_grad():
             for step, data in enumerate(self.eval_data_loader()):
                 outputs = self.run(self.net, data, mode='eval')
