@@ -148,8 +148,8 @@ bool DetPostprocess::ProcessMask(DataBlob* mask_blob,
       } else {
         for (auto i = 0; i < mask_mat.rows; ++i) {
           box->mask.data.insert(box->mask.data.end(),
-                                mask_mat.ptr<u_int8_t>(i),
-                                mask_mat.ptr<u_int8_t>(i) + mask_mat.cols);
+                                mask_mat.ptr<uint8_t>(i),
+                                mask_mat.ptr<uint8_t>(i) + mask_mat.cols);
         }
       }
       mask_data += classes * mask_pixels;
@@ -183,8 +183,8 @@ bool DetPostprocess::ProcessMaskV2(DataBlob* mask_blob,
       } else {
         for (auto i = 0; i < bin_mask.rows; ++i) {
           box->mask.data.insert(box->mask.data.end(),
-                                bin_mask.ptr<u_int8_t>(i),
-                                bin_mask.ptr<u_int8_t>(i) + bin_mask.cols);
+                                bin_mask.ptr<uint8_t>(i),
+                                bin_mask.ptr<uint8_t>(i) + bin_mask.cols);
         }
       }
     }
