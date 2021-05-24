@@ -19,7 +19,7 @@
 
 int main(int argc, char** argv) {
   // create model
-  std::string model_type = "det";
+  std::string model_type = "clas";
   std::shared_ptr<PaddleDeploy::Model> model =
           PaddleDeploy::CreateModel(model_type);
 
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   model->PaddleEngineInit(engine_config);
 
   // prepare data
-  std::string image_path = "resnet50/test.jpg";
+  std::string image_path = "resnet50/test.jpeg";
   std::vector<cv::Mat> imgs;
   imgs.push_back(std::move(cv::imread(image_path)));
 

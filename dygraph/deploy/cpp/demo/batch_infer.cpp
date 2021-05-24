@@ -20,7 +20,7 @@
 
 int main(int argc, char** argv) {
   // create model
-  std::string model_type = "det";
+  std::string model_type = "clas";
   std::shared_ptr<PaddleDeploy::Model> model =
           PaddleDeploy::CreateModel(model_type);
 
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   // batch predict
   std::vector<PaddleDeploy::Result> results;
   int batch_size = 8;
-  for (int i = 0; i < imags.size(); i += batch_size) {
+  for (int i = 0; i < imgs.size(); i += batch_size) {
     int im_vec_size = std::min(static_cast<int>(imgs.size()), i + batch_size);
     std::vector<cv::Mat> im_vec(imgs.begin() + i,
                                 imgs.begin() + im_vec_size);
