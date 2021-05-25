@@ -16,15 +16,3 @@ from . import models
 from . import nets
 from . import transforms
 from . import datasets
-
-
-# Paddleseg does init_weights() inevitably after building a network, and when
-# its parameter `pretrained_model` is None, log info like "No pretrained model to load,
-# ResNet_vd will be trained from scratch" will be shown. To prevent this problem,
-# we redefine its load_pretrained_model()
-def load_pretrained_model(model, pretrained_model):
-    pass
-
-
-from .nets import paddleseg
-paddleseg.utils.utils.load_pretrained_model = load_pretrained_model

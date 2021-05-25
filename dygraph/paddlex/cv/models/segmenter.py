@@ -22,7 +22,7 @@ from paddle.static import InputSpec
 import paddleseg
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.utils import get_single_card_bs
+from paddlex.utils import get_single_card_bs, DisablePrint
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
@@ -448,8 +448,9 @@ class DeepLabV3P(BaseSegmenter):
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
-        backbone = getattr(paddleseg.models, backbone)(
-            output_stride=output_stride)
+        with DisablePrint():
+            backbone = getattr(paddleseg.models, backbone)(
+                output_stride=output_stride)
         params = {
             'backbone': backbone,
             'backbone_indices': backbone_indices,
@@ -488,8 +489,9 @@ class HRNet(BaseSegmenter):
                 "width={} is not supported, please choose from [18, 48]".
                 format(width))
         self.backbone_name = 'HRNet_W{}'.format(width)
-        backbone = getattr(paddleseg.models, self.backbone_name)(
-            align_corners=align_corners)
+        with DisablePrint():
+            backbone = getattr(paddleseg.models, self.backbone_name)(
+                align_corners=align_corners)
 
         params = {'backbone': backbone, 'align_corners': align_corners}
         super(HRNet, self).__init__(
