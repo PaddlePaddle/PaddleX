@@ -22,7 +22,6 @@ import yaml
 import json
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
-from paddle.jit import to_static
 from paddleslim.analysis import flops
 from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
@@ -193,6 +192,7 @@ class BaseModel:
                    save_interval_epochs=1,
                    log_interval_steps=10,
                    save_dir='output',
+                   ema=None,
                    early_stop=False,
                    early_stop_patience=5,
                    use_vdl=True):
@@ -268,6 +268,8 @@ class BaseModel:
 
                 train_avg_metrics.update(outputs)
                 outputs['lr'] = lr
+                if ema is not None:
+                    ema.update(self.net)
                 step_time_toc = time.time()
                 train_step_time.update(step_time_toc - step_time_tic)
                 step_time_tic = step_time_toc
@@ -305,6 +307,9 @@ class BaseModel:
             self.completed_epochs += 1
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            if ema is not None:
+                weight = self.net.state_dict()
+                self.net.set_dict(ema.apply())
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
@@ -337,6 +342,8 @@ class BaseModel:
                     if eval_dataset is not None and early_stop:
                         if earlystop(current_accuracy):
                             break
+            if ema is not None:
+                self.net.set_dict(weight)
 
     def analyze_sensitivity(self,
                             dataset,

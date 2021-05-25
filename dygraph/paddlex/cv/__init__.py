@@ -13,6 +13,5 @@
 # limitations under the License.
 
 from . import models
-from . import nets
 from . import transforms
 from . import datasets
