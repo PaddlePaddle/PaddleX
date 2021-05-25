@@ -18,14 +18,14 @@ import collections
 import copy
 import os
 import os.path as osp
-
+import six
+import numpy as np
+import paddle
 from paddle.static import InputSpec
+import ppdet
+from ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.nets.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
-from paddlex.cv.nets.ppdet.modeling import *
-from paddlex.cv.nets.ppdet.modeling.post_process import *
-from paddlex.cv.nets.ppdet.modeling.layers import YOLOBox, MultiClassNMS, RCNNBox
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
@@ -43,7 +43,7 @@ class BaseDetector(BaseModel):
         self.init_params.update(locals())
         del self.init_params['params']
         super(BaseDetector, self).__init__('detector')
-        if not hasattr(architectures, model_name):
+        if not hasattr(ppdet.modeling, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
 
@@ -54,7 +54,7 @@ class BaseDetector(BaseModel):
 
     def build_net(self, **params):
         with paddle.utils.unique_name.guard():
-            net = architectures.__dict__[self.model_name](**params)
+            net = ppdet.modeling.__dict__[self.model_name](**params)
         return net
 
     def get_test_inputs(self, image_shape):
@@ -69,7 +69,7 @@ class BaseDetector(BaseModel):
         return input_spec
 
     def _get_backbone(self, backbone_name, **params):
-        backbone = backbones.__dict__[backbone_name](**params)
+        backbone = getattr(ppdet.modeling, backbone_name)(**params)
         return backbone
 
     def run(self, net, inputs, mode):
@@ -536,22 +536,22 @@ class YOLOv3(BaseDetector):
         else:
             backbone = self._get_backbone('DarkNet', norm_type=norm_type)
 
-        neck = necks.YOLOv3FPN(
+        neck = ppdet.modeling.YOLOv3FPN(
             norm_type=norm_type,
             in_channels=[i.channels for i in backbone.out_shape])
-        loss = losses.YOLOv3Loss(
+        loss = ppdet.modeling.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
             label_smooth=label_smooth)
-        yolo_head = heads.YOLOv3Head(
+        yolo_head = ppdet.modeling.YOLOv3Head(
             in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
             num_classes=num_classes,
             loss=loss)
-        post_process = BBoxPostProcess(
-            decode=YOLOBox(num_classes=num_classes),
-            nms=MultiClassNMS(
+        post_process = ppdet.modeling.BBoxPostProcess(
+            decode=ppdet.modeling.YOLOBox(num_classes=num_classes),
+            nms=ppdet.modeling.MultiClassNMS(
                 score_threshold=nms_score_threshold,
                 nms_top_k=nms_topk,
                 keep_top_k=nms_keep_topk,
@@ -690,7 +690,7 @@ class FasterRCNN(BaseDetector):
         rpn_in_channel = backbone.out_shape[0].channels
 
         if with_fpn:
-            neck = necks.FPN(
+            neck = ppdet.modeling.FPN(
                 in_channels=[i.channels for i in backbone.out_shape],
                 out_channel=fpn_num_channels,
                 spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
@@ -714,7 +714,7 @@ class FasterRCNN(BaseDetector):
                 if test_pre_nms_top_n is None else test_pre_nms_top_n,
                 'post_nms_top_n': test_post_nms_top_n
             }
-            head = heads.TwoFCHead(out_channel=1024)
+            head = ppdet.modeling.TwoFCHead(out_channel=1024)
             roi_extractor_cfg = {
                 'resolution': 7,
                 'spatial_scale': [1. / i.stride for i in neck.out_shape],
@@ -744,7 +744,7 @@ class FasterRCNN(BaseDetector):
                 if test_pre_nms_top_n is None else test_pre_nms_top_n,
                 'post_nms_top_n': test_post_nms_top_n
             }
-            head = backbones.Res5Head()
+            head = ppdet.modeling.Res5Head()
             roi_extractor_cfg = {
                 'resolution': 14,
                 'spatial_scale': [1. / i.stride for i in backbone.out_shape],
@@ -761,7 +761,7 @@ class FasterRCNN(BaseDetector):
             'use_random': True
         }
 
-        rpn_head = RPNHead(
+        rpn_head = ppdet.modeling.RPNHead(
             anchor_generator=anchor_generator_cfg,
             rpn_target_assign=rpn_target_assign_cfg,
             train_proposal=train_proposal_cfg,
@@ -770,7 +770,7 @@ class FasterRCNN(BaseDetector):
 
         bbox_assigner = BBoxAssigner(num_classes=num_classes)
 
-        bbox_head = heads.BBoxHead(
+        bbox_head = ppdet.modeling.BBoxHead(
             head=head,
             in_channel=head.out_shape[0].channels,
             roi_extractor=roi_extractor_cfg,
@@ -778,10 +778,10 @@ class FasterRCNN(BaseDetector):
             bbox_assigner=bbox_assigner,
             num_classes=num_classes)
 
-        bbox_post_process = BBoxPostProcess(
+        bbox_post_process = ppdet.modeling.BBoxPostProcess(
             num_classes=num_classes,
-            decode=RCNNBox(num_classes=num_classes),
-            nms=MultiClassNMS(
+            decode=ppdet.modeling.RCNNBox(num_classes=num_classes),
+            nms=ppdet.modeling.MultiClassNMS(
                 score_threshold=score_threshold,
                 keep_top_k=keep_top_k,
                 nms_threshold=nms_threshold))
@@ -922,7 +922,7 @@ class PPYOLO(YOLOv3):
                 feature_maps=[9, 12])
             downsample_ratios = [32, 16]
 
-        neck = necks.PPYOLOFPN(
+        neck = ppdet.modeling.PPYOLOFPN(
             norm_type=norm_type,
             in_channels=[i.channels for i in backbone.out_shape],
             coord_conv=use_coord_conv,
@@ -931,18 +931,18 @@ class PPYOLO(YOLOv3):
             conv_block_num=0 if ('MobileNetV3' in self.backbone_name or
                                  self.backbone_name == 'ResNet18_vd') else 2)
 
-        loss = losses.YOLOv3Loss(
+        loss = ppdet.modeling.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
             downsample=downsample_ratios,
             label_smooth=label_smooth,
             scale_x_y=scale_x_y,
-            iou_loss=losses.IouLoss(
+            iou_loss=ppdet.modeling.IouLoss(
                 loss_weight=2.5, loss_square=True) if use_iou_loss else None,
-            iou_aware_loss=losses.IouAwareLoss(loss_weight=1.0)
+            iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
             if use_iou_aware else None)
 
-        yolo_head = heads.YOLOv3Head(
+        yolo_head = ppdet.modeling.YOLOv3Head(
             in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
@@ -951,7 +951,7 @@ class PPYOLO(YOLOv3):
             iou_aware=use_iou_aware)
 
         if use_matrix_nms:
-            nms = MatrixNMS(
+            nms = ppdet.modeling.MatrixNMS(
                 keep_top_k=nms_keep_topk,
                 score_threshold=nms_score_threshold,
                 post_threshold=.05
@@ -959,14 +959,14 @@ class PPYOLO(YOLOv3):
                 nms_top_k=nms_topk,
                 background_label=-1)
         else:
-            nms = MultiClassNMS(
+            nms = ppdet.modeling.MultiClassNMS(
                 score_threshold=nms_score_threshold,
                 nms_top_k=nms_topk,
                 keep_top_k=nms_keep_topk,
                 nms_threshold=nms_iou_threshold)
 
-        post_process = BBoxPostProcess(
-            decode=YOLOBox(
+        post_process = ppdet.modeling.BBoxPostProcess(
+            decode=ppdet.modeling.YOLOBox(
                 num_classes=num_classes,
                 conf_thresh=.005
                 if 'MobileNetV3' in self.backbone_name else .01,
@@ -1029,24 +1029,24 @@ class PPYOLOTiny(YOLOv3):
             feature_maps=[7, 13, 16])
         downsample_ratios = [32, 16, 8]
 
-        neck = necks.PPYOLOTinyFPN(
+        neck = ppdet.modeling.PPYOLOTinyFPN(
             detection_block_channels=[160, 128, 96],
             in_channels=[i.channels for i in backbone.out_shape],
             spp=use_spp,
             drop_block=use_drop_block)
 
-        loss = losses.YOLOv3Loss(
+        loss = ppdet.modeling.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
             downsample=downsample_ratios,
             label_smooth=label_smooth,
             scale_x_y=scale_x_y,
-            iou_loss=losses.IouLoss(
+            iou_loss=ppdet.modeling.IouLoss(
                 loss_weight=2.5, loss_square=True) if use_iou_loss else None,
-            iou_aware_loss=losses.IouAwareLoss(loss_weight=1.0)
+            iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
             if use_iou_aware else None)
 
-        yolo_head = heads.YOLOv3Head(
+        yolo_head = ppdet.modeling.YOLOv3Head(
             in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
@@ -1055,21 +1055,21 @@ class PPYOLOTiny(YOLOv3):
             iou_aware=use_iou_aware)
 
         if use_matrix_nms:
-            nms = MatrixNMS(
+            nms = ppdet.modeling.MatrixNMS(
                 keep_top_k=nms_keep_topk,
                 score_threshold=nms_score_threshold,
                 post_threshold=.05,
                 nms_top_k=nms_topk,
                 background_label=-1)
         else:
-            nms = MultiClassNMS(
+            nms = ppdet.modeling.MultiClassNMS(
                 score_threshold=nms_score_threshold,
                 nms_top_k=nms_topk,
                 keep_top_k=nms_keep_topk,
                 nms_threshold=nms_iou_threshold)
 
-        post_process = BBoxPostProcess(
-            decode=YOLOBox(
+        post_process = ppdet.modeling.BBoxPostProcess(
+            decode=ppdet.modeling.YOLOBox(
                 num_classes=num_classes,
                 conf_thresh=.005,
                 downsample_ratio=32,
@@ -1150,7 +1150,7 @@ class PPYOLOv2(YOLOv3):
                 norm_decay=0.)
             downsample_ratios = [32, 16, 8]
 
-        neck = necks.PPYOLOPAN(
+        neck = ppdet.modeling.PPYOLOPAN(
             norm_type=norm_type,
             in_channels=[i.channels for i in backbone.out_shape],
             drop_block=use_drop_block,
@@ -1158,18 +1158,18 @@ class PPYOLOv2(YOLOv3):
             keep_prob=.9,
             spp=use_spp)
 
-        loss = losses.YOLOv3Loss(
+        loss = ppdet.modeling.YOLOv3Loss(
             num_classes=num_classes,
             ignore_thresh=ignore_threshold,
             downsample=downsample_ratios,
             label_smooth=label_smooth,
             scale_x_y=scale_x_y,
-            iou_loss=losses.IouLoss(
+            iou_loss=ppdet.modeling.IouLoss(
                 loss_weight=2.5, loss_square=True) if use_iou_loss else None,
-            iou_aware_loss=losses.IouAwareLoss(loss_weight=1.0)
+            iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
             if use_iou_aware else None)
 
-        yolo_head = heads.YOLOv3Head(
+        yolo_head = ppdet.modeling.YOLOv3Head(
             in_channels=[i.channels for i in neck.out_shape],
             anchors=anchors,
             anchor_masks=anchor_masks,
@@ -1179,21 +1179,21 @@ class PPYOLOv2(YOLOv3):
             iou_aware_factor=.5)
 
         if use_matrix_nms:
-            nms = MatrixNMS(
+            nms = ppdet.modeling.MatrixNMS(
                 keep_top_k=nms_keep_topk,
                 score_threshold=nms_score_threshold,
                 post_threshold=.01,
                 nms_top_k=nms_topk,
                 background_label=-1)
         else:
-            nms = MultiClassNMS(
+            nms = ppdet.modeling.MultiClassNMS(
                 score_threshold=nms_score_threshold,
                 nms_top_k=nms_topk,
                 keep_top_k=nms_keep_topk,
                 nms_threshold=nms_iou_threshold)
 
-        post_process = BBoxPostProcess(
-            decode=YOLOBox(
+        post_process = ppdet.modeling.BBoxPostProcess(
+            decode=ppdet.modeling.YOLOBox(
                 num_classes=num_classes,
                 conf_thresh=.01,
                 downsample_ratio=32,
@@ -1294,7 +1294,7 @@ class MaskRCNN(BaseDetector):
         rpn_in_channel = backbone.out_shape[0].channels
 
         if with_fpn:
-            neck = necks.FPN(
+            neck = ppdet.modeling.FPN(
                 in_channels=[i.channels for i in backbone.out_shape],
                 out_channel=fpn_num_channels,
                 spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
@@ -1318,7 +1318,7 @@ class MaskRCNN(BaseDetector):
                 if test_pre_nms_top_n is None else test_pre_nms_top_n,
                 'post_nms_top_n': test_post_nms_top_n
             }
-            bb_head = heads.TwoFCHead(
+            bb_head = ppdet.modeling.TwoFCHead(
                 in_channel=neck.out_shape[0].channels, out_channel=1024)
             bb_roi_extractor_cfg = {
                 'resolution': 7,
@@ -1327,7 +1327,7 @@ class MaskRCNN(BaseDetector):
                 'aligned': True
             }
             with_pool = False
-            m_head = heads.MaskFeat(
+            m_head = ppdet.modeling.MaskFeat(
                 in_channel=neck.out_shape[0].channels,
                 out_channel=256,
                 num_convs=4)
@@ -1362,7 +1362,7 @@ class MaskRCNN(BaseDetector):
                 if test_pre_nms_top_n is None else test_pre_nms_top_n,
                 'post_nms_top_n': test_post_nms_top_n
             }
-            bb_head = backbones.Res5Head()
+            bb_head = ppdet.modeling.Res5Head()
             bb_roi_extractor_cfg = {
                 'resolution': 14,
                 'spatial_scale': [1. / i.stride for i in backbone.out_shape],
@@ -1370,7 +1370,7 @@ class MaskRCNN(BaseDetector):
                 'aligned': True
             }
             with_pool = True
-            m_head = heads.MaskFeat(
+            m_head = ppdet.modeling.MaskFeat(
                 in_channel=bb_head.out_shape[0].channels,
                 out_channel=256,
                 num_convs=0)
@@ -1392,7 +1392,7 @@ class MaskRCNN(BaseDetector):
             'use_random': True
         }
 
-        rpn_head = RPNHead(
+        rpn_head = ppdet.modeling.RPNHead(
             anchor_generator=anchor_generator_cfg,
             rpn_target_assign=rpn_target_assign_cfg,
             train_proposal=train_proposal_cfg,
@@ -1401,7 +1401,7 @@ class MaskRCNN(BaseDetector):
 
         bbox_assigner = BBoxAssigner(num_classes=num_classes)
 
-        bbox_head = heads.BBoxHead(
+        bbox_head = ppdet.modeling.BBoxHead(
             head=bb_head,
             in_channel=bb_head.out_shape[0].channels,
             roi_extractor=bb_roi_extractor_cfg,
@@ -1409,22 +1409,22 @@ class MaskRCNN(BaseDetector):
             bbox_assigner=bbox_assigner,
             num_classes=num_classes)
 
-        mask_head = heads.MaskHead(
+        mask_head = ppdet.modeling.MaskHead(
             head=m_head,
             roi_extractor=m_roi_extractor_cfg,
             mask_assigner=mask_assigner,
             share_bbox_feat=share_bbox_feat,
             num_classes=num_classes)
 
-        bbox_post_process = BBoxPostProcess(
+        bbox_post_process = ppdet.modeling.BBoxPostProcess(
             num_classes=num_classes,
-            decode=RCNNBox(num_classes=num_classes),
-            nms=MultiClassNMS(
+            decode=ppdet.modeling.RCNNBox(num_classes=num_classes),
+            nms=ppdet.modeling.MultiClassNMS(
                 score_threshold=score_threshold,
                 keep_top_k=keep_top_k,
                 nms_threshold=nms_threshold))
 
-        mask_post_process = MaskPostProcess(binary_thresh=.5)
+        mask_post_process = ppdet.modeling.MaskPostProcess(binary_thresh=.5)
 
         params = {
             'backbone': backbone,
