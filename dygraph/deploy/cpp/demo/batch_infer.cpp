@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
+#include <gflags/gflags.h>
 #include <omp.h>
 #include <memory>
 #include <string>
@@ -24,32 +24,33 @@ DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
-DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(image_list, "", "Path of test image file");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
+DEFINE_bool(use_trt, false, "Infering with TensorRT");
 
 int main(int argc, char** argv) {
   // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
-  std::cout << "model_type=" << FLAGS_model_type << std::endl;
 
   // create model
   std::shared_ptr<PaddleDeploy::Model> model =
         PaddleDeploy::CreateModel(FLAGS_model_type);
 
-  std::cout << "start model init " << std::endl;
   // model init
   model->Init(FLAGS_cfg_file);
 
-  std::cout << "start engine init " << std::endl;
   // inference engine init
   PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = FLAGS_model_filename;
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.gpu_id = FLAGS_gpu_id;
+  engine_config.use_trt = FLAGS_use_trt;
+  if (FLAGS_use_trt) {
+    engine_config.precision = 0;
+  }
   model->PaddleEngineInit(engine_config);
 
   // Mini-batch
@@ -64,14 +65,8 @@ int main(int argc, char** argv) {
     while (getline(inf, image_path)) {
       image_paths.push_back(image_path);
     }
-  } else if (FLAGS_image != "") {
-    image_paths.push_back(FLAGS_image);
-  } else {
-    std::cerr << "image_list or image should be defined" << std::endl;
-    return -1;
   }
 
-  std::cout << "start model predict " << image_paths.size() << std::endl;
   // infer
   std::vector<PaddleDeploy::Result> results;
   for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
@@ -86,7 +81,7 @@ int main(int argc, char** argv) {
 
     model->Predict(im_vec, &results);
 
-    std::cout << i / FLAGS_batch_size << " group" << std::endl;
+    std::cout << i / FLAGS_batch_size << " group -----" << std::endl;
     for (auto j = 0; j < results.size(); ++j) {
       std::cout << "Result for sample " << j << std::endl;
       std::cout << results[j] << std::endl;
