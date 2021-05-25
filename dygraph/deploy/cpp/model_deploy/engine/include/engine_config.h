@@ -68,6 +68,15 @@ struct PaddleEngineConfig {
 
   //  tensorrt workspace size
   int max_workspace_size = 1 << 10;
+
+  //  tensorrt dynamic shape ,  min input shape
+  std::map<std::string, std::vector<int>> min_input_shape;
+
+  //  tensorrt dynamic shape ,  max input shape
+  std::map<std::string, std::vector<int>> max_input_shape,
+      
+  //  tensorrt dynamic shape ,  optimal input shape
+  std::map<std::string, std::vector<int>> optim_input_shape,
 };
 
 struct TritonEngineConfig {
