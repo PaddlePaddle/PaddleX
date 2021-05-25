@@ -34,7 +34,7 @@ bool Model::TensorRTInit(const TensorRTEngineConfig& engine_config) {
   infer_engine_ = std::make_shared<TensorRTInferenceEngine>();
   InferenceConfig config("tensorrt");
 
-  YAML::Node node  = YAML::LoadFile(cfg_file);
+  YAML::Node node  = YAML::LoadFile(engine_config.cfg_file_);
   if (!node["input"].IsDefined()) {
     std::cout << "Fail to find input in yaml file!" << std::endl;
     return false;

@@ -132,6 +132,9 @@ struct TensorRTEngineConfig {
   // onnx model path
   std::string model_file_ = "";
 
+  // paddle model config file
+  std::string cfg_file_ = "";
+
   // GPU workspace size
   int max_workspace_size_ = 1<<28;
 
