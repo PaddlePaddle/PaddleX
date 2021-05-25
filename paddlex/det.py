@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 from . import cv
 from . import tools
+import os
 
 FasterRCNN = cv.models.FasterRCNN
 YOLOv3 = cv.models.YOLOv3
