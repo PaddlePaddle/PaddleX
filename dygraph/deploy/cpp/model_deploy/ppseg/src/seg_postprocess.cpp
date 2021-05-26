@@ -59,6 +59,33 @@ void SegPostprocess::RestoreSegMap(const ShapeInfo& shape_info,
     score_mat->begin<float>(), score_mat->end<float>());
 }
 
+bool SegPostprocess::RunV2(const DataBlob& output,
+                           const std::vector<ShapeInfo>& shape_infos,
+                           std::vector<Result>* results, int thread_num) {
+  int batch_size = shape_infos.size();
+  std::vector<int> score_map_shape = output.shape;
+  int score_map_size = std::accumulate(output.shape.begin() + 1,
+                                       output.shape.end(), 1,
+                                       std::multiplies<int>());
+  const uint8_t* score_map_data =
+          reinterpret_cast<const uint8_t*>(output.data.data());
+  int num_map_pixels = output.shape[1] * output.shape[2];
+
+  for (int i = 0; i < batch_size; ++i) {
+    (*results)[i].model_type = "seg";
+    (*results)[i].seg_result = new SegResult();
+    const uint8_t* current_start_ptr = score_map_data + i * score_map_size;
+    cv::Mat score_mat(output.shape[1], output.shape[2],
+                      CV_32FC1, cv::Scalar(1.0));
+    cv::Mat label_mat(output.shape[1], output.shape[2],
+                      CV_8UC1, const_cast<uint8_t*>(current_start_ptr));
+
+    RestoreSegMap(shape_infos[i], &label_mat,
+                &score_mat, (*results)[i].seg_result);
+  }
+  return true;
+}
+
 bool SegPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
@@ -72,6 +99,11 @@ bool SegPostprocess::Run(const std::vector<DataBlob>& outputs,
     index = 1;
   }
   std::vector<int> score_map_shape = outputs[index].shape;
+  // ppseg version >= 2.1  shape = [b, w, h]
+  if (score_map_shape.size() == 3) {
+    return RunV2(outputs[index], shape_infos, results, thread_num);
+  }
+
   int score_map_size = std::accumulate(score_map_shape.begin() + 1,
                     score_map_shape.end(), 1, std::multiplies<int>());
   const float* score_map_data =

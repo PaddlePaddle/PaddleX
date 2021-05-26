@@ -62,9 +62,9 @@ bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
         engine_config.use_calib_mode /* use_calib_mode*/);
     
     if (engine_config.min_input_shape.size() != 0) {
-      config.set_trt_dynamic_shape_info(engine_config.min_input_shape,
-                                        engine_config.max_input_shape,
-                                        engine_config.opt_input_shape)
+      config.SetTRTDynamicShapeInfo(engine_config.min_input_shape,
+                                    engine_config.max_input_shape,
+                                    engine_config.optim_input_shape);
     }
   }
   predictor_ = std::move(paddle_infer::CreatePredictor(config));
