@@ -11,18 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import paddlex.cv.models
 from paddlex.cv.transforms import seg_transforms
-
-message = 'Your running script needs PaddleX<2.0.0, please refer to {} to solve this issue.'.format(
-    'https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7'
-)
 
 
 def __getattr__(attr):
     if attr == 'transforms':
-        print("\033[1;31;40m{}\033[0m".format(message).encode("utf-8")
-              .decode("latin1"))
+        print("You are using PaddleX 1.x API")
 
 
 transforms = seg_transforms
+
+UNet = paddlex.cv.models.UNet
+DeepLabV3P = paddlex.cv.models.DeepLabV3P
+FastSCNN = paddlex.cv.models.FastSCNN
+HRNet = paddlex.cv.models.HRNet
+BiSeNetV2 = paddlex.cv.models.BiSeNetV2
