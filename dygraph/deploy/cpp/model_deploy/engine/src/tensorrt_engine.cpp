@@ -44,6 +44,7 @@ bool Model::TensorRTInit(const TensorRTEngineConfig& engine_config) {
     return false;
   }
 
+  *(config.tensorrt_config) = engine_config;
   config.tensorrt_config->yaml_config_ = node;
   return infer_engine_->Init(config);
 }
