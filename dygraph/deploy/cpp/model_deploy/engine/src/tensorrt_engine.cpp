@@ -129,7 +129,7 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   context_ = std::shared_ptr<nvinfer1::IExecutionContext>(
                     engine_->createExecutionContext(),
                     InferDeleter());
-  if (!context) {
+  if (!context_) {
     return false;
   }
 
@@ -227,7 +227,7 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
   TensorRT::BufferManager buffers(engine_);
   FeedInput(input_blobs, buffers);
   buffers.copyInputToDevice();
-  bool status = context->executeV2(buffers.getDeviceBindings().data());
+  bool status = context_->executeV2(buffers.getDeviceBindings().data());
   if (!status) {
     return false;
   }
