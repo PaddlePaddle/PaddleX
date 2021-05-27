@@ -95,6 +95,7 @@ class TensorRTInferenceEngine : public InferEngine {
              std::vector<DataBlob>* output_blobs);
 
   std::shared_ptr<nvinfer1::ICudaEngine> engine_{nullptr};
+  std::shared_ptr<nvinfer1::IExecutionContext> context_;
   NaiveLogger logger_;
 
  private:

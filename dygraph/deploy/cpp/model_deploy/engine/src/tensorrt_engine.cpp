@@ -126,6 +126,13 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
                                                    *config),
                     InferDeleter());
 
+  context_ = std::shared_ptr<nvinfer1::IExecutionContext>(
+                    engine_->createExecutionContext(),
+                    InferDeleter());
+  if (!context) {
+    return false;
+  }
+
   if (tensorrt_config.save_engine_) {
     if (!SaveEngine(*(engine_.get()), tensorrt_config.trt_cache_file_)) {
       std::cout << "Fail save Trt Engine to "
@@ -217,12 +224,6 @@ bool TensorRTInferenceEngine::SaveEngine(const nvinfer1::ICudaEngine& engine,
 
 bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
                                     std::vector<DataBlob>* output_blobs) {
-  auto context = InferUniquePtr<nvinfer1::IExecutionContext>(
-                     engine_->createExecutionContext());
-  if (!context) {
-    return false;
-  }
-
   TensorRT::BufferManager buffers(engine_);
   FeedInput(input_blobs, buffers);
   buffers.copyInputToDevice();

@@ -74,7 +74,7 @@ struct PaddleEngineConfig {
 
   //  tensorrt dynamic shape ,  max input shape
   std::map<std::string, std::vector<int>> max_input_shape;
-      
+
   //  tensorrt dynamic shape ,  optimal input shape
   std::map<std::string, std::vector<int>> optim_input_shape;
 };

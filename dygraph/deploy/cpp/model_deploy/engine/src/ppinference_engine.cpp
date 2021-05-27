@@ -60,7 +60,7 @@ bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
         precision /* precision*/,
         engine_config.use_static /* use_static*/,
         engine_config.use_calib_mode /* use_calib_mode*/);
-    
+
     if (engine_config.min_input_shape.size() != 0) {
       config.SetTRTDynamicShapeInfo(engine_config.min_input_shape,
                                     engine_config.max_input_shape,
