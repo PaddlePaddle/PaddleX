@@ -54,7 +54,7 @@ class BaseClassifier(BaseModel):
         self.init_params.update(params)
         del self.init_params['params']
         super(BaseClassifier, self).__init__('classifier')
-        if not hasattr(architectures, model_name):
+        if not hasattr(architectures, model_name.strip('_ssld')):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
 
