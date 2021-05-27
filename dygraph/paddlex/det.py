@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from . import cv
+from .cv.models.utils.visualize import visualize_detection, draw_pr_curve
 from paddlex.cv.transforms import det_transforms
 
-
-def __getattr__(attr):
-    if attr == 'transforms':
-        print("You are using PaddleX 1.x API")
-
-
 transforms = det_transforms
+
+FasterRCNN = cv.models.FasterRCNN
+YOLOv3 = cv.models.YOLOv3
+PPYOLO = cv.models.PPYOLO
+MaskRCNN = cv.models.MaskRCNN
+
+visualize = visualize_detection
+draw_pr_curve = draw_pr_curve

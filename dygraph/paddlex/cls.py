@@ -15,12 +15,6 @@
 from . import cv
 from paddlex.cv.transforms import cls_transforms
 
-
-def __getattr__(attr):
-    if attr == 'transforms':
-        print("You are using PaddleX 1.x API")
-
-
 transforms = cls_transforms
 
 ResNet18 = cv.models.ResNet18

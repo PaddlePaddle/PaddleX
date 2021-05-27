@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from . import cv
+from .cv.models.utils.visualize import visualize_segmentation
 from paddlex.cv.transforms import seg_transforms
 
-
-def __getattr__(attr):
-    if attr == 'transforms':
-        print("You are using PaddleX 1.x API")
-
-
 transforms = seg_transforms
+
+UNet = cv.models.UNet
+DeepLabv3p = cv.models.DeepLabV3P
+HRNet = cv.models.HRNet
+FastSCNN = cv.models.FastSCNN
+
+visualize = visualize_segmentation
