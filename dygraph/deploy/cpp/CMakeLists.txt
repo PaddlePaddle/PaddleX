@@ -221,9 +221,9 @@ ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
 target_link_libraries(multi_gpu_model_infer ${DEPS})
 
 if (WITH_TENSORRT)
-  add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
-  ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
-  target_link_libraries(multi_gpu_model_infer ${DEPS})
+  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+  ADD_DEPENDENCIES(tensorrt_infer ext-yaml-cpp)
+  target_link_libraries(tensorrt_infer ${DEPS})
 endif()
 
 if(WIN32)
