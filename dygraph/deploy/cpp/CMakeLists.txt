@@ -153,8 +153,9 @@ if(WITH_GPU)
       include_directories("${TENSORRT_DIR}/include")
       link_directories("${TENSORRT_DIR}/lib")
 
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
   endif()
 endif()
@@ -232,5 +233,8 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll  ${CMAKE_BINARY_DIR}/paddle_deploy
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/paddle/lib/paddle_inference.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
   )
 endif()
