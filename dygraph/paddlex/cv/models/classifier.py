@@ -34,10 +34,11 @@ __all__ = [
     "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet50_vd_ssld",
     "ResNet101_vd", "ResNet101_vd_ssld", "ResNet152_vd", "ResNet200_vd",
     "AlexNet", "DarkNet53", "MobileNetV1", "MobileNetV2", "MobileNetV3_small",
-    "MobileNetV3_large", "DenseNet121", "DenseNet161", "DenseNet169",
-    "DenseNet201", "DenseNet264", "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C",
-    "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W64_C", "Xception41",
-    "Xception65", "Xception71", "ShuffleNetV2", "ShuffleNetV2_swish"
+    "MobileNetV3_small_ssld", "MobileNetV3_large", "MobileNetV3_large_ssld",
+    "DenseNet121", "DenseNet161", "DenseNet169", "DenseNet201", "DenseNet264",
+    "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C", "HRNet_W40_C", "HRNet_W44_C",
+    "HRNet_W48_C", "HRNet_W64_C", "Xception41", "Xception65", "Xception71",
+    "ShuffleNetV2", "ShuffleNetV2_swish"
 ]
 
 
@@ -66,7 +67,7 @@ class BaseClassifier(BaseModel):
 
     def build_net(self, **params):
         with paddle.utils.unique_name.guard():
-            net = architectures.__dict__[self.model_name](
+            net = architectures.__dict__[self.model_name.strip('_ssld')](
                 class_dim=self.num_classes, **params)
         return net
 
@@ -406,10 +407,9 @@ class ResNet50_vd(BaseClassifier):
 class ResNet50_vd_ssld(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ResNet50_vd_ssld, self).__init__(
-            model_name='ResNet50_vd',
+            model_name='ResNet50_vd_ssld',
             num_classes=num_classes,
             lr_mult_list=[.1, .1, .2, .2, .3])
-        self.model_name = 'ResNet50_vd_ssld'
 
 
 class ResNet101_vd(BaseClassifier):
@@ -424,7 +424,6 @@ class ResNet101_vd_ssld(BaseClassifier):
             model_name='ResNet101_vd_ssld',
             num_classes=num_classes,
             lr_mult_list=[.1, .1, .2, .2, .3])
-        self.model_name = 'ResNet101_vd_ssld'
 
 
 class ResNet152_vd(BaseClassifier):
@@ -505,6 +504,22 @@ class MobileNetV3_small(BaseClassifier):
         model_name = 'MobileNetV3_small_x' + str(float(scale)).replace('.',
                                                                        '_')
         super(MobileNetV3_small, self).__init__(
+            model_name=model_name,
+            num_classes=num_classes,
+            lr_mult_list=[.1, .1, .2, .2, .3])
+
+
+class MobileNetV3_small_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.35, 1.0]
+        if scale not in supported_scale:
+            logging.warning(
+                "scale={} is not supported by MobileNetV3_small_ssld, "
+                "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        model_name = 'MobileNetV3_small_x' + str(float(scale)).replace(
+            '.', '_') + '_ssld'
+        super(MobileNetV3_small_ssld, self).__init__(
             model_name=model_name, num_classes=num_classes)
 
 
@@ -519,6 +534,12 @@ class MobileNetV3_large(BaseClassifier):
                                                                        '_')
         super(MobileNetV3_large, self).__init__(
             model_name=model_name, num_classes=num_classes)
+
+
+class MobileNetV3_large_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_ssld, self).__init__(
+            model_name='MobileNetV3_large_x1_0_ssld', num_classes=num_classes)
 
 
 class DenseNet121(BaseClassifier):
