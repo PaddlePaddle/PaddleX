@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import paddlex.cv.models
+
 from paddlex.cv.transforms import seg_transforms
 
 
@@ -21,9 +21,3 @@ def __getattr__(attr):
 
 
 transforms = seg_transforms
-
-UNet = paddlex.cv.models.UNet
-DeepLabV3P = paddlex.cv.models.DeepLabV3P
-FastSCNN = paddlex.cv.models.FastSCNN
-HRNet = paddlex.cv.models.HRNet
-BiSeNetV2 = paddlex.cv.models.BiSeNetV2
