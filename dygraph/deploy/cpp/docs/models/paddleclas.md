@@ -56,8 +56,8 @@ ResNet50
 
 参考编译文档
 
-- [Linux系统上编译指南](../compile/linux.md)
-- [Windows系统上编译指南](../compile/windows.md)
+- [Linux系统上编译指南](../compile/paddle/linux.md)
+- [Windows系统上编译指南](../compile/paddle/windows.md)
 
 
 

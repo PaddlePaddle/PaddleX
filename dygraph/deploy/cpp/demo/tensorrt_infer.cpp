@@ -24,7 +24,6 @@ DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_int32(gpu_id, 0, "GPU card id");
-DEFINE_bool(use_trt, false, "Infering with TensorRT");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -42,32 +41,26 @@ int main(int argc, char** argv) {
   engine_config.model_filename = FLAGS_model_filename;
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.gpu_id = FLAGS_gpu_id;
-  engine_config.use_trt = FLAGS_use_trt;
-  if (FLAGS_use_trt) {
-    /*Set TensorRT data precision
-      0: FP32
-      1: FP16
-      2: Int8
-    */
-    engine_config.precision = 0;
-    engine_config.min_subgraph_size = 10;
-    engine_config.max_workspace_size = 1 << 30;
-    if ("clas" == FLAGS_model_type) {
-      // Adjust shape according to the actual model
-      engine_config.min_input_shape["inputs"] = {1, 3, 224, 224};
-      engine_config.max_input_shape["inputs"] = {1, 3, 224, 224};;
-      engine_config.optim_input_shape["inputs"] = {1, 3, 224, 224};;
-    } else if ("det" == FLAGS_model_type) {
-      // Adjust shape according to the actual model
-      engine_config.min_input_shape["image"] = {1, 3, 608, 608};
-      engine_config.max_input_shape["image"] = {1, 3, 608, 608};
-      engine_config.optim_input_shape["image"] = {1, 3, 608, 608};
-    } else if ("seg" == FLAGS_model_type) {
-      engine_config.min_input_shape["x"] = {1, 3, 100, 100};
-      engine_config.max_input_shape["x"] = {1, 3, 2000, 2000};
-      engine_config.optim_input_shape["x"] = {1, 3, 1024, 1024};
-      // Additional nodes need to be added, pay attention to the output prompt
-    }
+  engine_config.use_gpu = true;
+  engine_config.use_trt = true;
+  engine_config.precision = 0;
+  engine_config.min_subgraph_size = 10;
+  engine_config.max_workspace_size = 1 << 30;
+  if ("clas" == FLAGS_model_type) {
+    // Adjust shape according to the actual model
+    engine_config.min_input_shape["inputs"] = {1, 3, 224, 224};
+    engine_config.max_input_shape["inputs"] = {1, 3, 224, 224};
+    engine_config.optim_input_shape["inputs"] = {1, 3, 224, 224};
+  } else if ("det" == FLAGS_model_type) {
+    // Adjust shape according to the actual model
+    engine_config.min_input_shape["image"] = {1, 3, 608, 608};
+    engine_config.max_input_shape["image"] = {1, 3, 608, 608};
+    engine_config.optim_input_shape["image"] = {1, 3, 608, 608};
+  } else if ("seg" == FLAGS_model_type) {
+    engine_config.min_input_shape["x"] = {1, 3, 100, 100};
+    engine_config.max_input_shape["x"] = {1, 3, 2000, 2000};
+    engine_config.optim_input_shape["x"] = {1, 3, 1024, 1024};
+    // Additional nodes need to be added, pay attention to the output prompt
   }
   model->PaddleEngineInit(engine_config);
 

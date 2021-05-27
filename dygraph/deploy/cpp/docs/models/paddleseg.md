@@ -1,6 +1,6 @@
 # PaddleSeg模型部署
 
-当前支持PaddleSeg release/2.0分支训练的模型进行导出及部署。本文档以[Deeplabv3P](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/configs/deeplabv3p)模型为例，讲述从release-2.0版本导出模型并进行cpp部署整个流程。 PaddleSeg相关详细文档查看[官网文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/README_CN.md)
+当前支持PaddleSeg release/2.1分支训练的模型进行导出及部署。本文档以[Deeplabv3P](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/configs/deeplabv3p)模型为例，讲述从release-2.1版本导出模型并进行cpp部署整个流程。 PaddleSeg相关详细文档查看[官网文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.1/README_CN.md)
 
 ## 步骤一 部署模型导出
 
@@ -9,7 +9,6 @@
 ```sh
 git clone https://github.com/PaddlePaddle/PaddleSeg.git
 cd PaddleSeg
-git checkout realease/v2.0
 ```
 
 ### 2. 导出基于Cityscape数据的预训练模型
@@ -35,16 +34,12 @@ output
   └── model.pdmodel          # 静态图模型文件
 ```
 
-
-
 ## 步骤二 编译
 
 参考编译文档
 
-- [Linux系统上编译指南](../compile/linux.md)
-- [Windows系统上编译指南](../compile/windows.md)
-
-
+- [Linux系统上编译指南](../compile/paddle/linux.md)
+- [Windows系统上编译指南](../compile/paddle/windows.md)
 
 ## 步骤三 模型预测
 
@@ -63,6 +58,8 @@ output
 ```
 ScoreMask(mean: 12.4814 std:    10.4955)    LabelMask(mean: 1.98847 std:    10.3141)
 ```
+
+**注意：**release/2.1之后，PaddleSeg导出的模型默认只有label_map, score_map的值都被填充为1.0
 
 关于demo程序的详细使用方法可分别参考以下文档
 
