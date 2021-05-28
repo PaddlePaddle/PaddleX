@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 import os.path as osp
 import numpy as np
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
 from paddle.static import InputSpec
+import paddleseg
 import paddlex
-from paddlex.cv.nets.paddleseg import models
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.utils import get_single_card_bs
+from paddlex.utils import get_single_card_bs, DisablePrint
 import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
 from paddlex.utils.checkpoint import seg_pretrain_weights_dict
-from paddlex.cv.nets.paddleseg.cvlibs import manager
 from paddlex.cv.transforms import Decode
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
@@ -40,7 +40,7 @@ class BaseSegmenter(BaseModel):
                  **params):
         self.init_params = locals()
         super(BaseSegmenter, self).__init__('segmenter')
-        if not hasattr(models, model_name):
+        if not hasattr(paddleseg.models, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
         self.model_name = model_name
@@ -53,8 +53,8 @@ class BaseSegmenter(BaseModel):
     def build_net(self, **params):
         # TODO: when using paddle.utils.unique_name.guard,
         # DeepLabv3p and HRNet will raise a error
-        net = models.__dict__[self.model_name](num_classes=self.num_classes,
-                                               **params)
+        net = paddleseg.models.__dict__[self.model_name](
+            num_classes=self.num_classes, **params)
         return net
 
     def get_test_inputs(self, image_shape):
@@ -100,15 +100,16 @@ class BaseSegmenter(BaseModel):
         if isinstance(self.use_mixed_loss, bool):
             if self.use_mixed_loss:
                 losses = [
-                    manager.LOSSES['CrossEntropyLoss'](),
-                    manager.LOSSES['LovaszSoftmaxLoss']()
+                    paddleseg.models.CrossEntropyLoss(),
+                    paddleseg.models.LovaszSoftmaxLoss()
                 ]
                 coef = [.8, .2]
                 loss_type = [
-                    manager.LOSSES['MixedLoss'](losses=losses, coef=coef)
+                    paddleseg.models.MixedLoss(
+                        losses=losses, coef=coef),
                 ]
             else:
-                loss_type = [manager.LOSSES['CrossEntropyLoss']()]
+                loss_type = [paddleseg.models.CrossEntropyLoss()]
         else:
             losses, coef = list(zip(*self.use_mixed_loss))
             if not set(losses).issubset(
@@ -116,9 +117,10 @@ class BaseSegmenter(BaseModel):
                 raise ValueError(
                     "Only 'CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss' are supported."
                 )
-            losses = [manager.LOSSES[loss]() for loss in losses]
+            losses = [getattr(paddleseg.models, loss)() for loss in losses]
             loss_type = [
-                manager.LOSSES['MixedLoss'](losses=losses, coef=list(coef))
+                paddleseg.models.MixedLoss(
+                    losses=losses, coef=list(coef))
             ]
         if self.model_name == 'FastSCNN':
             loss_type *= 2
@@ -271,6 +273,10 @@ class BaseSegmenter(BaseModel):
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        logging.info(
+            "Start to evaluate(total_samples={}, total_steps={})...".format(
+                eval_dataset.num_samples,
+                math.ceil(eval_dataset.num_samples * 1.0 / batch_size)))
         with paddle.no_grad():
             for step, data in enumerate(self.eval_data_loader):
                 data.append(eval_dataset.transforms.transforms)
@@ -442,7 +448,9 @@ class DeepLabV3P(BaseSegmenter):
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
-        backbone = manager.BACKBONES[backbone](output_stride=output_stride)
+        with DisablePrint():
+            backbone = getattr(paddleseg.models, backbone)(
+                output_stride=output_stride)
         params = {
             'backbone': backbone,
             'backbone_indices': backbone_indices,
@@ -481,8 +489,9 @@ class HRNet(BaseSegmenter):
                 "width={} is not supported, please choose from [18, 48]".
                 format(width))
         self.backbone_name = 'HRNet_W{}'.format(width)
-        backbone = manager.BACKBONES[self.backbone_name](
-            align_corners=align_corners)
+        with DisablePrint():
+            backbone = getattr(paddleseg.models, self.backbone_name)(
+                align_corners=align_corners)
 
         params = {'backbone': backbone, 'align_corners': align_corners}
         super(HRNet, self).__init__(

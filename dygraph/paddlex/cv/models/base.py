@@ -22,7 +22,6 @@ import yaml
 import json
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
-from paddle.jit import to_static
 from paddleslim.analysis import flops
 from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
@@ -63,12 +62,8 @@ class BaseModel:
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
-                scale = getattr(self, 'scale', None)
                 pretrain_weights = get_pretrain_weights(
-                    pretrain_weights,
-                    self.__class__.__name__,
-                    save_dir,
-                    scale=scale)
+                    pretrain_weights, self.model_name, save_dir)
             else:
                 backbone_name = getattr(self, 'backbone_name', None)
                 pretrain_weights = get_pretrain_weights(
@@ -161,18 +156,11 @@ class BaseModel:
         logging.info("Model saved in {}.".format(save_dir))
 
     def build_data_loader(self, dataset, batch_size, mode='train'):
-        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
-        if mode == 'eval':
-            batch_size = batch_size_each_card
-            total_steps = math.ceil(dataset.num_samples * 1.0 / batch_size)
-            logging.info(
-                "Start to evaluate(total_samples={}, total_steps={})...".
-                format(dataset.num_samples, total_steps))
         if dataset.num_samples < batch_size:
             raise Exception(
-                'The volume of datset({}) must be larger than batch size({}).'
+                'The volume of dataset({}) must be larger than batch size({}).'
                 .format(dataset.num_samples, batch_size))
-
+        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
         # TODO detection eval阶段需做判断
         batch_sampler = DistributedBatchSampler(
             dataset,
@@ -204,6 +192,7 @@ class BaseModel:
                    save_interval_epochs=1,
                    log_interval_steps=10,
                    save_dir='output',
+                   ema=None,
                    early_stop=False,
                    early_stop_patience=5,
                    use_vdl=True):
@@ -279,6 +268,8 @@ class BaseModel:
 
                 train_avg_metrics.update(outputs)
                 outputs['lr'] = lr
+                if ema is not None:
+                    ema.update(self.net)
                 step_time_toc = time.time()
                 train_step_time.update(step_time_toc - step_time_tic)
                 step_time_tic = step_time_toc
@@ -316,6 +307,9 @@ class BaseModel:
             self.completed_epochs += 1
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
+            if ema is not None:
+                weight = self.net.state_dict()
+                self.net.set_dict(ema.apply())
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
@@ -323,10 +317,10 @@ class BaseModel:
                         eval_dataset,
                         batch_size=eval_batch_size,
                         return_details=False)
-                    logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
-                        i + 1, dict2str(self.eval_metrics)))
                     # 保存最优模型
                     if local_rank == 0:
+                        logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
+                            i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
                         current_accuracy = self.eval_metrics[best_accuracy_key]
                         if current_accuracy > best_accuracy:
@@ -348,6 +342,8 @@ class BaseModel:
                     if eval_dataset is not None and early_stop:
                         if earlystop(current_accuracy):
                             break
+            if ema is not None:
+                self.net.set_dict(weight)
 
     def analyze_sensitivity(self,
                             dataset,

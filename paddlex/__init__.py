@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-__version__ = '1.3.10'
+__version__ = '1.3.11'
 
 import os
 if 'FLAGS_eager_delete_tensor_gb' not in os.environ:
@@ -39,7 +39,7 @@ if version[0] == '1':
 
 if hasattr(paddle, 'enable_static'):
     paddle.enable_static()
-    gui_mode = False
+    gui_mode = True
 
 from .utils.utils import get_environ_info
 from . import cv

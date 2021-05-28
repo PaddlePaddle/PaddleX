@@ -1,9 +1,9 @@
 [submodule "dygraph/PaddleClas"]
 	path = dygraph/PaddleClas
-	url = https://github.com/PaddlePaddle/PaddleClas
+	url = https://github.com/PaddlePaddle/PaddleClas.git
 [submodule "dygraph/PaddleDetection"]
 	path = dygraph/PaddleDetection
-	url = https://github.com/PaddlePaddle/PaddleDetection
+	url = https://github.com/PaddlePaddle/PaddleDetection.git
 [submodule "dygraph/PaddleSeg"]
 	path = dygraph/PaddleSeg
-	url = https://github.com/PaddlePaddle/PaddleSeg
+	url = https://github.com/PaddlePaddle/PaddleSeg.git
