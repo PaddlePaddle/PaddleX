@@ -38,10 +38,15 @@ class SegPostprocess : public BasePostprocess {
   virtual bool Run(const std::vector<DataBlob>& outputs,
                    const std::vector<ShapeInfo>& shape_infos,
                    std::vector<Result>* results, int thread_num = 1);
+
   void RestoreSegMap(const ShapeInfo& shape_info,
                      cv::Mat* label_mat,
                      cv::Mat* score_mat,
                      SegResult* result);
+
+  bool RunV2(const DataBlob& outputs,
+             const std::vector<ShapeInfo>& shape_infos,
+             std::vector<Result>* results, int thread_num);
 };
 
 }  // namespace PaddleDeploy

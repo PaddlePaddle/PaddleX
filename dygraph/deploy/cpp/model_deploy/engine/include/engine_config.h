@@ -48,7 +48,7 @@ struct PaddleEngineConfig {
   bool use_trt = false;
 
   //  Set batchsize
-  int batch_size = 1;
+  int max_batch_size = 1;
 
   //  Set TensorRT min_subgraph_size
   int min_subgraph_size = 1;
@@ -65,13 +65,25 @@ struct PaddleEngineConfig {
 
   //  Is offline calibration required, when tensorrt is used
   bool use_calib_mode = false;
+
+  //  tensorrt workspace size
+  int max_workspace_size = 1 << 10;
+
+  //  tensorrt dynamic shape ,  min input shape
+  std::map<std::string, std::vector<int>> min_input_shape;
+
+  //  tensorrt dynamic shape ,  max input shape
+  std::map<std::string, std::vector<int>> max_input_shape;
+
+  //  tensorrt dynamic shape ,  optimal input shape
+  std::map<std::string, std::vector<int>> optim_input_shape;
 };
 
 struct TritonEngineConfig {
   TritonEngineConfig() : model_name_(""), model_version_(""),
         request_id_(""), sequence_id_(0), sequence_start_(false),
         sequence_end_(false), priority_(0), server_timeout_(0),
-        client_timeout_(0) {}
+        client_timeout_(0), verbose_(false), url_("") {}
   /// The name of the model to run inference.
   std::string model_name_;
   /// The version of the model to use while running inference. The default
@@ -118,14 +130,19 @@ struct TritonEngineConfig {
   // InferenceServerGrpcClient::StartStream().
   uint64_t client_timeout_;
 
-  bool verbose_ = false;
+  // open client log
+  bool verbose_;
 
+  // Request the address
   std::string url_;
 };
 
 struct TensorRTEngineConfig {
   // onnx model path
-  std::string model_file_;
+  std::string model_file_ = "";
+
+  // paddle model config file
+  std::string cfg_file_ = "";
 
   // GPU workspace size
   int max_workspace_size_ = 1<<28;

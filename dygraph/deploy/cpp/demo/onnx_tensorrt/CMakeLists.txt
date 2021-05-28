@@ -83,6 +83,6 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
-add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/tensorrt/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/onnx_tensorrt/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})

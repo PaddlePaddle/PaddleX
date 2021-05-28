@@ -29,6 +29,11 @@
           "type": "PATH"
         },
         {
+          "name": "TENSORRT_DIR",
+          "value": "path\\to\\TensorRT_dir",
+          "type": "PATH"
+        },
+        {
           "name": "WITH_STATIC_LIB",
           "value": "True",
           "type": "BOOL"

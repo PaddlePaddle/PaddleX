@@ -18,6 +18,7 @@
 
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {
 inline std::shared_ptr<Model> CreateModel(const std::string &name) {

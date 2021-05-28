@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {
 class MultiGPUModel {
@@ -49,8 +50,7 @@ class MultiGPUModel {
     return true;
   }
 
-  bool PaddleEngineInit(const std::string& model_filename,
-                        const std::string& params_filename,
+  bool PaddleEngineInit(PaddleEngineConfig engine_config,
                         const std::vector<int> gpu_ids) {
     if (gpu_ids.size() != models_.size()) {
       std::cerr << "Paddle Engine Init gpu_ids != MultiGPUModel Init gpu_num"
@@ -58,11 +58,10 @@ class MultiGPUModel {
                 << std::endl;
       return false;
     }
+    engine_config.use_gpu = true;
     for (auto i = 0; i < gpu_ids.size(); ++i) {
-      if (!models_[i]->PaddleEngineInit(model_filename,
-                                        params_filename,
-                                        true, gpu_ids[i],
-                                        true)) {
+      engine_config.gpu_id = gpu_ids[i];
+      if (!models_[i]->PaddleEngineInit(engine_config)) {
         std::cerr << "Paddle Engine Init error:" << gpu_ids[i] << std::endl;
         return false;
       }
