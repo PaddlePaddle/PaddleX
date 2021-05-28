@@ -83,3 +83,4 @@ Classify(809    sunscreen   0.939211)
 
 - [单卡加载模型预测示例](../demo/model_infer.md)
 - [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)

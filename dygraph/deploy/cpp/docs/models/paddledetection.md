@@ -80,3 +80,4 @@ Box(39  bottle  0.356306    551.603 288.384 34.9819 112.599)
 
 - [单卡加载模型预测示例](../demo/model_infer.md)
 - [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)

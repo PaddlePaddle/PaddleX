@@ -4,7 +4,7 @@
 
 ## 模型套件支持
 - PaddleDetection([release/2.1](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.1))
-- PaddleSeg([release/2.0](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.1))
+- PaddleSeg([release/2.1](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.1))
 - PaddleClas([release/2.1](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.1))
 - PaddleX([release/2.0-rc](https://github.com/PaddlePaddle/PaddleX))
 

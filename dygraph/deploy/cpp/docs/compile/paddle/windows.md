@@ -21,7 +21,7 @@ cd projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
 
-**说明**：其中`C++`预测代码在`PaddleX\dygraph\deploy\cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，而示例demo代码为`demo/model_infer.cpp`。
+**说明**：其中`C++`预测代码在`PaddleX\dygraph\deploy\cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，所有示例代码都在`demo`目录下。
 
 
 ### Step2: 下载PaddlePaddle C++ 预测库
@@ -65,7 +65,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 ![](../../images/vs2019_step2.png)
 
-选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\cpp`），并打开`CMakeList.txt`：
+选择C++预测代码所在路径（例如`D:\projects\PaddleX\dygraph\deploy\cpp`），并打开`CMakeList.txt`：
 ![](../../images/vs2019_step3.png)
 
 3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。

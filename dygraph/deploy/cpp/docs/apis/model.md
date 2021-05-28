@@ -8,6 +8,8 @@
 4. [预测结果字段](#004)
 5. [代码示例](#005)
 
+
+
 <span id="001"></span>
 
 ## 1. 创建模型对象
@@ -31,6 +33,8 @@ std::shared_ptr<PaddleDeploy::Model>  PaddleDeploy::ModelFactory::CreateObject(c
 > ```c++
 > std::shared_ptr<PaddleDeploy::Model> model = PaddleDeploy::ModelFactory::CreateObject("det")
 > ```
+
+
 
 <span id="002"></span>
 
@@ -61,6 +65,8 @@ bool Model::Init(const std::string& cfg_file)
 >     std::cerr << "Fail to execute model->Init()" << std::endl;
 > }
 >```
+
+
 
 ### 2.2 推理引擎初始化
 
@@ -130,6 +136,8 @@ bool TensorRTInit(const TensorRTEngineConfig& engine_config);
 > }
 > ```
 
+
+
 <span id="003"></span>
 
 ## 3.模型预测
@@ -137,6 +145,9 @@ bool TensorRTInit(const TensorRTEngineConfig& engine_config);
 推理过程包括输入数据的预处理、推理引擎的inference、inference结果的后处理3个步骤，在部署代码中，三个步骤分别对应`PaddleDeploy::Model::Preprocess()`、`PaddleDeploy::Model::Infer()`、`PaddleDeploy::Model::Postprocess()`。
 
 为了更便于开发者使用，此三个步骤被封装为`PaddleDeploy::Model::Predict()`一个接口内，用户可根据自行需求进行调用，一般情况下，推荐使用`PaddleDeploy::Model::Predict()`接口即可一步完成预测需求。
+
+
+
 
 ## 3.1 预测接口
 
@@ -170,6 +181,9 @@ bool TensorRTInit(const TensorRTEngineConfig& engine_config);
 >   std::cerr << "Fail to execute model->Predict()" << std::endl;
 > }
 > ```
+
+
+
 
 ### 3.2 预处理接口
 
@@ -249,6 +263,9 @@ if (!model->Infer(inputs, &outputs)) {
 }
 ```
 
+
+
+
 ### 3.4 后处理接口
 
 ```c++
@@ -300,6 +317,9 @@ bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
 > }
 > ```
 
+
+
+
 <span id="004"></span>
 
 ## 4. 推理引擎配置参数
@@ -343,6 +363,8 @@ bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
   std::map<std::string, std::vector<int>> optim_input_shape; // 模型动态shape的最常见输入形状， TensorRT才需要设置
 ```
 
+
+
 ### 4.2 Triton推理引擎配置
 
 ```c++
@@ -350,26 +372,16 @@ bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
 
   std::string model_version_; // Triton Server中模型的版本号
 
-  /// The timeout value for the request, in microseconds. If the request
-  /// cannot be completed within the time by the server can take a
-  /// model-specific action such as terminating the request. If not
-  /// provided, the server will handle the request using default setting
-  /// for the model.
-  uint64_t server_timeout_;
-  // The maximum end-to-end time, in microseconds, the request is allowed
-  // to take. Note the HTTP library only offer the precision upto
-  // milliseconds. The client will abort request when the specified time
-  // elapses. The request will return error with message "Deadline Exceeded".
-  // The default value is 0 which means client will wait for the
-  // response from the server. This option is not supported for streaming
-  // requests. Instead see 'stream_timeout' argument in
-  // InferenceServerGrpcClient::StartStream().
-  uint64_t client_timeout_;
+  uint64_t server_timeout_ = 0; // 服务端最大计算时间
+
+  uint64_t client_timeout_ = 0; // 客户端等待时间， 默认一直等
 
   bool verbose_ = false; // 是否打开客户端日志
 
   std::string url_; // Triton Server地址
 ```
+
+
 
 ### 4.1 TensorRT推理引擎配置
 
@@ -384,6 +396,8 @@ bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
 
   int gpu_id_ = 0; // 使用编号几的GPU
 ```
+
+
 
 <span id="005"></span>
 

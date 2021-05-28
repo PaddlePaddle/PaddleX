@@ -1,6 +1,6 @@
 # TensorRT加载模型预测
 
-本文档说明`PaddleX/deploy/cpp/demo/model_infer.cpp`编译后的使用方法，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
+本文档基于`PaddleX/dygraph/deploy/cpp/demo/tensorrt_infer.cpp`示例，讲述如何用PaddleInference引擎结合TensorRT部署模型。开发者可基于此demo示例进行二次开发，满足集成的需求。
 
 ## 步骤一、编译
 参考编译文档
@@ -30,13 +30,13 @@
 
    TensorRT配置参数说明, 动态输入一定要配置`min_input_shape`、`max_input_shape`、`optim_input_shape` 三个参数
 
-   | 参数               | 说明                                                         |
-   | ------------------ | ------------------------------------------------------------ |
-   | precision          | 数据类型， 默认值为0。 0表示FP32 、1表示FP16、2表示INT8      |
-   | max_workspace_size | TensorRT申请的显存空间， 默认值为 1 << 10(1M),  如果大点模型需要提到1 << 30 |
-   | min_input_shape    | 动态输入的最小shape。 map类型， key为输入名称， value为shape |
-   | max_input_shape    | 动态输入的最大shape。 map类型， key为输入名称， value为shape |
-   | optim_input_shape  | 动态输入的最常出现的shape。 map类型， key为输入名称， value为shape |
+   | 参数               | 说明                                                                                                                       |
+   | ------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+   | precision          | 数据类型， 默认值为0。 0表示FP32 、1表示FP16、2表示INT8                                                                    |
+   | max_workspace_size | TensorRT申请的显存空间， 默认值为 1 << 10(1M),  如果大点模型需要提到1 << 30                                                |
+   | min_input_shape    | 动态输入的最小shape。 map类型， key为输入名称， value为shape                                                               |
+   | max_input_shape    | 动态输入的最大shape。 map类型， key为输入名称， value为shape                                                               |
+   | optim_input_shape  | 动态输入的最常出现的shape。 map类型， key为输入名称， value为shape                                                         |
    | min_subgraph_size  | 最小的字图大小，用于过滤节点过小的子图。<br/>设置为10，则小于10个node的子图将不用TensorRT优化，用PaddleInference引擎运行。 |
 
    可参考`demo/tensorrt_infer.cpp`例子：
@@ -135,13 +135,13 @@ Box(45	bowl	0.0191819	3.91156	1.276	225.888	214.273)
 ```
 ### 参数说明
 
-| 参数            | 说明                                                         |
-| --------------- | ------------------------------------------------------------ |
-| model_filename  | **[必填]** 模型结构文件路径，如`yolov3_darknet/model.pdmodel` |
-| params_filename | **[必填]** 模型权重文件路径，如`yolov3_darknet/model.pdiparams` |
-| cfg_file        | **[必填]** 模型配置文件路径，如`yolov3_darknet/infer_cfg.yml` |
+| 参数            | 说明                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| model_filename  | **[必填]** 模型结构文件路径，如`yolov3_darknet/model.pdmodel`                                                |
+| params_filename | **[必填]** 模型权重文件路径，如`yolov3_darknet/model.pdiparams`                                              |
+| cfg_file        | **[必填]** 模型配置文件路径，如`yolov3_darknet/infer_cfg.yml`                                                |
 | model_type      | **[必填]** 模型来源，det/seg/clas/paddlex，分别表示模型来源于PaddleDetection、PaddleSeg、PaddleClas和PaddleX |
-| image           | 待预测的图片文件路径                                         |
+| image           | 待预测的图片文件路径                                                                                         |
 
 
 
