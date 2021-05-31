@@ -43,7 +43,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 | 参数          | 说明                                                                                 |
 | :------------ | :----------------------------------------------------------------------------------- |
 | WITH_GPU      | ON或OFF，表示是否使用GPU，当下载的为CPU预测库时，设为OFF                             |
-| PADDLE_DIR    | 预测库所在路径，默认为`PaddleX/deploy/cpp/paddle_inference`目录下                    |
+| PADDLE_DIR    | 预测库所在路径，默认为`PaddleX/dygraph/deploy/cpp/paddle_inference`目录下            |
 | CUDA_LIB      | cuda相关lib文件所在的目录路径                                                        |
 | CUDNN_LIB     | cudnn相关lib文件所在的目录路径                                                       |
 | WITH_TENSORRT | ON或OFF，表示是否使用开启TensorRT                                                    |

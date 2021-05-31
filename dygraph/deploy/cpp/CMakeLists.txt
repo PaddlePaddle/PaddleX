@@ -137,13 +137,21 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      include_directories("${TENSORRT_DIR}/include")
-      link_directories("${TENSORRT_DIR}/lib")
+      if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") # x86_64 aarch64
+        include_directories("/usr/include/aarch64-linux-gnu")
+        link_directories("/usr/lib/aarch64-linux-gnu")
 
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(DEPS ${DEPS} /usr/lib/aarch64-linux-gnu/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(DEPS ${DEPS} /usr/lib/aarch64-linux-gnu/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+      else()
+        include_directories("${TENSORRT_DIR}/include")
+        link_directories("${TENSORRT_DIR}/lib")
+
+        set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+      endif()
     endif()
-    
+
   else()
     set(DEPS ${DEPS} ${CUDA_LIB}/cudart${CMAKE_STATIC_LIBRARY_SUFFIX} )
     set(DEPS ${DEPS} ${CUDA_LIB}/cublas${CMAKE_STATIC_LIBRARY_SUFFIX} )
