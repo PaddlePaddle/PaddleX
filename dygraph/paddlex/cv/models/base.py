@@ -204,13 +204,17 @@ class BaseModel:
         nranks = paddle.distributed.get_world_size()
         local_rank = paddle.distributed.get_rank()
         if nranks > 1:
+            find_unused_parameters = getattr(self, 'find_unused_parameters',
+                                             False)
             # Initialize parallel environment if not done.
             if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
             ):
                 paddle.distributed.init_parallel_env()
-                ddp_net = paddle.DataParallel(self.net)
+                ddp_net = paddle.DataParallel(
+                    self.net, find_unused_parameters=find_unused_parameters)
             else:
-                ddp_net = paddle.DataParallel(self.net)
+                ddp_net = paddle.DataParallel(
+                    self.net, find_unused_parameters=find_unused_parameters)
 
         if use_vdl:
             from visualdl import LogWriter

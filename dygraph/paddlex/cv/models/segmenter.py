@@ -49,6 +49,7 @@ class BaseSegmenter(BaseModel):
         self.losses = None
         self.labels = None
         self.net = self.build_net(**params)
+        self.find_unused_parameters = True
 
     def build_net(self, **params):
         # TODO: when using paddle.utils.unique_name.guard,
