@@ -8,7 +8,7 @@
 
 ## 2. 数据准备
 
-* [数据格式说明](format/README.md)
+* [数据格式说明](./data/format/README.md)
 
 * [标注工具LabelMe的安装和启动]()
 
