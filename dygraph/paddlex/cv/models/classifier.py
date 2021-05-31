@@ -21,6 +21,7 @@ import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
 from paddle.static import InputSpec
+from paddleslim import QAT
 from paddlex.utils import logging, TrainingStats, DisablePrint
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.transforms import arrange_transforms
@@ -238,6 +239,76 @@ class BaseClassifier(BaseModel):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
+
+    def quant_aware_train(self,
+                          num_epochs,
+                          train_dataset,
+                          train_batch_size=64,
+                          eval_dataset=None,
+                          optimizer=None,
+                          save_interval_epochs=1,
+                          log_interval_steps=10,
+                          save_dir='output',
+                          pretrain_weights='IMAGENET',
+                          learning_rate=.025,
+                          warmup_steps=0,
+                          warmup_start_lr=0.0,
+                          lr_decay_epochs=(30, 60, 90),
+                          lr_decay_gamma=0.1,
+                          early_stop=False,
+                          early_stop_patience=5,
+                          use_vdl=True,
+                          infer_image_shape=[-1, -1],
+                          quant_config=None):
+        """
+        Quantization-aware training.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            pretrain_weights(str or None, optional):
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .025.
+            warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
+            warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
+            lr_decay_epochs(List[int] or Tuple[int], optional):
+                Epoch milestones for learning rate decay. Defaults to (20, 60, 90).
+            lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay, default .1.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            infer_image_shape(List[int], optional): The shape of input images during inference process, in [w, h] format.
+                If the shape of images is variable, set `infer_image_shape` to [-1, -1]. Defaults to [-1, -1].
+            quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
+                configuration will be used. Defaults to None.
+
+        """
+        self._prepare_qat(quant_config, infer_image_shape)
+        self.train(
+            num_epochs=num_epochs,
+            train_dataset=train_dataset,
+            train_batch_size=train_batch_size,
+            eval_dataset=eval_dataset,
+            optimizer=optimizer,
+            save_interval_epochs=save_interval_epochs,
+            log_interval_steps=log_interval_steps,
+            save_dir=save_dir,
+            pretrain_weights=pretrain_weights,
+            learning_rate=learning_rate,
+            warmup_steps=warmup_steps,
+            warmup_start_lr=warmup_start_lr,
+            lr_decay_epochs=lr_decay_epochs,
+            lr_decay_gamma=lr_decay_gamma,
             early_stop=early_stop,
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
