@@ -1,10 +1,25 @@
 # 10分钟快速上手使用
 
-本文档在一个小数据集上展示了如何通过PaddleX进行训练。  
+## 目录
+* [前置说明](#1)
+  * [PaddleX的模型训练](#11)
+  * [PaddleX的其他用法](#12)
+* [使用示例](#2)
+  * <a href=#安装PaddleX>安装PaddleX</a>
+  * <a href=#准备蔬菜分类数据集>准备蔬菜分类数据集</a>
+  * <a href=#定义训练验证图像处理流程transforms>定义训练/验证图像处理流程transforms</a>
+  * <a href=#定义dataset加载图像分类数据集>定义dataset加载图像分类数据集</a>
+  * <a href=#使用MoibleNetV3_small模型开始训练>使用MoibleNetV3_small模型开始训练</a>
+  * <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
+  * <a href=加载训练保存的模型预测>加载训练保存的模型预测</a>
+* [更多使用教程](#3)
 
-本示例代码源于Github [tutorials/train/image_classification/mobilenetv3_small.py](./tutorials/train/image_classification/mobilenetv3_small_ssld.py)，用户可自行下载至本地运行。  
 
-PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练代码开发！
+## <h2 id="1">前置说明</h2>
+
+### <h3 id="11">PaddleX的模型训练</h3>
+
+跟随以下3个步骤，即可快速完成训练代码开发:
 
 | 步骤 |                  |说明             |
 | :--- | :--------------- | :-------------- |
@@ -12,23 +27,25 @@ PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练
 | 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
 | 第3步| <a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
 
-> **注意**：不同模型的transforms、datasets和训练参数都有较大差异，更多模型训练，可直接根据文档教程获取更多模型的训练代码。[模型训练教程](train/README.md)
+> **注意**：不同模型的transforms、datasets和训练参数都有较大差异。可直接根据[模型训练教程]()获取更多模型的训练代码。
 
-PaddleX的其它用法
+### <h3 id="12">PaddleX的其它用法</h3>
 
 - <a href="#训练过程使用VisualDL查看训练指标变化">使用VisualDL查看训练过程中的指标变化</a>
 - <a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>
 
+## <h2 id="2">使用示例</h2>
+
+接下来展示如何通过PaddleX在一个小数据集上进行训练。示例代码源于Github [tutorials/train/image_classification/mobilenetv3_small.py](../tutorials/train/image_classification/mobilenetv3_small_ssld.py)，用户可自行下载至本地运行。  
 
 <a name="安装PaddleX"></a>
 **1. 安装PaddleX**  
-> 安装相关过程和问题可以参考PaddleX的[安装文档](./install.md)。
-```
-pip install paddlex -i https://mirror.baidu.com/pypi/simple
-```
+
+PaddleX的安装以及安装问题的解决可以参考PaddleX的[安装文档](./install.md)。
 
 <a name="准备蔬菜分类数据集"></a>
 **2. 准备蔬菜分类数据集**  
+
 ```
 wget https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz
 tar xzvf vegetables_cls.tar.gz
@@ -56,9 +73,7 @@ eval_transforms = T.Compose([
 <a name="定义dataset加载图像分类数据集"></a>
 **4. 定义`dataset`加载图像分类数据集**  
 
-定义数据集，`pdx.datasets.ImageNet`表示读取ImageNet格式的分类数据集
-- [paddlex.datasets.ImageNet接口说明]()
-- [ImageNet数据格式说明]()
+定义数据集，`pdx.datasets.ImageNet`表示读取ImageNet格式的分类数据集：
 
 ```
 train_dataset = pdx.datasets.ImageNet(
@@ -73,6 +88,9 @@ eval_dataset = pdx.datasets.ImageNet(
     label_list='vegetables_cls/labels.txt',
     transforms=eval_transforms)
 ```
+
+- [paddlex.datasets.ImageNet接口说明]()
+- [ImageNet数据格式说明]()
 
 <a name="使用MoibleNetV3_small模型开始训练"></a>
 **5. 使用MobileNetV3_small模型开始训练**  
@@ -105,12 +123,11 @@ visualdl --logdir output/mobilenetv3_small --port 8001
 <a name="加载训练保存的模型预测"></a>
 **7. 加载训练保存的模型预测**  
 
-模型在训练过程中，会每间隔一定轮数保存一次模型，在验证集上评估效果最好的一轮会保存在`save_dir`目录下的`best_model`文件夹。通过如下方式可加载模型，进行预测。
-- [load_model接口说明]()
-- [分类模型predict接口说明]()
+模型在训练过程中，会每间隔一定轮数保存一次模型，在验证集上评估效果最好的一轮会保存在`save_dir`目录下的`best_model`文件夹。通过如下方式可加载模型，进行预测：
+
 ```
 import paddlex as pdx
-model = pdx.load_model('output/mobilenetv3_small_ssld/best_model')
+model = pdx.load_model('output/mobilenetv3_small/best_model')
 result = model.predict('vegetables_cls/bocai/100.jpg')
 print("Predict Result: ", result)
 ```
@@ -118,9 +135,12 @@ print("Predict Result: ", result)
 ```
 Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'category_id': 0}]
 ```
+- [load_model接口说明]()
+- [分类模型predict接口说明]()
 
-<a name="更多使用教程"></a>
-**更多使用教程**
+
+<h2 id="3">更多使用教程</h2>
+
 - 1.[目标检测模型训练](train/object_detection.md)
 - 2.[语义分割模型训练](train/semantic_segmentation.md)
 - 3.[实例分割模型训练](train/instance_segmentation.md)
