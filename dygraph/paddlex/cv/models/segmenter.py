@@ -237,7 +237,6 @@ class BaseSegmenter(BaseModel):
                           save_interval_epochs=1,
                           log_interval_steps=2,
                           save_dir='output',
-                          pretrain_weights='CITYSCAPES',
                           learning_rate=0.01,
                           lr_decay_power=0.9,
                           early_stop=False,
@@ -258,8 +257,6 @@ class BaseSegmenter(BaseModel):
             save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
-            pretrain_weights(str or None, optional):
-                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
             learning_rate(float, optional): Learning rate for training. Defaults to .025.
             lr_decay_power(float, optional): Learning decay power. Defaults to .9.
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
@@ -281,7 +278,7 @@ class BaseSegmenter(BaseModel):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            pretrain_weights=pretrain_weights,
+            pretrain_weights=None,
             learning_rate=learning_rate,
             lr_decay_power=lr_decay_power,
             early_stop=early_stop,

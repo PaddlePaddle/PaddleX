@@ -134,12 +134,14 @@ class BaseModel:
 
         if self.status == 'Quantized':
             self.quanter.save_quantized_model(
-                self.net, save_dir, input_spec=self.test_inputs)
+                self.net,
+                osp.join(save_dir, 'model'),
+                input_spec=self.test_inputs)
         else:
             paddle.save(self.net.state_dict(),
-                        os.path.join(save_dir, 'model.pdparams'))
+                        osp.join(save_dir, 'model.pdparams'))
             paddle.save(self.optimizer.state_dict(),
-                        os.path.join(save_dir, 'model.pdopt'))
+                        osp.join(save_dir, 'model.pdopt'))
 
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',

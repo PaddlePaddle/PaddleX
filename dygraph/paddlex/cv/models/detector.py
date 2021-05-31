@@ -255,7 +255,6 @@ class BaseDetector(BaseModel):
                           save_interval_epochs=1,
                           log_interval_steps=10,
                           save_dir='output',
-                          pretrain_weights='IMAGENET',
                           learning_rate=.001,
                           warmup_steps=0,
                           warmup_start_lr=0.0,
@@ -281,8 +280,6 @@ class BaseDetector(BaseModel):
             save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
-            pretrain_weights(str or None, optional):
-                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
             learning_rate(float, optional): Learning rate for training. Defaults to .001.
             warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
             warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
@@ -310,7 +307,7 @@ class BaseDetector(BaseModel):
             save_interval_epochs=save_interval_epochs,
             log_interval_steps=log_interval_steps,
             save_dir=save_dir,
-            pretrain_weights=pretrain_weights,
+            pretrain_weights=None,
             learning_rate=learning_rate,
             warmup_steps=warmup_steps,
             warmup_start_lr=warmup_start_lr,
