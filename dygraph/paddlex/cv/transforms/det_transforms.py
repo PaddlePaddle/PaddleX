@@ -22,6 +22,11 @@ from .operators import RandomExpand as dy_RandomExpand
 from .operators import RandomCrop as dy_RandomCrop
 from .functions import is_poly, expand_poly, expand_rle
 
+__all__ = [
+    'Compose', 'ResizeByShort', 'Resize', 'RandomHorizontalFlip', 'Normalize',
+    'Padding', 'RandomExpand', 'RandomCrop'
+]
+
 
 class Padding(Transform):
     """1.将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],

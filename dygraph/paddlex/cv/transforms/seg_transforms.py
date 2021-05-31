@@ -23,6 +23,14 @@ from .operators import Transform, Compose, RandomHorizontalFlip, RandomVerticalF
     ResizeByShort, Normalize, RandomDistort, ArrangeSegmenter
 from .operators import Padding as dy_Padding
 
+__all__ = [
+    'Compose', 'RandomHorizontalFlip', 'RandomVerticalFlip', 'Resize',
+    'ResizeByShort', 'Normalize', 'RandomDistort', 'ArrangeSegmenter',
+    'ResizeByLong', 'ResizeRangeScaling', 'ResizeStepScaling', 'Padding',
+    'RandomPaddingCrop', 'RandomBlur', 'RandomRotate', 'RandomScaleAspect',
+    'Clip', 'ComposedSegTransforms'
+]
+
 
 class ResizeByLong(Transform):
     """对图像长边resize到固定值，短边按比例进行缩放。当存在标注图像时，则同步进行处理。
