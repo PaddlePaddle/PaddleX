@@ -33,7 +33,7 @@ class UNet(cv.models.UNet):
                  input_channel=None):
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise ValueError(
-                "dice loss and bce loss is only applicable to binary classfication"
+                "dice loss and bce loss is only applicable to binary classification"
             )
         elif num_classes == 2:
             if use_bce_loss and use_dice_loss:
@@ -87,7 +87,7 @@ class DeepLabv3p(cv.models.DeepLabV3P):
                  input_channel=None):
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise ValueError(
-                "dice loss and bce loss is only applicable to binary classfication"
+                "dice loss and bce loss is only applicable to binary classification"
             )
         elif num_classes == 2:
             if use_bce_loss and use_dice_loss:
@@ -152,7 +152,7 @@ class HRNet(cv.models.HRNet):
                  input_channel=None):
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise ValueError(
-                "dice loss and bce loss is only applicable to binary classfication"
+                "dice loss and bce loss is only applicable to binary classification"
             )
         elif num_classes == 2:
             if use_bce_loss and use_dice_loss:
@@ -196,7 +196,7 @@ class FastSCNN(cv.models.FastSCNN):
                  input_channel=3):
         if num_classes > 2 and (use_bce_loss or use_dice_loss):
             raise ValueError(
-                "dice loss and bce loss is only applicable to binary classfication"
+                "dice loss and bce loss is only applicable to binary classification"
             )
         elif num_classes == 2:
             if use_bce_loss and use_dice_loss:
