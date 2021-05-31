@@ -23,6 +23,12 @@ from PIL import Image
 from .operators import Transform, Compose, RandomHorizontalFlip, RandomVerticalFlip, Normalize, \
     ResizeByShort, CenterCrop, RandomDistort, ArrangeClassifier
 
+__all__ = [
+    'Compose', 'RandomHorizontalFlip', 'RandomVerticalFlip', 'Normalize',
+    'ResizeByShort', 'CenterCrop', 'RandomDistort', 'ArrangeClassifier',
+    'RandomCrop', 'RandomRotate', 'ComposedClsTransforms'
+]
+
 
 class RandomCrop(Transform):
     """对图像进行随机剪裁，模型训练时的数据增强操作。
