@@ -58,6 +58,5 @@ model.train(
     warmup_steps=1000,
     warmup_start_lr=0.0,
     lr_decay_epochs=[243],
-    use_ema=True,
     save_interval_epochs=5,
     save_dir='output/ppyolov2_r50vd_dcn')
