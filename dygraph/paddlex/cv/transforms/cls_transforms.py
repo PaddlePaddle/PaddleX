@@ -1,4 +1,4 @@
-# copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,6 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+function:
+    transforms for classification in PaddleX<2.0
+"""
 
 import math
 import numpy as np
@@ -45,8 +49,24 @@ class RandomCrop(Transform):
         self.upper_ratio = upper_ratio
 
     def apply_im(self, image):
-        image = _random_crop(image, self.crop_size, self.lower_scale,
-                             self.lower_ratio, self.upper_ratio)
+        scale = [self.lower_scale, 1.0]
+        ratio = [self.lower_ratio, self.upper_ratio]
+        aspect_ratio = math.sqrt(np.random.uniform(*ratio))
+        w = 1. * aspect_ratio
+        h = 1. / aspect_ratio
+        bound = min((float(image.shape[0]) / image.shape[1]) / (h**2),
+                    (float(image.shape[1]) / image.shape[0]) / (w**2))
+        scale_max = min(scale[1], bound)
+        scale_min = min(scale[0], bound)
+        target_area = image.shape[0] * image.shape[1] * np.random.uniform(
+            scale_min, scale_max)
+        target_size = math.sqrt(target_area)
+        w = int(target_size * w)
+        h = int(target_size * h)
+        i = np.random.randint(0, image.shape[0] - h + 1)
+        j = np.random.randint(0, image.shape[1] - w + 1)
+        image = image[i:i + h, j:j + w, :]
+        image = cv2.resize(image, (self.crop_size, self.crop_size))
         return image
 
     def apply(self, sample):
@@ -136,29 +156,3 @@ class ComposedClsTransforms(Compose):
             ]
 
         super(ComposedClsTransforms, self).__init__(transforms)
-
-
-def _random_crop(im,
-                 crop_size=224,
-                 lower_scale=0.08,
-                 lower_ratio=3. / 4,
-                 upper_ratio=4. / 3):
-    scale = [lower_scale, 1.0]
-    ratio = [lower_ratio, upper_ratio]
-    aspect_ratio = math.sqrt(np.random.uniform(*ratio))
-    w = 1. * aspect_ratio
-    h = 1. / aspect_ratio
-    bound = min((float(im.shape[0]) / im.shape[1]) / (h**2),
-                (float(im.shape[1]) / im.shape[0]) / (w**2))
-    scale_max = min(scale[1], bound)
-    scale_min = min(scale[0], bound)
-    target_area = im.shape[0] * im.shape[1] * np.random.uniform(scale_min,
-                                                                scale_max)
-    target_size = math.sqrt(target_area)
-    w = int(target_size * w)
-    h = int(target_size * h)
-    i = np.random.randint(0, im.shape[0] - h + 1)
-    j = np.random.randint(0, im.shape[1] - w + 1)
-    im = im[i:i + h, j:j + w, :]
-    im = cv2.resize(im, (crop_size, crop_size))
-    return im
