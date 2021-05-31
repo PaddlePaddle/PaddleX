@@ -577,9 +577,7 @@ class MobileNetV3_small(BaseClassifier):
         model_name = 'MobileNetV3_small_x' + str(float(scale)).replace('.',
                                                                        '_')
         super(MobileNetV3_small, self).__init__(
-            model_name=model_name,
-            num_classes=num_classes,
-            lr_mult_list=[.1, .1, .2, .2, .3])
+            model_name=model_name, num_classes=num_classes)
 
 
 class MobileNetV3_small_ssld(BaseClassifier):
