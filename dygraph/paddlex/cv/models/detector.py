@@ -255,7 +255,7 @@ class BaseDetector(BaseModel):
                           save_interval_epochs=1,
                           log_interval_steps=10,
                           save_dir='output',
-                          learning_rate=.001,
+                          learning_rate=.00001,
                           warmup_steps=0,
                           warmup_start_lr=0.0,
                           lr_decay_epochs=(216, 243),

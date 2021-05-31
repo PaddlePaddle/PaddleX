@@ -237,7 +237,7 @@ class BaseSegmenter(BaseModel):
                           save_interval_epochs=1,
                           log_interval_steps=2,
                           save_dir='output',
-                          learning_rate=0.01,
+                          learning_rate=0.0001,
                           lr_decay_power=0.9,
                           early_stop=False,
                           early_stop_patience=5,

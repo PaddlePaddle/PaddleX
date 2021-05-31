@@ -252,7 +252,7 @@ class BaseClassifier(BaseModel):
                           save_interval_epochs=1,
                           log_interval_steps=10,
                           save_dir='output',
-                          learning_rate=.025,
+                          learning_rate=.000025,
                           warmup_steps=0,
                           warmup_start_lr=0.0,
                           lr_decay_epochs=(30, 60, 90),
