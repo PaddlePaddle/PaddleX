@@ -160,7 +160,7 @@ class BaseModel:
                     mode='w') as f:
                 yaml.dump(pruning_info, f)
 
-        if self.status == 'Quantized' and self.quanter is not None:
+        if self.status == 'Quantized' and self.quantizer is not None:
             quant_info = self.get_quant_info()
             with open(
                     osp.join(save_dir, 'quant.yml'), encoding='utf-8',
