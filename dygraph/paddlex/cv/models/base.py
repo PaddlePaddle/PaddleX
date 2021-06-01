@@ -128,7 +128,7 @@ class BaseModel:
     def get_quant_info(self):
         info = dict()
         info['quant_config'] = self.quant_config
-        return self.info
+        return info
 
     def save_model(self, save_dir):
         if not osp.isdir(save_dir):
