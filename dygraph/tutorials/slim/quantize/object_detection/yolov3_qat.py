@@ -48,8 +48,8 @@ model.quant_aware_train(
     train_batch_size=8,
     eval_dataset=eval_dataset,
     learning_rate=0.0001 / 8,
-    warmup_steps=1000,
+    warmup_steps=100,
     warmup_start_lr=0.0,
-    save_interval_epochs=5,
+    save_interval_epochs=1,
     lr_decay_epochs=[30, 45],
     save_dir='output/yolov3_darknet53/quant')
