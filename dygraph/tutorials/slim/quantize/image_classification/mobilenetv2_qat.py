@@ -32,7 +32,7 @@ eval_dataset = pdx.datasets.ImageNet(
 # 加载模型
 model = pdx.load_model('output/mobilenet_v2/best_model')
 
-# 量化训练
+# 在线量化
 model.quant_aware_train(
     num_epochs=5,
     train_dataset=train_dataset,

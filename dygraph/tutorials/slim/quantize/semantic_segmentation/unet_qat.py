@@ -39,7 +39,7 @@ eval_dataset = pdx.datasets.SegDataset(
 # 加载模型
 model = pdx.load_model('output/unet/best_model')
 
-# 量化训练
+# 在线量化
 model.quant_aware_train(
     num_epochs=5,
     train_dataset=train_dataset,

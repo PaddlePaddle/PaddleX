@@ -41,7 +41,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 # 加载模型
 model = pdx.load_model('output/yolov3_darknet53/best_model')
 
-# 量化训练
+# 在线量化
 model.quant_aware_train(
     num_epochs=50,
     train_dataset=train_dataset,
