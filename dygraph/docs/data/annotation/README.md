@@ -1,11 +1,43 @@
-# 数据准备、转换、划分
+# 数据标注
 
-PaddleX对数据集的格式做了规定，具体的格式说明请参考[数据格式说明文档]()。在完成数据标注后，需要将不同的标注协议转换成PaddleX要求的格式，并将数据集划分出训练集、验证集和测试集用于模型的训练、验证和测试。
+## 手机拍照图片旋转
 
-## [标注工具LabelMe的安装和启动]()
+当您收集的样本图像来源于手机拍照时，请注意由于手机拍照信息内附带水平垂直方向信息，这可能会使得在标注和训练时出现问题，因此在拍完照后注意根据方向对照片进行处理，使用如下函数即可解决
+```
+from PIL import Image, ExifTags
+def rotate(im):
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+        exif = dict(im._getexif().items())
+        if exif[orientation] == 3:
+            im = im.rotate(180, expand=True)
+        if exif[orientation] == 6:
+            im = im.rotate(270, expand=True)
+        if exif[orientation] == 8:
+            im = im.rotate(90, expand=True)
+    except:
+        pass
 
-## 数据标注
+img_file = '1.jpeg'
+im = Image.open(img_file)
+rotate(im)
+im.save('new_1.jpeg')
+```
 
-## 数据格式转换
+## 图像分类数据标注
 
-## 数据划分
+详见文档[图像分类数据标注](classification.md)
+
+## 目标检测数据标注
+
+详见文档[目标检测数据标注](object_detection.md)
+
+## 实例分割数据标注
+
+详见文档[实例分割数据标注](instance_segmentation.md)
+
+## 语义分割数据标注
+
+详见文档[语义分割数据标注](semantic_segmentation.md)

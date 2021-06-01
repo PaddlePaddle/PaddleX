@@ -1,4 +1,4 @@
-# 数据标注工具
+# 数据格式转换
 
 PaddleX支持图像分类、目标检测、实例分割和语义分割四大视觉领域常见的任务，对于每类视觉任务，都支持了特定的数据格式。PaddleX目前支持了图像分类的ImageNet格式，目标检测的PascalVOC格式，实例分割的MSCOCO格式（MSCOCO也可以用于目标检测）以及语义分割数据格式。
 
@@ -10,7 +10,6 @@ PaddleX支持图像分类、目标检测、实例分割和语义分割四大视�
 | :---------  | :------- | :------ | :------  | :------- | :----------------------------------------------- |
 | Labelme     | -        | √        | √        | √        | pip install labelme （本地数据标注）                              |
 | 精灵标注    | √        | √*        | √        | √        | [官网下载](http://www.jinglingbiaozhu.com/) （本地数据标注）     |
-| EasyData    | √        | √        | √        | √        | [Web页面标注](https://ai.baidu.com/easydata/) （需上传数据进行标注)   |
 
 数据标注完成后，参照如下流程，将标注数据转为可用PaddleX模型训练的数据组织格式。
 
@@ -31,7 +30,7 @@ paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annota
 
 | 参数 | 说明 |
 | ---- | ---- |
-| --source | 表示数据标注来源，支持`labelme`、`jingling`和`easydata`（分别表示数据来源于LabelMe，精灵标注助手和EasyData）|
+| --source | 表示数据标注来源，支持`labelme`、`jingling`（分别表示数据来源于LabelMe，精灵标注助手）|
 | --to | 表示数据需要转换成为的格式，支持`ImageNet`（图像分类）、`PascalVOC`（目标检测），`MSCOCO`（实例分割，也可用于目标检测）和`SEG`(语义分割)  |
 | --pics | 指定原图所在的目录路径  |
 | --annotations | 指定标注文件所在的目录路径 |
@@ -39,29 +38,3 @@ paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annota
 **注意**：  
 1. 精灵标注的目标检测数据可以在工具内部导出为PascalVOC格式，因此paddlex未提供精灵标注数据到PascalVOC格式的转换  
 2. 在将LabelMe数据集转换为COCO数据集时，LabelMe的图像文件名和json文件名需要一一对应，才可正确转换
-
-## 手机拍照标注说明
-
-当您收集的样本图像来源于手机拍照时，请注意由于手机拍照信息内附带水平垂直方向信息，这可能会使得在标注和训练时出现问题，因此在拍完照后注意根据方向对照片进行处理，使用如下函数即可解决
-```
-from PIL import Image, ExifTags
-def rotate(im):
-    try:
-        for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation] == 'Orientation':
-                break
-        exif = dict(im._getexif().items())
-        if exif[orientation] == 3:
-            im = im.rotate(180, expand=True)
-        if exif[orientation] == 6:
-            im = im.rotate(270, expand=True)
-        if exif[orientation] == 8:
-            im = im.rotate(90, expand=True)
-    except:
-        pass
-
-img_file = '1.jpeg'
-im = Image.open(img_file)
-rotate(im)
-im.save('new_1.jpeg')
-```
