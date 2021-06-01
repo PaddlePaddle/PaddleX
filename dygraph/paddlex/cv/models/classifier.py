@@ -21,7 +21,6 @@ import paddle
 from paddle import to_tensor
 import paddle.nn.functional as F
 from paddle.static import InputSpec
-from paddleslim import QAT
 from paddlex.utils import logging, TrainingStats, DisablePrint
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.transforms import arrange_transforms

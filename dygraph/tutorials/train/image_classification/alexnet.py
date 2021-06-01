@@ -42,6 +42,6 @@ model.train(
     train_batch_size=32,
     eval_dataset=eval_dataset,
     lr_decay_epochs=[4, 6, 8],
-    learning_rate=0.01,
+    learning_rate=0.001,
     save_dir='output/alexnet',
     use_vdl=True)
