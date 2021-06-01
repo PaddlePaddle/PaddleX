@@ -22,12 +22,11 @@ if [ $arch == "aarch64" ]; then
 else
   CUDNN_LIB=/usr/lib/x86_64-linux-gnu
   {
-    bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具和opencv依赖库
+    bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的opencv依赖库
   } || {
     echo "Fail to execute script/bootstrap.sh"
     exit -1
   }
-
 fi
 
 # OPENCV 路径, 如果使用自带预编译版本可不修改
