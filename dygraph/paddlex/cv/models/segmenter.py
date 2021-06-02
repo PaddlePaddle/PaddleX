@@ -261,8 +261,6 @@ class BaseSegmenter(BaseModel):
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
-            infer_image_shape(List[int], optional): The shape of input images during inference process, in [w, h] format.
-                If the shape of images is variable, set `infer_image_shape` to [-1, -1]. Defaults to [-1, -1].
             quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
                 configuration will be used. Defaults to None.
 
