@@ -781,7 +781,7 @@ class FasterRCNN(BaseDetector):
 
             if 'HRNet' in self.backbone_name:
                 neck = ppdet.modeling.HRFPN(
-                    in_channel=[i.channels for i in backbone.out_shape],
+                    in_channels=[i.channels for i in backbone.out_shape],
                     out_channel=fpn_num_channels,
                     spatial_scales=[
                         1.0 / i.stride for i in backbone.out_shape
