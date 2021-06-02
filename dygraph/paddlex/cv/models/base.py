@@ -420,7 +420,7 @@ class BaseModel:
                 Otherwise, the pruned model will be saved at save_dir. Defaults to None.
 
         """
-        if self.ne == "Pruned":
+        if self.status == "Pruned":
             raise Exception(
                 "A pruned model cannot be done model pruning again!")
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
