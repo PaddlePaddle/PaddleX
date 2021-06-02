@@ -40,5 +40,4 @@ model.quant_aware_train(
     eval_dataset=eval_dataset,
     learning_rate=0.000025,
     save_dir='output/mobilenet_v2/quant',
-    use_vdl=True,
-    infer_image_shape=[224, 224])
+    use_vdl=True)
