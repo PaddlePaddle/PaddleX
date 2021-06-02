@@ -242,6 +242,70 @@ class BaseClassifier(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
+    def quant_aware_train(self,
+                          num_epochs,
+                          train_dataset,
+                          train_batch_size=64,
+                          eval_dataset=None,
+                          optimizer=None,
+                          save_interval_epochs=1,
+                          log_interval_steps=10,
+                          save_dir='output',
+                          learning_rate=.000025,
+                          warmup_steps=0,
+                          warmup_start_lr=0.0,
+                          lr_decay_epochs=(30, 60, 90),
+                          lr_decay_gamma=0.1,
+                          early_stop=False,
+                          early_stop_patience=5,
+                          use_vdl=True,
+                          quant_config=None):
+        """
+        Quantization-aware training.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .025.
+            warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
+            warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
+            lr_decay_epochs(List[int] or Tuple[int], optional):
+                Epoch milestones for learning rate decay. Defaults to (20, 60, 90).
+            lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay, default .1.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
+                configuration will be used. Defaults to None.
+
+        """
+        self._prepare_qat(quant_config)
+        self.train(
+            num_epochs=num_epochs,
+            train_dataset=train_dataset,
+            train_batch_size=train_batch_size,
+            eval_dataset=eval_dataset,
+            optimizer=optimizer,
+            save_interval_epochs=save_interval_epochs,
+            log_interval_steps=log_interval_steps,
+            save_dir=save_dir,
+            pretrain_weights=None,
+            learning_rate=learning_rate,
+            warmup_steps=warmup_steps,
+            warmup_start_lr=warmup_start_lr,
+            lr_decay_epochs=lr_decay_epochs,
+            lr_decay_gamma=lr_decay_gamma,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
+
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         """
         Evaluate the model.
@@ -506,9 +570,7 @@ class MobileNetV3_small(BaseClassifier):
         model_name = 'MobileNetV3_small_x' + str(float(scale)).replace('.',
                                                                        '_')
         super(MobileNetV3_small, self).__init__(
-            model_name=model_name,
-            num_classes=num_classes,
-            lr_mult_list=[.1, .1, .2, .2, .3])
+            model_name=model_name, num_classes=num_classes)
 
 
 class MobileNetV3_small_ssld(BaseClassifier):

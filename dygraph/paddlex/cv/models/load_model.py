@@ -76,6 +76,13 @@ def load_model(model_dir):
                     ratios=model.pruning_ratios,
                     axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
+        if status == 'Quantized':
+            with open(osp.join(model_dir, "quant.yml")) as f:
+                quant_info = yaml.load(f.read(), Loader=yaml.Loader)
+                quant_config = quant_info['quant_config']
+                model.quantizer = paddleslim.QAT(quant_config)
+                model.quantizer.quantize(model.net)
+
         if status == 'Infer':
             if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
                 net_state_dict = paddle.load(
