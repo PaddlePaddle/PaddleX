@@ -265,7 +265,6 @@ class BaseDetector(BaseModel):
                           early_stop=False,
                           early_stop_patience=5,
                           use_vdl=True,
-                          infer_image_shape=[-1, -1],
                           quant_config=None):
         """
         Quantization-aware training.
@@ -297,7 +296,7 @@ class BaseDetector(BaseModel):
                 configuration will be used. Defaults to None.
 
         """
-        self._prepare_qat(quant_config, infer_image_shape)
+        self._prepare_qat(quant_config)
         self.train(
             num_epochs=num_epochs,
             train_dataset=train_dataset,
