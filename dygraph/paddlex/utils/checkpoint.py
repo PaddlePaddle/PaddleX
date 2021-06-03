@@ -43,7 +43,7 @@ det_pretrain_weights_dict = {
     'FasterRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet50_vd_ssld_fpn': ['COCO', 'IMAGENET'],
-    'FasterRCNN_HRNet_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_HRNet_W18_fpn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET'],
     'PPYOLO_MobileNetV3_large': ['COCO', 'IMAGENET'],
@@ -213,7 +213,7 @@ imagenet_weights = {
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
     'FasterRCNN_ResNet101_vd_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
-    'FasterRCNN_HRNet_fpn_IMAGENET':
+    'FasterRCNN_HRNet_W18_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/HRNet_W18_C_pretrained.pdparams',
     'YOLOv3_ResNet50_vd_dcn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
@@ -307,7 +307,7 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_fpn_2x_coco.pdparams',
     'FasterRCNN_ResNet101_vd_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams',
-    'FasterRCNN_HRNet_fpn_COCO':
+    'FasterRCNN_HRNet_W18_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_hrnetv2p_w18_2x_coco.pdparams',
     'PPYOLO_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
