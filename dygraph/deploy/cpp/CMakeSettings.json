@@ -34,11 +34,6 @@
           "type": "PATH"
         },
         {
-          "name": "WITH_STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
           "name": "WITH_MKL",
           "value": "True",
           "type": "BOOL"
