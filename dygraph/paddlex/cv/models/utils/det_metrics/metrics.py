@@ -21,8 +21,7 @@ import sys
 from collections import OrderedDict
 import paddle
 import numpy as np
-
-from .map_utils import prune_zero_padding, DetectionMAP
+from ppdet.metrics.map_utils import prune_zero_padding, DetectionMAP
 from .coco_utils import get_infer_results, cocoapi_eval
 import paddlex.utils.logging as logging
 
@@ -88,22 +87,23 @@ class VOCMetric(Metric):
 
         if bboxes.shape == (1, 1) or bboxes is None:
             return
-        gt_boxes = inputs['gt_bbox'].numpy()
-        gt_labels = inputs['gt_class'].numpy()
-        difficults = inputs['difficult'].numpy(
-        ) if not self.evaluate_difficult else None
+        gt_boxes = inputs['gt_bbox']
+        gt_labels = inputs['gt_class']
+        difficults = inputs['difficult'] if not self.evaluate_difficult \
+            else None
 
         scale_factor = inputs['scale_factor'].numpy(
         ) if 'scale_factor' in inputs else np.ones(
             (gt_boxes.shape[0], 2)).astype('float32')
 
         bbox_idx = 0
-        for i in range(gt_boxes.shape[0]):
-            gt_box = gt_boxes[i]
+        for i in range(len(gt_boxes)):
+            gt_box = gt_boxes[i].numpy()
             h, w = scale_factor[i]
             gt_box = gt_box / np.array([w, h, w, h])
-            gt_label = gt_labels[i]
-            difficult = None if difficults is None else difficults[i]
+            gt_label = gt_labels[i].numpy()
+            difficult = None if difficults is None \
+                else difficults[i].numpy()
             bbox_num = bbox_lengths[i]
             bbox = bboxes[bbox_idx:bbox_idx + bbox_num]
             score = scores[bbox_idx:bbox_idx + bbox_num]
