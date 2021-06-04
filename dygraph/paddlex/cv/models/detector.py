@@ -192,9 +192,10 @@ class BaseDetector(BaseModel):
                 "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
             self.metric = metric.lower()
 
+        self.labels = train_dataset.labels
+        self.num_max_boxes = train_dataset.num_max_boxes
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
-        self.labels = train_dataset.labels
 
         # build optimizer if not defined
         if optimizer is None:
@@ -1178,7 +1179,6 @@ class PPYOLOTiny(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOTiny'
 
 
@@ -1302,7 +1302,6 @@ class PPYOLOv2(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOv2'
 
 
