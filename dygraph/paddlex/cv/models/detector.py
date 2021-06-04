@@ -636,8 +636,7 @@ class YOLOv3(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
+                _BatchPadding(pad_to_stride=-1), _NormalizeBox(),
                 _PadBox(getattr(self, 'num_max_boxes', 50)), _BboxXYXY2XYWH(),
                 _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
@@ -647,10 +646,11 @@ class YOLOv3(BaseDetector):
                     num_classes=self.num_classes)
             ]
         else:
-            default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False)
-            ]
+            default_batch_transforms = [_BatchPadding(pad_to_stride=-1)]
+        if mode == 'eval' and self.metric == 'voc':
+            collate_batch = False
+        else:
+            collate_batch = True
 
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
@@ -662,8 +662,9 @@ class YOLOv3(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
@@ -888,14 +889,14 @@ class FasterRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -906,8 +907,9 @@ class FasterRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
@@ -1529,14 +1531,14 @@ class MaskRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -1547,7 +1549,8 @@ class MaskRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
