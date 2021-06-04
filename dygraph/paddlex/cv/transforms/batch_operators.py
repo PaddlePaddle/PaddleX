@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import traceback
-import multiprocessing as mp
 import random
 import numpy as np
 try:
