@@ -336,7 +336,7 @@ class BaseDetector(BaseModel):
         """
 
         if metric is None:
-            if not hasattr(self, metric):
+            if not hasattr(self, 'metric'):
                 if eval_dataset.__class__.__name__ == 'VOCDetection':
                     self.metric = 'voc'
                 elif eval_dataset.__class__.__name__ == 'CocoDetection':
