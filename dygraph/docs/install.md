@@ -1,4 +1,4 @@
-# 快速安装
+# 快速安装PaddleX
 
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.0)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick)
 
