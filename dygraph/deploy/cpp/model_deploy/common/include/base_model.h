@@ -70,6 +70,8 @@ class Model {
 
   bool TensorRTInit(const TensorRTEngineConfig& engine_config);
 
+  bool OpenVinoEngineInit(const OpenVinoEngineConfig& engine_config);
+
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;
     std::cerr << "model no Postprocess!" << std::endl;

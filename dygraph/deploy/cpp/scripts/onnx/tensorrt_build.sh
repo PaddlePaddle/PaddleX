@@ -41,6 +41,7 @@ else
 	echo "TENSORRT_HEADER is not exist, please set by --tensorrt_header"
     exit 1
 fi
+
 # download opencv library
 OPENCV_DIR=$(pwd)/deps/opencv3.4.6gcc4.8ffmpeg/
 {
