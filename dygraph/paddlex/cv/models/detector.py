@@ -192,9 +192,10 @@ class BaseDetector(BaseModel):
                 "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
             self.metric = metric.lower()
 
+        self.labels = train_dataset.labels
+        self.num_max_boxes = train_dataset.num_max_boxes
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
-        self.labels = train_dataset.labels
 
         # build optimizer if not defined
         if optimizer is None:
@@ -334,12 +335,24 @@ class BaseDetector(BaseModel):
             collections.OrderedDict with key-value pairs: {"mAP(0.50, 11point)":`mean average precision`}.
 
         """
-        if eval_dataset.__class__.__name__ == 'VOCDetection':
+
+        if metric is None:
+            if not hasattr(self, 'metric'):
+                if eval_dataset.__class__.__name__ == 'VOCDetection':
+                    self.metric = 'voc'
+                elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                    self.metric = 'coco'
+        else:
+            assert metric.lower() in ['coco', 'voc'], \
+                "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
+            self.metric = metric.lower()
+
+        if self.metric == 'voc':
             eval_dataset.data_fields = {
                 'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
                 'difficult'
             }
-        elif eval_dataset.__class__.__name__ == 'CocoDetection':
+        elif self.metric == 'coco':
             if self.__class__.__name__ == 'MaskRCNN':
                 eval_dataset.data_fields = {
                     'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
@@ -380,41 +393,16 @@ class BaseDetector(BaseModel):
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
-            if metric is None:
-                if getattr(self, 'metric', None) is not None:
-                    if self.metric == 'voc':
-                        eval_metric = VOCMetric(
-                            labels=eval_dataset.labels,
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            is_bbox_normalized=is_bbox_normalized,
-                            classwise=False)
-                    else:
-                        eval_metric = COCOMetric(
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            classwise=False)
-                else:
-                    if eval_dataset.__class__.__name__ == 'VOCDetection':
-                        eval_metric = VOCMetric(
-                            labels=eval_dataset.labels,
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            is_bbox_normalized=is_bbox_normalized,
-                            classwise=False)
-                    elif eval_dataset.__class__.__name__ == 'CocoDetection':
-                        eval_metric = COCOMetric(
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            classwise=False)
+            if self.metric == 'voc':
+                eval_metric = VOCMetric(
+                    labels=eval_dataset.labels,
+                    coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                    is_bbox_normalized=is_bbox_normalized,
+                    classwise=False)
             else:
-                assert metric.lower() in ['coco', 'voc'], \
-                    "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
-                if metric.lower() == 'coco':
-                    eval_metric = COCOMetric(
-                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                        classwise=False)
-                else:
-                    eval_metric = VOCMetric(
-                        labels=eval_dataset.labels,
-                        is_bbox_normalized=is_bbox_normalized,
-                        classwise=False)
+                eval_metric = COCOMetric(
+                    coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                    classwise=False)
             scores = collections.OrderedDict()
             logging.info(
                 "Start to evaluate(total_samples={}, total_steps={})...".
@@ -649,8 +637,7 @@ class YOLOv3(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
+                _BatchPadding(pad_to_stride=-1), _NormalizeBox(),
                 _PadBox(getattr(self, 'num_max_boxes', 50)), _BboxXYXY2XYWH(),
                 _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
@@ -660,10 +647,11 @@ class YOLOv3(BaseDetector):
                     num_classes=self.num_classes)
             ]
         else:
-            default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False)
-            ]
+            default_batch_transforms = [_BatchPadding(pad_to_stride=-1)]
+        if mode == 'eval' and self.metric == 'voc':
+            collate_batch = False
+        else:
+            collate_batch = True
 
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
@@ -675,8 +663,9 @@ class YOLOv3(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
@@ -901,14 +890,14 @@ class FasterRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -919,8 +908,9 @@ class FasterRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
@@ -1189,7 +1179,6 @@ class PPYOLOTiny(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOTiny'
 
 
@@ -1313,7 +1302,6 @@ class PPYOLOv2(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOv2'
 
 
@@ -1542,14 +1530,14 @@ class MaskRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -1560,7 +1548,8 @@ class MaskRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms

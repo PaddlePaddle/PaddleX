@@ -57,12 +57,14 @@ class CocoDetection(VOCDetection):
         super(VOCDetection, self).__init__()
         self.data_fields = None
         self.transforms = copy.deepcopy(transforms)
+        self.num_max_boxes = 50
         self.use_mix = False
         if self.transforms is not None:
             for op in self.transforms.transforms:
                 if isinstance(op, MixupImage):
                     self.mixup_op = copy.deepcopy(op)
                     self.use_mix = True
+                    self.num_max_boxes *= 2
                     break
 
         self.batch_transforms = None
@@ -153,6 +155,11 @@ class CocoDetection(VOCDetection):
                 **
                 label_info
             }))
+        if self.use_mix:
+            self.num_max_boxes = max(self.num_max_boxes, 2 * len(instances))
+        else:
+            self.num_max_boxes = max(self.num_max_boxes, len(instances))
+
         if not len(self.file_list) > 0:
             raise Exception('not found any coco record in %s' % ann_file)
         logging.info("{} samples in file {}".format(
