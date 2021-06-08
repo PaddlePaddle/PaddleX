@@ -43,7 +43,7 @@ num_classes = len(train_dataset.labels)
 model = pdx.models.FasterRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L154
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=12,
