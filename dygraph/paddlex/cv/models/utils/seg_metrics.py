@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import numpy as np
 import paddle
 
 
@@ -23,6 +24,24 @@ def loss_computation(logits_list, labels, losses):
         loss_list.append(losses['coef'][i] * loss_i(logits, labels))
 
     return loss_list
+
+
+def f1_score(intersect_area, pred_area, label_area):
+    intersect_area = intersect_area.numpy()
+    pred_area = pred_area.numpy()
+    label_area = label_area.numpy()
+    class_f1_sco = []
+    for i in range(len(intersect_area)):
+        if pred_area[i] + label_area[i] == 0:
+            f1_sco = 0
+        elif pred_area[i] == 0:
+            f1_sco = 0
+        else:
+            prec = intersect_area[i] / pred_area[i]
+            rec = intersect_area[i] / label_area[i]
+            f1_sco = 2 * prec * rec / (prec + rec)
+        class_f1_sco.append(f1_sco)
+    return np.array(class_f1_sco)
 
 
 def confusion_matrix(pred, label, num_classes, ignore_index=255):

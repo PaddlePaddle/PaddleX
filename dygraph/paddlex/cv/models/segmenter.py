@@ -383,8 +383,8 @@ class BaseSegmenter(BaseModel):
                                                            pred_area_all)
         kappa = paddleseg.utils.metrics.kappa(intersect_area_all,
                                               pred_area_all, label_area_all)
-        category_f1score = paddleseg.utils.metrics.f1_score(
-            intersect_area_all, pred_area_all, label_area_all)
+        category_f1score = metrics.f1_score(intersect_area_all, pred_area_all,
+                                            label_area_all)
         eval_metrics = OrderedDict(
             zip([
                 'miou', 'category_iou', 'oacc', 'category_acc', 'kappa',
