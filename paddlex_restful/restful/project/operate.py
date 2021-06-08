@@ -315,9 +315,9 @@ def _call_paddlex_predict(task_path,
             for i in range(len(model.labels)):
                 legend[model.labels[i]] = color_map[i]
             results = model.predict(img)
-            image_pred = pdx.seg.visualize(image, results, save_dir=None)
+            image_pred = pdx.seg.visualize(img, results, save_dir=None)
             pse_pred = pdx.seg.visualize(
-                image, results, weight=0, save_dir=None)
+                img, results, weight=0, save_dir=None)
             image_ground = None
             pse_label = None
             save_name = osp.join(save_dir, 'predict_result.png')
