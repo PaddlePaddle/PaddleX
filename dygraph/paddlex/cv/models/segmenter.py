@@ -85,11 +85,13 @@ class BaseSegmenter(BaseModel):
             origin_shape = [label.shape[-2:]]
             # TODO: 替换cv2后postprocess移出run
             pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
-            intersect_area, pred_area, label_area = metrics.calculate_area(
+            intersect_area, pred_area, label_area = paddleseg.utils.metrics.calculate_area(
                 pred, label, self.num_classes)
             outputs['intersect_area'] = intersect_area
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
+            outputs['conf_mat'] = metrics.confusion_matrix(pred, label,
+                                                           self.num_classes)
         if mode == 'train':
             loss_list = metrics.loss_computation(
                 logits_list=net_out, labels=inputs[1], losses=self.losses)
@@ -328,6 +330,7 @@ class BaseSegmenter(BaseModel):
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        conf_mat_all = []
         logging.info(
             "Start to evaluate(total_samples={}, total_steps={})...".format(
                 eval_dataset.num_samples,
@@ -339,16 +342,19 @@ class BaseSegmenter(BaseModel):
                 pred_area = outputs['pred_area']
                 label_area = outputs['label_area']
                 intersect_area = outputs['intersect_area']
+                conf_mat = outputs['conf_mat']
 
                 # Gather from all ranks
                 if nranks > 1:
                     intersect_area_list = []
                     pred_area_list = []
                     label_area_list = []
+                    conf_mat_list = []
                     paddle.distributed.all_gather(intersect_area_list,
                                                   intersect_area)
                     paddle.distributed.all_gather(pred_area_list, pred_area)
                     paddle.distributed.all_gather(label_area_list, label_area)
+                    paddle.distributed.all_gather(conf_mat_list, conf_mat)
 
                     # Some image has been evaluated and should be eliminated in last iter
                     if (step + 1) * nranks > len(eval_dataset):
@@ -356,23 +362,27 @@ class BaseSegmenter(BaseModel):
                         intersect_area_list = intersect_area_list[:valid]
                         pred_area_list = pred_area_list[:valid]
                         label_area_list = label_area_list[:valid]
+                        conf_mat_list = conf_mat_list[:valid]
 
                     for i in range(len(intersect_area_list)):
                         intersect_area_all = intersect_area_all + intersect_area_list[
                             i]
                         pred_area_all = pred_area_all + pred_area_list[i]
                         label_area_all = label_area_all + label_area_list[i]
+                    conf_mat_all = conf_mat_all + conf_mat_list
 
                 else:
                     intersect_area_all = intersect_area_all + intersect_area
                     pred_area_all = pred_area_all + pred_area
                     label_area_all = label_area_all + label_area
-        class_iou, miou = metrics.mean_iou(intersect_area_all, pred_area_all,
-                                           label_area_all)
+                    conf_mat_all.append(conf_mat)
+        class_iou, miou = paddleseg.utils.metrics.mean_iou(
+            intersect_area_all, pred_area_all, label_area_all)
         # TODO 确认是按oacc还是macc
-        class_acc, oacc = metrics.accuracy(intersect_area_all, pred_area_all)
-        kappa = metrics.kappa(intersect_area_all, pred_area_all,
-                              label_area_all)
+        class_acc, oacc = paddleseg.utils.metrics.accuracy(intersect_area_all,
+                                                           pred_area_all)
+        kappa = paddleseg.utils.metrics.kappa(intersect_area_all,
+                                              pred_area_all, label_area_all)
         category_f1score = metrics.f1_score(intersect_area_all, pred_area_all,
                                             label_area_all)
         eval_metrics = OrderedDict(
@@ -381,6 +391,10 @@ class BaseSegmenter(BaseModel):
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
 
+        if return_details:
+            conf_mat = sum(conf_mat_all).numpy()
+            eval_details = {'confusion_matrix': conf_mat.tolist()}
+            return eval_metrics, eval_details
         return eval_metrics
 
     def predict(self, img_file, transforms=None):

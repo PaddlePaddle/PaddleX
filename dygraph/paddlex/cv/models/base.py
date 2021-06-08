@@ -333,10 +333,10 @@ class BaseModel:
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
-                    self.eval_metrics = self.evaluate(
+                    self.eval_metrics, self.eval_details = self.evaluate(
                         eval_dataset,
                         batch_size=eval_batch_size,
-                        return_details=False)
+                        return_details=True)
                     # 保存最优模型
                     if local_rank == 0:
                         logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
