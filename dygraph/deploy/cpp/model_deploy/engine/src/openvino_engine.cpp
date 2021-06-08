@@ -33,7 +33,7 @@ bool OpenVinoEngine::Init(const InferenceConfig& infer_config) {
     std::map<std::string, std::string> networkConfig;
     networkConfig["VPU_HW_STAGES_OPTIMIZATION"] = "NO";
     executable_network_ = ie.LoadNetwork(
-            network_, engine_config.device_ networkConfig);
+            network_, engine_config.device_, networkConfig);
   } else {
     executable_network_ = ie.LoadNetwork(network_, engine_config.device_);
   }
