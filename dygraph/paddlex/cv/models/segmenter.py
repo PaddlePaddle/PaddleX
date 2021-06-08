@@ -90,8 +90,8 @@ class BaseSegmenter(BaseModel):
             outputs['intersect_area'] = intersect_area
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
-            outputs['conf_mat'] = paddleseg.utils.metrics.confusion_matrix(
-                pred, label, self.num_classes)
+            outputs['conf_mat'] = metrics.confusion_matrix(pred, label,
+                                                           self.num_classes)
         if mode == 'train':
             loss_list = metrics.loss_computation(
                 logits_list=net_out, labels=inputs[1], losses=self.losses)
