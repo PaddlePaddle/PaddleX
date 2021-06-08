@@ -163,9 +163,6 @@ struct OpenVinoEngineConfig {
   // onnx model path
   std::string model_file_ = "";
 
-  // openvino bin file
-  std::string bin_file_ = "";
-
   //  Set batchsize
   int batch_size_ = 1;
 

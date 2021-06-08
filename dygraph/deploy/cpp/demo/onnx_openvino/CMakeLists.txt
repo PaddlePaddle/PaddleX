@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(PaddleDeploy CXX C)
 
+option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   OFF)
+
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 SET(OPENVINO_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
@@ -26,18 +28,26 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/src/ext-yaml-cpp/i
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/lib")
 
 # Openvino
-MESSAGE("${GFLAGS_DIR}")
+include_directories("${OPENVINO_DIR}")
+include_directories("${OPENVINO_DIR}/include")
+include_directories("${OPENVINO_DIR}/external/tbb/include/tbb")
+link_directories("${OPENVINO_DIR}/lib")
+link_directories("${OPENVINO_DIR}/external/tbb/lib")
+
+link_directories("${NGRAPH_LIB}")
+link_directories("${NGRAPH_LIB}/lib")
+
 include_directories("${GFLAGS_DIR}/include")
 link_directories("${GFLAGS_DIR}/lib")
 
-include_directories("${GLOG_DIR}/include")
-link_directories("${GLOG_DIR}/lib")
-
 if(WIN32)
+    link_directories("${OPENVINO_DIR}/lib/intel64/Release")
+    link_directories("${OPENVINO_DIR}/bin/intel64/Release")
+
     set(DEPS ${OPENVINO_DIR}/lib/intel64/Release/inference_engine${CMAKE_STATIC_LIBRARY_SUFFIX})
     set(DEPS ${DEPS} ${OPENVINO_DIR}/lib/intel64/Release/inference_engine_legacy${CMAKE_STATIC_LIBRARY_SUFFIX})
-    set(DEPS ${DEPS} glog gflags_static libyaml-cppmt)
-    else()
+    set(DEPS ${DEPS} gflags_static libyaml-cppmt)
+else()
     if (${ARCH} STREQUAL "armv7")
         if(WITH_STATIC_LIB)
             set(DEPS ${OPENVINO_DIR}/lib/armv7l/libinference_engine${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -55,7 +65,7 @@ if(WIN32)
             set(DEPS ${DEPS} ${OPENVINO_DIR}/lib/intel64/libinference_engine_legacy${CMAKE_SHARED_LIBRARY_SUFFIX})
         endif()
     endif()
-    set(DEPS ${DEPS} glog gflags yaml-cpp)
+    set(DEPS ${DEPS} gflags yaml-cpp)
 endif(WIN32)
 
 # OPENCV

@@ -19,6 +19,8 @@
 
 #include <inference_engine.hpp>
 
+#include "model_deploy/common/include/base_model.h"
+#include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {

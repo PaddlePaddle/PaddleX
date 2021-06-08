@@ -17,30 +17,30 @@
 namespace PaddleDeploy {
 bool Model::OpenVinoEngineInit(const OpenVinoEngineConfig& engine_config) {
   infer_engine_ = std::make_shared<OpenVinoEngine>();
-  engine_config.bin_file_ = engine_config.model_file_.substr(0,
-                                engine_config.model_file_.size() - 4) + ".bin";
   InferenceConfig config("openvino");
   *(config.openvino_config) = engine_config;
   return infer_engine_->Init(config);
 }
 
-void OpenVinoEngine::Init(const InferenceConfig& infer_config) {
+bool OpenVinoEngine::Init(const InferenceConfig& infer_config) {
   const OpenVinoEngineConfig& engine_config = *(infer_config.openvino_config);
   InferenceEngine::Core ie;
-  network_ = ie.ReadNetwork(engine_config.model_file_,
-                            engine_config.bin_file_);
+  std::string bin_file = engine_config.model_file_.substr(0,
+                                 engine_config.model_file_.size() - 4) + ".bin";
+  network_ = ie.ReadNetwork(engine_config.model_file_, bin_file);
   network_.setBatchSize(engine_config.batch_size_);
   if (engine_config.device_ == "MYRIAD") {
     std::map<std::string, std::string> networkConfig;
     networkConfig["VPU_HW_STAGES_OPTIMIZATION"] = "NO";
     executable_network_ = ie.LoadNetwork(
-            network_, engine_config.device, networkConfig);
+            network_, engine_config.device_ networkConfig);
   } else {
-    executable_network_ = ie.LoadNetwork(network_, engine_config.device);
+    executable_network_ = ie.LoadNetwork(network_, engine_config.device_);
   }
+  return true;
 }
 
-void OpenVinoEngine::Infer(const std::vector<DataBlob> &inputs,
+bool OpenVinoEngine::Infer(const std::vector<DataBlob> &inputs,
                           std::vector<DataBlob> *outputs) {
   InferenceEngine::InferRequest infer_request =
         executable_network_.CreateInferRequest();
@@ -113,6 +113,7 @@ void OpenVinoEngine::Infer(const std::vector<DataBlob> &inputs,
     }
     outputs->push_back(std::move(output));
   }
+  return true;
 }
 
 bool OpenVinoEngine::GetDtype(const InferenceEngine::TensorDesc &output_blob,

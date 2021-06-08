@@ -13,15 +13,14 @@
 // limitations under the License.
 
 #include <gflags/gflags.h>
+#include <string>
+#include <fstream>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "yaml-cpp/yaml.h"
-#include "include/deploy/postprocess/ppclas_post_proc.h"
-#include "include/deploy/preprocess/ppclas_pre_proc.h"
-#include "include/deploy/engine/openvino_engine.h"
+#include "model_deploy/common/include/paddle_deploy.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(cfg_file, "", "Path of yaml file");
