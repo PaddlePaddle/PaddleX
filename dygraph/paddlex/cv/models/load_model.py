@@ -43,7 +43,7 @@ def load_model(model_dir):
     if int(version.split('.')[0]) < 2:
         raise Exception(
             'Current version is {}, a model trained by PaddleX={} cannot be load.'.
-            format(paddlex.version, version))
+            format(paddlex.__version__, version))
 
     status = model_info['status']
 
@@ -78,10 +78,41 @@ def load_model(model_dir):
 
         if status == 'Infer':
             if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
-                net_state_dict = paddle.load(
-                    model_dir,
-                    params_filename='model.pdiparams',
-                    model_filename='model.pdmodel')
+                #net_state_dict = paddle.load(
+                #    model_dir,
+                #    params_filename='model.pdiparams',
+                #    model_filename='model.pdmodel')
+
+                net = paddle.jit.load(osp.join(model_dir, 'model'))
+                #load_param_dict = paddle.load(osp.join(model_dir, 'model.pdiparams'))
+                #print(load_param_dict)
+
+                import pickle
+                var_info_path = osp.join(model_dir, 'model.pdiparams.info')
+                with open(var_info_path, 'rb') as f:
+                    extra_var_info = pickle.load(f)
+                net_state_dict = dict()
+                static_state_dict = dict()
+                for name, var in net.state_dict().items():
+                    print(name, var.name)
+                    static_state_dict[var.name] = var.numpy()
+                exit()
+                for var_name in static_state_dict:
+                    if var_name not in extra_var_info:
+                        print(var_name)
+                        continue
+                    structured_name = extra_var_info[var_name].get(
+                        'structured_name', None)
+                    if structured_name is None:
+                        continue
+                    net_state_dict[structured_name] = static_state_dict[
+                        var_name]
+
+                #model.net = paddle.jit.load(
+                #    model_dir,
+                #    params_filename='model.pdiparams',
+                #    model_filename='model.pdmodel')
+                #net_state_dict = paddle.load(osp.join(model_dir, 'model'))
             else:
                 net_state_dict = paddle.load(osp.join(model_dir, 'model'))
         else:

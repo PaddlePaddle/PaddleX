@@ -212,13 +212,15 @@ class Resize(Transform):
             Otherwise, target_size represents [target height, target width].
         interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
             Interpolation method of resize. Defaults to 'LINEAR'.
+        keep_ratio (bool): the resize scale of width/height is same and width/height after resized is not greater
+            than target width/height. Defaults to False.
 
     Raises:
         TypeError: Invalid type of target_size.
         ValueError: Invalid interpolation method.
     """
 
-    def __init__(self, target_size, interp='LINEAR'):
+    def __init__(self, target_size, interp='LINEAR', keep_ratio=False):
         super(Resize, self).__init__()
         if not (interp == "RANDOM" or interp in interp_dict):
             raise ValueError("interp should be one of {}".format(
@@ -234,6 +236,7 @@ class Resize(Transform):
         # (height, width)
         self.target_size = target_size
         self.interp = interp
+        self.keep_ratio = keep_ratio
 
     def apply_im(self, image, interp):
         image = cv2.resize(
@@ -281,6 +284,14 @@ class Resize(Transform):
 
         im_scale_y = self.target_size[0] / im_h
         im_scale_x = self.target_size[1] / im_w
+        target_size = list(self.target_size)
+        if self.keep_ratio:
+            scale = min(im_scale_y, im_scale_x)
+            target_w = int(round(im_w * scale))
+            target_h = int(round(im_h * scale))
+            target_size = [target_w, target_h]
+            im_scale_y = target_h / im_h
+            im_scale_x = target_w / im_w
 
         sample['image'] = self.apply_im(sample['image'], interp)
 
@@ -913,7 +924,8 @@ class Padding(Transform):
                  pad_mode=0,
                  offsets=None,
                  im_padding_value=(127.5, 127.5, 127.5),
-                 label_padding_value=255):
+                 label_padding_value=255,
+                 size_divisor=32):
         """
         Pad image to a specified size or multiple of size_divisor.
 
@@ -923,6 +935,7 @@ class Padding(Transform):
                 if 0, only pad to right and bottom. If 1, pad according to center. If 2, only pad left and top. Defaults to 0.
             im_padding_value(Sequence[float]): RGB value of pad area. Defaults to (127.5, 127.5, 127.5).
             label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
+            size_divisor(int): Image width and height after padding is a multiple of size_divisor
         """
         super(Padding, self).__init__()
         if isinstance(target_size, (list, tuple)):
@@ -940,7 +953,7 @@ class Padding(Transform):
             assert offsets, 'if pad_mode is -1, offsets should not be None'
 
         self.target_size = target_size
-        self.size_divisor = 32
+        self.size_divisor = size_divisor
         self.pad_mode = pad_mode
         self.offsets = offsets
         self.im_padding_value = im_padding_value

@@ -26,7 +26,7 @@ import ppdet
 from ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
+from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, Resize, Padding
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
@@ -42,7 +42,6 @@ __all__ = [
 class BaseDetector(BaseModel):
     def __init__(self, model_name, num_classes=80, **params):
         self.init_params.update(locals())
-        del self.init_params['params']
         super(BaseDetector, self).__init__('detector')
         if not hasattr(ppdet.modeling, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -58,15 +57,32 @@ class BaseDetector(BaseModel):
             net = ppdet.modeling.__dict__[self.model_name](**params)
         return net
 
-    def get_test_inputs(self, image_shape):
+    def _fix_transforms_shape(self, image_shape):
+        pass
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
+                raise Exception(
+                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
+                    format(image_shape[-2:]))
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+
         input_spec = [{
             "image": InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32'),
+                shape=image_shape, name='image', dtype='float32'),
             "im_shape": InputSpec(
-                shape=[None, 2], name='im_shape', dtype='float32'),
+                shape=[image_shape[0], 2], name='im_shape', dtype='float32'),
             "scale_factor": InputSpec(
-                shape=[None, 2], name='scale_factor', dtype='float32')
+                shape=[image_shape[0], 2],
+                name='scale_factor',
+                dtype='float32')
         }]
+
         return input_spec
 
     def _get_backbone(self, backbone_name, **params):
@@ -610,6 +626,29 @@ class YOLOv3(BaseDetector):
 
         return batch_transforms
 
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Resize':
+                        has_resize_op = True
+                        resize_op_idx = idx
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx,
+                        Resize(
+                            target_size=image_shape, interp='CUBIC'))
+                else:
+                    self.test_transforms.transforms[
+                        resize_op_idx].target_size = image_shape
+
 
 class FasterRCNN(BaseDetector):
     def __init__(self,
@@ -832,6 +871,35 @@ class FasterRCNN(BaseDetector):
                                         default_batch_transforms)
 
         return batch_transforms
+
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'ResizeByShort':
+                        has_resize_op = True
+                        resize_op_idx = idx
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx,
+                        Resize(
+                            target_size=image_shape,
+                            keep_ratio=True,
+                            interp='CUBIC'))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape,
+                        keep_ratio=True,
+                        interp='CUBIC')
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
 
 
 class PPYOLO(YOLOv3):
@@ -1473,3 +1541,28 @@ class MaskRCNN(BaseDetector):
                                         default_batch_transforms)
 
         return batch_transforms
+
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'ResizeByShort':
+                        has_resize_op = True
+                        resize_op_idx = idx
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx,
+                        Resize(
+                            target_size=image_shape, keep_ratio=True))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape, keep_ratio=True)
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
