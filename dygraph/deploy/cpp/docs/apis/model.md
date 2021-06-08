@@ -8,6 +8,8 @@
 4. [预测结果字段](#004)
 5. [代码示例](#005)
 
+
+
 <span id="001"></span>
 
 ## 1. 创建模型对象
@@ -38,7 +40,7 @@ std::shared_ptr<PaddleDeploy::Model>  PaddleDeploy::ModelFactory::CreateObject(c
 
 ## 2. 模型初始化
 
-模型初始化包括2个步骤，第一步读取配置文件，初始化数据预处理和后处理相关操作；第二步初始化推理PaddleInference推理引擎；对应的接口分别为`PaddleDeploy::Model::Init()`和`PaddleDeploy::Model::PaddleEngineInit()`
+模型初始化包括2个步骤，第一步读取配置文件，初始化数据预处理和后处理相关操作；第二步初始化推理推理引擎；对应的接口分别为`PaddleDeploy::Model::Init()`和`PaddleDeploy::Model::XXXEngineInit()`
 
 ### 2.1 模型前后处理初始化
 
@@ -69,29 +71,14 @@ bool Model::Init(const std::string& cfg_file)
 ### 2.2 推理引擎初始化
 
 ```c++
-bool Model::PaddleEngineInit(const std::string& model_filename,
-                             const std::string& params_filename,
-                             bool use_gpu = false,
-                             int gpu_id = 0,
-                             bool use_mkl = true,
-                             int mkl_thread_num = 8)
+bool PaddleEngineInit(const PaddleEngineConfig& engine_config);
 ```
 
-> 初始化Paddle 推理引擎,  创建Model或者其子类对象后必须先调用它初始化，才能调推理接口。
+> 初始化Paddle推理引擎，创建Model或者其子类对象后必须先调用它初始化，才能调推理接口。
 
 **参数**
 
-> >**model_filename** 模型结构文件路径，如`model.pdmodel`或`__model__`
-> >
-> >**params_filename** 模型权重文件路径，如`model.pdiparams`或`__params__`
-> >
-> >**use_gpu** 是否使用GPU
-> >
-> >**gpu_id** GPU设备ID
-> >
-> >**use_mkl** 是否使用mkldnn（CPU上推理加速引擎）
-> >
-> >**mkl_thread_num** 使用mkldnn时的推理线程数
+> >**engine_config** Paddle推理引擎配置文件，具体参数说明请看[推理引擎配置参数](#004)
 
 **返回值**
 
@@ -100,10 +87,52 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 **代码示例**
 
 > ```c++
-> if (!modle->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel",
->                              "yolov3_mbv1/model/model.pdiparams",
->                              true, 0)) {
+> if (!modle->PaddleEngineInit(engine_config)) {
 >   std::cerr << "Fail to execute model->PaddleEngineInit()" << std::endl;
+> }
+> ```
+
+```c++
+bool TritonEngineInit(const TritonEngineConfig& engine_config);
+```
+
+> 初始化Triton推理引擎，用于ONNX模型推理。创建Model或者其子类对象后必须先调用它初始化，才能调推理接口。
+
+**参数**
+
+> >**engine_config** Triton推理引擎配置文件，具体参数说明请看[推理引擎配置参数](#004)
+
+**返回值**
+
+>  `true`或`false`，表示是否正确初始化
+
+**代码示例**
+
+> ```c++
+> if (!modle->TritonEngineInit(engine_config)) {
+>   std::cerr << "Fail to execute model->TritonEngineInit()" << std::endl;
+> }
+> ```
+
+```c++
+bool TensorRTInit(const TensorRTEngineConfig& engine_config);
+```
+
+> 初始化TensorRT推理引擎，用于ONNX模型推理。创建Model或者其子类对象后必须先调用它初始化，才能调推理接口。
+
+**参数**
+
+> >**engine_config** TensorRT推理引擎配置文件，具体参数说明请看[推理引擎配置参数](#004)
+
+**返回值**
+
+>  `true`或`false`，表示是否正确初始化
+
+**代码示例**
+
+> ```c++
+> if (!modle->PaddleEngineInit(engine_config)) {
+>   std::cerr << "Fail to execute model->TensorRTEngineInit()" << std::endl;
 > }
 > ```
 
@@ -116,6 +145,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 推理过程包括输入数据的预处理、推理引擎的inference、inference结果的后处理3个步骤，在部署代码中，三个步骤分别对应`PaddleDeploy::Model::Preprocess()`、`PaddleDeploy::Model::Infer()`、`PaddleDeploy::Model::Postprocess()`。
 
 为了更便于开发者使用，此三个步骤被封装为`PaddleDeploy::Model::Predict()`一个接口内，用户可根据自行需求进行调用，一般情况下，推荐使用`PaddleDeploy::Model::Predict()`接口即可一步完成预测需求。
+
 
 
 
@@ -133,7 +163,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 
 > **imgs** 传入的vector，元素为cv::Mat，预测时将会对vector中所有Mat进行预处理，并作为一个batch输入给推理引擎进行预测；开发者在调用时，需考虑硬件配置，vector的size过大时，可能会由于显存或内存不足导致程序出错
 >
-> **results** 预测结果vector，其与输入的imgs长度相同，vector中每个元素说明参考[预测结果字段说明](#004)
+> **results** 预测结果vector，其与输入的imgs长度相同，vector中每个元素说明参考[预测结果字段说明](#005)
 >
 > **thread_num** 当输入vector的size大于1时，可通过thread_num来配置预处理和后处理的并行处理时的多线程数量
 
@@ -151,6 +181,7 @@ bool Model::PaddleEngineInit(const std::string& model_filename,
 >   std::cerr << "Fail to execute model->Predict()" << std::endl;
 > }
 > ```
+
 
 
 
@@ -234,6 +265,7 @@ if (!model->Infer(inputs, &outputs)) {
 
 
 
+
 ### 3.4 后处理接口
 
 ```c++
@@ -287,9 +319,89 @@ bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
 
 
 
+
 <span id="004"></span>
 
-## 4. 预测结果字段
+## 4. 推理引擎配置参数
+
+### 4.1 Paddle推理引擎配置
+
+```c++
+  std::string model_filename = "";  // 模型文件
+
+  std::string params_filename = ""; // 模型参数
+
+  bool use_mkl = true; // 是否开启mkl
+
+  int mkl_thread_num = 8; // mkl并行线程数
+
+  bool use_gpu = false; // 是否使用GPU进行推理
+
+  int gpu_id = 0; // 使用编号几的GPU
+
+  bool use_ir_optim = true; // 是否开启IR优化
+
+  bool use_trt = false; // 是否使用TensorRT
+
+  int max_batch_size = 1; // TensorRT最大batch大小
+
+  int min_subgraph_size = 1; // TensorRT 子图最小节点数
+
+  /*Set TensorRT data precision
+  0: FP32
+  1: FP16
+  2: Int8
+  */
+  int precision = 0;
+
+  int max_workspace_size = 1 << 10; // TensorRT申请的显存大小,1 << 10 = 1M
+
+  std::map<std::string, std::vector<int>> min_input_shape; // 模型动态shape的最下输入形状， TensorRT才需要设置
+
+  std::map<std::string, std::vector<int>> max_input_shape; // 模型动态shape的最大输入形状， TensorRT才需要设置
+
+  std::map<std::string, std::vector<int>> optim_input_shape; // 模型动态shape的最常见输入形状， TensorRT才需要设置
+```
+
+
+
+### 4.2 Triton推理引擎配置
+
+```c++
+  std::string model_name_; // 向Triton Server请求的模型名称
+
+  std::string model_version_; // Triton Server中模型的版本号
+
+  uint64_t server_timeout_ = 0; // 服务端最大计算时间
+
+  uint64_t client_timeout_ = 0; // 客户端等待时间， 默认一直等
+
+  bool verbose_ = false; // 是否打开客户端日志
+
+  std::string url_; // Triton Server地址
+```
+
+
+
+### 4.1 TensorRT推理引擎配置
+
+```c++
+  std::string model_file_; // ONNX 模型地址
+
+  std::string cfg_file_; // 模型配置文件地址
+
+  int max_workspace_size_ = 1<<28; // GPU显存大小
+
+  int max_batch_size_ = 1; // 最大batch
+
+  int gpu_id_ = 0; // 使用编号几的GPU
+```
+
+
+
+<span id="005"></span>
+
+## 5. 预测结果字段
 
 在开发者常调用的接口中，包括主要的`Model::Predict`，以及`Model::Predict`内部调用的`Model::Preprocess`、`Model::Infer`和`Model::Postprocess`接口，涉及到的结构体主要为`PaddleDeploy::Result`（预测结果），`PaddleDeploy::DataBlob`和`PaddleDeploy::ShapeInfo`。其中`DataBlob`和`ShapeInfo`开发者较少用到，可直接阅读其代码实现。
 
@@ -311,7 +423,7 @@ struct Result {
 
 
 
-### 4.1 图像分类结果
+### 5.1 图像分类结果
 
 ```C++
 struct ClasResult {
@@ -323,7 +435,7 @@ struct ClasResult {
 
 
 
-### 4.2 目标检测结果
+### 5.2 目标检测结果
 
 ```C++
 struct DetResult {
@@ -352,7 +464,7 @@ struct Mask {
 
 
 
-### 4.3 语义分割结果
+### 5.3 语义分割结果
 
 ```c++
 struct SegResult {
@@ -371,9 +483,9 @@ struct Mask {
 
 
 
-<span id="005"></span>
+<span id="006"></span>
 
-## 5. 部署代码示例
+## 6. 部署代码示例
 
 以下示例代码以目标检测模型为例
 
@@ -384,9 +496,11 @@ int main() {
   std::shared_ptr<PaddleDeploy::Model> model =
                     PaddleDeploy::ModelFactory::CreateObject("det");
   model->Init("yolov3_mbv1/model/infer_cfg.yml");
-  model->PaddleEngineInit("yolov3_mbv1/model/model.pdmodel",
-                          "yolov3_mbv1/model/model.pdiparams",
-                          true, 0);
+  PaddleDeploy::PaddleEngineConfig engine_config;
+  engine_config.model_filename = "yolov3_mbv1/model/model.pdmodel"
+  engine_config.params_filename = "yolov3_mbv1/model/model.pdiparams"
+  engine_config.use_gpu = true;
+  engine_config.gpu_id = 0;
 
   std::vector<cv::Mat> images;
   std::vector<PaddleDeploy::Result> results;

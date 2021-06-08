@@ -19,26 +19,23 @@ d:
 mkdir projects
 cd projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
-git checkout deploykit
 ```
 
-**说明**：其中`C++`预测代码在`PaddleX\deploy\cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，而示例demo代码为`demo/model_infer.cpp`。
+**说明**：其中`C++`预测代码在`PaddleX\dygraph\deploy\cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，所有示例代码都在`demo`目录下。
 
 
 ### Step2: 下载PaddlePaddle C++ 预测库
 
-PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX支持Paddle预测库2.0+，最新2.0.2版本下载链接如下所示:
+PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX支持Paddle预测库2.0+，最新2.1版本下载链接如下所示:
 
-| 版本说明                     | 预测库(2.0.2)                                                                                                   | 编译器                | 构建工具      | cuDNN | CUDA |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------- | ------------- | ----- | ---- |
-| cpu_avx_mkl                  | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.0.2/win-infer/mkl/cpu/paddle_inference.zip)         | Visual Studio 15 2017 | CMake v3.17.0 | -     | -    |
-| cuda10.0_cudnn7_avx_mkl      | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.0.2/win-infer/mkl/post100/paddle_inference.zip)     | MSVC 2015 update 3    | CMake v3.17.0 | 7.4.1 | 10.0 |
-| cuda10.0_cudnn7_avx_mkl_trt6 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.0.2/win-infer/trt_mkl/post100/paddle_inference.zip) | MSVC 2015 update 3    | CMake v3.17.0 | 7.4.1 | 10.0 |
-| cuda10.1_cudnn7_avx_mkl_trt6 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.0.2/win-infer/trt_mkl/post101/paddle_inference.zip) | MSVC 2015 update 3    | CMake v3.17.0 | 7.6   | 10.1 |
-| cuda10.2_cudnn7_avx_mkl_trt7 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.0.2/win-infer/trt_mkl/post102/paddle_inference.zip) | MSVC 2015 update 3    | CMake v3.17.0 | 7.6   | 10.2 |
-| cuda11.0_cudnn8_avx_mkl_trt7 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.0.2/win-infer/trt_mkl/post11/paddle_inference.zip)  | MSVC 2015 update 3    | CMake v3.17.0 | 8.0   | 11.0 |
+| 版本说明                     | 预测库(2.1)                                                                                                    | 编译器                | 构建工具      | cuDNN | CUDA |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------- | ------------- | ----- | ---- |
+| cpu_avx_mkl                  | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.1.0win/win-infer/mkl/cpu/paddle_inference.zip)     | Visual Studio 15 2017 | CMake v3.17.0 | -     | -    |
+| cuda10.1_cudnn7_avx_mkl_trt6 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.1.0win/win-infer/mkl/post101/paddle_inference.zip) | MSVC 2015 update 3    | CMake v3.17.0 | 7.6   | 10.1 |
+| cuda10.2_cudnn7_avx_mkl_trt7 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.1.0win/win-infer/mkl/post102/paddle_inference.zip) | MSVC 2015 update 3    | CMake v3.17.0 | 7.6   | 10.2 |
+| cuda11.0_cudnn8_avx_mkl_trt7 | [paddle_inference.zip](https://paddle-wheel.bj.bcebos.com/2.1.0win/win-infer/mkl/post110/paddle_inference.zip) | MSVC 2015 update 3    | CMake v3.17.0 | 8.0   | 11.0 |
 
-请根据实际情况选择下载，如若以上版本不满足您的需求，请至[C++预测库下载列表](https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/guides/05_inference_deployment/inference/windows_cpp_inference.html)选择符合的版本。
+请根据实际情况选择下载，如若以上版本不满足您的需求，请至[C++预测库下载列表](https://paddleinference.paddlepaddle.org.cn/v2.1/user_guides/download_lib.html)选择符合的版本。
 
 将预测库解压后，其所在目录（例如`D:\projects\paddle_inference_install_dir\`）下主要包含的内容有：
 
@@ -68,7 +65,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 ![](../../images/vs2019_step2.png)
 
-选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\cpp`），并打开`CMakeList.txt`：
+选择C++预测代码所在路径（例如`D:\projects\PaddleX\dygraph\deploy\cpp`），并打开`CMakeList.txt`：
 ![](../../images/vs2019_step3.png)
 
 3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。
@@ -90,7 +87,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 - 如果使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
 - 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
-- 如果无法联网，请手动点击下载 [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压，并修改`PaddleX\deploy\cpp\cmake\yaml.cmake`中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址替换为第3步中下载的路径，如改为`URL D:\projects\yaml-cpp.zip`。
+- 如果无法联网，请手动点击下载 [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压，并修改`PaddleX\dygraph\deploy\cpp\cmake\yaml.cmake`中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址替换为第3步中下载的路径，如改为`URL D:\projects\yaml-cpp.zip`。
 
 5. 保存并生成CMake缓存
 
@@ -103,10 +100,11 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 ### Step5: 编译结果
 
-编译后会在`PaddleX/deploy/cpp/build/demo`目录下生成`model_infer`和`multi_gpu_model_infer`两个可执行二进制文件示例，分别用于在单卡/多卡上加载模型进行预测，示例使用参考如下文档
+编译后会在`PaddleX/dygraph/deploy/cpp/build/demo`目录下生成`model_infer`和`multi_gpu_model_infer`两个可执行二进制文件示例，分别用于在单卡/多卡上加载模型进行预测，示例使用参考如下文档
 
 - [单卡加载模型预测示例](../../demo/model_infer.md)
 - [多卡加载模型预测示例](../../demo/multi_gpu_model_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
 
 
 
