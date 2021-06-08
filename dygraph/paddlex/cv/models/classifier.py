@@ -35,10 +35,11 @@ __all__ = [
     "ResNet18_vd", "ResNet34_vd", "ResNet50_vd", "ResNet50_vd_ssld",
     "ResNet101_vd", "ResNet101_vd_ssld", "ResNet152_vd", "ResNet200_vd",
     "AlexNet", "DarkNet53", "MobileNetV1", "MobileNetV2", "MobileNetV3_small",
-    "MobileNetV3_large", "DenseNet121", "DenseNet161", "DenseNet169",
-    "DenseNet201", "DenseNet264", "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C",
-    "HRNet_W40_C", "HRNet_W44_C", "HRNet_W48_C", "HRNet_W64_C", "Xception41",
-    "Xception65", "Xception71", "ShuffleNetV2", "ShuffleNetV2_swish"
+    "MobileNetV3_small_ssld", "MobileNetV3_large", "MobileNetV3_large_ssld",
+    "DenseNet121", "DenseNet161", "DenseNet169", "DenseNet201", "DenseNet264",
+    "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C", "HRNet_W40_C", "HRNet_W44_C",
+    "HRNet_W48_C", "HRNet_W64_C", "Xception41", "Xception65", "Xception71",
+    "ShuffleNetV2", "ShuffleNetV2_swish"
 ]
 
 
@@ -261,6 +262,70 @@ class BaseClassifier(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
+    def quant_aware_train(self,
+                          num_epochs,
+                          train_dataset,
+                          train_batch_size=64,
+                          eval_dataset=None,
+                          optimizer=None,
+                          save_interval_epochs=1,
+                          log_interval_steps=10,
+                          save_dir='output',
+                          learning_rate=.000025,
+                          warmup_steps=0,
+                          warmup_start_lr=0.0,
+                          lr_decay_epochs=(30, 60, 90),
+                          lr_decay_gamma=0.1,
+                          early_stop=False,
+                          early_stop_patience=5,
+                          use_vdl=True,
+                          quant_config=None):
+        """
+        Quantization-aware training.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .025.
+            warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
+            warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
+            lr_decay_epochs(List[int] or Tuple[int], optional):
+                Epoch milestones for learning rate decay. Defaults to (20, 60, 90).
+            lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay, default .1.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
+                configuration will be used. Defaults to None.
+
+        """
+        self._prepare_qat(quant_config)
+        self.train(
+            num_epochs=num_epochs,
+            train_dataset=train_dataset,
+            train_batch_size=train_batch_size,
+            eval_dataset=eval_dataset,
+            optimizer=optimizer,
+            save_interval_epochs=save_interval_epochs,
+            log_interval_steps=log_interval_steps,
+            save_dir=save_dir,
+            pretrain_weights=None,
+            learning_rate=learning_rate,
+            warmup_steps=warmup_steps,
+            warmup_start_lr=warmup_start_lr,
+            lr_decay_epochs=lr_decay_epochs,
+            lr_decay_gamma=lr_decay_gamma,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
+
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         """
         Evaluate the model.
@@ -441,7 +506,7 @@ class ResNet101_vd(BaseClassifier):
 class ResNet101_vd_ssld(BaseClassifier):
     def __init__(self, num_classes=1000):
         super(ResNet101_vd_ssld, self).__init__(
-            model_name='ResNet101_vd_ssld',
+            model_name='ResNet101_vd',
             num_classes=num_classes,
             lr_mult_list=[.1, .1, .2, .2, .3])
         self.model_name = 'ResNet101_vd_ssld'
@@ -531,6 +596,21 @@ class MobileNetV3_small(BaseClassifier):
             model_name=model_name, num_classes=num_classes)
 
 
+class MobileNetV3_small_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1.0):
+        supported_scale = [.35, 1.0]
+        if scale not in supported_scale:
+            logging.warning(
+                "scale={} is not supported by MobileNetV3_small_ssld, "
+                "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        model_name = 'MobileNetV3_small_x' + str(float(scale)).replace('.',
+                                                                       '_')
+        super(MobileNetV3_small_ssld, self).__init__(
+            model_name=model_name, num_classes=num_classes)
+        self.model_name = model_name + '_ssld'
+
+
 class MobileNetV3_large(BaseClassifier):
     def __init__(self, num_classes=1000, scale=1.0):
         supported_scale = [.35, .5, .75, 1.0, 1.25]
@@ -542,6 +622,13 @@ class MobileNetV3_large(BaseClassifier):
                                                                        '_')
         super(MobileNetV3_large, self).__init__(
             model_name=model_name, num_classes=num_classes)
+
+
+class MobileNetV3_large_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000):
+        super(MobileNetV3_large_ssld, self).__init__(
+            model_name='MobileNetV3_large_x1_0', num_classes=num_classes)
+        self.model_name = 'MobileNetV3_large_x1_0_ssld'
 
 
 class DenseNet121(BaseClassifier):

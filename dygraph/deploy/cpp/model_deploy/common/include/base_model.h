@@ -64,21 +64,11 @@ class Model {
     return false;
   }
 
-  bool PaddleEngineInit(const std::string& model_filename,
-                        const std::string& params_filename,
-                        bool use_gpu = false, int gpu_id = 0,
-                        bool use_mkl = true, int mkl_thread_num = 8);
+  bool PaddleEngineInit(const PaddleEngineConfig& engine_config);
 
-  bool TritonEngineInit(const std::string& url,
-                        const std::string& model_name,
-                        const std::string& model_version,
-                        bool verbose = false);
+  bool TritonEngineInit(const TritonEngineConfig& engine_config);
 
-  bool TensorRTInit(const std::string& model_file,
-                    const std::string& cfg_file,
-                    const int gpu_id = 0,
-                    const bool save_engine = false,
-                    std::string trt_cache_file = "");
+  bool TensorRTInit(const TensorRTEngineConfig& engine_config);
 
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;
@@ -104,12 +94,15 @@ class Model {
     std::vector<DataBlob> inputs;
     std::vector<DataBlob> outputs;
 
-    if (!preprocess_->Run(&imgs_clone, &inputs, &shape_infos, thread_num))
+    if (!preprocess_->Run(&imgs_clone, &inputs, &shape_infos, thread_num)) {
       return false;
-    if (!infer_engine_->Infer(inputs, &outputs))
+    }
+    if (!infer_engine_->Infer(inputs, &outputs)) {
       return false;
-    if (!postprocess_->Run(outputs, shape_infos, results, thread_num))
+    }
+    if (!postprocess_->Run(outputs, shape_infos, results, thread_num)) {
       return false;
+    }
     return true;
   }
 

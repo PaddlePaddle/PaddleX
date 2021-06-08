@@ -208,9 +208,10 @@ class BaseDetector(BaseModel):
                 "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
             self.metric = metric.lower()
 
+        self.labels = train_dataset.labels
+        self.num_max_boxes = train_dataset.num_max_boxes
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
-        self.labels = train_dataset.labels
 
         # build optimizer if not defined
         if optimizer is None:
@@ -236,7 +237,7 @@ class BaseDetector(BaseModel):
                 pretrain_weights = det_pretrain_weights_dict['_'.join(
                     [self.model_name, self.backbone_name])][0]
                 logging.warning("Pretrain_weights is forcibly set to '{}'. "
-                                "If don't want to use pretrain weights, "
+                                "If you don't want to use pretrain weights, "
                                 "set pretrain_weights to be None.".format(
                                     pretrain_weights))
         pretrained_dir = osp.join(save_dir, 'pretrain')
@@ -262,6 +263,76 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
+    def quant_aware_train(self,
+                          num_epochs,
+                          train_dataset,
+                          train_batch_size=64,
+                          eval_dataset=None,
+                          optimizer=None,
+                          save_interval_epochs=1,
+                          log_interval_steps=10,
+                          save_dir='output',
+                          learning_rate=.00001,
+                          warmup_steps=0,
+                          warmup_start_lr=0.0,
+                          lr_decay_epochs=(216, 243),
+                          lr_decay_gamma=0.1,
+                          metric=None,
+                          use_ema=False,
+                          early_stop=False,
+                          early_stop_patience=5,
+                          use_vdl=True,
+                          quant_config=None):
+        """
+        Quantization-aware training.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .001.
+            warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
+            warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
+            lr_decay_epochs(list or tuple, optional): Epoch milestones for learning rate decay. Defaults to (216, 243).
+            lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay. Defaults to .1.
+            metric({'VOC', 'COCO', None}, optional):
+                Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
+            use_ema(bool, optional): Whether to use exponential moving average strategy. Defaults to False.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
+                configuration will be used. Defaults to None.
+
+        """
+        self._prepare_qat(quant_config)
+        self.train(
+            num_epochs=num_epochs,
+            train_dataset=train_dataset,
+            train_batch_size=train_batch_size,
+            eval_dataset=eval_dataset,
+            optimizer=optimizer,
+            save_interval_epochs=save_interval_epochs,
+            log_interval_steps=log_interval_steps,
+            save_dir=save_dir,
+            pretrain_weights=None,
+            learning_rate=learning_rate,
+            warmup_steps=warmup_steps,
+            warmup_start_lr=warmup_start_lr,
+            lr_decay_epochs=lr_decay_epochs,
+            lr_decay_gamma=lr_decay_gamma,
+            metric=metric,
+            use_ema=use_ema,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl)
+
     def evaluate(self,
                  eval_dataset,
                  batch_size=1,
@@ -280,12 +351,24 @@ class BaseDetector(BaseModel):
             collections.OrderedDict with key-value pairs: {"mAP(0.50, 11point)":`mean average precision`}.
 
         """
-        if eval_dataset.__class__.__name__ == 'VOCDetection':
+
+        if metric is None:
+            if not hasattr(self, 'metric'):
+                if eval_dataset.__class__.__name__ == 'VOCDetection':
+                    self.metric = 'voc'
+                elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                    self.metric = 'coco'
+        else:
+            assert metric.lower() in ['coco', 'voc'], \
+                "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
+            self.metric = metric.lower()
+
+        if self.metric == 'voc':
             eval_dataset.data_fields = {
                 'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
                 'difficult'
             }
-        elif eval_dataset.__class__.__name__ == 'CocoDetection':
+        elif self.metric == 'coco':
             if self.__class__.__name__ == 'MaskRCNN':
                 eval_dataset.data_fields = {
                     'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
@@ -326,41 +409,16 @@ class BaseDetector(BaseModel):
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
-            if metric is None:
-                if getattr(self, 'metric', None) is not None:
-                    if self.metric == 'voc':
-                        eval_metric = VOCMetric(
-                            labels=eval_dataset.labels,
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            is_bbox_normalized=is_bbox_normalized,
-                            classwise=False)
-                    else:
-                        eval_metric = COCOMetric(
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            classwise=False)
-                else:
-                    if eval_dataset.__class__.__name__ == 'VOCDetection':
-                        eval_metric = VOCMetric(
-                            labels=eval_dataset.labels,
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            is_bbox_normalized=is_bbox_normalized,
-                            classwise=False)
-                    elif eval_dataset.__class__.__name__ == 'CocoDetection':
-                        eval_metric = COCOMetric(
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            classwise=False)
+            if self.metric == 'voc':
+                eval_metric = VOCMetric(
+                    labels=eval_dataset.labels,
+                    coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                    is_bbox_normalized=is_bbox_normalized,
+                    classwise=False)
             else:
-                assert metric.lower() in ['coco', 'voc'], \
-                    "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
-                if metric.lower() == 'coco':
-                    eval_metric = COCOMetric(
-                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                        classwise=False)
-                else:
-                    eval_metric = VOCMetric(
-                        labels=eval_dataset.labels,
-                        is_bbox_normalized=is_bbox_normalized,
-                        classwise=False)
+                eval_metric = COCOMetric(
+                    coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                    classwise=False)
             scores = collections.OrderedDict()
             logging.info(
                 "Start to evaluate(total_samples={}, total_steps={})...".
@@ -595,8 +653,7 @@ class YOLOv3(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
+                _BatchPadding(pad_to_stride=-1), _NormalizeBox(),
                 _PadBox(getattr(self, 'num_max_boxes', 50)), _BboxXYXY2XYWH(),
                 _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
@@ -606,10 +663,11 @@ class YOLOv3(BaseDetector):
                     num_classes=self.num_classes)
             ]
         else:
-            default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False)
-            ]
+            default_batch_transforms = [_BatchPadding(pad_to_stride=-1)]
+        if mode == 'eval' and self.metric == 'voc':
+            collate_batch = False
+        else:
+            collate_batch = True
 
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
@@ -621,8 +679,9 @@ class YOLOv3(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
@@ -668,14 +727,22 @@ class FasterRCNN(BaseDetector):
         self.init_params = locals()
         if backbone not in [
                 'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34',
-                'ResNet34_vd', 'ResNet101', 'ResNet101_vd'
+                'ResNet34_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', "
-                "'ResNet101', 'ResNet101_vd')".format(backbone))
-        self.backbone_name = backbone + '_fpn' if with_fpn else backbone
-        if backbone == 'ResNet50_vd_ssld':
+                "'ResNet101', 'ResNet101_vd', 'HRNet_W18')".format(backbone))
+        self.backbone_name = backbone
+        if backbone == 'HRNet_W18':
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                    format(backbone))
+                with_fpn = True
+            backbone = self._get_backbone(
+                'HRNet', width=18, freeze_at=0, return_idx=[0, 1, 2, 3])
+        elif backbone == 'ResNet50_vd_ssld':
             if not with_fpn:
                 logging.warning(
                     "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
@@ -738,10 +805,23 @@ class FasterRCNN(BaseDetector):
         rpn_in_channel = backbone.out_shape[0].channels
 
         if with_fpn:
-            neck = ppdet.modeling.FPN(
-                in_channels=[i.channels for i in backbone.out_shape],
-                out_channel=fpn_num_channels,
-                spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
+            self.backbone_name = self.backbone_name + '_fpn'
+
+            if 'HRNet' in self.backbone_name:
+                neck = ppdet.modeling.HRFPN(
+                    in_channels=[i.channels for i in backbone.out_shape],
+                    out_channel=fpn_num_channels,
+                    spatial_scales=[
+                        1.0 / i.stride for i in backbone.out_shape
+                    ],
+                    share_conv=False)
+            else:
+                neck = ppdet.modeling.FPN(
+                    in_channels=[i.channels for i in backbone.out_shape],
+                    out_channel=fpn_num_channels,
+                    spatial_scales=[
+                        1.0 / i.stride for i in backbone.out_shape
+                    ])
             rpn_in_channel = neck.out_shape[0].channels
             anchor_generator_cfg = {
                 'aspect_ratios': aspect_ratios,
@@ -849,14 +929,14 @@ class FasterRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -867,8 +947,9 @@ class FasterRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
@@ -1166,7 +1247,6 @@ class PPYOLOTiny(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOTiny'
 
 
@@ -1290,7 +1370,6 @@ class PPYOLOv2(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOv2'
 
 
@@ -1519,14 +1598,14 @@ class MaskRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -1537,8 +1616,9 @@ class MaskRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 

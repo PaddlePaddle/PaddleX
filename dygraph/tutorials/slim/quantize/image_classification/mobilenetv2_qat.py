@@ -29,19 +29,15 @@ eval_dataset = pdx.datasets.ImageNet(
     label_list='vegetables_cls/labels.txt',
     transforms=eval_transforms)
 
-# 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
-num_classes = len(train_dataset.labels)
-model = pdx.models.AlexNet(num_classes=num_classes)
+# 加载模型
+model = pdx.load_model('output/mobilenet_v2/best_model')
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/95c53dec89ab0f3769330fa445c6d9213986ca5f/paddlex/cv/models/classifier.py#L153
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
-model.train(
-    num_epochs=10,
+# 在线量化
+model.quant_aware_train(
+    num_epochs=5,
     train_dataset=train_dataset,
     train_batch_size=32,
     eval_dataset=eval_dataset,
-    lr_decay_epochs=[4, 6, 8],
-    learning_rate=0.001,
-    save_dir='output/alexnet',
+    learning_rate=0.000025,
+    save_dir='output/mobilenet_v2/quant',
     use_vdl=True)

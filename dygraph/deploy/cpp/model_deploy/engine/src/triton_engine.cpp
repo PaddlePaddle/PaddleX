@@ -51,16 +51,10 @@ int DtypeToInt(std::string dtype) {
   }
 }
 
-bool Model::TritonEngineInit(const std::string& url,
-                             const std::string& model_name,
-                             const std::string& model_version,
-                             bool verbose) {
+bool Model::TritonEngineInit(const TritonEngineConfig& engine_config) {
   infer_engine_ = std::make_shared<TritonInferenceEngine>();
   InferenceConfig config("triton");
-  config.triton_config->url_ = url;
-  config.triton_config->model_name_ = model_name;
-  config.triton_config->model_version_ = model_version;
-  config.triton_config->verbose_ = verbose;
+  *(config.triton_config) = engine_config;
   infer_engine_->Init(config);
 }
 

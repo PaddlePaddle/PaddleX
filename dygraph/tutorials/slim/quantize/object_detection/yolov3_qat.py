@@ -8,16 +8,17 @@ pdx.utils.download_and_decompress(dataset, path='./')
 # 定义训练和验证时的transforms
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
 train_transforms = T.Compose([
-    T.RandomResizeByShort(
-        short_sizes=[640, 672, 704, 736, 768, 800],
-        max_size=1333,
-        interp='CUBIC'), T.RandomHorizontalFlip(), T.Normalize(
+    T.MixupImage(mixup_epoch=250), T.RandomDistort(),
+    T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
+    T.RandomHorizontalFlip(), T.BatchRandomResize(
+        target_sizes=[320, 352, 384, 416, 448, 480, 512, 544, 576, 608],
+        interp='RANDOM'), T.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 eval_transforms = T.Compose([
-    T.ResizeByShort(
-        short_size=800, max_size=1333, interp='CUBIC'), T.Normalize(
+    T.Resize(
+        608, interp='CUBIC'), T.Normalize(
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
@@ -37,22 +38,18 @@ eval_dataset = pdx.datasets.VOCDetection(
     transforms=eval_transforms,
     shuffle=False)
 
-# 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
-num_classes = len(train_dataset.labels)
-model = pdx.models.FasterRCNN(
-    num_classes=num_classes, backbone='ResNet34', with_fpn=True)
+# 加载模型
+model = pdx.load_model('output/yolov3_darknet53/best_model')
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L154
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
-model.train(
-    num_epochs=12,
+# 在线量化
+model.quant_aware_train(
+    num_epochs=50,
     train_dataset=train_dataset,
-    train_batch_size=2,
+    train_batch_size=8,
     eval_dataset=eval_dataset,
-    learning_rate=0.0025,
-    lr_decay_epochs=[8, 11],
-    warmup_steps=500,
-    warmup_start_lr=0.00025,
-    save_dir='output/faster_rcnn_r50_fpn',
-    use_vdl=True)
+    learning_rate=0.0001 / 8,
+    warmup_steps=100,
+    warmup_start_lr=0.0,
+    save_interval_epochs=1,
+    lr_decay_epochs=[30, 45],
+    save_dir='output/yolov3_darknet53/quant')

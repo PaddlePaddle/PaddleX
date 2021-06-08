@@ -133,6 +133,9 @@ if(WITH_GPU)
       message(FATAL_ERROR "please set CUDNN_LIB with -DCUDNN_LIB=/path/cudnn/")
     endif()
 
+    set(DEPS ${DEPS} ${CUDA_LIB}/libcudart${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
+
     if (WITH_TENSORRT)
       include_directories("${TENSORRT_DIR}/include")
       link_directories("${TENSORRT_DIR}/lib")
@@ -140,12 +143,20 @@ if(WITH_GPU)
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
     endif()
-    set(DEPS ${DEPS} ${CUDA_LIB}/libcudart${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
+
   else()
     set(DEPS ${DEPS} ${CUDA_LIB}/cudart${CMAKE_STATIC_LIBRARY_SUFFIX} )
     set(DEPS ${DEPS} ${CUDA_LIB}/cublas${CMAKE_STATIC_LIBRARY_SUFFIX} )
     set(DEPS ${DEPS} ${CUDA_LIB}/cudnn${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+    if (WITH_TENSORRT)
+      include_directories("${TENSORRT_DIR}/include")
+      link_directories("${TENSORRT_DIR}/lib")
+
+      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
+    endif()
   endif()
 endif()
 
@@ -202,9 +213,19 @@ add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENG
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
 
+add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+ADD_DEPENDENCIES(batch_infer ext-yaml-cpp)
+target_link_libraries(batch_infer ${DEPS})
+
 add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
 target_link_libraries(multi_gpu_model_infer ${DEPS})
+
+if (WITH_TENSORRT)
+  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+  ADD_DEPENDENCIES(tensorrt_infer ext-yaml-cpp)
+  target_link_libraries(tensorrt_infer ${DEPS})
+endif()
 
 if(WIN32)
   add_custom_command(TARGET model_infer POST_BUILD
@@ -212,5 +233,10 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll  ${CMAKE_BINARY_DIR}/paddle_deploy
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/paddle/lib/paddle_inference.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    if (WITH_TENSORRT)
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    endif()
   )
 endif()

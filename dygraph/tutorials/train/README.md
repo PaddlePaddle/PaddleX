@@ -12,7 +12,6 @@
 |image_classification/darknet53.py | 图像分类DarkNet53 | 蔬菜分类 |
 |image_classification/xception41.py | 图像分类Xception41 | 蔬菜分类 |
 |image_classification/densenet121.py | 图像分类DenseNet121 | 蔬菜分类 |
-|object_detection/faster_rcnn_r34_fpn.py | 目标检测FasterRCNN | 昆虫检测 |
 |object_detection/faster_rcnn_r50_fpn.py | 目标检测FasterRCNN | 昆虫检测 |
 |object_detection/ppyolo.py | 目标检测PPYOLO | 昆虫检测 |
 |object_detection/ppyolotiny.py | 目标检测PPYOLOTiny | 昆虫检测 |

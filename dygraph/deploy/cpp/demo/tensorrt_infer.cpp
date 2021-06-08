@@ -23,7 +23,6 @@ DEFINE_string(params_filename, "", "Path of det inference params");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
-DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 
 int main(int argc, char** argv) {
@@ -41,8 +40,28 @@ int main(int argc, char** argv) {
   PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = FLAGS_model_filename;
   engine_config.params_filename = FLAGS_params_filename;
-  engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.gpu_id = FLAGS_gpu_id;
+  engine_config.use_gpu = true;
+  engine_config.use_trt = true;
+  engine_config.precision = 0;
+  engine_config.min_subgraph_size = 10;
+  engine_config.max_workspace_size = 1 << 30;
+  if ("clas" == FLAGS_model_type) {
+    // Adjust shape according to the actual model
+    engine_config.min_input_shape["inputs"] = {1, 3, 224, 224};
+    engine_config.max_input_shape["inputs"] = {1, 3, 224, 224};
+    engine_config.optim_input_shape["inputs"] = {1, 3, 224, 224};
+  } else if ("det" == FLAGS_model_type) {
+    // Adjust shape according to the actual model
+    engine_config.min_input_shape["image"] = {1, 3, 608, 608};
+    engine_config.max_input_shape["image"] = {1, 3, 608, 608};
+    engine_config.optim_input_shape["image"] = {1, 3, 608, 608};
+  } else if ("seg" == FLAGS_model_type) {
+    engine_config.min_input_shape["x"] = {1, 3, 100, 100};
+    engine_config.max_input_shape["x"] = {1, 3, 2000, 2000};
+    engine_config.optim_input_shape["x"] = {1, 3, 1024, 1024};
+    // Additional nodes need to be added, pay attention to the output prompt
+  }
   model->PaddleEngineInit(engine_config);
 
   // prepare data

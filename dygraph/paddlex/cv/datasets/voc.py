@@ -56,6 +56,7 @@ class VOCDetection(Dataset):
         super(VOCDetection, self).__init__()
         self.data_fields = None
         self.transforms = copy.deepcopy(transforms)
+        self.num_max_boxes = 50
 
         self.use_mix = False
         if self.transforms is not None:
@@ -63,6 +64,7 @@ class VOCDetection(Dataset):
                 if isinstance(op, MixupImage):
                     self.mixup_op = copy.deepcopy(op)
                     self.use_mix = True
+                    self.num_max_boxes *= 2
                     break
 
         self.batch_transforms = None
@@ -257,6 +259,11 @@ class VOCDetection(Dataset):
                         'id': int(im_id[0]),
                         'file_name': osp.split(img_file)[1]
                     })
+                if self.use_mix:
+                    self.num_max_boxes = max(self.num_max_boxes, 2 * len(objs))
+                else:
+                    self.num_max_boxes = max(self.num_max_boxes, len(objs))
+
         if not len(self.file_list) > 0:
             raise Exception('not found any voc record in %s' % (file_list))
         logging.info("{} samples in file {}".format(

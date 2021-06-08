@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
+#include <gflags/gflags.h>
 #include <omp.h>
 #include <memory>
 #include <string>
@@ -30,11 +30,7 @@ DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of preprocessing");
 
 int main(int argc, char** argv) {
-  // Parsing command-line
   google::ParseCommandLineFlags(&argc, &argv, true);
-  std::cout << "ParseCommandLineFlags:FLAGS_model_type="
-            << FLAGS_model_type << " model_filename="
-            << FLAGS_model_filename << std::endl;
 
   std::vector<int> gpu_ids;
   std::stringstream gpu_ids_str(FLAGS_gpu_id);
@@ -54,11 +50,16 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if (!model.PaddleEngineInit(FLAGS_model_filename,
-                              FLAGS_params_filename,
-                              gpu_ids)) {
+  // engine init
+  PaddleDeploy::PaddleEngineConfig engine_config;
+  engine_config.model_filename = FLAGS_model_filename;
+  engine_config.params_filename = FLAGS_params_filename;
+  engine_config.use_gpu = true;
+  engine_config.max_batch_size = FLAGS_batch_size;
+  if (!model.PaddleEngineInit(engine_config, gpu_ids)) {
     return -1;
   }
+
   // Mini-batch
   if (FLAGS_image_list == "") {
     std::cerr << "image_list should be defined" << std::endl;
