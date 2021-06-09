@@ -351,7 +351,7 @@ class BaseModel:
                             self.save_model(save_dir=best_model_dir)
                         if best_model_epoch > 0:
                             logging.info(
-                                'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
+                                'Current evaluated best model on eval_dataset is epoch_{}, {}={}'
                                 .format(best_model_epoch, best_accuracy_key,
                                         best_accuracy))
                     eval_epoch_time = time.time() - eval_epoch_tic
