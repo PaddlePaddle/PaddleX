@@ -46,6 +46,7 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=1,
     eval_dataset=eval_dataset,
+    pretrain_weights='COCO',
     learning_rate=0.00125,
     lr_decay_epochs=[8, 11],
     warmup_steps=10,
