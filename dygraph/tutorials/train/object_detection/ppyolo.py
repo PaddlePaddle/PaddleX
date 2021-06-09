@@ -50,6 +50,7 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=8,
     eval_dataset=eval_dataset,
+    pretrain_weights='COCO',
     learning_rate=0.005 / 12,
     warmup_steps=1000,
     warmup_start_lr=0.0,
