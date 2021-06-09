@@ -58,7 +58,7 @@ class BaseDetector(BaseModel):
         return net
 
     def _fix_transforms_shape(self, image_shape):
-        pass
+        raise NotImplementedError("_fix_transforms_shape: not implemented!")
 
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
