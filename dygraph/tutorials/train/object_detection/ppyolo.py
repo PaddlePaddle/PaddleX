@@ -51,9 +51,9 @@ model.train(
     train_batch_size=8,
     eval_dataset=eval_dataset,
     learning_rate=0.005 / 12,
-    warmup_steps=500,
+    warmup_steps=1000,
     warmup_start_lr=0.0,
     save_interval_epochs=5,
-    lr_decay_epochs=[160, 210, 230],
+    lr_decay_epochs=[243, 324],
     save_dir='output/ppyolo_r50vd_dcn',
     use_vdl=True)
