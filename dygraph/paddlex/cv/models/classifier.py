@@ -90,6 +90,7 @@ class BaseClassifier(BaseModel):
             acc1 = paddle.metric.accuracy(softmax_out, label=labels)
             k = min(5, self.num_classes)
             acck = paddle.metric.accuracy(softmax_out, label=labels, k=k)
+            prediction = softmax_out
             # multi cards eval
             if paddle.distributed.get_world_size() > 1:
                 acc1 = paddle.distributed.all_reduce(
@@ -98,9 +99,12 @@ class BaseClassifier(BaseModel):
                 acck = paddle.distributed.all_reduce(
                     acck, op=paddle.distributed.ReduceOp.
                     SUM) / paddle.distributed.get_world_size()
+                prediction = []
+                paddle.distributed.all_gather(prediction, softmax_out)
+                prediction = paddle.concat(prediction, axis=0)
 
             outputs = OrderedDict([('acc1', acc1), ('acc{}'.format(k), acck),
-                                   ('prediction', softmax_out)])
+                                   ('prediction', prediction)])
 
         else:
             # mode == 'train'
@@ -347,7 +351,7 @@ class BaseClassifier(BaseModel):
             for step, data in enumerate(self.eval_data_loader()):
                 outputs = self.run(self.net, data, mode='eval')
                 if return_details:
-                    eval_details.append(outputs['prediction'].numpy())
+                    eval_details.append(outputs['prediction'].tolist())
                 outputs.pop('prediction')
                 eval_metrics.update(outputs)
         if return_details:
