@@ -156,6 +156,8 @@ class PPYOLO(cv.models.PPYOLO):
             nms_iou_threshold=0.45,
             train_random_shapes=None,
             input_channel=None):
+        if backbone == 'ResNet50_vd_ssld':
+            backbone = 'ResNet50_vd_dcn'
         if with_dcn_v2 is not None:
             logging.warning(
                 "`with_dcn_v2` is deprecated in PaddleX 2.0 and will not take effect. "

@@ -17,14 +17,14 @@ function:
 """
 
 import numpy as np
-from .operators import Transform, Compose, ResizeByShort, Resize, RandomHorizontalFlip, Normalize, MixupImage
+from .operators import Transform, Compose, ResizeByShort, Resize, RandomHorizontalFlip, Normalize, MixupImage, RandomDistort
 from .operators import RandomExpand as dy_RandomExpand
 from .operators import RandomCrop as dy_RandomCrop
 from .functions import is_poly, expand_poly, expand_rle
 
 __all__ = [
     'Compose', 'ResizeByShort', 'Resize', 'RandomHorizontalFlip', 'Normalize',
-    'MixupImage', 'Padding', 'RandomExpand', 'RandomCrop'
+    'MixupImage', 'Padding', 'RandomExpand', 'RandomCrop', 'RandomDistort'
 ]
 
 
