@@ -1,8 +1,8 @@
 import paddlex as pdx
 from paddlex import transforms as T
 
-# 下载和解压昆虫检测数据集
-dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
+# 下载和解压小度熊分拣数据集
+dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
