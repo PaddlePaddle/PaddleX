@@ -364,12 +364,10 @@ class BaseSegmenter(BaseModel):
                         label_area_list = label_area_list[:valid]
                         conf_mat_list = conf_mat_list[:valid]
 
-                    for i in range(len(intersect_area_list)):
-                        intersect_area_all = intersect_area_all + intersect_area_list[
-                            i]
-                        pred_area_all = pred_area_all + pred_area_list[i]
-                        label_area_all = label_area_all + label_area_list[i]
-                    conf_mat_all = conf_mat_all + conf_mat_list
+                    intersect_area_all += sum(intersect_area_list)
+                    pred_area_all += sum(pred_area_list)
+                    label_area_all += sum(label_area_list)
+                    conf_mat_all.extend(conf_mat_list)
 
                 else:
                     intersect_area_all = intersect_area_all + intersect_area
