@@ -419,9 +419,6 @@ class BaseDetector(BaseModel):
             if return_details:
                 return scores, self.eval_details
             return scores
-        if return_details:
-            return None, None
-        return None
 
     def predict(self, img_file, transforms=None):
         """
