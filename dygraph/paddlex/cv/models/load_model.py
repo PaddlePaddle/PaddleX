@@ -13,13 +13,36 @@
 # limitations under the License.
 
 import os.path as osp
-
+import numpy as np
 import yaml
 import paddle
 import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
+
+
+def load_rcnn_inference_model(model_dir):
+    paddle.enable_static()
+    exe = paddle.static.Executor(paddle.CPUPlace())
+    path_prefix = osp.join(model_dir, "model")
+    prog, _, _ = paddle.static.load_inference_model(path_prefix, exe)
+    paddle.disable_static()
+    extra_var_info = paddle.load(osp.join(model_dir, "model.pdiparams.info"))
+
+    net_state_dict = dict()
+    static_state_dict = dict()
+
+    for name, var in prog.state_dict().items():
+        static_state_dict[name] = np.array(var)
+    for var_name in static_state_dict:
+        if var_name not in extra_var_info:
+            continue
+        structured_name = extra_var_info[var_name].get('structured_name', None)
+        if structured_name is None:
+            continue
+        net_state_dict[structured_name] = static_state_dict[var_name]
+    return net_state_dict
 
 
 def load_model(model_dir):
@@ -85,41 +108,7 @@ def load_model(model_dir):
 
         if status == 'Infer':
             if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
-                #net_state_dict = paddle.load(
-                #    model_dir,
-                #    params_filename='model.pdiparams',
-                #    model_filename='model.pdmodel')
-
-                net = paddle.jit.load(osp.join(model_dir, 'model'))
-                #load_param_dict = paddle.load(osp.join(model_dir, 'model.pdiparams'))
-                #print(load_param_dict)
-
-                import pickle
-                var_info_path = osp.join(model_dir, 'model.pdiparams.info')
-                with open(var_info_path, 'rb') as f:
-                    extra_var_info = pickle.load(f)
-                net_state_dict = dict()
-                static_state_dict = dict()
-                for name, var in net.state_dict().items():
-                    print(name, var.name)
-                    static_state_dict[var.name] = var.numpy()
-                exit()
-                for var_name in static_state_dict:
-                    if var_name not in extra_var_info:
-                        print(var_name)
-                        continue
-                    structured_name = extra_var_info[var_name].get(
-                        'structured_name', None)
-                    if structured_name is None:
-                        continue
-                    net_state_dict[structured_name] = static_state_dict[
-                        var_name]
-
-                #model.net = paddle.jit.load(
-                #    model_dir,
-                #    params_filename='model.pdiparams',
-                #    model_filename='model.pdmodel')
-                #net_state_dict = paddle.load(osp.join(model_dir, 'model'))
+                net_state_dict = load_rcnn_inference_model(model_dir)
             else:
                 net_state_dict = paddle.load(osp.join(model_dir, 'model'))
         else:

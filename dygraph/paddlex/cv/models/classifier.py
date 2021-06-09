@@ -529,16 +529,18 @@ class AlexNet(BaseClassifier):
         super(AlexNet, self).__init__(
             model_name='AlexNet', num_classes=num_classes)
 
-    def get_test_inputs(self, image_shape):
+    def _get_test_inputs(self, image_shape):
         if image_shape is not None:
             if len(image_shape) == 2:
                 image_shape = [None, 3] + image_shape
         else:
-            image_shape = [224, 224]
+            image_shape = [None, 3, 224, 224]
             logging.info('When exporting inference model for {},'.format(
                 self.__class__.__name__
             ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
                          )
+        self._fix_transforms_shape(image_shape[-2:])
+
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -732,16 +734,17 @@ class ShuffleNetV2(BaseClassifier):
         super(ShuffleNetV2, self).__init__(
             model_name=model_name, num_classes=num_classes)
 
-    def get_test_inputs(self, image_shape):
+    def _get_test_inputs(self, image_shape):
         if image_shape is not None:
             if len(image_shape) == 2:
                 image_shape = [None, 3] + image_shape
         else:
-            image_shape = [224, 224]
+            image_shape = [None, 3, 224, 224]
             logging.info('When exporting inference model for {},'.format(
                 self.__class__.__name__
             ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
                          )
+        self._fix_transforms_shape(image_shape[-2:])
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -754,16 +757,17 @@ class ShuffleNetV2_swish(BaseClassifier):
         super(ShuffleNetV2_swish, self).__init__(
             model_name='ShuffleNetV2_x1_5', num_classes=num_classes)
 
-    def get_test_inputs(self, image_shape):
+    def _get_test_inputs(self, image_shape):
         if image_shape is not None:
             if len(image_shape) == 2:
                 image_shape = [None, 3] + image_shape
         else:
-            image_shape = [224, 224]
+            image_shape = [None, 3, 224, 224]
             logging.info('When exporting inference model for {},'.format(
                 self.__class__.__name__
             ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
                          )
+        self._fix_transforms_shape(image_shape[-2:])
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')

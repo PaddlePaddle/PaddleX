@@ -238,24 +238,20 @@ class Resize(Transform):
         self.interp = interp
         self.keep_ratio = keep_ratio
 
-    def apply_im(self, image, interp):
-        image = cv2.resize(
-            image, (self.target_size[1], self.target_size[0]),
-            interpolation=interp)
+    def apply_im(self, image, interp, target_size):
+        image = cv2.resize(image, target_size, interpolation=interp)
         return image
 
     def apply_mask(self, mask):
-        mask = cv2.resize(
-            mask, (self.target_size[1], self.target_size[0]),
-            interpolation=cv2.INTER_NEAREST)
+        mask = cv2.resize(mask, target_size, interpolation=cv2.INTER_NEAREST)
         return mask
 
-    def apply_bbox(self, bbox, scale):
+    def apply_bbox(self, bbox, scale, target_size):
         im_scale_x, im_scale_y = scale
         bbox[:, 0::2] *= im_scale_x
         bbox[:, 1::2] *= im_scale_y
-        bbox[:, 0::2] = np.clip(bbox[:, 0::2], 0, self.target_size[1])
-        bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, self.target_size[0])
+        bbox[:, 0::2] = np.clip(bbox[:, 0::2], 0, target_size[0])
+        bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, target_size[1])
         return bbox
 
     def apply_segm(self, segms, im_size, scale):
@@ -284,22 +280,22 @@ class Resize(Transform):
 
         im_scale_y = self.target_size[0] / im_h
         im_scale_x = self.target_size[1] / im_w
-        target_size = list(self.target_size)
+        target_size = (self.target_size[1], self.target_size[0])
         if self.keep_ratio:
             scale = min(im_scale_y, im_scale_x)
             target_w = int(round(im_w * scale))
             target_h = int(round(im_h * scale))
-            target_size = [target_w, target_h]
+            target_size = (target_w, target_h)
             im_scale_y = target_h / im_h
             im_scale_x = target_w / im_w
 
-        sample['image'] = self.apply_im(sample['image'], interp)
+        sample['image'] = self.apply_im(sample['image'], interp, target_size)
 
         if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'])
+            sample['mask'] = self.apply_mask(sample['mask'], target_size)
         if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-            sample['gt_bbox'] = self.apply_bbox(sample['gt_bbox'],
-                                                [im_scale_x, im_scale_y])
+            sample['gt_bbox'] = self.apply_bbox(
+                sample['gt_bbox'], [im_scale_x, im_scale_y], target_size)
         if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
             sample['gt_poly'] = self.apply_segm(
                 sample['gt_poly'], [im_h, im_w], [im_scale_x, im_scale_y])

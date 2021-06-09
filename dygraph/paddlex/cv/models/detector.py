@@ -1640,9 +1640,13 @@ class MaskRCNN(BaseDetector):
                     self.test_transforms.transforms.insert(
                         normalize_op_idx,
                         Resize(
-                            target_size=image_shape, keep_ratio=True))
+                            target_size=image_shape,
+                            keep_ratio=True,
+                            interp='CUBIC'))
                 else:
                     self.test_transforms.transforms[resize_op_idx] = Resize(
-                        target_size=image_shape, keep_ratio=True)
+                        target_size=image_shape,
+                        keep_ratio=True,
+                        interp='CUBIC')
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
