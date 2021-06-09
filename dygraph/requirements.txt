@@ -1,4 +1,4 @@
--r PaddleClas/requirements.txt
+-r ./PaddleClas/requirements.txt
 -r ./PaddleSeg/requirements.txt
 ./PaddleSeg
 -r ./PaddleDetection/requirements.txt
