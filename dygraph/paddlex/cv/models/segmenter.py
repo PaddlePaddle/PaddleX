@@ -390,7 +390,7 @@ class BaseSegmenter(BaseModel):
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
 
         if return_details:
-            conf_mat = sum(conf_mat_all).numpy()
+            conf_mat = sum(conf_mat_all)
             eval_details = {'confusion_matrix': conf_mat.tolist()}
             return eval_metrics, eval_details
         return eval_metrics
