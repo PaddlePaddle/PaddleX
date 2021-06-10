@@ -46,7 +46,7 @@ model = pdx.models.PPYOLO(num_classes=num_classes, backbone='ResNet50_vd_dcn')
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
-    num_epochs=405,
+    num_epochs=200,
     train_dataset=train_dataset,
     train_batch_size=8,
     eval_dataset=eval_dataset,
@@ -55,6 +55,6 @@ model.train(
     warmup_steps=1000,
     warmup_start_lr=0.0,
     save_interval_epochs=5,
-    lr_decay_epochs=[243, 324],
+    lr_decay_epochs=[105, 135, 155],
     save_dir='output/ppyolo_r50vd_dcn',
     use_vdl=True)
