@@ -50,13 +50,14 @@ model = pdx.models.PPYOLOv2(
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
-    num_epochs=365,
+    num_epochs=170,
     train_dataset=train_dataset,
     train_batch_size=8,
     eval_dataset=eval_dataset,
+    pretrain_weights='COCO',
     learning_rate=0.005 / 12,
     warmup_steps=1000,
     warmup_start_lr=0.0,
-    lr_decay_epochs=[243],
+    lr_decay_epochs=[105, 135, 150],
     save_interval_epochs=5,
     save_dir='output/ppyolov2_r50vd_dcn')
