@@ -480,6 +480,22 @@ def _legacy_train(model,
     train_dataset.batch_transforms = model._compose_batch_transform(
         train_dataset.transforms, mode='train')
 
+    # initiate weights
+    if pretrain_weights is not None and not osp.exists(pretrain_weights):
+        if pretrain_weights not in det_pretrain_weights_dict['_'.join(
+            [model.model_name, model.backbone_name])]:
+            logging.warning("Path of pretrain_weights('{}') does not exist!".
+                            format(pretrain_weights))
+            pretrain_weights = det_pretrain_weights_dict['_'.join(
+                [model.model_name, model.backbone_name])][0]
+            logging.warning("Pretrain_weights is forcibly set to '{}'. "
+                            "If you don't want to use pretrain weights, "
+                            "set pretrain_weights to be None.".format(
+                                pretrain_weights))
+    pretrained_dir = osp.join(save_dir, 'pretrain')
+    model.net_initialize(
+        pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+
     if sensitivities_file is not None:
         dataset = eval_dataset or train_dataset
         im_shape = dataset[0]['image'].shape[:2]
@@ -511,22 +527,6 @@ def _legacy_train(model,
             num_steps_each_epoch=num_steps_each_epoch)
     else:
         model.optimizer = optimizer
-
-    # initiate weights
-    if pretrain_weights is not None and not osp.exists(pretrain_weights):
-        if pretrain_weights not in det_pretrain_weights_dict['_'.join(
-            [model.model_name, model.backbone_name])]:
-            logging.warning("Path of pretrain_weights('{}') does not exist!".
-                            format(pretrain_weights))
-            pretrain_weights = det_pretrain_weights_dict['_'.join(
-                [model.model_name, model.backbone_name])][0]
-            logging.warning("Pretrain_weights is forcibly set to '{}'. "
-                            "If you don't want to use pretrain weights, "
-                            "set pretrain_weights to be None.".format(
-                                pretrain_weights))
-    pretrained_dir = osp.join(save_dir, 'pretrain')
-    model.net_initialize(
-        pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
 
     if use_ema:
         ema = ExponentialMovingAverage(

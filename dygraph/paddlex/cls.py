@@ -1202,6 +1202,19 @@ def _legacy_train(model, num_epochs, train_dataset, train_batch_size,
                   early_stop, early_stop_patience):
     model.labels = train_dataset.labels
 
+    # initiate weights
+    if pretrain_weights is not None and not osp.exists(pretrain_weights):
+        if pretrain_weights not in ['IMAGENET']:
+            logging.warning("Path of pretrain_weights('{}') does not exist!".
+                            format(pretrain_weights))
+            logging.warning("Pretrain_weights is forcibly set to 'IMAGENET'. "
+                            "If don't want to use pretrain weights, "
+                            "set pretrain_weights to be None.")
+            pretrain_weights = 'IMAGENET'
+    pretrained_dir = osp.join(save_dir, 'pretrain')
+    model.net_initialize(
+        pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+
     if sensitivities_file is not None:
         dataset = eval_dataset or train_dataset
         inputs = [1, 3] + list(dataset[0]['image'].shape[:2])
@@ -1222,19 +1235,6 @@ def _legacy_train(model, num_epochs, train_dataset, train_batch_size,
             num_steps_each_epoch=num_steps_each_epoch)
     else:
         model.optimizer = optimizer
-
-    # initiate weights
-    if pretrain_weights is not None and not osp.exists(pretrain_weights):
-        if pretrain_weights not in ['IMAGENET']:
-            logging.warning("Path of pretrain_weights('{}') does not exist!".
-                            format(pretrain_weights))
-            logging.warning("Pretrain_weights is forcibly set to 'IMAGENET'. "
-                            "If don't want to use pretrain weights, "
-                            "set pretrain_weights to be None.")
-            pretrain_weights = 'IMAGENET'
-    pretrained_dir = osp.join(save_dir, 'pretrain')
-    model.net_initialize(
-        pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
 
     model.train_loop(
         num_epochs=num_epochs,
