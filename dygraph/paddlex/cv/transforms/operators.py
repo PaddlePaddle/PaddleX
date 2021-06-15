@@ -242,7 +242,7 @@ class Resize(Transform):
         image = cv2.resize(image, target_size, interpolation=interp)
         return image
 
-    def apply_mask(self, mask):
+    def apply_mask(self, mask, target_size):
         mask = cv2.resize(mask, target_size, interpolation=cv2.INTER_NEAREST)
         return mask
 
