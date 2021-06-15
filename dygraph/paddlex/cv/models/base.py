@@ -122,7 +122,14 @@ class BaseModel:
         info = dict()
         info['pruner'] = self.pruner.__class__.__name__
         info['pruning_ratios'] = self.pruning_ratios
-        info['pruner_inputs'] = self.pruner.inputs
+        pruner_inputs = self.pruner.inputs
+        if self.model_type == 'detector':
+            pruner_inputs = {
+                k: v.tolist()
+                for k, v in pruner_inputs[0].items()
+            }
+        info['pruner_inputs'] = pruner_inputs
+
         return info
 
     def get_quant_info(self):
@@ -333,12 +340,13 @@ class BaseModel:
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
-                    self.eval_metrics = self.evaluate(
+                    eval_result = self.evaluate(
                         eval_dataset,
                         batch_size=eval_batch_size,
-                        return_details=False)
+                        return_details=True)
                     # 保存最优模型
                     if local_rank == 0:
+                        self.eval_metrics, self.eval_details = eval_result
                         logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                             i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
@@ -426,12 +434,7 @@ class BaseModel:
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
             pre_pruning_flops))
-        skip_vars = []
-        for param in self.net.parameters():
-            if param.shape[0] <= 8:
-                skip_vars.append(param.name)
-        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops,
-                                                 skip_vars)
+        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops)
         post_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
             post_pruning_flops))

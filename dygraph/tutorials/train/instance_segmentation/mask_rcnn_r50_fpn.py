@@ -1,8 +1,8 @@
 import paddlex as pdx
 from paddlex import transforms as T
 
-# 下载和解压昆虫检测数据集
-dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
+# 下载和解压小度熊分拣数据集
+dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
@@ -22,25 +22,21 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/datasets/voc.py#L29
-train_dataset = pdx.datasets.VOCDetection(
-    data_dir='insect_det',
-    file_list='insect_det/train_list.txt',
-    label_list='insect_det/labels.txt',
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/paddlex/cv/datasets/coco.py#L26
+train_dataset = pdx.datasets.CocoDetection(
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/train.json',
     transforms=train_transforms,
     shuffle=True)
-
-eval_dataset = pdx.datasets.VOCDetection(
-    data_dir='insect_det',
-    file_list='insect_det/val_list.txt',
-    label_list='insect_det/labels.txt',
-    transforms=eval_transforms,
-    shuffle=False)
+eval_dataset = pdx.datasets.CocoDetection(
+    data_dir='xiaoduxiong_ins_det/JPEGImages',
+    ann_file='xiaoduxiong_ins_det/val.json',
+    transforms=eval_transforms)
 
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
-model = pdx.models.FasterRCNN(
+model = pdx.models.MaskRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
@@ -48,11 +44,11 @@ model = pdx.models.FasterRCNN(
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,
-    train_batch_size=2,
+    train_batch_size=1,
     eval_dataset=eval_dataset,
-    learning_rate=0.0025,
+    learning_rate=0.00125,
     lr_decay_epochs=[8, 11],
-    warmup_steps=500,
-    warmup_start_lr=0.00025,
-    save_dir='output/faster_rcnn_r50_fpn',
+    warmup_steps=10,
+    warmup_start_lr=0.0,
+    save_dir='output/mask_rcnn_r50_fpn',
     use_vdl=True)
