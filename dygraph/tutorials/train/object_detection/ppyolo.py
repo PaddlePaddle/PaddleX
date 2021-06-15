@@ -52,9 +52,9 @@ model.train(
     eval_dataset=eval_dataset,
     pretrain_weights='COCO',
     learning_rate=0.005 / 12,
-    warmup_steps=1000,
+    warmup_steps=500,
     warmup_start_lr=0.0,
     save_interval_epochs=5,
-    lr_decay_epochs=[105, 135, 155],
+    lr_decay_epochs=[85, 135],
     save_dir='output/ppyolo_r50vd_dcn',
     use_vdl=True)
