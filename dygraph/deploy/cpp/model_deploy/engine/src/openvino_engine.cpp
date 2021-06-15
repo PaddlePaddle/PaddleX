@@ -25,9 +25,7 @@ bool Model::OpenVinoEngineInit(const OpenVinoEngineConfig& engine_config) {
 bool OpenVinoEngine::Init(const InferenceConfig& infer_config) {
   const OpenVinoEngineConfig& engine_config = *(infer_config.openvino_config);
   InferenceEngine::Core ie;
-  std::string bin_file = engine_config.model_file_.substr(0,
-                                 engine_config.model_file_.size() - 4) + ".bin";
-  network_ = ie.ReadNetwork(engine_config.model_file_, bin_file);
+  network_ = ie.ReadNetwork(engine_config.xml_file_, engine_config.bin_file_);
   network_.setBatchSize(engine_config.batch_size_);
   if (engine_config.device_ == "MYRIAD") {
     std::map<std::string, std::string> networkConfig;

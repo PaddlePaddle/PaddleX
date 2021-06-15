@@ -33,7 +33,7 @@ struct PaddleEngineConfig {
   bool use_mkl = true;
 
   //  The number of threads set when using mkldnn accelerator
-  int mkl_thread_num = 1;
+  int mkl_thread_num = 8;
 
   //  Whether to use GPU
   bool use_gpu = false;
@@ -160,8 +160,11 @@ struct TensorRTEngineConfig {
 };
 
 struct OpenVinoEngineConfig {
-  // onnx model path
-  std::string model_file_ = "";
+  // openvino xml file path
+  std::string xml_file_ = "";
+
+  // openvino bin file path
+  std::string bin_file_ = "";
 
   //  Set batchsize
   int batch_size_ = 1;

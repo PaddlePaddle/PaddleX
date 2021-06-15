@@ -22,7 +22,8 @@
 
 #include "model_deploy/common/include/paddle_deploy.h"
 
-DEFINE_string(model_filename, "", "Path of det inference model");
+DEFINE_string(xml_file, "", "Path of model xml file");
+DEFINE_string(bin_file, "", "Path of model bin file");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
@@ -43,7 +44,8 @@ int main(int argc, char** argv) {
 
   // engine init
   PaddleDeploy::OpenVinoEngineConfig engine_config;
-  engine_config.model_file_ = FLAGS_model_filename;
+  engine_config.xml_file_ = FLAGS_xml_file;
+  engine_config.bin_file_ = FLAGS_bin_file;
   engine_config.batch_size_ = 1;
   engine_config.device_ = FLAGS_device;
   model->OpenVinoEngineInit(engine_config);
