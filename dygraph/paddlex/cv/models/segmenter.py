@@ -27,7 +27,7 @@ import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
 from paddlex.utils.checkpoint import seg_pretrain_weights_dict
-from paddlex.cv.transforms import Decode
+from paddlex.cv.transforms import Decode, Resize
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
@@ -58,10 +58,37 @@ class BaseSegmenter(BaseModel):
             num_classes=self.num_classes, **params)
         return net
 
-    def get_test_inputs(self, image_shape):
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+                    if 'Resize' in name:
+                        has_resize_op = True
+                        resize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx, Resize(target_size=image_shape))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape)
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
