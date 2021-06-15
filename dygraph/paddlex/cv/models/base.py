@@ -479,10 +479,10 @@ class BaseModel:
         logging.info("Model is ready for quantization-aware training.")
         self.status = 'Quantized'
 
-    def _export_inference_model(self, save_dir, image_shape=[-1, -1]):
+    def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
         self.net.eval()
-        self.test_inputs = self.get_test_inputs(image_shape)
+        self.test_inputs = self._get_test_inputs(image_shape)
 
         if self.status == 'Quantized':
             self.quantizer.save_quantized_model(self.net,
