@@ -13,10 +13,6 @@
 # limitations under the License.
 
 import copy
-import os.path as osp
-import numpy as np
-import paddle
-from paddleslim import L1NormFilterPruner
 from . import cv
 from .cv.models.utils.visualize import visualize_detection, draw_pr_curve
 from paddlex.cv.transforms import det_transforms
@@ -24,8 +20,6 @@ from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XY
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, \
     _BatchPadding, _Gt2YoloTarget
 import paddlex.utils.logging as logging
-from paddlex.utils.checkpoint import det_pretrain_weights_dict
-from paddlex.cv.models.utils.ema import ExponentialMovingAverage
 
 transforms = det_transforms
 
@@ -104,50 +98,6 @@ class FasterRCNN(cv.models.FasterRCNN):
             test_pre_nms_top_n=test_pre_nms_top_n,
             test_post_nms_top_n=test_post_nms_top_n)
 
-    def train(self,
-              num_epochs,
-              train_dataset,
-              train_batch_size=2,
-              eval_dataset=None,
-              save_interval_epochs=1,
-              log_interval_steps=2,
-              save_dir='output',
-              pretrain_weights='IMAGENET',
-              optimizer=None,
-              learning_rate=0.0025,
-              warmup_steps=500,
-              warmup_start_lr=1.0 / 1200,
-              lr_decay_epochs=[8, 11],
-              lr_decay_gamma=0.1,
-              metric=None,
-              use_vdl=False,
-              early_stop=False,
-              early_stop_patience=5,
-              sensitivities_file=None,
-              pruned_flops=.2):
-        _legacy_train(
-            self,
-            num_epochs=num_epochs,
-            train_dataset=train_dataset,
-            train_batch_size=train_batch_size,
-            eval_dataset=eval_dataset,
-            save_interval_epochs=save_interval_epochs,
-            log_interval_steps=log_interval_steps,
-            save_dir=save_dir,
-            pretrain_weights=pretrain_weights,
-            optimizer=optimizer,
-            learning_rate=learning_rate,
-            warmup_steps=warmup_steps,
-            warmup_start_lr=warmup_start_lr,
-            lr_decay_epochs=lr_decay_epochs,
-            lr_decay_gamma=lr_decay_gamma,
-            metric=metric,
-            use_vdl=use_vdl,
-            early_stop=early_stop,
-            early_stop_patience=early_stop_patience,
-            sensitivities_file=sensitivities_file,
-            pruned_flops=pruned_flops)
-
 
 class YOLOv3(cv.models.YOLOv3):
     def __init__(self,
@@ -186,50 +136,6 @@ class YOLOv3(cv.models.YOLOv3):
             nms_iou_threshold=nms_iou_threshold,
             label_smooth=label_smooth)
         self.train_random_shapes = train_random_shapes
-
-    def train(self,
-              num_epochs,
-              train_dataset,
-              train_batch_size=8,
-              eval_dataset=None,
-              save_interval_epochs=20,
-              log_interval_steps=2,
-              save_dir='output',
-              pretrain_weights='IMAGENET',
-              optimizer=None,
-              learning_rate=1.0 / 8000,
-              warmup_steps=1000,
-              warmup_start_lr=0.0,
-              lr_decay_epochs=[213, 240],
-              lr_decay_gamma=0.1,
-              metric=None,
-              use_vdl=False,
-              sensitivities_file=None,
-              pruned_flops=.2,
-              early_stop=False,
-              early_stop_patience=5):
-        _legacy_train(
-            self,
-            num_epochs=num_epochs,
-            train_dataset=train_dataset,
-            train_batch_size=train_batch_size,
-            eval_dataset=eval_dataset,
-            save_interval_epochs=save_interval_epochs,
-            log_interval_steps=log_interval_steps,
-            save_dir=save_dir,
-            pretrain_weights=pretrain_weights,
-            optimizer=optimizer,
-            learning_rate=learning_rate,
-            warmup_steps=warmup_steps,
-            warmup_start_lr=warmup_start_lr,
-            lr_decay_epochs=lr_decay_epochs,
-            lr_decay_gamma=lr_decay_gamma,
-            metric=metric,
-            use_vdl=use_vdl,
-            early_stop=early_stop,
-            early_stop_patience=early_stop_patience,
-            sensitivities_file=sensitivities_file,
-            pruned_flops=pruned_flops)
 
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
@@ -334,55 +240,6 @@ class PPYOLO(cv.models.PPYOLO):
             nms_iou_threshold=nms_iou_threshold)
         self.train_random_shapes = train_random_shapes
 
-    def train(self,
-              num_epochs,
-              train_dataset,
-              train_batch_size=8,
-              eval_dataset=None,
-              save_interval_epochs=20,
-              log_interval_steps=2,
-              save_dir='output',
-              pretrain_weights='IMAGENET',
-              optimizer=None,
-              learning_rate=1.0 / 8000,
-              warmup_steps=1000,
-              warmup_start_lr=0.0,
-              lr_decay_epochs=[213, 240],
-              lr_decay_gamma=0.1,
-              metric=None,
-              use_vdl=False,
-              sensitivities_file=None,
-              pruned_flops=.2,
-              early_stop=False,
-              early_stop_patience=5,
-              resume_checkpoint=None,
-              use_ema=True,
-              ema_decay=0.9998):
-        _legacy_train(
-            self,
-            num_epochs=num_epochs,
-            train_dataset=train_dataset,
-            train_batch_size=train_batch_size,
-            eval_dataset=eval_dataset,
-            save_interval_epochs=save_interval_epochs,
-            log_interval_steps=log_interval_steps,
-            save_dir=save_dir,
-            pretrain_weights=pretrain_weights,
-            optimizer=optimizer,
-            learning_rate=learning_rate,
-            warmup_steps=warmup_steps,
-            warmup_start_lr=warmup_start_lr,
-            lr_decay_epochs=lr_decay_epochs,
-            lr_decay_gamma=lr_decay_gamma,
-            metric=metric,
-            use_vdl=use_vdl,
-            early_stop=early_stop,
-            early_stop_patience=early_stop_patience,
-            sensitivities_file=sensitivities_file,
-            pruned_flops=pruned_flops,
-            use_ema=use_ema,
-            ema_decay=ema_decay)
-
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
@@ -424,125 +281,3 @@ class PPYOLO(cv.models.PPYOLO):
             collate_batch=collate_batch)
 
         return batch_transforms
-
-
-def _legacy_train(model,
-                  num_epochs,
-                  train_dataset,
-                  train_batch_size,
-                  eval_dataset,
-                  save_interval_epochs,
-                  log_interval_steps,
-                  save_dir,
-                  pretrain_weights,
-                  optimizer,
-                  learning_rate,
-                  warmup_steps,
-                  warmup_start_lr,
-                  lr_decay_epochs,
-                  lr_decay_gamma,
-                  metric,
-                  use_vdl,
-                  early_stop,
-                  early_stop_patience,
-                  sensitivities_file,
-                  pruned_flops,
-                  use_ema=False,
-                  ema_decay=0.9998):
-    if train_dataset.__class__.__name__ == 'VOCDetection':
-        train_dataset.data_fields = {
-            'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class', 'difficult'
-        }
-    elif train_dataset.__class__.__name__ == 'CocoDetection':
-        if model.__class__.__name__ == 'MaskRCNN':
-            train_dataset.data_fields = {
-                'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
-                'gt_poly', 'is_crowd'
-            }
-        else:
-            train_dataset.data_fields = {
-                'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
-                'is_crowd'
-            }
-
-    if metric is None:
-        if eval_dataset.__class__.__name__ == 'VOCDetection':
-            model.metric = 'voc'
-        elif eval_dataset.__class__.__name__ == 'CocoDetection':
-            model.metric = 'coco'
-    else:
-        assert metric.lower() in ['coco', 'voc'], \
-            "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
-        model.metric = metric.lower()
-
-    model.labels = train_dataset.labels
-    model.num_max_boxes = train_dataset.num_max_boxes
-    train_dataset.batch_transforms = model._compose_batch_transform(
-        train_dataset.transforms, mode='train')
-
-    # initiate weights
-    if pretrain_weights is not None and not osp.exists(pretrain_weights):
-        if pretrain_weights not in det_pretrain_weights_dict['_'.join(
-            [model.model_name, model.backbone_name])]:
-            logging.warning("Path of pretrain_weights('{}') does not exist!".
-                            format(pretrain_weights))
-            pretrain_weights = det_pretrain_weights_dict['_'.join(
-                [model.model_name, model.backbone_name])][0]
-            logging.warning("Pretrain_weights is forcibly set to '{}'. "
-                            "If you don't want to use pretrain weights, "
-                            "set pretrain_weights to be None.".format(
-                                pretrain_weights))
-    pretrained_dir = osp.join(save_dir, 'pretrain')
-    model.net_initialize(
-        pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
-
-    if sensitivities_file is not None:
-        dataset = eval_dataset or train_dataset
-        im_shape = dataset[0]['image'].shape[:2]
-        if getattr(model, 'with_fpn', False):
-            im_shape[0] = int(np.ceil(im_shape[0] / 32) * 32)
-            im_shape[1] = int(np.ceil(im_shape[1] / 32) * 32)
-        inputs = [{
-            "image": paddle.ones(
-                shape=[1, 3] + list(im_shape), dtype='float32'),
-            "im_shape": paddle.full(
-                [1, 2], 640, dtype='float32'),
-            "scale_factor": paddle.ones(
-                shape=[1, 2], dtype='float32')
-        }]
-        model.pruner = L1NormFilterPruner(
-            model.net, inputs=inputs, sen_file=sensitivities_file)
-        model.pruner.sensitive_prune(pruned_flops=pruned_flops)
-
-    # build optimizer if not defined
-    if optimizer is None:
-        num_steps_each_epoch = len(train_dataset) // train_batch_size
-        model.optimizer = model.default_optimizer(
-            parameters=model.net.parameters(),
-            learning_rate=learning_rate,
-            warmup_steps=warmup_steps,
-            warmup_start_lr=warmup_start_lr,
-            lr_decay_epochs=lr_decay_epochs,
-            lr_decay_gamma=lr_decay_gamma,
-            num_steps_each_epoch=num_steps_each_epoch)
-    else:
-        model.optimizer = optimizer
-
-    if use_ema:
-        ema = ExponentialMovingAverage(
-            decay=ema_decay, model=model.net, use_thres_step=True)
-    else:
-        ema = None
-    # start train loop
-    model.train_loop(
-        num_epochs=num_epochs,
-        train_dataset=train_dataset,
-        train_batch_size=train_batch_size,
-        eval_dataset=eval_dataset,
-        save_interval_epochs=save_interval_epochs,
-        log_interval_steps=log_interval_steps,
-        save_dir=save_dir,
-        ema=ema,
-        early_stop=early_stop,
-        early_stop_patience=early_stop_patience,
-        use_vdl=use_vdl)
