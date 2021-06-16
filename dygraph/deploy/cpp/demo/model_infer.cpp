@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   // create model
-  Model* model = PaddleDeploy::CreateModel(FLAGS_model_type);
+  PaddleDeploy::Model* model = PaddleDeploy::CreateModel(FLAGS_model_type);
 
   // model init
   model->Init(FLAGS_cfg_file);
