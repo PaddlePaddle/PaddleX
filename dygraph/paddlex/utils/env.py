@@ -16,6 +16,7 @@ import sys
 import glob
 import os
 import os.path as osp
+import platform
 import random
 import numpy as np
 import multiprocessing as mp
@@ -47,6 +48,10 @@ def get_environ_info():
 
 
 def get_num_workers(num_workers):
+    if not platform.system() == 'Linux':
+        # Dataloader with multi-process model is not supported
+        # on MacOS and Windows currently.
+        return 0
     if num_workers == 'auto':
         num_workers = mp.cpu_count() // 2 if mp.cpu_count() // 2 < 2 else 2
     return num_workers
