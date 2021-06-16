@@ -50,7 +50,7 @@ class Register {
    public:                                                        \
     static Model* newInstance() {                                 \
       std::cerr << "REGISTER_CLASS:" << #model_type << std::endl; \
-      return std::make_shared<class_name>(#model_type);           \
+      return new class_name(#model_type);           \
     }                                                             \
                                                                   \
    private:                                                       \

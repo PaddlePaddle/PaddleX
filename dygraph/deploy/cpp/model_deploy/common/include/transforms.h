@@ -42,8 +42,8 @@ class Transform {
 class Normalize : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
-    std::vector<double> mean_ = item["mean"].as<std::vector<float>>();
-    std::vector<double> std_ = item["std"].as<std::vector<float>>();
+    std::vector<double> mean_ = item["mean"].as<std::vector<double>>();
+    std::vector<double> std_ = item["std"].as<std::vector<double>>();
     bool is_scale_;
     std::vector<double> min_val_;
     std::vector<double> max_val_;
@@ -55,12 +55,12 @@ class Normalize : public Transform {
     if (item["min_val"].IsDefined()) {
       min_val_ = item["min_val"].as<std::vector<float>>();
     } else {
-      min_val_ = std::vector<float>(mean_.size(), 0.);
+      min_val_ = std::vector<double>(mean_.size(), 0.);
     }
     if (item["max_val"].IsDefined()) {
       max_val_ = item["max_val"].as<std::vector<float>>();
     } else {
-      max_val_ = std::vector<float>(mean_.size(), 255.);
+      max_val_ = std::vector<double>(mean_.size(), 255.);
     }
 
     for (auto c = 0; c < mean_.size(); c++) {

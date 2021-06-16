@@ -55,7 +55,7 @@ class Model {
 
   virtual bool YamlConfigInit(const std::string& cfg_file) {
     // YAML::Node yaml_config_ = YAML::LoadFile(cfg_file);
-    std::cerr << "Error! The Base Model was incorrectly entered"
+    std::cerr << "Error! The Base Model was incorrectly entered" << std::endl;
     return false;
   }
 
