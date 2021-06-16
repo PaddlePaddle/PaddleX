@@ -26,13 +26,7 @@ bool Normalize::Run(cv::Mat *im) {
   std::vector<cv::Mat> split_im;
   cv::split(*im, split_im);
   for (int c = 0; c < im->channels(); c++) {
-    cv::subtract(split_im[c], cv::Scalar(min_val_[c]), split_im[c]);
-    if (is_scale_) {
-      float range_val = max_val_[c] - min_val_[c];
-      cv::divide(split_im[c], cv::Scalar(range_val), split_im[c]);
-    }
-    cv::subtract(split_im[c], cv::Scalar(mean_[c]), split_im[c]);
-    cv::divide(split_im[c], cv::Scalar(std_[c]), split_im[c]);
+    split_im[c].convertTo(split_im[c], CV_32FC1, alpha_[c], beta_[c]);
   }
   cv::merge(split_im, *im);
   return true;

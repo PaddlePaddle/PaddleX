@@ -26,14 +26,14 @@
 
 namespace PaddleDeploy {
 
-typedef std::shared_ptr<Model> (*NewInstance)();
+typedef Model* (*NewInstance)();
 
 class ModelFactory {
  private:
   static std::map<std::string, NewInstance> model_map_;
 
  public:
-  static std::shared_ptr<Model> CreateObject(const std::string &name);
+  static Model* CreateObject(const std::string &name);
 
   static void Register(const std::string &name, NewInstance model);
 };
@@ -48,7 +48,7 @@ class Register {
 #define REGISTER_CLASS(model_type, class_name)                    \
   class class_name##Register {                                    \
    public:                                                        \
-    static std::shared_ptr<Model> newInstance() {                 \
+    static Model* newInstance() {                                 \
       std::cerr << "REGISTER_CLASS:" << #model_type << std::endl; \
       return std::make_shared<class_name>(#model_type);           \
     }                                                             \
