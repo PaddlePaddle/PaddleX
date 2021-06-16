@@ -1372,6 +1372,38 @@ class PPYOLOv2(YOLOv3):
         self.downsample_ratios = downsample_ratios
         self.model_name = 'PPYOLOv2'
 
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
+                raise Exception(
+                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
+                    format(image_shape[-2:]))
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 608, 608]. '
+                +
+                'Please check image shape after transforms is [3, 608, 608], if not, fixed_input_shape '
+                + 'should be specified manually.')
+            image_shape = [None, 3, 608, 608]
+
+        input_spec = [{
+            "image": InputSpec(
+                shape=image_shape, name='image', dtype='float32'),
+            "im_shape": InputSpec(
+                shape=[image_shape[0], 2], name='im_shape', dtype='float32'),
+            "scale_factor": InputSpec(
+                shape=[image_shape[0], 2],
+                name='scale_factor',
+                dtype='float32')
+        }]
+
+        return input_spec
+
 
 class MaskRCNN(BaseDetector):
     def __init__(self,
