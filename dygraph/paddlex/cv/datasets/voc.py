@@ -113,11 +113,11 @@ class VOCDetection(Dataset):
                 if not osp.isfile(xml_file):
                     continue
                 if not osp.exists(img_file):
-                    logging.warning('The image file {} is not exist!'.format(
+                    logging.warning('The image file {} does not exist!'.format(
                         img_file))
                     continue
                 if not osp.exists(xml_file):
-                    logging.warning('The annotation file {} is not exist!'.
+                    logging.warning('The annotation file {} does not exist!'.
                                     format(xml_file))
                     continue
                 tree = ET.parse(xml_file)
