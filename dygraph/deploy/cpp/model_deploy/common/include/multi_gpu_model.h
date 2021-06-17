@@ -30,8 +30,7 @@ class MultiGPUModel {
             const std::string& cfg_file, size_t gpu_num = 1) {
     models_.clear();
     for (auto i = 0; i < gpu_num; ++i) {
-      std::shared_ptr<Model> model =
-          PaddleDeploy::ModelFactory::CreateObject(model_type);
+      Model* model = PaddleDeploy::ModelFactory::CreateObject(model_type);
 
       if (!model) {
         std::cerr << "no model_type: " << model_type << std::endl;
@@ -45,7 +44,7 @@ class MultiGPUModel {
         return false;
       }
 
-      models_.push_back(model);
+      models_.push_back(std::shared_ptr<Model>(model));
     }
     return true;
   }

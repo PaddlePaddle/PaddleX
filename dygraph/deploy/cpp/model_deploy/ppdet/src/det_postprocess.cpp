@@ -197,7 +197,7 @@ bool DetPostprocess::Run(const std::vector<DataBlob>& outputs,
                          std::vector<Result>* results, int thread_num) {
   results->clear();
   if (outputs.size() == 0) {
-    std::cerr << "empty input image on DetPostprocess" << std::endl;
+    std::cerr << "empty output on DetPostprocess" << std::endl;
     return true;
   }
   results->resize(shape_infos.size());
