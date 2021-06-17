@@ -241,7 +241,7 @@ class BaseSegmenter(BaseModel):
                                         0]))
                 pretrain_weights = seg_pretrain_weights_dict[self.model_name][
                     0]
-        elif osp.exists(pretrain_weights):
+        elif pretrain_weights is not None and osp.exists(pretrain_weights):
             if osp.splitext(pretrain_weights)[-1] != '.pdparams':
                 logging.error(
                     "Invalid pretrain weights. Please specify a '.pdparams' file.",
