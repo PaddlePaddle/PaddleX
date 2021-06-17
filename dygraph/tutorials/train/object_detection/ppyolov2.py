@@ -8,7 +8,7 @@ pdx.utils.download_and_decompress(dataset, path='./')
 # 定义训练和验证时的transforms
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
 train_transforms = T.Compose([
-    T.MixupImage(mixup_epoch=170), T.RandomDistort(),
+    T.MixupImage(mixup_epoch=-1), T.RandomDistort(),
     T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
     T.RandomHorizontalFlip(), T.BatchRandomResize(
         target_sizes=[
