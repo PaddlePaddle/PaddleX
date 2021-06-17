@@ -243,7 +243,7 @@ class BaseClassifier(BaseModel):
                     "If don't want to use pretrain weights, "
                     "set pretrain_weights to be None.")
                 pretrain_weights = 'IMAGENET'
-        elif osp.exists(pretrain_weights):
+        elif pretrain_weights is not None and osp.exists(pretrain_weights):
             if osp.splitext(pretrain_weights)[-1] != '.pdparams':
                 logging.error(
                     "Invalid pretrain weights. Please specify a '.pdparams' file.",
