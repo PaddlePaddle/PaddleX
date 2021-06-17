@@ -512,7 +512,7 @@ class BaseDetector(BaseModel):
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
-                        'category_id': int(num_id),
+                        'category_id': int(num_id) + 1,
                         'category': category,
                         'bbox': bbox,
                         'score': score
@@ -544,6 +544,7 @@ class BaseDetector(BaseModel):
                         if 'counts' in rle:
                             rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
+                        'category_id': int(label) + 1,
                         'category': category,
                         'segmentation': rle,
                         'score': score

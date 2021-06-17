@@ -89,7 +89,7 @@ class VOCDetection(Dataset):
         for k, v in cname2cid.items():
             annotations['categories'].append({
                 'supercategory': 'component',
-                'id': v,
+                'id': v + 1,
                 'name': k
             })
         ct = 0
@@ -219,7 +219,7 @@ class VOCDetection(Dataset):
                         'image_id': int(im_id[0]),
                         'bbox': [x1, y1, x2 - x1 + 1, y2 - y1 + 1],
                         'area': float((x2 - x1 + 1) * (y2 - y1 + 1)),
-                        'category_id': cname2cid[cname],
+                        'category_id': cname2cid[cname] + 1,
                         'id': ann_ct,
                         'difficult': _difficult
                     })
