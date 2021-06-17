@@ -14,9 +14,6 @@
 
 from . import cv
 import paddlex.utils.logging as logging
-import paddlex
-
-transforms = paddlex.cv.transforms
 
 
 class ResNet18(cv.models.ResNet18):
