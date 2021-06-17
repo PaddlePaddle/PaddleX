@@ -30,10 +30,11 @@ from .functions import normalize, horizontal_flip, permute, vertical_flip, cente
 
 __all__ = [
     "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
-    "RandomResizeByShort", "RandomHorizontalFlip", "RandomVerticalFlip",
-    "Normalize", "CenterCrop", "RandomCrop", "RandomScaleAspect",
-    "RandomExpand", "Padding", "MixupImage", "RandomDistort", "RandomBlur",
-    "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector"
+    "RandomResizeByShort", "ResizeByLong", "RandomHorizontalFlip",
+    "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
+    "RandomScaleAspect", "RandomExpand", "Padding", "MixupImage",
+    "RandomDistort", "RandomBlur", "ArrangeSegmenter", "ArrangeClassifier",
+    "ArrangeDetector"
 ]
 
 interp_dict = {
@@ -375,44 +376,7 @@ class ResizeByShort(Transform):
         self.max_size = max_size
         self.interp = interp
 
-    def apply_im(self, image, interp, target_size):
-        image = cv2.resize(image, target_size, interpolation=interp)
-        return image
-
-    def apply_mask(self, mask, target_size):
-        mask = cv2.resize(mask, target_size, interpolation=cv2.INTER_NEAREST)
-        return mask
-
-    def apply_bbox(self, bbox, scale, target_size):
-        im_scale_x, im_scale_y = scale
-        bbox[:, 0::2] *= im_scale_x
-        bbox[:, 1::2] *= im_scale_y
-        bbox[:, 0::2] = np.clip(bbox[:, 0::2], 0, target_size[1])
-        bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, target_size[0])
-        return bbox
-
-    def apply_segm(self, segms, im_size, scale):
-        im_h, im_w = im_size
-        im_scale_x, im_scale_y = scale
-        resized_segms = []
-        for segm in segms:
-            if is_poly(segm):
-                # Polygon format
-                resized_segms.append([
-                    resize_poly(poly, im_scale_x, im_scale_y) for poly in segm
-                ])
-            else:
-                # RLE format
-                resized_segms.append(
-                    resize_rle(segm, im_h, im_w, im_scale_x, im_scale_y))
-
-        return resized_segms
-
     def apply(self, sample):
-        if self.interp == "RANDOM":
-            interp = random.choice(list(interp_dict.values()))
-        else:
-            interp = interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
         im_short_size = min(im_h, im_w)
         im_long_size = max(im_h, im_w)
@@ -422,25 +386,7 @@ class ResizeByShort(Transform):
         target_w = int(round(im_w * scale))
         target_h = int(round(im_h * scale))
         target_size = (target_w, target_h)
-
-        sample['image'] = self.apply_im(sample['image'], interp, target_size)
-        im_scale_y = target_h / im_h
-        im_scale_x = target_w / im_w
-        if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'], target_size)
-        if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-            sample['gt_bbox'] = self.apply_bbox(
-                sample['gt_bbox'], [im_scale_x, im_scale_y], target_size)
-        if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
-            sample['gt_poly'] = self.apply_segm(
-                sample['gt_poly'], [im_h, im_w], [im_scale_x, im_scale_y])
-        sample['im_shape'] = np.asarray(
-            sample['image'].shape[:2], dtype=np.float32)
-        if 'scale_factor' in sample:
-            scale_factor = sample['scale_factor']
-            sample['scale_factor'] = np.asarray(
-                [scale_factor[0] * im_scale_y, scale_factor[1] * im_scale_x],
-                dtype=np.float32)
+        sample = Resize(target_size=target_size, interp=self.interp)(sample)
 
         return sample
 
@@ -481,6 +427,24 @@ class RandomResizeByShort(Transform):
         resizer = ResizeByShort(
             short_size=short_size, max_size=self.max_size, interp=self.interp)
         sample = resizer(sample)
+        return sample
+
+
+class ResizeByLong(Transform):
+    def __init__(self, long_size=256, interp='LINEAR'):
+        super(ResizeByLong, self).__init__()
+        self.long_size = long_size
+        self.interp = interp
+
+    def apply(self, sample):
+        im_h, im_w = sample['image'].shape[:2]
+        im_long_size = max(im_h, im_w)
+        scale = float(self.long_size) / float(im_long_size)
+        target_h = int(round(im_h * scale))
+        target_w = int(round(im_w * scale))
+        target_size = (target_w, target_h)
+        sample = Resize(target_size=target_size, interp=self.interp)(sample)
+
         return sample
 
 
@@ -815,7 +779,7 @@ class RandomCrop(Transform):
 
     def apply_mask(self, mask, crop):
         x1, y1, x2, y2 = crop
-        return mask[y1:y2, x1:x2, :]
+        return mask[y1:y2, x1:x2, ...]
 
     def apply(self, sample):
         crop_info = self._generate_crop_info(sample)
