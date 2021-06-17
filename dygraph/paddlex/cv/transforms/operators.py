@@ -31,9 +31,9 @@ from .functions import normalize, horizontal_flip, permute, vertical_flip, cente
 __all__ = [
     "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
     "RandomResizeByShort", "RandomHorizontalFlip", "RandomVerticalFlip",
-    "Normalize", "CenterCrop", "RandomCrop", "RandomExpand", "Padding",
-    "MixupImage", "RandomDistort", "ArrangeSegmenter", "ArrangeClassifier",
-    "ArrangeDetector"
+    "Normalize", "CenterCrop", "RandomCrop", "RandomScaleAspect",
+    "RandomExpand", "Padding", "MixupImage", "RandomDistort", "RandomBlur",
+    "ArrangeSegmenter", "ArrangeClassifier", "ArrangeDetector"
 ]
 
 interp_dict = {
@@ -683,12 +683,13 @@ class RandomCrop(Transform):
     4. Resize the cropped area to crop_size by crop_size.
 
     Args:
-        crop_size(int or None, optional): Target size of the cropped area. If None, the cropped area will not be resized. Defaults to None.
-        aspect_ratio (List[float], optional): Aspect ratio of cropped region.
-            in [min, max] format. Defaults to [.5, .2].
-        thresholds (List[float], optional): Iou thresholds to decide a valid bbox crop. Defaults to [.0, .1, .3, .5, .7, .9].
-        scaling (List[float], optional): Ratio between the cropped region and the original image.
-             in [min, max] format, default [.3, 1.].
+        crop_size(int, List[int] or Tuple[int]): Target size of the cropped area. If None, the cropped area will not be
+            resized. Defaults to None.
+        aspect_ratio (List[float], optional): Aspect ratio of cropped region in [min, max] format. Defaults to [.5, 2.].
+        thresholds (List[float], optional): Iou thresholds to decide a valid bbox crop.
+            Defaults to [.0, .1, .3, .5, .7, .9].
+        scaling (List[float], optional): Ratio between the cropped region and the original image in [min, max] format.
+            Defaults to [.3, 1.].
         num_attempts (int, optional): The number of tries before giving up. Defaults to 50.
         allow_no_crop (bool, optional): Whether returning without doing crop is allowed. Defaults to True.
         cover_all_box (bool, optional): Whether to ensure all bboxes are covered in the final crop. Defaults to False.
@@ -860,8 +861,34 @@ class RandomCrop(Transform):
                 sample['mask'] = self.apply_mask(sample['mask'], crop_box)
 
         if self.crop_size is not None:
-            sample = Resize((self.crop_size, self.crop_size))(sample)
+            sample = Resize(self.crop_size)(sample)
 
+        return sample
+
+
+class RandomScaleAspect(Transform):
+    """
+    Crop input image(s) and resize back to original sizes.
+    Args：
+        min_scale (float)：Minimum ratio between the cropped region and the original image.
+            If 0, image(s) will not be cropped. Defaults to .5.
+        aspect_ratio (float): Aspect ratio of cropped region. Defaults to .33.
+    """
+
+    def __init__(self, min_scale=0.5, aspect_ratio=0.33):
+        super(RandomScaleAspect, self).__init__()
+        self.min_scale = min_scale
+        self.aspect_ratio = aspect_ratio
+
+    def apply(self, sample):
+        if self.min_scale != 0 and self.aspect_ratio != 0:
+            img_height, img_width = sample['image'].shape[:2]
+            sample = RandomCrop(
+                crop_size=(img_height, img_width),
+                aspect_ratio=[self.aspect_ratio, 1. / self.aspect_ratio],
+                scaling=[self.min_scale, 1.],
+                num_attempts=10,
+                allow_no_crop=False)(sample)
         return sample
 
 
@@ -921,7 +948,7 @@ class Padding(Transform):
                  offsets=None,
                  im_padding_value=(127.5, 127.5, 127.5),
                  label_padding_value=255,
-                 size_divisor=32):
+                 coarsest_stride=32):
         """
         Pad image to a specified size or multiple of size_divisor.
 
@@ -931,7 +958,7 @@ class Padding(Transform):
                 if 0, only pad to right and bottom. If 1, pad according to center. If 2, only pad left and top. Defaults to 0.
             im_padding_value(Sequence[float]): RGB value of pad area. Defaults to (127.5, 127.5, 127.5).
             label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
-            size_divisor(int): Image width and height after padding is a multiple of size_divisor
+            coarsest_stride(int): Image width and height after padding is a multiple of coarsest_stride.
         """
         super(Padding, self).__init__()
         if isinstance(target_size, (list, tuple)):
@@ -949,7 +976,7 @@ class Padding(Transform):
             assert offsets, 'if pad_mode is -1, offsets should not be None'
 
         self.target_size = target_size
-        self.size_divisor = size_divisor
+        self.coarsest_stride = coarsest_stride
         self.pad_mode = pad_mode
         self.offsets = offsets
         self.im_padding_value = im_padding_value
@@ -1001,10 +1028,10 @@ class Padding(Transform):
             ), 'target size ({}, {}) cannot be less than image size ({}, {})'\
                 .format(h, w, im_h, im_w)
         else:
-            h = (np.ceil(im_h // self.size_divisor) *
-                 self.size_divisor).astype(int)
-            w = (np.ceil(im_w / self.size_divisor) *
-                 self.size_divisor).astype(int)
+            h = (np.ceil(im_h // self.coarsest_stride) *
+                 self.coarsest_stride).astype(int)
+            w = (np.ceil(im_w / self.coarsest_stride) *
+                 self.coarsest_stride).astype(int)
 
         if h == im_h and w == im_w:
             return sample
@@ -1228,6 +1255,41 @@ class RandomDistort(Transform):
             if np.random.randint(0, 2):
                 sample['image'] = sample['image'][..., np.random.permutation(
                     3)]
+
+        return sample
+
+
+class RandomBlur(Transform):
+    """
+    Randomly blur input image(s).
+
+    Args：
+        prob (float): Probability of blurring.
+    """
+
+    def __init__(self, prob=0.1):
+        super(RandomBlur, self).__init__()
+        self.prob = prob
+
+    def apply_im(self, image, radius):
+        image = cv2.GaussianBlur(image, (radius, radius), 0, 0)
+        return image
+
+    def apply(self, sample):
+        if self.prob <= 0:
+            n = 0
+        elif self.prob >= 1:
+            n = 1
+        else:
+            n = int(1.0 / self.prob)
+        if n > 0:
+            if np.random.randint(0, n) == 0:
+                radius = np.random.randint(3, 10)
+                if radius % 2 != 1:
+                    radius = radius + 1
+                if radius > 9:
+                    radius = 9
+                sample['image'] = self.apply_im(sample['image'], radius)
 
         return sample
 

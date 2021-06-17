@@ -14,10 +14,10 @@
 
 from . import cv
 from .cv.models.utils.visualize import visualize_segmentation
-from paddlex.cv.transforms import seg_transforms
+import paddlex
 import paddlex.utils.logging as logging
 
-transforms = seg_transforms
+transforms = paddlex.cv.transforms
 
 visualize = visualize_segmentation
 

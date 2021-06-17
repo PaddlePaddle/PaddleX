@@ -15,13 +15,10 @@
 import copy
 from . import cv
 from .cv.models.utils.visualize import visualize_detection, draw_pr_curve
-from paddlex.cv.transforms import det_transforms
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, \
     _BatchPadding, _Gt2YoloTarget
 import paddlex.utils.logging as logging
-
-transforms = det_transforms
 
 visualize = visualize_detection
 draw_pr_curve = draw_pr_curve

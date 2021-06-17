@@ -13,10 +13,10 @@
 # limitations under the License.
 
 from . import cv
-from paddlex.cv.transforms import cls_transforms
 import paddlex.utils.logging as logging
+import paddlex
 
-transforms = cls_transforms
+transforms = paddlex.cv.transforms
 
 
 class ResNet18(cv.models.ResNet18):
