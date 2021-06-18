@@ -814,7 +814,7 @@ class RandomCrop(Transform):
 
     def apply_mask(self, mask, crop):
         x1, y1, x2, y2 = crop
-        return mask[y1:y2, x1:x2, :]
+        return mask[y1:y2, x1:x2, ...]
 
     def apply(self, sample):
         crop_info = self._generate_crop_info(sample)
