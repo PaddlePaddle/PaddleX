@@ -67,7 +67,7 @@ class UNet(cv.models.UNet):
             use_deconv=use_deconv)
 
 
-class DeepLabv3p(cv.models.DeepLabV3P):
+class DeepLabV3P(cv.models.DeepLabV3P):
     def __init__(self,
                  num_classes=2,
                  backbone='ResNet50_vd',
@@ -131,7 +131,7 @@ class DeepLabv3p(cv.models.DeepLabV3P):
                 "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
             )
 
-        super(DeepLabv3p, self).__init__(
+        super(DeepLabV3P, self).__init__(
             num_classes=num_classes,
             backbone=backbone,
             use_mixed_loss=use_mixed_loss,
