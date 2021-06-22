@@ -2,7 +2,7 @@
 OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
 
 # ngraph lib的路径，编译openvino时通常会生成
-NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph/lib
+NGRAPH_LIB=$INTEL_OPENVINO_DIR/deployment_tools/ngraph
 
 # gflags预编译库的路径
 GFLAGS_DIR=$(pwd)/deps/gflags

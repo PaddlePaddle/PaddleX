@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.0)
-
 #paddle inference
 if (NOT DEFINED PADDLE_DIR OR ${PADDLE_DIR} STREQUAL "")
     message(FATAL_ERROR "please set PADDLE_DIR with -DPADDLE_DIR=/path/paddle_influence_dir")
@@ -95,6 +93,8 @@ if(WITH_GPU)
     endif()
   endif()
 endif()
+
+message("-----DEPS = ${DEPS}")
 
 # engine src
 set(ENGINE_SRC ${PROJECT_SOURCE_DIR}/model_deploy/engine/src/ppinference_engine.cpp)

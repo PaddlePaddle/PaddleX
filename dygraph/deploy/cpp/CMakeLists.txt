@@ -116,11 +116,9 @@ else()
     set(DEPS ${DEPS} ${EXTERNAL_LIB})
 endif()
 
-# engine
+# select engine
 if(WITH_OPENVINO)
   add_subdirectory(demo/onnx_openvino)
 else ()
   add_subdirectory(demo)
 endif()
-
-message("-----DEPS = ${DEPS}")
