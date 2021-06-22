@@ -191,11 +191,14 @@ class BaseModel:
             shuffle=dataset.shuffle,
             drop_last=mode == 'train')
 
-        shm_size = _get_shared_memory_size_in_M()
-        if shm_size is None or shm_size < 1024.:
-            use_shared_memory = False
+        if dataset.num_workers > 0:
+            shm_size = _get_shared_memory_size_in_M()
+            if shm_size is None or shm_size < 1024.:
+                use_shared_memory = False
+            else:
+                use_shared_memory = True
         else:
-            use_shared_memory = True
+            use_shared_memory = False
 
         loader = DataLoader(
             dataset,

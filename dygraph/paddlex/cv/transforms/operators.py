@@ -814,7 +814,7 @@ class RandomCrop(Transform):
 
     def apply_mask(self, mask, crop):
         x1, y1, x2, y2 = crop
-        return mask[y1:y2, x1:x2, :]
+        return mask[y1:y2, x1:x2, ...]
 
     def apply(self, sample):
         crop_info = self._generate_crop_info(sample)
@@ -867,13 +867,16 @@ class RandomCrop(Transform):
 
 class RandomExpand(Transform):
     """
-    Randomly expand the input by padding to the lower right side of the image(s) in input.
+    Randomly expand the input by padding according to random offsets.
 
     Args:
         upper_ratio(float, optional): The maximum ratio to which the original image is expanded. Defaults to 4..
         prob(float, optional): The probability of apply expanding. Defaults to .5.
         im_padding_value(List[float] or Tuple[float], optional): RGB filling value for the image. Defaults to (127.5, 127.5, 127.5).
         label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
+
+    See Also:
+        paddlex.transforms.Padding
     """
 
     def __init__(self,

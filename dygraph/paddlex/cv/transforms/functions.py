@@ -47,23 +47,17 @@ def center_crop(im, crop_size=224):
     h_start = (height - crop_size) // 2
     w_end = w_start + crop_size
     h_end = h_start + crop_size
-    im = im[h_start:h_end, w_start:w_end, :]
+    im = im[h_start:h_end, w_start:w_end, ...]
     return im
 
 
 def horizontal_flip(im):
-    if len(im.shape) == 3:
-        im = im[:, ::-1, :]
-    elif len(im.shape) == 2:
-        im = im[:, ::-1]
+    im = im[:, ::-1, ...]
     return im
 
 
 def vertical_flip(im):
-    if len(im.shape) == 3:
-        im = im[::-1, :, :]
-    elif len(im.shape) == 2:
-        im = im[::-1, :]
+    im = im[::-1, :, ...]
     return im
 
 
