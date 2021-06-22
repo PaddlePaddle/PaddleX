@@ -1,4 +1,4 @@
-# OpenVINO预编译库的路径
+# OpenVINO预编译库inference_engine的路径
 OPENVINO_DIR=$INTEL_OPENVINO_DIR/inference_engine
 
 # ngraph lib的路径，编译openvino时通常会生成
@@ -42,7 +42,8 @@ rm -rf build
 mkdir -p build
 cd build
 if [ ${ARCH} = "x86" ];then
-  cmake ../demo/onnx_openvino/ \
+  cmake .. \
+      -DWITH_OPENVINO=ON \
       -DOPENCV_DIR=${OPENCV_DIR} \
       -DGFLAGS_DIR=${GFLAGS_DIR} \
       -DOPENVINO_DIR=${OPENVINO_DIR} \
@@ -50,7 +51,8 @@ if [ ${ARCH} = "x86" ];then
       -DARCH=${ARCH}
   make
 else
-  cmake ../demo/onnx_openvino/ \
+  cmake .. \
+      -DWITH_OPENVINO=ON \
       -DOPENCV_DIR=${OPENCV_DIR} \
       -DGFLAGS_DIR=${GFLAGS_DIR} \
       -DOPENVINO_DIR=${OPENVINO_DIR} \
