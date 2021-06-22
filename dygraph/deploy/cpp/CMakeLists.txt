@@ -202,6 +202,7 @@ include_directories("${PROJECT_ROOT_DIR}")
 
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/common/src SRC)
 set(ENGINE_SRC ${PROJECT_ROOT_DIR}/model_deploy/engine/src/ppinference_engine.cpp)
+aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/utils/src UTILS_SRC)
 
 #detector seg
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppdet/src DETECTOR_SRC)
@@ -209,20 +210,20 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
-add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
 
-add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
 ADD_DEPENDENCIES(batch_infer ext-yaml-cpp)
 target_link_libraries(batch_infer ${DEPS})
 
-add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
 ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
 target_link_libraries(multi_gpu_model_infer ${DEPS})
 
 if (WITH_TENSORRT)
-  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
   ADD_DEPENDENCIES(tensorrt_infer ext-yaml-cpp)
   target_link_libraries(tensorrt_infer ${DEPS})
 endif()
