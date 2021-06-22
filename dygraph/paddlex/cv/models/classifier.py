@@ -24,6 +24,7 @@ from paddle.static import InputSpec
 from paddlex.utils import logging, TrainingStats, DisablePrint
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.transforms import arrange_transforms
+from paddlex.cv.transforms.operators import Resize
 
 with DisablePrint():
     from PaddleClas.ppcls.modeling import architectures
@@ -52,7 +53,8 @@ class BaseClassifier(BaseModel):
     def __init__(self, model_name='ResNet50', num_classes=1000, **params):
         self.init_params = locals()
         self.init_params.update(params)
-        del self.init_params['params']
+        if 'lr_mult_list' in self.init_params:
+            del self.init_params['lr_mult_list']
         super(BaseClassifier, self).__init__('classifier')
         if not hasattr(architectures, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -71,10 +73,22 @@ class BaseClassifier(BaseModel):
                 class_dim=self.num_classes, **params)
         return net
 
-    def get_test_inputs(self, image_shape):
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                self.test_transforms.transforms.append(
+                    Resize(target_size=image_shape))
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -90,6 +104,7 @@ class BaseClassifier(BaseModel):
             acc1 = paddle.metric.accuracy(softmax_out, label=labels)
             k = min(5, self.num_classes)
             acck = paddle.metric.accuracy(softmax_out, label=labels, k=k)
+            prediction = softmax_out
             # multi cards eval
             if paddle.distributed.get_world_size() > 1:
                 acc1 = paddle.distributed.all_reduce(
@@ -98,9 +113,12 @@ class BaseClassifier(BaseModel):
                 acck = paddle.distributed.all_reduce(
                     acck, op=paddle.distributed.ReduceOp.
                     SUM) / paddle.distributed.get_world_size()
+                prediction = []
+                paddle.distributed.all_gather(prediction, softmax_out)
+                prediction = paddle.concat(prediction, axis=0)
 
             outputs = OrderedDict([('acc1', acc1), ('acc{}'.format(k), acck),
-                                   ('prediction', softmax_out)])
+                                   ('prediction', prediction)])
 
         else:
             # mode == 'train'
@@ -225,6 +243,11 @@ class BaseClassifier(BaseModel):
                     "If don't want to use pretrain weights, "
                     "set pretrain_weights to be None.")
                 pretrain_weights = 'IMAGENET'
+        elif pretrain_weights is not None and osp.exists(pretrain_weights):
+            if osp.splitext(pretrain_weights)[-1] != '.pdparams':
+                logging.error(
+                    "Invalid pretrain weights. Please specify a '.pdparams' file.",
+                    exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
@@ -347,7 +370,7 @@ class BaseClassifier(BaseModel):
             for step, data in enumerate(self.eval_data_loader()):
                 outputs = self.run(self.net, data, mode='eval')
                 if return_details:
-                    eval_details.append(outputs['prediction'].numpy())
+                    eval_details.append(outputs['prediction'].tolist())
                 outputs.pop('prediction')
                 eval_metrics.update(outputs)
         if return_details:
@@ -509,16 +532,24 @@ class AlexNet(BaseClassifier):
         super(AlexNet, self).__init__(
             model_name='AlexNet', num_classes=num_classes)
 
-    def get_test_inputs(self, image_shape):
-        if image_shape == [-1, -1]:
-            image_shape = [224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
-                         )
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+        else:
+            image_shape = [None, 3, 224, 224]
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
+        self._fix_transforms_shape(image_shape[-2:])
+
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -709,16 +740,23 @@ class ShuffleNetV2(BaseClassifier):
         super(ShuffleNetV2, self).__init__(
             model_name=model_name, num_classes=num_classes)
 
-    def get_test_inputs(self, image_shape):
-        if image_shape == [-1, -1]:
-            image_shape = [224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
-                         )
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+        else:
+            image_shape = [None, 3, 224, 224]
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
+        self._fix_transforms_shape(image_shape[-2:])
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -728,15 +766,22 @@ class ShuffleNetV2_swish(BaseClassifier):
         super(ShuffleNetV2_swish, self).__init__(
             model_name='ShuffleNetV2_x1_5', num_classes=num_classes)
 
-    def get_test_inputs(self, image_shape):
-        if image_shape == [-1, -1]:
-            image_shape = [224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if image_shape is [-1, -1], it will be forcibly set to [224, 224]'
-                         )
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+        else:
+            image_shape = [None, 3, 224, 224]
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
+        self._fix_transforms_shape(image_shape[-2:])
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec

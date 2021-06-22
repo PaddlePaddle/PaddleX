@@ -15,10 +15,10 @@
 ## 1. 创建模型对象
 
 ```c++
-std::shared_ptr<PaddleDeploy::Model>  PaddleDeploy::ModelFactory::CreateObject(const std::string  &model_type)
+PaddleDeploy::Model*  PaddleDeploy::ModelFactory::CreateObject(const std::string  &model_type)
 ```
 
-> 根据模型来源的套件类型，创建相应的套件对象并返回基类智能指针。所有推理相关的操作，包括预处理、推理和后处理都在该对象中。
+> 根据模型来源的套件类型，创建相应的套件对象并返回基类指针。所有推理相关的操作，包括预处理、推理和后处理都在该对象中。
 
 **参数**
 
@@ -31,7 +31,7 @@ std::shared_ptr<PaddleDeploy::Model>  PaddleDeploy::ModelFactory::CreateObject(c
 **代码示例**
 
 > ```c++
-> std::shared_ptr<PaddleDeploy::Model> model = PaddleDeploy::ModelFactory::CreateObject("det")
+> PaddleDeploy::Model* model = PaddleDeploy::ModelFactory::CreateObject("det")
 > ```
 
 

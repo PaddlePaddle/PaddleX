@@ -122,7 +122,14 @@ class BaseModel:
         info = dict()
         info['pruner'] = self.pruner.__class__.__name__
         info['pruning_ratios'] = self.pruning_ratios
-        info['pruner_inputs'] = self.pruner.inputs
+        pruner_inputs = self.pruner.inputs
+        if self.model_type == 'detector':
+            pruner_inputs = {
+                k: v.tolist()
+                for k, v in pruner_inputs[0].items()
+            }
+        info['pruner_inputs'] = pruner_inputs
+
         return info
 
     def get_quant_info(self):
@@ -184,11 +191,14 @@ class BaseModel:
             shuffle=dataset.shuffle,
             drop_last=mode == 'train')
 
-        shm_size = _get_shared_memory_size_in_M()
-        if shm_size is None or shm_size < 1024.:
-            use_shared_memory = False
+        if dataset.num_workers > 0:
+            shm_size = _get_shared_memory_size_in_M()
+            if shm_size is None or shm_size < 1024.:
+                use_shared_memory = False
+            else:
+                use_shared_memory = True
         else:
-            use_shared_memory = True
+            use_shared_memory = False
 
         loader = DataLoader(
             dataset,
@@ -333,12 +343,13 @@ class BaseModel:
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
-                    self.eval_metrics = self.evaluate(
+                    eval_result = self.evaluate(
                         eval_dataset,
                         batch_size=eval_batch_size,
-                        return_details=False)
+                        return_details=True)
                     # 保存最优模型
                     if local_rank == 0:
+                        self.eval_metrics, self.eval_details = eval_result
                         logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                             i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
@@ -426,12 +437,7 @@ class BaseModel:
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
             pre_pruning_flops))
-        skip_vars = []
-        for param in self.net.parameters():
-            if param.shape[0] <= 8:
-                skip_vars.append(param.name)
-        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops,
-                                                 skip_vars)
+        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops)
         post_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
             post_pruning_flops))
@@ -476,10 +482,10 @@ class BaseModel:
         logging.info("Model is ready for quantization-aware training.")
         self.status = 'Quantized'
 
-    def _export_inference_model(self, save_dir, image_shape=[-1, -1]):
+    def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
         self.net.eval()
-        self.test_inputs = self.get_test_inputs(image_shape)
+        self.test_inputs = self._get_test_inputs(image_shape)
 
         if self.status == 'Quantized':
             self.quantizer.save_quantized_model(self.net,

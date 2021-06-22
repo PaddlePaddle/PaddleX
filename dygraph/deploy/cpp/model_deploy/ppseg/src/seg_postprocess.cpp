@@ -89,6 +89,10 @@ bool SegPostprocess::RunV2(const DataBlob& output,
 bool SegPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
+  if (outputs.size() == 0) {
+    std::cerr << "empty output on SegPostprocess" << std::endl;
+    return true;
+  }
   results->clear();
   int batch_size = shape_infos.size();
   results->resize(batch_size);

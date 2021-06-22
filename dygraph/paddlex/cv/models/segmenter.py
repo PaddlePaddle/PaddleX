@@ -27,7 +27,7 @@ import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
 from paddlex.utils.checkpoint import seg_pretrain_weights_dict
-from paddlex.cv.transforms import Decode
+from paddlex.cv.transforms import Decode, Resize
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
@@ -58,10 +58,37 @@ class BaseSegmenter(BaseModel):
             num_classes=self.num_classes, **params)
         return net
 
-    def get_test_inputs(self, image_shape):
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+                    if 'Resize' in name:
+                        has_resize_op = True
+                        resize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx, Resize(target_size=image_shape))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape)
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [None, 3] + image_shape
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -85,11 +112,13 @@ class BaseSegmenter(BaseModel):
             origin_shape = [label.shape[-2:]]
             # TODO: 替换cv2后postprocess移出run
             pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
-            intersect_area, pred_area, label_area = metrics.calculate_area(
+            intersect_area, pred_area, label_area = paddleseg.utils.metrics.calculate_area(
                 pred, label, self.num_classes)
             outputs['intersect_area'] = intersect_area
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
+            outputs['conf_mat'] = metrics.confusion_matrix(pred, label,
+                                                           self.num_classes)
         if mode == 'train':
             loss_list = metrics.loss_computation(
                 logits_list=net_out, labels=inputs[1], losses=self.losses)
@@ -212,6 +241,11 @@ class BaseSegmenter(BaseModel):
                                         0]))
                 pretrain_weights = seg_pretrain_weights_dict[self.model_name][
                     0]
+        elif pretrain_weights is not None and osp.exists(pretrain_weights):
+            if osp.splitext(pretrain_weights)[-1] != '.pdparams':
+                logging.error(
+                    "Invalid pretrain weights. Please specify a '.pdparams' file.",
+                    exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
             pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
@@ -328,6 +362,7 @@ class BaseSegmenter(BaseModel):
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        conf_mat_all = []
         logging.info(
             "Start to evaluate(total_samples={}, total_steps={})...".format(
                 eval_dataset.num_samples,
@@ -339,16 +374,19 @@ class BaseSegmenter(BaseModel):
                 pred_area = outputs['pred_area']
                 label_area = outputs['label_area']
                 intersect_area = outputs['intersect_area']
+                conf_mat = outputs['conf_mat']
 
                 # Gather from all ranks
                 if nranks > 1:
                     intersect_area_list = []
                     pred_area_list = []
                     label_area_list = []
+                    conf_mat_list = []
                     paddle.distributed.all_gather(intersect_area_list,
                                                   intersect_area)
                     paddle.distributed.all_gather(pred_area_list, pred_area)
                     paddle.distributed.all_gather(label_area_list, label_area)
+                    paddle.distributed.all_gather(conf_mat_list, conf_mat)
 
                     # Some image has been evaluated and should be eliminated in last iter
                     if (step + 1) * nranks > len(eval_dataset):
@@ -356,23 +394,25 @@ class BaseSegmenter(BaseModel):
                         intersect_area_list = intersect_area_list[:valid]
                         pred_area_list = pred_area_list[:valid]
                         label_area_list = label_area_list[:valid]
+                        conf_mat_list = conf_mat_list[:valid]
 
-                    for i in range(len(intersect_area_list)):
-                        intersect_area_all = intersect_area_all + intersect_area_list[
-                            i]
-                        pred_area_all = pred_area_all + pred_area_list[i]
-                        label_area_all = label_area_all + label_area_list[i]
+                    intersect_area_all += sum(intersect_area_list)
+                    pred_area_all += sum(pred_area_list)
+                    label_area_all += sum(label_area_list)
+                    conf_mat_all.extend(conf_mat_list)
 
                 else:
                     intersect_area_all = intersect_area_all + intersect_area
                     pred_area_all = pred_area_all + pred_area
                     label_area_all = label_area_all + label_area
-        class_iou, miou = metrics.mean_iou(intersect_area_all, pred_area_all,
-                                           label_area_all)
+                    conf_mat_all.append(conf_mat)
+        class_iou, miou = paddleseg.utils.metrics.mean_iou(
+            intersect_area_all, pred_area_all, label_area_all)
         # TODO 确认是按oacc还是macc
-        class_acc, oacc = metrics.accuracy(intersect_area_all, pred_area_all)
-        kappa = metrics.kappa(intersect_area_all, pred_area_all,
-                              label_area_all)
+        class_acc, oacc = paddleseg.utils.metrics.accuracy(intersect_area_all,
+                                                           pred_area_all)
+        kappa = paddleseg.utils.metrics.kappa(intersect_area_all,
+                                              pred_area_all, label_area_all)
         category_f1score = metrics.f1_score(intersect_area_all, pred_area_all,
                                             label_area_all)
         eval_metrics = OrderedDict(
@@ -381,6 +421,10 @@ class BaseSegmenter(BaseModel):
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
 
+        if return_details:
+            conf_mat = sum(conf_mat_all)
+            eval_details = {'confusion_matrix': conf_mat.tolist()}
+            return eval_metrics, eval_details
         return eval_metrics
 
     def predict(self, img_file, transforms=None):
@@ -419,7 +463,13 @@ class BaseSegmenter(BaseModel):
         label_map = label_map.numpy().astype('uint8')
         score_map = outputs['score_map']
         score_map = score_map.numpy().astype('float32')
-        return {'label_map': label_map, 'score_map': score_map}
+        prediction = [{
+            'label_map': l,
+            'score_map': s
+        } for l, s in zip(label_map, score_map)]
+        if isinstance(img_file, (str, np.ndarray)):
+            prediction = prediction[0]
+        return prediction
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
