@@ -512,7 +512,7 @@ class BaseDetector(BaseModel):
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
-                        'category_id': int(num_id) + 1,
+                        'category_id': int(num_id),
                         'category': category,
                         'bbox': bbox,
                         'score': score
