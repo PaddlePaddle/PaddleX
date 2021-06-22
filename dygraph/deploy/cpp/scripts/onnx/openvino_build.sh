@@ -49,7 +49,7 @@ if [ ${ARCH} = "x86" ];then
       -DOPENVINO_DIR=${OPENVINO_DIR} \
       -DNGRAPH_LIB=${NGRAPH_LIB} \
       -DARCH=${ARCH}
-  make
+  make -j16
 else
   cmake .. \
       -DWITH_OPENVINO=ON \

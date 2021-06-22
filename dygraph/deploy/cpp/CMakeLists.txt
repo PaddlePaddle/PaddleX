@@ -12,7 +12,7 @@ option(WITH_GPU        "Compile demo with GPU/CPU, default use CPU."            
 option(WITH_PADDLE_TENSORRT "Compile demo with TensorRT."   OFF)
 # engine
 option(WITH_OPENVINO "Compile demo with TensorRT."   OFF)
-option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
+option(WITH_ONNX_TENSORRT "Compile demo with TensorRT."   OFF)
 
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(DEPS "" CACHE PATH "Location of libraries")

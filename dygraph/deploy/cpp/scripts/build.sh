@@ -3,7 +3,7 @@ WITH_GPU=ON
 # 使用MKL or openblas
 WITH_MKL=ON
 # 是否集成 TensorRT(仅WITH_GPU=ON 有效)
-WITH_TENSORRT=OFF
+WITH_PADDLE_TENSORRT=OFF
 # TensorRT 的路径，如果需要集成TensorRT，需修改为您实际安装的TensorRT路径
 TENSORRT_DIR=$(pwd)/TensorRT/
 # Paddle 预测库路径, 请修改为您实际安装的预测库路径
@@ -33,7 +33,7 @@ cd build
 cmake .. \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_MKL=${WITH_MKL} \
-    -DWITH_TENSORRT=${WITH_TENSORRT} \
+    -DWITH_PADDLE_TENSORRT=${WITH_PADDLE_TENSORRT} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
