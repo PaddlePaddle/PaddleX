@@ -8,8 +8,8 @@ paddlex.cls.ResNet50(num_classes=1000)
 
 > 构建ResNet50分类器，并实现其训练、评估和预测。
 
-**参数**
-
+> **参数**
+>
 > - **num_classes** (int): 类别数。默认为1000。  
 
 ### train
