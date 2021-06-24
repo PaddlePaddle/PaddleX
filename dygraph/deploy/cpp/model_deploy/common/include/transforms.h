@@ -166,6 +166,11 @@ class Resize : public Transform {
     } else {
       use_scale_ = true;
     }
+    if (item["keep_ratio"].IsDefined()) {
+      keep_ratio_ = item["keep_ratio"].as<bool>();
+    } else {
+      keep_ratio_ = false;
+    }
     height_ = item["height"].as<int>();
     width_ = item["width"].as<int>();
     if (height_ <= 0 || width_ <= 0) {
@@ -184,6 +189,7 @@ class Resize : public Transform {
   int width_;
   int interp_;
   bool use_scale_;
+  bool keep_ratio_;
 };
 
 class BGR2RGB : public Transform {

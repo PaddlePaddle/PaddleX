@@ -147,11 +147,19 @@ bool Resize::Run(cv::Mat *im) {
               << std::endl;
     return false;
   }
+  double scale_w;
+  double scale_h;
+  if (keep_ratio_) {
+    scale_w = width_ / static_cast<double>(im->cols);
+    scale_h = height_ / static_cast<double>(im->rows);
+    scale_h = std::min(scale_w, scale_h);
+    scale_w = scale_h;
+  }
   if (use_scale_) {
-    double scale_w = width_ / static_cast<double>(im->cols);
-    double scale_h = height_ / static_cast<double>(im->rows);
     cv::resize(*im, *im, cv::Size(), scale_w, scale_h, interp_);
   } else {
+    width_ = static_cast<int>(round(scale_w * im->cols));
+    height_ = static_cast<int>(round(scale_h * im->rows));
     cv::resize(*im, *im, cv::Size(width_, height_), 0, 0, interp_);
   }
   return true;

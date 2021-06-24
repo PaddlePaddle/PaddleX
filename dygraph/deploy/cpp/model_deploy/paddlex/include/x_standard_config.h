@@ -87,6 +87,9 @@ void XResize(const YAML::Node& src, YAML::Node* dst) {
       assert(false);
     }
   }
+  if (src["keep_ratio"].IsDefined() && src["keep_ratio"].as<bool>()) {
+    (*dst)["transforms"]["Resize"]["keep_ratio"] = w;
+  }
   (*dst)["transforms"]["Resize"]["width"] = w;
   (*dst)["transforms"]["Resize"]["height"] = h;
   (*dst)["transforms"]["Resize"]["interp"] = interp;
@@ -118,7 +121,8 @@ void XResizeByShort(const YAML::Node& src, YAML::Node* dst) {
 
 // dygraph version
 void XPaddingV2(const YAML::Node& src, YAML::Node* dst) {
-  if (src["target_size"].IsDefined() && src["target_size"] != YAML::Null) {
+  if (src["target_size"].IsDefined() &&
+      src["target_size"].Type() != YAML::NodeType::Null) {
     assert(src["target_size"].IsScalar() || src["target_size"].IsSequence());
     if (src["target_size"].IsScalar()) {
       (*dst)["transforms"]["Padding"]["width"] = src["target_size"].as<int>();
@@ -144,7 +148,7 @@ void XPaddingV2(const YAML::Node& src, YAML::Node* dst) {
   }
 
   if (src["pad_mode"].IsDefined()) {
-    if (src["pad_mode"].as<int>() != 1) {
+    if (src["pad_mode"].as<int>() != 0) {
       std::cerr << "[Error] No support pad_mode :"
               << src["pad_mode"].as<int>()
               << std::endl;
