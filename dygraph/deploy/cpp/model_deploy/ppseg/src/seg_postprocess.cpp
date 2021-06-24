@@ -67,14 +67,14 @@ bool SegPostprocess::RunV2(const DataBlob& output,
   int label_map_size = output.shape[1] * output.shape[2];
   const uint8_t* label_data;
   std::vector<uint8_t> label_vector;
-  if (output.dtype == 1) {  // int64
+  if (output.dtype == INT64) {  // int64
     const int64_t* output_data =
           reinterpret_cast<const int64_t*>(output.data.data());
     std::transform(output_data, output_data + label_map_size * batch_size,
                    std::back_inserter(label_vector),
                    [](int64_t x) { return (uint8_t)x;});
     label_data = reinterpret_cast<const uint8_t*>(label_vector.data());
-  } else if (output.dtype == 3) {  // uint8
+  } else if (output.dtype == INT8) {  // uint8
     label_data = reinterpret_cast<const uint8_t*>(output.data.data());
   } else {
     std::cerr << "Output dtype is not support on seg posrtprocess "
