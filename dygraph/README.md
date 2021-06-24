@@ -33,14 +33,25 @@
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
   **前置依赖**
-> - paddlepaddle == 2.1.0
+> - 安装PaddlePaddle Develop版本，具体PaddlePaddle[安装主页](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 > - python >= 3.6
-> - cython
-> - pycocotools
 
-```
-pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
-```
+
+
+安装方式
+
+> - git clone --recurse-submodules https://github.com/PaddlePaddle/PaddleX.git
+> - cd PaddleX/dygraph
+> - pip install -r requirements.txt
+> - pip install -r submodules.txt
+> - python setup.py install
+
+
+
+  **特别说明**Windows除了执行上述命令外，还需要下载pycocotools
+
+> - pip install cython
+> - pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 
 
 2. **Padlde GUI模式：**
@@ -60,9 +71,23 @@ pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
 
 ## 使用教程
 
-- [模型训练教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train)
-- [模型剪裁教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
+- API模式教程
+[模型训练教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train)
+[模型剪裁教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
+- GUI模式教程
+[图像分类](https://www.bilibili.com/video/BV1nK411F7J9)
+[目标检测](https://www.bilibili.com/video/BV1HB4y1A73b)
+[语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co)
+[实例分割](https://www.bilibili.com/video/BV1M44y1r7s6)
 
+## 全流程产业应用案例:star:
+
+（continue to be updated）
+
+* 工业案例：
+  * [钢筋计数]()
+  * [机械手抓取]()
+  * [镜头表面缺陷检测]()
 
 ## :question:[FAQ](../docs/gui/faq.md):question:
 
