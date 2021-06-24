@@ -1004,7 +1004,7 @@ class Padding(Transform):
             ), 'target size ({}, {}) cannot be less than image size ({}, {})'\
                 .format(h, w, im_h, im_w)
         else:
-            h = (np.ceil(im_h // self.size_divisor) *
+            h = (np.ceil(im_h / self.size_divisor) *
                  self.size_divisor).astype(int)
             w = (np.ceil(im_w / self.size_divisor) *
                  self.size_divisor).astype(int)
