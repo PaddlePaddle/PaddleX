@@ -14,7 +14,6 @@
 
 from __future__ import absolute_import
 import copy
-import os
 import os.path as osp
 import random
 import re

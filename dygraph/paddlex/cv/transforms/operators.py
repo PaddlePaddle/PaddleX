@@ -858,13 +858,16 @@ class RandomScaleAspect(Transform):
 
 class RandomExpand(Transform):
     """
-    Randomly expand the input by padding to the lower right side of the image(s) in input.
+    Randomly expand the input by padding according to random offsets.
 
     Args:
         upper_ratio(float, optional): The maximum ratio to which the original image is expanded. Defaults to 4..
         prob(float, optional): The probability of apply expanding. Defaults to .5.
         im_padding_value(List[float] or Tuple[float], optional): RGB filling value for the image. Defaults to (127.5, 127.5, 127.5).
         label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
+
+    See Also:
+        paddlex.transforms.Padding
     """
 
     def __init__(self,
@@ -992,10 +995,10 @@ class Padding(Transform):
             ), 'target size ({}, {}) cannot be less than image size ({}, {})'\
                 .format(h, w, im_h, im_w)
         else:
-            h = (np.ceil(im_h // self.coarsest_stride) *
-                 self.coarsest_stride).astype(int)
-            w = (np.ceil(im_w / self.coarsest_stride) *
-                 self.coarsest_stride).astype(int)
+            h = (np.ceil(im_h / self.size_divisor) *
+                 self.size_divisor).astype(int)
+            w = (np.ceil(im_w / self.size_divisor) *
+                 self.size_divisor).astype(int)
 
         if h == im_h and w == im_w:
             return sample

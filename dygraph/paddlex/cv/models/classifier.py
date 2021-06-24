@@ -546,10 +546,13 @@ class AlexNet(BaseClassifier):
                 image_shape = [None, 3] + image_shape
         else:
             image_shape = [None, 3, 224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
-                         )
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
 
         input_spec = [
@@ -751,10 +754,13 @@ class ShuffleNetV2(BaseClassifier):
                 image_shape = [None, 3] + image_shape
         else:
             image_shape = [None, 3, 224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
-                         )
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
         input_spec = [
             InputSpec(
@@ -774,10 +780,13 @@ class ShuffleNetV2_swish(BaseClassifier):
                 image_shape = [None, 3] + image_shape
         else:
             image_shape = [None, 3, 224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
-                         )
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
         input_spec = [
             InputSpec(

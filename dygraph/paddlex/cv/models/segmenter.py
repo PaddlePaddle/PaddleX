@@ -463,7 +463,13 @@ class BaseSegmenter(BaseModel):
         label_map = label_map.numpy().astype('uint8')
         score_map = outputs['score_map']
         score_map = score_map.numpy().astype('float32')
-        return {'label_map': label_map, 'score_map': score_map}
+        prediction = [{
+            'label_map': l,
+            'score_map': s
+        } for l, s in zip(label_map, score_map)]
+        if isinstance(img_file, (str, np.ndarray)):
+            prediction = prediction[0]
+        return prediction
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(
