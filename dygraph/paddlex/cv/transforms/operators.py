@@ -917,7 +917,7 @@ class Padding(Transform):
                  label_padding_value=255,
                  coarsest_stride=32):
         """
-        Pad image to a specified size or multiple of size_divisor.
+        Pad image to a specified size or multiple of coarsest_stride.
 
         Args:
             target_size(int, Sequence, optional): Image target size, if None, pad to multiple of size_divisor. Defaults to None.
