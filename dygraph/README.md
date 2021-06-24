@@ -33,14 +33,25 @@
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
   **前置依赖**
-> - paddlepaddle == 2.1.0
+> - 安装PaddlePaddle Develop版本，具体PaddlePaddle[安装主页](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 > - python >= 3.6
-> - cython
-> - pycocotools
 
-```
-pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
-```
+
+
+安装方式
+
+> - git clone --recurse-submodules https://github.com/PaddlePaddle/PaddleX.git
+> - cd PaddleX/dygraph
+> - pip install -r requirements.txt
+> - pip install -r submodules.txt
+> - python setup.py install
+
+
+
+  **特别说明**Windows除了执行上述命令外，还需要下载pycocotools
+
+> - pip install cython
+> - pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 
 
 2. **Padlde GUI模式：**
