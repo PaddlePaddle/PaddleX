@@ -116,6 +116,43 @@ void XResizeByShort(const YAML::Node& src, YAML::Node* dst) {
   (*dst)["transforms"]["ResizeByShort"]["use_scale"] = false;
 }
 
+// dygraph version
+void XPaddingV2(const YAML::Node& src, YAML::Node* dst) {
+  if (src["target_size"].IsDefined() && src["target_size"] != YAML::Null) {
+    assert(src["target_size"].IsScalar() || src["target_size"].IsSequence());
+    if (src["target_size"].IsScalar()) {
+      (*dst)["transforms"]["Padding"]["width"] = src["target_size"].as<int>();
+      (*dst)["transforms"]["Padding"]["height"] = src["target_size"].as<int>();
+    } else {
+      std::vector<int> target_size = src["target_size"].as<std::vector<int>>();
+      (*dst)["transforms"]["Padding"]["width"] = target_size[0];
+      (*dst)["transforms"]["Padding"]["height"] = target_size[1];
+    }
+  } else if (src["size_divisor"].IsDefined()) {
+    (*dst)["transforms"]["Padding"]["stride"] =
+                        src["size_divisor"].as<int>();
+  } else {
+    std::cerr << "[Error] As least one of size_divisor/"
+              << "target_size must be defined for Padding"
+              << std::endl;
+    assert(false);
+  }
+
+  if (src["im_padding_value"].IsDefined()) {
+    (*dst)["transforms"]["Padding"]["im_padding_value"] =
+            src["im_padding_value"].as<std::vector<float>>();
+  }
+
+  if (src["pad_mode"].IsDefined()) {
+    if (src["pad_mode"].as<int>() != 1) {
+      std::cerr << "[Error] No support pad_mode :"
+              << src["pad_mode"].as<int>()
+              << std::endl;
+      assert(false);
+    }
+  }
+}
+
 void XPadding(const YAML::Node& src, YAML::Node* dst) {
   if (src["coarsest_stride"].IsDefined()) {
     (*dst)["transforms"]["Padding"]["stride"] =
