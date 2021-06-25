@@ -60,18 +60,7 @@ class BaseDetector(BaseModel):
     def _fix_transforms_shape(self, image_shape):
         raise NotImplementedError("_fix_transforms_shape: not implemented!")
 
-    def _get_test_inputs(self, image_shape):
-        if image_shape is not None:
-            if len(image_shape) == 2:
-                image_shape = [None, 3] + image_shape
-            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
-                raise Exception(
-                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
-                    format(image_shape[-2:]))
-            self._fix_transforms_shape(image_shape[-2:])
-        else:
-            image_shape = [None, 3, -1, -1]
-
+    def _define_input_spec(self, image_shape):
         input_spec = [{
             "image": InputSpec(
                 shape=image_shape, name='image', dtype='float32'),
@@ -82,8 +71,25 @@ class BaseDetector(BaseModel):
                 name='scale_factor',
                 dtype='float32')
         }]
-
         return input_spec
+
+    def _check_image_shape(self, image_shape):
+        if len(image_shape) == 2:
+            image_shape = [None, 3] + image_shape
+            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
+                raise Exception(
+                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
+                    format(image_shape[-2:]))
+        return image_shape
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+
+        return self._define_input_spec(image_shape)
 
     def _get_backbone(self, backbone_name, **params):
         backbone = getattr(ppdet.modeling, backbone_name)(**params)
@@ -989,6 +995,18 @@ class FasterRCNN(BaseDetector):
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
 
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+            if self.with_fpn:
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+
+        return self._define_input_spec(image_shape)
+
 
 class PPYOLO(YOLOv3):
     def __init__(self,
@@ -1689,3 +1707,15 @@ class MaskRCNN(BaseDetector):
                         interp='CUBIC')
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+            if self.with_fpn:
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+
+        return self._define_input_spec(image_shape)
