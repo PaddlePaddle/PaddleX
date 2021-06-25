@@ -33,7 +33,7 @@ eval_dataset = pdx.datasets.ImageNet(
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
-model = pdx.models.MobileNetV3_large(num_classes=num_classes)
+model = pdx.cls.MobileNetV3_large(num_classes=num_classes)
 
 # 自定义优化器：使用CosineAnnealingDecay
 train_batch_size = 64

@@ -13,211 +13,48 @@
 # limitations under the License.
 
 from . import cv
-import paddlex.utils.logging as logging
 
+ResNet18 = cv.models.ResNet18
+ResNet34 = cv.models.ResNet34
+ResNet50 = cv.models.ResNet50
+ResNet101 = cv.models.ResNet101
+ResNet152 = cv.models.ResNet152
 
-class ResNet18(cv.models.ResNet18):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet18, self).__init__(num_classes=num_classes)
+ResNet18_vd = cv.models.ResNet18_vd
+ResNet34_vd = cv.models.ResNet34_vd
+ResNet50_vd = cv.models.ResNet50_vd
+ResNet50_vd_ssld = cv.models.ResNet50_vd_ssld
+ResNet101_vd = cv.models.ResNet101_vd
+ResNet101_vd_ssld = cv.models.ResNet101_vd_ssld
+ResNet152_vd = cv.models.ResNet152_vd
+ResNet200_vd = cv.models.ResNet200_vd
 
+MobileNetV1 = cv.models.MobileNetV1
+MobileNetV2 = cv.models.MobileNetV2
+MobileNetV3_small = cv.models.MobileNetV3_small
+MobileNetV3_large = cv.models.MobileNetV3_large
 
-class ResNet34(cv.models.ResNet34):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet34, self).__init__(num_classes=num_classes)
+AlexNet = cv.models.AlexNet
 
+DarkNet53 = cv.models.DarkNet53
 
-class ResNet50(cv.models.ResNet50):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet50, self).__init__(num_classes=num_classes)
+DenseNet121 = cv.models.DenseNet121
+DenseNet161 = cv.models.DenseNet161
+DenseNet169 = cv.models.DenseNet169
+DenseNet201 = cv.models.DenseNet201
+DenseNet264 = cv.models.DenseNet264
 
+HRNet_W18_C = cv.models.HRNet_W18_C
+HRNet_W30_C = cv.models.HRNet_W30_C
+HRNet_W32_C = cv.models.HRNet_W32_C
+HRNet_W40_C = cv.models.HRNet_W40_C
+HRNet_W44_C = cv.models.HRNet_W44_C
+HRNet_W48_C = cv.models.HRNet_W48_C
+HRNet_W64_C = cv.models.HRNet_W64_C
 
-class ResNet101(cv.models.ResNet101):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet101, self).__init__(num_classes=num_classes)
+Xception41 = cv.models.Xception41
+Xception65 = cv.models.Xception65
+Xception71 = cv.models.Xception71
 
-
-class ResNet50_vd(cv.models.ResNet50_vd):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet50_vd, self).__init__(num_classes=num_classes)
-
-
-class ResNet101_vd(cv.models.ResNet101_vd):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet101_vd, self).__init__(num_classes=num_classes)
-
-
-class ResNet50_vd_ssld(cv.models.ResNet50_vd_ssld):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet50_vd_ssld, self).__init__(num_classes=num_classes)
-
-
-class ResNet101_vd_ssld(cv.models.ResNet101_vd_ssld):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ResNet101_vd_ssld, self).__init__(num_classes=num_classes)
-
-
-class DarkNet53(cv.models.DarkNet53):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(DarkNet53, self).__init__(num_classes=num_classes)
-
-
-class MobileNetV1(cv.models.MobileNetV1):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(MobileNetV1, self).__init__(num_classes=num_classes)
-
-
-class MobileNetV2(cv.models.MobileNetV2):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(MobileNetV2, self).__init__(num_classes=num_classes)
-
-
-class MobileNetV3_small(cv.models.MobileNetV3_small):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(MobileNetV3_small, self).__init__(num_classes=num_classes)
-
-
-class MobileNetV3_large(cv.models.MobileNetV3_large):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(MobileNetV3_large, self).__init__(num_classes=num_classes)
-
-
-class MobileNetV3_small_ssld(cv.models.MobileNetV3_small_ssld):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(MobileNetV3_small_ssld, self).__init__(num_classes=num_classes)
-
-
-class MobileNetV3_large_ssld(cv.models.MobileNetV3_large_ssld):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(MobileNetV3_large_ssld, self).__init__(num_classes=num_classes)
-
-
-class Xception41(cv.models.Xception41):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(Xception41, self).__init__(num_classes=num_classes)
-
-
-class Xception65(cv.models.Xception65):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(Xception65, self).__init__(num_classes=num_classes)
-
-
-class DenseNet121(cv.models.DenseNet121):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(DenseNet121, self).__init__(num_classes=num_classes)
-
-
-class DenseNet161(cv.models.DenseNet161):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(DenseNet161, self).__init__(num_classes=num_classes)
-
-
-class DenseNet201(cv.models.DenseNet201):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(DenseNet201, self).__init__(num_classes=num_classes)
-
-
-class ShuffleNetV2(cv.models.ShuffleNetV2):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(ShuffleNetV2, self).__init__(num_classes=num_classes)
-
-
-class HRNet_W18(cv.models.HRNet_W18_C):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(HRNet_W18, self).__init__(num_classes=num_classes)
-
-
-class AlexNet(cv.models.AlexNet):
-    def __init__(self, num_classes=1000, input_channel=None):
-        if input_channel is not None:
-            logging.warning(
-                "`input_channel` is deprecated in PaddleX 2.0 and won't take effect. Defaults to 3."
-            )
-        super(AlexNet, self).__init__(num_classes=num_classes)
+ShuffleNetV2 = cv.models.ShuffleNetV2
+ShuffleNetV2_swish = cv.models.ShuffleNetV2_swish
