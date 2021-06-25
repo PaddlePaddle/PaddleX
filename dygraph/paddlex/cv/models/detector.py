@@ -455,10 +455,11 @@ class BaseDetector(BaseModel):
             If img_file is a string or np.array, the result is a list of dict with key-value pairs:
             {"category_id": `category_id`, "category": `category`, "bbox": `[x, y, w, h]`, "score": `score`}.
             If img_file is a list, the result is a list composed of dicts with the corresponding fields:
-            category_id(int): the predicted category ID
+            category_id(int): the predicted category ID. 0 represents the first category in the dataset, and so on.
             category(str): category name
             bbox(list): bounding box in [x, y, w, h] format
             score(str): confidence
+            mask(dict): Only for instance segmentation task. Mask of the object in RLE format
 
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
@@ -512,7 +513,7 @@ class BaseDetector(BaseModel):
                     h = ymax - ymin
                     bbox = [xmin, ymin, w, h]
                     dt_res = {
-                        'category_id': int(num_id) + 1,
+                        'category_id': int(num_id),
                         'category': category,
                         'bbox': bbox,
                         'score': score
@@ -544,9 +545,9 @@ class BaseDetector(BaseModel):
                         if 'counts' in rle:
                             rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
-                        'category_id': int(label) + 1,
+                        'category_id': int(label),
                         'category': category,
-                        'segmentation': rle,
+                        'mask': rle,
                         'score': score
                     }
                     seg_res.append(sg_res)

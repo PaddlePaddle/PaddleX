@@ -915,9 +915,9 @@ class Padding(Transform):
                  offsets=None,
                  im_padding_value=(127.5, 127.5, 127.5),
                  label_padding_value=255,
-                 coarsest_stride=32):
+                 size_divisor=32):
         """
-        Pad image to a specified size or multiple of coarsest_stride.
+        Pad image to a specified size or multiple of size_divisor.
 
         Args:
             target_size(int, Sequence, optional): Image target size, if None, pad to multiple of size_divisor. Defaults to None.
@@ -925,7 +925,7 @@ class Padding(Transform):
                 if 0, only pad to right and bottom. If 1, pad according to center. If 2, only pad left and top. Defaults to 0.
             im_padding_value(Sequence[float]): RGB value of pad area. Defaults to (127.5, 127.5, 127.5).
             label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
-            coarsest_stride(int): Image width and height after padding is a multiple of coarsest_stride.
+            size_divisor(int): Image width and height after padding is a multiple of coarsest_stride.
         """
         super(Padding, self).__init__()
         if isinstance(target_size, (list, tuple)):
@@ -943,7 +943,7 @@ class Padding(Transform):
             assert offsets, 'if pad_mode is -1, offsets should not be None'
 
         self.target_size = target_size
-        self.coarsest_stride = coarsest_stride
+        self.coarsest_stride = size_divisor
         self.pad_mode = pad_mode
         self.offsets = offsets
         self.im_padding_value = im_padding_value

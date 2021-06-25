@@ -252,8 +252,8 @@ def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
                 linestyle="-", ))
 
         # draw mask
-        if 'segmentation' in dt:
-            mask = mask_util.decode(dt['segmentation'])
+        if 'mask' in dt:
+            mask = mask_util.decode(dt['mask'])
             mask = np.ascontiguousarray(mask)
             res = cv2.findContours(
                 mask.astype("uint8"), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
