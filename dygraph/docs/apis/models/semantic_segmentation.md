@@ -29,7 +29,7 @@ train(num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, optimize
 > **参数**
 > > - **num_epochs** (int): 训练迭代轮数。
 > > - **train_dataset** (paddlex.dataset): 训练数据集。
-> > - **train_batch_size** (int): 训练数据batch大小。同时作为验证数据batch大小。默认为2。
+> > - **train_batch_size** (int): 训练数据batch大小，默认为2。目前语义分割仅支持每张卡上batch大小为1进行评估，`train_batch_size`参数不影响评估时的batch大小。
 > > - **eval_dataset** (paddlex.dataset): 评估数据集。
 > > - **optimizer** (paddle.optimizer.Optimizer): 优化器。当该参数为None时，使用默认的优化器：使用paddle.optimizer.Momentum优化方法，paddle.optimizer.lr.PolynomialDecay学习率衰减策略。
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
