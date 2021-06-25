@@ -39,7 +39,7 @@ eval_dataset = pdx.datasets.SegDataset(
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
-model = pdx.models.HRNet(num_classes=num_classes, width=48)
+model = pdx.seg.HRNet(num_classes=num_classes, width=48)
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/segmenter.py#L150
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
