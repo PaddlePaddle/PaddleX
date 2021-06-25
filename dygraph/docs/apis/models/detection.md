@@ -39,13 +39,13 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, o
 >
 > > - **num_epochs** (int): 训练迭代轮数。
 > > - **train_dataset** (paddlex.dataset): 训练数据集。
-> > - **train_batch_size** (int): 训练数据batch大小。目前检测仅支持单卡评估，训练数据batch大小与显卡数量之商为验证数据batch大小。默认为64。
+> > - **train_batch_size** (int): 训练数据batch大小，默认为64。目前检测仅支持单卡batch大小为1进行评估，`train_batch_size`参数不影响评估时的batch大小。
 > > - **eval_dataset** (paddlex.dataset or None): 评估数据集。当该参数为None时，训练过程中不会进行模型评估。默认为None。
 > > - **optimizer** (paddle.optimizer.Optimizer): 优化器。当该参数为None时，使用默认优化器：paddle.optimizer.lr.PiecewiseDecay衰减策略，paddle.optimizer.Momentum优化方法。
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为10。
 > > - **save_dir** (str): 模型保存路径。默认为'output'。
-> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串’IMAGENET’，则自动下载在ImageNet图片数据上预训练的模型权重；若为字符串’COCO’，则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串’IMAGENET’，则自动下载在ImageNet图片数据上预训练的模型权重（仅包含backbone网络）；若为字符串’COCO’，则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
 > > - **learning_rate** (float): 默认优化器的学习率。默认为0.001。
 > > - **warmup_steps** (int):  默认优化器进行warmup过程的步数。默认为0。
 > > - **warmup_start_lr** (int): 默认优化器warmup的起始学习率。默认为0.0。
