@@ -78,7 +78,7 @@ class BaseDetector(BaseModel):
             image_shape = [None, 3] + image_shape
             if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
                 raise Exception(
-                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
+                    "Height and width in fixed_input_shape must be a multiple of 32, but received {}.".
                     format(image_shape[-2:]))
         return image_shape
 
