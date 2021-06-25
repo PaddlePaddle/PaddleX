@@ -79,7 +79,7 @@
 
 - [模型训练](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train)
 - [模型剪裁](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
-- [模型导出]()
+
 
 
 2. **GUI模式：**
