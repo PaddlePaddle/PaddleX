@@ -167,7 +167,7 @@ paddlex.seg.BiSeNetV2(num_classes=2, use_mixed_loss=False, align_corners=False)
 > > - **use_mixed_loss** (bool or List[tuple]): 是否使用混合损失函数。如果为True，混合使用CrossEntropyLoss和LovaszSoftmaxLoss，权重分别为0.8和0.2。如果为False，则仅使用CrossEntropyLoss。也可以以列表的形式自定义混合损失函数，列表的每一个元素为(损失函数类型，权重)元组，损失函数类型取值范围为['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']。
 > > - **align_corners** (bool): 网络中对特征图进行插值时是否将四个角落像素的中心对齐。若特征图尺寸为偶数，建议设为True。若特征图尺寸为奇数，建议设为False。默认为False。
 
-> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)
+> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)（`pretrain_weights`取值范围为['CITYSCAPES', None]）
 > - evaluate 评估接口说明同 [DeepLabV3P模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabV3P模型predict接口](#predict)
 > - analyze_sensitivity 敏感度分析接口说明同 [DeepLabV3P模型analyze_sensivity接口](#analyze_sensitivity)
@@ -189,7 +189,7 @@ paddlex.seg.UNet(num_classes=2, use_mixed_loss=False, use_deconv=False, align_co
 > > - **use_deconv** (bool): 在上采样过程中是否使用反卷积操作。如果为True，使用反卷积进行上采样。如果为False，使用双线性插值方法进行上采样。默认为False。
 > > - **align_corners** (bool): 网络中对特征图进行插值时是否将四个角落像素的中心对齐。若特征图尺寸为偶数，建议设为True。若特征图尺寸为奇数，建议设为False。默认为False。
 
-> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)
+> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)（`pretrain_weights`取值范围为['CITYSCAPES', None]）
 > - evaluate 评估接口说明同 [DeepLabV3P模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabV3P模型predict接口](#predict)
 > - analyze_sensitivity 敏感度分析接口说明同 [DeepLabV3P模型analyze_sensivity接口](#analyze_sensitivity)
@@ -232,7 +232,7 @@ paddlex.seg.FastSCNN(num_classes=2, use_mixed_loss=False, align_corners=False)
 > > - **use_mixed_loss** (bool or List[tuple]): 是否使用混合损失函数。如果为True，混合使用CrossEntropyLoss和LovaszSoftmaxLoss，权重分别为0.8和0.2。如果为False，则仅使用CrossEntropyLoss。也可以以列表的形式自定义混合损失函数，列表的每一个元素为(损失函数类型，权重)元组，损失函数类型取值范围为['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']。
 > > - **align_corners** (bool): 网络中对特征图进行插值时是否将四个角落像素的中心对齐。若特征图尺寸为偶数，建议设为True。若特征图尺寸为奇数，建议设为False。默认为False。
 
-> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)
+> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)（`pretrain_weights`取值范围为['CITYSCAPES', None]）
 > - evaluate 评估接口说明同 [DeepLabV3P模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabV3P模型predict接口](#predict)
 > - analyze_sensitivity 敏感度分析接口说明同 [DeepLabV3P模型analyze_sensivity接口](#analyze_sensitivity)
