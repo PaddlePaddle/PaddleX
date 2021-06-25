@@ -284,7 +284,7 @@ paddlex.det.FasterRCNN(num_classes=80, backbone='ResNet50', with_fpn=True, aspec
 
 > **参数**
 >
-> > - **num_classes** (int): 包含了背景类的类别数。默认为80。
+> > - **num_classes** (int): 类别数。默认为80。
 > > - **backbone** (str): FasterRCNN的backbone网络，取值范围为['ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18']。默认为'ResNet50'。
 > > - **with_fpn** (bool): 是否使用FPN结构。默认为True。
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
