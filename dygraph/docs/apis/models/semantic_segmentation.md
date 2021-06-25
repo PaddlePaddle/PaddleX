@@ -35,7 +35,7 @@ train(num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, optimize
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。默认'output'
-> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES图片数据上预训练的模型权重；若为字符串'PascalVOC'，则自动下载在PascalVOC图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'CITYSCAPES'。
+> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES图片数据上预训练的模型权重；若为字符串'PascalVOC'，则自动下载在PascalVOC图片数据上预训练的模型权重；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'CITYSCAPES'。
 > > - **learning_rate** (float): 默认优化器的初始学习率。默认为0.01。
 > > - **lr_decay_power** (float): 默认优化器学习率衰减指数。默认为0.9。
 > > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
@@ -211,7 +211,7 @@ paddlex.seg.HRNet(num_classes=2, width=48, use_mixed_loss=False, align_corners=F
 > > - **use_mixed_loss** (bool or List[tuple]): 是否使用混合损失函数。如果为True，混合使用CrossEntropyLoss和LovaszSoftmaxLoss，权重分别为0.8和0.2。如果为False，则仅使用CrossEntropyLoss。也可以以列表的形式自定义混合损失函数，列表的每一个元素为(损失函数类型，权重)元组，损失函数类型取值范围为['CrossEntropyLoss', 'DiceLoss', 'LovaszSoftmaxLoss']。
 > > - **align_corners** (bool): 网络中对特征图进行插值时是否将四个角落像素的中心对齐。若特征图尺寸为偶数，建议设为True。若特征图尺寸为奇数，建议设为False。默认为False。
 
-> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)
+> - train 训练接口说明同 [DeepLabV3P模型train接口](#train)（`pretrain_weights`取值范围为['CITYSCAPES', 'PascalVOC', None]）
 > - evaluate 评估接口说明同 [DeepLabV3P模型evaluate接口](#evaluate)
 > - predict 预测接口说明同 [DeepLabV3P模型predict接口](#predict)
 > - analyze_sensitivity 敏感度分析接口说明同 [DeepLabV3P模型analyze_sensivity接口](#analyze_sensitivity)

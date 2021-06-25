@@ -42,7 +42,7 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, o
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为10。
 > > - **save_dir** (str): 模型保存路径。默认为'output'。
-> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串’IMAGENET’，则自动下载在ImageNet图片数据上预训练的模型权重（仅包含backbone网络）；若为字符串’COCO’，则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+> > - **pretrain_weights** (str or None): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串’IMAGENET’，则自动下载在ImageNet图片数据上预训练的模型权重（仅包含backbone网络）；若为字符串’COCO’，则自动下载在COCO数据集上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
 > > - **learning_rate** (float): 默认优化器的学习率。默认为0.001。
 > > - **warmup_steps** (int):  默认优化器进行warmup过程的步数。默认为0。
 > > - **warmup_start_lr** (int): 默认优化器warmup的起始学习率。默认为0.0。
