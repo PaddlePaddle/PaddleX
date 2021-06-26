@@ -99,12 +99,12 @@ class BaseClassifier(BaseModel):
             outputs = OrderedDict([('prediction', softmax_out)])
 
         elif mode == 'eval':
-            labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
-                                                                         1))
+            pred = softmax_out
+            gt = inputs[1]
+            labels = inputs[1].reshape([-1, 1])
             acc1 = paddle.metric.accuracy(softmax_out, label=labels)
             k = min(5, self.num_classes)
             acck = paddle.metric.accuracy(softmax_out, label=labels, k=k)
-            prediction = softmax_out
             # multi cards eval
             if paddle.distributed.get_world_size() > 1:
                 acc1 = paddle.distributed.all_reduce(
@@ -113,17 +113,19 @@ class BaseClassifier(BaseModel):
                 acck = paddle.distributed.all_reduce(
                     acck, op=paddle.distributed.ReduceOp.
                     SUM) / paddle.distributed.get_world_size()
-                prediction = []
-                paddle.distributed.all_gather(prediction, softmax_out)
-                prediction = paddle.concat(prediction, axis=0)
+                pred = list()
+                gt = list()
+                paddle.distributed.all_gather(pred, softmax_out)
+                paddle.distributed.all_gather(gt, inputs[1])
+                pred = paddle.concat(pred, axis=0)
+                gt = paddle.concat(gt, axis=0)
 
             outputs = OrderedDict([('acc1', acc1), ('acc{}'.format(k), acck),
-                                   ('prediction', prediction)])
+                                   ('prediction', pred), ('labels', gt)])
 
         else:
             # mode == 'train'
-            labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
-                                                                         1))
+            labels = inputs[1].reshape([-1, 1])
             loss = CELoss(class_dim=self.num_classes)
             loss = loss(net_out, inputs[1])
             acc1 = paddle.metric.accuracy(softmax_out, label=labels, k=1)
@@ -358,9 +360,9 @@ class BaseClassifier(BaseModel):
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
         eval_metrics = TrainingStats()
-        eval_details = None
         if return_details:
-            eval_details = list()
+            true_labels = list()
+            pred_scores = list()
 
         logging.info(
             "Start to evaluate(total_samples={}, total_steps={})...".format(
@@ -370,10 +372,16 @@ class BaseClassifier(BaseModel):
             for step, data in enumerate(self.eval_data_loader()):
                 outputs = self.run(self.net, data, mode='eval')
                 if return_details:
-                    eval_details.append(outputs['prediction'].tolist())
+                    true_labels.extend(outputs['labels'].tolist())
+                    pred_scores.extend(outputs['prediction'].tolist())
                 outputs.pop('prediction')
+                outputs.pop('labels')
                 eval_metrics.update(outputs)
         if return_details:
+            eval_details = {
+                'true_labels': true_labels,
+                'pred_scores': pred_scores
+            }
             return eval_metrics.get(), eval_details
         else:
             return eval_metrics.get()
