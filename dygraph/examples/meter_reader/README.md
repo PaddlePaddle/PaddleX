@@ -16,7 +16,7 @@
 在电力能源厂区需要定期监测表计读数，以保证设备正常运行及厂区安全。但厂区分布分散，人工巡检耗时长，无法实时监测表计，且部分工作环境危险导致人工巡检无法触达。针对上述问题，希望通过摄像头拍照->智能读数的方式高效地完成此任务。
 
 <div align="center">
-<img src="./images/scene_introduce.png"  width = "500" />              </div>
+<img src="./images/scene_introduce.jpg"  width = "800" />              </div>
 
 为实现智能读数，我们采取目标检测->语义分割->读数后处理的方案：
 
@@ -27,7 +27,7 @@
 整个方案的流程如下所示：
 
 <div align="center">
-<img src="images/MeterReader_Architecture.jpg"  width = "500" />              </div>
+<img src="images/MeterReader_Architecture.jpg"  width = "800" />              </div>
 
 
 ## <h2 id="2">2 数据准备</h2>
@@ -45,6 +45,8 @@
 
 * 解压后的表计检测数据集的文件夹内容如下：
 
+训练集有725张图片，测试集有58张图片。
+
 ```
 meter_det/
 |-- annotations/ # 标注文件所在文件夹
@@ -60,6 +62,8 @@ meter_det/
 ```
 
 * 解压后的指针和刻度分割数据集的文件夹内容如下：
+
+训练集有374张图片，测试集有40张图片。
 
 ```
 meter_seg/
@@ -84,6 +88,9 @@ meter_seg/
 ```
 
 * 解压后的表计测试图片的文件夹内容如下:
+
+一共有58张测试图片。
+
 ```
 meter_test/
 |-- 20190822_105.jpg
@@ -105,17 +112,17 @@ PaddleX提供了丰富的视觉模型，在目标检测中提供了RCNN和YOLO�
 
 运行如下代码开始训练模型：
 
-```
+```shell
 python code/train_detection.py
 ```
 
-* 训练过程说明
+训练过程说明:
 
 定义数据预处理 -> 定义数据集路径 -> 初始化模型 -> 模型训练
 
-** 定义数据预处理
+ * 定义数据预处理
 
-```
+```python
 train_transforms = T.Compose([
     T.MixupImage(mixup_epoch=250), T.RandomDistort(),
     T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
@@ -133,11 +140,11 @@ eval_transforms = T.Compose([
 ```
 
 
-** 定义数据集路径
+ * 定义数据集路径
 
-```
+```python
 
-# 下载和解压表计检测数据集，如果已经预先下载，可注视掉下面两行
+# 下载和解压表计检测数据集，如果已经预先下载，可注释掉下面两行
 meter_det_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_det.tar.gz'
 pdx.utils.download_and_decompress(meter_det_dataset, path='./')
 
@@ -152,18 +159,18 @@ eval_dataset = pdx.datasets.CocoDetection(
     transforms=eval_transforms)
 ```
 
-** 初始化模型
+ * 初始化模型
 
-```
+```python
 num_classes = len(train_dataset.labels)
 model = pdx.models.PPYOLOv2(
     num_classes=num_classes, backbone='ResNet50_vd_dcn')
 
 ```
 
-** 模型训练
+* 模型训练
 
-```
+```python
 model.train(
     num_epochs=170,
     train_dataset=train_dataset,
@@ -185,17 +192,17 @@ model.train(
 
 运行如下代码开始训练模型：
 
-```
+```shell
 python code/train_segmentation.py
 ```
 
-* 训练过程说明
+训练过程说明:
 
 定义数据预处理 -> 定义数据集路径 -> 初始化模型 -> 模型训练
 
-** 定义数据预处理
+* 定义数据预处理
 
-```
+```python
 train_transforms = T.Compose([
     T.Resize(target_size=512),
     T.RandomHorizontalFlip(),
@@ -211,9 +218,9 @@ eval_transforms = T.Compose([
 ```
 
 
-** 定义数据集路径
+* 定义数据集路径
 
-```
+```python
 # 下载和解压指针刻度分割数据集，如果已经预先下载，可注视掉下面两行
 meter_seg_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz'
 pdx.utils.download_and_decompress(meter_seg_dataset, path='./')
@@ -234,17 +241,17 @@ eval_dataset = pdx.datasets.SegDataset(
 
 ```
 
-** 初始化模型
+* 初始化模型
 
-```
+```python
 num_classes = len(train_dataset.labels)
 model = pdx.models.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd', use_mixed_loss=True)
 
 ```
 
-** 模型训练
+* 模型训练
 
-```
+```python
 model.train(
     num_epochs=20,
     train_dataset=train_dataset,
@@ -259,7 +266,7 @@ model.train(
 
 运行如下代码：
 
-```
+```shell
 python code/reader_infer.py --det_model_dir output/ppyolov2_r50vd_dcn/best_model --seg_model_dir output/deeplabv3p_r50vd/best_model/ --image meter_det/test/20190822_105.jpg
 ```
 
@@ -274,20 +281,20 @@ Meter 2: 1.1057142840816332
 预测结果如下：
 
 <div align="center">
-<img src="./images/predict.jpg"  width = "1000" />              </div>
+<img src="./images/visualize_1624716128584.jpg"  width = "1000" />              </div>
 
 我们看下预测代码中的预测流程：
 
 图像解码 —> 检测表计 -> 过滤检测框 -> 提取检测框所在图像区域 -> 图像缩放 -> 指针和刻度分割 -> 读数后处理 -> 打印读数 -> 可视化预测结果
 
-```
+```python
 def predict(self,
-                img_file,
-                save_dir='./',
-                use_erode=True,
-                erode_kernel=4,
-                score_threshold=0.5,
-                seg_batch_size=2):
+            img_file,
+            save_dir='./',
+            use_erode=True,
+            erode_kernel=4,
+            score_threshold=0.5,
+            seg_batch_size=2):
     """检测图像中的表盘，而后分割出各表盘中的指针和刻度，对分割结果进行读数后厨后得到各表盘的读数。
 
 

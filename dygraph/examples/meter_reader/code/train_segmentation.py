@@ -45,10 +45,10 @@ model = pdx.models.DeepLabV3P(
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/segmenter.py#L150
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
-    num_epochs=80,
+    num_epochs=20,
     train_dataset=train_dataset,
     train_batch_size=4,
     pretrain_weights='IMAGENET',
     eval_dataset=eval_dataset,
     learning_rate=0.1,
-    save_dir='output/deeplabv3p_r50vd_mixed_loss_moreaug')
+    save_dir='output/deeplabv3p_r50vd')
