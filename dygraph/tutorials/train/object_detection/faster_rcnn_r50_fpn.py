@@ -40,7 +40,7 @@ eval_dataset = pdx.datasets.VOCDetection(
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
-model = pdx.models.FasterRCNN(
+model = pdx.det.FasterRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155

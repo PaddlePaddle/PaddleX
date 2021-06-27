@@ -208,7 +208,7 @@ class BaseSegmenter(BaseModel):
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
             pretrain_weights(str or None, optional):
-                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'CITYSCAPES'.
             learning_rate(float, optional): Learning rate for training. Defaults to .025.
             lr_decay_power(float, optional): Learning decay power. Defaults to .9.
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.

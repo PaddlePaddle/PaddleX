@@ -45,7 +45,7 @@ paddlex.seg.visualize(image, result, weight=0.6, save_dir='./', color=None)
 import paddlex as pdx
 model = pdx.load_model('cityscape_deeplab')
 result = model.predict('city.png')
-pdx.det.visualize('city.png', result, save_dir='./')
+pdx.seg.visualize('city.png', result, save_dir='./')
 # 预测结果保存在./visualize_city.png
 ```
 
