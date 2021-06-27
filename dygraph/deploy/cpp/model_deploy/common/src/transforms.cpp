@@ -147,19 +147,17 @@ bool Resize::Run(cv::Mat *im) {
               << std::endl;
     return false;
   }
-  double scale_w;
-  double scale_h;
+  double scale_w = width_ / static_cast<double>(im->cols);
+  double scale_h = height_ / static_cast<double>(im->rows);
   if (keep_ratio_) {
-    scale_w = width_ / static_cast<double>(im->cols);
-    scale_h = height_ / static_cast<double>(im->rows);
     scale_h = std::min(scale_w, scale_h);
     scale_w = scale_h;
+    width_ = static_cast<int>(round(scale_w * im->cols));
+    height_ = static_cast<int>(round(scale_h * im->rows));
   }
   if (use_scale_) {
     cv::resize(*im, *im, cv::Size(), scale_w, scale_h, interp_);
   } else {
-    width_ = static_cast<int>(round(scale_w * im->cols));
-    height_ = static_cast<int>(round(scale_h * im->rows));
     cv::resize(*im, *im, cv::Size(width_, height_), 0, 0, interp_);
   }
   return true;
@@ -169,8 +167,8 @@ bool Resize::ShapeInfer(
         const std::vector<int>& in_shape,
         std::vector<int>* out_shape) {
   out_shape->clear();
-  double width;
-  double height;
+  double width = width_;
+  double height = height_;
   if (keep_ratio_) {
     int w = in_shape[0];
     int h = in_shape[1];
