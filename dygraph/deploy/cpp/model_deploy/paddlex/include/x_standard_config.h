@@ -51,6 +51,9 @@ void XNormalize(const YAML::Node& src, YAML::Node* dst) {
     (*dst)["transforms"]["Normalize"]["mean"].push_back(mean[i]);
     (*dst)["transforms"]["Normalize"]["std"].push_back(std[i]);
   }
+  if (src["is_scale"].IsDefined()) {
+    (*dst)["transforms"]["Normalize"]["is_scale"] = src["is_scale"];
+  }
 }
 
 void XResize(const YAML::Node& src, YAML::Node* dst) {
@@ -62,8 +65,13 @@ void XResize(const YAML::Node& src, YAML::Node* dst) {
     w = src["target_size"].as<int>();
     h = src["target_size"].as<int>();
   } else if (src["target_size"].IsSequence()) {
-    w = src["target_size"].as<std::vector<int>>()[0];
-    h = src["target_size"].as<std::vector<int>>()[1];
+    if ((*dst)["version"].as<std::string>() >= "2.0.0") {
+      h = src["target_size"].as<std::vector<int>>()[0];
+      w = src["target_size"].as<std::vector<int>>()[1];
+    } else {
+      w = src["target_size"].as<std::vector<int>>()[0];
+      h = src["target_size"].as<std::vector<int>>()[1];
+    }
   } else {
     std::cerr << "[ERROR] Unexpected value type of `target_size`" << std::endl;
     assert(false);
@@ -88,7 +96,7 @@ void XResize(const YAML::Node& src, YAML::Node* dst) {
     }
   }
   if (src["keep_ratio"].IsDefined() && src["keep_ratio"].as<bool>()) {
-    (*dst)["transforms"]["Resize"]["keep_ratio"] = w;
+    (*dst)["transforms"]["Resize"]["keep_ratio"] = true;
   }
   (*dst)["transforms"]["Resize"]["width"] = w;
   (*dst)["transforms"]["Resize"]["height"] = h;

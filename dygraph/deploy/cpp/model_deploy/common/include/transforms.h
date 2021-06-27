@@ -68,8 +68,8 @@ class Normalize : public Transform {
       if (is_scale_) {
         alpha /= (max_val_[c] - min_val_[c]);
       }
+      double beta = -1.0 * (mean_[c] + min_val_[c] * alpha) / std_[c];
       alpha /= std_[c];
-      double beta = -1.0 * mean_[c] / std_[c];
 
       alpha_.push_back(alpha);
       beta_.push_back(beta);

@@ -169,8 +169,20 @@ bool Resize::ShapeInfer(
         const std::vector<int>& in_shape,
         std::vector<int>* out_shape) {
   out_shape->clear();
-  out_shape->push_back(width_);
-  out_shape->push_back(height_);
+  double width;
+  double height;
+  if (keep_ratio_) {
+    int w = in_shape[0];
+    int h = in_shape[1];
+    double scale_w = width_ / static_cast<double>(w);
+    double scale_h = height_ / static_cast<double>(h);
+    scale_h = std::min(scale_w, scale_h);
+    scale_w = scale_h;
+    width = static_cast<int>(round(scale_w * w));
+    height = static_cast<int>(round(scale_h * h));
+  }
+  out_shape->push_back(width);
+  out_shape->push_back(height);
   return true;
 }
 
