@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
-project(Installation CXX C VERSION 1.0)
+project(Installation
+        LANGUAGES CXX C
+        VERSION 1.0)
+
+message("----this is build lib--------")
 
 option(WITH_MKL        "Compile demo with MKL/OpenBlas support,defaultuseMKL."          ON)
 option(WITH_GPU        "Compile demo with GPU/CPU, default use CPU."                    OFF)
@@ -15,9 +19,11 @@ SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 
-SET(PROJECT_ROOT_DIR  "." CACHE PATH  "root directory of project.")
+get_filename_component(PROJECT_ROOT_DIR "../../" REALPATH)
+SET(PROJECT_ROOT_DIR ${PROJECT_ROOT_DIR}  CACHE PATH  "root directory of project.")
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install_dir" CACHE PATH  "project install")
+SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install_dir" CACHE PATH  "project install")
+SET(PaddleDeploy_LIBS "" CACHE PATH "Location of libraries")
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -100,6 +106,28 @@ endif()
 
 set(DEPS ${DEPS} ${MATH_LIB} ${MKLDNN_LIB})
 
+#OPENCV
+if (NOT (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64"))
+  if (NOT DEFINED OPENCV_DIR OR ${OPENCV_DIR} STREQUAL "")
+    message(FATAL_ERROR "please set OPENCV_DIR with -DOPENCV_DIR=/path/opencv")
+  endif()
+endif()
+
+if (WIN32)
+  find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/build/ NO_DEFAULT_PATH)
+  unset(OpenCV_DIR CACHE)
+else ()
+  if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") # x86_64 aarch64
+    set(OpenCV_INCLUDE_DIRS "/usr/include/opencv4")
+    file(GLOB OpenCV_LIBS /usr/lib/aarch64-linux-gnu/libopencv_*${CMAKE_SHARED_LIBRARY_SUFFIX})
+    message("OpenCV libs: ${OpenCV_LIBS}")
+  else()
+    find_package(OpenCV REQUIRED PATHS ${OPENCV_DIR}/share/OpenCV NO_DEFAULT_PATH)
+  endif()
+endif ()
+
+set(DEPS ${DEPS} ${OpenCV_LIBS})
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 #set GPU
 if(WITH_GPU)
@@ -194,34 +222,30 @@ add_dependencies(PaddleDeploy ext-yaml-cpp)
 target_link_libraries(PaddleDeploy ${DEPS})
 
 # Install
-#project file
+# project lib
 install(TARGETS PaddleDeploy
         EXPORT PaddleDeployTargets
-        LIBRARY DESTINATION paddle_deploy/lib
-        PUBLIC_HEADER DESTINATION deploy/include
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/paddle_deploy/lib
 )
 
+# project header file
 file(GLOB PROJECT_INCLUDE_FILE
-          ${PROJECT_ROOT_DIR}/common
-          ${PROJECT_ROOT_DIR}/engine
-          ${PROJECT_ROOT_DIR}/ppdet)
+          ${PROJECT_ROOT_DIR}/model_deploy
+)
 install(DIRECTORY ${PROJECT_INCLUDE_FILE}
-        DESTINATION  paddle_deploy/include
+        DESTINATION  ${CMAKE_INSTALL_PREFIX}/paddle_deploy/include
         PATTERN "*/src" EXCLUDE)
 
 # find_package config
 install(EXPORT PaddleDeployTargets
         FILE PaddleDeployTargets.cmake
         NAMESPACE PaddleDeploy::
-        DESTINATION paddle_deploy/lib/cmake/PaddleDeploy
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/PaddleDeploy
 )
 include(CMakePackageConfigHelpers)
 configure_package_config_file(${PROJECT_ROOT_DIR}/utils/build_lib/Config.cmake.in
     PaddleDeployConfig.cmake
-    INSTALL_DESTINATION "lib/cmake/PaddleDeploy"
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-    COMPATIBILITY AnyNewerVersion  # 表示该函数库向下兼容
+    INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/share/PaddleDeployy"
 )
 write_basic_package_version_file(
     PaddleDeployConfigVersion.cmake
@@ -231,35 +255,32 @@ write_basic_package_version_file(
 install(FILES
     "${PROJECT_BINARY_DIR}/PaddleDeployConfig.cmake"
     "${PROJECT_BINARY_DIR}/PaddleDeployConfigVersion.cmake"
-    DESTINATION "lib/cmake/PaddleDeploy"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/PaddleDeploy"
 )
 
-
-
-
-# if(WIN32)
+if(WIN32)
 #paddle inference
-# file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/* ${PADDLE_DIR}/paddle)
-# install(DIRECTORY ${THIRD_PARTY_FILE}
-#         DESTINATION  third_party)
+file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/* ${PADDLE_DIR}/paddle)
+install(DIRECTORY ${THIRD_PARTY_FILE}
+        DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
 
-# else()
+else()
 # #paddle inference
-# file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/* ${PADDLE_DIR}/paddle)
-# install(DIRECTORY ${THIRD_PARTY_FILE}
-#         DESTINATION  third_party
-#         PATTERN "*/lib" EXCLUDE)
+file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/* ${PADDLE_DIR}/paddle)
+install(DIRECTORY ${THIRD_PARTY_FILE}
+        DESTINATION  third_party
+        PATTERN "*/lib" EXCLUDE)
 
 #yaml-cpp
-# install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/src/ext-yaml-cpp/include
-#                   ${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/lib
-#         DESTINATION  third_party/yaml-cpp)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/src/ext-yaml-cpp/include
+                  ${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/lib
+        DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/yaml-cpp)
 #opencv
 # install(DIRECTORY ${OpenCV_INSTALL_PATH}/include ${OpenCV_INSTALL_PATH}/lib
-#         DESTINATION  ${LIB_FILE_OUTPUT}/third_party/opencv)
+#         DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/opencv)
 
 # install(DIRECTORY ${PADDLE_DIR}/third_party/install/mklml/lib
 #         DESTINATION  third_party/mklml)
 # install(DIRECTORY ${PADDLE_DIR}/third_party/install/mkldnn/lib
 #         DESTINATION  third_party/mkldnn)
-# endif()
+endif()
