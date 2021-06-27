@@ -108,12 +108,12 @@ PaddleX提供了丰富的视觉模型，在目标检测中提供了RCNN和YOLO�
 
 ## <h2 id="4">4 表计检测模型训练</h2>
 
-本项目中采用精度和预测性能的PPYOLOV2进行表计检测。具体代码请参考[train_detection.py](./code/train_detection.py)。
+本项目中采用精度和预测性能的PPYOLOV2进行表计检测。具体代码请参考[train_detection.py](./train_detection.py)。
 
 运行如下代码开始训练模型：
 
 ```shell
-python code/train_detection.py
+python train_detection.py
 ```
 
 训练过程说明:
@@ -188,12 +188,12 @@ model.train(
 
 ## <h2 id="5">5 指针和刻度分割模型训练</h2>
 
-本项目中采用精度更优的DeepLabV3P进行指针和刻度的分割。具体代码请参考[train_segmentation.py](./code/train_segmentation.py)。
+本项目中采用精度更优的DeepLabV3P进行指针和刻度的分割。具体代码请参考[train_segmentation.py](./train_segmentation.py)。
 
 运行如下代码开始训练模型：
 
 ```shell
-python code/train_segmentation.py
+python train_segmentation.py
 ```
 
 训练过程说明:
@@ -267,7 +267,7 @@ model.train(
 运行如下代码：
 
 ```shell
-python code/reader_infer.py --det_model_dir output/ppyolov2_r50vd_dcn/best_model --seg_model_dir output/deeplabv3p_r50vd/best_model/ --image meter_det/test/20190822_105.jpg
+python reader_infer.py --det_model_dir output/ppyolov2_r50vd_dcn/best_model --seg_model_dir output/deeplabv3p_r50vd/best_model/ --image meter_det/test/20190822_105.jpg
 ```
 
 则会在终端上输出信息：

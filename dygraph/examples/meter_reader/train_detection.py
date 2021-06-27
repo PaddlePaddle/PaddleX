@@ -18,6 +18,10 @@ eval_transforms = T.Compose([
             mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+# 下载和解压表计检测数据集，如果已经预先下载，可注释掉下面两行
+meter_det_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_det.tar.gz'
+pdx.utils.download_and_decompress(meter_det_dataset, path='./')
+
 # 定义训练和验证所用的数据集
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/paddlex/cv/datasets/coco.py#L26
 train_dataset = pdx.datasets.CocoDetection(
@@ -33,8 +37,7 @@ eval_dataset = pdx.datasets.CocoDetection(
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
-model = pdx.models.PPYOLOv2(
-    num_classes=num_classes, backbone='ResNet50_vd_dcn')
+model = pdx.det.PPYOLOv2(num_classes=num_classes, backbone='ResNet50_vd_dcn')
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
