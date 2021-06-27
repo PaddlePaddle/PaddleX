@@ -107,8 +107,8 @@ def load_model(model_dir):
         if status == 'Quantized':
             with open(osp.join(model_dir, "quant.yml")) as f:
                 quant_info = yaml.load(f.read(), Loader=yaml.Loader)
-                quant_config = quant_info['quant_config']
-                model.quantizer = paddleslim.QAT(quant_config)
+                model.quant_config = quant_info['quant_config']
+                model.quantizer = paddleslim.QAT(model.quant_config)
                 model.quantizer.quantize(model.net)
 
         if status == 'Infer':
