@@ -3,7 +3,7 @@
 
 * [钢筋计数](./rebar_count)
 
-* [机械手抓取](./rebar_count)
+* [机械手抓取](./robot_grab)
 
 * [缺陷检测](./defect_detection)
 
