@@ -51,6 +51,9 @@ void XNormalize(const YAML::Node& src, YAML::Node* dst) {
     (*dst)["transforms"]["Normalize"]["mean"].push_back(mean[i]);
     (*dst)["transforms"]["Normalize"]["std"].push_back(std[i]);
   }
+  if (src["is_scale"].IsDefined()) {
+    (*dst)["transforms"]["Normalize"]["is_scale"] = src["is_scale"];
+  }
 }
 
 void XResize(const YAML::Node& src, YAML::Node* dst) {
@@ -62,8 +65,13 @@ void XResize(const YAML::Node& src, YAML::Node* dst) {
     w = src["target_size"].as<int>();
     h = src["target_size"].as<int>();
   } else if (src["target_size"].IsSequence()) {
-    w = src["target_size"].as<std::vector<int>>()[0];
-    h = src["target_size"].as<std::vector<int>>()[1];
+    if ((*dst)["version"].as<std::string>() >= "2.0.0") {
+      h = src["target_size"].as<std::vector<int>>()[0];
+      w = src["target_size"].as<std::vector<int>>()[1];
+    } else {
+      w = src["target_size"].as<std::vector<int>>()[0];
+      h = src["target_size"].as<std::vector<int>>()[1];
+    }
   } else {
     std::cerr << "[ERROR] Unexpected value type of `target_size`" << std::endl;
     assert(false);
@@ -86,6 +94,9 @@ void XResize(const YAML::Node& src, YAML::Node* dst) {
                 << interp_str << "'" << std::endl;
       assert(false);
     }
+  }
+  if (src["keep_ratio"].IsDefined() && src["keep_ratio"].as<bool>()) {
+    (*dst)["transforms"]["Resize"]["keep_ratio"] = true;
   }
   (*dst)["transforms"]["Resize"]["width"] = w;
   (*dst)["transforms"]["Resize"]["height"] = h;
@@ -114,6 +125,44 @@ void XResizeByShort(const YAML::Node& src, YAML::Node* dst) {
   (*dst)["transforms"]["ResizeByShort"]["target_size"] = target_size;
   (*dst)["transforms"]["ResizeByShort"]["interp"] = interp;
   (*dst)["transforms"]["ResizeByShort"]["use_scale"] = false;
+}
+
+// dygraph version
+void XPaddingV2(const YAML::Node& src, YAML::Node* dst) {
+  if (src["target_size"].IsDefined() &&
+      src["target_size"].Type() != YAML::NodeType::Null) {
+    assert(src["target_size"].IsScalar() || src["target_size"].IsSequence());
+    if (src["target_size"].IsScalar()) {
+      (*dst)["transforms"]["Padding"]["width"] = src["target_size"].as<int>();
+      (*dst)["transforms"]["Padding"]["height"] = src["target_size"].as<int>();
+    } else {
+      std::vector<int> target_size = src["target_size"].as<std::vector<int>>();
+      (*dst)["transforms"]["Padding"]["width"] = target_size[0];
+      (*dst)["transforms"]["Padding"]["height"] = target_size[1];
+    }
+  } else if (src["size_divisor"].IsDefined()) {
+    (*dst)["transforms"]["Padding"]["stride"] =
+                        src["size_divisor"].as<int>();
+  } else {
+    std::cerr << "[Error] As least one of size_divisor/"
+              << "target_size must be defined for Padding"
+              << std::endl;
+    assert(false);
+  }
+
+  if (src["im_padding_value"].IsDefined()) {
+    (*dst)["transforms"]["Padding"]["im_padding_value"] =
+            src["im_padding_value"].as<std::vector<float>>();
+  }
+
+  if (src["pad_mode"].IsDefined()) {
+    if (src["pad_mode"].as<int>() != 0) {
+      std::cerr << "[Error] No support pad_mode :"
+              << src["pad_mode"].as<int>()
+              << std::endl;
+      assert(false);
+    }
+  }
 }
 
 void XPadding(const YAML::Node& src, YAML::Node* dst) {
