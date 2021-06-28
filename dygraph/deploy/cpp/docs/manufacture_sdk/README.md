@@ -11,7 +11,7 @@ PaddleX-Deploy全面升级，支持飞桨视觉套件PaddleX、PaddleDetection�
 * [1 Manufactue SDK简介](#1)
 * [2 下载安装Manufacture SDK](#2)
 * [3 Pipeline配置文件说明](#3)
-* [4 Pipeline Node说明<](#4)
+* [4 Pipeline Node说明](#4)
 * [5 多模型串联的工业表计读数部署](#5)
 
 ## <h2 id="1">1 Manufactue SDK简介</h2>
@@ -21,7 +21,7 @@ PaddleX Manufacture基于[PaddleX-Deploy](https://github.com/PaddlePaddle/Paddle
 <div align="center">
 <img src="images/pipeline_arch.png"  width = "500" />              </div>
 
-* **PaddleX Pipeline**：完成业务逻辑的推理预测，同时提供向其发送数据和获取结果的结构。
+* **PaddleX Pipeline**：完成业务逻辑的推理预测，同时提供向其发送数据和获取结果的接口。
 * **PaddleX Config**: 定义Pipeline的节点类型和前后关系。
 * **PaddleX Node**：功能节点，例如图像解码节点、图像缩放节点、兴趣区域提取节点、模型推理节点。
 * **PaddleX Deploy**：高性能模型推理能力。
@@ -90,7 +90,7 @@ pipeline_nodes:
 | Source | 接收Pipeline所需的输入数据 | 无 | `str/List(str)`: 可以是单个节点名字或多个节点名字组成的列表 | 无 |
 | Decode | 图像解码 | 无 | `str/List(str)`: 可以是单个节点名字或多个节点名字组成的列表 | 只能有一个 |
 | Resize | 图像大小缩放 | `width (int)`: 目标宽；<br>`height (int)`: 目标高；<br>`interp (int)`：差值类型，默认为`1`；| str/List(str): 可以是单个节点名字或多个节点名字组成的列表 | 只能有一个 |
-| Predict | PaddleX导出的分类/检测/分割模型预测 | `model_dir (str)`: PaddleX导出后的模型文件夹所在路径；<br>`use_gpu (bool)`: 是否使用GPU，默认为`false`；<br>`gpu_id (int)`：GPU卡号，在`use_gpu`为`true`时有效 | `str/List(str)`: 可以是单个节点名字或多个节点名字组成的列表 | 只能有一个 |
+| Predict | PaddleX导出的分类/检测/分割模型预测 | `model_dir (str)`: PaddleX导出后的模型文件夹所在路径；<br>`use_gpu (bool)`: 是否使用GPU，默认为`false`；<br>`gpu_id (int)`：GPU卡号，在`use_gpu`为`true`时有效；<br>`use_trt (bool)`: 是否开启TensorRT加速GPU端预测 | `str/List(str)`: 可以是单个节点名字或多个节点名字组成的列表 | 只能有一个 |
 | FilterBbox | 过滤置信度低于阈值的检测框 | `score_thresh (float)`: 置信度阈值 | `str/List(str)`: 可以是单个节点名字或多个节点名字组成的列表 | 只能有一个 |
 | RoiCrop | 感兴趣区域提取 | 无 | `str/List(str)`: 可以是单个节点名字或多个节点名字组成的列表 | 必须有两个：能给出图像数据的节点、能给出检测模型预测结果的节点 |
 | Visualize | 目标检测/实例分割/语义分割模型预测结果可视化 | `save_dir (str)`: 存储可视化结果的文件夹路径 | 无 (可视化结果只能本地保存) | 必须有两个：能给出图像数据的节点、能给目标检测/实例分割/语义分割模型预测结果的节点 |
