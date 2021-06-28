@@ -22,7 +22,7 @@ SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 get_filename_component(PROJECT_ROOT_DIR "../../" REALPATH)
 SET(PROJECT_ROOT_DIR ${PROJECT_ROOT_DIR}  CACHE PATH  "root directory of project.")
 
-SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install_dir" CACHE PATH  "project install")
+SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install_dir" CACHE PATH  "project install" FORCE)
 SET(PaddleDeploy_LIBS "" CACHE PATH "Location of libraries")
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -260,27 +260,29 @@ install(FILES
 
 if(WIN32)
 #paddle inference
-file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/* ${PADDLE_DIR}/paddle)
+file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/gflags ${PADDLE_DIR}/paddle)
 install(DIRECTORY ${THIRD_PARTY_FILE}
         DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
 
 else()
 # #paddle inference
-file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/* ${PADDLE_DIR}/paddle)
+file(GLOB THIRD_PARTY_FILE ${PADDLE_DIR}/third_party/install/gflags ${PADDLE_DIR}/paddle)
 install(DIRECTORY ${THIRD_PARTY_FILE}
-        DESTINATION  third_party
-        PATTERN "*/lib" EXCLUDE)
+        DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party
+        PATTERN "*/lib" EXCLUDE
+)
 
 #yaml-cpp
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/src/ext-yaml-cpp/include
                   ${CMAKE_CURRENT_BINARY_DIR}/ext/yaml-cpp/lib
         DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/yaml-cpp)
-#opencv
-# install(DIRECTORY ${OpenCV_INSTALL_PATH}/include ${OpenCV_INSTALL_PATH}/lib
-#         DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/opencv)
 
-# install(DIRECTORY ${PADDLE_DIR}/third_party/install/mklml/lib
-#         DESTINATION  third_party/mklml)
-# install(DIRECTORY ${PADDLE_DIR}/third_party/install/mkldnn/lib
-#         DESTINATION  third_party/mkldnn)
+endif()
+
+# mkl
+if(WITH_MKL)
+  install(DIRECTORY ${PADDLE_DIR}/third_party/install/mklml
+          DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
+  install(DIRECTORY ${PADDLE_DIR}/third_party/install/mkldnn
+          DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
 endif()
