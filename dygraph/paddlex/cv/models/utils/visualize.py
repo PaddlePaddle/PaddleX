@@ -259,7 +259,7 @@ def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
         image = cv2.putText(
             image,
             text, (text_pos[0], text_pos[1] + th),
-            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontFace=cv2.FONT_HERSHEY_DUPLEX,
             fontScale=default_font_scale,
             color=(255, 255, 255),
             thickness=1,
