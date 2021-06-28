@@ -8,7 +8,7 @@ set(WITH_MKL @WITH_MKL@)
 # set(PaddleDeploy_LIBS @PaddleDeploy_LIBS@)
 
 link_directories("${PaddleDeploy_INSTALL_PATH}/paddle_deploy/lib")
-link_directories("${PaddleDeploy_INSTALL_PATH}/third_party/yaml-cpp/lib)
+link_directories("${PaddleDeploy_INSTALL_PATH}/third_party/yaml-cpp/lib")
 
 set(PaddleDeploy_INCLUDE_DIRS ${PaddleDeploy_INSTALL_PATH}/paddle_deploy/include)
 set(PaddleDeploy_INCLUDE_DIRS ${PaddleDeploy_INCLUDE_DIRS} ${PaddleDeploy_INSTALL_PATH}/third_party/yaml-cpp/include)
@@ -33,7 +33,6 @@ else()
     set(PaddleDeploy_LIBS ${PaddleDeploy_LIBS} libmklml_intel.so libiomp5.so libmkldnn.so)
   endif()
 endif(WIN32)
-set(PaddleDeploy_INCLUDE_DIRS ${PaddleDeploy_INSTALL_PATH}/paddle_deploy/include ${PaddleDeploy_INSTALL_PATH}/third_party)
 
 # Same syntax as find_package
 # find_dependency(OpenCV COMPONENTS core REQUIRED)
