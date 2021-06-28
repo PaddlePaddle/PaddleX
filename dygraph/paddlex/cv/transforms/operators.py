@@ -943,7 +943,7 @@ class Padding(Transform):
             assert offsets, 'if pad_mode is -1, offsets should not be None'
 
         self.target_size = target_size
-        self.coarsest_stride = size_divisor
+        self.size_divisor = size_divisor
         self.pad_mode = pad_mode
         self.offsets = offsets
         self.im_padding_value = im_padding_value

@@ -75,7 +75,7 @@ class BaseDetector(BaseModel):
 
     def _check_image_shape(self, image_shape):
         if len(image_shape) == 2:
-            image_shape = [None, 3] + image_shape
+            image_shape = [1, 3] + image_shape
             if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
                 raise Exception(
                     "Height and width in fixed_input_shape must be a multiple of 32, but received {}.".
@@ -88,6 +88,7 @@ class BaseDetector(BaseModel):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, -1, -1]
+        self.fixed_input_shape = image_shape
 
         return self._define_input_spec(image_shape)
 
@@ -1034,6 +1035,7 @@ class FasterRCNN(BaseDetector):
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
 
+        self.fixed_input_shape = image_shape
         return self._define_input_spec(image_shape)
 
 
@@ -1428,14 +1430,10 @@ class PPYOLOv2(YOLOv3):
 
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
-            if len(image_shape) == 2:
-                image_shape = [None, 3] + image_shape
-            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
-                raise Exception(
-                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
-                    format(image_shape[-2:]))
+            image_shape = self._check_image_shape(image_shape)
             self._fix_transforms_shape(image_shape[-2:])
         else:
+            image_shape = [None, 3, 608, 608]
             logging.warning(
                 '[Important!!!] When exporting inference model for {},'.format(
                     self.__class__.__name__) +
@@ -1443,20 +1441,9 @@ class PPYOLOv2(YOLOv3):
                 +
                 'Please check image shape after transforms is [3, 608, 608], if not, fixed_input_shape '
                 + 'should be specified manually.')
-            image_shape = [None, 3, 608, 608]
 
-        input_spec = [{
-            "image": InputSpec(
-                shape=image_shape, name='image', dtype='float32'),
-            "im_shape": InputSpec(
-                shape=[image_shape[0], 2], name='im_shape', dtype='float32'),
-            "scale_factor": InputSpec(
-                shape=[image_shape[0], 2],
-                name='scale_factor',
-                dtype='float32')
-        }]
-
-        return input_spec
+        self.fixed_input_shape = image_shape
+        return self._define_input_spec(image_shape)
 
 
 class MaskRCNN(BaseDetector):
@@ -1755,5 +1742,6 @@ class MaskRCNN(BaseDetector):
             if self.with_fpn:
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
+        self.fixed_input_shape = image_shape
 
         return self._define_input_spec(image_shape)
