@@ -158,7 +158,8 @@ class BaseDetector(BaseModel):
               use_ema=False,
               early_stop=False,
               early_stop_patience=5,
-              use_vdl=True):
+              use_vdl=True,
+              resume_checkpoint=None):
         """
         Train the model.
         Args:
@@ -185,8 +186,15 @@ class BaseDetector(BaseModel):
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
+                If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
+                `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if pretrain_weights is not None and resume_checkpoint is not None:
+            logging.error(
+                "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
+                exit=True)
         if train_dataset.__class__.__name__ == 'VOCDetection':
             train_dataset.data_fields = {
                 'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
@@ -253,7 +261,9 @@ class BaseDetector(BaseModel):
                     exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
-            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights,
+            save_dir=pretrained_dir,
+            resume_checkpoint=resume_checkpoint)
 
         if use_ema:
             ema = ExponentialMovingAverage(
@@ -293,6 +303,7 @@ class BaseDetector(BaseModel):
                           early_stop=False,
                           early_stop_patience=5,
                           use_vdl=True,
+                          resume_checkpoint=None,
                           quant_config=None):
         """
         Quantization-aware training.
@@ -320,6 +331,8 @@ class BaseDetector(BaseModel):
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
             quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
                 configuration will be used. Defaults to None.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
+                from. If None, no training checkpoint will be resumed. Defaults to None.
 
         """
         self._prepare_qat(quant_config)
@@ -342,7 +355,8 @@ class BaseDetector(BaseModel):
             use_ema=use_ema,
             early_stop=early_stop,
             early_stop_patience=early_stop_patience,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            resume_checkpoint=resume_checkpoint)
 
     def evaluate(self,
                  eval_dataset,
