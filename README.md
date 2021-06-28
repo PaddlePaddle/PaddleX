@@ -19,7 +19,26 @@
 * 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署，[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)。
 
 * PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的统一部署能力，[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)。
+## :factory: 重要活动提醒
 
+✨直播课预告✨  直播链接：http://live.bilibili.com/21689802
+
+* Day① 6.28 20:15-21:30 
+   * 主题：工业算法选型及调优策略
+
+* Day② 6.29 20:15-21:30 
+    * 主题：安防及智慧城市典型方案
+* Day③ 6.30 20:15-21:30 
+   * 主题：产业高性能高效部署方案
+
+## 欢迎大家扫码入群交流：
+
+  <p align="center">
+    <img src="./docs/images/weichat.png" width="200" height ="200" alt="QR" align="middle" />
+  </p>
+
+
+----------------------------------------------------------------------
 :hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
 
 :factory: **PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
