@@ -528,21 +528,7 @@ class MeterReader:
                 erode_kernel=4,
                 score_threshold=0.5,
                 seg_batch_size=2):
-        """Detect meters in a image, segment scales and points in these meters, the postprocess are
-        done to provide a digital readout according to scale and point location.
-
-        Args:
-            im_file (str):  the path of a image to be predicted.
-            save_dir (str): the directory to save the visual prediction. Default: './'.
-            use_erode (bool, optional): whether to do image erosion by using a specific structuring element for
-                the label map output from the segmenter. Default: True.
-            erode_kernel (int, optional): structuring element used for erosion. Default: 4.
-            score_threshold (float, optional): detected meters whose scores are not lower than `score_threshold`
-                will be fed into the following segmenter. Default: 0.5.
-            seg_batch_size (int, optional): batch size of meters when do segmentation. Default: 2.
-
-        """
-        """检测图像中的表盘，而后分割出各表盘中的指针和刻度，对分割结果进行读数后厨后得到各表盘的读数。
+        """检测图像中的表盘，而后分割出各表盘中的指针和刻度，对分割结果进行读数后处理后得到各表盘的读数。
 
 
         参数：

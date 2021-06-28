@@ -16,7 +16,7 @@ eval_transforms = T.Compose([
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 
-# 下载和解压指针刻度分割数据集，如果已经预先下载，可注视掉下面两行
+# 下载和解压指针刻度分割数据集，如果已经预先下载，可注释掉下面两行
 meter_seg_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz'
 pdx.utils.download_and_decompress(meter_seg_dataset, path='./')
 
@@ -48,7 +48,7 @@ model.train(
     num_epochs=20,
     train_dataset=train_dataset,
     train_batch_size=4,
-    pretrain_weights='IMAGENET',
+    #pretrain_weights='IMAGENET',
     eval_dataset=eval_dataset,
     learning_rate=0.1,
     save_dir='output/deeplabv3p_r50vd')

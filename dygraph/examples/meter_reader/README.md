@@ -102,7 +102,7 @@ meter_test/
 
 PaddleX提供了丰富的视觉模型，在目标检测中提供了RCNN和YOLO系列模型，在语义分割中提供了DeepLabV3P和BiSeNetV2等模型。
 
-因最终部署场景是本地化的服务器GPU端，算力相对充足，因此在本项目中采用精度和预测性能的PPYOLOV2进行表计检测。
+因最终部署场景是本地化的服务器GPU端，算力相对充足，因此在本项目中采用精度和预测性能皆优的PPYOLOV2进行表计检测。
 
 考虑到指针和刻度均为细小区域，我们采用精度更优的DeepLabV3P进行指针和刻度的分割。
 
@@ -221,7 +221,7 @@ eval_transforms = T.Compose([
 * 定义数据集路径
 
 ```python
-# 下载和解压指针刻度分割数据集，如果已经预先下载，可注视掉下面两行
+# 下载和解压指针刻度分割数据集，如果已经预先下载，可注释掉下面两行
 meter_seg_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz'
 pdx.utils.download_and_decompress(meter_seg_dataset, path='./')
 
@@ -295,7 +295,7 @@ def predict(self,
             erode_kernel=4,
             score_threshold=0.5,
             seg_batch_size=2):
-    """检测图像中的表盘，而后分割出各表盘中的指针和刻度，对分割结果进行读数后厨后得到各表盘的读数。
+    """检测图像中的表盘，而后分割出各表盘中的指针和刻度，对分割结果进行读数后处理后得到各表盘的读数。
 
 
         参数：
