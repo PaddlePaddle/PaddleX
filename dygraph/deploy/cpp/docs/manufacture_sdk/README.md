@@ -55,23 +55,25 @@ Manufature SDK的文件夹结构如下所示：
 PaddleX的模型导出后都会在模型文件夹中自动生成一个名为`pipeline.yml`流程编排文件，下面展示单一检测模型的流程配置文件：
 
 ```
-pipeline_name: detection
+pipeline_name: detector
 pipeline_nodes:
 - src0:
-    type: Source
     next: decode0
+    type: Source
 - decode0:
+    next: predict0
     type: Decode
-    next: modelpredict0
-- modelpredict0:
-    type: Predict
+- predict0:
     init_params:
-       model_dir: ./det_inference
-       gpu_id: 0
-       use_gpu: true
-       next: sink0
+      gpu_id: 0
+      model_dir: test_inference/inference_model
+      use_gpu: false
+      use_trt: false
+    next: sink0
+    type: Predict
 - sink0:
-    type：Sink
+    type: Sink
+version: 1.0.0
 ```
 
 从上面示例可以看出，Pipeline配置文件是一个存储字典的`yaml`文件，文件中**必须包含`pipeline_name`和`pipeline_nodes`两个关键字**。每个关键词和键值说明如下：
