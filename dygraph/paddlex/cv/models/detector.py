@@ -531,7 +531,7 @@ class BaseDetector(BaseModel):
                     category = self.labels[int(num_id)]
                     w = xmax - xmin
                     h = ymax - ymin
-                    bbox = [xmin, ymin, w, h]
+                    bbox = list(map(int, [xmin, ymin, w, h]))
                     dt_res = {
                         'category_id': int(num_id),
                         'category': category,
