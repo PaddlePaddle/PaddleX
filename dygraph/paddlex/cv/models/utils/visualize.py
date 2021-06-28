@@ -14,7 +14,6 @@
 
 import os
 import cv2
-import colorsys
 import numpy as np
 import time
 import pycocotools.mask as mask_util
