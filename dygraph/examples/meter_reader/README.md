@@ -297,7 +297,6 @@ def predict(self,
             seg_batch_size=2):
     """检测图像中的表盘，而后分割出各表盘中的指针和刻度，对分割结果进行读数后处理后得到各表盘的读数。
 
-
         参数：
             img_file (str)：待预测的图片路径。
             save_dir (str): 可视化结果的保存路径。

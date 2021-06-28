@@ -48,7 +48,7 @@ model.train(
     num_epochs=20,
     train_dataset=train_dataset,
     train_batch_size=4,
-    #pretrain_weights='IMAGENET',
+    pretrain_weights='IMAGENET',
     eval_dataset=eval_dataset,
     learning_rate=0.1,
     save_dir='output/deeplabv3p_r50vd')

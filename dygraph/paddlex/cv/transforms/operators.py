@@ -318,7 +318,7 @@ class RandomResize(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]):
+        target_sizes (List[int], List[list or tuple] or Tuple[list or tuple]):
             Multiple target sizes, each target size is an int or list/tuple.
         interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
             Interpolation method of resize. Defaults to 'LINEAR'.
@@ -943,7 +943,7 @@ class Padding(Transform):
             assert offsets, 'if pad_mode is -1, offsets should not be None'
 
         self.target_size = target_size
-        self.coarsest_stride = size_divisor
+        self.size_divisor = size_divisor
         self.pad_mode = pad_mode
         self.offsets = offsets
         self.im_padding_value = im_padding_value

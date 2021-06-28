@@ -7,6 +7,13 @@
 </p>
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
+## :heart:重磅功能升级
+* 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)。
+
+* PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的统一部署能力。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)。
+
+
+
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
  ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
 
@@ -34,13 +41,21 @@
 
   **前置依赖**
 > - paddlepaddle == 2.1.0
-> - python >= 3.6
-> - cython
-> - pycocotools
+> - 安装PaddlePaddle Develop版本，具体PaddlePaddle[安装主页](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 
-```
-pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
-```
+**安装方式**
+
+> - git clone --recurse-submodules https://github.com/PaddlePaddle/PaddleX.git
+> - cd PaddleX/dygraph
+> - pip install -r requirements.txt
+> - pip install -r submodules.txt
+> - python setup.py install
+
+
+**特别说明**   Windows除了执行上述命令外，还需要下载pycocotools
+
+> - pip install cython
+> - pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 
 
 2. **Padlde GUI模式：**
@@ -55,16 +70,37 @@ pip install paddlex==2.0.0rc -i https://mirror.baidu.com/pypi/simple
 
 3. **PaddleX Restful:**  
   使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
-- 前往[PaddleX RESTful API使用教程](../docs/gui/restful/introduction.md)  
+- 前往[PaddleX RESTful API使用教程](../docs/Resful_API/docs/readme.md)  
 
 
 ## 使用教程
 
-- [模型训练教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train)
-- [模型剪裁教程](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
+1. **API模式：**
+
+- [模型训练](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train)
+- [模型剪裁](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
 
 
-## :question:[FAQ](../docs/gui/faq.md):question:
+
+2. **GUI模式：**
+
+- [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)
+- [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)
+- [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
+- [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)
+
+3. **模型部署：**
+- [Manufacture SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)
+提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署
+- [PaddleX Deploy](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp) 支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的统一部署能力
+## 产业级应用示例
+
+- [钢筋计数](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/rebar_count)
+- [缺陷检测](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/defect_detection)
+- [机械手抓取](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/robot_grab)
+- [表计检测]()
+## :question:[FAQ]
+(../docs/gui/faq.md):question:
 
 ## 交流与反馈
 
