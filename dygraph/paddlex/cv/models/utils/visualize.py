@@ -163,21 +163,6 @@ def clip_bbox(bbox):
 
 
 def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
-    import matplotlib.colors as mplc
-
-    # refer to https://github.com/facebookresearch/detectron2/blob/master/detectron2/utils/visualizer.py
-    def _change_color_brightness(color, brightness_factor):
-        assert brightness_factor >= -1.0 and brightness_factor <= 1.0
-        color = mplc.to_rgb(color)
-        polygon_color = colorsys.rgb_to_hls(*mplc.to_rgb(color))
-        modified_lightness = polygon_color[1] + (brightness_factor *
-                                                 polygon_color[1])
-        modified_lightness = 0.0 if modified_lightness < 0.0 else modified_lightness
-        modified_lightness = 1.0 if modified_lightness > 1.0 else modified_lightness
-        modified_color = colorsys.hls_to_rgb(
-            polygon_color[0], modified_lightness, polygon_color[2])
-        return modified_color
-
     _SMALL_OBJECT_AREA_THRESH = 1000
     height, width = image.shape[:2]
     default_font_scale = max(np.sqrt(height * width) // 900, .5)
@@ -215,6 +200,7 @@ def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
 
     for dt in keep_results:
         cname, bbox, score = dt['category'], dt['bbox'], dt['score']
+        bbox = list(map(int, bbox))
         xmin, ymin, w, h = bbox
         xmax = xmin + w
         ymax = ymin + h
