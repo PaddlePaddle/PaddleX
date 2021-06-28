@@ -56,6 +56,7 @@ class BaseModel:
         self.pruning_ratios = None
         self.quantizer = None
         self.quant_config = None
+        self.fixed_input_shape = None
 
     def net_initialize(self,
                        pretrain_weights=None,
@@ -130,6 +131,7 @@ class BaseModel:
 
         info['_Attributes']['num_classes'] = self.num_classes
         info['_Attributes']['labels'] = self.labels
+        info['_Attributes']['fixed_input_shape'] = self.fixed_input_shape
 
         try:
             primary_metric_key = list(self.eval_metrics.keys())[0]

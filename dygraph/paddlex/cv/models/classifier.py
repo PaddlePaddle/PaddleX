@@ -82,10 +82,11 @@ class BaseClassifier(BaseModel):
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
             if len(image_shape) == 2:
-                image_shape = [None, 3] + image_shape
+                image_shape = [1, 3] + image_shape
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, -1, -1]
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -570,7 +571,7 @@ class AlexNet(BaseClassifier):
                 'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
                 + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
-
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -778,6 +779,7 @@ class ShuffleNetV2(BaseClassifier):
                 'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
                 + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -804,6 +806,7 @@ class ShuffleNetV2_swish(BaseClassifier):
                 'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
                 + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
