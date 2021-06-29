@@ -46,6 +46,8 @@ class BasePreprocess {
                    std::vector<ShapeInfo>* shape_info,
                    int thread_num = 1) = 0;
 
+  virtual std::string GetModelName() { return model_name_; }
+
  protected:
   bool BuildTransform(const YAML::Node& yaml_config);
   std::vector<std::shared_ptr<Transform>> transforms_;
@@ -54,6 +56,7 @@ class BasePreprocess {
   std::shared_ptr<Transform> CreateTransform(const std::string& name);
   Padding batch_padding_;
   Permute permute_;
+  std::string model_name_;
 };
 
 }  // namespace PaddleDeploy
