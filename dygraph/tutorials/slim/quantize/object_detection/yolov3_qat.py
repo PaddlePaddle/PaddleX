@@ -52,4 +52,5 @@ model.quant_aware_train(
     warmup_start_lr=0.0,
     save_interval_epochs=1,
     lr_decay_epochs=[30, 45],
-    save_dir='output/yolov3_darknet53/quant')
+    save_dir='output/yolov3_darknet53/quant',
+    use_vdl=True)
