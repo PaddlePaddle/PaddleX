@@ -26,7 +26,7 @@ SET(CUDA_LIB "" CACHE PATH "Location of libraries")
 get_filename_component(PROJECT_ROOT_DIR "." REALPATH)
 SET(PROJECT_ROOT_DIR ${PROJECT_ROOT_DIR}  CACHE PATH  "root directory of project.")
 
-SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install_dir" CACHE PATH  "project install" FORCE)
+SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/paddlex_inference" CACHE PATH  "project install" FORCE)
 SET(PaddleDeploy_LIBS "" CACHE PATH "Location of libraries")
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -292,7 +292,7 @@ endif()
 
 #opencv
 install(DIRECTORY ${OpenCV_INSTALL_PATH}/include ${OpenCV_INSTALL_PATH}/lib
-        DESTINATION  ${LIB_FILE_OUTPUT}/third_party/opencv)
+        DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/opencv)
 
 # GPU
 if(WITH_GPU)
@@ -306,12 +306,12 @@ if(WITH_GPU)
     file(GLOB TENSORRT_FILE ${TENSORRT_DIR}/lib/libnvinfer.* ${TENSORRT_DIR}/lib/libnvinfer_plugin.*)
   endif()
 
-  install(FILES CUDA_FILE
-          DESTINATION  ${LIB_FILE_OUTPUT}/third_party/cuda)
+  install(FILES ${CUDA_FILE}
+          DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/cuda)
   if (WITH_TENSORRT)
       install(DIRECTORY ${TENSORRT_DIR}/include
-              DESTINATION  ${LIB_FILE_OUTPUT}/third_party/tensorrt)
-      install(FILES TENSORRT_FILE
-              DESTINATION  ${LIB_FILE_OUTPUT}/third_party/tensorrt/lib)
+              DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/tensorrt)
+      install(FILES ${TENSORRT_FILE}
+              DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/tensorrt/lib)
   endif()
 endif()
