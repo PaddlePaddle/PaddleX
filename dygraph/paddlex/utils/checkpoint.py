@@ -20,7 +20,7 @@ from .download import download_and_decompress
 
 seg_pretrain_weights_dict = {
     'UNet': ['CITYSCAPES'],
-    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC', 'IMAGENET'],
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
     'FastSCNN': ['CITYSCAPES'],
     'HRNet': ['CITYSCAPES', 'PascalVOC'],
     'BiSeNetV2': ['CITYSCAPES']
@@ -254,11 +254,7 @@ imagenet_weights = {
     'MaskRCNN_ResNet101_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
     'MaskRCNN_ResNet101_vd_fpn_IMAGENET':
-    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
-    'DeepLabV3P_ResNet50_vd_IMAGENET':
-    'https://bj.bcebos.com/paddleseg/dygraph/resnet50_vd_ssld.tar.gz',
-    'DeepLabV3P_ResNet101_vd_IMAGENET':
-    'https://bj.bcebos.com/paddleseg/dygraph/resnet101_vd_ssld.tar.gz'
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams'
 }
 
 pascalvoc_weights = {
