@@ -4,6 +4,7 @@ project(Installation
         VERSION 1.0)
 
 message("----this is build lib--------")
+
 if(WIN32)
   add_definitions(-DPADDLEX_DEPLOY)
 endif()
@@ -27,7 +28,6 @@ SET(PROJECT_ROOT_DIR ${PROJECT_ROOT_DIR}  CACHE PATH  "root directory of project
 
 SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install_dir" CACHE PATH  "project install" FORCE)
 SET(PaddleDeploy_LIBS "" CACHE PATH "Location of libraries")
-message("-------CMAKE_BINARY_DIR------------${CMAKE_BINARY_DIR}")
 if (NOT WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -36,14 +36,6 @@ else()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
-endif()
-
-if(NOT WITH_STATIC_LIB)
-  add_definitions("-DPADDLE_WITH_SHARED_LIB")
-else()
-  # PD_INFER_DECL is mainly used to set the dllimport/dllexport attribute in dynamic library mode. 
-  # Set it to empty in static library mode to avoid compilation issues.
-  add_definitions("/DPD_INFER_DECL=")
 endif()
 
 #source
@@ -82,7 +74,7 @@ link_directories("${PADDLE_DIR}/third_party/install/cryptopp/lib")
 
 if (WIN32)
   set(DEPS ${DEPS} ${PADDLE_DIR}/paddle/lib/paddle_inference.lib)
-  set(DEPS ${DEPS} glog gflags_static libprotobuf xxhash cryptopp-static libyaml-cppmt shlwapi.lib)
+  set(DEPS ${DEPS} glog gflags_static libprotobuf xxhash cryptopp-static libyaml-cppmt shlwapi)
 else()
   if (WITH_STATIC_LIB)
     set(DEPS ${PADDLE_DIR}/paddle/lib/libpaddle_inference${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -214,7 +206,6 @@ else()
     set(DEPS ${DEPS} ${EXTERNAL_LIB})
 endif()
 
-
 message("-----DEPS = ${DEPS}")
 
 #project
@@ -230,21 +221,15 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
 #shared lib
-#if(WITH_STATIC_LIB)
-#    add_library (PaddleDeploy STATIC  ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
-#    add_dependencies(PaddleDeploy ext-yaml-cpp)
-#    target_link_libraries(PaddleDeploy ${DEPS})
-#else()
 add_library (PaddleDeploy SHARED  ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 add_dependencies(PaddleDeploy ext-yaml-cpp)
 target_link_libraries(PaddleDeploy ${DEPS})
-#endif()
 
 # Install
 # project lib
 install(TARGETS PaddleDeploy
         EXPORT PaddleDeployTargets
-        DESTINATION  ${CMAKE_INSTALL_PREFIX}/paddle_deploy/lib
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/paddle_deploy/lib
 )
 
 # project header file
@@ -290,7 +275,6 @@ install(DIRECTORY ${THIRD_PARTY_FILE}
         DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party
         PATTERN "*/lib" EXCLUDE
 )
-
 endif()
 
 #yaml-cpp
@@ -304,4 +288,30 @@ if(WITH_MKL)
           DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
   install(DIRECTORY ${PADDLE_DIR}/third_party/install/mkldnn
           DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
+endif()
+
+#opencv
+install(DIRECTORY ${OpenCV_INSTALL_PATH}/include ${OpenCV_INSTALL_PATH}/lib
+        DESTINATION  ${LIB_FILE_OUTPUT}/third_party/opencv)
+
+# GPU
+if(WITH_GPU)
+  if(WIN32)
+    file(GLOB CUDA_FILE ${CUDA_LIB}/cudart.* ${CUDA_LIB}/cublas.* ${CUDA_LIB}/cudnn.*)
+    file(GLOB TENSORRT_FILE ${TENSORRT_DIR}/lib/libnvinfer.*
+                            ${TENSORRT_DIR}/lib/libnvinfer_plugin.*
+                            ${TENSORRT_DIR}/lib/myelin64_1.*)
+  else()
+    file(GLOB CUDA_FILE ${CUDA_LIB}/libcudart.* ${CUDNN_LIB}/libcudnn.*)
+    file(GLOB TENSORRT_FILE ${TENSORRT_DIR}/lib/libnvinfer.* ${TENSORRT_DIR}/lib/libnvinfer_plugin.*)
+  endif()
+
+  install(FILES CUDA_FILE
+          DESTINATION  ${LIB_FILE_OUTPUT}/third_party/cuda)
+  if (WITH_TENSORRT)
+      install(DIRECTORY ${TENSORRT_DIR}/include
+              DESTINATION  ${LIB_FILE_OUTPUT}/third_party/tensorrt)
+      install(FILES TENSORRT_FILE
+              DESTINATION  ${LIB_FILE_OUTPUT}/third_party/tensorrt/lib)
+  endif()
 endif()
