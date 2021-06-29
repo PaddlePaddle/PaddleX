@@ -4,6 +4,8 @@ include(CMakeFindDependencyMacro)
 
 # Capturing values from configure (optional)
 get_filename_component(PaddleDeploy_INSTALL_PATH "${CMAKE_CURRENT_LIST_DIR}/../../" REALPATH)
+set(OpenCV_LIBS @OpenCV_LIBS@)
+
 # set(WITH_MKL @WITH_MKL@)
 # set(WITH_STATIC_LIB @WITH_STATIC_LIB@)
 # set(PaddleDeploy_LIBS @PaddleDeploy_LIBS@)
@@ -36,6 +38,10 @@ else()
     set(PaddleDeploy_LIBS ${PaddleDeploy_LIBS} libmklml_intel.so libiomp5.so libmkldnn.so)
   endif()
 endif(WIN32)
+
+link_directories("${PaddleDeploy_INSTALL_PATH}/third_party/opencv/lib")
+set(PaddleDeploy_INCLUDE_DIRS ${PaddleDeploy_INCLUDE_DIRS} ${PaddleDeploy_INSTALL_PATH}/third_party/opencv/include)
+set(PaddleDeploy_LIBS ${PaddleDeploy_LIBS} ${OpenCV_LIBS})
 
 if(WITH_GPU)
   link_directories("${PaddleDeploy_INSTALL_PATH}/third_party/cuda")
