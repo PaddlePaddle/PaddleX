@@ -15,7 +15,6 @@
 
 #include <memory>
 #include <string>
-#include <iostream>
 
 #include "model_deploy/common/include/deploy_delacre.h"
 #include "model_deploy/common/include/output_struct.h"
