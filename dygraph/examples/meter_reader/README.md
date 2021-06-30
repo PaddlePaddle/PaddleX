@@ -350,7 +350,7 @@ paddlex --export_inference --model_dir=output/deeplabv3p_r50vd/best_model --save
 ### 环境依赖
 
 * Visual Studio 2019
-* CUDA 10.2, CUDNN 7
+* CUDA 10.2, CUDNN 7.6
 * CMake 3.0+
 
 ### 编译步骤
@@ -368,7 +368,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
 ### Step2: 下载PaddleX Manufature SDK
 
-点击链接下载适用Windows 10平台CUDA 10.2/CUDNN 7的[PaddleXManufature.tar](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)。
+点击链接下载适用Windows 10平台CUDA 10.2/CUDNN 7.6的[PaddleXManufature.tar](https://bj.bcebos.com/paddlex/examples2/manufacture_sdk//PaddleXManufacture_win64_210_cuda102_cudnn76_trt70.zip )。
 
 将SDK解压后，其所在目录（例如`D:\projects\PaddleXManufature\`）下主要包含的内容有：
 
@@ -402,27 +402,27 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 ### Step5: 使用Visual Studio 2019直接编译CMake
 
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-   ![](../../images/vs2019_step1.png)
+   ![](./images/step5_1.png)
 
 2. 点击： `文件`->`打开`->`CMake`
 
-![](../../images/vs2019_step2.png)
+![](./images/step5_2-1.png)
 
 选择表计读数C++预测代码所在路径（例如`D:\projects\PaddleX\dygraph/examples/meter_reader/deploy/cpp/meter_reader`），并打开`CMakeList.txt`：
-![](../../images/vs2019_step3.png)
+![](./images/step5_2-2.png)
 
 3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。
 
   点击：`项目`->`CMake设置`
-  ![](../../images/vs2019_step4.png)
+  ![](./images/step5_3.png)
 
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`PaddleXManufacture`、`TensorRT`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
-   ![](../../images/vs2019_step5.png)
+   ![](./images/step5_4.png)
    依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本与PaddleXManufacture的对齐，例如PaddleXManufacture是**使用9.0、10.0版本**编译的，则编译PaddleX预测代码时**不使用9.2、10.1等版本**CUDA库）：
 
 | 参数名     | 含义                                                                                                                                                |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *CUDA_LIB  | CUDA的库路径, 注：请将CUDNN的cudnn.lib文件拷贝到CUDA_LIB路径下。<br />例如 `C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\lib\\x64` |
+| CUDA_LIB  | CUDA的库路径, 注：请将CUDNN的cudnn.lib文件拷贝到CUDA_LIB路径下。<br />例如 `C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\lib\\x64` |
 | OPENCV_DIR | OpenCV的安装路径，例如`D:\\projects\\opencv`                                                                                                        |
 | PaddleXManufacture_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\PaddleXManufacture`                                                                           |
 | TENSORRT_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\TensorRT-7.0.0.11`                                                                           |
@@ -432,12 +432,10 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 5. 保存并生成CMake缓存
 
-![](../../images/vs2019_step6.png)
-**设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。然后我们可以看到vs的输出会打印CMake生成的过程，出现`CMake 生成完毕`且无报错代表生成完毕。
+**设置完成后**, CTRL+C保存。然后我们可以看到vs的输出会打印CMake生成的过程，出现`CMake 生成完毕`且无报错代表生成完毕。
 
-6. 点击`生成`->`全部生成`，生成demo里的可执行文件。
+6. 点击`项目`->`全部生成`，生成meter_reader里的可执行文件。
 
-![step6](../../images/vs2019_step7.png)
 
 ### Step6: 编译结果
 
@@ -447,12 +445,14 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 | 修改检测模型所在路径，并设置`use_gpu`和`use_trt`为true | 修改分割模型所在路径，并设置`use_gpu`和`use_trt`为true |
 | -- | -- |
-| ![]() | ![]() |
+| ![](./images/step6_det.png) | ![](./images/step6_seg.png) |
+
+**模型所在路径是我们在上一步导出的模型模型所在路径**
 
 打开CMD终端，运行表计读数的可执行文件，进行推理预测：
 ```
 cd PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\
-.\out\build\x64-Release\meter_reader.exe --pipeline_cfg meter_pipeline --image 20190822_168.jpg
+.\out\build\x64-Release\meter_reader.exe --pipeline_cfg meter_pipeline.yml --image 20190822_168.jpg
 ```
 执行后终端会输出预测结果：
 
@@ -467,7 +467,8 @@ Meter 2: 6.21739101
 ```
 
 在检测模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_det`，可以点击进行查看：
-![]()
+![](./images/20190822_168.jpg)
 
 在分割模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_seg`，可以点击进行查看：
-![]()
+![](./images/20190822_168_06-30-17-09-33-217.jpg)
+![](20190822_168_06-30-17-09-33-213.jpg)
