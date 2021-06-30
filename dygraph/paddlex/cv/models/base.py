@@ -84,7 +84,7 @@ class BaseModel:
                 load_pretrain_weights(
                     self.net.backbone,
                     pretrain_weights,
-                    model_name=self.model_name)
+                    model_name='backbone of ' + self.model_name)
             else:
                 load_pretrain_weights(
                     self.net, pretrain_weights, model_name=self.model_name)
