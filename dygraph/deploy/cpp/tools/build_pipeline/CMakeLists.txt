@@ -225,9 +225,9 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/pipeline/src PIPELINE_SRC)
 
 #shared lib
-add_library (PxManufacture SHARED  ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
-add_dependencies(PxManufacture ext-yaml-cpp)
-target_link_libraries(PxManufacture ${DEPS})
+add_library (PaddleXManufacture SHARED  ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
+add_dependencies(PaddleXManufacture ext-yaml-cpp)
+target_link_libraries(PaddleXManufacture ${DEPS})
 
 # Install
 # project lib
@@ -252,7 +252,7 @@ install(EXPORT PaddleXManufactureTargets
         DESTINATION ${CMAKE_INSTALL_PREFIX}/share/PaddleXManufacture
 )
 include(CMakePackageConfigHelpers)
-configure_package_config_file(${PROJECT_ROOT_DIR}/utils/build_pipeline/Config.cmake.in
+configure_package_config_file(${PROJECT_ROOT_DIR}/tools/build_pipeline/Config.cmake.in
     PaddleXManufactureConfig.cmake
     INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/share/PaddleXManufacture"
 )

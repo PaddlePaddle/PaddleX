@@ -29,7 +29,7 @@ OPENCV_DIR=$(pwd)/deps/opencv3.4.6gcc4.8ffmpeg/
 rm -rf use_lib_build
 mkdir -p use_lib_build
 cd use_lib_build
-cmake ../utils/use_lib \
+cmake ../tools/use_lib \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
