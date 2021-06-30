@@ -50,9 +50,9 @@ PaddleXManufacture
 
 ### 下载安装Windows Manufacture SDK
 
-| 版本说明 | Manufacture SDK                                                                                                                                                      | 编译器  | 构建工具     | cuDNN | CUDA | TensorRT |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ | ----- | ---- | -------- |
-| v1.0     | [PaddleXManufacture_win64_210_cuda102_cudnn76_trt70](ttps://bj.bcebos.com/paddlex/examples2/manufacture_sdk//PaddleXManufacture_win64_210_cuda102_cudnn76_trt70.zip) | gcc 8.2 | cmake+vs2019 | 7.6   | 10.2 | 7.0      |
+| 版本说明 | Manufacture SDK                                                                                                                                                       | 编译器  | 构建工具     | cuDNN | CUDA | TensorRT |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ | ----- | ---- | -------- |
+| v1.0     | [PaddleXManufacture_win64_210_cuda102_cudnn76_trt70](https://bj.bcebos.com/paddlex/examples2/manufacture_sdk//PaddleXManufacture_win64_210_cuda102_cudnn76_trt70.zip) | gcc 8.2 | cmake+vs2019 | 7.6   | 10.2 | 7.0      |
 
 ### 下载安装Linux Manufacture SDK
 
