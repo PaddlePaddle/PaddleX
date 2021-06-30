@@ -49,5 +49,6 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
+    pretrain_weights='IMAGENET',
     learning_rate=0.1,
     save_dir='output/deeplabv3p_r50vd')

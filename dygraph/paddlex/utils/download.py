@@ -164,6 +164,7 @@ def decompress(fname):
 
     shutil.rmtree(fpath_tmp)
     logging.debug("{} decompressed.".format(fname))
+    return dst_dir
 
 
 def url2dir(url, path):
@@ -171,7 +172,7 @@ def url2dir(url, path):
     if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
         fname = osp.split(url)[-1]
         savepath = osp.join(path, fname)
-        decompress(savepath)
+        return decompress(savepath)
 
 
 def download_and_decompress(url, path='.'):
@@ -179,17 +180,21 @@ def download_and_decompress(url, path='.'):
     local_rank = paddle.distributed.get_rank()
     fname = osp.split(url)[-1]
     fullname = osp.join(path, fname)
-    if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
-        fullname = osp.join(path, fname.split('.')[0])
+    # if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
+    #     fullname = osp.join(path, fname.split('.')[0])
     if nranks <= 1:
-        url2dir(url, path)
+        dst_dir = url2dir(url, path)
+        if dst_dir is not None:
+            fullname = dst_dir
     else:
         lock_path = fullname + '.lock'
         if not os.path.exists(fullname):
             with open(lock_path, 'w'):
                 os.utime(lock_path, None)
             if local_rank == 0:
-                url2dir(url, path)
+                dst_dir = url2dir(url, path)
+                if dst_dir is not None:
+                    fullname = dst_dir
                 os.remove(lock_path)
             else:
                 while os.path.exists(lock_path):
