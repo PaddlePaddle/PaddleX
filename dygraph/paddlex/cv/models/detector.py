@@ -60,18 +60,7 @@ class BaseDetector(BaseModel):
     def _fix_transforms_shape(self, image_shape):
         raise NotImplementedError("_fix_transforms_shape: not implemented!")
 
-    def _get_test_inputs(self, image_shape):
-        if image_shape is not None:
-            if len(image_shape) == 2:
-                image_shape = [None, 3] + image_shape
-            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
-                raise Exception(
-                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
-                    format(image_shape[-2:]))
-            self._fix_transforms_shape(image_shape[-2:])
-        else:
-            image_shape = [None, 3, -1, -1]
-
+    def _define_input_spec(self, image_shape):
         input_spec = [{
             "image": InputSpec(
                 shape=image_shape, name='image', dtype='float32'),
@@ -82,8 +71,26 @@ class BaseDetector(BaseModel):
                 name='scale_factor',
                 dtype='float32')
         }]
-
         return input_spec
+
+    def _check_image_shape(self, image_shape):
+        if len(image_shape) == 2:
+            image_shape = [1, 3] + image_shape
+            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
+                raise Exception(
+                    "Height and width in fixed_input_shape must be a multiple of 32, but received {}.".
+                    format(image_shape[-2:]))
+        return image_shape
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+        self.fixed_input_shape = image_shape
+
+        return self._define_input_spec(image_shape)
 
     def _get_backbone(self, backbone_name, **params):
         backbone = getattr(ppdet.modeling, backbone_name)(**params)
@@ -152,7 +159,8 @@ class BaseDetector(BaseModel):
               use_ema=False,
               early_stop=False,
               early_stop_patience=5,
-              use_vdl=True):
+              use_vdl=True,
+              resume_checkpoint=None):
         """
         Train the model.
         Args:
@@ -179,8 +187,15 @@ class BaseDetector(BaseModel):
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
+                If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
+                `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if pretrain_weights is not None and resume_checkpoint is not None:
+            logging.error(
+                "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
+                exit=True)
         if train_dataset.__class__.__name__ == 'VOCDetection':
             train_dataset.data_fields = {
                 'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
@@ -247,7 +262,9 @@ class BaseDetector(BaseModel):
                     exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
-            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights,
+            save_dir=pretrained_dir,
+            resume_checkpoint=resume_checkpoint)
 
         if use_ema:
             ema = ExponentialMovingAverage(
@@ -287,6 +304,7 @@ class BaseDetector(BaseModel):
                           early_stop=False,
                           early_stop_patience=5,
                           use_vdl=True,
+                          resume_checkpoint=None,
                           quant_config=None):
         """
         Quantization-aware training.
@@ -314,6 +332,8 @@ class BaseDetector(BaseModel):
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
             quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
                 configuration will be used. Defaults to None.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
+                from. If None, no training checkpoint will be resumed. Defaults to None.
 
         """
         self._prepare_qat(quant_config)
@@ -336,7 +356,8 @@ class BaseDetector(BaseModel):
             use_ema=use_ema,
             early_stop=early_stop,
             early_stop_patience=early_stop_patience,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            resume_checkpoint=resume_checkpoint)
 
     def evaluate(self,
                  eval_dataset,
@@ -455,10 +476,11 @@ class BaseDetector(BaseModel):
             If img_file is a string or np.array, the result is a list of dict with key-value pairs:
             {"category_id": `category_id`, "category": `category`, "bbox": `[x, y, w, h]`, "score": `score`}.
             If img_file is a list, the result is a list composed of dicts with the corresponding fields:
-            category_id(int): the predicted category ID
+            category_id(int): the predicted category ID. 0 represents the first category in the dataset, and so on.
             category(str): category name
             bbox(list): bounding box in [x, y, w, h] format
             score(str): confidence
+            mask(dict): Only for instance segmentation task. Mask of the object in RLE format
 
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
@@ -544,9 +566,9 @@ class BaseDetector(BaseModel):
                         if 'counts' in rle:
                             rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
-                        'category_id': int(label) + 1,
+                        'category_id': int(label),
                         'category': category,
-                        'segmentation': rle,
+                        'mask': rle,
                         'score': score
                     }
                     seg_res.append(sg_res)
@@ -720,6 +742,7 @@ class FasterRCNN(BaseDetector):
                  num_classes=80,
                  backbone='ResNet50',
                  with_fpn=True,
+                 with_dcn=False,
                  aspect_ratios=[0.5, 1.0, 2.0],
                  anchor_sizes=[[32], [64], [128], [256], [512]],
                  keep_top_k=100,
@@ -740,12 +763,17 @@ class FasterRCNN(BaseDetector):
                 "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', "
                 "'ResNet101', 'ResNet101_vd', 'HRNet_W18')".format(backbone))
         self.backbone_name = backbone
+        dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
         if backbone == 'HRNet_W18':
             if not with_fpn:
                 logging.warning(
                     "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
                     format(backbone))
                 with_fpn = True
+            if with_dcn:
+                logging.warning(
+                    "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                    format(backbone))
             backbone = self._get_backbone(
                 'HRNet', width=18, freeze_at=0, return_idx=[0, 1, 2, 3])
         elif backbone == 'ResNet50_vd_ssld':
@@ -761,7 +789,8 @@ class FasterRCNN(BaseDetector):
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
                 num_stages=4,
-                lr_mult_list=[0.05, 0.05, 0.1, 0.15])
+                lr_mult_list=[0.05, 0.05, 0.1, 0.15],
+                dcn_v2_stages=dcn_v2_stages)
         elif 'ResNet50' in backbone:
             if with_fpn:
                 backbone = self._get_backbone(
@@ -770,8 +799,13 @@ class FasterRCNN(BaseDetector):
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
-                    num_stages=4)
+                    num_stages=4,
+                    dcn_v2_stages=dcn_v2_stages)
             else:
+                if with_dcn:
+                    logging.warning(
+                        "Backbone {} without fpn should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                        format(backbone))
                 backbone = self._get_backbone(
                     'ResNet',
                     variant='d' if '_vd' in backbone else 'b',
@@ -792,7 +826,8 @@ class FasterRCNN(BaseDetector):
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
-                num_stages=4)
+                num_stages=4,
+                dcn_v2_stages=dcn_v2_stages)
         else:
             if not with_fpn:
                 logging.warning(
@@ -806,7 +841,8 @@ class FasterRCNN(BaseDetector):
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
-                num_stages=4)
+                num_stages=4,
+                dcn_v2_stages=dcn_v2_stages)
 
         rpn_in_channel = backbone.out_shape[0].channels
 
@@ -988,6 +1024,19 @@ class FasterRCNN(BaseDetector):
                         interp='CUBIC')
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+            if self.with_fpn:
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+
+        self.fixed_input_shape = image_shape
+        return self._define_input_spec(image_shape)
 
 
 class PPYOLO(YOLOv3):
@@ -1381,14 +1430,10 @@ class PPYOLOv2(YOLOv3):
 
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
-            if len(image_shape) == 2:
-                image_shape = [None, 3] + image_shape
-            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
-                raise Exception(
-                    "Height and width in fixed_input_shape must be a multiple of 32, but recieved is {}.".
-                    format(image_shape[-2:]))
+            image_shape = self._check_image_shape(image_shape)
             self._fix_transforms_shape(image_shape[-2:])
         else:
+            image_shape = [None, 3, 608, 608]
             logging.warning(
                 '[Important!!!] When exporting inference model for {},'.format(
                     self.__class__.__name__) +
@@ -1396,20 +1441,9 @@ class PPYOLOv2(YOLOv3):
                 +
                 'Please check image shape after transforms is [3, 608, 608], if not, fixed_input_shape '
                 + 'should be specified manually.')
-            image_shape = [None, 3, 608, 608]
 
-        input_spec = [{
-            "image": InputSpec(
-                shape=image_shape, name='image', dtype='float32'),
-            "im_shape": InputSpec(
-                shape=[image_shape[0], 2], name='im_shape', dtype='float32'),
-            "scale_factor": InputSpec(
-                shape=[image_shape[0], 2],
-                name='scale_factor',
-                dtype='float32')
-        }]
-
-        return input_spec
+        self.fixed_input_shape = image_shape
+        return self._define_input_spec(image_shape)
 
 
 class MaskRCNN(BaseDetector):
@@ -1417,6 +1451,7 @@ class MaskRCNN(BaseDetector):
                  num_classes=80,
                  backbone='ResNet50_vd',
                  with_fpn=True,
+                 with_dcn=False,
                  aspect_ratios=[0.5, 1.0, 2.0],
                  anchor_sizes=[[32], [64], [128], [256], [512]],
                  keep_top_k=100,
@@ -1438,6 +1473,7 @@ class MaskRCNN(BaseDetector):
                 format(backbone))
 
         self.backbone_name = backbone + '_fpn' if with_fpn else backbone
+        dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
 
         if backbone == 'ResNet50':
             if with_fpn:
@@ -1446,8 +1482,13 @@ class MaskRCNN(BaseDetector):
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
-                    num_stages=4)
+                    num_stages=4,
+                    dcn_v2_stages=dcn_v2_stages)
             else:
+                if with_dcn:
+                    logging.warning(
+                        "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                        format(backbone))
                 backbone = self._get_backbone(
                     'ResNet',
                     norm_type='bn',
@@ -1469,7 +1510,8 @@ class MaskRCNN(BaseDetector):
                 return_idx=[0, 1, 2, 3],
                 num_stages=4,
                 lr_mult_list=[0.05, 0.05, 0.1, 0.15]
-                if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0])
+                if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0],
+                dcn_v2_stages=dcn_v2_stages)
 
         else:
             if not with_fpn:
@@ -1484,7 +1526,8 @@ class MaskRCNN(BaseDetector):
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
-                num_stages=4)
+                num_stages=4,
+                dcn_v2_stages=dcn_v2_stages)
 
         rpn_in_channel = backbone.out_shape[0].channels
 
@@ -1689,3 +1732,16 @@ class MaskRCNN(BaseDetector):
                         interp='CUBIC')
                 self.test_transforms.transforms.append(
                     Padding(im_padding_value=[0., 0., 0.]))
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+            if self.with_fpn:
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+        self.fixed_input_shape = image_shape
+
+        return self._define_input_spec(image_shape)

@@ -36,7 +36,7 @@ eval_dataset = pdx.datasets.CocoDetection(
 # 初始化模型，并进行训练
 # 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
 num_classes = len(train_dataset.labels)
-model = pdx.models.MaskRCNN(
+model = pdx.det.MaskRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
@@ -46,6 +46,7 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=1,
     eval_dataset=eval_dataset,
+    pretrain_weights='COCO',
     learning_rate=0.00125,
     lr_decay_epochs=[8, 11],
     warmup_steps=10,

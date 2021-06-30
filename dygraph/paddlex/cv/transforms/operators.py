@@ -30,9 +30,10 @@ from .functions import normalize, horizontal_flip, permute, vertical_flip, cente
 
 __all__ = [
     "Compose", "Decode", "Resize", "RandomResize", "ResizeByShort",
-    "RandomResizeByShort", "RandomHorizontalFlip", "RandomVerticalFlip",
-    "Normalize", "CenterCrop", "RandomCrop", "RandomExpand", "Padding",
-    "MixupImage", "RandomDistort", "ArrangeSegmenter", "ArrangeClassifier",
+    "RandomResizeByShort", "ResizeByLong", "RandomHorizontalFlip",
+    "RandomVerticalFlip", "Normalize", "CenterCrop", "RandomCrop",
+    "RandomScaleAspect", "RandomExpand", "Padding", "MixupImage",
+    "RandomDistort", "RandomBlur", "ArrangeSegmenter", "ArrangeClassifier",
     "ArrangeDetector"
 ]
 
@@ -317,7 +318,7 @@ class RandomResize(Transform):
     Attention：If interp is 'RANDOM', the interpolation method will be chose randomly.
 
     Args:
-        target_sizes (List[int], List[list or tuple] or Tuple[lsit or tuple]):
+        target_sizes (List[int], List[list or tuple] or Tuple[list or tuple]):
             Multiple target sizes, each target size is an int or list/tuple.
         interp ({'NEAREST', 'LINEAR', 'CUBIC', 'AREA', 'LANCZOS4', 'RANDOM'}, optional):
             Interpolation method of resize. Defaults to 'LINEAR'.
@@ -375,44 +376,7 @@ class ResizeByShort(Transform):
         self.max_size = max_size
         self.interp = interp
 
-    def apply_im(self, image, interp, target_size):
-        image = cv2.resize(image, target_size, interpolation=interp)
-        return image
-
-    def apply_mask(self, mask, target_size):
-        mask = cv2.resize(mask, target_size, interpolation=cv2.INTER_NEAREST)
-        return mask
-
-    def apply_bbox(self, bbox, scale, target_size):
-        im_scale_x, im_scale_y = scale
-        bbox[:, 0::2] *= im_scale_x
-        bbox[:, 1::2] *= im_scale_y
-        bbox[:, 0::2] = np.clip(bbox[:, 0::2], 0, target_size[1])
-        bbox[:, 1::2] = np.clip(bbox[:, 1::2], 0, target_size[0])
-        return bbox
-
-    def apply_segm(self, segms, im_size, scale):
-        im_h, im_w = im_size
-        im_scale_x, im_scale_y = scale
-        resized_segms = []
-        for segm in segms:
-            if is_poly(segm):
-                # Polygon format
-                resized_segms.append([
-                    resize_poly(poly, im_scale_x, im_scale_y) for poly in segm
-                ])
-            else:
-                # RLE format
-                resized_segms.append(
-                    resize_rle(segm, im_h, im_w, im_scale_x, im_scale_y))
-
-        return resized_segms
-
     def apply(self, sample):
-        if self.interp == "RANDOM":
-            interp = random.choice(list(interp_dict.values()))
-        else:
-            interp = interp_dict[self.interp]
         im_h, im_w = sample['image'].shape[:2]
         im_short_size = min(im_h, im_w)
         im_long_size = max(im_h, im_w)
@@ -422,25 +386,7 @@ class ResizeByShort(Transform):
         target_w = int(round(im_w * scale))
         target_h = int(round(im_h * scale))
         target_size = (target_w, target_h)
-
-        sample['image'] = self.apply_im(sample['image'], interp, target_size)
-        im_scale_y = target_h / im_h
-        im_scale_x = target_w / im_w
-        if 'mask' in sample:
-            sample['mask'] = self.apply_mask(sample['mask'], target_size)
-        if 'gt_bbox' in sample and len(sample['gt_bbox']) > 0:
-            sample['gt_bbox'] = self.apply_bbox(
-                sample['gt_bbox'], [im_scale_x, im_scale_y], target_size)
-        if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
-            sample['gt_poly'] = self.apply_segm(
-                sample['gt_poly'], [im_h, im_w], [im_scale_x, im_scale_y])
-        sample['im_shape'] = np.asarray(
-            sample['image'].shape[:2], dtype=np.float32)
-        if 'scale_factor' in sample:
-            scale_factor = sample['scale_factor']
-            sample['scale_factor'] = np.asarray(
-                [scale_factor[0] * im_scale_y, scale_factor[1] * im_scale_x],
-                dtype=np.float32)
+        sample = Resize(target_size=target_size, interp=self.interp)(sample)
 
         return sample
 
@@ -481,6 +427,24 @@ class RandomResizeByShort(Transform):
         resizer = ResizeByShort(
             short_size=short_size, max_size=self.max_size, interp=self.interp)
         sample = resizer(sample)
+        return sample
+
+
+class ResizeByLong(Transform):
+    def __init__(self, long_size=256, interp='LINEAR'):
+        super(ResizeByLong, self).__init__()
+        self.long_size = long_size
+        self.interp = interp
+
+    def apply(self, sample):
+        im_h, im_w = sample['image'].shape[:2]
+        im_long_size = max(im_h, im_w)
+        scale = float(self.long_size) / float(im_long_size)
+        target_h = int(round(im_h * scale))
+        target_w = int(round(im_w * scale))
+        target_size = (target_w, target_h)
+        sample = Resize(target_size=target_size, interp=self.interp)(sample)
+
         return sample
 
 
@@ -683,12 +647,13 @@ class RandomCrop(Transform):
     4. Resize the cropped area to crop_size by crop_size.
 
     Args:
-        crop_size(int or None, optional): Target size of the cropped area. If None, the cropped area will not be resized. Defaults to None.
-        aspect_ratio (List[float], optional): Aspect ratio of cropped region.
-            in [min, max] format. Defaults to [.5, .2].
-        thresholds (List[float], optional): Iou thresholds to decide a valid bbox crop. Defaults to [.0, .1, .3, .5, .7, .9].
-        scaling (List[float], optional): Ratio between the cropped region and the original image.
-             in [min, max] format, default [.3, 1.].
+        crop_size(int, List[int] or Tuple[int]): Target size of the cropped area. If None, the cropped area will not be
+            resized. Defaults to None.
+        aspect_ratio (List[float], optional): Aspect ratio of cropped region in [min, max] format. Defaults to [.5, 2.].
+        thresholds (List[float], optional): Iou thresholds to decide a valid bbox crop.
+            Defaults to [.0, .1, .3, .5, .7, .9].
+        scaling (List[float], optional): Ratio between the cropped region and the original image in [min, max] format.
+            Defaults to [.3, 1.].
         num_attempts (int, optional): The number of tries before giving up. Defaults to 50.
         allow_no_crop (bool, optional): Whether returning without doing crop is allowed. Defaults to True.
         cover_all_box (bool, optional): Whether to ensure all bboxes are covered in the final crop. Defaults to False.
@@ -860,8 +825,34 @@ class RandomCrop(Transform):
                 sample['mask'] = self.apply_mask(sample['mask'], crop_box)
 
         if self.crop_size is not None:
-            sample = Resize((self.crop_size, self.crop_size))(sample)
+            sample = Resize(self.crop_size)(sample)
 
+        return sample
+
+
+class RandomScaleAspect(Transform):
+    """
+    Crop input image(s) and resize back to original sizes.
+    Args：
+        min_scale (float)：Minimum ratio between the cropped region and the original image.
+            If 0, image(s) will not be cropped. Defaults to .5.
+        aspect_ratio (float): Aspect ratio of cropped region. Defaults to .33.
+    """
+
+    def __init__(self, min_scale=0.5, aspect_ratio=0.33):
+        super(RandomScaleAspect, self).__init__()
+        self.min_scale = min_scale
+        self.aspect_ratio = aspect_ratio
+
+    def apply(self, sample):
+        if self.min_scale != 0 and self.aspect_ratio != 0:
+            img_height, img_width = sample['image'].shape[:2]
+            sample = RandomCrop(
+                crop_size=(img_height, img_width),
+                aspect_ratio=[self.aspect_ratio, 1. / self.aspect_ratio],
+                scaling=[self.min_scale, 1.],
+                num_attempts=10,
+                allow_no_crop=False)(sample)
         return sample
 
 
@@ -934,7 +925,7 @@ class Padding(Transform):
                 if 0, only pad to right and bottom. If 1, pad according to center. If 2, only pad left and top. Defaults to 0.
             im_padding_value(Sequence[float]): RGB value of pad area. Defaults to (127.5, 127.5, 127.5).
             label_padding_value(int, optional): Filling value for the mask. Defaults to 255.
-            size_divisor(int): Image width and height after padding is a multiple of size_divisor
+            size_divisor(int): Image width and height after padding is a multiple of coarsest_stride.
         """
         super(Padding, self).__init__()
         if isinstance(target_size, (list, tuple)):
@@ -1004,7 +995,7 @@ class Padding(Transform):
             ), 'target size ({}, {}) cannot be less than image size ({}, {})'\
                 .format(h, w, im_h, im_w)
         else:
-            h = (np.ceil(im_h // self.size_divisor) *
+            h = (np.ceil(im_h / self.size_divisor) *
                  self.size_divisor).astype(int)
             w = (np.ceil(im_w / self.size_divisor) *
                  self.size_divisor).astype(int)
@@ -1231,6 +1222,41 @@ class RandomDistort(Transform):
             if np.random.randint(0, 2):
                 sample['image'] = sample['image'][..., np.random.permutation(
                     3)]
+
+        return sample
+
+
+class RandomBlur(Transform):
+    """
+    Randomly blur input image(s).
+
+    Args：
+        prob (float): Probability of blurring.
+    """
+
+    def __init__(self, prob=0.1):
+        super(RandomBlur, self).__init__()
+        self.prob = prob
+
+    def apply_im(self, image, radius):
+        image = cv2.GaussianBlur(image, (radius, radius), 0, 0)
+        return image
+
+    def apply(self, sample):
+        if self.prob <= 0:
+            n = 0
+        elif self.prob >= 1:
+            n = 1
+        else:
+            n = int(1.0 / self.prob)
+        if n > 0:
+            if np.random.randint(0, n) == 0:
+                radius = np.random.randint(3, 10)
+                if radius % 2 != 1:
+                    radius = radius + 1
+                if radius > 9:
+                    radius = 9
+                sample['image'] = self.apply_im(sample['image'], radius)
 
         return sample
 
