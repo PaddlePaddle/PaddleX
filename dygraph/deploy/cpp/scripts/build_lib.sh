@@ -7,7 +7,7 @@ WITH_TENSORRT=OFF
 # TensorRT 的路径，如果需要集成TensorRT，需修改为您实际安装的TensorRT路径
 TENSORRT_DIR=$(pwd)/TensorRT/
 # Paddle 预测库路径, 请修改为您实际安装的预测库路径
-PADDLE_DIR=/ssd2/heliqi/paddle_inference
+PADDLE_DIR=$(pwd)/paddle_inference
 # Paddle 的预测库是否使用静态库来编译
 # 使用TensorRT时，Paddle的预测库通常为动态库
 WITH_STATIC_LIB=ON
@@ -22,11 +22,6 @@ CUDNN_LIB=/usr/lib/x86_64-linux-gnu
     echo "Fail to execute script/bootstrap.sh"
     exit -1
 }
-
-# 是否加载加密后的模型
-WITH_ENCRYPTION=OFF
-# 加密工具的路径, 如果使用自带预编译版本可不修改
-ENCRYPTION_DIR=$(pwd)/paddlex-encryption
 # OPENCV 路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv3.4.6gcc4.8ffmpeg/
 
@@ -38,13 +33,10 @@ cmake ../build_lib \
     -DWITH_GPU=${WITH_GPU} \
     -DWITH_MKL=${WITH_MKL} \
     -DWITH_TENSORRT=${WITH_TENSORRT} \
-    -DWITH_ENCRYPTION=${WITH_ENCRYPTION} \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DPADDLE_DIR=${PADDLE_DIR} \
-    -DPADDLE_LIB=${PADDLE_DIR} \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
-    -DENCRYPTION_DIR=${ENCRYPTION_DIR} \
     -DOPENCV_DIR=${OPENCV_DIR}
 make install -j16

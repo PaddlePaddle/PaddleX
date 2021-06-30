@@ -289,29 +289,3 @@ if(WITH_MKL)
   install(DIRECTORY ${PADDLE_DIR}/third_party/install/mkldnn
           DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party)
 endif()
-
-#opencv
-install(DIRECTORY ${OpenCV_INSTALL_PATH}/include ${OpenCV_INSTALL_PATH}/lib
-        DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/opencv)
-
-# GPU
-if(WITH_GPU)
-  if(WIN32)
-    file(GLOB CUDA_FILE ${CUDA_LIB}/cudart.* ${CUDA_LIB}/cublas.* ${CUDA_LIB}/cudnn.*)
-    file(GLOB TENSORRT_FILE ${TENSORRT_DIR}/lib/libnvinfer.*
-                            ${TENSORRT_DIR}/lib/libnvinfer_plugin.*
-                            ${TENSORRT_DIR}/lib/myelin64_1.*)
-  else()
-    file(GLOB CUDA_FILE ${CUDA_LIB}/libcudart.* ${CUDNN_LIB}/libcudnn.*)
-    file(GLOB TENSORRT_FILE ${TENSORRT_DIR}/lib/libnvinfer.* ${TENSORRT_DIR}/lib/libnvinfer_plugin.*)
-  endif()
-
-  install(FILES ${CUDA_FILE}
-          DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/cuda)
-  if (WITH_TENSORRT)
-      install(DIRECTORY ${TENSORRT_DIR}/include
-              DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/tensorrt)
-      install(FILES ${TENSORRT_FILE}
-              DESTINATION  ${CMAKE_INSTALL_PREFIX}/third_party/tensorrt/lib)
-  endif()
-endif()
