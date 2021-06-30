@@ -1,0 +1,47 @@
+﻿{
+    "configurations": [
+        {
+            "name": "x64-Release",
+            "generator": "Ninja",
+            "configurationType": "Release",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
+            "buildRoot": "${projectDir}\\out\\build\\${name}",
+            "installRoot": "${projectDir}\\out\\install\\${name}",
+            "cmakeCommandArgs": "",
+            "buildCommandArgs": "",
+            "ctestCommandArgs": "",
+            "variables": [
+                {
+                    "name": "CUDA_LIB",
+                    "value": "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.2/lib/x64",
+                    "type": "PATH"
+                },
+                {
+                    "name": "OPENCV_DIR",
+                    "value": "D:/luoqianhui/projects/opencv",
+                    "type": "PATH"
+                },
+                {
+                    "name": "PADDLEX_DIR",
+                    "value": "D:/luoqianhui/projects/pipeline/test_1452/PaddleXManufacture",
+                    "type": "PATH"
+                },
+                {
+                    "name": "TENSORRT_DIR",
+                    "value": "D:/luoqianhui/projects/TensorRT-7.0.0.11",
+                    "type": "PATH"
+                },
+                {
+                    "name": "WITH_TENSORRT",
+                    "value": "True",
+                    "type": "BOOL"
+                },
+                {
+                    "name": "WITH_STATIC_LIB",
+                    "value": "False",
+                    "type": "BOOL"
+                }
+            ]
+        }
+    ]
+}

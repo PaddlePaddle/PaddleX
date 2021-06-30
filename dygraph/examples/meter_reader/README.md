@@ -8,6 +8,8 @@
 * [4 表计检测模型训练](#4)
 * [5 指针和刻度分割模型训练](#5)
 * [6 模型预测](#6)
+* [7 模型导出](#7)
+* [8 Windows环境下模型部署](#8)
 
 ## <h2 id="1">1 项目说明</h2>
 
@@ -115,6 +117,7 @@ PaddleX提供了丰富的视觉模型，在目标检测中提供了RCNN和YOLO�
 ```shell
 python train_detection.py
 ```
+训练结束后，最优模型精度`bbox_mmap`达到100%。
 
 训练过程说明:
 
@@ -195,6 +198,8 @@ model.train(
 ```shell
 python train_segmentation.py
 ```
+
+训练结束后，最优模型精度`miou`达84.09。
 
 训练过程说明:
 
@@ -318,3 +323,151 @@ def predict(self,
     self.visualize(img, filtered_results, meter_readings, save_dir)
 
 ```
+
+## <h2 id="7">7 模型导出</h2>
+
+在训练过程中模型被保存在了`output`文件夹，此时模型格式还是动态图格式，需要导出成静态图格式才可以进行下一步部署。
+
+运行如下命令将表计检测模型导出，会自动在`meter_det_model`文件夹下创建一个`inference_model`的文件夹，用来存放静态图格式的检测模型。
+
+```python
+
+paddlex --export_inference --model_dir=output/ppyolov2_r50vd_dcn/best_model --save_dir=meter_det_model
+
+```
+
+运行如下命令将刻度和指针分割模型导出，会自动在`meter_seg_model`文件夹下创建一个`inference_model`的文件夹，用来存放静态图格式的分割模型。
+
+```python
+
+paddlex --export_inference --model_dir=output/deeplabv3p_r50vd/best_model --save_dir=meter_seg_model
+```
+
+## <h2 id="8">8 Windows环境下模型部署</h2>
+
+我们在上一步已经将模型导出为静态图格式了，现在可以开始部署了。这里我们基于[PaddleX Manufature SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)进行部署。
+
+### 环境依赖
+
+* Visual Studio 2019
+* CUDA 10.2, CUDNN 7
+* CMake 3.0+
+
+### 编译步骤
+
+**下面所有示例以工作目录为 `D:\projects`演示。**
+
+### Step1: 下载工业表计读数部署代码
+
+```shell
+d:
+mkdir projects
+cd projects
+git clone https://github.com/PaddlePaddle/PaddleX.git
+
+```
+### Step2: 下载PaddleX Manufature SDK
+
+点击链接下载适用Windows 10平台CUDA 10.2/CUDNN 7的[PaddleXManufature.tar](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)。
+
+将SDK解压后，其所在目录（例如`D:\projects\PaddleXManufature\`）下主要包含的内容有：
+
+```
+├── \include\ # paddlex deploy核心库和头文件
+|
+├── \lib\ #
+|
+├── \share\ #
+|
+├── \third_party\ # 第三方依赖库和头文件
+|
+└── \version.txt # 版本和编译信息
+```
+
+### Step3: 安装配置OpenCV
+
+1. 在OpenCV官网下载适用于Windows平台的3.4.6版本  [下载地址](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
+2. 运行下载的可执行文件，将OpenCV解压至指定目录，例如`D:\projects\opencv`
+3. 配置环境变量，如下流程所示  
+   - 我的电脑->属性->高级系统设置->环境变量
+   - 在系统变量中找到Path（如没有，自行创建），并双击编辑
+   - 新建，将opencv路径填入并保存，如`D:\projects\opencv\build\x64\vc15\bin`
+   - 在进行cmake构建时，会有相关提示，请注意vs2019的输出
+
+### Step4: 下载TensorRT
+
+1. 在英伟达官网下载适用于Windows平台CUDA 10.2, CUDNN 7版本的TensorRT-7.0.0.11
+2. 将TensorRT解压至指定目录，例如`D:\projects\TensorRT-7.0.0.11`
+
+### Step5: 使用Visual Studio 2019直接编译CMake
+
+1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
+   ![](../../images/vs2019_step1.png)
+
+2. 点击： `文件`->`打开`->`CMake`
+
+![](../../images/vs2019_step2.png)
+
+选择表计读数C++预测代码所在路径（例如`D:\projects\PaddleX\dygraph/examples/meter_reader/deploy/cpp/meter_reader`），并打开`CMakeList.txt`：
+![](../../images/vs2019_step3.png)
+
+3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。
+
+  点击：`项目`->`CMake设置`
+  ![](../../images/vs2019_step4.png)
+
+4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`PaddleXManufacture`、`TensorRT`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
+   ![](../../images/vs2019_step5.png)
+   依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本与PaddleXManufacture的对齐，例如PaddleXManufacture是**使用9.0、10.0版本**编译的，则编译PaddleX预测代码时**不使用9.2、10.1等版本**CUDA库）：
+
+| 参数名     | 含义                                                                                                                                                |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| *CUDA_LIB  | CUDA的库路径, 注：请将CUDNN的cudnn.lib文件拷贝到CUDA_LIB路径下。<br />例如 `C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\lib\\x64` |
+| OPENCV_DIR | OpenCV的安装路径，例如`D:\\projects\\opencv`                                                                                                        |
+| PaddleXManufacture_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\PaddleXManufacture`                                                                           |
+| TENSORRT_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\TensorRT-7.0.0.11`                                                                           |
+
+- 如果使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
+- **`WITH_GPU`的`值`必须打上勾**
+
+5. 保存并生成CMake缓存
+
+![](../../images/vs2019_step6.png)
+**设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。然后我们可以看到vs的输出会打印CMake生成的过程，出现`CMake 生成完毕`且无报错代表生成完毕。
+
+6. 点击`生成`->`全部生成`，生成demo里的可执行文件。
+
+![step6](../../images/vs2019_step7.png)
+
+### Step6: 编译结果
+
+编译后会在`D:\projects\PaddleX\dygraph\examples\meter_reader\out\build\x64-Release`目录下生成`meter_reader.exe`二进制文件。
+
+使用PaddleXManufacture所需要的流程配置文件位于`PaddleX\dygraph\examples\meter_reader\meter_pipeline.yml`，打开该配置文件，修改检测模型和分割模型所在路径:
+
+| 修改检测模型所在路径，并设置`use_gpu`和`use_trt`为true | 修改分割模型所在路径，并设置`use_gpu`和`use_trt`为true |
+| -- | -- |
+| ![]() | ![]() |
+
+打开CMD终端，运行表计读数的可执行文件，进行推理预测：
+```
+cd PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\
+.\out\build\x64-Release\meter_reader.exe --pipeline_cfg meter_pipeline --image 20190822_168.jpg
+```
+执行后终端会输出预测结果：
+
+```
+save_dir: ./output_det does not exists. This path will be created automatically.
+save_dir: ./output_seg does not exists. This path will be created automatically.
+Box(0   meter   0.98431444      656.26440430    451.94650269    224.40563965    230.18161011)
+Box(0   meter   0.98169208      1374.56347656   529.34149170    284.29077148    291.98461914)
+ScoreMask(mean: 13.08305625     std:    44.50118578)    LabelMask(mean: 0.10153198      std:    0.18212054)
+Meter 1: 1.05576932
+Meter 2: 6.21739101
+```
+
+在检测模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_det`，可以点击进行查看：
+![]()
+
+在分割模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_seg`，可以点击进行查看：
+![]()
