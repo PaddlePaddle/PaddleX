@@ -11,18 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#pragma once
-
-#include <memory>
-#include <string>
-
-#include "model_deploy/common/include/deploy_delacre.h"
-#include "model_deploy/common/include/output_struct.h"
-#include "model_deploy/common/include/model_factory.h"
-#include "model_deploy/engine/include/engine.h"
+#include "model_deploy/common/include/paddle_deploy.h"
 
 namespace PaddleDeploy {
 
-PD_INFER_DECL Model* CreateModel(const std::string& name);
+Model* CreateModel(const std::string& name) {
+	return PaddleDeploy::ModelFactory::CreateObject(name);
+}
 
 }  // namespace PaddleDeploy
