@@ -40,8 +40,7 @@
    通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
   **前置依赖**
-> - paddlepaddle == 2.1.0
-> - 安装PaddlePaddle Develop版本，具体PaddlePaddle[安装主页](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
+> - 安装PaddlePaddle Develop版本，具体方式请参考PaddlePaddle[安装主页](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 
 **安装方式**
 

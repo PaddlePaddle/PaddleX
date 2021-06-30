@@ -397,7 +397,7 @@ class BaseModel:
                             self.save_model(save_dir=best_model_dir)
                         if best_model_epoch > 0:
                             logging.info(
-                                'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
+                                'Current evaluated best model on eval_dataset is epoch_{}, {}={}'
                                 .format(best_model_epoch, best_accuracy_key,
                                         best_accuracy))
                     eval_epoch_time = time.time() - eval_epoch_tic
@@ -527,6 +527,39 @@ class BaseModel:
                 .format(self.quant_config),
                 exit=True)
 
+    def _get_pipeline_info(self, save_dir):
+        pipeline_info = {}
+        pipeline_info["pipeline_name"] = self.model_type
+        nodes = [{
+            "src0": {
+                "type": "Source",
+                "next": "decode0"
+            }
+        }, {
+            "decode0": {
+                "type": "Decode",
+                "next": "predict0"
+            }
+        }, {
+            "predict0": {
+                "type": "Predict",
+                "init_params": {
+                    "use_gpu": False,
+                    "gpu_id": 0,
+                    "use_trt": False,
+                    "model_dir": save_dir,
+                },
+                "next": "sink0"
+            }
+        }, {
+            "sink0": {
+                "type": "Sink"
+            }
+        }]
+        pipeline_info["pipeline_nodes"] = nodes
+        pipeline_info["version"] = "1.0.0"
+        return pipeline_info
+
     def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
         self.net.eval()
@@ -559,6 +592,12 @@ class BaseModel:
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
+        pipeline_info = self._get_pipeline_info(save_dir)
+        with open(
+                osp.join(save_dir, 'pipeline.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(pipeline_info, f)
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()

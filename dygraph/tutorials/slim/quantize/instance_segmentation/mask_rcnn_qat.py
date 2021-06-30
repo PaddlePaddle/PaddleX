@@ -33,23 +33,15 @@ eval_dataset = pdx.datasets.CocoDetection(
     ann_file='xiaoduxiong_ins_det/val.json',
     transforms=eval_transforms)
 
-# 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
-num_classes = len(train_dataset.labels)
-model = pdx.det.MaskRCNN(
-    num_classes=num_classes, backbone='ResNet50', with_fpn=True)
+# 加载模型
+model = pdx.load_model('output/mask_rcnn_r50_fpn/best_model')
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
-model.train(
-    num_epochs=12,
+# 在线量化
+model.quant_aware_train(
+    num_epochs=6,
     train_dataset=train_dataset,
     train_batch_size=1,
     eval_dataset=eval_dataset,
-    pretrain_weights='COCO',
-    learning_rate=0.00125,
-    lr_decay_epochs=[8, 11],
-    warmup_steps=10,
-    warmup_start_lr=0.0,
-    save_dir='output/mask_rcnn_r50_fpn',
+    learning_rate=0.000125,
+    save_dir='output/mask_rcnn_r50_fpn/quant',
     use_vdl=True)
