@@ -225,7 +225,7 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/pipeline/src PIPELINE_SRC)
 
 #shared lib
-add_library (PaddleXManufacture SHARED  ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC})
+add_library (PaddleXManufacture SHARED  ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${UTILS_SRC} ${PIPELINE_SRC})
 add_dependencies(PaddleXManufacture ext-yaml-cpp)
 target_link_libraries(PaddleXManufacture ${DEPS})
 
