@@ -35,7 +35,7 @@ train(num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, optimize
 > > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
 > > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代次数）。默认为2。
 > > - **save_dir** (str): 模型保存路径。默认'output'
-> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES图片数据上预训练的模型权重；若为字符串'PascalVOC'，则自动下载在PascalVOC图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'CITYSCAPES'。
+> > - **pretrain_weights** (str): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串'CITYSCAPES'，则自动下载在CITYSCAPES图片数据上预训练的模型权重；若为字符串'PascalVOC'，则自动下载在PascalVOC图片数据上预训练的模型权重；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'CITYSCAPES'。
 > > - **learning_rate** (float): 默认优化器的初始学习率。默认为0.01。
 > > - **lr_decay_power** (float): 默认优化器学习率衰减指数。默认为0.9。
 > > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
