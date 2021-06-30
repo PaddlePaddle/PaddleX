@@ -256,10 +256,12 @@ class BaseSegmenter(BaseModel):
                     "Invalid pretrain weights. Please specify a '.pdparams' file.",
                     exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
+        is_backbone_weights = pretrain_weights == 'IMAGENET'
         self.net_initialize(
             pretrain_weights=pretrain_weights,
             save_dir=pretrained_dir,
-            resume_checkpoint=resume_checkpoint)
+            resume_checkpoint=resume_checkpoint,
+            is_backbone_weights=is_backbone_weights)
 
         self.train_loop(
             num_epochs=num_epochs,

@@ -61,7 +61,8 @@ class BaseModel:
     def net_initialize(self,
                        pretrain_weights=None,
                        save_dir='.',
-                       resume_checkpoint=None):
+                       resume_checkpoint=None,
+                       is_backbone_weights=False):
         if pretrain_weights is not None and \
                 not osp.exists(pretrain_weights):
             if not osp.isdir(save_dir):
@@ -79,8 +80,14 @@ class BaseModel:
                     save_dir,
                     backbone_name=backbone_name)
         if pretrain_weights is not None:
-            load_pretrain_weights(
-                self.net, pretrain_weights, model_name=self.model_name)
+            if is_backbone_weights:
+                load_pretrain_weights(
+                    self.net.backbone,
+                    pretrain_weights,
+                    model_name='backbone of ' + self.model_name)
+            else:
+                load_pretrain_weights(
+                    self.net, pretrain_weights, model_name=self.model_name)
         if resume_checkpoint is not None:
             if not osp.exists(resume_checkpoint):
                 logging.error(

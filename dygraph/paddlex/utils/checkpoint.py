@@ -14,13 +14,14 @@
 
 import os
 import os.path as osp
+import glob
 import paddle
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
 seg_pretrain_weights_dict = {
     'UNet': ['CITYSCAPES'],
-    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC', 'IMAGENET'],
     'FastSCNN': ['CITYSCAPES'],
     'HRNet': ['CITYSCAPES', 'PascalVOC'],
     'BiSeNetV2': ['CITYSCAPES']
@@ -254,7 +255,11 @@ imagenet_weights = {
     'MaskRCNN_ResNet101_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
     'MaskRCNN_ResNet101_vd_fpn_IMAGENET':
-    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams'
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
+    'DeepLabV3P_ResNet50_vd_IMAGENET':
+    'https://bj.bcebos.com/paddleseg/dygraph/resnet50_vd_ssld_v2.tar.gz',
+    'DeepLabV3P_ResNet101_vd_IMAGENET':
+    'https://bj.bcebos.com/paddleseg/dygraph/resnet101_vd_ssld.tar.gz'
 }
 
 pascalvoc_weights = {
@@ -364,6 +369,8 @@ def get_pretrain_weights(flag, class_name, save_dir, backbone_name=None):
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))
     fname = download_and_decompress(url, path=new_save_dir)
+    if osp.isdir(fname):
+        fname = glob.glob(osp.join(fname, '*.pdparams'))[0]
     return fname
 
 
