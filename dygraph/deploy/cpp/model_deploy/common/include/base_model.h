@@ -20,6 +20,7 @@
 
 #include "yaml-cpp/yaml.h"
 
+#include "model_deploy/common/include/deploy_delacre.h"
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/common/include/output_struct.h"
@@ -27,7 +28,7 @@
 
 namespace PaddleDeploy {
 
-class Model {
+class PD_INFER_DECL Model {
  private:
   const std::string model_type_;
 
