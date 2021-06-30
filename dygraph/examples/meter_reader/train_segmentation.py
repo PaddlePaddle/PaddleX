@@ -16,7 +16,7 @@ eval_transforms = T.Compose([
         mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
 ])
 
-# 下载和解压指针刻度分割数据集，如果已经预先下载，可注视掉下面两行
+# 下载和解压指针刻度分割数据集，如果已经预先下载，可注释掉下面两行
 meter_seg_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz'
 pdx.utils.download_and_decompress(meter_seg_dataset, path='./')
 
