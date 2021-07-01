@@ -23,7 +23,7 @@
 
 
 
-:heart:**您可以前往  [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)  查看完整*Read the Doc* 格式的文档，获得更好的阅读体验**:heart:
+:heart: **您可以前往  [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)  查看完整*Read the Doc* 格式的文档，获得更好的阅读体验**:heart:
 
 
 
