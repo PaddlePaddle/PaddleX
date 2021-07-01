@@ -1,4 +1,4 @@
-# PaddleX全面升级动态图，2.0.0-rc发布！
+# PaddleX全面升级动态图，2.0.0-rc1发布！
 
 
 
@@ -8,11 +8,14 @@
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
 ## :heart:重磅功能升级
-* 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)。
+### 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)
 
-* PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的统一部署能力。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)。
+### PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)
 
 
+### 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples)
+
+### 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/FlyingQianMM/PaddleX/blob/develop_qh/dygraph/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
  ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
@@ -21,85 +24,77 @@
 
 :factory: **PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
 
-
-
-:heart:**您可以前往  [完整PaddleX在线使用文档目录](https://paddlex.readthedocs.io/zh_CN/develop/index.html)  查看完整*Read the Doc* 格式的文档，获得更好的阅读体验**:heart:
-
-
-
 ![](../docs/gui/images/paddlexoverview.png)
 
 
-
-## 安装
-
-**PaddleX提供三种开发模式，满足用户的不同需求：**
-
-1. **Python开发模式：**
-
-   通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
-
-  **前置依赖**
-> - 安装PaddlePaddle Develop版本，具体方式请参考PaddlePaddle[安装主页](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
-
-**安装方式**
-
-> - git clone --recurse-submodules https://github.com/PaddlePaddle/PaddleX.git
-> - cd PaddleX/dygraph
-> - pip install -r requirements.txt
-> - pip install -r submodules.txt
-> - python setup.py install
+## PaddleX 使用文档
 
 
-**特别说明**   Windows除了执行上述命令外，还需要下载pycocotools
-
-> - pip install cython
-> - pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
+### 1. 快速上手PaddleX
 
 
-2. **Padlde GUI模式：**
-
-   无代码开发的可视化客户端，应用Paddle API实现，使开发者快速进行产业项目验证，并为用户开发自有深度学习软件/应用提供参照。
-
-- 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载PaddleX GUI一键绿色安装包。
-
-- 前往[PaddleX GUI使用教程](../docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
-
-- [PaddleX GUI安装环境说明](../docs/gui/download.md)
-
-3. **PaddleX Restful:**  
-  使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
-- 前往[PaddleX RESTful API使用教程](../docs/Resful_API/docs/readme.md)  
+* [快速安装PaddleX](./docs/install.md)
+  * [PaddleX API开发模式安装](./docs/install.md#1-paddlex-api开发模式安装)
+  * [PadldeX GUI开发模式安装](./docs/install.md#2-padldex-gui开发模式安装)
+  * [PaddleX Restful开发模式安装](./docs/install.md#3-paddlex-restful开发模式安装)
+* [10分钟快速上手使用](./docs/quick_start.md)
 
 
-## 使用教程
+### 2. 数据准备
 
-1. **API模式：**
+* [数据格式说明](./docs/data/format/README.md)
+* [标注工具LabelMe的安装和启动](./docs/data/annotation/labelme.md)
+* [数据标注](./docs/data/annotation/README.md)
+  * [手机拍照图片旋转](./docs/data/annotation/README.md)
+  * [开始数据标注](./docs/data/annatation/README.md)
+* [数据格式转换](./docs/data/convert.md)
+* [数据划分](./docs/data/split.md)
 
-- [模型训练](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train)
-- [模型剪裁](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/slim/prune)
+
+### 3. 模型训练/评估/预测
+
+* **PaddleX API开发模式：**
+
+    * [API文档](./docs/apis)
+      * [数据集读取API](./docs/apis/datasets.md)
+      * [数据预处理和数据增强API](./docs/apis/transforms/transforms.md)
+      * [图像分类模型API](./docs/apis/models/classification.md)
+      * [目标检测模型API](./docs/apis/models/detection.md)
+      * [实例分割模型API](./docs/apis/models/instance_segmentation.md)
+      * [图像分割模型API](./docs/apis/models/semantic_segmentation.md)
+    * [模型训练与参数调整](tutorials/train)
+      * [模型训练](tutorials/train)
+      * [训练参数调整](./docs//parameters.md)
+    * [VisualDL可视化训练指标](../docs/train/visualdl.md)
+    * [加载训好的模型完成预测及预测结果可视化](../docs/train/prediction.md)
+
+* **PaddleX GUI开发模式：**
+
+    - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)
+    - [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)
+    - [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
+    - [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)
 
 
+### 4. 模型剪裁和量化
 
-2. **GUI模式：**
+- [模型剪裁](tutorials/slim/prune)
+- [模型量化](tutorials/slim/quantize)
 
-- [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)
-- [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)
-- [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
-- [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)
+### 5. 模型部署
 
-3. **模型部署：**
-- [Manufacture SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)
-提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署
-- [PaddleX Deploy](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp) 支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的统一部署能力
-## 产业级应用示例
+- [PaddleX Manufacture SDK低代码高效部署](./deploy/cpp/docs/manufacture_sdk)
+- [PaddleX/PaddleClas/PaddleDetection/PaddleSeg端到端高性能统一部署](./deploy/cpp)
 
-- [钢筋计数](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/rebar_count)
-- [缺陷检测](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/defect_detection)
-- [机械手抓取](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/robot_grab)
-- [表计检测]()
-## :question:[FAQ]
-(../docs/gui/faq.md):question:
+### 6. 产业级应用示例
+
+- [钢筋计数](examples/rebar_count)
+- [缺陷检测](examples/defect_detection)
+- [机械手抓取](examples/robot_grab)
+- [工业表计读数](examples/meter_reader)
+- [Windows系统下使用C#语言部署](examples/C#_deploy)
+
+
 
 ## 交流与反馈
 
@@ -114,6 +109,13 @@
 
 
 ## 更新日志
+
+- **2021.07.01 v2.0.0-rc1**
+
+  * PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[使用教程](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)
+  * 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[使用教程](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)
+  * 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。[使用教程](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples)
+  * 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[使用教程](https://github.com/FlyingQianMM/PaddleX/blob/develop_qh/dygraph/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
 
 - **2021.05.19 v2.0.0-rc**
 
