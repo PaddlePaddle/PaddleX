@@ -25,7 +25,10 @@
 #include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/engine/include/engine.h"
-#include "encryption/include/paddle_model_decrypt.h"
+
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
+#include "encryption/include/paddle_model_encrypt.h"
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
 
 namespace PaddleDeploy {
 

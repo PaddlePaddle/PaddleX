@@ -9,7 +9,7 @@ else()
     option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   ON)
 endif()
 option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
-option(WITH_ENCRYPTION "Compile demo with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile demo with ENCRYPTION."   OFF)
 
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")

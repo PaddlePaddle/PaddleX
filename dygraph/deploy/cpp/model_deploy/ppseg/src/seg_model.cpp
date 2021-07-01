@@ -40,12 +40,17 @@ bool SegModel::GenerateTransformsConfig(const YAML::Node& src) {
 
 bool SegModel::YamlConfigInit(const std::string& cfg_file,
                               const std::string key) {
-  YAML::Node seg_config
+  YAML::Node seg_config;
   if ("" == key) {
     seg_config = YAML::LoadFile(cfg_file);
   } else {
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
     std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
     seg_config = YAML::Load(cfg);
+#else
+     std::cerr << "Don't open encryption on compile" << std::endl;
+    return false;
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
   }
 
   yaml_config_["model_format"] = "Paddle";

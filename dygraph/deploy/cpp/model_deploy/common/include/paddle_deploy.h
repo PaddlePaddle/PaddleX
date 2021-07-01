@@ -23,7 +23,7 @@
 
 #ifdef PADDLEX_DEPLOY_ENCRYPTION
 #include "encryption/include/paddle_model_encrypt.h"
-#endif  // _WIN32
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
 
 namespace PaddleDeploy {
 
