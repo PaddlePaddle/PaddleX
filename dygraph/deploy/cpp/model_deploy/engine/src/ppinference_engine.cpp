@@ -25,8 +25,15 @@ bool Model::PaddleEngineInit(const PaddleEngineConfig& engine_config) {
 bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
   const PaddleEngineConfig& engine_config = *(infer_config.paddle_config);
   paddle_infer::Config config;
-  config.SetModel(engine_config.model_filename,
+  if ("" == engine_config.key) {
+    config.SetModel(engine_config.model_filename,
                   engine_config.params_filename);
+  } else {
+    config.SetModelBuffer(engine_config.model_filename.c_str(),
+                          engine_config.model_filename.size(),
+                          engine_config.params_filename.c_str(),
+                          engine_config.params_filename.size());
+  }
   if (engine_config.use_mkl && !engine_config.use_gpu) {
     config.EnableMKLDNN();
     config.SetCpuMathLibraryNumThreads(engine_config.mkl_thread_num);

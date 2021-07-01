@@ -21,5 +21,5 @@
 #define PD_INFER_DECL __declspec(dllimport)
 #endif  // PADDLEX_DEPLOY
 #else
-#define PD_INFER_DECL
+#define PD_INFER_DECL __attribute__((visibility("default")))
 #endif  // _WIN32

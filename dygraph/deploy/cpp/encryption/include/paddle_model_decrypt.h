@@ -16,21 +16,11 @@
 #include <stdio.h>
 #include <string>
 
-#include "encryption/include/paddle_inference_api.h"
+#include "model_deploy/common/include/deploy_delacre.h"
+// #include "paddle/include/paddle_inference_api.h"  // NOLINT
 
 #ifndef PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
 #define PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
-
-#ifdef WIN32
-#ifdef PM_EXPORTS
-#define PDD_MODEL_API __declspec(dllexport)
-#else
-#define PDD_MODEL_API __declspec(dllimport)
-#endif
-#endif
-#ifdef linux
-#define PDD_MODEL_API __attribute__((visibility("default")))
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,7 +34,7 @@ extern "C" {
  * @param param_file    参数文件路径
  * @return              error_code
  */
-PDD_MODEL_API int paddle_security_load_model(paddle::AnalysisConfig* config,
+PD_INFER_DECL int paddle_security_load_model(paddle::AnalysisConfig* config,
                                const char* key,
                                const char* model_file,
                                const char* param_file);
@@ -54,9 +44,9 @@ PDD_MODEL_API int paddle_security_load_model(paddle::AnalysisConfig* config,
  * @param file_path
  * @return
  */
-PDD_MODEL_API int paddle_check_file_encrypted(const char* file_path);
+PD_INFER_DECL int paddle_check_file_encrypted(const char* file_path);
 
-PDD_MODEL_API std::string decrypt_file(const char* file_path, const char* key);
+PD_INFER_DECL std::string decrypt_file(const char* file_path, const char* key);
 
 #ifdef __cplusplus
 }

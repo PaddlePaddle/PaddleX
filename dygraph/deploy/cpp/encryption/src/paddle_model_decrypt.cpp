@@ -103,7 +103,7 @@ std::string decrypt_file(const char* file_path, const char* key) {
  * support params_file encrypted or unencrypt
  * all in one interface
  */
-
+/*
 int paddle_security_load_model(
     paddle::AnalysisConfig* config,
     const char* key,
@@ -252,3 +252,4 @@ int paddle_security_load_model(
 
     return CODE_OK;
 }
+*/

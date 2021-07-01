@@ -21,6 +21,10 @@
 #include "model_deploy/common/include/model_factory.h"
 #include "model_deploy/engine/include/engine.h"
 
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
+#include "encryption/include/paddle_model_encrypt.h"
+#endif  // _WIN32
+
 namespace PaddleDeploy {
 
 PD_INFER_DECL Model* CreateModel(const std::string& name);

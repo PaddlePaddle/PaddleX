@@ -29,6 +29,9 @@ struct PaddleEngineConfig {
   //  model params file path
   std::string params_filename = "";
 
+  //  model encrypt key
+  std::string key = "";
+
   //  Whether to use mkdnn accelerator library when deploying on CPU
   bool use_mkl = true;
 

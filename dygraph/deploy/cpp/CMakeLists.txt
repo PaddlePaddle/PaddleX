@@ -9,11 +9,13 @@ else()
     option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   ON)
 endif()
 option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile demo with TensorRT."   OFF)
 
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
+SET(OPENSSL_DIR "" CACHE PATH "Location of libraries")
 
 SET(PROJECT_ROOT_DIR  "." CACHE PATH  "root directory of project.")
 
@@ -225,6 +227,26 @@ if (WITH_TENSORRT)
   add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
   ADD_DEPENDENCIES(tensorrt_infer ext-yaml-cpp)
   target_link_libraries(tensorrt_infer ${DEPS})
+endif()
+
+if (WITH_ENCRYPTION)
+  add_definitions(-DPADDLEX_DEPLOY_ENCRYPTION)
+  set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+
+  include_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/include")
+  link_directories("${TENSORRT_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
+  set(DEPS ${DEPS} libssl_static${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto_static${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src ENCRYPTION_SRC)
+
+  message("====decrypt==========${ENCRYPTION_SRC}")
+
+  add_executable(decrypt_infer ${PROJECT_ROOT_DIR}/demo/decrypt_infer.cpp ${SRC}
+                               ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
+  ADD_DEPENDENCIES(decrypt_infer ext-yaml-cpp)
+  target_link_libraries(decrypt_infer ${DEPS})
 endif()
 
 if(WIN32)
