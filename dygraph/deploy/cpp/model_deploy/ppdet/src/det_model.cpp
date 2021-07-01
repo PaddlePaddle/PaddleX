@@ -45,11 +45,12 @@ bool DetModel::GenerateTransformsConfig(const YAML::Node& src) {
 
 bool DetModel::YamlConfigInit(const std::string& cfg_file,
                               const std::string key) {
+  YAML::Node det_config
   if ("" == key) {
-    YAML::Node det_config = YAML::LoadFile(cfg_file);
+    det_config = YAML::LoadFile(cfg_file);
   } else {
     std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
-    YAML::Node det_config = YAML::Load(cfg);
+    det_config = YAML::Load(cfg);
   }
 
   yaml_config_["model_format"] = "Paddle";

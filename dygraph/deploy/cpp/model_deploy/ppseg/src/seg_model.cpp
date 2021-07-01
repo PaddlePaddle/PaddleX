@@ -40,11 +40,12 @@ bool SegModel::GenerateTransformsConfig(const YAML::Node& src) {
 
 bool SegModel::YamlConfigInit(const std::string& cfg_file,
                               const std::string key) {
+  YAML::Node seg_config
   if ("" == key) {
-    YAML::Node seg_config = YAML::LoadFile(cfg_file);
+    seg_config = YAML::LoadFile(cfg_file);
   } else {
     std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
-    YAML::Node seg_config = YAML::Load(cfg);
+    seg_config = YAML::Load(cfg);
   }
 
   yaml_config_["model_format"] = "Paddle";
