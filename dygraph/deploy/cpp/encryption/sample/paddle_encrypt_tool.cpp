@@ -1,99 +1,65 @@
+//   Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+#include <stdio.h>
 #include <iostream>
-#include <cstring>
-#include "model_code.h"
-#include "paddle_model_encrypt.h"
-// #include "paddle_inference_api.h"
+#include <string>
 
-#ifdef linux
-#define RESET           "\033[0m"
-#define BOLD            "\033[1m"
-#define BOLDGREEN       "\033[1m\033[32m"
-#elif WIN32
-#define RESET           ""
-#define BOLD            ""
-#define BOLDGREEN       ""
-#endif
+#include "encryption/include/model_code.h"
+#include "encryption/include/paddle_model_encrypt.h"
+#include "encryption/util/include/io_utils.h"
 
-void help() {
-    std::cout << BOLD << "*** paddle_encrypt_tool Usage ***" << RESET << std::endl;
-
-    std::cout << "[1]Help:" << std::endl;
-    std::cout << "\t-h" << std::endl;
-    std::cout << "[2]Generate random key and encrypt dir files" << std::endl;
-    std::cout << "\t-model_dir\tmodel_dir_ori\t-save_dir\tencrypted_models" << std::endl;
-    std::cout << "[3]Generate random key for encrypt file" << std::endl;
-    std::cout << "\t-g" << std::endl;
-    std::cout << "[4]Encrypt file:" << std::endl;
-    std::cout << "\t-e\t-key\tkeydata\t-infile\tinfile\t-outfile\toutfile" << std::endl;
-}
+DEFINE_string(model_filename, "", "Path of model");
+DEFINE_string(params_filename, "", "Path of params");
+DEFINE_string(cfg_file, "", "Path of yaml file");
+DEFINE_string(save_dir, "", "Path of save");
+DEFINE_string(key, "", "encrypt key");
 
 int main(int argc, char** argv) {
+  // Parsing command-line
+  google::ParseCommandLineFlags(&argc, &argv, true);
 
-    switch (argc) {
-        case 2:
-            if (strcmp(argv[1], "-g") == 0) {
-                std::cout << BOLD << "Generate key success: \n\t" << RESET << BOLDGREEN << paddle_generate_random_key()
-                          << RESET << std::endl;
-            } else {
-                help();
-            }
-            break;
-        case 5:
-            if (strcmp(argv[1], "-model_dir") == 0 && strcmp(argv[3], "-save_dir") == 0) {
-                std::string key_random = paddle_generate_random_key();
-                std::cout << BOLD << "Output: " << "Encryption key: \n\t" << RESET << BOLDGREEN
-                          << key_random << RESET << std::endl;
-                int ret = paddle_encrypt_dir(key_random.c_str(), argv[2], argv[4]);
-                switch (ret) {
-                    case CODE_OK:
-                        std::cout << "Success, Encrypt __model__, __params__ to " << argv[4] << "(dir) success!"
-                                  << std::endl;
-                        break;
-                    case CODE_MODEL_FILE_NOT_EXIST:
-                        std::cout << "Failed, errorcode = " << ret << ", could't find __model__(file) in " << argv[2]
-                                  << std::endl;
-                        break;
-                    case CODE_MODEL_YML_FILE_NOT_EXIST:
-                        std::cout << "Failed, errorcode = " << ret << ", could't find model.yml(file) in " << argv[2]
-                                  << std::endl;
-                        break;
-                    case CODE_PARAMS_FILE_NOT_EXIST:
-                        std::cout << "Failed, errorcode = " << ret << ", could't find __params__(file) in " << argv[2]
-                                  << std::endl;
-                        break;
-                    case CODE_NOT_EXIST_DIR:
-                        std::cout << "Failed, errorcode = " << ret << ", " << argv[2] << "(dir) not exist" << std::endl;
-                        break;
-                    case CODE_FILES_EMPTY_WITH_DIR:
-                        std::cout << "Failed, errorcode = " << ret << ", could't find any files in " << argv[2]
-                                  << std::endl;
-                        break;
-                    default:std::cout << "Failed, errorcode = " << ret << ", others" << std::endl;
-                        break;
-                }
-            } else {
-                help();
-            }
-            break;
-        case 8:
-            if (strcmp(argv[1], "-e") == 0 && strcmp(argv[2], "-key") == 0 && strcmp(argv[4], "-infile") == 0
-                && strcmp(argv[6], "-outfile") == 0) {
-                int ret_encrypt = paddle_encrypt_model(argv[3], argv[5], argv[7]);
-                if (ret_encrypt == 0) {
-                    std::cout << "Encrypt " << argv[5] << "(file) to " << argv[7] << "(file) success" << std::endl;
-                } else {
-                    std::cout << "Encrypt " << argv[5] << " failed, ret = " << ret_encrypt << std::endl;
-                }
-            } else {
-                help();
-            }
-            break;
-        default:help();
+  if ("" == FLAGS_key) {
+    FLAGS_key = paddle_generate_random_key();
+  }
+
+  if ("" == FLAGS_save_dir) {
+      std::cerr << "Please input a save path" << std::endl;
+      return -1;
+  }
+  int ret = ioutil::dir_exist_or_mkdir(FLAGS_save_dir.c_str());
+  if (FLAGS_save_dir[FLAGS_save_dir.length() - 1] != '/') {
+    FLAGS_save_dir.append("/");
+  }
+
+  std::string save_name[] = {"encrypted.yml",
+                              "encrypted.pdmodel",
+                              "encrypted.pdparams"};
+  std::string input_files[] = {FLAGS_cfg_file,
+                               FLAGS_model_filename,
+                               FLAGS_params_filename}
+  std::string outfile;
+  for (auto i = 0; i < 3; ++i) {
+    outfile = FLAGS_save_dir + save_name[i];
+    ret = paddle_encrypt_model(FLAGS_key.c_str(),
+                               input_files[i].c_str(),
+                               outfile.c_str());
+    if (ret != 0) {
+      std::cerr << ret << ", Failed encrypt "
+                << input_files[i] << std::endl;
+      return -1;
     }
-
-#ifdef WIN32
-    system("pause");
-#endif
-
-    return 0;
+  }
+  std::cout << "encrypt to " << FLAGS_save_dir << std::endl;
+  return 0;
 }

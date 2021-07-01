@@ -25,6 +25,7 @@ DEFINE_string(model_type, "", "model type");
 DEFINE_string(image, "", "Path of test image file");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
+DEFINE_string(key, "", "encrypt key");
 
 int main(int argc, char** argv) {
   // Parsing command-line
@@ -34,7 +35,7 @@ int main(int argc, char** argv) {
   PaddleDeploy::Model* model = PaddleDeploy::CreateModel(FLAGS_model_type);
 
   // model init
-  model->Init(FLAGS_cfg_file);
+  model->Init(FLAGS_cfg_file, FLAGS_key);
 
   // inference engine init
   PaddleDeploy::PaddleEngineConfig engine_config;

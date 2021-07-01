@@ -43,8 +43,14 @@ bool DetModel::GenerateTransformsConfig(const YAML::Node& src) {
   return true;
 }
 
-bool DetModel::YamlConfigInit(const std::string& cfg_file) {
-  YAML::Node det_config = YAML::LoadFile(cfg_file);
+bool DetModel::YamlConfigInit(const std::string& cfg_file,
+                              const std::string key) {
+  if ("" == key) {
+    YAML::Node det_config = YAML::LoadFile(cfg_file);
+  } else {
+    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    YAML::Node det_config = YAML::Load(cfg);
+  }
 
   yaml_config_["model_format"] = "Paddle";
   // arch support value:YOLO, SSD, RetinaNet, RCNN, Face

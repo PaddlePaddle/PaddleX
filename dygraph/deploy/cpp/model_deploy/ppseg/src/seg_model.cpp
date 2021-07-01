@@ -38,8 +38,14 @@ bool SegModel::GenerateTransformsConfig(const YAML::Node& src) {
   return true;
 }
 
-bool SegModel::YamlConfigInit(const std::string& cfg_file) {
-  YAML::Node seg_config = YAML::LoadFile(cfg_file);
+bool SegModel::YamlConfigInit(const std::string& cfg_file,
+                              const std::string key) {
+  if ("" == key) {
+    YAML::Node seg_config = YAML::LoadFile(cfg_file);
+  } else {
+    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    YAML::Node seg_config = YAML::Load(cfg);
+  }
 
   yaml_config_["model_format"] = "Paddle";
   yaml_config_["toolkit"] = "PaddleSeg";

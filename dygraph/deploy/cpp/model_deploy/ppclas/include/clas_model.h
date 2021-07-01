@@ -33,7 +33,7 @@ class ClasModel : public Model {
     std::cerr << "init ClasModel,model_type=" << model_type << std::endl;
   }
 
-  bool YamlConfigInit(const std::string &cfg_file);
+  bool YamlConfigInit(const std::string &cfg_file, const std::string key);
 
   bool PreprocessInit();
 

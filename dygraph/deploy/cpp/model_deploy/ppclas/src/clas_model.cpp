@@ -15,8 +15,14 @@
 
 namespace PaddleDeploy {
 
-bool ClasModel::YamlConfigInit(const std::string& cfg_file) {
-  yaml_config_ = YAML::LoadFile(cfg_file);
+bool ClasModel::YamlConfigInit(const std::string& cfg_file,
+                               const std::string key) {
+  if ("" == key) {
+    yaml_config_ = YAML::LoadFile(cfg_file);
+  } else {
+    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    yaml_config_ = YAML::Load(cfg);
+  }
   return true;
 }
 

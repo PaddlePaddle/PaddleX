@@ -47,8 +47,14 @@ bool PaddleXModel::GenerateTransformsConfig(const YAML::Node& src) {
   return true;
 }
 
-bool PaddleXModel::YamlConfigInit(const std::string& cfg_file) {
-  YAML::Node x_config = YAML::LoadFile(cfg_file);
+bool PaddleXModel::YamlConfigInit(const std::string& cfg_file,
+                                  const std::string key) {
+  if ("" == key) {
+    YAML::Node x_config = YAML::LoadFile(cfg_file);
+  } else {
+    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    YAML::Node x_config = YAML::Load(cfg);
+  }
 
   yaml_config_["model_format"] = "Paddle";
   yaml_config_["toolkit"] = "PaddleX";
