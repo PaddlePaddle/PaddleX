@@ -46,7 +46,9 @@ ResNet200_vd = cv.models.ResNet200_vd
 MobileNetV1 = cv.models.MobileNetV1
 MobileNetV2 = cv.models.MobileNetV2
 MobileNetV3_small = cv.models.MobileNetV3_small
+MobileNetV3_small_ssld = cv.models.MobileNetV3_small_ssld
 MobileNetV3_large = cv.models.MobileNetV3_large
+MobileNetV3_large_ssld = cv.models.MobileNetV3_large_ssld
 
 AlexNet = cv.models.AlexNet
 
