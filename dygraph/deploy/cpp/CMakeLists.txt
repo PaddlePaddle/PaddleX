@@ -240,6 +240,7 @@ if (WITH_ENCRYPTION)
 
   aux_source_directory(${PROJECT_ROOT_DIR}/encryption/src ENCRYPTION_SRC)
   aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src/crypto ENCRYPTION_SRC)
 
   message("====decrypt==========${ENCRYPTION_SRC}")
 
