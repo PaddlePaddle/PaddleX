@@ -139,18 +139,14 @@ class VOCMetric(Metric):
 
     def log(self):
         map_stat = 100. * self.detection_map.get_map()
-        logging.info("mAP({:.2f}, {}) = {:.2f}%".format(
-            self.overlap_thresh, self.map_type, map_stat))
+        logging.info("bbox_map = {:.2f}%".format(map_stat))
 
     def get_results(self):
         return {'bbox': [self.detection_map.get_map()]}
 
     def get(self):
         map_stat = 100. * self.detection_map.get_map()
-        stats = {
-            "mAP({:.2f}, {})".format(self.overlap_thresh, self.map_type):
-            map_stat
-        }
+        stats = {"bbox_map": map_stat}
         return stats
 
 
