@@ -20,7 +20,7 @@ bool ClasModel::YamlConfigInit(const std::string& cfg_file,
   if ("" == key) {
     yaml_config_ = YAML::LoadFile(cfg_file);
   } else {
-    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
     yaml_config_ = YAML::Load(cfg);
   }
   return true;

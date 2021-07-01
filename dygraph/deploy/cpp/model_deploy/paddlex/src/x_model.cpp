@@ -56,7 +56,7 @@ bool PaddleXModel::YamlConfigInit(const std::string& cfg_file,
   if ("" == key) {
     YAML::Node x_config = YAML::LoadFile(cfg_file);
   } else {
-    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
     YAML::Node x_config = YAML::Load(cfg);
   }
 

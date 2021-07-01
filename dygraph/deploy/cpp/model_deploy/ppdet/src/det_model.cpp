@@ -48,7 +48,7 @@ bool DetModel::YamlConfigInit(const std::string& cfg_file,
   if ("" == key) {
     YAML::Node det_config = YAML::LoadFile(cfg_file);
   } else {
-    std::string cfg = decrypt_file(cfg_file.str(), key.str());
+    std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
     YAML::Node det_config = YAML::Load(cfg);
   }
 
