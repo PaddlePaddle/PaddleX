@@ -68,8 +68,8 @@ class Normalize : public Transform {
       if (is_scale_) {
         alpha /= (max_val_[c] - min_val_[c]);
       }
+      double beta = -1.0 * (mean_[c] + min_val_[c] * alpha) / std_[c];
       alpha /= std_[c];
-      double beta = -1.0 * mean_[c] / std_[c];
 
       alpha_.push_back(alpha);
       beta_.push_back(beta);
@@ -166,6 +166,11 @@ class Resize : public Transform {
     } else {
       use_scale_ = true;
     }
+    if (item["keep_ratio"].IsDefined()) {
+      keep_ratio_ = item["keep_ratio"].as<bool>();
+    } else {
+      keep_ratio_ = false;
+    }
     height_ = item["height"].as<int>();
     width_ = item["width"].as<int>();
     if (height_ <= 0 || width_ <= 0) {
@@ -184,6 +189,7 @@ class Resize : public Transform {
   int width_;
   int interp_;
   bool use_scale_;
+  bool keep_ratio_;
 };
 
 class BGR2RGB : public Transform {

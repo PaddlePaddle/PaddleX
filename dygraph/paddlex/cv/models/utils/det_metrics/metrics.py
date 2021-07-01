@@ -61,6 +61,11 @@ class VOCMetric(Metric):
                  classwise=False):
         self.cid2cname = {i: name for i, name in enumerate(labels)}
         self.coco_gt = coco_gt
+        self.clsid2catid = {
+            i: cat['id']
+            for i, cat in enumerate(
+                self.coco_gt.loadCats(self.coco_gt.getCatIds()))
+        }
         self.overlap_thresh = overlap_thresh
         self.map_type = map_type
         self.evaluate_difficult = evaluate_difficult
@@ -80,9 +85,10 @@ class VOCMetric(Metric):
         self.detection_map.reset()
 
     def update(self, inputs, outputs):
-        bboxes = outputs['bbox'][:, 2:].numpy()
-        scores = outputs['bbox'][:, 1].numpy()
-        labels = outputs['bbox'][:, 0].numpy()
+        bbox_np = outputs['bbox'].numpy()
+        bboxes = bbox_np[:, 2:]
+        scores = bbox_np[:, 1]
+        labels = bbox_np[:, 0]
         bbox_lengths = outputs['bbox_num'].numpy()
 
         if bboxes.shape == (1, 1) or bboxes is None:
@@ -121,7 +127,7 @@ class VOCMetric(Metric):
                 bbox = [xmin, ymin, w, h]
                 coco_res = {
                     'image_id': int(inputs['im_id']),
-                    'category_id': int(l + 1),
+                    'category_id': self.clsid2catid[int(l)],
                     'bbox': bbox,
                     'score': float(s)
                 }

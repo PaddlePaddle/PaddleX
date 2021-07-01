@@ -14,13 +14,14 @@
 
 import os
 import os.path as osp
+import glob
 import paddle
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
 seg_pretrain_weights_dict = {
     'UNet': ['CITYSCAPES'],
-    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC', 'IMAGENET'],
     'FastSCNN': ['CITYSCAPES'],
     'HRNet': ['CITYSCAPES', 'PascalVOC'],
     'BiSeNetV2': ['CITYSCAPES']
@@ -254,7 +255,11 @@ imagenet_weights = {
     'MaskRCNN_ResNet101_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
     'MaskRCNN_ResNet101_vd_fpn_IMAGENET':
-    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams'
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
+    'DeepLabV3P_ResNet50_vd_IMAGENET':
+    'https://bj.bcebos.com/paddleseg/dygraph/resnet50_vd_ssld_v2.tar.gz',
+    'DeepLabV3P_ResNet101_vd_IMAGENET':
+    'https://bj.bcebos.com/paddleseg/dygraph/resnet101_vd_ssld.tar.gz'
 }
 
 pascalvoc_weights = {
@@ -364,6 +369,8 @@ def get_pretrain_weights(flag, class_name, save_dir, backbone_name=None):
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))
     fname = download_and_decompress(url, path=new_save_dir)
+    if osp.isdir(fname):
+        fname = glob.glob(osp.join(fname, '*.pdparams'))[0]
     return fname
 
 
@@ -390,7 +397,7 @@ def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
                 else:
                     model_state_dict[k] = para_state_dict[k]
                     num_params_loaded += 1
-            model.set_dict(model_state_dict)
+            model.set_state_dict(model_state_dict)
             logging.info("There are {}/{} variables loaded into {}.".format(
                 num_params_loaded, len(model_state_dict), model_name))
         else:
@@ -400,3 +407,21 @@ def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
         logging.info(
             'No pretrained model to load, {} will be trained from scratch.'.
             format(model_name))
+
+
+def load_optimizer(optimizer, state_dict_path):
+    logging.info("Loading optimizer from {}".format(state_dict_path))
+    optim_state_dict = paddle.load(state_dict_path)
+    if 'last_epoch' in optim_state_dict:
+        optim_state_dict.pop('last_epoch')
+    optimizer.set_state_dict(optim_state_dict)
+
+
+def load_checkpoint(model, optimizer, model_name, checkpoint):
+    logging.info("Loading checkpoint from {}".format(checkpoint))
+    load_pretrain_weights(
+        model,
+        pretrain_weights=osp.join(checkpoint, 'model.pdparams'),
+        model_name=model_name)
+    load_optimizer(
+        optimizer, state_dict_path=osp.join(checkpoint, "model.pdopt"))

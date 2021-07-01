@@ -243,8 +243,24 @@ struct Result {
     return stream;
   }
 
+  void Clear() {
+    if ("det" == model_type) {
+      delete det_result;
+      det_result = NULL;
+    } else if ("seg" == model_type) {
+      delete seg_result;
+      seg_result = NULL;
+    } else if ("clas" == model_type) {
+      delete clas_result;
+      clas_result = NULL;
+    } else if ("ocr" == model_type) {
+      delete ocr_result;
+      ocr_result = NULL;
+    }
+  }
 
   Result(const Result& result) {
+    Clear();
     model_type = result.model_type;
     if ("det" == model_type) {
       det_result = new DetResult();
@@ -261,20 +277,28 @@ struct Result {
     }
   }
 
-  ~Result() {
+  Result& operator=(const Result& result) {
+    Clear();
+    model_type = result.model_type;
     if ("det" == model_type) {
-      delete det_result;
-      det_result = NULL;
+      det_result = new DetResult();
+      *det_result = *(result.det_result);
     } else if ("seg" == model_type) {
-      delete seg_result;
-      seg_result = NULL;
+      seg_result = new SegResult();
+      *seg_result = *(result.seg_result);
     } else if ("clas" == model_type) {
-      delete clas_result;
-      clas_result = NULL;
+      clas_result = new ClasResult();
+      *clas_result = *(result.clas_result);
     } else if ("ocr" == model_type) {
-      delete ocr_result;
-      ocr_result = NULL;
+      ocr_result = new OcrResult();
+      *ocr_result = *(result.ocr_result);
     }
+    return *this;
+  }
+
+
+  ~Result() {
+    Clear();
   }
 };
 

@@ -32,7 +32,11 @@ bool PaddleXModel::GenerateTransformsConfig(const YAML::Node& src) {
     } else if (op_name == "ResizeByLong") {
       XResizeByLong(op.begin()->second, &yaml_config_);
     } else if (op_name == "Padding") {
-      XPadding(op.begin()->second, &yaml_config_);
+      if (src["version"].as<std::string>() >= "2.0.0") {
+        XPaddingV2(op.begin()->second, &yaml_config_);
+      } else {
+        XPadding(op.begin()->second, &yaml_config_);
+      }
     } else if (op_name == "CenterCrop") {
       XCenterCrop(op.begin()->second, &yaml_config_);
     } else if (op_name == "Resize") {

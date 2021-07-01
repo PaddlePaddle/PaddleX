@@ -29,7 +29,7 @@ import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            get_pretrain_weights, load_pretrain_weights,
-                           SmoothedValue, TrainingStats,
+                           load_checkpoint, SmoothedValue, TrainingStats,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
 from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
@@ -56,12 +56,17 @@ class BaseModel:
         self.pruning_ratios = None
         self.quantizer = None
         self.quant_config = None
+        self.fixed_input_shape = None
 
-    def net_initialize(self, pretrain_weights=None, save_dir='.'):
+    def net_initialize(self,
+                       pretrain_weights=None,
+                       save_dir='.',
+                       resume_checkpoint=None,
+                       is_backbone_weights=False):
         if pretrain_weights is not None and \
-                not os.path.exists(pretrain_weights):
-            if not os.path.isdir(save_dir):
-                if os.path.exists(save_dir):
+                not osp.exists(pretrain_weights):
+            if not osp.isdir(save_dir):
+                if osp.exists(save_dir):
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
@@ -75,8 +80,45 @@ class BaseModel:
                     save_dir,
                     backbone_name=backbone_name)
         if pretrain_weights is not None:
-            load_pretrain_weights(
-                self.net, pretrain_weights, model_name=self.model_name)
+            if is_backbone_weights:
+                load_pretrain_weights(
+                    self.net.backbone,
+                    pretrain_weights,
+                    model_name='backbone of ' + self.model_name)
+            else:
+                load_pretrain_weights(
+                    self.net, pretrain_weights, model_name=self.model_name)
+        if resume_checkpoint is not None:
+            if not osp.exists(resume_checkpoint):
+                logging.error(
+                    "The checkpoint path {} to resume training from does not exist."
+                    .format(resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.pdparams')):
+                logging.error(
+                    "Model parameter state dictionary file 'model.pdparams' "
+                    "not found under given checkpoint path {}".format(
+                        resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.pdopt')):
+                logging.error(
+                    "Optimizer state dictionary file 'model.pdparams' "
+                    "not found under given checkpoint path {}".format(
+                        resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.yml')):
+                logging.error(
+                    "'model.yml' not found under given checkpoint path {}".
+                    format(resume_checkpoint),
+                    exit=True)
+            with open(osp.join(resume_checkpoint, "model.yml")) as f:
+                info = yaml.load(f.read(), Loader=yaml.Loader)
+                self.completed_epochs = info['completed_epochs']
+            load_checkpoint(
+                self.net,
+                self.optimizer,
+                model_name=self.model_name,
+                checkpoint=resume_checkpoint)
 
     def get_model_info(self):
         info = dict()
@@ -96,6 +138,7 @@ class BaseModel:
 
         info['_Attributes']['num_classes'] = self.num_classes
         info['_Attributes']['labels'] = self.labels
+        info['_Attributes']['fixed_input_shape'] = self.fixed_input_shape
 
         try:
             primary_metric_key = list(self.eval_metrics.keys())[0]
@@ -339,7 +382,7 @@ class BaseModel:
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
             if ema is not None:
                 weight = self.net.state_dict()
-                self.net.set_dict(ema.apply())
+                self.net.set_state_dict(ema.apply())
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
@@ -361,7 +404,7 @@ class BaseModel:
                             self.save_model(save_dir=best_model_dir)
                         if best_model_epoch > 0:
                             logging.info(
-                                'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
+                                'Current evaluated best model on eval_dataset is epoch_{}, {}={}'
                                 .format(best_model_epoch, best_accuracy_key,
                                         best_accuracy))
                     eval_epoch_time = time.time() - eval_epoch_tic
@@ -374,7 +417,7 @@ class BaseModel:
                         if earlystop(current_accuracy):
                             break
             if ema is not None:
-                self.net.set_dict(weight)
+                self.net.set_state_dict(weight)
 
     def analyze_sensitivity(self,
                             dataset,
@@ -475,12 +518,54 @@ class BaseModel:
                 # Types of layers that will be quantized.
                 'quantizable_layer_type': ['Conv2D', 'Linear']
             }
-        self.quant_config = quant_config
-        self.quantizer = QAT(config=self.quant_config)
-        logging.info("Preparing the model for quantization-aware training...")
-        self.quantizer.quantize(self.net)
-        logging.info("Model is ready for quantization-aware training.")
-        self.status = 'Quantized'
+        if self.status != 'Quantized':
+            self.quant_config = quant_config
+            self.quantizer = QAT(config=self.quant_config)
+            logging.info(
+                "Preparing the model for quantization-aware training...")
+            self.quantizer.quantize(self.net)
+            logging.info("Model is ready for quantization-aware training.")
+            self.status = 'Quantized'
+        elif quant_config != self.quant_config:
+            logging.error(
+                "The model has been quantized with the following quant_config: {}."
+                "Doing quantization-aware training with a quantized model "
+                "using a different configuration is not supported."
+                .format(self.quant_config),
+                exit=True)
+
+    def _get_pipeline_info(self, save_dir):
+        pipeline_info = {}
+        pipeline_info["pipeline_name"] = self.model_type
+        nodes = [{
+            "src0": {
+                "type": "Source",
+                "next": "decode0"
+            }
+        }, {
+            "decode0": {
+                "type": "Decode",
+                "next": "predict0"
+            }
+        }, {
+            "predict0": {
+                "type": "Predict",
+                "init_params": {
+                    "use_gpu": False,
+                    "gpu_id": 0,
+                    "use_trt": False,
+                    "model_dir": save_dir,
+                },
+                "next": "sink0"
+            }
+        }, {
+            "sink0": {
+                "type": "Sink"
+            }
+        }]
+        pipeline_info["pipeline_nodes"] = nodes
+        pipeline_info["version"] = "1.0.0"
+        return pipeline_info
 
     def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
@@ -514,6 +599,12 @@ class BaseModel:
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
+        pipeline_info = self._get_pipeline_info(save_dir)
+        with open(
+                osp.join(save_dir, 'pipeline.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(pipeline_info, f)
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()

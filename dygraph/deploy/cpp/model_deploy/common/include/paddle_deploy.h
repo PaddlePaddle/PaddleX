@@ -16,12 +16,13 @@
 #include <memory>
 #include <string>
 
+#include "model_deploy/common/include/deploy_delacre.h"
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/common/include/model_factory.h"
 #include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {
-inline Model* CreateModel(const std::string &name) {
-  return PaddleDeploy::ModelFactory::CreateObject(name);
-}
+
+PD_INFER_DECL Model* CreateModel(const std::string& name);
+
 }  // namespace PaddleDeploy

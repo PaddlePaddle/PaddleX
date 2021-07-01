@@ -17,11 +17,12 @@
 #include <thread> // NOLINT
 #include <vector>
 
+#include "model_deploy/common/include/deploy_delacre.h"
 #include "model_deploy/common/include/model_factory.h"
 #include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {
-class MultiGPUModel {
+class PD_INFER_DECL MultiGPUModel {
  private:
   std::vector<std::shared_ptr<Model>> models_;
 

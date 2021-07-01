@@ -82,10 +82,11 @@ class BaseClassifier(BaseModel):
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
             if len(image_shape) == 2:
-                image_shape = [None, 3] + image_shape
+                image_shape = [1, 3] + image_shape
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, -1, -1]
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -99,12 +100,12 @@ class BaseClassifier(BaseModel):
             outputs = OrderedDict([('prediction', softmax_out)])
 
         elif mode == 'eval':
-            labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
-                                                                         1))
+            pred = softmax_out
+            gt = inputs[1]
+            labels = inputs[1].reshape([-1, 1])
             acc1 = paddle.metric.accuracy(softmax_out, label=labels)
             k = min(5, self.num_classes)
             acck = paddle.metric.accuracy(softmax_out, label=labels, k=k)
-            prediction = softmax_out
             # multi cards eval
             if paddle.distributed.get_world_size() > 1:
                 acc1 = paddle.distributed.all_reduce(
@@ -113,17 +114,19 @@ class BaseClassifier(BaseModel):
                 acck = paddle.distributed.all_reduce(
                     acck, op=paddle.distributed.ReduceOp.
                     SUM) / paddle.distributed.get_world_size()
-                prediction = []
-                paddle.distributed.all_gather(prediction, softmax_out)
-                prediction = paddle.concat(prediction, axis=0)
+                pred = list()
+                gt = list()
+                paddle.distributed.all_gather(pred, softmax_out)
+                paddle.distributed.all_gather(gt, inputs[1])
+                pred = paddle.concat(pred, axis=0)
+                gt = paddle.concat(gt, axis=0)
 
             outputs = OrderedDict([('acc1', acc1), ('acc{}'.format(k), acck),
-                                   ('prediction', prediction)])
+                                   ('prediction', pred), ('labels', gt)])
 
         else:
             # mode == 'train'
-            labels = to_tensor(inputs[1].numpy().astype('int64').reshape(-1,
-                                                                         1))
+            labels = inputs[1].reshape([-1, 1])
             loss = CELoss(class_dim=self.num_classes)
             loss = loss(net_out, inputs[1])
             acc1 = paddle.metric.accuracy(softmax_out, label=labels, k=1)
@@ -189,7 +192,8 @@ class BaseClassifier(BaseModel):
               lr_decay_gamma=0.1,
               early_stop=False,
               early_stop_patience=5,
-              use_vdl=True):
+              use_vdl=True,
+              resume_checkpoint=None):
         """
         Train the model.
         Args:
@@ -204,7 +208,9 @@ class BaseClassifier(BaseModel):
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
             pretrain_weights(str or None, optional):
-                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded.
+                At most one of `resume_checkpoint` and `pretrain_weights` can be set simultaneously.
+                Defaults to 'IMAGENET'.
             learning_rate(float, optional): Learning rate for training. Defaults to .025.
             warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
             warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
@@ -214,8 +220,15 @@ class BaseClassifier(BaseModel):
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
+                If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
+                `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if pretrain_weights is not None and resume_checkpoint is not None:
+            logging.error(
+                "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
+                exit=True)
         self.labels = train_dataset.labels
 
         # build optimizer if not defined
@@ -250,7 +263,9 @@ class BaseClassifier(BaseModel):
                     exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
-            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights,
+            save_dir=pretrained_dir,
+            resume_checkpoint=resume_checkpoint)
 
         # start train loop
         self.train_loop(
@@ -282,6 +297,7 @@ class BaseClassifier(BaseModel):
                           early_stop=False,
                           early_stop_patience=5,
                           use_vdl=True,
+                          resume_checkpoint=None,
                           quant_config=None):
         """
         Quantization-aware training.
@@ -307,6 +323,8 @@ class BaseClassifier(BaseModel):
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
             quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
                 configuration will be used. Defaults to None.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
+                from. If None, no training checkpoint will be resumed. Defaults to None.
 
         """
         self._prepare_qat(quant_config)
@@ -327,7 +345,8 @@ class BaseClassifier(BaseModel):
             lr_decay_gamma=lr_decay_gamma,
             early_stop=early_stop,
             early_stop_patience=early_stop_patience,
-            use_vdl=use_vdl)
+            use_vdl=use_vdl,
+            resume_checkpoint=resume_checkpoint)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         """
@@ -358,9 +377,9 @@ class BaseClassifier(BaseModel):
         self.eval_data_loader = self.build_data_loader(
             eval_dataset, batch_size=batch_size, mode='eval')
         eval_metrics = TrainingStats()
-        eval_details = None
         if return_details:
-            eval_details = list()
+            true_labels = list()
+            pred_scores = list()
 
         logging.info(
             "Start to evaluate(total_samples={}, total_steps={})...".format(
@@ -370,10 +389,16 @@ class BaseClassifier(BaseModel):
             for step, data in enumerate(self.eval_data_loader()):
                 outputs = self.run(self.net, data, mode='eval')
                 if return_details:
-                    eval_details.append(outputs['prediction'].tolist())
+                    true_labels.extend(outputs['labels'].tolist())
+                    pred_scores.extend(outputs['prediction'].tolist())
                 outputs.pop('prediction')
+                outputs.pop('labels')
                 eval_metrics.update(outputs)
         if return_details:
+            eval_details = {
+                'true_labels': true_labels,
+                'pred_scores': pred_scores
+            }
             return eval_metrics.get(), eval_details
         else:
             return eval_metrics.get()
@@ -538,12 +563,15 @@ class AlexNet(BaseClassifier):
                 image_shape = [None, 3] + image_shape
         else:
             image_shape = [None, 3, 224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
-                         )
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
-
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -743,11 +771,15 @@ class ShuffleNetV2(BaseClassifier):
                 image_shape = [None, 3] + image_shape
         else:
             image_shape = [None, 3, 224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
-                         )
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')
@@ -766,11 +798,15 @@ class ShuffleNetV2_swish(BaseClassifier):
                 image_shape = [None, 3] + image_shape
         else:
             image_shape = [None, 3, 224, 224]
-            logging.info('When exporting inference model for {},'.format(
-                self.__class__.__name__
-            ) + ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
-                         )
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 224, 224]'
+                +
+                'Please check image shape after transforms is [3, 224, 224], if not, fixed_input_shape '
+                + 'should be specified manually.')
         self._fix_transforms_shape(image_shape[-2:])
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
                 shape=image_shape, name='image', dtype='float32')

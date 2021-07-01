@@ -33,6 +33,7 @@ class XPreprocess : public BasePreprocess {
                    std::vector<DataBlob>* inputs,
                    std::vector<ShapeInfo>* shape_info,
                    int thread_num = 1);
+  virtual std::string GetModelName() { return model_name_; }
 
  private:
   std::string model_type_;

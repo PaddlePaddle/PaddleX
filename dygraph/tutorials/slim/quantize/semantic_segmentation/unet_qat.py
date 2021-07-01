@@ -46,4 +46,5 @@ model.quant_aware_train(
     train_batch_size=4,
     eval_dataset=eval_dataset,
     learning_rate=0.001,
-    save_dir='output/unet/quant')
+    save_dir='output/unet/quant',
+    use_vdl=True)
