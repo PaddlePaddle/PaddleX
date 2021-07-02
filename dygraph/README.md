@@ -46,7 +46,7 @@
 * [标注工具LabelMe的安装和启动](./docs/data/annotation/labelme.md)
 * [数据标注](./docs/data/annotation/README.md)
   * [手机拍照图片旋转](./docs/data/annotation/README.md)
-  * [开始数据标注](./docs/data/annatation/README.md)
+  * [开始数据标注](./docs/data/annotation/README.md)
 * [数据格式转换](./docs/data/convert.md)
 * [数据划分](./docs/data/split.md)
 
