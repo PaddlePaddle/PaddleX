@@ -20,8 +20,8 @@ import sys
 import copy
 import numpy as np
 import itertools
-from ppdet.metrics.map_utils import draw_pr_curve
-from ppdet.metrics.json_results import get_det_res, get_det_poly_res, get_seg_res, get_solov2_segm_res
+from paddlex.ppdet.metrics.map_utils import draw_pr_curve
+from paddlex.ppdet.metrics.json_results import get_det_res, get_det_poly_res, get_seg_res, get_solov2_segm_res
 import paddlex.utils.logging as logging
 
 

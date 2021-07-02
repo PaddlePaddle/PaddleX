@@ -19,7 +19,7 @@ from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
 from paddle.static import InputSpec
-import paddleseg
+import paddlex.paddleseg as paddleseg
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import get_single_card_bs, DisablePrint
