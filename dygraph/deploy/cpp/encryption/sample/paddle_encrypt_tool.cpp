@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
   if ("" == FLAGS_key) {
     FLAGS_key = paddle_generate_random_key();
   }
+  std::cout << "key is =" << FLAGS_key << std::endl;
 
   if ("" == FLAGS_save_dir) {
       std::cerr << "Please input a save path" << std::endl;
@@ -62,6 +63,6 @@ int main(int argc, char** argv) {
       return -1;
     }
   }
-  std::cout << "encrypt to " << FLAGS_save_dir << std::endl;
+  std::cout << "save to " << FLAGS_save_dir << std::endl;
   return 0;
 }

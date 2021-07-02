@@ -23,7 +23,7 @@ file(COPY "${PROJECT_SOURCE_DIR}/include/paddle_stream_decrypt.h" DESTINATION "$
 file(COPY "${PROJECT_SOURCE_DIR}/include/model_code.h" DESTINATION "${PROJECT_SOURCE_DIR}/output/include/model_code.h")
 
 set(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rd/openssl-1.1.0k/install-${CMAKE_SYSTEM_PROCESSOR}")
-include_directories("../" include ${OPENSSL_ROOT_DIR}/include)
+include_directories("../" ${OPENSSL_ROOT_DIR}/include)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/3rd/gflags/include")
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(OPENSSL_LIBS
@@ -48,7 +48,7 @@ ENDIF ()
 
 
 aux_source_directory(util/src SRC_COMMON)
-aux_source_directory(util/src/srypto SRC_COMMON)
+aux_source_directory(util/src/crypto SRC_COMMON)
 set(SRC_ENCRYPT src/paddle_model_encrypt.cpp ${SRC_COMMON})
 
 # tool: paddle_encrypt_tool

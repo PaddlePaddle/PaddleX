@@ -1,5 +1,4 @@
 @echo off
-set PADDLE_DIR=/path/to/Paddle/include
 
 set workPath=%~dp0
 set thirdPartyPath=%~dp03rd
@@ -30,6 +29,6 @@ MD %workPath%build
 MD %workPath%\output
 cd %workPath%build
 
-cmake .. -G "Visual Studio 14 2015" -A x64 -T host=x64 -DCMAKE_BUILD_TYPE=Release -DPADDLE_DIR=%PADDLE_DIR%
+cmake .. -G "Visual Studio 14 2015" -A x64 -T host=x64 -DCMAKE_BUILD_TYPE=Release
 
 cd %workPath%

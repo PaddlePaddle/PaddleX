@@ -53,9 +53,9 @@ GFLAGS_DIR=$(pwd)/deps/gflags/
 GFLAGS_URL=https://bj.bcebos.com/paddlex/deploy/gflags.tar.gz
 if [ ! -d ${GFLAGS_DIR} ]; then
     cd deps
-    wget -c ${GFLAGS_URL} -O glog.tar.gz
-    tar -zxvf glog.tar.gz
-    rm -rf glog.tar.gz
+    wget -c ${GFLAGS_URL} -O glags.tar.gz
+    tar -zxvf gflags.tar.gz
+    rm -rf gflags.tar.gz
     cd ..
 fi
 

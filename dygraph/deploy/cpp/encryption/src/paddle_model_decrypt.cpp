@@ -93,7 +93,7 @@ std::string decrypt_file(const char* file_path, const char* key) {
     LOGD("[M]decrypt file failed, decrypt ret = %d", ret_decrypt_file);
     return std::string();
   }
-  std::string result((const char*)model_plain);
+  std::string result((const char*)model_plain, model_plain_len);
   free(model_plain);
   return result;
 }
