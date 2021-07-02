@@ -396,6 +396,14 @@ class BaseModel:
                     # 保存最优模型
                     if local_rank == 0:
                         self.eval_metrics, self.eval_details = eval_result
+                        if use_vdl:
+                            for k, v in self.eval_metrics.items():
+                                try:
+                                    log_writer.add_scalar(
+                                        '{}-Metrics/Eval(Epoch): {}'.format(
+                                            task_id, k), v, i + 1)
+                                except TypeError:
+                                    pass
                         logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                             i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
