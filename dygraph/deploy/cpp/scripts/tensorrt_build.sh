@@ -66,7 +66,7 @@ if [ ! -d ${GLOG_DIR} ]; then
     cd ..
 fi
 
-# download gflogs library
+# download gflags library
 GFLAGS_DIR=$(pwd)/deps/gflags/
 GFLAGS_URL=https://bj.bcebos.com/paddlex/deploy/gflags.tar.gz
 if [ ! -d ${GFLAGS_DIR} ]; then

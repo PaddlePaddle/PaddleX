@@ -43,10 +43,10 @@ int main(int argc, char** argv) {
   // encryption
   if ("" != FLAGS_key) {
     engine_config.key = FLAGS_key;
-    engine_config.model_filename = decrypt_file(FLAGS_model_filename.str(),
-                                                key.str());
-    engine_config.params_filename = decrypt_file(FLAGS_params_filename.str(),
-                                                 key.str());
+    engine_config.model_filename = decrypt_file(FLAGS_model_filename.c_str(),
+                                                FLAGS_key.c_str());
+    engine_config.params_filename = decrypt_file(FLAGS_params_filename.c_str(),
+                                                 FLAGS_key.c_str());
   } else {
     engine_config.model_filename = FLAGS_model_filename;
     engine_config.params_filename = FLAGS_params_filename;

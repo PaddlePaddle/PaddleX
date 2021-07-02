@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <stdio.h>
+#include <gflags/gflags.h>
 #include <iostream>
 #include <string>
 
@@ -45,9 +46,10 @@ int main(int argc, char** argv) {
   std::string save_name[] = {"encrypted.yml",
                               "encrypted.pdmodel",
                               "encrypted.pdparams"};
+
   std::string input_files[] = {FLAGS_cfg_file,
                                FLAGS_model_filename,
-                               FLAGS_params_filename}
+                               FLAGS_params_filename};
   std::string outfile;
   for (auto i = 0; i < 3; ++i) {
     outfile = FLAGS_save_dir + save_name[i];

@@ -211,6 +211,23 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
+if (WITH_ENCRYPTION)
+  add_definitions(-DPADDLEX_DEPLOY_ENCRYPTION)
+  set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+
+  include_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/include")
+  link_directories("${TENSORRT_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
+  if (WIN32)
+    set(DEPS ${DEPS} libssl_static${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto_static${CMAKE_STATIC_LIBRARY_SUFFIX})
+  else ()
+    set(DEPS ${DEPS} libssl${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto${CMAKE_STATIC_LIBRARY_SUFFIX})
+   endif()
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src/crypto ENCRYPTION_SRC)
+endif()
+
 add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
@@ -230,20 +247,6 @@ if (WITH_TENSORRT)
 endif()
 
 if (WITH_ENCRYPTION)
-  add_definitions(-DPADDLEX_DEPLOY_ENCRYPTION)
-  set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
-  set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
-
-  include_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/include")
-  link_directories("${TENSORRT_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
-  set(DEPS ${DEPS} libssl_static${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto_static${CMAKE_STATIC_LIBRARY_SUFFIX})
-
-  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/src ENCRYPTION_SRC)
-  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src ENCRYPTION_SRC)
-  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src/crypto ENCRYPTION_SRC)
-
-  message("====decrypt==========${ENCRYPTION_SRC}")
-
   add_executable(decrypt_infer ${PROJECT_ROOT_DIR}/demo/decrypt_infer.cpp ${SRC}
                                ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
   ADD_DEPENDENCIES(decrypt_infer ext-yaml-cpp)

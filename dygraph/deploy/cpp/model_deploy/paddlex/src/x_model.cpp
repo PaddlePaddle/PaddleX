@@ -61,7 +61,7 @@ bool PaddleXModel::YamlConfigInit(const std::string& cfg_file,
     std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
     x_config = YAML::Load(cfg);
 #else
-     std::cerr << "Don't open encryption on compile" << std::endl;
+    std::cerr << "Don't open encryption on compile" << std::endl;
     return false;
 #endif  // PADDLEX_DEPLOY_ENCRYPTION
   }

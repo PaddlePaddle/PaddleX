@@ -27,7 +27,7 @@
 #include "model_deploy/engine/include/engine.h"
 
 #ifdef PADDLEX_DEPLOY_ENCRYPTION
-#include "encryption/include/paddle_model_encrypt.h"
+#include "encryption/include/paddle_model_decrypt.h"
 #endif  // PADDLEX_DEPLOY_ENCRYPTION
 
 namespace PaddleDeploy {

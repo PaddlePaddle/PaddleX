@@ -19,7 +19,7 @@
 
 #include "encryption/include/model_code.h"
 #include "encryption/include/paddle_model_encrypt.h"
-#include "encryption/constant/constant_model.h"
+#include "encryption/util/include/constant/constant_model.h"
 #include "encryption/util/include/crypto/aes_gcm.h"
 #include "encryption/util/include/crypto/sha256_utils.h"
 #include "encryption/util/include/crypto/base64.h"

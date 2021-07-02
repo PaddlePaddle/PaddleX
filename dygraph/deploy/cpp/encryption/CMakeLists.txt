@@ -23,16 +23,19 @@ file(COPY "${PROJECT_SOURCE_DIR}/include/paddle_stream_decrypt.h" DESTINATION "$
 file(COPY "${PROJECT_SOURCE_DIR}/include/model_code.h" DESTINATION "${PROJECT_SOURCE_DIR}/output/include/model_code.h")
 
 set(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rd/openssl-1.1.0k/install-${CMAKE_SYSTEM_PROCESSOR}")
-include_directories("." include ${OPENSSL_ROOT_DIR}/include)
+include_directories("../" include ${OPENSSL_ROOT_DIR}/include)
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/3rd/gflags/include")
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(OPENSSL_LIBS
                 "${OPENSSL_ROOT_DIR}/lib/libssl_static.lib"
                 "${OPENSSL_ROOT_DIR}/lib/libcrypto_static.lib")
+        set(OPENSSL_LIBS ${OPENSSL_LIBS} ${CMAKE_CURRENT_SOURCE_DIR}/3rd/gflags/lib/gflags_static.a)
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
         set(OPENSSL_LIBS
                 "${OPENSSL_ROOT_DIR}/lib/libssl.a"
                 "${OPENSSL_ROOT_DIR}/lib/libcrypto.a"
                 -ldl -lpthread)
+        set(OPENSSL_LIBS ${OPENSSL_LIBS} ${CMAKE_CURRENT_SOURCE_DIR}/3rd/gflags/lib/libgflags.a)
 ENDIF ()
 
 message("build no paddle libs")
@@ -42,7 +45,10 @@ IF (MSVC)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ws2_32.lib /NODEFAULTLIB:libcmt.lib")
 ENDIF ()
 
-aux_source_directory(util/src SRC_COMMONC)
+
+
+aux_source_directory(util/src SRC_COMMON)
+aux_source_directory(util/src/srypto SRC_COMMON)
 set(SRC_ENCRYPT src/paddle_model_encrypt.cpp ${SRC_COMMON})
 
 # tool: paddle_encrypt_tool

@@ -33,11 +33,12 @@ extern "C" {
  * @param model_file    模型文件路径
  * @param param_file    参数文件路径
  * @return              error_code
- */
+
 PD_INFER_DECL int paddle_security_load_model(paddle::AnalysisConfig* config,
                                const char* key,
                                const char* model_file,
                                const char* param_file);
+ */
 
 /**
  * check file (un)encrypted?
