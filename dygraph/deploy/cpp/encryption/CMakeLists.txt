@@ -29,7 +29,7 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(OPENSSL_LIBS
                 "${OPENSSL_ROOT_DIR}/lib/libssl_static.lib"
                 "${OPENSSL_ROOT_DIR}/lib/libcrypto_static.lib")
-        set(OPENSSL_LIBS ${OPENSSL_LIBS} ${CMAKE_CURRENT_SOURCE_DIR}/3rd/gflags/lib/gflags_static.a)
+        set(OPENSSL_LIBS ${OPENSSL_LIBS} ${CMAKE_CURRENT_SOURCE_DIR}/3rd/gflags/lib/gflags_static.lib shlwapi)
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
         set(OPENSSL_LIBS
                 "${OPENSSL_ROOT_DIR}/lib/libssl.a"

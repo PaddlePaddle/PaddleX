@@ -47,6 +47,16 @@
           "name": "WITH_TENSORRT",
           "value": "False",
           "type": "BOOL"
+        },
+        {
+          "name": "WITH_ENCRYPTION",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "OPENSSL_DIR",
+          "value": "path\\to\\openssl1.1.0k",
+          "type": "PATH"
         }
       ]
     }

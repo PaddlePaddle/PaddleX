@@ -18,7 +18,7 @@ CUDNN_LIB=/usr/lib/x86_64-linux-gnu
 # 是否加密
 WITH_ENCRYPTION=OFF
 # OPENSSL 路径
-OPENSSL_DIR=${PWD}/openssl-1.1.0k
+OPENSSL_DIR=$(pwd)/deps/openssl-1.1.0k
 
 {
     bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具和opencv依赖库
