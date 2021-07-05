@@ -23,8 +23,8 @@
 ## 步骤三、对模型文件进行加密
 
 加密工具我们已经制作好，直接下载并执行指令，即可将模型加密保存到指定目录：
-[windows加密工具](https://bj.bcebos.com/paddlex/deploy/windows_paddle_encrypt_tool)
-[linux加密工具](https://bj.bcebos.com/paddlex/deploy/linx_paddle_encrypt_tool)
+- [windows加密工具](https://bj.bcebos.com/paddlex/deploy/windows_paddle_encrypt_tool)
+- [linux加密工具](https://bj.bcebos.com/paddlex/deploy/linx_paddle_encrypt_tool)
 
 以YOLOV3模型为例，对其进行加密.
 ```sh
