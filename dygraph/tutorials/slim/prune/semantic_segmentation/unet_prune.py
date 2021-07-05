@@ -56,5 +56,6 @@ model.train(
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
+    pretrain_weights=None,
     learning_rate=0.01,
     save_dir='output/unet/prune')
