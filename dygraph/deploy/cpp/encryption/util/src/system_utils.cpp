@@ -60,12 +60,12 @@ int SystemUtils::check_key_match(const char* key, const char* filepath) {
     LOGD("[M]read file failed when check key");
     return ret;
   }
-  std::string check_str(reinterpret_cast<char*>(data_pos), 64);
-  free(data_pos);
 
+  std::string check_str(reinterpret_cast<char*>(data_pos), 64);
   if (strcmp(sha256_aes_key_iv.c_str(), check_str.c_str()) != 0) {
     return CODE_KEY_NOT_MATCH;
   }
+  free(data_pos);
   return CODE_OK;
 }
 
