@@ -73,37 +73,37 @@ YOLOv3的训练日志除了通用统计信息外（见上文训练通用统计�
 
 #### FasterRCNN
 
-FasterRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss_bbox`、`loss_rpn_cls`和`loss_rpn_bbox`，这些字段的含义如下:
+FasterRCNN的训练日志除了通用统计信息外，还包括`loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls`和`loss_bbox_reg`，这些字段的含义如下:
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
-| loss_cls          | RCNN子网络中分类损失函数值                  |
-| loss_bbox          | RCNN子网络中检测框回归损失函数值  |
 | loss_rpn_cls       | RPN子网络中分类损失函数值   |
-| loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
+| loss_rpn_reg      | RPN子网络中检测框回归损失函数值  |
+| loss_bbox_cls          | RCNN子网络中分类损失函数值                  |
+| loss_bbox_reg          | RCNN子网络中检测框回归损失函数值  |
 | loss              | 所有子网络损失函数值之和          |
 
 ![](images/faster_train.png)
 
-上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
+上图中第1行`loss`, `loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls`、`loss_bbox_reg`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
 
 #### MaskRCNN
 
-MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_cls`和`loss_rpn_bbox`，这些字段的含义如下:
+MaskRCNN的训练日志除了通用统计信息外，还包括`loss_mask`、`loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls`和`loss_bbox_reg`，这些字段的含义如下:
 
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
-| loss_cls          | RCNN子网络中分类损失函数值                  |
-| loss_bbox          | RCNN子网络中检测框回归损失函数值  |
 | loss_mask          | RCNN子网络中Mask回归损失函数值  |
 | loss_rpn_cls       | RPN子网络中分类损失函数值   |
-| loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
+| loss_rpn_reg      | RPN子网络中检测框回归损失函数值  |
+| loss_bbox_cls          | RCNN子网络中分类损失函数值                  |
+| loss_bbox_reg         | RCNN子网络中检测框回归损失函数值  |
 | loss              | 所有子网络损失函数值之和          |
 
 ![](images/mask_train.png)
 
-上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
+上图中第1行`loss`, `loss_mask`、`loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls` `loss_bbox_reg`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
 
 ### 评估日志字段
 
