@@ -66,7 +66,7 @@
       * [模型训练](tutorials/train)
       * [训练参数调整](./docs//parameters.md)
     * [VisualDL可视化训练指标](../docs/train/visualdl.md)
-    * [加载训好的模型完成预测及预测结果可视化](../docs/train/prediction.md)
+    * [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
 
 * **PaddleX GUI开发模式：**
 
