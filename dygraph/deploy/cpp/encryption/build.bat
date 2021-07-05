@@ -13,9 +13,11 @@ md %thirdPartyPath%
 
 
 cd %thirdPartyPath%
-wget --no-check-certificate https://bj.bcebos.com/paddlex/tools/openssl-1.1.0k.tar.gz
-tar -zxvf openssl-1.1.0k.tar.gz
-del openssl-1.1.0k.tar.gz
+wget --no-check-certificate https://bj.bcebos.com/paddlex/tools/windows_openssl-1.1.0k.zip
+tar -zxvf windows_openssl-1.1.0k.zip
+del windows_openssl-1.1.0k.zip
+
+
 
 cd %workPath%
 if exist %workPath%build (
@@ -29,6 +31,6 @@ MD %workPath%build
 MD %workPath%\output
 cd %workPath%build
 
-cmake .. -G "Visual Studio 14 2015" -A x64 -T host=x64 -DCMAKE_BUILD_TYPE=Release
+cmake .. -G "Visual Studio 16 2019" -A x64 -T host=x64 -DCMAKE_BUILD_TYPE=Release
 
 cd %workPath%

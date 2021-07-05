@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
   if ("" == FLAGS_key) {
     FLAGS_key = paddle_generate_random_key();
   }
-  std::cout << "key is =" << FLAGS_key << std::endl;
+  std::cout << "key is " << FLAGS_key << std::endl;
 
   if ("" == FLAGS_save_dir) {
       std::cerr << "Please input a save path" << std::endl;
@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
   }
 
   std::string save_name[] = {"encrypted.yml",
-                              "encrypted.pdmodel",
-                              "encrypted.pdparams"};
+                             "encrypted.pdmodel",
+                             "encrypted.pdparams"};
 
   std::string input_files[] = {FLAGS_cfg_file,
                                FLAGS_model_filename,
