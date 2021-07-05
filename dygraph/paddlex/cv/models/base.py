@@ -20,6 +20,7 @@ import copy
 import math
 import yaml
 import json
+import numpy as np
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 from paddleslim import QAT
@@ -249,7 +250,9 @@ class BaseModel:
             collate_fn=dataset.batch_transforms,
             num_workers=dataset.num_workers,
             return_list=True,
-            use_shared_memory=use_shared_memory)
+            use_shared_memory=use_shared_memory,
+            worker_init_fn=lambda worker_id: np.random.seed(np.random.get_state()[1][0] + worker_id)
+        )
 
         return loader
 
@@ -381,7 +384,7 @@ class BaseModel:
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
             if ema is not None:
-                weight = self.net.state_dict()
+                weight = copy.deepcopy(self.net.state_dict())
                 self.net.set_state_dict(ema.apply())
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
@@ -393,6 +396,14 @@ class BaseModel:
                     # 保存最优模型
                     if local_rank == 0:
                         self.eval_metrics, self.eval_details = eval_result
+                        if use_vdl:
+                            for k, v in self.eval_metrics.items():
+                                try:
+                                    log_writer.add_scalar(
+                                        '{}-Metrics/Eval(Epoch): {}'.format(
+                                            task_id, k), v, i + 1)
+                                except TypeError:
+                                    pass
                         logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                             i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]

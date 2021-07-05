@@ -9,5 +9,6 @@ pycocotools
 visualdl >= 2.1.1
 paddleslim == 2.1.0
 shapely
-paddlepaddle-gpu==2.1.0
+paddlepaddle-gpu==2.1.1
+numpy >= 1.20
 opencv-python
