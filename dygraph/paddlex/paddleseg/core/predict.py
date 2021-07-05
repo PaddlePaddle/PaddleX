@@ -19,7 +19,7 @@ import cv2
 import numpy as np
 import paddle
 
-from paddleseg import utils
+from paddlex.paddleseg import utils
 from paddlex.paddleseg.core import infer
 from paddlex.paddleseg.utils import logger, progbar
 

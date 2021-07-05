@@ -16,7 +16,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from paddleseg import utils
+from paddlex.paddleseg import utils
 from paddlex.paddleseg.cvlibs import manager
 from paddlex.paddleseg.models import layers
 

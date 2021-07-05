@@ -16,7 +16,7 @@ import paddle
 import paddle.nn as nn
 from paddlex.paddleseg.cvlibs import manager
 from paddlex.paddleseg.models import layers
-from paddleseg import utils
+from paddlex.paddleseg import utils
 import numpy as np
 
 
