@@ -1,6 +1,3 @@
--r ./PaddleClas/requirements.txt
--r ./PaddleSeg/requirements.txt
--r ./PaddleDetection/requirements.txt
 tqdm
 scipy
 colorama
@@ -12,3 +9,6 @@ shapely
 paddlepaddle-gpu==2.1.1
 numpy >= 1.20
 opencv-python
+scikit-learn==0.23.2
+lap
+motmetrics
