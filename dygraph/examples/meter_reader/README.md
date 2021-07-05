@@ -343,9 +343,18 @@ paddlex --export_inference --model_dir=output/ppyolov2_r50vd_dcn/best_model --sa
 paddlex --export_inference --model_dir=output/deeplabv3p_r50vd/best_model --save_dir=meter_seg_model
 ```
 
+如果部署时需要使用TensorRT，导出模型的时候需要固定模型的输入大小，具体导出流程参考[部署模型导出](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/export_model.md)。
+
 ## <h2 id="8">8 Windows环境下模型部署</h2>
 
-我们在上一步已经将模型导出为静态图格式了，现在可以开始部署了。这里我们基于[PaddleX Manufature SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)进行部署。
+我们在上一步已经将模型导出为静态图格式了，现在可以开始部署了。如果不想运行前面的训练步骤，也可以下载我们训练好并已经导出成静态图格式的模型进行下面的部署流程：
+
+| 表计检测预训练模型 | 刻度和指针分割预训练模型 |
+| -- | -- |
+| [meter_det_model](https://bj.bcebos.com/paddlex/examples2/meter_reader/meter_det_model.tar.gz) | [meter_seg_model](https://bj.bcebos.com/paddlex/examples2/meter_reader//meter_seg_model.tar.gz) |
+
+
+这里我们基于[PaddleX Manufature SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)进行部署。
 
 ### 环境依赖
 
