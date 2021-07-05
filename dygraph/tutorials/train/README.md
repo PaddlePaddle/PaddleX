@@ -28,7 +28,7 @@
 - [PaddlePaddle安装](https://www.paddlepaddle.org.cn/install/quick)
 * 版本要求：PaddlePaddle==2.1.0
 
-- [PaddleX安装](https://paddlex.readthedocs.io/zh_CN/develop/install.html)
+- [PaddleX安装](../../docs/install.md)
 
 ## 开始训练
 * 在安装PaddleX后，使用如下命令开始训练，代码会自动下载训练数据, 并均使用单张GPU卡进行训练。
