@@ -428,7 +428,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 | TENSORRT_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\TensorRT-7.0.0.11`                                                                           |
 
 - 如果使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
-- **`WITH_GPU`的`值`必须打上勾**
+- **`WITH_TENSORRT`的`值`必须打上勾**
 
 5. 保存并生成CMake缓存
 
@@ -470,5 +470,6 @@ Meter 2: 6.21739101
 ![](./images/20190822_168.jpg)
 
 在分割模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_seg`，可以点击进行查看：
-![](./images/20190822_168_06-30-17-09-33-217.jpg)
-![](20190822_168_06-30-17-09-33-213.jpg)
+| 表1可视化分割结果 | 表2可视化分割结果|
+| -- | -- |
+| ![](./images/20190822_168_06-30-17-09-33-217.jpg) | ![](20190822_168_06-30-17-09-33-213.jpg) |
