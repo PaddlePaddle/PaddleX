@@ -58,14 +58,14 @@ yolov3_encryption
 
 ```sh
 # 使用GPU 加参数 --use_gpu=1
-build/demo/model_infer --model_filename=yolov3_encryption/encrypted.pdmodel \
-                       --params_filename=yolov3_encryption/encrypted.pdparams \
-                       --cfg_file=yolov3_encryption/model/encrypted.yml \
-                       --image=yolov3_mbv1/images/000000010583.jpg \
-                       --model_type=det \
-                       --key=2DTPfe+K+I/hkHlDMDAoXdVzotbC8UCF9Ti0rwWd+KU=
+build/demo/decrypt_infer --model_filename=yolov3_encryption/encrypted.pdmodel \
+                         --params_filename=yolov3_encryption/encrypted.pdparams \
+                         --cfg_file=yolov3_encryption/model/encrypted.yml \
+                         --image=yolov3_mbv1/images/000000010583.jpg \
+                         --model_type=det \
+                         --key=2DTPfe+K+I/hkHlDMDAoXdVzotbC8UCF9Ti0rwWd+KU=
 ```
-**注意**：密钥key要是步骤三中使用加密工具对模型进行加密得到的key， 如果不传入key默认加载普通未加密模型。
+**注意**：密钥key一定是步骤三中使用加密工具对模型进行加密得到的key， 如果不传入key默认加载普通未加密模型。
 
 输出结果如下(分别为类别id、标签、置信度、xmin、ymin、w, h)
 ```
