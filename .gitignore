@@ -1,1 +1,5 @@
 /dygraph/venv/
+*.gitignore
+**.ipynb
+**.idea
+**.DS_Store
