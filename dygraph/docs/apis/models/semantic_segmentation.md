@@ -76,6 +76,9 @@ predict(self, img_file, transforms=None):
 > >
 > > - **dict** ｜ **List[dict]**: 如果输入为单张图像，返回dict。包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。如果输入为多张图像，返回由每张图像预测结果组成的列表。
 
+
+### analyze_sensitivity
+
 ```python
 analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='output')
 ```
