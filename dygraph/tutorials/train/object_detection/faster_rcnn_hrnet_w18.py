@@ -6,7 +6,7 @@ dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/transforms/transforms.md
 train_transforms = T.Compose([
     T.RandomResizeByShort(
         short_sizes=[640, 672, 704, 736, 768, 800],
@@ -22,7 +22,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/datasets/voc.py#L29
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/datasets.md
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -38,12 +38,12 @@ eval_dataset = pdx.datasets.VOCDetection(
     shuffle=False)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/train/visualdl.md
 num_classes = len(train_dataset.labels)
-model = pdx.seg.FasterRCNN(num_classes=num_classes, backbone='HRNet_W18')
+model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='HRNet_W18')
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/models/detection.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/parameters.md
 model.train(
     num_epochs=24,
     train_dataset=train_dataset,
