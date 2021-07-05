@@ -83,6 +83,7 @@
 
 ### 5. 模型部署
 
+- [部署模型导出](./docs/apis/export_model.md)
 - [PaddleX Manufacture SDK低代码高效部署](./deploy/cpp/docs/manufacture_sdk)
 - [PaddleX/PaddleClas/PaddleDetection/PaddleSeg端到端高性能统一部署](./deploy/cpp)
 
