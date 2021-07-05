@@ -148,7 +148,7 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_pretrained.pdparams',
     'MobileNetV3_large_x1_25_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_25_pretrained.pdparams',
-    'MobileNetV3_large_x1_0_ssld':
+    'MobileNetV3_large_x1_0_ssld_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
     'AlexNet_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams',
