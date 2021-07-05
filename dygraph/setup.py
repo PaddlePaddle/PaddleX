@@ -31,7 +31,7 @@ setuptools.setup(
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
         'paddleslim==2.1.0', 'visualdl>=2.1.1', 'shapely>=1.7.0',
-        'opencv-python', 'scipy'
+        'opencv-python', 'scipy', 'lap', 'motmetrics'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
