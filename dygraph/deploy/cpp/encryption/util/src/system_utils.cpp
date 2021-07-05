@@ -107,7 +107,8 @@ int SystemUtils::check_file_encrypted(const char* filepath) {
 
   std::string tag(constant::MAGIC_NUMBER);
   tag.append(constant::VERSION);
-  int ret_cmp = strcmp(tag.c_str(), (const char*)data_pos) == 0 ? 0 : 1;
+  std::string check_str(reinterpret_cast<char*>(data_pos), read_len);
+  int ret_cmp = strcmp(tag.c_str(), check_str.c_str()) == 0 ? 0 : 1;
   free(data_pos);
   return ret_cmp;
 }

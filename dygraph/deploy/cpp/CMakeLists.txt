@@ -27,6 +27,7 @@ else()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
+    add_definitions(-DPADDLEX_DEPLOY)
 endif()
 
 #source
@@ -218,7 +219,7 @@ if (WITH_ENCRYPTION)
   set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
 
   include_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/include")
-  link_directories("${TENSORRT_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
+  link_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
   if (WIN32)
     set(DEPS ${DEPS} libssl_static${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto_static${CMAKE_STATIC_LIBRARY_SUFFIX})
   else ()
