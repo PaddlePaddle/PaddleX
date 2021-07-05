@@ -24,7 +24,7 @@ from . import det
 from . import tools
 
 from .cv.models.utils.visualize import visualize_detection as visualize_det
-from .cv.models.utils.visualize import visualize_segmentation as visualize_seg
+from .cv.models.utils.visualize import entation as visualize_seg
 
 env_info = get_environ_info()
 datasets = cv.datasets
