@@ -27,8 +27,8 @@ from paddlex.cv.transforms import arrange_transforms
 from paddlex.cv.transforms.operators import Resize
 
 with DisablePrint():
-    from PaddleClas.ppcls.modeling import architectures
-    from PaddleClas.ppcls.modeling.loss import CELoss
+    from paddlex.ppcls.modeling import architectures
+    from paddlex.ppcls.modeling.loss import CELoss
 
 __all__ = [
     "ResNet18", "ResNet34", "ResNet50", "ResNet101", "ResNet152",
