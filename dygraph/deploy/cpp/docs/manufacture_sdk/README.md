@@ -112,6 +112,8 @@ version: 1.0.0
 
 ## <h2 id="5">使用Pipeline部署</h2>
 
+在部署之前，请确保已经进行了部署模型导出步骤。如果没有，请参考文档[部署模型导出](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/export_model.md)完成部署模型的导出。
+
 我们在SDK下载包里放置了demo目录，下面以该demo为例讲解如何使用Pipeline部署。
 
 一. 代码调用 —— 只需关注这几个接口： 初始化、设置输入、推理运行、获取输出 (demo/pipeline_infer.cpp)
