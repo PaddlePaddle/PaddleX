@@ -23,7 +23,7 @@ REGISTER_CLASS(seg, SegModel);
 REGISTER_CLASS(clas, ClasModel);
 REGISTER_CLASS(paddlex, PaddleXModel);
 
-std::shared_ptr<Model> ModelFactory::CreateObject(const std::string &name) {
+Model* ModelFactory::CreateObject(const std::string &name) {
   std::map<std::string, NewInstance>::const_iterator it;
   it = model_map_.find(name);
   if (it == model_map_.end())

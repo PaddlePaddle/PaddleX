@@ -13,13 +13,36 @@
 # limitations under the License.
 
 import os.path as osp
-
+import numpy as np
 import yaml
 import paddle
 import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
+
+
+def load_rcnn_inference_model(model_dir):
+    paddle.enable_static()
+    exe = paddle.static.Executor(paddle.CPUPlace())
+    path_prefix = osp.join(model_dir, "model")
+    prog, _, _ = paddle.static.load_inference_model(path_prefix, exe)
+    paddle.disable_static()
+    extra_var_info = paddle.load(osp.join(model_dir, "model.pdiparams.info"))
+
+    net_state_dict = dict()
+    static_state_dict = dict()
+
+    for name, var in prog.state_dict().items():
+        static_state_dict[name] = np.array(var)
+    for var_name in static_state_dict:
+        if var_name not in extra_var_info:
+            continue
+        structured_name = extra_var_info[var_name].get('structured_name', None)
+        if structured_name is None:
+            continue
+        net_state_dict[structured_name] = static_state_dict[var_name]
+    return net_state_dict
 
 
 def load_model(model_dir):
@@ -43,7 +66,7 @@ def load_model(model_dir):
     if int(version.split('.')[0]) < 2:
         raise Exception(
             'Current version is {}, a model trained by PaddleX={} cannot be load.'.
-            format(paddlex.version, version))
+            format(paddlex.__version__, version))
 
     status = model_info['status']
 
@@ -69,6 +92,12 @@ def load_model(model_dir):
             with open(osp.join(model_dir, "prune.yml")) as f:
                 pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
                 inputs = pruning_info['pruner_inputs']
+                if model.model_type == 'detector':
+                    inputs = [{
+                        k: paddle.to_tensor(v)
+                        for k, v in inputs.items()
+                    }]
+                    model.net.eval()
                 model.pruner = getattr(paddleslim, pruning_info['pruner'])(
                     model.net, inputs=inputs)
                 model.pruning_ratios = pruning_info['pruning_ratios']
@@ -76,12 +105,16 @@ def load_model(model_dir):
                     ratios=model.pruning_ratios,
                     axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
+        if status == 'Quantized':
+            with open(osp.join(model_dir, "quant.yml")) as f:
+                quant_info = yaml.load(f.read(), Loader=yaml.Loader)
+                model.quant_config = quant_info['quant_config']
+                model.quantizer = paddleslim.QAT(model.quant_config)
+                model.quantizer.quantize(model.net)
+
         if status == 'Infer':
             if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
-                net_state_dict = paddle.load(
-                    model_dir,
-                    params_filename='model.pdiparams',
-                    model_filename='model.pdmodel')
+                net_state_dict = load_rcnn_inference_model(model_dir)
             else:
                 net_state_dict = paddle.load(osp.join(model_dir, 'model'))
         else:

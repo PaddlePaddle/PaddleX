@@ -70,6 +70,7 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   auto builder = InferUniquePtr<nvinfer1::IBuilder>(
                      nvinfer1::createInferBuilder(logger_));
   if (!builder) {
+    std::cerr << "TensorRT init builder error" << std::endl;
     return false;
   }
 
@@ -78,22 +79,26 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
   auto network = InferUniquePtr<nvinfer1::INetworkDefinition>(
                      builder->createNetworkV2(explicitBatch));
   if (!network) {
+    std::cerr << "TensorRT init network error" << std::endl;
     return false;
   }
 
   auto parser = InferUniquePtr<nvonnxparser::IParser>(
                     nvonnxparser::createParser(*network, logger_));
   if (!parser) {
+    std::cerr << "TensorRT init parser error" << std::endl;
     return false;
   }
   if (!parser->parseFromFile(tensorrt_config.model_file_.c_str(),
                              static_cast<int>(logger_.mReportableSeverity))) {
+    std::cerr << "TensorRT init model_file error" << std::endl;
     return false;
   }
 
   auto config = InferUniquePtr<nvinfer1::IBuilderConfig>(
                      builder->createBuilderConfig());
   if (!config) {
+    std::cerr << "TensorRT init config error" << std::endl;
     return false;
   }
 
@@ -130,6 +135,7 @@ bool TensorRTInferenceEngine::Init(const InferenceConfig& engine_config) {
                     engine_->createExecutionContext(),
                     InferDeleter());
   if (!context_) {
+    std::cerr << "TensorRT init context error" << std::endl;
     return false;
   }
 
@@ -229,6 +235,7 @@ bool TensorRTInferenceEngine::Infer(const std::vector<DataBlob>& input_blobs,
   buffers.copyInputToDevice();
   bool status = context_->executeV2(buffers.getDeviceBindings().data());
   if (!status) {
+    std::cerr << "TensorRT create execute error" << std::endl;
     return false;
   }
   buffers.copyOutputToHost();

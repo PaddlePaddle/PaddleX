@@ -21,8 +21,7 @@ import sys
 from collections import OrderedDict
 import paddle
 import numpy as np
-
-from .map_utils import prune_zero_padding, DetectionMAP
+from paddlex.ppdet.metrics.map_utils import prune_zero_padding, DetectionMAP
 from .coco_utils import get_infer_results, cocoapi_eval
 import paddlex.utils.logging as logging
 
@@ -62,6 +61,11 @@ class VOCMetric(Metric):
                  classwise=False):
         self.cid2cname = {i: name for i, name in enumerate(labels)}
         self.coco_gt = coco_gt
+        self.clsid2catid = {
+            i: cat['id']
+            for i, cat in enumerate(
+                self.coco_gt.loadCats(self.coco_gt.getCatIds()))
+        }
         self.overlap_thresh = overlap_thresh
         self.map_type = map_type
         self.evaluate_difficult = evaluate_difficult
@@ -81,29 +85,31 @@ class VOCMetric(Metric):
         self.detection_map.reset()
 
     def update(self, inputs, outputs):
-        bboxes = outputs['bbox'][:, 2:].numpy()
-        scores = outputs['bbox'][:, 1].numpy()
-        labels = outputs['bbox'][:, 0].numpy()
+        bbox_np = outputs['bbox'].numpy()
+        bboxes = bbox_np[:, 2:]
+        scores = bbox_np[:, 1]
+        labels = bbox_np[:, 0]
         bbox_lengths = outputs['bbox_num'].numpy()
 
         if bboxes.shape == (1, 1) or bboxes is None:
             return
-        gt_boxes = inputs['gt_bbox'].numpy()
-        gt_labels = inputs['gt_class'].numpy()
-        difficults = inputs['difficult'].numpy(
-        ) if not self.evaluate_difficult else None
+        gt_boxes = inputs['gt_bbox']
+        gt_labels = inputs['gt_class']
+        difficults = inputs['difficult'] if not self.evaluate_difficult \
+            else None
 
         scale_factor = inputs['scale_factor'].numpy(
         ) if 'scale_factor' in inputs else np.ones(
             (gt_boxes.shape[0], 2)).astype('float32')
 
         bbox_idx = 0
-        for i in range(gt_boxes.shape[0]):
-            gt_box = gt_boxes[i]
+        for i in range(len(gt_boxes)):
+            gt_box = gt_boxes[i].numpy()
             h, w = scale_factor[i]
             gt_box = gt_box / np.array([w, h, w, h])
-            gt_label = gt_labels[i]
-            difficult = None if difficults is None else difficults[i]
+            gt_label = gt_labels[i].numpy()
+            difficult = None if difficults is None \
+                else difficults[i].numpy()
             bbox_num = bbox_lengths[i]
             bbox = bboxes[bbox_idx:bbox_idx + bbox_num]
             score = scores[bbox_idx:bbox_idx + bbox_num]
@@ -121,7 +127,7 @@ class VOCMetric(Metric):
                 bbox = [xmin, ymin, w, h]
                 coco_res = {
                     'image_id': int(inputs['im_id']),
-                    'category_id': int(l + 1),
+                    'category_id': self.clsid2catid[int(l)],
                     'bbox': bbox,
                     'score': float(s)
                 }
@@ -133,18 +139,14 @@ class VOCMetric(Metric):
 
     def log(self):
         map_stat = 100. * self.detection_map.get_map()
-        logging.info("mAP({:.2f}, {}) = {:.2f}%".format(
-            self.overlap_thresh, self.map_type, map_stat))
+        logging.info("bbox_map = {:.2f}%".format(map_stat))
 
     def get_results(self):
         return {'bbox': [self.detection_map.get_map()]}
 
     def get(self):
         map_stat = 100. * self.detection_map.get_map()
-        stats = {
-            "mAP({:.2f}, {})".format(self.overlap_thresh, self.map_type):
-            map_stat
-        }
+        stats = {"bbox_map": map_stat}
         return stats
 
 

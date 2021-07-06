@@ -47,7 +47,9 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 | CUDA_LIB      | cuda相关lib文件所在的目录路径                                                        |
 | CUDNN_LIB     | cudnn相关lib文件所在的目录路径                                                       |
 | WITH_TENSORRT | ON或OFF，表示是否使用开启TensorRT                                                    |
-| TENSORRT_DIR  | TensorRT 的路径，如果开启TensorRT开关WITH_TENSORRT，需修改为您实际安装的TensorRT路径 |
+| TENSORRT_DIR  | TensorRT 的路径，如果开启TensorRT开关WITH_TENSORRT，需修改为您实际安装的TensorRT路径     |
+| WITH_ENCRYPTION      | ON或OFF，表示是否开启加密模块                             |
+| OPENSSL_DIR    | OPENSSL所在路径，解密所需。默认为`PaddleX/deploy/cpp/deps/penssl-1.1.0k`目录下        |
 
 ### Step 4. 编译
 修改完build.sh后执行编译， **[注意]**: 以下命令在`PaddleX/dygraph/deploy/cpp`目录下进行执行
@@ -57,25 +59,29 @@ sh script/build.sh
 ```
 #### 编译环境无法联网导致编译失败？
 
-> 编译过程，会调用script/bootstrap.sh联网下载opencv，以及yaml依赖包，如无法联网，用户按照下操作手动下载
+> 编译过程，会调用script/bootstrap.sh联网下载opencv、openssl，以及yaml依赖包，如无法联网，用户按照下操作手动下载
 >
 > 1. 根据系统版本，点击右侧链接下载不同版本的opencv依赖 [Ubuntu 16.04](https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2)/[Ubuntu 18.04](https://bj.bcebos.com/paddlex/deploy/opencv3.4.6gcc4.8ffmpeg_ubuntu_18.04.tar.gz2)
 > 2. 解压下载的opencv依赖（解压后目录名为opencv3.4.6gcc4.8ffmpeg)，创建目录`PaddleX/dygraph/deploy/cpp/deps`，将解压后的目录拷贝至该创建的目录下
-> 3. [点击下载yaml依赖包](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压
+> 3. 点击[下载yaml依赖包](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压
 > 4. 修改`PaddleX/deploy/cpp/cmake/yaml.cmake`文件，将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip`中网址替换为第3步中下载的路径，如改为`URL /Users/Download/yaml-cpp.zip`
-> 5. 重新执行`sh script/build.sh`即可编译
+> 5. 如果**开启加密**，点击[下载openssl](https://bj.bcebos.com/paddlex/tools/openssl-1.1.0k.tar.gz),将解压后的目录拷贝至跟opencv同级目录，即`PaddleX/dygraph/deploy/cpp/deps`目录。
+> 6. 重新执行`sh script/build.sh`即可编译
 
 
 
 ### Step 5. 编译结果
 
-编译后会在`PaddleX/dygraph/deploy/cpp/build/demo`目录下生成`model_infer`、`multi_gpu_model_infer`和`batch_infer`等几个可执行二进制文件示例，分别用于在单卡/多卡/多batch上加载模型进行预测，示例使用参考如下文档
+编译后会在`PaddleX/dygraph/deploy/cpp/build/demo`目录下生成`model_infer`、`multi_gpu_model_infer`和`batch_infer`等几个可执行二进制文件示例，分别用于在单卡/多卡/多batch上加载模型进行预测，示例使用参考如下文档：
 
 - [单卡加载模型预测示例](../../demo/model_infer.md)
 - [多卡加载模型预测示例](../../demo/multi_gpu_model_infer.md)
+
+如果编译时开启TensorRT， 会多成一个`tensorrt_infer`二进制文件示例。示例使用参考如下文档：
 - [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
 
-
+如果编译时开启加密， 会多成一个`decrypt_infer`二进制文件示例。示例使用参考如下文档：
+- [模型加密预测示例](../../demo/decrypt_infer.md)
 
 ## 其它文档
 

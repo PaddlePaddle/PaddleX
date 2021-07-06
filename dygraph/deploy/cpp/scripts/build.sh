@@ -11,11 +11,15 @@ TENSORRT_DIR=$(pwd)/TensorRT/
 PADDLE_DIR=$(pwd)/paddle_inference
 # Paddle 的预测库是否使用静态库来编译
 # 使用TensorRT时，Paddle的预测库通常为动态库
-WITH_STATIC_LIB=ON
+WITH_STATIC_LIB=OFF
+# 是否加密
+WITH_ENCRYPTION=OFF
+# OPENSSL 路径
+OPENSSL_DIR=$(pwd)/deps/openssl-1.1.0k
 # CUDA 的 lib 路径
 CUDA_LIB=/usr/local/cuda/lib64
 # CUDNN 的 lib 路径
-if [ $arch == "aarch64" ]; then
+if [ $arch = "aarch64" ]; then
   WITH_MKL=OFF
   WITH_STATIC_LIB=OFF
   CUDNN_LIB=/usr/lib/aarch64-linux-gnu
@@ -45,5 +49,7 @@ cmake .. \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
-    -DOPENCV_DIR=${OPENCV_DIR}
+    -DOPENCV_DIR=${OPENCV_DIR} \
+    -DWITH_ENCRYPTION=${WITH_ENCRYPTION} \
+    -DOPENSSL_DIR=${OPENSSL_DIR}
 make -j16

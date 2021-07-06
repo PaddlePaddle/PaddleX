@@ -42,22 +42,37 @@ class Transform {
 class Normalize : public Transform {
  public:
   virtual void Init(const YAML::Node& item) {
-    mean_ = item["mean"].as<std::vector<float>>();
-    std_ = item["std"].as<std::vector<float>>();
+    std::vector<double> mean_ = item["mean"].as<std::vector<double>>();
+    std::vector<double> std_ = item["std"].as<std::vector<double>>();
+    bool is_scale_;
+    std::vector<double> min_val_;
+    std::vector<double> max_val_;
     if (item["is_scale"].IsDefined()) {
       is_scale_ = item["is_scale"];
     } else {
       is_scale_ = true;
     }
     if (item["min_val"].IsDefined()) {
-      min_val_ = item["min_val"].as<std::vector<float>>();
+      min_val_ = item["min_val"].as<std::vector<double>>();
     } else {
-      min_val_ = std::vector<float>(mean_.size(), 0.);
+      min_val_ = std::vector<double>(mean_.size(), 0.);
     }
     if (item["max_val"].IsDefined()) {
-      max_val_ = item["max_val"].as<std::vector<float>>();
+      max_val_ = item["max_val"].as<std::vector<double>>();
     } else {
-      max_val_ = std::vector<float>(mean_.size(), 255.);
+      max_val_ = std::vector<double>(mean_.size(), 255.);
+    }
+
+    for (auto c = 0; c < mean_.size(); c++) {
+      double alpha = 1.0;
+      if (is_scale_) {
+        alpha /= (max_val_[c] - min_val_[c]);
+      }
+      double beta = -1.0 * (mean_[c] + min_val_[c] * alpha) / std_[c];
+      alpha /= std_[c];
+
+      alpha_.push_back(alpha);
+      beta_.push_back(beta);
     }
   }
   virtual bool Run(cv::Mat* im);
@@ -67,11 +82,8 @@ class Normalize : public Transform {
 
 
  private:
-  bool is_scale_;
-  std::vector<float> mean_;
-  std::vector<float> std_;
-  std::vector<float> min_val_;
-  std::vector<float> max_val_;
+  std::vector<float> alpha_;
+  std::vector<float> beta_;
 };
 
 class ResizeByShort : public Transform {
@@ -154,6 +166,11 @@ class Resize : public Transform {
     } else {
       use_scale_ = true;
     }
+    if (item["keep_ratio"].IsDefined()) {
+      keep_ratio_ = item["keep_ratio"].as<bool>();
+    } else {
+      keep_ratio_ = false;
+    }
     height_ = item["height"].as<int>();
     width_ = item["width"].as<int>();
     if (height_ <= 0 || width_ <= 0) {
@@ -172,6 +189,7 @@ class Resize : public Transform {
   int width_;
   int interp_;
   bool use_scale_;
+  bool keep_ratio_;
 };
 
 class BGR2RGB : public Transform {

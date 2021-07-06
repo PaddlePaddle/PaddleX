@@ -80,7 +80,7 @@ def arg_parser():
         "--fixed_input_shape",
         "-fs",
         default=None,
-        help="export inference model with fixed input shape:[w,h]")
+        help="export inference model with fixed input shape:[w,h] or [n,3,w,h]")
     parser.add_argument(
         "--split_dataset",
         "-sd",
@@ -136,15 +136,21 @@ def main():
 
         fixed_input_shape = None
         if args.fixed_input_shape is not None:
-            fixed_input_shape = eval(args.fixed_input_shape)
-            assert len(
-                fixed_input_shape
-            ) == 2, "len of fixed input shape must == 2, such as [224,224]"
+            fixed_input_shape = list(eval(args.fixed_input_shape))
+            assert len(fixed_input_shape) in [
+                2, 4
+            ], "fixed_input_shape must be a list/tuple with length 2 or 4, such as [224,224] or [1,3,224,244]"
+            if len(fixed_input_shape) == 4:
+                assert fixed_input_shape[
+                    1] == 3, "input channel in fixed_input_shape must be 3, but recieved is {}".format(
+                        fixed_input_shape[1])
+            assert fixed_input_shape[-2] > 0 and fixed_input_shape[
+                -1] > 0, "input width and height must be a positive integer, but recievied is {}".format(
+                    fixed_input_shape[-2:])
+
             # input fixed_input_shape is [w,h]
             # export_inference_model needs [h,w]
-            fixed_input_shape = fixed_input_shape[-1::-1]
-        else:
-            fixed_input_shape = [-1, -1]
+            fixed_input_shape[-2:] = fixed_input_shape[-1:-3:-1]
 
         os.environ['PADDLEX_EXPORT_STAGE'] = 'True'
         os.environ['PADDLESEG_EXPORT_STAGE'] = 'True'

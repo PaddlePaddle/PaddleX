@@ -20,10 +20,8 @@ import sys
 import copy
 import numpy as np
 import itertools
-
-from .json_results import get_det_res, get_det_poly_res, get_seg_res, get_solov2_segm_res
-from .map_utils import _draw_pr_curve
-
+from paddlex.ppdet.metrics.map_utils import draw_pr_curve
+from paddlex.ppdet.metrics.json_results import get_det_res, get_det_poly_res, get_seg_res, get_solov2_segm_res
 import paddlex.utils.logging as logging
 
 
@@ -123,7 +121,7 @@ def cocoapi_eval(anns,
                 (str(nm["name"]), '{:0.3f}'.format(float(ap))))
             pr_array = precisions[0, :, idx, 0, 2]
             recall_array = np.arange(0.0, 1.01, 0.01)
-            _draw_pr_curve(
+            draw_pr_curve(
                 pr_array,
                 recall_array,
                 out_dir=style + '_pr_curve',
@@ -133,7 +131,7 @@ def cocoapi_eval(anns,
         results_flatten = list(itertools.chain(*results_per_category))
         headers = ['category', 'AP'] * (num_columns // 2)
         results_2d = itertools.zip_longest(
-            * [results_flatten[i::num_columns] for i in range(num_columns)])
+            *[results_flatten[i::num_columns] for i in range(num_columns)])
         table_data = [headers]
         table_data += [result for result in results_2d]
         table = AsciiTable(table_data)

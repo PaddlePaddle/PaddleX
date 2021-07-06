@@ -32,7 +32,11 @@ bool PaddleXModel::GenerateTransformsConfig(const YAML::Node& src) {
     } else if (op_name == "ResizeByLong") {
       XResizeByLong(op.begin()->second, &yaml_config_);
     } else if (op_name == "Padding") {
-      XPadding(op.begin()->second, &yaml_config_);
+      if (src["version"].as<std::string>() >= "2.0.0") {
+        XPaddingV2(op.begin()->second, &yaml_config_);
+      } else {
+        XPadding(op.begin()->second, &yaml_config_);
+      }
     } else if (op_name == "CenterCrop") {
       XCenterCrop(op.begin()->second, &yaml_config_);
     } else if (op_name == "Resize") {
@@ -47,8 +51,20 @@ bool PaddleXModel::GenerateTransformsConfig(const YAML::Node& src) {
   return true;
 }
 
-bool PaddleXModel::YamlConfigInit(const std::string& cfg_file) {
-  YAML::Node x_config = YAML::LoadFile(cfg_file);
+bool PaddleXModel::YamlConfigInit(const std::string& cfg_file,
+                                  const std::string key) {
+  YAML::Node x_config;
+  if ("" == key) {
+    x_config = YAML::LoadFile(cfg_file);
+  } else {
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
+    std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
+    x_config = YAML::Load(cfg);
+#else
+    std::cerr << "Don't open encryption on compile" << std::endl;
+    return false;
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
+  }
 
   yaml_config_["model_format"] = "Paddle";
   yaml_config_["toolkit"] = "PaddleX";

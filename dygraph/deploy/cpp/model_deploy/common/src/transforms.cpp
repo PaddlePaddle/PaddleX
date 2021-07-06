@@ -26,13 +26,7 @@ bool Normalize::Run(cv::Mat *im) {
   std::vector<cv::Mat> split_im;
   cv::split(*im, split_im);
   for (int c = 0; c < im->channels(); c++) {
-    cv::subtract(split_im[c], cv::Scalar(min_val_[c]), split_im[c]);
-    if (is_scale_) {
-      float range_val = max_val_[c] - min_val_[c];
-      cv::divide(split_im[c], cv::Scalar(range_val), split_im[c]);
-    }
-    cv::subtract(split_im[c], cv::Scalar(mean_[c]), split_im[c]);
-    cv::divide(split_im[c], cv::Scalar(std_[c]), split_im[c]);
+    split_im[c].convertTo(split_im[c], CV_32FC1, alpha_[c], beta_[c]);
   }
   cv::merge(split_im, *im);
   return true;
@@ -153,9 +147,15 @@ bool Resize::Run(cv::Mat *im) {
               << std::endl;
     return false;
   }
+  double scale_w = width_ / static_cast<double>(im->cols);
+  double scale_h = height_ / static_cast<double>(im->rows);
+  if (keep_ratio_) {
+    scale_h = std::min(scale_w, scale_h);
+    scale_w = scale_h;
+    width_ = static_cast<int>(round(scale_w * im->cols));
+    height_ = static_cast<int>(round(scale_h * im->rows));
+  }
   if (use_scale_) {
-    double scale_w = width_ / static_cast<double>(im->cols);
-    double scale_h = height_ / static_cast<double>(im->rows);
     cv::resize(*im, *im, cv::Size(), scale_w, scale_h, interp_);
   } else {
     cv::resize(*im, *im, cv::Size(width_, height_), 0, 0, interp_);
@@ -167,8 +167,20 @@ bool Resize::ShapeInfer(
         const std::vector<int>& in_shape,
         std::vector<int>* out_shape) {
   out_shape->clear();
-  out_shape->push_back(width_);
-  out_shape->push_back(height_);
+  double width = width_;
+  double height = height_;
+  if (keep_ratio_) {
+    int w = in_shape[0];
+    int h = in_shape[1];
+    double scale_w = width_ / static_cast<double>(w);
+    double scale_h = height_ / static_cast<double>(h);
+    scale_h = std::min(scale_w, scale_h);
+    scale_w = scale_h;
+    width = static_cast<int>(round(scale_w * w));
+    height = static_cast<int>(round(scale_h * h));
+  }
+  out_shape->push_back(width);
+  out_shape->push_back(height);
   return true;
 }
 

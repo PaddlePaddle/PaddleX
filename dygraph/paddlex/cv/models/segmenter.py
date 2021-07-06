@@ -19,7 +19,7 @@ from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
 from paddle.static import InputSpec
-import paddleseg
+import paddlex.paddleseg as paddleseg
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import get_single_card_bs, DisablePrint
@@ -27,7 +27,7 @@ import paddlex.utils.logging as logging
 from .base import BaseModel
 from .utils import seg_metrics as metrics
 from paddlex.utils.checkpoint import seg_pretrain_weights_dict
-from paddlex.cv.transforms import Decode
+from paddlex.cv.transforms import Decode, Resize
 
 __all__ = ["UNet", "DeepLabV3P", "FastSCNN", "HRNet", "BiSeNetV2"]
 
@@ -58,10 +58,38 @@ class BaseSegmenter(BaseModel):
             num_classes=self.num_classes, **params)
         return net
 
-    def get_test_inputs(self, image_shape):
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+                    if 'Resize' in name:
+                        has_resize_op = True
+                        resize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx, Resize(target_size=image_shape))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape)
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            if len(image_shape) == 2:
+                image_shape = [1, 3] + image_shape
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+        self.fixed_input_shape = image_shape
         input_spec = [
             InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32')
+                shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
 
@@ -85,11 +113,13 @@ class BaseSegmenter(BaseModel):
             origin_shape = [label.shape[-2:]]
             # TODO: 替换cv2后postprocess移出run
             pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
-            intersect_area, pred_area, label_area = metrics.calculate_area(
+            intersect_area, pred_area, label_area = paddleseg.utils.metrics.calculate_area(
                 pred, label, self.num_classes)
             outputs['intersect_area'] = intersect_area
             outputs['pred_area'] = pred_area
             outputs['label_area'] = label_area
+            outputs['conf_mat'] = metrics.confusion_matrix(pred, label,
+                                                           self.num_classes)
         if mode == 'train':
             loss_list = metrics.loss_computation(
                 logits_list=net_out, labels=inputs[1], losses=self.losses)
@@ -164,7 +194,8 @@ class BaseSegmenter(BaseModel):
               lr_decay_power=0.9,
               early_stop=False,
               early_stop_patience=5,
-              use_vdl=True):
+              use_vdl=True,
+              resume_checkpoint=None):
         """
         Train the model.
         Args:
@@ -179,14 +210,21 @@ class BaseSegmenter(BaseModel):
             log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
             save_dir(str, optional): Directory to save the model. Defaults to 'output'.
             pretrain_weights(str or None, optional):
-                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'IMAGENET'.
+                None or name/path of pretrained weights. If None, no pretrained weights will be loaded. Defaults to 'CITYSCAPES'.
             learning_rate(float, optional): Learning rate for training. Defaults to .025.
             lr_decay_power(float, optional): Learning decay power. Defaults to .9.
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
+                If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
+                `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if pretrain_weights is not None and resume_checkpoint is not None:
+            logging.error(
+                "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
+                exit=True)
         self.labels = train_dataset.labels
         if self.losses is None:
             self.losses = self.default_loss()
@@ -212,9 +250,18 @@ class BaseSegmenter(BaseModel):
                                         0]))
                 pretrain_weights = seg_pretrain_weights_dict[self.model_name][
                     0]
+        elif pretrain_weights is not None and osp.exists(pretrain_weights):
+            if osp.splitext(pretrain_weights)[-1] != '.pdparams':
+                logging.error(
+                    "Invalid pretrain weights. Please specify a '.pdparams' file.",
+                    exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
+        is_backbone_weights = pretrain_weights == 'IMAGENET'
         self.net_initialize(
-            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights,
+            save_dir=pretrained_dir,
+            resume_checkpoint=resume_checkpoint,
+            is_backbone_weights=is_backbone_weights)
 
         self.train_loop(
             num_epochs=num_epochs,
@@ -227,6 +274,64 @@ class BaseSegmenter(BaseModel):
             early_stop=early_stop,
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
+
+    def quant_aware_train(self,
+                          num_epochs,
+                          train_dataset,
+                          train_batch_size=2,
+                          eval_dataset=None,
+                          optimizer=None,
+                          save_interval_epochs=1,
+                          log_interval_steps=2,
+                          save_dir='output',
+                          learning_rate=0.0001,
+                          lr_decay_power=0.9,
+                          early_stop=False,
+                          early_stop_patience=5,
+                          use_vdl=True,
+                          resume_checkpoint=None,
+                          quant_config=None):
+        """
+        Quantization-aware training.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 2.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated furing training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used in training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .025.
+            lr_decay_power(float, optional): Learning decay power. Defaults to .9.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
+                configuration will be used. Defaults to None.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
+                from. If None, no training checkpoint will be resumed. Defaults to None.
+
+        """
+        self._prepare_qat(quant_config)
+        self.train(
+            num_epochs=num_epochs,
+            train_dataset=train_dataset,
+            train_batch_size=train_batch_size,
+            eval_dataset=eval_dataset,
+            optimizer=optimizer,
+            save_interval_epochs=save_interval_epochs,
+            log_interval_steps=log_interval_steps,
+            save_dir=save_dir,
+            pretrain_weights=None,
+            learning_rate=learning_rate,
+            lr_decay_power=lr_decay_power,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl,
+            resume_checkpoint=resume_checkpoint)
 
     def evaluate(self, eval_dataset, batch_size=1, return_details=False):
         """
@@ -274,6 +379,7 @@ class BaseSegmenter(BaseModel):
         intersect_area_all = 0
         pred_area_all = 0
         label_area_all = 0
+        conf_mat_all = []
         logging.info(
             "Start to evaluate(total_samples={}, total_steps={})...".format(
                 eval_dataset.num_samples,
@@ -285,16 +391,19 @@ class BaseSegmenter(BaseModel):
                 pred_area = outputs['pred_area']
                 label_area = outputs['label_area']
                 intersect_area = outputs['intersect_area']
+                conf_mat = outputs['conf_mat']
 
                 # Gather from all ranks
                 if nranks > 1:
                     intersect_area_list = []
                     pred_area_list = []
                     label_area_list = []
+                    conf_mat_list = []
                     paddle.distributed.all_gather(intersect_area_list,
                                                   intersect_area)
                     paddle.distributed.all_gather(pred_area_list, pred_area)
                     paddle.distributed.all_gather(label_area_list, label_area)
+                    paddle.distributed.all_gather(conf_mat_list, conf_mat)
 
                     # Some image has been evaluated and should be eliminated in last iter
                     if (step + 1) * nranks > len(eval_dataset):
@@ -302,23 +411,25 @@ class BaseSegmenter(BaseModel):
                         intersect_area_list = intersect_area_list[:valid]
                         pred_area_list = pred_area_list[:valid]
                         label_area_list = label_area_list[:valid]
+                        conf_mat_list = conf_mat_list[:valid]
 
-                    for i in range(len(intersect_area_list)):
-                        intersect_area_all = intersect_area_all + intersect_area_list[
-                            i]
-                        pred_area_all = pred_area_all + pred_area_list[i]
-                        label_area_all = label_area_all + label_area_list[i]
+                    intersect_area_all += sum(intersect_area_list)
+                    pred_area_all += sum(pred_area_list)
+                    label_area_all += sum(label_area_list)
+                    conf_mat_all.extend(conf_mat_list)
 
                 else:
                     intersect_area_all = intersect_area_all + intersect_area
                     pred_area_all = pred_area_all + pred_area
                     label_area_all = label_area_all + label_area
-        class_iou, miou = metrics.mean_iou(intersect_area_all, pred_area_all,
-                                           label_area_all)
+                    conf_mat_all.append(conf_mat)
+        class_iou, miou = paddleseg.utils.metrics.mean_iou(
+            intersect_area_all, pred_area_all, label_area_all)
         # TODO 确认是按oacc还是macc
-        class_acc, oacc = metrics.accuracy(intersect_area_all, pred_area_all)
-        kappa = metrics.kappa(intersect_area_all, pred_area_all,
-                              label_area_all)
+        class_acc, oacc = paddleseg.utils.metrics.accuracy(intersect_area_all,
+                                                           pred_area_all)
+        kappa = paddleseg.utils.metrics.kappa(intersect_area_all,
+                                              pred_area_all, label_area_all)
         category_f1score = metrics.f1_score(intersect_area_all, pred_area_all,
                                             label_area_all)
         eval_metrics = OrderedDict(
@@ -327,6 +438,10 @@ class BaseSegmenter(BaseModel):
                 'category_F1-score'
             ], [miou, class_iou, oacc, class_acc, kappa, category_f1score]))
 
+        if return_details:
+            conf_mat = sum(conf_mat_all)
+            eval_details = {'confusion_matrix': conf_mat.tolist()}
+            return eval_metrics, eval_details
         return eval_metrics
 
     def predict(self, img_file, transforms=None):
@@ -365,7 +480,16 @@ class BaseSegmenter(BaseModel):
         label_map = label_map.numpy().astype('uint8')
         score_map = outputs['score_map']
         score_map = score_map.numpy().astype('float32')
-        return {'label_map': label_map, 'score_map': score_map}
+        if isinstance(img_file, list) and len(img_file) > 1:
+            prediction = [{
+                'label_map': l,
+                'score_map': s
+            } for l, s in zip(label_map, score_map)]
+        elif isinstance(img_file, list):
+            prediction = [{'label_map': label_map, 'score_map': score_map}]
+        else:
+            prediction = {'label_map': label_map, 'score_map': score_map}
+        return prediction
 
     def _preprocess(self, images, transforms, model_type):
         arrange_transforms(

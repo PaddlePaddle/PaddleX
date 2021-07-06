@@ -14,13 +14,14 @@
 
 import os
 import os.path as osp
+import glob
 import paddle
 import paddlex.utils.logging as logging
 from .download import download_and_decompress
 
 seg_pretrain_weights_dict = {
     'UNet': ['CITYSCAPES'],
-    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC'],
+    'DeepLabV3P': ['CITYSCAPES', 'PascalVOC', 'IMAGENET'],
     'FastSCNN': ['CITYSCAPES'],
     'HRNet': ['CITYSCAPES', 'PascalVOC'],
     'BiSeNetV2': ['CITYSCAPES']
@@ -43,6 +44,7 @@ det_pretrain_weights_dict = {
     'FasterRCNN_ResNet101_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet101_vd_fpn': ['COCO', 'IMAGENET'],
     'FasterRCNN_ResNet50_vd_ssld_fpn': ['COCO', 'IMAGENET'],
+    'FasterRCNN_HRNet_W18_fpn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet50_vd_dcn': ['COCO', 'IMAGENET'],
     'PPYOLO_ResNet18_vd': ['COCO', 'IMAGENET'],
     'PPYOLO_MobileNetV3_large': ['COCO', 'IMAGENET'],
@@ -146,7 +148,7 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_pretrained.pdparams',
     'MobileNetV3_large_x1_25_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_25_pretrained.pdparams',
-    'MobileNetV3_large_x1_0_ssld':
+    'MobileNetV3_large_x1_0_ssld_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
     'AlexNet_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams',
@@ -212,6 +214,8 @@ imagenet_weights = {
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
     'FasterRCNN_ResNet101_vd_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
+    'FasterRCNN_HRNet_W18_fpn_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/HRNet_W18_C_pretrained.pdparams',
     'YOLOv3_ResNet50_vd_dcn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_pretrained.pdparams',
     'YOLOv3_ResNet34_IMAGENET':
@@ -251,7 +255,11 @@ imagenet_weights = {
     'MaskRCNN_ResNet101_fpn_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_pretrained.pdparams',
     'MaskRCNN_ResNet101_vd_fpn_IMAGENET':
-    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams'
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet101_vd_pretrained.pdparams',
+    'DeepLabV3P_ResNet50_vd_IMAGENET':
+    'https://bj.bcebos.com/paddleseg/dygraph/resnet50_vd_ssld_v2.tar.gz',
+    'DeepLabV3P_ResNet101_vd_IMAGENET':
+    'https://bj.bcebos.com/paddleseg/dygraph/resnet101_vd_ssld.tar.gz'
 }
 
 pascalvoc_weights = {
@@ -304,6 +312,8 @@ coco_weights = {
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_fpn_2x_coco.pdparams',
     'FasterRCNN_ResNet101_vd_fpn_COCO':
     'https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams',
+    'FasterRCNN_HRNet_W18_fpn_COCO':
+    'https://paddledet.bj.bcebos.com/models/faster_rcnn_hrnetv2p_w18_2x_coco.pdparams',
     'PPYOLO_ResNet50_vd_dcn_COCO':
     'https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_2x_coco.pdparams',
     'PPYOLO_ResNet18_vd_COCO':
@@ -359,6 +369,8 @@ def get_pretrain_weights(flag, class_name, save_dir, backbone_name=None):
         raise ValueError('Given pretrained weights {} is undefined.'.format(
             flag))
     fname = download_and_decompress(url, path=new_save_dir)
+    if osp.isdir(fname):
+        fname = glob.glob(osp.join(fname, '*.pdparams'))[0]
     return fname
 
 
@@ -369,23 +381,31 @@ def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
             use_color=True)
 
         if os.path.exists(pretrain_weights):
-            para_state_dict = paddle.load(pretrain_weights)
+            param_state_dict = paddle.load(pretrain_weights)
             model_state_dict = model.state_dict()
-            keys = model_state_dict.keys()
+            # hack: fit for faster rcnn. Pretrain weights contain prefix of 'backbone'
+            # while res5 module is located in bbox_head.head. Replace the prefix of
+            # res5 with 'bbox_head.head' to load pretrain weights correctly.
+            for k in list(param_state_dict.keys()):
+                if 'backbone.res5' in k:
+                    new_k = k.replace('backbone', 'bbox_head.head')
+                    if new_k in model_state_dict:
+                        value = param_state_dict.pop(k)
+                        param_state_dict[new_k] = value
             num_params_loaded = 0
-            for k in keys:
-                if k not in para_state_dict:
+            for k in model_state_dict:
+                if k not in param_state_dict:
                     logging.warning("{} is not in pretrained model".format(k))
-                elif list(para_state_dict[k].shape) != list(model_state_dict[k]
-                                                            .shape):
+                elif list(param_state_dict[k].shape) != list(model_state_dict[
+                        k].shape):
                     logging.warning(
                         "[SKIP] Shape of pretrained params {} doesn't match.(Pretrained: {}, Actual: {})"
-                        .format(k, para_state_dict[k].shape, model_state_dict[
+                        .format(k, param_state_dict[k].shape, model_state_dict[
                             k].shape))
                 else:
-                    model_state_dict[k] = para_state_dict[k]
+                    model_state_dict[k] = param_state_dict[k]
                     num_params_loaded += 1
-            model.set_dict(model_state_dict)
+            model.set_state_dict(model_state_dict)
             logging.info("There are {}/{} variables loaded into {}.".format(
                 num_params_loaded, len(model_state_dict), model_name))
         else:
@@ -395,3 +415,21 @@ def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
         logging.info(
             'No pretrained model to load, {} will be trained from scratch.'.
             format(model_name))
+
+
+def load_optimizer(optimizer, state_dict_path):
+    logging.info("Loading optimizer from {}".format(state_dict_path))
+    optim_state_dict = paddle.load(state_dict_path)
+    if 'last_epoch' in optim_state_dict:
+        optim_state_dict.pop('last_epoch')
+    optimizer.set_state_dict(optim_state_dict)
+
+
+def load_checkpoint(model, optimizer, model_name, checkpoint):
+    logging.info("Loading checkpoint from {}".format(checkpoint))
+    load_pretrain_weights(
+        model,
+        pretrain_weights=osp.join(checkpoint, 'model.pdparams'),
+        model_name=model_name)
+    load_optimizer(
+        optimizer, state_dict_path=osp.join(checkpoint, "model.pdopt"))

@@ -22,11 +22,11 @@ import six
 import numpy as np
 import paddle
 from paddle.static import InputSpec
-import ppdet
-from ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
+import paddlex.ppdet as ppdet
+from paddlex.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH
+from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, Resize, Padding
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
@@ -42,7 +42,6 @@ __all__ = [
 class BaseDetector(BaseModel):
     def __init__(self, model_name, num_classes=80, **params):
         self.init_params.update(locals())
-        del self.init_params['params']
         super(BaseDetector, self).__init__('detector')
         if not hasattr(ppdet.modeling, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -58,16 +57,40 @@ class BaseDetector(BaseModel):
             net = ppdet.modeling.__dict__[self.model_name](**params)
         return net
 
-    def get_test_inputs(self, image_shape):
+    def _fix_transforms_shape(self, image_shape):
+        raise NotImplementedError("_fix_transforms_shape: not implemented!")
+
+    def _define_input_spec(self, image_shape):
         input_spec = [{
             "image": InputSpec(
-                shape=[None, 3] + image_shape, name='image', dtype='float32'),
+                shape=image_shape, name='image', dtype='float32'),
             "im_shape": InputSpec(
-                shape=[None, 2], name='im_shape', dtype='float32'),
+                shape=[image_shape[0], 2], name='im_shape', dtype='float32'),
             "scale_factor": InputSpec(
-                shape=[None, 2], name='scale_factor', dtype='float32')
+                shape=[image_shape[0], 2],
+                name='scale_factor',
+                dtype='float32')
         }]
         return input_spec
+
+    def _check_image_shape(self, image_shape):
+        if len(image_shape) == 2:
+            image_shape = [1, 3] + image_shape
+            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
+                raise Exception(
+                    "Height and width in fixed_input_shape must be a multiple of 32, but received {}.".
+                    format(image_shape[-2:]))
+        return image_shape
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+        self.fixed_input_shape = image_shape
+
+        return self._define_input_spec(image_shape)
 
     def _get_backbone(self, backbone_name, **params):
         backbone = getattr(ppdet.modeling, backbone_name)(**params)
@@ -136,7 +159,8 @@ class BaseDetector(BaseModel):
               use_ema=False,
               early_stop=False,
               early_stop_patience=5,
-              use_vdl=True):
+              use_vdl=True,
+              resume_checkpoint=None):
         """
         Train the model.
         Args:
@@ -163,8 +187,15 @@ class BaseDetector(BaseModel):
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
+                If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
+                `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if pretrain_weights is not None and resume_checkpoint is not None:
+            logging.error(
+                "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
+                exit=True)
         if train_dataset.__class__.__name__ == 'VOCDetection':
             train_dataset.data_fields = {
                 'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
@@ -192,9 +223,10 @@ class BaseDetector(BaseModel):
                 "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
             self.metric = metric.lower()
 
+        self.labels = train_dataset.labels
+        self.num_max_boxes = train_dataset.num_max_boxes
         train_dataset.batch_transforms = self._compose_batch_transform(
             train_dataset.transforms, mode='train')
-        self.labels = train_dataset.labels
 
         # build optimizer if not defined
         if optimizer is None:
@@ -220,12 +252,19 @@ class BaseDetector(BaseModel):
                 pretrain_weights = det_pretrain_weights_dict['_'.join(
                     [self.model_name, self.backbone_name])][0]
                 logging.warning("Pretrain_weights is forcibly set to '{}'. "
-                                "If don't want to use pretrain weights, "
+                                "If you don't want to use pretrain weights, "
                                 "set pretrain_weights to be None.".format(
                                     pretrain_weights))
+        elif pretrain_weights is not None and osp.exists(pretrain_weights):
+            if osp.splitext(pretrain_weights)[-1] != '.pdparams':
+                logging.error(
+                    "Invalid pretrain weights. Please specify a '.pdparams' file.",
+                    exit=True)
         pretrained_dir = osp.join(save_dir, 'pretrain')
         self.net_initialize(
-            pretrain_weights=pretrain_weights, save_dir=pretrained_dir)
+            pretrain_weights=pretrain_weights,
+            save_dir=pretrained_dir,
+            resume_checkpoint=resume_checkpoint)
 
         if use_ema:
             ema = ExponentialMovingAverage(
@@ -246,6 +285,80 @@ class BaseDetector(BaseModel):
             early_stop_patience=early_stop_patience,
             use_vdl=use_vdl)
 
+    def quant_aware_train(self,
+                          num_epochs,
+                          train_dataset,
+                          train_batch_size=64,
+                          eval_dataset=None,
+                          optimizer=None,
+                          save_interval_epochs=1,
+                          log_interval_steps=10,
+                          save_dir='output',
+                          learning_rate=.00001,
+                          warmup_steps=0,
+                          warmup_start_lr=0.0,
+                          lr_decay_epochs=(216, 243),
+                          lr_decay_gamma=0.1,
+                          metric=None,
+                          use_ema=False,
+                          early_stop=False,
+                          early_stop_patience=5,
+                          use_vdl=True,
+                          resume_checkpoint=None,
+                          quant_config=None):
+        """
+        Quantization-aware training.
+        Args:
+            num_epochs(int): The number of epochs.
+            train_dataset(paddlex.dataset): Training dataset.
+            train_batch_size(int, optional): Total batch size among all cards used in training. Defaults to 64.
+            eval_dataset(paddlex.dataset, optional):
+                Evaluation dataset. If None, the model will not be evaluated during training process. Defaults to None.
+            optimizer(paddle.optimizer.Optimizer or None, optional):
+                Optimizer used for training. If None, a default optimizer is used. Defaults to None.
+            save_interval_epochs(int, optional): Epoch interval for saving the model. Defaults to 1.
+            log_interval_steps(int, optional): Step interval for printing training information. Defaults to 10.
+            save_dir(str, optional): Directory to save the model. Defaults to 'output'.
+            learning_rate(float, optional): Learning rate for training. Defaults to .001.
+            warmup_steps(int, optional): The number of steps of warm-up training. Defaults to 0.
+            warmup_start_lr(float, optional): Start learning rate of warm-up training. Defaults to 0..
+            lr_decay_epochs(list or tuple, optional): Epoch milestones for learning rate decay. Defaults to (216, 243).
+            lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay. Defaults to .1.
+            metric({'VOC', 'COCO', None}, optional):
+                Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
+            use_ema(bool, optional): Whether to use exponential moving average strategy. Defaults to False.
+            early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
+            early_stop_patience(int, optional): Early stop patience. Defaults to 5.
+            use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
+            quant_config(dict or None, optional): Quantization configuration. If None, a default rule of thumb
+                configuration will be used. Defaults to None.
+            resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
+                from. If None, no training checkpoint will be resumed. Defaults to None.
+
+        """
+        self._prepare_qat(quant_config)
+        self.train(
+            num_epochs=num_epochs,
+            train_dataset=train_dataset,
+            train_batch_size=train_batch_size,
+            eval_dataset=eval_dataset,
+            optimizer=optimizer,
+            save_interval_epochs=save_interval_epochs,
+            log_interval_steps=log_interval_steps,
+            save_dir=save_dir,
+            pretrain_weights=None,
+            learning_rate=learning_rate,
+            warmup_steps=warmup_steps,
+            warmup_start_lr=warmup_start_lr,
+            lr_decay_epochs=lr_decay_epochs,
+            lr_decay_gamma=lr_decay_gamma,
+            metric=metric,
+            use_ema=use_ema,
+            early_stop=early_stop,
+            early_stop_patience=early_stop_patience,
+            use_vdl=use_vdl,
+            resume_checkpoint=resume_checkpoint)
+
     def evaluate(self,
                  eval_dataset,
                  batch_size=1,
@@ -264,12 +377,24 @@ class BaseDetector(BaseModel):
             collections.OrderedDict with key-value pairs: {"mAP(0.50, 11point)":`mean average precision`}.
 
         """
-        if eval_dataset.__class__.__name__ == 'VOCDetection':
+
+        if metric is None:
+            if not hasattr(self, 'metric'):
+                if eval_dataset.__class__.__name__ == 'VOCDetection':
+                    self.metric = 'voc'
+                elif eval_dataset.__class__.__name__ == 'CocoDetection':
+                    self.metric = 'coco'
+        else:
+            assert metric.lower() in ['coco', 'voc'], \
+                "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
+            self.metric = metric.lower()
+
+        if self.metric == 'voc':
             eval_dataset.data_fields = {
                 'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
                 'difficult'
             }
-        elif eval_dataset.__class__.__name__ == 'CocoDetection':
+        elif self.metric == 'coco':
             if self.__class__.__name__ == 'MaskRCNN':
                 eval_dataset.data_fields = {
                     'im_id', 'image_shape', 'image', 'gt_bbox', 'gt_class',
@@ -310,41 +435,16 @@ class BaseDetector(BaseModel):
                 is_bbox_normalized = any(
                     isinstance(t, _NormalizeBox)
                     for t in eval_dataset.batch_transforms.batch_transforms)
-            if metric is None:
-                if getattr(self, 'metric', None) is not None:
-                    if self.metric == 'voc':
-                        eval_metric = VOCMetric(
-                            labels=eval_dataset.labels,
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            is_bbox_normalized=is_bbox_normalized,
-                            classwise=False)
-                    else:
-                        eval_metric = COCOMetric(
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            classwise=False)
-                else:
-                    if eval_dataset.__class__.__name__ == 'VOCDetection':
-                        eval_metric = VOCMetric(
-                            labels=eval_dataset.labels,
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            is_bbox_normalized=is_bbox_normalized,
-                            classwise=False)
-                    elif eval_dataset.__class__.__name__ == 'CocoDetection':
-                        eval_metric = COCOMetric(
-                            coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                            classwise=False)
+            if self.metric == 'voc':
+                eval_metric = VOCMetric(
+                    labels=eval_dataset.labels,
+                    coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                    is_bbox_normalized=is_bbox_normalized,
+                    classwise=False)
             else:
-                assert metric.lower() in ['coco', 'voc'], \
-                    "Evaluation metric {} is not supported, please choose form 'COCO' and 'VOC'"
-                if metric.lower() == 'coco':
-                    eval_metric = COCOMetric(
-                        coco_gt=copy.deepcopy(eval_dataset.coco_gt),
-                        classwise=False)
-                else:
-                    eval_metric = VOCMetric(
-                        labels=eval_dataset.labels,
-                        is_bbox_normalized=is_bbox_normalized,
-                        classwise=False)
+                eval_metric = COCOMetric(
+                    coco_gt=copy.deepcopy(eval_dataset.coco_gt),
+                    classwise=False)
             scores = collections.OrderedDict()
             logging.info(
                 "Start to evaluate(total_samples={}, total_steps={})...".
@@ -376,10 +476,11 @@ class BaseDetector(BaseModel):
             If img_file is a string or np.array, the result is a list of dict with key-value pairs:
             {"category_id": `category_id`, "category": `category`, "bbox": `[x, y, w, h]`, "score": `score`}.
             If img_file is a list, the result is a list composed of dicts with the corresponding fields:
-            category_id(int): the predicted category ID
+            category_id(int): the predicted category ID. 0 represents the first category in the dataset, and so on.
             category(str): category name
             bbox(list): bounding box in [x, y, w, h] format
             score(str): confidence
+            mask(dict): Only for instance segmentation task. Mask of the object in RLE format
 
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
@@ -465,8 +566,9 @@ class BaseDetector(BaseModel):
                         if 'counts' in rle:
                             rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
+                        'category_id': int(label),
                         'category': category,
-                        'segmentation': rle,
+                        'mask': rle,
                         'score': score
                     }
                     seg_res.append(sg_res)
@@ -579,8 +681,7 @@ class YOLOv3(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False), _NormalizeBox(),
+                _BatchPadding(pad_to_stride=-1), _NormalizeBox(),
                 _PadBox(getattr(self, 'num_max_boxes', 50)), _BboxXYXY2XYWH(),
                 _Gt2YoloTarget(
                     anchor_masks=self.anchor_masks,
@@ -590,10 +691,11 @@ class YOLOv3(BaseDetector):
                     num_classes=self.num_classes)
             ]
         else:
-            default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=-1, pad_gt=False)
-            ]
+            default_batch_transforms = [_BatchPadding(pad_to_stride=-1)]
+        if mode == 'eval' and self.metric == 'voc':
+            collate_batch = False
+        else:
+            collate_batch = True
 
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
@@ -605,10 +707,34 @@ class YOLOv3(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
+
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Resize':
+                        has_resize_op = True
+                        resize_op_idx = idx
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx,
+                        Resize(
+                            target_size=image_shape, interp='CUBIC'))
+                else:
+                    self.test_transforms.transforms[
+                        resize_op_idx].target_size = image_shape
 
 
 class FasterRCNN(BaseDetector):
@@ -616,6 +742,7 @@ class FasterRCNN(BaseDetector):
                  num_classes=80,
                  backbone='ResNet50',
                  with_fpn=True,
+                 with_dcn=False,
                  aspect_ratios=[0.5, 1.0, 2.0],
                  anchor_sizes=[[32], [64], [128], [256], [512]],
                  keep_top_k=100,
@@ -629,14 +756,27 @@ class FasterRCNN(BaseDetector):
         self.init_params = locals()
         if backbone not in [
                 'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34',
-                'ResNet34_vd', 'ResNet101', 'ResNet101_vd'
+                'ResNet34_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18'
         ]:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', "
-                "'ResNet101', 'ResNet101_vd')".format(backbone))
-        self.backbone_name = backbone + '_fpn' if with_fpn else backbone
-        if backbone == 'ResNet50_vd_ssld':
+                "'ResNet101', 'ResNet101_vd', 'HRNet_W18')".format(backbone))
+        self.backbone_name = backbone
+        dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
+        if backbone == 'HRNet_W18':
+            if not with_fpn:
+                logging.warning(
+                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                    format(backbone))
+                with_fpn = True
+            if with_dcn:
+                logging.warning(
+                    "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                    format(backbone))
+            backbone = self._get_backbone(
+                'HRNet', width=18, freeze_at=0, return_idx=[0, 1, 2, 3])
+        elif backbone == 'ResNet50_vd_ssld':
             if not with_fpn:
                 logging.warning(
                     "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
@@ -649,7 +789,8 @@ class FasterRCNN(BaseDetector):
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
                 num_stages=4,
-                lr_mult_list=[0.05, 0.05, 0.1, 0.15])
+                lr_mult_list=[0.05, 0.05, 0.1, 0.15],
+                dcn_v2_stages=dcn_v2_stages)
         elif 'ResNet50' in backbone:
             if with_fpn:
                 backbone = self._get_backbone(
@@ -658,8 +799,13 @@ class FasterRCNN(BaseDetector):
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
-                    num_stages=4)
+                    num_stages=4,
+                    dcn_v2_stages=dcn_v2_stages)
             else:
+                if with_dcn:
+                    logging.warning(
+                        "Backbone {} without fpn should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                        format(backbone))
                 backbone = self._get_backbone(
                     'ResNet',
                     variant='d' if '_vd' in backbone else 'b',
@@ -680,7 +826,8 @@ class FasterRCNN(BaseDetector):
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
-                num_stages=4)
+                num_stages=4,
+                dcn_v2_stages=dcn_v2_stages)
         else:
             if not with_fpn:
                 logging.warning(
@@ -694,15 +841,29 @@ class FasterRCNN(BaseDetector):
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
-                num_stages=4)
+                num_stages=4,
+                dcn_v2_stages=dcn_v2_stages)
 
         rpn_in_channel = backbone.out_shape[0].channels
 
         if with_fpn:
-            neck = ppdet.modeling.FPN(
-                in_channels=[i.channels for i in backbone.out_shape],
-                out_channel=fpn_num_channels,
-                spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
+            self.backbone_name = self.backbone_name + '_fpn'
+
+            if 'HRNet' in self.backbone_name:
+                neck = ppdet.modeling.HRFPN(
+                    in_channels=[i.channels for i in backbone.out_shape],
+                    out_channel=fpn_num_channels,
+                    spatial_scales=[
+                        1.0 / i.stride for i in backbone.out_shape
+                    ],
+                    share_conv=False)
+            else:
+                neck = ppdet.modeling.FPN(
+                    in_channels=[i.channels for i in backbone.out_shape],
+                    out_channel=fpn_num_channels,
+                    spatial_scales=[
+                        1.0 / i.stride for i in backbone.out_shape
+                    ])
             rpn_in_channel = neck.out_shape[0].channels
             anchor_generator_cfg = {
                 'aspect_ratios': aspect_ratios,
@@ -723,7 +884,8 @@ class FasterRCNN(BaseDetector):
                 if test_pre_nms_top_n is None else test_pre_nms_top_n,
                 'post_nms_top_n': test_post_nms_top_n
             }
-            head = ppdet.modeling.TwoFCHead(out_channel=1024)
+            head = ppdet.modeling.TwoFCHead(
+                in_channel=neck.out_shape[0].channels, out_channel=1024)
             roi_extractor_cfg = {
                 'resolution': 7,
                 'spatial_scale': [1. / i.stride for i in neck.out_shape],
@@ -810,14 +972,14 @@ class FasterRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -828,10 +990,53 @@ class FasterRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
+
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'ResizeByShort':
+                        has_resize_op = True
+                        resize_op_idx = idx
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx,
+                        Resize(
+                            target_size=image_shape,
+                            keep_ratio=True,
+                            interp='CUBIC'))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape,
+                        keep_ratio=True,
+                        interp='CUBIC')
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+            if self.with_fpn:
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+
+        self.fixed_input_shape = image_shape
+        return self._define_input_spec(image_shape)
 
 
 class PPYOLO(YOLOv3):
@@ -1098,7 +1303,6 @@ class PPYOLOTiny(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOTiny'
 
 
@@ -1222,8 +1426,24 @@ class PPYOLOv2(YOLOv3):
         self.anchors = anchors
         self.anchor_masks = anchor_masks
         self.downsample_ratios = downsample_ratios
-        self.num_max_boxes = 100
         self.model_name = 'PPYOLOv2'
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, 608, 608]
+            logging.warning(
+                '[Important!!!] When exporting inference model for {},'.format(
+                    self.__class__.__name__) +
+                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 608, 608]. '
+                +
+                'Please check image shape after transforms is [3, 608, 608], if not, fixed_input_shape '
+                + 'should be specified manually.')
+
+        self.fixed_input_shape = image_shape
+        return self._define_input_spec(image_shape)
 
 
 class MaskRCNN(BaseDetector):
@@ -1231,6 +1451,7 @@ class MaskRCNN(BaseDetector):
                  num_classes=80,
                  backbone='ResNet50_vd',
                  with_fpn=True,
+                 with_dcn=False,
                  aspect_ratios=[0.5, 1.0, 2.0],
                  anchor_sizes=[[32], [64], [128], [256], [512]],
                  keep_top_k=100,
@@ -1252,6 +1473,7 @@ class MaskRCNN(BaseDetector):
                 format(backbone))
 
         self.backbone_name = backbone + '_fpn' if with_fpn else backbone
+        dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
 
         if backbone == 'ResNet50':
             if with_fpn:
@@ -1260,8 +1482,13 @@ class MaskRCNN(BaseDetector):
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
-                    num_stages=4)
+                    num_stages=4,
+                    dcn_v2_stages=dcn_v2_stages)
             else:
+                if with_dcn:
+                    logging.warning(
+                        "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                        format(backbone))
                 backbone = self._get_backbone(
                     'ResNet',
                     norm_type='bn',
@@ -1283,7 +1510,8 @@ class MaskRCNN(BaseDetector):
                 return_idx=[0, 1, 2, 3],
                 num_stages=4,
                 lr_mult_list=[0.05, 0.05, 0.1, 0.15]
-                if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0])
+                if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0],
+                dcn_v2_stages=dcn_v2_stages)
 
         else:
             if not with_fpn:
@@ -1298,7 +1526,8 @@ class MaskRCNN(BaseDetector):
                 norm_type='bn',
                 freeze_at=0,
                 return_idx=[0, 1, 2, 3],
-                num_stages=4)
+                num_stages=4,
+                dcn_v2_stages=dcn_v2_stages)
 
         rpn_in_channel = backbone.out_shape[0].channels
 
@@ -1451,14 +1680,14 @@ class MaskRCNN(BaseDetector):
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=True)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = False
         else:
             default_batch_transforms = [
-                _BatchPadding(
-                    pad_to_stride=32 if self.with_fpn else -1, pad_gt=False)
+                _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
+            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -1469,7 +1698,50 @@ class MaskRCNN(BaseDetector):
                         "Please check the {} transforms.".format(mode))
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
-        batch_transforms = BatchCompose(custom_batch_transforms +
-                                        default_batch_transforms)
+        batch_transforms = BatchCompose(
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
+
+    def _fix_transforms_shape(self, image_shape):
+        if hasattr(self, 'test_transforms'):
+            if self.test_transforms is not None:
+                has_resize_op = False
+                resize_op_idx = -1
+                normalize_op_idx = len(self.test_transforms.transforms)
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'ResizeByShort':
+                        has_resize_op = True
+                        resize_op_idx = idx
+                    if name == 'Normalize':
+                        normalize_op_idx = idx
+
+                if not has_resize_op:
+                    self.test_transforms.transforms.insert(
+                        normalize_op_idx,
+                        Resize(
+                            target_size=image_shape,
+                            keep_ratio=True,
+                            interp='CUBIC'))
+                else:
+                    self.test_transforms.transforms[resize_op_idx] = Resize(
+                        target_size=image_shape,
+                        keep_ratio=True,
+                        interp='CUBIC')
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, -1, -1]
+            if self.with_fpn:
+                self.test_transforms.transforms.append(
+                    Padding(im_padding_value=[0., 0., 0.]))
+        self.fixed_input_shape = image_shape
+
+        return self._define_input_spec(image_shape)

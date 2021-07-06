@@ -12,20 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = '2.0.0rc0'
+__version__ = '2.0.0rc3'
 
-from .utils.env import get_environ_info, init_parallel_env
+from paddlex.utils.env import get_environ_info, init_parallel_env
 init_parallel_env()
 
 from . import cv
 from . import seg
 from . import cls
 from . import det
-from . import models
 from . import tools
 
-from .cv.models.utils.visualize import visualize_detection
-from .cv.models.utils.visualize import visualize_segmentation
+from .cv.models.utils.visualize import visualize_detection as visualize_det
+from .cv.models.utils.visualize import visualize_segmentation as visualize_seg
 
 env_info = get_environ_info()
 datasets = cv.datasets
@@ -35,5 +34,5 @@ log_level = 2
 
 load_model = cv.models.load_model
 
-visualize_det = visualize_detection
-visualize_seg = visualize_segmentation
+visualize_det = visualize_det
+visualize_seg = visualize_seg

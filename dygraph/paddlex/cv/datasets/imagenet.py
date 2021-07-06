@@ -14,6 +14,7 @@
 
 import os.path as osp
 import copy
+import numpy as np
 from paddle.io import Dataset
 from paddlex.utils import logging, get_num_workers, get_encoding, path_normalization, is_pic
 
@@ -70,7 +71,8 @@ class ImageNet(Dataset):
                         full_path))
                 self.file_list.append({
                     'image': full_path,
-                    'label': int(items[1])
+                    'label': np.asarray(
+                        items[1], dtype=np.int64)
                 })
         self.num_samples = len(self.file_list)
         logging.info("{} samples in file {}".format(

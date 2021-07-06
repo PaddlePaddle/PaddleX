@@ -9,11 +9,13 @@ else()
     option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   ON)
 endif()
 option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile demo with ENCRYPTION."   OFF)
 
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
+SET(OPENSSL_DIR "" CACHE PATH "Location of libraries")
 
 SET(PROJECT_ROOT_DIR  "." CACHE PATH  "root directory of project.")
 
@@ -25,6 +27,7 @@ else()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
+    add_definitions(-DPADDLEX_DEPLOY)
 endif()
 
 #source
@@ -122,6 +125,28 @@ endif ()
 set(DEPS ${DEPS} ${OpenCV_LIBS})
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+
+if (WITH_TENSORRT AND WITH_GPU)
+  include_directories("${TENSORRT_DIR}/include")
+  link_directories("${TENSORRT_DIR}/lib")
+
+  file(READ ${TENSORRT_DIR}/include/NvInfer.h TENSORRT_VERSION_FILE_CONTENTS)
+  string(REGEX MATCH "define NV_TENSORRT_MAJOR +([0-9]+)" TENSORRT_MAJOR_VERSION
+    "${TENSORRT_VERSION_FILE_CONTENTS}")
+  if("${TENSORRT_MAJOR_VERSION}" STREQUAL "")
+    file(READ ${TENSORRT_DIR}/include/NvInferVersion.h TENSORRT_VERSION_FILE_CONTENTS)
+    string(REGEX MATCH "define NV_TENSORRT_MAJOR +([0-9]+)" TENSORRT_MAJOR_VERSION
+      "${TENSORRT_VERSION_FILE_CONTENTS}")
+  endif()
+  if("${TENSORRT_MAJOR_VERSION}" STREQUAL "")
+    message(SEND_ERROR "Failed to detect TensorRT version.")
+  endif()
+  string(REGEX REPLACE "define NV_TENSORRT_MAJOR +([0-9]+)" "\\1"
+    TENSORRT_MAJOR_VERSION "${TENSORRT_MAJOR_VERSION}")
+  message(STATUS "Current TensorRT header is ${TENSORRT_INCLUDE_DIR}/NvInfer.h. "
+    "Current TensorRT version is v${TENSORRT_MAJOR_VERSION}. ")
+endif()
+
 #set GPU
 if(WITH_GPU)
   if (NOT DEFINED CUDA_LIB OR ${CUDA_LIB} STREQUAL "")
@@ -137,16 +162,13 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") # x86_64 aarch64
+      if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") # aarch64
         include_directories("/usr/include/aarch64-linux-gnu")
         link_directories("/usr/lib/aarch64-linux-gnu")
 
         set(DEPS ${DEPS} /usr/lib/aarch64-linux-gnu/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
         set(DEPS ${DEPS} /usr/lib/aarch64-linux-gnu/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
       else()
-        include_directories("${TENSORRT_DIR}/include")
-        link_directories("${TENSORRT_DIR}/lib")
-
         set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
         set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
       endif()
@@ -158,12 +180,11 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDA_LIB}/cudnn${CMAKE_STATIC_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      include_directories("${TENSORRT_DIR}/include")
-      link_directories("${TENSORRT_DIR}/lib")
-
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
+      if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
+        set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
+      endif()
     endif()
   endif()
 endif()
@@ -197,7 +218,7 @@ if (WIN32)
         add_definitions(-DSTATIC_LIB)
     endif()
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -o2 -fopenmp -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -o3 -fopenmp -std=c++11")
     set(CMAKE_STATIC_LIBRARY_PREFIX "")
     set(EXTERNAL_LIB "-ldl -lrt -lgomp -lz -lm -lpthread")
     set(DEPS ${DEPS} ${EXTERNAL_LIB})
@@ -217,22 +238,47 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
-add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+set(ENCRYPTION_SRC "")
+if (WITH_ENCRYPTION)
+  add_definitions(-DPADDLEX_DEPLOY_ENCRYPTION)
+  set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+
+  include_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/include")
+  link_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
+  if (WIN32)
+    set(DEPS ${DEPS} libssl_static${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto_static${CMAKE_STATIC_LIBRARY_SUFFIX})
+  else ()
+    set(DEPS ${DEPS} libssl${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto${CMAKE_STATIC_LIBRARY_SUFFIX})
+   endif()
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src/crypto ENCRYPTION_SRC)
+endif()
+
+add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
 
-add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
 ADD_DEPENDENCIES(batch_infer ext-yaml-cpp)
 target_link_libraries(batch_infer ${DEPS})
 
-add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
 ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
 target_link_libraries(multi_gpu_model_infer ${DEPS})
 
 if (WITH_TENSORRT)
-  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
   ADD_DEPENDENCIES(tensorrt_infer ext-yaml-cpp)
   target_link_libraries(tensorrt_infer ${DEPS})
+endif()
+
+if (WITH_ENCRYPTION)
+  add_executable(decrypt_infer ${PROJECT_ROOT_DIR}/demo/decrypt_infer.cpp ${SRC}
+                               ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
+  ADD_DEPENDENCIES(decrypt_infer ext-yaml-cpp)
+  target_link_libraries(decrypt_infer ${DEPS})
 endif()
 
 if(WIN32)
@@ -241,8 +287,16 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/libiomp5md.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mkldnn/lib/mkldnn.dll  ${CMAKE_BINARY_DIR}/paddle_deploy
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/paddle/lib/paddle_inference.dll ${CMAKE_BINARY_DIR}/paddle_deploy
-    COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
-    COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
-    COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
   )
+  if (WITH_TENSORRT)
+    add_custom_command(TARGET model_infer POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+    )
+    if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
+      add_custom_command(TARGET model_infer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      )
+    endif()
+  endif()
 endif()

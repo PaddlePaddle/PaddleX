@@ -20,15 +20,17 @@ import copy
 import math
 import yaml
 import json
+import numpy as np
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
+from paddleslim import QAT
 from paddleslim.analysis import flops
 from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            get_pretrain_weights, load_pretrain_weights,
-                           SmoothedValue, TrainingStats,
+                           load_checkpoint, SmoothedValue, TrainingStats,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
 from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
@@ -53,12 +55,19 @@ class BaseModel:
         self.completed_epochs = 0
         self.pruner = None
         self.pruning_ratios = None
+        self.quantizer = None
+        self.quant_config = None
+        self.fixed_input_shape = None
 
-    def net_initialize(self, pretrain_weights=None, save_dir='.'):
+    def net_initialize(self,
+                       pretrain_weights=None,
+                       save_dir='.',
+                       resume_checkpoint=None,
+                       is_backbone_weights=False):
         if pretrain_weights is not None and \
-                not os.path.exists(pretrain_weights):
-            if not os.path.isdir(save_dir):
-                if os.path.exists(save_dir):
+                not osp.exists(pretrain_weights):
+            if not osp.isdir(save_dir):
+                if osp.exists(save_dir):
                     os.remove(save_dir)
                 os.makedirs(save_dir)
             if self.model_type == 'classifier':
@@ -72,8 +81,45 @@ class BaseModel:
                     save_dir,
                     backbone_name=backbone_name)
         if pretrain_weights is not None:
-            load_pretrain_weights(
-                self.net, pretrain_weights, model_name=self.model_name)
+            if is_backbone_weights:
+                load_pretrain_weights(
+                    self.net.backbone,
+                    pretrain_weights,
+                    model_name='backbone of ' + self.model_name)
+            else:
+                load_pretrain_weights(
+                    self.net, pretrain_weights, model_name=self.model_name)
+        if resume_checkpoint is not None:
+            if not osp.exists(resume_checkpoint):
+                logging.error(
+                    "The checkpoint path {} to resume training from does not exist."
+                    .format(resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.pdparams')):
+                logging.error(
+                    "Model parameter state dictionary file 'model.pdparams' "
+                    "not found under given checkpoint path {}".format(
+                        resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.pdopt')):
+                logging.error(
+                    "Optimizer state dictionary file 'model.pdparams' "
+                    "not found under given checkpoint path {}".format(
+                        resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.yml')):
+                logging.error(
+                    "'model.yml' not found under given checkpoint path {}".
+                    format(resume_checkpoint),
+                    exit=True)
+            with open(osp.join(resume_checkpoint, "model.yml")) as f:
+                info = yaml.load(f.read(), Loader=yaml.Loader)
+                self.completed_epochs = info['completed_epochs']
+            load_checkpoint(
+                self.net,
+                self.optimizer,
+                model_name=self.model_name,
+                checkpoint=resume_checkpoint)
 
     def get_model_info(self):
         info = dict()
@@ -93,6 +139,7 @@ class BaseModel:
 
         info['_Attributes']['num_classes'] = self.num_classes
         info['_Attributes']['labels'] = self.labels
+        info['_Attributes']['fixed_input_shape'] = self.fixed_input_shape
 
         try:
             primary_metric_key = list(self.eval_metrics.keys())[0]
@@ -119,7 +166,19 @@ class BaseModel:
         info = dict()
         info['pruner'] = self.pruner.__class__.__name__
         info['pruning_ratios'] = self.pruning_ratios
-        info['pruner_inputs'] = self.pruner.inputs
+        pruner_inputs = self.pruner.inputs
+        if self.model_type == 'detector':
+            pruner_inputs = {
+                k: v.tolist()
+                for k, v in pruner_inputs[0].items()
+            }
+        info['pruner_inputs'] = pruner_inputs
+
+        return info
+
+    def get_quant_info(self):
+        info = dict()
+        info['quant_config'] = self.quant_config
         return info
 
     def save_model(self, save_dir):
@@ -129,10 +188,11 @@ class BaseModel:
             os.makedirs(save_dir)
         model_info = self.get_model_info()
         model_info['status'] = self.status
+
         paddle.save(self.net.state_dict(),
-                    os.path.join(save_dir, 'model.pdparams'))
+                    osp.join(save_dir, 'model.pdparams'))
         paddle.save(self.optimizer.state_dict(),
-                    os.path.join(save_dir, 'model.pdopt'))
+                    osp.join(save_dir, 'model.pdopt'))
 
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
@@ -151,6 +211,13 @@ class BaseModel:
                     mode='w') as f:
                 yaml.dump(pruning_info, f)
 
+        if self.status == 'Quantized' and self.quantizer is not None:
+            quant_info = self.get_quant_info()
+            with open(
+                    osp.join(save_dir, 'quant.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(quant_info, f)
+
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info("Model saved in {}.".format(save_dir))
@@ -168,11 +235,14 @@ class BaseModel:
             shuffle=dataset.shuffle,
             drop_last=mode == 'train')
 
-        shm_size = _get_shared_memory_size_in_M()
-        if shm_size is None or shm_size < 1024.:
-            use_shared_memory = False
+        if dataset.num_workers > 0:
+            shm_size = _get_shared_memory_size_in_M()
+            if shm_size is None or shm_size < 1024.:
+                use_shared_memory = False
+            else:
+                use_shared_memory = True
         else:
-            use_shared_memory = True
+            use_shared_memory = False
 
         loader = DataLoader(
             dataset,
@@ -180,7 +250,9 @@ class BaseModel:
             collate_fn=dataset.batch_transforms,
             num_workers=dataset.num_workers,
             return_list=True,
-            use_shared_memory=use_shared_memory)
+            use_shared_memory=use_shared_memory,
+            worker_init_fn=lambda worker_id: np.random.seed(np.random.get_state()[1][0] + worker_id)
+        )
 
         return loader
 
@@ -312,17 +384,26 @@ class BaseModel:
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
             if ema is not None:
-                weight = self.net.state_dict()
-                self.net.set_dict(ema.apply())
+                weight = copy.deepcopy(self.net.state_dict())
+                self.net.set_state_dict(ema.apply())
             eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
-                    self.eval_metrics = self.evaluate(
+                    eval_result = self.evaluate(
                         eval_dataset,
                         batch_size=eval_batch_size,
-                        return_details=False)
+                        return_details=True)
                     # 保存最优模型
                     if local_rank == 0:
+                        self.eval_metrics, self.eval_details = eval_result
+                        if use_vdl:
+                            for k, v in self.eval_metrics.items():
+                                try:
+                                    log_writer.add_scalar(
+                                        '{}-Metrics/Eval(Epoch): {}'.format(
+                                            task_id, k), v, i + 1)
+                                except TypeError:
+                                    pass
                         logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
                             i + 1, dict2str(self.eval_metrics)))
                         best_accuracy_key = list(self.eval_metrics.keys())[0]
@@ -334,7 +415,7 @@ class BaseModel:
                             self.save_model(save_dir=best_model_dir)
                         if best_model_epoch > 0:
                             logging.info(
-                                'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
+                                'Current evaluated best model on eval_dataset is epoch_{}, {}={}'
                                 .format(best_model_epoch, best_accuracy_key,
                                         best_accuracy))
                     eval_epoch_time = time.time() - eval_epoch_tic
@@ -347,7 +428,7 @@ class BaseModel:
                         if earlystop(current_accuracy):
                             break
             if ema is not None:
-                self.net.set_dict(weight)
+                self.net.set_state_dict(weight)
 
     def analyze_sensitivity(self,
                             dataset,
@@ -400,8 +481,8 @@ class BaseModel:
 
         Args:
             pruned_flops(float): Ratio of FLOPs to be pruned.
-            save_dir(None or str, optional): If None, the pruned model will not be saved
-            Otherwise, the pruned model will be saved at save_dir. Defaults to None.
+            save_dir(None or str, optional): If None, the pruned model will not be saved.
+                Otherwise, the pruned model will be saved at save_dir. Defaults to None.
 
         """
         if self.status == "Pruned":
@@ -410,12 +491,7 @@ class BaseModel:
         pre_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
             pre_pruning_flops))
-        skip_vars = []
-        for param in self.net.parameters():
-            if param.shape[0] <= 8:
-                skip_vars.append(param.name)
-        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops,
-                                                 skip_vars)
+        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops)
         post_pruning_flops = flops(self.net, self.pruner.inputs)
         logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
             post_pruning_flops))
@@ -427,13 +503,99 @@ class BaseModel:
             self.save_model(save_dir)
             logging.info("Pruned model is saved at {}".format(save_dir))
 
-    def _export_inference_model(self, save_dir, image_shape=[-1, -1]):
+    def _prepare_qat(self, quant_config):
+        if quant_config is None:
+            # default quantization configuration
+            quant_config = {
+                # {None, 'PACT'}. Weight preprocess type. If None, no preprocessing is performed.
+                'weight_preprocess_type': None,
+                # {None, 'PACT'}. Activation preprocess type. If None, no preprocessing is performed.
+                'activation_preprocess_type': None,
+                # {'abs_max', 'channel_wise_abs_max', 'range_abs_max', 'moving_average_abs_max'}.
+                # Weight quantization type.
+                'weight_quantize_type': 'channel_wise_abs_max',
+                # {'abs_max', 'range_abs_max', 'moving_average_abs_max'}. Activation quantization type.
+                'activation_quantize_type': 'moving_average_abs_max',
+                # The number of bits of weights after quantization.
+                'weight_bits': 8,
+                # The number of bits of activation after quantization.
+                'activation_bits': 8,
+                # Data type after quantization, such as 'uint8', 'int8', etc.
+                'dtype': 'int8',
+                # Window size for 'range_abs_max' quantization.
+                'window_size': 10000,
+                # Decay coefficient of moving average.
+                'moving_rate': .9,
+                # Types of layers that will be quantized.
+                'quantizable_layer_type': ['Conv2D', 'Linear']
+            }
+        if self.status != 'Quantized':
+            self.quant_config = quant_config
+            self.quantizer = QAT(config=self.quant_config)
+            logging.info(
+                "Preparing the model for quantization-aware training...")
+            self.quantizer.quantize(self.net)
+            logging.info("Model is ready for quantization-aware training.")
+            self.status = 'Quantized'
+        elif quant_config != self.quant_config:
+            logging.error(
+                "The model has been quantized with the following quant_config: {}."
+                "Doing quantization-aware training with a quantized model "
+                "using a different configuration is not supported."
+                .format(self.quant_config),
+                exit=True)
+
+    def _get_pipeline_info(self, save_dir):
+        pipeline_info = {}
+        pipeline_info["pipeline_name"] = self.model_type
+        nodes = [{
+            "src0": {
+                "type": "Source",
+                "next": "decode0"
+            }
+        }, {
+            "decode0": {
+                "type": "Decode",
+                "next": "predict0"
+            }
+        }, {
+            "predict0": {
+                "type": "Predict",
+                "init_params": {
+                    "use_gpu": False,
+                    "gpu_id": 0,
+                    "use_trt": False,
+                    "model_dir": save_dir,
+                },
+                "next": "sink0"
+            }
+        }, {
+            "sink0": {
+                "type": "Sink"
+            }
+        }]
+        pipeline_info["pipeline_nodes"] = nodes
+        pipeline_info["version"] = "1.0.0"
+        return pipeline_info
+
+    def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
         self.net.eval()
-        self.test_inputs = self.get_test_inputs(image_shape)
-        static_net = paddle.jit.to_static(
-            self.net, input_spec=self.test_inputs)
-        paddle.jit.save(static_net, osp.join(save_dir, 'model'))
+        self.test_inputs = self._get_test_inputs(image_shape)
+
+        if self.status == 'Quantized':
+            self.quantizer.save_quantized_model(self.net,
+                                                osp.join(save_dir, 'model'),
+                                                self.test_inputs)
+            quant_info = self.get_quant_info()
+            with open(
+                    osp.join(save_dir, 'quant.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(quant_info, f)
+        else:
+            static_net = paddle.jit.to_static(
+                self.net, input_spec=self.test_inputs)
+            paddle.jit.save(static_net, osp.join(save_dir, 'model'))
 
         if self.status == 'Pruned':
             pruning_info = self.get_pruning_info()
@@ -448,6 +610,12 @@ class BaseModel:
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
+        pipeline_info = self._get_pipeline_info(save_dir)
+        with open(
+                osp.join(save_dir, 'pipeline.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(pipeline_info, f)
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()

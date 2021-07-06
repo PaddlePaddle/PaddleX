@@ -26,6 +26,7 @@ bool BasePreprocess::BuildTransform(const YAML::Node& yaml_config) {
     std::string name = it->first.as<std::string>();
     std::shared_ptr<Transform> transform = CreateTransform(name);
     if (!transform) {
+      std::cerr << "Failed to create " << name << " on Preprocess" << std::endl;
       return false;
     }
     transform->Init(it->second);

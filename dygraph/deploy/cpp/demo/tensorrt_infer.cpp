@@ -30,8 +30,7 @@ int main(int argc, char** argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   // create model
-  std::shared_ptr<PaddleDeploy::Model> model =
-        PaddleDeploy::CreateModel(FLAGS_model_type);
+  PaddleDeploy::Model* model = PaddleDeploy::CreateModel(FLAGS_model_type);
 
   // model init
   model->Init(FLAGS_cfg_file);
@@ -74,5 +73,6 @@ int main(int argc, char** argv) {
 
   std::cout << results[0] << std::endl;
 
+  delete model;
   return 0;
 }

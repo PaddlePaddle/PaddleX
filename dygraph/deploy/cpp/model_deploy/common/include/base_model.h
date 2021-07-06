@@ -20,14 +20,19 @@
 
 #include "yaml-cpp/yaml.h"
 
+#include "model_deploy/common/include/deploy_delacre.h"
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/engine/include/engine.h"
 
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
+#include "encryption/include/paddle_model_decrypt.h"
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
+
 namespace PaddleDeploy {
 
-class Model {
+class PD_INFER_DECL Model {
  private:
   const std::string model_type_;
 
@@ -46,16 +51,17 @@ class Model {
   // Init model_type.
   explicit Model(const std::string model_type) : model_type_(model_type) {}
 
-  virtual bool Init(const std::string& cfg_file) {
-    if (!YamlConfigInit(cfg_file)) return false;
+  virtual bool Init(const std::string& cfg_file, const std::string key = "") {
+    if (!YamlConfigInit(cfg_file, key)) return false;
     if (!PreprocessInit()) return false;
     if (!PostprocessInit()) return false;
     return true;
   }
 
-  virtual bool YamlConfigInit(const std::string& cfg_file) {
-    YAML::Node yaml_config_ = YAML::LoadFile(cfg_file);
-    return true;
+  virtual bool YamlConfigInit(const std::string& cfg_file,
+                              const std::string key) {
+    std::cerr << "Error! The Base Model was incorrectly entered" << std::endl;
+    return false;
   }
 
   virtual bool PreprocessInit() {

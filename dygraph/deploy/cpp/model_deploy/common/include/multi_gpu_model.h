@@ -17,11 +17,12 @@
 #include <thread> // NOLINT
 #include <vector>
 
+#include "model_deploy/common/include/deploy_delacre.h"
 #include "model_deploy/common/include/model_factory.h"
 #include "model_deploy/engine/include/engine.h"
 
 namespace PaddleDeploy {
-class MultiGPUModel {
+class PD_INFER_DECL MultiGPUModel {
  private:
   std::vector<std::shared_ptr<Model>> models_;
 
@@ -30,8 +31,7 @@ class MultiGPUModel {
             const std::string& cfg_file, size_t gpu_num = 1) {
     models_.clear();
     for (auto i = 0; i < gpu_num; ++i) {
-      std::shared_ptr<Model> model =
-          PaddleDeploy::ModelFactory::CreateObject(model_type);
+      Model* model = PaddleDeploy::ModelFactory::CreateObject(model_type);
 
       if (!model) {
         std::cerr << "no model_type: " << model_type << std::endl;
@@ -45,7 +45,7 @@ class MultiGPUModel {
         return false;
       }
 
-      models_.push_back(model);
+      models_.push_back(std::shared_ptr<Model>(model));
     }
     return true;
   }

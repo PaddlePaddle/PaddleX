@@ -47,7 +47,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 └── \version.txt # 版本和编译信息
 ```
 
-### Step3: 安装配置OpenCV
+### Step3: 安装配置OpenCV和加密
 
 1. 在OpenCV官网下载适用于Windows平台的3.4.6版本  [下载地址](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)  
 2. 运行下载的可执行文件，将OpenCV解压至指定目录，例如`D:\projects\opencv`
@@ -56,6 +56,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
    - 在系统变量中找到Path（如没有，自行创建），并双击编辑
    - 新建，将opencv路径填入并保存，如`D:\projects\opencv\build\x64\vc15\bin`
    - 在进行cmake构建时，会有相关提示，请注意vs2019的输出
+4. 如果**开启加密**，点击[下载openssl](https://bj.bcebos.com/paddlex/tools/windows_openssl1.1.0k.zip),并解压至某个目录
 
 ### Step4: 使用Visual Studio 2019直接编译CMake
 
@@ -70,10 +71,11 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。
 
-  点击：`项目`->`CMake设置`
+  点击：`项目`->`CMake设置`(也可能叫`PaddleDeploy`的CMake设置)
   ![](../../images/vs2019_step4.png)
 
 4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`Paddle预测库`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
+   如果**需要模型加密**，需要把WITH_ENCRYPTION勾选上,并填写openssl解压后的路径。
    ![](../../images/vs2019_step5.png)
    依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本尽量与Paddle预测库的对齐，例如Paddle预测库是**使用9.0、10.0版本**编译的，则编译PaddleX预测代码时**不使用9.2、10.1等版本**CUDA库）：
 
@@ -88,8 +90,10 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 - 如果使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
 - 如果使用的是`openblas`版本，请把`WITH_MKL`的`值`去掉勾
 - 如果无法联网，请手动点击下载 [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压，并修改`PaddleX\dygraph\deploy\cpp\cmake\yaml.cmake`中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址替换为第3步中下载的路径，如改为`URL D:\projects\yaml-cpp.zip`。
+- 如果使用GPU， 当前官网下载的Paddle预测库一定要链接TensorRT。
+- 如果使用加密部署， 一定记得勾选上WITH_ENCRYPTION，并填写[OpenSSL](https://bj.bcebos.com/paddlex/tools/windows_openssl1.1.0k.zip)路径
 
-5. 保存并生成CMake缓存
+1. 保存并生成CMake缓存
 
 ![](../../images/vs2019_step6.png)
 **设置完成后**, 点击上图中`保存并生成CMake缓存以加载变量`。然后我们可以看到vs的输出会打印CMake生成的过程，出现`CMake 生成完毕`且无报错代表生成完毕。
@@ -104,7 +108,12 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 - [单卡加载模型预测示例](../../demo/model_infer.md)
 - [多卡加载模型预测示例](../../demo/multi_gpu_model_infer.md)
+
+如果编译时开启TensorRT， 会多成一个`tensorrt_infer`二进制文件示例。示例使用参考如下文档：
 - [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
+
+如果编译时开启加密， 会多成一个`decrypt_infer`二进制文件示例。示例使用参考如下文档：
+- [模型加密预测示例](../../demo/decrypt_infer.md)
 
 
 
