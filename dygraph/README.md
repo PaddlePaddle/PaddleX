@@ -1,4 +1,4 @@
-# PaddleX全面升级动态图，2.0.0-rc1发布！
+# PaddleX全面升级动态图，2.0.0-rc3发布！
 
 
 
@@ -97,7 +97,7 @@
 
 ## 版本更新
 
-- **2021.07.05 v2.0.0-rc1**
+- **2021.07.06 v2.0.0-rc3**
 
   PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。详细内容请参考[版本更新文档](./docs/CHANGELOG.md)
 
