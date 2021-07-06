@@ -22,8 +22,8 @@ import six
 import numpy as np
 import paddle
 from paddle.static import InputSpec
-import ppdet
-from ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
+import paddlex.ppdet as ppdet
+from paddlex.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner, MaskAssigner
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, Resize, Padding

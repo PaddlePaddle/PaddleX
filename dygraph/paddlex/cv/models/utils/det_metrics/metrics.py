@@ -21,7 +21,7 @@ import sys
 from collections import OrderedDict
 import paddle
 import numpy as np
-from ppdet.metrics.map_utils import prune_zero_padding, DetectionMAP
+from paddlex.ppdet.metrics.map_utils import prune_zero_padding, DetectionMAP
 from .coco_utils import get_infer_results, cocoapi_eval
 import paddlex.utils.logging as logging
 
