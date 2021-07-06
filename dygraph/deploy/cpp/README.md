@@ -15,14 +15,21 @@
 
 ## 文档
 ### PaddleInference编译说明
-- [Linux编译指南](./docs/compile/paddle/linux.md)
-- [Windows编译指南](./docs/compile/paddle/windows.md)
+- [Linux编译(支持加密)指南](./docs/compile/paddle/linux.md)
+- [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
 - [Jetson编译指南](./docs/compile/paddle/jetson.md)
 
 ### 模型部署说明
+- [PaddleX部署指南](./docs/models/paddlex.md)
 - [PaddleDetection部署指南](./docs/models/paddledetection.md)
 - [PaddleSeg部署指南](./docs/models/paddleseg.md)
 - [PaddleClas部署指南](./docs/models/paddleclas.md)
+
+### 模型预测示例
+- [单卡加载模型预测示例](./docs/demo/model_infer.md)
+- [多卡加载模型预测示例](./docs/demo/multi_gpu_model_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](./docs/demo/tensorrt_infer.md)
+- [模型加密预测示例](./docs/demo/decrypt_infer.md)
 
 ### API说明
 
