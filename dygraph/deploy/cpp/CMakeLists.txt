@@ -284,7 +284,11 @@ if(WIN32)
     add_custom_command(TARGET model_infer POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
       COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
-      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     )
+    if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
+      add_custom_command(TARGET model_infer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      )
+    endif()
   endif()
 endif()
