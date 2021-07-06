@@ -125,6 +125,28 @@ endif ()
 set(DEPS ${DEPS} ${OpenCV_LIBS})
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+
+if (WITH_TENSORRT AND WITH_GPU)
+  include_directories("${TENSORRT_DIR}/include")
+  link_directories("${TENSORRT_DIR}/lib")
+
+  file(READ ${TENSORRT_DIR}/include/NvInfer.h TENSORRT_VERSION_FILE_CONTENTS)
+  string(REGEX MATCH "define NV_TENSORRT_MAJOR +([0-9]+)" TENSORRT_MAJOR_VERSION
+    "${TENSORRT_VERSION_FILE_CONTENTS}")
+  if("${TENSORRT_MAJOR_VERSION}" STREQUAL "")
+    file(READ ${TENSORRT_DIR}/include/NvInferVersion.h TENSORRT_VERSION_FILE_CONTENTS)
+    string(REGEX MATCH "define NV_TENSORRT_MAJOR +([0-9]+)" TENSORRT_MAJOR_VERSION
+      "${TENSORRT_VERSION_FILE_CONTENTS}")
+  endif()
+  if("${TENSORRT_MAJOR_VERSION}" STREQUAL "")
+    message(SEND_ERROR "Failed to detect TensorRT version.")
+  endif()
+  string(REGEX REPLACE "define NV_TENSORRT_MAJOR +([0-9]+)" "\\1"
+    TENSORRT_MAJOR_VERSION "${TENSORRT_MAJOR_VERSION}")
+  message(STATUS "Current TensorRT header is ${TENSORRT_INCLUDE_DIR}/NvInfer.h. "
+    "Current TensorRT version is v${TENSORRT_MAJOR_VERSION}. ")
+endif()
+
 #set GPU
 if(WITH_GPU)
   if (NOT DEFINED CUDA_LIB OR ${CUDA_LIB} STREQUAL "")
@@ -140,9 +162,6 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      include_directories("${TENSORRT_DIR}/include")
-      link_directories("${TENSORRT_DIR}/lib")
-
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
     endif()
@@ -153,12 +172,11 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDA_LIB}/cudnn${CMAKE_STATIC_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      include_directories("${TENSORRT_DIR}/include")
-      link_directories("${TENSORRT_DIR}/lib")
-
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
+      if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
+        set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
+      endif()
     endif()
   endif()
 endif()
