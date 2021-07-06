@@ -11,13 +11,18 @@ cd PaddleX/dygraph/deploy/cpp
 **说明**：`C++`预测代码在`PaddleX/dygraph/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，所有示例代码都在`demo`目录下。
 
 ### Step 2. 下载PaddlePaddle C++ 预测库
-PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX支持Paddle预测库2.0+，最新2.1版本下载链接如下所示:
+PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前Jetson必须下载2.1.1版本预测库， 下载链接如下所示:
 
-| 版本说明                                       | 预测库(2.1)                                                                                                            |
+| 版本说明                                       | 预测库(2.1.1)                                                                                                            |
 | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| nv_jetson_cuda10.2_cudnn8_trt7_all(jetpack4.4) | [paddle_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/2.1.0-nv-jetson-jetpack4.4-all/paddle_inference.tgz) |
+| Jetpack4.4: nv-jetson-cuda10.2-cudnn8-trt7(all) | [paddle_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/2.1.1-nv-jetson-jetpack4.4-all/paddle_inference_install_dir.tgz) |
+| Jetpack4.4: nv-jetson-cuda10.2-cudnn8-trt7(nano) | [paddle_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/2.1.1-nv-jetson-jetpack4.4-nano/paddle_inference_install_dir.tgz) |
+| Jetpack4.4: nv-jetson-cuda10.2-cudnn8-trt7(tx2) | [paddle_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/2.1.1-nv-jetson-jetpack4.4-tx2/paddle_inference_install_dir.tgz) |
+| Jetpack4.4: nv-jetson-cuda10.2-cudnn8-trt7(xavier) | [paddle_inference.tgz](https://paddle-inference-lib.bj.bcebos.com/2.1.1-nv-jetson-jetpack4.4-xavier/paddle_inference_install_dir.tgz) |
 
-**注意：**目前2.1版本的预测库只提供Nvidia Jetpack 4.4版本下载。如果你的设备是其他版本jetpack，需要重新编译Paddle预测库，请参考: [预测库源码编译](https://paddleinference.paddlepaddle.org.cn/user_guides/source_compile.html)中的`NVIDIA Jetson嵌入式硬件预测库源码编译`。
+**注意：**:
+- 目前2.1.1版本的预测库只提供Nvidia Jetpack 4.4版本下载。如果你的设备是其他版本jetpack，需要重新编译Paddle预测库，请参考: [预测库源码编译](https://paddleinference.paddlepaddle.org.cn/user_guides/source_compile.html)中的`NVIDIA Jetson嵌入式硬件预测库源码编译`。
+- 请参照自己的jetson型号下载对应的预测库，如果没有对应型号可以下载all版本。
 
 将预测库解压后，其所在目录（例如解压至`PaddleX/dygraph/deploy/cpp/paddle_inferenc/`）下主要包含的内容有：
 
