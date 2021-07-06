@@ -15,6 +15,10 @@ WITH_STATIC_LIB=ON
 CUDA_LIB=/usr/local/cuda/lib64
 # CUDNN 的 lib 路径
 CUDNN_LIB=/usr/lib/x86_64-linux-gnu
+# 是否加密
+WITH_ENCRYPTION=OFF
+# OPENSSL 路径
+OPENSSL_DIR=$(pwd)/deps/openssl-1.1.0k
 
 {
     bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具和opencv依赖库
@@ -39,5 +43,7 @@ cmake .. \
     -DWITH_STATIC_LIB=${WITH_STATIC_LIB} \
     -DCUDA_LIB=${CUDA_LIB} \
     -DCUDNN_LIB=${CUDNN_LIB} \
-    -DOPENCV_DIR=${OPENCV_DIR}
+    -DOPENCV_DIR=${OPENCV_DIR} \
+    -DWITH_ENCRYPTION=${WITH_ENCRYPTION} \
+    -DOPENSSL_DIR=${OPENSSL_DIR}
 make -j16

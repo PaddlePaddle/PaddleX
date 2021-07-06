@@ -35,7 +35,7 @@ class SegModel : public Model {
 
   bool GenerateTransformsConfig(const YAML::Node &node);
 
-  bool YamlConfigInit(const std::string &cfg_file);
+  bool YamlConfigInit(const std::string &cfg_file, const std::string key);
 
   bool PreprocessInit();
 

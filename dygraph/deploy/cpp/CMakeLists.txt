@@ -9,11 +9,13 @@ else()
     option(WITH_STATIC_LIB "Compile demo with static/shared library, default use static."   ON)
 endif()
 option(WITH_TENSORRT "Compile demo with TensorRT."   OFF)
+option(WITH_ENCRYPTION "Compile demo with ENCRYPTION."   OFF)
 
 SET(TENSORRT_DIR "" CACHE PATH "Location of libraries")
 SET(PADDLE_DIR "" CACHE PATH "Location of libraries")
 SET(OPENCV_DIR "" CACHE PATH "Location of libraries")
 SET(CUDA_LIB "" CACHE PATH "Location of libraries")
+SET(OPENSSL_DIR "" CACHE PATH "Location of libraries")
 
 SET(PROJECT_ROOT_DIR  "." CACHE PATH  "root directory of project.")
 
@@ -25,6 +27,7 @@ else()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/paddle_deploy)
+    add_definitions(-DPADDLEX_DEPLOY)
 endif()
 
 #source
@@ -209,22 +212,47 @@ aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppseg/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/ppclas/src DETECTOR_SRC)
 aux_source_directory(${PROJECT_ROOT_DIR}/model_deploy/paddlex/src DETECTOR_SRC)
 
-add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+set(ENCRYPTION_SRC "")
+if (WITH_ENCRYPTION)
+  add_definitions(-DPADDLEX_DEPLOY_ENCRYPTION)
+  set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+
+  include_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/include")
+  link_directories("${OPENSSL_DIR}/install-${CMAKE_SYSTEM_PROCESSOR}/lib")
+  if (WIN32)
+    set(DEPS ${DEPS} libssl_static${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto_static${CMAKE_STATIC_LIBRARY_SUFFIX})
+  else ()
+    set(DEPS ${DEPS} libssl${CMAKE_STATIC_LIBRARY_SUFFIX} libcrypto${CMAKE_STATIC_LIBRARY_SUFFIX})
+   endif()
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src ENCRYPTION_SRC)
+  aux_source_directory(${PROJECT_ROOT_DIR}/encryption/util/src/crypto ENCRYPTION_SRC)
+endif()
+
+add_executable(model_infer ${PROJECT_ROOT_DIR}/demo/model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
 ADD_DEPENDENCIES(model_infer ext-yaml-cpp)
 target_link_libraries(model_infer ${DEPS})
 
-add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(batch_infer ${PROJECT_ROOT_DIR}/demo/batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
 ADD_DEPENDENCIES(batch_infer ext-yaml-cpp)
 target_link_libraries(batch_infer ${DEPS})
 
-add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+add_executable(multi_gpu_model_infer ${PROJECT_ROOT_DIR}/demo/multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
 ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
 target_link_libraries(multi_gpu_model_infer ${DEPS})
 
 if (WITH_TENSORRT)
-  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC})
+  add_executable(tensorrt_infer ${PROJECT_ROOT_DIR}/demo/tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
   ADD_DEPENDENCIES(tensorrt_infer ext-yaml-cpp)
   target_link_libraries(tensorrt_infer ${DEPS})
+endif()
+
+if (WITH_ENCRYPTION)
+  add_executable(decrypt_infer ${PROJECT_ROOT_DIR}/demo/decrypt_infer.cpp ${SRC}
+                               ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
+  ADD_DEPENDENCIES(decrypt_infer ext-yaml-cpp)
+  target_link_libraries(decrypt_infer ${DEPS})
 endif()
 
 if(WIN32)

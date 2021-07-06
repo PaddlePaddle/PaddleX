@@ -13,20 +13,33 @@
 // limitations under the License.
 #pragma once
 
-#include <memory>
+#include <vector>
 #include <string>
 
-#include "model_deploy/common/include/deploy_delacre.h"
-#include "model_deploy/common/include/output_struct.h"
-#include "model_deploy/common/include/model_factory.h"
-#include "model_deploy/engine/include/engine.h"
+#ifndef PADDLE_MODEL_PROTECT_UTIL_CRYPTO_BASE64_UTILS_H
+#define PADDLE_MODEL_PROTECT_UTIL_CRYPTO_BASE64_UTILS_H
 
-#ifdef PADDLEX_DEPLOY_ENCRYPTION
-#include "encryption/include/paddle_model_encrypt.h"
-#endif  // PADDLEX_DEPLOY_ENCRYPTION
+namespace baidu {
+namespace base {
+namespace base64 {
 
-namespace PaddleDeploy {
+std::string base64_encode(const std::string& input);
+std::string base64_decode(const std::string& input);
 
-PD_INFER_DECL Model* CreateModel(const std::string& name);
+}  // namespace base64
+}  // namespace base
+}  // namespace baidu
 
-}  // namespace PaddleDeploy
+// namespace util {
+// namespace crypto {
+
+// class Base64Utils {
+// public:
+//     static std::string encode(const ::std::string& data);
+
+//     static std::string decode(const ::std::string& data);
+// };
+
+// }
+// }
+#endif  // PADDLE_MODEL_PROTECT_BASE64_UTILS_H

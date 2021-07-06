@@ -15,8 +15,19 @@
 
 namespace PaddleDeploy {
 
-bool ClasModel::YamlConfigInit(const std::string& cfg_file) {
-  yaml_config_ = YAML::LoadFile(cfg_file);
+bool ClasModel::YamlConfigInit(const std::string& cfg_file,
+                               const std::string key) {
+  if ("" == key) {
+    yaml_config_ = YAML::LoadFile(cfg_file);
+  } else {
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
+    std::string cfg = decrypt_file(cfg_file.c_str(), key.c_str());
+    yaml_config_ = YAML::Load(cfg);
+#else
+     std::cerr << "Don't open encryption on compile" << std::endl;
+    return false;
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
+  }
   return true;
 }
 

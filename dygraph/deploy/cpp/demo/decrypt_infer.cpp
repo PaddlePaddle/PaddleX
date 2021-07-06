@@ -37,10 +37,20 @@ int main(int argc, char** argv) {
   // model init
   model->Init(FLAGS_cfg_file, FLAGS_key);
 
+
   // inference engine init
   PaddleDeploy::PaddleEngineConfig engine_config;
-  engine_config.model_filename = FLAGS_model_filename;
-  engine_config.params_filename = FLAGS_params_filename;
+  // encryption
+  if ("" != FLAGS_key) {
+    engine_config.key = FLAGS_key;
+    engine_config.model_filename = decrypt_file(FLAGS_model_filename.c_str(),
+                                                FLAGS_key.c_str());
+    engine_config.params_filename = decrypt_file(FLAGS_params_filename.c_str(),
+                                                 FLAGS_key.c_str());
+  } else {
+    engine_config.model_filename = FLAGS_model_filename;
+    engine_config.params_filename = FLAGS_params_filename;
+  }
   engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.gpu_id = FLAGS_gpu_id;
   model->PaddleEngineInit(engine_config);
