@@ -170,7 +170,7 @@ if(WITH_GPU)
 
     if (WITH_TENSORRT)
       set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
     endif()
 
   else()
@@ -289,12 +289,12 @@ if(WIN32)
   )
   if (WITH_TENSORRT)
     add_custom_command(TARGET model_infer POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
-      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_LIB_DIR}/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_LIB_DIR}/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     )
     if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
       add_custom_command(TARGET model_infer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+        COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_LIB_DIR}/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
       )
     endif()
   endif()
