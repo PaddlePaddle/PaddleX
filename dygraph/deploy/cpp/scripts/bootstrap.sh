@@ -42,8 +42,8 @@ OPENSSL_URL=https://bj.bcebos.com/paddlex/tools/openssl-1.1.0k.tar.gz
 if [ ! -d "./deps/openssl-1.1.0k/" ]; then
     mkdir -p deps
     cd deps
-    wget -c ${OPENCV_URL} -O openssl-1.1.0k.tar.gz
-    tar xvfj openssl-1.1.0k.tar.gz
+    wget -c ${OPENSSL_URL} -O openssl-1.1.0k.tar.gz
+    tar -zxvf openssl-1.1.0k.tar.gz
     rm -rf openssl-1.1.0k.tar.gz
     cd ..
 fi
