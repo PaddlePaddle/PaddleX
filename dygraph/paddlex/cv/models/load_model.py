@@ -97,6 +97,7 @@ def load_model(model_dir):
                         k: paddle.to_tensor(v)
                         for k, v in inputs.items()
                     }]
+                    model.net.eval()
                 model.pruner = getattr(paddleslim, pruning_info['pruner'])(
                     model.net, inputs=inputs)
                 model.pruning_ratios = pruning_info['pruning_ratios']
