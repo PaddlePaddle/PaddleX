@@ -290,7 +290,7 @@ paddlex.det.FasterRCNN(num_classes=80, backbone='ResNet50', with_fpn=True, aspec
 > > - **aspect_ratios** (list): 生成anchor高宽比的可选值。默认为[0.5, 1.0, 2.0]。
 > > - **anchor_sizes** (list): 生成anchor大小的可选值。默认为[[32], [64], [128], [256], [512]]。
 > > - **keep_top_k** (int): RCNN部分在进行非极大值抑制计算后，每张图像保留最多保存`keep_top_k`个检测框。默认为100。
-> > - **nms_threshold** (float): RCNN部分在进行非极大值抑制时，用于剔除检测框所需的IoU阈值。当`rcnn_nms`设置为`MultiClassSoftNMS`时，`nms_threshold`的设置不生效。默认为0.5。
+> > - **nms_threshold** (float): RCNN部分在进行非极大值抑制时，用于剔除检测框所需的IoU阈值。默认为0.5。
 > > - **score_threshold** (float): RCNN部分在进行非极大值抑制前，用于过滤掉低置信度边界框所需的置信度阈值。默认为0.05。
 > > - **fpn_num_channels** (int): FPN部分特征层的通道数量。默认为256。
 > > - **rpn_batch_size_per_im** (int): 训练阶段，RPN部分每张图片的正负样本的数量总和。默认为256。
