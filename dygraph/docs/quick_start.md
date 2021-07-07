@@ -116,7 +116,7 @@ model.train(num_epochs=10,
 ```
 visualdl --logdir output/mobilenetv3_small --port 8001
 ```
-服务启动后，通过浏览器打开https://0.0.0.0:8001或https://localhost:8001即可。
+服务启动后，通过浏览器打开https://0.0.0.0:8001或https://localhost:8001 即可。
 
 如果您使用的是AIStudio平台进行训练，不能通过此方式启动visualdl，请参考AIStudio VisualDL启动教程使用
 
@@ -135,7 +135,7 @@ print("Predict Result: ", result)
 ```
 Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'category_id': 0}]
 ```
-- [load_model接口说明](../../docs/train/prediction.md)
+- [load_model接口说明](./apis/prediction.md)
 - [分类模型predict接口说明](./apis/models/classification.md#predict)
 
 

@@ -1,6 +1,21 @@
 # Object Detection
 
-## paddlex.det.PPYOLOv2
+
+## 目录
+* [paddlex.det.PPYOLOv2](#1)
+  * [train](#11)
+  * [evaluate](#12)
+  * [predict](#13)
+  * [analyze_sensitivity](#14)
+  * [prune](#15)
+  * [quant_aware_train](#16)
+* [paddlex.det.PPYOLO](#2)
+* [paddlex.det.PPYOLOTiny](#3)
+* [paddlex.det.YOLOv3](#4)
+* [paddlex.det.FasterRCNN](#5)
+
+
+## <h2 id="1">paddlex.det.PPYOLOv2</h2>
 
 ```python
 paddlex.det.PPYOLOv2(num_classes=80, backbone='ResNet50_vd_dcn', anchors=[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45], [59, 119], [116, 90], [156, 198], [373, 326]], anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]], use_iou_aware=True, use_spp=True, use_drop_block=True, scale_x_y=1.05, ignore_threshold=0.7, label_smooth=False, use_iou_loss=True, use_matrix_nms=True, nms_score_threshold=0.01, nms_topk=-1, nms_keep_topk=100, nms_iou_threshold=0.45)
@@ -27,7 +42,7 @@ paddlex.det.PPYOLOv2(num_classes=80, backbone='ResNet50_vd_dcn', anchors=[[10, 1
 > > - **nms_keep_topk** (int): 进行NMS后，每个图像要保留的总检测框数。默认为100。
 > > - **nms_iou_threshold** (float): 进行NMS时，用于剔除检测框IOU的阈值。默认为0.45。
 
-### train
+### <h3 id="11">train</h3>
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, optimizer=None, save_interval_epochs=1, log_interval_steps=10, save_dir='output', pretrain_weights='IMAGENET', learning_rate=.001, warmup_steps=0, warmup_start_lr=0.0, lr_decay_epochs=(216, 243), lr_decay_gamma=0.1, metric=None, use_ema=False, early_stop=False, early_stop_patience=5, use_vdl=True)
@@ -56,8 +71,9 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, o
 > > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认为5。
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认为True。
+> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/ppyolov2/best_model`。若为None，则不会恢复训练。默认值为None。
 
-### evaluate
+### <h3 id="12">evaluate</h3>
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, metric=None, return_details=False)
@@ -76,7 +92,7 @@ evaluate(self, eval_dataset, batch_size=1, metric=None, return_details=False)
 >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当`return_details`为False时，返回metrics。metrics为dict，包含关键字：'bbox_mmap'或者’bbox_map‘，分别表示平均准确率平均值在各个阈值下的结果取平均值的结果（mmAP）、平均准确率平均值（mAP）。eval_details为dict，包含bbox和gt两个关键字。其中关键字bbox的键值是一个列表，列表中每个元素代表一个预测结果，一个预测结果是一个由图像id，预测框类别id, 预测框坐标，预测框得分组成的列表。而关键字gt的键值是真实标注框的相关信息。
 
-### predict
+### <h3 id="13">predict</h3>
 
 ```python
 predict(self, img_file, transforms=None)
@@ -93,7 +109,7 @@ predict(self, img_file, transforms=None)
 >
 > > - **list**: 预测结果列表。如果输入为单张图像，列表中每个元素均为一个dict，键值包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。如果输入为多张图像，如果输入为多张图像，返回由每张图像预测结果组成的列表。
 
-### analyze_sensitivity
+### <h3 id="14">analyze_sensitivity</h3>
 
 ```python
 analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='output')
@@ -108,7 +124,7 @@ analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='
 > > - **criterion** ({'l1_norm', 'fpgm'}): 进行Filter粒度剪裁时评估，评估Filter重要性的范数标准。如果为'l1_norm'，采用L1-Norm标准。如果为'fpgm'，采用 [Geometric Median](https://arxiv.org/abs/1811.00250) 标准。
 > > - **save_dir** (str): 计算的得到的sensetives文件的存储路径。
 
-### prune
+### <h3 id="15">prune</h3>
 
 ```python
 prune(self, pruned_flops, save_dir=None)
@@ -120,7 +136,7 @@ prune(self, pruned_flops, save_dir=None)
 > > - **pruned_flops** (float): 每秒浮点数运算次数（FLOPs）的剪裁比例。
 > > - **save_dir** (None or str): 剪裁后模型保存路径。如果为None，剪裁完成后不会对模型进行保存。默认为None。
 
-### quant_aware_train
+### <h3 id="16">quant_aware_train</h3>
 
 ```python
 quant_aware_train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, optimizer=None, save_interval_epochs=1, log_interval_steps=10, save_dir='output', learning_rate=.00001, warmup_steps=0, warmup_start_lr=0.0, lr_decay_epochs=(216, 243), lr_decay_gamma=0.1, metric=None, use_ema=False, early_stop=False, early_stop_patience=5, use_vdl=True, quant_config=None)
@@ -177,7 +193,8 @@ quant_aware_train(self, num_epochs, train_dataset, train_batch_size=64, eval_dat
 > >  }
 > >  ```
 
-## paddlex.det.PPYOLO
+
+## <h2 id="2">paddlex.det.PPYOLO</h2>
 
 ```python
 paddlex.det.PPYOLO(num_classes=80, backbone='ResNet50_vd_dcn', anchors=None, anchor_masks=None, use_coord_conv=True, use_iou_aware=True, use_spp=True, use_drop_block=True, scale_x_y=1.05, ignore_threshold=0.7, label_smooth=False, use_iou_loss=True, use_matrix_nms=True, nms_score_threshold=0.01, nms_topk=-1, nms_keep_topk=100, nms_iou_threshold=0.45)
@@ -212,7 +229,7 @@ paddlex.det.PPYOLO(num_classes=80, backbone='ResNet50_vd_dcn', anchors=None, anc
 > - prune 剪裁接口说明同 [PPYOLOv2模型prune接口](#prune)
 > - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
 
-## paddlex.det.PPYOLOTiny
+## <h2 id="3">paddlex.det.PPYOLOTiny</h2>
 ```python
 paddlex.det.PPYOLOTiny(num_classes=80, backbone='MobileNetV3', anchors=[[10, 15], [24, 36], [72, 42], [35, 87], [102, 96], [60, 170], [220, 125], [128, 222], [264, 266]], anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]], use_iou_aware=False, use_spp=True, use_drop_block=True, scale_x_y=1.05, ignore_threshold=0.5, label_smooth=False, use_iou_loss=True, use_matrix_nms=False, nms_score_threshold=0.005, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=0.45)
 ```
@@ -245,7 +262,7 @@ paddlex.det.PPYOLOTiny(num_classes=80, backbone='MobileNetV3', anchors=[[10, 15]
 > - prune 剪裁接口说明同 [PPYOLOv2模型prune接口](#prune)
 > - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
 
-## paddlex.det.YOLOv3
+## <h2 id="4">paddlex.det.YOLOv3</h2>
 
 ```python
 paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45], [59, 119], [116, 90], [156, 198], [373, 326]], anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]], ignore_threshold=0.7, nms_score_threshold=0.01, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=0.45, label_smooth=False)
@@ -274,7 +291,7 @@ paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=[[10, 13], [1
 > - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
 
 
-## paddlex.det.FasterRCNN
+## <h2 id="5">paddlex.det.FasterRCNN</h2>
 
 ```python
 paddlex.det.FasterRCNN(num_classes=80, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[[32], [64], [128], [256], [512]], keep_top_k=100, nms_threshold=0.5, score_threshold=0.05, fpn_num_channels=256, rpn_batch_size_per_im=256, rpn_fg_fraction=0.5, test_pre_nms_top_n=None, test_post_nms_top_n=1000)
