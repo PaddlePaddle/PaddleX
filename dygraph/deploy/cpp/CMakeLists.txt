@@ -266,13 +266,6 @@ if (WITH_TENSORRT)
   target_link_libraries(tensorrt_infer ${DEPS})
 endif()
 
-if (WITH_ENCRYPTION)
-  add_executable(decrypt_infer ${PROJECT_ROOT_DIR}/demo/decrypt_infer.cpp ${SRC}
-                               ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
-  ADD_DEPENDENCIES(decrypt_infer ext-yaml-cpp)
-  target_link_libraries(decrypt_infer ${DEPS})
-endif()
-
 if(WIN32)
   add_custom_command(TARGET model_infer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${PADDLE_DIR}/third_party/install/mklml/lib/mklml.dll ${CMAKE_BINARY_DIR}/paddle_deploy
