@@ -45,7 +45,7 @@ PaddleDeploy::Model*  PaddleDeploy::ModelFactory::CreateObject(const std::string
 ### 2.1 模型前后处理初始化
 
 ```C++
-bool Model::Init(const std::string& cfg_file)
+bool Model::Init(const std::string& cfg_file, const std::string key = "")
 ```
 
 > 读取模型的配置文件，初始化模型预测过程中的数据预处理和后处理等相关操作
@@ -53,6 +53,8 @@ bool Model::Init(const std::string& cfg_file)
 **参数**
 
 > > **cfg_file** 配置文件路径，如PaddleDetection导出的模型中的`infer_cfg.yml`
+>
+> > > **key** 模型加密的key，用于解密模型。默认为空，表示加载普通模型；如果非空则用该key解密模型并加载部署
 
 **返回值**
 
@@ -64,6 +66,8 @@ bool Model::Init(const std::string& cfg_file)
 > if (!model->Init("yolov3_mbv1/model/infer_cfg.yml")) {
 >     std::cerr << "Fail to execute model->Init()" << std::endl;
 > }
+> //  解密
+> model->Init("yolov3_mbv1/model/infer_cfg.yml", "2DTPfe+K+I/hkHlDMDAoXdVzotbC8UCF9Ti0rwWd+KU=")
 >```
 
 
@@ -330,6 +334,8 @@ bool Model::Postprocess(const std::vector<PaddleDeploy::DataBlob>& outputs,
   std::string model_filename = "";  // 模型文件
 
   std::string params_filename = ""; // 模型参数
+
+  std::string key = ""; // 模型加密的key， 用于解密经过加密的模型。如果为空，则直接加载普通模型部署。
 
   bool use_mkl = true; // 是否开启mkl
 
