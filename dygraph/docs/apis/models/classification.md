@@ -1,6 +1,16 @@
 # Image Classification
 
-## paddlex.cls.ResNet50
+## 目录
+* [paddlex.cls.ResNet50](#1)
+  * [train](#11)
+  * [evaluate](#12)
+  * [predict](#13)
+  * [analyze_sensitivity](#14)
+  * [prune](#15)
+  * [quant_aware_train](#16)
+* [其他分类模型](#2)
+
+## <h2 id="1">paddlex.cls.ResNet50</h2>
 
 ```python
 paddlex.cls.ResNet50(num_classes=1000)
@@ -12,7 +22,7 @@ paddlex.cls.ResNet50(num_classes=1000)
 >
 > - **num_classes** (int): 类别数。默认为1000。  
 
-### train
+### <h3 id="11">train</h3>
 
 ```python
 train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, optimizer=None, save_interval_epochs=1, log_interval_steps=10, save_dir='output', pretrain_weights='IMAGENET', learning_rate=.025, warmup_steps=0, warmup_start_lr=0.0, lr_decay_epochs=(30, 60, 90), lr_decay_gamma=0.1, early_stop=False, early_stop_patience=5, use_vdl=True)
@@ -37,8 +47,9 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, o
 > > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认为5。
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认为True。
+> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/mobilenetv3_small/best_model`。若为None，则不会恢复训练。默认值为None。
 
-### evaluate
+### <h3 id="12">evaluate</h3>
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, return_details=False)
@@ -54,7 +65,7 @@ evaluate(self, eval_dataset, batch_size=1, return_details=False)
 >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当`return_details`为False时，返回metrics。 metrics为dict，包含键值：'acc1'、'acc5'，分别表示最大值的accuracy、前5个最大值的accuracy。eval_details为dict。包含键值：'true_labels'、'pred_scores'，分别代表真实类别id、每个类别的预测得分。
 
-### predict
+### <h3 id="13">predict</h3>
 
 ```python
 predict(self, img_file, transforms=None, topk=1)
@@ -72,7 +83,7 @@ predict(self, img_file, transforms=None, topk=1)
 >
 > > - **dict** ｜ **List[dict]**: 如果输入为单张图像，返回dict。包含的键值为'category_id'、'category'、'score'，分别对应预测类别id、预测类别标签、预测得分。如果输入为多张图像，返回由每张图像预测结果组成的列表。
 
-### analyze_sensitivity
+### <h3 id="14">analyze_sensitivity</h3>
 
 ```python
 analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='output')
@@ -87,7 +98,7 @@ analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='
 > > - **criterion** ({'l1_norm', 'fpgm'}): 进行Filter粒度剪裁时评估，评估Filter重要性的范数标准。如果为'l1_norm'，采用L1-Norm标准。如果为'fpgm'，采用 [Geometric Median](https://arxiv.org/abs/1811.00250) 标准。
 > > - **save_dir** (str): 计算的得到的sensetives文件的存储路径。
 
-### prune
+### <h3 id="15">prune</h3>
 
 ```python
 prune(self, pruned_flops, save_dir=None)
@@ -99,7 +110,7 @@ prune(self, pruned_flops, save_dir=None)
 > > - **pruned_flops** (float): 每秒浮点数运算次数（FLOPs）的剪裁比例。
 > > - **save_dir** (None or str): 剪裁后模型保存路径。如果为None，剪裁完成后不会对模型进行保存。默认为None。
 
-### quant_aware_train
+### <h3 id="16">quant_aware_train</h3>
 
 ```python
 quant_aware_train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, optimizer=None, save_interval_epochs=1, log_interval_steps=10, save_dir='output', learning_rate=.000025, warmup_steps=0, warmup_start_lr=0.0, lr_decay_epochs=(30, 60, 90), lr_decay_gamma=0.1, early_stop=False, early_stop_patience=5, use_vdl=True, quant_config=None)
@@ -155,7 +166,8 @@ quant_aware_train(self, num_epochs, train_dataset, train_batch_size=64, eval_dat
 > >  ```
 
 
-## 其它分类模型
+## <h2 id="2">其他分类模型</h2>
+
 
 PaddleX提供了共计38种分类模型，所有分类模型均提供同`ResNet50`相同的训练`train`，评估`evaluate`，预测`predict`，敏感度分析`analyze_sensitivity`，剪裁`prune`和在线量化`quant_aware_train`接口，各模型效果可参考[模型库](../../appendix/model_zoo.md)。
 

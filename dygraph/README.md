@@ -32,12 +32,12 @@
 
 ### 1. 快速上手PaddleX
 
-
 * [快速安装PaddleX](./docs/install.md)
   * [PaddleX API开发模式安装](./docs/install.md#1-paddlex-api开发模式安装)
   * [PadldeX GUI开发模式安装](./docs/install.md#2-padldex-gui开发模式安装)
   * [PaddleX Restful开发模式安装](./docs/install.md#3-paddlex-restful开发模式安装)
 * [10分钟快速上手使用](./docs/quick_start.md)
+* [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
 
 
 ### 2. 数据准备
@@ -58,14 +58,12 @@
     * [API文档](./docs/apis)
       * [数据集读取API](./docs/apis/datasets.md)
       * [数据预处理和数据增强API](./docs/apis/transforms/transforms.md)
-      * [图像分类模型API](./docs/apis/models/classification.md)
-      * [目标检测模型API](./docs/apis/models/detection.md)
-      * [实例分割模型API](./docs/apis/models/instance_segmentation.md)
-      * [图像分割模型API](./docs/apis/models/semantic_segmentation.md)
+      * [模型API/模型加载API](./docs/apis/models/README.md)
+      * [预测结果可视化API](./docs/apis/visualize.md)
     * [模型训练与参数调整](tutorials/train)
       * [模型训练](tutorials/train)
-      * [训练参数调整](./docs//parameters.md)
-    * [VisualDL可视化训练指标](../docs/train/visualdl.md)
+      * [训练参数调整](./docs/parameters.md)
+    * [VisualDL可视化训练指标](./docs/visualdl.md)
     * [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
 
 * **PaddleX GUI开发模式：**
@@ -93,7 +91,7 @@
 - [缺陷检测](examples/defect_detection)
 - [机械手抓取](examples/robot_grab)
 - [工业表计读数](examples/meter_reader)
-- [Windows系统下使用C#语言部署](examples/C#_deploy)
+- [Windows系统下使用C#语言部署](examples/C%23_deploy)
 
 ## 版本更新
 

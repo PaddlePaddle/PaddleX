@@ -1,6 +1,21 @@
 # Semantic Segmentation
 
-## paddlex.seg.DeepLabv3p
+
+## 目录
+* [paddlex.seg.DeepLabv3p](#1)
+  * [train](#11)
+  * [evaluate](#12)
+  * [predict](#13)
+  * [analyze_sensitivity](#14)
+  * [prune](#15)
+  * [quant_aware_train](#16)
+* [paddlex.seg.BiSeNetV2](#2)
+* [paddlex.seg.UNet](#3)
+* [paddlex.seg.HRNet](#4)
+* [paddlex.seg.FastSCNN](#5)
+
+
+## <h2 id="1">paddlex.seg.DeepLabv3p</h2>
 
 ```python
 paddlex.seg.DeepLabV3P(num_classes=2, backbone='ResNet50_vd', use_mixed_loss=False, output_stride=8, backbone_indices=(0, 3), aspp_ratios=(1, 12, 24, 36), aspp_out_channels=256, align_corners=False)
@@ -18,7 +33,7 @@ paddlex.seg.DeepLabV3P(num_classes=2, backbone='ResNet50_vd', use_mixed_loss=Fal
 > > - **assp_out_channels** (int): assp模块输出通道数。默认为256。
 > > - **align_corners** (bool): 网络中对特征图进行插值时是否将四个角落像素的中心对齐。若特征图尺寸为偶数，建议设为True。若特征图尺寸为奇数，建议设为False。默认为False。
 
-### train
+### <h3 id="11">train</h3>
 
 ```python
 train(num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, optimizer=None, save_interval_epochs=1, log_interval_steps=2, save_dir='output', pretrain_weights='CITYSCAPES', learning_rate=0.01, lr_decay_power=0.9, early_stop=False, early_stop_patience=5, use_vdl=True)
@@ -41,8 +56,9 @@ train(num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, optimize
 > > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认为5。
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认为True。
+> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/deeplabv3p/best_model`。若为None，则不会恢复训练。默认值为None。
 
-### evaluate
+### <h3 id="12">evaluate</h3>
 
 ```python
 evaluate(self, eval_dataset, batch_size=1, return_details=False):
@@ -59,7 +75,7 @@ evaluate(self, eval_dataset, batch_size=1, return_details=False):
 > >
 > > - **tuple** (metrics, eval_details) | **dict** (metrics): 当`return_details`为True时，返回(metrics, eval_details)，当`return_details`为False时，返回metrics。metrics为dict，包含关键字：'miou'、'category_iou'、'oacc'、'category_acc'和'kappa'，分别表示平均IoU、各类别IoU、总体准确率、各类别准确率和kappa系数。eval_details为dict，包含关键字：'confusion_matrix'，表示评估的混淆矩阵。
 
-### predict
+### <h3 id="13">predict</h3>
 
 ```
 predict(self, img_file, transforms=None):
@@ -77,7 +93,7 @@ predict(self, img_file, transforms=None):
 > > - **dict** ｜ **List[dict]**: 如果输入为单张图像，返回dict。包含关键字'label_map'和'score_map', 'label_map'存储预测结果灰度图，像素值表示对应的类别，'score_map'存储各类别的概率，shape=(h, w, num_classes)。如果输入为多张图像，返回由每张图像预测结果组成的列表。
 
 
-### analyze_sensitivity
+### <h3 id="14">analyze_sensitivity</h3>
 
 ```python
 analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='output')
@@ -92,7 +108,7 @@ analyze_sensitivity(self, dataset, batch_size=8, criterion='l1_norm', save_dir='
 > > - **criterion** ({'l1_norm', 'fpgm'}): 进行Filter粒度剪裁时评估，评估Filter重要性的范数标准。如果为'l1_norm'，采用L1-Norm标准。如果为'fpgm'，采用 [Geometric Median](https://arxiv.org/abs/1811.00250) 标准。
 > > - **save_dir** (str): 计算的得到的sensetives文件的存储路径。
 
-### prune
+### <h3 id="15">prune</h3>
 
 ```python
 prune(self, pruned_flops, save_dir=None)
@@ -104,7 +120,7 @@ prune(self, pruned_flops, save_dir=None)
 > > - **pruned_flops** (float): 每秒浮点数运算次数（FLOPs）的剪裁比例。
 > > - **save_dir** (None or str): 剪裁后模型保存路径。如果为None，剪裁完成后不会对模型进行保存。默认为None。
 
-### quant_aware_train
+### <h3 id="16">quant_aware_train</h3>
 
 ```python
 quant_aware_train(self, num_epochs, train_dataset, train_batch_size=2, eval_dataset=None, optimizer=None, save_interval_epochs=1, log_interval_steps=2, save_dir='output', learning_rate=.0001, lr_decay_power=0.9, early_stop=False, early_stop_patience=5, use_vdl=True, quant_config=None)
@@ -156,7 +172,7 @@ quant_aware_train(self, num_epochs, train_dataset, train_batch_size=2, eval_data
 > >  }
 > >  ```
 
-## paddlex.seg.BiSeNetV2
+## <h2 id="2">paddlex.seg.BiSeNetV2</h2>
 
 ```python
 paddlex.seg.BiSeNetV2(num_classes=2, use_mixed_loss=False, align_corners=False)
@@ -199,7 +215,7 @@ paddlex.seg.UNet(num_classes=2, use_mixed_loss=False, use_deconv=False, align_co
 > - prune 剪裁接口说明同 [DeepLabV3P模型prune接口](#prune)
 > - quant_aware_train 在线量化接口说明同 [DeepLabV3P模型quant_aware_train接口](#quant_aware_train)
 
-## paddlex.seg.HRNet
+## <h2 id="3">paddlex.seg.HRNet</h2>
 
 ```python
 paddlex.seg.HRNet(num_classes=2, width=48, use_mixed_loss=False, align_corners=False)
@@ -221,7 +237,7 @@ paddlex.seg.HRNet(num_classes=2, width=48, use_mixed_loss=False, align_corners=F
 > - prune 剪裁接口说明同 [DeepLabV3P模型prune接口](#prune)
 > - quant_aware_train 在线量化接口说明同 [DeepLabV3P模型quant_aware_train接口](#quant_aware_train)
 
-## paddlex.seg.FastSCNN
+## <h2 id="4">paddlex.seg.FastSCNN</h2>
 
 ```python
 paddlex.seg.FastSCNN(num_classes=2, use_mixed_loss=False, align_corners=False)
