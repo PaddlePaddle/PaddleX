@@ -38,7 +38,7 @@ namespace ConsoleApp2
             Byte[] labellist = new Byte[1000];    //新建字节数组
 
             //第四个参数为输入图像的通道数
-            ModelPredict(inputData, bmp.Width, bmp.Height, 4, results, boxesInfo, ref labellist[0]);
+            ModelPredict(inputData, bmp.Width, bmp.Height, 3, results, boxesInfo, ref labellist[0]);
             string strGet = System.Text.Encoding.Default.GetString(labellist, 0, labellist.Length);    //将字节数组转换为字符串
             Console.WriteLine("labellist: {0}", strGet);
             for (int i = 0; i < boxesInfo[0]; i++)
