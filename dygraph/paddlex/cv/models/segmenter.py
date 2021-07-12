@@ -515,12 +515,44 @@ class BaseSegmenter(BaseModel):
             restore_list = list()
             h, w = ori_shape[0], ori_shape[1]
             for op in transforms:
-                if op.__class__.__name__ in ['Resize', 'ResizeByShort']:
+                if op.__class__.__name__ == 'Resize':
                     restore_list.append(('resize', (h, w)))
                     h, w = op.target_size
-                if op.__class__.__name__ in ['Padding']:
-                    restore_list.append(('padding', (h, w)))
-                    h, w = op.target_size
+                elif op.__class__.__name__ == 'ResizeByShort':
+                    restore_list.append(('resize', (h, w)))
+                    im_short_size = min(h, w)
+                    im_long_size = max(h, w)
+                    scale = float(op.short_size) / float(im_short_size)
+                    if 0 < op.max_size < np.round(scale * im_long_size):
+                        scale = float(op.max_size) / float(im_long_size)
+                    h = int(round(h * scale))
+                    w = int(round(w * scale))
+                elif op.__class__.__name__ == 'ResizeByLong':
+                    restore_list.append(('resize', (h, w)))
+                    im_long_size = max(h, w)
+                    scale = float(op.long_size) / float(im_long_size)
+                    h = int(round(h * scale))
+                    w = int(round(w * scale))
+                elif op.__class__.__name__ == 'Padding':
+                    if op.target_size:
+                        target_h, target_w = op.target_size
+                    else:
+                        target_h = int(
+                            (np.ceil(h / op.size_divisor) * op.size_divisor))
+                        target_w = int(
+                            (np.ceil(w / op.size_divisor) * op.size_divisor))
+
+                    if op.pad_mode == -1:
+                        offsets = op.offsets
+                    elif op.pad_mode == 0:
+                        offsets = [0, 0]
+                    elif op.pad_mode == 1:
+                        offsets = [(target_h - h) // 2, (target_w - w) // 2]
+                    else:
+                        offsets = [target_h - h, target_w - w]
+                    restore_list.append(('padding', (h, w), offsets))
+                    h, w = target_h, target_w
+
             batch_restore_list.append(restore_list)
         return batch_restore_list
 
@@ -536,7 +568,8 @@ class BaseSegmenter(BaseModel):
                 if item[0] == 'resize':
                     pred = F.interpolate(pred, (h, w), mode='nearest')
                 elif item[0] == 'padding':
-                    pred = pred[:, :, 0:h, 0:w]
+                    x, y = item[2]
+                    pred = pred[:, :, y:y + h, x:x + w]
                 else:
                     pass
             results.append(pred)
