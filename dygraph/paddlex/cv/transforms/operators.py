@@ -385,8 +385,8 @@ class ResizeByShort(Transform):
             scale = float(self.max_size) / float(im_long_size)
         target_w = int(round(im_w * scale))
         target_h = int(round(im_h * scale))
-        target_size = (target_w, target_h)
-        sample = Resize(target_size=target_size, interp=self.interp)(sample)
+        sample = Resize(
+            target_size=(target_h, target_w), interp=self.interp)(sample)
 
         return sample
 
@@ -442,8 +442,8 @@ class ResizeByLong(Transform):
         scale = float(self.long_size) / float(im_long_size)
         target_h = int(round(im_h * scale))
         target_w = int(round(im_w * scale))
-        target_size = (target_w, target_h)
-        sample = Resize(target_size=target_size, interp=self.interp)(sample)
+        sample = Resize(
+            target_size=(target_h, target_w), interp=self.interp)(sample)
 
         return sample
 
@@ -1008,9 +1008,9 @@ class Padding(Transform):
         elif self.pad_mode == 0:
             offsets = [0, 0]
         elif self.pad_mode == 1:
-            offsets = [(h - im_h) // 2, (w - im_w) // 2]
+            offsets = [(w - im_w) // 2, (h - im_h) // 2]
         else:
-            offsets = [h - im_h, w - im_w]
+            offsets = [w - im_w, h - im_h]
 
         sample['image'] = self.apply_im(sample['image'], offsets, (h, w))
         if 'mask' in sample:
