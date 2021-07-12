@@ -44,11 +44,11 @@ eval_transforms = transforms.Compose([
     transforms.Padding(coarsest_stride=32),
 ])
 
-train_dataset = pdx.dataset.CocoDetection(
+train_dataset = pdx.datasets.CocoDetection(
                     data_dir='./MyDataset/JPEGImages',
                     ann_file='./MyDataset/train.json',
                     transforms=train_transforms)
-eval_dataset = pdx.dataset.CocoDetection(
+eval_dataset = pdx.datasets.CocoDetection(
                     data_dir='./MyDataset/JPEGImages',
                     ann_file='./MyDataset/val.json',
                     transforms=eval_transforms)

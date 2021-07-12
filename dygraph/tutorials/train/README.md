@@ -23,10 +23,18 @@
 |semantic_segmentation/hrnet.py | 语义分割HRNet | 视盘分割 |
 |semantic_segmentation/unet.py | 语义分割UNet | 视盘分割 |
 
+可参考API接口说明了解示例代码中的API：
+* [数据集读取API](../../docs/apis/datasets.md)
+* [数据预处理和数据增强API](../../docs/apis/transforms/transforms.md)
+* [模型API/模型加载API](../../docs/apis/models/README.md)
+* [预测结果可视化API](../../docs/apis/visualize.md)
+
+
 # 环境准备
 
 - [PaddlePaddle安装](https://www.paddlepaddle.org.cn/install/quick)
-* 版本要求：PaddlePaddle==2.1.0
+* 版本要求：PaddlePaddle>=2.1.0
+* **运行MaskRCNN要求PaddlePaddle>=2.1.1**
 
 - [PaddleX安装](../../docs/install.md)
 
@@ -43,7 +51,7 @@ python image_classification/mobilenetv3_small.py
 ```
 python -m paddle.distributed.launch --gpus 0,1 image_classification/mobilenetv3_small.py
 ```
-使用多卡时，参考[训练参数调整](https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html)调整学习率和批量大小。
+使用多卡时，参考[训练参数调整](../../docs/parameters.md)调整学习率和批量大小。
 
 
 ## VisualDL可视化训练指标
@@ -57,4 +65,4 @@ visualdl --logdir output/mobilenetv3_small/vdl_log --port 8001
 
 ## 版本升级
 
-由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.10版本。如果安装PaddleX 2.0.0，请使用本目录下的训练脚本。
+由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.10版本。如果安装PaddleX 2.0.0rc3，请使用本目录下的训练脚本。
