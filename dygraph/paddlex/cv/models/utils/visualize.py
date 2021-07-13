@@ -204,7 +204,7 @@ def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
         xmax = xmin + w
         ymax = ymin + h
 
-        color = tuple(color_map[labels.index(cname)])
+        color = tuple(map(int, color_map[labels.index(cname)]))
         # draw bbox
         image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color,
                               linewidth)
