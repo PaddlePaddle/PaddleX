@@ -29,15 +29,15 @@
 * [点击查看回访录播](https://aistudio.baidu.com/aistudio/education/group/info/24531)
 
 
-* Day① 6.28 20:15-21:30 
+* Day① 6.28 20:15-21:30
    * 主题：工业算法选型及调优策略
 
-* Day② 6.29 20:15-21:30 
+* Day② 6.29 20:15-21:30
     * 主题：安防及智慧城市典型方案
     * [表计检测案例](https://paddlex.readthedocs.io/zh_CN/develop/examples/meter_reader.html)
 
 
-* Day③ 6.30 20:15-21:30 
+* Day③ 6.30 20:15-21:30
    * 主题：产业高性能高效部署方案
 
 ## 欢迎大家扫码入群交流：
@@ -143,7 +143,7 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 * 卫星遥感：
   * [RGB遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/remote_sensing.html)
   * [多通道遥感影像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
-  * [地块变化检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/multi-channel_remote_sensing/README.html)
+  * [地块变化检测](https://paddlex.readthedocs.io/zh_CN/develop/examples/change_detection.html)
 * [人像分割](https://paddlex.readthedocs.io/zh_CN/develop/examples/human_segmentation.html)
 * 模型多端安全部署
   * [CPU/GPU(加密)部署](https://paddlex.readthedocs.io/zh_CN/develop/deploy/server/index.html)
