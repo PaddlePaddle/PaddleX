@@ -216,8 +216,8 @@ class VOCDetection(Dataset):
                     annotations['annotations'].append({
                         'iscrowd': 0,
                         'image_id': int(im_id[0]),
-                        'bbox': [x1, y1, x2 - x1 + 1, y2 - y1 + 1],
-                        'area': float((x2 - x1 + 1) * (y2 - y1 + 1)),
+                        'bbox': [x1, y1, x2 - x1, y2 - y1],
+                        'area': float((x2 - x1) * (y2 - y1)),
                         'category_id': cname2cid[cname] + 1,
                         'id': ann_ct,
                         'difficult': _difficult
