@@ -1,5 +1,5 @@
 tqdm
-scipy
+scipy==1.5.4
 colorama
 cython
 pycocotools
