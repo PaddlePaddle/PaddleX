@@ -29,10 +29,19 @@ bool PaddleInferenceEngine::Init(const InferenceConfig& infer_config) {
     config.SetModel(engine_config.model_filename,
                   engine_config.params_filename);
   } else {
-    config.SetModelBuffer(engine_config.model_filename.c_str(),
-                          engine_config.model_filename.size(),
-                          engine_config.params_filename.c_str(),
-                          engine_config.params_filename.size());
+#ifdef PADDLEX_DEPLOY_ENCRYPTION
+    std::string model = decrypt_file(engine_config.model_filename.c_str(),
+                                     engine_config.key.c_str());
+    std::string params = decrypt_file(engine_config.params_filename.c_str(),
+                                      engine_config.key.c_str());
+    config.SetModelBuffer(model.c_str(),
+                          model.size(),
+                          params.c_str(),
+                          params.size());
+#else
+    std::cerr << "Don't open with_encryption on compile" << std::endl;
+    return false;
+#endif  // PADDLEX_DEPLOY_ENCRYPTION
   }
   if (engine_config.use_mkl && !engine_config.use_gpu) {
     config.EnableMKLDNN();

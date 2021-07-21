@@ -210,6 +210,8 @@ class COCOMetric(Metric):
         pass
 
     def get(self):
+        if 'bbox' not in self.eval_stats:
+            return {'bbox_mmap': 0.}
         if 'mask' in self.eval_stats:
             return OrderedDict(
                 zip(['bbox_mmap', 'segm_mmap'],

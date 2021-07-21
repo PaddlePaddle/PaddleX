@@ -228,7 +228,8 @@ def update_program(program, model_dir, place, scope=None):
             if param.name in shapes:
                 param_tensor = scope.find_var(param.name).get_tensor()
                 param_tensor.set(
-                    np.zeros(list(shapes[param.name])).astype('float32'), place)
+                    np.zeros(list(shapes[param.name])).astype('float32'),
+                    place)
     graph.update_groups_of_conv()
     graph.infer_shape()
     return program
@@ -295,7 +296,10 @@ def cal_params_sensitivities(model, save_file, eval_dataset, batch_size=8):
 
 def analysis(model, dataset, batch_size=8, save_file='./model.sensi.data'):
     return cal_params_sensitivities(
-        model, eval_dataset=dataset, batch_size=batch_size, save_file=save_file)
+        model,
+        eval_dataset=dataset,
+        batch_size=batch_size,
+        save_file=save_file)
 
 
 def get_params_ratios(sensitivities_file, eval_metric_loss=0.05):
@@ -383,6 +387,8 @@ def cal_model_size(program,
                 prune_var = prune_block.var(name)
                 prune_shape = prune_var.shape
                 break
+        if len(shape) == 0:
+            continue
         origin_size += reduce(lambda x, y: x * y, shape)
         new_size += reduce(lambda x, y: x * y, prune_shape)
     return (new_size * 1.0) / origin_size

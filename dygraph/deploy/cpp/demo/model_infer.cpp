@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.gpu_id = FLAGS_gpu_id;
+  engine_config.key = FLAGS_key;
   model->PaddleEngineInit(engine_config);
 
   // prepare data

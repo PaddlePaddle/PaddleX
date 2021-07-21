@@ -1,6 +1,6 @@
 # 模型加密预测示例
 
-本文档说明`PaddleX/deploy/cpp/demo/decrypt_infer.cpp`编译后的使用方法，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
+本文档说明如何对模型进行加密解密部署，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
 
 ## 步骤一、编译
 参考编译文档
@@ -8,7 +8,7 @@
 - [Linux系统上编译指南](../compile/paddle/linux.md)
 - [Windows系统上编译指南](../compile/paddle/windows.md)
 
-**注意**:编译时打开加密开关WITH_ENCRYPTION， 并填写OpenSSL路径
+**注意**:编译时一定要打开加密开关WITH_ENCRYPTION， 并填写OpenSSL路径
 
 ## 步骤二、准备PaddlePaddle部署模型
 开发者可从以下套件获取部署模型，需要注意，部署时需要准备的是导出来的部署模型，一般包含`model.pdmodel`、`model.pdiparams`和`deploy.yml`三个文件，分别表示模型结构、模型权重和各套件自行定义的配置信息。
@@ -58,7 +58,7 @@ yolov3_encryption
 
 ```sh
 # 使用GPU 加参数 --use_gpu=1
-build/demo/decrypt_infer --model_filename=yolov3_encryption/encrypted.pdmodel \
+build/demo/model_infer --model_filename=yolov3_encryption/encrypted.pdmodel \
                          --params_filename=yolov3_encryption/encrypted.pdparams \
                          --cfg_file=yolov3_encryption/model/encrypted.yml \
                          --image=yolov3_mbv1/images/000000010583.jpg \
