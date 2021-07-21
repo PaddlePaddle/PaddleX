@@ -25,8 +25,8 @@ for weights in weights_lists:
 
 > 之后在使用PaddleX Python API模式进行PaddleX模型训练时，只需要在import paddlex的同时，配置如下参数，模型在训练时便会优先在此目录下寻找已经下载好的预训练模型。
 ```
-import paddlex as pdx
-pdx.pretrain_dir = '/home/work/paddlex_pretrain'
+import paddlex
+paddlex.pretrain_dir = '/home/work/paddlex_pretrain'
 ```
 
 ## PaddleX GUI准备预训练模型
