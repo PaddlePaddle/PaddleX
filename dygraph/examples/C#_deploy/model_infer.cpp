@@ -52,9 +52,9 @@ extern "C" __declspec(dllexport) void InitModel(const char* model_type, const ch
 * 
 * nChannel: channel of img.
 * 
-* output: result of pridict ,include category_id£¬score£¬coordinate¡£
+* output: result of pridict ,include category_idï¿½ï¿½scoreï¿½ï¿½coordinateï¿½ï¿½
 * 
-* nBoxesNum£º number of box
+* nBoxesNumï¿½ï¿½ number of box
 * 
 * LabelList: label list of result
 */
@@ -93,24 +93,27 @@ extern "C" __declspec(dllexport) void ModelPredict(const unsigned char* img, int
 	{
 		std::cout << "model predict success" << std::endl;
 	}
-	nBoxesNum[0] = results.size();
+
 	std::string label ="";
+	int box_size = 0;
 	for (int num = 0; num < results.size(); num++)
 	{
 		//std::cout << "res: " << results[num] << std::endl;
+		nBoxesNum[num] = results[num].det_result->boxes.size();
 		for (int i = 0; i < results[num].det_result->boxes.size(); i++)
 		{
 			//std::cout << "category: " << results[num].det_result->boxes[i].category << std::endl;
 			label = label + results[num].det_result->boxes[i].category+ " ";
 			// labelindex
-			output[num * 6 + 0] = results[num].det_result->boxes[i].category_id;
+			output[box_size * 6 + 0] = results[num].det_result->boxes[i].category_id;
 			// score
-			output[num * 6 + 1] = results[num].det_result->boxes[i].score;
+			output[box_size * 6 + 1] = results[num].det_result->boxes[i].score;
 			//// box
-			output[num * 6 + 2] = results[num].det_result->boxes[i].coordinate[0];
-			output[num * 6 + 3] = results[num].det_result->boxes[i].coordinate[1];
-			output[num * 6 + 4] = results[num].det_result->boxes[i].coordinate[2];
-			output[num * 6 + 5] = results[num].det_result->boxes[i].coordinate[3];						
+			output[box_size * 6 + 2] = results[num].det_result->boxes[i].coordinate[0];
+			output[box_size * 6 + 3] = results[num].det_result->boxes[i].coordinate[1];
+			output[box_size * 6 + 4] = results[num].det_result->boxes[i].coordinate[2];
+			output[box_size * 6 + 5] = results[num].det_result->boxes[i].coordinate[3];
+			box_size += 1;						
 		}
 	}
 	memcpy(LabelList, label.c_str(), strlen(label.c_str()));
