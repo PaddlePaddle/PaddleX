@@ -55,9 +55,9 @@ PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epoc
 
 ### 训练日志字段
 
-#### YOLOv3
+#### YOLOv3/PPYOLO/PPYOLOv2/PPYOLOTiny
 
-YOLOv3的训练日志除了通用统计信息外（见上文训练通用统计信息），还包括`loss_xy`、`loss_wh`、`loss_obj`、`loss_cls`，这些字段的含义如下:
+YOLOv3/PPYOLO/PPYOLOv2/PPYOLOTiny的训练日志除了通用统计信息外（见上文训练通用统计信息），还包括`loss_xy`、`loss_wh`、`loss_obj`、`loss_cls`，这些字段的含义如下:
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
@@ -115,7 +115,7 @@ MaskRCNN的训练日志除了通用统计信息外，还包括`loss_mask`、`los
 
 > 注：`map`为平均准确率的平均值，即IoU(Intersection Over Union)取0.5时各个类别的准确率-召回率曲线下面积的平均值。
 
-上图中第3行`bbox_map`表示检测任务中整个验证集的平均准确率平均值。
+上图中第3行`bbox_map`表示检测任务中整个验证集上检测框的平均准确率的平均值。
 
 #### COCO评估标准
 
@@ -125,10 +125,10 @@ COCO格式的数据集不仅可以用于训练目标检测模型，也可以用�
 
 ![](images/faster_eval.png)
 
-上图中红框标注的`bbox_mmap`表示整个验证集的检测框平均准确率平均值。
+上图中红框标注的`bbox_mmap`表示整个验证集上检测框的平均准确率平均值（mAP）的平均值。
 
 ![](images/mask_eval.png)
-上图中红框标注的`bbox_mmap`和`seg_mmap`分别表示整个验证集的检测框平均准确率平均值、Mask平均准确率平均值。
+上图中红框标注的`bbox_mmap`和`seg_mmap`分别表示整个验证集上检测框的平均准确率平均值（mAP）的平均值、Mask的平均准确率平均值（mAP）的平均值。
 
 ## 分割特有统计信息
 
@@ -140,7 +140,7 @@ COCO格式的数据集不仅可以用于训练目标检测模型，也可以用�
 
 ### 评估日志字段
 
-语义分割的评估日志包括了`miou`、`category_iou`、`oacc`、`category_acc`、`kappa`，这些字段的含义如下：
+语义分割的评估日志包括了`miou`、`category_iou`、`oacc`、`category_acc`、`kappa`，`category_F1-score`这些字段的含义如下：
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
