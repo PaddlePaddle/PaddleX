@@ -37,15 +37,15 @@ def dataset_conversion(source, to, pics, anns, save_dir):
         labelme2seg(pics, anns, save_dir)
     elif source.lower() == 'easydata' and to.lower() == 'seg':
         easydata2seg(pics, anns, save_dir)
-    elif source.lower() == 'labelme' and to.lower() == 'voc':
+    elif source.lower() == 'labelme' and to.lower() == 'pascalvoc':
         labelme2voc(pics, anns, save_dir)
-    elif source.lower() == 'easydata' and to.lower() == 'voc':
+    elif source.lower() == 'easydata' and to.lower() == 'pascalvoc':
         easydata2voc(pics, anns, save_dir)
-    elif source.lower() == 'labelme' and to.lower() == 'coco':
+    elif source.lower() == 'labelme' and to.lower() == 'mscoco':
         labelme2coco(pics, anns, save_dir)
-    elif source.lower() == 'easydata' and to.lower() == 'coco':
+    elif source.lower() == 'easydata' and to.lower() == 'mscoco':
         easydata2coco(pics, anns, save_dir)
-    elif source.lower() == 'jingling' and to.lower() == 'coco':
+    elif source.lower() == 'jingling' and to.lower() == 'mscoco':
         jingling2coco(pics, anns, save_dir)
     else:
         raise Exception("Converting from {} to {} is not supported.".format(

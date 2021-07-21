@@ -93,6 +93,10 @@
 - [工业表计读数](examples/meter_reader)
 - [Windows系统下使用C#语言部署](examples/C%23_deploy)
 
+### 7. 附录
+
+- [无联网模型训练](./docs/how_to_offline_run.md)
+
 ## 版本更新
 
 - **2021.07.06 v2.0.0-rc3**
