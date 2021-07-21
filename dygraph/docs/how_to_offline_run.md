@@ -45,5 +45,6 @@ save_dir = '/home/work/paddlex_pretrain'
 weights_lists = [cityscapes_weights, imagenet_weights, pascalvoc_weights, coco_weights]
 for weights in weights_lists:
     for key, value in weights.items():
+        new_save_dir = osp.join(save_dir, key)
         download_and_decompress(value, path=new_save_dir)
 ```
