@@ -157,4 +157,4 @@ if __name__ == '__main__':
 
     print(
         "The visualized ground-truths and predictions are saved in {}. Ground-truth is on the left, prediciton is on the right".
-        format(save_dir))
+        format(args.save_dir))
