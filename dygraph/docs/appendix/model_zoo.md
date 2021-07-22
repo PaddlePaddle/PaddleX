@@ -105,7 +105,7 @@
 ### YOLOv3 on COCO
 
 | 骨架网络             | 输入尺寸    |  推理时间(fps) | Box AP |                           下载                          |
-| :------------------- | :------- |   :------------: | :-----: | :-----------------------------------------------------: |
+| :------------------- | :------- |   :------------: | :-----: | :------------------------------------------------: |
 | DarkNet53         | 608         |           ----     |  39.0  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams) |
 |   ResNet50_vd        | 608        |         ----     |  39.1  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams) |
 | ResNet34         | 608         |            ----     |  36.2  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_r34_270e_coco.pdparams) |
@@ -117,7 +117,7 @@
 ### YOLOv3 on Pasacl VOC
 
 | 骨架网络     | 输入尺寸   |推理时间(fps)| Box AP | 下载 |
-| :----------- | :--: |  :-----: |:------------: |:----: |:----: |
+| :----------- | :--: |  :-----: |:------------: |:----: |
 | MobileNet-V1 | 608  |          -        |  75.2  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams) |
 | MobileNet-V3 | 608  |            -        |  79.6  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_voc.pdparams) |
 | MobileNet-V1-SSLD | 608  |            -        |  78.3  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_voc.pdparams) |
