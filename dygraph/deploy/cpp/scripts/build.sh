@@ -1,3 +1,4 @@
+arch=`uname -m`
 # 是否使用GPU(即是否使用 CUDA)
 WITH_GPU=ON
 # 使用MKL or openblas
@@ -10,22 +11,27 @@ TENSORRT_DIR=$(pwd)/TensorRT/
 PADDLE_DIR=$(pwd)/paddle_inference
 # Paddle 的预测库是否使用静态库来编译
 # 使用TensorRT时，Paddle的预测库通常为动态库
-WITH_STATIC_LIB=ON
-# CUDA 的 lib 路径
-CUDA_LIB=/usr/local/cuda/lib64
-# CUDNN 的 lib 路径
-CUDNN_LIB=/usr/lib/x86_64-linux-gnu
+WITH_STATIC_LIB=OFF
 # 是否加密
 WITH_ENCRYPTION=OFF
 # OPENSSL 路径
 OPENSSL_DIR=$(pwd)/deps/openssl-1.1.0k
-
-{
-    bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的加密工具和opencv依赖库
-} || {
+# CUDA 的 lib 路径
+CUDA_LIB=/usr/local/cuda/lib64
+# CUDNN 的 lib 路径
+if [ $arch = "aarch64" ]; then
+  WITH_MKL=OFF
+  WITH_STATIC_LIB=OFF
+  CUDNN_LIB=/usr/lib/aarch64-linux-gnu
+else
+  CUDNN_LIB=/usr/lib/x86_64-linux-gnu
+  {
+    bash $(pwd)/scripts/bootstrap.sh # 下载预编译版本的opencv依赖库
+  } || {
     echo "Fail to execute script/bootstrap.sh"
     exit -1
-}
+  }
+fi
 
 # OPENCV 路径, 如果使用自带预编译版本可不修改
 OPENCV_DIR=$(pwd)/deps/opencv3.4.6gcc4.8ffmpeg/

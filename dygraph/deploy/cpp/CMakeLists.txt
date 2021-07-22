@@ -127,14 +127,21 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 
 if (WITH_TENSORRT AND WITH_GPU)
-  include_directories("${TENSORRT_DIR}/include")
-  link_directories("${TENSORRT_DIR}/lib")
+  if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") # aarch64
+    set(TENSORRT_INCLUDE_DIR /usr/include/aarch64-linux-gnu)
+    set(TENSORRT_LIB_DIR /usr/lib/aarch64-linux-gnu)
+  else()
+    set(TENSORRT_INCLUDE_DIR ${TENSORRT_DIR}/include)
+    set(TENSORRT_LIB_DIR ${TENSORRT_DIR}/lib)
+  endif()
+  include_directories("${TENSORRT_INCLUDE_DIR}")
+  link_directories("${TENSORRT_LIB_DIR}")
 
-  file(READ ${TENSORRT_DIR}/include/NvInfer.h TENSORRT_VERSION_FILE_CONTENTS)
+  file(READ ${TENSORRT_INCLUDE_DIR}/NvInfer.h TENSORRT_VERSION_FILE_CONTENTS)
   string(REGEX MATCH "define NV_TENSORRT_MAJOR +([0-9]+)" TENSORRT_MAJOR_VERSION
     "${TENSORRT_VERSION_FILE_CONTENTS}")
   if("${TENSORRT_MAJOR_VERSION}" STREQUAL "")
-    file(READ ${TENSORRT_DIR}/include/NvInferVersion.h TENSORRT_VERSION_FILE_CONTENTS)
+    file(READ ${TENSORRT_INCLUDE_DIR}/NvInferVersion.h TENSORRT_VERSION_FILE_CONTENTS)
     string(REGEX MATCH "define NV_TENSORRT_MAJOR +([0-9]+)" TENSORRT_MAJOR_VERSION
       "${TENSORRT_VERSION_FILE_CONTENTS}")
   endif()
@@ -162,8 +169,8 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDNN_LIB}/libcudnn${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/libnvinfer${CMAKE_SHARED_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/libnvinfer_plugin${CMAKE_SHARED_LIBRARY_SUFFIX})
     endif()
 
   else()
@@ -172,10 +179,10 @@ if(WITH_GPU)
     set(DEPS ${DEPS} ${CUDA_LIB}/cudnn${CMAKE_STATIC_LIBRARY_SUFFIX})
 
     if (WITH_TENSORRT)
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
-      set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
+      set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
       if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
-        set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
+        set(DEPS ${DEPS} ${TENSORRT_LIB_DIR}/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
       endif()
     endif()
   endif()
@@ -275,12 +282,12 @@ if(WIN32)
   )
   if (WITH_TENSORRT)
     add_custom_command(TARGET model_infer POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
-      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_LIB_DIR}/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+      COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_LIB_DIR}/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     )
     if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
       add_custom_command(TARGET model_infer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
+        COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_LIB_DIR}/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
       )
     endif()
   endif()
