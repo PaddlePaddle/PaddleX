@@ -3,7 +3,7 @@
 
 
 <p align="center">
-  <img src="../docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
+  <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
@@ -117,7 +117,7 @@
 - PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
 
   <p align="center">
-    <img src="../docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
+    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
   </p>
 
 
