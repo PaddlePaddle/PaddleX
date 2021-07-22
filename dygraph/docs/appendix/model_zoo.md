@@ -87,49 +87,50 @@
 
 ### Faster RCNN on COCO
 
-| 骨架网络             | 网络类型       | 每张GPU图片个数  |推理时间(fps) | Box AP |                           下载                          |
-| :------------------- | :------------- | :-----: | :------------: | :-----: | :-----------------------------------------------------: |
-| ResNet50             | Faster         |    1    |        ----     |  36.7  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_1x_coco.pdparams) |
-| ResNet50-vd          | Faster         |    1    |        ----     |  37.6  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_1x_coco.pdparams) |
-| ResNet101            | Faster         |    1    |        ----     |  39.0  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_1x_coco.pdparams) |
-| ResNet34-FPN         | Faster         |    1    |        ----     |  37.8  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_fpn_1x_coco.pdparams) |
-| ResNet34-vd-FPN      | Faster         |    1    |        ----     |  38.5  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_vd_fpn_1x_coco.pdparams) |
-| ResNet50-FPN         | Faster         |    1    |        ----     |  38.4  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_fpn_1x_coco.pdparams) |
-| ResNet50-vd-FPN      | Faster         |    1    |        ----     |  39.5  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_1x_coco.pdparams) |
-| ResNet101-vd-FPN     | Faster         |    1    |        ----     |  42.0  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams) |
-| ResNeXt101-vd-FPN    | Faster         |    1    |        ----     |  43.4  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_x101_vd_64x4d_fpn_1x_coco.pdparams) |
-| ResNet50-vd-SSLDv2-FPN | Faster       |    1    |        ----     |  41.4  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_ssld_1x_coco.pdparams) |
+| 骨架网络             | 网络类型       | 推理时间(fps) | Box AP |                           下载                          |
+| :------------------- | :------------- |  :------------: | :-----: | :-----------------------------------------------------: |
+| ResNet50             | Faster         |            ----     |  36.7  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_1x_coco.pdparams) |
+| ResNet50-vd          | Faster         |            ----     |  37.6  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_1x_coco.pdparams) |
+| ResNet101            | Faster         |            ----     |  39.0  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_1x_coco.pdparams) |
+| ResNet34-FPN         | Faster         |            ----     |  37.8  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_fpn_1x_coco.pdparams) |
+| ResNet34-vd-FPN      | Faster         |            ----     |  38.5  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r34_vd_fpn_1x_coco.pdparams) |
+| ResNet50-FPN         | Faster         |            ----     |  38.4  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_fpn_1x_coco.pdparams) |
+| ResNet50-vd-FPN      | Faster         |            ----     |  39.5  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_1x_coco.pdparams) |
+| ResNet101-vd-FPN     | Faster         |            ----     |  42.0  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r101_vd_fpn_1x_coco.pdparams) |
+| ResNeXt101-vd-FPN    | Faster         |            ----     |  43.4  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_x101_vd_64x4d_fpn_1x_coco.pdparams) |
+| ResNet50-vd-SSLDv2-FPN | Faster       |            ----     |  41.4  | [下载链接](https://paddledet.bj.bcebos.com/models/faster_rcnn_r50_vd_fpn_ssld_1x_coco.pdparams) |
 
 
 
 ### YOLOv3 on COCO
 
-| 骨架网络             | 输入尺寸   | 每张GPU图片个数 |  推理时间(fps) | Box AP |                           下载                          |
-| :------------------- | :------- | :-----: |  :------------: | :-----: | :-----------------------------------------------------: | :-----: |
-| DarkNet53         | 608         |    8    |        ----     |  39.0  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams) |
-|   ResNet50_vd        | 608        |    8    |        ----     |  39.1  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams) |
-| ResNet34         | 608         |    8    |        ----     |  36.2  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_r34_270e_coco.pdparams) |
-| MobileNet-V1         | 608         |    8    |        ----     |  29.4  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams) |
-| MobileNet-V3         | 608         |    8    |        ----     |  31.4  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams) |
-| MobileNet-V1-SSLD    | 608         |    8    |        ----     |  31.0  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_coco.pdparams) |
+| 骨架网络             | 输入尺寸    |  推理时间(fps) | Box AP |                           下载                          |
+| :------------------- | :------- |   :------------: | :-----: | :-----------------------------------------------------: |
+| DarkNet53         | 608         |           ----     |  39.0  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_darknet53_270e_coco.pdparams) |
+|   ResNet50_vd        | 608        |         ----     |  39.1  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_r50vd_dcn_270e_coco.pdparams) |
+| ResNet34         | 608         |            ----     |  36.2  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_r34_270e_coco.pdparams) |
+| MobileNet-V1         | 608         |        ----     |  29.4  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams) |
+| MobileNet-V3         | 608         |        ----     |  31.4  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_coco.pdparams) |
+| MobileNet-V1-SSLD    | 608         |        ----     |  31.0  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_coco.pdparams) |
+
 
 ### YOLOv3 on Pasacl VOC
 
-| 骨架网络     | 输入尺寸 | 每张GPU图片个数  |推理时间(fps)| Box AP | 下载 |
-| :----------- | :--: | :-----: | :-----: |:------------: |:----: |
-| MobileNet-V1 | 608  |    8    |   270e  |      -        |  75.2  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams) |
-| MobileNet-V3 | 608  |    8    |   270e  |      -        |  79.6  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_voc.pdparams) |
-| MobileNet-V1-SSLD | 608  |    8    |   270e  |      -        |  78.3  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_voc.pdparams) |
-| MobileNet-V3-SSLD | 608  |    8    |   270e  |      -        |  80.4  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_ssld_270e_voc.pdparams) |
+| 骨架网络     | 输入尺寸   |推理时间(fps)| Box AP | 下载 |
+| :----------- | :--: |  :-----: |:------------: |:----: |:----: |
+| MobileNet-V1 | 608  |          -        |  75.2  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_voc.pdparams) |
+| MobileNet-V3 | 608  |            -        |  79.6  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_270e_voc.pdparams) |
+| MobileNet-V1-SSLD | 608  |            -        |  78.3  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_ssld_270e_voc.pdparams) |
+| MobileNet-V3-SSLD | 608  |            -        |  80.4  | [下载链接](https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v3_large_ssld_270e_voc.pdparams) |
 
 
 ### PP-YOLO on COCO
 
-|          模型            | GPU个数 | 每GPU图片个数 |  骨干网络  | 输入尺寸 | Box AP<sup>val</sup> | Box AP<sup>test</sup> | V100 FP32(FPS) | V100 TensorRT FP16(FPS) | 模型下载 |
-|:------------------------:|:-------:|:-------------:|:----------:| :-------:| :------------------: | :-------------------: | :------------: | :---------------------: | :------: |
-| PP-YOLO                  |     8      |     24     | ResNet50vd |     608     |         44.8         |         45.2          |      72.9      |          155.6          | [model](https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_1x_coco.pdparams) |
-| PP-YOLOv2               |     8      |     12     | ResNet50vd |     640     |         49.1         |         49.5          |      68.9      |          106.5          | [model](https://paddledet.bj.bcebos.com/models/ppyolov2_r50vd_dcn_365e_coco.pdparams) |
-| PP-YOLOv2               |     8      |     12     | ResNet101vd |     640     |         49.7         |         50.3          |     49.5     |         87.0         | [model](https://paddledet.bj.bcebos.com/models/ppyolov2_r101vd_dcn_365e_coco.pdparams) |
+|          模型            |   骨干网络  | 输入尺寸 | Box AP<sup>val</sup> | Box AP<sup>test</sup> | V100 FP32(FPS) | V100 TensorRT FP16(FPS) | 模型下载 |
+|:------------------------:|:----------:| :-------:| :------------------: | :-------------------: | :------------: | :---------------------: | :------: |
+| PP-YOLO                  |     ResNet50vd |     608     |         44.8         |         45.2          |      72.9      |          155.6          | [model](https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_1x_coco.pdparams) |
+| PP-YOLOv2               |      ResNet50vd |     640     |         49.1         |         49.5          |      68.9      |          106.5          | [model](https://paddledet.bj.bcebos.com/models/ppyolov2_r50vd_dcn_365e_coco.pdparams) |
+| PP-YOLOv2               |      ResNet101vd |     640     |         49.7         |         50.3          |     49.5     |         87.0         | [model](https://paddledet.bj.bcebos.com/models/ppyolov2_r101vd_dcn_365e_coco.pdparams) |
 
 **注意:**
 
@@ -141,16 +142,16 @@
 ### PP-YOLO on Pascal VOC
 
 
-|       模型         | GPU个数 | 每GPU图片个数 |  骨干网络  |   输入尺寸  | Box AP50<sup>val</sup> | 模型下载 |
-|:------------------:|:-------:|:-------------:|:----------:| :----------:| :--------------------: | :------: |
-| PP-YOLO            |    8    |       12      | ResNet50vd |     608     |          84.9          | [model](https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_voc.pdparams) |
+|       模型         |   骨干网络  |   输入尺寸  | Box AP50<sup>val</sup> | 模型下载 |
+|:------------------:| :----------:| :----------:| :--------------------: | :------: |
+| PP-YOLO            |   ResNet50vd |     608     |          84.9          | [model](https://paddledet.bj.bcebos.com/models/ppyolo_r50vd_dcn_voc.pdparams) |
 
 
 ### PP-YOLO tiny on COCO
 
-|            模型              |  GPU 个数  | 每GPU图片个数 |  模型体积  | 后量化模型体积 |   输入尺寸  | Box AP<sup>val</sup> | Kirin 990 1xCore (FPS) | 模型下载 | 量化后模型 |
-|:----------------------------:|:----------:|:-------------:| :--------: | :------------: | :----------:| :------------------: | :--------------------: | :------: | :------: |
-| PP-YOLO tiny                 |     8      |      32       |   4.2MB    |   **1.3M**     |     416     |         22.7         |          65.4         | [model](https://paddledet.bj.bcebos.com/models/ppyolo_tiny_650e_coco.pdparams) | [预测模型](https://paddledet.bj.bcebos.com/models/ppyolo_tiny_quant.tar) |
+|            模型              |   模型体积  | 后量化模型体积 |   输入尺寸  | Box AP<sup>val</sup> | Kirin 990 1xCore (FPS) | 模型下载 | 量化后模型 |
+|:----------------------------:| :--------: | :------------: | :----------:| :------------------: | :--------------------: | :------: | :------: |
+| PP-YOLO tiny                 |       4.2MB    |   **1.3M**     |     416     |         22.7         |          65.4         | [model](https://paddledet.bj.bcebos.com/models/ppyolo_tiny_650e_coco.pdparams) | [预测模型](https://paddledet.bj.bcebos.com/models/ppyolo_tiny_quant.tar) |
 
 - PP-YOLO-tiny 模型推理速度测试环境配置为麒麟990芯片4线程，arm8架构。
 - 我们也提供的PP-YOLO-tiny的后量化压缩模型，将模型体积压缩到**1.3M**，对精度和预测速度基本无影响
@@ -164,40 +165,40 @@
 - 除非特殊说明，所有ResNet骨干网络采用[ResNet-B](https://arxiv.org/pdf/1812.01187)结构。
 - **推理时间(fps)**: 推理时间是在一张Tesla V100的GPU上测试所有验证集得到，单位是fps(图片数/秒), cuDNN版本是7.5，包括数据加载、网络前向执行和后处理, batch size是1。
 
-| 骨架网络              | 网络类型       | 每张GPU图片个数  |推理时间(fps) | Box AP | Mask AP |                           下载                          |
-| :------------------- | :------------| :-----: | :-----: | :------------: | :-----: | :-----: | :-----------------------------------------------------: |
-| ResNet50             | Mask         |    1    |        ----     |  37.4  |    32.8    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_1x_coco.pdparams) |
-| ResNet50             | Mask         |    1    |        ----     |  39.7  |    34.5    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_2x_coco.pdparams) |
-| ResNet50-FPN         | Mask         |    1    |        ----     |  39.2  |    35.6    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_fpn_1x_coco.pdparams) |
-| ResNet50-FPN         | Mask         |    1    |        ----     |  40.5  |    36.7    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_fpn_2x_coco.pdparams) |
-| ResNet50-vd-FPN         | Mask         |    1    |     ----     |  40.3  |    36.4    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_1x_coco.pdparams) |
-| ResNet50-vd-FPN         | Mask         |    1    |     ----     |  41.4  |    37.5    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_2x_coco.pdparams) |
-| ResNet101-FPN         | Mask         |    1    |        ----     |  40.6  |    36.6    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r101_fpn_1x_coco.pdparams) |
-| ResNet101-vd-FPN         | Mask         |    1    |      ----     |  42.4  |    38.1    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r101_vd_fpn_1x_coco.pdparams) |
-| ResNeXt101-vd-FPN        | Mask         |    1    |      ----     |  44.0  |    39.5   | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_x101_vd_64x4d_fpn_1x_coco.pdparams) |
-| ResNeXt101-vd-FPN        | Mask         |    1    |      ----     |  44.6  |    39.8   | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_x101_vd_64x4d_fpn_2x_coco.pdparams) | (https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/mask_rcnn/mask_rcnn_x101_vd_64x4d_fpn_2x_coco.yml) |
-| ResNet50-vd-SSLDv2-FPN   | Mask       |    1    |        ----     |  42.0  |    38.2    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_ssld_1x_coco.pdparams) |
-| ResNet50-vd-SSLDv2-FPN   | Mask       |    1    |        ----     |  42.7  |    38.9    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_ssld_2x_coco.pdparams) |
+| 骨架网络              | 网络类型       | 推理时间(fps) | Box AP | Mask AP |                           下载                          |
+| :------------------- | :------------|  :-----: | :------------: | :-----: |  :-----------------------------------------------------: |
+| ResNet50             | Mask         |            ----     |  37.4  |    32.8    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_1x_coco.pdparams) |
+| ResNet50             | Mask         |            ----     |  39.7  |    34.5    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_2x_coco.pdparams) |
+| ResNet50-FPN         | Mask         |            ----     |  39.2  |    35.6    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_fpn_1x_coco.pdparams) |
+| ResNet50-FPN         | Mask         |            ----     |  40.5  |    36.7    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_fpn_2x_coco.pdparams) |
+| ResNet50-vd-FPN         | Mask         |         ----     |  40.3  |    36.4    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_1x_coco.pdparams) |
+| ResNet50-vd-FPN         | Mask         |         ----     |  41.4  |    37.5    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_2x_coco.pdparams) |
+| ResNet101-FPN         | Mask         |            ----     |  40.6  |    36.6    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r101_fpn_1x_coco.pdparams) |
+| ResNet101-vd-FPN         | Mask         |          ----     |  42.4  |    38.1    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r101_vd_fpn_1x_coco.pdparams) |
+| ResNeXt101-vd-FPN        | Mask         |          ----     |  44.0  |    39.5   | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_x101_vd_64x4d_fpn_1x_coco.pdparams) |
+| ResNeXt101-vd-FPN        | Mask         |          ----     |  44.6  |    39.8   | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_x101_vd_64x4d_fpn_2x_coco.pdparams) | (https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/mask_rcnn/mask_rcnn_x101_vd_64x4d_fpn_2x_coco.yml) |
+| ResNet50-vd-SSLDv2-FPN   | Mask       |            ----     |  42.0  |    38.2    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_ssld_1x_coco.pdparams) |
+| ResNet50-vd-SSLDv2-FPN   | Mask       |            ----     |  42.7  |    38.9    | [下载链接](https://paddledet.bj.bcebos.com/models/mask_rcnn_r50_vd_fpn_ssld_2x_coco.pdparams) |
 
 
 ## 语义分割模型
 
 > 以下指标均在Pascal VOC验证集上测试得到，表中符号`-`表示相关指标暂未测试。
 
-| Model | Backbone | Resolution | Training Iters | mIoU | Links |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|DeepLabV3P|ResNet50_vd|512x512|40000|80.66%|81.33%|81.49%|[model](https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet50_os8_voc12aug_512x512_40k/model.pdparams) |
-|DeepLabV3P|ResNet101_vd|512x512|40000|80.60%|80.77%|80.75%|[model](https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams) |
+| Model | Backbone | Resolution |  mIoU | Links |
+|:-:|:-:|:-:|:-:|:-:|
+|DeepLabV3P|ResNet50_vd|512x512|80.66%|[model](https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet50_os8_voc12aug_512x512_40k/model.pdparams) |
+|DeepLabV3P|ResNet101_vd|512x512|80.60%|[model](https://bj.bcebos.com/paddleseg/dygraph/pascal_voc12/deeplabv3p_resnet101_os8_voc12aug_512x512_40k/model.pdparams) |
 
 
 > 以下指标均在Cityscapes验证集上测试得到，表中符号`-`表示相关指标暂未测试。
 
-| Model | Backbone | Resolution | Training Iters | Batch Size | mIoU | Links |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|UNet|-|1024x512|160000|4|65.00%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_160k/model.pdparams) |
-|DeepLabV3P|ResNet50_vd|1024x512|80000|80.36%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet50_os8_cityscapes_1024x512_80k/model.pdparams) |
-|DeepLabV3P|ResNet101_vd|1024x512|80000|81.10%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet101_os8_cityscapes_1024x512_80k/model.pdparams) |
-|Fast SCNN|-|1024x1024|160000|69.31%|-|-|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fastscnn_cityscapes_1024x1024_160k/model.pdparams) |
-|HRNet_W18|-|1024x512|80000|78.97%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw18_cityscapes_1024x512_80k/model.pdparams) |
-|HRNet_W48|-|1024x512|80000|80.70%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw48_cityscapes_1024x512_80k/model.pdparams) |
-|BiSeNetv2|-|1024x1024|160000|73.19%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/bisenet_cityscapes_1024x1024_160k/model.pdparams) |
+| Model | Backbone | Resolution | mIoU | Links |
+|:-:|:-:|:-:|:-:|:-:|
+|UNet|-|1024x512|65.00%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/unet_cityscapes_1024x512_160k/model.pdparams) |
+|DeepLabV3P|ResNet50_vd|1024x512|80.36%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet50_os8_cityscapes_1024x512_80k/model.pdparams) |
+|DeepLabV3P|ResNet101_vd|1024x512|81.10%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/deeplabv3p_resnet101_os8_cityscapes_1024x512_80k/model.pdparams) |
+|Fast SCNN|-|1024x1024|69.31%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fastscnn_cityscapes_1024x1024_160k/model.pdparams) |
+|HRNet_W18|-|1024x512|78.97%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw18_cityscapes_1024x512_80k/model.pdparams) |
+|HRNet_W48|-|1024x512|80.70%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/fcn_hrnetw48_cityscapes_1024x512_80k/model.pdparams) |
+|BiSeNetv2|-|1024x1024|73.19%|[model](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/bisenet_cityscapes_1024x1024_160k/model.pdparams) |
