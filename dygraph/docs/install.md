@@ -23,7 +23,7 @@
 使用pip安装方式安装2.0.0-rc3版本：
 
 ```
-pip install paddlex -i https://mirror.baidu.com/pypi/simple
+pip install paddlex==2.0.0rc3 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，如遇到pycocotools安装失败，可参照如下方式安装pycocotools：
@@ -41,7 +41,7 @@ pip install pycocotools
 使用pip安装方式安装2.0.0-rc3版本：
 
 ```
-pip install paddlex -i https://mirror.baidu.com/pypi/simple
+pip install paddlex==2.0.0rc3 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，Windows安装时可能会提示`Microsoft Visual C++ 14.0 is required`，从而导致安装出错，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
