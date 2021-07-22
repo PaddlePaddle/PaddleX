@@ -17,7 +17,7 @@ import os.path as osp
 import glob
 import paddle
 import paddlex
-import paddlex.utils.logging as logging
+from paddlex.utils import logging
 from .download import download_and_decompress
 
 seg_pretrain_weights_dict = {

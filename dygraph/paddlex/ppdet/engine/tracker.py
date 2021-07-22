@@ -29,7 +29,7 @@ from paddlex.ppdet.modeling.mot.utils import Timer, load_det_results
 from paddlex.ppdet.modeling.mot import visualization as mot_vis
 
 from paddlex.ppdet.metrics import Metric, MOTMetric
-import paddlex.ppdet.utils.stats as stats
+from paddlex.ppdet.utils import stats
 
 from .callbacks import Callback, ComposeCallback
 from .export_utils import _dump_infer_config
@@ -242,8 +242,9 @@ class Tracker(object):
         n_frame = 0
         timer_avgs, timer_calls = [], []
         for seq in seqs:
-            save_dir = os.path.join(output_dir, 'mot_outputs',
-                                    seq) if save_images or save_videos else None
+            save_dir = os.path.join(
+                output_dir, 'mot_outputs',
+                seq) if save_images or save_videos else None
             logger.info('start seq: {}'.format(seq))
 
             infer_dir = os.path.join(data_root, seq, 'img1')
@@ -253,7 +254,8 @@ class Tracker(object):
             dataloader = create('EvalMOTReader')(self.dataset, 0)
 
             result_filename = os.path.join(result_root, '{}.txt'.format(seq))
-            meta_info = open(os.path.join(data_root, seq, 'seqinfo.ini')).read()
+            meta_info = open(os.path.join(data_root, seq, 'seqinfo.ini')).read(
+            )
             frame_rate = int(meta_info[meta_info.find('frameRate') + 10:
                                        meta_info.find('\nseqLength')])
 

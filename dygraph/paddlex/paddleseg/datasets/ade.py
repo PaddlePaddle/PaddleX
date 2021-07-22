@@ -22,7 +22,7 @@ from paddlex.paddleseg.utils.download import download_file_and_uncompress
 from paddlex.paddleseg.utils import seg_env
 from paddlex.paddleseg.cvlibs import manager
 from paddlex.paddleseg.transforms import Compose
-import paddlex.paddleseg.transforms.functional as F
+from paddlex.paddleseg.transforms import functional as F
 
 URL = "http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip"
 
@@ -40,7 +40,8 @@ class ADE20K(Dataset):
     """
     NUM_CLASSES = 150
 
-    def __init__(self, transforms, dataset_root=None, mode='train', edge=False):
+    def __init__(self, transforms, dataset_root=None, mode='train',
+                 edge=False):
         self.dataset_root = dataset_root
         self.transforms = Compose(transforms)
         mode = mode.lower()
