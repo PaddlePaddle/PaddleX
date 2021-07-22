@@ -95,6 +95,7 @@
 
 ### 7. 附录
 
+- [PaddleX模型库](./docs/appendix/model_zoo.md)
 - [PaddleX指标及日志](./docs/appendix/metrics.md)
 - [无联网模型训练](./docs/how_to_offline_run.md)
 
