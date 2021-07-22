@@ -1,7 +1,5 @@
 include(ExternalProject)
 
-message("${CMAKE_BUILD_TYPE}")
-
 ExternalProject_Add(
         ext-yaml-cpp
 	URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip
@@ -12,7 +10,7 @@ ExternalProject_Add(
         -DYAML_CPP_INSTALL=OFF
         -DYAML_CPP_BUILD_CONTRIB=OFF
         -DMSVC_SHARED_RT=OFF
-        -DBUILD_SHARED_LIBS=${YAML_BUILD_TYPE}
+        -DBUILD_SHARED_LIBS=${YAML_BUILD_SHARED_LIBS}
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
         -DCMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}

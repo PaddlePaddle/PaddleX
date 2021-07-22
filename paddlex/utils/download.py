@@ -1,3 +1,17 @@
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import os
 import os.path as osp
 import shutil
@@ -7,7 +21,9 @@ import time
 import hashlib
 import tarfile
 import zipfile
-from .utils import logging
+import filelock
+import paddle
+from . import logging
 
 DOWNLOAD_RETRY_LIMIT = 3
 
@@ -148,9 +164,39 @@ def decompress(fname):
 
     shutil.rmtree(fpath_tmp)
     logging.debug("{} decompressed.".format(fname))
+    return dst_dir
+
+
+def url2dir(url, path):
+    download(url, path)
+    if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
+        fname = osp.split(url)[-1]
+        savepath = osp.join(path, fname)
+        return decompress(savepath)
 
 
 def download_and_decompress(url, path='.'):
-    download(url, path)
+    nranks = paddle.distributed.get_world_size()
+    local_rank = paddle.distributed.get_rank()
     fname = osp.split(url)[-1]
-    decompress(osp.join(path, fname))
+    fullname = osp.join(path, fname)
+    # if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
+    #     fullname = osp.join(path, fname.split('.')[0])
+    if nranks <= 1:
+        dst_dir = url2dir(url, path)
+        if dst_dir is not None:
+            fullname = dst_dir
+    else:
+        lock_path = fullname + '.lock'
+        if not os.path.exists(fullname):
+            with open(lock_path, 'w'):
+                os.utime(lock_path, None)
+            if local_rank == 0:
+                dst_dir = url2dir(url, path)
+                if dst_dir is not None:
+                    fullname = dst_dir
+                os.remove(lock_path)
+            else:
+                while os.path.exists(lock_path):
+                    time.sleep(1)
+    return fullname

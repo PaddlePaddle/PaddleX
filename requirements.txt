@@ -1,14 +1,14 @@
 tqdm
+scipy==1.5.4
 colorama
-sklearn
 cython
 pycocotools
-visualdl >= 2.0.0b
-paddleslim == 1.1.1
+visualdl >= 2.1.1
+paddleslim == 2.1.0
 shapely
-paddle2onnx==0.4
-paddlepaddle-gpu
+paddlepaddle-gpu==2.1.1
 opencv-python
-psutil
-flask_cors
-xlwt
+scikit-learn==0.23.2
+lap
+motmetrics
+matplotlib==3.3.4

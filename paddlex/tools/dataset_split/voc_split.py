@@ -1,4 +1,4 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
 import os.path as osp
 import random
 import xml.etree.ElementTree as ET
-from .utils import list_files, is_pic, replace_ext
-import paddlex.utils.logging as logging
+from .utils import list_files, replace_ext
+from paddlex.utils import is_pic, logging
 
 
 def split_voc_dataset(dataset_dir, val_percent, test_percent, save_dir):
