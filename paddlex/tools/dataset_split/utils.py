@@ -1,10 +1,10 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,6 @@ import os
 import os.path as osp
 from PIL import Image
 import numpy as np
-import json
-
-
-class MyEncoder(json.JSONEncoder):
-    # 调整json文件存储形式
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        else:
-            return super(MyEncoder, self).default(obj)
 
 
 def list_files(dirname):
@@ -61,19 +47,6 @@ def list_files(dirname):
                 continue
             all_files.append(osp.join(d, f))
     return all_files
-
-
-def is_pic(filename):
-    """ 判断文件是否为图片格式
-
-    Args:
-        filename: 文件路径
-    """
-    suffixes = {'JPEG', 'jpeg', 'JPG', 'jpg', 'BMP', 'bmp', 'PNG', 'png'}
-    suffix = filename.strip().split('.')[-1]
-    if suffix not in suffixes:
-        return False
-    return True
 
 
 def replace_ext(filename, new_ext):

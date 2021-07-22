@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,5 @@
 # limitations under the License.
 
 from . import models
-from . import nets
 from . import transforms
 from . import datasets
-
-cls_transforms = transforms.cls_transforms
-det_transforms = transforms.det_transforms
-seg_transforms = transforms.seg_transforms
-
-# classification
-ResNet50 = models.ResNet50
-DarkNet53 = models.DarkNet53
-# detection
-YOLOv3 = models.YOLOv3
-PPYOLO = models.PPYOLO
-#EAST = models.EAST
-FasterRCNN = models.FasterRCNN
-MaskRCNN = models.MaskRCNN
-UNet = models.UNet
-DeepLabv3p = models.DeepLabv3p

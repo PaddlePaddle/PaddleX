@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,181 +12,115 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import yaml
 import os.path as osp
-import six
-import copy
-from collections import OrderedDict
-import paddle.fluid as fluid
-from paddle.fluid.framework import Parameter
+import numpy as np
+import yaml
+import paddle
+import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
-from paddlex.cv.transforms import build_transforms, build_transforms_v1
+from paddlex.cv.transforms import build_transforms
 
 
-def load_model(model_dir, fixed_input_shape=None):
-    model_scope = fluid.Scope()
+def load_rcnn_inference_model(model_dir):
+    paddle.enable_static()
+    exe = paddle.static.Executor(paddle.CPUPlace())
+    path_prefix = osp.join(model_dir, "model")
+    prog, _, _ = paddle.static.load_inference_model(path_prefix, exe)
+    paddle.disable_static()
+    extra_var_info = paddle.load(osp.join(model_dir, "model.pdiparams.info"))
+
+    net_state_dict = dict()
+    static_state_dict = dict()
+
+    for name, var in prog.state_dict().items():
+        static_state_dict[name] = np.array(var)
+    for var_name in static_state_dict:
+        if var_name not in extra_var_info:
+            continue
+        structured_name = extra_var_info[var_name].get('structured_name', None)
+        if structured_name is None:
+            continue
+        net_state_dict[structured_name] = static_state_dict[var_name]
+    return net_state_dict
+
+
+def load_model(model_dir):
+    """
+    Load saved model from a given directory.
+    Args:
+        model_dir(str): The directory where the model is saved.
+
+    Returns:
+        The model loaded from the directory.
+    """
     if not osp.exists(model_dir):
-        logging.error("model_dir '{}' is not exists!".format(model_dir))
+        logging.error("model_dir '{}' does not exists!".format(model_dir))
     if not osp.exists(osp.join(model_dir, "model.yml")):
-        raise Exception("There's not model.yml in {}".format(model_dir))
+        raise Exception("There's no model.yml in {}".format(model_dir))
     with open(osp.join(model_dir, "model.yml")) as f:
-        info = yaml.load(f.read(), Loader=yaml.Loader)
+        model_info = yaml.load(f.read(), Loader=yaml.Loader)
+    f.close()
 
-    if 'status' in info:
-        status = info['status']
-    elif 'save_method' in info:
-        # 兼容老版本PaddleX
-        status = info['save_method']
+    version = model_info['version']
+    if int(version.split('.')[0]) < 2:
+        raise Exception(
+            'Current version is {}, a model trained by PaddleX={} cannot be load.'.
+            format(paddlex.__version__, version))
 
-    if not hasattr(paddlex.cv.models, info['Model']):
+    status = model_info['status']
+
+    if not hasattr(paddlex.cv.models, model_info['Model']):
         raise Exception("There's no attribute {} in paddlex.cv.models".format(
-            info['Model']))
-    if 'model_name' in info['_init_params']:
-        del info['_init_params']['model_name']
-    model = getattr(paddlex.cv.models, info['Model'])(**info['_init_params'])
+            model_info['Model']))
+    if 'model_name' in model_info['_init_params']:
+        del model_info['_init_params']['model_name']
 
-    model.fixed_input_shape = fixed_input_shape
-    if '_Attributes' in info:
-        if 'fixed_input_shape' in info['_Attributes']:
-            fixed_input_shape = info['_Attributes']['fixed_input_shape']
-            if fixed_input_shape is not None:
-                logging.info("Model already has fixed_input_shape with {}".
-                             format(fixed_input_shape))
-                model.fixed_input_shape = fixed_input_shape
+    with paddle.utils.unique_name.guard():
+        model = getattr(paddlex.cv.models, model_info['Model'])(
+            **model_info['_init_params'])
+
+        if 'Transforms' in model_info:
+            model.test_transforms = build_transforms(model_info['Transforms'])
+
+        if '_Attributes' in model_info:
+            for k, v in model_info['_Attributes'].items():
+                if k in model.__dict__:
+                    model.__dict__[k] = v
+
+        if status == 'Pruned' or osp.exists(osp.join(model_dir, "prune.yml")):
+            with open(osp.join(model_dir, "prune.yml")) as f:
+                pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
+                inputs = pruning_info['pruner_inputs']
+                if model.model_type == 'detector':
+                    inputs = [{
+                        k: paddle.to_tensor(v)
+                        for k, v in inputs.items()
+                    }]
+                    model.net.eval()
+                model.pruner = getattr(paddleslim, pruning_info['pruner'])(
+                    model.net, inputs=inputs)
+                model.pruning_ratios = pruning_info['pruning_ratios']
+                model.pruner.prune_vars(
+                    ratios=model.pruning_ratios,
+                    axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
+
+        if status == 'Quantized':
+            with open(osp.join(model_dir, "quant.yml")) as f:
+                quant_info = yaml.load(f.read(), Loader=yaml.Loader)
+                model.quant_config = quant_info['quant_config']
+                model.quantizer = paddleslim.QAT(model.quant_config)
+                model.quantizer.quantize(model.net)
+
+        if status == 'Infer':
+            if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
+                net_state_dict = load_rcnn_inference_model(model_dir)
             else:
-                info['_Attributes']['fixed_input_shape'] = model.fixed_input_shape
-
-
-    if info['Model'].count('RCNN') > 0:
-        if info['_init_params']['with_fpn']:
-            if model.fixed_input_shape is not None:
-                if model.fixed_input_shape[0] % 32 > 0:
-                    raise Exception(
-                        "The first value in fixed_input_shape must be a multiple of 32, but recieved {}.".
-                        format(model.fixed_input_shape[0]))
-                if model.fixed_input_shape[1] % 32 > 0:
-                    raise Exception(
-                        "The second value in fixed_input_shape must be a multiple of 32, but recieved {}.".
-                        format(model.fixed_input_shape[1]))
-
-
-    with fluid.scope_guard(model_scope):
-        if status == "Normal" or \
-                status == "Prune" or status == "fluid.save":
-            startup_prog = fluid.Program()
-            model.test_prog = fluid.Program()
-            with fluid.program_guard(model.test_prog, startup_prog):
-                with fluid.unique_name.guard():
-                    model.test_inputs, model.test_outputs = model.build_net(
-                        mode='test')
-            model.test_prog = model.test_prog.clone(for_test=True)
-            model.exe.run(startup_prog)
-            if status == "Prune":
-                from .slim.prune import update_program
-                model.test_prog = update_program(
-                    model.test_prog,
-                    model_dir,
-                    model.places[0],
-                    scope=model_scope)
-            import pickle
-            with open(osp.join(model_dir, 'model.pdparams'), 'rb') as f:
-                load_dict = pickle.load(f)
-            fluid.io.set_program_state(model.test_prog, load_dict)
-
-        elif status == "Infer" or \
-                status == "Quant" or status == "fluid.save_inference_model":
-            [prog, input_names, outputs] = fluid.io.load_inference_model(
-                model_dir, model.exe, params_filename='__params__')
-            model.test_prog = prog
-            test_outputs_info = info['_ModelInputsOutputs']['test_outputs']
-            model.test_inputs = OrderedDict()
-            model.test_outputs = OrderedDict()
-            for name in input_names:
-                model.test_inputs[name] = model.test_prog.global_block().var(
-                    name)
-            for i, out in enumerate(outputs):
-                var_desc = test_outputs_info[i]
-                model.test_outputs[var_desc[0]] = out
-
-    if 'Transforms' in info:
-        transforms_mode = info.get('TransformsMode', 'RGB')
-        # 固定模型的输入shape
-        fix_input_shape(info, fixed_input_shape=model.fixed_input_shape)
-        if transforms_mode == 'RGB':
-            to_rgb = True
+                net_state_dict = paddle.load(osp.join(model_dir, 'model'))
         else:
-            to_rgb = False
-        if 'BatchTransforms' in info:
-            # 兼容老版本PaddleX模型
-            model.test_transforms = build_transforms_v1(
-                model.model_type, info['Transforms'], info['BatchTransforms'])
-            model.eval_transforms = copy.deepcopy(model.test_transforms)
-        else:
-            model.test_transforms = build_transforms(
-                model.model_type, info['Transforms'], to_rgb)
-            model.eval_transforms = copy.deepcopy(model.test_transforms)
+            net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
+        model.net.set_state_dict(net_state_dict)
 
-    if '_Attributes' in info:
-        for k, v in info['_Attributes'].items():
-            if k in model.__dict__:
-                model.__dict__[k] = v
-
-
-
-    logging.info("Model[{}] loaded.".format(info['Model']))
-    model.scope = model_scope
-    model.trainable = False
-    model.status = status
+        logging.info("Model[{}] loaded.".format(model_info['Model']))
+        model.status = status
     return model
-
-
-def fix_input_shape(info, fixed_input_shape=None):
-    if fixed_input_shape is not None:
-        input_channel = 3
-        if 'input_channel' in info['_init_params']:
-            input_channel = info['_init_params']['input_channel']
-        resize = {'ResizeByShort': {}}
-        padding = {'Padding': {}}
-        if info['_Attributes']['model_type'] == 'classifier':
-            pass
-        elif info['Model'].count('YOLO') > 0:
-            resize_op_index = None
-            for i in range(len(info['Transforms'])):
-                if list(info['Transforms'][i].keys())[0] == 'Resize':
-                    resize_op_index = i
-            if resize_op_index is not None:
-                info['Transforms'][resize_op_index]['Resize'][
-                    'target_size'] = fixed_input_shape[0]
-        elif info['Model'].count('RCNN') > 0:
-            resize_op_index = None
-            for i in range(len(info['Transforms'])):
-                if list(info['Transforms'][i].keys())[0] == 'ResizeByShort':
-                    resize_op_index = i
-            if resize_op_index is not None:
-                info['Transforms'][resize_op_index]['ResizeByShort'][
-                    'short_size'] = min(fixed_input_shape)
-                info['Transforms'][resize_op_index]['ResizeByShort'][
-                    'max_size'] = max(fixed_input_shape)
-            else:
-                resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
-                resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
-                info['Transforms'].append(resize)
-
-            padding_op_index = None
-            for i in range(len(info['Transforms'])):
-                if list(info['Transforms'][i].keys())[0] == 'Padding':
-                    padding_op_index = i
-            if padding_op_index is not None:
-                info['Transforms'][padding_op_index]['Padding'][
-                    'target_size'] = list(fixed_input_shape)
-            else:
-                padding['Padding']['target_size'] = list(fixed_input_shape)
-                info['Transforms'].append(padding)
-        elif info['_Attributes']['model_type'] == 'segmenter':
-            resize['ResizeByShort']['short_size'] = min(fixed_input_shape)
-            resize['ResizeByShort']['max_size'] = max(fixed_input_shape)
-            padding['Padding']['target_size'] = list(fixed_input_shape)
-            padding['Padding']['im_padding_value'] = [0.] * input_channel
-            info['Transforms'].append(resize)
-            info['Transforms'].append(padding)

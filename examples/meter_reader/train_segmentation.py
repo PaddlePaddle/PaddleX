@@ -1,55 +1,54 @@
-import os
-# 选择使用0号卡
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 import paddlex as pdx
-from paddlex.seg import transforms
+from paddlex import transforms as T
 
-# 下载和解压表盘分割数据集
+# 定义训练和验证时的transforms
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/transforms/operators.py
+train_transforms = T.Compose([
+    T.Resize(target_size=512),
+    T.RandomHorizontalFlip(),
+    T.Normalize(
+        mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+])
+
+eval_transforms = T.Compose([
+    T.Resize(target_size=512),
+    T.Normalize(
+        mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+])
+
+# 下载和解压指针刻度分割数据集，如果已经预先下载，可注释掉下面两行
 meter_seg_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/datasets/meter_seg.tar.gz'
 pdx.utils.download_and_decompress(meter_seg_dataset, path='./')
 
-# 定义训练和验证时的transforms
-train_transforms = transforms.Compose([
-    transforms.Resize([512, 512]),
-    transforms.RandomHorizontalFlip(prob=0.5),
-    transforms.Normalize(),
-])
-
-eval_transforms = transforms.Compose([
-    transforms.Resize([512, 512]),
-    transforms.Normalize(),
-])
 # 定义训练和验证所用的数据集
-# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-segdataset
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/datasets/seg_dataset.py#L22
 train_dataset = pdx.datasets.SegDataset(
-    data_dir='meter_seg/',
+    data_dir='meter_seg',
     file_list='meter_seg/train.txt',
     label_list='meter_seg/labels.txt',
     transforms=train_transforms,
     shuffle=True)
+
 eval_dataset = pdx.datasets.SegDataset(
-    data_dir='meter_seg/',
+    data_dir='meter_seg',
     file_list='meter_seg/val.txt',
     label_list='meter_seg/labels.txt',
-    transforms=eval_transforms)
+    transforms=eval_transforms,
+    shuffle=False)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标
-# VisualDL启动方式: visualdl --logdir output/deeplab/vdl_log --port 8001
-# 浏览器打开 https://0.0.0.0:8001即可
-# 其中0.0.0.0为本机访问，如为远程服务, 改成相应机器IP
-#
-# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p
-model = pdx.seg.DeepLabv3p(
-    num_classes=len(train_dataset.labels), backbone='Xception65')
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#visualdl可视化训练指标
+num_classes = len(train_dataset.labels)
+model = pdx.seg.DeepLabV3P(
+    num_classes=num_classes, backbone='ResNet50_vd', use_mixed_loss=True)
+
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/segmenter.py#L150
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
 model.train(
     num_epochs=20,
     train_dataset=train_dataset,
     train_batch_size=4,
     eval_dataset=eval_dataset,
+    pretrain_weights='IMAGENET',
     learning_rate=0.1,
-    pretrain_weights='COCO',
-    save_interval_epochs=5,
-    save_dir='output/meter_seg',
-    use_vdl=True)
+    save_dir='output/deeplabv3p_r50vd')

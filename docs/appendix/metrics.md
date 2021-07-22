@@ -55,9 +55,17 @@ PaddleX所有模型在训练过程中会根据用户设定的`save_interval_epoc
 
 ### 训练日志字段
 
-#### YOLOv3
+#### YOLOv3/PPYOLO/PPYOLOv2/PPYOLOTiny
 
-YOLOv3的训练日志只包括训练通用统计信息（见上文训练通用统计信息）。
+YOLOv3/PPYOLO/PPYOLOv2/PPYOLOTiny的训练日志除了通用统计信息外（见上文训练通用统计信息），还包括`loss_xy`、`loss_wh`、`loss_obj`、`loss_cls`，这些字段的含义如下:
+
+| 字段           | 含义                                          |
+| -------------- | --------------------------------------------- |
+| loss_xy          | 检测框位置损失函数值                  |
+| loss_wh          | 检测框尺寸损失函数值  |
+| loss_obj       | 检测框置信度损失函数值   |
+| loss_cls      | 检测框类别损失函数值 |
+| loss              | 所有子网络损失函数值之和          |
 
 ![](images/yolo_train.png)
 
@@ -65,37 +73,37 @@ YOLOv3的训练日志只包括训练通用统计信息（见上文训练通用�
 
 #### FasterRCNN
 
-FasterRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss_bbox`、`loss_rpn_cls`和`loss_rpn_bbox`，这些字段的含义如下:
+FasterRCNN的训练日志除了通用统计信息外，还包括`loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls`和`loss_bbox_reg`，这些字段的含义如下:
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
-| loss_cls          | RCNN子网络中分类损失函数值                  |
-| loss_bbox          | RCNN子网络中检测框回归损失函数值  |
 | loss_rpn_cls       | RPN子网络中分类损失函数值   |
-| loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
+| loss_rpn_reg      | RPN子网络中检测框回归损失函数值  |
+| loss_bbox_cls          | RCNN子网络中分类损失函数值                  |
+| loss_bbox_reg          | RCNN子网络中检测框回归损失函数值  |
 | loss              | 所有子网络损失函数值之和          |
 
 ![](images/faster_train.png)
 
-上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
+上图中第1行`loss`, `loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls`、`loss_bbox_reg`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
 
 #### MaskRCNN
 
-MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_cls`和`loss_rpn_bbox`，这些字段的含义如下:
+MaskRCNN的训练日志除了通用统计信息外，还包括`loss_mask`、`loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls`和`loss_bbox_reg`，这些字段的含义如下:
 
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
-| loss_cls          | RCNN子网络中分类损失函数值                  |
-| loss_bbox          | RCNN子网络中检测框回归损失函数值  |
 | loss_mask          | RCNN子网络中Mask回归损失函数值  |
 | loss_rpn_cls       | RPN子网络中分类损失函数值   |
-| loss_rpn_bbox      | RPN子网络中检测框回归损失函数值  |
+| loss_rpn_reg      | RPN子网络中检测框回归损失函数值  |
+| loss_bbox_cls          | RCNN子网络中分类损失函数值                  |
+| loss_bbox_reg         | RCNN子网络中检测框回归损失函数值  |
 | loss              | 所有子网络损失函数值之和          |
 
 ![](images/mask_train.png)
 
-上图中第1行`loss`, `loss_cls`、`loss_bbox`、`loss_mask`、`loss_rpn_clss`、`loss_rpn_bbox`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
+上图中第1行`loss`, `loss_mask`、`loss_rpn_cls`、`loss_rpn_reg`、`loss_bbox_cls` `loss_bbox_reg`都是参与当前迭代步数的训练样本的损失值，而第7行是针整个训练集的损失函数值。
 
 ### 评估日志字段
 
@@ -107,7 +115,7 @@ MaskRCNN的训练日志除了通用统计信息外，还包括`loss_cls`、`loss
 
 > 注：`map`为平均准确率的平均值，即IoU(Intersection Over Union)取0.5时各个类别的准确率-召回率曲线下面积的平均值。
 
-上图中第3行`bbox_map`表示检测任务中整个验证集的平均准确率平均值。
+上图中第3行`bbox_map`表示检测任务中整个验证集上检测框的平均准确率的平均值。
 
 #### COCO评估标准
 
@@ -117,10 +125,10 @@ COCO格式的数据集不仅可以用于训练目标检测模型，也可以用�
 
 ![](images/faster_eval.png)
 
-上图中红框标注的`bbox_mmap`表示整个验证集的检测框平均准确率平均值。
+上图中红框标注的`bbox_mmap`表示整个验证集上检测框的平均准确率平均值（mAP）的平均值。
 
 ![](images/mask_eval.png)
-上图中红框标注的`bbox_mmap`和`seg_mmap`分别表示整个验证集的检测框平均准确率平均值、Mask平均准确率平均值。
+上图中红框标注的`bbox_mmap`和`seg_mmap`分别表示整个验证集上检测框的平均准确率平均值（mAP）的平均值、Mask的平均准确率平均值（mAP）的平均值。
 
 ## 分割特有统计信息
 
@@ -132,7 +140,7 @@ COCO格式的数据集不仅可以用于训练目标检测模型，也可以用�
 
 ### 评估日志字段
 
-语义分割的评估日志包括了`miou`、`category_iou`、`macc`、`category_acc`、`kappa`，这些字段的含义如下：
+语义分割的评估日志包括了`miou`、`category_iou`、`oacc`、`category_acc`、`kappa`，`category_F1-score`这些字段的含义如下：
 
 | 字段           | 含义                                          |
 | -------------- | --------------------------------------------- |
