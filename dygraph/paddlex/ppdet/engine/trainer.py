@@ -36,7 +36,7 @@ from paddlex.ppdet.utils.visualizer import visualize_results, save_result
 from paddlex.ppdet.metrics import JDEDetMetric, JDEReIDMetric
 from paddlex.ppdet.metrics import Metric, COCOMetric, VOCMetric, WiderFaceMetric, get_infer_results, KeyPointTopDownCOCOEval
 from paddlex.ppdet.data.source.category import get_categories
-import paddlex.ppdet.utils.stats as stats
+from paddlex.ppdet.utils import stats
 
 from .callbacks import Callback, ComposeCallback, LogPrinter, Checkpointer, WiferFaceEval, VisualDLWriter
 from .export_utils import _dump_infer_config
@@ -95,8 +95,8 @@ class Trainer(object):
         if self.mode == 'train':
             steps_per_epoch = len(self.loader)
             self.lr = create('LearningRate')(steps_per_epoch)
-            self.optimizer = create('OptimizerBuilder')(self.lr,
-                                                        self.model.parameters())
+            self.optimizer = create('OptimizerBuilder')(
+                self.lr, self.model.parameters())
 
         self._nranks = dist.get_world_size()
         self._local_rank = dist.get_rank()
@@ -401,7 +401,7 @@ class Trainer(object):
         clsid2catid, catid2name = get_categories(
             self.cfg.metric, anno_file=anno_file)
 
-        # Run Infer 
+        # Run Infer
         self.status['mode'] = 'test'
         self.model.eval()
         for step_id, data in enumerate(loader):
@@ -485,8 +485,8 @@ class Trainer(object):
 
         # Save infer cfg
         _dump_infer_config(self.cfg,
-                           os.path.join(save_dir, 'infer_cfg.yml'), image_shape,
-                           self.model)
+                           os.path.join(save_dir, 'infer_cfg.yml'),
+                           image_shape, self.model)
 
         input_spec = [{
             "image": InputSpec(
