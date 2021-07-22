@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,18 +14,15 @@
 
 from __future__ import absolute_import
 import copy
-import os
 import os.path as osp
 import random
 import re
 import numpy as np
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
-import paddlex.utils.logging as logging
-from paddlex.utils import path_normalization
-from .dataset import Dataset
-from .dataset import is_pic
-from .dataset import get_encoding
+from paddle.io import Dataset
+from paddlex.utils import logging, get_num_workers, get_encoding, path_normalization, is_pic
+from paddlex.cv.transforms import Decode, MixupImage
 
 
 class VOCDetection(Dataset):
@@ -39,9 +36,6 @@ class VOCDetection(Dataset):
         num_workers (int|str): 数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据
             系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的
             一半。
-        buffer_size (int): 数据集中样本在预处理过程中队列的缓存长度，以样本数为单位。默认为100。
-        parallel_method (str): 数据集中样本在预处理过程中并行处理的方式，支持'thread'
-            线程和'process'进程两种方式。默认为'process'（Windows和Mac下会强制使用thread，该参数无效）。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
     """
 
@@ -51,8 +45,6 @@ class VOCDetection(Dataset):
                  label_list,
                  transforms=None,
                  num_workers='auto',
-                 buffer_size=100,
-                 parallel_method='process',
                  shuffle=False):
         # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
         # or matplotlib.backends is imported for the first time
@@ -60,25 +52,35 @@ class VOCDetection(Dataset):
         import matplotlib
         matplotlib.use('Agg')
         from pycocotools.coco import COCO
-        super(VOCDetection, self).__init__(
-            transforms=transforms,
-            num_workers=num_workers,
-            buffer_size=buffer_size,
-            parallel_method=parallel_method,
-            shuffle=shuffle)
+        super(VOCDetection, self).__init__()
+        self.data_fields = None
+        self.transforms = copy.deepcopy(transforms)
+        self.num_max_boxes = 50
+
+        self.use_mix = False
+        if self.transforms is not None:
+            for op in self.transforms.transforms:
+                if isinstance(op, MixupImage):
+                    self.mixup_op = copy.deepcopy(op)
+                    self.use_mix = True
+                    self.num_max_boxes *= 2
+                    break
+
+        self.batch_transforms = None
+        self.num_workers = get_num_workers(num_workers)
+        self.shuffle = shuffle
         self.file_list = list()
         self.labels = list()
-        self._epoch = 0
 
-        annotations = {}
-        annotations['images'] = []
-        annotations['categories'] = []
-        annotations['annotations'] = []
+        annotations = dict()
+        annotations['images'] = list()
+        annotations['categories'] = list()
+        annotations['annotations'] = list()
 
         cname2cid = OrderedDict()
-        label_id = 1
-        with open(label_list, 'r', encoding=get_encoding(label_list)) as fr:
-            for line in fr.readlines():
+        label_id = 0
+        with open(label_list, 'r', encoding=get_encoding(label_list)) as f:
+            for line in f.readlines():
                 cname2cid[line.strip()] = label_id
                 label_id += 1
                 self.labels.append(line.strip())
@@ -86,22 +88,23 @@ class VOCDetection(Dataset):
         for k, v in cname2cid.items():
             annotations['categories'].append({
                 'supercategory': 'component',
-                'id': v,
+                'id': v + 1,
                 'name': k
             })
         ct = 0
         ann_ct = 0
-        with open(file_list, 'r', encoding=get_encoding(file_list)) as fr:
+        with open(file_list, 'r', encoding=get_encoding(file_list)) as f:
             while True:
-                line = fr.readline()
+                line = f.readline()
                 if not line:
                     break
                 if len(line.strip().split()) > 2:
-                    raise Exception(
-                        "A space is defined as the separator, but it exists in image or label name {}."
-                        .format(line))
-                img_file, xml_file = [osp.join(data_dir, x) \
-                        for x in line.strip().split()[:2]]
+                    raise Exception("A space is defined as the separator, "
+                                    "but it exists in image or label name {}."
+                                    .format(line))
+                img_file, xml_file = [
+                    osp.join(data_dir, x) for x in line.strip().split()[:2]
+                ]
                 img_file = path_normalization(img_file)
                 xml_file = path_normalization(xml_file)
                 if not is_pic(img_file):
@@ -109,11 +112,11 @@ class VOCDetection(Dataset):
                 if not osp.isfile(xml_file):
                     continue
                 if not osp.exists(img_file):
-                    logging.warning('The image file {} is not exist!'.format(
+                    logging.warning('The image file {} does not exist!'.format(
                         img_file))
                     continue
                 if not osp.exists(xml_file):
-                    logging.warning('The annotation file {} is not exist!'.
+                    logging.warning('The annotation file {} does not exist!'.
                                     format(xml_file))
                     continue
                 tree = ET.parse(xml_file)
@@ -151,6 +154,7 @@ class VOCDetection(Dataset):
                 gt_score = np.ones((len(objs), 1), dtype=np.float32)
                 is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
                 difficult = np.zeros((len(objs), 1), dtype=np.int32)
+                skipped_indices = list()
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
@@ -171,7 +175,8 @@ class VOCDetection(Dataset):
                     box_tag = pattern.findall(str(ET.tostringlist(obj)))
                     if len(box_tag) == 0:
                         logging.warning(
-                            "There's no field '<bndbox>' in one of object, so this object will be ignored. xml file: {}".
+                            "There's no field '<bndbox>' in one of object, "
+                            "so this object will be ignored. xml file: {}".
                             format(xml_file))
                         continue
                     box_tag = box_tag[0][1:-1]
@@ -197,19 +202,34 @@ class VOCDetection(Dataset):
                     if im_w > 0.5 and im_h > 0.5:
                         x2 = min(im_w - 1, x2)
                         y2 = min(im_h - 1, y2)
+
+                    if not (x2 >= x1 and y2 >= y1):
+                        skipped_indices.append(i)
+                        logging.warning(
+                            "Bounding box for object {} does not satisfy x1 <= x2 and y1 <= y2, "
+                            "so this object is skipped".format(i))
+                        continue
+
                     gt_bbox[i] = [x1, y1, x2, y2]
                     is_crowd[i][0] = 0
                     difficult[i][0] = _difficult
                     annotations['annotations'].append({
                         'iscrowd': 0,
                         'image_id': int(im_id[0]),
-                        'bbox': [x1, y1, x2 - x1 + 1, y2 - y1 + 1],
-                        'area': float((x2 - x1 + 1) * (y2 - y1 + 1)),
-                        'category_id': cname2cid[cname],
+                        'bbox': [x1, y1, x2 - x1, y2 - y1],
+                        'area': float((x2 - x1) * (y2 - y1)),
+                        'category_id': cname2cid[cname] + 1,
                         'id': ann_ct,
                         'difficult': _difficult
                     })
                     ann_ct += 1
+
+                if skipped_indices:
+                    gt_bbox = np.delete(gt_bbox, skipped_indices, axis=0)
+                    gt_class = np.delete(gt_class, skipped_indices, axis=0)
+                    gt_score = np.delete(gt_score, skipped_indices, axis=0)
+                    is_crowd = np.delete(is_crowd, skipped_indices, axis=0)
+                    difficult = np.delete(difficult, skipped_indices, axis=0)
 
                 im_info = {
                     'im_id': im_id,
@@ -220,12 +240,17 @@ class VOCDetection(Dataset):
                     'gt_class': gt_class,
                     'gt_bbox': gt_bbox,
                     'gt_score': gt_score,
-                    'gt_poly': [],
                     'difficult': difficult
                 }
-                voc_rec = (im_info, label_info)
-                if len(objs) != 0:
-                    self.file_list.append([img_file, voc_rec])
+
+                if gt_bbox.size != 0:
+                    self.file_list.append({
+                        'image': img_file,
+                        **
+                        im_info,
+                        **
+                        label_info
+                    })
                     ct += 1
                     annotations['images'].append({
                         'height': im_h,
@@ -233,6 +258,10 @@ class VOCDetection(Dataset):
                         'id': int(im_id[0]),
                         'file_name': osp.split(img_file)[1]
                     })
+                if self.use_mix:
+                    self.num_max_boxes = max(self.num_max_boxes, 2 * len(objs))
+                else:
+                    self.num_max_boxes = max(self.num_max_boxes, len(objs))
 
         if not len(self.file_list) > 0:
             raise Exception('not found any voc record in %s' % (file_list))
@@ -243,72 +272,30 @@ class VOCDetection(Dataset):
         self.coco_gt.dataset = annotations
         self.coco_gt.createIndex()
 
-    def add_negative_samples(self, image_dir):
-        """将背景图片加入训练
+        self._epoch = 0
 
-        Args:
-            image_dir (str)：背景图片所在的文件夹目录。
-
-        """
-        import cv2
-        if not osp.exists(image_dir):
-            raise Exception("{} background images directory does not exist.".
-                            format(image_dir))
-        image_list = os.listdir(image_dir)
-        max_img_id = max(self.coco_gt.getImgIds())
-        for image in image_list:
-            if not is_pic(image):
-                continue
-            # False ground truth
-            gt_bbox = np.array([[0, 0, 1e-05, 1e-05]], dtype=np.float32)
-            gt_class = np.array([[0]], dtype=np.int32)
-            gt_score = np.ones((1, 1), dtype=np.float32)
-            is_crowd = np.array([[0]], dtype=np.int32)
-            difficult = np.zeros((1, 1), dtype=np.int32)
-            gt_poly = [[[0, 0, 0, 1e-05, 1e-05, 1e-05, 1e-05, 0]]]
-
-            max_img_id += 1
-            im_fname = osp.join(image_dir, image)
-            img_data = cv2.imread(im_fname, cv2.IMREAD_UNCHANGED)
-            im_h, im_w, im_c = img_data.shape
-            im_info = {
-                'im_id': np.array([max_img_id]).astype('int32'),
-                'image_shape': np.array([im_h, im_w]).astype('int32'),
-            }
-            label_info = {
-                'is_crowd': is_crowd,
-                'gt_class': gt_class,
-                'gt_bbox': gt_bbox,
-                'gt_score': gt_score,
-                'difficult': difficult,
-                'gt_poly': gt_poly
-            }
-            coco_rec = (im_info, label_info)
-            self.file_list.append([im_fname, coco_rec])
-        self.num_samples = len(self.file_list)
-
-    def iterator(self):
-        self._epoch += 1
-        self._pos = 0
-        files = copy.deepcopy(self.file_list)
-        if self.shuffle:
-            random.shuffle(files)
-        files = files[:self.num_samples]
-        self.num_samples = len(files)
-        for f in files:
-            records = f[1]
-            im_info = copy.deepcopy(records[0])
-            label_info = copy.deepcopy(records[1])
-            im_info['epoch'] = self._epoch
+    def __getitem__(self, idx):
+        sample = copy.deepcopy(self.file_list[idx])
+        if self.data_fields is not None:
+            sample = {k: sample[k] for k in self.data_fields}
+        if self.use_mix and (self.mixup_op.mixup_epoch == -1 or
+                             self._epoch < self.mixup_op.mixup_epoch):
             if self.num_samples > 1:
                 mix_idx = random.randint(1, self.num_samples - 1)
-                mix_pos = (mix_idx + self._pos) % self.num_samples
+                mix_pos = (mix_idx + idx) % self.num_samples
             else:
                 mix_pos = 0
-            im_info['mixup'] = [
-                files[mix_pos][0], copy.deepcopy(files[mix_pos][1][0]),
-                copy.deepcopy(files[mix_pos][1][1])
-            ]
-            self._pos += 1
-            sample = [f[0], im_info, label_info]
-            yield sample
+            sample_mix = copy.deepcopy(self.file_list[mix_pos])
+            if self.data_fields is not None:
+                sample_mix = {k: sample_mix[k] for k in self.data_fields}
+            sample = self.mixup_op(sample=[
+                Decode(to_rgb=False)(sample), Decode(to_rgb=False)(sample_mix)
+            ])
+        sample = self.transforms(sample)
+        return sample
+
+    def __len__(self):
+        return self.num_samples
+
+    def set_epoch(self, epoch_id):
+        self._epoch = epoch_id

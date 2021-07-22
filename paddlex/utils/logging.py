@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,24 +18,26 @@ import sys
 import colorama
 from colorama import init
 import paddlex
+import paddle
 
 init(autoreset=True)
 levels = {0: 'ERROR', 1: 'WARNING', 2: 'INFO', 3: 'DEBUG'}
 
 
 def log(level=2, message="", use_color=False):
-    current_time = time.time()
-    time_array = time.localtime(current_time)
-    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
-    if paddlex.log_level >= level:
-        if use_color:
-            print("\033[1;31;40m{} [{}]\t{}\033[0m".format(
-                current_time, levels[level], message).encode("utf-8").decode(
-                    "latin1"))
-        else:
-            print("{} [{}]\t{}".format(current_time, levels[level], message)
-                  .encode("utf-8").decode("latin1"))
-        sys.stdout.flush()
+    if paddle.distributed.get_rank() == 0:
+        current_time = time.time()
+        time_array = time.localtime(current_time)
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
+        if paddlex.log_level >= level:
+            if use_color:
+                print("\033[1;31;40m{} [{}]\t{}\033[0m".format(
+                    current_time, levels[level], message).encode("utf-8")
+                      .decode("latin1"))
+            else:
+                print("{} [{}]\t{}".format(current_time, levels[
+                    level], message).encode("utf-8").decode("latin1"))
+            sys.stdout.flush()
 
 
 def debug(message="", use_color=False):

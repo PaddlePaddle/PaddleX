@@ -1,54 +1,50 @@
-# 环境变量配置，用于控制是否使用GPU
-# 说明文档：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html#gpu
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-from paddlex.det import transforms
 import paddlex as pdx
+from paddlex import transforms as T
 
 # 下载和解压昆虫检测数据集
-insect_dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
-pdx.utils.download_and_decompress(insect_dataset, path='./')
+dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
+pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/det_transforms.html
-train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(), transforms.Normalize(),
-    transforms.ResizeByShort(
-        short_size=800, max_size=1333), transforms.Padding(coarsest_stride=32)
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/transforms/transforms.md
+train_transforms = T.Compose([
+    T.RandomResizeByShort(
+        short_sizes=[640, 672, 704, 736, 768, 800],
+        max_size=1333,
+        interp='CUBIC'), T.RandomHorizontalFlip(), T.Normalize(
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-eval_transforms = transforms.Compose([
-    transforms.Normalize(),
-    transforms.ResizeByShort(
-        short_size=800, max_size=1333),
-    transforms.Padding(coarsest_stride=32),
+eval_transforms = T.Compose([
+    T.ResizeByShort(
+        short_size=800, max_size=1333, interp='CUBIC'), T.Normalize(
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/datasets.html#paddlex-datasets-vocdetection
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/datasets.md
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
     label_list='insect_det/labels.txt',
     transforms=train_transforms,
     shuffle=True)
+
 eval_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/val_list.txt',
     label_list='insect_det/labels.txt',
-    transforms=eval_transforms)
+    transforms=eval_transforms,
+    shuffle=False)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://paddlex.readthedocs.io/zh_CN/develop/train/visualdl.html
-# num_classes 需要设置为包含背景类的类别数，即: 目标类别数量 + 1
-num_classes = len(train_dataset.labels) + 1
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/train/visualdl.md
+num_classes = len(train_dataset.labels)
+model = pdx.det.FasterRCNN(
+    num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
-# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#paddlex-det-fasterrcnn
-model = pdx.det.FasterRCNN(num_classes=num_classes, backbone='ResNet50')
-
-# API说明: https://paddlex.readthedocs.io/zh_CN/develop/apis/models/detection.html#id5
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/models/detection.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/parameters.md
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,
@@ -56,5 +52,7 @@ model.train(
     eval_dataset=eval_dataset,
     learning_rate=0.0025,
     lr_decay_epochs=[8, 11],
+    warmup_steps=500,
+    warmup_start_lr=0.00025,
     save_dir='output/faster_rcnn_r50_fpn',
     use_vdl=True)

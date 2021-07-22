@@ -1,4 +1,5 @@
-# 目标检测模型裁剪训练
+# 目标检测模型剪裁
+
 
 ## 第一步 正常训练目标检测模型
 
@@ -6,45 +7,61 @@
 python yolov3_train.py
 ```
 
-在此步骤中，训练的模型会保存在`output/yolov3_mobilenetv1`目录下
+在此步骤中，训练的模型会保存在`output/yolov3_darknet53`目录下
 
-## 第二步 分析模型参数信息
 
-```
-python param_analysis.py
-```
-参数分析完后，会得到`yolov3.sensi.data`文件，此文件保存了各参数的敏感度信息。  
+## 第二步 模型剪裁
 
-> 我们可以继续加载模型和敏感度文件，进行可视化，如下命令所示
-> ```
-> python slim_visualize.py
-> ```
-> 可视化结果出下图
-纵轴为`eval_metric_loss`(接下来第三步需要配置的参数)，横轴为模型被裁剪的比例，从图中可以看到，  
-- 当`eval_metric_loss`设0.05时，模型被裁掉63.1%（剩余36.9%）  
-- 当`eval_metric_loss`设0.1时，模型被裁掉68.6%（剩余31.4%）
-
-![](./sensitivities.png)
-
-## 第三步 模型进行裁剪训练
+**注意**：目标检测模型的剪裁依赖PaddleSlim 2.1.0
 
 ```
-python yolov3_prune_train.py
+python yolov3_prune.py
 ```
-此步骤的代码与第一步的代码基本一致，唯一的区别是在最后的train函数中，`yolov3_prune_train.py`修改了里面的`pretrain_weights`、`save_dir`、`sensitivities_file`和`eval_metric_loss`四个参数
 
-- pretrain_weights: 在裁剪训练中，设置为之前训练好的模型
-- save_dir: 模型训练过程中，模型的保存位置
-- sensitivities_file: 在第二步中分析得到的参数敏感度信息文件
-- eval_metric_loss: 第二步中可视化的相关参数，通过此参数可相应的改变最终模型被裁剪的比例
+`yolov3_prune.py`中主要执行了以下API：
 
-## 裁剪效果
+step 1: 分析模型各层参数在不同的剪裁比例下的敏感度
 
-在本示例数据上，裁剪效果对比如下，其中预测采用**CPU，关闭MKLDNN**进行预测，预测时间不包含数据的预处理和结果的后处理。  
-可以看到在模型被裁剪掉63%后，模型精度还有上升，单张图片的预测用时减少了30%。
+主要由两个API完成:
+
+```
+model = pdx.load_model('output/yolov3_darknet53/best_model')
+model.analyze_sensitivity(
+    dataset=eval_dataset,
+    batch_size=1,
+    save_dir='output/yolov3_darknet53/prune')
+```
+
+参数分析完后，`output/yolov3_darknet53/prune`目录下会得到`model.sensi.data`文件，此文件保存了不同剪裁比例下各层参数的敏感度信息。
+
+**注意：** 如果之前运行过该步骤，第二次运行时会自动加载已有的`output/yolov3_darknet53/prune/model.sensi.data`，不再进行敏感度分析。
+
+step 2: 根据选择的FLOPs减小比例对模型进行剪裁
+
+```
+model.prune(pruned_flops=.2, save_dir=None)
+```
+
+**注意：** 如果想直接保存剪裁完的模型参数，设置`save_dir`即可。但我们强烈建议对剪裁过的模型重新进行训练，以保证模型精度损失能尽可能少。
 
 
-| 模型 | 参数文件大小 | 预测速度 | MAP |
-| :--- | :----------  | :------- | :--- |
-| YOLOv3-MobileNetV1 |    93M       |   1.045s  | 0.635 |
-| YOLOv3-MobileNetV1(裁掉63%) | 35M | 0.735s | 0.735 |
+step 3: 对剪裁后的模型重新训练
+
+```
+model.train(
+    num_epochs=270,
+    train_dataset=train_dataset,
+    train_batch_size=8,
+    eval_dataset=eval_dataset,
+    learning_rate=0.001 / 8,
+    warmup_steps=1000,
+    warmup_start_lr=0.0,
+    save_interval_epochs=5,
+    lr_decay_epochs=[216, 243],
+    save_dir='output/yolov3_darknet53/prune')
+
+```
+
+重新训练后的模型保存在`output/yolov3_darknet53/prune`。
+
+**注意：** 重新训练时需将`pretrain_weights`设置为`None`，否则模型会加载`pretrain_weights`指定的预训练模型参数。

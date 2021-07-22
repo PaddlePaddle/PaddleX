@@ -1,10 +1,10 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,289 +12,114 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-import paddle.fluid as fluid
 import os
-import sys
-import numpy as np
+import os.path as osp
+from functools import partial
 import time
+import copy
 import math
 import yaml
-import copy
 import json
-import functools
-import multiprocessing as mp
-import paddlex.utils.logging as logging
-from paddlex.utils import seconds_to_hms
-from paddlex.utils.utils import EarlyStop
-from paddlex.cv.transforms import arrange_transforms
+import numpy as np
+import paddle
+from paddle.io import DataLoader, DistributedBatchSampler
+from paddleslim import QAT
+from paddleslim.analysis import flops
+from paddleslim import L1NormFilterPruner, FPGMFilterPruner
 import paddlex
-from collections import OrderedDict
-from os import path as osp
-from paddle.fluid.framework import Program
-from .utils.pretrain_weights import get_pretrain_weights
+from paddlex.cv.transforms import arrange_transforms
+from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
+                           get_pretrain_weights, load_pretrain_weights,
+                           load_checkpoint, SmoothedValue, TrainingStats,
+                           _get_shared_memory_size_in_M, EarlyStop)
+import paddlex.utils.logging as logging
+from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
 
 
-def dict2str(dict_input):
-    out = ''
-    for k, v in dict_input.items():
-        try:
-            v = round(float(v), 6)
-        except:
-            pass
-        out = out + '{}={}, '.format(k, v)
-    return out.strip(', ')
-
-
-class BaseAPI:
+class BaseModel:
     def __init__(self, model_type):
         self.model_type = model_type
-        # 现有的CV模型都有这个属性，而这个属且也需要在eval时用到
         self.num_classes = None
         self.labels = None
         self.version = paddlex.__version__
-        if paddlex.env_info['place'] == 'cpu':
-            self.places = fluid.cpu_places()
-        else:
-            self.places = fluid.cuda_places()
-        self.exe = fluid.Executor(self.places[0])
-        self.train_prog = None
-        self.test_prog = None
-        self.parallel_train_prog = None
-        self.train_inputs = None
+        self.net = None
+        self.optimizer = None
         self.test_inputs = None
-        self.train_outputs = None
-        self.test_outputs = None
         self.train_data_loader = None
+        self.eval_data_loader = None
         self.eval_metrics = None
-        # 若模型是从inference model加载进来的，无法调用训练接口进行训练
-        self.trainable = True
         # 是否使用多卡间同步BatchNorm均值和方差
         self.sync_bn = False
-        # 当前模型状态
         self.status = 'Normal'
         # 已完成迭代轮数，为恢复训练时的起始轮数
         self.completed_epochs = 0
-        self.scope = fluid.global_scope()
-
-        # 线程池，在模型在预测时用于对输入数据以图片为单位进行并行处理
-        # 主要用于batch_predict接口
-        thread_num = mp.cpu_count() if mp.cpu_count() < 8 else 8
-        self.thread_pool = mp.pool.ThreadPool(thread_num)
-
-    def reset_thread_pool(self, thread_num):
-        self.thread_pool.close()
-        self.thread_pool.join()
-        self.thread_pool = mp.pool.ThreadPool(thread_num)
-
-    def _get_single_card_bs(self, batch_size):
-        if batch_size % len(self.places) == 0:
-            return int(batch_size // len(self.places))
-        else:
-            raise Exception("Please support correct batch_size, \
-                            which can be divided by available cards({}) in {}"
-                            .format(paddlex.env_info['num'], paddlex.env_info[
-                                'place']))
-
-    def build_program(self):
-        if hasattr(paddlex, 'model_built') and paddlex.model_built:
-            logging.error(
-                "Function model.train() only can be called once in your code.")
-        paddlex.model_built = True
-        # 构建训练网络
-        self.train_inputs, self.train_outputs = self.build_net(mode='train')
-        self.train_prog = fluid.default_main_program()
-        startup_prog = fluid.default_startup_program()
-
-        # 构建预测网络
-        self.test_prog = fluid.Program()
-        with fluid.program_guard(self.test_prog, startup_prog):
-            with fluid.unique_name.guard():
-                self.test_inputs, self.test_outputs = self.build_net(
-                    mode='test')
-        self.test_prog = self.test_prog.clone(for_test=True)
-
-    def build_train_data_loader(self, dataset, batch_size):
-        # 初始化data_loader
-        if self.train_data_loader is None:
-            self.train_data_loader = fluid.io.DataLoader.from_generator(
-                feed_list=list(self.train_inputs.values()),
-                capacity=64,
-                use_double_buffer=True,
-                iterable=True)
-        batch_size_each_gpu = self._get_single_card_bs(batch_size)
-        generator = dataset.generator(
-            batch_size=batch_size_each_gpu, drop_last=True)
-        self.train_data_loader.set_sample_list_generator(
-            dataset.generator(batch_size=batch_size_each_gpu),
-            places=self.places)
-
-    def export_quant_model(self,
-                           dataset,
-                           save_dir,
-                           batch_size=1,
-                           batch_num=10,
-                           cache_dir="./temp"):
-        input_channel = getattr(self, 'input_channel', 3)
-        arrange_transforms(
-            model_type=self.model_type,
-            class_name=self.__class__.__name__,
-            transforms=dataset.transforms,
-            mode='quant',
-            input_channel=input_channel)
-        dataset.num_samples = batch_size * batch_num
-        import paddle
-        version = paddle.__version__.strip().split('.')
-        if version[0] == '2' or (version[0] == '0' and
-                                 hasattr(paddle, 'enable_static')):
-            from .slim.post_quantization import PaddleXPostTrainingQuantizationV2 as PaddleXPostTrainingQuantization
-        else:
-            from .slim.post_quantization import PaddleXPostTrainingQuantization
-            PaddleXPostTrainingQuantization._collect_target_varnames
-        is_use_cache_file = True
-        if cache_dir is None:
-            is_use_cache_file = False
-        quant_prog = self.test_prog.clone(for_test=True)
-        post_training_quantization = PaddleXPostTrainingQuantization(
-            executor=self.exe,
-            dataset=dataset,
-            program=quant_prog,
-            inputs=self.test_inputs,
-            outputs=self.test_outputs,
-            batch_size=batch_size,
-            batch_nums=batch_num,
-            scope=self.scope,
-            algo='KL',
-            quantizable_op_type=["conv2d", "depthwise_conv2d", "mul"],
-            is_full_quantize=False,
-            is_use_cache_file=is_use_cache_file,
-            cache_dir=cache_dir)
-        post_training_quantization.quantize()
-        post_training_quantization.save_quantized_model(save_dir)
-        model_info = self.get_model_info()
-        model_info['status'] = 'Quant'
-
-        # 保存模型输出的变量描述
-        model_info['_ModelInputsOutputs'] = dict()
-        model_info['_ModelInputsOutputs']['test_inputs'] = [
-            [k, v.name] for k, v in self.test_inputs.items()
-        ]
-        model_info['_ModelInputsOutputs']['test_outputs'] = [
-            [k, v.name] for k, v in self.test_outputs.items()
-        ]
-
-        with open(
-                osp.join(save_dir, 'model.yml'), encoding='utf-8',
-                mode='w') as f:
-            yaml.dump(model_info, f)
+        self.pruner = None
+        self.pruning_ratios = None
+        self.quantizer = None
+        self.quant_config = None
+        self.fixed_input_shape = None
 
     def net_initialize(self,
-                       startup_prog=None,
                        pretrain_weights=None,
-                       fuse_bn=False,
                        save_dir='.',
-                       sensitivities_file=None,
-                       eval_metric_loss=0.05,
-                       resume_checkpoint=None):
-        if not resume_checkpoint:
-            pretrain_dir = osp.join(save_dir, 'pretrain')
-            if not os.path.isdir(pretrain_dir):
-                if os.path.exists(pretrain_dir):
-                    os.remove(pretrain_dir)
-                os.makedirs(pretrain_dir)
-            if pretrain_weights is not None and not os.path.exists(
-                    pretrain_weights):
-                if self.model_type == 'classifier':
-                    if pretrain_weights not in ['IMAGENET', 'BAIDU10W']:
-                        logging.warning(
-                            "Path of pretrain_weights('{}') is not exists!".
-                            format(pretrain_weights))
-                        logging.warning(
-                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
-                        )
-                        pretrain_weights = 'IMAGENET'
-                elif self.model_type == 'detector':
-                    if pretrain_weights not in ['IMAGENET', 'COCO']:
-                        logging.warning(
-                            "Path of pretrain_weights('{}') is not exists!".
-                            format(pretrain_weights))
-                        logging.warning(
-                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
-                        )
-                        pretrain_weights = 'IMAGENET'
-                elif self.model_type == 'segmenter':
-                    if pretrain_weights not in [
-                            'IMAGENET', 'COCO', 'CITYSCAPES'
-                    ]:
-                        logging.warning(
-                            "Path of pretrain_weights('{}') is not exists!".
-                            format(pretrain_weights))
-                        logging.warning(
-                            "Pretrain_weights will be forced to set as 'IMAGENET', if you don't want to use pretrain weights, set pretrain_weights=None."
-                        )
-                        pretrain_weights = 'IMAGENET'
-            if hasattr(self, 'backbone'):
-                backbone = self.backbone
+                       resume_checkpoint=None,
+                       is_backbone_weights=False):
+        if pretrain_weights is not None and \
+                not osp.exists(pretrain_weights):
+            if not osp.isdir(save_dir):
+                if osp.exists(save_dir):
+                    os.remove(save_dir)
+                os.makedirs(save_dir)
+            if self.model_type == 'classifier':
+                pretrain_weights = get_pretrain_weights(
+                    pretrain_weights, self.model_name, save_dir)
             else:
-                backbone = self.__class__.__name__
-                if backbone == "HRNet":
-                    backbone = backbone + "_W{}".format(self.width)
-            class_name = self.__class__.__name__
-            pretrain_weights = get_pretrain_weights(
-                pretrain_weights, class_name, backbone, pretrain_dir)
-        if startup_prog is None:
-            startup_prog = fluid.default_startup_program()
-        self.exe.run(startup_prog)
-
-        if not resume_checkpoint and pretrain_weights:
-            logging.info(
-                "Load pretrain weights from {}.".format(pretrain_weights),
-                use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(
-                self.exe, self.train_prog, pretrain_weights, fuse_bn)
-
-        # 进行裁剪
-        if sensitivities_file is not None:
-            import paddle
-            version = paddle.__version__.strip().split('.')
-            if version[0] == '2' or (version[0] == '0' and
-                                     hasattr(paddle, 'enable_static')):
-                raise Exception(
-                    'Model pruning is not ready when using paddle>=2.0.0, please downgrade paddle to 1.8.5.'
-                )
-            import paddleslim
-            from .slim.prune_config import get_sensitivities
-            sensitivities_file = get_sensitivities(sensitivities_file, self,
-                                                   save_dir)
-            from .slim.prune import get_params_ratios, prune_program
-            logging.info(
-                "Start to prune program with eval_metric_loss = {}".format(
-                    eval_metric_loss),
-                use_color=True)
-            origin_flops = paddleslim.analysis.flops(self.test_prog)
-            prune_params_ratios = get_params_ratios(
-                sensitivities_file, eval_metric_loss=eval_metric_loss)
-            prune_program(self, prune_params_ratios)
-            current_flops = paddleslim.analysis.flops(self.test_prog)
-            remaining_ratio = current_flops / origin_flops
-            logging.info(
-                "Finish prune program, before FLOPs:{}, after prune FLOPs:{}, remaining ratio:{}"
-                .format(origin_flops, current_flops, remaining_ratio),
-                use_color=True)
-            self.status = 'Prune'
-
-        if resume_checkpoint:
-            logging.info(
-                "Resume checkpoint from {}.".format(resume_checkpoint),
-                use_color=True)
-            paddlex.utils.utils.load_pretrain_weights(
-                self.exe, self.train_prog, resume_checkpoint, resume=True)
-            if not osp.exists(osp.join(resume_checkpoint, "model.yml")):
-                raise Exception("There's not model.yml in {}".format(
-                    resume_checkpoint))
+                backbone_name = getattr(self, 'backbone_name', None)
+                pretrain_weights = get_pretrain_weights(
+                    pretrain_weights,
+                    self.__class__.__name__,
+                    save_dir,
+                    backbone_name=backbone_name)
+        if pretrain_weights is not None:
+            if is_backbone_weights:
+                load_pretrain_weights(
+                    self.net.backbone,
+                    pretrain_weights,
+                    model_name='backbone of ' + self.model_name)
+            else:
+                load_pretrain_weights(
+                    self.net, pretrain_weights, model_name=self.model_name)
+        if resume_checkpoint is not None:
+            if not osp.exists(resume_checkpoint):
+                logging.error(
+                    "The checkpoint path {} to resume training from does not exist."
+                    .format(resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.pdparams')):
+                logging.error(
+                    "Model parameter state dictionary file 'model.pdparams' "
+                    "not found under given checkpoint path {}".format(
+                        resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.pdopt')):
+                logging.error(
+                    "Optimizer state dictionary file 'model.pdparams' "
+                    "not found under given checkpoint path {}".format(
+                        resume_checkpoint),
+                    exit=True)
+            if not osp.exists(osp.join(resume_checkpoint, 'model.yml')):
+                logging.error(
+                    "'model.yml' not found under given checkpoint path {}".
+                    format(resume_checkpoint),
+                    exit=True)
             with open(osp.join(resume_checkpoint, "model.yml")) as f:
                 info = yaml.load(f.read(), Loader=yaml.Loader)
                 self.completed_epochs = info['completed_epochs']
+            load_checkpoint(
+                self.net,
+                self.optimizer,
+                model_name=self.model_name,
+                checkpoint=resume_checkpoint)
 
     def get_model_info(self):
         info = dict()
@@ -307,12 +132,15 @@ class BaseAPI:
             del self.init_params['__class__']
         if 'model_name' in self.init_params:
             del self.init_params['model_name']
+        if 'params' in self.init_params:
+            del self.init_params['params']
 
         info['_init_params'] = self.init_params
 
         info['_Attributes']['num_classes'] = self.num_classes
         info['_Attributes']['labels'] = self.labels
         info['_Attributes']['fixed_input_shape'] = self.fixed_input_shape
+
         try:
             primary_metric_key = list(self.eval_metrics.keys())[0]
             primary_metric_value = float(self.eval_metrics[primary_metric_key])
@@ -323,12 +151,6 @@ class BaseAPI:
             pass
 
         if hasattr(self, 'test_transforms'):
-            if hasattr(self.test_transforms, 'to_rgb'):
-                if self.test_transforms.to_rgb:
-                    info['TransformsMode'] = 'RGB'
-                else:
-                    info['TransformsMode'] = 'BGR'
-
             if self.test_transforms is not None:
                 info['Transforms'] = list()
                 for op in self.test_transforms.transforms:
@@ -340,77 +162,99 @@ class BaseAPI:
         info['completed_epochs'] = self.completed_epochs
         return info
 
+    def get_pruning_info(self):
+        info = dict()
+        info['pruner'] = self.pruner.__class__.__name__
+        info['pruning_ratios'] = self.pruning_ratios
+        pruner_inputs = self.pruner.inputs
+        if self.model_type == 'detector':
+            pruner_inputs = {
+                k: v.tolist()
+                for k, v in pruner_inputs[0].items()
+            }
+        info['pruner_inputs'] = pruner_inputs
+
+        return info
+
+    def get_quant_info(self):
+        info = dict()
+        info['quant_config'] = self.quant_config
+        return info
+
     def save_model(self, save_dir):
         if not osp.isdir(save_dir):
             if osp.exists(save_dir):
                 os.remove(save_dir)
             os.makedirs(save_dir)
-        if self.train_prog is not None:
-            fluid.save(self.train_prog, osp.join(save_dir, 'model'))
-        else:
-            fluid.save(self.test_prog, osp.join(save_dir, 'model'))
         model_info = self.get_model_info()
         model_info['status'] = self.status
+
+        paddle.save(self.net.state_dict(),
+                    osp.join(save_dir, 'model.pdparams'))
+        paddle.save(self.optimizer.state_dict(),
+                    osp.join(save_dir, 'model.pdopt'))
+
         with open(
                 osp.join(save_dir, 'model.yml'), encoding='utf-8',
                 mode='w') as f:
             yaml.dump(model_info, f)
+
         # 评估结果保存
         if hasattr(self, 'eval_details'):
             with open(osp.join(save_dir, 'eval_details.json'), 'w') as f:
                 json.dump(self.eval_details, f)
 
-        if self.status == 'Prune':
-            # 保存裁剪的shape
-            shapes = {}
-            for block in self.train_prog.blocks:
-                for param in block.all_parameters():
-                    pd_var = fluid.global_scope().find_var(param.name)
-                    pd_param = pd_var.get_tensor()
-                    shapes[param.name] = np.array(pd_param).shape
+        if self.status == 'Pruned' and self.pruner is not None:
+            pruning_info = self.get_pruning_info()
             with open(
                     osp.join(save_dir, 'prune.yml'), encoding='utf-8',
                     mode='w') as f:
-                yaml.dump(shapes, f)
+                yaml.dump(pruning_info, f)
+
+        if self.status == 'Quantized' and self.quantizer is not None:
+            quant_info = self.get_quant_info()
+            with open(
+                    osp.join(save_dir, 'quant.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(quant_info, f)
 
         # 模型保存成功的标志
         open(osp.join(save_dir, '.success'), 'w').close()
         logging.info("Model saved in {}.".format(save_dir))
 
-    def export_inference_model(self, save_dir):
-        test_input_names = [
-            var.name for var in list(self.test_inputs.values())
-        ]
-        test_outputs = list(self.test_outputs.values())
-        save_prog = self.test_prog.clone(for_test=True)
-        with fluid.scope_guard(self.scope):
-            fluid.io.save_inference_model(
-                dirname=save_dir,
-                executor=self.exe,
-                params_filename='__params__',
-                feeded_var_names=test_input_names,
-                target_vars=test_outputs,
-                main_program=save_prog)
-        model_info = self.get_model_info()
-        model_info['status'] = 'Infer'
+    def build_data_loader(self, dataset, batch_size, mode='train'):
+        if dataset.num_samples < batch_size:
+            raise Exception(
+                'The volume of dataset({}) must be larger than batch size({}).'
+                .format(dataset.num_samples, batch_size))
+        batch_size_each_card = get_single_card_bs(batch_size=batch_size)
+        # TODO detection eval阶段需做判断
+        batch_sampler = DistributedBatchSampler(
+            dataset,
+            batch_size=batch_size_each_card,
+            shuffle=dataset.shuffle,
+            drop_last=mode == 'train')
 
-        # 保存模型输出的变量描述
-        model_info['_ModelInputsOutputs'] = dict()
-        model_info['_ModelInputsOutputs']['test_inputs'] = [
-            [k, v.name] for k, v in self.test_inputs.items()
-        ]
-        model_info['_ModelInputsOutputs']['test_outputs'] = [
-            [k, v.name] for k, v in self.test_outputs.items()
-        ]
-        with open(
-                osp.join(save_dir, 'model.yml'), encoding='utf-8',
-                mode='w') as f:
-            yaml.dump(model_info, f)
+        if dataset.num_workers > 0:
+            shm_size = _get_shared_memory_size_in_M()
+            if shm_size is None or shm_size < 1024.:
+                use_shared_memory = False
+            else:
+                use_shared_memory = True
+        else:
+            use_shared_memory = False
 
-        # 模型保存成功的标志
-        open(osp.join(save_dir, '.success'), 'w').close()
-        logging.info("Model for inference deploy saved in {}.".format(
-            save_dir))
+        loader = DataLoader(
+            dataset,
+            batch_sampler=batch_sampler,
+            collate_fn=dataset.batch_transforms,
+            num_workers=dataset.num_workers,
+            return_list=True,
+            use_shared_memory=use_shared_memory,
+            worker_init_fn=lambda worker_id: np.random.seed(np.random.get_state()[1][0] + worker_id)
+        )
+
+        return loader
 
     def train_loop(self,
                    num_epochs,
@@ -420,195 +264,360 @@ class BaseAPI:
                    save_interval_epochs=1,
                    log_interval_steps=10,
                    save_dir='output',
-                   use_vdl=False,
+                   ema=None,
                    early_stop=False,
-                   early_stop_patience=5):
-        if train_dataset.num_samples < train_batch_size:
-            raise Exception(
-                'The amount of training datset must be larger than batch size.')
-        if not osp.isdir(save_dir):
-            if osp.exists(save_dir):
-                os.remove(save_dir)
-            os.makedirs(save_dir)
+                   early_stop_patience=5,
+                   use_vdl=True):
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=train_dataset.transforms,
+            mode='train')
+
+        nranks = paddle.distributed.get_world_size()
+        local_rank = paddle.distributed.get_rank()
+        if nranks > 1:
+            find_unused_parameters = getattr(self, 'find_unused_parameters',
+                                             False)
+            # Initialize parallel environment if not done.
+            if not paddle.distributed.parallel.parallel_helper._is_parallel_ctx_initialized(
+            ):
+                paddle.distributed.init_parallel_env()
+                ddp_net = paddle.DataParallel(
+                    self.net, find_unused_parameters=find_unused_parameters)
+            else:
+                ddp_net = paddle.DataParallel(
+                    self.net, find_unused_parameters=find_unused_parameters)
+
         if use_vdl:
             from visualdl import LogWriter
             vdl_logdir = osp.join(save_dir, 'vdl_log')
-        # 给transform添加arrange操作
-        input_channel = getattr(self, 'input_channel', 3)
-        arrange_transforms(
-            model_type=self.model_type,
-            class_name=self.__class__.__name__,
-            transforms=train_dataset.transforms,
-            mode='train',
-            input_channel=input_channel)
-        # 构建train_data_loader
-        self.build_train_data_loader(
-            dataset=train_dataset, batch_size=train_batch_size)
-
-        if eval_dataset is not None:
-            self.eval_transforms = eval_dataset.transforms
-            self.test_transforms = copy.deepcopy(eval_dataset.transforms)
-
-        # 获取实时变化的learning rate
-        lr = self.optimizer._learning_rate
-        if isinstance(lr, fluid.framework.Variable):
-            self.train_outputs['lr'] = lr
-
-        # 在多卡上跑训练
-        if self.parallel_train_prog is None:
-            build_strategy = fluid.compiler.BuildStrategy()
-            build_strategy.fuse_all_optimizer_ops = False
-            if paddlex.env_info['place'] != 'cpu' and len(self.places) > 1:
-                build_strategy.sync_batch_norm = self.sync_bn
-            exec_strategy = fluid.ExecutionStrategy()
-            exec_strategy.num_iteration_per_drop_scope = 1
-            self.parallel_train_prog = fluid.CompiledProgram(
-                self.train_prog).with_data_parallel(
-                    loss_name=self.train_outputs['loss'].name,
-                    build_strategy=build_strategy,
-                    exec_strategy=exec_strategy)
-
-        total_num_steps = math.floor(train_dataset.num_samples /
-                                     train_batch_size)
-        num_steps = 0
-        time_stat = list()
-        time_train_one_epoch = None
-        time_eval_one_epoch = None
-
-        total_num_steps_eval = 0
-        # 模型总共的评估次数
-        total_eval_times = math.ceil(num_epochs / save_interval_epochs)
-        # 检测目前仅支持单卡评估，训练数据batch大小与显卡数量之商为验证数据batch大小。
-        eval_batch_size = train_batch_size
-        if self.model_type == 'detector':
-            eval_batch_size = self._get_single_card_bs(train_batch_size)
-        if eval_dataset is not None:
-            total_num_steps_eval = math.ceil(eval_dataset.num_samples /
-                                             eval_batch_size)
-
-        if use_vdl:
-            # VisualDL component
             log_writer = LogWriter(vdl_logdir)
-
-        thresh = 0.0001
-        if early_stop:
-            earlystop = EarlyStop(early_stop_patience, thresh)
-        best_accuracy_key = ""
-        best_accuracy = -1.0
-        best_model_epoch = -1
-        start_epoch = self.completed_epochs
         # task_id: 目前由PaddleX GUI赋值
         # 用于在VisualDL日志中注明所属任务id
         task_id = getattr(paddlex, "task_id", "")
-        for i in range(start_epoch, num_epochs):
-            records = list()
-            step_start_time = time.time()
-            epoch_start_time = time.time()
-            for step, data in enumerate(self.train_data_loader()):
-                outputs = self.exe.run(
-                    self.parallel_train_prog,
-                    feed=data,
-                    fetch_list=list(self.train_outputs.values()))
-                outputs_avg = np.mean(np.array(outputs), axis=1)
-                records.append(outputs_avg)
 
-                # 训练完成剩余时间预估
-                current_time = time.time()
-                step_cost_time = current_time - step_start_time
-                step_start_time = current_time
-                if len(time_stat) < 20:
-                    time_stat.append(step_cost_time)
+        thresh = .0001
+        if early_stop:
+            earlystop = EarlyStop(early_stop_patience, thresh)
+
+        self.train_data_loader = self.build_data_loader(
+            train_dataset, batch_size=train_batch_size, mode='train')
+
+        if eval_dataset is not None:
+            self.test_transforms = copy.deepcopy(eval_dataset.transforms)
+
+        start_epoch = self.completed_epochs
+        train_step_time = SmoothedValue(log_interval_steps)
+        train_step_each_epoch = math.floor(train_dataset.num_samples /
+                                           train_batch_size)
+        train_total_step = train_step_each_epoch * (num_epochs - start_epoch)
+        if eval_dataset is not None:
+            eval_batch_size = train_batch_size
+            eval_epoch_time = 0
+
+        best_accuracy_key = ""
+        best_accuracy = -1.0
+        best_model_epoch = -1
+        current_step = 0
+        for i in range(start_epoch, num_epochs):
+            self.net.train()
+            if callable(
+                    getattr(self.train_data_loader.dataset, 'set_epoch',
+                            None)):
+                self.train_data_loader.dataset.set_epoch(i)
+            train_avg_metrics = TrainingStats()
+            step_time_tic = time.time()
+
+            for step, data in enumerate(self.train_data_loader()):
+                if nranks > 1:
+                    outputs = self.run(ddp_net, data, mode='train')
                 else:
-                    time_stat[num_steps % 20] = step_cost_time
+                    outputs = self.run(self.net, data, mode='train')
+                loss = outputs['loss']
+                loss.backward()
+                self.optimizer.step()
+                self.optimizer.clear_grad()
+                lr = self.optimizer.get_lr()
+                if isinstance(self.optimizer._learning_rate,
+                              paddle.optimizer.lr.LRScheduler):
+                    self.optimizer._learning_rate.step()
+
+                train_avg_metrics.update(outputs)
+                outputs['lr'] = lr
+                if ema is not None:
+                    ema.update(self.net)
+                step_time_toc = time.time()
+                train_step_time.update(step_time_toc - step_time_tic)
+                step_time_tic = step_time_toc
+                current_step += 1
 
                 # 每间隔log_interval_steps，输出loss信息
-                num_steps += 1
-                if num_steps % log_interval_steps == 0:
-                    step_metrics = OrderedDict(
-                        zip(list(self.train_outputs.keys()), outputs_avg))
-
+                if current_step % log_interval_steps == 0 and local_rank == 0:
                     if use_vdl:
-                        for k, v in step_metrics.items():
+                        for k, v in outputs.items():
                             log_writer.add_scalar(
                                 '{}-Metrics/Training(Step): {}'.format(
-                                    task_id, k), v, num_steps)
+                                    task_id, k), v, current_step)
 
                     # 估算剩余时间
-                    avg_step_time = np.mean(time_stat)
-                    if time_train_one_epoch is not None:
-                        eta = (num_epochs - i - 1) * time_train_one_epoch + (
-                            total_num_steps - step - 1) * avg_step_time
-                    else:
-                        eta = ((num_epochs - i) * total_num_steps - step - 1
-                               ) * avg_step_time
-                    if time_eval_one_epoch is not None:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * time_eval_one_epoch
-                    else:
-                        eval_eta = (
-                            total_eval_times - i // save_interval_epochs
-                        ) * total_num_steps_eval * avg_step_time
-                    eta_str = seconds_to_hms(eta + eval_eta)
+                    avg_step_time = train_step_time.avg()
+                    eta = avg_step_time * (train_total_step - current_step)
+                    if eval_dataset is not None:
+                        eval_num_epochs = math.ceil(
+                            (num_epochs - i - 1) / save_interval_epochs)
+                        if eval_epoch_time == 0:
+                            eta += avg_step_time * math.ceil(
+                                eval_dataset.num_samples / eval_batch_size)
+                        else:
+                            eta += eval_epoch_time * eval_num_epochs
 
                     logging.info(
                         "[TRAIN] Epoch={}/{}, Step={}/{}, {}, time_each_step={}s, eta={}"
-                        .format(i + 1, num_epochs, step + 1, total_num_steps,
-                                dict2str(step_metrics),
-                                round(avg_step_time, 2), eta_str))
-            train_metrics = OrderedDict(
-                zip(list(self.train_outputs.keys()), np.mean(
-                    records, axis=0)))
-            logging.info('[TRAIN] Epoch {} finished, {} .'.format(
-                i + 1, dict2str(train_metrics)))
-            time_train_one_epoch = time.time() - epoch_start_time
-            epoch_start_time = time.time()
+                        .format(i + 1, num_epochs, step + 1,
+                                train_step_each_epoch,
+                                dict2str(outputs),
+                                round(avg_step_time, 2), seconds_to_hms(eta)))
+
+            logging.info('[TRAIN] Epoch {} finished, {} .'
+                         .format(i + 1, train_avg_metrics.log()))
+            self.completed_epochs += 1
 
             # 每间隔save_interval_epochs, 在验证集上评估和对模型进行保存
-            self.completed_epochs += 1
-            eval_epoch_start_time = time.time()
+            if ema is not None:
+                weight = copy.deepcopy(self.net.state_dict())
+                self.net.set_state_dict(ema.apply())
+            eval_epoch_tic = time.time()
             if (i + 1) % save_interval_epochs == 0 or i == num_epochs - 1:
-                current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
-                if not osp.isdir(current_save_dir):
-                    os.makedirs(current_save_dir)
-                if getattr(self, 'use_ema', False):
-                    self.exe.run(self.ema.apply_program)
                 if eval_dataset is not None and eval_dataset.num_samples > 0:
-                    self.eval_metrics, self.eval_details = self.evaluate(
-                        eval_dataset=eval_dataset,
+                    eval_result = self.evaluate(
+                        eval_dataset,
                         batch_size=eval_batch_size,
-                        epoch_id=i + 1,
                         return_details=True)
-                    logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
-                        i + 1, dict2str(self.eval_metrics)))
                     # 保存最优模型
-                    best_accuracy_key = list(self.eval_metrics.keys())[0]
-                    current_accuracy = self.eval_metrics[best_accuracy_key]
-                    if current_accuracy > best_accuracy:
-                        best_accuracy = current_accuracy
-                        best_model_epoch = i + 1
-                        best_model_dir = osp.join(save_dir, "best_model")
-                        self.save_model(save_dir=best_model_dir)
-                    if use_vdl:
-                        for k, v in self.eval_metrics.items():
-                            if isinstance(v, list):
-                                continue
-                            if isinstance(v, np.ndarray):
-                                if v.size > 1:
-                                    continue
-                            log_writer.add_scalar(
-                                "{}-Metrics/Eval(Epoch): {}".format(
-                                    task_id, k), v, i + 1)
-                self.save_model(save_dir=current_save_dir)
-                if getattr(self, 'use_ema', False):
-                    self.exe.run(self.ema.restore_program)
-                time_eval_one_epoch = time.time() - eval_epoch_start_time
-                eval_epoch_start_time = time.time()
-                if best_model_epoch > 0:
-                    logging.info(
-                        'Current evaluated best model in eval_dataset is epoch_{}, {}={}'
-                        .format(best_model_epoch, best_accuracy_key,
-                                best_accuracy))
-                if eval_dataset is not None and early_stop:
-                    if earlystop(current_accuracy):
-                        break
+                    if local_rank == 0:
+                        self.eval_metrics, self.eval_details = eval_result
+                        if use_vdl:
+                            for k, v in self.eval_metrics.items():
+                                try:
+                                    log_writer.add_scalar(
+                                        '{}-Metrics/Eval(Epoch): {}'.format(
+                                            task_id, k), v, i + 1)
+                                except TypeError:
+                                    pass
+                        logging.info('[EVAL] Finished, Epoch={}, {} .'.format(
+                            i + 1, dict2str(self.eval_metrics)))
+                        best_accuracy_key = list(self.eval_metrics.keys())[0]
+                        current_accuracy = self.eval_metrics[best_accuracy_key]
+                        if current_accuracy > best_accuracy:
+                            best_accuracy = current_accuracy
+                            best_model_epoch = i + 1
+                            best_model_dir = osp.join(save_dir, "best_model")
+                            self.save_model(save_dir=best_model_dir)
+                        if best_model_epoch > 0:
+                            logging.info(
+                                'Current evaluated best model on eval_dataset is epoch_{}, {}={}'
+                                .format(best_model_epoch, best_accuracy_key,
+                                        best_accuracy))
+                    eval_epoch_time = time.time() - eval_epoch_tic
+
+                current_save_dir = osp.join(save_dir, "epoch_{}".format(i + 1))
+                if local_rank == 0:
+                    self.save_model(save_dir=current_save_dir)
+
+                    if eval_dataset is not None and early_stop:
+                        if earlystop(current_accuracy):
+                            break
+            if ema is not None:
+                self.net.set_state_dict(weight)
+
+    def analyze_sensitivity(self,
+                            dataset,
+                            batch_size=8,
+                            criterion='l1_norm',
+                            save_dir='output'):
+        """
+
+        Args:
+            dataset(paddlex.dataset): Dataset used for evaluation during sensitivity analysis.
+            batch_size(int, optional): Batch size used in evaluation. Defaults to 8.
+            criterion({'l1_norm', 'fpgm'}, optional): Pruning criterion. Defaults to 'l1_norm'.
+            save_dir(str, optional): The directory to save sensitivity file of the model. Defaults to 'output'.
+
+        """
+        if self.__class__.__name__ in ['FasterRCNN', 'MaskRCNN']:
+            raise Exception("{} does not support pruning currently!".format(
+                self.__class__.__name__))
+
+        assert criterion in ['l1_norm', 'fpgm'], \
+            "Pruning criterion {} is not supported. Please choose from ['l1_norm', 'fpgm']"
+        arrange_transforms(
+            model_type=self.model_type,
+            transforms=dataset.transforms,
+            mode='eval')
+        if self.model_type == 'detector':
+            self.net.eval()
+        else:
+            self.net.train()
+        inputs = _pruner_template_input(
+            sample=dataset[0], model_type=self.model_type)
+        if criterion == 'l1_norm':
+            self.pruner = L1NormFilterPruner(self.net, inputs=inputs)
+        else:
+            self.pruner = FPGMFilterPruner(self.net, inputs=inputs)
+
+        if not osp.isdir(save_dir):
+            os.makedirs(save_dir)
+        sen_file = osp.join(save_dir, 'model.sensi.data')
+        logging.info('Sensitivity analysis of model parameters starts...')
+        self.pruner.sensitive(
+            eval_func=partial(_pruner_eval_fn, self, dataset, batch_size),
+            sen_file=sen_file)
+        logging.info(
+            'Sensitivity analysis is complete. The result is saved at {}.'.
+            format(sen_file))
+
+    def prune(self, pruned_flops, save_dir=None):
+        """
+
+        Args:
+            pruned_flops(float): Ratio of FLOPs to be pruned.
+            save_dir(None or str, optional): If None, the pruned model will not be saved.
+                Otherwise, the pruned model will be saved at save_dir. Defaults to None.
+
+        """
+        if self.status == "Pruned":
+            raise Exception(
+                "A pruned model cannot be done model pruning again!")
+        pre_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pre-pruning FLOPs: {}. Pruning starts...".format(
+            pre_pruning_flops))
+        _, self.pruning_ratios = sensitive_prune(self.pruner, pruned_flops)
+        post_pruning_flops = flops(self.net, self.pruner.inputs)
+        logging.info("Pruning is complete. Post-pruning FLOPs: {}".format(
+            post_pruning_flops))
+        logging.warning("Pruning the model may hurt its performance, "
+                        "retraining is highly recommended")
+        self.status = 'Pruned'
+
+        if save_dir is not None:
+            self.save_model(save_dir)
+            logging.info("Pruned model is saved at {}".format(save_dir))
+
+    def _prepare_qat(self, quant_config):
+        if quant_config is None:
+            # default quantization configuration
+            quant_config = {
+                # {None, 'PACT'}. Weight preprocess type. If None, no preprocessing is performed.
+                'weight_preprocess_type': None,
+                # {None, 'PACT'}. Activation preprocess type. If None, no preprocessing is performed.
+                'activation_preprocess_type': None,
+                # {'abs_max', 'channel_wise_abs_max', 'range_abs_max', 'moving_average_abs_max'}.
+                # Weight quantization type.
+                'weight_quantize_type': 'channel_wise_abs_max',
+                # {'abs_max', 'range_abs_max', 'moving_average_abs_max'}. Activation quantization type.
+                'activation_quantize_type': 'moving_average_abs_max',
+                # The number of bits of weights after quantization.
+                'weight_bits': 8,
+                # The number of bits of activation after quantization.
+                'activation_bits': 8,
+                # Data type after quantization, such as 'uint8', 'int8', etc.
+                'dtype': 'int8',
+                # Window size for 'range_abs_max' quantization.
+                'window_size': 10000,
+                # Decay coefficient of moving average.
+                'moving_rate': .9,
+                # Types of layers that will be quantized.
+                'quantizable_layer_type': ['Conv2D', 'Linear']
+            }
+        if self.status != 'Quantized':
+            self.quant_config = quant_config
+            self.quantizer = QAT(config=self.quant_config)
+            logging.info(
+                "Preparing the model for quantization-aware training...")
+            self.quantizer.quantize(self.net)
+            logging.info("Model is ready for quantization-aware training.")
+            self.status = 'Quantized'
+        elif quant_config != self.quant_config:
+            logging.error(
+                "The model has been quantized with the following quant_config: {}."
+                "Doing quantization-aware training with a quantized model "
+                "using a different configuration is not supported."
+                .format(self.quant_config),
+                exit=True)
+
+    def _get_pipeline_info(self, save_dir):
+        pipeline_info = {}
+        pipeline_info["pipeline_name"] = self.model_type
+        nodes = [{
+            "src0": {
+                "type": "Source",
+                "next": "decode0"
+            }
+        }, {
+            "decode0": {
+                "type": "Decode",
+                "next": "predict0"
+            }
+        }, {
+            "predict0": {
+                "type": "Predict",
+                "init_params": {
+                    "use_gpu": False,
+                    "gpu_id": 0,
+                    "use_trt": False,
+                    "model_dir": save_dir,
+                },
+                "next": "sink0"
+            }
+        }, {
+            "sink0": {
+                "type": "Sink"
+            }
+        }]
+        pipeline_info["pipeline_nodes"] = nodes
+        pipeline_info["version"] = "1.0.0"
+        return pipeline_info
+
+    def _export_inference_model(self, save_dir, image_shape=None):
+        save_dir = osp.join(save_dir, 'inference_model')
+        self.net.eval()
+        self.test_inputs = self._get_test_inputs(image_shape)
+
+        if self.status == 'Quantized':
+            self.quantizer.save_quantized_model(self.net,
+                                                osp.join(save_dir, 'model'),
+                                                self.test_inputs)
+            quant_info = self.get_quant_info()
+            with open(
+                    osp.join(save_dir, 'quant.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(quant_info, f)
+        else:
+            static_net = paddle.jit.to_static(
+                self.net, input_spec=self.test_inputs)
+            paddle.jit.save(static_net, osp.join(save_dir, 'model'))
+
+        if self.status == 'Pruned':
+            pruning_info = self.get_pruning_info()
+            with open(
+                    osp.join(save_dir, 'prune.yml'), encoding='utf-8',
+                    mode='w') as f:
+                yaml.dump(pruning_info, f)
+
+        model_info = self.get_model_info()
+        model_info['status'] = 'Infer'
+        with open(
+                osp.join(save_dir, 'model.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(model_info, f)
+
+        pipeline_info = self._get_pipeline_info(save_dir)
+        with open(
+                osp.join(save_dir, 'pipeline.yml'), encoding='utf-8',
+                mode='w') as f:
+            yaml.dump(pipeline_info, f)
+
+        # 模型保存成功的标志
+        open(osp.join(save_dir, '.success'), 'w').close()
+        logging.info("The model for the inference deployment is saved in {}.".
+                     format(save_dir))

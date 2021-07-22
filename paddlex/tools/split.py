@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# coding: utf-8
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .dataset_split.coco_split import split_coco_dataset
-from .dataset_split.voc_split import split_voc_dataset
-from .dataset_split.imagenet_split import split_imagenet_dataset
-from .dataset_split.seg_split import split_seg_dataset
+from .dataset_split import *
+from paddlex.utils import logging
 
 
 def dataset_split(dataset_dir, dataset_format, val_value, test_value,
                   save_dir):
+    logging.info("Dataset split starts...")
     if dataset_format == "coco":
         train_num, val_num, test_num = split_coco_dataset(
             dataset_dir, val_value, test_value, save_dir)
@@ -34,8 +31,11 @@ def dataset_split(dataset_dir, dataset_format, val_value, test_value,
     elif dataset_format == "imagenet":
         train_num, val_num, test_num = split_imagenet_dataset(
             dataset_dir, val_value, test_value, save_dir)
-    print("Dataset Split Done.")
-    print("Train samples: {}".format(train_num))
-    print("Eval samples: {}".format(val_num))
-    print("Test samples: {}".format(test_num))
-    print("Split files saved in {}".format(save_dir))
+    else:
+        raise Exception("Dataset format {} is not supported.".format(
+            dataset_format))
+    logging.info("Dataset split done.")
+    logging.info("Train samples: {}".format(train_num))
+    logging.info("Eval samples: {}".format(val_num))
+    logging.info("Test samples: {}".format(test_num))
+    logging.info("Split files saved in {}".format(save_dir))

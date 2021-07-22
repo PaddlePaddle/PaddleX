@@ -1,4 +1,4 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,18 +47,6 @@ def arg_parser():
         default=False,
         help="export inference model for C++/Python deployment")
     parser.add_argument(
-        "--export_onnx",
-        "-eo",
-        action="store_true",
-        default=False,
-        help="export onnx model for deployment")
-    parser.add_argument(
-        "--onnx_opset",
-        "-oo",
-        type=int,
-        default=10,
-        help="when use paddle2onnx, set onnx opset version to export")
-    parser.add_argument(
         "--data_conversion",
         "-dc",
         action="store_true",
@@ -92,7 +80,7 @@ def arg_parser():
         "--fixed_input_shape",
         "-fs",
         default=None,
-        help="export inference model with fixed input shape:[w,h]")
+        help="export inference model with fixed input shape:[w,h] or [n,3,w,h]")
     parser.add_argument(
         "--split_dataset",
         "-sd",
@@ -148,31 +136,26 @@ def main():
 
         fixed_input_shape = None
         if args.fixed_input_shape is not None:
-            fixed_input_shape = eval(args.fixed_input_shape)
-            assert len(
-                fixed_input_shape
-            ) == 2, "len of fixed input shape must == 2, such as [224,224]"
-        else:
-            fixed_input_shape = None
+            fixed_input_shape = list(eval(args.fixed_input_shape))
+            assert len(fixed_input_shape) in [
+                2, 4
+            ], "fixed_input_shape must be a list/tuple with length 2 or 4, such as [224,224] or [1,3,224,244]"
+            if len(fixed_input_shape) == 4:
+                assert fixed_input_shape[
+                    1] == 3, "input channel in fixed_input_shape must be 3, but recieved is {}".format(
+                        fixed_input_shape[1])
+            assert fixed_input_shape[-2] > 0 and fixed_input_shape[
+                -1] > 0, "input width and height must be a positive integer, but recievied is {}".format(
+                    fixed_input_shape[-2:])
 
-        model = pdx.load_model(args.model_dir, fixed_input_shape)
-        model.export_inference_model(args.save_dir)
+            # input fixed_input_shape is [w,h]
+            # export_inference_model needs [h,w]
+            fixed_input_shape[-2:] = fixed_input_shape[-1:-3:-1]
 
-    if args.export_onnx:
-        assert args.model_dir is not None, "--model_dir should be defined while exporting onnx model"
-        assert args.save_dir is not None, "--save_dir should be defined to create onnx model"
-
+        os.environ['PADDLEX_EXPORT_STAGE'] = 'True'
+        os.environ['PADDLESEG_EXPORT_STAGE'] = 'True'
         model = pdx.load_model(args.model_dir)
-
-        if model.status == "Normal" or model.status == "Prune":
-            logging.error(
-                "Only support inference model, try to export model first as below,",
-                exit=False)
-            logging.error(
-                "paddlex --export_inference --model_dir model_path --save_dir infer_model"
-            )
-        save_file = os.path.join(args.save_dir, 'paddle2onnx_model.onnx')
-        pdx.converter.export_onnx_model(model, save_file, args.onnx_opset)
+        model._export_inference_model(args.save_dir, fixed_input_shape)
 
     if args.data_conversion:
         assert args.source is not None, "--source should be defined while converting dataset"
@@ -226,8 +209,6 @@ def main():
 
         pdx.tools.split.dataset_split(dataset_dir, dataset_format, val_value,
                                       test_value, save_dir)
-
-    
 
 
 if __name__ == "__main__":
