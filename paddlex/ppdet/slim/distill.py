@@ -95,7 +95,8 @@ class DistillYOLOv3Loss(nn.Layer):
         teacher_distill_pairs = teacher_model.yolo_head.loss.distill_pairs
         student_distill_pairs = student_model.yolo_head.loss.distill_pairs
         distill_reg_loss, distill_cls_loss, distill_obj_loss = [], [], []
-        for s_pair, t_pair in zip(student_distill_pairs, teacher_distill_pairs):
+        for s_pair, t_pair in zip(student_distill_pairs,
+                                  teacher_distill_pairs):
             distill_reg_loss.append(
                 self.obj_weighted_reg(s_pair[0], s_pair[1], s_pair[2], s_pair[
                     3], t_pair[0], t_pair[1], t_pair[2], t_pair[3], t_pair[4]))

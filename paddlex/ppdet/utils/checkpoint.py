@@ -76,7 +76,7 @@ def get_weights_path_dist(path):
                 except OSError as e:
                     if e.errno != errno.EEXIST:
                         raise
-                with open(lock_path, 'w'):  # touch    
+                with open(lock_path, 'w'):  # touch
                     os.utime(lock_path, None)
                 if ParallelEnv().current_endpoint in unique_endpoints:
                     get_weights_path(path)

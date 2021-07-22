@@ -122,10 +122,11 @@ class HeatMapSWAHRLoss(object):
         heatmaps_pred = preds[0]
         scalemaps_pred = preds[1]
 
-        heatmaps_scaled_gt = paddle.where(heatmaps_gt > 0, 0.5 * heatmaps_gt * (
-            1 + (1 +
-                 (scalemaps_pred - 1.) * paddle.log(heatmaps_gt + 1e-10))**2),
-                                          heatmaps_gt)
+        heatmaps_scaled_gt = paddle.where(
+            heatmaps_gt > 0, 0.5 * heatmaps_gt *
+            (1 + (1 +
+                  (scalemaps_pred - 1.) * paddle.log(heatmaps_gt + 1e-10))**2),
+            heatmaps_gt)
 
         regularizer_loss = paddle.mean(
             paddle.pow((scalemaps_pred - 1.) * (heatmaps_gt > 0).astype(float),

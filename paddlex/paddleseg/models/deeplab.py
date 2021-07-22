@@ -117,7 +117,8 @@ class DeepLabV3PHead(nn.Layer):
             align_corners,
             use_sep_conv=True,
             image_pooling=True)
-        self.decoder = Decoder(num_classes, backbone_channels[0], align_corners)
+        self.decoder = Decoder(num_classes, backbone_channels[0],
+                               align_corners)
         self.backbone_indices = backbone_indices
 
     def forward(self, feat_list):

@@ -41,10 +41,10 @@ class MOTDataSet(DetDataset):
         MOT datasets root directory following this:
             dataset/mot
             |——————image_lists
-            |        |——————caltech.train  
-            |        |——————caltech.val   
-            |        |——————mot16.train  
-            |        |——————mot17.train  
+            |        |——————caltech.train
+            |        |——————caltech.val
+            |        |——————mot16.train
+            |        |——————mot17.train
             |        ......
             |——————Caltech
             |——————MOT17
@@ -302,7 +302,7 @@ class MOTVideoDataset(DetDataset):
     Args:
         video_file (str): path of the video file
         dataset_dir (str): root directory for dataset.
-        keep_ori_im (bool): whether to keep original image, default False. 
+        keep_ori_im (bool): whether to keep original image, default False.
             Set True when used during MOT model inference while saving
             images or video, or used in DeepSORT.
     """

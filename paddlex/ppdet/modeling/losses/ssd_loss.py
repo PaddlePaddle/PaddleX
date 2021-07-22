@@ -151,7 +151,8 @@ class SSDLoss(nn.Layer):
         # Mining hard examples.
         label_mask = self._mine_hard_example(
             conf_loss.squeeze(-1), targets_label.squeeze(-1), bg_index)
-        conf_loss = conf_loss * label_mask.unsqueeze(-1).astype(conf_loss.dtype)
+        conf_loss = conf_loss * label_mask.unsqueeze(-1).astype(
+            conf_loss.dtype)
         conf_loss = conf_loss.sum() * self.conf_loss_weight
 
         # Compute overall weighted loss.

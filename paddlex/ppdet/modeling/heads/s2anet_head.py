@@ -85,7 +85,8 @@ class S2ANetAnchorGenerator(nn.Layer):
         shift_x = paddle.arange(0, feat_w, 1, 'int32') * stride
         shift_y = paddle.arange(0, feat_h, 1, 'int32') * stride
         shift_xx, shift_yy = self._meshgrid(shift_x, shift_y)
-        shifts = paddle.stack([shift_xx, shift_yy, shift_xx, shift_yy], axis=-1)
+        shifts = paddle.stack(
+            [shift_xx, shift_yy, shift_xx, shift_yy], axis=-1)
 
         all_anchors = base_anchors[:, :] + shifts[:, :]
         all_anchors = all_anchors.reshape([feat_h * feat_w, 4])
@@ -444,7 +445,8 @@ class S2ANetHead(nn.Layer):
             fam_reg = self.fam_reg(fam_reg_feat)
             # [N, 5, H, W] --> [N, H, W, 5]
             fam_reg = fam_reg.transpose([0, 2, 3, 1])
-            fam_reg_reshape = paddle.reshape(fam_reg, [fam_reg.shape[0], -1, 5])
+            fam_reg_reshape = paddle.reshape(fam_reg,
+                                             [fam_reg.shape[0], -1, 5])
             fam_reg_branch_list.append(fam_reg_reshape)
 
             # refine anchors
@@ -559,7 +561,8 @@ class S2ANetHead(nn.Layer):
         bboxes = paddle.stack([gx, gy, gw, gh, ga], axis=-1)
         return bboxes
 
-    def bbox_decode(self, bbox_preds, anchors, stds, means, wh_ratio_clip=1e-6):
+    def bbox_decode(self, bbox_preds, anchors, stds, means,
+                    wh_ratio_clip=1e-6):
         """decode bbox from deltas
         Args:
             bbox_preds: bbox_preds, shape=[N,H,W,5]
@@ -799,8 +802,8 @@ class S2ANetHead(nn.Layer):
         mlvl_scores = []
 
         idx = 0
-        for cls_score, bbox_pred, anchors in zip(cls_score_list, bbox_pred_list,
-                                                 mlvl_anchors):
+        for cls_score, bbox_pred, anchors in zip(cls_score_list,
+                                                 bbox_pred_list, mlvl_anchors):
             cls_score = paddle.reshape(cls_score, [-1, cls_out_channels])
             if use_sigmoid_cls:
                 scores = F.sigmoid(cls_score)

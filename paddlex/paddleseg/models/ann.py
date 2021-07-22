@@ -143,7 +143,9 @@ class ANNHead(nn.Layer):
                 psp_size=psp_size))
 
         self.cls = nn.Conv2D(
-            in_channels=inter_channels, out_channels=num_classes, kernel_size=1)
+            in_channels=inter_channels,
+            out_channels=num_classes,
+            kernel_size=1)
         self.auxlayer = layers.AuxLayer(
             in_channels=low_in_channels,
             inter_channels=low_in_channels // 2,

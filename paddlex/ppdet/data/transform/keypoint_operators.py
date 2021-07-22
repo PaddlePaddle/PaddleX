@@ -334,7 +334,8 @@ class TagGenerate(object):
     def __call__(self, records):
         kpts_lst = records['joints']
         kpts = kpts_lst[0]
-        tagmap = np.zeros((self.max_people, self.num_joints, 4), dtype=np.int64)
+        tagmap = np.zeros(
+            (self.max_people, self.num_joints, 4), dtype=np.int64)
         inds = np.where(kpts[..., 2] > 0)
         p, j = inds[0], inds[1]
         visible = kpts[inds]

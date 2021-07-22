@@ -167,9 +167,9 @@ def get_dataset_path(path, annotation, image_dir):
     if _dataset_exists(path, annotation, image_dir):
         return path
 
-    logger.info("Dataset {} is not valid for reason above, try searching {} or "
-                "downloading dataset...".format(
-                    osp.realpath(path), DATASET_HOME))
+    logger.info(
+        "Dataset {} is not valid for reason above, try searching {} or "
+        "downloading dataset...".format(osp.realpath(path), DATASET_HOME))
 
     data_name = os.path.split(path.strip().lower())[-1]
     for name, dataset in DATASETS.items():
@@ -228,7 +228,7 @@ def create_voc_list(data_dir, devkit_subdir='VOCdevkit'):
     years = ['2007', '2012']
 
     # NOTE: since using auto download VOC
-    # dataset, VOC default label list should be used, 
+    # dataset, VOC default label list should be used,
     # do not generate label_list.txt here. For default
     # label, see ../data/source/voc.py
     create_list(devkit_dir, years, data_dir)
@@ -350,7 +350,6 @@ def _download(url, path, md5sum=None):
 
         logger.info("Downloading {} from {}".format(fname, url))
 
-        
         # NOTE: windows path join may incur \, which is invalid in url
         if sys.platform == "win32":
             url = url.replace('\\', '/')
@@ -381,7 +380,7 @@ def _download(url, path, md5sum=None):
 
 
 def _check_exist_file_md5(filename, md5sum, url):
-    # if md5sum is None, and file to check is weights file, 
+    # if md5sum is None, and file to check is weights file,
     # read md5um from url and check, else check md5sum directly
     return _md5check_from_url(filename, url) if md5sum is None \
             and filename.endswith('pdparams') \

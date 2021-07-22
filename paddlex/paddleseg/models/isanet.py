@@ -54,9 +54,11 @@ class ISANet(nn.Layer):
 
         self.backbone = backbone
         self.backbone_indices = backbone_indices
-        in_channels = [self.backbone.feat_channels[i] for i in backbone_indices]
-        self.head = ISAHead(num_classes, in_channels, isa_channels, down_factor,
-                            enable_auxiliary_loss)
+        in_channels = [
+            self.backbone.feat_channels[i] for i in backbone_indices
+        ]
+        self.head = ISAHead(num_classes, in_channels, isa_channels,
+                            down_factor, enable_auxiliary_loss)
         self.align_corners = align_corners
         self.pretrained = pretrained
         self.init_weight()
@@ -114,7 +116,8 @@ class ISAHead(nn.Layer):
                 in_channels=1024,
                 out_channels=256,
                 kernel_size=3,
-                bias_attr=False), nn.Dropout2D(p=0.1),
+                bias_attr=False),
+            nn.Dropout2D(p=0.1),
             nn.Conv2D(256, num_classes, 1))
 
     def forward(self, feat_list):
@@ -127,22 +130,24 @@ class ISAHead(nn.Layer):
         pad_h, pad_w = (Q_h * P_h - x_shape[2]).astype('int32'), (
             Q_w * P_w - x_shape[3]).astype('int32')
         if pad_h > 0 or pad_w > 0:
-            padding = paddle.concat([
-                pad_w // 2, pad_w - pad_w // 2, pad_h // 2, pad_h - pad_h // 2
-            ],
-                                    axis=0)
+            padding = paddle.concat(
+                [
+                    pad_w // 2, pad_w - pad_w // 2, pad_h // 2,
+                    pad_h - pad_h // 2
+                ],
+                axis=0)
             feat = F.pad(x, padding)
         else:
             feat = x
 
         feat = feat.reshape([0, x_shape[1], Q_h, P_h, Q_w, P_w])
-        feat = feat.transpose([0, 3, 5, 1, 2,
-                               4]).reshape([-1, self.inter_channels, Q_h, Q_w])
+        feat = feat.transpose(
+            [0, 3, 5, 1, 2, 4]).reshape([-1, self.inter_channels, Q_h, Q_w])
         feat = self.global_relation(feat)
 
         feat = feat.reshape([x_shape[0], P_h, P_w, x_shape[1], Q_h, Q_w])
-        feat = feat.transpose([0, 4, 5, 3, 1,
-                               2]).reshape([-1, self.inter_channels, P_h, P_w])
+        feat = feat.transpose(
+            [0, 4, 5, 3, 1, 2]).reshape([-1, self.inter_channels, P_h, P_w])
         feat = self.local_relation(feat)
 
         feat = feat.reshape([x_shape[0], Q_h, Q_w, x_shape[1], P_h, P_w])

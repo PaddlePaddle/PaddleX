@@ -73,7 +73,11 @@ def plot_tracking(image,
         _line_thickness = 1 if obj_id <= 0 else line_thickness
         color = get_color(abs(obj_id))
         cv2.rectangle(
-            im, intbox[0:2], intbox[2:4], color=color, thickness=line_thickness)
+            im,
+            intbox[0:2],
+            intbox[2:4],
+            color=color,
+            thickness=line_thickness)
         cv2.putText(
             im,
             id_text, (intbox[0], intbox[1] + 30),

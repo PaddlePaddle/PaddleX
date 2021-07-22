@@ -21,7 +21,8 @@ import paddle.nn.functional as F
 
 def SyncBatchNorm(*args, **kwargs):
     """In cpu environment nn.SyncBatchNorm does not have kernel so use nn.BatchNorm2D instead"""
-    if paddle.get_device() == 'cpu' or os.environ.get('PADDLESEG_EXPORT_STAGE'):
+    if paddle.get_device() == 'cpu' or os.environ.get(
+            'PADDLESEG_EXPORT_STAGE'):
         return nn.BatchNorm2D(*args, **kwargs)
     else:
         return nn.SyncBatchNorm(*args, **kwargs)

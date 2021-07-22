@@ -74,5 +74,5 @@ python mobilenetv2_prune_train.py
 
 | 模型 | 参数大小 | CPU预测速度(MKLDNN关闭) | 准确率 |
 | :--- | :----- | :-------------------- | :--- |
-| output/mobilenetv2/best_model | 8.7M | 0.057s | 0.92 | 
+| output/mobilenetv2/best_model | 8.7M | 0.057s | 0.92 |
 | output/mobilenetv2_prune/best_model | 2.8M | 0.036s | 0.99 |

@@ -31,4 +31,3 @@ paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.
 
 
 - [图像分类任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py)
-

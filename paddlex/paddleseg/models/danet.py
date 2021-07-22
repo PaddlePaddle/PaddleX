@@ -50,7 +50,9 @@ class DANet(nn.Layer):
 
         self.backbone = backbone
         self.backbone_indices = backbone_indices
-        in_channels = [self.backbone.feat_channels[i] for i in backbone_indices]
+        in_channels = [
+            self.backbone.feat_channels[i] for i in backbone_indices
+        ]
 
         self.head = DAHead(num_classes=num_classes, in_channels=in_channels)
 
@@ -205,8 +207,8 @@ class CAM(nn.Layer):
         # sim: n, c, c
         sim = paddle.bmm(query, key)
         # The danet author claims that this can avoid gradient divergence
-        sim = paddle.max(
-            sim, axis=-1, keepdim=True).tile([1, 1, self.channels]) - sim
+        sim = paddle.max(sim, axis=-1, keepdim=True).tile(
+            [1, 1, self.channels]) - sim
         sim = F.softmax(sim, axis=-1)
 
         # feat: from (n, c, h * w) to (n, c, h, w)

@@ -126,14 +126,17 @@ class DecoupledSegNetHead(nn.Layer):
                 in_channels=256,
                 out_channels=48,
                 kernel_size=3,
-                bias_attr=False), nn.Conv2D(48, 1, 1, bias_attr=False))
+                bias_attr=False),
+            nn.Conv2D(
+                48, 1, 1, bias_attr=False))
         self.dsn_seg_body = nn.Sequential(
             layers.ConvBNReLU(
                 in_channels=256,
                 out_channels=256,
                 kernel_size=3,
-                bias_attr=False), nn.Conv2D(
-                    256, num_classes, 1, bias_attr=False))
+                bias_attr=False),
+            nn.Conv2D(
+                256, num_classes, 1, bias_attr=False))
 
         self.final_seg = nn.Sequential(
             layers.ConvBNReLU(
@@ -146,7 +149,8 @@ class DecoupledSegNetHead(nn.Layer):
                 out_channels=256,
                 kernel_size=3,
                 bias_attr=False),
-            nn.Conv2D(256, num_classes, kernel_size=1, bias_attr=False))
+            nn.Conv2D(
+                256, num_classes, kernel_size=1, bias_attr=False))
 
     def forward(self, feat_list):
         fine_fea = feat_list[self.backbone_indices[0]]
@@ -163,7 +167,9 @@ class DecoupledSegNetHead(nn.Layer):
             fine_size[2:],
             mode='bilinear',
             align_corners=self.align_corners)
-        seg_edge = self.edge_fusion(paddle.concat([seg_edge, fine_fea], axis=1))
+        seg_edge = self.edge_fusion(
+            paddle.concat(
+                [seg_edge, fine_fea], axis=1))
         seg_edge_out = self.edge_out(seg_edge)
         seg_edge_out = self.sigmoid_edge(seg_edge_out)  # seg_edge output
         seg_body_out = self.dsn_seg_body(seg_body)  # body out
@@ -218,7 +224,8 @@ class SqueezeBodyEdge(nn.Layer):
         h_grid = h_grid.tile([size[1]])
         w_grid = paddle.linspace(-1.0, 1.0, size[1]).reshape([-1, 1])
         w_grid = w_grid.tile([size[0]]).transpose([1, 0])
-        grid = paddle.concat([w_grid.unsqueeze(2), h_grid.unsqueeze(2)], axis=2)
+        grid = paddle.concat(
+            [w_grid.unsqueeze(2), h_grid.unsqueeze(2)], axis=2)
         grid.unsqueeze(0).tile([input_shape[0], 1, 1, 1])
         grid = grid + paddle.transpose(flow, (0, 2, 3, 1)) / norm
 

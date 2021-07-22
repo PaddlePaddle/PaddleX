@@ -62,8 +62,10 @@ class UNet3Plus(nn.Layer):
             self.deepsup = DeepSup(self.up_channels, self.filters, num_classes)
             if self.is_CGM:
                 self.cls = nn.Sequential(
-                    nn.Dropout(p=0.5), nn.Conv2D(self.filters[4], 2, 1),
-                    nn.AdaptiveMaxPool2D(1), nn.Sigmoid())
+                    nn.Dropout(p=0.5),
+                    nn.Conv2D(self.filters[4], 2, 1),
+                    nn.AdaptiveMaxPool2D(1),
+                    nn.Sigmoid())
         else:
             self.outconv1 = nn.Conv2D(
                 self.up_channels, num_classes, 3, padding=1)
@@ -93,7 +95,8 @@ class UNet3Plus(nn.Layer):
                 cls_branch = self.cls(hds[-1]).squeeze(3).squeeze(
                     2)  # (B,N,1,1)->(B,N)
                 cls_branch_max = cls_branch.argmax(axis=1)
-                cls_branch_max = cls_branch_max.reshape((-1, 1)).astype('float')
+                cls_branch_max = cls_branch_max.reshape(
+                    (-1, 1)).astype('float')
                 out = [self.dotProduct(d, cls_branch_max) for d in out]
         else:
             out = [self.outconv1(hds[0])]  # d1->320*320*num_classes
@@ -185,7 +188,8 @@ class Decoder(nn.Layer):
         self.hd4_UT_hd1 = nn.Upsample(scale_factor=8, mode='bilinear')  # 14*14
         self.hd4_UT_hd1_cbr = ConvBnReLU2D(up_channels, cat_channels)
         # hd5->20*20, hd1->320*320, Upsample 16 times
-        self.hd5_UT_hd1 = nn.Upsample(scale_factor=16, mode='bilinear')  # 14*14
+        self.hd5_UT_hd1 = nn.Upsample(
+            scale_factor=16, mode='bilinear')  # 14*14
         self.hd5_UT_hd1_cbr = ConvBnReLU2D(filters[4], cat_channels)
         # fusion(h1_Cat_hd1, hd2_UT_hd1, hd3_UT_hd1, hd4_UT_hd1, hd5_UT_hd1)
         self.cbr1d_1 = ConvBnReLU2D(up_channels, up_channels)  # 16
@@ -217,8 +221,9 @@ class Decoder(nn.Layer):
         hd5_UT_hd2 = self.hd5_UT_hd2_cbr(self.hd5_UT_hd2(hd5))
         # hd2->160*160*up_channels
         hd2 = self.cbr2d_1(
-            paddle.concat(
-                [h1_PT_hd2, h2_Cat_hd2, hd3_UT_hd2, hd4_UT_hd2, hd5_UT_hd2], 1))
+            paddle.concat([
+                h1_PT_hd2, h2_Cat_hd2, hd3_UT_hd2, hd4_UT_hd2, hd5_UT_hd2
+            ], 1))
         h1_Cat_hd1 = self.h1_Cat_hd1_cbr(h1)
         hd2_UT_hd1 = self.hd2_UT_hd1_cbr(self.hd2_UT_hd1(hd2))
         hd3_UT_hd1 = self.hd3_UT_hd1_cbr(self.hd3_UT_hd1(hd3))
@@ -226,9 +231,9 @@ class Decoder(nn.Layer):
         hd5_UT_hd1 = self.hd5_UT_hd1_cbr(self.hd5_UT_hd1(hd5))
         # hd1->320*320*up_channels
         hd1 = self.cbr1d_1(
-            paddle.concat(
-                [h1_Cat_hd1, hd2_UT_hd1, hd3_UT_hd1, hd4_UT_hd1, hd5_UT_hd1],
-                1))
+            paddle.concat([
+                h1_Cat_hd1, hd2_UT_hd1, hd3_UT_hd1, hd4_UT_hd1, hd5_UT_hd1
+            ], 1))
         return [hd1, hd2, hd3, hd4, hd5]
 
 
@@ -254,15 +259,19 @@ class DeepSup(nn.Layer):
 class ConvBnReLU2D(nn.Sequential):
     def __init__(self, in_channels, out_channels):
         super(ConvBnReLU2D, self).__init__(
-            nn.Conv2D(in_channels, out_channels, 3, padding=1),
-            nn.BatchNorm(out_channels), nn.ReLU())
+            nn.Conv2D(
+                in_channels, out_channels, 3, padding=1),
+            nn.BatchNorm(out_channels),
+            nn.ReLU())
 
 
 class ConvUp2D(nn.Sequential):
     def __init__(self, in_channels, out_channels, scale_factor):
         super(ConvUp2D, self).__init__(
-            nn.Conv2D(in_channels, out_channels, 3, padding=1),
-            nn.Upsample(scale_factor=scale_factor, mode='bilinear'))
+            nn.Conv2D(
+                in_channels, out_channels, 3, padding=1),
+            nn.Upsample(
+                scale_factor=scale_factor, mode='bilinear'))
 
 
 class MaxPoolConv2D(nn.Sequential):

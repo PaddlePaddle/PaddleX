@@ -1,15 +1,15 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved. 
-#   
-# Licensed under the Apache License, Version 2.0 (the "License");   
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at   
-#   
-#     http://www.apache.org/licenses/LICENSE-2.0    
-#   
-# Unless required by applicable law or agreed to in writing, software   
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and   
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 import numpy as np
@@ -91,7 +91,7 @@ class XConvNormHead(nn.Layer):
         conv_dim (int): The number of channels for the conv layers
         out_channel (int): Output channels
         resolution (int): Resolution of input feature map
-        norm_type (string): Norm type, bn, gn, sync_bn are available, 
+        norm_type (string): Norm type, bn, gn, sync_bn are available,
             default `gn`
         freeze_norm (bool): Whether to freeze the norm
         stage_name (string): Prefix name for conv layer,  '' by default
@@ -170,11 +170,11 @@ class BBoxHead(nn.Layer):
         head (nn.Layer): Extract feature in bbox head
         in_channel (int): Input channel after RoI extractor
         roi_extractor (object): The module of RoI Extractor
-        bbox_assigner (object): The module of Box Assigner, label and sample the 
+        bbox_assigner (object): The module of Box Assigner, label and sample the
             box.
         with_pool (bool): Whether to use pooling for the RoI feature.
         num_classes (int): The number of classes
-        bbox_weight (List[float]): The weight to get the decode box 
+        bbox_weight (List[float]): The weight to get the decode box
     """
 
     def __init__(self,
@@ -236,7 +236,8 @@ class BBoxHead(nn.Layer):
         inputs (dict{Tensor}): The ground-truth of image
         """
         if self.training:
-            rois, rois_num, targets = self.bbox_assigner(rois, rois_num, inputs)
+            rois, rois_num, targets = self.bbox_assigner(rois, rois_num,
+                                                         inputs)
             self.assigned_rois = (rois, rois_num)
             self.assigned_targets = targets
 

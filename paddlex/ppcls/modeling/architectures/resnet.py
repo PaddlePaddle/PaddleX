@@ -183,7 +183,11 @@ class BasicBlock(nn.Layer):
 
 
 class ResNet(nn.Layer):
-    def __init__(self, layers=50, class_dim=1000, input_image_channel=3, data_format="NCHW"):
+    def __init__(self,
+                 layers=50,
+                 class_dim=1000,
+                 input_image_channel=3,
+                 data_format="NCHW"):
         super(ResNet, self).__init__()
 
         self.layers = layers
@@ -216,10 +220,7 @@ class ResNet(nn.Layer):
             name="conv1",
             data_format=self.data_format)
         self.pool2d_max = MaxPool2D(
-            kernel_size=3,
-            stride=2, 
-            padding=1,
-            data_format=self.data_format)
+            kernel_size=3, stride=2, padding=1, data_format=self.data_format)
 
         self.block_list = []
         if layers >= 50:

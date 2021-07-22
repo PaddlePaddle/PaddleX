@@ -232,12 +232,13 @@ class BlazeNet(nn.Layer):
         use_5x5kernel (bool): whether or not filter size is 5x5 in depth-wise conv.
     """
 
-    def __init__(
-            self,
-            blaze_filters=[[24, 24], [24, 24], [24, 48, 2], [48, 48], [48, 48]],
-            double_blaze_filters=[[48, 24, 96, 2], [96, 24, 96], [96, 24, 96],
-                                  [96, 24, 96, 2], [96, 24, 96], [96, 24, 96]],
-            use_5x5kernel=True):
+    def __init__(self,
+                 blaze_filters=[[24, 24], [24, 24], [24, 48, 2], [48, 48],
+                                [48, 48]],
+                 double_blaze_filters=[[48, 24, 96, 2], [96, 24, 96],
+                                       [96, 24, 96], [96, 24, 96, 2],
+                                       [96, 24, 96], [96, 24, 96]],
+                 use_5x5kernel=True):
         super(BlazeNet, self).__init__()
         conv1_num_filters = blaze_filters[0][0]
         self.conv1 = ConvBNLayer(

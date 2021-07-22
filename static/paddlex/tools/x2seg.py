@@ -25,41 +25,52 @@ import PIL.Image
 from .base import MyEncoder, is_pic, get_encoding
 import math
 
+
 class X2Seg(object):
     def __init__(self):
         self.labels2ids = {'_background_': 0}
-        
+
     def shapes_to_label(self, img_shape, shapes, label_name_to_value):
         # 该函数基于https://github.com/wkentaro/labelme/blob/master/labelme/utils/shape.py实现。
-        def shape_to_mask(img_shape, points, shape_type=None,
-                  line_width=10, point_size=5):
+        def shape_to_mask(img_shape,
+                          points,
+                          shape_type=None,
+                          line_width=10,
+                          point_size=5):
             mask = np.zeros(img_shape[:2], dtype=np.uint8)
             mask = PIL.Image.fromarray(mask)
             draw = PIL.ImageDraw.Draw(mask)
             xy = [tuple(point) for point in points]
             if shape_type == 'circle':
-                assert len(xy) == 2, 'Shape of shape_type=circle must have 2 points'
+                assert len(
+                    xy) == 2, 'Shape of shape_type=circle must have 2 points'
                 (cx, cy), (px, py) = xy
-                d = math.sqrt((cx - px) ** 2 + (cy - py) ** 2)
-                draw.ellipse([cx - d, cy - d, cx + d, cy + d], outline=1, fill=1)
+                d = math.sqrt((cx - px)**2 + (cy - py)**2)
+                draw.ellipse(
+                    [cx - d, cy - d, cx + d, cy + d], outline=1, fill=1)
             elif shape_type == 'rectangle':
-                assert len(xy) == 2, 'Shape of shape_type=rectangle must have 2 points'
+                assert len(
+                    xy) == 2, 'Shape of shape_type=rectangle must have 2 points'
                 draw.rectangle(xy, outline=1, fill=1)
             elif shape_type == 'line':
-                assert len(xy) == 2, 'Shape of shape_type=line must have 2 points'
+                assert len(
+                    xy) == 2, 'Shape of shape_type=line must have 2 points'
                 draw.line(xy=xy, fill=1, width=line_width)
             elif shape_type == 'linestrip':
                 draw.line(xy=xy, fill=1, width=line_width)
             elif shape_type == 'point':
-                assert len(xy) == 1, 'Shape of shape_type=point must have 1 points'
+                assert len(
+                    xy) == 1, 'Shape of shape_type=point must have 1 points'
                 cx, cy = xy[0]
                 r = point_size
-                draw.ellipse([cx - r, cy - r, cx + r, cy + r], outline=1, fill=1)
+                draw.ellipse(
+                    [cx - r, cy - r, cx + r, cy + r], outline=1, fill=1)
             else:
                 assert len(xy) > 2, 'Polygon must have points more than 2'
                 draw.polygon(xy=xy, outline=1, fill=1)
             mask = np.array(mask, dtype=bool)
             return mask
+
         cls = np.zeros(img_shape[:2], dtype=np.int32)
         ins = np.zeros_like(cls)
         instances = []
@@ -82,7 +93,7 @@ class X2Seg(object):
             cls[mask] = cls_id
             ins[mask] = ins_id
         return cls, ins
-    
+
     def get_color_map_list(self, num_classes):
         color_map = num_classes * [0, 0, 0]
         for i in range(0, num_classes):
@@ -95,7 +106,7 @@ class X2Seg(object):
                 j += 1
                 lab >>= 3
         return color_map
-    
+
     def convert(self, image_dir, json_dir, dataset_save_dir):
         """转换。
         Args:
@@ -110,13 +121,15 @@ class X2Seg(object):
         # Convert the image files.
         new_image_dir = osp.join(dataset_save_dir, "JPEGImages")
         if osp.exists(new_image_dir):
-            raise Exception("The directory {} is already exist, please remove the directory first".format(new_image_dir))
+            raise Exception(
+                "The directory {} is already exist, please remove the directory first".
+                format(new_image_dir))
         os.makedirs(new_image_dir)
         for img_name in os.listdir(image_dir):
             if is_pic(img_name):
                 shutil.copyfile(
-                            osp.join(image_dir, img_name),
-                            osp.join(new_image_dir, img_name))
+                    osp.join(image_dir, img_name),
+                    osp.join(new_image_dir, img_name))
         # Convert the json files.
         png_dir = osp.join(dataset_save_dir, "Annotations")
         if osp.exists(png_dir):
@@ -125,18 +138,19 @@ class X2Seg(object):
         self.get_labels2ids(new_image_dir, json_dir)
         self.json2png(new_image_dir, json_dir, png_dir)
         # Generate the labels.txt
-        ids2labels = {v : k for k, v in self.labels2ids.items()}
+        ids2labels = {v: k for k, v in self.labels2ids.items()}
         with open(osp.join(dataset_save_dir, 'labels.txt'), 'w') as fw:
             for i in range(len(ids2labels)):
                 fw.write(ids2labels[i] + '\n')
-        
+
 
 class JingLing2Seg(X2Seg):
     """将使用标注精灵标注的数据集转换为Seg数据集。
     """
+
     def __init__(self):
-        super(JingLing2Seg, self).__init__() 
-        
+        super(JingLing2Seg, self).__init__()
+
     def get_labels2ids(self, image_dir, json_dir):
         for img_name in os.listdir(image_dir):
             img_name_part = osp.splitext(img_name)[0]
@@ -151,8 +165,8 @@ class JingLing2Seg(X2Seg):
                     for output in json_info['outputs']['object']:
                         cls_name = output['name']
                         if cls_name not in self.labels2ids:
-                            self.labels2ids[cls_name] =  len(self.labels2ids)
-    
+                            self.labels2ids[cls_name] = len(self.labels2ids)
+
     def json2png(self, image_dir, json_dir, png_dir):
         color_map = self.get_color_map_list(256)
         for img_name in os.listdir(image_dir):
@@ -172,8 +186,10 @@ class JingLing2Seg(X2Seg):
                             name = output['name']
                             points = []
                             for i in range(1, int(len(polygon) / 2) + 1):
-                                points.append(
-                                    [polygon['x' + str(i)], polygon['y' + str(i)]])
+                                points.append([
+                                    polygon['x' + str(i)], polygon['y' + str(
+                                        i)]
+                                ])
                             shape = {
                                 'label': name,
                                 'points': points,
@@ -182,14 +198,13 @@ class JingLing2Seg(X2Seg):
                             data_shapes.append(shape)
                 if 'size' not in json_info:
                     continue
-            img_shape = (json_info['size']['height'], 
+            img_shape = (json_info['size']['height'],
                          json_info['size']['width'],
                          json_info['size']['depth'])
             lbl, _ = self.shapes_to_label(
                 img_shape=img_shape,
                 shapes=data_shapes,
-                label_name_to_value=self.labels2ids,
-            )
+                label_name_to_value=self.labels2ids, )
             out_png_file = osp.join(png_dir, img_name_part + '.png')
             if lbl.min() >= 0 and lbl.max() <= 255:
                 lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
@@ -199,14 +214,15 @@ class JingLing2Seg(X2Seg):
                 raise ValueError(
                     '[%s] Cannot save the pixel-wise class label as PNG. '
                     'Please consider using the .npy format.' % out_png_file)
-                
-                
+
+
 class LabelMe2Seg(X2Seg):
     """将使用LabelMe标注的数据集转换为Seg数据集。
     """
+
     def __init__(self):
         super(LabelMe2Seg, self).__init__()
-    
+
     def get_labels2ids(self, image_dir, json_dir):
         for img_name in os.listdir(image_dir):
             img_name_part = osp.splitext(img_name)[0]
@@ -220,8 +236,8 @@ class LabelMe2Seg(X2Seg):
                 for shape in json_info['shapes']:
                     cls_name = shape['label']
                     if cls_name not in self.labels2ids:
-                        self.labels2ids[cls_name] =  len(self.labels2ids)
-                     
+                        self.labels2ids[cls_name] = len(self.labels2ids)
+
     def json2png(self, image_dir, json_dir, png_dir):
         color_map = self.get_color_map_list(256)
         for img_name in os.listdir(image_dir):
@@ -238,8 +254,7 @@ class LabelMe2Seg(X2Seg):
             lbl, _ = self.shapes_to_label(
                 img_shape=img.shape,
                 shapes=json_info['shapes'],
-                label_name_to_value=self.labels2ids,
-            )
+                label_name_to_value=self.labels2ids, )
             out_png_file = osp.join(png_dir, img_name_part + '.png')
             if lbl.min() >= 0 and lbl.max() <= 255:
                 lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
@@ -249,14 +264,15 @@ class LabelMe2Seg(X2Seg):
                 raise ValueError(
                     '[%s] Cannot save the pixel-wise class label as PNG. '
                     'Please consider using the .npy format.' % out_png_file)
-                
-                            
+
+
 class EasyData2Seg(X2Seg):
     """将使用EasyData标注的分割数据集转换为Seg数据集。
     """
+
     def __init__(self):
         super(EasyData2Seg, self).__init__()
-    
+
     def get_labels2ids(self, image_dir, json_dir):
         for img_name in os.listdir(image_dir):
             img_name_part = osp.splitext(img_name)[0]
@@ -270,19 +286,18 @@ class EasyData2Seg(X2Seg):
                 for shape in json_info["labels"]:
                     cls_name = shape['name']
                     if cls_name not in self.labels2ids:
-                        self.labels2ids[cls_name] =  len(self.labels2ids)
-                        
+                        self.labels2ids[cls_name] = len(self.labels2ids)
+
     def mask2polygon(self, mask, label):
         contours, hierarchy = cv2.findContours(
-            (mask).astype(np.uint8), cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+            (mask).astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         segmentation = []
         for contour in contours:
             contour_list = contour.flatten().tolist()
             if len(contour_list) > 4:
                 points = []
                 for i in range(0, len(contour_list), 2):
-                    points.append(
-                                [contour_list[i], contour_list[i + 1]])
+                    points.append([contour_list[i], contour_list[i + 1]])
                 shape = {
                     'label': label,
                     'points': points,
@@ -290,7 +305,7 @@ class EasyData2Seg(X2Seg):
                 }
                 segmentation.append(shape)
         return segmentation
-    
+
     def json2png(self, image_dir, json_dir, png_dir):
         from pycocotools.mask import decode
         color_map = self.get_color_map_list(256)
@@ -318,8 +333,7 @@ class EasyData2Seg(X2Seg):
             lbl, _ = self.shapes_to_label(
                 img_shape=img.shape,
                 shapes=data_shapes,
-                label_name_to_value=self.labels2ids,
-            )
+                label_name_to_value=self.labels2ids, )
             out_png_file = osp.join(png_dir, img_name_part + '.png')
             if lbl.min() >= 0 and lbl.max() <= 255:
                 lbl_pil = PIL.Image.fromarray(lbl.astype(np.uint8), mode='P')
@@ -329,6 +343,3 @@ class EasyData2Seg(X2Seg):
                 raise ValueError(
                     '[%s] Cannot save the pixel-wise class label as PNG. '
                     'Please consider using the .npy format.' % out_png_file)
-            
-
-

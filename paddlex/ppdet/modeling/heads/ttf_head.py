@@ -31,7 +31,7 @@ class HMHead(nn.Layer):
         ch_out (int): The channel number of output Tensor.
         num_classes (int): Number of classes.
         conv_num (int): The convolution number of hm_feat.
-        dcn_head(bool): whether use dcn in head. False by default. 
+        dcn_head(bool): whether use dcn in head. False by default.
         lite_head(bool): whether use lite version. False by default.
         norm_type (string): norm type, 'sync_bn', 'bn', 'gn' are optional.
             bn by default
@@ -71,7 +71,8 @@ class HMHead(nn.Layer):
                             in_channels=ch_in if i == 0 else ch_out,
                             out_channels=ch_out,
                             kernel_size=3,
-                            weight_attr=ParamAttr(initializer=Normal(0, 0.01))))
+                            weight_attr=ParamAttr(initializer=Normal(0,
+                                                                     0.01))))
                 else:
                     head_conv.add_sublayer(
                         name,
@@ -146,7 +147,8 @@ class WHHead(nn.Layer):
                             in_channels=ch_in if i == 0 else ch_out,
                             out_channels=ch_out,
                             kernel_size=3,
-                            weight_attr=ParamAttr(initializer=Normal(0, 0.01))))
+                            weight_attr=ParamAttr(initializer=Normal(0,
+                                                                     0.01))))
                 else:
                     head_conv.add_sublayer(
                         name,
@@ -279,7 +281,10 @@ class TTFHead(nn.Layer):
         base_loc.stop_gradient = True
 
         pred_boxes = paddle.concat(
-            [0 - pred_wh[:, 0:2, :, :] + base_loc, pred_wh[:, 2:4] + base_loc],
+            [
+                0 - pred_wh[:, 0:2, :, :] + base_loc, pred_wh[:, 2:4] +
+                base_loc
+            ],
             axis=1)
         pred_boxes = paddle.transpose(pred_boxes, [0, 2, 3, 1])
         boxes = paddle.transpose(box_target, [0, 2, 3, 1])
@@ -290,8 +295,8 @@ class TTFHead(nn.Layer):
             pred_hm_max_softmax = F.softmax(pred_hm_max, axis=1)
             pred_hm_max_softmax = paddle.transpose(pred_hm_max_softmax,
                                                    [0, 2, 3, 1])
-            pred_hm_max_softmax = self.filter_loc_by_weight(pred_hm_max_softmax,
-                                                            mask)
+            pred_hm_max_softmax = self.filter_loc_by_weight(
+                pred_hm_max_softmax, mask)
         else:
             pred_hm_max_softmax = None
 

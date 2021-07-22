@@ -82,7 +82,7 @@ def check_architecture(architecture):
 
 def check_model_with_running_mode(architecture):
     """
-    check whether the model is consistent with the operating mode 
+    check whether the model is consistent with the operating mode
     """
     # some model are not supported in the static mode
     blacklist = get_blacklist_model_in_static_mode()

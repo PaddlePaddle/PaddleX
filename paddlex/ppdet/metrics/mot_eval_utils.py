@@ -144,7 +144,8 @@ class MOTEvaluator(object):
             trk_ids = trk_ids[keep]
 
         # get distance matrix
-        iou_distance = mm.distances.iou_matrix(gt_tlwhs, trk_tlwhs, max_iou=0.5)
+        iou_distance = mm.distances.iou_matrix(
+            gt_tlwhs, trk_tlwhs, max_iou=0.5)
 
         # acc
         self.acc.update(gt_ids, trk_ids, iou_distance)

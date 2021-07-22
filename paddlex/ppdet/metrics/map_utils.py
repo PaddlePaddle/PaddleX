@@ -108,8 +108,8 @@ class DetectionMAP(object):
     Args:
         class_num (int): The class number.
         overlap_thresh (float): The threshold of overlap
-            ratio between prediction bounding box and 
-            ground truth bounding box for deciding 
+            ratio between prediction bounding box and
+            ground truth bounding box for deciding
             true/false positive. Default 0.5.
         map_type (str): Calculation method of mean average
             precision, currently support '11point' and
@@ -283,8 +283,9 @@ class DetectionMAP(object):
             num_columns = min(6, len(results_per_category) * 2)
             results_flatten = list(itertools.chain(*results_per_category))
             headers = ['category', 'AP'] * (num_columns // 2)
-            results_2d = itertools.zip_longest(
-                *[results_flatten[i::num_columns] for i in range(num_columns)])
+            results_2d = itertools.zip_longest(* [
+                results_flatten[i::num_columns] for i in range(num_columns)
+            ])
             table_data = [headers]
             table_data += [result for result in results_2d]
             table = AsciiTable(table_data)
@@ -315,7 +316,7 @@ def ap_per_class(tp, conf, pred_cls, target_cls):
     """
     Computes the average precision, given the recall and precision curves.
     Method originally from https://github.com/rafaelpadilla/Object-Detection-Metrics.
-    
+
     Args:
         tp (list): True positives.
         conf (list): Objectness value from 0-1.
@@ -369,7 +370,7 @@ def compute_ap(recall, precision):
     """
     Computes the average precision, given the recall and precision curves.
     Code originally from https://github.com/rbgirshick/py-faster-rcnn.
-    
+
     Args:
         recall (list): The recall curve.
         precision (list): The precision curve.

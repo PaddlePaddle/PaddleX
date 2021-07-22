@@ -55,8 +55,8 @@ def load_model(model_dir, fixed_input_shape=None):
                              format(fixed_input_shape))
                 model.fixed_input_shape = fixed_input_shape
             else:
-                info['_Attributes']['fixed_input_shape'] = model.fixed_input_shape
-
+                info['_Attributes'][
+                    'fixed_input_shape'] = model.fixed_input_shape
 
     if info['Model'].count('RCNN') > 0:
         if info['_init_params']['with_fpn']:
@@ -69,7 +69,6 @@ def load_model(model_dir, fixed_input_shape=None):
                     raise Exception(
                         "The second value in fixed_input_shape must be a multiple of 32, but recieved {}.".
                         format(model.fixed_input_shape[1]))
-
 
     with fluid.scope_guard(model_scope):
         if status == "Normal" or \
@@ -131,8 +130,6 @@ def load_model(model_dir, fixed_input_shape=None):
         for k, v in info['_Attributes'].items():
             if k in model.__dict__:
                 model.__dict__[k] = v
-
-
 
     logging.info("Model[{}] loaded.".format(info['Model']))
     model.scope = model_scope

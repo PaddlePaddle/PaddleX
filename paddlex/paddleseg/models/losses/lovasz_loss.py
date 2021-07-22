@@ -77,8 +77,8 @@ class LovaszHingeLoss(nn.Layer):
         """
         if logits.shape[1] == 2:
             logits = binary_channel_to_unary(logits)
-        loss = lovasz_hinge_flat(
-            *flatten_binary_scores(logits, labels, self.ignore_index))
+        loss = lovasz_hinge_flat(*flatten_binary_scores(logits, labels,
+                                                        self.ignore_index))
         return loss
 
 
@@ -181,8 +181,8 @@ def lovasz_softmax_flat(probas, labels, classes='present'):
         else:
             class_pred = probas[:, c]
         errors = paddle.abs(fg - class_pred)
-        errors_sorted, perm = paddle.fluid.core.ops.argsort(
-            errors, 'axis', 0, 'descending', True)
+        errors_sorted, perm = paddle.fluid.core.ops.argsort(errors, 'axis', 0,
+                                                            'descending', True)
         errors_sorted.stop_gradient = False
 
         fg_sorted = paddle.gather(fg, perm)

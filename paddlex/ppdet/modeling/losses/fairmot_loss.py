@@ -35,7 +35,7 @@ class FairMOTLoss(nn.Layer):
 
     def forward(self, det_loss, reid_loss):
         loss = paddle.exp(-self.det_weight) * det_loss + paddle.exp(
-            -self.reid_weight) * reid_loss + (self.det_weight + self.reid_weight
-                                              )
+            -self.reid_weight) * reid_loss + (self.det_weight +
+                                              self.reid_weight)
         loss *= 0.5
         return {'loss': loss}

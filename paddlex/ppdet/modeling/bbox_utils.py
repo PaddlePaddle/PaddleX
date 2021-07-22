@@ -173,7 +173,8 @@ def decode_yolo(box, anchor, downsample_ratio):
     """
     x, y, w, h = box
     na, grid_h, grid_w = x.shape[1:4]
-    grid = make_grid(grid_h, grid_w, x.dtype).reshape((1, 1, grid_h, grid_w, 2))
+    grid = make_grid(grid_h, grid_w, x.dtype).reshape(
+        (1, 1, grid_h, grid_w, 2))
     x1 = (x + grid[:, :, :, :, 0:1]) / grid_w
     y1 = (y + grid[:, :, :, :, 1:2]) / grid_h
 
@@ -252,7 +253,8 @@ def bbox_iou(box1, box2, giou=False, diou=False, ciou=False, eps=1e-9):
             # convex diagonal squared
             c2 = cw**2 + ch**2 + eps
             # center distance
-            rho2 = ((px1 + px2 - gx1 - gx2)**2 + (py1 + py2 - gy1 - gy2)**2) / 4
+            rho2 = (
+                (px1 + px2 - gx1 - gx2)**2 + (py1 + py2 - gy1 - gy2)**2) / 4
             if diou:
                 return iou - rho2 / c2
             else:
@@ -315,7 +317,8 @@ def poly2rbox(polys):
 def cal_line_length(point1, point2):
     import math
     return math.sqrt(
-        math.pow(point1[0] - point2[0], 2) + math.pow(point1[1] - point2[1], 2))
+        math.pow(point1[0] - point2[0], 2) + math.pow(point1[1] - point2[1],
+                                                      2))
 
 
 def get_best_begin_point_single(coordinate):

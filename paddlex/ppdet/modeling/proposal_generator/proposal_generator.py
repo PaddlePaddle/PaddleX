@@ -28,7 +28,7 @@ class ProposalGenerator(object):
     """
     Proposal generation module
 
-    For more details, please refer to the document of generate_proposals 
+    For more details, please refer to the document of generate_proposals
     in ppdet/modeing/ops.py
 
     Args:
@@ -42,8 +42,8 @@ class ProposalGenerator(object):
         eta (float): Apply in adaptive NMS, if adaptive `threshold > 0.5`,
              `adaptive_threshold = adaptive_threshold * eta` in each iteration.
              default 1.
-        topk_after_collect (bool): whether to adopt topk after batch 
-             collection. If topk_after_collect is true, box filter will not be 
+        topk_after_collect (bool): whether to adopt topk after batch
+             collection. If topk_after_collect is true, box filter will not be
              used after NMS at each image in proposal generation. default false
     """
 

@@ -83,7 +83,7 @@ class KalmanFilter(object):
 
         Returns:
             The mean vector (8 dimensional) and covariance matrix (8x8
-            dimensional) of the new track. Unobserved velocities are 
+            dimensional) of the new track. Unobserved velocities are
             initialized to 0 mean.
         """
         mean_pos = measurement
@@ -112,7 +112,7 @@ class KalmanFilter(object):
                 object state at the previous time step.
 
         Returns:
-            The mean vector and covariance matrix of the predicted state. 
+            The mean vector and covariance matrix of the predicted state.
             Unobserved velocities are initialized to 0 mean.
         """
         std_pos = [
@@ -157,7 +157,7 @@ class KalmanFilter(object):
     def multi_predict(self, mean, covariance):
         """
         Run Kalman filter prediction step (Vectorized version).
-        
+
         Args:
             mean (ndarray): The Nx8 dimensional mean matrix of the object states
                 at the previous time step.
@@ -231,7 +231,7 @@ class KalmanFilter(object):
         A suitable distance threshold can be obtained from `chi2inv95`. If
         `only_position` is False, the chi-square distribution has 4 degrees of
         freedom, otherwise 2.
-        
+
         Args:
             mean (ndarray): Mean vector over the state distribution (8
                 dimensional).
@@ -240,7 +240,7 @@ class KalmanFilter(object):
             measurements (ndarray): An Nx4 dimensional matrix of N measurements,
                 each in format (x, y, a, h) where (x, y) is the bounding box center
                 position, a the aspect ratio, and h the height.
-            only_position (Optional[bool]): If True, distance computation is 
+            only_position (Optional[bool]): If True, distance computation is
                 done with respect to the bounding box center position only.
             metric (str): Metric type, 'gaussian' or 'maha'.
 

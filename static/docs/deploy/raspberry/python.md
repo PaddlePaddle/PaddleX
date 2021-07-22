@@ -34,7 +34,7 @@ python -m pip install paddlelite
 ```
 cd /root/projects/python  
 
-python demo.py --model_dir /path/to/nb_model --img /path/to/test_img.jpeg --cfg_file /path/to/PadlleX_model.yml --thread_num 4 
+python demo.py --model_dir /path/to/nb_model --img /path/to/test_img.jpeg --cfg_file /path/to/PadlleX_model.yml --thread_num 4
 ```  
 
 样例二`:
@@ -51,5 +51,5 @@ python demo.py --model_dir /path/to/nb_model --img /path/to/test_img.jpeg --cfg_
 ```
 cd /root/projects/python  
 
-python demo.py --model_dir /path/to/models/nb_model --image_list /root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --thread_num 4 
+python demo.py --model_dir /path/to/models/nb_model --image_list /root/projects/images_list.txt --cfg_file=/path/to/PadlleX_model.yml --thread_num 4
 ```

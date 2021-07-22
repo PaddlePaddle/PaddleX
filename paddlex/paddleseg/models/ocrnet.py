@@ -55,7 +55,9 @@ class OCRNet(nn.Layer):
 
         self.backbone = backbone
         self.backbone_indices = backbone_indices
-        in_channels = [self.backbone.feat_channels[i] for i in backbone_indices]
+        in_channels = [
+            self.backbone.feat_channels[i] for i in backbone_indices
+        ]
 
         self.head = OCRHead(
             num_classes=num_classes,
@@ -239,8 +241,8 @@ class ObjectAttentionBlock(nn.Layer):
         # context from (n, h1*w1, key_channels) to (n , out_channels, h1, w1)
         context = paddle.bmm(sim_map, value)
         context = paddle.transpose(context, (0, 2, 1))
-        context = paddle.reshape(context,
-                                 (0, self.key_channels, x_shape[2], x_shape[3]))
+        context = paddle.reshape(
+            context, (0, self.key_channels, x_shape[2], x_shape[3]))
         context = self.f_up(context)
 
         return context

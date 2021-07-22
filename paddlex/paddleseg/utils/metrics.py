@@ -38,8 +38,8 @@ def calculate_area(pred, label, num_classes, ignore_index=255):
         label = paddle.squeeze(label, axis=1)
     if not pred.shape == label.shape:
         raise ValueError('Shape of `pred` and `label should be equal, '
-                         'but there are {} and {}.'.format(
-                             pred.shape, label.shape))
+                         'but there are {} and {}.'.format(pred.shape,
+                                                           label.shape))
 
     # Delete ignore_index
     mask = label != ignore_index

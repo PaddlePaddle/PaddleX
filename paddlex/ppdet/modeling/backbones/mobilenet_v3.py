@@ -300,19 +300,19 @@ class ExtraBlockDW(nn.Layer):
 class MobileNetV3(nn.Layer):
     __shared__ = ['norm_type']
 
-    def __init__(
-            self,
-            scale=1.0,
-            model_name="large",
-            feature_maps=[6, 12, 15],
-            with_extra_blocks=False,
-            extra_block_filters=[[256, 512], [128, 256], [128, 256], [64, 128]],
-            lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
-            conv_decay=0.0,
-            multiplier=1.0,
-            norm_type='bn',
-            norm_decay=0.0,
-            freeze_norm=False):
+    def __init__(self,
+                 scale=1.0,
+                 model_name="large",
+                 feature_maps=[6, 12, 15],
+                 with_extra_blocks=False,
+                 extra_block_filters=[[256, 512], [128, 256], [128, 256],
+                                      [64, 128]],
+                 lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
+                 conv_decay=0.0,
+                 multiplier=1.0,
+                 norm_type='bn',
+                 norm_decay=0.0,
+                 freeze_norm=False):
         super(MobileNetV3, self).__init__()
         if isinstance(feature_maps, Integral):
             feature_maps = [feature_maps]
@@ -339,7 +339,8 @@ class MobileNetV3(nn.Layer):
                 [3, 184, 80, False, "hard_swish", 1],
                 [3, 480, 112, True, "hard_swish", 1],
                 [3, 672, 112, True, "hard_swish", 1],  # YOLOv3 output
-                [5, 672, 160, True, "hard_swish", 2],  # SSD/SSDLite/RCNN output
+                [5, 672, 160, True, "hard_swish", 2
+                 ],  # SSD/SSDLite/RCNN output
                 [5, 960, 160, True, "hard_swish", 1],
                 [5, 960, 160, True, "hard_swish", 1],  # YOLOv3 output
             ]
@@ -446,8 +447,8 @@ class MobileNetV3(nn.Layer):
             self._update_out_channels(extra_out_c, i + 1, feature_maps)
 
             for j, block_filter in enumerate(self.extra_block_filters):
-                in_c = extra_out_c if j == 0 else self.extra_block_filters[j -
-                                                                           1][1]
+                in_c = extra_out_c if j == 0 else self.extra_block_filters[
+                    j - 1][1]
                 conv_extra = self.add_sublayer(
                     "conv" + str(i + 2),
                     sublayer=ExtraBlockDW(

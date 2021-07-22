@@ -24,7 +24,8 @@ from paddlex.paddleseg.utils import utils
 
 __all__ = [
     "HRNet_W18_Small_V1", "HRNet_W18_Small_V2", "HRNet_W18", "HRNet_W30",
-    "HRNet_W32", "HRNet_W40", "HRNet_W44", "HRNet_W48", "HRNet_W60", "HRNet_W64"
+    "HRNet_W32", "HRNet_W40", "HRNet_W44", "HRNet_W48", "HRNet_W60",
+    "HRNet_W64"
 ]
 
 

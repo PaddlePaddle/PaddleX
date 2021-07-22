@@ -1,15 +1,15 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved. 
-#   
-# Licensed under the Apache License, Version 2.0 (the "License");   
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at   
-#   
-#     http://www.apache.org/licenses/LICENSE-2.0    
-#   
-# Unless required by applicable law or agreed to in writing, software   
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and   
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 from __future__ import absolute_import
@@ -97,7 +97,8 @@ class LogPrinter(Callback):
                 logs = training_staus.log()
                 space_fmt = ':' + str(len(str(steps_per_epoch))) + 'd'
                 if step_id % self.model.cfg.log_iter == 0:
-                    eta_steps = (epoches - epoch_id) * steps_per_epoch - step_id
+                    eta_steps = (epoches - epoch_id
+                                 ) * steps_per_epoch - step_id
                     eta_sec = eta_steps * batch_time.global_avg
                     eta_str = str(datetime.timedelta(seconds=int(eta_sec)))
                     ips = float(batch_size) / batch_time.avg
@@ -162,7 +163,8 @@ class Checkpointer(Callback):
                         epoch_id + 1
                 ) % self.model.cfg.snapshot_epoch == 0 or epoch_id == end_epoch - 1:
                     save_name = str(
-                        epoch_id) if epoch_id != end_epoch - 1 else "model_final"
+                        epoch_id
+                    ) if epoch_id != end_epoch - 1 else "model_final"
                     weight = self.weight
             elif mode == 'eval':
                 if 'save_best_model' in status and status['save_best_model']:
@@ -217,7 +219,8 @@ class VisualDLWriter(Callback):
             logger.error('visualdl not found, plaese install visualdl. '
                          'for example: `pip install visualdl`.')
             raise e
-        self.vdl_writer = LogWriter(model.cfg.get('vdl_log_dir', 'vdl_log_dir/scalar'))
+        self.vdl_writer = LogWriter(
+            model.cfg.get('vdl_log_dir', 'vdl_log_dir/scalar'))
         self.vdl_loss_step = 0
         self.vdl_mAP_step = 0
         self.vdl_image_step = 0
@@ -236,8 +239,8 @@ class VisualDLWriter(Callback):
                 ori_image = status['original_image']
                 result_image = status['result_image']
                 self.vdl_writer.add_image(
-                    "original/frame_{}".format(self.vdl_image_frame), ori_image,
-                    self.vdl_image_step)
+                    "original/frame_{}".format(self.vdl_image_frame),
+                    ori_image, self.vdl_image_step)
                 self.vdl_writer.add_image(
                     "result/frame_{}".format(self.vdl_image_frame),
                     result_image, self.vdl_image_step)

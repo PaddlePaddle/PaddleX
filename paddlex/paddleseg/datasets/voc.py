@@ -38,7 +38,8 @@ class PascalVOC(Dataset):
     """
     NUM_CLASSES = 21
 
-    def __init__(self, transforms, dataset_root=None, mode='train', edge=False):
+    def __init__(self, transforms, dataset_root=None, mode='train',
+                 edge=False):
         self.dataset_root = dataset_root
         self.transforms = Compose(transforms)
         mode = mode.lower()

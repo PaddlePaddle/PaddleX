@@ -35,15 +35,32 @@ class ShuffleNetV2(nn.Layer):
         self.conv_bn1 = _ConvBNReLU(36, 18, 1, 1, 0)
 
         self.block1 = nn.Sequential(
-            SFNetV2Module(36, stride=2, out_channels=72),
-            SFNetV2Module(72, stride=1), SFNetV2Module(72, stride=1),
-            SFNetV2Module(72, stride=1))
+            SFNetV2Module(
+                36, stride=2, out_channels=72),
+            SFNetV2Module(
+                72, stride=1),
+            SFNetV2Module(
+                72, stride=1),
+            SFNetV2Module(
+                72, stride=1))
 
         self.block2 = nn.Sequential(
-            SFNetV2Module(72, stride=2), SFNetV2Module(144, stride=1),
-            SFNetV2Module(144, stride=1), SFNetV2Module(144, stride=1),
-            SFNetV2Module(144, stride=1), SFNetV2Module(144, stride=1),
-            SFNetV2Module(144, stride=1), SFNetV2Module(144, stride=1))
+            SFNetV2Module(
+                72, stride=2),
+            SFNetV2Module(
+                144, stride=1),
+            SFNetV2Module(
+                144, stride=1),
+            SFNetV2Module(
+                144, stride=1),
+            SFNetV2Module(
+                144, stride=1),
+            SFNetV2Module(
+                144, stride=1),
+            SFNetV2Module(
+                144, stride=1),
+            SFNetV2Module(
+                144, stride=1))
 
         self.depthwise_separable0 = _SeparableConvBNReLU(144, 64, 3, stride=1)
         self.depthwise_separable1 = _SeparableConvBNReLU(82, 64, 3, stride=1)
@@ -227,7 +244,8 @@ class SFNetV2Module(nn.Layer):
         h, w = out_shape[2], out_shape[3]
         output = paddle.reshape(x=output, shape=[0, 2, self.in_channels, h, w])
         output = paddle.transpose(x=output, perm=[0, 2, 1, 3, 4])
-        output = paddle.reshape(x=output, shape=[0, 2 * self.in_channels, h, w])
+        output = paddle.reshape(
+            x=output, shape=[0, 2 * self.in_channels, h, w])
         return output
 
 

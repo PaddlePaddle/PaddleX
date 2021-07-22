@@ -234,8 +234,8 @@ def draw_pose(image, results, visual_thread=0.6, save_name='pose.jpg'):
                      'for example: `pip install matplotlib`.')
         raise e
     EDGES = [(0, 14), (0, 13), (0, 4), (0, 1), (14, 16), (13, 15), (4, 10),
-             (1, 7), (10, 11), (7, 8), (11, 12), (8, 9), (4, 5), (1, 2), (5, 6),
-             (2, 3)]
+             (1, 7), (10, 11), (7, 8), (11, 12), (8, 9), (4, 5), (1, 2),
+             (5, 6), (2, 3)]
     NUM_EDGES = len(EDGES)
 
     colors = [[255, 0, 0], [255, 85, 0], [255, 170, 0], [255, 255, 0], [170, 255, 0], [85, 255, 0], [0, 255, 0], \
@@ -244,8 +244,8 @@ def draw_pose(image, results, visual_thread=0.6, save_name='pose.jpg'):
     cmap = matplotlib.cm.get_cmap('hsv')
     plt.figure()
 
-    skeletons = np.array([item['keypoints'] for item in results]).reshape(-1,
-                                                                          17, 3)
+    skeletons = np.array([item['keypoints'] for item in results]).reshape(
+        -1, 17, 3)
     img = np.array(image).astype('float32')
     canvas = img.copy()
 

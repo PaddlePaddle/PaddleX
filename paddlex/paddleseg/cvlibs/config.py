@@ -67,9 +67,9 @@ class Config(object):
 
     def __init__(self,
                  path: str,
-                 learning_rate: float = None,
-                 batch_size: int = None,
-                 iters: int = None):
+                 learning_rate: float=None,
+                 batch_size: int=None,
+                 iters: int=None):
         if not path:
             raise ValueError('Please specify the configuration file path.')
 
@@ -113,9 +113,9 @@ class Config(object):
         return dic
 
     def update(self,
-               learning_rate: float = None,
-               batch_size: int = None,
-               iters: int = None):
+               learning_rate: float=None,
+               batch_size: int=None,
+               iters: int=None):
         '''Update config'''
         if learning_rate:
             if 'lr_scheduler' in self.dic:
@@ -207,10 +207,9 @@ class Config(object):
 
     @property
     def decay_args(self) -> dict:
-        args = self.dic.get('learning_rate', {}).get('decay', {
-            'type': 'poly',
-            'power': 0.9
-        }).copy()
+        args = self.dic.get('learning_rate', {}).get(
+            'decay', {'type': 'poly',
+                      'power': 0.9}).copy()
 
         if args['type'] == 'poly':
             args.setdefault('decay_steps', self.iters)

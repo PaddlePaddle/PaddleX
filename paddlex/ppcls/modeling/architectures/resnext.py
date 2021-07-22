@@ -135,7 +135,12 @@ class BottleneckBlock(nn.Layer):
 
 
 class ResNeXt(nn.Layer):
-    def __init__(self, layers=50, class_dim=1000, cardinality=32, input_image_channel=3, data_format="NCHW"):
+    def __init__(self,
+                 layers=50,
+                 class_dim=1000,
+                 cardinality=32,
+                 input_image_channel=3,
+                 data_format="NCHW"):
         super(ResNeXt, self).__init__()
 
         self.layers = layers
@@ -168,7 +173,8 @@ class ResNeXt(nn.Layer):
             act='relu',
             name="res_conv1",
             data_format=self.data_format)
-        self.pool2d_max = MaxPool2D(kernel_size=3, stride=2, padding=1, data_format=self.data_format)
+        self.pool2d_max = MaxPool2D(
+            kernel_size=3, stride=2, padding=1, data_format=self.data_format)
 
         self.block_list = []
         for block in range(len(depth)):

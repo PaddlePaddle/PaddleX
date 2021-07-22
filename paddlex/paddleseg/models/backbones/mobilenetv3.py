@@ -103,7 +103,8 @@ class MobileNetV3(nn.Layer):
                 [5, 144, 48, True, "hard_swish", 1],  # output 3 -> out_index=7
                 [5, 288, 96, True, "hard_swish", 2],
                 [5, 576, 96, True, "hard_swish", 1],
-                [5, 576, 96, True, "hard_swish", 1],  # output 4 -> out_index=10
+                [5, 576, 96, True, "hard_swish", 1
+                 ],  # output 4 -> out_index=10
             ]
             self.out_indices = [0, 3, 7, 10]
             self.feat_channels = [

@@ -115,12 +115,12 @@ class L2NormScale(nn.Layer):
 @register
 @serializable
 class VGG(nn.Layer):
-    def __init__(self,
-                 depth=16,
-                 normalizations=[20., -1, -1, -1, -1, -1],
-                 extra_block_filters=[[256, 512, 1, 2, 3], [128, 256, 1, 2, 3],
-                                      [128, 256, 0, 1, 3],
-                                      [128, 256, 0, 1, 3]]):
+    def __init__(
+            self,
+            depth=16,
+            normalizations=[20., -1, -1, -1, -1, -1],
+            extra_block_filters=[[256, 512, 1, 2, 3], [128, 256, 1, 2, 3],
+                                 [128, 256, 0, 1, 3], [128, 256, 0, 1, 3]]):
         super(VGG, self).__init__()
 
         assert depth in [16, 19], \
@@ -165,8 +165,8 @@ class VGG(nn.Layer):
         for i, v in enumerate(self.extra_block_filters):
             assert len(v) == 5, "extra_block_filters size not fix"
             extra_conv = self.add_sublayer("conv{}".format(6 + i),
-                                           ExtraBlock(last_channels, v[0], v[1],
-                                                      v[2], v[3], v[4]))
+                                           ExtraBlock(last_channels, v[0],
+                                                      v[1], v[2], v[3], v[4]))
             last_channels = v[1]
             self.extra_convs.append(extra_conv)
             self._out_channels.append(last_channels)
@@ -174,9 +174,9 @@ class VGG(nn.Layer):
         self.norms = []
         for i, n in enumerate(self.normalizations):
             if n != -1:
-                norm = self.add_sublayer("norm{}".format(i),
-                                         L2NormScale(
-                                             self.extra_block_filters[i][1], n))
+                norm = self.add_sublayer(
+                    "norm{}".format(i),
+                    L2NormScale(self.extra_block_filters[i][1], n))
             else:
                 norm = None
             self.norms.append(norm)

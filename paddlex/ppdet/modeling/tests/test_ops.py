@@ -210,7 +210,8 @@ class TestDistributeFpnProposals(LayerTest):
                 refer_level=4,
                 refer_scale=224,
                 rois_num=rois_num_dy)
-            output_dy = multi_rois_dy + [restore_ind_dy] + rois_num_per_level_dy
+            output_dy = multi_rois_dy + [restore_ind_dy
+                                         ] + rois_num_per_level_dy
             output_dy_np = []
             for output in output_dy:
                 output_np = output.numpy()
@@ -372,7 +373,9 @@ class TestIoUSimilarity(LayerTest):
                 feed={
                     'x': x_np,
                     'y': y_np,
-                }, fetch_list=[iou], with_lod=False)
+                },
+                fetch_list=[iou],
+                with_lod=False)
 
         with self.dynamic_graph():
             x_dy = base.to_variable(x_np)

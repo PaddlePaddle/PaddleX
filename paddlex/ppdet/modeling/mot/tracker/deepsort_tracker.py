@@ -41,12 +41,12 @@ class DeepSORTTracker(object):
             Removes the oldest samples when the budget is reached.
         max_age (int): maximum number of missed misses before a track is deleted
         n_init (float): Number of frames that a track remains in initialization
-            phase. Number of consecutive detections before the track is confirmed. 
-            The track state is set to `Deleted` if a miss occurs within the first 
+            phase. Number of consecutive detections before the track is confirmed.
+            The track state is set to `Deleted` if a miss occurs within the first
             `n_init` frames.
-        metric_type (str): either "euclidean" or "cosine", the distance metric 
+        metric_type (str): either "euclidean" or "cosine", the distance metric
             used for measurement to track association.
-        matching_threshold (float): samples with larger distance are 
+        matching_threshold (float): samples with larger distance are
             considered an invalid match.
         max_iou_distance (float): max iou distance threshold
         motion (object): KalmanFilter instance

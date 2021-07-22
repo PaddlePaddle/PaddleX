@@ -29,18 +29,18 @@ class AnchorGenerator(nn.Layer):
     Generate anchors according to the feature maps
 
     Args:
-        anchor_sizes (list[float] | list[list[float]]): The anchor sizes at 
-            each feature point. list[float] means all feature levels share the 
-            same sizes. list[list[float]] means the anchor sizes for 
+        anchor_sizes (list[float] | list[list[float]]): The anchor sizes at
+            each feature point. list[float] means all feature levels share the
+            same sizes. list[list[float]] means the anchor sizes for
             each level. The sizes stand for the scale of input size.
         aspect_ratios (list[float] | list[list[float]]): The aspect ratios at
             each feature point. list[float] means all feature levels share the
             same ratios. list[list[float]] means the aspect ratios for
             each level.
-        strides (list[float]): The strides of feature maps which generate 
+        strides (list[float]): The strides of feature maps which generate
             anchors
         offset (float): The offset of the coordinate of anchors, default 0.
-        
+
     """
 
     def __init__(self,
@@ -77,7 +77,8 @@ class AnchorGenerator(nn.Layer):
 
     def _calculate_anchors(self, num_features):
         sizes = self._broadcast_params(self.anchor_sizes, num_features)
-        aspect_ratios = self._broadcast_params(self.aspect_ratios, num_features)
+        aspect_ratios = self._broadcast_params(self.aspect_ratios,
+                                               num_features)
         cell_anchors = [
             self.generate_cell_anchors(s, a)
             for s, a in zip(sizes, aspect_ratios)
@@ -93,7 +94,10 @@ class AnchorGenerator(nn.Layer):
         shifts_x = paddle.arange(
             offset * stride, grid_width * stride, step=stride, dtype='float32')
         shifts_y = paddle.arange(
-            offset * stride, grid_height * stride, step=stride, dtype='float32')
+            offset * stride,
+            grid_height * stride,
+            step=stride,
+            dtype='float32')
         shift_y, shift_x = paddle.meshgrid(shifts_y, shifts_x)
         shift_x = paddle.reshape(shift_x, [-1])
         shift_y = paddle.reshape(shift_y, [-1])

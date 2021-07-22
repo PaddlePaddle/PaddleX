@@ -38,9 +38,9 @@ class RoIAlign(object):
             default 0.0625
         sampling_ratio (int): The number of sampling points in the interpolation
             grid, default 0
-        canconical_level (int): The referring level of FPN layer with 
+        canconical_level (int): The referring level of FPN layer with
             specified level. default 4
-        canonical_size (int): The referring scale of FPN layer with 
+        canonical_size (int): The referring scale of FPN layer with
             specified scale. default 224
         start_level (int): The start level of FPN layer to extract RoI feature,
             default 0

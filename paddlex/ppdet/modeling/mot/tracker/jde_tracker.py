@@ -39,15 +39,15 @@ class JDETracker(object):
         det_thresh (float): threshold of detection score
         track_buffer (int): buffer for tracker
         min_box_area (int): min box area to filter out low quality boxes
-        tracked_thresh (float): linear assignment threshold of tracked 
+        tracked_thresh (float): linear assignment threshold of tracked
             stracks and detections
-        r_tracked_thresh (float): linear assignment threshold of 
+        r_tracked_thresh (float): linear assignment threshold of
             tracked stracks and unmatched detections
-        unconfirmed_thresh (float): linear assignment threshold of 
+        unconfirmed_thresh (float): linear assignment threshold of
             unconfirmed stracks and unmatched detections
         motion (object): KalmanFilter instance
         conf_thres (float): confidence threshold for tracking
-        metric_type (str): either "euclidean" or "cosine", the distance metric 
+        metric_type (str): either "euclidean" or "cosine", the distance metric
             used for measurement to track association.
     """
 
@@ -99,7 +99,7 @@ class JDETracker(object):
         refind_stracks = []
         # Lost Tracks whose detections are obtained in the current frame
         lost_stracks = []
-        # The tracks which are not obtained in the current frame but are not 
+        # The tracks which are not obtained in the current frame but are not
         # removed. (Lost for some time lesser than the threshold for removing)
         removed_stracks = []
 
@@ -236,9 +236,11 @@ class JDETracker(object):
         self.tracked_stracks = joint_stracks(self.tracked_stracks,
                                              refind_stracks)
 
-        self.lost_stracks = sub_stracks(self.lost_stracks, self.tracked_stracks)
+        self.lost_stracks = sub_stracks(self.lost_stracks,
+                                        self.tracked_stracks)
         self.lost_stracks.extend(lost_stracks)
-        self.lost_stracks = sub_stracks(self.lost_stracks, self.removed_stracks)
+        self.lost_stracks = sub_stracks(self.lost_stracks,
+                                        self.removed_stracks)
         self.removed_stracks.extend(removed_stracks)
         self.tracked_stracks, self.lost_stracks = remove_duplicate_stracks(
             self.tracked_stracks, self.lost_stracks)

@@ -52,7 +52,6 @@ class Compose(SegTransform):
         self.transforms = transforms
         self.to_rgb = False
 
-
     def __call__(self, im, im_info=None, label=None):
         """
         Args:
@@ -107,7 +106,9 @@ class Compose(SegTransform):
         transform_names = [type(x).__name__ for x in self.transforms]
         for aug in augmenters:
             if type(aug).__name__ in transform_names:
-                print("{} is already in ComposedTransforms, need to remove it from add_augmenters().".format(type(aug).__name__))
+                print(
+                    "{} is already in ComposedTransforms, need to remove it from add_augmenters().".
+                    format(type(aug).__name__))
         self.transforms = augmenters + self.transforms
 
 
@@ -817,8 +818,6 @@ class RandomBlur(SegTransform):
             return (im, im_info)
         else:
             return (im, im_info, label)
-
-
 
 
 class RandomScaleAspect(SegTransform):

@@ -157,8 +157,8 @@ class JDELoss(nn.Layer):
         assert len(loss_confs) == len(loss_params_cls)
 
         batchsize = targets['gt_bbox'].shape[0]
-        nTargets = paddle.nonzero(paddle.sum(targets['gt_bbox'], axis=2)).shape[
-            0] / batchsize
+        nTargets = paddle.nonzero(paddle.sum(targets['gt_bbox'],
+                                             axis=2)).shape[0] / batchsize
         nTargets = paddle.to_tensor(nTargets, dtype='float32')
         nTargets.stop_gradient = True
 

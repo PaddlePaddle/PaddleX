@@ -24,7 +24,7 @@ Paddle-Lite模型需要通过Paddle-Lite的opt工具转出模型
 
 
 若安装了python版本的Paddle-Lite也可以通过如下方式转换
-``` 
+```
 ./paddle_lite_opt --model_file=<model_path> \
       --param_file=<param_path> \
       --valid_targets=arm \

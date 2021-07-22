@@ -25,7 +25,10 @@ from sklearn.preprocessing import binarize
 
 import numpy as np
 
-__all__ = ["multi_hot_encode", "hamming_distance", "accuracy_score", "precision_recall_fscore", "mean_average_precision"]
+__all__ = [
+    "multi_hot_encode", "hamming_distance", "accuracy_score",
+    "precision_recall_fscore", "mean_average_precision"
+]
 
 
 def multi_hot_encode(logits, threshold=0.5):
@@ -70,7 +73,8 @@ def accuracy_score(output, target, base="sample"):
         tps = mcm[:, 1, 1]
         fps = mcm[:, 0, 1]
 
-        accuracy = (sum(tps) + sum(tns)) / (sum(tps) + sum(tns) + sum(fns) + sum(fps))
+        accuracy = (sum(tps) + sum(tns)) / (
+            sum(tps) + sum(tns) + sum(fns) + sum(fps))
 
     return accuracy
 
@@ -84,7 +88,8 @@ def precision_recall_fscore(output, target):
         fscores:
     """
 
-    precisions, recalls, fscores, _ = precision_recall_fscore_support(target, output)
+    precisions, recalls, fscores, _ = precision_recall_fscore_support(target,
+                                                                      output)
 
     return precisions, recalls, fscores
 

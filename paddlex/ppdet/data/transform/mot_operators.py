@@ -130,7 +130,7 @@ class LetterBoxResize(BaseOperator):
 
 @register_op
 class MOTRandomAffine(BaseOperator):
-    """ 
+    """
     Affine transform to image and coords to achieve the rotate, scale and
     shift effect for training image.
 
@@ -225,7 +225,8 @@ class MOTRandomAffine(BaseOperator):
 
             # apply angle-based reduction
             radians = a * math.pi / 180
-            reduction = max(abs(math.sin(radians)), abs(math.cos(radians)))**0.5
+            reduction = max(abs(math.sin(radians)),
+                            abs(math.cos(radians)))**0.5
             x = (xy[:, 2] + xy[:, 0]) / 2
             y = (xy[:, 3] + xy[:, 1]) / 2
             w = (xy[:, 2] - xy[:, 0]) * reduction
@@ -269,7 +270,7 @@ class Gt2JDETargetThres(BaseOperator):
         anchors (list): anchors of JDE model
         anchor_masks (list): anchor_masks of JDE model
         downsample_ratios (list): downsample ratios of JDE model
-        ide_thresh (float): thresh of identity, higher is groud truth 
+        ide_thresh (float): thresh of identity, higher is groud truth
         fg_thresh (float): thresh of foreground, higher is foreground
         bg_thresh (float): thresh of background, lower is background
         num_classes (int): number of classes
@@ -511,8 +512,8 @@ class Gt2JDETargetMax(BaseOperator):
                     # XY coordinates
                     tbox[:, :, :, 0:2][a_i, gj_i, gi_i] = gxy - gxy.astype(int)
                     # Width and height in yolo method
-                    tbox[:, :, :, 2:4][a_i, gj_i, gi_i] = np.log(gwh /
-                                                                 anchor_hw[a_i])
+                    tbox[:, :, :, 2:4][a_i, gj_i, gi_i] = np.log(
+                        gwh / anchor_hw[a_i])
                     tconf[a_i, gj_i, gi_i] = 1
                     tid[a_i, gj_i, gi_i] = t_id
 
@@ -528,7 +529,7 @@ class Gt2FairMOTTarget(Gt2TTFTarget):
     Difference between Gt2FairMOTTarget and Gt2TTFTarget are:
         1. the gaussian kernal radius to generate a heatmap.
         2. the targets needed during traing.
-    
+
     Args:
         num_classes(int): the number of classes.
         down_ratio(int): the down ratio from images to heatmap, 4 by default.
@@ -586,8 +587,8 @@ class Gt2FairMOTTarget(Gt2TTFTarget):
                     radius = max(0, int(radius))
                     ct = np.array([bbox[0], bbox[1]], dtype=np.float32)
                     ct_int = ct.astype(np.int32)
-                    self.draw_truncate_gaussian(heatmap[cls_id], ct_int, radius,
-                                                radius)
+                    self.draw_truncate_gaussian(heatmap[cls_id], ct_int,
+                                                radius, radius)
                     bbox_size[k] = ct[0] - bbox_amodal[0], ct[1] - bbox_amodal[1], \
                             bbox_amodal[2] - ct[0], bbox_amodal[3] - ct[1]
 

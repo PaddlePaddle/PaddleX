@@ -202,7 +202,8 @@ class DropBlock(nn.Layer):
             for s in shape:
                 gamma *= s / (s - self.block_size + 1)
 
-            matrix = paddle.cast(paddle.rand(x.shape, x.dtype) < gamma, x.dtype)
+            matrix = paddle.cast(
+                paddle.rand(x.shape, x.dtype) < gamma, x.dtype)
             mask_inv = F.max_pool2d(
                 matrix,
                 self.block_size,
@@ -312,7 +313,7 @@ class PPYOLOTinyDetBlock(nn.Layer):
         self.conv_module = nn.Sequential()
 
         cfgs = [
-            # name, in channels, out channels, filter_size, 
+            # name, in channels, out channels, filter_size,
             # stride, padding, groups
             ['.0', ch_in, ch_out, 1, 1, 0, 1],
             ['.1', ch_out, ch_out, 5, 1, 2, ch_out],
@@ -724,7 +725,7 @@ class PPYOLOTinyFPN(nn.Layer):
             detection_block_channels (list): channels in fpn
             norm_type (str): batch norm type, default bn
             data_format (str): data format, NCHW or NHWC
-            kwargs: extra key-value pairs, such as parameter of DropBlock and spp 
+            kwargs: extra key-value pairs, such as parameter of DropBlock and spp
         """
         super(PPYOLOTinyFPN, self).__init__()
         assert len(in_channels) > 0, "in_channels length should > 0"

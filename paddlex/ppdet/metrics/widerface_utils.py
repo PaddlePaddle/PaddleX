@@ -130,8 +130,8 @@ def multi_scale_test(model, image, max_shrink):
     st = 0.5 if max_shrink >= 0.75 else 0.5 * max_shrink
     det_s = detect_face(model, image, st)
     index = np.where(
-        np.maximum(det_s[:, 2] - det_s[:, 0] + 1, det_s[:, 3] - det_s[:, 1] + 1)
-        > 30)[0]
+        np.maximum(det_s[:, 2] - det_s[:, 0] + 1,
+                   det_s[:, 3] - det_s[:, 1] + 1) > 30)[0]
     det_s = det_s[index, :]
     # Enlarge one times
     bt = min(2, max_shrink) if max_shrink > 1 else (st + max_shrink) / 2
@@ -164,8 +164,8 @@ def multi_scale_test_pyramid(model, image, max_shrink):
     # Use image pyramids to detect faces
     det_b = detect_face(model, image, 0.25)
     index = np.where(
-        np.maximum(det_b[:, 2] - det_b[:, 0] + 1, det_b[:, 3] - det_b[:, 1] + 1)
-        > 30)[0]
+        np.maximum(det_b[:, 2] - det_b[:, 0] + 1,
+                   det_b[:, 3] - det_b[:, 1] + 1) > 30)[0]
     det_b = det_b[index, :]
 
     st = [0.75, 1.25, 1.5, 1.75]
@@ -371,9 +371,11 @@ def lmk2out(results, is_bbox_normalized=False):
                 prior_h_center = (me_prior[3] + me_prior[1]) / 2
                 lmk_decode = np.zeros((10))
                 for j in [0, 2, 4, 6, 8]:
-                    lmk_decode[j] = lmk_pred[j] * 0.1 * prior_w + prior_w_center
+                    lmk_decode[j] = lmk_pred[
+                        j] * 0.1 * prior_w + prior_w_center
                 for j in [1, 3, 5, 7, 9]:
-                    lmk_decode[j] = lmk_pred[j] * 0.1 * prior_h + prior_h_center
+                    lmk_decode[j] = lmk_pred[
+                        j] * 0.1 * prior_h + prior_h_center
                 im_shape = t['im_shape'][0][a].tolist()
                 image_h, image_w = int(im_shape[0]), int(im_shape[1])
                 if is_bbox_normalized:

@@ -35,8 +35,7 @@ class ConvBNLayer(nn.Layer):
             dilation=1,
             groups=1,
             is_vd_mode=False,
-            act=None,
-    ):
+            act=None, ):
         super(ConvBNLayer, self).__init__()
 
         self.is_vd_mode = is_vd_mode
@@ -215,13 +214,13 @@ class ResNet_vd(nn.Layer):
             depth = [3, 8, 36, 3]
         elif layers == 200:
             depth = [3, 12, 48, 3]
-        num_channels = [64, 256, 512, 1024
-                        ] if layers >= 50 else [64, 64, 128, 256]
+        num_channels = [64, 256, 512,
+                        1024] if layers >= 50 else [64, 64, 128, 256]
         num_filters = [64, 128, 256, 512]
 
         # for channels of four returned stages
-        self.feat_channels = [c * 4 for c in num_filters
-                              ] if layers >= 50 else num_filters
+        self.feat_channels = [c * 4 for c in
+                              num_filters] if layers >= 50 else num_filters
 
         dilation_dict = None
         if output_stride == 8:
@@ -230,7 +229,11 @@ class ResNet_vd(nn.Layer):
             dilation_dict = {3: 2}
 
         self.conv1_1 = ConvBNLayer(
-            in_channels=3, out_channels=32, kernel_size=3, stride=2, act='relu')
+            in_channels=3,
+            out_channels=32,
+            kernel_size=3,
+            stride=2,
+            act='relu')
         self.conv1_2 = ConvBNLayer(
             in_channels=32,
             out_channels=32,
@@ -277,8 +280,8 @@ class ResNet_vd(nn.Layer):
                             in_channels=num_channels[block]
                             if i == 0 else num_filters[block] * 4,
                             out_channels=num_filters[block],
-                            stride=2 if i == 0 and block != 0
-                            and dilation_rate == 1 else 1,
+                            stride=2 if i == 0 and block != 0 and
+                            dilation_rate == 1 else 1,
                             shortcut=shortcut,
                             if_first=block == i == 0,
                             dilation=dilation_rate))

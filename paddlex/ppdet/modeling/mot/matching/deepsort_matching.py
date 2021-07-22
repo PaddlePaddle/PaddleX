@@ -61,7 +61,8 @@ def iou_1toN(bbox, candidates):
     area_intersection = wh.prod(axis=1)
     area_bbox = bbox[2:].prod()
     area_candidates = candidates[:, 2:].prod(axis=1)
-    ious = area_intersection / (area_bbox + area_candidates - area_intersection)
+    ious = area_intersection / (
+        area_bbox + area_candidates - area_intersection)
     return ious
 
 
@@ -78,8 +79,8 @@ def iou_cost(tracks, detections, track_indices=None, detection_indices=None):
             that should be matched. Defaults to all `detections`.
 
     Returns:
-        cost_matrix (ndarray): A cost matrix of shape len(track_indices), 
-            len(detection_indices) where entry (i, j) is 
+        cost_matrix (ndarray): A cost matrix of shape len(track_indices),
+            len(detection_indices) where entry (i, j) is
             `1 - iou(tracks[track_indices[i]], detections[detection_indices[j]])`.
     """
     if track_indices is None:
@@ -94,7 +95,8 @@ def iou_cost(tracks, detections, track_indices=None, detection_indices=None):
             continue
 
         bbox = tracks[track_idx].to_tlwh()
-        candidates = np.asarray([detections[i].tlwh for i in detection_indices])
+        candidates = np.asarray(
+            [detections[i].tlwh for i in detection_indices])
         cost_matrix[row, :] = 1. - iou_1toN(bbox, candidates)
     return cost_matrix
 
@@ -152,7 +154,7 @@ class NearestNeighborDistanceMetric(object):
         budget (Optional[int]): If not None, fix samples per class to at most
             this number. Removes the oldest samples when the budget is reached.
 
-    Attributes: 
+    Attributes:
         samples (Dict[int -> List[ndarray]]): A dictionary that maps from target
             identities to the list of samples that have been observed so far.
     """
@@ -216,8 +218,8 @@ def min_cost_matching(distance_metric,
     Args:
         distance_metric :
             Callable[List[Track], List[Detection], List[int], List[int]) -> ndarray
-            The distance metric is given a list of tracks and detections as 
-            well as a list of N track indices and M detection indices. The 
+            The distance metric is given a list of tracks and detections as
+            well as a list of N track indices and M detection indices. The
             metric should return the NxM dimensional cost matrix, where element
             (i, j) is the association cost between the i-th track in the given
             track indices and the j-th detection in the given detection_indices.
@@ -284,8 +286,8 @@ def matching_cascade(distance_metric,
     Args:
         distance_metric :
             Callable[List[Track], List[Detection], List[int], List[int]) -> ndarray
-            The distance metric is given a list of tracks and detections as 
-            well as a list of N track indices and M detection indices. The 
+            The distance metric is given a list of tracks and detections as
+            well as a list of N track indices and M detection indices. The
             metric should return the NxM dimensional cost matrix, where element
             (i, j) is the association cost between the i-th track in the given
             track indices and the j-th detection in the given detection_indices.
@@ -321,7 +323,8 @@ def matching_cascade(distance_metric,
             break
 
         track_indices_l = [
-            k for k in track_indices if tracks[k].time_since_update == 1 + level
+            k for k in track_indices
+            if tracks[k].time_since_update == 1 + level
         ]
         if len(track_indices_l) == 0:  # Nothing to match at this level
             continue

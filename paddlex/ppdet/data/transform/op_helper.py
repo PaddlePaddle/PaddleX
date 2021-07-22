@@ -61,7 +61,10 @@ def is_overlap(object_bbox, sample_bbox):
         return True
 
 
-def filter_and_process(sample_bbox, bboxes, labels, scores=None,
+def filter_and_process(sample_bbox,
+                       bboxes,
+                       labels,
+                       scores=None,
                        keypoints=None):
     new_bboxes = []
     new_labels = []
@@ -233,7 +236,8 @@ def data_anchor_sampling(bbox_labels, image_width, image_height, scale_array,
 
         else:
             w_off_orig = np.random.uniform(image_width - sample_bbox_size, 0.0)
-            h_off_orig = np.random.uniform(image_height - sample_bbox_size, 0.0)
+            h_off_orig = np.random.uniform(image_height - sample_bbox_size,
+                                           0.0)
 
         w_off_orig = math.floor(w_off_orig)
         h_off_orig = math.floor(h_off_orig)

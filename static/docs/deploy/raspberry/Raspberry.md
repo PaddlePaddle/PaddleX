@@ -44,7 +44,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 **说明**：其中C++预测代码在PaddleX/deploy/raspberry 目录，该目录不依赖任何PaddleX下其他目录，如果需要在python下预测部署请参考[Python预测部署](./python.md)。  
 
 #### Step2：Paddle-Lite预编译库下载
-对于Armv7hf的用户提供了2.6.1版本的Paddle-Lite在架构为armv7hf的ArmLinux下面的Full版本预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)    
+对于Armv7hf的用户提供了2.6.1版本的Paddle-Lite在架构为armv7hf的ArmLinux下面的Full版本预编译库:[Paddle-Lite(ArmLinux)预编译库](https://bj.bcebos.com/paddlex/deploy/lite/inference_lite_2.6.1_armlinux.tar.bz2)  
 对于Armv8的用户提供了2.6.3版本的Paddle-Lite在架构为armv8的ArmLinux下面的full版本预编译库:[Paddle-Lite(ArmLinux)与编译库](https://bj.bcebos.com/paddlex/paddle-lite/armlinux/paddle-Lite_armlinux_full_2.6.3.zip)  
 其他版本与arm架构的Paddle-Lite预测库请在官网[Releases](https://github.com/PaddlePaddle/Paddle-Lite/release)下载
 若用户需要在树莓派上自行编译Paddle-Lite，在树莓派上LX终端输入  

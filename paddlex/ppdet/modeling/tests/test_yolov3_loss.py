@@ -116,7 +116,7 @@ def _split_target(target):
 
 def _calc_obj_loss(output, obj, tobj, gt_box, batch_size, anchors, num_classes,
                    downsample, ignore_thresh, scale_x_y):
-    # A prediction bbox overlap any gt_bbox over ignore_thresh, 
+    # A prediction bbox overlap any gt_bbox over ignore_thresh,
     # objectness loss will be ignored, process as follows:
     # 1. get pred bbox, which is same with YOLOv3 infer mode, use yolo_box here
     # NOTE: img_size is set as 1.0 to get noramlized pred bbox
@@ -220,8 +220,8 @@ def fine_grained_loss(output,
     loss_h = fluid.layers.reduce_sum(loss_h, dim=[1, 2, 3])
 
     loss_obj_pos, loss_obj_neg = _calc_obj_loss(
-        output, obj, tobj, gt_box, batch_size, anchors, num_classes, downsample,
-        ignore_thresh, scale_x_y)
+        output, obj, tobj, gt_box, batch_size, anchors, num_classes,
+        downsample, ignore_thresh, scale_x_y)
 
     loss_cls = fluid.layers.sigmoid_cross_entropy_with_logits(cls, tcls)
     loss_cls = fluid.layers.elementwise_mul(loss_cls, tobj, axis=0)
@@ -242,8 +242,8 @@ def fine_grained_loss(output,
     return losses_all, x, y, tx, ty
 
 
-def gt2yolotarget(gt_bbox, gt_class, gt_score, anchors, mask, num_classes, size,
-                  stride):
+def gt2yolotarget(gt_bbox, gt_class, gt_score, anchors, mask, num_classes,
+                  size, stride):
     grid_h, grid_w = size
     h, w = grid_h * stride, grid_w * stride
     an_hw = np.array(anchors) / np.array([[w, h]])
@@ -260,8 +260,9 @@ def gt2yolotarget(gt_bbox, gt_class, gt_score, anchors, mask, num_classes, size,
         best_iou = 0.
         best_idx = -1
         for an_idx in range(an_hw.shape[0]):
-            iou = jaccard_overlap([0., 0., gw, gh],
-                                  [0., 0., an_hw[an_idx, 0], an_hw[an_idx, 1]])
+            iou = jaccard_overlap(
+                [0., 0., gw, gh],
+                [0., 0., an_hw[an_idx, 0], an_hw[an_idx, 1]])
             if iou > best_iou:
                 best_iou = iou
                 best_idx = an_idx
@@ -269,7 +270,7 @@ def gt2yolotarget(gt_bbox, gt_class, gt_score, anchors, mask, num_classes, size,
         gi = int(gx * grid_w)
         gj = int(gy * grid_h)
 
-        # gtbox should be regresed in this layes if best match 
+        # gtbox should be regresed in this layes if best match
         # anchor index in anchor mask of this layer
         if best_idx in mask:
             best_n = mask.index(best_idx)
@@ -309,9 +310,9 @@ class TestYolov3LossOp(unittest.TestCase):
         target = []
         for box, label, score in zip(gtbox, gtlabel, gtscore):
             target.append(
-                gt2yolotarget(box, label, score, self.anchors, self.anchor_mask,
-                              self.class_num, (self.h, self.w
-                                               ), self.downsample_ratio))
+                gt2yolotarget(box, label, score, self.anchors,
+                              self.anchor_mask, self.class_num, (
+                                  self.h, self.w), self.downsample_ratio))
 
         self.target = np.array(target).astype('float64')
 

@@ -41,21 +41,21 @@ extern "C" __declspec(dllexport) void InitModel(const char* model_type, const ch
 	if (init)
 	{
 		std::cout << "init model success" << std::endl;
-	}	
+	}
 }
 /*
 * img: input for predicting.
-* 
+*
 * nWidth: width of img.
-* 
+*
 * nHeight: height of img.
-* 
+*
 * nChannel: channel of img.
-* 
+*
 * output: result of pridict ,include category_id£¬score£¬coordinate¡£
-* 
+*
 * nBoxesNum£º number of box
-* 
+*
 * LabelList: label list of result
 */
 extern "C" __declspec(dllexport) void ModelPredict(const unsigned char* img, int nWidth, int nHeight,int nChannel, float* output, int* nBoxesNum, char* LabelList)
@@ -110,7 +110,7 @@ extern "C" __declspec(dllexport) void ModelPredict(const unsigned char* img, int
 			output[num * 6 + 2] = results[num].det_result->boxes[i].coordinate[0];
 			output[num * 6 + 3] = results[num].det_result->boxes[i].coordinate[1];
 			output[num * 6 + 4] = results[num].det_result->boxes[i].coordinate[2];
-			output[num * 6 + 5] = results[num].det_result->boxes[i].coordinate[3];						
+			output[num * 6 + 5] = results[num].det_result->boxes[i].coordinate[3];
 		}
 	}
 	memcpy(LabelList, label.c_str(), strlen(label.c_str()));

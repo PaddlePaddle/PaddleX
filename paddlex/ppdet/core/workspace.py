@@ -155,7 +155,10 @@ def merge_config(config, another_cfg=None):
 
 
 def get_registered_modules():
-    return {k: v for k, v in global_config.items() if isinstance(v, SchemaDict)}
+    return {
+        k: v
+        for k, v in global_config.items() if isinstance(v, SchemaDict)
+    }
 
 
 def make_partial(cls):

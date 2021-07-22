@@ -81,7 +81,7 @@ class ClsResult {
 class DetResult {
  public:
   std::vector<Box> boxes; // 预测结果中的各个目标框
-  int mask_resolution; 
+  int mask_resolution;
   std::string type = "det";
 }
 

@@ -358,7 +358,8 @@ class SOLOv2Head(nn.Layer):
             reshape_pred = paddle.transpose(reshape_pred, [0, 2, 1])
             reshape_pred = paddle.reshape(
                 reshape_pred, shape=(-1, paddle.shape(reshape_pred)[2]))
-            gathered_pred = paddle.gather(reshape_pred, index=grid_orders_level)
+            gathered_pred = paddle.gather(
+                reshape_pred, index=grid_orders_level)
             gathered_pred = paddle.reshape(
                 gathered_pred,
                 shape=[batch_size, -1, paddle.shape(gathered_pred)[1]])
@@ -386,8 +387,9 @@ class SOLOv2Head(nn.Layer):
             new_cate_labels.append(paddle.reshape(cate_label, shape=[-1]))
         cate_labels = paddle.concat(new_cate_labels)
 
-        loss_ins, loss_cate = self.solov2_loss(
-            ins_pred_list, ins_labels, flatten_cate_preds, cate_labels, num_ins)
+        loss_ins, loss_cate = self.solov2_loss(ins_pred_list, ins_labels,
+                                               flatten_cate_preds, cate_labels,
+                                               num_ins)
 
         return {'loss_ins': loss_ins, 'loss_cate': loss_cate}
 
@@ -508,7 +510,11 @@ class SOLOv2Head(nn.Layer):
         cate_scores *= seg_scores
         # Matrix NMS
         seg_preds, cate_scores, cate_labels = self.mask_nms(
-            seg_preds, seg_masks, cate_labels, cate_scores, sum_masks=sum_masks)
+            seg_preds,
+            seg_masks,
+            cate_labels,
+            cate_scores,
+            sum_masks=sum_masks)
         ori_shape = im_shape[:2] / scale_factor + 0.5
         ori_shape = paddle.cast(ori_shape, 'int32')
         seg_preds = F.interpolate(

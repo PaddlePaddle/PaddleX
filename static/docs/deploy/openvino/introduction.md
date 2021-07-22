@@ -36,5 +36,5 @@ CPU或者VPU的情况下使用OpenVINO进行预测加速
 **[Windows](./windows.md)**:介绍了PaddleX在操作系统为Window，编程语言为C++，硬件平台为CPU或者VPU的情况下使用OpenVINO进行预测加速  
 
 **[Python](./python.md)**:介绍了PaddleX在python下使用OpenVINO进行预测加速
-  
+
 **[部署常见问题](./faq.md)**:介绍了部署过程中遇到的常见问题以及其解决方案

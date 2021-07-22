@@ -53,8 +53,8 @@ class OpticDiscSeg(Dataset):
 
         if mode not in ['train', 'val', 'test']:
             raise ValueError(
-                "`mode` should be 'train', 'val' or 'test', but got {}.".format(
-                    mode))
+                "`mode` should be 'train', 'val' or 'test', but got {}.".
+                format(mode))
 
         if self.transforms is None:
             raise ValueError("`transforms` is necessary, but it is None.")

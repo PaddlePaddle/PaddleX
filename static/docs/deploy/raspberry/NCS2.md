@@ -4,7 +4,7 @@ PaddleX支持在树莓派上插入NCS2(神经计算棒2代)通过OpenVINO部署P
 **注意**：目前仅支持分类模型、仅支持Armv7hf的树莓派  
 
 ## 前置条件  
-* OS: Raspbian OS 
+* OS: Raspbian OS
 * PaddleX 1.0+
 * OpenVINO 2020.4  
 
@@ -13,7 +13,7 @@ PaddleX支持在树莓派上插入NCS2(神经计算棒2代)通过OpenVINO部署P
 - OpenVINO: OpenVINO的安装请参考[OpenVINO-Raspbian](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_raspbian.html)  
 
 **注意**：安装完OpenVINO后需要初始化OpenVINO环境，并且需要对USB进行配置，请参考：  
-  
+
 ```
 #初始化OpenVINO环境
 source /opt/intel/openvino/bin/setupvars.sh
@@ -22,14 +22,14 @@ echo "source /opt/intel/openvino/bin/setupvars.sh" >> ~/.bashrc
 #配置USB
 sh /opt/intel/openvino/install_dependencies/install_NCS_udev_rules.sh
 ```
-  
+
 ## 部署流程  
-  
+
 部署流程主要分为模型转换与转换后模型部署两个步骤，下面以MobilnetV2模型为例，介绍如何将PaddleX训练好的模型通过OpenVINO部署到插入NCS2的树莓派  
 教程的示例项目训练MobilenetV2模型，请参考[PaddleX模型训练示例](https://aistudio.baidu.com/aistudio/projectdetail/439860)  
 
 ## 模型转换
-  
+
 模型转换指的是将PaddleX训练出来的Paddle模型转换为OpenVINO的IR，对于模型转换教程可以参考[OpenVINO模型转换](../openvino/export_openvino_model.md)  
 
 **注意**：树莓派上面安装的OpenVINO是不带Model Optmizier模块的，不能在上面进行模型转换，请在Host下载与树莓派一直的OpenVINO版本，然后进行模型转换。  
@@ -70,7 +70,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX/deploy/openvino
 #将MobileNetV2转好的OpenVINO IR以及测试图片拷贝到树莓派上面，并以及MobileNetV2文件夹放到OpenVINO部署的代码的目录
 ```
-  
+
 **C++部署**
 ```
 #修改编译文件script/build.sh，将ARCH参数修改为armv7

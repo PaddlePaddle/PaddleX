@@ -30,7 +30,7 @@ def flatten_tensor(inputs, channel_first=False):
     Flatten a Tensor
     Args:
         inputs (Tensor): 4-D Tensor with shape [N, C, H, W] or [N, H, W, C]
-        channel_first (bool): If true the dimension order of Tensor is 
+        channel_first (bool): If true the dimension order of Tensor is
             [N, C, H, W], otherwise is [N, H, W, C]
     Return:
         output_channel_last (Tensor): The flattened Tensor in channel_last style

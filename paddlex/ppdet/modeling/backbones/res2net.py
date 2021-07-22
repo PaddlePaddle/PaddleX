@@ -132,7 +132,8 @@ class BottleNeck(nn.Layer):
         if self.stride == 1:
             out_split.append(feature_split[-1])
         else:
-            out_split.append(F.avg_pool2d(feature_split[-1], 3, self.stride, 1))
+            out_split.append(
+                F.avg_pool2d(feature_split[-1], 3, self.stride, 1))
         out = self.branch2c(paddle.concat(out_split, 1))
 
         if self.shortcut:

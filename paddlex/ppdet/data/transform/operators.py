@@ -41,11 +41,11 @@ from paddlex.ppdet.core.workspace import serializable
 from paddlex.ppdet.modeling.layers import AnchorGrid
 from paddlex.ppdet.modeling import bbox_utils
 
-from .op_helper import (satisfy_sample_constraint, filter_and_process,
-                        generate_sample_bbox, clip_bbox, data_anchor_sampling,
-                        satisfy_sample_constraint_coverage, crop_image_sampling,
-                        generate_sample_bbox_square, bbox_area_sampling,
-                        is_poly, gaussian_radius, draw_gaussian)
+from .op_helper import (
+    satisfy_sample_constraint, filter_and_process, generate_sample_bbox,
+    clip_bbox, data_anchor_sampling, satisfy_sample_constraint_coverage,
+    crop_image_sampling, generate_sample_bbox_square, bbox_area_sampling,
+    is_poly, gaussian_radius, draw_gaussian)
 
 from paddlex.ppdet.utils.logger import setup_logger
 logger = setup_logger(__name__)
@@ -58,7 +58,8 @@ def register_op(cls):
     if not hasattr(BaseOperator, cls.__name__):
         setattr(BaseOperator, cls.__name__, cls)
     else:
-        raise KeyError("The {} class has been registered.".format(cls.__name__))
+        raise KeyError("The {} class has been registered.".format(
+            cls.__name__))
     return serializable(cls)
 
 
@@ -238,7 +239,9 @@ class RandomErasingImage(BaseOperator):
 
 @register_op
 class NormalizeImage(BaseOperator):
-    def __init__(self, mean=[0.485, 0.456, 0.406], std=[1, 1, 1],
+    def __init__(self,
+                 mean=[0.485, 0.456, 0.406],
+                 std=[1, 1, 1],
                  is_scale=True):
         """
         Args:
@@ -322,7 +325,8 @@ class GridMask(BaseOperator):
             upper_iter=upper_iter)
 
     def apply(self, sample, context=None):
-        sample['image'] = self.gridmask_op(sample['image'], sample['curr_iter'])
+        sample['image'] = self.gridmask_op(sample['image'],
+                                           sample['curr_iter'])
         return sample
 
 
@@ -514,7 +518,8 @@ class RandomFlip(BaseOperator):
         for segm in segms:
             if is_poly(segm):
                 # Polygon format
-                flipped_segms.append([_flip_poly(poly, width) for poly in segm])
+                flipped_segms.append(
+                    [_flip_poly(poly, width) for poly in segm])
             else:
                 # RLE format
                 import pycocotools.mask as mask_util
@@ -582,8 +587,8 @@ class RandomFlip(BaseOperator):
                 sample['gt_segm'] = sample['gt_segm'][:, :, ::-1]
 
             if 'gt_rbox2poly' in sample and sample['gt_rbox2poly'].any():
-                sample['gt_rbox2poly'] = self.apply_rbox(sample['gt_rbox2poly'],
-                                                         width)
+                sample['gt_rbox2poly'] = self.apply_rbox(
+                    sample['gt_rbox2poly'], width)
 
             sample['flipped'] = True
             sample['image'] = im
@@ -594,7 +599,7 @@ class RandomFlip(BaseOperator):
 class Resize(BaseOperator):
     def __init__(self, target_size, keep_ratio, interp=cv2.INTER_LINEAR):
         """
-        Resize image to target size. if keep_ratio is True, 
+        Resize image to target size. if keep_ratio is True,
         resize the image's long side to the maximum of target_size
         if keep_ratio is False, resize the image to target size(h, w)
         Args:
@@ -734,8 +739,8 @@ class Resize(BaseOperator):
 
         # apply polygon
         if 'gt_poly' in sample and len(sample['gt_poly']) > 0:
-            sample['gt_poly'] = self.apply_segm(sample['gt_poly'], im_shape[:2],
-                                                [im_scale_x, im_scale_y])
+            sample['gt_poly'] = self.apply_segm(
+                sample['gt_poly'], im_shape[:2], [im_scale_x, im_scale_y])
 
         # apply semantic
         if 'semantic' in sample and sample['semantic']:
@@ -1241,14 +1246,15 @@ class RandomCrop(BaseOperator):
                             if not isinstance(part, Polygon):
                                 continue
                             part = np.squeeze(
-                                np.array(part.exterior.coords[:-1]).reshape(1,
-                                                                            -1))
+                                np.array(part.exterior.coords[:-1]).reshape(
+                                    1, -1))
                             part[0::2] -= xmin
                             part[1::2] -= ymin
                             crop_segm.append(part.tolist())
                     elif isinstance(inter, Polygon):
                         crop_poly = np.squeeze(
-                            np.array(inter.exterior.coords[:-1]).reshape(1, -1))
+                            np.array(inter.exterior.coords[:-1]).reshape(1,
+                                                                         -1))
                         crop_poly[0::2] -= xmin
                         crop_poly[1::2] -= ymin
                         crop_segm.append(crop_poly.tolist())
@@ -1485,7 +1491,7 @@ class RandomScaledCrop(BaseOperator):
 @register_op
 class Cutmix(BaseOperator):
     def __init__(self, alpha=1.5, beta=1.5):
-        """ 
+        """
         CutMix: Regularization Strategy to Train Strong Classifiers with Localizable Features, see https://arxiv.org/abs/1905.04899
         Cutmix image and gt_bbbox/gt_score
         Args:
@@ -1808,7 +1814,9 @@ class DebugVisibleImage(BaseOperator):
                     x1 = round(keypoint[2 * j]).astype(np.int32)
                     y1 = round(keypoint[2 * j + 1]).astype(np.int32)
                     draw.ellipse(
-                        (x1, y1, x1 + 5, y1 + 5), fill='green', outline='green')
+                        (x1, y1, x1 + 5, y1 + 5),
+                        fill='green',
+                        outline='green')
         save_path = os.path.join(self.output_dir, out_file_name)
         image.save(save_path, quality=95)
         return sample
@@ -2015,10 +2023,10 @@ class Rbox2Poly(BaseOperator):
 @register_op
 class AugmentHSV(BaseOperator):
     def __init__(self, fraction=0.50, is_bgr=False):
-        """ 
+        """
         Augment the SV channel of image data.
         Args:
-            fraction (float): the fraction for augment 
+            fraction (float): the fraction for augment
             is_bgr (bool): whether the image is BGR mode
         """
         super(AugmentHSV, self).__init__()

@@ -97,7 +97,8 @@ class MaskHead(object):
             act='relu',
             param_attr=ParamAttr(
                 name='conv5_mask_w',
-                initializer=MSRA(uniform=False, fan_in=fan)),
+                initializer=MSRA(
+                    uniform=False, fan_in=fan)),
             bias_attr=ParamAttr(
                 name='conv5_mask_b', learning_rate=2.,
                 regularizer=L2Decay(0.)))
@@ -116,7 +117,8 @@ class MaskHead(object):
             act=None,
             param_attr=ParamAttr(
                 name='mask_fcn_logits_w',
-                initializer=MSRA(uniform=False, fan_in=fan)),
+                initializer=MSRA(
+                    uniform=False, fan_in=fan)),
             bias_attr=ParamAttr(
                 name="mask_fcn_logits_b",
                 learning_rate=2.,

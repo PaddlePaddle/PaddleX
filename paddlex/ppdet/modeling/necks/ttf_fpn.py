@@ -167,9 +167,9 @@ class TTFFPN(nn.Layer):
         shortcut_num (list): the number of convolution layers in each shortcut.
             [3,2,1] by default, means DarkNet53 backbone return_idx_1 has 3 convs
             in its shortcut, return_idx_2 has 2 convs and return_idx_3 has 1 conv.
-        norm_type (string): norm type, 'sync_bn', 'bn', 'gn' are optional. 
+        norm_type (string): norm type, 'sync_bn', 'bn', 'gn' are optional.
             bn by default
-        lite_neck (bool): whether to use lite conv in TTFNet FPN, 
+        lite_neck (bool): whether to use lite conv in TTFNet FPN,
             False by default
         fusion_method (string): the method to fusion upsample and lateral layer.
             'add' and 'concat' are optional, add by default

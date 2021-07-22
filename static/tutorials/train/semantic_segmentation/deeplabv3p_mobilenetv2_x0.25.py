@@ -13,16 +13,13 @@ pdx.utils.download_and_decompress(optic_dataset, path='./')
 # 定义训练和验证时的transforms
 # API说明 https://paddlex.readthedocs.io/zh_CN/develop/apis/transforms/seg_transforms.html
 train_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(), 
-    transforms.ResizeRangeScaling(),
-    transforms.RandomPaddingCrop(crop_size=512), 
-    transforms.Normalize()
+    transforms.RandomHorizontalFlip(), transforms.ResizeRangeScaling(),
+    transforms.RandomPaddingCrop(crop_size=512), transforms.Normalize()
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.ResizeByLong(long_size=512), 
-    transforms.Padding(target_size=512),
-    transforms.Normalize()
+    transforms.ResizeByLong(long_size=512),
+    transforms.Padding(target_size=512), transforms.Normalize()
 ])
 
 # 定义训练和验证所用的数据集
@@ -47,7 +44,8 @@ eval_dataset = pdx.datasets.SegDataset(
 num_classes = len(train_dataset.labels)
 
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p
-model = pdx.seg.DeepLabv3p(num_classes=num_classes, backbone='MobileNetV2_x0.25')
+model = pdx.seg.DeepLabv3p(
+    num_classes=num_classes, backbone='MobileNetV2_x0.25')
 
 # API说明：https://paddlex.readthedocs.io/zh_CN/develop/apis/models/semantic_segmentation.html#train
 # 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html

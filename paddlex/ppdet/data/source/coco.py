@@ -1,15 +1,15 @@
-# Copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved. 
-#   
-# Licensed under the Apache License, Version 2.0 (the "License");   
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at   
-#   
-#     http://www.apache.org/licenses/LICENSE-2.0    
-#   
-# Unless required by applicable law or agreed to in writing, software   
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and   
+# Copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 import os
@@ -33,11 +33,11 @@ class COCODataSet(DetDataset):
         anno_path (str): coco annotation file path.
         data_fields (list): key name of data dictionary, at least have 'image'.
         sample_num (int): number of samples to load, -1 means all.
-        load_crowd (bool): whether to load crowded ground-truth. 
+        load_crowd (bool): whether to load crowded ground-truth.
             False as default
         allow_empty (bool): whether to load empty entry. False as default
-        empty_ratio (float): the ratio of empty record number to total 
-            record's, if empty_ratio is out of [0. ,1.), do not sample the 
+        empty_ratio (float): the ratio of empty record number to total
+            record's, if empty_ratio is out of [0. ,1.), do not sample the
             records. 1. as default
     """
 
@@ -90,8 +90,9 @@ class COCODataSet(DetDataset):
 
         if 'annotations' not in coco.dataset:
             self.load_image_only = True
-            logger.warning('Annotation file: {} does not contains ground truth '
-                           'and load image information only.'.format(anno_path))
+            logger.warning(
+                'Annotation file: {} does not contains ground truth '
+                'and load image information only.'.format(anno_path))
 
         for img_id in img_ids:
             img_anno = coco.loadImgs([img_id])[0]
@@ -108,9 +109,9 @@ class COCODataSet(DetDataset):
                 continue
 
             if im_w < 0 or im_h < 0:
-                logger.warning('Illegal width: {} or height: {} in annotation, '
-                               'and im_id: {} will be ignored'.format(
-                                   im_w, im_h, img_id))
+                logger.warning(
+                    'Illegal width: {} or height: {} in annotation, '
+                    'and im_id: {} will be ignored'.format(im_w, im_h, img_id))
                 continue
 
             coco_rec = {
@@ -122,7 +123,8 @@ class COCODataSet(DetDataset):
 
             if not self.load_image_only:
                 ins_anno_ids = coco.getAnnIds(
-                    imgIds=[img_id], iscrowd=None if self.load_crowd else False)
+                    imgIds=[img_id],
+                    iscrowd=None if self.load_crowd else False)
                 instances = coco.loadAnns(ins_anno_ids)
 
                 bboxes = []
@@ -187,7 +189,7 @@ class COCODataSet(DetDataset):
                     if is_rbox_anno:
                         gt_rbox[i, :] = box['clean_rbox']
                     is_crowd[i][0] = box['iscrowd']
-                    # check RLE format 
+                    # check RLE format
                     if 'segmentation' in box and box['iscrowd'] == 1:
                         gt_poly[i] = [[0.0, 0.0], ]
                     elif 'segmentation' in box and box['segmentation']:

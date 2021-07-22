@@ -63,10 +63,12 @@ class EMANet(nn.Layer):
 
         self.backbone = backbone
         self.backbone_indices = backbone_indices
-        in_channels = [self.backbone.feat_channels[i] for i in backbone_indices]
-        self.head = EMAHead(num_classes, in_channels, ema_channels, gc_channels,
-                            num_bases, stage_num, momentum, concat_input,
-                            enable_auxiliary_loss)
+        in_channels = [
+            self.backbone.feat_channels[i] for i in backbone_indices
+        ]
+        self.head = EMAHead(num_classes, in_channels, ema_channels,
+                            gc_channels, num_bases, stage_num, momentum,
+                            concat_input, enable_auxiliary_loss)
         self.align_corners = align_corners
         self.pretrained = pretrained
         self.init_weight()
@@ -127,7 +129,8 @@ class EMAHead(nn.Layer):
             in_channels=self.in_channels,
             out_channels=ema_channels,
             kernel_size=3)
-        self.ema_mid_conv = nn.Conv2D(ema_channels, ema_channels, kernel_size=1)
+        self.ema_mid_conv = nn.Conv2D(
+            ema_channels, ema_channels, kernel_size=1)
         self.ema_out_conv = layers.ConvBNReLU(
             in_channels=ema_channels, out_channels=ema_channels, kernel_size=1)
         self.bottleneck = layers.ConvBNReLU(
@@ -137,7 +140,8 @@ class EMAHead(nn.Layer):
         self.aux = nn.Sequential(
             layers.ConvBNReLU(
                 in_channels=1024, out_channels=256, kernel_size=3),
-            nn.Dropout2D(p=0.1), nn.Conv2D(256, num_classes, 1))
+            nn.Dropout2D(p=0.1),
+            nn.Conv2D(256, num_classes, 1))
         if self.concat_input:
             self.conv_cat = layers.ConvBNReLU(
                 self.in_channels + gc_channels, gc_channels, kernel_size=3)

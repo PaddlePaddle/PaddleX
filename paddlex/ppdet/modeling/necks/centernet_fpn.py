@@ -137,7 +137,7 @@ class CenterNetDLAFPN(nn.Layer):
         out_channel (int): the channel of the output feature, 0 by default means
             the channel of the input feature whose down ratio is `down_ratio`
         dcn_v2 (bool): whether use the DCNv2, true by default
-        
+
     """
 
     def __init__(self,

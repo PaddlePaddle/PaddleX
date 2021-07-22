@@ -41,9 +41,11 @@ def arg_parser():
         help="set the workspace dir of restful server")
     return parser
 
+
 def main():
     if len(sys.argv) < 2:
-        print("Use command 'paddlex_restful -h` to print the help information\n")
+        print(
+            "Use command 'paddlex_restful -h` to print the help information\n")
         return
     parser = arg_parser()
     args = parser.parse_args()

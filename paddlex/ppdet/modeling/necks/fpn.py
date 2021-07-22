@@ -1,15 +1,15 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved. 
-#   
-# Licensed under the Apache License, Version 2.0 (the "License");   
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at   
-#   
-#     http://www.apache.org/licenses/LICENSE-2.0    
-#   
-# Unless required by applicable law or agreed to in writing, software   
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and   
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 import numpy as np
@@ -33,28 +33,28 @@ class FPN(nn.Layer):
     Feature Pyramid Network, see https://arxiv.org/abs/1612.03144
 
     Args:
-        in_channels (list[int]): input channels of each level which can be 
+        in_channels (list[int]): input channels of each level which can be
             derived from the output shape of backbone by from_config
         out_channel (list[int]): output channel of each level
         spatial_scales (list[float]): the spatial scales between input feature
-            maps and original input image which can be derived from the output 
+            maps and original input image which can be derived from the output
             shape of backbone by from_config
         has_extra_convs (bool): whether to add extra conv to the last level.
             default False
         extra_stage (int): the number of extra stages added to the last level.
             default 1
-        use_c5 (bool): Whether to use c5 as the input of extra stage, 
+        use_c5 (bool): Whether to use c5 as the input of extra stage,
             otherwise p5 is used. default True
-        norm_type (string|None): The normalization type in FPN module. If 
-            norm_type is None, norm will not be used after conv and if 
+        norm_type (string|None): The normalization type in FPN module. If
+            norm_type is None, norm will not be used after conv and if
             norm_type is string, bn, gn, sync_bn are available. default None
         norm_decay (float): weight decay for normalization layer weights.
             default 0.
-        freeze_norm (bool): whether to freeze normalization layer.  
+        freeze_norm (bool): whether to freeze normalization layer.
             default False
         relu_before_extra_convs (bool): whether to add relu before extra convs.
             default False
-        
+
     """
 
     def __init__(self,
@@ -217,8 +217,8 @@ class FPN(nn.Layer):
 
                 for i in range(1, self.extra_stage):
                     if self.relu_before_extra_convs:
-                        fpn_output.append(self.fpn_convs[num_levels + i](F.relu(
-                            fpn_output[-1])))
+                        fpn_output.append(self.fpn_convs[num_levels + i](
+                            F.relu(fpn_output[-1])))
                     else:
                         fpn_output.append(self.fpn_convs[num_levels + i](
                             fpn_output[-1]))

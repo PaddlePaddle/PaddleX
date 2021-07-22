@@ -13,8 +13,8 @@ train_transforms = transforms.Compose([
 ])
 
 eval_transforms = transforms.Compose([
-    transforms.ResizeByLong(long_size=512), transforms.Padding(target_size=512),
-    transforms.Normalize()
+    transforms.ResizeByLong(long_size=512),
+    transforms.Padding(target_size=512), transforms.Normalize()
 ])
 
 train_dataset = pdx.datasets.SegDataset(

@@ -227,8 +227,6 @@ def main():
         pdx.tools.split.dataset_split(dataset_dir, dataset_format, val_value,
                                       test_value, save_dir)
 
-    
-
 
 if __name__ == "__main__":
     main()

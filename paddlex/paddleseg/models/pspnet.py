@@ -58,8 +58,8 @@ class PSPNet(nn.Layer):
             backbone.feat_channels[i] for i in backbone_indices
         ]
 
-        self.head = PSPNetHead(num_classes, backbone_indices, backbone_channels,
-                               pp_out_channels, bin_sizes,
+        self.head = PSPNetHead(num_classes, backbone_indices,
+                               backbone_channels, pp_out_channels, bin_sizes,
                                enable_auxiliary_loss, align_corners)
         self.align_corners = align_corners
         self.pretrained = pretrained

@@ -304,7 +304,9 @@ class Classifier(nn.Layer):
             padding=1)
 
         self.conv = nn.Conv2D(
-            in_channels=input_channels, out_channels=num_classes, kernel_size=1)
+            in_channels=input_channels,
+            out_channels=num_classes,
+            kernel_size=1)
 
         self.dropout = nn.Dropout(p=0.1)  # dropout_prob
 

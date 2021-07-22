@@ -1,15 +1,15 @@
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved. 
-#   
-# Licensed under the Apache License, Version 2.0 (the "License");   
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at   
-#   
-#     http://www.apache.org/licenses/LICENSE-2.0    
-#   
-# Unless required by applicable law or agreed to in writing, software   
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and   
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 from __future__ import absolute_import
@@ -35,8 +35,8 @@ __all__ = [
 ]
 
 COCO_SIGMAS = np.array([
-    .26, .25, .25, .35, .35, .79, .79, .72, .72, .62, .62, 1.07, 1.07, .87, .87,
-    .89, .89
+    .26, .25, .25, .35, .35, .79, .79, .72, .72, .62, .62, 1.07, 1.07, .87,
+    .87, .89, .89
 ]) / 10.0
 CROWD_SIGMAS = np.array(
     [.79, .79, .72, .72, .62, .62, 1.07, 1.07, .87, .87, .89, .89, .79,
@@ -275,8 +275,8 @@ class VOCMetric(Metric):
 
     def log(self):
         map_stat = 100. * self.detection_map.get_map()
-        logger.info("mAP({:.2f}, {}) = {:.2f}%".format(self.overlap_thresh,
-                                                       self.map_type, map_stat))
+        logger.info("mAP({:.2f}, {}) = {:.2f}%".format(
+            self.overlap_thresh, self.map_type, map_stat))
 
     def get_results(self):
         return {'bbox': [self.detection_map.get_map()]}

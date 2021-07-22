@@ -282,7 +282,8 @@ class LimitLong:
         if target != long_edge:
             im = functional.resize_long(im, target)
             if label is not None:
-                label = functional.resize_long(label, target, cv2.INTER_NEAREST)
+                label = functional.resize_long(label, target,
+                                               cv2.INTER_NEAREST)
 
         if label is None:
             return (im, )
@@ -303,8 +304,8 @@ class ResizeRangeScaling:
     def __init__(self, min_value=400, max_value=600):
         if min_value > max_value:
             raise ValueError('min_value must be less than max_value, '
-                             'but they are {} and {}.'.format(
-                                 min_value, max_value))
+                             'but they are {} and {}.'.format(min_value,
+                                                              max_value))
         self.min_value = min_value
         self.max_value = max_value
 
@@ -415,8 +416,9 @@ class Normalize:
     def __init__(self, mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)):
         self.mean = mean
         self.std = std
-        if not (isinstance(self.mean, (list, tuple))
-                and isinstance(self.std, (list, tuple))):
+        if not (isinstance(self.mean,
+                           (list, tuple)) and isinstance(self.std,
+                                                         (list, tuple))):
             raise ValueError(
                 "{}: input type is invalid. It should be list or tuple".format(
                     self))
@@ -562,9 +564,10 @@ class PaddingByAspectRatio:
             img_height = int(img_width / self.aspect_ratio)
         else:
             img_width = int(img_height * self.aspect_ratio)
-        padding = Padding((img_width, img_height),
-                          im_padding_value=self.im_padding_value,
-                          label_padding_value=self.label_padding_value)
+        padding = Padding(
+            (img_width, img_height),
+            im_padding_value=self.im_padding_value,
+            label_padding_value=self.label_padding_value)
         return padding(im, label)
 
 
@@ -655,8 +658,8 @@ class RandomPaddingCrop:
                 h_off = np.random.randint(img_height - crop_height + 1)
                 w_off = np.random.randint(img_width - crop_width + 1)
 
-                im = im[h_off:(crop_height + h_off), w_off:(
-                    w_off + crop_width), :]
+                im = im[h_off:(crop_height + h_off), w_off:(w_off + crop_width
+                                                            ), :]
                 if label is not None:
                     label = label[h_off:(crop_height + h_off), w_off:(
                         w_off + crop_width)]

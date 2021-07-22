@@ -47,7 +47,7 @@ class BBoxPostProcess(object):
 
     def __call__(self, head_out, rois, im_shape, scale_factor):
         """
-        Decode the bbox and do NMS if needed. 
+        Decode the bbox and do NMS if needed.
 
         Args:
             head_out (tuple): bbox_pred and cls_prob of bbox_head output.
@@ -71,9 +71,9 @@ class BBoxPostProcess(object):
 
     def get_pred(self, bboxes, bbox_num, im_shape, scale_factor):
         """
-        Rescale, clip and filter the bbox from the output of NMS to 
-        get final prediction. 
-        
+        Rescale, clip and filter the bbox from the output of NMS to
+        get final prediction.
+
         Notes:
         Currently only support bs = 1.
 
@@ -132,7 +132,8 @@ class BBoxPostProcess(object):
         keep_mask = paddle.unsqueeze(keep_mask, [1])
         pred_label = paddle.where(keep_mask, pred_label,
                                   paddle.ones_like(pred_label) * -1)
-        pred_result = paddle.concat([pred_label, pred_score, pred_bbox], axis=1)
+        pred_result = paddle.concat(
+            [pred_label, pred_score, pred_bbox], axis=1)
         return pred_result
 
     def get_origin_shape(self, ):
@@ -227,7 +228,8 @@ class S2ANetBBoxPostProcess(nn.Layer):
     __shared__ = ['num_classes']
     __inject__ = ['nms']
 
-    def __init__(self, num_classes=15, nms_pre=2000, min_bbox_size=0, nms=None):
+    def __init__(self, num_classes=15, nms_pre=2000, min_bbox_size=0,
+                 nms=None):
         super(S2ANetBBoxPostProcess, self).__init__()
         self.num_classes = num_classes
         self.nms_pre = nms_pre
@@ -329,18 +331,18 @@ class S2ANetBBoxPostProcess(nn.Layer):
 class JDEBBoxPostProcess(BBoxPostProcess):
     def __call__(self, head_out, anchors):
         """
-        Decode the bbox and do NMS for JDE model. 
+        Decode the bbox and do NMS for JDE model.
 
         Args:
             head_out (list): Bbox_pred and cls_prob of bbox_head output.
             anchors (list): Anchors of JDE model.
 
         Returns:
-            boxes_idx (Tensor): The index of kept bboxes after decode 'JDEBox'. 
+            boxes_idx (Tensor): The index of kept bboxes after decode 'JDEBox'.
             bbox_pred (Tensor): The output is the prediction with shape [N, 6]
                 including labels, scores and bboxes.
             bbox_num (Tensor): The number of prediction of each batch with shape [N].
-            nms_keep_idx (Tensor): The index of kept bboxes after NMS. 
+            nms_keep_idx (Tensor): The index of kept bboxes after NMS.
         """
         boxes_idx, bboxes, score = self.decode(head_out, anchors)
         bbox_pred, bbox_num, nms_keep_idx = self.nms(bboxes, score,

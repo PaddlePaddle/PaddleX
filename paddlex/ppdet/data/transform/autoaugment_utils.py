@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# Reference: 
+# Reference:
 #   https://github.com/tensorflow/tpu/blob/master/models/official/detection/utils/autoaugment_utils.py
 """AutoAugment util file."""
 
@@ -67,7 +67,7 @@ def policy_v1():
         [('ShearY_Only_BBoxes', 0.8, 2), ('Flip_Only_BBoxes', 0.0, 10)],
         [('Equalize', 0.6, 10), ('TranslateX_BBox', 0.2, 2)],
         [('Color', 1.0, 10), ('TranslateY_Only_BBoxes', 0.4, 6)],
-        [('Rotate_BBox', 0.8, 10), ('Contrast', 0.0, 10)],  # , 
+        [('Rotate_BBox', 0.8, 10), ('Contrast', 0.0, 10)],  # ,
         [('Cutout', 0.2, 2), ('Brightness', 0.8, 10)],
         [('Color', 1.0, 6), ('Equalize', 1.0, 2)],
         [('Cutout_Only_BBoxes', 0.4, 6), ('TranslateY_Only_BBoxes', 0.8, 2)],
@@ -113,7 +113,8 @@ def policy_v2():
         [('Cutout', 0.8, 8), ('Brightness', 0.8, 8), ('Cutout', 0.2, 2)],
         [('Color', 0.8, 4), ('TranslateY_BBox', 1.0, 6),
          ('Rotate_BBox', 0.6, 6)],
-        [('Rotate_BBox', 0.6, 10), ('BBox_Cutout', 1.0, 4), ('Cutout', 0.2, 8)],
+        [('Rotate_BBox', 0.6, 10), ('BBox_Cutout', 1.0, 4), ('Cutout', 0.2, 8)
+         ],
         [('Rotate_BBox', 0.0, 0), ('Equalize', 0.6, 6),
          ('ShearY_BBox', 0.6, 8)],
         [('Brightness', 0.8, 8), ('AutoContrast', 0.4, 2),
@@ -365,8 +366,10 @@ def random_shift_bbox(image,
                                        2.0))
     maxval_y = clip_y(min_y + np.int32(pixel_scaling * float(bbox_height) /
                                        2.0))
-    minval_x = clip_x(min_x - np.int32(pixel_scaling * float(bbox_width) / 2.0))
-    maxval_x = clip_x(min_x + np.int32(pixel_scaling * float(bbox_width) / 2.0))
+    minval_x = clip_x(min_x - np.int32(pixel_scaling * float(bbox_width) /
+                                       2.0))
+    maxval_x = clip_x(min_x + np.int32(pixel_scaling * float(bbox_width) /
+                                       2.0))
 
     # Sample and calculate the new unclipped min/max coordinates of the new bbox.
     if new_min_bbox_coords is None:
@@ -403,8 +406,8 @@ def random_shift_bbox(image,
     bbox_content = image[shifted_min_y:shifted_max_y + 1, shifted_min_x:
                          shifted_max_x + 1, :]
 
-    def mask_and_add_image(min_y_, min_x_, max_y_, max_x_, mask, content_tensor,
-                           image_):
+    def mask_and_add_image(min_y_, min_x_, max_y_, max_x_, mask,
+                           content_tensor, image_):
         """Applies mask to bbox region in image then adds content_tensor to it."""
         mask = np.pad(mask, [[min_y_, (image_height - 1) - max_y_],
                              [min_x_, (image_width - 1) - max_x_], [0, 0]],
@@ -426,8 +429,8 @@ def random_shift_bbox(image,
 
     # Fill in bbox content to new bbox location.
     mask = np.zeros_like(bbox_content)
-    image = mask_and_add_image(new_min_y, new_min_x, new_max_y, new_max_x, mask,
-                               bbox_content, image)
+    image = mask_and_add_image(new_min_y, new_min_x, new_max_y, new_max_x,
+                               mask, bbox_content, image)
 
     return image.astype(np.uint8), new_bbox
 
@@ -609,8 +612,8 @@ def _apply_bbox_augmentation_wrapper(image, bbox, new_bboxes, prob,
             augmented_image, bbox = (image, bbox)
     else:
         if should_apply_op:
-            augmented_image = _apply_bbox_augmentation(image, bbox,
-                                                       augmentation_func, *args)
+            augmented_image = _apply_bbox_augmentation(
+                image, bbox, augmentation_func, *args)
         else:
             augmented_image = image
     new_bboxes = _concat_bbox(bbox, new_bboxes)
@@ -761,16 +764,16 @@ def solarize_only_bboxes(image, bboxes, prob, threshold):
     """Apply solarize to each bbox in the image with probability prob."""
     func_changes_bbox = False
     prob = _scale_bbox_only_op_probability(prob)
-    return _apply_multi_bbox_augmentation_wrapper(image, bboxes, prob, solarize,
-                                                  func_changes_bbox, threshold)
+    return _apply_multi_bbox_augmentation_wrapper(
+        image, bboxes, prob, solarize, func_changes_bbox, threshold)
 
 
 def equalize_only_bboxes(image, bboxes, prob):
     """Apply equalize to each bbox in the image with probability prob."""
     func_changes_bbox = False
     prob = _scale_bbox_only_op_probability(prob)
-    return _apply_multi_bbox_augmentation_wrapper(image, bboxes, prob, equalize,
-                                                  func_changes_bbox)
+    return _apply_multi_bbox_augmentation_wrapper(image, bboxes, prob,
+                                                  equalize, func_changes_bbox)
 
 
 def cutout_only_bboxes(image, bboxes, prob, pad_size, replace):
@@ -1087,7 +1090,8 @@ def sharpness(image, factor):
     image = image.astype(np.float32)
     # Make image 4D for conv operation.
     # SMOOTH PIL Kernel.
-    kernel = np.array([[1, 1, 1], [1, 5, 1], [1, 1, 1]], dtype=np.float32) / 13.
+    kernel = np.array(
+        [[1, 1, 1], [1, 5, 1], [1, 1, 1]], dtype=np.float32) / 13.
     result = cv2.filter2D(image, -1, kernel).astype(np.uint8)
 
     # Blend the final result.
@@ -1388,9 +1392,10 @@ def _translate_level_to_arg(level, translate_const):
 
 
 def _bbox_cutout_level_to_arg(level, hparams):
-    cutout_pad_fraction = (level /
-                           _MAX_LEVEL) * 0.75  # hparams.cutout_max_pad_fraction
-    return (cutout_pad_fraction, False)  # hparams.cutout_bbox_replace_with_mean
+    cutout_pad_fraction = (
+        level / _MAX_LEVEL) * 0.75  # hparams.cutout_max_pad_fraction
+    return (cutout_pad_fraction, False
+            )  # hparams.cutout_bbox_replace_with_mean
 
 
 def level_to_arg(hparams):

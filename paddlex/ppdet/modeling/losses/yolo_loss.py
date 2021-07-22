@@ -56,7 +56,7 @@ class YOLOv3Loss(nn.Layer):
             downsample (list): downsample ratio for each detection block
             scale_x_y (float): scale_x_y factor
             iou_loss (object): IoULoss instance
-            iou_aware_loss (object): IouAwareLoss instance  
+            iou_aware_loss (object): IouAwareLoss instance
         """
         super(YOLOv3Loss, self).__init__()
         self.num_classes = num_classes
@@ -110,7 +110,13 @@ class YOLOv3Loss(nn.Layer):
             pcls, tcls, reduction='none')
         return loss_cls
 
-    def yolov3_loss(self, p, t, gt_box, anchor, downsample, scale=1.,
+    def yolov3_loss(self,
+                    p,
+                    t,
+                    gt_box,
+                    anchor,
+                    downsample,
+                    scale=1.,
                     eps=1e-10):
         na = len(anchor)
         b, c, h, w = p.shape

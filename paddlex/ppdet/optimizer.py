@@ -108,7 +108,7 @@ class PiecewiseDecay(object):
             boundary = [int(step_per_epoch) * i for i in self.milestones]
             value = [base_lr]  # during step[0, boundary[0]] is base_lr
 
-        # self.values is setted directly in config 
+        # self.values is setted directly in config
         if self.values is not None:
             assert len(self.milestones) + 1 == len(self.values)
             return optimizer.lr.PiecewiseDecay(boundary, self.values)
@@ -199,7 +199,7 @@ class LearningRate(object):
             return self.schedulers[0](base_lr=self.base_lr,
                                       step_per_epoch=step_per_epoch)
 
-        # TODO: split warmup & decay 
+        # TODO: split warmup & decay
         # warmup
         boundary, value = self.schedulers[1](self.base_lr, step_per_epoch)
         # decay

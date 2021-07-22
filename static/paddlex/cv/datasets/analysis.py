@@ -134,7 +134,8 @@ class Seg:
             self.label_value_list[id] = unique
             self.label_value_num_list[id] = counts
 
-    def _get_clipped_mean_std(self, start, end, clip_min_value, clip_max_value):
+    def _get_clipped_mean_std(self, start, end, clip_min_value,
+                              clip_max_value):
         for id in range(start, end):
             full_path_im, full_path_label = self.file_list[id]
             image, label = Compose.decode_image(full_path_im, full_path_label)
@@ -170,7 +171,8 @@ class Seg:
             start = one_worker_file * i
             end = one_worker_file * (
                 i + 1) if i < num_workers - 1 else len(self.file_list)
-            t = threading.Thread(target=self._get_image_info, args=(start, end))
+            t = threading.Thread(
+                target=self._get_image_info, args=(start, end))
             threads.append(t)
         for t in threads:
             t.start()

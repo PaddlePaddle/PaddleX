@@ -22,10 +22,16 @@ for i in range(60):
 
 # 加载数据集用于量化
 dataset = pdx.datasets.ImageNet(
-                data_dir='vegetables_cls',
-                file_list='vegetables_cls/train_list.txt',
-                label_list='vegetables_cls/labels.txt',
-                transforms=model.test_transforms)
+    data_dir='vegetables_cls',
+    file_list='vegetables_cls/train_list.txt',
+    label_list='vegetables_cls/labels.txt',
+    transforms=model.test_transforms)
 
 # 开始量化
-pdx.slim.export_quant_model(model, dataset, batch_size=4, batch_num=10, save_dir='./quant_mobilenet', cache_dir='./tmp')
+pdx.slim.export_quant_model(
+    model,
+    dataset,
+    batch_size=4,
+    batch_num=10,
+    save_dir='./quant_mobilenet',
+    cache_dir='./tmp')

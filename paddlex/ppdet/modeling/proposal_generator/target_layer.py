@@ -1,15 +1,15 @@
 # Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
-#   
-# Licensed under the Apache License, Version 2.0 (the "License");   
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at   
-#   
-#     http://www.apache.org/licenses/LICENSE-2.0    
-#   
-# Unless required by applicable law or agreed to in writing, software   
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and   
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 import sys
 import paddle
@@ -28,25 +28,25 @@ class RPNTargetAssign(object):
     The assignment consists of three steps:
         1. Match anchor and ground-truth box, label the anchor with foreground
            or background sample
-        2. Sample anchors to keep the properly ratio between foreground and 
+        2. Sample anchors to keep the properly ratio between foreground and
            background
         3. Generate the targets for classification and regression branch
 
 
     Args:
-        batch_size_per_im (int): Total number of RPN samples per image. 
+        batch_size_per_im (int): Total number of RPN samples per image.
             default 256
         fg_fraction (float): Fraction of anchors that is labeled
             foreground, default 0.5
         positive_overlap (float): Minimum overlap required between an anchor
-            and ground-truth box for the (anchor, gt box) pair to be 
+            and ground-truth box for the (anchor, gt box) pair to be
             a foreground sample. default 0.7
         negative_overlap (float): Maximum overlap allowed between an anchor
-            and ground-truth box for the (anchor, gt box) pair to be 
+            and ground-truth box for the (anchor, gt box) pair to be
             a background sample. default 0.3
         ignore_thresh(float): Threshold for ignoring the is_crowd ground-truth
             if the value is larger than zero.
-        use_random (bool): Use random sampling to choose foreground and 
+        use_random (bool): Use random sampling to choose foreground and
             background boxes, default true.
     """
 
@@ -91,13 +91,13 @@ class BBoxAssigner(object):
     The assignment consists of three steps:
         1. Match RoIs and ground-truth box, label the RoIs with foreground
            or background sample
-        2. Sample anchors to keep the properly ratio between foreground and 
+        2. Sample anchors to keep the properly ratio between foreground and
            background
         3. Generate the targets for classification and regression branch
 
     Args:
-        batch_size_per_im (int): Total number of RoIs per image. 
-            default 512 
+        batch_size_per_im (int): Total number of RoIs per image.
+            default 512
         fg_fraction (float): Fraction of RoIs that is labeled
             foreground, default 0.25
         fg_thresh (float): Minimum overlap required between a RoI
@@ -108,7 +108,7 @@ class BBoxAssigner(object):
             a background sample. default 0.5
         ignore_thresh(float): Threshold for ignoring the is_crowd ground-truth
             if the value is larger than zero.
-        use_random (bool): Use random sampling to choose foreground and 
+        use_random (bool): Use random sampling to choose foreground and
             background boxes, default true
         cascade_iou (list[iou]): The list of overlap to select foreground and
             background of each stage, which is only used In Cascade RCNN.
@@ -220,7 +220,8 @@ class BBoxLibraAssigner(object):
         outs = libra_generate_proposal_target(
             rpn_rois, gt_classes, gt_boxes, self.batch_size_per_im,
             self.fg_fraction, self.fg_thresh, self.bg_thresh, self.num_classes,
-            self.use_random, is_cascade, self.cascade_iou[stage], self.num_bins)
+            self.use_random, is_cascade, self.cascade_iou[stage],
+            self.num_bins)
         rois = outs[0]
         rois_num = outs[-1]
         # tgt_labels, tgt_bboxes, tgt_gt_inds
@@ -237,7 +238,7 @@ class MaskAssigner(object):
 
     The assignment consists of three steps:
         1. Select RoIs labels with foreground.
-        2. Encode the RoIs and corresponding gt polygons to generate 
+        2. Encode the RoIs and corresponding gt polygons to generate
            mask target
 
     Args:
@@ -371,7 +372,8 @@ class RBoxAssigner(object):
         # calc rbox iou
         anchors_xc_yc = anchors_xc_yc.astype(np.float32)
         gt_bboxes_xc_yc = gt_bboxes_xc_yc.astype(np.float32)
-        anchors_xc_yc = paddle.to_tensor(anchors_xc_yc, place=paddle.CPUPlace())
+        anchors_xc_yc = paddle.to_tensor(
+            anchors_xc_yc, place=paddle.CPUPlace())
         gt_bboxes_xc_yc = paddle.to_tensor(
             gt_bboxes_xc_yc, place=paddle.CPUPlace())
 

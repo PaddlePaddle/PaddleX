@@ -132,12 +132,15 @@ class SFNetHead(nn.Layer):
         for i in range(len(fpn_inplanes) - 1):
             self.fpn_out.append(
                 nn.Sequential(
-                    layers.ConvBNReLU(fpn_dim, fpn_dim, 3, bias_attr=False)))
+                    layers.ConvBNReLU(
+                        fpn_dim, fpn_dim, 3, bias_attr=False)))
             self.fpn_out_align.append(
-                AlignedModule(inplane=fpn_dim, outplane=fpn_dim // 2))
+                AlignedModule(
+                    inplane=fpn_dim, outplane=fpn_dim // 2))
             if self.enable_auxiliary_loss:
                 self.dsn.append(
-                    nn.Sequential(layers.AuxLayer(fpn_dim, fpn_dim, num_class)))
+                    nn.Sequential(
+                        layers.AuxLayer(fpn_dim, fpn_dim, num_class)))
 
         self.fpn_out = nn.LayerList(self.fpn_out)
         self.fpn_out_align = nn.LayerList(self.fpn_out_align)
@@ -148,7 +151,8 @@ class SFNetHead(nn.Layer):
         self.conv_last = nn.Sequential(
             layers.ConvBNReLU(
                 len(fpn_inplanes) * fpn_dim, fpn_dim, 3, bias_attr=False),
-            nn.Conv2D(fpn_dim, num_class, kernel_size=1))
+            nn.Conv2D(
+                fpn_dim, num_class, kernel_size=1))
 
     def forward(self, conv_out):
         psp_out = self.ppm(conv_out[-1])
@@ -211,8 +215,8 @@ class AlignedModule(nn.Layer):
         norm = paddle.to_tensor([[[[out_w, out_h]]]]).astype('float32')
         h = paddle.linspace(-1.0, 1.0, out_h).reshape([-1, 1]).tile([1, out_w])
         w = paddle.linspace(-1.0, 1.0, out_w).tile([out_h, 1])
-        grid = paddle.concat([paddle.unsqueeze(w, 2),
-                              paddle.unsqueeze(h, 2)], 2)
+        grid = paddle.concat([paddle.unsqueeze(w, 2), paddle.unsqueeze(h, 2)],
+                             2)
         grid = grid.tile([n, 1, 1, 1]).astype('float32')
         grid = grid + flow.transpose([0, 2, 3, 1]) / norm
         output = F.grid_sample(inputs, grid)

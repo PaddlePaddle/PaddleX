@@ -34,7 +34,8 @@ class CrossEntropyLoss(nn.Layer):
             the top k percent pixels (e.g., the top 20% pixels). This is useful for hard pixel mining.
     """
 
-    def __init__(self, weight=None, ignore_index=255, top_k_percent_pixels=1.0):
+    def __init__(self, weight=None, ignore_index=255,
+                 top_k_percent_pixels=1.0):
         super(CrossEntropyLoss, self).__init__()
         if weight is not None:
             weight = paddle.to_tensor(weight, dtype='float32')

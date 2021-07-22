@@ -106,12 +106,12 @@ def roi_pool(input,
     For more information, please refer to https://stackoverflow.com/questions/43430056/what-is-roi-layer-in-fast-rcnn
 
     Args:
-        input (Tensor): Input feature, 4D-Tensor with the shape of [N,C,H,W], 
-            where N is the batch size, C is the input channel, H is Height, W is weight. 
+        input (Tensor): Input feature, 4D-Tensor with the shape of [N,C,H,W],
+            where N is the batch size, C is the input channel, H is Height, W is weight.
             The data type is float32 or float64.
-        rois (Tensor): ROIs (Regions of Interest) to pool over. 
-            2D-Tensor or 2D-LoDTensor with the shape of [num_rois,4], the lod level is 1. 
-            Given as [[x1, y1, x2, y2], ...], (x1, y1) is the top left coordinates, 
+        rois (Tensor): ROIs (Regions of Interest) to pool over.
+            2D-Tensor or 2D-LoDTensor with the shape of [num_rois,4], the lod level is 1.
+            Given as [[x1, y1, x2, y2], ...], (x1, y1) is the top left coordinates,
             and (x2, y2) is the bottom right coordinates.
         output_size (int or tuple[int, int]): The pooled output size(h, w), data type is int32. If int, h and w are both equal to output_size.
         spatial_scale (float, optional): Multiplicative spatial scale factor to translate ROI coords from their input scale to the scale used when pooling. Default: 1.0
@@ -197,30 +197,30 @@ def roi_align(input,
     """
 
     Region of interest align (also known as RoI align) is to perform
-    bilinear interpolation on inputs of nonuniform sizes to obtain 
+    bilinear interpolation on inputs of nonuniform sizes to obtain
     fixed-size feature maps (e.g. 7*7)
 
     Dividing each region proposal into equal-sized sections with
     the pooled_width and pooled_height. Location remains the origin
     result.
 
-    In each ROI bin, the value of the four regularly sampled locations 
+    In each ROI bin, the value of the four regularly sampled locations
     are computed directly through bilinear interpolation. The output is
     the mean of four locations.
-    Thus avoid the misaligned problem. 
+    Thus avoid the misaligned problem.
 
     Args:
-        input (Tensor): Input feature, 4D-Tensor with the shape of [N,C,H,W], 
-            where N is the batch size, C is the input channel, H is Height, W is weight. 
+        input (Tensor): Input feature, 4D-Tensor with the shape of [N,C,H,W],
+            where N is the batch size, C is the input channel, H is Height, W is weight.
             The data type is float32 or float64.
         rois (Tensor): ROIs (Regions of Interest) to pool over.It should be
-            a 2-D Tensor or 2-D LoDTensor of shape (num_rois, 4), the lod level is 1. 
+            a 2-D Tensor or 2-D LoDTensor of shape (num_rois, 4), the lod level is 1.
             The data type is float32 or float64. Given as [[x1, y1, x2, y2], ...],
             (x1, y1) is the top left coordinates, and (x2, y2) is the bottom right coordinates.
         output_size (int or tuple[int, int]): The pooled output size(h, w), data type is int32. If int, h and w are both equal to output_size.
-        spatial_scale (float32, optional): Multiplicative spatial scale factor to translate ROI coords 
+        spatial_scale (float32, optional): Multiplicative spatial scale factor to translate ROI coords
             from their input scale to the scale used when pooling. Default: 1.0
-        sampling_ratio(int32, optional): number of sampling points in the interpolation grid. 
+        sampling_ratio(int32, optional): number of sampling points in the interpolation grid.
             If <=0, then grid points are adaptive to roi_width and pooled_w, likewise for height. Default: -1
         rois_num (Tensor): The number of RoIs in each image. Default: None
         name(str, optional): For detailed information, please refer
@@ -303,31 +303,31 @@ def iou_similarity(x, y, box_normalized=True, name=None):
     Given two boxes A and B, the calculation of IOU is as follows:
 
     $$
-    IOU(A, B) = 
+    IOU(A, B) =
     \\frac{area(A\\cap B)}{area(A)+area(B)-area(A\\cap B)}
     $$
 
     Args:
-        x (Tensor): Box list X is a 2-D Tensor with shape [N, 4] holds N 
-             boxes, each box is represented as [xmin, ymin, xmax, ymax], 
-             the shape of X is [N, 4]. [xmin, ymin] is the left top 
+        x (Tensor): Box list X is a 2-D Tensor with shape [N, 4] holds N
+             boxes, each box is represented as [xmin, ymin, xmax, ymax],
+             the shape of X is [N, 4]. [xmin, ymin] is the left top
              coordinate of the box if the input is image feature map, they
-             are close to the origin of the coordinate system. 
+             are close to the origin of the coordinate system.
              [xmax, ymax] is the right bottom coordinate of the box.
              The data type is float32 or float64.
-        y (Tensor): Box list Y holds M boxes, each box is represented as 
-             [xmin, ymin, xmax, ymax], the shape of X is [N, 4]. 
-             [xmin, ymin] is the left top coordinate of the box if the 
-             input is image feature map, and [xmax, ymax] is the right 
+        y (Tensor): Box list Y holds M boxes, each box is represented as
+             [xmin, ymin, xmax, ymax], the shape of X is [N, 4].
+             [xmin, ymin] is the left top coordinate of the box if the
+             input is image feature map, and [xmax, ymax] is the right
              bottom coordinate of the box. The data type is float32 or float64.
         box_normalized(bool): Whether treat the priorbox as a normalized box.
             Set true by default.
-        name(str, optional): For detailed information, please refer 
-            to :ref:`api_guide_Name`. Usually name is no need to set and 
-            None by default. 
+        name(str, optional): For detailed information, please refer
+            to :ref:`api_guide_Name`. Usually name is no need to set and
+            None by default.
 
     Returns:
-        Tensor: The output of iou_similarity op, a tensor with shape [N, M] 
+        Tensor: The output of iou_similarity op, a tensor with shape [N, M]
               representing pairwise iou scores. The data type is same with x.
 
     Examples:
@@ -367,9 +367,9 @@ def collect_fpn_proposals(multi_rois,
                           rois_num_per_level=None,
                           name=None):
     """
-    
-    **This OP only supports LoDTensor as input**. Concat multi-level RoIs 
-    (Region of Interest) and select N RoIs with respect to multi_scores. 
+
+    **This OP only supports LoDTensor as input**. Concat multi-level RoIs
+    (Region of Interest) and select N RoIs with respect to multi_scores.
     This operation performs the following steps:
 
     1. Choose num_level RoIs and scores as input: num_level = max_level - min_level
@@ -379,38 +379,38 @@ def collect_fpn_proposals(multi_rois,
     5. Re-sort RoIs by corresponding batch_id
 
     Args:
-        multi_rois(list): List of RoIs to collect. Element in list is 2-D 
-            LoDTensor with shape [N, 4] and data type is float32 or float64, 
+        multi_rois(list): List of RoIs to collect. Element in list is 2-D
+            LoDTensor with shape [N, 4] and data type is float32 or float64,
             N is the number of RoIs.
-        multi_scores(list): List of scores of RoIs to collect. Element in list 
+        multi_scores(list): List of scores of RoIs to collect. Element in list
             is 2-D LoDTensor with shape [N, 1] and data type is float32 or
             float64, N is the number of RoIs.
         min_level(int): The lowest level of FPN layer to collect
         max_level(int): The highest level of FPN layer to collect
         post_nms_top_n(int): The number of selected RoIs
-        rois_num_per_level(list, optional): The List of RoIs' numbers. 
-            Each element is 1-D Tensor which contains the RoIs' number of each 
-            image on each level and the shape is [B] and data type is 
-            int32, B is the number of images. If it is not None then return 
-            a 1-D Tensor contains the output RoIs' number of each image and 
+        rois_num_per_level(list, optional): The List of RoIs' numbers.
+            Each element is 1-D Tensor which contains the RoIs' number of each
+            image on each level and the shape is [B] and data type is
+            int32, B is the number of images. If it is not None then return
+            a 1-D Tensor contains the output RoIs' number of each image and
             the shape is [B]. Default: None
-        name(str, optional): For detailed information, please refer 
-            to :ref:`api_guide_Name`. Usually name is no need to set and 
+        name(str, optional): For detailed information, please refer
+            to :ref:`api_guide_Name`. Usually name is no need to set and
             None by default.
 
     Returns:
         Variable:
 
-        fpn_rois(Variable): 2-D LoDTensor with shape [N, 4] and data type is 
-        float32 or float64. Selected RoIs. 
+        fpn_rois(Variable): 2-D LoDTensor with shape [N, 4] and data type is
+        float32 or float64. Selected RoIs.
 
-        rois_num(Tensor): 1-D Tensor contains the RoIs's number of each 
-        image. The shape is [B] and data type is int32. B is the number of 
-        images. 
+        rois_num(Tensor): 1-D Tensor contains the RoIs's number of each
+        image. The shape is [B] and data type is int32. B is the number of
+        images.
 
     Examples:
         .. code-block:: python
-           
+
             import paddle
             from paddlex.ppdet.modeling import ops
             paddle.enable_static()
@@ -424,10 +424,10 @@ def collect_fpn_proposals(multi_rois,
                     name='score_'+str(i), shape=[None, 1], dtype='float32', lod_level=1))
 
             fpn_rois = ops.collect_fpn_proposals(
-                multi_rois=multi_rois, 
+                multi_rois=multi_rois,
                 multi_scores=multi_scores,
-                min_level=2, 
-                max_level=5, 
+                min_level=2,
+                max_level=5,
                 post_nms_top_n=2000)
     """
     check_type(multi_rois, 'multi_rois', list, 'collect_fpn_proposals')
@@ -479,14 +479,14 @@ def distribute_fpn_proposals(fpn_rois,
                              rois_num=None,
                              name=None):
     """
-    
-    **This op only takes LoDTensor as input.** In Feature Pyramid Networks 
-    (FPN) models, it is needed to distribute all proposals into different FPN 
-    level, with respect to scale of the proposals, the referring scale and the 
-    referring level. Besides, to restore the order of proposals, we return an 
-    array which indicates the original index of rois in current proposals. 
+
+    **This op only takes LoDTensor as input.** In Feature Pyramid Networks
+    (FPN) models, it is needed to distribute all proposals into different FPN
+    level, with respect to scale of the proposals, the referring scale and the
+    referring level. Besides, to restore the order of proposals, we return an
+    array which indicates the original index of rois in current proposals.
     To compute FPN level for each roi, the formula is given as follows:
-    
+
     .. math::
 
         roi\_scale &= \sqrt{BBoxArea(fpn\_roi)}
@@ -497,36 +497,36 @@ def distribute_fpn_proposals(fpn_rois,
 
     Args:
 
-        fpn_rois(Variable): 2-D Tensor with shape [N, 4] and data type is 
+        fpn_rois(Variable): 2-D Tensor with shape [N, 4] and data type is
             float32 or float64. The input fpn_rois.
-        min_level(int32): The lowest level of FPN layer where the proposals come 
+        min_level(int32): The lowest level of FPN layer where the proposals come
             from.
         max_level(int32): The highest level of FPN layer where the proposals
             come from.
         refer_level(int32): The referring level of FPN layer with specified scale.
         refer_scale(int32): The referring scale of FPN layer with specified level.
-        rois_num(Tensor): 1-D Tensor contains the number of RoIs in each image. 
+        rois_num(Tensor): 1-D Tensor contains the number of RoIs in each image.
             The shape is [B] and data type is int32. B is the number of images.
-            If it is not None then return a list of 1-D Tensor. Each element 
+            If it is not None then return a list of 1-D Tensor. Each element
             is the output RoIs' number of each image on the corresponding level
             and the shape is [B]. None by default.
-        name(str, optional): For detailed information, please refer 
-            to :ref:`api_guide_Name`. Usually name is no need to set and 
-            None by default. 
+        name(str, optional): For detailed information, please refer
+            to :ref:`api_guide_Name`. Usually name is no need to set and
+            None by default.
 
     Returns:
         Tuple:
 
-        multi_rois(List) : A list of 2-D LoDTensor with shape [M, 4] 
-        and data type of float32 and float64. The length is 
+        multi_rois(List) : A list of 2-D LoDTensor with shape [M, 4]
+        and data type of float32 and float64. The length is
         max_level-min_level+1. The proposals in each FPN level.
 
-        restore_ind(Variable): A 2-D Tensor with shape [N, 1], N is 
+        restore_ind(Variable): A 2-D Tensor with shape [N, 1], N is
         the number of total rois. The data type is int32. It is
         used to restore the order of fpn_rois.
 
-        rois_num_per_level(List): A list of 1-D Tensor and each Tensor is 
-        the RoIs' number in each image on the corresponding level. The shape 
+        rois_num_per_level(List): A list of 1-D Tensor and each Tensor is
+        the RoIs' number in each image on the corresponding level. The shape
         is [B] and data type of int32. B is the number of images
 
 
@@ -610,7 +610,7 @@ def yolo_box(
     """
 
     This operator generates YOLO detection boxes from output of YOLOv3 network.
-     
+
      The output of previous network is in shape [N, C, H, W], while H and W
      should be the same, H and W specify the grid size, each grid point predict
      given number boxes, this given number, which following will be represented as S,
@@ -671,7 +671,7 @@ def yolo_box(
                     M is output box number, and the 3rd dimension stores [xmin, ymin, xmax, ymax] coordinates of boxes.
         scores Tensor: A 3-D tensor with shape [N, M, :attr:`class_num`], the coordinates of boxes,  N is the batch num,
                     M is output box number.
-                    
+
     Raises:
         TypeError: Attr anchors of yolo box must be list or tuple
         TypeError: Attr class_num of yolo box must be an integer
@@ -683,7 +683,7 @@ def yolo_box(
 
         import paddle
         from paddlex.ppdet.modeling import ops
-        
+
         paddle.enable_static()
         x = paddle.static.data(name='x', shape=[None, 255, 13, 13], dtype='float32')
         img_size = paddle.static.data(name='img_size',shape=[None, 2],dtype='int64')
@@ -698,12 +698,13 @@ def yolo_box(
     if not isinstance(class_num, int):
         raise TypeError("Attr class_num of yolo_box must be an integer")
     if not isinstance(conf_thresh, float):
-        raise TypeError("Attr ignore_thresh of yolo_box must be a float number")
+        raise TypeError(
+            "Attr ignore_thresh of yolo_box must be a float number")
 
     if in_dygraph_mode():
         attrs = ('anchors', anchors, 'class_num', class_num, 'conf_thresh',
-                 conf_thresh, 'downsample_ratio', downsample_ratio, 'clip_bbox',
-                 clip_bbox, 'scale_x_y', scale_x_y)
+                 conf_thresh, 'downsample_ratio', downsample_ratio,
+                 'clip_bbox', clip_bbox, 'scale_x_y', scale_x_y)
         boxes, scores = core.ops.yolo_box(x, origin_shape, *attrs)
         return boxes, scores
     else:
@@ -777,7 +778,7 @@ def prior_box(input,
             Caffe. Please note, this order affects the weights order of
             convolution layer followed by and does not affect the final
             detection results. Default: False.
-       name(str, optional): The default value is None.  Normally there is no need for 
+       name(str, optional): The default value is None.  Normally there is no need for
             user to set this property. For more information, please refer to :ref:`api_guide_Name`
 
     Returns:
@@ -937,9 +938,9 @@ def multiclass_nms(bboxes,
                           step. -1 means keeping all bboxes after NMS step.
         normalized (bool): Whether detections are normalized. Default: True
         return_index(bool): Whether return selected index. Default: False
-        rois_num(Tensor): 1-D Tensor contains the number of RoIs in each image. 
+        rois_num(Tensor): 1-D Tensor contains the number of RoIs in each image.
             The shape is [B] and data type is int32. B is the number of images.
-            If it is not None then return a list of 1-D Tensor. Each element 
+            If it is not None then return a list of 1-D Tensor. Each element
             is the output RoIs' number of each image on the corresponding level
             and the shape is [B]. None by default.
         name(str): Name of the multiclass nms op. Default: None.
@@ -985,8 +986,8 @@ def multiclass_nms(bboxes,
                  score_threshold, 'nms_top_k', nms_top_k, 'nms_threshold',
                  nms_threshold, 'keep_top_k', keep_top_k, 'nms_eta', nms_eta,
                  'normalized', normalized)
-        output, index, nms_rois_num = core.ops.multiclass_nms3(bboxes, scores,
-                                                               rois_num, *attrs)
+        output, index, nms_rois_num = core.ops.multiclass_nms3(
+            bboxes, scores, rois_num, *attrs)
         if not return_index:
             index = None
         return output, nms_rois_num, index
@@ -1094,7 +1095,7 @@ def matrix_nms(bboxes,
              from {0} to {1})
         Index (Tensor): A 2-D Tensor with shape [No, 1] containing the
             selected indices, which are absolute values cross batches.
-        rois_num (Tensor): A 1-D Tensor with shape [N] containing 
+        rois_num (Tensor): A 1-D Tensor with shape [N] containing
             the number of detected boxes in each image.
     Examples:
         .. code-block:: python
@@ -1123,10 +1124,10 @@ def matrix_nms(bboxes,
 
     if in_dygraph_mode():
         attrs = ('background_label', background_label, 'score_threshold',
-                 score_threshold, 'post_threshold', post_threshold, 'nms_top_k',
-                 nms_top_k, 'gaussian_sigma', gaussian_sigma, 'use_gaussian',
-                 use_gaussian, 'keep_top_k', keep_top_k, 'normalized',
-                 normalized)
+                 score_threshold, 'post_threshold', post_threshold,
+                 'nms_top_k', nms_top_k, 'gaussian_sigma', gaussian_sigma,
+                 'use_gaussian', use_gaussian, 'keep_top_k', keep_top_k,
+                 'normalized', normalized)
         out, index, rois_num = core.ops.matrix_nms(bboxes, scores, *attrs)
         if not return_index:
             index = None
@@ -1196,23 +1197,23 @@ def bipartite_match(dist_matrix,
 
     Args:
         dist_matrix(Tensor): This input is a 2-D LoDTensor with shape
-            [K, M]. The data type is float32 or float64. It is pair-wise 
-            distance matrix between the entities represented by each row and 
-            each column. For example, assumed one entity is A with shape [K], 
-            another entity is B with shape [M]. The dist_matrix[i][j] is the 
-            distance between A[i] and B[j]. The bigger the distance is, the 
-            better matching the pairs are. NOTE: This tensor can contain LoD 
-            information to represent a batch of inputs. One instance of this 
+            [K, M]. The data type is float32 or float64. It is pair-wise
+            distance matrix between the entities represented by each row and
+            each column. For example, assumed one entity is A with shape [K],
+            another entity is B with shape [M]. The dist_matrix[i][j] is the
+            distance between A[i] and B[j]. The bigger the distance is, the
+            better matching the pairs are. NOTE: This tensor can contain LoD
+            information to represent a batch of inputs. One instance of this
             batch can contain different numbers of entities.
         match_type(str, optional): The type of matching method, should be
            'bipartite' or 'per_prediction'. None ('bipartite') by default.
         dist_threshold(float32, optional): If `match_type` is 'per_prediction',
             this threshold is to determine the extra matching bboxes based
             on the maximum distance, 0.5 by default.
-        name(str, optional): For detailed information, please refer 
-            to :ref:`api_guide_Name`. Usually name is no need to set and 
+        name(str, optional): For detailed information, please refer
+            to :ref:`api_guide_Name`. Usually name is no need to set and
             None by default.
- 
+
     Returns:
         Tuple:
 
@@ -1282,74 +1283,74 @@ def box_coder(prior_box,
     """
     **Box Coder Layer**
     Encode/Decode the target bounding box with the priorbox information.
-    
+
     The Encoding schema described below:
     .. math::
         ox = (tx - px) / pw / pxv
         oy = (ty - py) / ph / pyv
-        ow = \log(\abs(tw / pw)) / pwv 
-        oh = \log(\abs(th / ph)) / phv 
+        ow = \log(\abs(tw / pw)) / pwv
+        oh = \log(\abs(th / ph)) / phv
     The Decoding schema described below:
-    
+
     .. math::
-  
+
         ox = (pw * pxv * tx * + px) - tw / 2
         oy = (ph * pyv * ty * + py) - th / 2
         ow = \exp(pwv * tw) * pw + tw / 2
-        oh = \exp(phv * th) * ph + th / 2   
-    where `tx`, `ty`, `tw`, `th` denote the target box's center coordinates, 
-    width and height respectively. Similarly, `px`, `py`, `pw`, `ph` denote 
-    the priorbox's (anchor) center coordinates, width and height. `pxv`, 
-    `pyv`, `pwv`, `phv` denote the variance of the priorbox and `ox`, `oy`, 
-    `ow`, `oh` denote the encoded/decoded coordinates, width and height. 
-    During Box Decoding, two modes for broadcast are supported. Say target 
-    box has shape [N, M, 4], and the shape of prior box can be [N, 4] or 
-    [M, 4]. Then prior box will broadcast to target box along the 
-    assigned axis. 
+        oh = \exp(phv * th) * ph + th / 2
+    where `tx`, `ty`, `tw`, `th` denote the target box's center coordinates,
+    width and height respectively. Similarly, `px`, `py`, `pw`, `ph` denote
+    the priorbox's (anchor) center coordinates, width and height. `pxv`,
+    `pyv`, `pwv`, `phv` denote the variance of the priorbox and `ox`, `oy`,
+    `ow`, `oh` denote the encoded/decoded coordinates, width and height.
+    During Box Decoding, two modes for broadcast are supported. Say target
+    box has shape [N, M, 4], and the shape of prior box can be [N, 4] or
+    [M, 4]. Then prior box will broadcast to target box along the
+    assigned axis.
 
     Args:
-        prior_box(Tensor): Box list prior_box is a 2-D Tensor with shape 
+        prior_box(Tensor): Box list prior_box is a 2-D Tensor with shape
             [M, 4] holds M boxes and data type is float32 or float64. Each box
-            is represented as [xmin, ymin, xmax, ymax], [xmin, ymin] is the 
+            is represented as [xmin, ymin, xmax, ymax], [xmin, ymin] is the
             left top coordinate of the anchor box, if the input is image feature
-            map, they are close to the origin of the coordinate system. 
-            [xmax, ymax] is the right bottom coordinate of the anchor box.       
-        prior_box_var(List|Tensor|None): prior_box_var supports three types 
-            of input. One is Tensor with shape [M, 4] which holds M group and 
-            data type is float32 or float64. The second is list consist of 
-            4 elements shared by all boxes and data type is float32 or float64. 
-            Other is None and not involved in calculation. 
-        target_box(Tensor): This input can be a 2-D LoDTensor with shape 
-            [N, 4] when code_type is 'encode_center_size'. This input also can 
-            be a 3-D Tensor with shape [N, M, 4] when code_type is 
-            'decode_center_size'. Each box is represented as 
-            [xmin, ymin, xmax, ymax]. The data type is float32 or float64. 
+            map, they are close to the origin of the coordinate system.
+            [xmax, ymax] is the right bottom coordinate of the anchor box.
+        prior_box_var(List|Tensor|None): prior_box_var supports three types
+            of input. One is Tensor with shape [M, 4] which holds M group and
+            data type is float32 or float64. The second is list consist of
+            4 elements shared by all boxes and data type is float32 or float64.
+            Other is None and not involved in calculation.
+        target_box(Tensor): This input can be a 2-D LoDTensor with shape
+            [N, 4] when code_type is 'encode_center_size'. This input also can
+            be a 3-D Tensor with shape [N, M, 4] when code_type is
+            'decode_center_size'. Each box is represented as
+            [xmin, ymin, xmax, ymax]. The data type is float32 or float64.
         code_type(str): The code type used with the target box. It can be
-            `encode_center_size` or `decode_center_size`. `encode_center_size` 
+            `encode_center_size` or `decode_center_size`. `encode_center_size`
             by default.
         box_normalized(bool): Whether treat the priorbox as a normalized box.
             Set true by default.
-        axis(int): Which axis in PriorBox to broadcast for box decode, 
-            for example, if axis is 0 and TargetBox has shape [N, M, 4] and 
+        axis(int): Which axis in PriorBox to broadcast for box decode,
+            for example, if axis is 0 and TargetBox has shape [N, M, 4] and
             PriorBox has shape [M, 4], then PriorBox will broadcast to [N, M, 4]
-            for decoding. It is only valid when code type is 
-            `decode_center_size`. Set 0 by default. 
-        name(str, optional): For detailed information, please refer 
-            to :ref:`api_guide_Name`. Usually name is no need to set and 
-            None by default. 
+            for decoding. It is only valid when code type is
+            `decode_center_size`. Set 0 by default.
+        name(str, optional): For detailed information, please refer
+            to :ref:`api_guide_Name`. Usually name is no need to set and
+            None by default.
 
     Returns:
         Tensor:
-        output_box(Tensor): When code_type is 'encode_center_size', the 
-        output tensor of box_coder_op with shape [N, M, 4] representing the 
-        result of N target boxes encoded with M Prior boxes and variances. 
-        When code_type is 'decode_center_size', N represents the batch size 
+        output_box(Tensor): When code_type is 'encode_center_size', the
+        output tensor of box_coder_op with shape [N, M, 4] representing the
+        result of N target boxes encoded with M Prior boxes and variances.
+        When code_type is 'decode_center_size', N represents the batch size
         and M represents the number of decoded boxes.
 
     Examples:
- 
+
         .. code-block:: python
- 
+
             import paddle
             from paddlex.ppdet.modeling import ops
             paddle.enable_static()
@@ -1442,16 +1443,16 @@ def generate_proposals(scores,
     """
     **Generate proposal Faster-RCNN**
     This operation proposes RoIs according to each box with their
-    probability to be a foreground object and 
+    probability to be a foreground object and
     the box can be calculated by anchors. Bbox_deltais and scores
     to be an object are the output of RPN. Final proposals
     could be used to train detection net.
     For generating proposals, this operation performs following steps:
     1. Transposes and resizes scores and bbox_deltas in size of
        (H*W*A, 1) and (H*W*A, 4)
-    2. Calculate box locations as proposals candidates. 
+    2. Calculate box locations as proposals candidates.
     3. Clip boxes to image
-    4. Remove predicted boxes with small area. 
+    4. Remove predicted boxes with small area.
     5. Apply NMS to get final proposals as output.
     Args:
         scores(Tensor): A 4-D Tensor with shape [N, A, H, W] represents
@@ -1462,7 +1463,7 @@ def generate_proposals(scores,
             represents the difference between predicted box location and
             anchor location. The data type must be float32.
         im_shape(Tensor): A 2-D Tensor with shape [N, 2] represents H, W, the
-            origin image size or input size. The data type can be float32 or 
+            origin image size or input size. The data type can be float32 or
             float64.
         anchors(Tensor):   A 4-D Tensor represents the anchors with a layout
             of [H, W, A, 4]. H and W are height and width of the feature map,
@@ -1480,13 +1481,13 @@ def generate_proposals(scores,
             width < min_size. The data type must be float32. `0.1` by default.
         eta(float): Apply in adaptive NMS, if adaptive `threshold > 0.5`,
             `adaptive_threshold = adaptive_threshold * eta` in each iteration.
-        return_rois_num(bool): When setting True, it will return a 1D Tensor with shape [N, ] that includes Rois's 
+        return_rois_num(bool): When setting True, it will return a 1D Tensor with shape [N, ] that includes Rois's
             num of each image in one batch. The N is the image's num. For example, the tensor has values [4,5] that represents
-            the first image has 4 Rois, the second image has 5 Rois. It only used in rcnn model. 
-            'False' by default. 
-        name(str, optional): For detailed information, please refer 
-            to :ref:`api_guide_Name`. Usually name is no need to set and 
-            None by default. 
+            the first image has 4 Rois, the second image has 5 Rois. It only used in rcnn model.
+            'False' by default.
+        name(str, optional): For detailed information, please refer
+            to :ref:`api_guide_Name`. Usually name is no need to set and
+            None by default.
 
     Returns:
         tuple:
@@ -1496,7 +1497,7 @@ def generate_proposals(scores,
 
     Examples:
         .. code-block:: python
-        
+
             import paddle
             from paddlex.ppdet.modeling import ops
             paddle.enable_static()
@@ -1510,9 +1511,9 @@ def generate_proposals(scores,
     """
     if in_dygraph_mode():
         assert return_rois_num, "return_rois_num should be True in dygraph mode."
-        attrs = ('pre_nms_topN', pre_nms_top_n, 'post_nms_topN', post_nms_top_n,
-                 'nms_thresh', nms_thresh, 'min_size', min_size, 'eta', eta,
-                 'pixel_offset', pixel_offset)
+        attrs = ('pre_nms_topN', pre_nms_top_n, 'post_nms_topN',
+                 post_nms_top_n, 'nms_thresh', nms_thresh, 'min_size',
+                 min_size, 'eta', eta, 'pixel_offset', pixel_offset)
         rpn_rois, rpn_roi_probs, rpn_rois_num = core.ops.generate_proposals_v2(
             scores, bbox_deltas, im_shape, anchors, variances, *attrs)
         return rpn_rois, rpn_roi_probs, rpn_rois_num
@@ -1582,7 +1583,10 @@ def sigmoid_cross_entropy_with_logits(input,
     return output
 
 
-def smooth_l1(input, label, inside_weight=None, outside_weight=None,
+def smooth_l1(input,
+              label,
+              inside_weight=None,
+              outside_weight=None,
               sigma=None):
     input_new = paddle.multiply(input, inside_weight)
     label_new = paddle.multiply(label, inside_weight)

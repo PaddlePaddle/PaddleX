@@ -168,10 +168,12 @@ class ConvNormLayer(nn.Layer):
         norm_lr = 0. if freeze_norm else 1.
         param_attr = ParamAttr(
             learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay) if norm_decay is not None else None)
+            regularizer=L2Decay(norm_decay)
+            if norm_decay is not None else None)
         bias_attr = ParamAttr(
             learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay) if norm_decay is not None else None)
+            regularizer=L2Decay(norm_decay)
+            if norm_decay is not None else None)
         if norm_type == 'bn':
             self.norm = nn.BatchNorm2D(
                 ch_out, weight_attr=param_attr, bias_attr=bias_attr)
@@ -251,18 +253,19 @@ class LiteConv(nn.Layer):
 @register
 @serializable
 class AnchorGeneratorSSD(object):
-    def __init__(self,
-                 steps=[8, 16, 32, 64, 100, 300],
-                 aspect_ratios=[[2.], [2., 3.], [2., 3.], [2., 3.], [2.], [2.]],
-                 min_ratio=15,
-                 max_ratio=90,
-                 base_size=300,
-                 min_sizes=[30.0, 60.0, 111.0, 162.0, 213.0, 264.0],
-                 max_sizes=[60.0, 111.0, 162.0, 213.0, 264.0, 315.0],
-                 offset=0.5,
-                 flip=True,
-                 clip=False,
-                 min_max_aspect_ratios_order=False):
+    def __init__(
+            self,
+            steps=[8, 16, 32, 64, 100, 300],
+            aspect_ratios=[[2.], [2., 3.], [2., 3.], [2., 3.], [2.], [2.]],
+            min_ratio=15,
+            max_ratio=90,
+            base_size=300,
+            min_sizes=[30.0, 60.0, 111.0, 162.0, 213.0, 264.0],
+            max_sizes=[60.0, 111.0, 162.0, 213.0, 264.0, 315.0],
+            offset=0.5,
+            flip=True,
+            clip=False,
+            min_max_aspect_ratios_order=False):
         self.steps = steps
         self.aspect_ratios = aspect_ratios
         self.min_ratio = min_ratio
@@ -401,17 +404,17 @@ class MultiClassNMS(object):
 
     def __call__(self, bboxes, score, background_label=-1):
         """
-        bboxes (Tensor|List[Tensor]): 1. (Tensor) Predicted bboxes with shape 
+        bboxes (Tensor|List[Tensor]): 1. (Tensor) Predicted bboxes with shape
                                          [N, M, 4], N is the batch size and M
                                          is the number of bboxes
                                       2. (List[Tensor]) bboxes and bbox_num,
                                          bboxes have shape of [M, C, 4], C
                                          is the class number and bbox_num means
                                          the number of bboxes of each batch with
-                                         shape [N,] 
+                                         shape [N,]
         score (Tensor): Predicted scores with shape [N, C, M] or [M, C]
         background_label (int): Ignore the background label; For example, RCNN
-                                is num_classes and YOLO is -1. 
+                                is num_classes and YOLO is -1.
         """
         kwargs = self.__dict__.copy()
         if isinstance(bboxes, tuple):
@@ -674,7 +677,7 @@ class FCOSBox(object):
         Postprocess each layer of the output with corresponding locations.
         Args:
             locations (Tensor): anchor points for current layer, [H*W, 2]
-            box_cls (Tensor): categories prediction, [N, C, H, W], 
+            box_cls (Tensor): categories prediction, [N, C, H, W],
                 C is the number of classes
             box_reg (Tensor): bounding box prediction, [N, 4, H, W]
             box_ctn (Tensor): centerness prediction, [N, 1, H, W]
@@ -888,7 +891,8 @@ class JDEBox(object):
             p = head_out.reshape((nB, nA, self.num_classes + 5, nGh, nGw))
             p = paddle.transpose(p, perm=[0, 1, 3, 4, 2])  # [nB, 4, 19, 34, 6]
             p_box = p[:, :, :, :, :4]  # [nB, 4, 19, 34, 4]
-            boxes = self.decode_delta_map(p_box, anchor_vec)  # [nB, 4*19*34, 4]
+            boxes = self.decode_delta_map(p_box,
+                                          anchor_vec)  # [nB, 4*19*34, 4]
             boxes = boxes * stride
 
             p_conf = paddle.transpose(
@@ -901,7 +905,8 @@ class JDEBox(object):
             bbox_pred_list.append(paddle.concat([boxes, scores], axis=-1))
 
         yolo_boxes_pred = paddle.concat(bbox_pred_list, axis=1)
-        boxes_idx = paddle.nonzero(yolo_boxes_pred[:, :, -1] > self.conf_thresh)
+        boxes_idx = paddle.nonzero(
+            yolo_boxes_pred[:, :, -1] > self.conf_thresh)
         boxes_idx.stop_gradient = True
         if boxes_idx.shape[0] == 0:  # TODO: deploy
             boxes_idx = paddle.to_tensor(np.array([[0]], dtype='int64'))
@@ -976,16 +981,19 @@ class MaskMatrixNMS(object):
 
         seg_masks = paddle.flatten(seg_masks, start_axis=1, stop_axis=-1)
         # inter.
-        inter_matrix = paddle.mm(seg_masks, paddle.transpose(seg_masks, [1, 0]))
+        inter_matrix = paddle.mm(seg_masks,
+                                 paddle.transpose(seg_masks, [1, 0]))
         n_samples = paddle.shape(cate_labels)
         # union.
         sum_masks_x = paddle.expand(sum_masks, shape=[n_samples, n_samples])
         # iou.
         iou_matrix = (inter_matrix / (
-            sum_masks_x + paddle.transpose(sum_masks_x, [1, 0]) - inter_matrix))
+            sum_masks_x + paddle.transpose(sum_masks_x, [1, 0]) - inter_matrix)
+                      )
         iou_matrix = paddle.triu(iou_matrix, diagonal=1)
         # label_specific matrix.
-        cate_labels_x = paddle.expand(cate_labels, shape=[n_samples, n_samples])
+        cate_labels_x = paddle.expand(
+            cate_labels, shape=[n_samples, n_samples])
         label_matrix = paddle.cast(
             (cate_labels_x == paddle.transpose(cate_labels_x, [1, 0])),
             'float32')

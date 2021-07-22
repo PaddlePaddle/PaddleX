@@ -110,8 +110,7 @@ def train(model,
         train_dataset,
         batch_sampler=batch_sampler,
         num_workers=num_workers,
-        return_list=True,
-    )
+        return_list=True, )
 
     if use_vdl:
         from visualdl import LogWriter
@@ -176,9 +175,9 @@ def train(model,
                 eta = calculate_eta(remain_iters, avg_train_batch_cost)
                 logger.info(
                     "[TRAIN] epoch: {}, iter: {}/{}, loss: {:.4f}, lr: {:.6f}, batch_cost: {:.4f}, reader_cost: {:.5f}, ips: {:.4f} samples/sec | ETA {}"
-                    .format((iter - 1) // iters_per_epoch + 1, iter, iters,
-                            avg_loss, lr, avg_train_batch_cost,
-                            avg_train_reader_cost,
+                    .format((iter - 1
+                             ) // iters_per_epoch + 1, iter, iters, avg_loss,
+                            lr, avg_train_batch_cost, avg_train_reader_cost,
                             batch_cost_averager.get_ips_average(), eta))
                 if use_vdl:
                     log_writer.add_scalar('Train/loss', avg_loss, iter)
@@ -201,14 +200,15 @@ def train(model,
                 reader_cost_averager.reset()
                 batch_cost_averager.reset()
 
-            if (iter % save_interval == 0
-                    or iter == iters) and (val_dataset is not None):
+            if (iter % save_interval == 0 or
+                    iter == iters) and (val_dataset is not None):
                 num_workers = 1 if num_workers > 0 else 0
                 mean_iou, acc, _, _, _ = evaluate(
                     model, val_dataset, num_workers=num_workers)
                 model.train()
 
-            if (iter % save_interval == 0 or iter == iters) and local_rank == 0:
+            if (iter % save_interval == 0 or
+                    iter == iters) and local_rank == 0:
                 current_save_dir = os.path.join(save_dir,
                                                 "iter_{}".format(iter))
                 if not os.path.isdir(current_save_dir):

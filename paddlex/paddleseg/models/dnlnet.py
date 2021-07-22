@@ -60,7 +60,9 @@ class DNLNet(nn.Layer):
         super().__init__()
         self.backbone = backbone
         self.backbone_indices = backbone_indices
-        in_channels = [self.backbone.feat_channels[i] for i in backbone_indices]
+        in_channels = [
+            self.backbone.feat_channels[i] for i in backbone_indices
+        ]
         self.head = DNLHead(num_classes, in_channels, reduction, use_scale,
                             mode, temperature, concat_input,
                             enable_auxiliary_loss)
@@ -143,7 +145,8 @@ class DNLHead(nn.Layer):
                 in_channels=1024,
                 out_channels=256,
                 kernel_size=3,
-                bias_attr=False), nn.Dropout2D(p=0.1),
+                bias_attr=False),
+            nn.Dropout2D(p=0.1),
             nn.Conv2D(256, num_classes, 1))
         if self.concat_input:
             self.conv_cat = layers.ConvBNReLU(
@@ -196,14 +199,16 @@ class DisentangledNonLocal2D(layers.NonLocal2D):
             theta_x = paddle.transpose(
                 x.reshape([0, self.in_channels, -1]), [0, 2, 1])
             if self.sub_sample:
-                phi_x = paddle.transpose(self.phi(x), [0, self.in_channels, -1])
+                phi_x = paddle.transpose(
+                    self.phi(x), [0, self.in_channels, -1])
             else:
                 phi_x = paddle.transpose(x, [0, self.in_channels, -1])
 
         elif self.mode == "concatenation":
             theta_x = paddle.reshape(
                 self.theta(x), [0, self.inter_channels, -1, 1])
-            phi_x = paddle.reshape(self.phi(x), [0, self.inter_channels, 1, -1])
+            phi_x = paddle.reshape(
+                self.phi(x), [0, self.inter_channels, 1, -1])
 
         else:
             theta_x = self.theta(x).reshape([0, self.inter_channels,

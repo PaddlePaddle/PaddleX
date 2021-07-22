@@ -75,7 +75,7 @@ class Detection(object):
         tlwh (ndarray): Bounding box in format `(top left x, top left y,
             width, height)`.
         confidence (ndarray): Detector confidence score.
-        feature (Tensor): A feature vector that describes the object 
+        feature (Tensor): A feature vector that describes the object
             contained in this image.
     """
 

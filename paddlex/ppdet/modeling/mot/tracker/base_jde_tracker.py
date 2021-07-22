@@ -115,8 +115,8 @@ class STrack(BaseTrack):
         mean_state = self.mean.copy()
         if self.state != TrackState.Tracked:
             mean_state[7] = 0
-        self.mean, self.covariance = self.kalman_filter.predict(mean_state,
-                                                                self.covariance)
+        self.mean, self.covariance = self.kalman_filter.predict(
+            mean_state, self.covariance)
 
     @staticmethod
     def multi_predict(stracks, kalman_filter):
