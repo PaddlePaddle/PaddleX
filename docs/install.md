@@ -16,14 +16,14 @@
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.0)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 
 
-### PaddleX 2.0.0-rc3安装
+### PaddleX 2.0.0-rc4安装
 
 #### * Linux / macOS 操作系统
 
-使用pip安装方式安装2.0.0-rc3版本：
+使用pip安装方式安装2.0.0-rc4版本：
 
 ```
-pip install paddlex==2.0.0rc3 -i https://mirror.baidu.com/pypi/simple
+pip install paddlex==2.0.0rc4 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，如遇到pycocotools安装失败，可参照如下方式安装pycocotools：
@@ -38,10 +38,10 @@ pip install pycocotools
 #### * Windows 操作系统
 
 
-使用pip安装方式安装2.0.0-rc3版本：
+使用pip安装方式安装2.0.0-rc4版本：
 
 ```
-pip install paddlex==2.0.0rc3 -i https://mirror.baidu.com/pypi/simple
+pip install paddlex==2.0.0rc4 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，Windows安装时可能会提示`Microsoft Visual C++ 14.0 is required`，从而导致安装出错，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
@@ -63,7 +63,7 @@ pip install -r requirements.txt
 python setup.py install
 ```
 
-如遇到pycocotools安装失败，参考[PaddleX 2.0.0-rc3安装](./install.md#paddlex-200-rc3安装)中介绍的解决方法。
+如遇到pycocotools安装失败，参考[PaddleX 2.0.0-rc4安装](./install.md#paddlex-200-rc4安装)中介绍的解决方法。
 
 ## <h2 id="2">2. PadldeX GUI开发模式安装</h2>
 

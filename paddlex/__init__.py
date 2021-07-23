@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = '2.0.0rc3'
+__version__ = '2.0.0rc4'
 
 from paddlex.utils.env import get_environ_info, init_parallel_env
 init_parallel_env()
