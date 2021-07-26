@@ -7,7 +7,7 @@ paddlex.slim.prune.analysis(model, dataset, batch_size, save_file='model.sensi.d
 ```
 此函数接口与`paddlex.slim.cal_params_sensitivites`接口功能一致，仅修改了函数名，参数名，顺序和默认值，推荐使用此接口。
 
-使用示例参考[教程-模型裁剪训练](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/slim/prune)
+使用示例参考[教程-模型裁剪训练](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/slim/prune)
 
 ## paddlex.slim.cal_params_sensitivities
 > 此函数接口与`paddlex.slim.prune.analysis`功能一致，推荐使用`paddlex.slim.prune.analysis`接口  
@@ -21,7 +21,7 @@ paddlex.slim.cal_params_sensitivities(model, save_file, eval_dataset, batch_size
 
 【注意】卷积的敏感度是指按照剪裁率将模型剪裁后模型精度的损失。选择合适的敏感度，对应地也能确定最终模型需要剪裁的参数列表和各剪裁参数对应的剪裁率。  
 
-[查看使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/compress/classification/cal_sensitivities_file.py#L33)
+[查看使用示例](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/compress/classification/cal_sensitivities_file.py#L33)
 
 **参数**
 

@@ -181,4 +181,4 @@ PaddleX提供的加密方案不仅只适配于PaddleX训练的模型，对于Pad
 > 模型加密命令参考本文档前面步骤
 
 3. 加载加密模型
-在使用Paddle预测库加载加密模型时，C++代码开发参考[Paddle部署代码模型加载函数](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/src/paddlex.cpp#L46)，同时需要引入新的头文件`paddle_model_decrypt.h`，相应依赖就在下载的加密工具中，CMakelist中参考[PaddleX的依赖](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/CMakeLists.txt#L52)即可。
+在使用Paddle预测库加载加密模型时，C++代码开发参考[Paddle部署代码模型加载函数](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/deploy/cpp/src/paddlex.cpp#L46)，同时需要引入新的头文件`paddle_model_decrypt.h`，相应依赖就在下载的加密工具中，CMakelist中参考[PaddleX的依赖](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/deploy/cpp/CMakeLists.txt#L52)即可。

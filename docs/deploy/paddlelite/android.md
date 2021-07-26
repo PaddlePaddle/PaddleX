@@ -27,7 +27,7 @@ PaddleX的安卓端部署基于Paddle Lite实现，部署的流程如下，首�
 pip install paddlelite
 python export_lite.py --model_dir /path/to/inference_model --save_file /path/to/lite_model_name --place place/to/run
 ```
-> 其中`export_lite.py`脚本请至github下载：https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/lite/export_lite.py
+> 其中`export_lite.py`脚本请至github下载：https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/deploy/lite/export_lite.py
 
 |  参数   | 说明  |
 |  ----  | ----  |

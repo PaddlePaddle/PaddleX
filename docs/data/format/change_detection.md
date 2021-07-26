@@ -50,4 +50,4 @@ val_list列出用于验证时的图片集成，与其对应的标注文件，格
 
 ## PaddleX数据集加载  
 
-[示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/change_detection/train.py)
+[示例代码](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/examples/change_detection/train.py)

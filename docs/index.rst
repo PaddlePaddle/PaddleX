@@ -1,6 +1,8 @@
 欢迎使用PaddleX！
 =======================================
 
+**本文档仅适用于PaddleX 1.3版本**，使用本文档请确保安装的paddlex<2.0（例如通过'pip install paddlex==1.3.11'安装1.3.11版本的PaddleX），PaddleX 1.3.11的代码位于: https://github.com/PaddlePaddle/PaddleX/tree/release/1.3。如果需要使用PaddleX 2.0，请参考PaddleX 2.0安装文档：https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/docs/install.md，关于2.0的其他使用介绍请查阅PaddleX 2.0文档：https://github.com/PaddlePaddle/PaddleX#paddlex-%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3。
+
 PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习全流程开发工具。具备 **全流程打通** 、**融合产业实践** 、**易用易集成** 三大特点。
 
 * 项目官网: http://www.paddlepaddle.org.cn/paddle/paddlex  
