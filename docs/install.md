@@ -33,7 +33,7 @@ pip install cython
 pip install pycocotools
 ```
 
-**我们推荐大家先安装Anacaonda，而后在新建的conoda环境中使用上述pip安装方式**。Anaconda是一个开源的Python发行版本，其包含了conda、Python等180多个科学包及其依赖项。使用Anaconda可以通过创建多个独立的Python环境，避免用户的Python环境安装太多不同版本依赖导致冲突。参考[Anaconda安装PaddleX文档](./docs/appendix/anaconda_install.md)
+**我们推荐大家先安装Anacaonda，而后在新建的conoda环境中使用上述pip安装方式**。Anaconda是一个开源的Python发行版本，其包含了conda、Python等180多个科学包及其依赖项。使用Anaconda可以通过创建多个独立的Python环境，避免用户的Python环境安装太多不同版本依赖导致冲突。参考[Anaconda安装PaddleX文档](./appendix/anaconda_install.md)
 
 #### * Windows 操作系统
 
@@ -72,12 +72,12 @@ python setup.py install
 
 - 前往[PaddleX官网](https://www.paddlepaddle.org.cn/paddle/paddlex)，申请下载PaddleX GUI一键绿色安装包。
 
-- 前往[PaddleX GUI使用教程](./docs/gui/how_to_use.md)了解PaddleX GUI使用详情。
+- 前往[PaddleX GUI使用教程](./gui/how_to_use.md)了解PaddleX GUI使用详情。
 
-- [PaddleX GUI安装环境说明](./docs/gui/download.md)
+- [PaddleX GUI安装环境说明](./gui/download.md)
 
 
 ## <h2 id="3">3. PaddleX Restful开发模式安装</h2>
 
 使用基于RESTful API开发的GUI与Web Demo实现远程的深度学习全流程开发；同时开发者也可以基于RESTful API开发个性化的可视化界面
-- 前往[PaddleX RESTful API使用教程](./docs/Resful_API/docs/readme.md)  
+- 前往[PaddleX RESTful API使用教程](./Resful_API/docs/readme.md)  
