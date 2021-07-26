@@ -135,10 +135,10 @@ pip install pycuda -i
 
 开发者可以使用PaddleX RESTful API 进行二次开发，按照自己的需求开发可视化界面，详细请参考以下文档  
 
-[RESTful API 二次开发简介](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/restful/restful.md)  
+[RESTful API 二次开发简介](../..//gui/restful/restful.md)  
 
-[快速开始](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/restful/quick_start.md)  
+[快速开始](../../gui/restful/quick_start.md)  
 
-[API 参考文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/restful/restful_api.md)  
+[API 参考文档](../../gui/restful/restful_api.md)  
 
-[自定义数据结构](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/restful/data_struct.md)
+[自定义数据结构](../../gui/restful/data_struct.md)
