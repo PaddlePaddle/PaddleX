@@ -6,7 +6,7 @@
 
 ## 使用方法
 
-PaddleX中已经将量化功能作为模型导出的一个API，代码使用方式如下，本示例代码和模型数据均可通过GitHub项目上代码[tutorials/slim/quant/image_classification](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/slim/quant/image_classification)获取得到
+PaddleX中已经将量化功能作为模型导出的一个API，代码使用方式如下，本示例代码和模型数据均可通过GitHub项目上代码[tutorials/slim/quant/image_classification](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/slim/quant/image_classification)获取得到
 ```
 import paddlex as pdx
 model = pdx.load_model('mobilenetv2_vegetables')
@@ -18,10 +18,10 @@ dataset = pdx.datasets.ImageNet(
                 transforms=model.test_transforms)
 
 # 开始量化
-pdx.slim.export_quant_model(model, dataset, 
+pdx.slim.export_quant_model(model, dataset,
 			  batch_size=4,
 			  batch_num=5,
-	                  save_dir='./quant_mobilenet', 
+	                  save_dir='./quant_mobilenet',
 	                  cache_dir='./tmp')
 ```
 

@@ -29,7 +29,7 @@ PaddleX提供了两种方式:
 基于上述两种方案，我们在PaddleX上使用样例数据进行了实验，在Tesla P40上实验指标如下所示:
 
 ### 图像分类
-实验背景：使用MobileNetV2模型，数据集为蔬菜分类示例数据，剪裁训练代码见[tutorials/compress/classification](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/classification)
+实验背景：使用MobileNetV2模型，数据集为蔬菜分类示例数据，剪裁训练代码见[tutorials/compress/classification](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/compress/classification)
 
 | 模型 | 剪裁情况 | 模型大小 | Top1准确率(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- |:----------|
@@ -38,7 +38,7 @@ PaddleX提供了两种方式:
 |MobileNetV2 | 方案二(eval_metric_loss=0.10) | 6.0M | 99.58 |5.42ms |29.06ms |
 
 ### 目标检测
-实验背景：使用YOLOv3-MobileNetV1模型，数据集为昆虫检测示例数据，剪裁训练代码见[tutorials/compress/detection](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/detection)
+实验背景：使用YOLOv3-MobileNetV1模型，数据集为昆虫检测示例数据，剪裁训练代码见[tutorials/compress/detection](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/compress/detection)
 
 | 模型 | 剪裁情况 | 模型大小 | MAP(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|
@@ -47,7 +47,7 @@ PaddleX提供了两种方式:
 |YOLOv3-MobileNetV1 | 方案二(eval_metric_loss=0.05) | 29M | 50.27| 9.43ms |360.46ms |
 
 ### 语义分割
-实验背景：使用UNet模型，数据集为视盘分割示例数据，剪裁训练代码见[tutorials/compress/segmentation](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress/segmentation)
+实验背景：使用UNet模型，数据集为视盘分割示例数据，剪裁训练代码见[tutorials/compress/segmentation](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/compress/segmentation)
 
 | 模型 | 剪裁情况 | 模型大小 | mIoU(%) |GPU预测速度 | CPU预测速度 |
 | :-----| :--------| :-------- | :---------- |:---------- | :---------|

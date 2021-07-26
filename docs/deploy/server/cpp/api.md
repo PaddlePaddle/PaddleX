@@ -81,7 +81,7 @@ class ClsResult {
 class DetResult {
  public:
   std::vector<Box> boxes; // 预测结果中的各个目标框
-  int mask_resolution; 
+  int mask_resolution;
   std::string type = "det";
 }
 
@@ -130,6 +130,6 @@ PaddleX::Visualize(const cv::Mat& img, // 原图
 
 ## 代码示例
 
-- 图像分类 [PaddleX/deploy/cpp/demo/classifier.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/classifier.cpp)  
-- 目标检测/实例分割 [PaddleX/deploy/cpp/demo/detector.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/detector.cpp)
-- 语义分割 [PaddleX/deploy/cpp/demo/segmenter.cpp](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/cpp/demo/segmenter.cpp)
+- 图像分类 [PaddleX/deploy/cpp/demo/classifier.cpp](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/deploy/cpp/demo/classifier.cpp)  
+- 目标检测/实例分割 [PaddleX/deploy/cpp/demo/detector.cpp](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/deploy/cpp/demo/detector.cpp)
+- 语义分割 [PaddleX/deploy/cpp/demo/segmenter.cpp](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/deploy/cpp/demo/segmenter.cpp)

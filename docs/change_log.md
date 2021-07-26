@@ -3,7 +3,7 @@
 **v1.3.0** 2020.12.20
 
 - 模型更新
-  > - 图像分类模型ResNet50_vd新增10万分类预训练模型 
+  > - 图像分类模型ResNet50_vd新增10万分类预训练模型
   > - 目标检测模型FasterRCNN新增模型裁剪支持
   > - 目标检测模型新增多通道图像训练支持
 
@@ -16,8 +16,8 @@
 
 - **新增RestFUL API模块**
 新增RestFUL API模块，开发者可通过此模块快速开发基于PaddleX的训练平台
- > - 增加基于RestFUL API的HTML Demo [详情链接](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/restful/introduction.md#paddlex-web-demo)
- > - 增加基于RestFUL API的Remote版可视化客户端 [详情链接](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/restful/introduction.md#paddlex-remote-gui)
+ > - 增加基于RestFUL API的HTML Demo [详情链接](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/docs/gui/restful/introduction.md#paddlex-web-demo)
+ > - 增加基于RestFUL API的Remote版可视化客户端 [详情链接](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/docs/gui/restful/introduction.md#paddlex-remote-gui)
 新增模型通过OpenVINO的部署方案[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
 
 **v1.2.0** 2020.09.07

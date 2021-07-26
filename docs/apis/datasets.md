@@ -7,7 +7,7 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 ```
 读取ImageNet格式的分类数据集，并对样本进行相应的处理。ImageNet数据集格式的介绍可查看文档:[数据集格式说明](../data/format/classification.md)  
 
-示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py)
+示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/image_classification/mobilenetv2.py)
 
 > **参数**
 
@@ -28,7 +28,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 
 > 读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../data/format/detection.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_darknet53.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/object_detection/yolov3_darknet53.py)
 
 > **参数**
 
@@ -47,7 +47,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 
 > > * **image_dir** (str): 背景图片所在的文件夹目录。
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/industrial_quality_inspection/train_rcnn.py#L45)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/examples/industrial_quality_inspection/train_rcnn.py#L45)
 
 
 ## paddlex.datasets.CocoDetection
@@ -58,7 +58,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 
 > 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../data/format/instance_segmentation.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py)
 
 > **参数**
 
@@ -76,7 +76,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 
 > > * **image_dir** (str): 背景图片所在的文件夹目录。
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/industrial_quality_inspection/train_rcnn.py#L45)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/examples/industrial_quality_inspection/train_rcnn.py#L45)
 
 
 ## paddlex.datasets.SegDataset
@@ -87,7 +87,7 @@ paddlex.datasets.SegDataset(data_dir, file_list, label_list, transforms=None, nu
 
 > 读取语义分割任务数据集，并对样本进行相应的处理。语义分割任务数据集格式的介绍可查看文档:[数据集格式说明](../data/format/segmentation.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/unet.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/semantic_segmentation/unet.py)
 
 > **参数**
 
@@ -167,7 +167,7 @@ paddlex.datasets.ChangeDetDataset(data_dir, file_list, label_list, transforms=No
 
 > 读取用于完成变化检测的语义分割数据集，并对样本进行相应的处理。地块检测数据集格式的介绍可查看文档:[数据集格式说明](../data/format/change_det.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/examples/change_detection/train.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/examples/change_detection/train.py)
 
 > **参数**
 

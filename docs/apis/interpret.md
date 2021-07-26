@@ -29,7 +29,7 @@ LIME表示与模型无关的局部可解释性，可以解释任何模型。LIME
 
 ### 使用示例
 
-> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/lime.py)。
+> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/interpret/lime.py)。
 
 
 ## paddlex.interpret.normlime
@@ -59,4 +59,4 @@ NormLIME是利用一定数量的样本来出一个全局的解释。由于NormLI
 
 **注意：** `dataset`读取的是一个数据集，该数据集不宜过大，否则计算时间会较长，但应包含所有类别的数据。NormLIME可解释性结果可视化目前只支持分类模型。
 ### 使用示例
-> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/interpret/normlime.py)。
+> 对预测可解释性结果可视化的过程可参见[代码](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/interpret/normlime.py)。

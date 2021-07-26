@@ -30,5 +30,4 @@ paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.
 > 注：如您使用PaddleX可视化客户端进行模型训练，数据集划分功能集成在客户端内，无需自行使用命令划分
 
 
-- [图像分类任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py)
-
+- [图像分类任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/image_classification/mobilenetv2.py)

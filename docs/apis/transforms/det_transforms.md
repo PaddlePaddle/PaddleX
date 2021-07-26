@@ -7,7 +7,7 @@
 paddlex.det.transforms.Compose(transforms)
 ```
 
-根据数据预处理/增强算子对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py#L15)
+根据数据预处理/增强算子对输入数据进行操作。[使用示例](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/object_detection/yolov3_mobilenetv1.py#L15)
 
 ### 参数
 * **transforms** (list): 数据预处理/数据增强列表。

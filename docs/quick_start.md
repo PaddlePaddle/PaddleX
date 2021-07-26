@@ -2,7 +2,7 @@
 
 本文档在一个小数据集上展示了如何通过PaddleX进行训练。本示例同步在AIStudio上，可直接[在线体验模型训练](https://aistudio.baidu.com/aistudio/projectdetail/450220)。  
 
-本示例代码源于Github [tutorials/train/classification/mobilenetv3_small_ssld.py](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small_ssld.py)，用户可自行下载至本地运行。  
+本示例代码源于Github [tutorials/train/classification/mobilenetv3_small_ssld.py](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/train/image_classification/mobilenetv3_small_ssld.py)，用户可自行下载至本地运行。  
 
 PaddleX中的所有模型训练跟随以下3个步骤，即可快速完成训练代码开发！
 
@@ -123,4 +123,4 @@ Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'cate
 - 1.[目标检测模型训练](train/object_detection.md)
 - 2.[语义分割模型训练](train/semantic_segmentation.md)
 - 3.[实例分割模型训练](train/instance_segmentation.md)
-- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/compress)
+- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](https://github.com/PaddlePaddle/PaddleX/tree/release/1.3/tutorials/compress)
