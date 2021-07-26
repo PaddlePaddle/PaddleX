@@ -1112,7 +1112,7 @@ class PPYOLO(YOLOv3):
                 freeze_at=-1,
                 freeze_norm=False,
                 norm_decay=0.)
-            downsample_ratios = [32, 16, 8]
+            downsample_ratios = [32, 16]
 
         elif backbone == 'MobileNetV3_large':
             backbone = self._get_backbone(
