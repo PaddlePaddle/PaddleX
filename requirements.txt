@@ -1,5 +1,5 @@
 tqdm
-scipy==1.5.4
+scipy
 colorama
 cython
 pycocotools
@@ -11,4 +11,4 @@ opencv-python
 scikit-learn==0.23.2
 lap
 motmetrics
-matplotlib==3.3.4
+matplotlib
