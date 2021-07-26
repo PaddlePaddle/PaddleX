@@ -162,12 +162,27 @@ struct TensorRTEngineConfig {
   YAML::Node yaml_config_;
 };
 
+struct OpenVinoEngineConfig {
+  // openvino xml file path
+  std::string xml_file_ = "";
+
+  // openvino bin file path
+  std::string bin_file_ = "";
+
+  //  Set batchsize
+  int batch_size_ = 1;
+
+  //  Set Device {CPU, MYRIAD}
+  std::string device_ = "CPU";
+};
+
 struct InferenceConfig {
   std::string engine_type;
   union {
     PaddleEngineConfig* paddle_config;
     TritonEngineConfig* triton_config;
     TensorRTEngineConfig* tensorrt_config;
+    OpenVinoEngineConfig* openvino_config;
   };
 
   InferenceConfig() {
@@ -182,6 +197,8 @@ struct InferenceConfig {
       triton_config = new TritonEngineConfig();
     } else if ("tensorrt" == engine_type) {
       tensorrt_config = new TensorRTEngineConfig();
+    } else if ("openvino" == engine_type) {
+      openvino_config = new OpenVinoEngineConfig();
     }
   }
 
@@ -196,20 +213,23 @@ struct InferenceConfig {
     } else if ("tensorrt" == engine_type) {
       tensorrt_config = new TensorRTEngineConfig();
       *tensorrt_config = *(config.tensorrt_config);
+    } else if ("openvino" == engine_type) {
+      openvino_config = new OpenVinoEngineConfig();
+      *openvino_config = *(config.openvino_config);
     }
   }
 
   ~InferenceConfig() {
     if ("paddle" == engine_type) {
       delete paddle_config;
-      paddle_config = NULL;
     } else if ("triton" == engine_type) {
       delete triton_config;
-      triton_config = NULL;
     } else if ("tensorrt" == engine_type) {
       delete tensorrt_config;
-      tensorrt_config = NULL;
+    } else if ("openvino" == engine_type) {
+      delete openvino_config;
     }
+    paddle_config = NULL;
   }
 };
 

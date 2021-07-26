@@ -100,7 +100,7 @@ rm -rf log
 rm -rf build
 mkdir -p build
 cd build
-cmake ../demo/onnx_tensorrt/ \
+cmake ../../demo/onnx_tensorrt/ \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
     -DTENSORRT_HEADER=${TENSORRT_HEADER} \
     -DCUDA_DIR=${CUDA_DIR} \

@@ -44,7 +44,7 @@
           "type": "BOOL"
         },
         {
-          "name": "WITH_TENSORRT",
+          "name": "WITH_PADDLE_TENSORRT",
           "value": "False",
           "type": "BOOL"
         },
@@ -56,6 +56,26 @@
         {
           "name": "OPENSSL_DIR",
           "value": "path\\to\\openssl1.1.0k",
+          "type": "PATH"
+        },
+        {
+          "name": "WITH_OPENVINO",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "GFLAGS_DIR",
+          "value": "path\\to\\gflags",
+          "type": "PATH"
+        },
+        {
+          "name": "OPENVINO_DIR",
+          "value": "path\\to\\inference_engine",
+          "type": "PATH"
+        },
+        {
+          "name": "NGRAPH_LIB",
+          "value": "path\\to\\deployment_tools/ngraph",
           "type": "PATH"
         }
       ]

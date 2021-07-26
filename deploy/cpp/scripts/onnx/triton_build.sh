@@ -80,7 +80,7 @@ fi
 rm -rf build
 mkdir -p build
 cd build
-cmake ../demo/onnx_triton/ \
+cmake ../../demo/onnx_triton/ \
     -DTRITON_CLIENT=${TRITON_CLIENT} \
     -DOPENCV_DIR=${OPENCV_DIR}  \
     -DGLOG_DIR=${GLOG_DIR} \
