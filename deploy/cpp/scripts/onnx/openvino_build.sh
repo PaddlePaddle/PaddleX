@@ -24,6 +24,7 @@ if [ ! -d ${GFLAGS_DIR} ]; then
     cd ..
 fi
 
+mkdir -p deps
 # opencv
 if [ "$ARCH" = "x86" ]; then
     OPENCV_URL=https://bj.bcebos.com/paddlex/deploy/x86opencv/opencv.tar.bz2
@@ -42,7 +43,7 @@ rm -rf build
 mkdir -p build
 cd build
 if [ ${ARCH} = "x86" ];then
-  cmake ../.. \
+  cmake .. \
       -DWITH_OPENVINO=ON \
       -DOPENCV_DIR=${OPENCV_DIR} \
       -DGFLAGS_DIR=${GFLAGS_DIR} \
@@ -51,7 +52,7 @@ if [ ${ARCH} = "x86" ];then
       -DARCH=${ARCH}
   make -j16
 else
-  cmake ../.. \
+  cmake .. \
       -DWITH_OPENVINO=ON \
       -DOPENCV_DIR=${OPENCV_DIR} \
       -DGFLAGS_DIR=${GFLAGS_DIR} \

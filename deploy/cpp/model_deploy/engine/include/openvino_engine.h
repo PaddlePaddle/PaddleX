@@ -36,7 +36,8 @@ class OpenVinoEngine : public InferEngine {
   bool GetDtype(const InferenceEngine::TensorDesc &output_blob,
                 DataBlob *output);
 
-  InferenceEngine::CNNNetwork network_;
+  InferenceEngine::OutputsDataMap out_maps_;
+  InferenceEngine::InputsDataMap inputInfo_;
   InferenceEngine::ExecutableNetwork executable_network_;
 };
 

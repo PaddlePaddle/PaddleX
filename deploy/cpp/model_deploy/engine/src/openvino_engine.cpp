@@ -25,15 +25,19 @@ bool Model::OpenVinoEngineInit(const OpenVinoEngineConfig& engine_config) {
 bool OpenVinoEngine::Init(const InferenceConfig& infer_config) {
   const OpenVinoEngineConfig& engine_config = *(infer_config.openvino_config);
   InferenceEngine::Core ie;
-  network_ = ie.ReadNetwork(engine_config.xml_file_, engine_config.bin_file_);
-  network_.setBatchSize(engine_config.batch_size_);
+  InferenceEngine::CNNNetwork network = ie.ReadNetwork(
+                              engine_config.xml_file_,
+                              engine_config.bin_file_);
+  inputInfo_ = network.getInputsInfo();
+  out_maps_ = network.getOutputsInfo();
+  network.setBatchSize(engine_config.batch_size_);
   if (engine_config.device_ == "MYRIAD") {
     std::map<std::string, std::string> networkConfig;
     networkConfig["VPU_HW_STAGES_OPTIMIZATION"] = "NO";
     executable_network_ = ie.LoadNetwork(
-            network_, engine_config.device_, networkConfig);
+            network, engine_config.device_, networkConfig);
   } else {
-    executable_network_ = ie.LoadNetwork(network_, engine_config.device_);
+    executable_network_ = ie.LoadNetwork(network, engine_config.device_);
   }
   return true;
 }
@@ -42,10 +46,11 @@ bool OpenVinoEngine::Infer(const std::vector<DataBlob> &inputs,
                           std::vector<DataBlob> *outputs) {
   InferenceEngine::InferRequest infer_request =
         executable_network_.CreateInferRequest();
-  for (int i = 0; i < inputs.size(); i++) {
+  int i = 0;
+  for (const auto & item : inputInfo_) {
     InferenceEngine::TensorDesc input_tensor;
     InferenceEngine::Blob::Ptr input_blob =
-        infer_request.GetBlob(inputs[i].name);
+        infer_request.GetBlob(item.first);
     InferenceEngine::MemoryBlob::Ptr input_mem_blob =
         InferenceEngine::as<InferenceEngine::MemoryBlob>(input_blob);
     auto mem_blob_holder = input_mem_blob->wmap();
@@ -69,13 +74,13 @@ bool OpenVinoEngine::Infer(const std::vector<DataBlob> &inputs,
       memcpy(blob_data, inputs[i].data.data(), size * sizeof(uint8_t));
       infer_request.SetBlob(inputs[i].name, input_blob);
     }
+    i += 1;
   }
 
   // do inference
   infer_request.Infer();
 
-  InferenceEngine::OutputsDataMap out_maps = network_.getOutputsInfo();
-  for (const auto & output_map : out_maps) {
+  for (const auto & output_map : out_maps_) {
     DataBlob output;
     std::string name = output_map.first;
     output.name = name;
