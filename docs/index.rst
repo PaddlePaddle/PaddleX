@@ -89,3 +89,11 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    appendix/interpret.md
    appendix/how_to_offline_run.md
    change_log.md
+
+.. raw:: html
+
+    <script type="text/javascript">
+    var old_url = String(window.location)
+    var new_url = old_url.replace("zh_CN/develop", "zh_CN/release-1.3")
+    window.location.replace(new_url);
+    </script>
