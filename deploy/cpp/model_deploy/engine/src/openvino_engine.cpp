@@ -124,7 +124,7 @@ bool OpenVinoEngine::GetDtype(const InferenceEngine::TensorDesc &output_blob,
   InferenceEngine::Precision output_precision = output_blob.getPrecision();
   if (output_precision == 10) {
     output->dtype = 0;
-  } else if (output_precision == 73) {
+  } else if (output_precision == 72) {
     output->dtype = 1;
   } else if (output_precision == 70) {
     output->dtype = 2;
