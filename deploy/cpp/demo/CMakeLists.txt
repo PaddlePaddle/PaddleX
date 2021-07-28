@@ -57,7 +57,7 @@ endif()
 set(DEPS ${DEPS} ${MATH_LIB} ${MKLDNN_LIB})
 
 #set GPU
-if (WITH_TENSORRT AND WITH_GPU)
+if (WITH_PADDLE_TENSORRT AND WITH_GPU)
   include_directories("${TENSORRT_DIR}/include")
   link_directories("${TENSORRT_DIR}/lib")
 
