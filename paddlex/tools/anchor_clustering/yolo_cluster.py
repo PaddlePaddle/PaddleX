@@ -19,22 +19,22 @@ from tqdm import tqdm
 from scipy.cluster.vq import kmeans
 from paddlex.utils import logging
 
+__all__ = ['YOLOAnchorCluster']
+
 
 class BaseAnchorCluster(object):
-    def __init__(self, num_anchors, cache, cache_path, verbose=True):
+    def __init__(self, num_anchors, cache, cache_path):
         """
         Base Anchor Cluster
         Args:
             num_anchors (int): number of clusters
             cache (bool): whether using cache
             cache_path (str): cache directory path
-            verbose (bool): whether print results
         """
         super(BaseAnchorCluster, self).__init__()
         self.num_anchors = num_anchors
         self.cache_path = cache_path
         self.cache = cache
-        self.verbose = verbose
 
     def print_result(self, centers):
         raise NotImplementedError('%s.print_result is not available' %
@@ -76,8 +76,6 @@ class BaseAnchorCluster(object):
     def __call__(self):
         self.get_whs()
         centers = self.calc_anchors()
-        if self.verbose:
-            self.print_result(centers)
         return centers
 
 
@@ -86,12 +84,11 @@ class YOLOAnchorCluster(BaseAnchorCluster):
                  num_anchors,
                  dataset,
                  image_size,
-                 cache,
+                 cache=True,
                  cache_path=None,
                  iters=300,
                  gen_iters=1000,
-                 thresh=0.25,
-                 verbose=True):
+                 thresh=0.25):
         """
         YOLOv5 Anchor Cluster
 
@@ -102,12 +99,11 @@ class YOLOAnchorCluster(BaseAnchorCluster):
             num_anchors (int): number of clusters
             dataset (DataSet): DataSet instance, VOC or COCO
             image_size (list or int): [h, w], being an int means image height and image width are the same.
-            cache (bool): whether using cache
-            cache_path (str or None, optional): cache directory path. If None, use `data_dir` of dataset.
-            iters (int, optional): iters of kmeans algorithm
-            gen_iters (int, optional): iters of genetic algorithm
-            threshold (float, optional): anchor scale threshold
-            verbose (bool, optional): whether print results
+            cache (bool): whether using cache。 Defaults to True.
+            cache_path (str or None, optional): cache directory path. If None, use `data_dir` of dataset. Defaults to None.
+            iters (int, optional): iters of kmeans algorithm. Defaults to 300.
+            gen_iters (int, optional): iters of genetic algorithm. Defaults to 1000.
+            thresh (float, optional): anchor scale threshold. Defaults to 0.25.
         """
         self.dataset = dataset
         if cache_path is None:
@@ -118,8 +114,7 @@ class YOLOAnchorCluster(BaseAnchorCluster):
         self.iters = iters
         self.gen_iters = gen_iters
         self.thresh = thresh
-        super(YOLOAnchorCluster, self).__init__(
-            num_anchors, cache, cache_path, verbose=verbose)
+        super(YOLOAnchorCluster, self).__init__(num_anchors, cache, cache_path)
 
     def print_result(self, centers):
         whs = self.whs
