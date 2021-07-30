@@ -58,7 +58,7 @@ result = model.predict(test_jpg)
 pdx.det.visualize(test_jpg, result, threshold=0.5, save_dir='./')
 ```
 - MaskRCNN模型predict接口[说明文档](./apis/models/instance_segmentation.md#predict)
-- 可视化pdx.det.visualize接口[说明文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/paddlex/cv/models/utils/visualize.py#L25)
+- 可视化pdx.det.visualize接口[说明文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/cv/models/utils/visualize.py#L25)
 
 **注意**：目标检测和实例分割模型在调用`predict`接口得到的结果需用户自行过滤低置信度结果，在`paddlex.det.visualize`接口中，我们提供了`threshold`用于过滤，置信度低于此值的结果将被过滤，不会可视化。
 ![](./images/mask_predict.jpg)
