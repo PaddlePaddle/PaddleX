@@ -123,13 +123,13 @@ bool OpenVinoEngine::GetDtype(const InferenceEngine::TensorDesc &output_blob,
                           DataBlob *output) {
   InferenceEngine::Precision output_precision = output_blob.getPrecision();
   if (output_precision == 10) {
-    output->dtype = 0;
+    output->dtype = FLOAT32;
   } else if (output_precision == 72) {
-    output->dtype = 1;
+    output->dtype = INT64;
   } else if (output_precision == 70) {
-    output->dtype = 2;
+    output->dtype = INT32;
   } else if (output_precision == 40) {
-    output->dtype = 3;
+    output->dtype = INT8;
   } else {
     std::cout << "can't paser the precision type" << std::endl;
     return false;
