@@ -20,7 +20,7 @@
 
 #include "yaml-cpp/yaml.h"
 
-#include "model_deploy/common/include/deploy_delacre.h"
+#include "model_deploy/common/include/deploy_declare.h"
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/common/include/output_struct.h"
