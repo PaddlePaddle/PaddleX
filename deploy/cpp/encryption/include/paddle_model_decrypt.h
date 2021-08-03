@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string>
 
-#include "model_deploy/common/include/deploy_delacre.h"
+#include "model_deploy/common/include/deploy_declare.h"
 // #include "paddle/include/paddle_inference_api.h"  // NOLINT
 
 #ifndef PADDLE_MODEL_PROTECT_API_PADDLE_MODEL_DECRYPT_H
