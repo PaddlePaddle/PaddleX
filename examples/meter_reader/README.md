@@ -425,7 +425,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
   点击：`项目`->`CMake设置`
   ![](./images/step5_3.png)
 
-4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OpenCV`、`PaddleXManufacture`、`TensorRT`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
+4. 点击`浏览`，分别设置编译选项指定`CUDA`、`OPENCV_DIR`、`PADDLEX_DIR`、`PaddleXManufacture_DIR`、`TensorRT`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
    ![](./images/step5_4.png)
    依赖库路径的含义说明如下（带*表示仅在使用**GPU版本**预测库时指定, 其中CUDA库版本与PaddleXManufacture的对齐，例如PaddleXManufacture是**使用9.0、10.0版本**编译的，则编译PaddleX预测代码时**不使用9.2、10.1等版本**CUDA库）：
 
@@ -433,7 +433,8 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CUDA_LIB  | CUDA的库路径, 注：请将CUDNN的cudnn.lib文件拷贝到CUDA_LIB路径下。<br />例如 `C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\lib\\x64` |
 | OPENCV_DIR | OpenCV的安装路径，例如`D:\\projects\\opencv`                                                                                                        |
-| PaddleXManufacture_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\PaddleXManufacture`                                                                           |
+| PADDLEX_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\PaddleXManufacture` |
+| PaddleXManufacture_DIR | PaddleXManufacture的config.cmake所在路径，例如 `D:\\projects\\PaddleXManufacture\\share\\PaddleXManufacture`                                                                           |
 | TENSORRT_DIR | PaddleXManufacture的路径，例如 `D:\\projects\\TensorRT-7.0.0.11`                                                                           |
 
 - 如果使用`CPU`版预测库，请把`WITH_GPU`的`值`去掉勾
