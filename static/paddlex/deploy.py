@@ -123,13 +123,15 @@ class Predictor:
         else:
             config.disable_gpu()
         if use_mkl and not use_gpu:
-            if self.model_name not in ["HRNet", "DeepLabv3p", "PPYOLO"]:
-                config.enable_mkldnn()
-                config.set_cpu_math_library_num_threads(mkl_thread_num)
-            else:
-                logging.warning(
-                    "HRNet/DeepLabv3p/PPYOLO are not supported for the use of mkldnn\n"
-                )
+            import paddle
+            if not hasattr(paddle, 'enable_static'):
+                if self.model_name not in ["HRNet", "DeepLabv3p", "PPYOLO"]:
+                    config.enable_mkldnn()
+                    config.set_cpu_math_library_num_threads(mkl_thread_num)
+                else:
+                    logging.warning(
+                        "HRNet/DeepLabv3p/PPYOLO are not supported for the use of mkldnn\n"
+                    )
         if use_glog:
             config.enable_glog_info()
         else:

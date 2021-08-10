@@ -74,6 +74,13 @@ bool SegPostprocess::RunV2(const DataBlob& output,
                    std::back_inserter(label_vector),
                    [](int64_t x) { return (uint8_t)x;});
     label_data = reinterpret_cast<const uint8_t*>(label_vector.data());
+  } else if (output.dtype == INT32) {  // int32
+    const int32_t* output_data =
+          reinterpret_cast<const int32_t*>(output.data.data());
+    std::transform(output_data, output_data + label_map_size * batch_size,
+                   std::back_inserter(label_vector),
+                   [](int32_t x) { return (uint8_t)x;});
+    label_data = reinterpret_cast<const uint8_t*>(label_vector.data());
   } else if (output.dtype == INT8) {  // uint8
     label_data = reinterpret_cast<const uint8_t*>(output.data.data());
   } else {

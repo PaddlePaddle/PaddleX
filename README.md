@@ -1,4 +1,4 @@
-# PaddleX全面升级动态图，2.0.0-rc3发布！
+# PaddleX全面升级动态图，2.0.0-rc4发布！
 
 
 
@@ -38,6 +38,7 @@
   * [PaddleX Restful开发模式安装](./docs/install.md#3-paddlex-restful开发模式安装)
 * [10分钟快速上手使用](./docs/quick_start.md)
 * [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
+* [常见问题汇总](./docs/FAQ/FAQ.md)
 
 
 ### 2. 数据准备

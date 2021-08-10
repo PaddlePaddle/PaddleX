@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string>
 
-#include "model_deploy/common/include/deploy_delacre.h"
+#include "model_deploy/common/include/deploy_declare.h"
 
 #ifndef PADDLE_MODEL_PROTECT_API_PADDLE_STREAM_DECRYPT_H
 #define PADDLE_MODEL_PROTECT_API_PADDLE_STREAM_DECRYPT_H

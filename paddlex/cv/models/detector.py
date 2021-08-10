@@ -1329,7 +1329,7 @@ class PPYOLOv2(YOLOv3):
         if backbone not in ['ResNet50_vd_dcn', 'ResNet101_vd_dcn']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ResNet50_vd_dcn', 'ResNet18_vd')".format(backbone))
+                "('ResNet50_vd_dcn', 'ResNet101_vd_dcn')".format(backbone))
         self.backbone_name = backbone
 
         if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[

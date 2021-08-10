@@ -20,7 +20,7 @@
 
 #include "yaml-cpp/yaml.h"
 
-#include "model_deploy/common/include/deploy_delacre.h"
+#include "model_deploy/common/include/deploy_declare.h"
 #include "model_deploy/common/include/base_postprocess.h"
 #include "model_deploy/common/include/base_preprocess.h"
 #include "model_deploy/common/include/output_struct.h"
@@ -75,6 +75,8 @@ class PD_INFER_DECL Model {
   bool TritonEngineInit(const TritonEngineConfig& engine_config);
 
   bool TensorRTInit(const TensorRTEngineConfig& engine_config);
+
+  bool OpenVinoEngineInit(const OpenVinoEngineConfig& engine_config);
 
   virtual bool PostprocessInit() {
     postprocess_ = nullptr;

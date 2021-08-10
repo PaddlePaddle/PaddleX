@@ -17,7 +17,7 @@
 #include <thread> // NOLINT
 #include <vector>
 
-#include "model_deploy/common/include/deploy_delacre.h"
+#include "model_deploy/common/include/deploy_declare.h"
 #include "model_deploy/common/include/model_factory.h"
 #include "model_deploy/engine/include/engine.h"
 
