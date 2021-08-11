@@ -14,6 +14,8 @@
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 该案例所有脚本均位于`PaddleX/examples/remote_sensing/`，进入该目录：

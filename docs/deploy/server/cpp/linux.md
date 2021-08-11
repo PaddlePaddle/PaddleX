@@ -12,7 +12,11 @@
 
 ### Step1: 下载代码
 
- `git clone https://github.com/PaddlePaddle/PaddleX.git`
+```
+git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+git checkout release/1.3
+```
 
 **说明**：其中`C++`预测代码在`/root/projects/PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。
 

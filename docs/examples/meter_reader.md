@@ -50,6 +50,8 @@ step 1. 下载PaddleX源码:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 step 2. 预测执行文件位于`PaddleX/examples/meter_reader/`，进入该目录：
@@ -115,6 +117,8 @@ step 1. 下载PaddleX源码:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 step 2. 将`PaddleX\examples\meter_reader\deploy\cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX\deploy\cpp`目录下，拷贝之前可以将`PaddleX\deploy\cpp`下原本的`CMakeList.txt`做好备份。
@@ -191,6 +195,8 @@ step 1. 下载PaddleX源码:
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 step 2. 将`PaddleX/examples/meter_reader/deploy/cpp`下的`meter_reader`文件夹和`CMakeList.txt`拷贝至`PaddleX/deploy/cpp`目录下，拷贝之前可以将`PaddleX/deploy/cpp`下原本的`CMakeList.txt`做好备份。

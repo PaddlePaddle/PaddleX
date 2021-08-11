@@ -33,7 +33,11 @@ sudo docker images
 本文档以PaddleX提供的jetson部署代码为示例：
 ```
 #通过如下命令下载代码，Jetson部署代码在 `PaddleX/deploy/cpp` 目录下面
+```
 git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+git checkout release/1.3
+```
 
 #在HOME目录下创建infer文件夹，将cpp文件夹拷贝到infer目录下面
 mkdir ~/infer

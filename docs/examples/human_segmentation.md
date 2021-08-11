@@ -21,7 +21,7 @@
 在训练完模型后，可能会遇到预测出来结果存在『锯齿』的问题，这个可能存在的原因是由于模型在预测过程中，经历了原图缩放再放大的过程，如下流程所示，
 
 ```
-原图输入 -> 预处理transforms将图像缩放至目标大小 -> Paddle模型预测 -> 预测结果放大至原图大小 
+原图输入 -> 预处理transforms将图像缩放至目标大小 -> Paddle模型预测 -> 预测结果放大至原图大小
 ```
 对于这种原因导致的问题，可以手动修改模型中的`model.yml`文件，将预处理中的目标大小**调整到更高**优化此问题，如在本文档中提供的人像分割server端模型中`model.yml`文件内容，修改`target_size`至1024*1024（这样也会带来模型预测所需的资源更多，预测速度更慢）
 ```
@@ -59,6 +59,8 @@ Transforms:
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 * 下载预训练模型的代码位于`PaddleX/examples/human_segmentation`，进入该目录：
@@ -97,6 +99,8 @@ python data/download_data.py
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 * 视频流人像分割和背景替换的执行文件均位于`PaddleX/examples/human_segmentation`，进入该目录：
@@ -165,6 +169,8 @@ python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --im
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 * 人像分割训练、评估、预测、模型导出、离线量化的执行文件均位于`PaddleX/examples/human_segmentation`，进入该目录：
@@ -341,6 +347,8 @@ step 1. 下载PaddleX源码
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 step 2. 将`PaddleX/examples/human_segmentation/deploy/cpp`下的`human_segmenter.cpp`和`CMakeList.txt`拷贝至`PaddleX/deploy/cpp`目录下，拷贝之前可以将`PaddleX/deploy/cpp`下原本的`CMakeList.txt`做好备份。
