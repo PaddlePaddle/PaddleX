@@ -9,7 +9,7 @@ Windows 平台下，我们使用`Visual Studio 2019 Community` 进行了测试�
 * CMake 3.0+
 
 **说明**：
-- PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html) 
+- PaddleX安装请参考[PaddleX](https://paddlex.readthedocs.io/zh_CN/develop/install.html) ， OpenVINO安装请参考[OpenVINO-Windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)
 - CPU下请使用OpenVINO 2021.1+版本；VPU下请使用OpenVINO 2020.4版本
 
 
@@ -37,6 +37,8 @@ d:
 mkdir projects
 cd projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+git checkout release/1.3
 ```
 
 **说明**：其中`C++`预测代码在`PaddleX\deploy\openvino` 目录，该目录不依赖任何`PaddleX`下其他目录。

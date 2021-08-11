@@ -21,7 +21,7 @@ github代码会跟随开发进度不断更新
 ```
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-git checkout develop
+git checkout release/1.3
 python setup.py install
 ```
 

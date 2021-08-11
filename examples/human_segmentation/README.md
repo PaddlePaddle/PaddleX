@@ -40,6 +40,8 @@
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 * 下载预训练模型的代码位于`PaddleX/examples/human_segmentation`，进入该目录：
@@ -80,6 +82,8 @@ python data/download_data.py
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 * 视频流人像分割和背景替换的执行文件均位于`PaddleX/examples/human_segmentation`，进入该目录：
@@ -150,6 +154,8 @@ python bg_replace.py --model_dir pretrain_weights/humanseg_mobile_inference --im
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX
+cd PaddleX
+git checkout release/1.3
 ```
 
 * 人像分割训练、评估、预测、模型导出、离线量化的执行文件均位于`PaddleX/examples/human_segmentation`，进入该目录：

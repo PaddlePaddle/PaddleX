@@ -25,8 +25,9 @@
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
-
-cd PaddleX/examples/industrial_quality_inspection
+cd PaddleX
+git checkout release/1.3
+cd examples/industrial_quality_inspection
 ```
 
 ### (2) 下载数据集

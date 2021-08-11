@@ -27,6 +27,8 @@
 mkdir -p /root/projects
 cd /root/projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+git checkout release/1.3
 ```
 **说明**：其中C++预测代码在PaddleX/deploy/openvino 目录，该目录不依赖任何PaddleX下其他目录。
 
