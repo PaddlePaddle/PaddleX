@@ -18,7 +18,6 @@ import os.path as osp
 from collections import OrderedDict
 import numpy as np
 import paddle
-from paddle import to_tensor
 import paddle.nn.functional as F
 from paddle.static import InputSpec
 from paddlex.utils import logging, TrainingStats, DisablePrint
@@ -411,7 +410,7 @@ class BaseClassifier(BaseModel):
         """
         Do inference.
         Args:
-            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+            img_file(List[np.ndarray or str], str or np.ndarray):
                 Image path or decoded image data in a BGR format, which also could constitute a list,
                 meaning all images to be predicted as a mini-batch.
             transforms(paddlex.transforms.Compose or None, optional):
@@ -436,7 +435,7 @@ class BaseClassifier(BaseModel):
             images = [img_file]
         else:
             images = img_file
-        im = self._preprocess(images, transforms, self.model_type)
+        im = self._preprocess(images, transforms)
         self.net.eval()
         with paddle.no_grad():
             outputs = self.run(self.net, im, mode='test')
@@ -447,15 +446,16 @@ class BaseClassifier(BaseModel):
 
         return prediction
 
-    def _preprocess(self, images, transforms, model_type):
+    def _preprocess(self, images, transforms, to_tensor=True):
         arrange_transforms(
-            model_type=model_type, transforms=transforms, mode='test')
+            model_type=self.model_type, transforms=transforms, mode='test')
         batch_im = list()
         for im in images:
             sample = {'image': im}
             batch_im.append(transforms(sample))
 
-        batch_im = to_tensor(batch_im)
+        if to_tensor:
+            batch_im = paddle.to_tensor(batch_im)
 
         return batch_im,
 

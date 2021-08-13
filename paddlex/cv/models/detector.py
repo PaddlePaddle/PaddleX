@@ -470,7 +470,7 @@ class BaseDetector(BaseModel):
         """
         Do inference.
         Args:
-            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+            img_file(List[np.ndarray or str], str or np.ndarray):
                 Image path or decoded image data in a BGR format, which also could constitute a list,
                 meaning all images to be predicted as a mini-batch.
             transforms(paddlex.transforms.Compose or None, optional):
@@ -505,7 +505,7 @@ class BaseDetector(BaseModel):
             prediction = prediction[0]
         return prediction
 
-    def _preprocess(self, images, transforms):
+    def _preprocess(self, images, transforms, to_tensor=True):
         arrange_transforms(
             model_type=self.model_type, transforms=transforms, mode='test')
         batch_samples = list()
@@ -514,8 +514,9 @@ class BaseDetector(BaseModel):
             batch_samples.append(transforms(sample))
         batch_transforms = self._compose_batch_transform(transforms, 'test')
         batch_samples = batch_transforms(batch_samples)
-        for k, v in batch_samples.items():
-            batch_samples[k] = paddle.to_tensor(v)
+        if to_tensor:
+            for k, v in batch_samples.items():
+                batch_samples[k] = paddle.to_tensor(v)
         return batch_samples
 
     def _postprocess(self, batch_pred):

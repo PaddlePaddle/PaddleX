@@ -22,6 +22,7 @@ from . import seg
 from . import cls
 from . import det
 from . import tools
+from . import deploy
 
 from .cv.models.utils.visualize import visualize_detection as visualize_det
 from .cv.models.utils.visualize import visualize_segmentation as visualize_seg
