@@ -82,11 +82,10 @@ def load_model(model_dir, **params):
 
     model_info['_init_params'].update({'with_net': with_net})
 
-    if with_net:
-        with paddle.utils.unique_name.guard():
-            model = getattr(paddlex.cv.models, model_info['Model'])(
-                **model_info['_init_params'])
-
+    with paddle.utils.unique_name.guard():
+        model = getattr(paddlex.cv.models, model_info['Model'])(
+            **model_info['_init_params'])
+        if with_net:
             if status == 'Pruned' or osp.exists(
                     osp.join(model_dir, "prune.yml")):
                 with open(osp.join(model_dir, "prune.yml")) as f:
@@ -121,9 +120,6 @@ def load_model(model_dir, **params):
                 net_state_dict = paddle.load(
                     osp.join(model_dir, 'model.pdparams'))
             model.net.set_state_dict(net_state_dict)
-    else:
-        model = getattr(paddlex.cv.models, model_info['Model'])(
-            **model_info['_init_params'])
 
     if 'Transforms' in model_info:
         model.test_transforms = build_transforms(model_info['Transforms'])

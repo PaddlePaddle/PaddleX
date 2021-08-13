@@ -453,7 +453,7 @@ class BaseSegmenter(BaseModel):
         Do inference.
         Args:
             Args:
-            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+            img_file(List[np.ndarray or str], str or np.ndarray):
                 Image path or decoded image data in a BGR format, which also could constitute a list,
                 meaning all images to be predicted as a mini-batch.
             transforms(paddlex.transforms.Compose or None, optional):
@@ -495,9 +495,9 @@ class BaseSegmenter(BaseModel):
             prediction = {'label_map': label_map, 'score_map': score_map}
         return prediction
 
-    def _preprocess(self, images, transforms, model_type):
+    def _preprocess(self, images, transforms, to_tensor=True):
         arrange_transforms(
-            model_type=model_type, transforms=transforms, mode='test')
+            model_type=self.model_type, transforms=transforms, mode='test')
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
@@ -508,7 +508,8 @@ class BaseSegmenter(BaseModel):
             im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)
-        batch_im = paddle.to_tensor(batch_im)
+        if to_tensor:
+            batch_im = paddle.to_tensor(batch_im)
 
         return batch_im, batch_ori_shape
 
