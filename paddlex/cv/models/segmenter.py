@@ -39,6 +39,8 @@ class BaseSegmenter(BaseModel):
                  use_mixed_loss=False,
                  **params):
         self.init_params = locals()
+        if 'with_net' in self.init_params:
+            del self.init_params['with_net']
         super(BaseSegmenter, self).__init__('segmenter')
         if not hasattr(paddleseg.models, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -48,7 +50,9 @@ class BaseSegmenter(BaseModel):
         self.use_mixed_loss = use_mixed_loss
         self.losses = None
         self.labels = None
-        self.net = self.build_net(**params)
+        if params.get('with_net', True):
+            params.pop('with_net', None)
+            self.net = self.build_net(**params)
         self.find_unused_parameters = True
 
     def build_net(self, **params):
@@ -582,8 +586,12 @@ class UNet(BaseSegmenter):
                  num_classes=2,
                  use_mixed_loss=False,
                  use_deconv=False,
-                 align_corners=False):
-        params = {'use_deconv': use_deconv, 'align_corners': align_corners}
+                 align_corners=False,
+                 **params):
+        params.update({
+            'use_deconv': use_deconv,
+            'align_corners': align_corners
+        })
         super(UNet, self).__init__(
             model_name='UNet',
             num_classes=num_classes,
@@ -600,22 +608,26 @@ class DeepLabV3P(BaseSegmenter):
                  backbone_indices=(0, 3),
                  aspp_ratios=(1, 12, 24, 36),
                  aspp_out_channels=256,
-                 align_corners=False):
+                 align_corners=False,
+                 **params):
         self.backbone_name = backbone
         if backbone not in ['ResNet50_vd', 'ResNet101_vd']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
-        with DisablePrint():
-            backbone = getattr(paddleseg.models, backbone)(
-                output_stride=output_stride)
-        params = {
+        if params.get('with_net', True):
+            with DisablePrint():
+                backbone = getattr(paddleseg.models, backbone)(
+                    output_stride=output_stride)
+        else:
+            backbone = None
+        params.update({
             'backbone': backbone,
             'backbone_indices': backbone_indices,
             'aspp_ratios': aspp_ratios,
             'aspp_out_channels': aspp_out_channels,
             'align_corners': align_corners
-        }
+        })
         super(DeepLabV3P, self).__init__(
             model_name='DeepLabV3P',
             num_classes=num_classes,
@@ -627,8 +639,9 @@ class FastSCNN(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  use_mixed_loss=False,
-                 align_corners=False):
-        params = {'align_corners': align_corners}
+                 align_corners=False,
+                 **params):
+        params.update({'align_corners': align_corners})
         super(FastSCNN, self).__init__(
             model_name='FastSCNN',
             num_classes=num_classes,
@@ -641,17 +654,21 @@ class HRNet(BaseSegmenter):
                  num_classes=2,
                  width=48,
                  use_mixed_loss=False,
-                 align_corners=False):
+                 align_corners=False,
+                 **params):
         if width not in (18, 48):
             raise ValueError(
                 "width={} is not supported, please choose from [18, 48]".
                 format(width))
         self.backbone_name = 'HRNet_W{}'.format(width)
-        with DisablePrint():
-            backbone = getattr(paddleseg.models, self.backbone_name)(
-                align_corners=align_corners)
+        if params.get('with_net', True):
+            with DisablePrint():
+                backbone = getattr(paddleseg.models, self.backbone_name)(
+                    align_corners=align_corners)
+        else:
+            backbone = None
 
-        params = {'backbone': backbone, 'align_corners': align_corners}
+        params.update({'backbone': backbone, 'align_corners': align_corners})
         super(HRNet, self).__init__(
             model_name='FCN',
             num_classes=num_classes,
@@ -664,8 +681,9 @@ class BiSeNetV2(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  use_mixed_loss=False,
-                 align_corners=False):
-        params = {'align_corners': align_corners}
+                 align_corners=False,
+                 **params):
+        params.update({'align_corners': align_corners})
         super(BiSeNetV2, self).__init__(
             model_name='BiSeNetV2',
             num_classes=num_classes,

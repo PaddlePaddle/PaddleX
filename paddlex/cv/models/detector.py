@@ -42,6 +42,8 @@ __all__ = [
 class BaseDetector(BaseModel):
     def __init__(self, model_name, num_classes=80, **params):
         self.init_params.update(locals())
+        if 'with_net' in self.init_params:
+            del self.init_params['with_net']
         super(BaseDetector, self).__init__('detector')
         if not hasattr(ppdet.modeling, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -50,7 +52,9 @@ class BaseDetector(BaseModel):
         self.model_name = model_name
         self.num_classes = num_classes
         self.labels = None
-        self.net = self.build_net(**params)
+        if params.get('with_net', True):
+            params.pop('with_net', None)
+            self.net = self.build_net(**params)
 
     def build_net(self, **params):
         with paddle.utils.unique_name.guard():
@@ -602,7 +606,8 @@ class YOLOv3(BaseDetector):
                  nms_topk=1000,
                  nms_keep_topk=100,
                  nms_iou_threshold=0.45,
-                 label_smooth=False):
+                 label_smooth=False,
+                 **params):
         self.init_params = locals()
         if backbone not in [
                 'MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3',
@@ -613,66 +618,69 @@ class YOLOv3(BaseDetector):
                 "('MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3', 'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34')".
                 format(backbone))
 
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
-            norm_type = 'sync_bn'
-        else:
-            norm_type = 'bn'
-
         self.backbone_name = backbone
-        if 'MobileNetV1' in backbone:
-            norm_type = 'bn'
-            backbone = self._get_backbone('MobileNet', norm_type=norm_type)
-        elif 'MobileNetV3' in backbone:
-            backbone = self._get_backbone(
-                'MobileNetV3', norm_type=norm_type, feature_maps=[7, 13, 16])
-        elif backbone == 'ResNet50_vd_dcn':
-            backbone = self._get_backbone(
-                'ResNet',
-                norm_type=norm_type,
-                variant='d',
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
-                freeze_at=-1,
-                freeze_norm=False)
-        elif backbone == 'ResNet34':
-            backbone = self._get_backbone(
-                'ResNet',
-                depth=34,
-                norm_type=norm_type,
-                return_idx=[1, 2, 3],
-                freeze_at=-1,
-                freeze_norm=False,
-                norm_decay=0.)
-        else:
-            backbone = self._get_backbone('DarkNet', norm_type=norm_type)
+        if params.get('with_net', True):
+            if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                    'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
+                norm_type = 'sync_bn'
+            else:
+                norm_type = 'bn'
 
-        neck = ppdet.modeling.YOLOv3FPN(
-            norm_type=norm_type,
-            in_channels=[i.channels for i in backbone.out_shape])
-        loss = ppdet.modeling.YOLOv3Loss(
-            num_classes=num_classes,
-            ignore_thresh=ignore_threshold,
-            label_smooth=label_smooth)
-        yolo_head = ppdet.modeling.YOLOv3Head(
-            in_channels=[i.channels for i in neck.out_shape],
-            anchors=anchors,
-            anchor_masks=anchor_masks,
-            num_classes=num_classes,
-            loss=loss)
-        post_process = ppdet.modeling.BBoxPostProcess(
-            decode=ppdet.modeling.YOLOBox(num_classes=num_classes),
-            nms=ppdet.modeling.MultiClassNMS(
-                score_threshold=nms_score_threshold,
-                nms_top_k=nms_topk,
-                keep_top_k=nms_keep_topk,
-                nms_threshold=nms_iou_threshold))
-        params = {
-            'backbone': backbone,
-            'neck': neck,
-            'yolo_head': yolo_head,
-            'post_process': post_process
-        }
+            if 'MobileNetV1' in backbone:
+                norm_type = 'bn'
+                backbone = self._get_backbone('MobileNet', norm_type=norm_type)
+            elif 'MobileNetV3' in backbone:
+                backbone = self._get_backbone(
+                    'MobileNetV3',
+                    norm_type=norm_type,
+                    feature_maps=[7, 13, 16])
+            elif backbone == 'ResNet50_vd_dcn':
+                backbone = self._get_backbone(
+                    'ResNet',
+                    norm_type=norm_type,
+                    variant='d',
+                    return_idx=[1, 2, 3],
+                    dcn_v2_stages=[3],
+                    freeze_at=-1,
+                    freeze_norm=False)
+            elif backbone == 'ResNet34':
+                backbone = self._get_backbone(
+                    'ResNet',
+                    depth=34,
+                    norm_type=norm_type,
+                    return_idx=[1, 2, 3],
+                    freeze_at=-1,
+                    freeze_norm=False,
+                    norm_decay=0.)
+            else:
+                backbone = self._get_backbone('DarkNet', norm_type=norm_type)
+
+            neck = ppdet.modeling.YOLOv3FPN(
+                norm_type=norm_type,
+                in_channels=[i.channels for i in backbone.out_shape])
+            loss = ppdet.modeling.YOLOv3Loss(
+                num_classes=num_classes,
+                ignore_thresh=ignore_threshold,
+                label_smooth=label_smooth)
+            yolo_head = ppdet.modeling.YOLOv3Head(
+                in_channels=[i.channels for i in neck.out_shape],
+                anchors=anchors,
+                anchor_masks=anchor_masks,
+                num_classes=num_classes,
+                loss=loss)
+            post_process = ppdet.modeling.BBoxPostProcess(
+                decode=ppdet.modeling.YOLOBox(num_classes=num_classes),
+                nms=ppdet.modeling.MultiClassNMS(
+                    score_threshold=nms_score_threshold,
+                    nms_top_k=nms_topk,
+                    keep_top_k=nms_keep_topk,
+                    nms_threshold=nms_iou_threshold))
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'yolo_head': yolo_head,
+                'post_process': post_process
+            })
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
@@ -752,7 +760,8 @@ class FasterRCNN(BaseDetector):
                  rpn_batch_size_per_im=256,
                  rpn_fg_fraction=0.5,
                  test_pre_nms_top_n=None,
-                 test_post_nms_top_n=1000):
+                 test_post_nms_top_n=1000,
+                 **params):
         self.init_params = locals()
         if backbone not in [
                 'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34',
@@ -763,207 +772,213 @@ class FasterRCNN(BaseDetector):
                 "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', "
                 "'ResNet101', 'ResNet101_vd', 'HRNet_W18')".format(backbone))
         self.backbone_name = backbone
-        dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
-        if backbone == 'HRNet_W18':
-            if not with_fpn:
-                logging.warning(
-                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
-                    format(backbone))
-                with_fpn = True
-            if with_dcn:
-                logging.warning(
-                    "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
-                    format(backbone))
-            backbone = self._get_backbone(
-                'HRNet', width=18, freeze_at=0, return_idx=[0, 1, 2, 3])
-        elif backbone == 'ResNet50_vd_ssld':
-            if not with_fpn:
-                logging.warning(
-                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
-                    format(backbone))
-                with_fpn = True
-            backbone = self._get_backbone(
-                'ResNet',
-                variant='d',
-                norm_type='bn',
-                freeze_at=0,
-                return_idx=[0, 1, 2, 3],
-                num_stages=4,
-                lr_mult_list=[0.05, 0.05, 0.1, 0.15],
-                dcn_v2_stages=dcn_v2_stages)
-        elif 'ResNet50' in backbone:
-            if with_fpn:
+
+        if params.get('with_net', True):
+            dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
+            if backbone == 'HRNet_W18':
+                if not with_fpn:
+                    logging.warning(
+                        "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                        format(backbone))
+                    with_fpn = True
+                if with_dcn:
+                    logging.warning(
+                        "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                        format(backbone))
+                backbone = self._get_backbone(
+                    'HRNet', width=18, freeze_at=0, return_idx=[0, 1, 2, 3])
+            elif backbone == 'ResNet50_vd_ssld':
+                if not with_fpn:
+                    logging.warning(
+                        "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                        format(backbone))
+                    with_fpn = True
                 backbone = self._get_backbone(
                     'ResNet',
-                    variant='d' if '_vd' in backbone else 'b',
+                    variant='d',
+                    norm_type='bn',
+                    freeze_at=0,
+                    return_idx=[0, 1, 2, 3],
+                    num_stages=4,
+                    lr_mult_list=[0.05, 0.05, 0.1, 0.15],
+                    dcn_v2_stages=dcn_v2_stages)
+            elif 'ResNet50' in backbone:
+                if with_fpn:
+                    backbone = self._get_backbone(
+                        'ResNet',
+                        variant='d' if '_vd' in backbone else 'b',
+                        norm_type='bn',
+                        freeze_at=0,
+                        return_idx=[0, 1, 2, 3],
+                        num_stages=4,
+                        dcn_v2_stages=dcn_v2_stages)
+                else:
+                    if with_dcn:
+                        logging.warning(
+                            "Backbone {} without fpn should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                            format(backbone))
+                    backbone = self._get_backbone(
+                        'ResNet',
+                        variant='d' if '_vd' in backbone else 'b',
+                        norm_type='bn',
+                        freeze_at=0,
+                        return_idx=[2],
+                        num_stages=3)
+            elif 'ResNet34' in backbone:
+                if not with_fpn:
+                    logging.warning(
+                        "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                        format(backbone))
+                    with_fpn = True
+                backbone = self._get_backbone(
+                    'ResNet',
+                    depth=34,
+                    variant='d' if 'vd' in backbone else 'b',
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
                     num_stages=4,
                     dcn_v2_stages=dcn_v2_stages)
             else:
-                if with_dcn:
+                if not with_fpn:
                     logging.warning(
-                        "Backbone {} without fpn should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                        "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
                         format(backbone))
+                    with_fpn = True
                 backbone = self._get_backbone(
                     'ResNet',
-                    variant='d' if '_vd' in backbone else 'b',
+                    depth=101,
+                    variant='d' if 'vd' in backbone else 'b',
                     norm_type='bn',
                     freeze_at=0,
-                    return_idx=[2],
-                    num_stages=3)
-        elif 'ResNet34' in backbone:
-            if not with_fpn:
-                logging.warning(
-                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
-                    format(backbone))
-                with_fpn = True
-            backbone = self._get_backbone(
-                'ResNet',
-                depth=34,
-                variant='d' if 'vd' in backbone else 'b',
-                norm_type='bn',
-                freeze_at=0,
-                return_idx=[0, 1, 2, 3],
-                num_stages=4,
-                dcn_v2_stages=dcn_v2_stages)
-        else:
-            if not with_fpn:
-                logging.warning(
-                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
-                    format(backbone))
-                with_fpn = True
-            backbone = self._get_backbone(
-                'ResNet',
-                depth=101,
-                variant='d' if 'vd' in backbone else 'b',
-                norm_type='bn',
-                freeze_at=0,
-                return_idx=[0, 1, 2, 3],
-                num_stages=4,
-                dcn_v2_stages=dcn_v2_stages)
+                    return_idx=[0, 1, 2, 3],
+                    num_stages=4,
+                    dcn_v2_stages=dcn_v2_stages)
 
-        rpn_in_channel = backbone.out_shape[0].channels
+            rpn_in_channel = backbone.out_shape[0].channels
 
-        if with_fpn:
-            self.backbone_name = self.backbone_name + '_fpn'
+            if with_fpn:
+                self.backbone_name = self.backbone_name + '_fpn'
 
-            if 'HRNet' in self.backbone_name:
-                neck = ppdet.modeling.HRFPN(
-                    in_channels=[i.channels for i in backbone.out_shape],
-                    out_channel=fpn_num_channels,
-                    spatial_scales=[
-                        1.0 / i.stride for i in backbone.out_shape
-                    ],
-                    share_conv=False)
+                if 'HRNet' in self.backbone_name:
+                    neck = ppdet.modeling.HRFPN(
+                        in_channels=[i.channels for i in backbone.out_shape],
+                        out_channel=fpn_num_channels,
+                        spatial_scales=[
+                            1.0 / i.stride for i in backbone.out_shape
+                        ],
+                        share_conv=False)
+                else:
+                    neck = ppdet.modeling.FPN(
+                        in_channels=[i.channels for i in backbone.out_shape],
+                        out_channel=fpn_num_channels,
+                        spatial_scales=[
+                            1.0 / i.stride for i in backbone.out_shape
+                        ])
+                rpn_in_channel = neck.out_shape[0].channels
+                anchor_generator_cfg = {
+                    'aspect_ratios': aspect_ratios,
+                    'anchor_sizes': anchor_sizes,
+                    'strides': [4, 8, 16, 32, 64]
+                }
+                train_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 2000,
+                    'post_nms_top_n': 1000,
+                    'topk_after_collect': True
+                }
+                test_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 1000
+                    if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                    'post_nms_top_n': test_post_nms_top_n
+                }
+                head = ppdet.modeling.TwoFCHead(
+                    in_channel=neck.out_shape[0].channels, out_channel=1024)
+                roi_extractor_cfg = {
+                    'resolution': 7,
+                    'spatial_scale': [1. / i.stride for i in neck.out_shape],
+                    'sampling_ratio': 0,
+                    'aligned': True
+                }
+                with_pool = False
+
             else:
-                neck = ppdet.modeling.FPN(
-                    in_channels=[i.channels for i in backbone.out_shape],
-                    out_channel=fpn_num_channels,
-                    spatial_scales=[
-                        1.0 / i.stride for i in backbone.out_shape
-                    ])
-            rpn_in_channel = neck.out_shape[0].channels
-            anchor_generator_cfg = {
-                'aspect_ratios': aspect_ratios,
-                'anchor_sizes': anchor_sizes,
-                'strides': [4, 8, 16, 32, 64]
-            }
-            train_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 2000,
-                'post_nms_top_n': 1000,
-                'topk_after_collect': True
-            }
-            test_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 1000
-                if test_pre_nms_top_n is None else test_pre_nms_top_n,
-                'post_nms_top_n': test_post_nms_top_n
-            }
-            head = ppdet.modeling.TwoFCHead(
-                in_channel=neck.out_shape[0].channels, out_channel=1024)
-            roi_extractor_cfg = {
-                'resolution': 7,
-                'spatial_scale': [1. / i.stride for i in neck.out_shape],
-                'sampling_ratio': 0,
-                'aligned': True
-            }
-            with_pool = False
+                neck = None
+                anchor_generator_cfg = {
+                    'aspect_ratios': aspect_ratios,
+                    'anchor_sizes': anchor_sizes,
+                    'strides': [16]
+                }
+                train_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 12000,
+                    'post_nms_top_n': 2000,
+                    'topk_after_collect': False
+                }
+                test_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 6000
+                    if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                    'post_nms_top_n': test_post_nms_top_n
+                }
+                head = ppdet.modeling.Res5Head()
+                roi_extractor_cfg = {
+                    'resolution': 14,
+                    'spatial_scale':
+                    [1. / i.stride for i in backbone.out_shape],
+                    'sampling_ratio': 0,
+                    'aligned': True
+                }
+                with_pool = True
 
+            rpn_target_assign_cfg = {
+                'batch_size_per_im': rpn_batch_size_per_im,
+                'fg_fraction': rpn_fg_fraction,
+                'negative_overlap': .3,
+                'positive_overlap': .7,
+                'use_random': True
+            }
+
+            rpn_head = ppdet.modeling.RPNHead(
+                anchor_generator=anchor_generator_cfg,
+                rpn_target_assign=rpn_target_assign_cfg,
+                train_proposal=train_proposal_cfg,
+                test_proposal=test_proposal_cfg,
+                in_channel=rpn_in_channel)
+
+            bbox_assigner = BBoxAssigner(num_classes=num_classes)
+
+            bbox_head = ppdet.modeling.BBoxHead(
+                head=head,
+                in_channel=head.out_shape[0].channels,
+                roi_extractor=roi_extractor_cfg,
+                with_pool=with_pool,
+                bbox_assigner=bbox_assigner,
+                num_classes=num_classes)
+
+            bbox_post_process = ppdet.modeling.BBoxPostProcess(
+                num_classes=num_classes,
+                decode=ppdet.modeling.RCNNBox(num_classes=num_classes),
+                nms=ppdet.modeling.MultiClassNMS(
+                    score_threshold=score_threshold,
+                    keep_top_k=keep_top_k,
+                    nms_threshold=nms_threshold))
+
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'rpn_head': rpn_head,
+                'bbox_head': bbox_head,
+                'bbox_post_process': bbox_post_process
+            })
         else:
-            neck = None
-            anchor_generator_cfg = {
-                'aspect_ratios': aspect_ratios,
-                'anchor_sizes': anchor_sizes,
-                'strides': [16]
-            }
-            train_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 12000,
-                'post_nms_top_n': 2000,
-                'topk_after_collect': False
-            }
-            test_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 6000
-                if test_pre_nms_top_n is None else test_pre_nms_top_n,
-                'post_nms_top_n': test_post_nms_top_n
-            }
-            head = ppdet.modeling.Res5Head()
-            roi_extractor_cfg = {
-                'resolution': 14,
-                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
-                'sampling_ratio': 0,
-                'aligned': True
-            }
-            with_pool = True
-
-        rpn_target_assign_cfg = {
-            'batch_size_per_im': rpn_batch_size_per_im,
-            'fg_fraction': rpn_fg_fraction,
-            'negative_overlap': .3,
-            'positive_overlap': .7,
-            'use_random': True
-        }
-
-        rpn_head = ppdet.modeling.RPNHead(
-            anchor_generator=anchor_generator_cfg,
-            rpn_target_assign=rpn_target_assign_cfg,
-            train_proposal=train_proposal_cfg,
-            test_proposal=test_proposal_cfg,
-            in_channel=rpn_in_channel)
-
-        bbox_assigner = BBoxAssigner(num_classes=num_classes)
-
-        bbox_head = ppdet.modeling.BBoxHead(
-            head=head,
-            in_channel=head.out_shape[0].channels,
-            roi_extractor=roi_extractor_cfg,
-            with_pool=with_pool,
-            bbox_assigner=bbox_assigner,
-            num_classes=num_classes)
-
-        bbox_post_process = ppdet.modeling.BBoxPostProcess(
-            num_classes=num_classes,
-            decode=ppdet.modeling.RCNNBox(num_classes=num_classes),
-            nms=ppdet.modeling.MultiClassNMS(
-                score_threshold=score_threshold,
-                keep_top_k=keep_top_k,
-                nms_threshold=nms_threshold))
-
-        params = {
-            'backbone': backbone,
-            'neck': neck,
-            'rpn_head': rpn_head,
-            'bbox_head': bbox_head,
-            'bbox_post_process': bbox_post_process
-        }
+            if backbone not in ['ResNet50', 'ResNet50_vd']:
+                with_fpn = True
 
         self.with_fpn = with_fpn
         super(FasterRCNN, self).__init__(
@@ -1057,7 +1072,8 @@ class PPYOLO(YOLOv3):
                  nms_score_threshold=0.01,
                  nms_topk=-1,
                  nms_keep_topk=100,
-                 nms_iou_threshold=0.45):
+                 nms_iou_threshold=0.45,
+                 **params):
         self.init_params = locals()
         if backbone not in [
                 'ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large',
@@ -1069,130 +1085,135 @@ class PPYOLO(YOLOv3):
                 format(backbone))
         self.backbone_name = backbone
 
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
-            norm_type = 'sync_bn'
-        else:
-            norm_type = 'bn'
-        if anchors is None and anchor_masks is None:
-            if 'MobileNetV3' in backbone:
-                anchors = [[11, 18], [34, 47], [51, 126], [115, 71],
-                           [120, 195], [254, 235]]
-                anchor_masks = [[3, 4, 5], [0, 1, 2]]
-            elif backbone == 'ResNet50_vd_dcn':
-                anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
-                           [59, 119], [116, 90], [156, 198], [373, 326]]
-                anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
+        if params.get('with_net', True):
+            if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                    'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
+                norm_type = 'sync_bn'
             else:
-                anchors = [[10, 14], [23, 27], [37, 58], [81, 82], [135, 169],
-                           [344, 319]]
-                anchor_masks = [[3, 4, 5], [0, 1, 2]]
-        elif anchors is None or anchor_masks is None:
-            raise ValueError("Please define both anchors and anchor_masks.")
+                norm_type = 'bn'
+            if anchors is None and anchor_masks is None:
+                if 'MobileNetV3' in backbone:
+                    anchors = [[11, 18], [34, 47], [51, 126], [115, 71],
+                               [120, 195], [254, 235]]
+                    anchor_masks = [[3, 4, 5], [0, 1, 2]]
+                elif backbone == 'ResNet50_vd_dcn':
+                    anchors = [[10, 13], [16, 30], [33, 23], [30, 61],
+                               [62, 45], [59, 119], [116, 90], [156, 198],
+                               [373, 326]]
+                    anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
+                else:
+                    anchors = [[10, 14], [23, 27], [37, 58], [81, 82],
+                               [135, 169], [344, 319]]
+                    anchor_masks = [[3, 4, 5], [0, 1, 2]]
+            elif anchors is None or anchor_masks is None:
+                raise ValueError(
+                    "Please define both anchors and anchor_masks.")
 
-        if backbone == 'ResNet50_vd_dcn':
-            backbone = self._get_backbone(
-                'ResNet',
-                variant='d',
+            if backbone == 'ResNet50_vd_dcn':
+                backbone = self._get_backbone(
+                    'ResNet',
+                    variant='d',
+                    norm_type=norm_type,
+                    return_idx=[1, 2, 3],
+                    dcn_v2_stages=[3],
+                    freeze_at=-1,
+                    freeze_norm=False,
+                    norm_decay=0.)
+                downsample_ratios = [32, 16, 8]
+
+            elif backbone == 'ResNet18_vd':
+                backbone = self._get_backbone(
+                    'ResNet',
+                    depth=18,
+                    variant='d',
+                    norm_type=norm_type,
+                    return_idx=[2, 3],
+                    freeze_at=-1,
+                    freeze_norm=False,
+                    norm_decay=0.)
+                downsample_ratios = [32, 16]
+
+            elif backbone == 'MobileNetV3_large':
+                backbone = self._get_backbone(
+                    'MobileNetV3',
+                    model_name='large',
+                    norm_type=norm_type,
+                    scale=1,
+                    with_extra_blocks=False,
+                    extra_block_filters=[],
+                    feature_maps=[13, 16])
+                downsample_ratios = [32, 16]
+
+            elif backbone == 'MobileNetV3_small':
+                backbone = self._get_backbone(
+                    'MobileNetV3',
+                    model_name='small',
+                    norm_type=norm_type,
+                    scale=1,
+                    with_extra_blocks=False,
+                    extra_block_filters=[],
+                    feature_maps=[9, 12])
+                downsample_ratios = [32, 16]
+
+            neck = ppdet.modeling.PPYOLOFPN(
                 norm_type=norm_type,
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
-                freeze_at=-1,
-                freeze_norm=False,
-                norm_decay=0.)
-            downsample_ratios = [32, 16, 8]
+                in_channels=[i.channels for i in backbone.out_shape],
+                coord_conv=use_coord_conv,
+                drop_block=use_drop_block,
+                spp=use_spp,
+                conv_block_num=0
+                if ('MobileNetV3' in self.backbone_name or
+                    self.backbone_name == 'ResNet18_vd') else 2)
 
-        elif backbone == 'ResNet18_vd':
-            backbone = self._get_backbone(
-                'ResNet',
-                depth=18,
-                variant='d',
-                norm_type=norm_type,
-                return_idx=[2, 3],
-                freeze_at=-1,
-                freeze_norm=False,
-                norm_decay=0.)
-            downsample_ratios = [32, 16]
-
-        elif backbone == 'MobileNetV3_large':
-            backbone = self._get_backbone(
-                'MobileNetV3',
-                model_name='large',
-                norm_type=norm_type,
-                scale=1,
-                with_extra_blocks=False,
-                extra_block_filters=[],
-                feature_maps=[13, 16])
-            downsample_ratios = [32, 16]
-
-        elif backbone == 'MobileNetV3_small':
-            backbone = self._get_backbone(
-                'MobileNetV3',
-                model_name='small',
-                norm_type=norm_type,
-                scale=1,
-                with_extra_blocks=False,
-                extra_block_filters=[],
-                feature_maps=[9, 12])
-            downsample_ratios = [32, 16]
-
-        neck = ppdet.modeling.PPYOLOFPN(
-            norm_type=norm_type,
-            in_channels=[i.channels for i in backbone.out_shape],
-            coord_conv=use_coord_conv,
-            drop_block=use_drop_block,
-            spp=use_spp,
-            conv_block_num=0 if ('MobileNetV3' in self.backbone_name or
-                                 self.backbone_name == 'ResNet18_vd') else 2)
-
-        loss = ppdet.modeling.YOLOv3Loss(
-            num_classes=num_classes,
-            ignore_thresh=ignore_threshold,
-            downsample=downsample_ratios,
-            label_smooth=label_smooth,
-            scale_x_y=scale_x_y,
-            iou_loss=ppdet.modeling.IouLoss(
-                loss_weight=2.5, loss_square=True) if use_iou_loss else None,
-            iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
-            if use_iou_aware else None)
-
-        yolo_head = ppdet.modeling.YOLOv3Head(
-            in_channels=[i.channels for i in neck.out_shape],
-            anchors=anchors,
-            anchor_masks=anchor_masks,
-            num_classes=num_classes,
-            loss=loss,
-            iou_aware=use_iou_aware)
-
-        if use_matrix_nms:
-            nms = ppdet.modeling.MatrixNMS(
-                keep_top_k=nms_keep_topk,
-                score_threshold=nms_score_threshold,
-                post_threshold=.05
-                if 'MobileNetV3' in self.backbone_name else .01,
-                nms_top_k=nms_topk,
-                background_label=-1)
-        else:
-            nms = ppdet.modeling.MultiClassNMS(
-                score_threshold=nms_score_threshold,
-                nms_top_k=nms_topk,
-                keep_top_k=nms_keep_topk,
-                nms_threshold=nms_iou_threshold)
-
-        post_process = ppdet.modeling.BBoxPostProcess(
-            decode=ppdet.modeling.YOLOBox(
+            loss = ppdet.modeling.YOLOv3Loss(
                 num_classes=num_classes,
-                conf_thresh=.005
-                if 'MobileNetV3' in self.backbone_name else .01,
-                scale_x_y=scale_x_y),
-            nms=nms)
+                ignore_thresh=ignore_threshold,
+                downsample=downsample_ratios,
+                label_smooth=label_smooth,
+                scale_x_y=scale_x_y,
+                iou_loss=ppdet.modeling.IouLoss(
+                    loss_weight=2.5, loss_square=True)
+                if use_iou_loss else None,
+                iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
+                if use_iou_aware else None)
 
-        params = {
-            'backbone': backbone,
-            'neck': neck,
-            'yolo_head': yolo_head,
-            'post_process': post_process
-        }
+            yolo_head = ppdet.modeling.YOLOv3Head(
+                in_channels=[i.channels for i in neck.out_shape],
+                anchors=anchors,
+                anchor_masks=anchor_masks,
+                num_classes=num_classes,
+                loss=loss,
+                iou_aware=use_iou_aware)
+
+            if use_matrix_nms:
+                nms = ppdet.modeling.MatrixNMS(
+                    keep_top_k=nms_keep_topk,
+                    score_threshold=nms_score_threshold,
+                    post_threshold=.05
+                    if 'MobileNetV3' in self.backbone_name else .01,
+                    nms_top_k=nms_topk,
+                    background_label=-1)
+            else:
+                nms = ppdet.modeling.MultiClassNMS(
+                    score_threshold=nms_score_threshold,
+                    nms_top_k=nms_topk,
+                    keep_top_k=nms_keep_topk,
+                    nms_threshold=nms_iou_threshold)
+
+            post_process = ppdet.modeling.BBoxPostProcess(
+                decode=ppdet.modeling.YOLOBox(
+                    num_classes=num_classes,
+                    conf_thresh=.005
+                    if 'MobileNetV3' in self.backbone_name else .01,
+                    scale_x_y=scale_x_y),
+                nms=nms)
+
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'yolo_head': yolo_head,
+                'post_process': post_process
+            })
 
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
@@ -1220,83 +1241,87 @@ class PPYOLOTiny(YOLOv3):
                  nms_score_threshold=0.005,
                  nms_topk=1000,
                  nms_keep_topk=100,
-                 nms_iou_threshold=0.45):
+                 nms_iou_threshold=0.45,
+                 **params):
         self.init_params = locals()
         if backbone != 'MobileNetV3':
             logging.warning(
                 "PPYOLOTiny only supports MobileNetV3 as backbone. "
                 "Backbone is forcibly set to MobileNetV3.")
         self.backbone_name = 'MobileNetV3'
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
-            norm_type = 'sync_bn'
-        else:
-            norm_type = 'bn'
 
-        backbone = self._get_backbone(
-            'MobileNetV3',
-            model_name='large',
-            norm_type=norm_type,
-            scale=.5,
-            with_extra_blocks=False,
-            extra_block_filters=[],
-            feature_maps=[7, 13, 16])
-        downsample_ratios = [32, 16, 8]
+        if params.get('with_net', True):
+            if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                    'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
+                norm_type = 'sync_bn'
+            else:
+                norm_type = 'bn'
 
-        neck = ppdet.modeling.PPYOLOTinyFPN(
-            detection_block_channels=[160, 128, 96],
-            in_channels=[i.channels for i in backbone.out_shape],
-            spp=use_spp,
-            drop_block=use_drop_block)
+            backbone = self._get_backbone(
+                'MobileNetV3',
+                model_name='large',
+                norm_type=norm_type,
+                scale=.5,
+                with_extra_blocks=False,
+                extra_block_filters=[],
+                feature_maps=[7, 13, 16])
+            downsample_ratios = [32, 16, 8]
 
-        loss = ppdet.modeling.YOLOv3Loss(
-            num_classes=num_classes,
-            ignore_thresh=ignore_threshold,
-            downsample=downsample_ratios,
-            label_smooth=label_smooth,
-            scale_x_y=scale_x_y,
-            iou_loss=ppdet.modeling.IouLoss(
-                loss_weight=2.5, loss_square=True) if use_iou_loss else None,
-            iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
-            if use_iou_aware else None)
+            neck = ppdet.modeling.PPYOLOTinyFPN(
+                detection_block_channels=[160, 128, 96],
+                in_channels=[i.channels for i in backbone.out_shape],
+                spp=use_spp,
+                drop_block=use_drop_block)
 
-        yolo_head = ppdet.modeling.YOLOv3Head(
-            in_channels=[i.channels for i in neck.out_shape],
-            anchors=anchors,
-            anchor_masks=anchor_masks,
-            num_classes=num_classes,
-            loss=loss,
-            iou_aware=use_iou_aware)
-
-        if use_matrix_nms:
-            nms = ppdet.modeling.MatrixNMS(
-                keep_top_k=nms_keep_topk,
-                score_threshold=nms_score_threshold,
-                post_threshold=.05,
-                nms_top_k=nms_topk,
-                background_label=-1)
-        else:
-            nms = ppdet.modeling.MultiClassNMS(
-                score_threshold=nms_score_threshold,
-                nms_top_k=nms_topk,
-                keep_top_k=nms_keep_topk,
-                nms_threshold=nms_iou_threshold)
-
-        post_process = ppdet.modeling.BBoxPostProcess(
-            decode=ppdet.modeling.YOLOBox(
+            loss = ppdet.modeling.YOLOv3Loss(
                 num_classes=num_classes,
-                conf_thresh=.005,
-                downsample_ratio=32,
-                clip_bbox=True,
-                scale_x_y=scale_x_y),
-            nms=nms)
+                ignore_thresh=ignore_threshold,
+                downsample=downsample_ratios,
+                label_smooth=label_smooth,
+                scale_x_y=scale_x_y,
+                iou_loss=ppdet.modeling.IouLoss(
+                    loss_weight=2.5, loss_square=True)
+                if use_iou_loss else None,
+                iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
+                if use_iou_aware else None)
 
-        params = {
-            'backbone': backbone,
-            'neck': neck,
-            'yolo_head': yolo_head,
-            'post_process': post_process
-        }
+            yolo_head = ppdet.modeling.YOLOv3Head(
+                in_channels=[i.channels for i in neck.out_shape],
+                anchors=anchors,
+                anchor_masks=anchor_masks,
+                num_classes=num_classes,
+                loss=loss,
+                iou_aware=use_iou_aware)
+
+            if use_matrix_nms:
+                nms = ppdet.modeling.MatrixNMS(
+                    keep_top_k=nms_keep_topk,
+                    score_threshold=nms_score_threshold,
+                    post_threshold=.05,
+                    nms_top_k=nms_topk,
+                    background_label=-1)
+            else:
+                nms = ppdet.modeling.MultiClassNMS(
+                    score_threshold=nms_score_threshold,
+                    nms_top_k=nms_topk,
+                    keep_top_k=nms_keep_topk,
+                    nms_threshold=nms_iou_threshold)
+
+            post_process = ppdet.modeling.BBoxPostProcess(
+                decode=ppdet.modeling.YOLOBox(
+                    num_classes=num_classes,
+                    conf_thresh=.005,
+                    downsample_ratio=32,
+                    clip_bbox=True,
+                    scale_x_y=scale_x_y),
+                nms=nms)
+
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'yolo_head': yolo_head,
+                'post_process': post_process
+            })
 
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
@@ -1324,7 +1349,8 @@ class PPYOLOv2(YOLOv3):
                  nms_score_threshold=0.01,
                  nms_topk=-1,
                  nms_keep_topk=100,
-                 nms_iou_threshold=0.45):
+                 nms_iou_threshold=0.45,
+                 **params):
         self.init_params = locals()
         if backbone not in ['ResNet50_vd_dcn', 'ResNet101_vd_dcn']:
             raise ValueError(
@@ -1332,94 +1358,96 @@ class PPYOLOv2(YOLOv3):
                 "('ResNet50_vd_dcn', 'ResNet101_vd_dcn')".format(backbone))
         self.backbone_name = backbone
 
-        if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
-                'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
-            norm_type = 'sync_bn'
-        else:
-            norm_type = 'bn'
+        if params.get('with_net', True):
+            if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
+                    'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
+                norm_type = 'sync_bn'
+            else:
+                norm_type = 'bn'
 
-        if backbone == 'ResNet50_vd_dcn':
-            backbone = self._get_backbone(
-                'ResNet',
-                variant='d',
+            if backbone == 'ResNet50_vd_dcn':
+                backbone = self._get_backbone(
+                    'ResNet',
+                    variant='d',
+                    norm_type=norm_type,
+                    return_idx=[1, 2, 3],
+                    dcn_v2_stages=[3],
+                    freeze_at=-1,
+                    freeze_norm=False,
+                    norm_decay=0.)
+                downsample_ratios = [32, 16, 8]
+
+            elif backbone == 'ResNet101_vd_dcn':
+                backbone = self._get_backbone(
+                    'ResNet',
+                    depth=101,
+                    variant='d',
+                    norm_type=norm_type,
+                    return_idx=[1, 2, 3],
+                    dcn_v2_stages=[3],
+                    freeze_at=-1,
+                    freeze_norm=False,
+                    norm_decay=0.)
+                downsample_ratios = [32, 16, 8]
+
+            neck = ppdet.modeling.PPYOLOPAN(
                 norm_type=norm_type,
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
-                freeze_at=-1,
-                freeze_norm=False,
-                norm_decay=0.)
-            downsample_ratios = [32, 16, 8]
+                in_channels=[i.channels for i in backbone.out_shape],
+                drop_block=use_drop_block,
+                block_size=3,
+                keep_prob=.9,
+                spp=use_spp)
 
-        elif backbone == 'ResNet101_vd_dcn':
-            backbone = self._get_backbone(
-                'ResNet',
-                depth=101,
-                variant='d',
-                norm_type=norm_type,
-                return_idx=[1, 2, 3],
-                dcn_v2_stages=[3],
-                freeze_at=-1,
-                freeze_norm=False,
-                norm_decay=0.)
-            downsample_ratios = [32, 16, 8]
-
-        neck = ppdet.modeling.PPYOLOPAN(
-            norm_type=norm_type,
-            in_channels=[i.channels for i in backbone.out_shape],
-            drop_block=use_drop_block,
-            block_size=3,
-            keep_prob=.9,
-            spp=use_spp)
-
-        loss = ppdet.modeling.YOLOv3Loss(
-            num_classes=num_classes,
-            ignore_thresh=ignore_threshold,
-            downsample=downsample_ratios,
-            label_smooth=label_smooth,
-            scale_x_y=scale_x_y,
-            iou_loss=ppdet.modeling.IouLoss(
-                loss_weight=2.5, loss_square=True) if use_iou_loss else None,
-            iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
-            if use_iou_aware else None)
-
-        yolo_head = ppdet.modeling.YOLOv3Head(
-            in_channels=[i.channels for i in neck.out_shape],
-            anchors=anchors,
-            anchor_masks=anchor_masks,
-            num_classes=num_classes,
-            loss=loss,
-            iou_aware=use_iou_aware,
-            iou_aware_factor=.5)
-
-        if use_matrix_nms:
-            nms = ppdet.modeling.MatrixNMS(
-                keep_top_k=nms_keep_topk,
-                score_threshold=nms_score_threshold,
-                post_threshold=.01,
-                nms_top_k=nms_topk,
-                background_label=-1)
-        else:
-            nms = ppdet.modeling.MultiClassNMS(
-                score_threshold=nms_score_threshold,
-                nms_top_k=nms_topk,
-                keep_top_k=nms_keep_topk,
-                nms_threshold=nms_iou_threshold)
-
-        post_process = ppdet.modeling.BBoxPostProcess(
-            decode=ppdet.modeling.YOLOBox(
+            loss = ppdet.modeling.YOLOv3Loss(
                 num_classes=num_classes,
-                conf_thresh=.01,
-                downsample_ratio=32,
-                clip_bbox=True,
-                scale_x_y=scale_x_y),
-            nms=nms)
+                ignore_thresh=ignore_threshold,
+                downsample=downsample_ratios,
+                label_smooth=label_smooth,
+                scale_x_y=scale_x_y,
+                iou_loss=ppdet.modeling.IouLoss(
+                    loss_weight=2.5, loss_square=True)
+                if use_iou_loss else None,
+                iou_aware_loss=ppdet.modeling.IouAwareLoss(loss_weight=1.0)
+                if use_iou_aware else None)
 
-        params = {
-            'backbone': backbone,
-            'neck': neck,
-            'yolo_head': yolo_head,
-            'post_process': post_process
-        }
+            yolo_head = ppdet.modeling.YOLOv3Head(
+                in_channels=[i.channels for i in neck.out_shape],
+                anchors=anchors,
+                anchor_masks=anchor_masks,
+                num_classes=num_classes,
+                loss=loss,
+                iou_aware=use_iou_aware,
+                iou_aware_factor=.5)
+
+            if use_matrix_nms:
+                nms = ppdet.modeling.MatrixNMS(
+                    keep_top_k=nms_keep_topk,
+                    score_threshold=nms_score_threshold,
+                    post_threshold=.01,
+                    nms_top_k=nms_topk,
+                    background_label=-1)
+            else:
+                nms = ppdet.modeling.MultiClassNMS(
+                    score_threshold=nms_score_threshold,
+                    nms_top_k=nms_topk,
+                    keep_top_k=nms_keep_topk,
+                    nms_threshold=nms_iou_threshold)
+
+            post_process = ppdet.modeling.BBoxPostProcess(
+                decode=ppdet.modeling.YOLOBox(
+                    num_classes=num_classes,
+                    conf_thresh=.01,
+                    downsample_ratio=32,
+                    clip_bbox=True,
+                    scale_x_y=scale_x_y),
+                nms=nms)
+
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'yolo_head': yolo_head,
+                'post_process': post_process
+            })
 
         super(YOLOv3, self).__init__(
             model_name='YOLOv3', num_classes=num_classes, **params)
@@ -1461,7 +1489,8 @@ class MaskRCNN(BaseDetector):
                  rpn_batch_size_per_im=256,
                  rpn_fg_fraction=0.5,
                  test_pre_nms_top_n=None,
-                 test_post_nms_top_n=1000):
+                 test_post_nms_top_n=1000,
+                 **params):
         self.init_params = locals()
         if backbone not in [
                 'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet101',
@@ -1475,204 +1504,210 @@ class MaskRCNN(BaseDetector):
         self.backbone_name = backbone + '_fpn' if with_fpn else backbone
         dcn_v2_stages = [1, 2, 3] if with_dcn else [-1]
 
-        if backbone == 'ResNet50':
-            if with_fpn:
+        if params.get('with_net', True):
+            if backbone == 'ResNet50':
+                if with_fpn:
+                    backbone = self._get_backbone(
+                        'ResNet',
+                        norm_type='bn',
+                        freeze_at=0,
+                        return_idx=[0, 1, 2, 3],
+                        num_stages=4,
+                        dcn_v2_stages=dcn_v2_stages)
+                else:
+                    if with_dcn:
+                        logging.warning(
+                            "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
+                            format(backbone))
+                    backbone = self._get_backbone(
+                        'ResNet',
+                        norm_type='bn',
+                        freeze_at=0,
+                        return_idx=[2],
+                        num_stages=3)
+
+            elif 'ResNet50_vd' in backbone:
+                if not with_fpn:
+                    logging.warning(
+                        "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                        format(backbone))
+                    with_fpn = True
                 backbone = self._get_backbone(
                     'ResNet',
+                    variant='d',
+                    norm_type='bn',
+                    freeze_at=0,
+                    return_idx=[0, 1, 2, 3],
+                    num_stages=4,
+                    lr_mult_list=[0.05, 0.05, 0.1, 0.15]
+                    if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0],
+                    dcn_v2_stages=dcn_v2_stages)
+
+            else:
+                if not with_fpn:
+                    logging.warning(
+                        "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
+                        format(backbone))
+                    with_fpn = True
+                backbone = self._get_backbone(
+                    'ResNet',
+                    variant='d' if '_vd' in backbone else 'b',
+                    depth=101,
                     norm_type='bn',
                     freeze_at=0,
                     return_idx=[0, 1, 2, 3],
                     num_stages=4,
                     dcn_v2_stages=dcn_v2_stages)
+
+            rpn_in_channel = backbone.out_shape[0].channels
+
+            if with_fpn:
+                neck = ppdet.modeling.FPN(
+                    in_channels=[i.channels for i in backbone.out_shape],
+                    out_channel=fpn_num_channels,
+                    spatial_scales=[
+                        1.0 / i.stride for i in backbone.out_shape
+                    ])
+                rpn_in_channel = neck.out_shape[0].channels
+                anchor_generator_cfg = {
+                    'aspect_ratios': aspect_ratios,
+                    'anchor_sizes': anchor_sizes,
+                    'strides': [4, 8, 16, 32, 64]
+                }
+                train_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 2000,
+                    'post_nms_top_n': 1000,
+                    'topk_after_collect': True
+                }
+                test_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 1000
+                    if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                    'post_nms_top_n': test_post_nms_top_n
+                }
+                bb_head = ppdet.modeling.TwoFCHead(
+                    in_channel=neck.out_shape[0].channels, out_channel=1024)
+                bb_roi_extractor_cfg = {
+                    'resolution': 7,
+                    'spatial_scale': [1. / i.stride for i in neck.out_shape],
+                    'sampling_ratio': 0,
+                    'aligned': True
+                }
+                with_pool = False
+                m_head = ppdet.modeling.MaskFeat(
+                    in_channel=neck.out_shape[0].channels,
+                    out_channel=256,
+                    num_convs=4)
+                m_roi_extractor_cfg = {
+                    'resolution': 14,
+                    'spatial_scale': [1. / i.stride for i in neck.out_shape],
+                    'sampling_ratio': 0,
+                    'aligned': True
+                }
+                mask_assigner = MaskAssigner(
+                    num_classes=num_classes, mask_resolution=28)
+                share_bbox_feat = False
+
             else:
-                if with_dcn:
-                    logging.warning(
-                        "Backbone {} should be used along with dcn disabled, 'with_dcn' is forcibly set to False".
-                        format(backbone))
-                backbone = self._get_backbone(
-                    'ResNet',
-                    norm_type='bn',
-                    freeze_at=0,
-                    return_idx=[2],
-                    num_stages=3)
+                neck = None
+                anchor_generator_cfg = {
+                    'aspect_ratios': aspect_ratios,
+                    'anchor_sizes': anchor_sizes,
+                    'strides': [16]
+                }
+                train_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 12000,
+                    'post_nms_top_n': 2000,
+                    'topk_after_collect': False
+                }
+                test_proposal_cfg = {
+                    'min_size': 0.0,
+                    'nms_thresh': .7,
+                    'pre_nms_top_n': 6000
+                    if test_pre_nms_top_n is None else test_pre_nms_top_n,
+                    'post_nms_top_n': test_post_nms_top_n
+                }
+                bb_head = ppdet.modeling.Res5Head()
+                bb_roi_extractor_cfg = {
+                    'resolution': 14,
+                    'spatial_scale':
+                    [1. / i.stride for i in backbone.out_shape],
+                    'sampling_ratio': 0,
+                    'aligned': True
+                }
+                with_pool = True
+                m_head = ppdet.modeling.MaskFeat(
+                    in_channel=bb_head.out_shape[0].channels,
+                    out_channel=256,
+                    num_convs=0)
+                m_roi_extractor_cfg = {
+                    'resolution': 14,
+                    'spatial_scale':
+                    [1. / i.stride for i in backbone.out_shape],
+                    'sampling_ratio': 0,
+                    'aligned': True
+                }
+                mask_assigner = MaskAssigner(
+                    num_classes=num_classes, mask_resolution=14)
+                share_bbox_feat = True
 
-        elif 'ResNet50_vd' in backbone:
-            if not with_fpn:
-                logging.warning(
-                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
-                    format(backbone))
-                with_fpn = True
-            backbone = self._get_backbone(
-                'ResNet',
-                variant='d',
-                norm_type='bn',
-                freeze_at=0,
-                return_idx=[0, 1, 2, 3],
-                num_stages=4,
-                lr_mult_list=[0.05, 0.05, 0.1, 0.15]
-                if '_ssld' in backbone else [1.0, 1.0, 1.0, 1.0],
-                dcn_v2_stages=dcn_v2_stages)
+            rpn_target_assign_cfg = {
+                'batch_size_per_im': rpn_batch_size_per_im,
+                'fg_fraction': rpn_fg_fraction,
+                'negative_overlap': .3,
+                'positive_overlap': .7,
+                'use_random': True
+            }
 
-        else:
-            if not with_fpn:
-                logging.warning(
-                    "Backbone {} should be used along with fpn enabled, 'with_fpn' is forcibly set to True".
-                    format(backbone))
-                with_fpn = True
-            backbone = self._get_backbone(
-                'ResNet',
-                variant='d' if '_vd' in backbone else 'b',
-                depth=101,
-                norm_type='bn',
-                freeze_at=0,
-                return_idx=[0, 1, 2, 3],
-                num_stages=4,
-                dcn_v2_stages=dcn_v2_stages)
+            rpn_head = ppdet.modeling.RPNHead(
+                anchor_generator=anchor_generator_cfg,
+                rpn_target_assign=rpn_target_assign_cfg,
+                train_proposal=train_proposal_cfg,
+                test_proposal=test_proposal_cfg,
+                in_channel=rpn_in_channel)
 
-        rpn_in_channel = backbone.out_shape[0].channels
+            bbox_assigner = BBoxAssigner(num_classes=num_classes)
 
-        if with_fpn:
-            neck = ppdet.modeling.FPN(
-                in_channels=[i.channels for i in backbone.out_shape],
-                out_channel=fpn_num_channels,
-                spatial_scales=[1.0 / i.stride for i in backbone.out_shape])
-            rpn_in_channel = neck.out_shape[0].channels
-            anchor_generator_cfg = {
-                'aspect_ratios': aspect_ratios,
-                'anchor_sizes': anchor_sizes,
-                'strides': [4, 8, 16, 32, 64]
-            }
-            train_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 2000,
-                'post_nms_top_n': 1000,
-                'topk_after_collect': True
-            }
-            test_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 1000
-                if test_pre_nms_top_n is None else test_pre_nms_top_n,
-                'post_nms_top_n': test_post_nms_top_n
-            }
-            bb_head = ppdet.modeling.TwoFCHead(
-                in_channel=neck.out_shape[0].channels, out_channel=1024)
-            bb_roi_extractor_cfg = {
-                'resolution': 7,
-                'spatial_scale': [1. / i.stride for i in neck.out_shape],
-                'sampling_ratio': 0,
-                'aligned': True
-            }
-            with_pool = False
-            m_head = ppdet.modeling.MaskFeat(
-                in_channel=neck.out_shape[0].channels,
-                out_channel=256,
-                num_convs=4)
-            m_roi_extractor_cfg = {
-                'resolution': 14,
-                'spatial_scale': [1. / i.stride for i in neck.out_shape],
-                'sampling_ratio': 0,
-                'aligned': True
-            }
-            mask_assigner = MaskAssigner(
-                num_classes=num_classes, mask_resolution=28)
-            share_bbox_feat = False
-
-        else:
-            neck = None
-            anchor_generator_cfg = {
-                'aspect_ratios': aspect_ratios,
-                'anchor_sizes': anchor_sizes,
-                'strides': [16]
-            }
-            train_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 12000,
-                'post_nms_top_n': 2000,
-                'topk_after_collect': False
-            }
-            test_proposal_cfg = {
-                'min_size': 0.0,
-                'nms_thresh': .7,
-                'pre_nms_top_n': 6000
-                if test_pre_nms_top_n is None else test_pre_nms_top_n,
-                'post_nms_top_n': test_post_nms_top_n
-            }
-            bb_head = ppdet.modeling.Res5Head()
-            bb_roi_extractor_cfg = {
-                'resolution': 14,
-                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
-                'sampling_ratio': 0,
-                'aligned': True
-            }
-            with_pool = True
-            m_head = ppdet.modeling.MaskFeat(
+            bbox_head = ppdet.modeling.BBoxHead(
+                head=bb_head,
                 in_channel=bb_head.out_shape[0].channels,
-                out_channel=256,
-                num_convs=0)
-            m_roi_extractor_cfg = {
-                'resolution': 14,
-                'spatial_scale': [1. / i.stride for i in backbone.out_shape],
-                'sampling_ratio': 0,
-                'aligned': True
-            }
-            mask_assigner = MaskAssigner(
-                num_classes=num_classes, mask_resolution=14)
-            share_bbox_feat = True
+                roi_extractor=bb_roi_extractor_cfg,
+                with_pool=with_pool,
+                bbox_assigner=bbox_assigner,
+                num_classes=num_classes)
 
-        rpn_target_assign_cfg = {
-            'batch_size_per_im': rpn_batch_size_per_im,
-            'fg_fraction': rpn_fg_fraction,
-            'negative_overlap': .3,
-            'positive_overlap': .7,
-            'use_random': True
-        }
+            mask_head = ppdet.modeling.MaskHead(
+                head=m_head,
+                roi_extractor=m_roi_extractor_cfg,
+                mask_assigner=mask_assigner,
+                share_bbox_feat=share_bbox_feat,
+                num_classes=num_classes)
 
-        rpn_head = ppdet.modeling.RPNHead(
-            anchor_generator=anchor_generator_cfg,
-            rpn_target_assign=rpn_target_assign_cfg,
-            train_proposal=train_proposal_cfg,
-            test_proposal=test_proposal_cfg,
-            in_channel=rpn_in_channel)
+            bbox_post_process = ppdet.modeling.BBoxPostProcess(
+                num_classes=num_classes,
+                decode=ppdet.modeling.RCNNBox(num_classes=num_classes),
+                nms=ppdet.modeling.MultiClassNMS(
+                    score_threshold=score_threshold,
+                    keep_top_k=keep_top_k,
+                    nms_threshold=nms_threshold))
 
-        bbox_assigner = BBoxAssigner(num_classes=num_classes)
+            mask_post_process = ppdet.modeling.MaskPostProcess(
+                binary_thresh=.5)
 
-        bbox_head = ppdet.modeling.BBoxHead(
-            head=bb_head,
-            in_channel=bb_head.out_shape[0].channels,
-            roi_extractor=bb_roi_extractor_cfg,
-            with_pool=with_pool,
-            bbox_assigner=bbox_assigner,
-            num_classes=num_classes)
-
-        mask_head = ppdet.modeling.MaskHead(
-            head=m_head,
-            roi_extractor=m_roi_extractor_cfg,
-            mask_assigner=mask_assigner,
-            share_bbox_feat=share_bbox_feat,
-            num_classes=num_classes)
-
-        bbox_post_process = ppdet.modeling.BBoxPostProcess(
-            num_classes=num_classes,
-            decode=ppdet.modeling.RCNNBox(num_classes=num_classes),
-            nms=ppdet.modeling.MultiClassNMS(
-                score_threshold=score_threshold,
-                keep_top_k=keep_top_k,
-                nms_threshold=nms_threshold))
-
-        mask_post_process = ppdet.modeling.MaskPostProcess(binary_thresh=.5)
-
-        params = {
-            'backbone': backbone,
-            'neck': neck,
-            'rpn_head': rpn_head,
-            'bbox_head': bbox_head,
-            'mask_head': mask_head,
-            'bbox_post_process': bbox_post_process,
-            'mask_post_process': mask_post_process
-        }
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'rpn_head': rpn_head,
+                'bbox_head': bbox_head,
+                'mask_head': mask_head,
+                'bbox_post_process': bbox_post_process,
+                'mask_post_process': mask_post_process
+            })
         self.with_fpn = with_fpn
         super(MaskRCNN, self).__init__(
             model_name='MaskRCNN', num_classes=num_classes, **params)
