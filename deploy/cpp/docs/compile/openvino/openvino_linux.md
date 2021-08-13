@@ -1,6 +1,6 @@
 # 基于OpenVINO的推理-Linux环境编译
 
-本文档指引用户如何基于OpenVINO对飞桨模型进行推理，并编译执行。进行以下编译操作前请先安装好OpenVINO，OpenVINO安装请参考官网[OpenVINO-windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)
+本文档指引用户如何基于OpenVINO对飞桨模型进行推理，并编译执行。进行以下编译操作前请先安装好OpenVINO，OpenVINO安装请参考官网[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)
 
 **注意：** 
 

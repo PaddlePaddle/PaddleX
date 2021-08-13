@@ -1,6 +1,6 @@
 # 基于OpenVINO的推理-Windows环境编译
 
-本文档指引用户如何基于OpenVINO对飞桨模型进行推理，并编译执行。进行以下编译操作前请先安装好OpenVINO，OpenVINO安装请参考官网[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)
+本文档指引用户如何基于OpenVINO对飞桨模型进行推理，并编译执行。进行以下编译操作前请先安装好OpenVINO，OpenVINO安装请参考官网[OpenVINO-windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)
 
 **注意：** 
 
@@ -77,7 +77,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
    - 在系统变量中找到Path（如没有，自行创建），并双击编辑
    - 新建，将opencv路径填入并保存，如`D:\projects\opencv\build\x64\vc15\bin`
    - 在进行cmake构建时，会有相关提示，请注意vs2019的输出
-4. 点击[下载gflags依赖包](https://bj.bcebos.com/paddlex/deploy/gflags.tar.gz)，解压至`deps`目录
+4. 点击[下载gflags依赖包](https://bj.bcebos.com/paddlex/deploy/gflags_windows.zip)，解压至`deps`目录
 
 ### Step 4. 编译
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
