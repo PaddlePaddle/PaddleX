@@ -151,7 +151,7 @@ SDK的预处理中使用了OpenCV， 所以需要额外下载链接：
 
 三.编译运行
 
-windows编译可以看[表计读数案例](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/meter_reader#8)
+windows编译可以看[表计读数案例](https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/meter_reader)
 
 linux上需要修改CMakeLists.txt 各个库位置，然后执行一下几行命令：
 
@@ -173,4 +173,4 @@ pipeline_infer --pipeline_cfg /path/pipeline.yaml --image /path/image.png
 
 ## <h2 id="6">多模型串联的工业表计读数部署</h2>
 
-多模型串联可以看我们的[表计读数案例](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/examples/meter_reader#8)， 里边有详细的部署介绍。
+多模型串联可以看我们的[表计读数案例](https://github.com/PaddlePaddle/PaddleX/tree/develop/examples/meter_reader)， 里边有详细的部署介绍。
