@@ -67,11 +67,13 @@ def main():
         lines = f.readlines()
         for im_path in lines:
             print(im_path)
-            predictor.predict(im_path.strip('\n'))
+            result = predictor.predict(im_path.strip('\n'))
+            print(result)
         f.close()
     else:
         im_path = args.img
-        predictor.predict(im_path)
+        result = predictor.predict(im_path)
+        print(result)
 
 
 if __name__ == "__main__":
