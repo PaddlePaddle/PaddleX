@@ -212,3 +212,4 @@ class Predictor:
         elif self.model_type == "segmenter":
             results = self.segmenter_postprocess(model_pred,
                                                  preprocessed_input)
+        return results
