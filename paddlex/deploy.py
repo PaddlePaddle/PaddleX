@@ -146,10 +146,37 @@ class Predictor(object):
                 exit=True)
         return preprocessed_samples
 
-    def postprocess(self, net_outputs, topk=1):
+    def postprocess(self, net_outputs, topk=1, ori_shape=None,
+                    transforms=None):
         if self._model.model_type == 'classifier':
             true_topk = min(self._model.num_classes, topk)
-            preds = self._model._postprocess(net_outputs, true_topk)
+            preds = self._model._postprocess(net_outputs[0], true_topk)
+        elif self._model.model_type == 'segmenter':
+            score_map, label_map = net_outputs
+            combo = np.concatenate([score_map, label_map], axis=-1)
+            combo = self._model._postprocess(
+                combo,
+                batch_origin_shape=ori_shape,
+                transforms=transforms.transforms)
+            score_map = np.squeeze(combo[..., :-1])
+            label_map = np.squeeze(combo[..., -1])
+            if len(score_map.shape) == 3:
+                preds = {'label_map': label_map, 'score_map': score_map}
+            else:
+                preds = [{
+                    'label_map': l,
+                    'score_map': s
+                } for l, s in zip(label_map, score_map)]
+        elif self._model.model_type == 'detector':
+            net_outputs = {
+                k: v
+                for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
+            }
+            preds = self._model._postprocess(net_outputs)
+        else:
+            logging.error(
+                "Invalid model type {}.".format(self._model.model_type),
+                exit=True)
 
         return preds
 
@@ -167,9 +194,6 @@ class Predictor(object):
         self.timer.inference_time_s.start()
         self.predictor.run()
         output_names = self.predictor.get_output_names()
-        if self._model.model_type == 'classifier':
-            net_outputs = F.softmax(self.predictor.get_output_handle(name))
-
         net_outputs = list()
         for name in output_names:
             output_tensor = self.predictor.get_output_handle(name)
@@ -204,5 +228,11 @@ class Predictor(object):
         self.timer.inference_time_s.end()
 
         self.timer.postprocess_time_s.start()
-        results = self.postprocess(net_outputs, topk)
-        print(results)
+        results = self.postprocess(
+            net_outputs,
+            topk,
+            ori_shape=preprocessed_input.get('ori_shape', None),
+            transforms=transforms.transforms)
+        self.timer.postprocess_time_s.end()
+
+        return results

@@ -17,14 +17,17 @@ import paddle
 
 class PostProcessor(paddle.nn.Layer):
     def __init__(self, model_type):
+        super(PostProcessor, self).__init__()
         self.model_type = model_type
 
     def forward(self, net_outputs):
         if self.model_type == 'classifier':
             outputs = paddle.nn.functional.softmax(net_outputs, axis=1)
         elif self.model_type == 'segmenter':
-            outputs = paddle.squeeze(paddle.nn.functional.softmax(net_outputs, axis=1)), \
-                      paddle.squeeze(paddle.argmax(net_outputs, axis=1))
+            # score_map, label_map
+            outputs = paddle.transpose(paddle.nn.functional.softmax(net_outputs, axis=1), perm=[0, 2, 3, 1]), \
+                      paddle.transpose(paddle.argmax(net_outputs, axis=1, keepdim=True, dtype='int32'),
+                                       perm=[0, 2, 3, 1])
         else:
             outputs = net_outputs
         return outputs
@@ -37,7 +40,7 @@ class InferNet(paddle.nn.Layer):
         self.postprocessor = PostProcessor(model_type)
 
     def forward(self, x):
-        net_outputs = self.net(x)
+        net_outputs = self.net(x)[0]
         outputs = self.postprocessor(net_outputs)
 
         return outputs
