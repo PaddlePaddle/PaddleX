@@ -14,6 +14,7 @@
 
 import os.path as osp
 import numpy as np
+import paddle.nn.functional as F
 from paddle.inference import Config
 from paddle.inference import create_predictor
 from paddle.inference import PrecisionType
@@ -131,19 +132,26 @@ class Predictor(object):
         preprocessed_samples = self._model._preprocess(
             images, transforms, to_tensor=False)
         if self._model.model_type == 'classifier':
-            batch_samples = {'image': preprocessed_samples[0]}
+            preprocessed_samples = {'image': preprocessed_samples[0]}
         elif self._model.model_type == 'segmenter':
-            batch_samples = {
+            preprocessed_samples = {
                 'image': preprocessed_samples[0],
                 'ori_shape': preprocessed_samples[1]
             }
         elif self._model.model_type == 'detector':
-            batch_samples = preprocessed_samples
+            pass
         else:
             logging.error(
                 "Invalid model type {}".format(self._model.model_type),
                 exit=True)
-        return batch_samples
+        return preprocessed_samples
+
+    def postprocess(self, net_outputs, topk=1):
+        if self._model.model_type == 'classifier':
+            true_topk = min(self._model.num_classes, topk)
+            preds = self._model._postprocess(net_outputs, true_topk)
+
+        return preds
 
     def raw_predict(self, inputs):
         """ 接受预处理过后的数据进行预测
@@ -151,6 +159,23 @@ class Predictor(object):
             Args:
                 inputs(dict): 预处理过后的数据
         """
+        input_names = self.predictor.get_input_names()
+        for name in input_names:
+            input_tensor = self.predictor.get_input_handle(name)
+            input_tensor.copy_from_cpu(inputs[name])
+
+        self.timer.inference_time_s.start()
+        self.predictor.run()
+        output_names = self.predictor.get_output_names()
+        if self._model.model_type == 'classifier':
+            net_outputs = F.softmax(self.predictor.get_output_handle(name))
+
+        net_outputs = list()
+        for name in output_names:
+            output_tensor = self.predictor.get_output_handle(name)
+            net_outputs.append(output_tensor.copy_to_cpu())
+
+        return net_outputs
 
     def predict(self, img_file, topk=1, transforms=None):
         """ 图片预测
@@ -161,7 +186,7 @@ class Predictor(object):
                 topk(int): 分类预测时使用，表示预测前topk的结果。
                 transforms (paddlex.transforms): 数据预处理操作。
         """
-        if transforms is None and not hasattr(self, 'test_transforms'):
+        if transforms is None and not hasattr(self._model, 'test_transforms'):
             raise Exception("Transforms need to be defined, now is None.")
         if transforms is None:
             transforms = self._model.test_transforms
@@ -171,14 +196,13 @@ class Predictor(object):
             images = img_file
 
         self.timer.preprocess_time_s.start()
-        batch_samples = self.preprocess(images, transforms)
+        preprocessed_input = self.preprocess(images, transforms)
         self.timer.preprocess_time_s.end()
 
-        input_names = self.predictor.get_input_names()
-        for name in input_names:
-            input_tensor = self.predictor.get_input_handle(name)
-            input_tensor.copy_from_cpu(batch_samples[name])
-
         self.timer.inference_time_s.start()
-        self.predictor.run()
-        output_names = self.predictor.get_output_names()
+        net_outputs = self.raw_predict(preprocessed_input)
+        self.timer.inference_time_s.end()
+
+        self.timer.postprocess_time_s.start()
+        results = self.postprocess(net_outputs, topk)
+        print(results)

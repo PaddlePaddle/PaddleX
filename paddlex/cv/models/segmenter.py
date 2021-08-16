@@ -107,7 +107,7 @@ class BaseSegmenter(BaseModel):
                 logit, origin_shape, transforms=inputs[2])
             label_map = paddle.argmax(
                 score_map, axis=1, keepdim=True, dtype='int32')
-            score_map = paddle.max(score_map, axis=1, keepdim=True)
+            score_map = paddle.nn.functional.softmax(score_map, axis=1)
             score_map = paddle.squeeze(score_map)
             label_map = paddle.squeeze(label_map)
             outputs = {'label_map': label_map, 'score_map': score_map}
@@ -510,6 +510,8 @@ class BaseSegmenter(BaseModel):
             batch_ori_shape.append(ori_shape)
         if to_tensor:
             batch_im = paddle.to_tensor(batch_im)
+        else:
+            batch_im = np.asarray(batch_im)
 
         return batch_im, batch_ori_shape
 
