@@ -34,6 +34,7 @@ from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
 from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
+from .utils.infer_nets import InferNet
 
 
 class BaseModel:
@@ -578,13 +579,18 @@ class BaseModel:
         pipeline_info["version"] = "1.0.0"
         return pipeline_info
 
+    def _build_inference_net(self):
+        infer_net = InferNet(self.net, self.model_type)
+        infer_net.eval()
+        return infer_net
+
     def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
-        self.net.eval()
         self.test_inputs = self._get_test_inputs(image_shape)
+        infer_net = self._build_inference_net()
 
         if self.status == 'Quantized':
-            self.quantizer.save_quantized_model(self.net,
+            self.quantizer.save_quantized_model(infer_net,
                                                 osp.join(save_dir, 'model'),
                                                 self.test_inputs)
             quant_info = self.get_quant_info()
@@ -594,7 +600,7 @@ class BaseModel:
                 yaml.dump(quant_info, f)
         else:
             static_net = paddle.jit.to_static(
-                self.net, input_spec=self.test_inputs)
+                infer_net, input_spec=self.test_inputs)
             paddle.jit.save(static_net, osp.join(save_dir, 'model'))
 
         if self.status == 'Pruned':

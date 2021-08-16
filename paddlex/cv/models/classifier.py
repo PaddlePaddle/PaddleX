@@ -440,7 +440,7 @@ class BaseClassifier(BaseModel):
         with paddle.no_grad():
             outputs = self.run(self.net, im, mode='test')
         prediction = outputs['prediction'].numpy()
-        prediction = self._postprocess(prediction, true_topk, self.labels)
+        prediction = self._postprocess(prediction, true_topk)
         if isinstance(img_file, (str, np.ndarray)):
             prediction = prediction[0]
 
@@ -456,16 +456,18 @@ class BaseClassifier(BaseModel):
 
         if to_tensor:
             batch_im = paddle.to_tensor(batch_im)
+        else:
+            batch_im = np.asarray(batch_im)
 
         return batch_im,
 
-    def _postprocess(self, results, true_topk, labels):
+    def _postprocess(self, results, true_topk):
         preds = list()
         for i, pred in enumerate(results):
             pred_label = np.argsort(pred)[::-1][:true_topk]
             preds.append([{
                 'category_id': l,
-                'category': labels[l],
+                'category': self.labels[l],
                 'score': results[i][l]
             } for l in pred_label])
 
