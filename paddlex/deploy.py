@@ -150,15 +150,15 @@ class Predictor(object):
         if self._model.model_type == 'classifier':
             true_topk = min(self._model.num_classes, topk)
             preds = self._model._postprocess(net_outputs[0], true_topk)
+            if len(preds) == 1:
+                preds = preds[0]
         elif self._model.model_type == 'segmenter':
-            score_map, label_map = net_outputs
-            combo = np.concatenate([score_map, label_map], axis=-1)
-            combo = self._model._postprocess(
-                combo,
+            score_map, label_map = self._model._postprocess(
+                net_outputs,
                 batch_origin_shape=ori_shape,
                 transforms=transforms.transforms)
-            score_map = np.squeeze(combo[..., :-1])
-            label_map = np.squeeze(combo[..., -1])
+            score_map = np.squeeze(score_map)
+            label_map = np.squeeze(label_map)
             if len(score_map.shape) == 3:
                 preds = {'label_map': label_map, 'score_map': score_map}
             else:
@@ -172,6 +172,8 @@ class Predictor(object):
                 for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
             }
             preds = self._model._postprocess(net_outputs)
+            if len(preds) == 1:
+                preds = preds[0]
         else:
             logging.error(
                 "Invalid model type {}.".format(self._model.model_type),
@@ -233,5 +235,8 @@ class Predictor(object):
             ori_shape=preprocessed_input.get('ori_shape', None),
             transforms=transforms)
         self.timer.postprocess_time_s.end()
+
+        self.timer.img_num = len(images)
+        self.timer.info(average=True)
 
         return results

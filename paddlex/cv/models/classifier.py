@@ -98,7 +98,7 @@ class BaseClassifier(BaseModel):
 
     def run(self, net, inputs, mode):
         net_out = net(inputs[0])
-        softmax_out = F.softmax(net_out)
+        softmax_out = net_out if self.status == 'Infer' else F.softmax(net_out)
         if mode == 'test':
             outputs = OrderedDict([('prediction', softmax_out)])
 
@@ -228,6 +228,10 @@ class BaseClassifier(BaseModel):
                 `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support training.",
+                exit=True)
         if pretrain_weights is not None and resume_checkpoint is not None:
             logging.error(
                 "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
