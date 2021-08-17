@@ -14,7 +14,6 @@
 
 import os.path as osp
 import numpy as np
-import paddle.nn.functional as F
 from paddle.inference import Config
 from paddle.inference import create_predictor
 from paddle.inference import PrecisionType
