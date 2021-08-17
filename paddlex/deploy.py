@@ -232,7 +232,7 @@ class Predictor(object):
             net_outputs,
             topk,
             ori_shape=preprocessed_input.get('ori_shape', None),
-            transforms=transforms.transforms)
+            transforms=transforms)
         self.timer.postprocess_time_s.end()
 
         return results
