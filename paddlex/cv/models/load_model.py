@@ -20,6 +20,7 @@ import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
+from .utils.infer_nets import InferNet
 
 
 def load_rcnn_inference_model(model_dir):
@@ -104,7 +105,8 @@ def load_model(model_dir, **params):
                         ratios=model.pruning_ratios,
                         axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
-            if status == 'Quantized':
+            if status == 'Quantized' or osp.exists(
+                    osp.join(model_dir, "quant.yml")):
                 with open(osp.join(model_dir, "quant.yml")) as f:
                     quant_info = yaml.load(f.read(), Loader=yaml.Loader)
                     model.quant_config = quant_info['quant_config']
@@ -112,6 +114,12 @@ def load_model(model_dir, **params):
                     model.quantizer.quantize(model.net)
 
             if status == 'Infer':
+                if osp.exists(osp.join(model_dir, "quant.yml")):
+                    logging.error(
+                        "Exported quantized model can not be loaded, only deployment is supported.",
+                        exit=True)
+                model.net = InferNet(
+                    net=model.net, model_type=model.model_type)
                 if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
                     net_state_dict = load_rcnn_inference_model(model_dir)
                 else:
