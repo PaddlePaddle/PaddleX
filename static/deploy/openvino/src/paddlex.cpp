@@ -205,6 +205,7 @@ bool Model::predict(const cv::Mat& im, DetResult* result) {
       result->boxes.push_back(std::move(box));
     }
   }
+  return true;
 }
 
 
