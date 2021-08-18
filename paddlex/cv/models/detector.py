@@ -1433,14 +1433,22 @@ class PPYOLOv2(YOLOv3):
             image_shape = self._check_image_shape(image_shape)
             self._fix_transforms_shape(image_shape[-2:])
         else:
-            image_shape = [None, 3, 608, 608]
+            image_shape = [None, 3, 640, 640]
+            if hasattr(self, 'test_transforms'):
+                if self.test_transforms is not None:
+                    for idx, op in enumerate(self.test_transforms.transforms):
+                        name = op.__class__.__name__
+                        if name == 'Resize':
+                            image_shape = [None, 3] + list(
+                                self.test_transforms.transforms[
+                                    idx].target_size)
             logging.warning(
                 '[Important!!!] When exporting inference model for {},'.format(
                     self.__class__.__name__) +
-                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 608, 608]. '
-                +
-                'Please check image shape after transforms is [3, 608, 608], if not, fixed_input_shape '
-                + 'should be specified manually.')
+                ' if fixed_input_shape is not set, it will be forcibly set to {}. '.
+                format(image_shape) +
+                'Please check image shape after transforms is {}, if not, fixed_input_shape '.
+                format(image_shape[1:]) + 'should be specified manually.')
 
         self.fixed_input_shape = image_shape
         return self._define_input_spec(image_shape)
