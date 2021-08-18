@@ -235,6 +235,10 @@ class BaseSegmenter(BaseModel):
                 `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support training.",
+                exit=True)
         if pretrain_weights is not None and resume_checkpoint is not None:
             logging.error(
                 "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
