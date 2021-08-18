@@ -105,8 +105,6 @@ class BaseDetector(BaseModel):
         if mode in ['train', 'eval']:
             outputs = net_out
         else:
-            for key in ['im_shape', 'scale_factor']:
-                net_out[key] = inputs[key]
             outputs = dict()
             for key in net_out:
                 outputs[key] = net_out[key].numpy()
@@ -519,8 +517,14 @@ class BaseDetector(BaseModel):
         batch_transforms = self._compose_batch_transform(transforms, 'test')
         batch_samples = batch_transforms(batch_samples)
         if to_tensor:
-            for k, v in batch_samples.items():
-                batch_samples[k] = paddle.to_tensor(v)
+            if isinstance(batch_samples, dict):
+                for k in batch_samples:
+                    batch_samples[k] = paddle.to_tensor(batch_samples[k])
+            else:
+                for sample in batch_samples:
+                    for k in sample:
+                        sample[k] = paddle.to_tensor(sample[k])
+
         return batch_samples
 
     def _postprocess(self, batch_pred):
@@ -989,6 +993,18 @@ class FasterRCNN(BaseDetector):
         super(FasterRCNN, self).__init__(
             model_name='FasterRCNN', num_classes=num_classes, **params)
 
+    def run(self, net, inputs, mode):
+        if mode in ['train', 'eval']:
+            outputs = net(inputs)
+        else:
+            outputs = []
+            for sample in inputs:
+                net_out = net(sample)
+                for key in net_out:
+                    net_out[key] = net_out[key].numpy()
+                outputs.append(net_out)
+        return outputs
+
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
@@ -1012,7 +1028,8 @@ class FasterRCNN(BaseDetector):
 
         batch_transforms = BatchCompose(
             custom_batch_transforms + default_batch_transforms,
-            collate_batch=collate_batch)
+            collate_batch=collate_batch,
+            return_list=mode == 'test')
 
         return batch_transforms
 
@@ -1057,6 +1074,13 @@ class FasterRCNN(BaseDetector):
 
         self.fixed_input_shape = image_shape
         return self._define_input_spec(image_shape)
+
+    def _postprocess(self, batch_pred):
+        prediction = [
+            super(FasterRCNN, self)._postprocess(pred)[0]
+            for pred in batch_pred
+        ]
+        return prediction
 
 
 class PPYOLO(YOLOv3):
@@ -1479,7 +1503,7 @@ class PPYOLOv2(YOLOv3):
         return self._define_input_spec(image_shape)
 
 
-class MaskRCNN(BaseDetector):
+class MaskRCNN(FasterRCNN):
     def __init__(self,
                  num_classes=80,
                  backbone='ResNet50_vd',
@@ -1714,7 +1738,7 @@ class MaskRCNN(BaseDetector):
                 'mask_post_process': mask_post_process
             })
         self.with_fpn = with_fpn
-        super(MaskRCNN, self).__init__(
+        super(FasterRCNN, self).__init__(
             model_name='MaskRCNN', num_classes=num_classes, **params)
 
     def _compose_batch_transform(self, transforms, mode='train'):
@@ -1740,7 +1764,8 @@ class MaskRCNN(BaseDetector):
 
         batch_transforms = BatchCompose(
             custom_batch_transforms + default_batch_transforms,
-            collate_batch=collate_batch)
+            collate_batch=collate_batch,
+            return_list=mode == 'test')
 
         return batch_transforms
 

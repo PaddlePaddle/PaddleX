@@ -167,10 +167,16 @@ class Predictor(object):
                     'score_map': s
                 } for l, s in zip(label_map, score_map)]
         elif self._model.model_type == 'detector':
-            net_outputs = {
-                k: v
-                for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
-            }
+            if 'RCNN' in self._model.__class__.__name__:
+                net_outputs = [{
+                    k: v
+                    for k, v in zip(['bbox', 'bbox_num', 'mask'], res)
+                } for res in net_outputs]
+            else:
+                net_outputs = {
+                    k: v
+                    for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
+                }
             preds = self._model._postprocess(net_outputs)
             if len(preds) == 1:
                 preds = preds[0]
@@ -192,7 +198,6 @@ class Predictor(object):
             input_tensor = self.predictor.get_input_handle(name)
             input_tensor.copy_from_cpu(inputs[name])
 
-        self.timer.inference_time_s.start()
         self.predictor.run()
         output_names = self.predictor.get_output_names()
         net_outputs = list()
@@ -225,15 +230,24 @@ class Predictor(object):
         self.timer.preprocess_time_s.end()
 
         self.timer.inference_time_s.start()
-        net_outputs = self.raw_predict(preprocessed_input)
-        self.timer.inference_time_s.end()
+        if 'RCNN' in self._model.__class__.__name__:
+            if len(preprocessed_input) > 1:
+                logging.warning(
+                    "{} only supports inference with batch size equal to 1."
+                    .format(self._model.__class__.__name__))
+            net_outputs = [
+                self.raw_predict(sample) for sample in preprocessed_input
+            ]
+            self.timer.inference_time_s.end(repeats=len(preprocessed_input))
+            ori_shape = None
+        else:
+            net_outputs = self.raw_predict(preprocessed_input)
+            self.timer.inference_time_s.end()
+            ori_shape = preprocessed_input.get('ori_shape', None)
 
         self.timer.postprocess_time_s.start()
         results = self.postprocess(
-            net_outputs,
-            topk,
-            ori_shape=preprocessed_input.get('ori_shape', None),
-            transforms=transforms)
+            net_outputs, topk, ori_shape=ori_shape, transforms=transforms)
         self.timer.postprocess_time_s.end()
 
         self.timer.img_num = len(images)
