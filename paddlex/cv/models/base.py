@@ -584,7 +584,8 @@ class BaseModel:
         return pipeline_info
 
     def _build_inference_net(self):
-        infer_net = InferNet(self.net, self.model_type)
+        infer_net = self.net if self.model_type == 'detector' else InferNet(
+            self.net, self.model_type)
         infer_net.eval()
         return infer_net
 
