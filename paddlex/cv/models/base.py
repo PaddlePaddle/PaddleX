@@ -505,6 +505,10 @@ class BaseModel:
             logging.info("Pruned model is saved at {}".format(save_dir))
 
     def _prepare_qat(self, quant_config):
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support quantization aware training.",
+                exit=True)
         if quant_config is None:
             # default quantization configuration
             quant_config = {
