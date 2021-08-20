@@ -152,12 +152,12 @@ class Times(object):
     def start(self):
         self.st = time.time()
 
-    def end(self, repeats=1, accumulative=True):
+    def end(self, iter_num=1, accumulative=True):
         self.et = time.time()
         if accumulative:
-            self.time += (self.et - self.st) / repeats
+            self.time += (self.et - self.st) / iter_num
         else:
-            self.time = (self.et - self.st) / repeats
+            self.time = (self.et - self.st) / iter_num
 
     def reset(self):
         self.time = 0.
@@ -175,46 +175,49 @@ class Timer(Times):
         self.inference_time_s = Times()
         self.postprocess_time_s = Times()
         self.img_num = 0
+        self.repeats = 0
 
     def info(self, average=False):
         total_time = self.preprocess_time_s.value(
         ) + self.inference_time_s.value() + self.postprocess_time_s.value()
         total_time = round(total_time, 4)
         print("------------------ Inference Time Info ----------------------")
-        print("total_time(ms): {}, img_num: {}".format(total_time * 1000,
-                                                       self.img_num))
+        print("total_time(ms): {}, img_num: {}, batch_size: {}".format(
+            total_time * 1000, self.img_num, self.img_num / self.repeats))
         preprocess_time = round(
-            self.preprocess_time_s.value() / self.img_num,
+            self.preprocess_time_s.value() / self.repeats,
             4) if average else self.preprocess_time_s.value()
         postprocess_time = round(
-            self.postprocess_time_s.value() / self.img_num,
+            self.postprocess_time_s.value() / self.repeats,
             4) if average else self.postprocess_time_s.value()
-        inference_time = round(self.inference_time_s.value() / self.img_num,
+        inference_time = round(self.inference_time_s.value() / self.repeats,
                                4) if average else self.inference_time_s.value()
 
-        average_latency = total_time / self.img_num
+        average_latency = total_time / self.repeats
         print("average latency time(ms): {:.2f}, QPS: {:2f}".format(
             average_latency * 1000, 1 / average_latency))
-        print(
-            "preprocess_time(ms): {:.2f}, inference_time(ms): {:.2f}, postprocess_time(ms): {:.2f}".
-            format(preprocess_time * 1000, inference_time * 1000,
-                   postprocess_time * 1000))
+        print("preprocess_time_per_im(ms): {:.2f}, "
+              "inference_time_per_batch(ms): {:.2f}, "
+              "postprocess_time_per_im(ms): {:.2f}".format(
+                  preprocess_time * 1000, inference_time * 1000,
+                  postprocess_time * 1000))
 
     def report(self, average=False):
         dic = {}
         dic['preprocess_time_s'] = round(
-            self.preprocess_time_s.value() / self.img_num,
+            self.preprocess_time_s.value() / self.repeats,
             4) if average else self.preprocess_time_s.value()
         dic['postprocess_time_s'] = round(
-            self.postprocess_time_s.value() / self.img_num,
+            self.postprocess_time_s.value() / self.repeats,
             4) if average else self.postprocess_time_s.value()
         dic['inference_time_s'] = round(
-            self.inference_time_s.value() / self.img_num,
+            self.inference_time_s.value() / self.repeats,
             4) if average else self.inference_time_s.value()
         dic['img_num'] = self.img_num
         total_time = self.preprocess_time_s.value(
         ) + self.inference_time_s.value() + self.postprocess_time_s.value()
         dic['total_time_s'] = round(total_time, 4)
+        dic['batch_size'] = self.img_num / self.repeats
         return dic
 
     def reset(self):
@@ -222,3 +225,4 @@ class Timer(Times):
         self.inference_time_s.reset()
         self.postprocess_time_s.reset()
         self.img_num = 0
+        self.repeats = 0

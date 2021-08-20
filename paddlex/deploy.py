@@ -207,38 +207,31 @@ class Predictor(object):
 
         return net_outputs
 
-    def _run(self, images, topk=1, transforms=None, repeats=1, verbose=False):
+    def _run(self, images, topk=1, transforms=None):
         self.timer.preprocess_time_s.start()
         preprocessed_input = self.preprocess(images, transforms)
-        self.timer.preprocess_time_s.end()
+        self.timer.preprocess_time_s.end(iter_num=len(images))
 
+        ori_shape = None
         self.timer.inference_time_s.start()
         if 'RCNN' in self._model.__class__.__name__:
             if len(preprocessed_input) > 1:
                 logging.warning(
                     "{} only supports inference with batch size equal to 1."
                     .format(self._model.__class__.__name__))
-            for step in range(repeats):
-                net_outputs = [
-                    self.raw_predict(sample) for sample in preprocessed_input
-                ]
-            self.timer.inference_time_s.end(repeats=len(preprocessed_input) *
-                                            repeats)
-            ori_shape = None
+            net_outputs = [
+                self.raw_predict(sample) for sample in preprocessed_input
+            ]
+            self.timer.inference_time_s.end(iter_num=len(images))
         else:
-            for step in range(repeats):
-                net_outputs = self.raw_predict(preprocessed_input)
-            self.timer.inference_time_s.end(repeats=repeats)
+            net_outputs = self.raw_predict(preprocessed_input)
+            self.timer.inference_time_s.end(iter_num=1)
             ori_shape = preprocessed_input.get('ori_shape', None)
 
         self.timer.postprocess_time_s.start()
         results = self.postprocess(
             net_outputs, topk, ori_shape=ori_shape, transforms=transforms)
-        self.timer.postprocess_time_s.end()
-
-        self.timer.img_num = len(images)
-        if verbose:
-            self.timer.info(average=True)
+        self.timer.postprocess_time_s.end(iter_num=len(images))
 
         return results
 
@@ -255,7 +248,11 @@ class Predictor(object):
                     图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
                 topk(int): 分类预测时使用，表示预测前topk的结果。
                 transforms (paddlex.transforms): 数据预处理操作。
+                warmup_iters (int): 预热轮数，默认为0。
+                repeats (int): 重复次数，用于评估模型推理以及前后处理速度。若大于1，会预测repeats次取时间平均值。
         """
+        if repeats < 1:
+            logging.error("`repeats` must be greater than 1.", exit=True)
         if transforms is None and not hasattr(self._model, 'test_transforms'):
             raise Exception("Transforms need to be defined, now is None.")
         if transforms is None:
@@ -269,3 +266,12 @@ class Predictor(object):
             self._run(
                 images=images, topk=topk, transforms=transforms, verbose=False)
         self.timer.reset()
+
+        for step in range(repeats):
+            results = self._run(
+                images=images, topk=topk, transforms=transforms)
+
+        self.timer.repeats = repeats
+        self.timer.info(average=True)
+
+        return results
