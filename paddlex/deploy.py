@@ -207,7 +207,47 @@ class Predictor(object):
 
         return net_outputs
 
-    def predict(self, img_file, topk=1, transforms=None):
+    def _run(self, images, topk=1, transforms=None, repeats=1, verbose=False):
+        self.timer.preprocess_time_s.start()
+        preprocessed_input = self.preprocess(images, transforms)
+        self.timer.preprocess_time_s.end()
+
+        self.timer.inference_time_s.start()
+        if 'RCNN' in self._model.__class__.__name__:
+            if len(preprocessed_input) > 1:
+                logging.warning(
+                    "{} only supports inference with batch size equal to 1."
+                    .format(self._model.__class__.__name__))
+            for step in range(repeats):
+                net_outputs = [
+                    self.raw_predict(sample) for sample in preprocessed_input
+                ]
+            self.timer.inference_time_s.end(repeats=len(preprocessed_input) *
+                                            repeats)
+            ori_shape = None
+        else:
+            for step in range(repeats):
+                net_outputs = self.raw_predict(preprocessed_input)
+            self.timer.inference_time_s.end(repeats=repeats)
+            ori_shape = preprocessed_input.get('ori_shape', None)
+
+        self.timer.postprocess_time_s.start()
+        results = self.postprocess(
+            net_outputs, topk, ori_shape=ori_shape, transforms=transforms)
+        self.timer.postprocess_time_s.end()
+
+        self.timer.img_num = len(images)
+        if verbose:
+            self.timer.info(average=True)
+
+        return results
+
+    def predict(self,
+                img_file,
+                topk=1,
+                transforms=None,
+                warmup_iters=0,
+                repeats=1):
         """ 图片预测
 
             Args:
@@ -225,32 +265,7 @@ class Predictor(object):
         else:
             images = img_file
 
-        self.timer.preprocess_time_s.start()
-        preprocessed_input = self.preprocess(images, transforms)
-        self.timer.preprocess_time_s.end()
-
-        self.timer.inference_time_s.start()
-        if 'RCNN' in self._model.__class__.__name__:
-            if len(preprocessed_input) > 1:
-                logging.warning(
-                    "{} only supports inference with batch size equal to 1."
-                    .format(self._model.__class__.__name__))
-            net_outputs = [
-                self.raw_predict(sample) for sample in preprocessed_input
-            ]
-            self.timer.inference_time_s.end(repeats=len(preprocessed_input))
-            ori_shape = None
-        else:
-            net_outputs = self.raw_predict(preprocessed_input)
-            self.timer.inference_time_s.end()
-            ori_shape = preprocessed_input.get('ori_shape', None)
-
-        self.timer.postprocess_time_s.start()
-        results = self.postprocess(
-            net_outputs, topk, ori_shape=ori_shape, transforms=transforms)
-        self.timer.postprocess_time_s.end()
-
-        self.timer.img_num = len(images)
-        self.timer.info(average=True)
-
-        return results
+        for step in range(warmup_iters):
+            self._run(
+                images=images, topk=topk, transforms=transforms, verbose=False)
+        self.timer.reset()

@@ -216,3 +216,9 @@ class Timer(Times):
         ) + self.inference_time_s.value() + self.postprocess_time_s.value()
         dic['total_time_s'] = round(total_time, 4)
         return dic
+
+    def reset(self):
+        self.preprocess_time_s.reset()
+        self.inference_time_s.reset()
+        self.postprocess_time_s.reset()
+        self.img_num = 0
