@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ from paddlex.utils import logging, Timer
 class Predictor(object):
     def __init__(self,
                  model_dir,
-                 use_gpu=True,
+                 use_gpu=False,
                  gpu_id=0,
                  cpu_thread_num=1,
                  use_mkl=True,
@@ -38,7 +38,7 @@ class Predictor(object):
 
             Args:
                 model_dir: 模型路径（必须是导出的部署或量化模型）
-                use_gpu: 是否使用gpu，默认True
+                use_gpu: 是否使用gpu，默认False
                 gpu_id: 使用gpu的id，默认0
                 cpu_thread_num=1：使用cpu进行预测时的线程数，默认为1
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
@@ -52,9 +52,9 @@ class Predictor(object):
         self.model_dir = model_dir
         self._model = load_model(model_dir, with_net=False)
 
-        if trt_precision_mode == 'float32':
+        if trt_precision_mode.lower() == 'float32':
             trt_precision_mode = PrecisionType.Float32
-        elif trt_precision_mode == 'float16':
+        elif trt_precision_mode.lower() == 'float16':
             trt_precision_mode = PrecisionType.Float16
         else:
             logging.error(
@@ -159,7 +159,7 @@ class Predictor(object):
                 transforms=transforms.transforms)
             score_map = np.squeeze(score_map)
             label_map = np.squeeze(label_map)
-            if len(score_map.shape) == 3:
+            if score_map.ndim == 3:
                 preds = {'label_map': label_map, 'score_map': score_map}
             else:
                 preds = [{
