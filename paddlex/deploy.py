@@ -263,8 +263,7 @@ class Predictor(object):
             images = img_file
 
         for step in range(warmup_iters):
-            self._run(
-                images=images, topk=topk, transforms=transforms, verbose=False)
+            self._run(images=images, topk=topk, transforms=transforms)
         self.timer.reset()
 
         for step in range(repeats):
