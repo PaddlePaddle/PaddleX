@@ -26,10 +26,14 @@ from paddlex.utils import logging
 
 
 class BatchCompose(Transform):
-    def __init__(self, batch_transforms=None, collate_batch=True):
+    def __init__(self,
+                 batch_transforms=None,
+                 collate_batch=True,
+                 return_list=False):
         super(BatchCompose, self).__init__()
         self.batch_transforms = batch_transforms
         self.collate_batch = collate_batch
+        self.return_list = return_list
 
     def __call__(self, samples):
         if self.batch_transforms is not None:
@@ -51,7 +55,13 @@ class BatchCompose(Transform):
                 if k in sample:
                     sample.pop(k)
 
-        if self.collate_batch:
+        if self.return_list:
+            batch_data = [{
+                k: np.expand_dims(
+                    sample[k], axis=0)
+                for k in sample
+            } for sample in samples]
+        elif self.collate_batch:
             batch_data = default_collate_fn(samples)
         else:
             batch_data = {}

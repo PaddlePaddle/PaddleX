@@ -15,6 +15,7 @@
 import math
 import os.path as osp
 import numpy as np
+import cv2
 from collections import OrderedDict
 import paddle
 import paddle.nn.functional as F
@@ -39,6 +40,8 @@ class BaseSegmenter(BaseModel):
                  use_mixed_loss=False,
                  **params):
         self.init_params = locals()
+        if 'with_net' in self.init_params:
+            del self.init_params['with_net']
         super(BaseSegmenter, self).__init__('segmenter')
         if not hasattr(paddleseg.models, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
@@ -48,7 +51,9 @@ class BaseSegmenter(BaseModel):
         self.use_mixed_loss = use_mixed_loss
         self.losses = None
         self.labels = None
-        self.net = self.build_net(**params)
+        if params.get('with_net', True):
+            params.pop('with_net', None)
+            self.net = self.build_net(**params)
         self.find_unused_parameters = True
 
     def build_net(self, **params):
@@ -99,19 +104,28 @@ class BaseSegmenter(BaseModel):
         outputs = OrderedDict()
         if mode == 'test':
             origin_shape = inputs[1]
-            score_map = self._postprocess(
-                logit, origin_shape, transforms=inputs[2])
-            label_map = paddle.argmax(
-                score_map, axis=1, keepdim=True, dtype='int32')
-            score_map = paddle.max(score_map, axis=1, keepdim=True)
-            score_map = paddle.squeeze(score_map)
-            label_map = paddle.squeeze(label_map)
-            outputs = {'label_map': label_map, 'score_map': score_map}
+            if self.status == 'Infer':
+                score_map, label_map = self._postprocess(
+                    net_out, origin_shape, transforms=inputs[2])
+            else:
+                logit = self._postprocess(
+                    logit, origin_shape, transforms=inputs[2])
+                score_map = paddle.transpose(
+                    F.softmax(
+                        logit, axis=1), perm=[0, 2, 3, 1])
+                label_map = paddle.argmax(
+                    score_map, axis=-1, keepdim=True, dtype='int32')
+            outputs['label_map'] = paddle.squeeze(label_map)
+            outputs['score_map'] = paddle.squeeze(score_map)
+
         if mode == 'eval':
-            pred = paddle.argmax(logit, axis=1, keepdim=True, dtype='int32')
+            if self.status == 'Infer':
+                pred = paddle.transpose(net_out[1], perm=[0, 3, 1, 2])
+            else:
+                pred = paddle.argmax(
+                    logit, axis=1, keepdim=True, dtype='int32')
             label = inputs[1]
             origin_shape = [label.shape[-2:]]
-            # TODO: 替换cv2后postprocess移出run
             pred = self._postprocess(pred, origin_shape, transforms=inputs[2])
             intersect_area, pred_area, label_area = paddleseg.utils.metrics.calculate_area(
                 pred, label, self.num_classes)
@@ -221,6 +235,10 @@ class BaseSegmenter(BaseModel):
                 `pretrain_weights` can be set simultaneously. Defaults to None.
 
         """
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support training.",
+                exit=True)
         if pretrain_weights is not None and resume_checkpoint is not None:
             logging.error(
                 "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
@@ -449,7 +467,7 @@ class BaseSegmenter(BaseModel):
         Do inference.
         Args:
             Args:
-            img_file(List[np.ndarray or str], str or np.ndarray): img_file(list or str or np.array)：
+            img_file(List[np.ndarray or str], str or np.ndarray):
                 Image path or decoded image data in a BGR format, which also could constitute a list,
                 meaning all images to be predicted as a mini-batch.
             transforms(paddlex.transforms.Compose or None, optional):
@@ -460,7 +478,7 @@ class BaseSegmenter(BaseModel):
             {"label map": `label map`, "score_map": `score map`}.
             If img_file is a list, the result is a list composed of dicts with the corresponding fields:
             label_map(np.ndarray): the predicted label map
-            score_map(np.ndarray): the prediction score map
+            score_map(np.ndarray): the prediction score map (NHWC)
 
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
@@ -491,9 +509,9 @@ class BaseSegmenter(BaseModel):
             prediction = {'label_map': label_map, 'score_map': score_map}
         return prediction
 
-    def _preprocess(self, images, transforms, model_type):
+    def _preprocess(self, images, transforms, to_tensor=True):
         arrange_transforms(
-            model_type=model_type, transforms=transforms, mode='test')
+            model_type=self.model_type, transforms=transforms, mode='test')
         batch_im = list()
         batch_ori_shape = list()
         for im in images:
@@ -504,7 +522,10 @@ class BaseSegmenter(BaseModel):
             im = transforms(sample)[0]
             batch_im.append(im)
             batch_ori_shape.append(ori_shape)
-        batch_im = paddle.to_tensor(batch_im)
+        if to_tensor:
+            batch_im = paddle.to_tensor(batch_im)
+        else:
+            batch_im = np.asarray(batch_im)
 
         return batch_im, batch_ori_shape
 
@@ -559,14 +580,19 @@ class BaseSegmenter(BaseModel):
     def _postprocess(self, batch_pred, batch_origin_shape, transforms):
         batch_restore_list = BaseSegmenter.get_transforms_shape_info(
             batch_origin_shape, transforms)
-        results = list()
+        if isinstance(batch_pred, (tuple, list)) and self.status == 'Infer':
+            return self._infer_postprocess(
+                batch_score_map=batch_pred[0],
+                batch_label_map=batch_pred[1],
+                batch_restore_list=batch_restore_list)
+        results = []
         for pred, restore_list in zip(batch_pred, batch_restore_list):
             pred = paddle.unsqueeze(pred, axis=0)
             for item in restore_list[::-1]:
-                # TODO: 替换成cv2的interpolate（部署阶段无法使用paddle op）
                 h, w = item[1][0], item[1][1]
                 if item[0] == 'resize':
-                    pred = F.interpolate(pred, (h, w), mode='nearest')
+                    pred = F.interpolate(
+                        pred, (h, w), mode='nearest', data_format='NCHW')
                 elif item[0] == 'padding':
                     x, y = item[2]
                     pred = pred[:, :, y:y + h, x:x + w]
@@ -576,14 +602,63 @@ class BaseSegmenter(BaseModel):
         batch_pred = paddle.concat(results, axis=0)
         return batch_pred
 
+    def _infer_postprocess(self, batch_score_map, batch_label_map,
+                           batch_restore_list):
+        score_maps = []
+        label_maps = []
+        for score_map, label_map, restore_list in zip(
+                batch_score_map, batch_label_map, batch_restore_list):
+            if not isinstance(score_map, np.ndarray):
+                score_map = paddle.unsqueeze(score_map, axis=0)
+                label_map = paddle.unsqueeze(label_map, axis=0)
+            for item in restore_list[::-1]:
+                h, w = item[1][0], item[1][1]
+                if item[0] == 'resize':
+                    if isinstance(score_map, np.ndarray):
+                        score_map = cv2.resize(
+                            score_map, (h, w), interpolation=cv2.INTER_LINEAR)
+                        label_map = cv2.resize(
+                            label_map, (h, w), interpolation=cv2.INTER_NEAREST)
+                    else:
+                        score_map = F.interpolate(
+                            score_map, (h, w),
+                            mode='bilinear',
+                            data_format='NHWC')
+                        label_map = F.interpolate(
+                            label_map, (h, w),
+                            mode='nearest',
+                            data_format='NHWC')
+                elif item[0] == 'padding':
+                    x, y = item[2]
+                    if isinstance(score_map, np.ndarray):
+                        score_map = score_map[..., y:y + h, x:x + w]
+                        label_map = label_map[..., y:y + h, x:x + w]
+                    else:
+                        score_map = score_map[:, :, y:y + h, x:x + w]
+                        label_map = label_map[:, :, y:y + h, x:x + w]
+                else:
+                    pass
+            score_maps.append(score_map)
+            label_maps.append(label_map)
+        if isinstance(score_maps[0], np.ndarray):
+            return np.stack(score_maps, axis=0), np.stack(label_maps, axis=0)
+        else:
+            return paddle.concat(
+                score_maps, axis=0), paddle.concat(
+                    label_maps, axis=0)
+
 
 class UNet(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  use_mixed_loss=False,
                  use_deconv=False,
-                 align_corners=False):
-        params = {'use_deconv': use_deconv, 'align_corners': align_corners}
+                 align_corners=False,
+                 **params):
+        params.update({
+            'use_deconv': use_deconv,
+            'align_corners': align_corners
+        })
         super(UNet, self).__init__(
             model_name='UNet',
             num_classes=num_classes,
@@ -600,22 +675,26 @@ class DeepLabV3P(BaseSegmenter):
                  backbone_indices=(0, 3),
                  aspp_ratios=(1, 12, 24, 36),
                  aspp_out_channels=256,
-                 align_corners=False):
+                 align_corners=False,
+                 **params):
         self.backbone_name = backbone
         if backbone not in ['ResNet50_vd', 'ResNet101_vd']:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd', 'ResNet101_vd')".format(backbone))
-        with DisablePrint():
-            backbone = getattr(paddleseg.models, backbone)(
-                output_stride=output_stride)
-        params = {
+        if params.get('with_net', True):
+            with DisablePrint():
+                backbone = getattr(paddleseg.models, backbone)(
+                    output_stride=output_stride)
+        else:
+            backbone = None
+        params.update({
             'backbone': backbone,
             'backbone_indices': backbone_indices,
             'aspp_ratios': aspp_ratios,
             'aspp_out_channels': aspp_out_channels,
             'align_corners': align_corners
-        }
+        })
         super(DeepLabV3P, self).__init__(
             model_name='DeepLabV3P',
             num_classes=num_classes,
@@ -627,8 +706,9 @@ class FastSCNN(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  use_mixed_loss=False,
-                 align_corners=False):
-        params = {'align_corners': align_corners}
+                 align_corners=False,
+                 **params):
+        params.update({'align_corners': align_corners})
         super(FastSCNN, self).__init__(
             model_name='FastSCNN',
             num_classes=num_classes,
@@ -641,17 +721,21 @@ class HRNet(BaseSegmenter):
                  num_classes=2,
                  width=48,
                  use_mixed_loss=False,
-                 align_corners=False):
+                 align_corners=False,
+                 **params):
         if width not in (18, 48):
             raise ValueError(
                 "width={} is not supported, please choose from [18, 48]".
                 format(width))
         self.backbone_name = 'HRNet_W{}'.format(width)
-        with DisablePrint():
-            backbone = getattr(paddleseg.models, self.backbone_name)(
-                align_corners=align_corners)
+        if params.get('with_net', True):
+            with DisablePrint():
+                backbone = getattr(paddleseg.models, self.backbone_name)(
+                    align_corners=align_corners)
+        else:
+            backbone = None
 
-        params = {'backbone': backbone, 'align_corners': align_corners}
+        params.update({'backbone': backbone, 'align_corners': align_corners})
         super(HRNet, self).__init__(
             model_name='FCN',
             num_classes=num_classes,
@@ -664,8 +748,9 @@ class BiSeNetV2(BaseSegmenter):
     def __init__(self,
                  num_classes=2,
                  use_mixed_loss=False,
-                 align_corners=False):
-        params = {'align_corners': align_corners}
+                 align_corners=False,
+                 **params):
+        params.update({'align_corners': align_corners})
         super(BiSeNetV2, self).__init__(
             model_name='BiSeNetV2',
             num_classes=num_classes,
