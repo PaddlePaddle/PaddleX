@@ -17,7 +17,7 @@ from __future__ import division
 from __future__ import print_function
 
 import unittest
-import paddlex.ppdet as ppdet
+import paddlex.ppdet
 
 
 class TestFasterRCNN(unittest.TestCase):
@@ -31,8 +31,8 @@ class TestFasterRCNN(unittest.TestCase):
         # Trainer __init__ will build model and DataLoader
         # 'train' and 'eval' mode include dataset loading
         # use 'test' mode to simplify tests
-        cfg = ppdet.core.workspace.load_config(self.cfg_file)
-        trainer = ppdet.engine.Trainer(cfg, mode='test')
+        cfg = paddlex.ppdet.core.workspace.load_config(self.cfg_file)
+        trainer = paddlex.ppdet.engine.Trainer(cfg, mode='test')
 
 
 class TestMaskRCNN(TestFasterRCNN):
@@ -53,6 +53,16 @@ class TestYolov3(TestFasterRCNN):
 class TestSSD(TestFasterRCNN):
     def set_config(self):
         self.cfg_file = 'configs/ssd/ssd_vgg16_300_240e_voc.yml'
+
+
+class TestGFL(TestFasterRCNN):
+    def set_config(self):
+        self.cfg_file = 'configs/gfl/gfl_r50_fpn_1x_coco.yml'
+
+
+class TestPicoDet(TestFasterRCNN):
+    def set_config(self):
+        self.cfg_file = 'configs/picodet/picodet_s_shufflenetv2_320_coco.yml'
 
 
 if __name__ == '__main__':

@@ -60,7 +60,7 @@ class JDEEmbeddingHead(nn.Layer):
     def __init__(
             self,
             num_classes=1,
-            num_identifiers=1,  # defined by dataset.total_identities
+            num_identifiers=14455,  # defined by dataset.total_identities when training
             anchor_levels=3,
             anchor_scales=4,
             embedding_dim=512,
@@ -92,9 +92,7 @@ class JDEEmbeddingHead(nn.Layer):
                     kernel_size=3,
                     stride=1,
                     padding=1,
-                    weight_attr=ParamAttr(name=name + '.conv.weights'),
-                    bias_attr=ParamAttr(
-                        name=name + '.conv.bias', regularizer=L2Decay(0.))))
+                    bias_attr=ParamAttr(regularizer=L2Decay(0.))))
             self.identify_outputs.append(identify_output)
 
             loss_p_cls = self.add_sublayer('cls.{}'.format(i),
@@ -177,8 +175,7 @@ class JDEEmbeddingHead(nn.Layer):
         for i, p_ide in enumerate(ide_outs):
             p_ide = p_ide.transpose((0, 2, 3, 1))
 
-            p_ide_repeat = paddle.tile(
-                p_ide.unsqueeze(axis=0), [1, self.anchor_scales, 1, 1, 1])
+            p_ide_repeat = paddle.tile(p_ide, [self.anchor_scales, 1, 1, 1])
             embedding = F.normalize(p_ide_repeat, axis=-1)
             emb = paddle.reshape(embedding, [-1, self.embedding_dim])
             emb_outs.append(emb)

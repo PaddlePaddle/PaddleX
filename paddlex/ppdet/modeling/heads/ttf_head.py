@@ -16,7 +16,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle import ParamAttr
-from paddle.nn.initializer import Constant, Uniform, Normal
+from paddle.nn.initializer import Constant, Normal
 from paddle.regularizer import L2Decay
 from paddlex.ppdet.core.workspace import register
 from paddlex.ppdet.modeling.layers import DeformableConvV2, LiteConv
@@ -62,7 +62,6 @@ class HMHead(nn.Layer):
                         in_channels=ch_in if i == 0 else ch_out,
                         out_channels=ch_out,
                         norm_type=norm_type))
-                head_conv.add_sublayer(lite_name + '.act', nn.ReLU6())
             else:
                 if dcn_head:
                     head_conv.add_sublayer(
@@ -87,11 +86,13 @@ class HMHead(nn.Layer):
                 head_conv.add_sublayer(name + '.act', nn.ReLU())
         self.feat = head_conv
         bias_init = float(-np.log((1 - 0.01) / 0.01))
+        weight_attr = None if lite_head else ParamAttr(initializer=Normal(
+            0, 0.01))
         self.head = nn.Conv2D(
             in_channels=ch_out,
             out_channels=num_classes,
             kernel_size=1,
-            weight_attr=ParamAttr(initializer=Normal(0, 0.01)),
+            weight_attr=weight_attr,
             bias_attr=ParamAttr(
                 learning_rate=2.,
                 regularizer=L2Decay(0.),
@@ -138,7 +139,6 @@ class WHHead(nn.Layer):
                         in_channels=ch_in if i == 0 else ch_out,
                         out_channels=ch_out,
                         norm_type=norm_type))
-                head_conv.add_sublayer(lite_name + '.act', nn.ReLU6())
             else:
                 if dcn_head:
                     head_conv.add_sublayer(
@@ -162,12 +162,14 @@ class WHHead(nn.Layer):
                                 learning_rate=2., regularizer=L2Decay(0.))))
                 head_conv.add_sublayer(name + '.act', nn.ReLU())
 
+        weight_attr = None if lite_head else ParamAttr(initializer=Normal(
+            0, 0.01))
         self.feat = head_conv
         self.head = nn.Conv2D(
             in_channels=ch_out,
             out_channels=4,
             kernel_size=1,
-            weight_attr=ParamAttr(initializer=Normal(0, 0.001)),
+            weight_attr=weight_attr,
             bias_attr=ParamAttr(
                 learning_rate=2., regularizer=L2Decay(0.)))
 
@@ -282,8 +284,8 @@ class TTFHead(nn.Layer):
 
         pred_boxes = paddle.concat(
             [
-                0 - pred_wh[:, 0:2, :, :] + base_loc, pred_wh[:, 2:4] +
-                base_loc
+                0 - pred_wh[:, 0:2, :, :] + base_loc,
+                pred_wh[:, 2:4] + base_loc
             ],
             axis=1)
         pred_boxes = paddle.transpose(pred_boxes, [0, 2, 3, 1])

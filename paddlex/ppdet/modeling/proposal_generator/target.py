@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import six
-import math
 import numpy as np
 import paddle
 from ..bbox_utils import bbox2delta, bbox_overlaps
-import copy
 
 
 def rpn_anchor_target(anchors,
@@ -220,7 +217,8 @@ def generate_proposal_target(rpn_rois,
         if gt_bbox.shape[0] > 0:
             sampled_bbox = paddle.gather(gt_bbox, sampled_gt_ind)
         else:
-            sampled_bbox = paddle.zeros([0, 4], dtype='float32')
+            num = rois_per_image.shape[0]
+            sampled_bbox = paddle.zeros([num, 4], dtype='float32')
 
         rois_per_image.stop_gradient = True
         sampled_gt_ind.stop_gradient = True

@@ -15,8 +15,6 @@
 import numpy as np
 import math
 import paddle
-import paddle.nn.functional as F
-from paddle import ParamAttr
 import paddle.nn as nn
 from paddle.nn.initializer import KaimingUniform
 from paddlex.ppdet.core.workspace import register, serializable
