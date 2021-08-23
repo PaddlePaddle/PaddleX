@@ -20,7 +20,6 @@ import paddleslim
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms import build_transforms
-from .utils.infer_nets import InferNet
 
 
 def load_rcnn_inference_model(model_dir):
@@ -117,8 +116,7 @@ def load_model(model_dir, **params):
                     logging.error(
                         "Exported quantized model can not be loaded, only deployment is supported.",
                         exit=True)
-                model.net = InferNet(
-                    net=model.net, model_type=model.model_type)
+                model.net = model._build_inference_net()
                 if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
                     net_state_dict = load_rcnn_inference_model(model_dir)
                 else:

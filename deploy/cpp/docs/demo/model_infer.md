@@ -21,13 +21,25 @@
 以步骤二中下载的YOLOv3模型为例，执行如下命令即可进行模型加载和预测
 
 ```sh
-# 使用GPU 加参数 --use_gpu=1
 build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
                        --params_filename=yolov3_mbv1/model/model.pdiparams \
                        --cfg_file=yolov3_mbv1/model/infer_cfg.yml \
                        --image=yolov3_mbv1/images/000000010583.jpg \
                        --model_type=det
 ```
+**注意：如果要使用GPU进行预测，请同时指定`--use_gpu=1`。根据模型来源的套件，设置正确的`model_type`。**
+
+| 参数            | 说明                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| model_filename  | **[必填]** 模型结构文件路径，如`yolov3_darknet/model.pdmodel`                                                |
+| params_filename | **[必填]** 模型权重文件路径，如`yolov3_darknet/model.pdiparams`                                              |
+| cfg_file        | **[必填]** 模型配置文件路径，如`yolov3_darknet/infer_cfg.yml`                                                |
+| model_type      | **[必填]** 模型来源，**det/seg/clas/paddlex**，分别表示模型来源于PaddleDetection、PaddleSeg、PaddleClas和PaddleX |
+| image           | 待预测的图片文件路径                                                                                         |
+| use_gpu         | 是否使用GPU，1或者0。默认为0，不使用GPU                                                                         |
+| gpu_id          | 使用GPU预测时的GUI设备ID，默认为0                                                                            |
+
+
 输出结果如下(分别为类别id、标签、置信度、xmin、ymin、w, h)
 ```
 Box(0	person	0.0386442	2.11425	53.4415	36.2138	197.833)
@@ -39,17 +51,6 @@ Box(44	spoon	0.0234474	509.703	189.959	100.65	93.9368)
 Box(45	bowl	0.0461333	0	0	223.386	83.5562)
 Box(45	bowl	0.0191819	3.91156	1.276	225.888	214.273)
 ```
-### 参数说明
-
-| 参数            | 说明                                                                                                         |
-| --------------- | ------------------------------------------------------------------------------------------------------------ |
-| model_filename  | **[必填]** 模型结构文件路径，如`yolov3_darknet/model.pdmodel`                                                |
-| params_filename | **[必填]** 模型权重文件路径，如`yolov3_darknet/model.pdiparams`                                              |
-| cfg_file        | **[必填]** 模型配置文件路径，如`yolov3_darknet/infer_cfg.yml`                                                |
-| model_type      | **[必填]** 模型来源，det/seg/clas/paddlex，分别表示模型来源于PaddleDetection、PaddleSeg、PaddleClas和PaddleX |
-| image           | 待预测的图片文件路径                                                                                         |
-| use_gpu         | 是否使用GPU，0或者1，默认为0                                                                                 |
-| gpu_id          | 使用GPU预测时的GUI设备ID，默认为0                                                                            |
 
 
 

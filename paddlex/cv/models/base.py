@@ -437,13 +437,11 @@ class BaseModel:
                             criterion='l1_norm',
                             save_dir='output'):
         """
-
         Args:
             dataset(paddlex.dataset): Dataset used for evaluation during sensitivity analysis.
             batch_size(int, optional): Batch size used in evaluation. Defaults to 8.
             criterion({'l1_norm', 'fpgm'}, optional): Pruning criterion. Defaults to 'l1_norm'.
             save_dir(str, optional): The directory to save sensitivity file of the model. Defaults to 'output'.
-
         """
         if self.__class__.__name__ in ['FasterRCNN', 'MaskRCNN']:
             raise Exception("{} does not support pruning currently!".format(
@@ -479,12 +477,10 @@ class BaseModel:
 
     def prune(self, pruned_flops, save_dir=None):
         """
-
         Args:
             pruned_flops(float): Ratio of FLOPs to be pruned.
             save_dir(None or str, optional): If None, the pruned model will not be saved.
                 Otherwise, the pruned model will be saved at save_dir. Defaults to None.
-
         """
         if self.status == "Pruned":
             raise Exception(
@@ -505,6 +501,10 @@ class BaseModel:
             logging.info("Pruned model is saved at {}".format(save_dir))
 
     def _prepare_qat(self, quant_config):
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support quantization aware training.",
+                exit=True)
         if quant_config is None:
             # default quantization configuration
             quant_config = {
@@ -580,7 +580,8 @@ class BaseModel:
         return pipeline_info
 
     def _build_inference_net(self):
-        infer_net = InferNet(self.net, self.model_type)
+        infer_net = self.net if self.model_type == 'detector' else InferNet(
+            self.net, self.model_type)
         infer_net.eval()
         return infer_net
 

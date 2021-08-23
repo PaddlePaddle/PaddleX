@@ -1,4 +1,4 @@
-# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ from paddlex.utils import logging, Timer
 class Predictor(object):
     def __init__(self,
                  model_dir,
-                 use_gpu=True,
+                 use_gpu=False,
                  gpu_id=0,
                  cpu_thread_num=1,
                  use_mkl=True,
@@ -37,7 +37,7 @@ class Predictor(object):
         """ 创建Paddle Predictor
             Args:
                 model_dir: 模型路径（必须是导出的部署或量化模型）
-                use_gpu: 是否使用gpu，默认True
+                use_gpu: 是否使用gpu，默认False
                 gpu_id: 使用gpu的id，默认0
                 cpu_thread_num=1：使用cpu进行预测时的线程数，默认为1
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
@@ -51,9 +51,9 @@ class Predictor(object):
         self.model_dir = model_dir
         self._model = load_model(model_dir, with_net=False)
 
-        if trt_precision_mode == 'float32':
+        if trt_precision_mode.lower() == 'float32':
             trt_precision_mode = PrecisionType.Float32
-        elif trt_precision_mode == 'float16':
+        elif trt_precision_mode.lower() == 'float16':
             trt_precision_mode = PrecisionType.Float16
         else:
             logging.error(
@@ -158,7 +158,7 @@ class Predictor(object):
                 transforms=transforms.transforms)
             score_map = np.squeeze(score_map)
             label_map = np.squeeze(label_map)
-            if len(score_map.shape) == 3:
+            if score_map.ndim == 3:
                 preds = {'label_map': label_map, 'score_map': score_map}
             else:
                 preds = [{
@@ -166,10 +166,16 @@ class Predictor(object):
                     'score_map': s
                 } for l, s in zip(label_map, score_map)]
         elif self._model.model_type == 'detector':
-            net_outputs = {
-                k: v
-                for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
-            }
+            if 'RCNN' in self._model.__class__.__name__:
+                net_outputs = [{
+                    k: v
+                    for k, v in zip(['bbox', 'bbox_num', 'mask'], res)
+                } for res in net_outputs]
+            else:
+                net_outputs = {
+                    k: v
+                    for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
+                }
             preds = self._model._postprocess(net_outputs)
             if len(preds) == 1:
                 preds = preds[0]
@@ -190,7 +196,6 @@ class Predictor(object):
             input_tensor = self.predictor.get_input_handle(name)
             input_tensor.copy_from_cpu(inputs[name])
 
-        self.timer.inference_time_s.start()
         self.predictor.run()
         output_names = self.predictor.get_output_names()
         net_outputs = list()
@@ -200,14 +205,51 @@ class Predictor(object):
 
         return net_outputs
 
-    def predict(self, img_file, topk=1, transforms=None):
+    def _run(self, images, topk=1, transforms=None):
+        self.timer.preprocess_time_s.start()
+        preprocessed_input = self.preprocess(images, transforms)
+        self.timer.preprocess_time_s.end(iter_num=len(images))
+
+        ori_shape = None
+        self.timer.inference_time_s.start()
+        if 'RCNN' in self._model.__class__.__name__:
+            if len(preprocessed_input) > 1:
+                logging.warning(
+                    "{} only supports inference with batch size equal to 1."
+                    .format(self._model.__class__.__name__))
+            net_outputs = [
+                self.raw_predict(sample) for sample in preprocessed_input
+            ]
+            self.timer.inference_time_s.end(iter_num=len(images))
+        else:
+            net_outputs = self.raw_predict(preprocessed_input)
+            self.timer.inference_time_s.end(iter_num=1)
+            ori_shape = preprocessed_input.get('ori_shape', None)
+
+        self.timer.postprocess_time_s.start()
+        results = self.postprocess(
+            net_outputs, topk, ori_shape=ori_shape, transforms=transforms)
+        self.timer.postprocess_time_s.end(iter_num=len(images))
+
+        return results
+
+    def predict(self,
+                img_file,
+                topk=1,
+                transforms=None,
+                warmup_iters=0,
+                repeats=1):
         """ 图片预测
             Args:
                 img_file(List[np.ndarray or str], str or np.ndarray):
                     图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
                 topk(int): 分类预测时使用，表示预测前topk的结果。
                 transforms (paddlex.transforms): 数据预处理操作。
+                warmup_iters (int): 预热轮数，默认为0。
+                repeats (int): 重复次数，用于评估模型推理以及前后处理速度。若大于1，会预测repeats次取时间平均值。
         """
+        if repeats < 1:
+            logging.error("`repeats` must be greater than 1.", exit=True)
         if transforms is None and not hasattr(self._model, 'test_transforms'):
             raise Exception("Transforms need to be defined, now is None.")
         if transforms is None:
@@ -217,23 +259,15 @@ class Predictor(object):
         else:
             images = img_file
 
-        self.timer.preprocess_time_s.start()
-        preprocessed_input = self.preprocess(images, transforms)
-        self.timer.preprocess_time_s.end()
+        for step in range(warmup_iters):
+            self._run(images=images, topk=topk, transforms=transforms)
+        self.timer.reset()
 
-        self.timer.inference_time_s.start()
-        net_outputs = self.raw_predict(preprocessed_input)
-        self.timer.inference_time_s.end()
+        for step in range(repeats):
+            results = self._run(
+                images=images, topk=topk, transforms=transforms)
 
-        self.timer.postprocess_time_s.start()
-        results = self.postprocess(
-            net_outputs,
-            topk,
-            ori_shape=preprocessed_input.get('ori_shape', None),
-            transforms=transforms)
-        self.timer.postprocess_time_s.end()
-
-        self.timer.img_num = len(images)
+        self.timer.repeats = repeats
         self.timer.info(average=True)
 
         return results

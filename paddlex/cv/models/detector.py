@@ -105,8 +105,6 @@ class BaseDetector(BaseModel):
         if mode in ['train', 'eval']:
             outputs = net_out
         else:
-            for key in ['im_shape', 'scale_factor']:
-                net_out[key] = inputs[key]
             outputs = dict()
             for key in net_out:
                 outputs[key] = net_out[key].numpy()
@@ -194,8 +192,11 @@ class BaseDetector(BaseModel):
             resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
                 If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
                 `pretrain_weights` can be set simultaneously. Defaults to None.
-
         """
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support training.",
+                exit=True)
         if pretrain_weights is not None and resume_checkpoint is not None:
             logging.error(
                 "pretrain_weights and resume_checkpoint cannot be set simultaneously.",
@@ -338,7 +339,6 @@ class BaseDetector(BaseModel):
                 configuration will be used. Defaults to None.
             resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
                 from. If None, no training checkpoint will be resumed. Defaults to None.
-
         """
         self._prepare_qat(quant_config)
         self.train(
@@ -376,10 +376,8 @@ class BaseDetector(BaseModel):
             metric({'VOC', 'COCO', None}, optional):
                 Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
             return_details(bool, optional): Whether to return evaluation details. Defaults to False.
-
         Returns:
             collections.OrderedDict with key-value pairs: {"mAP(0.50, 11point)":`mean average precision`}.
-
         """
 
         if metric is None:
@@ -475,7 +473,6 @@ class BaseDetector(BaseModel):
                 meaning all images to be predicted as a mini-batch.
             transforms(paddlex.transforms.Compose or None, optional):
                 Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
-
         Returns:
             If img_file is a string or np.array, the result is a list of dict with key-value pairs:
             {"category_id": `category_id`, "category": `category`, "bbox": `[x, y, w, h]`, "score": `score`}.
@@ -485,7 +482,6 @@ class BaseDetector(BaseModel):
             bbox(list): bounding box in [x, y, w, h] format
             score(str): confidence
             mask(dict): Only for instance segmentation task. Mask of the object in RLE format
-
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")
@@ -515,8 +511,14 @@ class BaseDetector(BaseModel):
         batch_transforms = self._compose_batch_transform(transforms, 'test')
         batch_samples = batch_transforms(batch_samples)
         if to_tensor:
-            for k, v in batch_samples.items():
-                batch_samples[k] = paddle.to_tensor(v)
+            if isinstance(batch_samples, dict):
+                for k in batch_samples:
+                    batch_samples[k] = paddle.to_tensor(batch_samples[k])
+            else:
+                for sample in batch_samples:
+                    for k in sample:
+                        sample[k] = paddle.to_tensor(sample[k])
+
         return batch_samples
 
     def _postprocess(self, batch_pred):
@@ -985,6 +987,18 @@ class FasterRCNN(BaseDetector):
         super(FasterRCNN, self).__init__(
             model_name='FasterRCNN', num_classes=num_classes, **params)
 
+    def run(self, net, inputs, mode):
+        if mode in ['train', 'eval']:
+            outputs = net(inputs)
+        else:
+            outputs = []
+            for sample in inputs:
+                net_out = net(sample)
+                for key in net_out:
+                    net_out[key] = net_out[key].numpy()
+                outputs.append(net_out)
+        return outputs
+
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
@@ -1008,7 +1022,8 @@ class FasterRCNN(BaseDetector):
 
         batch_transforms = BatchCompose(
             custom_batch_transforms + default_batch_transforms,
-            collate_batch=collate_batch)
+            collate_batch=collate_batch,
+            return_list=mode == 'test')
 
         return batch_transforms
 
@@ -1053,6 +1068,13 @@ class FasterRCNN(BaseDetector):
 
         self.fixed_input_shape = image_shape
         return self._define_input_spec(image_shape)
+
+    def _postprocess(self, batch_pred):
+        prediction = [
+            super(FasterRCNN, self)._postprocess(pred)[0]
+            for pred in batch_pred
+        ]
+        return prediction
 
 
 class PPYOLO(YOLOv3):
@@ -1462,20 +1484,28 @@ class PPYOLOv2(YOLOv3):
             image_shape = self._check_image_shape(image_shape)
             self._fix_transforms_shape(image_shape[-2:])
         else:
-            image_shape = [None, 3, 608, 608]
+            image_shape = [None, 3, 640, 640]
+            if hasattr(self, 'test_transforms'):
+                if self.test_transforms is not None:
+                    for idx, op in enumerate(self.test_transforms.transforms):
+                        name = op.__class__.__name__
+                        if name == 'Resize':
+                            image_shape = [None, 3] + list(
+                                self.test_transforms.transforms[
+                                    idx].target_size)
             logging.warning(
                 '[Important!!!] When exporting inference model for {},'.format(
                     self.__class__.__name__) +
-                ' if fixed_input_shape is not set, it will be forcibly set to [None, 3, 608, 608]. '
-                +
-                'Please check image shape after transforms is [3, 608, 608], if not, fixed_input_shape '
-                + 'should be specified manually.')
+                ' if fixed_input_shape is not set, it will be forcibly set to {}. '.
+                format(image_shape) +
+                'Please check image shape after transforms is {}, if not, fixed_input_shape '.
+                format(image_shape[1:]) + 'should be specified manually.')
 
         self.fixed_input_shape = image_shape
         return self._define_input_spec(image_shape)
 
 
-class MaskRCNN(BaseDetector):
+class MaskRCNN(FasterRCNN):
     def __init__(self,
                  num_classes=80,
                  backbone='ResNet50_vd',
@@ -1710,7 +1740,7 @@ class MaskRCNN(BaseDetector):
                 'mask_post_process': mask_post_process
             })
         self.with_fpn = with_fpn
-        super(MaskRCNN, self).__init__(
+        super(FasterRCNN, self).__init__(
             model_name='MaskRCNN', num_classes=num_classes, **params)
 
     def _compose_batch_transform(self, transforms, mode='train'):
@@ -1736,7 +1766,8 @@ class MaskRCNN(BaseDetector):
 
         batch_transforms = BatchCompose(
             custom_batch_transforms + default_batch_transforms,
-            collate_batch=collate_batch)
+            collate_batch=collate_batch,
+            return_list=mode == 'test')
 
         return batch_transforms
 
