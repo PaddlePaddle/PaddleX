@@ -40,7 +40,8 @@ class CocoDetection(VOCDetection):
                  ann_file,
                  transforms=None,
                  num_workers='auto',
-                 shuffle=False):
+                 shuffle=False,
+                 allow_empty=False):
         # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
         # or matplotlib.backends is imported for the first time
         # pycocotools import matplotlib
@@ -70,12 +71,14 @@ class CocoDetection(VOCDetection):
         self.batch_transforms = None
         self.num_workers = get_num_workers(num_workers)
         self.shuffle = shuffle
+        self.allow_empty = allow_empty
         self.file_list = list()
+        self.neg_file_list = list()
         self.labels = list()
 
         coco = COCO(ann_file)
         self.coco_gt = coco
-        img_ids = coco.getImgIds()
+        img_ids = sorted(coco.getImgIds())
         cat_ids = coco.getCatIds()
         catid2clsid = dict({catid: i for i, catid in enumerate(cat_ids)})
         cname2clsid = dict({
@@ -85,7 +88,10 @@ class CocoDetection(VOCDetection):
         for label, cid in sorted(cname2clsid.items(), key=lambda d: d[1]):
             self.labels.append(label)
         logging.info("Starting to read file list from dataset...")
+
+        ct = 0
         for img_id in img_ids:
+            is_empty = False
             img_anno = coco.loadImgs(img_id)[0]
             im_fname = osp.join(data_dir, img_anno['file_name'])
             if not is_pic(im_fname):
@@ -111,6 +117,11 @@ class CocoDetection(VOCDetection):
                         "im_id: {}, area: {} x1: {}, y1: {}, x2: {}, y2: {}."
                         .format(img_id, float(inst['area']), x1, y1, x2, y2))
             num_bbox = len(bboxes)
+            if num_bbox == 0 and not self.allow_empty:
+                continue
+            elif num_bbox == 0:
+                is_empty = True
+
             gt_bbox = np.zeros((num_bbox, 4), dtype=np.float32)
             gt_class = np.zeros((num_bbox, 1), dtype=np.int32)
             gt_score = np.ones((num_bbox, 1), dtype=np.float32)
@@ -125,11 +136,19 @@ class CocoDetection(VOCDetection):
                 gt_bbox[i, :] = box['clean_bbox']
                 is_crowd[i][0] = box['iscrowd']
                 if 'segmentation' in box and box['iscrowd'] == 1:
-                    gt_poly[i] = [[0.0, 0.0], ]
+                    gt_poly[i] = [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
                 elif 'segmentation' in box and box['segmentation']:
-                    gt_poly[i] = box['segmentation']
+                    if not np.array(box[
+                            'segmentation']).size > 0 and not self.allow_empty:
+                        bboxes.pop(i)
+                        gt_poly.pop(i)
+                        np.delete(is_crowd, i)
+                        np.delete(gt_class, i)
+                        np.delete(gt_bbox, i)
+                    else:
+                        gt_poly[i] = box['segmentation']
                     has_segmentation = True
-            if has_segmentation and not any(gt_poly):
+            if has_segmentation and not any(gt_poly) and not self.allow_empty:
                 continue
 
             im_info = {
@@ -145,25 +164,41 @@ class CocoDetection(VOCDetection):
                 'difficult': difficult
             }
 
-            if None in gt_poly:
-                del label_info['gt_poly']
+            if is_empty:
+                self.neg_file_list.append({
+                    'image': im_fname,
+                    **
+                    im_info,
+                    **
+                    label_info
+                })
+            else:
+                self.file_list.append({
+                    'image': im_fname,
+                    **
+                    im_info,
+                    **
+                    label_info
+                })
+            ct += 1
 
-            self.file_list.append(({
-                'image': im_fname,
-                **
-                im_info,
-                **
-                label_info
-            }))
-        if self.use_mix:
-            self.num_max_boxes = max(self.num_max_boxes, 2 * len(instances))
-        else:
-            self.num_max_boxes = max(self.num_max_boxes, len(instances))
+            if self.use_mix:
+                self.num_max_boxes = max(self.num_max_boxes,
+                                         2 * len(instances))
+            else:
+                self.num_max_boxes = max(self.num_max_boxes, len(instances))
 
-        if not len(self.file_list) > 0:
-            raise Exception('not found any coco record in %s' % ann_file)
-        logging.info("{} samples in file {}".format(
-            len(self.file_list), ann_file))
+        if not ct:
+            logging.error(
+                "No coco record found in %s' % (ann_file)", exit=True)
+        logging.info(
+            "{} samples in file {}, including {} positive samples and {} negative samples.".
+            format(
+                len(self.file_list) + len(self.neg_file_list), ann_file,
+                len(self.file_list), len(self.neg_file_list)))
+
+        if self.allow_empty:
+            self.file_list += self.neg_file_list
         self.num_samples = len(self.file_list)
 
         self._epoch = 0
