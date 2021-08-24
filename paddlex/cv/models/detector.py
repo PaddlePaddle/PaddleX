@@ -192,7 +192,6 @@ class BaseDetector(BaseModel):
             resume_checkpoint(str or None, optional): The path of the checkpoint to resume training from.
                 If None, no training checkpoint will be resumed. At most one of `resume_checkpoint` and
                 `pretrain_weights` can be set simultaneously. Defaults to None.
-
         """
         if self.status == 'Infer':
             logging.error(
@@ -340,7 +339,6 @@ class BaseDetector(BaseModel):
                 configuration will be used. Defaults to None.
             resume_checkpoint(str or None, optional): The path of the checkpoint to resume quantization-aware training
                 from. If None, no training checkpoint will be resumed. Defaults to None.
-
         """
         self._prepare_qat(quant_config)
         self.train(
@@ -378,10 +376,8 @@ class BaseDetector(BaseModel):
             metric({'VOC', 'COCO', None}, optional):
                 Evaluation metric. If None, determine the metric according to the dataset format. Defaults to None.
             return_details(bool, optional): Whether to return evaluation details. Defaults to False.
-
         Returns:
             collections.OrderedDict with key-value pairs: {"mAP(0.50, 11point)":`mean average precision`}.
-
         """
 
         if metric is None:
@@ -477,7 +473,6 @@ class BaseDetector(BaseModel):
                 meaning all images to be predicted as a mini-batch.
             transforms(paddlex.transforms.Compose or None, optional):
                 Transforms for inputs. If None, the transforms for evaluation process will be used. Defaults to None.
-
         Returns:
             If img_file is a string or np.array, the result is a list of dict with key-value pairs:
             {"category_id": `category_id`, "category": `category`, "bbox": `[x, y, w, h]`, "score": `score`}.
@@ -487,7 +482,6 @@ class BaseDetector(BaseModel):
             bbox(list): bounding box in [x, y, w, h] format
             score(str): confidence
             mask(dict): Only for instance segmentation task. Mask of the object in RLE format
-
         """
         if transforms is None and not hasattr(self, 'test_transforms'):
             raise Exception("transforms need to be defined, now is None.")

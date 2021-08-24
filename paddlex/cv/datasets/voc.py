@@ -24,6 +24,7 @@ import xml.etree.ElementTree as ET
 from paddle.io import Dataset
 from paddlex.utils import logging, get_num_workers, get_encoding, path_normalization, is_pic
 from paddlex.cv.transforms import Decode, MixupImage
+from paddlex.tools import YOLOAnchorCluster
 
 
 class VOCDetection(Dataset):
@@ -58,6 +59,7 @@ class VOCDetection(Dataset):
         matplotlib.use('Agg')
         from pycocotools.coco import COCO
         super(VOCDetection, self).__init__()
+        self.data_dir = data_dir
         self.data_fields = None
         self.transforms = copy.deepcopy(transforms)
         self.num_max_boxes = 50
@@ -325,6 +327,44 @@ class VOCDetection(Dataset):
 
     def set_epoch(self, epoch_id):
         self._epoch = epoch_id
+
+    def cluster_yolo_anchor(self,
+                            num_anchors,
+                            image_size,
+                            cache=True,
+                            cache_path=None,
+                            iters=300,
+                            gen_iters=1000,
+                            thresh=.25):
+        """
+        Cluster YOLO anchors.
+
+        Reference:
+            https://github.com/ultralytics/yolov5/blob/master/utils/autoanchor.py
+
+        Args:
+            num_anchors (int): number of clusters
+            image_size (list or int): [h, w], being an int means image height and image width are the same.
+            cache (bool): whether using cache
+            cache_path (str or None, optional): cache directory path. If None, use `data_dir` of dataset.
+            iters (int, optional): iters of kmeans algorithm
+            gen_iters (int, optional): iters of genetic algorithm
+            threshold (float, optional): anchor scale threshold
+            verbose (bool, optional): whether print results
+        """
+        if cache_path is None:
+            cache_path = self.data_dir
+        cluster = YOLOAnchorCluster(
+            num_anchors=num_anchors,
+            dataset=self,
+            image_size=image_size,
+            cache=cache,
+            cache_path=cache_path,
+            iters=iters,
+            gen_iters=gen_iters,
+            thresh=thresh)
+        anchors = cluster()
+        return anchors
 
     def add_negative_samples(self, image_dir, empty_ratio=1):
         """将背景图片加入训练

@@ -59,6 +59,7 @@ class CocoDetection(VOCDetection):
             six.reraise(*sys.exc_info())
 
         super(VOCDetection, self).__init__()
+        self.data_dir = data_dir
         self.data_fields = None
         self.transforms = copy.deepcopy(transforms)
         self.num_max_boxes = 50
