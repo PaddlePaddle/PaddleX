@@ -14,6 +14,7 @@
 
 from __future__ import absolute_import
 import copy
+import os
 import os.path as osp
 import random
 import re
@@ -37,6 +38,8 @@ class VOCDetection(Dataset):
             系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的
             一半。
         shuffle (bool): 是否需要对数据集中样本打乱顺序。默认为False。
+        allow_empty (bool): 是否加载负样本。默认为False。
+        empty_ratio (float): 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
     """
 
     def __init__(self,
@@ -45,7 +48,9 @@ class VOCDetection(Dataset):
                  label_list,
                  transforms=None,
                  num_workers='auto',
-                 shuffle=False):
+                 shuffle=False,
+                 allow_empty=False,
+                 empty_ratio=1.):
         # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
         # or matplotlib.backends is imported for the first time
         # pycocotools import matplotlib
@@ -69,7 +74,10 @@ class VOCDetection(Dataset):
         self.batch_transforms = None
         self.num_workers = get_num_workers(num_workers)
         self.shuffle = shuffle
+        self.allow_empty = allow_empty
+        self.empty_ratio = empty_ratio
         self.file_list = list()
+        neg_file_list = list()
         self.labels = list()
 
         annotations = dict()
@@ -121,17 +129,10 @@ class VOCDetection(Dataset):
                     continue
                 tree = ET.parse(xml_file)
                 if tree.find('id') is None:
-                    im_id = np.array([ct])
+                    im_id = np.asarray([ct])
                 else:
                     ct = int(tree.find('id').text)
-                    im_id = np.array([int(tree.find('id').text)])
-                pattern = re.compile('<object>', re.IGNORECASE)
-                obj_match = pattern.findall(
-                    str(ET.tostringlist(tree.getroot())))
-                if len(obj_match) == 0:
-                    continue
-                obj_tag = obj_match[0][1:-1]
-                objs = tree.findall(obj_tag)
+                    im_id = np.asarray([int(tree.find('id').text)])
                 pattern = re.compile('<size>', re.IGNORECASE)
                 size_tag = pattern.findall(
                     str(ET.tostringlist(tree.getroot())))
@@ -149,18 +150,26 @@ class VOCDetection(Dataset):
                 else:
                     im_w = 0
                     im_h = 0
-                gt_bbox = np.zeros((len(objs), 4), dtype=np.float32)
-                gt_class = np.zeros((len(objs), 1), dtype=np.int32)
-                gt_score = np.ones((len(objs), 1), dtype=np.float32)
-                is_crowd = np.zeros((len(objs), 1), dtype=np.int32)
-                difficult = np.zeros((len(objs), 1), dtype=np.int32)
-                skipped_indices = list()
+
+                pattern = re.compile('<object>', re.IGNORECASE)
+                obj_match = pattern.findall(
+                    str(ET.tostringlist(tree.getroot())))
+                if len(obj_match) > 0:
+                    obj_tag = obj_match[0][1:-1]
+                    objs = tree.findall(obj_tag)
+                else:
+                    objs = list()
+
+                gt_bbox = list()
+                gt_class = list()
+                gt_score = list()
+                is_crowd = list()
+                difficult = list()
                 for i, obj in enumerate(objs):
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
                         1:-1]
                     cname = obj.find(name_tag).text.strip()
-                    gt_class[i][0] = cname2cid[cname]
                     pattern = re.compile('<difficult>', re.IGNORECASE)
                     diff_tag = pattern.findall(str(ET.tostringlist(obj)))
                     if len(diff_tag) == 0:
@@ -204,15 +213,16 @@ class VOCDetection(Dataset):
                         y2 = min(im_h - 1, y2)
 
                     if not (x2 >= x1 and y2 >= y1):
-                        skipped_indices.append(i)
                         logging.warning(
                             "Bounding box for object {} does not satisfy x1 <= x2 and y1 <= y2, "
                             "so this object is skipped".format(i))
                         continue
 
-                    gt_bbox[i] = [x1, y1, x2, y2]
-                    is_crowd[i][0] = 0
-                    difficult[i][0] = _difficult
+                    gt_bbox.append([x1, y1, x2, y2])
+                    gt_class.append([cname2cid[cname]])
+                    gt_score.append([1.])
+                    is_crowd.append(0)
+                    difficult.append([_difficult])
                     annotations['annotations'].append({
                         'iscrowd': 0,
                         'image_id': int(im_id[0]),
@@ -224,16 +234,16 @@ class VOCDetection(Dataset):
                     })
                     ann_ct += 1
 
-                if skipped_indices:
-                    gt_bbox = np.delete(gt_bbox, skipped_indices, axis=0)
-                    gt_class = np.delete(gt_class, skipped_indices, axis=0)
-                    gt_score = np.delete(gt_score, skipped_indices, axis=0)
-                    is_crowd = np.delete(is_crowd, skipped_indices, axis=0)
-                    difficult = np.delete(difficult, skipped_indices, axis=0)
+                gt_bbox = np.array(gt_bbox, dtype=np.float32)
+                gt_class = np.array(gt_class, dtype=np.int32)
+                gt_score = np.array(gt_score, dtype=np.float32)
+                is_crowd = np.array(is_crowd, dtype=np.int32)
+                difficult = np.array(difficult, dtype=np.int32)
 
                 im_info = {
                     'im_id': im_id,
-                    'image_shape': np.array([im_h, im_w]).astype('int32'),
+                    'image_shape': np.array(
+                        [im_h, im_w], dtype=np.int32)
                 }
                 label_info = {
                     'is_crowd': is_crowd,
@@ -243,7 +253,7 @@ class VOCDetection(Dataset):
                     'difficult': difficult
                 }
 
-                if gt_bbox.size != 0:
+                if gt_bbox.size > 0:
                     self.file_list.append({
                         'image': img_file,
                         **
@@ -251,22 +261,38 @@ class VOCDetection(Dataset):
                         **
                         label_info
                     })
-                    ct += 1
                     annotations['images'].append({
                         'height': im_h,
                         'width': im_w,
                         'id': int(im_id[0]),
                         'file_name': osp.split(img_file)[1]
                     })
+                else:
+                    neg_file_list.append({
+                        'image': img_file,
+                        **
+                        im_info,
+                        **
+                        label_info
+                    })
+                ct += 1
+
                 if self.use_mix:
                     self.num_max_boxes = max(self.num_max_boxes, 2 * len(objs))
                 else:
                     self.num_max_boxes = max(self.num_max_boxes, len(objs))
 
-        if not len(self.file_list) > 0:
-            raise Exception('not found any voc record in %s' % (file_list))
-        logging.info("{} samples in file {}".format(
-            len(self.file_list), file_list))
+        if not ct:
+            logging.error(
+                "No voc record found in %s' % (file_list)", exit=True)
+        self.pos_num = len(self.file_list)
+        if self.allow_empty:
+            self.file_list += self._sample_empty(neg_file_list)
+        logging.info(
+            "{} samples in file {}, including {} positive samples and {} negative samples.".
+            format(
+                len(self.file_list), file_list, self.pos_num,
+                len(self.file_list) - self.pos_num))
         self.num_samples = len(self.file_list)
         self.coco_gt = COCO()
         self.coco_gt.dataset = annotations
@@ -299,3 +325,77 @@ class VOCDetection(Dataset):
 
     def set_epoch(self, epoch_id):
         self._epoch = epoch_id
+
+    def add_negative_samples(self, image_dir, empty_ratio=1):
+        """将背景图片加入训练
+
+        Args:
+            image_dir (str)：背景图片所在的文件夹目录。
+            empty_ratio (float or None): 用于指定负样本占总样本数的比例。如果为None，保留数据集初始化是设置的`empty_ratio`值，
+                否则更新原有`empty_ratio`值。如果小于0或大于等于1，则保留全部的负样本。默认为1。
+
+        """
+        import cv2
+        if not osp.isdir(image_dir):
+            raise Exception("{} is not a valid image directory.".format(
+                image_dir))
+        if empty_ratio is not None:
+            self.empty_ratio = empty_ratio
+        image_list = os.listdir(image_dir)
+        max_img_id = max(
+            len(self.file_list) - 1, max(self.coco_gt.getImgIds()))
+        neg_file_list = list()
+        for image in image_list:
+            if not is_pic(image):
+                continue
+            gt_bbox = np.array([], dtype=np.float32)
+            gt_class = np.array([], dtype=np.int32)
+            gt_score = np.array([], dtype=np.float32)
+            is_crowd = np.array([], dtype=np.int32)
+            difficult = np.array([], dtype=np.int32)
+
+            max_img_id += 1
+            im_fname = osp.join(image_dir, image)
+            img_data = cv2.imread(im_fname, cv2.IMREAD_UNCHANGED)
+            im_h, im_w, im_c = img_data.shape
+
+            im_info = {
+                'im_id': np.asarray([max_img_id]),
+                'image_shape': np.array(
+                    [im_h, im_w], dtype=np.int32)
+            }
+            label_info = {
+                'is_crowd': is_crowd,
+                'gt_class': gt_class,
+                'gt_bbox': gt_bbox,
+                'gt_score': gt_score,
+                'difficult': difficult
+            }
+            if 'gt_poly' in self.file_list[0]:
+                label_info['gt_poly'] = []
+
+            neg_file_list.append({
+                'image': im_fname,
+                **
+                im_info,
+                **
+                label_info
+            })
+        self.file_list += self._sample_empty(neg_file_list)
+        logging.info(
+            "{} negative samples added. Dataset contains {} positive samples and {} negative samples.".
+            format(
+                len(self.file_list) - self.num_samples, self.pos_num,
+                len(self.file_list) - self.pos_num))
+        self.num_samples = len(self.file_list)
+
+    def _sample_empty(self, neg_file_list):
+        if 0. <= self.empty_ratio < 1.:
+            import random
+            total_num = len(self.file_list)
+            neg_num = total_num - self.pos_num
+            sample_num = min((total_num * self.empty_ratio - neg_num) //
+                             (1 - self.empty_ratio), len(neg_file_list))
+            return random.sample(neg_file_list, sample_num)
+        else:
+            return neg_file_list

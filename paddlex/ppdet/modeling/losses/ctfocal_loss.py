@@ -17,7 +17,7 @@ from __future__ import division
 from __future__ import print_function
 
 import paddle
-import paddle.nn.functional as F
+
 from paddlex.ppdet.core.workspace import register, serializable
 
 __all__ = ['CTFocalLoss']

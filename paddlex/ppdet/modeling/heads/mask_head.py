@@ -16,12 +16,9 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle.nn.initializer import KaimingNormal
-from paddle.regularizer import L2Decay
 
 from paddlex.ppdet.core.workspace import register, create
-from paddlex.ppdet.modeling import ops
 from paddlex.ppdet.modeling.layers import ConvNormLayer
-
 from .roi_extractor import RoIAlign
 
 
