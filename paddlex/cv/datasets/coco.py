@@ -145,9 +145,9 @@ class CocoDetection(VOCDetection):
                     if not np.array(box[
                             'segmentation']).size > 0 and not self.allow_empty:
                         gt_poly.pop(i)
-                        np.delete(is_crowd, i)
-                        np.delete(gt_class, i)
-                        np.delete(gt_bbox, i)
+                        is_crowd = np.delete(is_crowd, i)
+                        gt_class = np.delete(gt_class, i)
+                        gt_bbox = np.delete(gt_bbox, i)
                     else:
                         gt_poly[i] = box['segmentation']
                     has_segmentation = True
