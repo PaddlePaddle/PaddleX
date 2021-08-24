@@ -21,6 +21,10 @@ from . import jde
 from . import deepsort
 from . import fairmot
 from . import centernet
+from . import gfl
+from . import picodet
+from . import detr
+from . import sparse_rcnn
 
 from .meta_arch import *
 from .faster_rcnn import *
@@ -38,3 +42,8 @@ from .jde import *
 from .deepsort import *
 from .fairmot import *
 from .centernet import *
+from .blazeface import *
+from .gfl import *
+from .picodet import *
+from .detr import *
+from .sparse_rcnn import *

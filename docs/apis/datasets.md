@@ -45,6 +45,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > > * **transforms** (paddlex.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.transforms](./transforms/transforms.md)。  
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
+> > * **allow_empty** (bool): 是否加载负样本。默认为False。
 
 ### <h3 id="21">cluster_yolo_anchor</h3>
 
@@ -86,6 +87,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > > * **transforms** (paddlex.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.transforms](./transforms/transforms.md)。
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
+> > * **allow_empty** (bool): 是否加载负样本。默认为False。
 
 ### <h3 id="31">cluster_yolo_anchor</h3>
 

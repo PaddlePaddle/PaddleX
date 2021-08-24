@@ -297,7 +297,7 @@ class RBoxAssigner(object):
             anchors = anchors.reshape(-1, anchors.shape[-1])
         assert anchors.ndim == 2
         anchor_num = anchors.shape[0]
-        anchor_valid = np.ones((anchor_num), np.uint8)
+        anchor_valid = np.ones((anchor_num), np.int32)
         anchor_inds = np.arange(anchor_num)
         return anchor_inds
 
@@ -372,10 +372,8 @@ class RBoxAssigner(object):
         # calc rbox iou
         anchors_xc_yc = anchors_xc_yc.astype(np.float32)
         gt_bboxes_xc_yc = gt_bboxes_xc_yc.astype(np.float32)
-        anchors_xc_yc = paddle.to_tensor(
-            anchors_xc_yc, place=paddle.CPUPlace())
-        gt_bboxes_xc_yc = paddle.to_tensor(
-            gt_bboxes_xc_yc, place=paddle.CPUPlace())
+        anchors_xc_yc = paddle.to_tensor(anchors_xc_yc)
+        gt_bboxes_xc_yc = paddle.to_tensor(gt_bboxes_xc_yc)
 
         try:
             from rbox_iou_ops import rbox_iou
@@ -435,8 +433,7 @@ class RBoxAssigner(object):
         ignore_iof_thr = self.ignore_iof_thr
 
         anchor_num = anchors.shape[0]
-        anchors_inds = self.anchor_valid(anchors)
-        anchors = anchors[anchors_inds]
+
         gt_bboxes = gt_bboxes
         is_crowd_slice = is_crowd
         not_crowd_inds = np.where(is_crowd_slice == 0)
@@ -455,16 +452,17 @@ class RBoxAssigner(object):
         anchors_num = anchors.shape[0]
         bbox_targets = np.zeros_like(anchors)
         bbox_weights = np.zeros_like(anchors)
+        bbox_gt_bboxes = np.zeros_like(anchors)
         pos_labels = np.ones(anchors_num, dtype=np.int32) * -1
         pos_labels_weights = np.zeros(anchors_num, dtype=np.float32)
 
         pos_sampled_anchors = anchors[pos_inds]
-        #print('ancho target pos_inds', pos_inds, len(pos_inds))
         pos_sampled_gt_boxes = gt_bboxes[anchor_gt_bbox_inds[pos_inds]]
         if len(pos_inds) > 0:
             pos_bbox_targets = self.rbox2delta(pos_sampled_anchors,
                                                pos_sampled_gt_boxes)
             bbox_targets[pos_inds, :] = pos_bbox_targets
+            bbox_gt_bboxes[pos_inds, :] = pos_sampled_gt_boxes
             bbox_weights[pos_inds, :] = 1.0
 
             pos_labels[pos_inds] = labels[pos_inds]
@@ -473,4 +471,4 @@ class RBoxAssigner(object):
         if len(neg_inds) > 0:
             pos_labels_weights[neg_inds] = 1.0
         return (pos_labels, pos_labels_weights, bbox_targets, bbox_weights,
-                pos_inds, neg_inds)
+                bbox_gt_bboxes, pos_inds, neg_inds)

@@ -15,8 +15,7 @@
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
-from paddle import ParamAttr
-from paddle.regularizer import L2Decay
+
 from paddlex.ppdet.core.workspace import register, serializable
 from paddlex.ppdet.modeling.ops import batch_norm, mish
 from ..shape_spec import ShapeSpec

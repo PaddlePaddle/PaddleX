@@ -20,15 +20,13 @@ import os
 import sys
 import datetime
 import six
-import numpy as np
 
-import paddle
 import paddle.distributed as dist
 
 from paddlex.ppdet.utils.checkpoint import save_model
 
 from paddlex.ppdet.utils.logger import setup_logger
-logger = setup_logger('ppdet.engine')
+logger = setup_logger('paddlex.ppdet.engine')
 
 __all__ = ['Callback', 'ComposeCallback', 'LogPrinter', 'Checkpointer']
 
@@ -177,7 +175,7 @@ class Checkpointer(Callback):
                         else:
                             key = 'mask'
                         if key not in map_res:
-                            logger.warn("Evaluation results empty, this may be due to " \
+                            logger.warning("Evaluation results empty, this may be due to " \
                                         "training iterations being too few or not " \
                                         "loading the correct weights.")
                             return

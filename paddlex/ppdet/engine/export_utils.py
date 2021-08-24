@@ -23,7 +23,7 @@ from collections import OrderedDict
 from paddlex.ppdet.data.source.category import get_categories
 
 from paddlex.ppdet.utils.logger import setup_logger
-logger = setup_logger('ppdet.engine')
+logger = setup_logger('paddlex.ppdet.engine')
 
 # Global dictionary
 TRT_MIN_SUBGRAPH = {
@@ -39,9 +39,15 @@ TRT_MIN_SUBGRAPH = {
     'SOLOv2': 60,
     'HigherHRNet': 3,
     'HRNet': 3,
+    'DeepSORT': 3,
+    'JDE': 10,
+    'FairMOT': 5,
+    'GFL': 16,
+    'PicoDet': 3,
 }
 
 KEYPOINT_ARCH = ['HigherHRNet', 'TopDownHRNet']
+MOT_ARCH = ['DeepSORT', 'JDE', 'FairMOT']
 
 
 def _parse_reader(reader_cfg, dataset_cfg, metric, arch, image_shape):
@@ -77,16 +83,32 @@ def _parse_reader(reader_cfg, dataset_cfg, metric, arch, image_shape):
     return preprocess_list, label_list
 
 
+def _parse_tracker(tracker_cfg):
+    tracker_params = {}
+    for k, v in tracker_cfg.items():
+        tracker_params.update({k: v})
+    return tracker_params
+
+
 def _dump_infer_config(config, path, image_shape, model):
     arch_state = False
     from paddlex.ppdet.core.config.yaml_helpers import setup_orderdict
     setup_orderdict()
+    use_dynamic_shape = True if image_shape[1] == -1 else False
     infer_cfg = OrderedDict({
         'mode': 'fluid',
         'draw_threshold': 0.5,
         'metric': config['metric'],
+        'use_dynamic_shape': use_dynamic_shape
     })
     infer_arch = config['architecture']
+
+    if infer_arch in MOT_ARCH:
+        if infer_arch == 'DeepSORT':
+            tracker_cfg = config['DeepSORTTracker']
+        else:
+            tracker_cfg = config['JDETracker']
+        infer_cfg['tracker'] = _parse_tracker(tracker_cfg)
 
     for arch, min_subgraph_size in TRT_MIN_SUBGRAPH.items():
         if arch in infer_arch:
@@ -96,22 +118,26 @@ def _dump_infer_config(config, path, image_shape, model):
             break
     if not arch_state:
         logger.error(
-            'Architecture: {} is not supported for exporting model now'.format(
-                infer_arch))
+            'Architecture: {} is not supported for exporting model now.\n'.
+            format(infer_arch) +
+            'Please set TRT_MIN_SUBGRAPH in ppdet/engine/export_utils.py')
         os._exit(0)
     if 'Mask' in infer_arch:
         infer_cfg['mask'] = True
     label_arch = 'detection_arch'
     if infer_arch in KEYPOINT_ARCH:
         label_arch = 'keypoint_arch'
-    infer_cfg['Preprocess'], infer_cfg['label_list'] = _parse_reader(
-        config['TestReader'], config['TestDataset'], config['metric'],
-        label_arch, image_shape)
 
-    if infer_arch == 'S2ANet':
-        # TODO: move background to num_classes
-        if infer_cfg['label_list'][0] != 'background':
-            infer_cfg['label_list'].insert(0, 'background')
+    if infer_arch in MOT_ARCH:
+        label_arch = 'mot_arch'
+        reader_cfg = config['TestMOTReader']
+        dataset_cfg = config['TestMOTDataset']
+    else:
+        reader_cfg = config['TestReader']
+        dataset_cfg = config['TestDataset']
+
+    infer_cfg['Preprocess'], infer_cfg['label_list'] = _parse_reader(
+        reader_cfg, dataset_cfg, config['metric'], label_arch, image_shape)
 
     yaml.dump(infer_cfg, open(path, 'w'))
     logger.info("Export inference config file to {}".format(
