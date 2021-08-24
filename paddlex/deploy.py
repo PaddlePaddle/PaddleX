@@ -39,14 +39,14 @@ class Predictor(object):
                 model_dir: 模型路径（必须是导出的部署或量化模型）
                 use_gpu: 是否使用gpu，默认False
                 gpu_id: 使用gpu的id，默认0
-                cpu_thread_num=1：使用cpu进行预测时的线程数，默认为1
+                cpu_thread_num：使用cpu进行预测时的线程数，默认为1
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
                 mkl_thread_num: mkldnn计算线程数，默认为4
                 use_trt: 是否使用TensorRT，默认False
                 use_glog: 是否启用glog日志, 默认False
                 memory_optimize: 是否启动内存优化，默认True
                 max_trt_batch_size: 在使用TensorRT时配置的最大batch size，默认1
-                trt_precision_mode：在使用TensorRT时采用的精度，默认float32
+                trt_precision_mode：在使用TensorRT时采用的精度，可选值['float32', 'float16']。默认'float32',
         """
         self.model_dir = model_dir
         self._model = load_model(model_dir, with_net=False)
@@ -243,10 +243,10 @@ class Predictor(object):
             Args:
                 img_file(List[np.ndarray or str], str or np.ndarray):
                     图像路径；或者是解码后的排列格式为（H, W, C）且类型为float32且为BGR格式的数组。
-                topk(int): 分类预测时使用，表示预测前topk的结果。
-                transforms (paddlex.transforms): 数据预处理操作。
-                warmup_iters (int): 预热轮数，默认为0。
-                repeats (int): 重复次数，用于评估模型推理以及前后处理速度。若大于1，会预测repeats次取时间平均值。
+                topk(int): 分类预测时使用，表示预测前topk的结果。默认值为1。
+                transforms (paddlex.transforms): 数据预处理操作。默认值为None, 即使用`model.yml`中保存的数据预处理操作。
+                warmup_iters (int): 预热轮数，用于评估模型推理以及前后处理速度。若大于1，会预先重复预测warmup_iters，而后才开始正式的预测及其速度评估。默认为0。
+                repeats (int): 重复次数，用于评估模型推理以及前后处理速度。若大于1，会预测repeats次取时间平均值。默认值为1。
         """
         if repeats < 1:
             logging.error("`repeats` must be greater than 1.", exit=True)
