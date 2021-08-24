@@ -45,12 +45,11 @@ def load_rcnn_inference_model(model_dir):
     return net_state_dict
 
 
-def load_model(model_dir):
+def load_model(model_dir, **params):
     """
     Load saved model from a given directory.
     Args:
         model_dir(str): The directory where the model is saved.
-
     Returns:
         The model loaded from the directory.
     """
@@ -69,6 +68,10 @@ def load_model(model_dir):
             format(paddlex.__version__, version))
 
     status = model_info['status']
+    with_net = params.get('with_net', True)
+    if not with_net:
+        assert status == 'Infer', \
+            "Only exported inference models can be deployed, current model status is {}".format(status)
 
     if not hasattr(paddlex.cv.models, model_info['Model']):
         raise Exception("There's no attribute {} in paddlex.cv.models".format(
@@ -76,51 +79,60 @@ def load_model(model_dir):
     if 'model_name' in model_info['_init_params']:
         del model_info['_init_params']['model_name']
 
+    model_info['_init_params'].update({'with_net': with_net})
+
     with paddle.utils.unique_name.guard():
         model = getattr(paddlex.cv.models, model_info['Model'])(
             **model_info['_init_params'])
+        if with_net:
+            if status == 'Pruned' or osp.exists(
+                    osp.join(model_dir, "prune.yml")):
+                with open(osp.join(model_dir, "prune.yml")) as f:
+                    pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
+                    inputs = pruning_info['pruner_inputs']
+                    if model.model_type == 'detector':
+                        inputs = [{
+                            k: paddle.to_tensor(v)
+                            for k, v in inputs.items()
+                        }]
+                        model.net.eval()
+                    model.pruner = getattr(paddleslim, pruning_info['pruner'])(
+                        model.net, inputs=inputs)
+                    model.pruning_ratios = pruning_info['pruning_ratios']
+                    model.pruner.prune_vars(
+                        ratios=model.pruning_ratios,
+                        axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
 
-        if 'Transforms' in model_info:
-            model.test_transforms = build_transforms(model_info['Transforms'])
+            if status == 'Quantized' or osp.exists(
+                    osp.join(model_dir, "quant.yml")):
+                with open(osp.join(model_dir, "quant.yml")) as f:
+                    quant_info = yaml.load(f.read(), Loader=yaml.Loader)
+                    model.quant_config = quant_info['quant_config']
+                    model.quantizer = paddleslim.QAT(model.quant_config)
+                    model.quantizer.quantize(model.net)
 
-        if '_Attributes' in model_info:
-            for k, v in model_info['_Attributes'].items():
-                if k in model.__dict__:
-                    model.__dict__[k] = v
-
-        if status == 'Pruned' or osp.exists(osp.join(model_dir, "prune.yml")):
-            with open(osp.join(model_dir, "prune.yml")) as f:
-                pruning_info = yaml.load(f.read(), Loader=yaml.Loader)
-                inputs = pruning_info['pruner_inputs']
-                if model.model_type == 'detector':
-                    inputs = [{
-                        k: paddle.to_tensor(v)
-                        for k, v in inputs.items()
-                    }]
-                    model.net.eval()
-                model.pruner = getattr(paddleslim, pruning_info['pruner'])(
-                    model.net, inputs=inputs)
-                model.pruning_ratios = pruning_info['pruning_ratios']
-                model.pruner.prune_vars(
-                    ratios=model.pruning_ratios,
-                    axis=paddleslim.dygraph.prune.filter_pruner.FILTER_DIM)
-
-        if status == 'Quantized':
-            with open(osp.join(model_dir, "quant.yml")) as f:
-                quant_info = yaml.load(f.read(), Loader=yaml.Loader)
-                model.quant_config = quant_info['quant_config']
-                model.quantizer = paddleslim.QAT(model.quant_config)
-                model.quantizer.quantize(model.net)
-
-        if status == 'Infer':
-            if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
-                net_state_dict = load_rcnn_inference_model(model_dir)
+            if status == 'Infer':
+                if osp.exists(osp.join(model_dir, "quant.yml")):
+                    logging.error(
+                        "Exported quantized model can not be loaded, only deployment is supported.",
+                        exit=True)
+                model.net = model._build_inference_net()
+                if model_info['Model'] in ['FasterRCNN', 'MaskRCNN']:
+                    net_state_dict = load_rcnn_inference_model(model_dir)
+                else:
+                    net_state_dict = paddle.load(osp.join(model_dir, 'model'))
             else:
-                net_state_dict = paddle.load(osp.join(model_dir, 'model'))
-        else:
-            net_state_dict = paddle.load(osp.join(model_dir, 'model.pdparams'))
-        model.net.set_state_dict(net_state_dict)
+                net_state_dict = paddle.load(
+                    osp.join(model_dir, 'model.pdparams'))
+            model.net.set_state_dict(net_state_dict)
 
-        logging.info("Model[{}] loaded.".format(model_info['Model']))
-        model.status = status
+    if 'Transforms' in model_info:
+        model.test_transforms = build_transforms(model_info['Transforms'])
+
+    if '_Attributes' in model_info:
+        for k, v in model_info['_Attributes'].items():
+            if k in model.__dict__:
+                model.__dict__[k] = v
+    logging.info("Model[{}] loaded.".format(model_info['Model']))
+    model.status = status
     return model

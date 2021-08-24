@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import os.path as osp
-import glob
 import pkg_resources
 
 try:
@@ -38,7 +36,7 @@ MODEL_ZOO_FILENAME = 'MODEL_ZOO'
 
 
 def list_model(filters=[]):
-    model_zoo_file = pkg_resources.resource_filename('ppdet.model_zoo',
+    model_zoo_file = pkg_resources.resource_filename('paddlex.ppdet.model_zoo',
                                                      MODEL_ZOO_FILENAME)
     with open(model_zoo_file) as f:
         model_names = f.read().splitlines()

@@ -20,7 +20,6 @@ import copy
 import math
 import yaml
 import json
-import numpy as np
 import paddle
 from paddle.io import DataLoader, DistributedBatchSampler
 from paddleslim import QAT
@@ -34,6 +33,7 @@ from paddlex.utils import (seconds_to_hms, get_single_card_bs, dict2str,
                            _get_shared_memory_size_in_M, EarlyStop)
 import paddlex.utils.logging as logging
 from .slim.prune import _pruner_eval_fn, _pruner_template_input, sensitive_prune
+from .utils.infer_nets import InferNet
 
 
 class BaseModel:
@@ -250,9 +250,7 @@ class BaseModel:
             collate_fn=dataset.batch_transforms,
             num_workers=dataset.num_workers,
             return_list=True,
-            use_shared_memory=use_shared_memory,
-            worker_init_fn=lambda worker_id: np.random.seed(np.random.get_state()[1][0] + worker_id)
-        )
+            use_shared_memory=use_shared_memory)
 
         return loader
 
@@ -436,13 +434,11 @@ class BaseModel:
                             criterion='l1_norm',
                             save_dir='output'):
         """
-
         Args:
             dataset(paddlex.dataset): Dataset used for evaluation during sensitivity analysis.
             batch_size(int, optional): Batch size used in evaluation. Defaults to 8.
             criterion({'l1_norm', 'fpgm'}, optional): Pruning criterion. Defaults to 'l1_norm'.
             save_dir(str, optional): The directory to save sensitivity file of the model. Defaults to 'output'.
-
         """
         if self.__class__.__name__ in ['FasterRCNN', 'MaskRCNN']:
             raise Exception("{} does not support pruning currently!".format(
@@ -478,12 +474,10 @@ class BaseModel:
 
     def prune(self, pruned_flops, save_dir=None):
         """
-
         Args:
             pruned_flops(float): Ratio of FLOPs to be pruned.
             save_dir(None or str, optional): If None, the pruned model will not be saved.
                 Otherwise, the pruned model will be saved at save_dir. Defaults to None.
-
         """
         if self.status == "Pruned":
             raise Exception(
@@ -504,6 +498,10 @@ class BaseModel:
             logging.info("Pruned model is saved at {}".format(save_dir))
 
     def _prepare_qat(self, quant_config):
+        if self.status == 'Infer':
+            logging.error(
+                "Exported inference model does not support quantization aware training.",
+                exit=True)
         if quant_config is None:
             # default quantization configuration
             quant_config = {
@@ -578,13 +576,19 @@ class BaseModel:
         pipeline_info["version"] = "1.0.0"
         return pipeline_info
 
+    def _build_inference_net(self):
+        infer_net = self.net if self.model_type == 'detector' else InferNet(
+            self.net, self.model_type)
+        infer_net.eval()
+        return infer_net
+
     def _export_inference_model(self, save_dir, image_shape=None):
         save_dir = osp.join(save_dir, 'inference_model')
-        self.net.eval()
         self.test_inputs = self._get_test_inputs(image_shape)
+        infer_net = self._build_inference_net()
 
         if self.status == 'Quantized':
-            self.quantizer.save_quantized_model(self.net,
+            self.quantizer.save_quantized_model(infer_net,
                                                 osp.join(save_dir, 'model'),
                                                 self.test_inputs)
             quant_info = self.get_quant_info()
@@ -594,7 +598,7 @@ class BaseModel:
                 yaml.dump(quant_info, f)
         else:
             static_net = paddle.jit.to_static(
-                self.net, input_spec=self.test_inputs)
+                infer_net, input_spec=self.test_inputs)
             paddle.jit.save(static_net, osp.join(save_dir, 'model'))
 
         if self.status == 'Pruned':
