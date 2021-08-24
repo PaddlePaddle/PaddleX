@@ -131,7 +131,7 @@ class CocoDetection(VOCDetection):
             gt_poly = [None] * num_bbox
 
             has_segmentation = False
-            for i, box in enumerate(bboxes):
+            for i, box in reversed(list(enumerate(bboxes))):
                 catid = box['category_id']
                 gt_class[i][0] = catid2clsid[catid]
                 gt_bbox[i, :] = box['clean_bbox']
@@ -141,7 +141,6 @@ class CocoDetection(VOCDetection):
                 elif 'segmentation' in box and box['segmentation']:
                     if not np.array(box[
                             'segmentation']).size > 0 and not self.allow_empty:
-                        bboxes.pop(i)
                         gt_poly.pop(i)
                         np.delete(is_crowd, i)
                         np.delete(gt_class, i)
