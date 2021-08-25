@@ -89,3 +89,11 @@ PaddleX是基于飞桨核心框架、开发套件和工具组件的深度学习�
    appendix/interpret.md
    appendix/how_to_offline_run.md
    change_log.md
+
+.. raw:: html
+
+    <script type="text/javascript">
+    if (String(window.location).indexOf("readthedocs") !== -1) {
+        window.alert('此文档为1.3版本PaddleX文档，如您使用2.0版本以上PaddleX，请直接阅读https://github.com/PaddlePaddle/PaddleX上的文档.');
+    }
+    </script>
