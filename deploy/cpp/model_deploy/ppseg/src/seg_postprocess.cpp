@@ -23,7 +23,7 @@ bool SegPostprocess::Init(const YAML::Node& yaml_config) {
       yaml_config["toolkit"].as<std::string>() == "PaddleX") {
     version_ = yaml_config["version"].as<std::string>();
   } else {
-    version_ = "0.0.0"
+    version_ = "0.0.0";
   }
   return true;
 }
@@ -33,7 +33,7 @@ void SegPostprocess::RestoreSegMap(const ShapeInfo& shape_info,
                                    SegResult* result) {
   int ori_h = shape_info.shapes[0][1];
   int ori_w = shape_info.shapes[0][0];
-  int score_c = score_mat.channels();
+  int score_c = score_mat->channels();
   result->label_map.Resize({ori_h, ori_w});
   if (score_c == 1) {
     result->score_map.Resize({ori_h, ori_w});
