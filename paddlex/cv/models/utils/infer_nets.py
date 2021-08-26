@@ -24,11 +24,10 @@ class PostProcessor(paddle.nn.Layer):
         if self.model_type == 'classifier':
             outputs = paddle.nn.functional.softmax(net_outputs, axis=1)
         else:
-            # score_map, label_map
+            # label_map, score_map
             logit = net_outputs[0]
-            outputs = paddle.transpose(paddle.nn.functional.softmax(logit, axis=1), perm=[0, 2, 3, 1]), \
-                      paddle.transpose(paddle.argmax(logit, axis=1, keepdim=True, dtype='int32'),
-                                       perm=[0, 2, 3, 1])
+            outputs = paddle.transpose(paddle.argmax(logit, axis=1, keepdim=True, dtype='int32'), perm=[0, 2, 3, 1]), \
+                      paddle.transpose(paddle.nn.functional.softmax(logit, axis=1), perm=[0, 2, 3, 1])
 
         return outputs
 

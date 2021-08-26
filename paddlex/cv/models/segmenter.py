@@ -105,7 +105,7 @@ class BaseSegmenter(BaseModel):
         if mode == 'test':
             origin_shape = inputs[1]
             if self.status == 'Infer':
-                score_map, label_map = self._postprocess(
+                label_map, score_map = self._postprocess(
                     net_out, origin_shape, transforms=inputs[2])
             else:
                 logit = self._postprocess(
@@ -582,8 +582,8 @@ class BaseSegmenter(BaseModel):
             batch_origin_shape, transforms)
         if isinstance(batch_pred, (tuple, list)) and self.status == 'Infer':
             return self._infer_postprocess(
-                batch_score_map=batch_pred[0],
-                batch_label_map=batch_pred[1],
+                batch_label_map=batch_pred[0],
+                batch_score_map=batch_pred[1],
                 batch_restore_list=batch_restore_list)
         results = []
         for pred, restore_list in zip(batch_pred, batch_restore_list):
@@ -602,50 +602,50 @@ class BaseSegmenter(BaseModel):
         batch_pred = paddle.concat(results, axis=0)
         return batch_pred
 
-    def _infer_postprocess(self, batch_score_map, batch_label_map,
+    def _infer_postprocess(self, batch_label_map, batch_score_map,
                            batch_restore_list):
-        score_maps = []
         label_maps = []
-        for score_map, label_map, restore_list in zip(
-                batch_score_map, batch_label_map, batch_restore_list):
-            if not isinstance(score_map, np.ndarray):
-                score_map = paddle.unsqueeze(score_map, axis=0)
+        score_maps = []
+        for label_map, score_map, restore_list in zip(
+                batch_label_map, batch_score_map, batch_restore_list):
+            if not isinstance(label_map, np.ndarray):
                 label_map = paddle.unsqueeze(label_map, axis=0)
+                score_map = paddle.unsqueeze(score_map, axis=0)
             for item in restore_list[::-1]:
                 h, w = item[1][0], item[1][1]
                 if item[0] == 'resize':
-                    if isinstance(score_map, np.ndarray):
-                        score_map = cv2.resize(
-                            score_map, (h, w), interpolation=cv2.INTER_LINEAR)
+                    if isinstance(label_map, np.ndarray):
                         label_map = cv2.resize(
                             label_map, (h, w), interpolation=cv2.INTER_NEAREST)
+                        score_map = cv2.resize(
+                            score_map, (h, w), interpolation=cv2.INTER_LINEAR)
                     else:
-                        score_map = F.interpolate(
-                            score_map, (h, w),
-                            mode='bilinear',
-                            data_format='NHWC')
                         label_map = F.interpolate(
                             label_map, (h, w),
                             mode='nearest',
                             data_format='NHWC')
+                        score_map = F.interpolate(
+                            score_map, (h, w),
+                            mode='bilinear',
+                            data_format='NHWC')
                 elif item[0] == 'padding':
                     x, y = item[2]
-                    if isinstance(score_map, np.ndarray):
-                        score_map = score_map[..., y:y + h, x:x + w]
+                    if isinstance(label_map, np.ndarray):
                         label_map = label_map[..., y:y + h, x:x + w]
+                        score_map = score_map[..., y:y + h, x:x + w]
                     else:
-                        score_map = score_map[:, :, y:y + h, x:x + w]
                         label_map = label_map[:, :, y:y + h, x:x + w]
+                        score_map = score_map[:, :, y:y + h, x:x + w]
                 else:
                     pass
-            score_maps.append(score_map)
             label_maps.append(label_map)
-        if isinstance(score_maps[0], np.ndarray):
-            return np.stack(score_maps, axis=0), np.stack(label_maps, axis=0)
+            score_maps.append(score_map)
+        if isinstance(label_maps[0], np.ndarray):
+            return np.stack(label_maps, axis=0), np.stack(score_maps, axis=0)
         else:
             return paddle.concat(
-                score_maps, axis=0), paddle.concat(
-                    label_maps, axis=0)
+                label_maps, axis=0), paddle.concat(
+                    score_maps, axis=0)
 
 
 class UNet(BaseSegmenter):
