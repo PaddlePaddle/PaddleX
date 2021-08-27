@@ -45,6 +45,10 @@ class SegPostprocess : public BasePostprocess {
   bool RunV2(const DataBlob& outputs, const std::vector<ShapeInfo>& shape_infos,
              std::vector<Result>* results, int thread_num);
 
+  bool RunXV2(const std::vector<DataBlob>& outputs,
+              const std::vector<ShapeInfo>& shape_infos,
+              std::vector<Result>* results, int thread_num);
+
  private:
   std::string version_;
 };

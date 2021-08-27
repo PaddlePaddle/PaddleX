@@ -114,6 +114,44 @@ bool SegPostprocess::RunV2(const DataBlob& output,
   return true;
 }
 
+// paddlex version >= 2.0.0 shape = [b, h, w, c]
+bool SegPostprocess::RunXV2(const std::vector<DataBlob>& outputs,
+                            const std::vector<ShapeInfo>& shape_infos,
+                            std::vector<Result>* results, int thread_num) {
+  int batch_size = shape_infos.size();
+  int label_map_size = outputs[0].shape[1] * outputs[1].shape[2];
+  std::vector<int> score_map_shape = outputs[1].shape;
+  int score_map_size =
+      std::accumulate(score_map_shape.begin() + 1, score_map_shape.end(), 1,
+                      std::multiplies<int>());
+  const uint8_t* label_map_data;
+  std::vector<uint8_t> label_map_vector;
+  if (outputs[0].dtype == INT32) {
+    const int32_t* output_data =
+        reinterpret_cast<const int32_t*>(outputs[0].data.data());
+    std::transform(output_data, output_data + label_map_size * batch_size,
+                   std::back_inserter(label_map_vector),
+                   [](int32_t x) { return (uint8_t)x; });
+    label_map_data = reinterpret_cast<const uint8_t*>(label_map_vector.data());
+  }
+  const float* score_map_data =
+      reinterpret_cast<const float*>(outputs[index].data.data());
+  for (int i = 0; i < batch_size; ++i) {
+    (*results)[i].model_type = "seg";
+    (*results)[i].seg_result = new SegResult();
+    const uint8_t* current_label_start_ptr =
+        label_map_data + i * label_map_size;
+    const float* current_score_start_ptr = score_map_data + i * score_map_size;
+    cv::Mat label_mat(outputs[0].shape[1], outputs[0].shape[2], CV_8UC1,
+                      const_cast<uint8_t*>(current_label_start_ptr));
+    cv::Mat score_mat(score_map_shape[1], score_map_shape[2], CV_32FC(n),
+                      const_cast<float*>(current_score_start_ptr));
+    RestoreSegMap(shape_infos[i], &label_mat, &score_mat,
+                  (*results)[i].seg_result);
+  }
+  return true;
+}
+
 bool SegPostprocess::Run(const std::vector<DataBlob>& outputs,
                          const std::vector<ShapeInfo>& shape_infos,
                          std::vector<Result>* results, int thread_num) {
@@ -131,7 +169,11 @@ bool SegPostprocess::Run(const std::vector<DataBlob>& outputs,
     index = 1;
   }
   std::vector<int> score_map_shape = outputs[index].shape;
-  // ppseg version >= 2.1  shape = [b, w, h]
+  // paddlex version >= 2.0.0 shape[b, h, w, c]
+  if (version_ >= "2.0.0") {
+    return RunXV2(outputs, shape_infos, results, thread_num);
+  }
+  // ppseg version >= 2.1  shape = [b, h, w]
   if (score_map_shape.size() == 3) {
     return RunV2(outputs[index], shape_infos, results, thread_num);
   }
