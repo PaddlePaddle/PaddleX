@@ -20,52 +20,47 @@
 
  ## 1 环境准备
 
-* 下载[opencv](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)，并设置系统环境变量
+* 下载好PaddleX代码和PaddleInference预测库
+* 下载Tensorrt，并设置系统环境变量
+在本项目中使用的cuda版本是10.2，下载对应的trt版本
+* 为了便于项目管理，将所有的文件汇总到一个文件夹中
+
 
 <div align="center">
 <img src="./images/1.png"  width = "800" />              </div>
 
-* 下载Tensorrt，并设置系统环境变量
-在本项目中使用的cuda版本是10.2，下载对应的trt版本
-
+* 设置OpenCV系统环境变量
 
 <div align="center">
-<img src="./images/13.png"  width = "800" />              </div>
+<img src="./images/2.png"  width = "400" />              </div>
+
+
+
 
 
 
 ## 2 代码编译
-下载好PaddleX代码
 
-```
-git clone https://github.com/PaddlePaddle/PaddleX
-cd dygraph
-```
-
-
-使用Cmake进行编译，我们主要对`PaddleX/dygraph/deploy/cpp`中代码进行编译，并创建`out`文件夹用来承接编译生成的内容，
-
-<div align="center">
-<img src="./images/2.png"  width = "800" />              </div>
-
-点击Configure进行选项筛选，并选择X64一项，并点击finish
+* 使用Cmake进行编译，我们主要对`PaddleX/deploy/cpp`中代码进行编译，并创建`out`文件夹用来承接编译生成的内容，
 <div align="center">
 <img src="./images/3.png"  width = "800" />              </div>
-在运行上述步骤后，出现报错，并在空白区域出现待补充的内容。
+* 点击Configure进行选项
 <div align="center">
 <img src="./images/4.png"  width = "800" />              </div>
 
-用户在这里补充opencv tensorrt paddle预测库，cuda的lib库的路径，并且勾选WITH_GPU  WITH_MKL WITH_TENSORRT 几项然后重新进行生成
+* 选择X64，并点击finish
 <div align="center">
 <img src="./images/5.png"  width = "800" />              </div>
-依次点击修改
-
+* 点击Generate进行生成，此时生成失败，
 <div align="center">
 <img src="./images/6.png"  width = "800" />              </div>
-最终在out文件夹中出现了.sln文件，则表示通过cmake生成成功了解决方案
+* 用户在这里补充opencv tensorrt paddle预测库，cuda的lib库的路径，并且勾选WITH_GPU  WITH_MKL WITH_TENSORRT 几项然后重新进行生成
 <div align="center">
 <img src="./images/7.png"  width = "800" />              </div>
-打开sln文件，会发现在PaddleDeploy目录下生成了7个项目，其中关键的是
+
+* 最终在out文件夹中出现了.sln文件，则表示通过cmake生成成功了解决方案
+
+* 打开sln文件，会发现在PaddleDeploy目录下生成了7个项目，其中关键的是
 
 `batch_infer`
 
@@ -78,29 +73,48 @@ cd dygraph
 <div align="center">
 <img src="./images/8.png"  width = "800" />              </div>
 
+
 ## 3 生成dll
 
 ### 3.1 修改cmakelists
 <div align="center">
-<img src="./images/17.png"  width = "800" />             </div>
+<img src="./images/9.png"  width = "800" />             </div>
 
-
+<div align="center">
+<img src="./images/8.5.png"  width = "800" />             </div>
 ### 3.2 修改model_infer.cpp并重新生成dll
 
-* 修改后的model_infer.cpp已经提供，位于[model_infer.cpp](./model_infer.cpp)。请将[model_infer.cpp](./model_infer.cpp)替换[deploy/cpp/demodeploy/cpp/demo](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/demo)中的model_infer.cpp，或者参考[model_infer.cpp](./model_infer.cpp)修改自己的model_infer.cpp。
+* 修改后的model_infer.cpp已经提供，请用paddleX/examples/C#_deploy/model_infer.cpp文件替换PaddleX/deploy/cpp/demo/model_infer.cpp
 
 ### 3.3 创建一个c#项目并调用dll
 
-默认已经创建好了一个c#项目。
-
-* 将前面生成的dll拷贝到C#项目中
+* 目前已经给出了C#项目，支持支持PaddleX PaddleClas PaddleDetection PaddleSeg的模型去预测，为了方便大家使用，提供了在单张图片/多张图片/视频流预测形式。支持实时显示预测时间，支持预测GPU和CPU分别预测。
+* 用户只需要运行.sln文件即可呈现如下文件形式：
 
 <div align="center">
 <img src="./images/16.png"  width = "800" />             </div>
 
-* 3.4 执行C#项目去预测
+* 用户选择Debug X64模式进行调式
 
-C#项目中的Program.cs代码已经提供，位于[Program.cs](Program.cs)。执行运行后得到预测结果如下：
+
+* 用户在使用预测之前需要自行下载opencvsharp
+方式：工具-NuGet包管理工具器，选择搜索下载opencvcharp
 
 <div align="center">
-<img src="./images/15.png"  width = "800" />             </div>
+<img src="./images/17.png"  width = "800" />             </div>
+
+<div align="center">
+<img src="./images/18.png"  width = "800" />             </div>
+
+
+* 如下为预测结果显示
+
+分类：
+<div align="center">
+<img src="./images/22.png"  width = "800" />             </div>
+目标检测：
+<div align="center">
+<img src="./images/20.png"  width = "800" />             </div>
+语义分割：
+<div align="center">
+<img src="./images/21.png"  width = "800" />             </div>
