@@ -616,9 +616,9 @@ class BaseSegmenter(BaseModel):
                 if item[0] == 'resize':
                     if isinstance(label_map, np.ndarray):
                         label_map = cv2.resize(
-                            label_map, (h, w), interpolation=cv2.INTER_NEAREST)
+                            label_map, (w, h), interpolation=cv2.INTER_NEAREST)
                         score_map = cv2.resize(
-                            score_map, (h, w), interpolation=cv2.INTER_LINEAR)
+                            score_map, (w, h), interpolation=cv2.INTER_LINEAR)
                     else:
                         label_map = F.interpolate(
                             label_map, (h, w),

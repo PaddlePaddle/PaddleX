@@ -27,7 +27,7 @@ class Predictor(object):
                  use_gpu=False,
                  gpu_id=0,
                  cpu_thread_num=1,
-                 use_mkl=True,
+                 use_mkl=False,
                  mkl_thread_num=4,
                  use_trt=False,
                  use_glog=False,
