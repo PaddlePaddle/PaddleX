@@ -135,7 +135,7 @@ bool SegPostprocess::RunXV2(const std::vector<DataBlob>& outputs,
     label_map_data = reinterpret_cast<const uint8_t*>(label_map_vector.data());
   }
   const float* score_map_data =
-      reinterpret_cast<const float*>(outputs[index].data.data());
+      reinterpret_cast<const float*>(outputs[1].data.data());
   for (int i = 0; i < batch_size; ++i) {
     (*results)[i].model_type = "seg";
     (*results)[i].seg_result = new SegResult();
@@ -144,7 +144,8 @@ bool SegPostprocess::RunXV2(const std::vector<DataBlob>& outputs,
     const float* current_score_start_ptr = score_map_data + i * score_map_size;
     cv::Mat label_mat(outputs[0].shape[1], outputs[0].shape[2], CV_8UC1,
                       const_cast<uint8_t*>(current_label_start_ptr));
-    cv::Mat score_mat(score_map_shape[1], score_map_shape[2], CV_32FC(n),
+    cv::Mat score_mat(score_map_shape[1], score_map_shape[2],
+                      CV_32FC(score_map_shape[3]),
                       const_cast<float*>(current_score_start_ptr));
     RestoreSegMap(shape_infos[i], &label_mat, &score_mat,
                   (*results)[i].seg_result);
