@@ -166,16 +166,10 @@ class Predictor(object):
                     'score_map': s
                 } for l, s in zip(label_map, score_map)]
         elif self._model.model_type == 'detector':
-            if 'RCNN' in self._model.__class__.__name__:
-                net_outputs = [{
-                    k: v
-                    for k, v in zip(['bbox', 'bbox_num', 'mask'], res)
-                } for res in net_outputs]
-            else:
-                net_outputs = {
-                    k: v
-                    for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
-                }
+            net_outputs = {
+                k: v
+                for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
+            }
             preds = self._model._postprocess(net_outputs)
             if len(preds) == 1:
                 preds = preds[0]
@@ -210,25 +204,16 @@ class Predictor(object):
         preprocessed_input = self.preprocess(images, transforms)
         self.timer.preprocess_time_s.end(iter_num=len(images))
 
-        ori_shape = None
         self.timer.inference_time_s.start()
-        if 'RCNN' in self._model.__class__.__name__:
-            if len(preprocessed_input) > 1:
-                logging.warning(
-                    "{} only supports inference with batch size equal to 1."
-                    .format(self._model.__class__.__name__))
-            net_outputs = [
-                self.raw_predict(sample) for sample in preprocessed_input
-            ]
-            self.timer.inference_time_s.end(iter_num=len(images))
-        else:
-            net_outputs = self.raw_predict(preprocessed_input)
-            self.timer.inference_time_s.end(iter_num=1)
-            ori_shape = preprocessed_input.get('ori_shape', None)
+        net_outputs = self.raw_predict(preprocessed_input)
+        self.timer.inference_time_s.end(iter_num=1)
 
         self.timer.postprocess_time_s.start()
         results = self.postprocess(
-            net_outputs, topk, ori_shape=ori_shape, transforms=transforms)
+            net_outputs,
+            topk,
+            ori_shape=preprocessed_input.get('ori_shape', None),
+            transforms=transforms)
         self.timer.postprocess_time_s.end(iter_num=len(images))
 
         return results
@@ -259,11 +244,11 @@ class Predictor(object):
         else:
             images = img_file
 
-        for step in range(warmup_iters):
+        for _ in range(warmup_iters):
             self._run(images=images, topk=topk, transforms=transforms)
         self.timer.reset()
 
-        for step in range(repeats):
+        for _ in range(repeats):
             results = self._run(
                 images=images, topk=topk, transforms=transforms)
 
