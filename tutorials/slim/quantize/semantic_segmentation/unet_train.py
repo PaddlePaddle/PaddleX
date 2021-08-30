@@ -6,7 +6,7 @@ optic_dataset = 'https://bj.bcebos.com/paddlex/datasets/optic_disc_seg.tar.gz'
 pdx.utils.download_and_decompress(optic_dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/transforms/transforms.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/transforms/transforms.md
 train_transforms = T.Compose([
     T.Resize(target_size=512),
     T.RandomHorizontalFlip(),
@@ -21,7 +21,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/datasets.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/datasets.md
 train_dataset = pdx.datasets.SegDataset(
     data_dir='optic_disc_seg',
     file_list='optic_disc_seg/train_list.txt',
@@ -41,8 +41,8 @@ eval_dataset = pdx.datasets.SegDataset(
 num_classes = len(train_dataset.labels)
 model = pdx.seg.UNet(num_classes=num_classes)
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/models/semantic_segmentation.md
-# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/parameters.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/semantic_segmentation.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
