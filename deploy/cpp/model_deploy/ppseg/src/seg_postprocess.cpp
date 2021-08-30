@@ -137,7 +137,7 @@ bool SegPostprocess::RunXV2(const std::vector<DataBlob>& outputs,
                             const std::vector<ShapeInfo>& shape_infos,
                             std::vector<Result>* results, int thread_num) {
   int batch_size = shape_infos.size();
-  int label_map_size = outputs[0].shape[1] * outputs[1].shape[2];
+  int label_map_size = outputs[0].shape[1] * outputs[0].shape[2];
   std::vector<int> score_map_shape = outputs[1].shape;
   int score_map_size =
       std::accumulate(score_map_shape.begin() + 1, score_map_shape.end(), 1,

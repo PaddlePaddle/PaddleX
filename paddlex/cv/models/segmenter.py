@@ -503,16 +503,11 @@ class BaseSegmenter(BaseModel):
         outputs = self.run(self.net, data, 'test')
         label_map_list = outputs['label_map']
         score_map_list = outputs['score_map']
-        if isinstance(img_file, list) and len(img_file) > 1:
+        if isinstance(img_file, list):
             prediction = [{
                 'label_map': l,
                 'score_map': s
             } for l, s in zip(label_map_list, score_map_list)]
-        elif isinstance(img_file, list):
-            prediction = [{
-                'label_map': label_map_list[0],
-                'score_map': score_map_list[0]
-            }]
         else:
             prediction = {
                 'label_map': label_map_list[0],
