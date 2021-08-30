@@ -1,6 +1,6 @@
 # 工业级多端多平台预编译部署开发包
 
-PaddleX-Deploy全面升级，支持飞桨视觉套件PaddleX、PaddleDetection、PaddleClas、PaddleSeg的统一部署能力，端到端打通PaddleInference、PaddleLite、OpenVINO、Triton等多种高性能预测引擎，如果需要从**源码编译使用**，可至目录[PaddlePaddle模型C++部署](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)。
+PaddleX-Deploy全面升级，支持飞桨视觉套件PaddleX、PaddleDetection、PaddleClas、PaddleSeg的统一部署能力，端到端打通PaddleInference、PaddleLite、OpenVINO、Triton等多种高性能预测引擎，如果需要从**源码编译使用**，可至目录[PaddlePaddle模型C++部署](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp)。
 
 在工业部署的开发过程中，常常因环境问题导致在部署代码编译环节中耗费较多的时间和人力成本。如果产线上的业务逻辑稍微复杂一点，尤其是串联多个模型时，则需要在模型推理前插入预处理、中间结果处理等操作，如此复杂的逻辑对应的部署代码开发工程量是很大的。
 
@@ -17,7 +17,7 @@ PaddleX-Deploy全面升级，支持飞桨视觉套件PaddleX、PaddleDetection�
 
 ## <h2 id="1">1 Manufactue SDK简介</h2>
 
-PaddleX Manufacture基于[PaddleX-Deploy](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp)的端到端高性能部署能力，将应用深度学习模型的业务逻辑抽象成Pipeline，而接入深度学习模型前的数据前处理、模型预测、模型串联时的中间结果处理等操作都对应于Pipeline中的节点PipelineNode，用户只需在Pipeline配置文件中编排好各节点的前后关系，就可以给Pipeline发送数据并快速地获取相应的推理结果。Manufacture SDK的架构设计如下图所示：
+PaddleX Manufacture基于[PaddleX-Deploy](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp)的端到端高性能部署能力，将应用深度学习模型的业务逻辑抽象成Pipeline，而接入深度学习模型前的数据前处理、模型预测、模型串联时的中间结果处理等操作都对应于Pipeline中的节点PipelineNode，用户只需在Pipeline配置文件中编排好各节点的前后关系，就可以给Pipeline发送数据并快速地获取相应的推理结果。Manufacture SDK的架构设计如下图所示：
 
 <div align="center">
 <img src="images/pipeline_arch.png"  width = "500" />              </div>
@@ -112,7 +112,7 @@ version: 1.0.0
 
 ## <h2 id="5">使用Pipeline部署</h2>
 
-在部署之前，请确保已经进行了部署模型导出步骤。如果没有，请参考文档[部署模型导出](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/export_model.md)完成部署模型的导出。
+在部署之前，请确保已经进行了部署模型导出步骤。如果没有，请参考文档[部署模型导出](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)完成部署模型的导出。
 
 我们在SDK下载包里放置了demo目录，下面以该demo为例讲解如何使用Pipeline部署。
 

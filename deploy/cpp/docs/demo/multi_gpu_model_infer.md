@@ -1,6 +1,6 @@
 # 多GPU卡模型加载预测示例
 
-本文档说明`PaddleX/dygraph/deploy/cpp/demo/multi_gpu_model_infer.cpp`编译后的使用方法，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
+本文档说明`PaddleX/deploy/cpp/demo/multi_gpu_model_infer.cpp`编译后的使用方法，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
 
 在多卡上实现机制如下
 
@@ -22,7 +22,7 @@
 - [PaddleDetection导出模型](https://github.com/PaddlePaddle/PaddleDetection/blob/release/2.0/deploy/EXPORT_MODEL.md)
 - [PaddleSeg导出模型](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/docs/model_export.md)
 - [PaddleClas导出模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/docs/zh_CN/tutorials/getting_started.md#4-%E4%BD%BF%E7%94%A8inference%E6%A8%A1%E5%9E%8B%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86)
-- [PaddleX导出模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/export_model.md)
+- [PaddleX导出模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
 
 
 

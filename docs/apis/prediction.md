@@ -39,7 +39,7 @@ result = model.predict(test_jpg)
 pdx.det.visualize(test_jpg, result, threshold=0.3, save_dir='./')
 ```
 - YOLOv3模型predict接口[说明文档](./apis/models/detection.md#predict)
-- 可视化pdx.det.visualize接口[说明文档](https://github.com/PaddlePaddle/PaddleX/blob/d555d26f92cd6f8d3b940636bd7cb9043de93768/dygraph/paddlex/cv/models/utils/visualize.py#L25)
+- 可视化pdx.det.visualize接口[说明文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/cv/models/utils/visualize.py#L25)
 > 注意：目标检测和实例分割模型在调用`predict`接口得到的结果需用户自行过滤低置信度结果，在`paddlex.det.visualize`接口中，我们提供了`threshold`用于过滤，置信度低于此值的结果将被过滤，不会可视化。
 ![](./images/yolo_predict.jpg)
 
@@ -78,5 +78,5 @@ pdx.seg.visualize(test_jpg, result, weight=0.0, save_dir='./')
 在上述示例代码中，通过调用`paddlex.seg.visualize`可以对语义分割的预测结果进行可视化，可视化的结果保存在`save_dir`下，见下图。其中`weight`参数用于调整预测结果和原图结果融合展现时的权重，0.0时只展示预测结果mask的可视化，1.0时只展示原图可视化。
 
 - DeepLabv3模型predict接口[说明文档](./apis/models/semantic_segmentation.md#predict)
-- 可视化pdx.seg.visualize接口[说明文档](https://github.com/PaddlePaddle/PaddleX/blob/d555d26f92cd6f8d3b940636bd7cb9043de93768/dygraph/paddlex/cv/models/utils/visualize.py#L50)
+- 可视化pdx.seg.visualize接口[说明文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/cv/models/utils/visualize.py#L50)
 ![](images/deeplab_predict.jpg)

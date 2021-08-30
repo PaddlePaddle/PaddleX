@@ -19,11 +19,11 @@ namespace ConsoleApp2
 
         static void Main(string[] args)
         {
-            string imgfile = "E:\\PaddleX_deploy\\PaddleX\\dygraph\\deploy\\cpp\\out\\paddle_deploy\\1.png";
+            string imgfile = "E:\\PaddleX_deploy\\PaddleX\\deploy\\cpp\\out\\paddle_deploy\\1.png";
             string model_type = "det";
-            string model_filename = "E:\\PaddleX_deploy\\PaddleX\\dygraph\\deploy\\cpp\\out\\paddle_deploy\\yolov3_darknet53_270e_coco1\\model.pdmodel";
-            string params_filename = "E:\\PaddleX_deploy\\PaddleX\\dygraph\\deploy\\cpp\\out\\paddle_deploy\\yolov3_darknet53_270e_coco1\\model.pdiparams";
-            string cfg_file = "E:\\PaddleX_deploy\\PaddleX\\dygraph\\deploy\\cpp\\out\\paddle_deploy\\yolov3_darknet53_270e_coco1\\infer_cfg.yml";
+            string model_filename = "E:\\PaddleX_deploy\\PaddleX\\deploy\\cpp\\out\\paddle_deploy\\yolov3_darknet53_270e_coco1\\model.pdmodel";
+            string params_filename = "E:\\PaddleX_deploy\\PaddleX\\deploy\\cpp\\out\\paddle_deploy\\yolov3_darknet53_270e_coco1\\model.pdiparams";
+            string cfg_file = "E:\\PaddleX_deploy\\PaddleX\\deploy\\cpp\\out\\paddle_deploy\\yolov3_darknet53_270e_coco1\\infer_cfg.yml";
 
 
             InitModel(model_type, model_filename, params_filename, cfg_file);

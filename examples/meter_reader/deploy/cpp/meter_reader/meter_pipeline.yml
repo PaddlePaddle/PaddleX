@@ -12,7 +12,7 @@ pipeline_nodes:
 - modelpredict0:
     type: Predict
     init_params:
-      model_dir: /paddle/PaddleX/dygraph/examples/meter_reader/det_inference/inference_model
+      model_dir: /paddle/PaddleX/examples/meter_reader/det_inference/inference_model
       gpu_id: 0
       use_gpu: true
       use_trt: false
@@ -41,7 +41,7 @@ pipeline_nodes:
 - modelpredict1:
     type: Predict
     init_params:
-      model_dir: /paddle/PaddleX/dygraph/examples/meter_reader/seg_inference/inference_model
+      model_dir: /paddle/PaddleX/examples/meter_reader/seg_inference/inference_model
       gpu_id: 0
       use_gpu: true
       use_trt: false

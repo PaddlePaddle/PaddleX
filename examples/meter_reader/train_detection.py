@@ -23,7 +23,7 @@ meter_det_dataset = 'https://bj.bcebos.com/paddlex/examples/meter_reader/dataset
 pdx.utils.download_and_decompress(meter_det_dataset, path='./')
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/paddlex/cv/datasets/coco.py#L26
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/cv/datasets/coco.py#L26
 train_dataset = pdx.datasets.CocoDetection(
     data_dir='meter_det/train/',
     ann_file='meter_det/annotations/instance_train.json',

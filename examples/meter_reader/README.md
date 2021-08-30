@@ -343,7 +343,7 @@ paddlex --export_inference --model_dir=output/ppyolov2_r50vd_dcn/best_model --sa
 paddlex --export_inference --model_dir=output/deeplabv3p_r50vd/best_model --save_dir=meter_seg_model
 ```
 
-如果部署时需要使用TensorRT，导出模型的时候需要固定模型的输入大小，具体导出流程参考[部署模型导出](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/export_model.md)。
+如果部署时需要使用TensorRT，导出模型的时候需要固定模型的输入大小，具体导出流程参考[部署模型导出](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)。
 
 ## <h2 id="8">8 Windows环境下模型部署</h2>
 
@@ -354,7 +354,7 @@ paddlex --export_inference --model_dir=output/deeplabv3p_r50vd/best_model --save
 | [meter_det_model](https://bj.bcebos.com/paddlex/examples2/meter_reader/meter_det_model.tar.gz) | [meter_seg_model](https://bj.bcebos.com/paddlex/examples2/meter_reader//meter_seg_model.tar.gz) |
 
 
-这里我们基于[PaddleX Manufature SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)进行部署。
+这里我们基于[PaddleX Manufature SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/manufacture_sdk)进行部署。
 
 ### 环境依赖
 
@@ -417,7 +417,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ![](./images/step5_2-1.png)
 
-选择表计读数C++预测代码所在路径（例如`D:\projects\PaddleX\dygraph/examples/meter_reader/deploy/cpp/meter_reader`），并打开`CMakeList.txt`：
+选择表计读数C++预测代码所在路径（例如`D:\projects\PaddleX\examples/meter_reader/deploy/cpp/meter_reader`），并打开`CMakeList.txt`：
 ![](./images/step5_2-2.png)
 
 3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。
@@ -449,9 +449,9 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step6: 编译结果
 
-编译后会在`D:\projects\PaddleX\dygraph\examples\meter_reader\out\build\x64-Release`目录下生成`meter_reader.exe`二进制文件。
+编译后会在`D:\projects\PaddleX\examples\meter_reader\out\build\x64-Release`目录下生成`meter_reader.exe`二进制文件。
 
-使用PaddleXManufacture所需要的流程配置文件位于`PaddleX\dygraph\examples\meter_reader\meter_pipeline.yml`，打开该配置文件，修改检测模型和分割模型所在路径:
+使用PaddleXManufacture所需要的流程配置文件位于`PaddleX\examples\meter_reader\meter_pipeline.yml`，打开该配置文件，修改检测模型和分割模型所在路径:
 
 | 修改检测模型所在路径，并设置`use_gpu`和`use_trt`为true | 修改分割模型所在路径，并设置`use_gpu`和`use_trt`为true |
 | -- | -- |
@@ -461,7 +461,7 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 打开CMD终端，运行表计读数的可执行文件，进行推理预测：
 ```
-cd PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\
+cd PaddleX\examples\meter_reader\deploy\cpp\meter_reader\
 .\out\build\x64-Release\meter_reader.exe --pipeline_cfg meter_pipeline.yml --image 20190822_168.jpg
 ```
 执行后终端会输出预测结果：
@@ -476,10 +476,10 @@ Meter 1: 1.05576932
 Meter 2: 6.21739101
 ```
 
-在检测模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_det`，可以点击进行查看：
+在检测模型可视化的预测结果保存在`PaddleX\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_det`，可以点击进行查看：
 ![](./images/20190822_168.jpg)
 
-在分割模型可视化的预测结果保存在`PaddleX\dygraph\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_seg`，可以点击进行查看：
+在分割模型可视化的预测结果保存在`PaddleX\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_seg`，可以点击进行查看：
 | 表1可视化分割结果 | 表2可视化分割结果|
 | -- | -- |
 | ![](./images/20190822_168_06-30-17-09-33-217.jpg) | ![](20190822_168_06-30-17-09-33-213.jpg) |

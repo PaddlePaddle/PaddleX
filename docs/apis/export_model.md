@@ -2,7 +2,7 @@
 
 **注：所有涉及到模型部署，均需要参考本文档，进行部署模型导出**  
 
-在服务端部署模型时需要将训练过程中保存的模型导出为inference格式模型，导出的inference格式模型包括`model.pdmodel`、`model.pdiparams`、`model.pdiparams.info`、`model.yml`和`pipeline.yml`五个文件，分别表示模型的网络结构、模型权重、模型权重名称、模型的配置文件（包括数据预处理参数等）和可用于[PaddleX Manufacture SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/docs/manufacture_sdk)的流程配置文件。
+在服务端部署模型时需要将训练过程中保存的模型导出为inference格式模型，导出的inference格式模型包括`model.pdmodel`、`model.pdiparams`、`model.pdiparams.info`、`model.yml`和`pipeline.yml`五个文件，分别表示模型的网络结构、模型权重、模型权重名称、模型的配置文件（包括数据预处理参数等）和可用于[PaddleX Manufacture SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/manufacture_sdk)的流程配置文件。
 
 > **检查你的模型文件夹**，如果里面是`model.pdparams`、`model.pdopt`和`model.yml`3个文件时，那么就需要按照下面流程进行模型导出
 
