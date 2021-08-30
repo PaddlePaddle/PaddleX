@@ -29,19 +29,18 @@ paddlex.det.visualize(image, result, threshold=0.5, save_dir='./', color=None)
 
 
 使用示例：
-```
+```python
 import paddlex as pdx
 model = pdx.load_model('xiaoduxiong_epoch_12')
 result = model.predict('./xiaoduxiong_epoch_12/xiaoduxiong.jpeg')
 pdx.det.visualize('./xiaoduxiong_epoch_12/xiaoduxiong.jpeg', result, save_dir='./')
 # 预测结果保存在./visualize_xiaoduxiong.jpeg
-
 ```
 
 
 ## <h2 id="2">paddlex.det.draw_pr_curve</h2>
 > 目标检测/实例分割准确率-召回率可视化
-```
+```python
 paddlex.det.draw_pr_curve(eval_details_file=None, gt=None, pred_bbox=None, pred_mask=None, iou_thresh=0.5, save_dir='./')
 ```
 将目标检测/实例分割模型评估结果中各个类别的准确率和召回率的对应关系进行可视化，同时可视化召回率和置信度阈值的对应关系。
@@ -61,16 +60,15 @@ paddlex.det.draw_pr_curve(eval_details_file=None, gt=None, pred_bbox=None, pred_
 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/2.0/faster_rcnn_e12.tar.gz)和[数据集](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)
 
 > 方式一：分析训练过程中保存的模型文件夹中的评估结果文件`eval_details.json`，例如[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)中的`eval_details.json`。
-```
+```python
 import paddlex as pdx
 eval_details_file = 'faster_rcnn_e12/eval_details.json'
 pdx.det.draw_pr_curve(eval_details_file, save_dir='./insect')
 ```
 > 方式二：分析模型评估函数返回的评估结果。
 
-```
+```python
 import paddlex as pdx
-from paddlex import transforms as T
 
 model = pdx.load_model('faster_rcnn_e12')
 eval_dataset = pdx.datasets.VOCDetection(
@@ -91,7 +89,7 @@ pdx.det.draw_pr_curve(gt=gt, pred_bbox=bbox, save_dir='./insect')
 ## <h2 id="3">paddlex.det.coco_error_analysis</h2>
 > 分析模型预测错误的原因
 
-```
+```python
 paddlex.det.coco_error_analysis(eval_details_file=None, gt=None, pred_bbox=None, pred_mask=None, save_dir='./output')
 ```
 逐个分析模型预测错误的原因，并将分析结果以图表的形式展示。分析结果图表示例如下：
@@ -125,16 +123,15 @@ paddlex.det.coco_error_analysis(eval_details_file=None, gt=None, pred_bbox=None,
 点击下载如下示例中的[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)和[数据集](https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz)
 
 > 方式一：分析训练过程中保存的模型文件夹中的评估结果文件`eval_details.json`，例如[模型](https://bj.bcebos.com/paddlex/models/insect_epoch_270.zip)中的`eval_details.json`。
-```
+```python
 import paddlex as pdx
 eval_details_file = 'insect_epoch_270/eval_details.json'
 pdx.det.coco_error_analysis(eval_details_file, save_dir='./insect')
 ```
 > 方式二：分析模型评估函数返回的评估结果。
 
-```
+```python
 import paddlex as pdx
-from paddlex import transforms as T
 
 model = pdx.load_model('insect_epoch_270')
 eval_dataset = pdx.datasets.VOCDetection(
@@ -171,7 +168,7 @@ paddlex.seg.visualize(image, result, weight=0.6, save_dir='./', color=None)
 
 使用示例：
 
-```
+```python
 import paddlex as pdx
 model = pdx.load_model('cityscape_deeplab')
 result = model.predict('city.png')
