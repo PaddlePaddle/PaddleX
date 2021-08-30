@@ -176,7 +176,7 @@ class Predictor:
 
         im_info = preprocessed_inputs['im_info']
 
-        for info in im_info[0][::-1]:
+        for info in im_info[::-1]:
             if info[0] == 'resize':
                 w, h = info[1][1], info[1][0]
                 label_map = cv2.resize(label_map, (w, h), cv2.INTER_NEAREST)
