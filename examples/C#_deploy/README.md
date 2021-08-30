@@ -39,11 +39,11 @@
 
 ```
 git clone https://github.com/PaddlePaddle/PaddleX
-cd dygraph
+cd PaddleX
 ```
 
 
-使用Cmake进行编译，我们主要对`PaddleX/dygraph/deploy/cpp`中代码进行编译，并创建`out`文件夹用来承接编译生成的内容，
+使用Cmake进行编译，我们主要对`PaddleX/deploy/cpp`中代码进行编译，并创建`out`文件夹用来承接编译生成的内容，
 
 <div align="center">
 <img src="./images/2.png"  width = "800" />              </div>
@@ -87,7 +87,7 @@ cd dygraph
 
 ### 3.2 修改model_infer.cpp并重新生成dll
 
-* 修改后的model_infer.cpp已经提供，位于[model_infer.cpp](./model_infer.cpp)。请将[model_infer.cpp](./model_infer.cpp)替换[deploy/cpp/demodeploy/cpp/demo](https://github.com/PaddlePaddle/PaddleX/tree/develop/dygraph/deploy/cpp/demo)中的model_infer.cpp，或者参考[model_infer.cpp](./model_infer.cpp)修改自己的model_infer.cpp。
+* 修改后的model_infer.cpp已经提供，位于[model_infer.cpp](./model_infer.cpp)。请将[model_infer.cpp](./model_infer.cpp)替换[deploy/cpp/demodeploy/cpp/demo](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/demo)中的model_infer.cpp，或者参考[model_infer.cpp](./model_infer.cpp)修改自己的model_infer.cpp。
 
 ### 3.3 创建一个c#项目并调用dll
 
