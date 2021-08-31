@@ -4,11 +4,12 @@ colorama
 cython
 pycocotools
 visualdl >= 2.1.1
-paddleslim == 2.1.0
+paddleslim >= 2.1.1
 shapely
-paddlepaddle-gpu==2.1.1
+paddlepaddle-gpu==2.1.2
 opencv-python
 scikit-learn==0.23.2
 lap
 motmetrics
 matplotlib
+chardet

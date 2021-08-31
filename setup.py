@@ -30,8 +30,9 @@ setuptools.setup(
     setup_requires=['cython', 'numpy'],
     install_requires=[
         "pycocotools;platform_system!='Windows'", 'pyyaml', 'colorama', 'tqdm',
-        'paddleslim==2.1.0', 'visualdl>=2.1.1', 'shapely>=1.7.0',
-        'opencv-python', 'scipy', 'lap', 'motmetrics', 'scikit-learn==0.23.2'
+        'paddleslim>=2.1.2', 'visualdl>=2.1.1', 'shapely>=1.7.0',
+        'opencv-python', 'scipy', 'lap', 'motmetrics', 'scikit-learn==0.23.2', 
+        'chardet'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
