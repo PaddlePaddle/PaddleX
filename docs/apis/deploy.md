@@ -45,7 +45,7 @@ predict(img_file, topk=1, transforms=None, warmup_iters=0, repeats=1)
 
 > **返回值**
 >
-> > * **图像分类**模型的返回值与[图像分类模型API中predict接口](./apis/models/classification.md#predict)的返回值一致
-> > * **目标检测** 模型的返回值与[目标检测模型API中predict接口](./apis/models/detection.md#predict)的返回值一致
-> > * **实例分割** 模型的返回值与[实例分割模型API中predict接口](./apis/models/instance_segmentation.md#predict)的返回值一致
-> > * **语义分割** 模型的返回值与[语义分割模型API中predict接口](./apis/models/semantic_segmentation.md#predict)的返回值一致
+> > * **图像分类**模型的返回值与[图像分类模型API中predict接口](./models/classification.md#predict)的返回值一致
+> > * **目标检测** 模型的返回值与[目标检测模型API中predict接口](./models/detection.md#predict)的返回值一致
+> > * **实例分割** 模型的返回值与[实例分割模型API中predict接口](./models/instance_segmentation.md#predict)的返回值一致
+> > * **语义分割** 模型的返回值与[语义分割模型API中predict接口](./models/semantic_segmentation.md#predict)的返回值一致
