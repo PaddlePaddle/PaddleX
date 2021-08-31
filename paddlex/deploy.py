@@ -152,12 +152,12 @@ class Predictor(object):
             if len(preds) == 1:
                 preds = preds[0]
         elif self._model.model_type == 'segmenter':
-            score_map, label_map = self._model._postprocess(
+            label_map, score_map = self._model._postprocess(
                 net_outputs,
                 batch_origin_shape=ori_shape,
                 transforms=transforms.transforms)
-            score_map = np.squeeze(score_map)
             label_map = np.squeeze(label_map)
+            score_map = np.squeeze(score_map)
             if score_map.ndim == 3:
                 preds = {'label_map': label_map, 'score_map': score_map}
             else:
