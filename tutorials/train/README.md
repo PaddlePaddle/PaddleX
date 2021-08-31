@@ -41,14 +41,14 @@
 ## 开始训练
 * 在安装PaddleX后，使用如下命令开始训练，代码会自动下载训练数据, 并均使用单张GPU卡进行训练。
 
-```
+```commandline
 export CUDA_VISIBLE_DEVICES=0
 python image_classification/mobilenetv3_small.py
 ```
 
 * 若需使用多张GPU卡进行训练，例如使用2张卡时执行：
 
-```
+```commandline
 python -m paddle.distributed.launch --gpus 0,1 image_classification/mobilenetv3_small.py
 ```
 使用多卡时，参考[训练参数调整](../../docs/parameters.md)调整学习率和批量大小。
@@ -56,7 +56,7 @@ python -m paddle.distributed.launch --gpus 0,1 image_classification/mobilenetv3_
 
 ## VisualDL可视化训练指标
 在模型训练过程，在`train`函数中，将`use_vdl`设为True，则训练过程会自动将训练日志以VisualDL的格式打点在`save_dir`（用户自己指定的路径）下的`vdl_log`目录，用户可以使用如下命令启动VisualDL服务，查看可视化指标
-```
+```commandline
 visualdl --logdir output/mobilenetv3_small/vdl_log --port 8001
 ```
 
