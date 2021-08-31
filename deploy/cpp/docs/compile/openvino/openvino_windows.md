@@ -2,7 +2,7 @@
 
 本文档指引用户如何基于OpenVINO对飞桨模型进行推理，并编译执行。进行以下编译操作前请先安装好OpenVINO，OpenVINO安装请参考官网[OpenVINO-windows](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html)
 
-**注意：** 
+**注意：**
 
 - 我们测试的openvino版本为2021.3，如果你使用其它版本遇到问题，可以尝试切换到该版本
 - 当前检测模型转换为openvino格式是有问题的，暂时只支持分割和分类模型
@@ -81,14 +81,14 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step 4. 编译
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-   
+
    ![](../../images/vs2019_step1.png)
 
 2. 点击： `文件`->`打开`->`CMake`
 
 ![](../../images/vs2019_step2.png)
 
-选择C++预测代码所在路径（例如`D:\projects\PaddleX\dygraph\deploy\cpp`），并打开`CMakeList.txt`：
+选择C++预测代码所在路径（例如`D:\projects\PaddleX\deploy\cpp`），并打开`CMakeList.txt`：
 ![](../../images/vs2019_step3.png)
 
 3. 打开项目时，可能会自动构建。由于没有进行下面的依赖路径设置会报错，这个报错可以先忽略。
@@ -99,14 +99,14 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 4. 点击`浏览`，分别设置编译选项指定`gflag`、`OpenCV`、`OpenVINO`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
 
    ![](../../images/vs2019_step5.png)
-   
+
   依赖库路径的含义说明如下，注意OpenVINO编译只需要勾选和填写以下参数即可：
 
 | 参数名     | 含义                                                                                                                                                |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | WITH_OPENVINO  | 是否使用OpenVINO推理引擎，默认为False。 勾选或者json文件填写为True，表示编译OpenVINO推理引擎  |
 | OPENCV_DIR | OpenCV的安装路径，例如`D:\\projects\\opencv`   |
-| GFLAGS_DIR | gflag的路径,例如`D:\\projects\\PaddleX\\dygraph\\deploy\\cpp\\deps\\gflags` |
+| GFLAGS_DIR | gflag的路径,例如`D:\\projects\\PaddleX\\deploy\\cpp\\deps\\gflags` |
 | OPENVINO_DIR | OpenVINO的路径,例如`C:\\Program Files (x86)\\Intel\\openvino_2021\\inference_engine` |
 | NGRAPH_LIB | OpenVINO的ngraph路径,例如`C:\\Program Files (x86)\\Intel\\openvino_2021\\deployment_tools\\ngraph` |
 
@@ -121,13 +121,13 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 #### 编译环境无法联网导致编译失败？
 
-- 如果无法联网，请手动点击下载 [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压，并修改`PaddleX\dygraph\deploy\cpp\cmake\yaml.cmake`中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址替换为第3步中下载的路径，如改为`URL D:\projects\yaml-cpp.zip`。
+- 如果无法联网，请手动点击下载 [yaml-cpp.zip](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压，并修改`PaddleX\deploy\cpp\cmake\yaml.cmake`中将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip` 中的网址替换为第3步中下载的路径，如改为`URL D:\projects\yaml-cpp.zip`。
 - 一定要勾选WITH_OPENVINO选项， WITH_GPU、WITH_TENSORRT选项可以取消掉
 - 不支持debug编译，注意切换成Release
 
 ### Step5: 编译结果
 
-编译后会在`PaddleX/dygraph/deploy/cpp/build/demo`目录下生成`model_infer`可执行二进制文件示例，用于加载模型进行预测。以上面转换的ResNet50模型为例，运行指令如下：
+编译后会在`PaddleX/deploy/cpp/build/demo`目录下生成`model_infer`可执行二进制文件示例，用于加载模型进行预测。以上面转换的ResNet50模型为例，运行指令如下：
 
 ```
 ./model_infer.exe --xml_file openvino_model/resnet50/ResNet50_vd.xml --bin_file openvino_model/resnet50/ResNet50_vd.bin --cfg_file openvino_model/resnet50/resnet50_imagenet.yml --model_type clas --image test.jpeg
