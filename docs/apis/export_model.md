@@ -8,7 +8,7 @@
 
 在安装完PaddleX后，在命令行终端使用如下命令将训练好的模型导出为部署所需格式：
 
-```
+```commandline
 paddlex --export_inference --model_dir=./output/deeplabv3p_r50vd/best_model/ --save_dir=./inference_model
 ```
 
@@ -24,7 +24,7 @@ paddlex --export_inference --model_dir=./output/deeplabv3p_r50vd/best_model/ --s
 
 使用TensorRT预测时，需固定模型的输入大小，通过`--fixed_input_shape `来指定输入大小`[w,h]`或者是`[n,c,w,h]`。例如指定为`[224,224]`时，输入大小为`[-1,3,224,224]`；若想同时固定住输入的批量大小，可设置为`[1,3,224,224]`:
 
-```
+```commandline
 paddlex --export_inference --model_dir=./output/deeplabv3p_r50vd/best_model/ --save_dir=./inference_model --fixed_input_shape=[224,224]
 ```
 

@@ -24,13 +24,13 @@ python mobilenetv2_qat.py
 step 1: 加载之前训练好的模型
 
 
-```
+```python
 model = pdx.load_model('output/mobilenet_v2/best_model')
 ```
 
 step 2: 完成在线量化
 
-```
+```python
 model.quant_aware_train(
     num_epochs=5,
     train_dataset=train_dataset,

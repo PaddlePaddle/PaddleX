@@ -22,7 +22,7 @@ step 1: 分析模型各层参数在不同的剪裁比例下的敏感度
 
 主要由两个API完成:
 
-```
+```python
 model = pdx.load_model('output/mobilenet_v2/best_model')
 model.analyze_sensitivity(
     dataset=eval_dataset, save_dir='output/mobilenet_v2/prune')
@@ -34,7 +34,7 @@ model.analyze_sensitivity(
 
 step 2: 根据选择的FLOPs减小比例对模型进行剪裁
 
-```
+```python
 model.prune(pruned_flops=.2, save_dir=None)
 ```
 
@@ -43,7 +43,7 @@ model.prune(pruned_flops=.2, save_dir=None)
 
 step 3: 对剪裁后的模型重新训练
 
-```
+```python
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,

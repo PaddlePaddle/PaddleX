@@ -5,7 +5,7 @@ PaddleX可以使用`paddlex.load_model`接口加载模型（包括训练过程�
 
 ## 图像分类
 
-```
+```python
 import paddlex as pdx
 test_jpg = 'mobilenetv3_small_ssld_imagenet/test.jpg'
 model = pdx.load_model('mobilenetv3_small_ssld_imagenet')
@@ -13,7 +13,7 @@ result = model.predict(test_jpg)
 print("Predict Result: ", result)
 ```
 结果输出如下：
-```
+```pythonregexp
 Predict Result: [{'category_id': 549, 'category': 'envelope', 'score': 0.29062933}]
 ```
 
@@ -27,7 +27,7 @@ Predict Result: [{'category_id': 549, 'category': 'envelope', 'score': 0.2906293
 ## 目标检测
 
 
-```
+```python
 import paddlex as pdx
 test_jpg = 'yolov3_mobilenetv1_coco/test.jpg'
 model = pdx.load_model('yolov3_mobilenetv1_coco')
@@ -46,7 +46,7 @@ pdx.det.visualize(test_jpg, result, threshold=0.3, save_dir='./')
 ## 实例分割
 
 
-```
+```python
 import paddlex as pdx
 test_jpg = 'mask_r50_fpn_coco/test.jpg'
 model = pdx.load_model('mask_r50_fpn_coco')
@@ -66,7 +66,7 @@ pdx.det.visualize(test_jpg, result, threshold=0.5, save_dir='./')
 ## 语义分割
 
 
-```
+```python
 import paddlex as pdx
 test_jpg = './deeplabv3p_mobilenetv2_voc/test.jpg'
 model = pdx.load_model('./deeplabv3p_mobilenetv2_voc')

@@ -13,7 +13,7 @@ Anaconda是一个开源的Python发行版本，其包含了conda、Python等180�
 ### 第三步 使用
 - 点击Windows系统左下角的Windows图标，打开：所有程序->Anaconda3/2（64-bit）->Anaconda Prompt  
 - 在命令行中执行下述命令
-```cmd
+```shell
 # 创建名为my_paddlex的环境，指定Python版本为3.7
 conda create -n my_paddlex python=3.7
 # 进入my_paddlex环境
@@ -37,14 +37,14 @@ pip install paddlex -i https://mirror.baidu.com/pypi/simple
 
 ### 第二步 安装
 打开终端，在终端安装Anaconda
-```
+```shell
 # ~/Downloads/Anaconda3-2019.07-Linux-x86_64.sh即下载的文件
 bash ~/Downloads/Anaconda3-2019.07-Linux-x86_64.sh
 ```
 安装过程中一直回车即可，如提示设置安装路径，可根据需求修改，一般默认即可。
 
 ### 第三步 使用
-```
+```shell
 # 创建名为my_paddlex的环境，指定Python版本为3.7
 conda create -n my_paddlex python=3.7
 # 进入paddlex环境
