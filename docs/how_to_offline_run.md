@@ -8,9 +8,8 @@ PaddleX在模型训练时，用户如果没有将`pretrain_weights`设置为自�
 
 > 用户在可联网的机器上，执行如下代码，所有的预训练模型将会下载至指定的`save_dir`（代码示例中为`/home/work/paddlex_pretrain`），
 
-```
+```python
 import os.path as osp
-import paddlex
 from paddlex.utils.checkpoint import cityscapes_weights, imagenet_weights, pascalvoc_weights, coco_weights
 from paddlex.utils.download import download_and_decompress
 
@@ -24,7 +23,7 @@ for weights in weights_lists:
 ```
 
 > 之后在使用PaddleX Python API模式进行PaddleX模型训练时，只需要在import paddlex的同时，配置如下参数，模型在训练时便会优先在此目录下寻找已经下载好的预训练模型。
-```
+```python
 import paddlex
 paddlex.pretrain_dir = '/home/work/paddlex_pretrain'
 ```
@@ -35,8 +34,8 @@ paddlex.pretrain_dir = '/home/work/paddlex_pretrain'
 
 > 事先下载所有预训练模型需要依赖PaddleX Python API，如果尚未安装PaddleX Python API，请参考文档[PaddleX API开发模式安装](install.md#1-paddlex-api开发模式安装)进行安装。安装完成后，在已联网的机器上运行以下代码，所有的预训练模型将会下载至指定的`save_dir`（代码示例中为`/home/work/paddlex_pretrain`，也可以直接指定到GUI工作空间下的预训练模型文件存储位置（例如`D:\PaddleX_Workspace\pretrain`）），下载完成后将`save_dir`下的所有文件拷贝至GUI工作空间下的预训练模型文件存储位置（例如`D:\PaddleX_Workspace\pretrain`）下。
 
-```
-import paddlex
+```python
+import os.path as osp
 from paddlex.utils.checkpoint import cityscapes_weights, imagenet_weights, pascalvoc_weights, coco_weights
 from paddlex.utils.download import download_and_decompress
 

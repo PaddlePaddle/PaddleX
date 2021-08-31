@@ -3,7 +3,7 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。
 
 对于开发者来说可以通过如下指令启动PaddleX RESTful服务  
 
-```
+```commandline
 paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]  
 ```
 
@@ -29,16 +29,16 @@ PaddleX Remote GUI是针对PaddleX RESTful开发的可视化客户端。开发�
 ### 客户端使用流程
 
 #### step1：安装PaddleX  
-```
+```commandline
 pip install paddlex
 ```  
 **注意**：若需要使用GPU请安装pycuda
-```
+```commandline
 pip install pycuda
 ```
 
 #### step2：开启RESTful 服务
-```
+```commandline
 paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```
 
@@ -55,16 +55,16 @@ PaddleX Web Demo是针对PaddleX RESTful开发的Web可视化客户端。
 ### Web DEMO使用流程
 
 #### step1：安装paddlex  
-```
+```commandline
 pip install paddlex
 ```  
 **注意**：若需要使用GPU请安装pycuda
-```
+```commandline
 pip install pycuda
 ```
 
 #### step2：开启RESTful 服务
-```
+```commandline
 paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间地址]
 ```
 

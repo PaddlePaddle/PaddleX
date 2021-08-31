@@ -6,7 +6,7 @@
 
 图像分类、目标检测、实例分割、语义分割统一的预测器，实现高性能预测。
 
-```
+```python
 paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, cpu_thread_num=1, use_mkl=True, mkl_thread_num=4, use_trt=False, use_glog=False, memory_optimize=True, max_trt_batch_size=1, trt_precision_mode='float32')
 ```
 
@@ -29,7 +29,7 @@ paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, cpu_thread_num=1, u
 
 图片预测
 
-```
+```python
 predict(img_file, topk=1, transforms=None, warmup_iters=0, repeats=1)
 ```
 

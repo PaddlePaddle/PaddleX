@@ -46,7 +46,7 @@ PaddleX的安装以及安装问题的解决可以参考PaddleX的[安装文档](
 <a name="准备蔬菜分类数据集"></a>
 **2. 准备蔬菜分类数据集**  
 
-```
+```commandline
 wget https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz
 tar xzvf vegetables_cls.tar.gz
 ```
@@ -56,7 +56,7 @@ tar xzvf vegetables_cls.tar.gz
 
 因为训练时加入了数据增强操作，因此在训练和验证过程中，模型的数据处理流程需要分别进行定义。如下所示，代码在`train_transforms`中加入了[RandomCrop](./apis/transforms/transforms.md#randomcrop)和[RandomHorizontalFlip](./apis/transforms/transforms.md#randomhorizontalflip)两种数据增强方式, 更多方法可以参考[数据增强文档](./apis/transforms/transforms.md)。
 
-```
+```python
 from paddlex import transforms as T
 train_transforms = T.Compose([
     T.RandomCrop(crop_size=224),
@@ -75,7 +75,7 @@ eval_transforms = T.Compose([
 
 定义数据集，`pdx.datasets.ImageNet`表示读取ImageNet格式的分类数据集：
 
-```
+```python
 train_dataset = pdx.datasets.ImageNet(
     data_dir='vegetables_cls',
     file_list='vegetables_cls/train_list.txt',
@@ -96,7 +96,7 @@ eval_dataset = pdx.datasets.ImageNet(
 **5. 使用MobileNetV3_small模型开始训练**  
 
 本文档中使用百度基于蒸馏方法得到的MobileNetV3预训练模型，模型结构与MobileNetV3一致，但精度更高。PaddleX内置了20多种分类模型，查阅[PaddleX 图像分类模型API](apis/models/classification.md#其它分类模型)了解更多分类模型。
-```
+```python
 num_classes = len(train_dataset.labels)
 model = pdx.cls.MobileNetV3_small(num_classes=num_classes)
 
@@ -113,7 +113,7 @@ model.train(num_epochs=10,
 **6. 训练过程使用VisualDL查看训练指标变化**  
 
 训练过程中，模型在训练集和验证集上的指标均会以标准输出流形式输出到命令终端。当用户设定`use_vdl=True`时，也会使用VisualDL格式将指标打点到`save_dir`目录下的`vdl_log`文件夹，在终端运行如下命令启动visualdl并查看可视化的指标变化情况。
-```
+```commandline
 visualdl --logdir output/mobilenetv3_small --port 8001
 ```
 服务启动后，通过浏览器打开https://0.0.0.0:8001或https://localhost:8001 即可。
@@ -125,7 +125,7 @@ visualdl --logdir output/mobilenetv3_small --port 8001
 
 模型在训练过程中，会每间隔一定轮数保存一次模型，在验证集上评估效果最好的一轮会保存在`save_dir`目录下的`best_model`文件夹。通过如下方式可加载模型，进行预测：
 
-```
+```python
 import paddlex as pdx
 model = pdx.load_model('output/mobilenetv3_small/best_model')
 result = model.predict('vegetables_cls/bocai/100.jpg')
