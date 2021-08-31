@@ -61,7 +61,7 @@ def visualize_segmentation(image,
         save_dir: the directory for saving visual image
         color: the list of a BGR-mode color for each label.
     """
-    label_map = result['label_map']
+    label_map = result['label_map'].astype("uint8")
     color_map = get_color_map_list(256)
     if color is not None:
         for i in range(len(color) // 3):

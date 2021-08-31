@@ -114,9 +114,10 @@ class BaseSegmenter(BaseModel):
                 score_map_list = []
                 for logit in logit_list:
                     logit = paddle.transpose(logit, perm=[0, 2, 3, 1])  # NHWC
-                    label_map_list.append((paddle.argmax(
-                        logit, axis=-1, keepdim=False, dtype='int32')).squeeze(
-                        ).numpy().astype('int32'))
+                    label_map_list.append(
+                        paddle.argmax(
+                            logit, axis=-1, keepdim=False, dtype='int32')
+                        .squeeze().numpy())
                     score_map_list.append(
                         F.softmax(
                             logit, axis=-1).squeeze().numpy().astype(
