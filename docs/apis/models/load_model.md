@@ -14,10 +14,10 @@
 
 方式一： 使用paddlex.load_model
 
-```
+```python
 import paddlex as pdx
 
-model = pdx.load_model(output/mobilenetv3_small/best_model)
+model = pdx.load_model("output/mobilenetv3_small/best_model")
 
 model.train(
     num_epochs=10,
@@ -32,7 +32,7 @@ model.train(
 
 方式二： 指定pretrain_weights
 
-```
+```python
 import paddlex as pdx
 
 model = pdx.cls.MobileNetV3_small(num_classes=num_classes)
@@ -55,7 +55,7 @@ model.train(
 
 我们以图像分类模型`MobileNetV3_small`为例，假设我们之前训练并保存好了模型（训练代码可参考[示例代码](../../../tutorials/train/image_classification/mobilenetv3_small.py)），在这次想加载之前训好的参数（之前训好的模型假设位于`output/mobilenetv3_small/best_model`）重新评估模型在验证集上的精度，示例代码如下：
 
-```
+```python
 import paddlex as pdx
 from paddlex import transforms as T
 
@@ -71,7 +71,7 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 
 
-model = pdx.load_model(output/mobilenetv3_small/best_model)
+model = pdx.load_model("output/mobilenetv3_small/best_model")
 
 res = model.evaluate(eval_dataset, batch_size=2)
 print(res)
@@ -82,7 +82,7 @@ print(res)
 ## <h2 id="3">加载模型用于剪裁</h2>
 
 模型剪裁时，先使用`paddlex.load_moel`加载模型，而后使用`analyze_sensitivity`、`prune`和`train`三个API完成剪裁：
-```
+```python
 model = pdx.load_model('output/mobilenet_v2/best_model')
 
 model.analyze_sensitivity(
@@ -107,7 +107,7 @@ model.train(
 
 模型量化时，先使用`paddlex.load_moel`加载模型，而后使用`quant_aware_train`完成量化：
 
-```
+```python
 model = pdx.load_model('output/mobilenet_v2/best_model')
 
 model.quant_aware_train(
