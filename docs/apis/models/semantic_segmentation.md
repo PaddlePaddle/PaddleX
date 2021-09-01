@@ -77,7 +77,7 @@ evaluate(self, eval_dataset, batch_size=1, return_details=False):
 
 ### <h3 id="13">predict</h3>
 
-```
+```python
 predict(self, img_file, transforms=None):
 ```
 
