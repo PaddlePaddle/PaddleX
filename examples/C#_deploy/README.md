@@ -165,4 +165,23 @@ MaskRCNN实例分割：
 <div align="center">
 <img src="./images/25.png"  width = "800" />             </div>
 
-### 3.6 C#项目数据流向演示
+### 3.6 C#项目模型推理/数据流向简要说明
+
+* 图像识别流程
+<div align="center">
+<img src="./images/26.png"  width = "800" />             </div>
+
+* 目标检测流程
+<div align="center">
+<img src="./images/27.png"  width = "800" />             </div>
+
+* 语义分割流程
+<div align="center">
+<img src="./images/28.png"  width = "800" />             </div>
+
+* 实例分割流程(MaskRCNN)
+<div align="center">
+<img src="./images/29.png"  width = "800" />             </div>
+
+> 该流程在任何模型类型下都是成立的，只是det类型只对应目标检测流程，seg类型只对应语义分割流程， clas类型只对应图像识别流程， mask类型只对应实例分割流程(MaskRCNN)。
+> 在paddlex类型下时，底层也是自动转为det、seg、clas类型进行实现的。
