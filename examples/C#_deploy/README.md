@@ -88,7 +88,7 @@
 
 ### 3.3 创建一个c#项目并调用dll
 
-* 目前已经给出了C#项目，支持支持PaddleX PaddleClas PaddleDetection PaddleSeg的模型去预测，为了方便大家使用，提供了在单张图片/多张图片/视频流预测形式。支持实时显示预测时间，支持预测GPU和CPU分别预测。
+* 目前已经给出了C#项目，支持PaddleX PaddleClas PaddleDetection PaddleSeg的模型去预测，为了方便大家使用，提供了在单张图片/多张图片/视频流预测形式。支持实时显示预测时间，支持预测GPU和CPU分别预测。
 * 用户只需要运行.sln文件即可呈现如下文件形式：
 
 <div align="center">
@@ -109,6 +109,9 @@
 * 此外需保证在C#项目的bin\x64\Debug\net5.0-windows下包含以下dll，再进行预测推理
  
   - opencv_world346.dll, 位于下载的opencv文件夹: opencv\build\x64\vc15\bin
+  - model_infer.dll, 位于上边cmkae编译的目录下: PaddleX\deploy\cpp\out\paddle_deploy\Release
+  - 其余dll, 位于以下目录: PaddleX\deploy\cpp\out\paddle_deploy
+  - opencvsharp的dll，只需按照上边安装下载即可自动加载到该目录下
 
 <div align="center">
 <img src="./images/24.png"  width = "800" />             </div>
