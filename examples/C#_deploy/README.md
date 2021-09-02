@@ -106,6 +106,12 @@
 <div align="center">
 <img src="./images/18.png"  width = "800" />             </div>
 
+* 此外需保证在C#项目的bin\x64\Debug\net5.0-windows下包含以下dll，再进行预测推理
+ 
+  - opencv_world346.dll, 位于下载的opencv文件夹: opencv\build\x64\vc15\bin
+
+<div align="center">
+<img src="./images/24.png"  width = "800" />             </div>
 
 * 如下为预测结果显示
 
@@ -118,3 +124,6 @@
 语义分割：
 <div align="center">
 <img src="./images/21.png"  width = "800" />             </div>
+MaskRCNN实例分割：
+<div align="center">
+<img src="./images/23.png"  width = "800" />             </div>
