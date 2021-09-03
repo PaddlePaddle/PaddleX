@@ -11,7 +11,7 @@
 除可视化客户端，PaddleX还提供了更灵活的API方式进行模型训练、裁剪、量化，以及一系列的模型效果分析接口，欢迎有需求的开发者使用。
 
 - [10分钟上手API训练模型](../quick_start.md)
-- [更多模型训练示例](https://github.com/PaddlePaddle/PaddleX#3-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E8%AF%84%E4%BC%B0%E9%A2%84%E6%B5%8B)
+- [更多模型训练示例](../../tutorials/train/README.md)
 
 ## 支持PaddleX
 
