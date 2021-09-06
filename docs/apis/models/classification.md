@@ -30,24 +30,24 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, o
 >
 > **参数**
 >
-> > - **num_epochs** (int): 训练迭代轮数。
-> > - **train_dataset** (paddlex.dataset): 训练数据集。
-> > - **train_batch_size** (int): 训练数据batch大小。同时作为验证数据batch大小。默认为64。
-> > - **eval_dataset** (paddlex.dataset or None): 评估数据集。当该参数为None时，训练过程中不会进行模型评估。默认为None。
-> > - **optimizer** (paddle.optimizer.Optimizer): 优化器。当该参数为None时，使用默认优化器：paddle.optimizer.lr.PiecewiseDecay衰减策略，paddle.optimizer.Momentum优化方法。
-> > - **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
-> > - **log_interval_steps** (int): 训练日志输出间隔（单位：迭代步数）。默认为10。
-> > - **save_dir** (str): 模型保存路径。默认为'output'。
-> > - **pretrain_weights** (str or None): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
-> > - **learning_rate** (float): 默认优化器的初始学习率。默认为0.025。
-> > - **warmup_steps** (int): 默认优化器的warmup步数，学习率将在设定的步数内，从warmup_start_lr线性增长至设定的learning_rate，默认为0。
-> > - **warmup_start_lr**(float): 默认优化器的warmup起始学习率，默认为0.0。
-> > - **lr_decay_epochs** (list): 默认优化器的学习率衰减轮数。默认为[30, 60, 90]。
-> > - **lr_decay_gamma** (float): 默认优化器的学习率衰减率。默认为0.1。
-> > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
-> > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认为5。
-> > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认为True。
-> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/mobilenetv3_small/best_model`。若为None，则不会恢复训练。默认值为None。
+- **num_epochs** (int): 训练迭代轮数。
+- **train_dataset** (paddlex.dataset): 训练数据集。
+- **train_batch_size** (int): 训练数据batch大小。同时作为验证数据batch大小。默认为64。
+- **eval_dataset** (paddlex.dataset or None): 评估数据集。当该参数为None时，训练过程中不会进行模型评估。默认为None。
+- **optimizer** (paddle.optimizer.Optimizer): 优化器。当该参数为None时，使用默认优化器：paddle.optimizer.lr.PiecewiseDecay衰减策略，paddle.optimizer.Momentum优化方法。
+- **save_interval_epochs** (int): 模型保存间隔（单位：迭代轮数）。默认为1。
+- **log_interval_steps** (int): 训练日志输出间隔（单位：迭代步数）。默认为10。
+- **save_dir** (str): 模型保存路径。默认为'output'。
+- **pretrain_weights** (str or None): 若指定为'.pdparams'文件时，则从文件加载模型权重；若为字符串'IMAGENET'，则自动下载在ImageNet图片数据上预训练的模型权重；若为None，则不使用预训练模型。默认为'IMAGENET'。
+- **learning_rate** (float): 默认优化器的初始学习率。默认为0.025。
+- **warmup_steps** (int): 默认优化器的warmup步数，学习率将在设定的步数内，从warmup_start_lr线性增长至设定的learning_rate，默认为0。
+- **warmup_start_lr**(float): 默认优化器的warmup起始学习率，默认为0.0。
+- **lr_decay_epochs** (list): 默认优化器的学习率衰减轮数。默认为[30, 60, 90]。
+- **lr_decay_gamma** (float): 默认优化器的学习率衰减率。默认为0.1。
+- **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
+- **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认为5。
+- **use_vdl** (bool): 是否使用VisualDL进行可视化。默认为True。
+- **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/mobilenetv3_small/best_model`。若为None，则不会恢复训练。默认值为None。**恢复训练需要将`pretrain_weights`设置为None。**
 
 ### <h3 id="12">evaluate</h3>
 
