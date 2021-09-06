@@ -71,7 +71,7 @@ train(self, num_epochs, train_dataset, train_batch_size=64, eval_dataset=None, o
 > > - **early_stop** (bool): 是否使用提前终止训练策略。默认为False。
 > > - **early_stop_patience** (int): 当使用提前终止训练策略时，如果验证集精度在`early_stop_patience`个epoch内连续下降或持平，则终止训练。默认为5。
 > > - **use_vdl** (bool): 是否使用VisualDL进行可视化。默认为True。
-> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/ppyolov2/best_model`。若为None，则不会恢复训练。默认值为None。
+> > - **resume_checkpoint** (str): 恢复训练时指定上次训练保存的模型路径，例如`output/ppyolov2/best_model`。若为None，则不会恢复训练。默认值为None。**恢复训练需要将`pretrain_weights`设置为None。**
 
 ### <h3 id="12">evaluate</h3>
 
