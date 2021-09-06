@@ -49,7 +49,7 @@ model.train(
     use_vdl=True)
 ```
 
-**注意**：`paddlex.load_model`只加载模型参数但不会恢复优化器设置，如果想要恢复训练，需定义模型之后在调用`train()`时指定[`resume_checkpoint`](./classification.md#train)为`output/mobilenetv3_small/best_model`。
+**注意**：`paddlex.load_model`只加载模型参数但不会恢复优化器设置，如果想要恢复训练，需定义模型之后在调用`train()`时指定[`resume_checkpoint`](./classification.md#train)为`output/mobilenetv3_small/best_model`，并且将[`pretrain_weights`](./classification.md#train)设置为None。
 
 ## <h2 id="2">加载模型用于评估</h2>
 
