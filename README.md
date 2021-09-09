@@ -67,11 +67,11 @@
 - [部署模型导出](./docs/apis/export_model.md)
 - [PaddleX python高性能部署](./docs/python_deploy.md)
 - [PaddleX Manufacture SDK低代码高效C++部署](./deploy/cpp/docs/manufacture_sdk)
-- [Paddle Inference的部署](./deploy/cpp)
-- [OpenVINO部署](./deploy/cpp/docs/compile/openvino)
-- [Triton部署](./deploy/cpp/docs/compile/triton)
-- [TensorRT部署](./deploy/cpp/docs/compile/tensorrt)
-- [PaddleX-Inference部署](./examples/C%23_deploy)
+- [基于Paddle Inference的C++部署](./deploy/cpp)
+- [基于OpenVINO的C++部署](./deploy/cpp/docs/compile/openvino)
+- [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton)
+- [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt)
+- [兼容并包的PaddleX-Inference部署](./examples/C%23_deploy)
 
 ### 6. 产业级应用示例
 
