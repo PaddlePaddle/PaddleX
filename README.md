@@ -88,8 +88,8 @@
 - [PaddleX Manufacture SDK低代码高效C++部署](./deploy/cpp/docs/manufacture_sdk)
 - [基于Paddle Inference的C++部署](./deploy/cpp)
 - [基于OpenVINO的C++部署](./deploy/cpp/docs/compile/openvino)
-- [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton)
-- [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt)
+- [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
+- [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt/trt.md)
 - [兼容并包的PaddleX-Inference部署](./examples/C%23_deploy)
 
 
