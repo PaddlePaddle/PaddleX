@@ -26,10 +26,7 @@
 
 ![](../docs/gui/images/paddlexoverview.png)
 
-
-## PaddleX 使用文档
-
-### 1. 快速上手PaddleX
+## 快速上手PaddleX
 
 - [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
   - [10分钟快速上手使用](./docs/quick_start.md)
@@ -37,14 +34,36 @@
 - [PaddleX Restful开发模式](./docs/Resful_API/docs)
 - [PadldeX GUI开发模式](./docs/gui)
 
-### 2. 数据准备
+## 产业级应用示例
+
+- [钢筋计数](examples/rebar_count)
+- [缺陷检测](examples/defect_detection)
+- [机械手抓取](examples/robot_grab)
+- [工业表计读数](examples/meter_reader)
+
+
+## 交流与反馈
+
+- 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
+
+- PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
+
+  <p align="center">
+    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
+  </p>
+
+
+## PaddleX 使用文档
+
+
+### 1. 数据准备
 
 - [数据格式说明](./docs/data/format/README.md)
 - [数据标注](./docs/data/annotation/README.md)
 - [数据格式转换](./docs/data/convert.md)
 - [数据划分](./docs/data/split.md)
 
-### 3. API模式下的模型训练/评估/预测
+### 2. API模式下的模型训练/评估/预测
 
 - [API文档](./docs/apis)
   - [数据集读取API](./docs/apis/datasets.md)
@@ -57,12 +76,12 @@
 - [VisualDL可视化训练指标](./docs/visualdl.md)
 - [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
 
-### 4. 模型剪裁和量化
+### 3. 模型剪裁和量化
 
 - [模型剪裁](tutorials/slim/prune)
 - [模型量化](tutorials/slim/quantize)
 
-### 5. 模型部署
+### 4. 模型部署
 
 - [部署模型导出](./docs/apis/export_model.md)
 - [PaddleX python高性能部署](./docs/python_deploy.md)
@@ -73,14 +92,9 @@
 - [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt)
 - [兼容并包的PaddleX-Inference部署](./examples/C%23_deploy)
 
-### 6. 产业级应用示例
 
-- [钢筋计数](examples/rebar_count)
-- [缺陷检测](examples/defect_detection)
-- [机械手抓取](examples/robot_grab)
-- [工业表计读数](examples/meter_reader)
 
-### 7. 附录
+### 5. 附录
 
 - [常见问题汇总](./docs/FAQ/FAQ.md)
 - [PaddleX模型库](./docs/appendix/model_zoo.md)
@@ -99,16 +113,6 @@
 
   全面支持飞桨2.0动态图，更易用的开发模式。 目标检测任务新增PP-YOLOv2, COCO test数据集精度达到49.5%、V100预测速度达到68.9 FPS。目标检测任务新增4.2MB的超轻量级模型PP-YOLO tiny。语义分割任务新增实时分割模型BiSeNetV2。C++部署模块全面升级，PaddleInference部署适配2.0预测库，支持飞桨PaddleDetection、PaddleSeg、PaddleClas以及PaddleX的模型部署；新增基于PaddleInference的GPU多卡预测；GPU部署新增基于ONNX的的TensorRT高性能加速引擎部署方式；GPU部署新增基于ONNX的Triton服务化部署方式。详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
 
-
-## 交流与反馈
-
-- 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
-
-- PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
-
-  <p align="center">
-    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
-  </p>
 
 
 ## :hugs: 贡献代码:hugs:
