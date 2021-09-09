@@ -31,11 +31,11 @@
 
 ### 1. 快速上手PaddleX
 
-- [PaddleX API开发模式安装](./docs/install.md#1-paddlex-api开发模式安装)
+- [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
   - [10分钟快速上手使用](./docs/quick_start.md)
   - [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
-- [PaddleX Restful开发模式安装](./docs/install.md#3-paddlex-restful开发模式安装)
-- [PadldeX GUI开发模式安装](./docs/install.md#2-padldex-gui开发模式安装)
+- [PaddleX Restful开发模式](./docs/Resful_API/docs)
+- [PadldeX GUI开发模式](./docs/gui)
 
 ### 2. 数据准备
 
