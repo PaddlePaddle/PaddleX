@@ -29,51 +29,33 @@
 
 ## PaddleX 使用文档
 
-
 ### 1. 快速上手PaddleX
 
-* [快速安装PaddleX](./docs/install.md)
-  * [PaddleX API开发模式安装](./docs/install.md#1-paddlex-api开发模式安装)
-  * [PadldeX GUI开发模式安装](./docs/install.md#2-padldex-gui开发模式安装)
-  * [PaddleX Restful开发模式安装](./docs/install.md#3-paddlex-restful开发模式安装)
-* [10分钟快速上手使用](./docs/quick_start.md)
-* [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
-* [常见问题汇总](./docs/FAQ/FAQ.md)
-
+- [PaddleX API开发模式安装](./docs/install.md#1-paddlex-api开发模式安装)
+  - [10分钟快速上手使用](./docs/quick_start.md)
+  - [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
+- [PaddleX Restful开发模式安装](./docs/install.md#3-paddlex-restful开发模式安装)
+- [PadldeX GUI开发模式安装](./docs/install.md#2-padldex-gui开发模式安装)
 
 ### 2. 数据准备
 
-* [数据格式说明](./docs/data/format/README.md)
-* [标注工具LabelMe的安装和启动](./docs/data/annotation/labelme.md)
-* [数据标注](./docs/data/annotation/README.md)
-  * [手机拍照图片旋转](./docs/data/annotation/README.md)
-  * [开始数据标注](./docs/data/annotation/README.md)
-* [数据格式转换](./docs/data/convert.md)
-* [数据划分](./docs/data/split.md)
+- [数据格式说明](./docs/data/format/README.md)
+- [数据标注](./docs/data/annotation/README.md)
+- [数据格式转换](./docs/data/convert.md)
+- [数据划分](./docs/data/split.md)
 
+### 3. API模式下的模型训练/评估/预测
 
-### 3. 模型训练/评估/预测
-
-* **PaddleX API开发模式：**
-
-    * [API文档](./docs/apis)
-      * [数据集读取API](./docs/apis/datasets.md)
-      * [数据预处理和数据增强API](./docs/apis/transforms/transforms.md)
-      * [模型API/模型加载API](./docs/apis/models/README.md)
-      * [预测结果可视化API](./docs/apis/visualize.md)
-    * [模型训练与参数调整](tutorials/train)
-      * [模型训练](tutorials/train)
-      * [训练参数调整](./docs/parameters.md)
-    * [VisualDL可视化训练指标](./docs/visualdl.md)
-    * [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
-
-* **PaddleX GUI开发模式：**
-
-    - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)
-    - [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)
-    - [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
-    - [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)
-
+- [API文档](./docs/apis)
+  - [数据集读取API](./docs/apis/datasets.md)
+  - [数据预处理和数据增强API](./docs/apis/transforms/transforms.md)
+  - [模型API/模型加载API](./docs/apis/models/README.md)
+  - [预测结果可视化API](./docs/apis/visualize.md)
+- [模型训练与参数调整](tutorials/train)
+  - [模型训练](tutorials/train)
+  - [训练参数调整](./docs/parameters.md)
+- [VisualDL可视化训练指标](./docs/visualdl.md)
+- [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
 
 ### 4. 模型剪裁和量化
 
@@ -85,7 +67,11 @@
 - [部署模型导出](./docs/apis/export_model.md)
 - [PaddleX python高性能部署](./docs/python_deploy.md)
 - [PaddleX Manufacture SDK低代码高效C++部署](./deploy/cpp/docs/manufacture_sdk)
-- [PaddleX/PaddleClas/PaddleDetection/PaddleSeg端到端高性能统一C++部署](./deploy/cpp)
+- [Paddle Inference的部署](./deploy/cpp)
+- [OpenVINO部署](./deploy/cpp/docs/compile/openvino)
+- [Triton部署](./deploy/cpp/docs/compile/triton)
+- [TensorRT部署](./deploy/cpp/docs/compile/tensorrt)
+- [PaddleX-Inference部署](./examples/C%23_deploy)
 
 ### 6. 产业级应用示例
 
@@ -93,13 +79,15 @@
 - [缺陷检测](examples/defect_detection)
 - [机械手抓取](examples/robot_grab)
 - [工业表计读数](examples/meter_reader)
-- [Windows系统下使用C#语言部署](examples/C%23_deploy)
 
 ### 7. 附录
 
+- [常见问题汇总](./docs/FAQ/FAQ.md)
 - [PaddleX模型库](./docs/appendix/model_zoo.md)
 - [PaddleX指标及日志](./docs/appendix/metrics.md)
 - [无联网模型训练](./docs/how_to_offline_run.md)
+
+
 
 ## 版本更新
 
