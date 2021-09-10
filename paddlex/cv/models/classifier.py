@@ -158,7 +158,7 @@ class BaseClassifier(BaseModel):
                     exit=False)
                 logging.error(
                     "See this doc for more information: "
-                    "https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/parameters.md",
+                    "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
                     exit=False)
                 logging.error(
                     "warmup_steps should less than {} or lr_decay_epochs[0] greater than {}, "
