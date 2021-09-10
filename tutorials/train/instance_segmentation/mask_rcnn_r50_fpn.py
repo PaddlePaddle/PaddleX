@@ -6,7 +6,7 @@ dataset = 'https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/transforms/transforms.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/transforms/transforms.md
 train_transforms = T.Compose([
     T.RandomResizeByShort(
         short_sizes=[640, 672, 704, 736, 768, 800],
@@ -22,7 +22,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/datasets.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/datasets.md
 train_dataset = pdx.datasets.CocoDetection(
     data_dir='xiaoduxiong_ins_det/JPEGImages',
     ann_file='xiaoduxiong_ins_det/train.json',
@@ -34,13 +34,13 @@ eval_dataset = pdx.datasets.CocoDetection(
     transforms=eval_transforms)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/train/visualdl.md
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/train/visualdl.md
 num_classes = len(train_dataset.labels)
 model = pdx.det.MaskRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/instance_segmentation.md
-# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/instance_segmentation.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/parameters.md
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,

@@ -12,7 +12,9 @@ Ubuntu 16.04/18.04
 ### Step1: 获取部署代码
 ```
 git clone https://github.com/PaddlePaddle/PaddleX.git
-cd PaddleX/deploy/cpp
+cd PaddleX/
+git checkout release/2.0.0
+cd deploy/cpp
 ```
 **说明**：`C++`预测代码在`PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的公共实现代码在`model_deploy`目录下，所有示例代码都在`demo`目录下。
 

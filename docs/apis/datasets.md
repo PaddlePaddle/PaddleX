@@ -16,7 +16,7 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 ```
 读取ImageNet格式的分类数据集，并对样本进行相应的处理。ImageNet数据集格式的介绍可查看文档:[数据集格式说明](../data/format/classification.md)  
 
-示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small.py)
+示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/tutorials/train/image_classification/mobilenetv3_small.py)
 
 > **参数**
 >
@@ -35,7 +35,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 
 > 读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../data/format/detection.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_darknet53.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/tutorials/train/object_detection/yolov3_darknet53.py)
 
 > **参数**
 >
@@ -80,7 +80,7 @@ dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/transforms/transforms.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/transforms/transforms.md
 train_transforms = T.Compose([
     T.MixupImage(mixup_epoch=-1), T.RandomDistort(),
     T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
@@ -97,7 +97,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/datasets.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/datasets.md
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -117,15 +117,15 @@ anchors = train_dataset.cluster_yolo_anchor(num_anchors=9, image_size=608)
 anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/train/visualdl.md
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/train/visualdl.md
 num_classes = len(train_dataset.labels)
 model = pdx.det.PPYOLO(num_classes=num_classes,
                        backbone='ResNet50_vd_dcn',
                        anchors=anchors,
                        anchor_masks=anchor_masks)
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md
-# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/detection.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/parameters.md
 model.train(
     num_epochs=200,
     train_dataset=train_dataset,
@@ -149,7 +149,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 
 > 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../data/format/instance_segmentation.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/tutorials/train/instance_segmentation/mask_rcnn_r50_fpn.py)
 
 > **参数**
 >
@@ -193,7 +193,7 @@ dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/transforms/transforms.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/transforms/transforms.md
 train_transforms = T.Compose([
     T.MixupImage(mixup_epoch=-1), T.RandomDistort(),
     T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
@@ -210,7 +210,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/datasets.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/datasets.md
 train_dataset = pdx.datasets.CocoDetection(
     data_dir='xiaoduxiong_ins_det/JPEGImages',
     ann_file='xiaoduxiong_ins_det/train.json',
@@ -226,15 +226,15 @@ anchors = train_dataset.cluster_yolo_anchor(num_anchors=9, image_size=608)
 anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/train/visualdl.md
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/train/visualdl.md
 num_classes = len(train_dataset.labels)
 model = pdx.det.PPYOLO(num_classes=num_classes,
                        backbone='ResNet50_vd_dcn',
                        anchors=anchors,
                        anchor_masks=anchor_masks)
 
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md
-# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/detection.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/parameters.md
 model.train(
     num_epochs=200,
     train_dataset=train_dataset,
@@ -258,7 +258,7 @@ paddlex.datasets.SegDataset(data_dir, file_list, label_list=None, transforms=Non
 
 > 读取语义分割任务数据集，并对样本进行相应的处理。语义分割任务数据集格式的介绍可查看文档:[数据集格式说明](../data/format/segmentation.md)  
 
-> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/unet.py)
+> 示例：[代码文件](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/tutorials/train/semantic_segmentation/unet.py)
 
 > **参数**
 >
