@@ -29,7 +29,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
   - [10分钟快速上手使用](./docs/quick_start.md)
   - [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
-- [PaddleX Restful开发模式](./docs/Resful_API/docs)
+- [PaddleX Restful API开发模式](./docs/Resful_API/docs)
 - [PadldeX GUI开发模式](./docs/gui)
 
 
@@ -57,9 +57,9 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
     - [训练参数调整](./docs/parameters.md)
   - [VisualDL可视化训练指标](./docs/visualdl.md)
   - [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
-- GUI开发模式(./docs/gui)
+- [GUI开发模式](./docs/gui)
   - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)  |  [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)  |  [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)  |  [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
-- [PaddleX Restful开发模式](./docs/Resful_API/docs)
+- [Restful API开发模式](./docs/Resful_API/docs)
 
 ### 3. 模型剪裁和量化
 
