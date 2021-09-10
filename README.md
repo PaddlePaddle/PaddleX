@@ -8,6 +8,8 @@
 
 
 ## 近期动态
+PaddleX发布2.0.0正式版本，详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
+
  全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
 
  PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp)
@@ -26,13 +28,11 @@
   <img src="https://user-images.githubusercontent.com/53808988/132805400-8479384f-32d0-4feb-a7eb-ffad90382524.jpg" width="800"  />
 </p>
 
-## 快速上手PaddleX
+## 安装与快速体验
 PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模式。用户可根据自己的需求选择任意一种开始体验
-- [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
-  - [10分钟快速上手使用](./docs/quick_start.md)
-  - [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
-- [PaddleX Restful API开发模式](./docs/Resful_API/docs)
 - [PadldeX GUI开发模式](./docs/gui)
+- [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
+- [PaddleX Restful API开发模式](./docs/Resful_API/docs)
 
 
 
@@ -51,7 +51,8 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [数据划分](./docs/data/split.md)
 
 ### 2. 模型训练/评估/预测
-
+- [GUI开发模式](./docs/gui)（视频解读）
+  - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)  |  [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)  |  [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)  |  [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
 - API开发模式
   - [API文档](./docs/apis)
     - [数据集读取API](./docs/apis/datasets.md)
@@ -63,9 +64,9 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
     - [训练参数调整](./docs/parameters.md)
   - [VisualDL可视化训练指标](./docs/visualdl.md)
   - [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
-- [GUI开发模式](./docs/gui)（视频解读）
-  - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)  |  [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)  |  [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)  |  [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
 - [Restful API开发模式](./docs/Resful_API/docs)
+  - [使用说明](./docs/Resful_API/docs)
+  - [使用说明](./docs/Resful_API/docs)
 
 ### 3. 模型剪裁和量化
 
@@ -87,7 +88,21 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
   - [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
   - [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt/trt.md)
 
-### 5.产业级应用示例
+
+
+### 5. 附录
+
+
+- [PaddleX模型库](./docs/appendix/model_zoo.md)
+- [PaddleX指标及日志](./docs/appendix/metrics.md)
+- [无联网模型训练](./docs/how_to_offline_run.md)
+
+## 常见问题汇总
+- [GUI相关问题](./docs/FAQ/FAQ.md/#GUI相关问题)
+- [API训练相关问题](#API训练相关问题)
+- [推理部署问题](#推理部署问题)
+
+## 产业级应用示例
 
 - [安防]()
     - [车流量计数]()  |  [人流量计数]()  |  [安全帽检测]()  |  [火灾烟雾检测]()
@@ -100,13 +115,6 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [互联网]()
     - [快递信息智能提取]()  |  [文本情感分析]()   |  [文字识别]()    |  [文本重建]() 
 
-### 6. 附录
-
-- [常见问题汇总](./docs/FAQ/FAQ.md)
-- [PaddleX模型库](./docs/appendix/model_zoo.md)
-- [PaddleX指标及日志](./docs/appendix/metrics.md)
-- [无联网模型训练](./docs/how_to_offline_run.md)
-
 ## 交流与反馈
 
 - 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
@@ -116,18 +124,6 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
   <p align="center">
     <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
   </p>
-
-
-
-## 版本更新
-
-- **2021.07.06 v2.0.0-rc3**
-
-  PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。详细内容请参考[版本更新文档](./docs/CHANGELOG.md)
-
-- **2021.05.19 v2.0.0-rc**
-
-  全面支持飞桨2.0动态图，更易用的开发模式。 目标检测任务新增PP-YOLOv2, COCO test数据集精度达到49.5%、V100预测速度达到68.9 FPS。目标检测任务新增4.2MB的超轻量级模型PP-YOLO tiny。语义分割任务新增实时分割模型BiSeNetV2。C++部署模块全面升级，PaddleInference部署适配2.0预测库，支持飞桨PaddleDetection、PaddleSeg、PaddleClas以及PaddleX的模型部署；新增基于PaddleInference的GPU多卡预测；GPU部署新增基于ONNX的的TensorRT高性能加速引擎部署方式；GPU部署新增基于ONNX的Triton服务化部署方式。详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
 
 
 
