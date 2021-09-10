@@ -84,13 +84,21 @@
 ### 4. 模型部署
 
 - [部署模型导出](./docs/apis/export_model.md)
-- [PaddleX python高性能部署](./docs/python_deploy.md)
-- [PaddleX Manufacture SDK低代码高效C++部署](./deploy/cpp/docs/manufacture_sdk)
-- [基于Paddle Inference的C++部署](./deploy/cpp)
-- [基于OpenVINO的C++部署](./deploy/cpp/docs/compile/openvino)
-- [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
-- [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt/trt.md)
-- [兼容并包的PaddleX-Inference部署](./examples/C%23_deploy)
+- [Inference Python部署](./docs/python_deploy.md)
+- [Inference C++部署]()
+  - [Manufacture SDK部署](./deploy/cpp/docs/manufacture_sdk)简化部署流程，支持多模型串联
+    - [Win C# Manufacture部署Demo]()
+    - [Linux qt Manufacture部署Demo]()
+  - [Deployment部署](./deploy/cpp)兼容多种套件部署
+    - [Win C# Deployment部署Demo](./examples/C%23_deploy)
+    - [Linux qt Deployment部署Demo]()
+    - [Jetson qt Deployment部署Demo]()
+- [PaddleServing部署]()
+- [其他]()
+  - [基于OpenVINO的C++部署](./deploy/cpp/docs/compile/openvino)
+  - [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
+  - [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt/trt.md)
+
 
 
 
