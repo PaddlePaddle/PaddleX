@@ -29,7 +29,7 @@ from paddlex.ppdet.modeling.mot.utils import Timer, load_det_results
 from paddlex.ppdet.modeling.mot import visualization as mot_vis
 
 from paddlex.ppdet.metrics import Metric, MOTMetric, KITTIMOTMetric
-import paddlex.ppdet.utils.stats as stats
+from paddlex.ppdet.utils import stats
 
 from .callbacks import Callback, ComposeCallback
 
