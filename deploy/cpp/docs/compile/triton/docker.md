@@ -168,7 +168,7 @@ curl -v localhost:8000/v2/health/ready
 ```
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-git checkout deploykit
+git checkout release/2.0.0
 ```
 
 ### 3.2 启动Triton客户端容器

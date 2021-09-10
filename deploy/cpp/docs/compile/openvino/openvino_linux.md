@@ -2,7 +2,7 @@
 
 本文档指引用户如何基于OpenVINO对飞桨模型进行推理，并编译执行。进行以下编译操作前请先安装好OpenVINO，OpenVINO安装请参考官网[OpenVINO-Linux](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html)
 
-**注意：** 
+**注意：**
 
 - 我们测试的openvino版本为2021.3，如果你使用其它版本遇到问题，可以尝试切换到该版本
 - 当前检测模型转换为openvino格式是有问题的，暂时只支持分割和分类模型
@@ -66,6 +66,7 @@ resnet50
 ### Step 1. 获取部署代码
 ```
 git clone https://github.com/PaddlePaddle/PaddleX.git
+git checkout release/2.0.0
 cd PaddleX/deploy/cpp
 ```
 **说明**：`C++`预测代码在`PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的推理实现代码在`model_deploy`目录下，所有示例代码都在`demo`目录下，script目录为编译脚本。
