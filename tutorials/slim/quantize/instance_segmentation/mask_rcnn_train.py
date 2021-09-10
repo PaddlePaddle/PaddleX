@@ -22,7 +22,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/cv/datasets/coco.py#L26
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/paddlex/cv/datasets/coco.py#L26
 train_dataset = pdx.datasets.CocoDetection(
     data_dir='xiaoduxiong_ins_det/JPEGImages',
     ann_file='xiaoduxiong_ins_det/train.json',
@@ -40,7 +40,7 @@ model = pdx.det.MaskRCNN(
     num_classes=num_classes, backbone='ResNet50', with_fpn=True)
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L155
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/release/2.0.0/appendix/parameters.html
 model.train(
     num_epochs=12,
     train_dataset=train_dataset,

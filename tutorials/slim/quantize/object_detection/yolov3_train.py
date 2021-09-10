@@ -44,7 +44,7 @@ num_classes = len(train_dataset.labels)
 model = pdx.det.YOLOv3(num_classes=num_classes, backbone='DarkNet53')
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/paddlex/cv/models/detector.py#L154
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/release/2.0.0/appendix/parameters.html
 model.train(
     num_epochs=270,
     train_dataset=train_dataset,

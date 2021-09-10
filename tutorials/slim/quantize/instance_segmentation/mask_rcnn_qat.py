@@ -22,7 +22,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/cv/datasets/coco.py#L26
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/paddlex/cv/datasets/coco.py#L26
 train_dataset = pdx.datasets.CocoDetection(
     data_dir='xiaoduxiong_ins_det/JPEGImages',
     ann_file='xiaoduxiong_ins_det/train.json',

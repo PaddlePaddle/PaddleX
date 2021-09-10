@@ -6,7 +6,7 @@ dataset = 'https://bj.bcebos.com/paddlex/datasets/insect_det.tar.gz'
 pdx.utils.download_and_decompress(dataset, path='./')
 
 # 定义训练和验证时的transforms
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/transforms/transforms.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/transforms/transforms.md
 train_transforms = T.Compose([
     T.MixupImage(mixup_epoch=250), T.RandomDistort(),
     T.RandomExpand(im_padding_value=[123.675, 116.28, 103.53]), T.RandomCrop(),
@@ -23,7 +23,7 @@ eval_transforms = T.Compose([
 ])
 
 # 定义训练和验证所用的数据集
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/datasets.md
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/datasets.md
 train_dataset = pdx.datasets.VOCDetection(
     data_dir='insect_det',
     file_list='insect_det/train_list.txt',
@@ -42,19 +42,19 @@ eval_dataset = pdx.datasets.VOCDetection(
 model = pdx.load_model('output/yolov3_darknet53/best_model')
 
 # Step 1/3: 分析模型各层参数在不同的剪裁比例下的敏感度
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md#analyze_sensitivity
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/detection.md#analyze_sensitivity
 model.analyze_sensitivity(
     dataset=eval_dataset,
     batch_size=1,
     save_dir='output/yolov3_darknet53/prune')
 
 # Step 2/3: 根据选择的FLOPs减小比例对模型进行剪裁
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md#prune
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/detection.md#prune
 model.prune(pruned_flops=.2)
 
 # Step 3/3: 对剪裁后的模型重新训练
-# API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md
-# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md#train
+# API说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/detection.md
+# 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/models/detection.md#train
 model.train(
     num_epochs=270,
     train_dataset=train_dataset,

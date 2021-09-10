@@ -35,7 +35,7 @@ num_classes = len(train_dataset.labels)
 model = pdx.cls.MobileNetV3_large(num_classes=num_classes)
 
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/95c53dec89ab0f3769330fa445c6d9213986ca5f/paddlex/cv/models/classifier.py#L153
-# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/develop/appendix/parameters.html
+# 各参数介绍与调整说明：https://paddlex.readthedocs.io/zh_CN/release/2.0.0/appendix/parameters.html
 model.train(
     num_epochs=10,
     train_dataset=train_dataset,
