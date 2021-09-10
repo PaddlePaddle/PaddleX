@@ -33,16 +33,6 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [PadldeX GUI开发模式](./docs/gui)
 
 
-## 交流与反馈
-
-- 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
-
-- PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
-
-  <p align="center">
-    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
-  </p>
-
 
 ## PaddleX 使用文档
 
@@ -54,18 +44,22 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [数据格式转换](./docs/data/convert.md)
 - [数据划分](./docs/data/split.md)
 
-### 2. API模式下的模型训练/评估/预测
+### 2. 模型训练/评估/预测
 
-- [API文档](./docs/apis)
-  - [数据集读取API](./docs/apis/datasets.md)
-  - [数据预处理和数据增强API](./docs/apis/transforms/transforms.md)
-  - [模型API/模型加载API](./docs/apis/models/README.md)
-  - [预测结果可视化API](./docs/apis/visualize.md)
-- [模型训练与参数调整](tutorials/train)
-  - [模型训练](tutorials/train)
-  - [训练参数调整](./docs/parameters.md)
-- [VisualDL可视化训练指标](./docs/visualdl.md)
-- [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
+- API开发模式
+  - [API文档](./docs/apis)
+    - [数据集读取API](./docs/apis/datasets.md)
+    - [数据预处理和数据增强API](./docs/apis/transforms/transforms.md)
+    - [模型API/模型加载API](./docs/apis/models/README.md)
+    - [预测结果可视化API](./docs/apis/visualize.md)
+  - [模型训练与参数调整](tutorials/train)
+    - [模型训练](tutorials/train)
+    - [训练参数调整](./docs/parameters.md)
+  - [VisualDL可视化训练指标](./docs/visualdl.md)
+  - [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
+- GUI开发模式(./docs/gui)
+  - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)  |  [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)  |  [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)  |  [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
+- [PaddleX Restful开发模式](./docs/Resful_API/docs)
 
 ### 3. 模型剪裁和量化
 
@@ -106,6 +100,16 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [PaddleX模型库](./docs/appendix/model_zoo.md)
 - [PaddleX指标及日志](./docs/appendix/metrics.md)
 - [无联网模型训练](./docs/how_to_offline_run.md)
+
+## 交流与反馈
+
+- 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
+
+- PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
+
+  <p align="center">
+    <img src="./docs/gui/images/QR2.jpg" width="250" height ="360" alt="QR" align="middle" />
+  </p>
 
 
 
