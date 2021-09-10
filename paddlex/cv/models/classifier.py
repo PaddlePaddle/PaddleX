@@ -154,7 +154,7 @@ class BaseClassifier(BaseModel):
             if warmup_steps > lr_decay_epochs[0] * num_steps_each_epoch:
                 logging.error(
                     "In function train(), parameters should satisfy: "
-                    "warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset",
+                    "warmup_steps <= lr_decay_epochs[0]*num_samples_in_train_dataset.",
                     exit=False)
                 logging.error(
                     "See this doc for more information: "
