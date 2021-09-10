@@ -22,7 +22,9 @@
 
 :factory: **PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
 
-![](../docs/gui/images/paddlexoverview.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/53808988/132805400-8479384f-32d0-4feb-a7eb-ffad90382524.jpg" width="800"  />
+</p>
 
 ## 快速上手PaddleX
 PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模式。用户可根据自己的需求选择任意一种开始体验
@@ -61,7 +63,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
     - [训练参数调整](./docs/parameters.md)
   - [VisualDL可视化训练指标](./docs/visualdl.md)
   - [加载训好的模型完成预测及预测结果可视化](./docs/apis/prediction.md)
-- [GUI开发模式](./docs/gui)
+- [GUI开发模式](./docs/gui)（视频解读）
   - [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)  |  [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)  |  [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)  |  [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)
 - [Restful API开发模式](./docs/Resful_API/docs)
 
