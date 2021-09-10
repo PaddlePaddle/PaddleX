@@ -1,25 +1,23 @@
-# PaddleX全面升级动态图，v2.0.0正式发布！
-
-
-
 <p align="center">
   <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
-
-## :heart:重磅功能升级
-### 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
-
-### PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp)
-
-
-### 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。[欢迎体验](./examples)
-
-### 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
-
-[![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
+ 
+ [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
  ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
 
+
+## 近期动态
+ 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
+
+ PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp)
+
+
+ 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。[欢迎体验](./examples)
+
+ 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
+
+## 产品介绍
 :hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
 
 :factory: **PaddleX** 经过**质检**、**安防**、**巡检**、**遥感**、**零售**、**医疗**等十多个行业实际应用场景验证，沉淀产业实际经验，**并提供丰富的案例实践教程**，全程助力开发者产业实践落地。
@@ -27,19 +25,12 @@
 ![](../docs/gui/images/paddlexoverview.png)
 
 ## 快速上手PaddleX
-
+PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模式。用户可根据自己的需求选择任意一种开始体验
 - [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
   - [10分钟快速上手使用](./docs/quick_start.md)
   - [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
 - [PaddleX Restful开发模式](./docs/Resful_API/docs)
 - [PadldeX GUI开发模式](./docs/gui)
-
-## 产业级应用示例
-
-- [钢筋计数](examples/rebar_count)
-- [缺陷检测](examples/defect_detection)
-- [机械手抓取](examples/robot_grab)
-- [工业表计读数](examples/meter_reader)
 
 
 ## 交流与反馈
@@ -87,22 +78,29 @@
 - [Inference Python部署](./docs/python_deploy.md)
 - [Inference C++部署]()
   - [Manufacture SDK部署](./deploy/cpp/docs/manufacture_sdk)简化部署流程，支持多模型串联
-    - [Win C# Manufacture部署Demo]()
-    - [Linux qt Manufacture部署Demo]()
+    - [WinC#-Demo]()  |  [LinuxQT-Demo]()
   - [Deployment部署](./deploy/cpp)兼容多种套件部署
-    - [Win C# Deployment部署Demo](./examples/C%23_deploy)
-    - [Linux qt Deployment部署Demo]()
-    - [Jetson qt Deployment部署Demo]()
+    - [WinC#-Demo](./examples/C%23_deploy)  |  [LinuxQT-Demo]()  |  [JetsonQT-Demo]()
 - [PaddleServing部署]()
-- [其他]()
+- [Onnx部署]()
   - [基于OpenVINO的C++部署](./deploy/cpp/docs/compile/openvino)
   - [基于Docker的Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
   - [基于Docker的TensorRT部署](./deploy/cpp/docs/compile/tensorrt/trt.md)
 
+### 5.产业级应用示例
 
+- [安防]()
+    - [车流量计数]()  |  [人流量计数]()  |  [安全帽检测]()  |  [火灾烟雾检测]()
+- [工业视觉]()
+    - [铝板缺陷检测]()  |  [齿轮缺陷检测]()  |  [表计读数]()  |  [钢筋计数]()  |  [视觉辅助定位抓取]()
+- [交通]()
+    - [车道线检测/车辆/行人检测]() 
+- [遥感]()
+    - [地块检测]()  |  [变化检测]() 
+- [互联网]()
+    - [快递信息智能提取]()  |  [文本情感分析]()   |  [文字识别]()    |  [文本重建]() 
 
-
-### 5. 附录
+### 6. 附录
 
 - [常见问题汇总](./docs/FAQ/FAQ.md)
 - [PaddleX模型库](./docs/appendix/model_zoo.md)
