@@ -2,6 +2,20 @@
 
 ## 最新版本信息
 
+- **2021.09.10 v2.0.0**
+
+  * PaddleX API
+    - 新增检测任务和实例分割任务的预测结果可视化、以及预测错误原因分析，辅助分析模型效果
+    - 新增检测任务的负样本优化，抑制背景区域的误检
+    - 完善语义分割任务的预测结果，支持返回预测类别和归一化后的预测置信度
+    - 完善图像分类任务的预测结果，支持返回归一化后的预测置信度
+
+  * 预测部署
+    - 完备PaddleX python预测部署, PaddleX模型使用2个API即可快速完成部署
+
+  * PaddleX GUI
+    - 新增导出API训练脚本功能，无缝切换PaddleX API训练
+
 - **2021.07.06 v2.0.0-rc3**
 
   * PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[使用教程](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp)
