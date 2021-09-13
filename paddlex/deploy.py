@@ -116,9 +116,7 @@ class Predictor(object):
                     )
                     pass
 
-        if use_glog:
-            config.enable_glog_info()
-        else:
+        if not use_glog:
             config.disable_glog_info()
         if memory_optimize:
             config.enable_memory_optim()
