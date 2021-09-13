@@ -117,7 +117,7 @@ anchors = train_dataset.cluster_yolo_anchor(num_anchors=9, image_size=608)
 anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/train/visualdl.md
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/visualdl.md
 num_classes = len(train_dataset.labels)
 model = pdx.det.PPYOLO(num_classes=num_classes,
                        backbone='ResNet50_vd_dcn',
@@ -226,7 +226,7 @@ anchors = train_dataset.cluster_yolo_anchor(num_anchors=9, image_size=608)
 anchor_masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/train/visualdl.md
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/visualdl.md
 num_classes = len(train_dataset.labels)
 model = pdx.det.PPYOLO(num_classes=num_classes,
                        backbone='ResNet50_vd_dcn',
