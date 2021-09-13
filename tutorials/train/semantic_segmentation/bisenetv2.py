@@ -37,7 +37,7 @@ eval_dataset = pdx.datasets.SegDataset(
     shuffle=False)
 
 # 初始化模型，并进行训练
-# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/train/visualdl.md
+# 可使用VisualDL查看训练指标，参考https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/visualdl.md
 num_classes = len(train_dataset.labels)
 model = pdx.seg.BiSeNetV2(num_classes=num_classes)
 
