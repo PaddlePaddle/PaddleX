@@ -127,7 +127,7 @@ class BaseDetector(BaseModel):
                     exit=False)
                 logging.error(
                     "See this doc for more information: "
-                    "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md",
+                    "https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/parameters.md",
                     exit=False)
 
             scheduler = paddle.optimizer.lr.LinearWarmup(
