@@ -2,22 +2,21 @@
   <img src="./docs/gui/images/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
- 
- [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
- ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
+
+<p align="left">
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a>
+    <a href="https://github.com/PaddlePaddle/PaddleOCR/releases"><img src="https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/python-3.6+-orange.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
+</p>
 
 ## 近期动态
-
-- 时间 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
-
+2021.09.10 PaddleX发布2.0.0正式版本，详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
+- 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
 - PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp)
-
-
 - 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。[欢迎体验](./examples)
-
 - 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
-
-PaddleX发布2.0.0正式版本，详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
 
 ## 产品介绍
 :hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
@@ -33,7 +32,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [PaddleX API开发模式](./docs/install.md#1-paddlex-api开发模式安装)
 - [PaddleX Restful API开发模式](./docs/Resful_API/docs)
 - [PadldeX GUI开发模式](./docs/gui)
-- [快速产业部署](#模型部署)
+- [快速产业部署](README.md#模型部署)
 
 ## 产业级应用示例
 
