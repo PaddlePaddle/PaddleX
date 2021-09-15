@@ -7,7 +7,7 @@
 请参考[安装方式文档](./download.md)下载安装PaddleX可视化客户端。
 
 ## 视频教程
-用户可观看视频教程，并通过PaddleX可视化客户端完成图像分类、目标检测、语义分割、实例分割四类任务。
+用户可观看视频教程，并通过PaddleX可视化客户端完成[图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)、[目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)、[语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)、[实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)四类任务。
 <table>
 <tr>
     <td> <p align="center">
@@ -25,10 +25,10 @@
 </tr>
   
 <tr>
-    <td> [图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009) </td>
-    <td> [目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009) </td>
-    <td> [语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009) </td>
-    <td> [实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009) </td>
+    <td> 图像分类 </td>
+    <td> 目标检测 </td>
+    <td> 语义分割 </td>
+    <td> 实例分割 </td>
 </tr>
 </table>
 
