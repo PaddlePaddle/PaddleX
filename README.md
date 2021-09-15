@@ -56,7 +56,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 ## PaddleX 使用文档
 本文档介绍了PaddleX从数据准备、模型训练到模型裁剪量化，及最终部署的全流程使用方法。
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/53808988/132805273-a1afcc2e-4c34-4906-8768-5c7791d1d1f9.png" width="800"  />
+  <img src="https://user-images.githubusercontent.com/53808988/133368962-8b330ea8-2590-45db-af0b-a3eab57e3e4b.png" width="800"  />
 </p>
 
 ### 1. 数据准备
