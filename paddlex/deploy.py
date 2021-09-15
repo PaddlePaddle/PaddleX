@@ -147,34 +147,27 @@ class Predictor(object):
         if self._model.model_type == 'classifier':
             true_topk = min(self._model.num_classes, topk)
             preds = self._model._postprocess(net_outputs[0], true_topk)
-            if len(preds) == 1:
-                preds = preds[0]
         elif self._model.model_type == 'segmenter':
             label_map, score_map = self._model._postprocess(
                 net_outputs,
                 batch_origin_shape=ori_shape,
                 transforms=transforms.transforms)
-            label_map = np.squeeze(label_map)
-            score_map = np.squeeze(score_map)
-            if score_map.ndim == 3:
-                preds = {'label_map': label_map, 'score_map': score_map}
-            else:
-                preds = [{
-                    'label_map': l,
-                    'score_map': s
-                } for l, s in zip(label_map, score_map)]
+            preds = [{
+                'label_map': l,
+                'score_map': s
+            } for l, s in zip(label_map, score_map)]
         elif self._model.model_type == 'detector':
             net_outputs = {
                 k: v
                 for k, v in zip(['bbox', 'bbox_num', 'mask'], net_outputs)
             }
             preds = self._model._postprocess(net_outputs)
-            if len(preds) == 1:
-                preds = preds[0]
         else:
             logging.error(
                 "Invalid model type {}.".format(self._model.model_type),
                 exit=True)
+        if len(preds) == 1:
+            preds = preds[0]
 
         return preds
 
