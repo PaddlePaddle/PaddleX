@@ -90,7 +90,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [模型剪裁](tutorials/slim/prune)
 - [模型量化](tutorials/slim/quantize)
 
-### 4模型部署
+### 4.模型部署
 
 - [部署模型导出](./docs/apis/export_model.md)
 - [部署方式概览]()
