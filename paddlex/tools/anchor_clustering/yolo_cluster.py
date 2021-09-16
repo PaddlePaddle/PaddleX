@@ -173,5 +173,6 @@ class YOLOAnchorCluster(BaseAnchorCluster):
                 f, centers = new_f, new_centers.copy()
                 pbar.desc = 'Evolving anchors with Genetic Algorithm: fitness = %.4f' % f
 
-        centers = np.round(centers[np.argsort(centers.prod(1))]).astype(int)
+        centers = np.round(centers[np.argsort(centers.prod(1))]).astype(
+            int).tolist()
         return centers
