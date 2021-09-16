@@ -1,0 +1,97 @@
+// Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package suitebackend;
+
+message Dataset {
+    string id = 1;
+    string name = 2;
+    string desc = 3;
+    // 'classification': 分类数据
+    // 'segmentation': 分割数据
+    // 'detection_voc': 检测数据（仅用于检测)
+    // 'detection_coco': 检测数据（用于检测，分割，实例分割)
+    string type = 4;
+    string path = 5;
+    string create_time = 6;
+}
+
+message Project {
+    string id = 1;
+    string name = 2;
+    string desc = 3;
+    // 'classification'
+    // 'segmentation'
+    // 'segmentation'
+    // 'instance_segmentation'
+    string type = 4;
+    string did = 5;
+    string path = 6;
+    string create_time = 7;
+}
+
+message Task {
+    string id = 1;
+    string name = 2;
+    string desc = 3;
+    string pid = 4;
+    string path = 5;
+    string create_time = 6;
+    string parent_id = 7;
+}
+
+message PretrainedModel {
+    string id = 1;
+    string name = 2;
+    string model = 3;
+    string type = 4;
+    // 所属项目id
+    string pid = 5;
+    string tid = 6;
+    string create_time = 7;
+    string path = 8;
+}
+
+message ExportedModel {
+    string id = 1;
+    string name = 2;
+    string model = 3;
+    string type = 4;
+    // 所属项目id
+    string pid = 5;
+    string tid = 6;
+    string create_time = 7;
+    string path = 8;
+    int32 exported_type = 9;
+}
+
+message Workspace {
+    string version = 1;
+    string path = 2;
+    map<string, Dataset> datasets = 3;
+    map<string, Project> projects = 4;
+    map<string, Task> tasks = 5;
+    int32 max_dataset_id = 6;
+    int32 max_project_id = 7;
+    int32 max_task_id = 8;
+    string current_time = 9;
+
+    int32 max_pretrained_model_id = 10;
+    map<string, PretrainedModel> pretrained_models = 11;
+
+    int32 max_exported_model_id = 12;
+    map<string, ExportedModel> exported_models = 13;
+}
+
