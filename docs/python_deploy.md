@@ -30,3 +30,12 @@ result = predictor.predict(img_file='test.img',
                            warmup_iters=100,
                            repeats=100)
 ```
+
+* Python部署所得预测结果支持使用`paddlex.det.visualize`（适用于目标检测和实例分割模型）或`paddlex.seg.visualize`（适用于语义分割模型）进行可视化。
+```python
+# 目标检测和实例分割结果
+pdx.det.visualize('test.img', result, save_dir='./')
+
+# 语义分割结果
+pdx.seg.visualize('test.img', result, save_dir='./')
+```
