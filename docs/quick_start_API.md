@@ -6,17 +6,17 @@
     - [PaddleX 2.0.0安装](#PaddleX-200安装)
     - [PaddleX develop安装](#PaddleX-develop安装)
 - [使用前置说明](#使用前置说明)
-  * [PaddleX的模型训练](#11)
-  * [PaddleX的其他用法](#12)
-* [使用示例](#2)
-  * <a href=#安装PaddleX>安装PaddleX</a>
-  * <a href=#准备蔬菜分类数据集>准备蔬菜分类数据集</a>
-  * <a href=#定义训练验证图像处理流程transforms>定义训练/验证图像处理流程transforms</a>
-  * <a href=#定义dataset加载图像分类数据集>定义dataset加载图像分类数据集</a>
-  * <a href=#使用MoibleNetV3_small模型开始训练>使用MoibleNetV3_small模型开始训练</a>
-  * <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
-  * <a href=加载训练保存的模型预测>加载训练保存的模型预测</a>
-* [更多使用教程](#3)
+    - [PaddleX的模型训练](#PaddleX的模型训练)
+    - [PaddleX的其他用法](#PaddleX的其他用法)
+- [使用示例](#使用示例)
+    - <a href=#安装PaddleX>安装PaddleX</a>
+    - <a href=#准备蔬菜分类数据集>准备蔬菜分类数据集</a>
+    - <a href=#定义训练验证图像处理流程transforms>定义训练/验证图像处理流程transforms</a>
+    - <a href=#定义dataset加载图像分类数据集>定义dataset加载图像分类数据集</a>
+    - <a href=#使用MoibleNetV3_small模型开始训练>使用MoibleNetV3_small模型开始训练</a>
+    - <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
+    - <a href=加载训练保存的模型预测>加载训练保存的模型预测</a>
+- [更多使用教程](#3)
 
 ## 快速安装
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.2)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/release/2.0.0/install/pip/windows-pip.html)
