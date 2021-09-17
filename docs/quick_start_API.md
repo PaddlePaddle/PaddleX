@@ -16,6 +16,7 @@
     - <a href=#使用MoibleNetV3_small模型开始训练>使用MoibleNetV3_small模型开始训练</a>
     - <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
     - <a href=#加载训练保存的模型预测>加载训练保存的模型预测</a>
+- [AIStudio在线项目示例](#AIStudio在线项目示例)
 - [更多使用教程](#3)
 
 ## 快速安装
