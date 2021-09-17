@@ -3,7 +3,7 @@
 
 ## 目录
 - [快速安装](#快速安装)
-    - [PaddleX 2.0.0安装](#PaddleX2-0-0安装)
+    - [PaddleX 2.0.0安装](#PaddleX-200安装)
     - [PaddleX develop安装](#PaddleXdevelop安装)
 - [使用前置说明](#使用前置说明)
   * [PaddleX的模型训练](#11)
