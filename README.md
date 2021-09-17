@@ -104,12 +104,9 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
     - [Python部署](./docs/python_deploy.md)
   - [边缘侧部署]()
     - [JetsonQT-Demo]()
-    - [手机部署]()
+    - [Android/iOS部署]()
   - [服务化部署]()
     - [Triton部署]()
-- [CPU部署]()
-- [Nvidia GPU部署]()
-- [Nvidia边缘芯片部署]()
 - [模型加密]()
 - [ONNX格式转换](./deploy/cpp/docs/compile)
 
