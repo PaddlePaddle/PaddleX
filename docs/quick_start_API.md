@@ -51,9 +51,9 @@ python setup.py install
 
 如遇到pycocotools安装失败，参考[PaddleX 2.0.0安装](./install.md#paddlex-200安装)中介绍的解决方法。
 
-## <h2 id="1">前置说明</h2>
+## 使用前置说明
 
-### <h3 id="11">PaddleX的模型训练</h3>
+### PaddleX的模型训练
 
 跟随以下3个步骤，即可快速完成训练代码开发:
 
@@ -61,16 +61,16 @@ python setup.py install
 | :--- | :--------------- | :-------------- |
 | 第1步| <a href=#定义训练验证图像处理流程transforms>定义transforms</a>  | 用于定义模型训练、验证、预测过程中，<br>输入图像的预处理和数据增强操作 |
 | 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
-| 第3步| <a href="#使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
+| 第3步| <a href="#5.使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
 
 > **注意**：不同模型的transforms、datasets和训练参数都有较大差异。可直接根据[模型训练教程](../tutorials/train)获取更多模型的训练代码。
 
-### <h3 id="12">PaddleX的其它用法</h3>
+### PaddleX的其它用法
 
 - <a href="#训练过程使用VisualDL查看训练指标变化">使用VisualDL查看训练过程中的指标变化</a>
 - <a href="#加载训练保存的模型预测">加载训练保存的模型进行预测</a>
 
-## <h2 id="2">使用示例</h2>
+## 使用示例
 
 接下来展示如何通过PaddleX在一个小数据集上进行训练。示例代码源于Github [tutorials/train/image_classification/mobilenetv3_small.py](../tutorials/train/image_classification/mobilenetv3_small.py)，用户可自行下载至本地运行。  
 
