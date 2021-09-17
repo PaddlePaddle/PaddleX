@@ -61,7 +61,7 @@ python setup.py install
 | :--- | :--------------- | :-------------- |
 | 第1步| <a href=#定义训练验证图像处理流程transforms>定义transforms</a>  | 用于定义模型训练、验证、预测过程中，<br>输入图像的预处理和数据增强操作 |
 | 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
-| 第3步| <a href="#5使用MoibleNetV3_small_ssld模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
+| 第3步| <a href="#5使用MobileNetV3_small模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
 
 > **注意**：不同模型的transforms、datasets和训练参数都有较大差异。可直接根据[模型训练教程](../tutorials/train)获取更多模型的训练代码。
 
