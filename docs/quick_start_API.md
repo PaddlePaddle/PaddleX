@@ -15,7 +15,7 @@
     - <a href=#定义dataset加载图像分类数据集>定义dataset加载图像分类数据集</a>
     - <a href=#使用MoibleNetV3_small模型开始训练>使用MoibleNetV3_small模型开始训练</a>
     - <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
-    - <a href=加载训练保存的模型预测>加载训练保存的模型预测</a>
+    - <a href=#加载训练保存的模型预测>加载训练保存的模型预测</a>
 - [更多使用教程](#3)
 
 ## 快速安装
@@ -78,7 +78,7 @@ python setup.py install
 | :--- | :--------------- | :-------------- |
 | 第1步| <a href="#定义训练验证图像处理流程transforms">定义transforms</a>  | 用于定义模型训练、验证、预测过程中，<br>输入图像的预处理和数据增强操作 |
 | 第2步| <a href="#定义dataset加载图像分类数据集">定义datasets</a>  | 用于定义模型要加载的训练、验证数据集 |
-| 第3步| <a href="#使用MoibleNetV3small模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
+| 第3步| <a href="#使用MoibleNetV3_small模型开始训练">定义模型开始训练</a> | 选择需要的模型，进行训练 |
 
 > **注意**：不同模型的transforms、datasets和训练参数都有较大差异。可直接根据[模型训练教程](../tutorials/train)获取更多模型的训练代码。
 
@@ -145,7 +145,7 @@ eval_dataset = pdx.datasets.ImageNet(
 - [paddlex.datasets.ImageNet接口说明](./apis/datasets.md#1)
 - [ImageNet数据格式说明](./data/format/classification.md)
 
-<a name="使用MoibleNetV3small模型开始训练"></a>
+<a name="使用MoibleNetV3_small模型开始训练"></a>
 **5. 使用MobileNetV3_small模型开始训练**  
 
 本文档中使用百度基于蒸馏方法得到的MobileNetV3预训练模型，模型结构与MobileNetV3一致，但精度更高。PaddleX内置了20多种分类模型，查阅[PaddleX 图像分类模型API](apis/models/classification.md#其它分类模型)了解更多分类模型。
