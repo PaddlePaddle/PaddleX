@@ -194,7 +194,8 @@ Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'cate
 
 <h2 id="3">更多使用教程</h2>
 
-- 1.[目标检测模型训练](../tutorials/train)
-- 2.[语义分割模型训练](../tutorials/train)
-- 3.[实例分割模型训练](../tutorials/train)
-- 4.[模型太大，想要更小的模型，试试模型裁剪吧!](../tutorials/slim/prune)
+- [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
+- [目标检测模型训练](../tutorials/train)
+- [语义分割模型训练](../tutorials/train)
+- [实例分割模型训练](../tutorials/train)
+- [模型太大，想要更小的模型，试试模型裁剪吧!](../tutorials/slim/prune)
