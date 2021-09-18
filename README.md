@@ -30,8 +30,8 @@
 ## 安装与快速体验
 PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模式。用户可根据自己的需求选择任意一种开始体验
 - [PaddleX API开发模式](./docs/quick_start_API.md)
-- [PaddleX Restful API开发模式](./docs/Resful_API/docs)
-- [PadldeX GUI开发模式](./docs/gui/quick_start.md)
+- [PaddleX Restful API开发模式](./docs/quick_start_Resful_API.md)
+- [PadldeX GUI开发模式](./docs/quick_start_GUI.md)
 - [快速产业部署](#4-模型部署)
 
 ## 产业级应用示例
