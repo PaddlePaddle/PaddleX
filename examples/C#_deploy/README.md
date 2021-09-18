@@ -82,6 +82,7 @@
 
 <div align="center">
 <img src="./images/8.5.png"  width = "800" />             </div>
+
 ### 3.2 修改model_infer.cpp并重新生成dll
 
 * 修改后的model_infer.cpp已经提供，请用paddleX/examples/C#_deploy/model_infer.cpp文件替换PaddleX/deploy/cpp/demo/model_infer.cpp
