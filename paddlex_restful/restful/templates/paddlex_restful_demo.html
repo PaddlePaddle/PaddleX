@@ -527,22 +527,26 @@ var PredictStatus = {
 //参数范围
 var Model_List = {
     "classification":["MobileNetV2", "ResNet18", "ResNet34", "ResNet50", "ResNet101",
-                      "ResNet50_vd", "ResNet101_vd", "ResNet50_vd_ssld", "ResNet101_vd_ssld",
-                      "DarkNet53", "MobileNetV1", "MobileNetV3_small", "MobileNetV3_large",
-                      "MobileNetV3_small_ssld", "MobileNetV3_large_ssld", "Xception41",
-                      "Xception65", "DenseNet121", "DenseNet161", "DenseNet201","ShuffleNetV2"],
-     "detection":["YOLOv3", "FasterRCNN", "PPYOLO"],
-     "segmentation":["DeepLabv3p", "U-Net", "HRNet_W18", "FastSCNN"],
+              "ResNet50_vd", "ResNet101_vd", "ResNet50_vd_ssld", "ResNet101_vd_ssld",
+              "DarkNet53", "MobileNetV1", "MobileNetV3_small", "MobileNetV3_large",
+              "MobileNetV3_small_ssld", "MobileNetV3_large_ssld", "Xception41",
+              "Xception65", "DenseNet121", "DenseNet161", "DenseNet201",
+              "ShuffleNetV2"],
+     "detection":["YOLOv3", "FasterRCNN", "PPYOLO", "PPYOLOTiny", "PPYOLOv2"],
+     "segmentation":["DeepLabv3P", "BiSeNetV2", "U-Net", "HRNet_W18", "FastSCNN"],
      "instance_segmentation":["MaskRCNN"]
 }
 
 var Backbone_List = {
-    "YOLOv3": ["DarkNet53", "ResNet34", "MobileNetV1", "MobileNetV3_large"],
-    "PPYOLO": ["ResNet50_vd_ssld"],
-    "FasterRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"],
-    "DeepLabv3p": ["Xception65", "Xception41", "MobileNetV3_large_x1_0_ssld", "MobileNetV2_x0.25",
-                   "MobileNetV2_x0.5", "MobileNetV2_x1.0", "MobileNetV2_x1.5","MobileNetV2_x2.0"],
-    "MaskRCNN": ["ResNet18", "ResNet50", "ResNet50_vd", "ResNet101", "ResNet101_vd", "HRNet_W18"]
+    "YOLOv3": ['MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3',
+             'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34'],
+    "PPYOLO": ['ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small'],
+    PPYOLOTiny: ['MobileNetV3'],
+    PPYOLOv2: ['ResNet50_vd_dcn', 'ResNet101_vd_dcn'],
+    "FasterRCNN": ['ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34',
+                 'ResNet34_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18'],
+    "DeepLabV3P": ['ResNet50_vd', 'ResNet101_vd'],
+    "MaskRCNN": ['ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet101', 'ResNet101_vd']
 }
 
 var Project_Type_Name_Enum = {
