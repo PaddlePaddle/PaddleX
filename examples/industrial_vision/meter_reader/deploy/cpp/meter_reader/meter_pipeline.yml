@@ -1,0 +1,63 @@
+pipeline_name: meter_reader
+pipeline_nodes:
+- src0:
+    type: Source
+    next: decode0
+- decode0:
+    type: Decode
+    next:
+    - modelpredict0
+    - visualize0
+    - roicrop0
+- modelpredict0:
+    type: Predict
+    init_params:
+      model_dir: /paddle/PaddleX/examples/meter_reader/det_inference/inference_model
+      gpu_id: 0
+      use_gpu: true
+      use_trt: false
+    next: filter0
+- filter0:
+    type: FilterBbox
+    init_params:
+        score_thresh: 0.3
+    next:
+    - sink0
+    - visualize0
+    - roicrop0
+- roicrop0:
+    type: RoiCrop
+    next:
+    - resize0
+- resize0:
+    type: Resize
+    init_params:
+      height: 512
+      width: 512
+      interp: 0
+    next:
+    - modelpredict1
+    - visualize1
+- modelpredict1:
+    type: Predict
+    init_params:
+      model_dir: /paddle/PaddleX/examples/meter_reader/seg_inference/inference_model
+      gpu_id: 0
+      use_gpu: true
+      use_trt: false
+    next:
+    - sink1
+    - visualize1
+- visualize0:
+    type: Visualize
+    init_params:
+      save_dir: ./output_det
+- visualize1:
+    type: Visualize
+    init_params:
+      save_dir: ./output_seg
+- sink0:
+    type: Sink
+- sink1:
+    type: Sink
+version: 2.0.0
