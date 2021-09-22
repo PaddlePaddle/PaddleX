@@ -17,7 +17,6 @@
     - <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
     - <a href=#加载训练保存的模型预测>加载训练保存的模型预测</a>
 - [AIStudio在线项目示例](#AIStudio在线项目示例)
-- [更多使用教程](#3)
 
 ## 快速安装
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.2)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/release/2.0.0/install/pip/windows-pip.html)
@@ -90,7 +89,7 @@ python setup.py install
 
 ## 使用示例
 
-接下来展示如何通过PaddleX在一个小数据集上进行训练。示例代码源于Github [tutorials/train/image_classification/mobilenetv3_small.py](../tutorials/train/image_classification/mobilenetv3_small.py)，用户可自行下载至本地运行。  
+接下来展示如何通过PaddleX在一个小数据集上进行训练。示例代码源于Github [tutorials/train/image_classification/mobilenetv3_small.py](../tutorials/train/image_classification/mobilenetv3_small.py)，用户可自行下载至本地运行。用户也可前往[AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)学习体验。
 
 <a name="安装PaddleX"></a>
 **1. 安装PaddleX**  
@@ -193,11 +192,4 @@ Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'cate
 - [分类模型predict接口说明](./apis/models/classification.md#predict)
 
 
-<h2 id="3">更多使用教程</h2>
 
-<a name="AIStudio在线项目示例"></a>
-- [AIStudio在线项目示例](https://aistudio.baidu.com/aistudio/projectdetail/2159977)
-- [目标检测模型训练](../tutorials/train)
-- [语义分割模型训练](../tutorials/train)
-- [实例分割模型训练](../tutorials/train)
-- [模型太大，想要更小的模型，试试模型裁剪吧!](../tutorials/slim/prune)
