@@ -208,7 +208,7 @@ paddlex --export_inference --model_dir=output/yolov3_resnet34/best_model --save_
 
 
 
-模型部署采用了PaddleX提供的C++ inference部署方案，在改方案中提供了C#部署[Demo](https://github.com/PaddlePaddle/PaddleX/tree/release/2.0.0/examples/C%23_deploy)，用户可根据实际情况自行参考。
+模型部署采用了PaddleX提供的C++ inference部署方案，在改方案中提供了C#部署[Demo](./C#_deploy)，用户可根据实际情况自行参考。
 
 <div align="center">
     <img src="./images/0.png" width="1024"/>
