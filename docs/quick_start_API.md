@@ -142,9 +142,6 @@ eval_dataset = pdx.datasets.ImageNet(
     transforms=eval_transforms)
 ```
 
-- [paddlex.datasets.ImageNet接口说明](./apis/datasets.md#1)
-- [ImageNet数据格式说明](./data/format/classification.md)
-
 <a name="使用MoibleNetV3_small模型开始训练"></a>
 **5. 使用MobileNetV3_small模型开始训练**  
 
@@ -188,8 +185,3 @@ print("Predict Result: ", result)
 ```
 Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'category_id': 0}]
 ```
-- [load_model接口说明](./apis/prediction.md)
-- [分类模型predict接口说明](./apis/models/classification.md#predict)
-
-
-
