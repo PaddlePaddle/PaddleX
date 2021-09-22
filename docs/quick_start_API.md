@@ -16,7 +16,6 @@
     - <a href=#使用MoibleNetV3_small模型开始训练>使用MoibleNetV3_small模型开始训练</a>
     - <a href=#训练过程使用VisualDL查看训练指标变化>训练过程使用VisualDL查看训练指标变化</a>
     - <a href=#加载训练保存的模型预测>加载训练保存的模型预测</a>
-- [AIStudio在线项目示例](#AIStudio在线项目示例)
 
 ## 快速安装
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.2)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/release/2.0.0/install/pip/windows-pip.html)
