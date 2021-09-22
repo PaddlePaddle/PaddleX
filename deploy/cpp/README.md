@@ -16,7 +16,6 @@
 ### PaddleInference编译说明
 - [Linux编译(支持加密)指南](./docs/compile/paddle/linux.md)
 - [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
-- [Jetson编译指南](./docs/compile/paddle/jetson.md)
 
 ### 模型部署说明
 - [PaddleX部署指南](./docs/models/paddlex.md)
