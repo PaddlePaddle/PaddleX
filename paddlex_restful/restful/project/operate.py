@@ -327,16 +327,23 @@ def _call_paddlex_export_infer(task_path, save_dir, export_status_path, epoch):
         osp.join(export_status_path, 'out.log'), 'w', encoding='utf-8')
     sys.stderr = open(
         osp.join(export_status_path, 'err.log'), 'w', encoding='utf-8')
+
     import os
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
+    os.environ['PADDLEX_EXPORT_STAGE'] = 'True'
+    os.environ['PADDLESEG_EXPORT_STAGE'] = 'True'
     import paddlex as pdx
-    if epoch is not None:
-        model_dir = "epoch_{}".format(epoch)
-        model_path = osp.join(task_path, 'output', model_dir)
-    else:
-        model_path = osp.join(task_path, 'output', 'best_model')
+    model_dir = "epoch_{}".format(epoch) if epoch is not None else "best_model"
+    model_path = osp.join(task_path, 'output', model_dir)
     model = pdx.load_model(model_path)
-    model.export_inference_model(save_dir)
+    model._export_inference_model(save_dir)
+    '''
+    model_dir = "epoch_{}".format(epoch)
+    model_path = osp.join(task_path, 'output', model_dir)
+    if os.path.exists(save_dir):
+        shutil.rmtree(save_dir)
+    shutil.copytree(model_path, save_dir)
+    '''
     set_folder_status(export_status_path, TaskStatus.XEXPORTED)
     set_folder_status(task_path, TaskStatus.XEXPORTED)
 
