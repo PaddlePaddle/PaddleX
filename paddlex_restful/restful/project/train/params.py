@@ -251,7 +251,6 @@ class SegParams(Params):
         self.backbone = 'ResNet50_vd'
         self.blur = True
         self.blur_prob = 0.
-        self.max_rotation = 15
         self.scale_aspect = False
         self.min_ratio = 0.5
         self.aspect_ratio = 0.33

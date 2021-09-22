@@ -282,7 +282,6 @@ def get_segmentation_params(params):
     params['blur'] = False
     params['blur_prob'] = 0.1
     params['rotate'] = False
-    params['max_rotation'] = 15
     params['scale_aspect'] = False
     params['min_ratio'] = 0.5
     params['aspect_ratio'] = 0.33
