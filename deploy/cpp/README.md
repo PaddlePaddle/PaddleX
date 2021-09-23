@@ -1,8 +1,18 @@
 ## PaddlePaddle模型C++部署
 
-本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署。
+## 目录
+- [模型套件支持](#模型套件支持)
+- [硬件支持](#硬件支持)
+- [具体步骤](#具体步骤)
+  - [1.PaddleInference编译说明](#1-PaddleInference编译说明)
+  - [2.部署模型导出](#2-部署模型导出)
+  - [3.模型预测](#3-模型预测)
+- [模型加密与预测加速](#模型加密与预测加速)
+- [API说明](#API说明)
+
 
 ## 模型套件支持
+本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署。
 - PaddleDetection([release/2.1](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.1))：当前支持PaddleDetection release/0.5和release/2.1分支导出的部分模型进行导出及部署，支持FasterRCNN / MaskRCNN / PPYOLO / PPYOLOv2 / YOLOv3。
 - PaddleSeg([release/2.1](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.1))：当前支持PaddleSeg release/2.1分支训练的模型进行导出及部署。
 - PaddleClas([release/2.1](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.1))：当前支持PaddleClas release/2.1分支导出的模型进行部署。
