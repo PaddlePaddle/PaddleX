@@ -59,7 +59,7 @@ Box(56  chair   0.136626    546.628 283.611 62.4004 138.243)
 | params_filename | **[必填]** 模型权重文件路径，如`yolov3_darknet/model.pdiparams` |
 | cfg_file        | **[必填]** 模型配置文件路径，如`yolov3_darknet/infer_cfg.yml` |
 | model_type      | **[必填]** 模型来源，det/seg/clas/paddlex，分别表示模型来源于PaddleDetection、PaddleSeg、PaddleClas和PaddleX |
-| image_list      | 待预测的图片路径列表文件路径，如步骤三中的`yolov3_mbv1/file_list.txt` |
+| image_list      | 待预测的图片路径列表文件路径，如`yolov3_darknet/file_list.txt` |
 | use_gpu         | 是否使用GPU，1或者0。默认为0，不使用GPU                                       |
 | gpu_id          | 使用GPU预测时的GUI设备ID，默认为0                            |
 | batch_size      | 设定每次预测时的batch大小(最终会均分至各张卡上)，默认为1(多卡时可填为，如0,1) |
