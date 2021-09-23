@@ -253,6 +253,7 @@ class Predictor(object):
                 images=images, topk=topk, transforms=transforms)
 
         self.timer.repeats = repeats
+        self.timer.img_num = len(images)
         self.timer.info(average=True)
 
         return results
