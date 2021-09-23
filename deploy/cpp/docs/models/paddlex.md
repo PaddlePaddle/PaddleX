@@ -3,20 +3,11 @@
 当前对PaddleX静态图和动态图版本导出的模型都支持
 
 
-## 步骤一 部署模型导出
+## 部署模型导出
 
 请参考[PaddlX模型导出文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
 
-
-## 步骤二 编译
-
-参考编译文档
-
-- [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
-
-
-## 步骤三 模型预测
+## 模型预测
 
 编译后即可获取可执行的二进制demo程序`model_infer`和`multi_gpu_model_infer`，分别用于在单卡/多卡上加载模型进行预测，对于分类模型，调用如下命令即可进行预测
 
@@ -49,10 +40,3 @@ ScoreMask(mean: 12.4814 std:    10.4955)    LabelMask(mean: 1.98847 std:    10.3
 ```
 Classify(809    sunscreen   0.939211)
 ```
-
-关于demo程序的详细使用方法可分别参考以下文档
-
-- [单卡加载模型预测示例](../demo/model_infer.md)
-- [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
-- [模型加密预测示例](./docs/demo/decrypt_infer.md)
