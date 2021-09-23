@@ -78,21 +78,3 @@ Box(44	spoon	0.0234474	509.703	189.959	100.65	93.9368)
 Box(45	bowl	0.0461333	0	0	223.386	83.5562)
 Box(45	bowl	0.0191819	3.91156	1.276	225.888	214.273)
 ```
-### 参数说明
-
-| 参数            | 说明                                                                                                         |
-| --------------- | ------------------------------------------------------------------------------------------------------------ |
-| model_filename  | **[必填]** 模型结构文件路径，如`yolov3_darknet/model.pdmodel`                                                |
-| params_filename | **[必填]** 模型权重文件路径，如`yolov3_darknet/model.pdiparams`                                              |
-| cfg_file        | **[必填]** 模型配置文件路径，如`yolov3_darknet/infer_cfg.yml`                        |
-| model_type      | **[必填]** 模型来源，det/seg/clas/paddlex，分别表示模型来源于PaddleDetection、PaddleSeg、PaddleClas和PaddleX |
-| image           | 待预测的图片文件路径                                                                |
-| use_gpu         | 是否使用GPU，0或者1，默认为0                                                        |
-| gpu_id          | 使用GPU预测时的GUI设备ID，默认为0                                                    |
-| gpu_id          | 使用GPU预测时的GUI设备ID，默认为0                                                    |
-| key             | 对模型加密使用的key，默认为空，只能加载未加密模型                                         |
-
-
-## 相关文档
-
-- [部署接口和数据结构文档](../apis/model.md)
