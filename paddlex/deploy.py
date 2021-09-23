@@ -175,8 +175,6 @@ class Predictor(object):
             logging.error(
                 "Invalid model type {}.".format(self._model.model_type),
                 exit=True)
-        if len(preds) == 1:
-            preds = preds[0]
 
         return preds
 
@@ -254,6 +252,9 @@ class Predictor(object):
 
         self.timer.repeats = repeats
         self.timer.info(average=True)
+
+        if isinstance(img_file, (str, np.ndarray)):
+            results = results[0]
 
         return results
 

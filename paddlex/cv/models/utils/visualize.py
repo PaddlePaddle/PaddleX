@@ -211,7 +211,7 @@ def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
 
         # draw mask
         if 'mask' in dt:
-            mask = mask_util.decode(dt['mask']) * 255
+            mask = dt['mask'] * 255
             image = image.astype('float32')
             alpha = .7
             w_ratio = .4
