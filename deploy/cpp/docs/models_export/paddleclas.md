@@ -1,10 +1,6 @@
-# PaddleClas模型部署
+# PaddleClas部署模型导出
 
 当前支持PaddleClas release/2.1分支导出的模型进行部署。本文档以ResNet50模型为例，讲述从release-2.1分支导出模型并用PaddleX 进行cpp部署整个流程。 PaddleClas相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/README_cn.md)
-
-
-
-## 步骤一 部署模型导出
 
 ### 1.获取PaddleClas源码
 
@@ -48,39 +44,5 @@ ResNet50
 
 [点击获取模版yaml配置文件](../../../resources/resnet50_imagenet.yml)
 
-**[注意]** 如若你的分类模型在自定义数据集上训练得到，请注意相应修改这个模版中的相关配置信息
+如若你的分类模型在自定义数据集上训练得到，请注意相应修改这个模版中的相关配置信息
 
-
-
-## 步骤二 编译
-
-参考编译文档
-
-- [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
-
-
-
-## 步骤三 模型预测
-
-编译后即可获取可执行的二进制demo程序`model_infer`和`multi_gpu_model_infer`，分别用于在单卡/多卡上加载模型进行预测，对于分类模型，调用如下命令即可进行预测
-
-```
-./build/demo/model_infer --model_filename=ResNet50_infer/model.pdmodel \
-                         --params_filename=ResNet50_infer/model.pdiparams \
-                         --cfg_file=ResNet50_infer/resnet50_imagenet.yml \
-                         --image=test.jpg \
-                         --model_type=clas
-```
-
-输出结果如下(分别为类别id， 类别标签，置信度)
-
-```
-Classify(809    sunscreen   0.939211)
-```
-
-关于demo程序的详细使用方法可分别参考以下文档
-
-- [单卡加载模型预测示例](../demo/model_infer.md)
-- [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
