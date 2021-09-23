@@ -28,17 +28,15 @@
 - [PaddleDetection模型预测](./docs/models/paddledetection.md/#模型预测)
 - [PaddleSeg模型预测](./docs/models/paddleseg.md/#模型预测)
 - [PaddleClas模型预测](./docs/models/paddleclas.md/#模型预测)
+- [模型加载预测示例](./docs/demo/model_infer.md)
+- [参数说明]()
 
+## 模型加密与预测加速
 
-
-
-### 模型预测示例
-- [单卡加载模型预测示例](./docs/demo/model_infer.md)
-- [多卡加载模型预测示例](./docs/demo/multi_gpu_model_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](./docs/demo/tensorrt_infer.md)
 - [模型加密预测示例](./docs/demo/decrypt_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](./docs/demo/tensorrt_infer.md)
 
-### API说明
+## API说明
 
 - [部署相关API说明](./docs/apis/model.md)
 - [模型配置文件说明](./docs/apis/yaml.md)
