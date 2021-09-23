@@ -18,7 +18,7 @@
 - [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
 
 ### 步骤二、部署模型导出
-- [PaddleX部署模型导出](./docs/models/paddlex.md)
+- [PaddleX部署模型导出](./docs/models/paddlex.md/#部署模型导出)
 - [PaddleDetection部署模型导出](./docs/models/paddledetection.md)
 - [PaddleSeg部署模型导出](./docs/models/paddleseg.md)
 - [PaddleClas部署模型导出](./docs/models/paddleclas.md)
