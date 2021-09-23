@@ -12,7 +12,7 @@
 - CPU(linux/windows)
 - GPU(linux/windows)
 
-## 部署方案
+## 具体步骤
 ### 1.PaddleInference编译说明
 - [Linux编译(支持加密)指南](./docs/compile/paddle/linux.md)
 - [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
