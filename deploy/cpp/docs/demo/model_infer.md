@@ -1,13 +1,8 @@
 # 模型加载预测示例
 
-本文档说明`PaddleX/deploy/cpp/demo/model_infer.cpp`编译后的使用方法，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
-本文档说明`PaddleX/deploy/cpp/demo/multi_gpu_model_infer.cpp`编译后的使用方法，仅供用户参考进行使用，开发者可基于此demo示例进行二次开发，满足集成的需求。
+本文档说明`PaddleX/deploy/cpp/demo/model_infer.cpp`及`PaddleX/deploy/cpp/demo/multi_gpu_model_infer.cpp`编译后的使用方法，仅供用户参考，开发者可基于此demo示例进行二次开发，满足集成的需求。
 
-在多卡上实现机制如下
 
-- 模型初始化，针对每张GPU卡分别加一个独立的模型
-- 模型预测时，根据传入的图像vector，将输入均分至每张GPU卡进行多线程并行预测
-- 预测结束后，将各GPU卡上预测结果汇总返回
 
 
 
@@ -27,6 +22,13 @@ build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
 **注意：如果要使用GPU进行预测，请同时指定`--use_gpu=1`。根据模型来源的套件，设置正确的`model_type`。**
 
 ### 多卡加载模型预测
+
+在多卡上实现机制如下
+
+- 模型初始化，针对每张GPU卡分别加一个独立的模型
+- 模型预测时，根据传入的图像vector，将输入均分至每张GPU卡进行多线程并行预测
+- 预测结束后，将各GPU卡上预测结果汇总返回
+
 执行如下命令即可进行模型加载和预测
 ```
 build/demo/multi_gpu_model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
