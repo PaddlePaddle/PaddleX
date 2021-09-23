@@ -179,11 +179,12 @@ class Timer(Times):
 
     def info(self, average=False):
         total_time = self.preprocess_time_s.value(
-        ) + self.inference_time_s.value() + self.postprocess_time_s.value()
+        ) * self.img_num + self.inference_time_s.value(
+        ) + self.postprocess_time_s.value() * self.img_num
         total_time = round(total_time, 4)
         print("------------------ Inference Time Info ----------------------")
         print("total_time(ms): {}, img_num: {}, batch_size: {}".format(
-            total_time * 1000, self.img_num, self.img_num / self.repeats))
+            total_time * 1000, self.img_num, self.img_num))
         preprocess_time = round(
             self.preprocess_time_s.value() / self.repeats,
             4) if average else self.preprocess_time_s.value()
