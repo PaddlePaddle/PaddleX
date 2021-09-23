@@ -256,3 +256,6 @@ class Predictor(object):
         self.timer.info(average=True)
 
         return results
+
+    def batch_predict(self, image_list, **params):
+        return self.predict(img_file=image_list, **params)
