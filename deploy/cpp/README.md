@@ -19,15 +19,15 @@
 
 ### 步骤二、部署模型导出
 - [PaddleX部署模型导出](./docs/models/paddlex.md/#部署模型导出)
-- [PaddleDetection部署模型导出](./docs/models/paddledetection.md)
-- [PaddleSeg部署模型导出](./docs/models/paddleseg.md)
-- [PaddleClas部署模型导出](./docs/models/paddleclas.md)
+- [PaddleDetection部署模型导出](./docs/models/paddledetection.md/#部署模型导出)
+- [PaddleSeg部署模型导出](./docs/models/paddleseg.md/#部署模型导出)
+- [PaddleClas部署模型导出](./docs/models/paddleclas.md/#部署模型导出)
 
 ### 步骤三、模型预测
-- [PaddleX模型预测](./docs/models/paddlex.md)
-- [PaddleDetection模型预测](./docs/models/paddledetection.md)
-- [PaddleSeg模型预测](./docs/models/paddleseg.md)
-- [PaddleClas模型预测](./docs/models/paddleclas.md)
+- [PaddleX模型预测](./docs/models/paddlex.md/#模型预测)
+- [PaddleDetection模型预测](./docs/models/paddledetection.md/#模型预测)
+- [PaddleSeg模型预测](./docs/models/paddleseg.md/#模型预测)
+- [PaddleClas模型预测](./docs/models/paddleclas.md/#模型预测)
 
 
 
