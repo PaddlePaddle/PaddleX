@@ -9,29 +9,14 @@
 - 模型预测时，根据传入的图像vector，将输入均分至每张GPU卡进行多线程并行预测
 - 预测结束后，将各GPU卡上预测结果汇总返回
 
-## 步骤一、编译
 
-参考编译文档
-- [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
 
-## 步骤二、准备PaddlePaddle部署模型
+用户在**编译**后，可直接下载本教程中从PaddleDetection中导出的YOLOv3模型进行测试，[点击下载](https://bj.bcebos.com/paddlex/deploy2/models/yolov3_mbv1.tar.gz)。
 
-开发者可从以下套件获取部署模型，需要注意，部署时需要准备的是导出来的部署模型，一般包含`model.pdmodel`、`model.pdiparams`和`deploy.yml`三个文件，分别表示模型结构、模型权重和各套件自行定义的配置信息。
 
-- [PaddleDetection导出模型](https://github.com/PaddlePaddle/PaddleDetection/blob/release/2.0/deploy/EXPORT_MODEL.md)
-- [PaddleSeg导出模型](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/docs/model_export.md)
-- [PaddleClas导出模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/docs/zh_CN/tutorials/getting_started.md#4-%E4%BD%BF%E7%94%A8inference%E6%A8%A1%E5%9E%8B%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86)
-- [PaddleX导出模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
-
-用户也可直接下载本教程中从PaddleDetection中导出的YOLOv3模型进行测试，[点击下载](https://bj.bcebos.com/paddlex/deploy2/models/yolov3_mbv1.tar.gz)。
-
-## 步骤三、使用编译好的可执行文件预测
-
-以步骤二中下载的YOLOv3模型为例，执行如下命令即可进行模型加载和预测
 
 ### 单卡加载模型预测
-
+执行如下命令即可进行模型加载和预测
 ```sh
 build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
                        --params_filename=yolov3_mbv1/model/model.pdiparams \
@@ -42,6 +27,7 @@ build/demo/model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
 **注意：如果要使用GPU进行预测，请同时指定`--use_gpu=1`。根据模型来源的套件，设置正确的`model_type`。**
 
 ### 多卡加载模型预测
+执行如下命令即可进行模型加载和预测
 ```
 build/demo/multi_gpu_model_infer --model_filename=yolov3_mbv1/model/model.pdmodel \
                        --params_filename=yolov3_mbv1/model/model.pdiparams \
