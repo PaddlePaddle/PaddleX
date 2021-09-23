@@ -82,8 +82,8 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [Restful API开发模式](./docs/Resful_API/docs)
   - [使用说明](./docs/Resful_API/docs)
   - [如何基于Restful API搭建一套AI开发平台]()
-- [GUI开发模式](./docs/gui)
-  - 视频教程：[图像分类](./docs/gui/quick_start.md/#视频教程) | [目标检测](./docs/gui/quick_start.md/#视频教程) | [语义分割](./docs/gui/quick_start.md/#视频教程) | [实例分割](./docs/gui/quick_start.md/#视频教程)
+- [GUI开发模式](./docs/quick_start_GUI.md)
+  - 视频教程：[图像分类](./docs/quick_start_GUI.md/#视频教程) | [目标检测](./docs/quick_start_GUI.md/#视频教程) | [语义分割](./docs/quick_start_GUI.md/#视频教程) | [实例分割](./docs/quick_start_GUI.md/#视频教程)
   
 ### 3. 模型压缩
 
