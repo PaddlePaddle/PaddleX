@@ -13,17 +13,17 @@
 - GPU(linux/windows)
 
 ## 部署方案
-### 步骤一、PaddleInference编译说明
+### 1.PaddleInference编译说明
 - [Linux编译(支持加密)指南](./docs/compile/paddle/linux.md)
 - [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
 
-### 步骤二、部署模型导出
+### 2.部署模型导出
 - [PaddleX部署模型导出](./docs/models/paddlex.md/#部署模型导出)
 - [PaddleDetection部署模型导出](./docs/models/paddledetection.md/#部署模型导出)
 - [PaddleSeg部署模型导出](./docs/models/paddleseg.md/#部署模型导出)
 - [PaddleClas部署模型导出](./docs/models/paddleclas.md/#部署模型导出)
 
-### 步骤三、模型预测
+### 3.模型预测
 - [PaddleX模型预测](./docs/models/paddlex.md/#模型预测)
 - [PaddleDetection模型预测](./docs/models/paddledetection.md/#模型预测)
 - [PaddleSeg模型预测](./docs/models/paddleseg.md/#模型预测)
