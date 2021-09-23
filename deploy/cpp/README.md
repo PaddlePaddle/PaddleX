@@ -29,7 +29,7 @@
 - [PaddleSeg模型预测](./docs/models/paddleseg.md/#模型预测)
 - [PaddleClas模型预测](./docs/models/paddleclas.md/#模型预测)
 - [模型加载预测示例](./docs/demo/model_infer.md)
-- [参数说明]()
+- [参数说明](./docs/demo/model_infer.md/#参数说明)
 
 ## 模型加密与预测加速
 
