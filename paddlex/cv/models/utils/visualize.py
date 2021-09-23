@@ -16,7 +16,6 @@ import os
 import cv2
 import numpy as np
 import time
-import pycocotools.mask as mask_util
 import paddlex.utils.logging as logging
 from paddlex.utils import is_pic
 from .det_metrics.coco_utils import loadRes
@@ -215,7 +214,7 @@ def draw_bbox_mask(image, results, threshold=0.5, color_map=None):
             image = image.astype('float32')
             alpha = .7
             w_ratio = .4
-            color_mask = np.asarray(color, dtype=np.int)
+            color_mask = np.asarray(color, dtype=int)
             for c in range(3):
                 color_mask[c] = color_mask[c] * (1 - w_ratio) + w_ratio * 255
             idx = np.nonzero(mask)
