@@ -16,7 +16,7 @@ PaddleX已经集成了基于Python的高性能预测接口，在安装PaddleX后
 ```python
 import paddlex as pdx
 predictor = pdx.deploy.Predictor('./inference_model')
-result = predictor.predict(img_file='test.img')
+result = predictor.predict(img_file='test.jpg')
 ```
 
 * 图片预测、并评估预测速度
@@ -26,16 +26,18 @@ result = predictor.predict(img_file='test.img')
 ```python
 import paddlex as pdx
 predictor = pdx.deploy.Predictor('./inference_model')
-result = predictor.predict(img_file='test.img',
+result = predictor.predict(img_file='test.jpg',
                            warmup_iters=100,
                            repeats=100)
 ```
 
-* Python部署所得预测结果支持使用`paddlex.det.visualize`（适用于目标检测和实例分割模型）或`paddlex.seg.visualize`（适用于语义分割模型）进行可视化。
+* 预测结果可视化
+ 
+Python部署所得预测结果支持使用`paddlex.det.visualize`（适用于目标检测和实例分割模型）或`paddlex.seg.visualize`（适用于语义分割模型）进行可视化。
 ```python
 # 目标检测和实例分割结果
-pdx.det.visualize('test.img', result, save_dir='./')
+pdx.det.visualize('test.jpg', result, save_dir='./')
 
 # 语义分割结果
-pdx.seg.visualize('test.img', result, save_dir='./')
+pdx.seg.visualize('test.jpg', result, save_dir='./')
 ```
