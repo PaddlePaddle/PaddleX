@@ -2,7 +2,7 @@
 
 当前支持PaddleSeg release/2.1分支训练的模型进行导出及部署。本文档以[Deeplabv3P](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/configs/deeplabv3p)模型为例，讲述从release-2.1版本导出模型并进行cpp部署整个流程。 PaddleSeg相关详细文档查看[官网文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.1/README_CN.md)
 
-## 步骤一 部署模型导出
+## 部署模型导出
 
 ### 1.获取PaddleSeg源码
 
@@ -34,14 +34,7 @@ output
   └── model.pdmodel          # 静态图模型文件
 ```
 
-## 步骤二 编译
-
-参考编译文档
-
-- [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
-
-## 步骤三 模型预测
+## 模型预测
 
 编译后即可获取可执行的二进制demo程序`model_infer`和`multi_gpu_model_infer`，分别用于在单卡/多卡上加载模型进行预测，对于分类模型，调用如下命令即可进行预测
 
@@ -60,9 +53,3 @@ ScoreMask(mean: 12.4814 std:    10.4955)    LabelMask(mean: 1.98847 std:    10.3
 ```
 
 **注意：**release/2.1之后，PaddleSeg导出的模型默认只有label_map, score_map的值都被填充为1.0
-
-关于demo程序的详细使用方法可分别参考以下文档
-
-- [单卡加载模型预测示例](../demo/model_infer.md)
-- [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
