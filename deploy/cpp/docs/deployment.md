@@ -13,10 +13,13 @@
 
 ## 模型套件支持
 本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署。
-- PaddleDetection([release/2.2](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.2))：当前支持PaddleDetection release/0.5和release/2.2分支导出的部分模型进行导出及部署，支持FasterRCNN / MaskRCNN / PPYOLO / PPYOLOv2 / YOLOv3。
-- PaddleSeg([release/2.2](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.2))：当前支持PaddleSeg release/2.2分支训练的模型进行导出及部署。
-- PaddleClas([release/2.2](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.2))：当前支持PaddleClas release/2.2分支导出的模型进行部署。
-- PaddleX([release/2.0.0](https://github.com/PaddlePaddle/PaddleX))：当前对PaddleX静态图和动态图版本导出的模型都支持
+
+| 套件名称 | 版本号   | 支持模型 | 
+| -------- | -------- | ------- |
+| PaddleDetection  | [release/2.2](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.2)、[release/0.5](https://github.com/PaddlePaddle/PaddleDetection/tree/release/0.5) |  FasterRCNN / MaskRCNN / PPYOLO / PPYOLOv2 / YOLOv3   |  
+| PaddleSeg        | [release/2.2](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.2)       |  全部  |
+| PaddleClas       | [release/2.2](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.2)      |  全部  |
+| PaddleX          | [release/2.0.0](https://github.com/PaddlePaddle/PaddleX)                        |  静态图、动态图   |
 
 ## 硬件支持
 - CPU(linux/windows)
