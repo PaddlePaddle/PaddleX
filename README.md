@@ -94,7 +94,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 ### 4. 模型部署
 
 - [部署模型导出](./docs/apis/export_model.md)
-- [部署方式概览]()
+- [部署方式概览](./deploy)
   - [硬件使用说明]()
   - [本地部署]()
     - [OpenVINO部署]()
