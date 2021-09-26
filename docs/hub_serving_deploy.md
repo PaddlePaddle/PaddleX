@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
 将代码中的`IMAGE_PATH1`改成想要进行预测的图片路径后，在命令行执行：
 ```commandline
-python ~/.paddlehub/module/MobileNetV3_small_ssld_hub/serving_client_demo.py
+python ~/.paddlehub/modules/mobilenetv3_small_hub/serving_client_demo.py
 ```
 即可收到预测结果，如下：
 ```commandline
