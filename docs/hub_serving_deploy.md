@@ -93,8 +93,9 @@ hub serving start --modules mobilenetv3_small_hub
         "version": "1.0.0"
       },
       "predict_args": {
-        "batch_size": 1,
-        "use_gpu": false
+        "topk": 3,
+        "warmup_iters": 30,
+        "repeats": 5
       }
     }
   },
