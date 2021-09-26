@@ -97,7 +97,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [部署方式概览](./deploy)
   - [硬件使用说明]()
   - [本地部署]()
-    - [OpenVINO部署]()
+    - [OpenVINO部署](./deploy/cpp/docs/compile/openvino/README.md)
     - [C++部署](./deploy/cpp)
       - [Manufacture SDK](./deploy/cpp/docs/manufacture_sdk) : [WinC#-Demo]()  |  [LinuxQT-Demo]()
       - [Deployment SDK](./deploy/cpp/docs/deployment.md) : [WinC#-Demo](./examples/C%23_deploy)  |  [LinuxQT-Demo]()
