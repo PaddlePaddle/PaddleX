@@ -106,7 +106,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
     - [JetsonQT-Demo]()
     - [Android/iOS部署]()
   - [服务化部署]()
-    - [Triton部署]()
+    - [Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
 - [模型加密](./deploy/cpp/docs/demo/decrypt_infer.md)
 - [ONNX格式转换](./deploy/cpp/docs/compile)
 
