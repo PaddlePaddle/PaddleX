@@ -36,7 +36,7 @@
 
 - [模型加密预测示例](./docs/demo/decrypt_infer.md)
 
-## CPP代码预测说明
+## C++代码预测说明
 
 - [部署相关API说明](./apis/model.md)
 - [模型配置文件说明](./apis/yaml.md)
