@@ -107,7 +107,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
     - [Android/iOS部署]()
   - [服务化部署]()
     - [Triton部署]()
-- [模型加密]()
+- [模型加密](./deploy/cpp/docs/demo/decrypt_infer.md)
 - [ONNX格式转换](./deploy/cpp/docs/compile)
 
 ### 5. 附录
