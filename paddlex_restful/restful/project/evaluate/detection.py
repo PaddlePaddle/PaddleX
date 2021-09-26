@@ -405,8 +405,8 @@ class InsSegConfusionMatrix(object):
 class DetEvaluator(object):
     def __init__(self, model_path, overlap_thresh=0.5, score_threshold=0.3):
         self.model_path = model_path
-        self.overlap_thresh = overlap_thresh
-        self.score_threshold = score_threshold
+        self.overlap_thresh = overlap_thresh if overlap_thresh is not None else .5
+        self.score_threshold = score_threshold if score_threshold is not None else .3
 
     def _prepare_data(self):
         with open(osp.join(self.model_path, 'eval_details.json'), 'r') as f:
@@ -616,8 +616,8 @@ class InsSegEvaluator(DetEvaluator):
     def __init__(self, model_path, overlap_thresh=0.5, score_threshold=0.3):
         super(DetEvaluator, self).__init__()
         self.model_path = model_path
-        self.overlap_thresh = overlap_thresh
-        self.score_threshold = score_threshold
+        self.overlap_thresh = overlap_thresh if overlap_thresh is not None else .5
+        self.score_threshold = score_threshold if score_threshold is not None else .3
 
     def cal_confusion_matrix_mask(self):
         '''计算Mask的混淆矩阵。
