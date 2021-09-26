@@ -1,14 +1,4 @@
-## Deployment部署方式
-
-## 目录
-- [模型套件支持](#模型套件支持)
-- [硬件支持](#硬件支持)
-- [具体步骤](#具体步骤)
-  - [1.PaddleInference编译说明](#1PaddleInference编译说明)
-  - [2.部署模型导出](#2部署模型导出)
-  - [3.模型预测](#3模型预测)
-- [模型加密与预测加速](#模型加密与预测加速)
-- [C++代码预测说明](#1)
+# Deployment部署方式
 
 
 ## 模型套件支持
@@ -25,7 +15,7 @@
 - CPU(linux/windows)
 - GPU(linux/windows)
 
-## 各套件部署
+## 各套件部署方式说明
 
 - [PaddleX部署指南](./models/paddlex.md)
 - [PaddleDetection部署指南](./models/paddledetection.md)
@@ -34,10 +24,10 @@
 
 ## 模型加密与预测加速
 
-- [模型加密预测示例](./docs/demo/decrypt_infer.md)
+- [模型加密预测示例](./demo/decrypt_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](../demo/tensorrt_infer.md)
 
 ## <h2 id="1">C++代码预测说明</h2>
-
 
 - [部署相关API说明](./apis/model.md)
 - [模型配置文件说明](./apis/yaml.md)
