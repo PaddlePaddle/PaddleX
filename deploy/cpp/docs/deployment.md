@@ -25,7 +25,7 @@
 ## 模型加密与预测加速
 
 - [模型加密预测示例](./demo/decrypt_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](../demo/tensorrt_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
 
 ## <h2 id="1">C++代码预测说明</h2>
 
