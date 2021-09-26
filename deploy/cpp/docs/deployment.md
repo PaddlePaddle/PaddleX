@@ -27,16 +27,16 @@
 
 ## 各套件部署
 
-- [PaddleX部署指南](./docs/models/paddlex.md/#部署模型导出)
-- [PaddleDetection部署指南](./docs/models/paddledetection.md/#部署模型导出)
-- [PaddleSeg部署指南](./docs/models/paddleseg.md/#部署模型导出)
-- [PaddleClas部署指南](./docs/models/paddleclas.md/#部署模型导出)
+- [PaddleX部署指南](./models/paddlex.md)
+- [PaddleDetection部署指南](./models/paddledetection.md)
+- [PaddleSeg部署指南](./models/paddleseg.md)
+- [PaddleClas部署指南](./models/paddleclas.md)
 
-## 模型加密
+## 模型加密与预测加速
 
 - [模型加密预测示例](./docs/demo/decrypt_infer.md)
 
 ## CPP代码预测说明
 
-- [部署相关API说明](./docs/apis/model.md)
-- [模型配置文件说明](./docs/apis/yaml.md)
+- [部署相关API说明](./apis/model.md)
+- [模型配置文件说明](./apis/yaml.md)
