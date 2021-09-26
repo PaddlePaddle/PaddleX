@@ -127,7 +127,7 @@ class BaseDetector(BaseModel):
                     exit=False)
                 logging.error(
                     "See this doc for more information: "
-                    "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/appendix/parameters.md#notice",
+                    "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md",
                     exit=False)
 
             scheduler = paddle.optimizer.lr.LinearWarmup(
@@ -1082,6 +1082,9 @@ class PPYOLO(YOLOv3):
                 "('ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small')".
                 format(backbone))
         self.backbone_name = backbone
+        self.downsample_ratios = [
+            32, 16, 8
+        ] if backbone == 'ResNet50_vd_dcn' else [32, 16]
 
         if params.get('with_net', True):
             if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
@@ -1117,7 +1120,6 @@ class PPYOLO(YOLOv3):
                     freeze_at=-1,
                     freeze_norm=False,
                     norm_decay=0.)
-                downsample_ratios = [32, 16, 8]
 
             elif backbone == 'ResNet18_vd':
                 backbone = self._get_backbone(
@@ -1129,7 +1131,6 @@ class PPYOLO(YOLOv3):
                     freeze_at=-1,
                     freeze_norm=False,
                     norm_decay=0.)
-                downsample_ratios = [32, 16]
 
             elif backbone == 'MobileNetV3_large':
                 backbone = self._get_backbone(
@@ -1140,7 +1141,6 @@ class PPYOLO(YOLOv3):
                     with_extra_blocks=False,
                     extra_block_filters=[],
                     feature_maps=[13, 16])
-                downsample_ratios = [32, 16]
 
             elif backbone == 'MobileNetV3_small':
                 backbone = self._get_backbone(
@@ -1151,7 +1151,6 @@ class PPYOLO(YOLOv3):
                     with_extra_blocks=False,
                     extra_block_filters=[],
                     feature_maps=[9, 12])
-                downsample_ratios = [32, 16]
 
             neck = ppdet.modeling.PPYOLOFPN(
                 norm_type=norm_type,
@@ -1166,7 +1165,7 @@ class PPYOLO(YOLOv3):
             loss = ppdet.modeling.YOLOv3Loss(
                 num_classes=num_classes,
                 ignore_thresh=ignore_threshold,
-                downsample=downsample_ratios,
+                downsample=self.downsample_ratios,
                 label_smooth=label_smooth,
                 scale_x_y=scale_x_y,
                 iou_loss=ppdet.modeling.IouLoss(
@@ -1217,7 +1216,6 @@ class PPYOLO(YOLOv3):
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
         self.anchor_masks = anchor_masks
-        self.downsample_ratios = downsample_ratios
         self.model_name = 'PPYOLO'
 
     def _get_test_inputs(self, image_shape):
@@ -1272,7 +1270,7 @@ class PPYOLOTiny(YOLOv3):
                 "PPYOLOTiny only supports MobileNetV3 as backbone. "
                 "Backbone is forcibly set to MobileNetV3.")
         self.backbone_name = 'MobileNetV3'
-
+        self.downsample_ratios = [32, 16, 8]
         if params.get('with_net', True):
             if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
                     'num'] > 1 and not os.environ.get('PADDLEX_EXPORT_STAGE'):
@@ -1288,7 +1286,6 @@ class PPYOLOTiny(YOLOv3):
                 with_extra_blocks=False,
                 extra_block_filters=[],
                 feature_maps=[7, 13, 16])
-            downsample_ratios = [32, 16, 8]
 
             neck = ppdet.modeling.PPYOLOTinyFPN(
                 detection_block_channels=[160, 128, 96],
@@ -1299,7 +1296,7 @@ class PPYOLOTiny(YOLOv3):
             loss = ppdet.modeling.YOLOv3Loss(
                 num_classes=num_classes,
                 ignore_thresh=ignore_threshold,
-                downsample=downsample_ratios,
+                downsample=self.downsample_ratios,
                 label_smooth=label_smooth,
                 scale_x_y=scale_x_y,
                 iou_loss=ppdet.modeling.IouLoss(
@@ -1350,7 +1347,6 @@ class PPYOLOTiny(YOLOv3):
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
         self.anchor_masks = anchor_masks
-        self.downsample_ratios = downsample_ratios
         self.model_name = 'PPYOLOTiny'
 
     def _get_test_inputs(self, image_shape):
@@ -1405,6 +1401,7 @@ class PPYOLOv2(YOLOv3):
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd_dcn', 'ResNet101_vd_dcn')".format(backbone))
         self.backbone_name = backbone
+        self.downsample_ratios = [32, 16, 8]
 
         if params.get('with_net', True):
             if paddlex.env_info['place'] == 'gpu' and paddlex.env_info[
@@ -1423,7 +1420,6 @@ class PPYOLOv2(YOLOv3):
                     freeze_at=-1,
                     freeze_norm=False,
                     norm_decay=0.)
-                downsample_ratios = [32, 16, 8]
 
             elif backbone == 'ResNet101_vd_dcn':
                 backbone = self._get_backbone(
@@ -1436,7 +1432,6 @@ class PPYOLOv2(YOLOv3):
                     freeze_at=-1,
                     freeze_norm=False,
                     norm_decay=0.)
-                downsample_ratios = [32, 16, 8]
 
             neck = ppdet.modeling.PPYOLOPAN(
                 norm_type=norm_type,
@@ -1449,7 +1444,7 @@ class PPYOLOv2(YOLOv3):
             loss = ppdet.modeling.YOLOv3Loss(
                 num_classes=num_classes,
                 ignore_thresh=ignore_threshold,
-                downsample=downsample_ratios,
+                downsample=self.downsample_ratios,
                 label_smooth=label_smooth,
                 scale_x_y=scale_x_y,
                 iou_loss=ppdet.modeling.IouLoss(
@@ -1501,7 +1496,6 @@ class PPYOLOv2(YOLOv3):
             model_name='YOLOv3', num_classes=num_classes, **params)
         self.anchors = anchors
         self.anchor_masks = anchor_masks
-        self.downsample_ratios = downsample_ratios
         self.model_name = 'PPYOLOv2'
 
     def _get_test_inputs(self, image_shape):
