@@ -86,6 +86,7 @@
 - [PaddleX python高性能部署](./docs/python_deploy.md)
 - [PaddleX Manufacture SDK低代码高效C++部署](./deploy/cpp/docs/manufacture_sdk)
 - [PaddleX/PaddleClas/PaddleDetection/PaddleSeg端到端高性能统一C++部署](./deploy/cpp)
+- [PaddleX python轻量级服务化部署](./docs/hub_serving_deploy.md)
 
 ### 6. 产业级应用示例
 
