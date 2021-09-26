@@ -8,7 +8,7 @@
   - [2.部署模型导出](#2部署模型导出)
   - [3.模型预测](#3模型预测)
 - [模型加密与预测加速](#模型加密与预测加速)
-- [API说明](#API说明)
+- [CPP代码预测说明](#CPP代码预测说明)
 
 
 ## 模型套件支持
@@ -25,31 +25,18 @@
 - CPU(linux/windows)
 - GPU(linux/windows)
 
-## 具体步骤
-### 1.PaddleInference编译说明
-- [Linux编译(支持加密)指南](./docs/compile/paddle/linux.md)
-- [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
+## 各套件部署
 
-### 2.部署模型导出
-- [PaddleX部署模型导出](./docs/models/paddlex.md/#部署模型导出)
-- [PaddleDetection部署模型导出](./docs/models/paddledetection.md/#部署模型导出)
-- [PaddleSeg部署模型导出](./docs/models/paddleseg.md/#部署模型导出)
-- [PaddleClas部署模型导出](./docs/models/paddleclas.md/#部署模型导出)
+- [PaddleX部署指南](./docs/models/paddlex.md/#部署模型导出)
+- [PaddleDetection部署指南](./docs/models/paddledetection.md/#部署模型导出)
+- [PaddleSeg部署指南](./docs/models/paddleseg.md/#部署模型导出)
+- [PaddleClas部署指南](./docs/models/paddleclas.md/#部署模型导出)
 
-### 3.模型预测
-- [PaddleX模型预测](./docs/models/paddlex.md/#模型预测)
-- [PaddleDetection模型预测](./docs/models/paddledetection.md/#模型预测)
-- [PaddleSeg模型预测](./docs/models/paddleseg.md/#模型预测)
-- [PaddleClas模型预测](./docs/models/paddleclas.md/#模型预测)
-- [模型加载预测示例](./docs/demo/model_infer.md)
-- [参数说明](./docs/demo/model_infer.md/#参数说明)
-
-## 模型加密与预测加速
+## 模型加密
 
 - [模型加密预测示例](./docs/demo/decrypt_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](./docs/demo/tensorrt_infer.md)
 
-## API说明
+## CPP代码预测说明
 
 - [部署相关API说明](./docs/apis/model.md)
 - [模型配置文件说明](./docs/apis/yaml.md)
