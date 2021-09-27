@@ -4,8 +4,6 @@
 * ## PaddleX_Restful API 说明
 * ## 如何快速使用PaddleX_Restful API 快速搭建私有化训练云平台
 
-[1](#快速使用)
-
 
 
 ## *什么是Resetful*
