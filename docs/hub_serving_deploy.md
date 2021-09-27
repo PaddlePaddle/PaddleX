@@ -149,6 +149,45 @@ python ~/.paddlehub/modules/mobilenetv3_small_hub/serving_client_demo.py
 即可收到预测结果，如下：
 ```commandline
 [[{'category': 'xihongshi', 'category_id': 4, 'score': 0.9999966621398926}]]
-````
+```
+**注意：**
+ - 语义分割模型返回的`label_map`和`score_map`经过Base64编码处理，可通过如下方式解码：
+```python
+import base64
+import numpy as np
+import cv2
+
+
+def base64_to_cv2(b64str):
+    data = base64.b64decode(b64str.encode('utf8'))
+    data = np.frombuffer(data, np.uint8)
+    data = cv2.imdecode(data, cv2.IMREAD_COLOR)
+    return data
+
+def base64_to_np(b64tuple):
+    data, shape = b64tuple
+    data = base64.b64decode(data.encode('utf8'))
+    data = np.frombuffer(data, np.float32).reshape(shape)
+    return data
+
+decoded_label_map = base64_to_cv2(label_map)
+decoded_score_map = base64_to_np(score_map)
+```
+
+ - 实例分割模型返回的`mask`经过Base64编码处理，可通过如下方式解码：
+```python
+import base64
+import numpy as np
+import cv2
+
+
+def base64_to_cv2(b64str):
+    data = base64.b64decode(b64str.encode('utf8'))
+    data = np.frombuffer(data, np.uint8)
+    data = cv2.imdecode(data, cv2.IMREAD_COLOR)
+    return data
+
+decoded_mask = base64_to_cv2(mask)
+```
 
 到此，我们就完成了`PaddleX`模型的PaddleHub Serving一键部署。
