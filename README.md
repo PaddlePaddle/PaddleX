@@ -3,7 +3,6 @@
 </p>
  <p align= "center"> PaddleX -- 飞桨全流程开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
-
 <p align="left">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a>
     <a href="https://github.com/PaddlePaddle/PaddleOCR/releases"><img src="https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg"></a>
@@ -11,7 +10,6 @@
     <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
 </p>
-
 
 ## 近期动态
 2021.09.10 PaddleX发布2.0.0正式版本，详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
@@ -118,27 +116,10 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [PaddleX指标及日志](./docs/appendix/metrics.md)
 - [无联网模型训练](./docs/how_to_offline_run.md)
 
-
 ## 常见问题汇总
 - [GUI相关问题](./docs/FAQ/FAQ.md/#GUI相关问题)
 - [API训练相关问题](./docs/FAQ/FAQ.md/#API训练相关问题)
 - [推理部署问题](./docs/FAQ/FAQ.md/#推理部署问题)
-
-## 版本更新
-
-- **2021.09.10 v2.0.0**
-
-  PaddleX 2.0动态图版本正式发布，PaddleX API、PaddleX GUI开发模式全面支持飞桨2.0动态图。PaddleX GUI新增导出API训练脚本功能，无缝切换PaddleX API训练。PaddleX python预测部署完备, PaddleX模型使用2个API即可快速完成部署。详细内容请参考[版本更新文档](./docs/CHANGELOG.md)
-
-- **2021.07.06 v2.0.0-rc3**
-
-  PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。详细内容请参考[版本更新文档](./docs/CHANGELOG.md)
-
-- **2021.05.19 v2.0.0-rc**
-
-  全面支持飞桨2.0动态图，更易用的开发模式。 目标检测任务新增PP-YOLOv2, COCO test数据集精度达到49.5%、V100预测速度达到68.9 FPS。目标检测任务新增4.2MB的超轻量级模型PP-YOLO tiny。语义分割任务新增实时分割模型BiSeNetV2。C++部署模块全面升级，PaddleInference部署适配2.0预测库，支持飞桨PaddleDetection、PaddleSeg、PaddleClas以及PaddleX的模型部署；新增基于PaddleInference的GPU多卡预测；GPU部署新增基于ONNX的的TensorRT高性能加速引擎部署方式；GPU部署新增基于ONNX的Triton服务化部署方式。详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
-
-
 
 ## 交流与反馈
 
