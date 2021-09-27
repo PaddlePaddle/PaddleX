@@ -48,12 +48,14 @@
 ## 视频教程
 用户可观看[图像分类](https://www.bilibili.com/video/BV1nK411F7J9?from=search&seid=3068181839691103009)、[目标检测](https://www.bilibili.com/video/BV1HB4y1A73b?from=search&seid=3068181839691103009)、[语义分割](https://www.bilibili.com/video/BV1qQ4y1Z7co?from=search&seid=3068181839691103009)、[实例分割](https://www.bilibili.com/video/BV1M44y1r7s6?from=search&seid=3068181839691103009)视频教程，并通过PaddleX可视化客户端完成四类任务。
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/53808988/133388877-b993a5a1-65ce-46a9-ada5-68d4e80fda3b.png" width="800" />
+  <img src="https://user-images.githubusercontent.com/53808988/134846471-4d5bcf96-216e-4419-a8b8-5d07fa05c884.png" width="800" />
 </p>
 
 ## 文档教程
 ### 1.启动客户端
 如果系统是Mac OS 10.15.5及以上，在双击客户端icon后，需要在Terminal中执行 ```sudo xattr -r -d com.apple.quarantine /Users/username/PaddleX``` ，并稍等几秒来启动客户端，其中 /Users/username/PaddleX 为您保存PaddleX的文件夹路径*
+
+其他系统，直接双击客户端icon即可启动客户端
 
 ### 2.准备和导入数据
 - 准备数据
