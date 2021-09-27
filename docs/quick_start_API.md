@@ -183,5 +183,8 @@ print("Predict Result: ", result)
 ```
 预测结果输出如下,
 ```
-Predict Result: Predict Result: [{'score': 0.9999393, 'category': 'bocai', 'category_id': 0}]
+Predict Result:  [{'category_id': 0, 'category': 'bocai', 'score': 0.99960476}]
 ```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/53808988/134845112-2330eab5-a2af-4e54-bda1-b5bb8e0c11be.png" width="400"  />
+</p>
