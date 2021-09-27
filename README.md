@@ -29,9 +29,9 @@
 
 ## 安装与快速体验
 PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模式。用户可根据自己的需求选择任意一种开始体验
+- [PadldeX GUI开发模式](./docs/quick_start_GUI.md)
 - [PaddleX API开发模式](./docs/quick_start_API.md)
 - [PaddleX Restful API开发模式](./docs/quick_start_Resful_API.md)
-- [PadldeX GUI开发模式](./docs/quick_start_GUI.md)
 - [快速产业部署](#4-模型部署)
 
 ## 产业级应用示例
@@ -68,6 +68,8 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 
 ### 2. 模型训练/评估/预测
 
+- [GUI开发模式](./docs/quick_start_GUI.md)
+  - 视频教程：[图像分类](./docs/quick_start_GUI.md/#视频教程) | [目标检测](./docs/quick_start_GUI.md/#视频教程) | [语义分割](./docs/quick_start_GUI.md/#视频教程) | [实例分割](./docs/quick_start_GUI.md/#视频教程)
 - API开发模式
   - [API文档](./docs/apis)
     - [数据集读取API](./docs/apis/datasets.md)
@@ -82,8 +84,6 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [Restful API开发模式](./docs/Resful_API/docs)
   - [使用说明](./docs/Resful_API/docs)
   - [如何基于Restful API搭建一套AI开发平台]()
-- [GUI开发模式](./docs/quick_start_GUI.md)
-  - 视频教程：[图像分类](./docs/quick_start_GUI.md/#视频教程) | [目标检测](./docs/quick_start_GUI.md/#视频教程) | [语义分割](./docs/quick_start_GUI.md/#视频教程) | [实例分割](./docs/quick_start_GUI.md/#视频教程)
   
 ### 3. 模型压缩
 
