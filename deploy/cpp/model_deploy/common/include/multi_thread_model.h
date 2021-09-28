@@ -122,7 +122,7 @@ class PD_INFER_DECL MultiThreadModel {
     return true;
   }
 
-  std::future<bool> add_predict_task(const std::vector<cv::Mat>& imgs,
+  std::future<bool> AddPredictTask(const std::vector<cv::Mat>& imgs,
                std::vector<Result>* results){
     std::unique_lock<std::mutex> lock(this->m_conditional_mutex);
     std::promise<bool> notify1;

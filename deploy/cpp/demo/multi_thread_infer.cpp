@@ -57,8 +57,8 @@ int main(int argc, char** argv) {
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.max_batch_size = FLAGS_batch_size;
-  // 如果开启gpu，gpu_ids为gpu的序号(可重复), 比如 0,0,1
-  // 如果使用cpu，可用任意int数字， 该参数的个数代表线程数量, 比如 0,0,0 
+  // 如果开启gpu，gpu_ids为gpu的序号(可重复)。 比如 0,0,1 表示0卡上创建两个实例， 1卡上创建1个实例
+  // 如果使用cpu，gpu_ids可用任意int数字， 数字个数代表线程数量。比如 0,0,0 表示创建三个实例
   if (!model.PaddleEngineInit(engine_config, gpu_ids)) {
     return -1;
   }
@@ -71,19 +71,19 @@ int main(int argc, char** argv) {
     std::vector<std::vector<PaddleDeploy::Result>> results(5);
     std::vector<std::future<bool>> futures(5);
     for(int i = 0; i < 5; i++) {
-      futures[i] = model.add_predict_task(imgs, &results[i]);
+      futures[i] = model.AddPredictTask(imgs, &results[i]);
     }
     for(int i = 0; i < 5; i++) {
       futures[i].get();
       std::cout << i << " result:" << results[i][0] << std::endl;
     }
 
-    // 如果输入是大batch, 可用此接口自动拆分输入然后计算完后组装结果(注意：会同步等待所有结果完成)
     std::vector<PaddleDeploy::Result> batch_results;
     std::vector<cv::Mat> batch_imgs;
     for(int i = 0; i < 5; i++) {
       batch_imgs.push_back(std::move(cv::imread(FLAGS_image)));
     }
+    // 如果输入是大batch, 可用此接口自动拆分输入，均匀分配到各线程上运算(注意：会同步等待所有结果完成)
     model.Predict(batch_imgs, &batch_results);
     for(int i = 0; i < 5; i++) {
        std::cout << i << " batch_result:" << batch_results[i] << std::endl;

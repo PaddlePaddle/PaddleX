@@ -28,8 +28,9 @@ DEFINE_string(image, "", "Path of test image file");
 DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 DEFINE_int32(gpu_id, 0, "GPU card id");
 
-void infer(PaddleDeploy::Model* model, const std::vector<cv::Mat>& imgs, std::vector<PaddleDeploy::Result>* results) {
-  model->Predict(imgs, results, 1);
+void infer(PaddleDeploy::Model* model, const std::vector<cv::Mat>& imgs,
+           std::vector<PaddleDeploy::Result>* results, int thread_num) {
+  model->Predict(imgs, results, thread_num);
 }
 
 int main(int argc, char** argv) {
@@ -73,13 +74,13 @@ int main(int argc, char** argv) {
   std::vector<PaddleDeploy::Result> results2;
   std::vector<PaddleDeploy::Result> results3;
 
-  auto future1 = pool.submit(infer, model1, ref(imgs), &results1);
+  auto future1 = pool.submit(infer, model1, ref(imgs), &results1, 1);
   future1.get();
 
-  auto future2 = pool.submit(infer, model2, ref(imgs), &results1);
+  auto future2 = pool.submit(infer, model2, ref(imgs), &results1, 1);
   future2.get();
 
-  auto future3 = pool.submit(infer, model3, ref(imgs), &results1);
+  auto future3 = pool.submit(infer, model3, ref(imgs), &results1, 1);
   future3.get();
 
   // print result
