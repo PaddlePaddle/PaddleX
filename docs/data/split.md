@@ -8,7 +8,7 @@
 
 使用paddlex命令即可将数据集随机划分成70%训练集，20%验证集和10%测试集:
 
-```
+```commandline
 paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.2 --test_value 0.1
 ```
 
@@ -21,7 +21,7 @@ paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.
 
 使用paddlex命令即可将数据集随机划分成70%训练集，20%验证集和10%测试集:
 
-```
+```commandline
 paddlex --split_dataset --format VOC --dataset_dir D:\MyDataset --val_value 0.2 --test_value 0.1
 ```
 执行上面命令行，会在`D:\MyDataset`下生成`labels.txt`, `train_list.txt`, `val_list.txt`和`test_list.txt`，分别存储类别信息，训练样本列表，验证样本列表，测试样本列表
@@ -33,7 +33,7 @@ paddlex --split_dataset --format VOC --dataset_dir D:\MyDataset --val_value 0.2 
 
 使用paddlex命令即可将数据集随机划分成70%训练集，20%验证集和10%测试集:
 
-```
+```commandline
 paddlex --split_dataset --format COCO --dataset_dir D:\MyDataset --val_value 0.2 --test_value 0.1
 ```
 执行上面命令行，会在`D:\MyDataset`下生成`train.json`, `val.json`, `test.json`，分别存储训练样本信息，验证样本信息，测试样本信息
@@ -44,7 +44,7 @@ paddlex --split_dataset --format COCO --dataset_dir D:\MyDataset --val_value 0.2
 ## 语义分割
 
 使用paddlex命令即可将数据集随机划分成70%训练集，20%验证集和10%测试集:
-```
+```commandline
 paddlex --split_dataset --format SEG --dataset_dir D:\MyDataset --val_value 0.2 --test_value 0.1
 ```
 执行上面命令行，会在`D:\MyDataset`下生成`train_list.txt`, `val_list.txt`, `test_list.txt`，分别存储训练样本信息，验证样本信息，测试样本信息

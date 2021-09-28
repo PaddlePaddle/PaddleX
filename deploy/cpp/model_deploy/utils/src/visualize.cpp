@@ -124,6 +124,7 @@ bool Visualize(const cv::Mat& img,
       vis_img->at<cv::Vec3b>(i, j)[2] = color_map[3 * category_id + 2];
     }
   }
+  cv::addWeighted(img, .5, *vis_img, .5, 0, *vis_img);
   return true;
 }
 

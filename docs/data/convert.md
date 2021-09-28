@@ -24,7 +24,7 @@ PaddleX支持图像分类、目标检测、实例分割和语义分割四大视�
 2. 将所有的标注json文件放在同一个目录下，如`annotations`目录  
 3. 使用如下命令进行转换:
 
-```
+```commandline
 paddlex --data_conversion --source labelme --to PascalVOC --pics ./pics --annotations ./annotations --save_dir ./converted_dataset_dir
 ```
 

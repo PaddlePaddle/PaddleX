@@ -1,6 +1,6 @@
 # TensorRT加载模型预测
 
-本文档基于`PaddleX/dygraph/deploy/cpp/demo/tensorrt_infer.cpp`示例，讲述如何用PaddleInference引擎结合TensorRT部署模型。开发者可基于此demo示例进行二次开发，满足集成的需求。
+本文档基于`PaddleX/deploy/cpp/demo/tensorrt_infer.cpp`示例，讲述如何用PaddleInference引擎结合TensorRT部署模型。开发者可基于此demo示例进行二次开发，满足集成的需求。
 
 ## 步骤一、编译
 参考编译文档
@@ -14,7 +14,7 @@
 - [PaddleDetection导出模型](https://github.com/PaddlePaddle/PaddleDetection/blob/release/2.0/deploy/EXPORT_MODEL.md)
 - [PaddleSeg导出模型](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/docs/model_export.md)
 - [PaddleClas导出模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/docs/zh_CN/tutorials/getting_started.md#4-%E4%BD%BF%E7%94%A8inference%E6%A8%A1%E5%9E%8B%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86)
-- [PaddleX导出模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/dygraph/docs/apis/export_model.md)
+- [PaddleX导出模型](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
 
 用户也可直接下载本教程中从PaddleDetection中导出的YOLOv3模型进行测试，[点击下载](https://bj.bcebos.com/paddlex/deploy2/models/yolov3_mbv1.tar.gz)。
 

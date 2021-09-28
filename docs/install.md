@@ -16,19 +16,19 @@
 以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.0)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 
 
-### PaddleX 2.0.0-rc4安装
+### PaddleX 2.0.0安装
 
 #### * Linux / macOS 操作系统
 
-使用pip安装方式安装2.0.0-rc4版本：
+使用pip安装方式安装2.0.0版本：
 
-```
-pip install paddlex==2.0.0rc4 -i https://mirror.baidu.com/pypi/simple
+```commandline
+pip install paddlex==2.0.0 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，如遇到pycocotools安装失败，可参照如下方式安装pycocotools：
 
-```
+```commandline
 pip install cython  
 pip install pycocotools
 ```
@@ -38,16 +38,16 @@ pip install pycocotools
 #### * Windows 操作系统
 
 
-使用pip安装方式安装2.0.0-rc4版本：
+使用pip安装方式安装2.0.0版本：
 
-```
-pip install paddlex==2.0.0rc4 -i https://mirror.baidu.com/pypi/simple
+```commandline
+pip install paddlex==2.0.0 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，Windows安装时可能会提示`Microsoft Visual C++ 14.0 is required`，从而导致安装出错，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
 > 注意：安装完后，需要重新打开新的终端命令窗口
 
-```
+```commandline
 pip install cython
 pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirectory=PythonAPI
 ```
@@ -56,14 +56,14 @@ pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirect
 
 github代码会跟随开发进度不断更新，可以安装develop分支的代码使用最新的功能，安装方式如下：
 
-```
+```commandline
 git clone https://github.com/PaddlePaddle/PaddleX.git
-cd PaddleX/dygraph
+cd PaddleX
 pip install -r requirements.txt
 python setup.py install
 ```
 
-如遇到pycocotools安装失败，参考[PaddleX 2.0.0-rc4安装](./install.md#paddlex-200-rc4安装)中介绍的解决方法。
+如遇到pycocotools安装失败，参考[PaddleX 2.0.0安装](./install.md#paddlex-200安装)中介绍的解决方法。
 
 ## <h2 id="2">2. PadldeX GUI开发模式安装</h2>
 

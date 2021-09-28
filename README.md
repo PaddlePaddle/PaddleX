@@ -1,4 +1,4 @@
-# PaddleX全面升级动态图，2.0.0-rc4发布！
+# PaddleX全面升级动态图，v2.0.0正式发布！
 
 
 
@@ -15,7 +15,7 @@
 
 ### 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数、Windows系统下使用C#语言部署。[欢迎体验](./examples)
 
-### 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
+### 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2，新增导出API训练脚本功能，无缝切换PaddleX API训练。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
 
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg)](LICENSE) [![Version](https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg)](https://github.com/PaddlePaddle/PaddleX/releases) ![python version](https://img.shields.io/badge/python-3.6+-orange.svg) ![support os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg)
  ![QQGroup](https://img.shields.io/badge/QQ_Group-1045148026-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)
@@ -83,8 +83,9 @@
 ### 5. 模型部署
 
 - [部署模型导出](./docs/apis/export_model.md)
-- [PaddleX Manufacture SDK低代码高效部署](./deploy/cpp/docs/manufacture_sdk)
-- [PaddleX/PaddleClas/PaddleDetection/PaddleSeg端到端高性能统一部署](./deploy/cpp)
+- [PaddleX python高性能部署](./docs/python_deploy.md)
+- [PaddleX Manufacture SDK低代码高效C++部署](./deploy/cpp/docs/manufacture_sdk)
+- [PaddleX/PaddleClas/PaddleDetection/PaddleSeg端到端高性能统一C++部署](./deploy/cpp)
 
 ### 6. 产业级应用示例
 
@@ -101,6 +102,10 @@
 - [无联网模型训练](./docs/how_to_offline_run.md)
 
 ## 版本更新
+
+- **2021.09.10 v2.0.0**
+
+  PaddleX 2.0动态图版本正式发布，PaddleX API、PaddleX GUI开发模式全面支持飞桨2.0动态图。PaddleX GUI新增导出API训练脚本功能，无缝切换PaddleX API训练。PaddleX python预测部署完备, PaddleX模型使用2个API即可快速完成部署。详细内容请参考[版本更新文档](./docs/CHANGELOG.md)
 
 - **2021.07.06 v2.0.0-rc3**
 

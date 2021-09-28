@@ -63,9 +63,9 @@ val_list列出用于验证时的图片集成，与其对应的标注文件，格
 
 训练过程中，PaddleX加载数据集的示例代码如下:
 
-```
+```python
 import paddlex as pdx
-from paddlex.seg import transforms
+from paddlex import transforms as T
 
 train_transforms = T.Compose([
     T.Resize(target_size=512),

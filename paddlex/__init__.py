@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = '2.0.0rc4'
+__version__ = '2.0.0'
 
 from paddlex.utils.env import get_environ_info, init_parallel_env
 init_parallel_env()
@@ -22,6 +22,7 @@ from . import seg
 from . import cls
 from . import det
 from . import tools
+from . import deploy
 
 from .cv.models.utils.visualize import visualize_detection as visualize_det
 from .cv.models.utils.visualize import visualize_segmentation as visualize_seg

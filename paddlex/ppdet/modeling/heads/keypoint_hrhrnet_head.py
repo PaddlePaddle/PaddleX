@@ -14,7 +14,7 @@
 
 import paddle
 import paddle.nn as nn
-import paddle.nn.functional as F
+
 from paddlex.ppdet.core.workspace import register
 from .. import layers as L
 from ..backbones.hrnet import BasicBlock

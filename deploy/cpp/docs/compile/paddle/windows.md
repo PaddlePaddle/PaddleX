@@ -104,7 +104,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 ### Step5: 编译结果
 
-编译后会在`PaddleX/dygraph/deploy/cpp/build/demo`目录下生成`model_infer`和`multi_gpu_model_infer`两个可执行二进制文件示例，分别用于在单卡/多卡上加载模型进行预测，示例使用参考如下文档
+编译后会在`PaddleX/deploy/cpp/build/demo`目录下生成`model_infer`和`multi_gpu_model_infer`两个可执行二进制文件示例，分别用于在单卡/多卡上加载模型进行预测，示例使用参考如下文档
 
 - [单卡加载模型预测示例](../../demo/model_infer.md)
 - [多卡加载模型预测示例](../../demo/multi_gpu_model_infer.md)

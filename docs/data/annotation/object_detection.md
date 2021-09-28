@@ -23,7 +23,7 @@
 ## 格式转换
 
 LabelMe标注后的数据还需要进行转换为PascalVOC或MSCOCO格式，才可以用于目标检测任务的训练，创建`D:\dataset_voc`目录，在python环境中安装paddlex后，使用如下命令即可
-```
+```commandline
 paddlex --data_conversion --source labelme --to PascalVOC \
         --pics D:\MyDataset\JPEGImages \
         --annotations D:\MyDataset\Annotations \

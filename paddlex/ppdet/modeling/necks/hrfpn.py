@@ -14,10 +14,8 @@
 
 import paddle
 import paddle.nn.functional as F
-from paddle import ParamAttr
 import paddle.nn as nn
-from paddle.regularizer import L2Decay
-from paddlex.ppdet.core.workspace import register, serializable
+from paddlex.ppdet.core.workspace import register
 from ..shape_spec import ShapeSpec
 
 __all__ = ['HRFPN']
@@ -54,7 +52,6 @@ class HRFPN(nn.Layer):
             in_channels=in_channel,
             out_channels=out_channel,
             kernel_size=1,
-            weight_attr=ParamAttr(name='hrfpn_reduction_weights'),
             bias_attr=False)
 
         if share_conv:
@@ -63,7 +60,6 @@ class HRFPN(nn.Layer):
                 out_channels=out_channel,
                 kernel_size=3,
                 padding=1,
-                weight_attr=ParamAttr(name='fpn_conv_weights'),
                 bias_attr=False)
         else:
             self.fpn_conv = []
@@ -76,7 +72,6 @@ class HRFPN(nn.Layer):
                         out_channels=out_channel,
                         kernel_size=3,
                         padding=1,
-                        weight_attr=ParamAttr(name=conv_name + "_weights"),
                         bias_attr=False))
                 self.fpn_conv.append(conv)
 

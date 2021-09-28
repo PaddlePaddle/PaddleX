@@ -7,12 +7,12 @@
 
 
 ## 服务端启动PaddleX RESTful服务
-```
+```commandline
  paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间目录]
 ```  
 
 ## 客户端请求服务端
-```
+```python
 import requests
 url = "https://127.0.0.1:5000"
 ```
@@ -35,7 +35,7 @@ url = "https://127.0.0.1:5000"
 
 ### 数据集操作
 #### 创建数据集
-```
+```python
 # dataset_type: 支持"detection"/"classification"/"segmentation"/"instance_segmentation"
 params = {"name": "我的第一个数据集", "desc": "这里是数据集的描述文字", "dataset_type": "detection"}  
 ret = requests.post(url+"/dataset", json=params)  
@@ -45,7 +45,7 @@ did = ret.json()['id']
 
 #### 导入数据集
 
-```
+```python
 # 导入数据集
 params = {'did' : did, 'path' : '/path/to/dataset'}
 ret = requests.put(url+"/dataset", json=params)
@@ -64,7 +64,7 @@ elif import_status == DatasetStatus.XCHECKFAIL:
 ```
 
 #### 切分数据集
-```
+```python
 # 当数据集导入成功后，可以对数据集进行切分
 # 切分数据集按照训练集、验证集、测试集为：6：2：2的形式切分
 params = {'did' : did, 'val_split' : 0.2 , 'test_split' : 0.2}
@@ -80,7 +80,7 @@ dataset_details = ret.json()
 ## 项目操作
 
 ### 创建项目
-```
+```python
 # project_type: 支持detection/classification/segmentation/instance_segmentation
 params = {'name': '项目名称', 'desc': '项目描述文字', 'project_type' : 'detection'}
 ret = requests.post(url+'/project', json=params)
@@ -89,7 +89,7 @@ pid = ret.json['pid']
 ```
 
 ### 绑定数据集
-```
+```python
 # 修改project中的did属性
 # struct支持 project/dataset/task
 params = {'struct': 'project', 'id': pid, 'attr_dict': {'did':did}}
@@ -97,7 +97,7 @@ ret = requests.put(url+'/workspace', json=params)
 ```
 
 ### 获取训练默认参数
-```
+```python
 params = {"pid", "P0001"}
 ret = requests.get(url+"/project/task/parmas", json=params)
 #获取默认训练参数
@@ -109,7 +109,7 @@ train_params = ret.json()['train']
 ## 任务操作
 
 ### 创建任务
-```
+```python
 #将训练参数json化
 params_json = json.dumps(train_params)
 #创建任务
@@ -120,7 +120,7 @@ tid = ret.json()['tid']
 ```
 
 ### 启动训练任务
-```
+```python
 params = {'tid' : tid}
 ret = requests.post(url+'/project/task/train', json=params)
 
@@ -133,13 +133,13 @@ ret.json()获取返回值：
 
 ### 停止训练任务
 通过如下操作，停止正在训练的任务
-```
+```python
 params = {'tid': tid, 'act': 'stop'}
 ret = requests.put(url+'/project/task/train', json=params)
 ```
 
 ### 获取训练任务信息
-```
+```python
 params = {'tid': tid, 'type': 'train'}
 ret = requests.get(url+'/project/task/metrics', json=params)
 #任务训练信息
@@ -147,7 +147,7 @@ train_log = ret.json()['train_log']
 ```
 
 ### 创建一个评估任务，并获取评估结果
-```
+```python
 #获取任务状态
 params = {'tid': tid}
 ret = requests.get(url+'/project/task', json=params)
@@ -172,7 +172,7 @@ result = ret.json()['result']
 
 ### 使用模型进行预测
 
-```
+```python
 import cv2
 import numpy as np
 #预测图片路径
@@ -210,7 +210,7 @@ img = cv2.imdecode(img_array, cv2.COLOR_RGB2BGR)
 
 ### 导出inference模型
 
-```
+```python
 #导出inference模型
 #保存地址
 save_dir = '/path/to/save/inference/model'

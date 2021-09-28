@@ -17,9 +17,10 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import sys
+import copy
 import time
-import random
-import datetime
+
 import numpy as np
 from PIL import Image
 
@@ -33,8 +34,8 @@ from paddlex.ppdet.optimizer import ModelEMA
 from paddlex.ppdet.core.workspace import create
 from paddlex.ppdet.utils.checkpoint import load_weight, load_pretrain_weight
 from paddlex.ppdet.utils.visualizer import visualize_results, save_result
-from paddlex.ppdet.metrics import JDEDetMetric, JDEReIDMetric
-from paddlex.ppdet.metrics import Metric, COCOMetric, VOCMetric, WiderFaceMetric, get_infer_results, KeyPointTopDownCOCOEval
+from paddlex.ppdet.metrics import Metric, COCOMetric, VOCMetric, WiderFaceMetric, get_infer_results, KeyPointTopDownCOCOEval, KeyPointTopDownMPIIEval
+from paddlex.ppdet.metrics import RBoxMetric, JDEDetMetric
 from paddlex.ppdet.data.source.category import get_categories
 from paddlex.ppdet.utils import stats
 
@@ -42,9 +43,11 @@ from .callbacks import Callback, ComposeCallback, LogPrinter, Checkpointer, Wife
 from .export_utils import _dump_infer_config
 
 from paddlex.ppdet.utils.logger import setup_logger
-logger = setup_logger('ppdet.engine')
+logger = setup_logger('paddlex.ppdet.engine')
 
 __all__ = ['Trainer']
+
+MOT_ARCH = ['DeepSORT', 'JDE', 'FairMOT']
 
 
 class Trainer(object):
@@ -57,7 +60,15 @@ class Trainer(object):
         self.is_loaded_weights = False
 
         # build data loader
-        self.dataset = cfg['{}Dataset'.format(self.mode.capitalize())]
+        if cfg.architecture in MOT_ARCH and self.mode in ['eval', 'test']:
+            self.dataset = cfg['{}MOTDataset'.format(self.mode.capitalize())]
+        else:
+            self.dataset = cfg['{}Dataset'.format(self.mode.capitalize())]
+
+        if cfg.architecture == 'DeepSORT' and self.mode == 'train':
+            logger.error('DeepSORT has no need of training on mot dataset.')
+            sys.exit(1)
+
         if self.mode == 'train':
             self.loader = create('{}Reader'.format(self.mode.capitalize()))(
                 self.dataset, cfg.worker_num)
@@ -104,7 +115,7 @@ class Trainer(object):
         self.status = {}
 
         self.start_epoch = 0
-        self.end_epoch = cfg.epoch
+        self.end_epoch = 0 if 'epoch' not in cfg else cfg.epoch
 
         # initial default callbacks
         self._init_callbacks()
@@ -167,6 +178,35 @@ class Trainer(object):
                     IouType=IouType,
                     save_prediction_only=save_prediction_only)
             ]
+        elif self.cfg.metric == 'RBOX':
+            # TODO: bias should be unified
+            bias = self.cfg['bias'] if 'bias' in self.cfg else 0
+            output_eval = self.cfg['output_eval'] \
+                if 'output_eval' in self.cfg else None
+            save_prediction_only = self.cfg.get('save_prediction_only', False)
+
+            # pass clsid2catid info to metric instance to avoid multiple loading
+            # annotation file
+            clsid2catid = {v: k for k, v in self.dataset.catid2clsid.items()} \
+                                if self.mode == 'eval' else None
+
+            # when do validation in train, annotation file should be get from
+            # EvalReader instead of self.dataset(which is TrainReader)
+            anno_file = self.dataset.get_anno()
+            if self.mode == 'train' and validate:
+                eval_dataset = self.cfg['EvalDataset']
+                eval_dataset.check_or_download_dataset()
+                anno_file = eval_dataset.get_anno()
+
+            self._metrics = [
+                RBoxMetric(
+                    anno_file=anno_file,
+                    clsid2catid=clsid2catid,
+                    classwise=classwise,
+                    output_eval=output_eval,
+                    bias=bias,
+                    save_prediction_only=save_prediction_only)
+            ]
         elif self.cfg.metric == 'VOC':
             self._metrics = [
                 VOCMetric(
@@ -188,17 +228,32 @@ class Trainer(object):
             eval_dataset = self.cfg['EvalDataset']
             eval_dataset.check_or_download_dataset()
             anno_file = eval_dataset.get_anno()
+            save_prediction_only = self.cfg.get('save_prediction_only', False)
             self._metrics = [
-                KeyPointTopDownCOCOEval(anno_file,
-                                        len(eval_dataset), self.cfg.num_joints,
-                                        self.cfg.save_dir)
+                KeyPointTopDownCOCOEval(
+                    anno_file,
+                    len(eval_dataset),
+                    self.cfg.num_joints,
+                    self.cfg.save_dir,
+                    save_prediction_only=save_prediction_only)
+            ]
+        elif self.cfg.metric == 'KeyPointTopDownMPIIEval':
+            eval_dataset = self.cfg['EvalDataset']
+            eval_dataset.check_or_download_dataset()
+            anno_file = eval_dataset.get_anno()
+            save_prediction_only = self.cfg.get('save_prediction_only', False)
+            self._metrics = [
+                KeyPointTopDownMPIIEval(
+                    anno_file,
+                    len(eval_dataset),
+                    self.cfg.num_joints,
+                    self.cfg.save_dir,
+                    save_prediction_only=save_prediction_only)
             ]
         elif self.cfg.metric == 'MOTDet':
             self._metrics = [JDEDetMetric(), ]
-        elif self.cfg.metric == 'ReID':
-            self._metrics = [JDEReIDMetric(), ]
         else:
-            logger.warn("Metric not support for metric type {}".format(
+            logger.warning("Metric not support for metric type {}".format(
                 self.cfg.metric))
             self._metrics = []
 
@@ -225,14 +280,15 @@ class Trainer(object):
         if self.is_loaded_weights:
             return
         self.start_epoch = 0
-        if hasattr(self.model, 'detector'):
-            if self.model.__class__.__name__ == 'FairMOT':
-                load_pretrain_weight(self.model, weights)
-            else:
-                load_pretrain_weight(self.model.detector, weights)
-        else:
-            load_pretrain_weight(self.model, weights)
+        load_pretrain_weight(self.model, weights)
         logger.debug("Load weights {} to start training".format(weights))
+
+    def load_weights_sde(self, det_weights, reid_weights):
+        if self.model.detector:
+            load_weight(self.model.detector, det_weights)
+            load_weight(self.model.reid, reid_weights)
+        else:
+            load_weight(self.model.reid, reid_weights)
 
     def resume_weights(self, weights):
         # support Distill resume weights
@@ -245,17 +301,12 @@ class Trainer(object):
 
     def train(self, validate=False):
         assert self.mode == 'train', "Model not in 'train' mode"
-
-        # if validation in training is enabled, metrics should be re-init
-        if validate:
-            self._init_metrics(validate=validate)
-            self._reset_metrics()
+        Init_mark = False
 
         model = self.model
         if self.cfg.get('fleet', False):
             model = fleet.distributed_model(model)
-            self.optimizer = fleet.distributed_optimizer(
-                self.optimizer).user_defined_optimizer
+            self.optimizer = fleet.distributed_optimizer(self.optimizer)
         elif self._nranks > 1:
             find_unused_parameters = self.cfg[
                 'find_unused_parameters'] if 'find_unused_parameters' in self.cfg else False
@@ -278,6 +329,9 @@ class Trainer(object):
         self.status['data_time'] = stats.SmoothedValue(
             self.cfg.log_iter, fmt='{avg:.4f}')
         self.status['training_staus'] = stats.TrainingStats(self.cfg.log_iter)
+
+        if self.cfg.get('print_flops', False):
+            self._flops(self.loader)
 
         for epoch_id in range(self.start_epoch, self.cfg.epoch):
             self.status['mode'] = 'train'
@@ -326,7 +380,7 @@ class Trainer(object):
 
             # apply ema weight on model
             if self.use_ema:
-                weight = self.model.state_dict()
+                weight = copy.deepcopy(self.model.state_dict())
                 self.model.set_dict(self.ema.apply())
 
             self._compose_callback.on_epoch_end(self.status)
@@ -345,6 +399,12 @@ class Trainer(object):
                         self._eval_dataset,
                         self.cfg.worker_num,
                         batch_sampler=self._eval_batch_sampler)
+                # if validation in training is enabled, metrics should be re-init
+                # Init_mark makes sure this code will only execute once
+                if validate and Init_mark == False:
+                    Init_mark = True
+                    self._init_metrics(validate=validate)
+                    self._reset_metrics()
                 with paddle.no_grad():
                     self.status['save_best_model'] = True
                     self._eval_with_loader(self._eval_loader)
@@ -359,6 +419,8 @@ class Trainer(object):
         self._compose_callback.on_epoch_begin(self.status)
         self.status['mode'] = 'eval'
         self.model.eval()
+        if self.cfg.get('print_flops', False):
+            self._flops(loader)
         for step_id, data in enumerate(loader):
             self.status['step_id'] = step_id
             self._compose_callback.on_step_begin(self.status)
@@ -404,6 +466,8 @@ class Trainer(object):
         # Run Infer
         self.status['mode'] = 'test'
         self.model.eval()
+        if self.cfg.get('print_flops', False):
+            self._flops(loader)
         for step_id, data in enumerate(loader):
             self.status['step_id'] = step_id
             # forward
@@ -433,7 +497,6 @@ class Trainer(object):
                         if 'segm' in batch_res else None
                 keypoint_res = batch_res['keypoint'][start:end] \
                         if 'keypoint' in batch_res else None
-
                 image = visualize_results(
                     image, bbox_res, mask_res, segm_res, keypoint_res,
                     int(im_id), catid2name, draw_threshold)
@@ -473,8 +536,12 @@ class Trainer(object):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         image_shape = None
-        if 'inputs_def' in self.cfg['TestReader']:
-            inputs_def = self.cfg['TestReader']['inputs_def']
+        if self.cfg.architecture in MOT_ARCH:
+            test_reader_name = 'TestMOTReader'
+        else:
+            test_reader_name = 'TestReader'
+        if 'inputs_def' in self.cfg[test_reader_name]:
+            inputs_def = self.cfg[test_reader_name]['inputs_def']
             image_shape = inputs_def.get('image_shape', None)
         # set image_shape=[3, -1, -1] as default
         if image_shape is None:
@@ -496,26 +563,31 @@ class Trainer(object):
             "scale_factor": InputSpec(
                 shape=[None, 2], name='scale_factor')
         }]
+        if self.cfg.architecture == 'DeepSORT':
+            input_spec[0].update({
+                "crops": InputSpec(
+                    shape=[None, 3, 192, 64], name='crops')
+            })
+
+        static_model = paddle.jit.to_static(self.model, input_spec=input_spec)
+        # NOTE: dy2st do not pruned program, but jit.save will prune program
+        # input spec, prune input spec here and save with pruned input spec
+        pruned_input_spec = self._prune_input_spec(
+            input_spec, static_model.forward.main_program,
+            static_model.forward.outputs)
 
         # dy2st and save model
         if 'slim' not in self.cfg or self.cfg['slim_type'] != 'QAT':
-            static_model = paddle.jit.to_static(
-                self.model, input_spec=input_spec)
-            # NOTE: dy2st do not pruned program, but jit.save will prune program
-            # input spec, prune input spec here and save with pruned input spec
-            pruned_input_spec = self._prune_input_spec(
-                input_spec, static_model.forward.main_program,
-                static_model.forward.outputs)
             paddle.jit.save(
                 static_model,
                 os.path.join(save_dir, 'model'),
                 input_spec=pruned_input_spec)
-            logger.info("Export model and saved in {}".format(save_dir))
         else:
             self.cfg.slim.save_quantized_model(
                 self.model,
                 os.path.join(save_dir, 'model'),
-                input_spec=input_spec)
+                input_spec=pruned_input_spec)
+        logger.info("Export model and saved in {}".format(save_dir))
 
     def _prune_input_spec(self, input_spec, program, targets):
         # try to prune static program to figure out pruned input spec
@@ -533,3 +605,28 @@ class Trainer(object):
                 pass
         paddle.disable_static()
         return pruned_input_spec
+
+    def _flops(self, loader):
+        self.model.eval()
+        try:
+            import paddleslim
+        except Exception as e:
+            logger.warning(
+                'Unable to calculate flops, please install paddleslim, for example: `pip install paddleslim`'
+            )
+            return
+
+        from paddleslim.analysis import dygraph_flops as flops
+        input_data = None
+        for data in loader:
+            input_data = data
+            break
+
+        input_spec = [{
+            "image": input_data['image'][0].unsqueeze(0),
+            "im_shape": input_data['im_shape'][0].unsqueeze(0),
+            "scale_factor": input_data['scale_factor'][0].unsqueeze(0)
+        }]
+        flops = flops(self.model, input_spec) / (1000**3)
+        logger.info(" Model FLOPs : {:.6f}G. (image shape is {})".format(
+            flops, input_data['image'][0].unsqueeze(0).shape))

@@ -43,6 +43,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 # common
 aux_source_directory(${PROJECT_SOURCE_DIR}/model_deploy/common/src SRC)
+aux_source_directory(${PROJECT_SOURCE_DIR}/model_deploy/utils/src SRC)
 
 # det seg clas pdx src
 aux_source_directory(${PROJECT_SOURCE_DIR}/model_deploy/ppdet/src DETECTOR_SRC)

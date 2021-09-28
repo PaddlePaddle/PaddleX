@@ -11,7 +11,7 @@ LabelMe可用于标注目标检测、实例分割、语义分割数据集，是�
 ## 2. 安装LabelMe
 
 进入Python环境后，执行如下命令即可
-```
+```commandline
 conda activate my_paddlex
 conda install pyqt
 pip install labelme
@@ -20,7 +20,7 @@ pip install labelme
 ## 3. 启动LabelMe
 
 进入安装了LabelMe的Python环境，执行如下命令即可启动LabelMe
-```
+```commandline
 conda activate my_paddlex
 labelme
 ```

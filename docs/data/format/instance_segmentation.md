@@ -35,7 +35,7 @@ MyDataset/ # 实例分割数据集根目录
 
 训练过程中，PaddleX加载数据集的示例代码如下:
 
-```
+```python
 import paddlex as pdx
 from paddlex import transforms as T
 
