@@ -126,9 +126,13 @@ add_executable(batch_infer batch_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} 
 ADD_DEPENDENCIES(batch_infer ext-yaml-cpp)
 target_link_libraries(batch_infer ${DEPS})
 
-add_executable(multi_gpu_model_infer multi_gpu_model_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
-ADD_DEPENDENCIES(multi_gpu_model_infer ext-yaml-cpp)
-target_link_libraries(multi_gpu_model_infer ${DEPS})
+add_executable(multi_thread_infer multi_thread_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
+ADD_DEPENDENCIES(multi_thread_infer ext-yaml-cpp)
+target_link_libraries(multi_thread_infer ${DEPS})
+
+add_executable(multi_thread_infer2 multi_thread_infer2.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})
+ADD_DEPENDENCIES(multi_thread_infer2 ext-yaml-cpp)
+target_link_libraries(multi_thread_infer2 ${DEPS})
 
 if (WITH_PADDLE_TENSORRT)
   add_executable(tensorrt_infer tensorrt_infer.cpp ${SRC} ${ENGINE_SRC} ${DETECTOR_SRC} ${ENCRYPTION_SRC})

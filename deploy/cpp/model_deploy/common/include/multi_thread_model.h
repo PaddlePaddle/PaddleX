@@ -167,7 +167,7 @@ class PD_INFER_DECL MultiThreadModel {
     model_results.resize(split_imgs.size());
     futures.resize(split_imgs.size());
     for (int i = 0; i < split_imgs.size(); ++i) {
-      futures[i] = add_predict_task(split_imgs[i], &model_results[i]);
+      futures[i] = AddPredictTask(split_imgs[i], &model_results[i]);
     }
 
     for (int i = 0; i < split_imgs.size(); ++i) {

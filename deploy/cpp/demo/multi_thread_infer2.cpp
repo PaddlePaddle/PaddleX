@@ -38,9 +38,9 @@ int main(int argc, char** argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   // create model
-  PaddleDeploy::Model1* model = PaddleDeploy::CreateModel(FLAGS_model_type);
-  PaddleDeploy::Model2* model = PaddleDeploy::CreateModel(FLAGS_model_type);
-  PaddleDeploy::Model3* model = PaddleDeploy::CreateModel(FLAGS_model_type);
+  PaddleDeploy::Model* model1 = PaddleDeploy::CreateModel(FLAGS_model_type);
+  PaddleDeploy::Model* model2 = PaddleDeploy::CreateModel(FLAGS_model_type);
+  PaddleDeploy::Model* model3 = PaddleDeploy::CreateModel(FLAGS_model_type);
 
   // model init
   model1->Init(FLAGS_cfg_file);
