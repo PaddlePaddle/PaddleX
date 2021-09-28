@@ -7,9 +7,9 @@
 | 套件名称 | 版本号   | 支持模型 | 
 | -------- | -------- | ------- |
 | PaddleDetection  | [release/2.2](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.2)、[release/0.5](https://github.com/PaddlePaddle/PaddleDetection/tree/release/0.5) |  FasterRCNN / MaskRCNN / PPYOLO / PPYOLOv2 / YOLOv3   |  
-| PaddleSeg        | [release/2.2](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.2)       |  全部  |
+| PaddleSeg        | [release/2.2](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.2)       |  全部分割模型  |
 | PaddleClas       | [release/2.2](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.2)      |  全部分类模型  |
-| PaddleX          | [release/2.0.0](https://github.com/PaddlePaddle/PaddleX)                        |  静态图、动态图   |
+| PaddleX          | [release/2.0.0](https://github.com/PaddlePaddle/PaddleX)                        |  全部静态图、动态图模型   |
 
 ## 硬件支持
 - CPU(linux/windows)
