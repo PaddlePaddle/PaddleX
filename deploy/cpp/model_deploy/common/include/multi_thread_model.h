@@ -45,6 +45,7 @@ class PD_INFER_DECL MultiThreadModel {
           if (m_model->m_input.empty()) {
             m_model->m_conditional_lock.wait(lock);
           }
+          if (m_model->m_input.empty()) continue;
           // std::unique_lock<std::mutex> lock(m_model->queue_mutex);
           imgs = std::move(m_model->m_input.front());
           m_model->m_input.pop();
