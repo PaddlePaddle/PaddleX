@@ -82,5 +82,5 @@ Classify(809    sunscreen   0.939211)
 关于demo程序的详细使用方法可分别参考以下文档
 
 - [单卡加载模型预测示例](../demo/model_infer.md)
-- [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
+- [多线程预测示例](../demo/multi_thread_infer.md)
 - [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
