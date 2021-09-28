@@ -61,7 +61,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 
 ### 1. 数据准备
 
-- [数据准备流程说明](./docs/data/format/README.md)
+- [数据准备流程说明](./docs/data)
 - [数据标注](./docs/data/annotation/README.md)
 - [数据格式转换](./docs/data/convert.md)
 - [数据划分](./docs/data/split.md)
