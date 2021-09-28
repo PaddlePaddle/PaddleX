@@ -53,10 +53,7 @@ int main(int argc, char** argv) {
   engine_config.params_filename = FLAGS_params_filename;
   engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.gpu_id = FLAGS_gpu_id;
-  engine_config.use_trt = FLAGS_use_trt;
-  if (FLAGS_use_trt) {
-    engine_config.precision = 0;
-  }
+
   model1->PaddleEngineInit(engine_config);
   model2->PaddleEngineInit(engine_config);
   model3->PaddleEngineInit(engine_config);
@@ -77,10 +74,10 @@ int main(int argc, char** argv) {
   auto future1 = pool.submit(infer, model1, ref(imgs), &results1, 1);
   future1.get();
 
-  auto future2 = pool.submit(infer, model2, ref(imgs), &results1, 1);
+  auto future2 = pool.submit(infer, model2, ref(imgs), &results2, 1);
   future2.get();
 
-  auto future3 = pool.submit(infer, model3, ref(imgs), &results1, 1);
+  auto future3 = pool.submit(infer, model3, ref(imgs), &results3, 1);
   future3.get();
 
   // print result

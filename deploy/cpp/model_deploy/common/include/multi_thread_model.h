@@ -75,6 +75,7 @@ class PD_INFER_DECL MultiThreadModel {
             const std::string& cfg_file, size_t thread_num = 1) {
     models_.clear();
     m_threads.clear();
+    m_shutdown = false;
     for (auto i = 0; i < thread_num; ++i) {
       Model* model = PaddleDeploy::ModelFactory::CreateObject(model_type);
 
@@ -176,6 +177,16 @@ class PD_INFER_DECL MultiThreadModel {
                       model_results[i].begin(), model_results[i].end());
     }
     return true;
+  }
+
+  ~MultiThreadModel() {
+    m_shutdown = true;
+    m_conditional_lock.notify_all();
+    for (int i = 0; i < m_threads.size(); ++i) {
+      if(m_threads[i].joinable()) {
+        m_threads[i].join();
+      }
+    }
   }
 };
 }  // namespace PaddleDeploy
