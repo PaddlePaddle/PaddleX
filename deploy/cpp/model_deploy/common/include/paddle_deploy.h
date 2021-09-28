@@ -19,6 +19,7 @@
 #include "model_deploy/common/include/deploy_declare.h"
 #include "model_deploy/common/include/output_struct.h"
 #include "model_deploy/common/include/model_factory.h"
+#include "model_deploy/common/include/thread_pool.h"
 #include "model_deploy/engine/include/engine.h"
 
 #ifdef PADDLEX_DEPLOY_ENCRYPTION

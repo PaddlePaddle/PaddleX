@@ -18,16 +18,17 @@
 #include <string>
 #include <fstream>
 
-#include "model_deploy/common/include/multi_gpu_model.h"
+#include "model_deploy/common/include/multi_thread_model.h"
 
 DEFINE_string(model_filename, "", "Path of det inference model");
 DEFINE_string(params_filename, "", "Path of det inference params");
 DEFINE_string(cfg_file, "", "Path of yaml file");
 DEFINE_string(model_type, "", "model type");
-DEFINE_string(image_list, "", "Path of test image file");
+DEFINE_string(image, "", "Path of test image file");
 DEFINE_string(gpu_id, "0", "GPU card id, example: 0,2,3");
 DEFINE_int32(batch_size, 1, "Batch size of infering");
 DEFINE_int32(thread_num, 1, "thread num of preprocessing");
+DEFINE_bool(use_gpu, false, "Infering with GPU or CPU");
 
 int main(int argc, char** argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
@@ -45,7 +46,7 @@ int main(int argc, char** argv) {
 
   std::cout << "start create model" << std::endl;
   // create model
-  PaddleDeploy::MultiGPUModel model;
+  PaddleDeploy::MultiThreadModel model;
   if (!model.Init(FLAGS_model_type, FLAGS_cfg_file, gpu_ids.size())) {
     return -1;
   }
@@ -54,46 +55,40 @@ int main(int argc, char** argv) {
   PaddleDeploy::PaddleEngineConfig engine_config;
   engine_config.model_filename = FLAGS_model_filename;
   engine_config.params_filename = FLAGS_params_filename;
-  engine_config.use_gpu = true;
+  engine_config.use_gpu = FLAGS_use_gpu;
   engine_config.max_batch_size = FLAGS_batch_size;
+  // 如果开启gpu，gpu_ids为gpu的序号(可重复), 比如 0,0,1
+  // 如果使用cpu，可用任意int数字， 该参数的个数代表线程数量, 比如 0,0,0 
   if (!model.PaddleEngineInit(engine_config, gpu_ids)) {
     return -1;
   }
 
-  // Mini-batch
-  if (FLAGS_image_list == "") {
-    std::cerr << "image_list should be defined" << std::endl;
-    return -1;
-  }
-  std::vector<std::string> image_paths;
-  std::ifstream inf(FLAGS_image_list);
-  if (!inf) {
-    std::cerr << "Fail to open file " << FLAGS_image_list << std::endl;
-    return -1;
-  }
-  std::string image_path;
-  while (getline(inf, image_path)) {
-    image_paths.push_back(image_path);
+  // prepare data
+  std::vector<cv::Mat> imgs;
+  imgs.push_back(std::move(cv::imread(FLAGS_image)));
+
+  for(;;) {
+    std::vector<std::vector<PaddleDeploy::Result>> results(5);
+    std::vector<std::future<bool>> futures(5);
+    for(int i = 0; i < 5; i++) {
+      futures[i] = model.add_predict_task(imgs, &results[i]);
+    }
+    for(int i = 0; i < 5; i++) {
+      futures[i].get();
+      std::cout << i << " result:" << results[i][0] << std::endl;
+    }
+
+    // 如果输入是大batch, 可用此接口自动拆分输入然后计算完后组装结果(注意：会同步等待所有结果完成)
+    std::vector<PaddleDeploy::Result> batch_results;
+    std::vector<cv::Mat> batch_imgs;
+    for(int i = 0; i < 5; i++) {
+      batch_imgs.push_back(std::move(cv::imread(FLAGS_image)));
+    }
+    model.Predict(batch_imgs, &batch_results);
+    for(int i = 0; i < 5; i++) {
+       std::cout << i << " batch_result:" << batch_results[i] << std::endl;
+    }
   }
 
-  std::cout << "start model predict " << image_paths.size() << std::endl;
-  // infer
-  std::vector<PaddleDeploy::Result> results;
-  for (int i = 0; i < image_paths.size(); i += FLAGS_batch_size) {
-    // Read image
-    int im_vec_size =
-        std::min(static_cast<int>(image_paths.size()), i + FLAGS_batch_size);
-    std::vector<cv::Mat> im_vec(im_vec_size - i);
-    #pragma omp parallel for num_threads(im_vec_size - i)
-    for (int j = i; j < im_vec_size; ++j) {
-      im_vec[j - i] = std::move(cv::imread(image_paths[j], 1));
-    }
-    model.Predict(im_vec, &results, FLAGS_thread_num);
-    std::cout << i / FLAGS_batch_size << " group" << std::endl;
-    for (auto j = 0; j < results.size(); ++j) {
-      std::cout << "Result for sample " << j << std::endl;
-      std::cout << results[j] << std::endl;
-    }
-  }
   return 0;
 }
