@@ -27,7 +27,7 @@ from ..utils import (pkill, set_folder_status, get_folder_status, TaskStatus,
                      PredictStatus, PruneStatus)
 from .evaluate.draw_pred_result import visualize_classified_result, visualize_detected_result, visualize_segmented_result
 from .visualize import plot_det_label, plot_insseg_label, get_color_map_list
-from paddlex.utils import get_encoding
+from paddlex_restful.restful.dataset.utils import get_encoding
 
 
 def _call_paddle_prune(best_model_path, prune_analysis_path, params):

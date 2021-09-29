@@ -21,7 +21,6 @@ from PIL import Image
 import numpy as np
 import json
 from ..utils import set_folder_status, DatasetStatus
-from paddlex.utils import get_encoding
 
 
 def list_files(dirname):

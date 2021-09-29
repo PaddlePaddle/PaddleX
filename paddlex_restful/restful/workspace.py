@@ -24,7 +24,7 @@ import configparser
 import time
 import shutil
 import copy
-from paddlex.utils import get_encoding
+from paddlex_restful.restful.dataset.utils import get_encoding
 
 
 class Workspace():
