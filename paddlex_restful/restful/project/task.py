@@ -24,6 +24,7 @@ import xlwt
 import numpy as np
 from ..utils import set_folder_status, TaskStatus, get_folder_status, is_available, get_ip, trans_name
 from .train.params import ClsParams, DetParams, SegParams
+from paddlex.utils import get_encoding
 
 
 def create_task(data, workspace):
@@ -742,7 +743,7 @@ def get_quant_result(data, workspace):
     result = {}
     import json
     if osp.exists(result_json):
-        with open(result_json, 'r') as f:
+        with open(result_json, 'r', encoding=get_encoding(result_json)) as f:
             result = json.load(f)
     return {'status': 1, 'quant_result': result}
 

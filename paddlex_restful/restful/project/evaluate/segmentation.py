@@ -16,14 +16,19 @@ import json
 import yaml
 import os.path as osp
 import numpy as np
+from paddlex.utils import get_encoding
 
 
 class Evaluator(object):
     def __init__(self, model_path):
-        with open(osp.join(model_path, "model.yml")) as f:
+        model_yml = osp.join(model_path, "model.yml")
+        with open(model_yml, encoding=get_encoding(model_yml)) as f:
             model_info = yaml.load(f.read(), Loader=yaml.Loader)
         self.labels = model_info['_Attributes']['labels']
-        with open(osp.join(model_path, 'eval_details.json'), 'r') as f:
+        eval_details_file = osp.join(model_path, 'eval_details.json')
+        with open(
+                eval_details_file, 'r',
+                encoding=get_encoding(eval_details_file)) as f:
             eval_details = json.load(f)
         self.confusion_matrix = np.array(eval_details['confusion_matrix'])
         self.num_classes = len(self.confusion_matrix)

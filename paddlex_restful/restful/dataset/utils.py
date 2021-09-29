@@ -21,6 +21,7 @@ from PIL import Image
 import numpy as np
 import json
 from ..utils import set_folder_status, DatasetStatus
+from paddlex.utils import get_encoding
 
 
 def list_files(dirname):
@@ -145,7 +146,7 @@ def check_list_txt(list_txts):
     for list_txt in list_txts:
         if not osp.exists(list_txt):
             continue
-        with open(list_txt) as f:
+        with open(list_txt, encoding=get_encoding(list_txt)) as f:
             for line in f:
                 items = line.strip().split()
                 if len(items) != 2:

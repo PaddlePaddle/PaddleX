@@ -24,6 +24,7 @@ import sys
 import multiprocessing as mp
 from . import workspace_pb2 as w
 from .utils import CustomEncoder, ShareData, is_pic, get_logger, TaskStatus, get_ip
+from paddlex.utils import get_encoding
 import numpy as np
 
 app = Flask(__name__)
@@ -929,14 +930,14 @@ def gui():
             osp.dirname(__file__), 'templates', 'paddlex_restful_demo.html')
         ip = get_ip()
         url = 'var str_srv_url = "http://' + ip + ':' + str(SD.port) + '";'
-        f = open(file_path, 'r+')
+        f = open(file_path, 'r+', encoding=get_encoding(file_path))
         lines = f.readlines()
         for i, line in enumerate(lines):
             if '0.0.0.0:8080' in line:
                 lines[i] = url
                 break
         f.close()
-        f = open(file_path, 'w+')
+        f = open(file_path, 'w+', encoding=get_encoding(file_path))
         f.writelines(lines)
         f.close()
         return render_template('/paddlex_restful_demo.html')

@@ -24,6 +24,7 @@ import configparser
 import time
 import shutil
 import copy
+from paddlex.utils import get_encoding
 
 
 class Workspace():
@@ -256,8 +257,11 @@ class Workspace():
         #更新程序配置信息
         app_conf_file_name = 'PaddleX'.lower() + ".cfg"
 
-        with open(os.path.join(PADDLEX_HOME, app_conf_file_name),
-                  'w+') as file:
+        with open(
+                os.path.join(PADDLEX_HOME, app_conf_file_name),
+                'w+',
+                encoding=get_encoding(
+                    os.path.join(PADDLEX_HOME, app_conf_file_name))) as file:
             self.m_cfgfile.write(file)
 
 

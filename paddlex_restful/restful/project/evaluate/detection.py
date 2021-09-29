@@ -18,6 +18,8 @@ import copy
 import os.path as osp
 import numpy as np
 
+from paddlex.utils import get_encoding
+
 backup_linspace = np.linspace
 
 
@@ -409,7 +411,10 @@ class DetEvaluator(object):
         self.score_threshold = score_threshold if score_threshold is not None else .3
 
     def _prepare_data(self):
-        with open(osp.join(self.model_path, 'eval_details.json'), 'r') as f:
+        eval_details_file = osp.join(self.model_path, 'eval_details.json')
+        with open(
+                eval_details_file, 'r',
+                encoding=get_encoding(eval_details_file)) as f:
             eval_details = json.load(f)
         self.bbox = eval_details['bbox']
         self.mask = None

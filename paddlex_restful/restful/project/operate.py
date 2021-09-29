@@ -27,6 +27,7 @@ from ..utils import (pkill, set_folder_status, get_folder_status, TaskStatus,
                      PredictStatus, PruneStatus)
 from .evaluate.draw_pred_result import visualize_classified_result, visualize_detected_result, visualize_segmented_result
 from .visualize import plot_det_label, plot_insseg_label, get_color_map_list
+from paddlex.utils import get_encoding
 
 
 def _call_paddle_prune(best_model_path, prune_analysis_path, params):
@@ -198,7 +199,10 @@ def _call_paddlex_predict(task_path,
                     osp.join(dataset_path, "test_list.txt")):
                 if len(img_list) == 0 and osp.exists(
                         osp.join(dataset_path, "test_list.txt")):
-                    with open(osp.join(dataset_path, "test_list.txt")) as f:
+                    with open(
+                            osp.join(dataset_path, "test_list.txt"),
+                            encoding=get_encoding(
+                                osp.join(dataset_path, "test_list.txt"))) as f:
                         for line in f:
                             items = line.strip().split()
                             file_list[osp.join(dataset_path, items[0])] = \
@@ -271,7 +275,10 @@ def _call_paddlex_predict(task_path,
         if img_data is None:
             if len(img_list) == 0 and osp.exists(
                     osp.join(dataset_path, "test_list.txt")):
-                with open(osp.join(dataset_path, "test_list.txt")) as f:
+                with open(
+                        osp.join(dataset_path, "test_list.txt"),
+                        encoding=get_encoding(
+                            osp.join(dataset_path, "test_list.txt"))) as f:
                     for line in f:
                         items = line.strip().split()
                         file_list[osp.join(dataset_path, items[0])] = \
