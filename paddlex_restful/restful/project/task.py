@@ -24,7 +24,7 @@ import xlwt
 import numpy as np
 from ..utils import set_folder_status, TaskStatus, get_folder_status, is_available, get_ip, trans_name
 from .train.params import ClsParams, DetParams, SegParams
-from paddlex.utils import get_encoding
+from paddlex_restful.restful.dataset.utils import get_encoding
 
 
 def create_task(data, workspace):

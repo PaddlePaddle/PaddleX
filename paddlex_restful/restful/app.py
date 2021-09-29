@@ -24,7 +24,7 @@ import sys
 import multiprocessing as mp
 from . import workspace_pb2 as w
 from .utils import CustomEncoder, ShareData, is_pic, get_logger, TaskStatus, get_ip
-from paddlex.utils import get_encoding
+from paddlex_restful.restful.dataset.utils import get_encoding
 import numpy as np
 
 app = Flask(__name__)

@@ -18,7 +18,7 @@ import copy
 import os.path as osp
 import numpy as np
 
-from paddlex.utils import get_encoding
+from paddlex_restful.restful.dataset.utils import get_encoding
 
 backup_linspace = np.linspace
 
