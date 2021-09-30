@@ -114,16 +114,21 @@ class Predictor(object):
             config.disable_gpu()
             config.set_cpu_math_library_num_threads(cpu_thread_num)
             if use_mkl:
-                try:
-                    # cache 10 different shapes for mkldnn to avoid memory leak
-                    config.set_mkldnn_cache_capacity(10)
-                    config.enable_mkldnn()
-                    config.set_cpu_math_library_num_threads(mkl_thread_num)
-                except Exception as e:
+                if self._model.__class__.__name__ == 'MaskRCNN':
                     logging.warning(
-                        "The current environment does not support `mkldnn`, so disable mkldnn."
+                        "MaskRCNN does not support MKL-DNN, MKL-DNN is forcibly disabled"
                     )
-                    pass
+                else:
+                    try:
+                        # cache 10 different shapes for mkldnn to avoid memory leak
+                        config.set_mkldnn_cache_capacity(10)
+                        config.enable_mkldnn()
+                        config.set_cpu_math_library_num_threads(mkl_thread_num)
+                    except Exception as e:
+                        logging.warning(
+                            "The current environment does not support MKL-DNN, MKL-DNN is disabled."
+                        )
+                        pass
 
         if not use_glog:
             config.disable_glog_info()
@@ -175,8 +180,6 @@ class Predictor(object):
             logging.error(
                 "Invalid model type {}.".format(self._model.model_type),
                 exit=True)
-        if len(preds) == 1:
-            preds = preds[0]
 
         return preds
 
@@ -256,4 +259,10 @@ class Predictor(object):
         self.timer.img_num = len(images)
         self.timer.info(average=True)
 
+        if isinstance(img_file, (str, np.ndarray)):
+            results = results[0]
+
         return results
+
+    def batch_predict(self, image_list, **params):
+        return self.predict(img_file=image_list, **params)

@@ -560,17 +560,10 @@ class BaseDetector(BaseModel):
                     if label == -1:
                         continue
                     category = self.labels[int(label)]
-                    import pycocotools.mask as mask_util
-                    rle = mask_util.encode(
-                        np.array(
-                            mask[:, :, None], order="F", dtype="uint8"))[0]
-                    if six.PY3:
-                        if 'counts' in rle:
-                            rle['counts'] = rle['counts'].decode("utf8")
                     sg_res = {
                         'category_id': int(label),
                         'category': category,
-                        'mask': rle,
+                        'mask': mask.astype('uint8'),
                         'score': score
                     }
                     seg_res.append(sg_res)
