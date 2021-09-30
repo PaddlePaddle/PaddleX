@@ -1,5 +1,9 @@
 # 模型量化
 
+PaddleX提供了各类任务的模型量化能力。在正常训练图像分类模型后，用户可完成模型在线量化。
+
+各类任务的模型量化示例：
+- [图像分类模型量化](./image_classification)
 
 这里**以图像分类为例**展示模型量化的使用过程，示例代码位于[image_classification/mobilenetv2_train.py](image_classification/mobilenetv2_train.py)和[image_classification/mobilenetv2_qat.py](image_classification/mobilenetv2_qat.py)，目标检测、实例分割和语义分割的量化使用均与图像分类一致，皆可参考以下步骤完成模型的在线量化。
 
