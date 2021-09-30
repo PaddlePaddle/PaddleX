@@ -10,6 +10,7 @@ demo适用场景:
 
 **注意：**
 - 多线程时不能频繁创建、销毁线程，否则会造成推理引擎的内存问题。可以使用线程池(`multi_thread_infer2.cpp`demo)或其它方式(`multi_thread_infer.cpp`demo)复用线程。
+- `multi_thread_infer.cpp`例子中的两个接口选择其中一个使用，不能同时使用
 
 
 `multi_thread_infer.cpp`说明：

@@ -67,9 +67,9 @@ int main(int argc, char** argv) {
   std::vector<cv::Mat> imgs;
   imgs.push_back(std::move(cv::imread(FLAGS_image)));
 
+  std::vector<std::vector<PaddleDeploy::Result>> results(5);
+  std::vector<std::future<bool>> futures(5);
   for(;;) {
-    std::vector<std::vector<PaddleDeploy::Result>> results(5);
-    std::vector<std::future<bool>> futures(5);
     for(int i = 0; i < 5; i++) {
       futures[i] = model.AddPredictTask(imgs, &results[i]);
     }
@@ -78,6 +78,7 @@ int main(int argc, char** argv) {
       std::cout << i << " result:" << results[i][0] << std::endl;
     }
 
+    /*
     std::vector<PaddleDeploy::Result> batch_results;
     std::vector<cv::Mat> batch_imgs;
     for(int i = 0; i < 5; i++) {
@@ -88,6 +89,7 @@ int main(int argc, char** argv) {
     for(int i = 0; i < 5; i++) {
        std::cout << i << " batch_result:" << batch_results[i] << std::endl;
     }
+    */
   }
 
   return 0;
