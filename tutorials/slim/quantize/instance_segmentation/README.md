@@ -9,7 +9,7 @@
 python mask_rcnn_train.py
 ```
 
-在此步骤中，训练的模型会保存在`output/mask_rcnn_train.py`目录下
+在此步骤中，训练的模型会保存在`output/mask_rcnn_r50_fpn`目录下
 
 
 ## 第二步 模型在线量化
