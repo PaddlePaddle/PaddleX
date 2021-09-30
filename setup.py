@@ -27,12 +27,20 @@ setuptools.setup(
     long_description_content_type="text/plain",
     url="https://github.com/PaddlePaddle/PaddleX",
     packages=setuptools.find_packages(),
+    package_data={
+        'paddlex_restful/restful/templates':
+        ['paddlex_restful/restful/templates/paddlex_restful_demo.html']
+    },
+    include_package_data=True,
+    data_files=[('paddlex_restful/restful/templates', [
+        'paddlex_restful/restful/templates/paddlex_restful_demo.html'
+    ])],
+    include_data_files=True,
     setup_requires=['cython', 'numpy'],
     install_requires=[
-        "pycocotools", 'pyyaml', 'colorama', 'tqdm',
-        'paddleslim==2.1.1', 'visualdl>=2.1.1', 'shapely>=1.7.0',
-        'opencv-python', 'scipy', 'lap', 'motmetrics', 'scikit-learn==0.23.2',
-        'chardet'
+        "pycocotools", 'pyyaml', 'colorama', 'tqdm', 'paddleslim==2.1.1',
+        'visualdl>=2.1.1', 'shapely>=1.7.0', 'opencv-python', 'scipy', 'lap',
+        'motmetrics', 'scikit-learn==0.23.2', 'chardet', 'flask_cors'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -40,4 +48,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     license='Apache 2.0',
-    entry_points={'console_scripts': ['paddlex=paddlex.command:main', ]})
+    entry_points={
+        'console_scripts': [
+            'paddlex=paddlex.command:main',
+            'paddlex_restful=paddlex_restful.command:main'
+        ]
+    })
