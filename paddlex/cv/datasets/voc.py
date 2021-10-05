@@ -162,12 +162,13 @@ class VOCDetection(Dataset):
                 else:
                     objs = list()
 
-                gt_bbox = list()
-                gt_class = list()
-                gt_score = list()
-                is_crowd = list()
-                difficult = list()
-                for i, obj in enumerate(objs):
+                num_bbox, i = len(objs), 0
+                gt_bbox = np.zeros((num_bbox, 4), dtype=np.float32)
+                gt_class = np.zeros((num_bbox, 1), dtype=np.int32)
+                gt_score = np.zeros((num_bbox, 1), dtype=np.float32)
+                is_crowd = np.zeros((num_bbox, 1), dtype=np.int32)
+                difficult = np.zeros((num_bbox, 1), dtype=np.int32)
+                for obj in objs:
                     pattern = re.compile('<name>', re.IGNORECASE)
                     name_tag = pattern.findall(str(ET.tostringlist(obj)))[0][
                         1:-1]
@@ -220,11 +221,12 @@ class VOCDetection(Dataset):
                             "so this object is skipped".format(i))
                         continue
 
-                    gt_bbox.append([x1, y1, x2, y2])
-                    gt_class.append([cname2cid[cname]])
-                    gt_score.append([1.])
-                    is_crowd.append(0)
-                    difficult.append([_difficult])
+                    gt_bbox[i, :] = [x1, y1, x2, y2]
+                    gt_class[i, 0] = cname2cid[cname]
+                    gt_score[i, 0] = 1.
+                    is_crowd[i, 0] = 0
+                    difficult[i, 0] = _difficult
+                    i += 1
                     annotations['annotations'].append({
                         'iscrowd': 0,
                         'image_id': int(im_id[0]),
@@ -236,11 +238,11 @@ class VOCDetection(Dataset):
                     })
                     ann_ct += 1
 
-                gt_bbox = np.array(gt_bbox, dtype=np.float32)
-                gt_class = np.array(gt_class, dtype=np.int32)
-                gt_score = np.array(gt_score, dtype=np.float32)
-                is_crowd = np.array(is_crowd, dtype=np.int32)
-                difficult = np.array(difficult, dtype=np.int32)
+                gt_bbox = gt_bbox[:i, :]
+                gt_class = gt_class[:i, :]
+                gt_score = gt_score[:i, :]
+                is_crowd = is_crowd[:i, :]
+                difficult = difficult[:i, :]
 
                 im_info = {
                     'im_id': im_id,
@@ -388,11 +390,11 @@ class VOCDetection(Dataset):
         for image in image_list:
             if not is_pic(image):
                 continue
-            gt_bbox = np.array([], dtype=np.float32)
-            gt_class = np.array([], dtype=np.int32)
-            gt_score = np.array([], dtype=np.float32)
-            is_crowd = np.array([], dtype=np.int32)
-            difficult = np.array([], dtype=np.int32)
+            gt_bbox = np.zeros((0, 4), dtype=np.float32)
+            gt_class = np.zeros((0, 1), dtype=np.int32)
+            gt_score = np.zeros((0, 1), dtype=np.float32)
+            is_crowd = np.zeros((0, 1), dtype=np.int32)
+            difficult = np.zeros((0, 1), dtype=np.int32)
 
             max_img_id += 1
             im_fname = osp.join(image_dir, image)
