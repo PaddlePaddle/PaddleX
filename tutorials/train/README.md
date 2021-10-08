@@ -65,4 +65,7 @@ visualdl --logdir output/mobilenetv3_small/vdl_log --port 8001
 
 ## 版本升级
 
-由于PaddleX代码的持续更新，版本低于2.0.0的训练脚本、API和模型暂时无法直接使用，如需使用请安装PaddleX 1.3.11版本。如果安装PaddleX 2.0.0，请使用本目录下的训练脚本。
+
+如果训练脚本、API和模型是之前使用PaddleX==1.x得到的，然后对PaddleX进行升级到2.0，此时再次运行之前的脚本会报错并提示`Your running script needs PaddleX<2.0.0, please refer to https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7 to solve this issue`，**这是因为PaddleX升级到2.0后，对部分训练API的设定做了修改，无法对1.x版本的PaddleX训练脚本做兼容**。
+
+如果需要使用PaddleX版本低于2.0.0的训练脚本、API和模型，请将PaddleX回退到1.3.11版本。如果想继续使用PaddleX 2.0，那么直接运行本目录下的训练脚本开始体验吧。
