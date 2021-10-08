@@ -17,9 +17,12 @@ from . import cv
 from .cv.models.utils.visualize import visualize_detection, draw_pr_curve
 from .cv.models.utils.det_metrics.coco_utils import coco_error_analysis
 
-message = 'Your running script needs PaddleX<2.0.0, please refer to {} to solve this issue.'.format(
-    'https://github.com/PaddlePaddle/PaddleX/tree/release/2.0-rc/tutorials/train#%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7'
-)
+
+message = 'Your script can be run normally only under PaddleX<2.0.0 ' + \
+    'but the installed PaddleX version is greater than or equal to 2.0.0, ' + \
+    'the solution is writen in the link {}, please refer to this link ro solve this issue.'.format(
+        'https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials/train#%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7'
+    )
 
 
 def __getattr__(attr):
