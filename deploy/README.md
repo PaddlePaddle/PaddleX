@@ -4,7 +4,7 @@ PaddleX提供了多种部署方式，用户可根据实际需要选择本地部�
 
 - [本地部署]()
   - [OpenVINO部署](./cpp/docs/compile/openvino/README.md)
-  - [C++部署](./deploy/cpp)
+  - [C++部署](./cpp)
     - [Manufacture SDK](./cpp/docs/manufacture_sdk) 
     - [Deployment SDK](./cpp/docs/deployment.md) 
   - [Python部署](../docs/python_deploy.md)
