@@ -1,6 +1,6 @@
-# Deployment部署方式
+# PaddleX Deployment部署方式
 
-
+PaddleX Deployment适配业界常用的CPU、GPU（包括NVIDIA Jetson）、树莓派等硬件，支持PaddleClas PaddleDetection PaddleSeg三个套件的训练的部署，支持用户采用OpenVINO或TensorRT进行推理加速。完备支持工业最常使用的Windows系统，且提供C#语言进行部署的方式！
 ## 模型套件支持
 本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署。用户可参考[文件夹结构](./file_format.md)了解模型导出前后文件夹状态。
 
