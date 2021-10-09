@@ -1,6 +1,6 @@
 # PaddleDetection模型部署
 
-当前支持PaddleDetection release/0.5和release/2.1分支导出的模型进行部署（仅支持FasterRCNN/MaskRCNN/PPYOLO/PPYOLOv2/YOLOv3)。PaddleDetection相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.1)。
+当前支持PaddleDetection release/0.5和release/2.2分支导出的模型进行部署（仅支持FasterRCNN/MaskRCNN/PPYOLO/PPYOLOv2/YOLOv3)。PaddleDetection相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.2)。
 
 下面主要以YoloV3为例，讲解从模型导出到部署的整个流程。
 
@@ -50,7 +50,8 @@ yolov3_darknet
 参考编译文档
 
 - [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成exe)](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成dll供C#调用)](../../../../examples/C%23_deploy/)
 
 
 
@@ -81,4 +82,3 @@ Box(39  bottle  0.356306    551.603 288.384 34.9819 112.599)
 - [单卡加载模型预测示例](../demo/model_infer.md)
 - [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
 - [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
-- [Windows系统下使用C#语言部署](../../../../examples/C%23_deploy/)
