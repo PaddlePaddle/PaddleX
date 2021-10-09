@@ -23,7 +23,7 @@ from collections import OrderedDict
 from paddlex.ppdet.data.source.category import get_categories
 
 from paddlex.ppdet.utils.logger import setup_logger
-logger = setup_logger('paddlex.ppdet.engine')
+logger = setup_logger('ppdet.engine')
 
 # Global dictionary
 TRT_MIN_SUBGRAPH = {
@@ -59,6 +59,7 @@ def _parse_reader(reader_cfg, dataset_cfg, metric, arch, image_shape):
 
     label_list = [str(cat) for cat in catid2name.values()]
 
+    fuse_normalize = reader_cfg.get('fuse_normalize', False)
     sample_transforms = reader_cfg['sample_transforms']
     for st in sample_transforms[1:]:
         for key, value in st.items():
@@ -66,6 +67,8 @@ def _parse_reader(reader_cfg, dataset_cfg, metric, arch, image_shape):
             if key == 'Resize':
                 if int(image_shape[1]) != -1:
                     value['target_size'] = image_shape[1:]
+            if fuse_normalize and key == 'NormalizeImage':
+                continue
             p.update(value)
             preprocess_list.append(p)
     batch_transforms = reader_cfg.get('batch_transforms', None)
@@ -122,7 +125,8 @@ def _dump_infer_config(config, path, image_shape, model):
             format(infer_arch) +
             'Please set TRT_MIN_SUBGRAPH in ppdet/engine/export_utils.py')
         os._exit(0)
-    if 'Mask' in infer_arch:
+    if 'mask_head' in config[config['architecture']] and config[config[
+            'architecture']]['mask_head']:
         infer_cfg['mask'] = True
     label_arch = 'detection_arch'
     if infer_arch in KEYPOINT_ARCH:

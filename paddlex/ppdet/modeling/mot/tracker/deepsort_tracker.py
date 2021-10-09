@@ -84,7 +84,7 @@ class DeepSORTTracker(object):
         """
         Perform measurement update and track management.
         Args:
-            detections (list): List[paddlex.ppdet.modeling.mot.utils.Detection]
+            detections (list): List[ppdet.modeling.mot.utils.Detection]
             A list of detections at the current time step.
         """
         # Run matching cascade.
