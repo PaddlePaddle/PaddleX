@@ -15,7 +15,7 @@ paddlex --split_dataset --format ImageNet --dataset_dir MyDataset --val_value 0.
 划分好的数据集会额外生成`labels.txt`, `train_list.txt`, `val_list.txt`, `test_list.txt`四个文件，之后可直接进行训练。
 
 
-- [图像分类任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv2.py)
+- [图像分类任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/shufflenetv2.py)
 
 ## 目标检测
 
