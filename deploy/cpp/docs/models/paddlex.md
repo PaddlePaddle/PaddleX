@@ -13,8 +13,8 @@
 参考编译文档
 
 - [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
-
+- [Windows系统上编译指南(生成exe)](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成dll供C#调用)](../../../../examples/C%23_deploy/)
 
 ## 步骤三 模型预测
 
@@ -55,4 +55,4 @@ Classify(809    sunscreen   0.939211)
 - [单卡加载模型预测示例](../demo/model_infer.md)
 - [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
 - [PaddleInference集成TensorRT加载模型预测示例](../demo/tensorrt_infer.md)
-- [Windows系统下使用C#语言部署](../../../../examples/C%23_deploy/)
+
