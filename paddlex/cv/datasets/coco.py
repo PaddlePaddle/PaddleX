@@ -196,8 +196,9 @@ class CocoDetection(VOCDetection):
             logging.error(
                 "No coco record found in %s' % (ann_file)", exit=True)
         self.pos_num = len(self.file_list)
-        if self.allow_empty:
+        if self.allow_empty and neg_file_list:
             self.file_list += self._sample_empty(neg_file_list)
+            self.num_workers = 0
         logging.info(
             "{} samples in file {}, including {} positive samples and {} negative samples.".
             format(
