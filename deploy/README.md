@@ -7,7 +7,7 @@ PaddleX提供了多种部署方式，用户可根据实际需要选择本地部�
   - [C++部署](./deploy/cpp)
     - [Manufacture SDK](./cpp/docs/manufacture_sdk) 
     - [Deployment SDK](./cpp/docs/deployment.md) 
-  - [Python部署](../../docs/python_deploy.md)
+  - [Python部署](../docs/python_deploy.md)
 - [边缘侧部署]()
   - [NVIDIA-JetsonQT部署]()
   - [Android/iOS部署]()
