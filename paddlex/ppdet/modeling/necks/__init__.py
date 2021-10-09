@@ -18,7 +18,6 @@ from . import hrfpn
 from . import ttf_fpn
 from . import centernet_fpn
 from . import pan
-from . import bifpn
 
 from .fpn import *
 from .yolo_fpn import *
@@ -27,4 +26,3 @@ from .ttf_fpn import *
 from .centernet_fpn import *
 from .blazeface_fpn import *
 from .pan import *
-from .bifpn import *
