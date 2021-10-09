@@ -27,7 +27,7 @@ paddlex --split_dataset --format VOC --dataset_dir D:\MyDataset --val_value 0.2 
 执行上面命令行，会在`D:\MyDataset`下生成`labels.txt`, `train_list.txt`, `val_list.txt`和`test_list.txt`，分别存储类别信息，训练样本列表，验证样本列表，测试样本列表
 
 
-- [目标检测任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_mobilenetv1.py)
+- [目标检测任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/object_detection/yolov3_darknet53.py)
 
 ## 实例分割
 
@@ -50,4 +50,4 @@ paddlex --split_dataset --format SEG --dataset_dir D:\MyDataset --val_value 0.2 
 执行上面命令行，会在`D:\MyDataset`下生成`train_list.txt`, `val_list.txt`, `test_list.txt`，分别存储训练样本信息，验证样本信息，测试样本信息
 
 
-- [语义分割任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_xception65.py)
+- [语义分割任务训练示例代码](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/semantic_segmentation/deeplabv3p_resnet50_vd.py)
