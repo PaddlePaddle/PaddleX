@@ -37,7 +37,7 @@ from paddlex.ppdet.utils.visualizer import visualize_results, save_result
 from paddlex.ppdet.metrics import Metric, COCOMetric, VOCMetric, WiderFaceMetric, get_infer_results, KeyPointTopDownCOCOEval, KeyPointTopDownMPIIEval
 from paddlex.ppdet.metrics import RBoxMetric, JDEDetMetric
 from paddlex.ppdet.data.source.category import get_categories
-import paddlex.ppdet.utils.stats as stats
+from paddlex.ppdet.utils import stats
 
 from .callbacks import Callback, ComposeCallback, LogPrinter, Checkpointer, WiferFaceEval, VisualDLWriter
 from .export_utils import _dump_infer_config
