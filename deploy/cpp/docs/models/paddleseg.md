@@ -1,6 +1,6 @@
 # PaddleSeg模型部署
 
-当前支持PaddleSeg release/2.1分支训练的模型进行导出及部署。本文档以[Deeplabv3P](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.0/configs/deeplabv3p)模型为例，讲述从release-2.1版本导出模型并进行cpp部署整个流程。 PaddleSeg相关详细文档查看[官网文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.1/README_CN.md)
+当前支持PaddleSeg release/2.2分支训练的模型进行导出及部署。本文档以[Deeplabv3P](https://github.com/PaddlePaddle/PaddleSeg/blob/release/v2.2/configs/deeplabv3p)模型为例，讲述从release-2.2版本导出模型并进行cpp部署整个流程。 PaddleSeg相关详细文档查看[官网文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.2/README_CN.md)
 
 ## 步骤一 部署模型导出
 
@@ -39,7 +39,8 @@ output
 参考编译文档
 
 - [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成exe)](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成dll供C#调用)](../../../../examples/C%23_deploy/)
 
 ## 步骤三 模型预测
 
@@ -66,4 +67,3 @@ ScoreMask(mean: 12.4814 std:    10.4955)    LabelMask(mean: 1.98847 std:    10.3
 - [单卡加载模型预测示例](../demo/model_infer.md)
 - [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
 - [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
-- [Windows系统下使用C#语言部署](../../../../examples/C%23_deploy/)
