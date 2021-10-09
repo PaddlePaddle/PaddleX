@@ -5,7 +5,7 @@
 
 ## 步骤一 部署模型导出
 
-请参考[PaddlX模型导出文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
+请参考[PaddleX模型导出文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
 
 
 ## 步骤二 编译
