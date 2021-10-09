@@ -140,7 +140,7 @@ def get_config_path(url):
 
     # 2. get url
     try:
-        from ppdet import __version__ as version
+        from paddlex.ppdet import __version__ as version
     except ImportError:
         version = None
 

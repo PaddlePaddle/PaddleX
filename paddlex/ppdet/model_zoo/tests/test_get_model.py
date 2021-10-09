@@ -18,7 +18,7 @@ from __future__ import print_function
 
 import os
 import paddle
-import paddlex.ppdet
+import paddlex.ppdet as ppdet
 import unittest
 
 # NOTE: weights downloading costs time, we choose
@@ -29,7 +29,7 @@ MODEL_NAME = 'ppyolo/ppyolo_tiny_650e_coco'
 class TestGetConfigFile(unittest.TestCase):
     def test_main(self):
         try:
-            cfg_file = paddlex.ppdet.model_zoo.get_config_file(MODEL_NAME)
+            cfg_file = ppdet.model_zoo.get_config_file(MODEL_NAME)
             assert os.path.isfile(cfg_file)
         except:
             self.assertTrue(False)
@@ -38,7 +38,7 @@ class TestGetConfigFile(unittest.TestCase):
 class TestGetModel(unittest.TestCase):
     def test_main(self):
         try:
-            model = paddlex.ppdet.model_zoo.get_model(MODEL_NAME)
+            model = ppdet.model_zoo.get_model(MODEL_NAME)
             assert isinstance(model, paddle.nn.Layer)
         except:
             self.assertTrue(False)

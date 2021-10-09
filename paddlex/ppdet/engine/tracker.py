@@ -29,7 +29,7 @@ from paddlex.ppdet.modeling.mot.utils import Timer, load_det_results
 from paddlex.ppdet.modeling.mot import visualization as mot_vis
 
 from paddlex.ppdet.metrics import Metric, MOTMetric, KITTIMOTMetric
-from paddlex.ppdet.utils import stats
+import paddlex.ppdet.utils.stats as stats
 
 from .callbacks import Callback, ComposeCallback
 
@@ -333,7 +333,7 @@ class Tracker(object):
             if save_videos:
                 output_video_path = os.path.join(save_dir, '..',
                                                  '{}_vis.mp4'.format(seq))
-                cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" {}'.format(
+                cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg {}'.format(
                     save_dir, output_video_path)
                 os.system(cmd_str)
                 logger.info('Save video in {}.'.format(output_video_path))
@@ -451,7 +451,7 @@ class Tracker(object):
         if save_videos:
             output_video_path = os.path.join(save_dir, '..',
                                              '{}_vis.mp4'.format(seq))
-            cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" {}'.format(
+            cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg {}'.format(
                 save_dir, output_video_path)
             os.system(cmd_str)
             logger.info('Save video in {}'.format(output_video_path))

@@ -26,7 +26,7 @@ import paddle.distributed as dist
 from paddlex.ppdet.utils.checkpoint import save_model
 
 from paddlex.ppdet.utils.logger import setup_logger
-logger = setup_logger('paddlex.ppdet.engine')
+logger = setup_logger('ppdet.engine')
 
 __all__ = ['Callback', 'ComposeCallback', 'LogPrinter', 'Checkpointer']
 
