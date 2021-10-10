@@ -1,6 +1,10 @@
 ---
 name: 2. 模型训练
 about: 模型训练中的问题
+title: ''
+labels: ''
+assignees: ''
+
 ---
 
 问题类型：模型训练  
