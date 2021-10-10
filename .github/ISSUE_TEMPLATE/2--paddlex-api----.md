@@ -1,6 +1,6 @@
 ---
-name: 5. 其它类型问题
-about: 所有问题都可以在这里提
+name: 2. PaddleX API使用问题
+about: 使用PaddleX API所遇到的问题
 title: ''
 labels: ''
 assignees: ''
@@ -12,11 +12,11 @@ assignees: ''
 1. 查找[历史相关issue](https://github.com/PaddlePaddle/PaddleX/issues)寻求解答
 2. 翻阅[FAQ常见问题汇总和答疑](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/FAQ/FAQ.md)
 3. 确认bug是否在新版本里还未修复
-4. 翻阅[PaddleX 使用文档](https://github.com/PaddlePaddle/PaddleX/tree/develop#paddlex-%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3)
+4. 翻阅[PaddleX API文档说明](https://github.com/PaddlePaddle/PaddleX/tree/develop#paddlex-%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3)
 
 ## 描述问题
 
-## 复现 
+## 复现
 
 1. 您是否已经正常运行我们提供的[教程](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials)？
 
