@@ -17,17 +17,17 @@ PaddleX Deployment适配业界常用的CPU、GPU（包括NVIDIA Jetson）、树�
 
 ## 各套件部署方式说明
 
-- [PaddleX部署指南](.docs/models/paddlex.md)
-- [PaddleDetection部署指南](.docs/models/paddledetection.md)
-- [PaddleSeg部署指南](.docs/models/paddleseg.md)
-- [PaddleClas部署指南](.docs/models/paddleclas.md)
+- [PaddleX部署指南](docs/models/paddlex.md)
+- [PaddleDetection部署指南](docs/models/paddledetection.md)
+- [PaddleSeg部署指南](docs/models/paddleseg.md)
+- [PaddleClas部署指南](docs/models/paddleclas.md)
 
 ## 模型加密与预测加速
 
-- [模型加密预测示例](.docs/demo/decrypt_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](.docs/demo/tensorrt_infer.md)
+- [模型加密预测示例](docs/demo/decrypt_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](docs/demo/tensorrt_infer.md)
 
 ## <h2 id="1">C++代码预测说明</h2>
 
-- [部署相关API说明](.docs/apis/model.md)
-- [模型配置文件说明](.docs/apis/yaml.md)
+- [部署相关API说明](docs/apis/model.md)
+- [模型配置文件说明](docs/apis/yaml.md)
