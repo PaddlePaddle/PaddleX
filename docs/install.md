@@ -59,7 +59,6 @@ github代码会跟随开发进度不断更新，可以安装develop分支的代�
 ```commandline
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-git checkout develop
 pip install -r requirements.txt
 python setup.py install
 ```

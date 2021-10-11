@@ -1,46 +1,10 @@
 # 部署模型导出
 
-**注：所有涉及到模型部署，均需要参考本文档，进行部署模型导出**
+**注：所有涉及到模型部署，均需要参考本文档，进行部署模型导出**  
 
-## 目录
+在服务端部署模型时需要将训练过程中保存的模型导出为inference格式模型，导出的inference格式模型包括`model.pdmodel`、`model.pdiparams`、`model.pdiparams.info`、`model.yml`和`pipeline.yml`五个文件，分别表示模型的网络结构、模型权重、模型权重名称、模型的配置文件（包括数据预处理参数等）和可用于[PaddleX Manufacture SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/manufacture_sdk)的流程配置文件。
 
-* [模型格式说明](#1)
-  * [训练模型格式](#11)
-  * [部署模型格式](#12)
-* [部署模型导出](#2)
-
-
-## <h2 id="1">模型格式说明</h2>
-
-### <h3 id="11">训练模型格式</h3>
-
-在使用**PaddleX 2.0训练保存的模型**文件夹中，主要包含四个文件：
-- `model.pdopt`，训练模型参数的优化器
-- `model.pdparams`，模型参数
-- `model.yml`，模型的配置文件（包括预处理参数、模型定义等）
-- `eval_details.json`，模型评估时的预测结果和真值
-
-需要注意的是，训练保存的模型不能直接用于部署，需要导出成部署格式后才能用于部署。
-
-### <h3 id="12">部署模型格式</h3>
-
-在服务端部署模型时需要将训练过程中保存的模型导出为inference格式模型，使用**PaddleX 2.0导出的inference格式模型**包括五个文件：
-- `model.pdmodel`，模型网络结构
-- `model.pdiparams`，模型权重
-- `model.pdiparams.info`，模型权重名称
-- `model.yml`，模型的配置文件（包括预处理参数、模型定义等）
-- `pipeline.yml`，可用于[PaddleX Manufacture SDK](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/manufacture_sdk)的流程配置文件
-
-
-需要注意的是，**PaddleX 2.0版本导出的inference格式与1.x版本的有所不同，1.x版本的inference格式模型是**：
-- `__model__`，模型网络结构
-- `__params__`，模型权重
-- `model.yml`，模型的配置文件（包括预处理参数、模型定义等）
-
-
-## <h2 id="2">部署模型导出</h2>
-
-> **检查你的模型文件夹**，如果里面是`model.pdparams`、`model.pdopt`和`model.yml`3个文件时，那么就需要按照下面流程进行模型导出:
+> **检查你的模型文件夹**，如果里面是`model.pdparams`、`model.pdopt`和`model.yml`3个文件时，那么就需要按照下面流程进行模型导出
 
 在安装完PaddleX后，在命令行终端使用如下命令将训练好的模型导出为部署所需格式：
 

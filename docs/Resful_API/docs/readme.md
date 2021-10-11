@@ -26,6 +26,7 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。对于开发者来说只�
 <div align="center">
 <img src="../images/1.png"  width = "500" />              </div>
 
+<a name="快速使用"></a>
 ## *如何快速使用PaddleX_Restful API 快速搭建私有化训练云平台*
 
 在该示例中PaddleX_Restful运行在一台带GPU的linux服务器下，用户通过其他电脑连接该服务器进行远程的操作。
