@@ -13,7 +13,7 @@
 
 通过简洁易懂的Python API，在兼顾功能全面性、开发灵活性、集成方便性的基础上，给开发者最流畅的深度学习开发体验。<br>
 
-以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.0)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/release/2.0.0/install/pip/windows-pip.html)
+以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.0)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/develop/install/pip/windows-pip.html)
 
 
 ### PaddleX 2.0.0安装
@@ -54,11 +54,10 @@ pip install git+https://gitee.com/jiangjiajun/philferriere-cocoapi.git#subdirect
 
 ### PaddleX develop安装
 
-github代码会跟随开发进度不断更新，可以安装release/2.0.0分支的代码使用最新的功能，安装方式如下：
+github代码会跟随开发进度不断更新，可以安装develop分支的代码使用最新的功能，安装方式如下：
 
 ```commandline
 git clone https://github.com/PaddlePaddle/PaddleX.git
-git checkout develop
 cd PaddleX
 pip install -r requirements.txt
 python setup.py install

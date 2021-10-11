@@ -26,6 +26,7 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。对于开发者来说只�
 <div align="center">
 <img src="../images/1.png"  width = "500" />              </div>
 
+<a name="快速使用"></a>
 ## *如何快速使用PaddleX_Restful API 快速搭建私有化训练云平台*
 
 在该示例中PaddleX_Restful运行在一台带GPU的linux服务器下，用户通过其他电脑连接该服务器进行远程的操作。
@@ -61,7 +62,7 @@ pip install pycuda -i
 
 ### 3 启动客户端进行远程全流程训练
 
-为了方便大家进行远程调试，PaddleX_Restful提供了两种访问形式，一个是Web图形化界面，另一个是客户端的图形化界面
+为了方便大家进行远程调试，PaddleX_Restful提供了两张访问形式，一个是Web图形化界面，另一个是客户端的图形化界面
 * ## Web图像化界面
 
 ### 3.1 打开Web界面

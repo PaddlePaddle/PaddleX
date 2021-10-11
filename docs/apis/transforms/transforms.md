@@ -27,7 +27,7 @@
 paddlex.transforms.Compose(transforms)
 ```
 
-根据数据预处理/增强算子对输入数据进行操作。  [使用示例](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/tutorials/train/image_classification/mobilenetv3_small.py#L10)
+根据数据预处理/增强算子对输入数据进行操作。  [使用示例](https://github.com/PaddlePaddle/PaddleX/blob/develop/tutorials/train/image_classification/mobilenetv3_small.py#L10)
 
 > **参数**
 > * **transforms** (List[paddlex.transforms.Transform]): 数据预处理/数据增强列表。

@@ -66,8 +66,6 @@ resnet50
 ### Step 1. 获取部署代码
 ```
 git clone https://github.com/PaddlePaddle/PaddleX.git
-cd PaddleX
-git checkout release/2.0.0
 ```
 **说明**：`C++`预测代码在`PaddleX/deploy/cpp` 目录，该目录不依赖任何`PaddleX`下其他目录。所有的推理实现代码在`model_deploy`目录下，所有示例代码都在`demo`目录下。
 

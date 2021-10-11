@@ -5,7 +5,7 @@
 
 ## 步骤一 部署模型导出
 
-请参考[PaddlX模型导出文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
+请参考[PaddleX模型导出文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/export_model.md)
 
 
 ## 步骤二 编译
@@ -13,8 +13,8 @@
 参考编译文档
 
 - [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
-
+- [Windows系统上编译指南(生成exe)](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成dll供C#调用)](../../../../examples/C%23_deploy/)
 
 ## 步骤三 模型预测
 
@@ -54,5 +54,4 @@ Classify(809    sunscreen   0.939211)
 
 - [单卡加载模型预测示例](../demo/model_infer.md)
 - [多卡加载模型预测示例](../demo/multi_gpu_model_infer.md)
-- [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)
-- [模型加密预测示例](./docs/demo/decrypt_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](../demo/tensorrt_infer.md)

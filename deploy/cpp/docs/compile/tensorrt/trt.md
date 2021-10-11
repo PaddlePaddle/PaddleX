@@ -25,9 +25,7 @@ $ docker run -it --gpus=all --name tensorrt-onnx  -v ~/paddle2onnx/:/paddle2onnx
 
 ```
 $ git clone https://github.com/PaddlePaddle/PaddleX.git
-$ cd PaddleX
-$ git checkout release/2.0.0
-$ cd deploy/cpp
+$ cd PaddleX/deploy/cpp
 $ git clone https://github.com/NVIDIA/TensorRT.git
 # 如果不是其他版本的容器， 将cuda_dir路径换成自己的cuda路径即可
 $ sh scripts/tensorrt_build.sh --tensorrt_dir=/usr/lib/x86_64-linux-gnu/ --cuda_dir=/usr/local/cuda-11.1/targets/x86_64-linux/ --tensorrt_header=./TensorRT/

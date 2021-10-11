@@ -50,7 +50,7 @@ paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间
 
 ## PaddleX Web Demo
 PaddleX Web Demo是针对PaddleX RESTful开发的Web可视化客户端。  
-[Wed demo传送门](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/paddlex_restful/restful/templates/paddlex_restful_demo.html)
+[Wed demo传送门](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_restful/restful/templates/paddlex_restful_demo.html)
 
 ### Web DEMO使用流程
 
@@ -70,7 +70,7 @@ paddlex_restful --start_restful --port [端口号] --workspace_dir [工作空间
 
 #### step3：
 - 方法1（推荐）：在浏览器输入开启RESTful服务的机器与端口号如:10.3.12.4:8080，便可以使用WEB GUI，此方法无需step4操作
-- 方法2：通过浏览器打开[Demo](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/paddlex_restful/restful/templates/paddlex_restful_demo.html)文件
+- 方法2：通过浏览器打开[Demo](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex_restful/restful/templates/paddlex_restful_demo.html)文件
 
 
 
