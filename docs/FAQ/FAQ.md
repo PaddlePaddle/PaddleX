@@ -53,7 +53,7 @@
 
 **Q:**  预测结果如何可视化？
 
-**A:**  检测结果可以用`pdx.det.visualize`，分割结果可以用`pdx.seg.visualize`，API说明见[文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/prediction.md)
+**A:**  检测结果可以用`pdx.det.visualize`，分割结果可以用`pdx.seg.visualize`，API说明见[文档](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0.0/docs/apis/prediction.md)
 
 
 **Q:**  如何用旧的部署代码部署新的模型？

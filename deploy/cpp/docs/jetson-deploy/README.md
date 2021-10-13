@@ -40,7 +40,7 @@
 
 项目使用基本环境说明：
 
-* CUDA10.2  Cudnn 8
+* CUDA10.2  cuDNN 8
 * Jetson原生opencv4.1.1 / opencv3.4.6等(原生应该都支持，自己编译的opencv则建议为3.4.6)
 * Jetpack4.4: nv-jetson-cuda10.2-cudnn8-trt7(xavier)——PaddleInference 10.2的预测库(2.1.1版本)
 * Cmake 3.10.2
@@ -67,7 +67,7 @@
 2. 下载PaddleX+PaddleInference预测库:
 > 可查看文档:
 
-- [基于PaddleInference的推理-Jetson环境编译](../../deploy/cpp/docs/compile/paddle/jetson.md)
+- [基于PaddleInference的推理-Jetson环境编译](./../compile/paddle/jetson.md)
 
 3. 查看cmake版本: `cmake -version`
 
@@ -81,7 +81,7 @@
 
 > 如果已经查看`Jetson环境编译`文档后，并已经成功编译出可执行程序后，可跳过该部分的`deploy/cpp/scripts/jetson_build.sh`、`deploy/cpp/CMakeList.txt`以及`deploy/cpp/cmake/yaml.cmake`的修改说明.
 
-> 以下3部分的修改完全同[基于PaddleInference的推理-Jetson环境编译](../../deploy/cpp/docs/compile/paddle/jetson.md)一样，可前往参阅。
+> 以下3部分的修改完全同[基于PaddleInference的推理-Jetson环境编译](./../compile/paddle/jetson.md)一样，可前往参阅。
 
 ### 2.1 修改`jetson_build.sh`编译参数<a id="### 2.1 修改`jetson_build.sh`编译参数"/>
 
@@ -142,7 +142,7 @@ eg:
   <img src="./images/yaml_cmakelist.png">
   </div>
 
-> 其它支持的加密操作以及TensorRT，可参考[Linux环境编译指南](./linux.md).
+> 其它支持的加密操作以及TensorRT，可参考[Linux环境编译指南](./../compile/paddle/jetson.md).
 
 -------
 
@@ -246,7 +246,7 @@ sh script/jetson_build.sh
 > 此时QT项目中，会出现标红的错误，原因可能如下:
 - 1. 还未导入动态链接库
 - 2. 还未导入opencv的编译好的库
-- 因此，现在暂时不用担心标红的问题
+因此，现在暂时不用担心标红的问题
 
 ### 4.2 载入动态链接库<a id="### 4.2 载入动态链接库"/>
 
@@ -267,7 +267,7 @@ sh script/jetson_build.sh
 
 > 此时QT项目中，会出现标红的错误，原因可能如下:
 - 1. 还未导入opencv的编译好的库
-- 因此，现在暂时不用担心标红的问题
+因此，现在暂时不用担心标红的问题
 
 ### 4.3 配置QT的Opencv路径<a id="### 4.3 配置QT的Opencv路径"/>
 
@@ -345,7 +345,7 @@ sh script/jetson_build.sh
 - 7.加载新模型，需要先点击销毁模型，然后再设置模型类型以及运行环境，最后重新初始化新模型
 - 8.在目标检测过程中，可设置检测阈值
 - 9.在文件夹推理过程中，可设置连续推理间隔时间
-- 10.可通过查看左上角实时推理耗时来查看模型预处理+推理-后处理的时间**(Jetson上，CPU推理过慢，建议直接使用GPU推理)**
+- 10.可通过查看左上角实时推理耗时来查看模型预处理+推理-后处理的时间 **(Jetson上，CPU推理过慢，建议直接使用GPU推理)**
 - 11.可编辑GPU_id，设置初始化时模型运行在指定GPU上——请根据实际硬件设置，默认为0
 
 ### 5.3 使用效果展示<a id="### 5.3 使用效果展示"/>
@@ -470,7 +470,7 @@ sh script/jetson_build.sh
   - windows上编译opencv可参考: [为qt编译opencv](http://159.138.37.243/article/z634863434/89950961)
   - 如cmake的configure中出现红字，说找不到ffmpeg相关包，属于网络问题，无法下载该相关dll，需要自行下载后进行相关处理，可参考: [ffmpeg下载失败处理方法](https://www.cxyzjd.com/article/pyt1234567890/106525475)
 - Jetson Xavier平台移植测试完成 -- 预编译opencv4.1.1，已支持QT和GL
-- Linux平台移植界面测试完成 -- opencv以及模型推理所需的动态链接库(可按照该项目的`CMakeList.txt`与`model_infer.cpp`替换原文件，然后按照[linux编译方法](../../deploy/cpp/docs/compile/paddle/linux.md)进行编译)去自行生成。
+- Linux平台移植界面测试完成 -- opencv以及模型推理所需的动态链接库(可按照该项目的`CMakeList.txt`与`model_infer.cpp`替换原文件，然后按照[linux编译方法](./../compile/paddle/linux.md)进行编译去自行生成。  ./../compile/paddle/jetson.md
 
 PS:
-- Windows下部署需要的推理model_infer动态链接库生成，可以参考[C#部署示例](../C#_deploy)。
+- Windows下部署需要的推理model_infer动态链接库生成，可以参考[C#部署示例](./../C#_deploy/README.md)。

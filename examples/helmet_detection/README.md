@@ -1,6 +1,6 @@
 # 安全帽检测
 
-> 基于Paddlex2.0API开发
+> 基于Paddlex2.0 API开发
 
 ## 1.项目说明
 
@@ -38,7 +38,7 @@ dataset/                          dataset/
 
 数据集分类情况: **`head` , `helmet`, `person`.**
 
-更多数据格式信息请参考[数据标注说明文档](https://paddlex.readthedocs.io/zh_CN/develop/data/annotation/index.html)
+更多数据格式信息请参考[数据标注说明文档](./../../docs/data/annotation/README.md)
 
 - **数据切分** 将训练集和验证集按照8.5：1.5的比例划分。 PaddleX中提供了简单易用的API，方便用户直接使用进行数据划分。
 
@@ -194,7 +194,7 @@ paddlex --export_inference --model_dir=output/yolov3_darknet53/best_model --save
 
 
 
-模型部署采用了PaddleX提供的C++ inference部署方案，在该方案中提供了C#部署[Demo](../../C%23_deploy)，用户可根据实际情况自行参考。
+模型部署采用了PaddleX提供的C++ inference部署方案，在该方案中提供了C#部署[Demo](../../deploy/cpp/docs/C#_deploy)，用户可根据实际情况自行参考。
 
 <div align="center">
 <img src="images/14.png"  width = "1024" /></div>
