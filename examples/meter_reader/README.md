@@ -373,6 +373,8 @@ d:
 mkdir projects
 cd projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+git checkout develop
 
 ```
 ### Step2: 下载PaddleX Manufature SDK
