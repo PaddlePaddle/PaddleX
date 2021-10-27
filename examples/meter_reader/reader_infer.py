@@ -263,7 +263,7 @@ class MeterReader:
         eroded_results = seg_results
         for i in range(len(seg_results)):
             eroded_results[i]['label_map'] = cv2.erode(
-                seg_results[i]['label_map'], kernel)
+                seg_results[i]['label_map'].astype(np.uint8), kernel)
         return eroded_results
 
     def circle_to_rectangle(self, seg_results):

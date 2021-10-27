@@ -388,7 +388,7 @@ def start_train_task(data, workspace, monitored_processes):
         parent_id = workspace.tasks[tid].parent_id
         assert parent_id != "", "任务{}不是裁剪训练任务".format(tid)
         parent_path = workspace.tasks[parent_id].path
-        sensitivities_path = osp.join(parent_path, 'prune')
+        sensitivities_path = osp.join(parent_path, 'prune', 'model.sensi.data')
         pruned_flops = data['pruned_flops']
         parent_best_model_path = osp.join(parent_path, 'output', 'best_model')
         params_conf_file = osp.join(path, 'params.pkl')

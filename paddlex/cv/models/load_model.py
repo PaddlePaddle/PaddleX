@@ -121,6 +121,16 @@ def load_model(model_dir, **params):
                     net_state_dict = load_rcnn_inference_model(model_dir)
                 else:
                     net_state_dict = paddle.load(osp.join(model_dir, 'model'))
+                    if model.model_type in ['classifier', 'segmenter'
+                                            ] and 'rc' in version:
+                        # For PaddleX>=2.0.0, when exporting a classifier and segmenter,
+                        # InferNet is defined to append softmax and argmax operators to the model,
+                        # so parameter name starts with 'net.'
+                        new_net_state_dict = {}
+                        for k, v in net_state_dict.items():
+                            new_net_state_dict['net.' + k] = v
+                        net_state_dict = new_net_state_dict
+
             else:
                 net_state_dict = paddle.load(
                     osp.join(model_dir, 'model.pdparams'))
