@@ -290,7 +290,7 @@ class VOCDetection(Dataset):
             logging.error(
                 "No voc record found in %s' % (file_list)", exit=True)
         self.pos_num = len(self.file_list)
-        if self.allow_empty:
+        if self.allow_empty and neg_file_list:
             self.file_list += self._sample_empty(neg_file_list)
         logging.info(
             "{} samples in file {}, including {} positive samples and {} negative samples.".
@@ -423,7 +423,9 @@ class VOCDetection(Dataset):
                 **
                 label_info
             })
-        self.file_list += self._sample_empty(neg_file_list)
+        if neg_file_list:
+            self.allow_empty = True
+            self.file_list += self._sample_empty(neg_file_list)
         logging.info(
             "{} negative samples added. Dataset contains {} positive samples and {} negative samples.".
             format(
