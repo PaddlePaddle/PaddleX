@@ -119,7 +119,7 @@ extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 		// score
 		output[i * 6 + 1] = results[0].det_result->boxes[i].score;  // Score
 		//// box
-		output[i * 6 + 2] = results[0].det_result->boxes[i].coordinate[0]; // x1, y1, x2, y2
+		output[i * 6 + 2] = results[0].det_result->boxes[i].coordinate[0]; // x1, y1, w, h
 		output[i * 6 + 3] = results[0].det_result->boxes[i].coordinate[1]; // Upper left and lower right vertices
 		output[i * 6 + 4] = results[0].det_result->boxes[i].coordinate[2];
 		output[i * 6 + 5] = results[0].det_result->boxes[i].coordinate[3];
