@@ -52,23 +52,31 @@ class ConvNormLayer(nn.Layer):
             stride=stride,
             padding=(filter_size - 1) // 2,
             groups=1,
-            weight_attr=ParamAttr(initializer=Normal(
-                mean=0., std=0.01)),
+            weight_attr=ParamAttr(
+                name=name + "_weights", initializer=Normal(
+                    mean=0., std=0.01)),
             bias_attr=False)
 
         norm_lr = 0. if freeze_norm else 1.
 
+        norm_name = name + '_bn'
         param_attr = ParamAttr(
-            learning_rate=norm_lr, regularizer=L2Decay(norm_decay))
+            name=norm_name + "_scale",
+            learning_rate=norm_lr,
+            regularizer=L2Decay(norm_decay))
         bias_attr = ParamAttr(
-            learning_rate=norm_lr, regularizer=L2Decay(norm_decay))
+            name=norm_name + "_offset",
+            learning_rate=norm_lr,
+            regularizer=L2Decay(norm_decay))
         global_stats = True if freeze_norm else False
         if norm_type in ['bn', 'sync_bn']:
             self.norm = nn.BatchNorm(
                 ch_out,
                 param_attr=param_attr,
                 bias_attr=bias_attr,
-                use_global_stats=global_stats)
+                use_global_stats=global_stats,
+                moving_mean_name=norm_name + '_mean',
+                moving_variance_name=norm_name + '_variance')
         elif norm_type == 'gn':
             self.norm = nn.GroupNorm(
                 num_groups=norm_groups,
@@ -368,13 +376,17 @@ class SELayer(nn.Layer):
         self.squeeze = Linear(
             num_channels,
             med_ch,
-            weight_attr=ParamAttr(initializer=Uniform(-stdv, stdv)))
+            weight_attr=ParamAttr(
+                initializer=Uniform(-stdv, stdv), name=name + "_sqz_weights"),
+            bias_attr=ParamAttr(name=name + '_sqz_offset'))
 
         stdv = 1.0 / math.sqrt(med_ch * 1.0)
         self.excitation = Linear(
             med_ch,
             num_filters,
-            weight_attr=ParamAttr(initializer=Uniform(-stdv, stdv)))
+            weight_attr=ParamAttr(
+                initializer=Uniform(-stdv, stdv), name=name + "_exc_weights"),
+            bias_attr=ParamAttr(name=name + '_exc_offset'))
 
     def forward(self, input):
         pool = self.pool2d_gap(input)
