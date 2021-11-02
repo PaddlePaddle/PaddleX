@@ -539,7 +539,7 @@ class KITTIEvaluation(object):
                         return
 
                 # do not consider objects marked as invalid
-                if t_data.track_id is -1 and t_data.obj_type != "dontcare":
+                if t_data.track_id == -1 and t_data.obj_type != "dontcare":
                     continue
 
                 idx = t_data.frame
@@ -718,7 +718,7 @@ class KITTIEvaluation(object):
                     seq_trajectories[gg.track_id].append(-1)
                     seq_ignored[gg.track_id].append(False)
 
-                if len(g) is 0:
+                if len(g) == 0:
                     cost_matrix = [[]]
                 # associate
                 association_matrix = hm.compute(cost_matrix)
