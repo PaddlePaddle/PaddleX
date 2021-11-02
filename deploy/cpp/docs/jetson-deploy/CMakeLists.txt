@@ -83,7 +83,7 @@ if(WITH_GPU)
     message(FATAL_ERROR "please set CUDA_LIB with -DCUDA_LIB=/path/cuda/lib64")
   endif()
 
-  
+
   if(NOT WIN32)
     if (NOT DEFINED CUDNN_LIB)
       message(FATAL_ERROR "please set CUDNN_LIB with -DCUDNN_LIB=/path/cudnn/")

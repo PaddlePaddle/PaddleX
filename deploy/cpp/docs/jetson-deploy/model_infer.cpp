@@ -8,21 +8,21 @@ PaddleDeploy::Model* model;
 
 /*
 * Model initialization / registration API
-* 
+*
 * model_type: det,seg,clas,paddlex
-* 
+*
 * model_filename: Model file path
-* 
+*
 * params_filename: Parameter file path
-* 
+*
 * cfg_file: Configuration file path
-* 
+*
 * use_gpu: Whether to use GPU
-* 
+*
 * gpu_id: Specify GPU x
-* 
+*
 * paddlex_model_type: When Model_Type is paddlx, the type of actual Paddlex model returned - det, seg, clas
-* 
+*
 */
 extern "C" void InitModel(const char* model_type, const char* model_filename, const char* params_filename, const char* cfg_file, bool use_gpu, int gpu_id, char* paddlex_model_type)
 {
@@ -61,12 +61,12 @@ extern "C" void InitModel(const char* model_type, const char* model_filename, co
 			strcpy(paddlex_model_type, "clas");
 		}
 	}
-} 
+}
 
 
 /*
 * Detection inference API
-* 
+*
 * img: input for predicting.
 *
 * nWidth: width of img.
@@ -80,7 +80,7 @@ extern "C" void InitModel(const char* model_type, const char* model_filename, co
 * nBoxesNum£º number of box
 *
 * LabelList: label list of result
-* 
+*
 * extern "C"
 */
 extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
@@ -129,8 +129,8 @@ extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 
 
 /*
-* Segmented inference 
-* 
+* Segmented inference
+*
 * img: input for predicting.
 *
 * nWidth: width of img.
@@ -140,7 +140,7 @@ extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 * nChannel: channel of img.
 *
 * output: result of pridict ,include label_map
-* 
+*
 * extern "C"
 */
 extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
@@ -175,7 +175,7 @@ extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 
 /*
 * Recognition inference API
-* 
+*
 * img: input for predicting.
 *
 * nWidth: width of img.
@@ -185,12 +185,12 @@ extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 * nChannel: channel of img.
 *
 * score: result of pridict ,include score
-* 
+*
 * category: result of pridict ,include category_string
-* 
+*
 * category_id: result of pridict ,include category_id
-* 
-* extern "C" 
+*
+* extern "C"
 */
 extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
 {
@@ -217,16 +217,16 @@ extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 	model->Predict(imgs, &results, 1);
 
 	*category_id = results[0].clas_result->category_id;
-	// Copy output category result to output -- string --> char* 
+	// Copy output category result to output -- string --> char*
 	memcpy(category, results[0].clas_result->category.c_str(), strlen(results[0].clas_result->category.c_str()));
 	// Copy output probability value
 	*score = results[0].clas_result->score;
-}	
+}
 
 
 /*
-* MaskRCNN Reasoning 
-* 
+* MaskRCNN Reasoning
+*
 * img: input for predicting.
 *
 * nWidth: width of img.
@@ -240,9 +240,9 @@ extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 * mask_output: result of pridict ,include label_map
 *
 * nBoxesNum: result of pridict ,include BoxesNum
-* 
+*
 * LabelList: result of pridict ,include LabelList
-* 
+*
 * extern "C"
 */
 extern "C" void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
@@ -285,7 +285,7 @@ extern "C" void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHei
 		box_output[i * 6 + 3] = results[0].det_result->boxes[i].coordinate[1]; // Upper left and lower right vertices
 		box_output[i * 6 + 4] = results[0].det_result->boxes[i].coordinate[2];
 		box_output[i * 6 + 5] = results[0].det_result->boxes[i].coordinate[3];
-		
+
 		// Mask prediction results
 		for (int j = 0; j < results[0].det_result->boxes[i].mask.data.size(); j++)
 		{
@@ -302,8 +302,8 @@ extern "C" void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHei
 
 /*
 * Model destruction API
-* 
-* extern "C" 
+*
+* extern "C"
 */
 extern "C" void DestructModel()
 {

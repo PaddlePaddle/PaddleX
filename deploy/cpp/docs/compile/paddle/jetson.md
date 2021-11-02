@@ -98,7 +98,7 @@ eg:
 <div>
   <img src="../../images/yaml_cmakelist.png">
   </div>
-  
+
 > 其它支持的加密操作以及TensorRT，可参考[Linux环境编译指南](./linux.md).
 
 ### Step 6. 编译
@@ -130,7 +130,7 @@ sh script/jetson_build.sh
 通过修改`PaddleX/deploy/cpp/demo/model_infer.cpp`以及`PaddleX/deploy/cpp/demo/CMakeLists.txt`, 再执行`jetson_build.sh`生成`libmodel_infer.so`动态链接库，用于QT应用调用，执行模型初始化、模型推理预测、模型注销等操作。[现已经在Jetson Xavier上利用原生编译的opencv实现了模型单张预测与文件夹连续预测，由于预编译opencv不支持解析视频格式，因此暂未对视频进行测试——仅在windows上完成了单张图片-文件夹连续预测-视频流预测的全流程验证。]
 
 > 该版本对于MaskRCNN模型的推理需要使用GPU进行推理——如果CPU下进行推理可能由于内存使用问题报错。
-> 
+>
 > 鉴于Qt跨平台属性，因此如果部署环境下opencv支持视频格式，则该Demo-Gui程序可启动完整的推理可视化功能。
 
 <div>
@@ -140,4 +140,3 @@ sh script/jetson_build.sh
 
 具体Demo信息可前往如下文档链接:
 - [基于QT的Jetson部署Demo](../../jetson-deploy/README.md)
-

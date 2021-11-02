@@ -49,11 +49,11 @@
 
 > 查看Jetpack版本: `cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2`
 > (4.3可以使用4.4版本的预测库)
-> 
+>
 > 查看QT版本: `qmake -v`
-> 
+>
 > 查看CUDA版本: `cat /usr/local/cuda/version.txt`
-> 
+>
 > 查看Cudnn版本: `cat /usr/include/cudnn_version.h | grep CUDNN_MAJOR -A 2`
 
 ## 1 环境准备<a id="## 1 环境准备"/>
@@ -65,7 +65,7 @@
 `sudo apt-get install qt5-default qtcreator -y`
 
 2. 下载PaddleX+PaddleInference预测库:
-> 可查看文档: 
+> 可查看文档:
 
 - [基于PaddleInference的推理-Jetson环境编译](../../deploy/cpp/docs/compile/paddle/jetson.md)
 
@@ -127,7 +127,7 @@
 <div>
   <img src="./images/cmakelist_set.png">
   </div>
-  
+
 ### 2.3 修改`yaml.cmake`参数<a id="### 2.3 修改`yaml.cmake`参数"/>
 
 由于Jetson环境下编译还需要yaml，所以这里需要手动下载yaml包，保证编译的正常运行。
@@ -141,7 +141,7 @@ eg:
 <div>
   <img src="./images/yaml_cmakelist.png">
   </div>
-  
+
 > 其它支持的加密操作以及TensorRT，可参考[Linux环境编译指南](./linux.md).
 
 -------
@@ -151,7 +151,7 @@ eg:
 该部分需要修改两个地方，以保证动态链接库的正常生成。
 
 > 接下来的操作，请在执行以下命令正常生成可执行程序后再往下继续配置，以确保修改前的工作是正确可执行的。
-> 
+>
 ```
 sh script/jetson_build.sh
 ```
@@ -222,27 +222,27 @@ sh script/jetson_build.sh
   </div><div>
   <img src="./images/qt_set_proname.png">
   </div>
-  
+
 > 如果存在多个编译环境供QT使用，请确保QT使用的编译环境与前边生成动态链接库的编译环境一致——或者至少保证生成的所有库都允许相互调用，即避免出现32位与64位不兼容等情况。
 
 2. 进入QT崭新的工程项目后，工程项目中会存在`*.pro`,`Headers`,`Sources`,`Forms`四个主要组件，其中后三个为项目分支(目录)<div>
   <img src="./images/project_list.png">
   </div>
-  
+
 3. 右键点击项目，选择`Add New`, 进入子界面选择`c++`，选中`Class`, 点击`choise`.<div>
   <img src="./images/qt_add_newfile.png">
   </div>
-  
+
 4. 在新出来的子界面中，输入`InferThread`作为**Class name**, 然后一直往下生成即可.<div>
   <img src="./images/qt_create_class.png">
   </div>
-  
+
 5. 将本项目`Deploy_infer`中的`inferthread.cpp`与`inferthread.h`中的内容分别复制过去即可.
 6. 然后，再将本项目`Deploy_infer`中的`mainwindow.cpp`与`mainwindow.h`中的内容也复制过去.
 7. 最后，将本项目的`mainwindow.ui`替换新建的QT-GUI项目的ui文件.
 
 > 此时，QT项目的移植就完成了——之所以新建项目，看起来比较复杂，是为了避免直接移植导致的QT版本不匹配，发生一些意料之外的问题。
-> 
+>
 > 此时QT项目中，会出现标红的错误，原因可能如下:
 - 1. 还未导入动态链接库
 - 2. 还未导入opencv的编译好的库
@@ -254,7 +254,7 @@ sh script/jetson_build.sh
 <div>
   <img src="./images/qt_project_inferlib.png">
   </div>
-  
+
 **然后打开`Qtcreator`, 打开项目选择本QT项目启动**，可观察到QT工程目录结构如图所示:
 <div>
   <img src="./images/project_list.png">
@@ -285,11 +285,11 @@ sh script/jetson_build.sh
 - `LIBS` : 表示`opencv`的动态链接库`so文件`所在路径，这里使用`正则匹配`，自动匹配路径下的所有`opencv.so`文件
 
 > 在本测试Jetson环境上，**预编译opencv由于没有同ffmpeg一同编译**，因此不支持视频流的处理与预测(无法打开视频文件，如mp4,avi等)
-> 
+>
 > 如有需要可在此时另外编译opencv，不覆盖原预编译的opencv版本，仅用于QT程序进行图像/视频的读取和简单处理。
-> 
+>
 > 此时编译的新opencv，在编译时要选择编译参数使其支持QT、GL以及ffmpeg.(ffmpeg可能需要自行编译)
-> 
+>
 > 该方案的编译指导，可参考网上的`linux下opencv与ffmpeg联合编译`资料。
 >
 > 因此，本QT的Demo在`Jetson Xavier`上，使用`原生opencv`，仅支持图片以及连续图片的预测，视频预测需要自行编译新的opencv，以支持视频读取——只要opencv编译成功，以上编译动态链接库的`opencv路径`仅需相应修改即可(**记得更改后重新编译生成**)，同时修改QT导入的`opencv库路径`就可以正常使用该可视化Demo了。
@@ -359,9 +359,9 @@ sh script/jetson_build.sh
 <div>
   <img src="./images/gpu_infer.png">
   </div>
-  
+
 -----
-  
+
 ## 6 QT开发注解<a id="## 6 QT开发注解"/>
 
 > 一些方便大家修改Demo界面源码，以实现一些适配工作。
@@ -405,7 +405,7 @@ sh script/jetson_build.sh
 
 不要直接使用子线程对主线程控件进行控制，避免导致线程报错，线程问题不易debug——因此，多用信号与槽来实现交互。
 
-实现思路: 
+实现思路:
 1. 在子线程需要对主线程中控件进行控制时，发送一个信号
 2. 主线程在消息循环机制中持续运行时，接收信号，执行对应的槽，实现控件的控制
 
@@ -419,7 +419,7 @@ sh script/jetson_build.sh
 <div>
   <img src="./images/thread_signal.png">
   </div>
-  
+
 主线程槽声明如下:
 <div>
   <img src="./images/main_slot.png">
@@ -471,5 +471,3 @@ sh script/jetson_build.sh
   - 如cmake的configure中出现红字，说找不到ffmpeg相关包，属于网络问题，无法下载该相关dll，需要自行下载后进行相关处理，可参考: [ffmpeg下载失败处理方法](https://www.cxyzjd.com/article/pyt1234567890/106525475)
 - Jetson Xavier平台移植测试完成 -- 预编译opencv4.1.1，已支持QT和GL
 - Linux平台移植界面测试完成 -- opencv以及模型推理所需的动态链接库(可按照该项目的`CMakeList.txt`与`model_infer.cpp`替换原文件，然后按照[linux编译方法](../../deploy/cpp/docs/compile/paddle/linux.md)进行编译)去自行生成。
-
-

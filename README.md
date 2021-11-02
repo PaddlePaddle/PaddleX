@@ -13,7 +13,7 @@
 
 ## 近期动态
 2021.09.10 PaddleX发布2.0.0正式版本。
-- 全新发布Manufacture SDK，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK），通过配置业务逻辑流程文件即可以低代码方式快速完成推理部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
+- 全新发布Manufacture SDK，支持多模型串联部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
 - PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp/docs/deployment.md)
 - 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数。[欢迎体验](./examples)
 - 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
@@ -41,7 +41,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - 安防
     - [安全帽检测](./examples/helmet_detection)  
 - 工业视觉
-    -   [表计读数](./examples/meter_reader)  |  [钢筋计数](./examples/rebar_count)  |  [视觉辅助定位抓取](./examples/robot_grab)
+    - [表计读数](./examples/meter_reader)  |  [钢筋计数](./examples/rebar_count)  |  [视觉辅助定位抓取](./examples/robot_grab)
 
 
 
@@ -85,24 +85,22 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 ### 4. 模型部署
 
 - [部署模型导出](./docs/apis/export_model.md)
-- [部署方式概览](./deploy)
+- [部署方式概览](./deploy/README.md)
   - 本地部署
-    - [OpenVINO](./deploy/cpp/docs/compile/openvino/README.md)（C++）
-    - [C++部署](./deploy/cpp)
-      - [Manufacture SDK](./deploy/cpp/docs/manufacture_sdk)
-      - [Deployment SDK](./deploy/cpp/docs/deployment.md)
-      - [C#工程化部署](./deploy/cpp/docs/CSharp_deploy)
+    - C++部署
+      - [C++源码编译](./deploy/cpp/README.md)
+      - [C#工程化示例](./deploy/cpp/docs/CSharp_deploy)
     - [Python部署](./docs/python_deploy.md)
   - 边缘侧部署
-    - [NVIDIA-JetsonQT部署](./deploy/cpp/docs/jetson-deploy)
+    - [NVIDIA-Jetson部署(C++)](./deploy/cpp/docs/compile/paddle/jetson.md)
+
   - 服务化部署
-    - [HubServing部署](./docs/hub_serving_deploy.md)
-  - Docker部署(C++)
+    - [HubServing部署（Python）](./docs/hub_serving_deploy.md)
+  - [基于ONNX部署（C++）](./deploy/cpp/docs/compile/README.md)
+    - [OpenVINO推理引擎](./deploy/cpp/docs/compile/openvino/README.md)
     - [Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
-    - [TensorRT部署](./deploy/cpp/docs/compile/tensorrt/trt.md)
 
 - [模型加密](./deploy/cpp/docs/demo/decrypt_infer.md)
-- [ONNX格式转换](./deploy/cpp/docs/compile)
 
 ### 5. 附录
 

@@ -942,7 +942,7 @@ void InferThread::Seg_Video()
 
         try {
             clock_t start_infer_time = clock();
-            
+
             qDebug() << "Doing Seg-Infer." << "\n";
             seg_ModelPredict((const uchar*)frame.data, frame.cols, frame.rows, 3, out_image);
             double cost_time = 1000 * (clock() - start_infer_time) / (double)CLOCKS_PER_SEC;
@@ -953,7 +953,7 @@ void InferThread::Seg_Video()
             qDebug() << "Finished Seg-Infer, but it is raise a exception." << "\n";
 
             emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
-            
+
             return;
         }
 

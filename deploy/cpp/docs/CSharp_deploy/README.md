@@ -107,7 +107,7 @@
 <img src="./images/18.png"  width = "800" />             </div>
 
 * 此外需保证在C#项目的bin\x64\Debug\net5.0-windows下包含以下dll，再进行预测推理
- 
+
   - opencv_world346.dll, 位于下载的opencv文件夹: opencv\build\x64\vc15\bin
   - model_infer.dll, 位于上边cmkae编译的目录下: PaddleX\deploy\cpp\out\paddle_deploy\Release
   - 其余dll, 位于以下目录: PaddleX\deploy\cpp\out\paddle_deploy
