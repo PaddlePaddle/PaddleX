@@ -207,6 +207,9 @@ def get_image_file():
     data = request.get_json()
     if request.method == 'GET':
         ret = data['path']
+        assert os.path.abspath(ret).startswith(
+            os.path.abspath(SD.workspace_dir)
+        ) and ".." not in ret, "Illegal path {}.".format(ret)
         return send_file(ret)
 
 
@@ -584,6 +587,9 @@ def task_evaluate_file():
     if request.method == 'GET':
         if 'path' in data:
             ret = data['path']
+            assert os.path.abspath(ret).startswith(
+                os.path.abspath(SD.workspace_dir)
+            ) and ".." not in ret, "Illegal path {}.".format(ret)
             return send_file(ret)
         else:
             from .project.task import get_evaluate_result
@@ -920,6 +926,9 @@ def model_file():
     data = request.get_json()
     if request.method == 'GET':
         ret = data['path']
+        assert os.path.abspath(ret).startswith(
+            os.path.abspath(SD.workspace_dir)
+        ) and ".." not in ret, "Illegal path {}.".format(ret)
         return send_file(ret)
 
 

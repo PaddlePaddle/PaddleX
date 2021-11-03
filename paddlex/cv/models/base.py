@@ -271,7 +271,11 @@ class BaseModel:
             transforms=train_dataset.transforms,
             mode='train')
 
-        nranks = paddle.distributed.get_world_size()
+        if "RCNN" in self.__class__.__name__ and train_dataset.pos_num < len(
+                train_dataset.file_list):
+            nranks = 1
+        else:
+            nranks = paddle.distributed.get_world_size()
         local_rank = paddle.distributed.get_rank()
         if nranks > 1:
             find_unused_parameters = getattr(self, 'find_unused_parameters',

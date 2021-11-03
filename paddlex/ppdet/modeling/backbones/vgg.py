@@ -30,7 +30,9 @@ class ConvBlock(nn.Layer):
             out_channels=out_channels,
             kernel_size=3,
             stride=1,
-            padding=1)
+            padding=1,
+            weight_attr=ParamAttr(name=name + "1_weights"),
+            bias_attr=ParamAttr(name=name + "1_bias"))
         self.conv_out_list = []
         for i in range(1, groups):
             conv_out = self.add_sublayer(
@@ -40,7 +42,10 @@ class ConvBlock(nn.Layer):
                     out_channels=out_channels,
                     kernel_size=3,
                     stride=1,
-                    padding=1))
+                    padding=1,
+                    weight_attr=ParamAttr(
+                        name=name + "{}_weights".format(i + 1)),
+                    bias_attr=ParamAttr(name=name + "{}_bias".format(i + 1))))
             self.conv_out_list.append(conv_out)
 
         self.pool = MaxPool2D(

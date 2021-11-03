@@ -228,27 +228,19 @@ class Trainer(object):
             eval_dataset = self.cfg['EvalDataset']
             eval_dataset.check_or_download_dataset()
             anno_file = eval_dataset.get_anno()
-            save_prediction_only = self.cfg.get('save_prediction_only', False)
             self._metrics = [
-                KeyPointTopDownCOCOEval(
-                    anno_file,
-                    len(eval_dataset),
-                    self.cfg.num_joints,
-                    self.cfg.save_dir,
-                    save_prediction_only=save_prediction_only)
+                KeyPointTopDownCOCOEval(anno_file,
+                                        len(eval_dataset), self.cfg.num_joints,
+                                        self.cfg.save_dir)
             ]
         elif self.cfg.metric == 'KeyPointTopDownMPIIEval':
             eval_dataset = self.cfg['EvalDataset']
             eval_dataset.check_or_download_dataset()
             anno_file = eval_dataset.get_anno()
-            save_prediction_only = self.cfg.get('save_prediction_only', False)
             self._metrics = [
-                KeyPointTopDownMPIIEval(
-                    anno_file,
-                    len(eval_dataset),
-                    self.cfg.num_joints,
-                    self.cfg.save_dir,
-                    save_prediction_only=save_prediction_only)
+                KeyPointTopDownMPIIEval(anno_file,
+                                        len(eval_dataset), self.cfg.num_joints,
+                                        self.cfg.save_dir)
             ]
         elif self.cfg.metric == 'MOTDet':
             self._metrics = [JDEDetMetric(), ]
@@ -302,6 +294,11 @@ class Trainer(object):
     def train(self, validate=False):
         assert self.mode == 'train', "Model not in 'train' mode"
         Init_mark = False
+
+        # if validation in training is enabled, metrics should be re-init
+        if validate:
+            self._init_metrics(validate=validate)
+            self._reset_metrics()
 
         model = self.model
         if self.cfg.get('fleet', False):
