@@ -298,6 +298,12 @@ def draw_pr_curve(eval_details_file=None,
     coco.createIndex()
 
     def _summarize(coco_gt, ap=1, iouThr=None, areaRng='all', maxDets=100):
+        """
+        This function has the same functionality as _summarize() in pycocotools.COCOeval.summarize().
+
+        Refer to
+        https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L427,
+        """
         p = coco_gt.params
         aind = [i for i, aRng in enumerate(p.areaRngLbl) if aRng == areaRng]
         mind = [i for i, mDet in enumerate(p.maxDets) if mDet == maxDets]
