@@ -111,7 +111,7 @@ class Evaluator(object):
         '''生成评估报告。
         '''
         report = dict()
-        report['Confusion_Matrix'] = self.cal_confusion_matrix()
+        report['Confusion_Matrix'] = self.cal_confusion_matrix().tolist()
         report['PRF1_average'] = {}
         report['PRF1'], report['PRF1_average'][
             'over_all'] = self.cal_precision_recall_F1()

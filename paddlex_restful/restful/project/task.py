@@ -334,7 +334,7 @@ def get_eval_all_metrics(data, workspace):
                 epoch_index = int(file_dir.split('_')[-1])
                 yml_file_path = osp.join(epoch_dir, "model.yml")
                 f = open(yml_file_path, 'r', encoding='utf-8')
-                yml_file = yaml.load(f.read())
+                yml_file = yaml.load(f.read(), Loader=yaml.Loader)
                 result = yml_file["_Attributes"]["eval_metrics"]
                 key = list(result.keys())[0]
                 value = result[key]

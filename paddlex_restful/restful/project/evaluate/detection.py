@@ -769,7 +769,7 @@ class InsSegEvaluator(DetEvaluator):
         '''
         report = dict()
         report['BBox_Confusion_Matrix'] = copy.deepcopy(
-            self.cal_confusion_matrix())
+            self.cal_confusion_matrix().tolist())
         report['BBox_mAP'] = copy.deepcopy(self.cal_map())
         report['BBox_PRAP'] = copy.deepcopy(self.cal_precision_recall())
         report['label_list'] = copy.deepcopy(list(self.cname2cid.keys()))
