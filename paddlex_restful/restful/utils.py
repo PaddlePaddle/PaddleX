@@ -29,13 +29,15 @@ import logging
 import socket
 import logging.handlers
 import requests
-import json
 from json import JSONEncoder
 
 
 class CustomEncoder(JSONEncoder):
     def default(self, o):
-        return o.__dict__
+        try:
+            return o.__dict__
+        except AttributeError:
+            return o.tolist()
 
 
 class ShareData():

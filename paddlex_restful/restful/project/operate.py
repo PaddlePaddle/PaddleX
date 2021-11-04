@@ -93,7 +93,7 @@ def _call_paddlex_evaluate_model(task_path,
                                  topk=5,
                                  score_thresh=0.3,
                                  overlap_thresh=0.5):
-    evaluate_status_path = osp.join(task_path, './logs/evaluate')
+    evaluate_status_path = osp.join(task_path, 'logs/evaluate')
     sys.stdout = open(
         osp.join(evaluate_status_path, 'out.log'), 'w', encoding='utf-8')
     sys.stderr = open(
@@ -636,7 +636,7 @@ def evaluate_model(task_path,
     output_path = osp.join(task_path, 'output')
     if not osp.exists(osp.join(output_path, 'best_model')):
         raise Exception("未在训练路径{}下发现保存的best_model，无法进行评估".format(output_path))
-    evaluate_status_path = osp.join(task_path, './logs/evaluate')
+    evaluate_status_path = osp.join(task_path, 'logs/evaluate')
     safe_clean_folder(evaluate_status_path)
     if epoch is None:
         model_path = osp.join(output_path, 'best_model')
@@ -657,7 +657,7 @@ def get_evaluate_status(task_path):
     Args:
         task_path(str): 训练任务文件夹
     """
-    evaluate_status_path = osp.join(task_path, './logs/evaluate')
+    evaluate_status_path = osp.join(task_path, 'logs/evaluate')
     if not osp.exists(evaluate_status_path):
         return None, "No evaluate fold in path {}".format(task_path)
     status, message = get_folder_status(evaluate_status_path, True)
@@ -689,7 +689,7 @@ def get_predict_status(task_path):
         task_path(str): 从predict_path下的'XPRESTART'文件中获取训练的进程id
     """
     from ..utils import list_files
-    predict_status_path = osp.join(task_path, "./logs/predict")
+    predict_status_path = osp.join(task_path, "logs/predict")
     save_dir = osp.join(task_path, "visualized_test_results")
     if not osp.exists(save_dir):
         return None, "任务目录下没有visualized_test_results文件夹，{}".format(
@@ -744,7 +744,7 @@ def predict_test_pics(task_path,
         params_conf_file), "任务无法启动，路径{}下不存在参数配置文件params.pkl".format(task_path)
     with open(params_conf_file, 'rb') as f:
         params = pickle.load(f)
-    predict_status_path = osp.join(task_path, "./logs/predict")
+    predict_status_path = osp.join(task_path, "logs/predict")
     safe_clean_folder(predict_status_path)
     save_dir = osp.join(task_path, 'visualized_test_results')
     safe_clean_folder(save_dir)
@@ -764,7 +764,7 @@ def stop_predict_task(task_path):
         task_path(str): 从predict_path下的'XPRESTART'文件中获取训练的进程id
     """
     from ..utils import list_files
-    predict_status_path = osp.join(task_path, "./logs/predict")
+    predict_status_path = osp.join(task_path, "logs/predict")
     save_dir = osp.join(task_path, "visualized_test_results")
     if not osp.exists(save_dir):
         return None, "任务目录下没有visualized_test_results文件夹，{}".format(
@@ -813,7 +813,7 @@ def get_export_status(task_path):
     Return:
         导出的状态和其他消息.
     """
-    export_status_path = osp.join(task_path, './logs/export')
+    export_status_path = osp.join(task_path, 'logs/export')
     if not osp.exists(export_status_path):
         return None, "{}任务目录下没有export文件夹".format(task_path)
     status, message = get_folder_status(export_status_path, True)
@@ -848,7 +848,7 @@ def export_quant_model(task_path, save_dir, epoch=None):
     output_path = osp.join(task_path, 'output')
     if not osp.exists(osp.join(output_path, 'best_model')):
         raise Exception("未在训练路径{}下发现保存的best_model，导出失败".format(output_path))
-    export_status_path = osp.join(task_path, './logs/export')
+    export_status_path = osp.join(task_path, 'logs/export')
     safe_clean_folder(export_status_path)
 
     params_conf_file = osp.join(task_path, 'params.pkl')
@@ -875,7 +875,7 @@ def export_noquant_model(task_path, save_dir, epoch=None):
     output_path = osp.join(task_path, 'output')
     if not osp.exists(osp.join(output_path, 'best_model')):
         raise Exception("未在训练路径{}下发现保存的best_model，导出失败".format(output_path))
-    export_status_path = osp.join(task_path, './logs/export')
+    export_status_path = osp.join(task_path, 'logs/export')
     safe_clean_folder(export_status_path)
     p = mp.Process(
         target=_call_paddlex_export_infer,
@@ -902,7 +902,7 @@ def stop_export_task(task_path):
     Return:
         the export status and message.
     """
-    export_status_path = osp.join(task_path, './logs/export')
+    export_status_path = osp.join(task_path, 'logs/export')
     if not osp.exists(export_status_path):
         return None, "{}任务目录下没有export文件夹".format(task_path)
     status, message = get_folder_status(export_status_path, True)
