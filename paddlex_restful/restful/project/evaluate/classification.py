@@ -1,4 +1,4 @@
-# copyright (c) 2021 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2020 PaddlePaddle Authors. All Rights Reserve.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,18 +17,13 @@ import yaml
 import os.path as osp
 import numpy as np
 from sklearn.metrics import confusion_matrix, roc_curve, auc
-from paddlex_restful.restful.dataset.utils import get_encoding
 
 
 class Evaluator(object):
     def __init__(self, model_path, topk=5):
-        model_yml = osp.join(model_path, "model.yml")
-        with open(model_yml, encoding=get_encoding(model_yml)) as f:
+        with open(osp.join(model_path, "model.yml")) as f:
             model_info = yaml.load(f.read(), Loader=yaml.Loader)
-        eval_details_file = osp.join(model_path, 'eval_details.json')
-        with open(
-                eval_details_file, 'r',
-                encoding=get_encoding(eval_details_file)) as f:
+        with open(osp.join(model_path, 'eval_details.json'), 'r') as f:
             eval_details = json.load(f)
         self.topk = topk
 
