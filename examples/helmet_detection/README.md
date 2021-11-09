@@ -1,6 +1,6 @@
 # 安全帽检测
 
-> 基于Paddlex2.0 API开发
+> 基于PaddleX API 2.0 开发
 
 ## 1.项目说明
 
@@ -194,7 +194,7 @@ paddlex --export_inference --model_dir=output/yolov3_darknet53/best_model --save
 
 
 
-模型部署采用了PaddleX提供的C++ inference部署方案，在该方案中提供了C#部署[Demo](../../deploy/cpp/docs/C#_deploy)，用户可根据实际情况自行参考。
+模型部署采用了PaddleX提供的C++ inference部署方案，在该方案中提供了C#部署[Demo](../../deploy/cpp/docs/CSharp_deploy)，用户可根据实际情况自行参考。
 
 <div align="center">
 <img src="images/14.png"  width = "1024" /></div>

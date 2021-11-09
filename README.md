@@ -91,15 +91,11 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
       - [C++源码编译](./deploy/cpp/README.md)
       - [C#工程化示例](./deploy/cpp/docs/CSharp_deploy)
     - [Python部署](./docs/python_deploy.md)
-  - 边缘侧部署
-    - [NVIDIA-Jetson部署(C++)](./deploy/cpp/docs/compile/paddle/jetson.md)
-
   - 服务化部署
     - [HubServing部署（Python）](./docs/hub_serving_deploy.md)
   - [基于ONNX部署（C++）](./deploy/cpp/docs/compile/README.md)
     - [OpenVINO推理引擎](./deploy/cpp/docs/compile/openvino/README.md)
     - [Triton部署](./deploy/cpp/docs/compile/triton/docker.md)
-
 - [模型加密](./deploy/cpp/docs/demo/decrypt_infer.md)
 
 ### 5. 附录

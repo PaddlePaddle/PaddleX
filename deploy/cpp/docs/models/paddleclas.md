@@ -1,6 +1,6 @@
 # PaddleClas模型部署
 
-当前支持PaddleClas release/2.2分支导出的模型进行部署。本文档以ResNet50模型为例，讲述从release/2.2分支导出模型并用PaddleX 进行cpp部署整个流程。 PaddleClas相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.2/README_cn.md)
+当前支持PaddleClas release/2.1分支导出的模型进行部署。本文档以ResNet50模型为例，讲述从release/2.1分支导出模型并用PaddleX 进行cpp部署整个流程。 PaddleClas相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/README_cn.md)
 
 
 

@@ -19,7 +19,7 @@
 ### 下载安装
 下载地址：https://www.paddlepaddle.org.cn/paddlex
 目前最新版本的GUI(Version 2.0.0)仅提供WIN和Linux版，暂未提供Mac版，若需在Mac上使用GUI，推荐安装Mac版历史版本Version 1.1.7
-- 特别说明：GUI 2.0要求CUDA >=11.0, cuDNN >= 8.0，这个需要加上说明
+- 特别说明：GUI 2.0要求CUDA >=11.0, cuDNN >= 8.0
 - WIN版下载后双击选择安装路径即可
 - Mac/Linux版下载后解压即可
 
