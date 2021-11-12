@@ -75,7 +75,7 @@ sh script/build.sh
 编译后会在`PaddleX/deploy/cpp/build/demo`目录下生成`model_infer`、`multi_gpu_model_infer`和`batch_infer`等几个可执行二进制文件示例，分别用于在单卡/多卡/多batch上加载模型进行预测，示例使用参考如下文档：
 
 - [单卡加载模型预测示例](../../demo/model_infer.md)
-- [多卡加载模型预测示例](../../demo/multi_gpu_model_infer.md)
+- [多线程预测示例](../../demo/multi_thread_infer.md)
 
 如果编译时开启TensorRT， 会多成一个`tensorrt_infer`二进制文件示例。示例使用参考如下文档：
 - [PaddleInference集成TensorRT加载模型预测示例](../../demo/tensorrt_infer.md)

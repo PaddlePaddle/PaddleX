@@ -81,7 +81,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 
 ### Step 4. 编译
 1. 打开Visual Studio 2019 Community，点击`继续但无需代码`
-
    ![](../../images/vs2019_step1.png)
 
 2. 点击： `文件`->`打开`->`CMake`
@@ -99,7 +98,6 @@ git clone https://github.com/PaddlePaddle/PaddleX.git
 4. 点击`浏览`，分别设置编译选项指定`gflag`、`OpenCV`、`OpenVINO`的路径（也可以点击右上角的“编辑 JSON”，直接修改json文件，然后保存点 项目->生成缓存）
 
    ![](../../images/vs2019_step5.png)
-
   依赖库路径的含义说明如下，注意OpenVINO编译只需要勾选和填写以下参数即可：
 
 | 参数名     | 含义                                                                                                                                                |
