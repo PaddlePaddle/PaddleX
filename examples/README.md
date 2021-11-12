@@ -8,5 +8,3 @@
 * [缺陷检测](./defect_detection)
 
 * [工业表计检测](./meter_reader)
-
-* [Windows系统下使用C#语言部署](./C%23_deploy)

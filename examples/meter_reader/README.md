@@ -373,6 +373,8 @@ d:
 mkdir projects
 cd projects
 git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+git checkout develop
 
 ```
 ### Step2: 下载PaddleX Manufature SDK
@@ -482,4 +484,4 @@ Meter 2: 6.21739101
 在分割模型可视化的预测结果保存在`PaddleX\examples\meter_reader\deploy\cpp\meter_reader\out\build\x64-Release\output_seg`，可以点击进行查看：
 | 表1可视化分割结果 | 表2可视化分割结果|
 | -- | -- |
-| ![](./images/20190822_168_06-30-17-09-33-217.jpg) | ![](20190822_168_06-30-17-09-33-213.jpg) |
+| ![](./images/20190822_168_06-30-17-09-33-217.jpg) | ![](./images/20190822_168_06-30-17-09-33-213.jpg) |
