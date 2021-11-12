@@ -144,6 +144,11 @@ def loadRes(coco_obj, anns):
     :param   resFile (str)     : file name of result file
     :return: res (obj)         : result api object
     """
+    # This function has the same functionality as pycocotools.COCO.loadRes,
+    # except that the input anns is list of results rather than a json file.
+    # Refer to
+    # https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/coco.py#L305,
+
     # matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
     # or matplotlib.backends is imported for the first time
     # pycocotools import matplotlib
@@ -805,7 +810,7 @@ def makeplot(rs, ps, outDir, class_name, iou_type):
     """针对某个特定类别，绘制不同评估要求下的准确率和召回率。
        绘制结果说明参考COCODataset官网给出分析工具说明https://cocodataset.org/#detection-eval。
 
-       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/analysis_tools/coco_error_analysis.py#L13
 
        Args:
            rs (np.array): 在不同置信度阈值下计算得到的召回率。
@@ -983,6 +988,10 @@ def coco_error_analysis(eval_details_file=None,
         raise Exception("There is no predicted mask.")
 
     def _analyze_results(cocoGt, cocoDt, res_type, out_dir):
+        """
+        Refer to
+        https://github.com/open-mmlab/mmdetection/blob/master/tools/analysis_tools/coco_error_analysis.py#L235
+        """
         directory = os.path.dirname(out_dir + '/')
         if not os.path.exists(directory):
             logging.info('-------------create {}-----------------'.format(
