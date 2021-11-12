@@ -202,4 +202,3 @@
 
 > **A:** 可能是缺少dll，双击执行一下out目录下的detector.exe或model_infer.exe，会有提示。
 </details>
-
