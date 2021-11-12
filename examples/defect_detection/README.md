@@ -13,7 +13,7 @@
 <img src="./images/lens.png"  width = "1000" /
 >              </div>
 
-更多数据格式信息请参考[数据标注说明文档](./../../docs/data/annotation/README.md)
+更多数据格式信息请参考[数据标注说明文档](https://paddlex.readthedocs.io/zh_CN/develop/data/annotation/index.html)
 * **数据切分**
 将训练集、验证集和测试集按照7：2：1的比例划分。
 ``` shell

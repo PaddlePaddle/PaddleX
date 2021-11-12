@@ -4,7 +4,7 @@ LabelMe可用于标注目标检测、实例分割、语义分割数据集，是�
 
 ## 1. 安装Anaconda
 
-推荐使用Anaconda安装python依赖，有经验的开发者可以跳过此步骤。安装Anaconda的方式可以参考[文档](../../../docs/appendix/anaconda_install.md)。
+推荐使用Anaconda安装python依赖，有经验的开发者可以跳过此步骤。安装Anaconda的方式可以参考[文档](../../../../docs/appendix/anaconda_install.md)。
 
 在安装Anaconda，并创建环境之后，再进行接下来的步骤
 

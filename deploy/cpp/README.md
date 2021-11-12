@@ -1,18 +1,44 @@
-# C++部署
+## PaddlePaddle模型C++部署
+
+本目录下代码，目前支持以下飞桨官方套件基于PaddleInference的部署。
+
+## 模型套件支持
+- PaddleDetection([release/2.1](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.1))
+- PaddleSeg([release/2.1](https://github.com/PaddlePaddle/PaddleSeg/tree/release/2.1))
+- PaddleClas([release/2.1](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.1))
+- PaddleX([release/2.0-rc](https://github.com/PaddlePaddle/PaddleX))
+
+## 硬件支持
+- CPU(linux/windows)
+- GPU(linux/windows)
+- Jetson(TX2/Nano/Xavier)
+
+## 文档
+### PaddleInference编译说明
+- [Linux编译(支持加密)指南](./docs/compile/paddle/linux.md)
+- [Windows编译(支持加密)指南](./docs/compile/paddle/windows.md)
+- [Jetson编译指南](./docs/compile/paddle/jetson.md)
+
+### 模型部署说明
+- [PaddleX部署指南](./docs/models/paddlex.md)
+- [PaddleDetection部署指南](./docs/models/paddledetection.md)
+- [PaddleSeg部署指南](./docs/models/paddleseg.md)
+- [PaddleClas部署指南](./docs/models/paddleclas.md)
+
+### 模型预测示例
+- [单卡加载模型预测示例](./docs/demo/model_infer.md)
+- [多卡加载模型预测示例](./docs/demo/multi_gpu_model_infer.md)
+- [PaddleInference集成TensorRT加载模型预测示例](./docs/demo/tensorrt_infer.md)
+- [模型加密预测示例](./docs/demo/decrypt_infer.md)
+
+### API说明
+
+- [部署相关API说明](./docs/apis/model.md)
+- [模型配置文件说明](./docs/apis/yaml.md)
 
 
-基于飞桨原生推理库PaddleInference，PaddleX推出了统一部署编译方式**PaddleX-Deploy**。
-
-**PaddleX-Deploy**提供了强大的部署性能，可同时兼容飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX统一部署，支持Windows、Linux等多种系统。同时提供了工业级别的C#部署工程示例。
-
-- [PaddleX Deployment部署方式说明](./docs/deployment.md)
-- [C#部署工程示例](./docs/CSharp_deploy)
----
-为更进一步地提升部署效率，PaddleX部署发布[Manufacture SDK](./docs/manufacture_sdk)，提供工业级多端多平台部署加速的预编译飞桨部署开发包（SDK）。
-
-- 通过配置业务逻辑流程文件即可以**低代码**方式快速完成推理部署。
-
-<div align="center">
-<img src="./docs/manufacture_sdk/images/pipeline_det.png"  width = "500" />              </div>
-
-- 通过配置文件，提供了**多模型串联**部署的方式，满足更多生产环境要求，相关使用参考[工业表计读数](./../../examples/meter_reader)。
+## ONNX模型部署
+Paddle的模型除了直接通过PaddleInference部署外，还可以通过[Paddle2ONNX](https://github.com/PaddlePaddle/Paddle2ONNX.git)转为ONNX后使用第三方推理引擎进行部署，在本目录下，我们提供了基于OpenVINO、Triton和TensorRT三个引擎的部署支持。
+- [OpenVINO部署](./docs/compile/openvino/README.md)
+- [Triton部署](./docs/compile/triton/docker.md)
+- [TensorRT部署](./docs/compile/tensorrt/trt.md)
