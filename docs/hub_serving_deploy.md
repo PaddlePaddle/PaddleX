@@ -140,7 +140,7 @@ if __name__ == '__main__':
 ```
 使用的测试图片如下：
 
-![](./apis/images/test.jpeg)
+![](./apis/images/test.jpg)
 
 将代码中的`IMAGE_PATH1`改成想要进行预测的图片路径后，在命令行执行：
 ```commandline
