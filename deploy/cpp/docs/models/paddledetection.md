@@ -50,7 +50,8 @@ yolov3_darknet
 参考编译文档
 
 - [Linux系统上编译指南](../compile/paddle/linux.md)
-- [Windows系统上编译指南](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成exe)](../compile/paddle/windows.md)
+- [Windows系统上编译指南(生成dll供C#调用)](../csharp_deploy/)
 
 
 
