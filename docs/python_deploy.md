@@ -32,7 +32,7 @@ result = predictor.predict(img_file='test.jpg',
 ```
 
 * **预测结果可视化**
- 
+
 Python部署所得预测结果支持使用`paddlex.det.visualize`（适用于目标检测和实例分割模型）或`paddlex.seg.visualize`（适用于语义分割模型）进行可视化。
 ```python
 # 目标检测和实例分割结果
