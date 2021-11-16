@@ -82,7 +82,8 @@ bool DetPreprocess::PrepareInputsForV2(
       }
       resize_w = static_cast<float>(shape_infos[i].shapes[j][0]);
       resize_h = static_cast<float>(shape_infos[i].shapes[j][1]);
-      break;
+      if (shape_infos[i].transforms[j].rfind("Resize", 0) == 0)
+        break;
     }
     float scale_x = resize_w / origin_w;
     float scale_y = resize_h / origin_h;
