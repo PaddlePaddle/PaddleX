@@ -279,7 +279,7 @@ def analyze_individual_category(k, cocoDt, cocoGt, catId, iou_type,
                                 areas=None):
     """针对某个特定类别，分析忽略亚类混淆和类别混淆时的准确率。
 
-       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/analysis_tools/coco_error_analysis.py#L174
 
        Args:
            k (int): 待分析类别的序号。
