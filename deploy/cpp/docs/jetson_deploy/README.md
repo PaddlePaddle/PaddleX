@@ -67,7 +67,7 @@
 2. 下载PaddleX+PaddleInference预测库:
 > 可查看文档: 
 
-- [基于PaddleInference的推理-Jetson环境编译](../../deploy/cpp/docs/compile/paddle/jetson.md)
+- [基于PaddleInference的推理-Jetson环境编译](../../compile/paddle/jetson.md)
 
 3. 查看cmake版本: `cmake -version`
 
