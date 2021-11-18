@@ -469,7 +469,7 @@ sh script/jetson_build.sh
 - Windows平台移植测试完成 -- 自行编译opencv3.4.6/4.1.1，需保证支持QT，GL
   - windows上编译opencv可参考: [为qt编译opencv](http://159.138.37.243/article/z634863434/89950961)
   - 如cmake的configure中出现红字，说找不到ffmpeg相关包，属于网络问题，无法下载该相关dll，需要自行下载后进行相关处理，可参考: [ffmpeg下载失败处理方法](https://www.cxyzjd.com/article/pyt1234567890/106525475)
-- Jetson Xavier平台移植测试完成 -- 预编译opencv4.1.1，已支持QT和GL
+- Jetson Xavier平台移植测试完成 -- 预编译opencv4.1.1，已支持QT和GL，但无ffmpeg，因此不支持视频流
 - Linux平台移植界面测试完成 -- opencv以及模型推理所需的动态链接库(可按照该项目的`CMakeList.txt`与`model_infer.cpp`替换原文件，然后按照[linux编译方法](../../deploy/cpp/docs/compile/paddle/linux.md)进行编译)去自行生成。
 
 PS:
