@@ -81,7 +81,7 @@
 
 > 如果已经查看`Jetson环境编译`文档后，并已经成功编译出可执行程序后，可跳过该部分的`deploy/cpp/scripts/jetson_build.sh`、`deploy/cpp/CMakeList.txt`以及`deploy/cpp/cmake/yaml.cmake`的修改说明.
 
-> 以下3部分的修改完全同[基于PaddleInference的推理-Jetson环境编译](../../deploy/cpp/docs/compile/paddle/jetson.md)一样，可前往参阅。
+> 以下3部分的修改完全同[基于PaddleInference的推理-Jetson环境编译](../compile/paddle/jetson.md)一样，可前往参阅。
 
 ### 2.1 修改`jetson_build.sh`编译参数<a id="### 2.1 修改`jetson_build.sh`编译参数"/>
 
