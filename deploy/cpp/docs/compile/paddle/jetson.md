@@ -139,4 +139,4 @@ sh script/jetson_build.sh
   </div>
 
 具体Demo信息可前往如下文档链接:
-- [基于QT的Jetson部署Demo](../../../../../examples/jetson-deploy/README.md)
+- [基于QT的Jetson部署Demo](../../jetson_deploy/README.md)
