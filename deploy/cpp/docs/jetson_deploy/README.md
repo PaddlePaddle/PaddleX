@@ -142,7 +142,7 @@ eg:
   <img src="./images/yaml_cmakelist.png">
   </div>
 
-> 其它支持的加密操作以及TensorRT，可参考[Linux环境编译指南](../compile/paddle/linux.md).
+> TensorRT操作，可参考[Linux环境编译指南](../compile/paddle/linux.md).
 
 -------
 

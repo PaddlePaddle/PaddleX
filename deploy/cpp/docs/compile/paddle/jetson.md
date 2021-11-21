@@ -99,7 +99,7 @@ eg:
   <img src="../../images/yaml_cmakelist.png">
   </div>
 
-> 其它支持的加密操作以及TensorRT，可参考[Linux环境编译指南](./linux.md).
+> TensorRT操作，可参考[Linux环境编译指南](./linux.md).
 
 ### Step 6. 编译
 以上yaml库添加完成，同时也修改完jetson_build.sh后，即可执行编译， **[注意]**: 以下命令在`PaddleX/deploy/cpp`目录下进行执行
