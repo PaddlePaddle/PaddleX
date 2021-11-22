@@ -862,7 +862,7 @@ def makeplot(rs, ps, outDir, class_name, iou_type):
 def analyze_individual_category(k, cocoDt, cocoGt, catId, iou_type):
     """针对某个特定类别，分析忽略亚类混淆和类别混淆时的准确率。
 
-       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/analysis_tools/coco_error_analysis.py#L174
 
        Args:
            k (int): 待分析类别的序号。
@@ -945,7 +945,7 @@ def coco_error_analysis(eval_details_file=None,
     """逐个分析模型预测错误的原因，并将分析结果以图表的形式展示。
        分析结果说明参考COCODataset官网给出分析工具说明https://cocodataset.org/#detection-eval。
 
-       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/coco_error_analysis.py
+       Refer to https://github.com/open-mmlab/mmdetection/blob/master/tools/analysis_tools/coco_error_analysis.py
 
        Args:
            eval_details_file (str):  模型评估结果的保存路径，包含真值信息和预测结果。
