@@ -243,6 +243,10 @@ sh script/jetson_build.sh
 
 6. 然后，再将本项目`qt_demo`中的`mainwindow.cpp`与`mainwindow.h`中的内容也复制过去.
 
+    - 使用`mainwindow.cpp`进行移植时，请修改代码内容如下：
+      - 修改(**319行左右**)`on_btnLoadImg_clicked`函数内的语句（按照注释提示修改即可）: `img_file_ = img_path.url().split("//")[1];`
+      - 修改(**398行左右**)`on_btnLoadVideo_clicked`函数内的语句（按照注释提示修改即可）: `video_file_ = video_path.url().split("//")[1];`
+
 7. 最后，将本项目的`mainwindow.ui`替换新建的QT-GUI项目中的空白ui文件.
 
 > 此时，QT项目的移植就完成了——之所以新建项目，看起来比较复杂，是为了避免直接移植导致的QT版本不匹配，发生一些意料之外的问题。
