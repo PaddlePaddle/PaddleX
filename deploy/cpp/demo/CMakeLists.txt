@@ -83,7 +83,7 @@ if(WITH_GPU)
     message(FATAL_ERROR "please set CUDA_LIB with -DCUDA_LIB=/path/cuda/lib64")
   endif()
 
-  
+
   if(NOT WIN32)
     if (NOT DEFINED CUDNN_LIB)
       message(FATAL_ERROR "please set CUDNN_LIB with -DCUDNN_LIB=/path/cudnn/")
@@ -105,7 +105,7 @@ if(WITH_GPU)
     if (WITH_PADDLE_TENSORRT)
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer${CMAKE_STATIC_LIBRARY_SUFFIX})
       set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/nvinfer_plugin${CMAKE_STATIC_LIBRARY_SUFFIX})
-      if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
+      if(${TENSORRT_MAJOR_VERSION} EQUAL 7)
         set(DEPS ${DEPS} ${TENSORRT_DIR}/lib/myelin64_1${CMAKE_STATIC_LIBRARY_SUFFIX})
       endif()
     endif()
@@ -148,7 +148,7 @@ if(WIN32)
       COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer.dll ${CMAKE_BINARY_DIR}/paddle_deploy
       COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/nvinfer_plugin.dll ${CMAKE_BINARY_DIR}/paddle_deploy
     )
-    if(${TENSORRT_MAJOR_VERSION} GREATER_EQUAL 7)
+    if(${TENSORRT_MAJOR_VERSION} EQUAL 7)
       add_custom_command(TARGET model_infer POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${TENSORRT_DIR}/lib/myelin64_1.dll ${CMAKE_BINARY_DIR}/paddle_deploy
       )
