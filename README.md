@@ -11,6 +11,21 @@
     <a href=""><img src="https://img.shields.io/badge/QQ_Group-957286141-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
 </p>
 
+## 近期活动
+为了更好的大家的部署需求，PaddleX举办《工业级视觉算法跨平台部署方案深入解析》两日课。
+
+* 基于QT实现的跨平台图形化部署工具，支持在Windows Linux（X86、ARM）[欢迎体验](https://github.com/cjh3020889729/The-PaddleX-QT-Visualize-GUI)
+* 基于C#实现的Windows平台高效部署方案，[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/csharp_deploy)
+* 从0-1构建工业级部署线程池，[欢迎体验](https://github.com/ximitiejiang/model_infer_multiThreads)
+
+
+
+<p align="center">
+  <img src="./docs/activities.png" width="800"  />
+</p>
+
+
+
 ## 近期动态
 2021.09.10 PaddleX发布2.0.0正式版本。
 - 全新发布Manufacture SDK，支持多模型串联部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
