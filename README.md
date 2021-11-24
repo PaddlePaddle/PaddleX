@@ -12,10 +12,10 @@
 </p>
 
 ## 近期活动
-为了更好的大家的部署需求，PaddleX举办《工业级视觉算法跨平台部署方案深入解析》两日课。
+为了更好的满足大家对部署需求，PaddleX举办《工业级视觉算法跨平台部署方案深入解析》两日课。
 
-* 基于QT实现的跨平台图形化部署工具，支持在Windows Linux（X86、ARM）[欢迎体验](https://github.com/cjh3020889729/The-PaddleX-QT-Visualize-GUI)
-* 基于C#实现的Windows平台高效部署方案，[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/csharp_deploy)
+* 基于QT实现的跨平台图形化部署工具，支持Windows、Linux系统和X86、ARM架构[欢迎体验](https://github.com/cjh3020889729/The-PaddleX-QT-Visualize-GUI)
+* 基于C#实现的Windows系统高效部署方案[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/csharp_deploy)
 * 从0-1构建工业级部署线程池，[欢迎体验](https://github.com/ximitiejiang/model_infer_multiThreads)
 
 
