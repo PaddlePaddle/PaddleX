@@ -143,7 +143,7 @@ SDK的预处理中使用了OpenCV， 所以需要额外下载链接：
 
 ​        [windows环境OpenCV下载地址](https://bj.bcebos.com/paddleseg/deploy/opencv-3.4.6-vc14_vc15.exe)
 
-​         [ubuntu 16.0环境OpenCV下载地址](https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2)
+​         [ubuntu 16.04环境OpenCV下载地址](https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2)
 
 使用GPU、TensorRT版，需要额外链接CUDA、cuDNN 和TensorRT。本地安装链接的CUDA、cuDNN、TensorRT的版本一定要跟SDK编译时所使用的版本一致。
 
