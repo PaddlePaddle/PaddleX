@@ -713,6 +713,7 @@ class PicoDet(BaseDetector):
             model_name='PicoDet', num_classes=num_classes, **params)
 
     def _compose_batch_transform(self, transforms, mode='train'):
+        default_batch_transforms = [_BatchPadding(pad_to_stride=32)]
         if mode == 'eval':
             collate_batch = True
         else:
@@ -729,7 +730,8 @@ class PicoDet(BaseDetector):
                 custom_batch_transforms.insert(0, copy.deepcopy(op))
 
         batch_transforms = BatchCompose(
-            custom_batch_transforms, collate_batch=collate_batch)
+            custom_batch_transforms + default_batch_transforms,
+            collate_batch=collate_batch)
 
         return batch_transforms
 
