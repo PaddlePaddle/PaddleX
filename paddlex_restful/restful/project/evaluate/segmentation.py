@@ -112,7 +112,7 @@ class Evaluator(object):
             category_iou_dict[self.labels[i]] = category_iou[i]
 
         report = dict()
-        report['Confusion_Matrix'] = self.cal_confusion_matrix()
+        report['Confusion_Matrix'] = self.cal_confusion_matrix().tolist()
         report['Mean_IoU'] = mean_iou
         report['Mean_Acc'] = mean_acc
         report['PRIoU'] = self.cal_precision_recall()
