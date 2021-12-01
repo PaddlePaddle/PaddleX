@@ -12,17 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-import glob
 import os
-import os.path as osp
 import platform
 import random
-import numpy as np
 import multiprocessing as mp
+import numpy as np
 import paddle
-
-from . import logging
 
 
 def get_environ_info():
