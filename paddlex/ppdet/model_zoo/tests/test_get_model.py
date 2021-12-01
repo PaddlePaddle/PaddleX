@@ -18,8 +18,8 @@ from __future__ import print_function
 
 import os
 import paddle
-import paddlex.ppdet
 import unittest
+import paddlex
 
 # NOTE: weights downloading costs time, we choose
 #       a small model for unittesting

@@ -22,7 +22,7 @@ import copy
 import time
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 import paddle
 import paddle.distributed as dist
@@ -35,15 +35,17 @@ from paddlex.ppdet.core.workspace import create
 from paddlex.ppdet.utils.checkpoint import load_weight, load_pretrain_weight
 from paddlex.ppdet.utils.visualizer import visualize_results, save_result
 from paddlex.ppdet.metrics import Metric, COCOMetric, VOCMetric, WiderFaceMetric, get_infer_results, KeyPointTopDownCOCOEval, KeyPointTopDownMPIIEval
-from paddlex.ppdet.metrics import RBoxMetric, JDEDetMetric
+from paddlex.ppdet.metrics import RBoxMetric, JDEDetMetric, SNIPERCOCOMetric
+from paddlex.ppdet.data.source.sniper_coco import SniperCOCODataSet
 from paddlex.ppdet.data.source.category import get_categories
 from paddlex.ppdet.utils import stats
+from paddlex.ppdet.utils import profiler
 
-from .callbacks import Callback, ComposeCallback, LogPrinter, Checkpointer, WiferFaceEval, VisualDLWriter
-from .export_utils import _dump_infer_config
+from .callbacks import Callback, ComposeCallback, LogPrinter, Checkpointer, WiferFaceEval, VisualDLWriter, SniperProposalsGenerator
+from .export_utils import _dump_infer_config, _prune_input_spec
 
 from paddlex.ppdet.utils.logger import setup_logger
-logger = setup_logger('paddlex.ppdet.engine')
+logger = setup_logger('ppdet.engine')
 
 __all__ = ['Trainer']
 
@@ -75,11 +77,13 @@ class Trainer(object):
 
         if cfg.architecture == 'JDE' and self.mode == 'train':
             cfg['JDEEmbeddingHead'][
-                'num_identifiers'] = self.dataset.total_identities
+                'num_identities'] = self.dataset.num_identities_dict[0]
+            # JDE only support single class MOT now.
 
         if cfg.architecture == 'FairMOT' and self.mode == 'train':
             cfg['FairMOTEmbeddingHead'][
-                'num_identifiers'] = self.dataset.total_identities
+                'num_identities_dict'] = self.dataset.num_identities_dict
+            # FairMOT support single class and multi-class MOT now.
 
         # build model
         if 'model' not in self.cfg:
@@ -88,10 +92,18 @@ class Trainer(object):
             self.model = self.cfg.model
             self.is_loaded_weights = True
 
+        #normalize params for deploy
+        self.model.load_meanstd(cfg['TestReader']['sample_transforms'])
+
         self.use_ema = ('use_ema' in cfg and cfg['use_ema'])
         if self.use_ema:
+            ema_decay = self.cfg.get('ema_decay', 0.9998)
+            cycle_epoch = self.cfg.get('cycle_epoch', -1)
             self.ema = ModelEMA(
-                cfg['ema_decay'], self.model, use_thres_step=True)
+                self.model,
+                decay=ema_decay,
+                use_thres_step=True,
+                cycle_epoch=cycle_epoch)
 
         # EvalDataset build with BatchSampler to evaluate in single device
         # TODO: multi-device evaluate
@@ -106,8 +118,11 @@ class Trainer(object):
         if self.mode == 'train':
             steps_per_epoch = len(self.loader)
             self.lr = create('LearningRate')(steps_per_epoch)
-            self.optimizer = create('OptimizerBuilder')(
-                self.lr, self.model.parameters())
+            self.optimizer = create('OptimizerBuilder')(self.lr, self.model)
+
+        if self.cfg.get('unstructured_prune'):
+            self.pruner = create('UnstructuredPruner')(self.model,
+                                                       steps_per_epoch)
 
         self._nranks = dist.get_world_size()
         self._local_rank = dist.get_rank()
@@ -129,6 +144,8 @@ class Trainer(object):
             self._callbacks = [LogPrinter(self), Checkpointer(self)]
             if self.cfg.get('use_vdl', False):
                 self._callbacks.append(VisualDLWriter(self))
+            if self.cfg.get('save_proposals', False):
+                self._callbacks.append(SniperProposalsGenerator(self))
             self._compose_callback = ComposeCallback(self._callbacks)
         elif self.mode == 'eval':
             self._callbacks = [LogPrinter(self)]
@@ -147,7 +164,7 @@ class Trainer(object):
             self._metrics = []
             return
         classwise = self.cfg['classwise'] if 'classwise' in self.cfg else False
-        if self.cfg.metric == 'COCO':
+        if self.cfg.metric == 'COCO' or self.cfg.metric == "SNIPERCOCO":
             # TODO: bias should be unified
             bias = self.cfg['bias'] if 'bias' in self.cfg else 0
             output_eval = self.cfg['output_eval'] \
@@ -162,22 +179,37 @@ class Trainer(object):
             # when do validation in train, annotation file should be get from
             # EvalReader instead of self.dataset(which is TrainReader)
             anno_file = self.dataset.get_anno()
+            dataset = self.dataset
             if self.mode == 'train' and validate:
                 eval_dataset = self.cfg['EvalDataset']
                 eval_dataset.check_or_download_dataset()
                 anno_file = eval_dataset.get_anno()
+                dataset = eval_dataset
 
             IouType = self.cfg['IouType'] if 'IouType' in self.cfg else 'bbox'
-            self._metrics = [
-                COCOMetric(
-                    anno_file=anno_file,
-                    clsid2catid=clsid2catid,
-                    classwise=classwise,
-                    output_eval=output_eval,
-                    bias=bias,
-                    IouType=IouType,
-                    save_prediction_only=save_prediction_only)
-            ]
+            if self.cfg.metric == "COCO":
+                self._metrics = [
+                    COCOMetric(
+                        anno_file=anno_file,
+                        clsid2catid=clsid2catid,
+                        classwise=classwise,
+                        output_eval=output_eval,
+                        bias=bias,
+                        IouType=IouType,
+                        save_prediction_only=save_prediction_only)
+                ]
+            elif self.cfg.metric == "SNIPERCOCO":  # sniper
+                self._metrics = [
+                    SNIPERCOCOMetric(
+                        anno_file=anno_file,
+                        dataset=dataset,
+                        clsid2catid=clsid2catid,
+                        classwise=classwise,
+                        output_eval=output_eval,
+                        bias=bias,
+                        IouType=IouType,
+                        save_prediction_only=save_prediction_only)
+                ]
         elif self.cfg.metric == 'RBOX':
             # TODO: bias should be unified
             bias = self.cfg['bias'] if 'bias' in self.cfg else 0
@@ -228,19 +260,27 @@ class Trainer(object):
             eval_dataset = self.cfg['EvalDataset']
             eval_dataset.check_or_download_dataset()
             anno_file = eval_dataset.get_anno()
+            save_prediction_only = self.cfg.get('save_prediction_only', False)
             self._metrics = [
-                KeyPointTopDownCOCOEval(anno_file,
-                                        len(eval_dataset), self.cfg.num_joints,
-                                        self.cfg.save_dir)
+                KeyPointTopDownCOCOEval(
+                    anno_file,
+                    len(eval_dataset),
+                    self.cfg.num_joints,
+                    self.cfg.save_dir,
+                    save_prediction_only=save_prediction_only)
             ]
         elif self.cfg.metric == 'KeyPointTopDownMPIIEval':
             eval_dataset = self.cfg['EvalDataset']
             eval_dataset.check_or_download_dataset()
             anno_file = eval_dataset.get_anno()
+            save_prediction_only = self.cfg.get('save_prediction_only', False)
             self._metrics = [
-                KeyPointTopDownMPIIEval(anno_file,
-                                        len(eval_dataset), self.cfg.num_joints,
-                                        self.cfg.save_dir)
+                KeyPointTopDownMPIIEval(
+                    anno_file,
+                    len(eval_dataset),
+                    self.cfg.num_joints,
+                    self.cfg.save_dir,
+                    save_prediction_only=save_prediction_only)
             ]
         elif self.cfg.metric == 'MOTDet':
             self._metrics = [JDEDetMetric(), ]
@@ -295,11 +335,6 @@ class Trainer(object):
         assert self.mode == 'train', "Model not in 'train' mode"
         Init_mark = False
 
-        # if validation in training is enabled, metrics should be re-init
-        if validate:
-            self._init_metrics(validate=validate)
-            self._reset_metrics()
-
         model = self.model
         if self.cfg.get('fleet', False):
             model = fleet.distributed_model(model)
@@ -329,6 +364,9 @@ class Trainer(object):
 
         if self.cfg.get('print_flops', False):
             self._flops(self.loader)
+        profiler_options = self.cfg.get('profiler_options', None)
+
+        self._compose_callback.on_train_begin(self.status)
 
         for epoch_id in range(self.start_epoch, self.cfg.epoch):
             self.status['mode'] = 'train'
@@ -340,7 +378,9 @@ class Trainer(object):
             for step_id, data in enumerate(self.loader):
                 self.status['data_time'].update(time.time() - iter_tic)
                 self.status['step_id'] = step_id
+                profiler.add_profiler_step(profiler_options)
                 self._compose_callback.on_step_begin(self.status)
+                data['epoch_id'] = epoch_id
 
                 if self.cfg.get('fp16', False):
                     with amp.auto_cast(enable=self.cfg.use_gpu):
@@ -360,9 +400,10 @@ class Trainer(object):
                     # model backward
                     loss.backward()
                     self.optimizer.step()
-
                 curr_lr = self.optimizer.get_lr()
                 self.lr.step()
+                if self.cfg.get('unstructured_prune'):
+                    self.pruner.step()
                 self.optimizer.clear_grad()
                 self.status['learning_rate'] = curr_lr
 
@@ -379,6 +420,8 @@ class Trainer(object):
             if self.use_ema:
                 weight = copy.deepcopy(self.model.state_dict())
                 self.model.set_dict(self.ema.apply())
+            if self.cfg.get('unstructured_prune'):
+                self.pruner.update_params()
 
             self._compose_callback.on_epoch_end(self.status)
 
@@ -409,6 +452,8 @@ class Trainer(object):
             # restore origin weight on model
             if self.use_ema:
                 self.model.set_dict(weight)
+
+        self._compose_callback.on_train_end(self.status)
 
     def _eval_with_loader(self, loader):
         sample_num = 0
@@ -465,6 +510,7 @@ class Trainer(object):
         self.model.eval()
         if self.cfg.get('print_flops', False):
             self._flops(loader)
+        results = []
         for step_id, data in enumerate(loader):
             self.status['step_id'] = step_id
             # forward
@@ -475,7 +521,13 @@ class Trainer(object):
             for key, value in outs.items():
                 if hasattr(value, 'numpy'):
                     outs[key] = value.numpy()
+            results.append(outs)
+        # sniper
+        if type(self.dataset) == SniperCOCODataSet:
+            results = self.dataset.anno_cropper.aggregate_chips_detections(
+                results)
 
+        for outs in results:
             batch_res = get_infer_results(outs, clsid2catid)
             bbox_num = outs['bbox_num']
 
@@ -483,6 +535,7 @@ class Trainer(object):
             for i, im_id in enumerate(outs['im_id']):
                 image_path = imid2path[int(im_id)]
                 image = Image.open(image_path).convert('RGB')
+                image = ImageOps.exif_transpose(image)
                 self.status['original_image'] = np.array(image.copy())
 
                 end = start + bbox_num[i]
@@ -526,13 +579,10 @@ class Trainer(object):
         name, ext = os.path.splitext(image_name)
         return os.path.join(output_dir, "{}".format(name)) + ext
 
-    def export(self, output_dir='output_inference'):
-        self.model.eval()
-        model_name = os.path.splitext(os.path.split(self.cfg.filename)[-1])[0]
-        save_dir = os.path.join(output_dir, model_name)
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
+    def _get_infer_cfg_and_input_spec(self, save_dir, prune_input=True):
         image_shape = None
+        im_shape = [None, 2]
+        scale_factor = [None, 2]
         if self.cfg.architecture in MOT_ARCH:
             test_reader_name = 'TestMOTReader'
         else:
@@ -540,12 +590,21 @@ class Trainer(object):
         if 'inputs_def' in self.cfg[test_reader_name]:
             inputs_def = self.cfg[test_reader_name]['inputs_def']
             image_shape = inputs_def.get('image_shape', None)
-        # set image_shape=[3, -1, -1] as default
+        # set image_shape=[None, 3, -1, -1] as default
         if image_shape is None:
-            image_shape = [3, -1, -1]
+            image_shape = [None, 3, -1, -1]
 
-        self.model.eval()
-        if hasattr(self.model, 'deploy'): self.model.deploy = True
+        if len(image_shape) == 3:
+            image_shape = [None] + image_shape
+        else:
+            im_shape = [image_shape[0], 2]
+            scale_factor = [image_shape[0], 2]
+
+        if hasattr(self.model, 'deploy'):
+            self.model.deploy = True
+        if hasattr(self.model, 'fuse_norm'):
+            self.model.fuse_norm = self.cfg['TestReader'].get('fuse_normalize',
+                                                              False)
 
         # Save infer cfg
         _dump_infer_config(self.cfg,
@@ -554,24 +613,47 @@ class Trainer(object):
 
         input_spec = [{
             "image": InputSpec(
-                shape=[None] + image_shape, name='image'),
+                shape=image_shape, name='image'),
             "im_shape": InputSpec(
-                shape=[None, 2], name='im_shape'),
+                shape=im_shape, name='im_shape'),
             "scale_factor": InputSpec(
-                shape=[None, 2], name='scale_factor')
+                shape=scale_factor, name='scale_factor')
         }]
         if self.cfg.architecture == 'DeepSORT':
             input_spec[0].update({
                 "crops": InputSpec(
                     shape=[None, 3, 192, 64], name='crops')
             })
+        if prune_input:
+            static_model = paddle.jit.to_static(
+                self.model, input_spec=input_spec)
+            # NOTE: dy2st do not pruned program, but jit.save will prune program
+            # input spec, prune input spec here and save with pruned input spec
+            pruned_input_spec = _prune_input_spec(
+                input_spec, static_model.forward.main_program,
+                static_model.forward.outputs)
+        else:
+            static_model = None
+            pruned_input_spec = input_spec
 
-        static_model = paddle.jit.to_static(self.model, input_spec=input_spec)
-        # NOTE: dy2st do not pruned program, but jit.save will prune program
-        # input spec, prune input spec here and save with pruned input spec
-        pruned_input_spec = self._prune_input_spec(
-            input_spec, static_model.forward.main_program,
-            static_model.forward.outputs)
+        # TODO: Hard code, delete it when support prune input_spec.
+        if self.cfg.architecture == 'PicoDet':
+            pruned_input_spec = [{
+                "image": InputSpec(
+                    shape=image_shape, name='image')
+            }]
+
+        return static_model, pruned_input_spec
+
+    def export(self, output_dir='output_inference'):
+        self.model.eval()
+        model_name = os.path.splitext(os.path.split(self.cfg.filename)[-1])[0]
+        save_dir = os.path.join(output_dir, model_name)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        static_model, pruned_input_spec = self._get_infer_cfg_and_input_spec(
+            save_dir)
 
         # dy2st and save model
         if 'slim' not in self.cfg or self.cfg['slim_type'] != 'QAT':
@@ -586,22 +668,26 @@ class Trainer(object):
                 input_spec=pruned_input_spec)
         logger.info("Export model and saved in {}".format(save_dir))
 
-    def _prune_input_spec(self, input_spec, program, targets):
-        # try to prune static program to figure out pruned input spec
-        # so we perform following operations in static mode
-        paddle.enable_static()
-        pruned_input_spec = [{}]
-        program = program.clone()
-        program = program._prune(targets=targets)
-        global_block = program.global_block()
-        for name, spec in input_spec[0].items():
-            try:
-                v = global_block.var(name)
-                pruned_input_spec[0][name] = spec
-            except Exception:
-                pass
-        paddle.disable_static()
-        return pruned_input_spec
+    def post_quant(self, output_dir='output_inference'):
+        model_name = os.path.splitext(os.path.split(self.cfg.filename)[-1])[0]
+        save_dir = os.path.join(output_dir, model_name)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        for idx, data in enumerate(self.loader):
+            self.model(data)
+            if idx == int(self.cfg.get('quant_batch_num', 10)):
+                break
+
+        # TODO: support prune input_spec
+        _, pruned_input_spec = self._get_infer_cfg_and_input_spec(
+            save_dir, prune_input=False)
+
+        self.cfg.slim.save_quantized_model(
+            self.model,
+            os.path.join(save_dir, 'model'),
+            input_spec=pruned_input_spec)
+        logger.info("Export Post-Quant model and saved in {}".format(save_dir))
 
     def _flops(self, loader):
         self.model.eval()

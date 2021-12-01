@@ -28,14 +28,14 @@ import paddlex.utils.logging as logging
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, Resize, Padding
 from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
-from paddlex.utils import get_single_card_bs
 from .base import BaseModel
 from .utils.det_metrics import VOCMetric, COCOMetric
 from .utils.ema import ExponentialMovingAverage
 from paddlex.utils.checkpoint import det_pretrain_weights_dict
 
 __all__ = [
-    "YOLOv3", "FasterRCNN", "PPYOLO", "PPYOLOTiny", "PPYOLOv2", "MaskRCNN"
+    "YOLOv3", "FasterRCNN", "PPYOLO", "PPYOLOTiny", "PPYOLOv2", "MaskRCNN",
+    "PicoDet"
 ]
 
 
@@ -585,6 +585,134 @@ class BaseDetector(BaseModel):
         return results
 
 
+class PicoDet(BaseDetector):
+    def __init__(self,
+                 num_classes=80,
+                 backbone='ESNet_m',
+                 nms_score_threshold=.025,
+                 nms_top_k=1000,
+                 nms_keep_top_k=100,
+                 nms_iou_threshold=.6,
+                 **params):
+        self.init_params = locals()
+        if backbone not in {
+                'ESNet_s', 'ESNet_m', 'ESNet_l', 'LCNet', 'MobileNetV3',
+                'ResNet18'
+        }:
+            raise ValueError(
+                "backbone: {} is not supported. Please choose one of "
+                "('ESNet_s', 'ESNet_m', 'ESNet_l', 'LCNet', 'MobileNetV3', 'ResNet18')".
+                format(backbone))
+        self.backbone_name = backbone
+        if params.get('with_net', True):
+            if backbone == 'ESNet_s':
+                backbone = self._get_backbone(
+                    'ESNet',
+                    scale=.75,
+                    feature_maps=[4, 11, 14],
+                    act="hard_swish",
+                    channel_ratio=[
+                        0.875, 0.5, 0.5, 0.5, 0.625, 0.5, 0.625, 0.5, 0.5, 0.5,
+                        0.5, 0.5, 0.5
+                    ])
+                neck_out_channels = 96
+                head_num_convs = 2
+            elif backbone == 'ESNet_m':
+                backbone = self._get_backbone(
+                    'ESNet',
+                    scale=1.0,
+                    feature_maps=[4, 11, 14],
+                    act="hard_swish",
+                    channel_ratio=[
+                        0.875, 0.5, 1.0, 0.625, 0.5, 0.75, 0.625, 0.625, 0.5,
+                        0.625, 1.0, 0.625, 0.75
+                    ])
+                neck_out_channels = 128
+                head_num_convs = 4
+            elif backbone == 'ESNet_l':
+                backbone = self._get_backbone(
+                    'ESNet',
+                    scale=1.25,
+                    feature_maps=[4, 11, 14],
+                    act="hard_swish",
+                    channel_ratio=[
+                        0.875, 0.5, 1.0, 0.625, 0.5, 0.75, 0.625, 0.625, 0.5,
+                        0.625, 1.0, 0.625, 0.75
+                    ])
+                neck_out_channels = 160
+                head_num_convs = 4
+            elif backbone == 'LCNet':
+                backbone = self._get_backbone(
+                    'LCNet', scale=1.5, feature_maps=[3, 4, 5])
+                neck_out_channels = 128
+                head_num_convs = 4
+            elif backbone == 'MobileNetV3':
+                backbone = self._get_backbone(
+                    'MobileNetV3',
+                    scale=1.0,
+                    with_extra_blocks=False,
+                    extra_block_filters=[],
+                    feature_maps=[7, 13, 16])
+                neck_out_channels = 128
+                head_num_convs = 4
+            else:
+                backbone = self._get_backbone(
+                    'ResNet',
+                    depth=18,
+                    variant='d',
+                    return_idx=[1, 2, 3],
+                    freeze_at=-1,
+                    freeze_norm=False,
+                    norm_decay=0.)
+                neck_out_channels = 128
+                head_num_convs = 4
+
+            neck = ppdet.modeling.CSPPAN(
+                in_channels=[i.channels for i in backbone.out_shape],
+                out_channels=neck_out_channels,
+                num_features=4,
+                num_csp_blocks=1,
+                use_depthwise=True)
+
+            head_conv_feat = ppdet.modeling.PicoFeat(
+                feat_in=neck_out_channels,
+                feat_out=neck_out_channels,
+                num_fpn_stride=4,
+                num_convs=head_num_convs,
+                norm_type='bn',
+                share_cls_reg=True, )
+            loss_class = ppdet.modeling.VarifocalLoss(
+                use_sigmoid=True, iou_weighted=True, loss_weight=1.0)
+            loss_dfl = ppdet.modeling.DistributionFocalLoss(loss_weight=.25)
+            loss_bbox = ppdet.modeling.GIoULoss(loss_weight=2.0)
+            assigner = ppdet.modeling.SimOTAAssigner(
+                candidate_topk=10, iou_weight=6)
+            nms = ppdet.modeling.MultiClassNMS(
+                nms_top_k=nms_top_k,
+                keep_top_k=nms_keep_top_k,
+                score_threshold=nms_score_threshold,
+                nms_threshold=nms_iou_threshold)
+            head = ppdet.modeling.PicoHead(
+                conv_feat=head_conv_feat,
+                num_classes=num_classes,
+                fpn_stride=[8, 16, 32, 64],
+                prior_prob=0.01,
+                loss_class=loss_class,
+                loss_dfl=loss_dfl,
+                loss_bbox=loss_bbox,
+                assigner=assigner,
+                reg_max=7,
+                feat_in_chan=neck_out_channels,
+                nms=nms)
+            params.update({
+                'backbone': backbone,
+                'neck': neck,
+                'head': head,
+            })
+        super(PicoDet, self).__init__(
+            model_name='PicoDet', num_classes=num_classes, **params)
+
+
 class YOLOv3(BaseDetector):
     def __init__(self,
                  num_classes=80,
@@ -600,14 +728,14 @@ class YOLOv3(BaseDetector):
                  label_smooth=False,
                  **params):
         self.init_params = locals()
-        if backbone not in [
+        if backbone not in {
                 'MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3',
                 'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34'
-        ]:
+        }:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3', 'MobileNetV3_ssld', 'DarkNet53', 'ResNet50_vd_dcn', 'ResNet34')".
-                format(backbone))
+                "('MobileNetV1', 'MobileNetV1_ssld', 'MobileNetV3', 'MobileNetV3_ssld', 'DarkNet53', "
+                "'ResNet50_vd_dcn', 'ResNet34')".format(backbone))
 
         self.backbone_name = backbone
         if params.get('with_net', True):
@@ -754,10 +882,10 @@ class FasterRCNN(BaseDetector):
                  test_post_nms_top_n=1000,
                  **params):
         self.init_params = locals()
-        if backbone not in [
+        if backbone not in {
                 'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34',
                 'ResNet34_vd', 'ResNet101', 'ResNet101_vd', 'HRNet_W18'
-        ]:
+        }:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet34', 'ResNet34_vd', "
@@ -968,7 +1096,7 @@ class FasterRCNN(BaseDetector):
                 'bbox_post_process': bbox_post_process
             })
         else:
-            if backbone not in ['ResNet50', 'ResNet50_vd']:
+            if backbone not in {'ResNet50', 'ResNet50_vd'}:
                 with_fpn = True
 
         self.with_fpn = with_fpn
@@ -1144,10 +1272,10 @@ class PPYOLO(YOLOv3):
                  nms_iou_threshold=0.45,
                  **params):
         self.init_params = locals()
-        if backbone not in [
+        if backbone not in {
                 'ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large',
                 'MobileNetV3_small'
-        ]:
+        }:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small')".
@@ -1467,7 +1595,7 @@ class PPYOLOv2(YOLOv3):
                  nms_iou_threshold=0.45,
                  **params):
         self.init_params = locals()
-        if backbone not in ['ResNet50_vd_dcn', 'ResNet101_vd_dcn']:
+        if backbone not in {'ResNet50_vd_dcn', 'ResNet101_vd_dcn'}:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50_vd_dcn', 'ResNet101_vd_dcn')".format(backbone))
@@ -1613,10 +1741,10 @@ class MaskRCNN(BaseDetector):
                  test_post_nms_top_n=1000,
                  **params):
         self.init_params = locals()
-        if backbone not in [
+        if backbone not in {
                 'ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet101',
                 'ResNet101_vd'
-        ]:
+        }:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
                 "('ResNet50', 'ResNet50_vd', 'ResNet50_vd_ssld', 'ResNet101', 'ResNet101_vd')".

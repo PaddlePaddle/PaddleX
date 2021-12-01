@@ -125,7 +125,7 @@ def roi_pool(input,
     ..  code-block:: python
 
         import paddle
-        from paddlex.ppdet.modeling import ops
+        from ppdet.modeling import ops
         paddle.enable_static()
 
         x = paddle.static.data(
@@ -232,7 +232,7 @@ def roi_align(input,
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             paddle.enable_static()
 
             x = paddle.static.data(
@@ -329,7 +329,7 @@ def iou_similarity(x, y, box_normalized=True, name=None):
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             paddle.enable_static()
 
             x = paddle.static.data(name='x', shape=[None, 4], dtype='float32')
@@ -407,7 +407,7 @@ def collect_fpn_proposals(multi_rois,
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             paddle.enable_static()
             multi_rois = []
             multi_scores = []
@@ -473,7 +473,7 @@ def distribute_fpn_proposals(fpn_rois,
                              pixel_offset=False,
                              rois_num=None,
                              name=None):
-    """
+    r"""
 
     **This op only takes LoDTensor as input.** In Feature Pyramid Networks
     (FPN) models, it is needed to distribute all proposals into different FPN
@@ -529,7 +529,7 @@ def distribute_fpn_proposals(fpn_rois,
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             paddle.enable_static()
             fpn_rois = paddle.static.data(
                 name='data', shape=[None, 4], dtype='float32', lod_level=1)
@@ -677,7 +677,7 @@ def yolo_box(
     .. code-block:: python
 
         import paddle
-        from paddlex.ppdet.modeling import ops
+        from ppdet.modeling import ops
 
         paddle.enable_static()
         x = paddle.static.data(name='x', shape=[None, 255, 13, 13], dtype='float32')
@@ -793,7 +793,7 @@ def prior_box(input,
         .. code-block:: python
 
         import paddle
-        from paddlex.ppdet.modeling import ops
+        from ppdet.modeling import ops
 
         paddle.enable_static()
         input = paddle.static.data(name="input", shape=[None,3,6,9])
@@ -959,7 +959,7 @@ def multiclass_nms(bboxes,
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             boxes = paddle.static.data(name='bboxes', shape=[81, 4],
                                       dtype='float32', lod_level=1)
             scores = paddle.static.data(name='scores', shape=[81],
@@ -1095,7 +1095,7 @@ def matrix_nms(bboxes,
     Examples:
         .. code-block:: python
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             boxes = paddle.static.data(name='bboxes', shape=[None,81, 4],
                                       dtype='float32', lod_level=1)
             scores = paddle.static.data(name='scores', shape=[None,81],
@@ -1230,8 +1230,8 @@ def bipartite_match(dist_matrix,
 
         .. code-block:: python
             import paddle
-            from paddlex.ppdet.modeling import ops
-            from paddlex.ppdet.modeling.utils import iou_similarity
+            from ppdet.modeling import ops
+            from ppdet.modeling.utils import iou_similarity
 
             paddle.enable_static()
 
@@ -1275,7 +1275,7 @@ def box_coder(prior_box,
               box_normalized=True,
               axis=0,
               name=None):
-    """
+    r"""
     **Box Coder Layer**
     Encode/Decode the target bounding box with the priorbox information.
 
@@ -1347,7 +1347,7 @@ def box_coder(prior_box,
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             paddle.enable_static()
             # For encode
             prior_box_encode = paddle.static.data(name='prior_box_encode',
@@ -1494,7 +1494,7 @@ def generate_proposals(scores,
         .. code-block:: python
 
             import paddle
-            from paddlex.ppdet.modeling import ops
+            from ppdet.modeling import ops
             paddle.enable_static()
             scores = paddle.static.data(name='scores', shape=[None, 4, 5, 5], dtype='float32')
             bbox_deltas = paddle.static.data(name='bbox_deltas', shape=[None, 16, 5, 5], dtype='float32')
@@ -1592,3 +1592,14 @@ def smooth_l1(input,
     out = paddle.reshape(out, shape=[out.shape[0], -1])
     out = paddle.sum(out, axis=1)
     return out
+
+
+def channel_shuffle(x, groups):
+    batch_size, num_channels, height, width = x.shape[0:4]
+    assert num_channels % groups == 0, 'num_channels should be divisible by groups'
+    channels_per_group = num_channels // groups
+    x = paddle.reshape(
+        x=x, shape=[batch_size, groups, channels_per_group, height, width])
+    x = paddle.transpose(x=x, perm=[0, 2, 1, 3, 4])
+    x = paddle.reshape(x=x, shape=[batch_size, num_channels, height, width])
+    return x

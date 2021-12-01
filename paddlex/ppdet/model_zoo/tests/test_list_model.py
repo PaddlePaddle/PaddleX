@@ -17,7 +17,7 @@ from __future__ import division
 from __future__ import print_function
 
 import unittest
-import paddlex.ppdet
+import paddlex
 
 
 class TestListModel(unittest.TestCase):

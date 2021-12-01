@@ -36,6 +36,9 @@ import copy
 import logging
 import cv2
 from PIL import Image, ImageDraw
+import pickle
+import threading
+MUTEX = threading.Lock()
 
 from paddlex.ppdet.core.workspace import serializable
 from paddlex.ppdet.modeling import bbox_utils
@@ -45,9 +48,10 @@ from .op_helper import (satisfy_sample_constraint, filter_and_process,
                         generate_sample_bbox, clip_bbox, data_anchor_sampling,
                         satisfy_sample_constraint_coverage,
                         crop_image_sampling, generate_sample_bbox_square,
-                        bbox_area_sampling, is_poly, transform_bbox)
+                        bbox_area_sampling, is_poly, get_border)
 
 from paddlex.ppdet.utils.logger import setup_logger
+from paddlex.ppdet.modeling.keypoint_utils import get_affine_transform, affine_transform
 logger = setup_logger(__name__)
 
 registered_ops = []
@@ -144,6 +148,122 @@ class Decode(BaseOperator):
                 "width: {} in annotation, and update sample['w'] by actual "
                 "image width.".format(im.shape[1], sample['w']))
             sample['w'] = im.shape[1]
+
+        sample['im_shape'] = np.array(im.shape[:2], dtype=np.float32)
+        sample['scale_factor'] = np.array([1., 1.], dtype=np.float32)
+        return sample
+
+
+def _make_dirs(dirname):
+    try:
+        from pathlib import Path
+    except ImportError:
+        from pathlib2 import Path
+    Path(dirname).mkdir(exist_ok=True)
+
+
+@register_op
+class DecodeCache(BaseOperator):
+    def __init__(self, cache_root=None):
+        '''decode image and caching
+        '''
+        super(DecodeCache, self).__init__()
+
+        self.use_cache = False if cache_root is None else True
+        self.cache_root = cache_root
+
+        if cache_root is not None:
+            _make_dirs(cache_root)
+
+    def apply(self, sample, context=None):
+
+        if self.use_cache and os.path.exists(
+                self.cache_path(self.cache_root, sample['im_file'])):
+            path = self.cache_path(self.cache_root, sample['im_file'])
+            im = self.load(path)
+
+        else:
+            if 'image' not in sample:
+                with open(sample['im_file'], 'rb') as f:
+                    sample['image'] = f.read()
+
+            im = sample['image']
+            data = np.frombuffer(im, dtype='uint8')
+            im = cv2.imdecode(data, 1)  # BGR mode, but need RGB mode
+            if 'keep_ori_im' in sample and sample['keep_ori_im']:
+                sample['ori_image'] = im
+            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+
+            if self.use_cache and not os.path.exists(
+                    self.cache_path(self.cache_root, sample['im_file'])):
+                path = self.cache_path(self.cache_root, sample['im_file'])
+                self.dump(im, path)
+
+        sample['image'] = im
+        sample['h'] = im.shape[0]
+        sample['w'] = im.shape[1]
+
+        sample['im_shape'] = np.array(im.shape[:2], dtype=np.float32)
+        sample['scale_factor'] = np.array([1., 1.], dtype=np.float32)
+
+        sample.pop('im_file')
+
+        return sample
+
+    @staticmethod
+    def cache_path(dir_oot, im_file):
+        return os.path.join(dir_oot, os.path.basename(im_file) + '.pkl')
+
+    @staticmethod
+    def load(path):
+        with open(path, 'rb') as f:
+            im = pickle.load(f)
+        return im
+
+    @staticmethod
+    def dump(obj, path):
+        MUTEX.acquire()
+        try:
+            with open(path, 'wb') as f:
+                pickle.dump(obj, f)
+
+        except Exception as e:
+            logger.warning('dump {} occurs exception {}'.format(path, str(e)))
+
+        finally:
+            MUTEX.release()
+
+
+@register_op
+class SniperDecodeCrop(BaseOperator):
+    def __init__(self):
+        super(SniperDecodeCrop, self).__init__()
+
+    def __call__(self, sample, context=None):
+        if 'image' not in sample:
+            with open(sample['im_file'], 'rb') as f:
+                sample['image'] = f.read()
+            sample.pop('im_file')
+
+        im = sample['image']
+        data = np.frombuffer(im, dtype='uint8')
+        im = cv2.imdecode(data,
+                          cv2.IMREAD_COLOR)  # BGR mode, but need RGB mode
+        if 'keep_ori_im' in sample and sample['keep_ori_im']:
+            sample['ori_image'] = im
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+
+        chip = sample['chip']
+        x1, y1, x2, y2 = [int(xi) for xi in chip]
+        im = im[max(y1, 0):min(y2, im.shape[0]), max(x1, 0):min(x2, im.shape[
+            1]), :]
+
+        sample['image'] = im
+        h = im.shape[0]
+        w = im.shape[1]
+        # sample['im_info'] = [h, w, 1.0]
+        sample['h'] = h
+        sample['w'] = w
 
         sample['im_shape'] = np.array(im.shape[:2], dtype=np.float32)
         sample['scale_factor'] = np.array([1., 1.], dtype=np.float32)
@@ -2360,190 +2480,14 @@ class RandomResizeCrop(BaseOperator):
         return sample
 
 
-class RandomPerspective(BaseOperator):
-    """
-    Rotate, tranlate, scale, shear and perspect image and bboxes randomly,
-    refer to https://github.com/ultralytics/yolov5/blob/develop/utils/datasets.py
-
-    Args:
-        degree (int): rotation degree, uniformly sampled in [-degree, degree]
-        translate (float): translate fraction, translate_x and translate_y are uniformly sampled
-            in [0.5 - translate, 0.5 + translate]
-        scale (float): scale factor, uniformly sampled in [1 - scale, 1 + scale]
-        shear (int): shear degree, shear_x and shear_y are uniformly sampled in [-shear, shear]
-        perspective (float): perspective_x and perspective_y are uniformly sampled in [-perspective, perspective]
-        area_thr (float): the area threshold of bbox to be kept after transformation, default 0.25
-        fill_value (tuple): value used in case of a constant border, default (114, 114, 114)
-    """
-
-    def __init__(self,
-                 degree=10,
-                 translate=0.1,
-                 scale=0.1,
-                 shear=10,
-                 perspective=0.0,
-                 border=[0, 0],
-                 area_thr=0.25,
-                 fill_value=(114, 114, 114)):
-        super(RandomPerspective, self).__init__()
-        self.degree = degree
-        self.translate = translate
-        self.scale = scale
-        self.shear = shear
-        self.perspective = perspective
-        self.border = border
-        self.area_thr = area_thr
-        self.fill_value = fill_value
-
-    def apply(self, sample, context=None):
-        im = sample['image']
-        height = im.shape[0] + self.border[0] * 2
-        width = im.shape[1] + self.border[1] * 2
-
-        # center
-        C = np.eye(3)
-        C[0, 2] = -im.shape[1] / 2
-        C[1, 2] = -im.shape[0] / 2
-
-        # perspective
-        P = np.eye(3)
-        P[2, 0] = random.uniform(-self.perspective, self.perspective)
-        P[2, 1] = random.uniform(-self.perspective, self.perspective)
-
-        # Rotation and scale
-        R = np.eye(3)
-        a = random.uniform(-self.degree, self.degree)
-        s = random.uniform(1 - self.scale, 1 + self.scale)
-        R[:2] = cv2.getRotationMatrix2D(angle=a, center=(0, 0), scale=s)
-
-        # Shear
-        S = np.eye(3)
-        # shear x (deg)
-        S[0, 1] = math.tan(
-            random.uniform(-self.shear, self.shear) * math.pi / 180)
-        # shear y (deg)
-        S[1, 0] = math.tan(
-            random.uniform(-self.shear, self.shear) * math.pi / 180)
-
-        # Translation
-        T = np.eye(3)
-        T[0, 2] = random.uniform(0.5 - self.translate,
-                                 0.5 + self.translate) * width
-        T[1, 2] = random.uniform(0.5 - self.translate,
-                                 0.5 + self.translate) * height
-
-        # matmul
-        # M = T @ S @ R @ P @ C
-        M = np.eye(3)
-        for cM in [T, S, R, P, C]:
-            M = np.matmul(M, cM)
-
-        if (self.border[0] != 0) or (self.border[1] != 0) or (
-                M != np.eye(3)).any():
-            if self.perspective:
-                im = cv2.warpPerspective(
-                    im, M, dsize=(width, height), borderValue=self.fill_value)
-            else:
-                im = cv2.warpAffine(
-                    im,
-                    M[:2],
-                    dsize=(width, height),
-                    borderValue=self.fill_value)
-
-        sample['image'] = im
-        if sample['gt_bbox'].shape[0] > 0:
-            sample = transform_bbox(
-                sample,
-                M,
-                width,
-                height,
-                area_thr=self.area_thr,
-                perspective=self.perspective)
-
-        return sample
-
-
-@register_op
-class Mosaic(BaseOperator):
-    """
-    Mosaic Data Augmentation, refer to https://github.com/ultralytics/yolov5/blob/develop/utils/datasets.py
-
-    """
-
-    def __init__(self,
-                 target_size,
-                 mosaic_border=None,
-                 fill_value=(114, 114, 114)):
-        super(Mosaic, self).__init__()
-        self.target_size = target_size
-        if mosaic_border is None:
-            mosaic_border = (-target_size // 2, -target_size // 2)
-        self.mosaic_border = mosaic_border
-        self.fill_value = fill_value
-
-    def __call__(self, sample, context=None):
-        if not isinstance(sample, Sequence):
-            return sample
-
-        s = self.target_size
-        yc, xc = [
-            int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border
-        ]
-        boxes = [x['gt_bbox'] for x in sample]
-        labels = [x['gt_class'] for x in sample]
-        for i in range(len(sample)):
-            im = sample[i]['image']
-            h, w, c = im.shape
-
-            if i == 0:  # top left
-                image = np.ones(
-                    (s * 2, s * 2, c), dtype=np.uint8) * self.fill_value
-                # xmin, ymin, xmax, ymax (dst image)
-                x1a, y1a, x2a, y2a = max(xc - w, 0), max(yc - h, 0), xc, yc
-                # xmin, ymin, xmax, ymax (src image)
-                x1b, y1b, x2b, y2b = w - (x2a - x1a), h - (y2a - y1a), w, h
-            elif i == 1:  # top right
-                x1a, y1a, x2a, y2a = xc, max(yc - h, 0), min(xc + w, s * 2), yc
-                x1b, y1b, x2b, y2b = 0, h - (y2a - y1a), min(w, x2a - x1a), h
-            elif i == 2:  # bottom left
-                x1a, y1a, x2a, y2a = max(xc - w, 0), yc, xc, min(s * 2, yc + h)
-                x1b, y1b, x2b, y2b = w - (x2a - x1a), 0, max(xc, w), min(
-                    y2a - y1a, h)
-            elif i == 3:  # bottom right
-                x1a, y1a, x2a, y2a = xc, yc, min(xc + w,
-                                                 s * 2), min(s * 2, yc + h)
-                x1b, y1b, x2b, y2b = 0, 0, min(w, x2a - x1a), min(y2a - y1a, h)
-
-            image[y1a:y2a, x1a:x2a] = im[y1b:y2b, x1b:x2b]
-            padw = x1a - x1b
-            padh = y1a - y1b
-            boxes[i] = boxes[i] + (padw, padh, padw, padh)
-
-        boxes = np.concatenate(boxes, axis=0)
-        boxes = np.clip(boxes, 0, s * 2)
-        labels = np.concatenate(labels, axis=0)
-        if 'is_crowd' in sample[0]:
-            is_crowd = np.concatenate([x['is_crowd'] for x in sample], axis=0)
-        if 'difficult' in sample[0]:
-            difficult = np.concatenate(
-                [x['difficult'] for x in sample], axis=0)
-        sample = sample[0]
-        sample['image'] = image.astype(np.uint8)
-        sample['gt_bbox'] = boxes
-        sample['gt_class'] = labels
-        if 'is_crowd' in sample:
-            sample['is_crowd'] = is_crowd
-        if 'difficult' in sample:
-            sample['difficult'] = difficult
-
-        return sample
-
-
 @register_op
 class RandomSelect(BaseOperator):
     """
     Randomly choose a transformation between transforms1 and transforms2,
     and the probability of choosing transforms1 is p.
+
+    The code is based on https://github.com/facebookresearch/detr/blob/main/datasets/transforms.py
+
     """
 
     def __init__(self, transforms1, transforms2, p=0.5):
@@ -2889,3 +2833,193 @@ class RandomSizeCrop(BaseOperator):
 
         region = self.get_crop_params(sample['image'].shape[:2], [h, w])
         return self.crop(sample, region)
+
+
+@register_op
+class WarpAffine(BaseOperator):
+    def __init__(self,
+                 keep_res=False,
+                 pad=31,
+                 input_h=512,
+                 input_w=512,
+                 scale=0.4,
+                 shift=0.1):
+        """WarpAffine
+        Warp affine the image
+
+        The code is based on https://github.com/xingyizhou/CenterNet/blob/master/src/lib/datasets/sample/ctdet.py
+
+
+        """
+        super(WarpAffine, self).__init__()
+        self.keep_res = keep_res
+        self.pad = pad
+        self.input_h = input_h
+        self.input_w = input_w
+        self.scale = scale
+        self.shift = shift
+
+    def apply(self, sample, context=None):
+        img = sample['image']
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        if 'gt_bbox' in sample and len(sample['gt_bbox']) == 0:
+            return sample
+
+        h, w = img.shape[:2]
+
+        if self.keep_res:
+            input_h = (h | self.pad) + 1
+            input_w = (w | self.pad) + 1
+            s = np.array([input_w, input_h], dtype=np.float32)
+            c = np.array([w // 2, h // 2], dtype=np.float32)
+
+        else:
+            s = max(h, w) * 1.0
+            input_h, input_w = self.input_h, self.input_w
+            c = np.array([w / 2., h / 2.], dtype=np.float32)
+
+        trans_input = get_affine_transform(c, s, 0, [input_w, input_h])
+        img = cv2.resize(img, (w, h))
+        inp = cv2.warpAffine(
+            img, trans_input, (input_w, input_h), flags=cv2.INTER_LINEAR)
+        sample['image'] = inp
+        return sample
+
+
+@register_op
+class FlipWarpAffine(BaseOperator):
+    def __init__(self,
+                 keep_res=False,
+                 pad=31,
+                 input_h=512,
+                 input_w=512,
+                 not_rand_crop=False,
+                 scale=0.4,
+                 shift=0.1,
+                 flip=0.5,
+                 is_scale=True,
+                 use_random=True):
+        """FlipWarpAffine
+        1. Random Crop
+        2. Flip the image horizontal
+        3. Warp affine the image
+        """
+        super(FlipWarpAffine, self).__init__()
+        self.keep_res = keep_res
+        self.pad = pad
+        self.input_h = input_h
+        self.input_w = input_w
+        self.not_rand_crop = not_rand_crop
+        self.scale = scale
+        self.shift = shift
+        self.flip = flip
+        self.is_scale = is_scale
+        self.use_random = use_random
+
+    def apply(self, sample, context=None):
+        img = sample['image']
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        if 'gt_bbox' in sample and len(sample['gt_bbox']) == 0:
+            return sample
+
+        h, w = img.shape[:2]
+
+        if self.keep_res:
+            input_h = (h | self.pad) + 1
+            input_w = (w | self.pad) + 1
+            s = np.array([input_w, input_h], dtype=np.float32)
+            c = np.array([w // 2, h // 2], dtype=np.float32)
+
+        else:
+            s = max(h, w) * 1.0
+            input_h, input_w = self.input_h, self.input_w
+            c = np.array([w / 2., h / 2.], dtype=np.float32)
+
+        if self.use_random:
+            gt_bbox = sample['gt_bbox']
+            if not self.not_rand_crop:
+                s = s * np.random.choice(np.arange(0.6, 1.4, 0.1))
+                w_border = get_border(128, w)
+                h_border = get_border(128, h)
+                c[0] = np.random.randint(low=w_border, high=w - w_border)
+                c[1] = np.random.randint(low=h_border, high=h - h_border)
+            else:
+                sf = self.scale
+                cf = self.shift
+                c[0] += s * np.clip(np.random.randn() * cf, -2 * cf, 2 * cf)
+                c[1] += s * np.clip(np.random.randn() * cf, -2 * cf, 2 * cf)
+                s = s * np.clip(np.random.randn() * sf + 1, 1 - sf, 1 + sf)
+
+            if np.random.random() < self.flip:
+                img = img[:, ::-1, :]
+                c[0] = w - c[0] - 1
+                oldx1 = gt_bbox[:, 0].copy()
+                oldx2 = gt_bbox[:, 2].copy()
+                gt_bbox[:, 0] = w - oldx2 - 1
+                gt_bbox[:, 2] = w - oldx1 - 1
+            sample['gt_bbox'] = gt_bbox
+
+        trans_input = get_affine_transform(c, s, 0, [input_w, input_h])
+        if not self.use_random:
+            img = cv2.resize(img, (w, h))
+        inp = cv2.warpAffine(
+            img, trans_input, (input_w, input_h), flags=cv2.INTER_LINEAR)
+        if self.is_scale:
+            inp = (inp.astype(np.float32) / 255.)
+        sample['image'] = inp
+        sample['center'] = c
+        sample['scale'] = s
+        return sample
+
+
+@register_op
+class CenterRandColor(BaseOperator):
+    """Random color for CenterNet series models.
+    Args:
+        saturation (float): saturation settings.
+        contrast (float): contrast settings.
+        brightness (float): brightness settings.
+    """
+
+    def __init__(self, saturation=0.4, contrast=0.4, brightness=0.4):
+        super(CenterRandColor, self).__init__()
+        self.saturation = saturation
+        self.contrast = contrast
+        self.brightness = brightness
+
+    def apply_saturation(self, img, img_gray):
+        alpha = 1. + np.random.uniform(
+            low=-self.saturation, high=self.saturation)
+        self._blend(alpha, img, img_gray[:, :, None])
+        return img
+
+    def apply_contrast(self, img, img_gray):
+        alpha = 1. + np.random.uniform(low=-self.contrast, high=self.contrast)
+        img_mean = img_gray.mean()
+        self._blend(alpha, img, img_mean)
+        return img
+
+    def apply_brightness(self, img, img_gray):
+        alpha = 1 + np.random.uniform(
+            low=-self.brightness, high=self.brightness)
+        img *= alpha
+        return img
+
+    def _blend(self, alpha, img, img_mean):
+        img *= alpha
+        img_mean *= (1 - alpha)
+        img += img_mean
+
+    def __call__(self, sample, context=None):
+        img = sample['image']
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        functions = [
+            self.apply_brightness,
+            self.apply_contrast,
+            self.apply_saturation,
+        ]
+        distortions = np.random.permutation(functions)
+        for func in distortions:
+            img = func(img, img_gray)
+        sample['image'] = img
+        return sample

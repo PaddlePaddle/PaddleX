@@ -43,6 +43,7 @@ FasterRCNN = cv.models.FasterRCNN
 PPYOLO = cv.models.PPYOLO
 PPYOLOTiny = cv.models.PPYOLOTiny
 PPYOLOv2 = cv.models.PPYOLOv2
+PicoDet = cv.models.PicoDet
 
 # instance segmentation
 MaskRCNN = cv.models.MaskRCNN
