@@ -68,4 +68,5 @@ def init_parallel_env():
         random.seed(local_seed)
         np.random.seed(local_seed)
 
-    paddle.distributed.init_parallel_env()
+    if paddle.distributed.get_world_size() > 1:
+        paddle.distributed.init_parallel_env()
