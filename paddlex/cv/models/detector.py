@@ -26,7 +26,8 @@ from paddlex.ppdet.modeling.proposal_generator.target_layer import BBoxAssigner,
 import paddlex
 import paddlex.utils.logging as logging
 from paddlex.cv.transforms.operators import _NormalizeBox, _PadBox, _BboxXYXY2XYWH, Resize, Padding
-from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, _BatchPadding, _Gt2YoloTarget
+from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResize, BatchRandomResizeByShort, \
+    _BatchPadding, _Gt2YoloTarget
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_metrics import VOCMetric, COCOMetric
@@ -597,11 +598,11 @@ class PicoDet(BaseDetector):
         self.init_params = locals()
         if backbone not in {
                 'ESNet_s', 'ESNet_m', 'ESNet_l', 'LCNet', 'MobileNetV3',
-                'ResNet18'
+                'ResNet18_vd'
         }:
             raise ValueError(
                 "backbone: {} is not supported. Please choose one of "
-                "('ESNet_s', 'ESNet_m', 'ESNet_l', 'LCNet', 'MobileNetV3', 'ResNet18')".
+                "('ESNet_s', 'ESNet_m', 'ESNet_l', 'LCNet', 'MobileNetV3', 'ResNet18_vd')".
                 format(backbone))
         self.backbone_name = backbone
         if params.get('with_net', True):

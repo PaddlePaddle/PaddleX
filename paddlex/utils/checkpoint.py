@@ -29,6 +29,12 @@ seg_pretrain_weights_dict = {
 }
 
 det_pretrain_weights_dict = {
+    'PicoDet_ESNet_s': ['COCO', 'IMAGENET'],
+    'PicoDet_ESNet_m': ['COCO', 'IMAGENET'],
+    'PicoDet_ESNet_l': ['COCO', 'IMAGENET'],
+    'PicoDet_LCNet': ['COCO', 'IMAGENET'],
+    'PicoDet_MobileNetV3': ['COCO', 'IMAGENET'],
+    'PicoDet_ResNet18_vd': ['IMAGENET'],
     'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC', 'IMAGENET'],
     'YOLOv3_MobileNetV1_ssld': ['COCO', 'PascalVOC', 'IMAGENET'],
     'YOLOv3_DarkNet53': ['COCO', 'IMAGENET'],
@@ -197,6 +203,18 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
     'ShuffleNetV2_x2_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams',
+    'PicoDet_ESNet_s_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ESNet_x0_75_pretrained.pdparams',
+    'PicoDet_ESNet_m_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ESNet_x1_0_pretrained.pdparams',
+    'PicoDet_ESNet_l_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ESNet_x1_25_pretrained.pdparams',
+    'PicoDet_LCNet_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/LCNet_x1_5_pretrained.pdparams',
+    'PicoDet_MobileNetV3_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'PicoDet_ResNet18_vd_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams',
     'FasterRCNN_ResNet50_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
     'FasterRCNN_ResNet50_fpn_IMAGENET':
@@ -283,6 +301,16 @@ pascalvoc_weights = {
 }
 
 coco_weights = {
+    'PicoDet_ESNet_s_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_s_416_coco.pdparams',
+    'PicoDet_ESNet_m_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_m_416_coco.pdparams',
+    'PicoDet_ESNet_l_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_l_640_coco.pdparams',
+    'PicoDet_LCNet_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_lcnet_1_5x_416_coco.pdparams',
+    'PicoDet_MobileNetV3_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_mobilenetv3_large_1x_416_coco.pdparams',
     'YOLOv3_MobileNetV1_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams',
     'YOLOv3_MobileNetV1_ssld_COCO':
