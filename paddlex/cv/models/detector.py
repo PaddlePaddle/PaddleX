@@ -270,7 +270,9 @@ class BaseDetector(BaseModel):
         self.net_initialize(
             pretrain_weights=pretrain_weights,
             save_dir=pretrained_dir,
-            resume_checkpoint=resume_checkpoint)
+            resume_checkpoint=resume_checkpoint,
+            is_backbone_weights=(pretrain_weights == 'IMAGENET' and
+                                 'ESNet_' in self.backbone_name))
 
         if use_ema:
             ema = ExponentialMovingAverage(
@@ -698,11 +700,12 @@ class PicoDet(BaseDetector):
                 num_classes=num_classes,
                 fpn_stride=[8, 16, 32, 64],
                 prior_prob=0.01,
+                reg_max=7,
+                cell_offset=.5,
                 loss_class=loss_class,
                 loss_dfl=loss_dfl,
                 loss_bbox=loss_bbox,
                 assigner=assigner,
-                reg_max=7,
                 feat_in_chan=neck_out_channels,
                 nms=nms)
             params.update({
