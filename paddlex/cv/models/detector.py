@@ -81,10 +81,10 @@ class BaseDetector(BaseModel):
     def _check_image_shape(self, image_shape):
         if len(image_shape) == 2:
             image_shape = [1, 3] + image_shape
-            if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
-                raise Exception(
-                    "Height and width in fixed_input_shape must be a multiple of 32, but received {}.".
-                    format(image_shape[-2:]))
+        if image_shape[-2] % 32 > 0 or image_shape[-1] % 32 > 0:
+            raise Exception(
+                "Height and width in fixed_input_shape must be a multiple of 32, but received {}.".
+                format(image_shape[-2:]))
         return image_shape
 
     def _get_test_inputs(self, image_shape):
@@ -739,6 +739,50 @@ class PicoDet(BaseDetector):
 
         return batch_transforms
 
+    def _fix_transforms_shape(self, image_shape):
+        if getattr(self, 'test_transforms', None) is not None:
+            has_resize_op = False
+            resize_op_idx = -1
+            normalize_op_idx = len(self.test_transforms.transforms)
+            for idx, op in enumerate(self.test_transforms.transforms):
+                name = op.__class__.__name__
+                if name == 'Resize':
+                    has_resize_op = True
+                    resize_op_idx = idx
+                if name == 'Normalize':
+                    normalize_op_idx = idx
+
+            if not has_resize_op:
+                self.test_transforms.transforms.insert(
+                    normalize_op_idx,
+                    Resize(
+                        target_size=image_shape, interp='CUBIC'))
+            else:
+                self.test_transforms.transforms[
+                    resize_op_idx].target_size = image_shape
+
+    def _get_test_inputs(self, image_shape):
+        if image_shape is not None:
+            image_shape = self._check_image_shape(image_shape)
+            self._fix_transforms_shape(image_shape[-2:])
+        else:
+            image_shape = [None, 3, 320, 320]
+            if getattr(self, 'test_transforms', None) is not None:
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Resize':
+                        image_shape = [None, 3] + list(
+                            self.test_transforms.transforms[idx].target_size)
+            logging.warning(
+                '[Important!!!] When exporting inference model for {}, '
+                'if fixed_input_shape is not set, it will be forcibly set to {}. '
+                'Please ensure image shape after transforms is {}, if not, '
+                'fixed_input_shape should be specified manually.'
+                .format(self.__class__.__name__, image_shape, image_shape[1:]))
+
+        self.fixed_input_shape = image_shape
+        return self._define_input_spec(image_shape)
+
 
 class YOLOv3(BaseDetector):
     def __init__(self,
@@ -868,27 +912,26 @@ class YOLOv3(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if hasattr(self, 'test_transforms'):
-            if self.test_transforms is not None:
-                has_resize_op = False
-                resize_op_idx = -1
-                normalize_op_idx = len(self.test_transforms.transforms)
-                for idx, op in enumerate(self.test_transforms.transforms):
-                    name = op.__class__.__name__
-                    if name == 'Resize':
-                        has_resize_op = True
-                        resize_op_idx = idx
-                    if name == 'Normalize':
-                        normalize_op_idx = idx
+        if getattr(self, 'test_transforms', None) is not None:
+            has_resize_op = False
+            resize_op_idx = -1
+            normalize_op_idx = len(self.test_transforms.transforms)
+            for idx, op in enumerate(self.test_transforms.transforms):
+                name = op.__class__.__name__
+                if name == 'Resize':
+                    has_resize_op = True
+                    resize_op_idx = idx
+                if name == 'Normalize':
+                    normalize_op_idx = idx
 
-                if not has_resize_op:
-                    self.test_transforms.transforms.insert(
-                        normalize_op_idx,
-                        Resize(
-                            target_size=image_shape, interp='CUBIC'))
-                else:
-                    self.test_transforms.transforms[
-                        resize_op_idx].target_size = image_shape
+            if not has_resize_op:
+                self.test_transforms.transforms.insert(
+                    normalize_op_idx,
+                    Resize(
+                        target_size=image_shape, interp='CUBIC'))
+            else:
+                self.test_transforms.transforms[
+                    resize_op_idx].target_size = image_shape
 
 
 class FasterRCNN(BaseDetector):
@@ -1236,33 +1279,30 @@ class FasterRCNN(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if hasattr(self, 'test_transforms'):
-            if self.test_transforms is not None:
-                has_resize_op = False
-                resize_op_idx = -1
-                normalize_op_idx = len(self.test_transforms.transforms)
-                for idx, op in enumerate(self.test_transforms.transforms):
-                    name = op.__class__.__name__
-                    if name == 'ResizeByShort':
-                        has_resize_op = True
-                        resize_op_idx = idx
-                    if name == 'Normalize':
-                        normalize_op_idx = idx
+        if getattr(self, 'test_transforms', None) is not None:
+            has_resize_op = False
+            resize_op_idx = -1
+            normalize_op_idx = len(self.test_transforms.transforms)
+            for idx, op in enumerate(self.test_transforms.transforms):
+                name = op.__class__.__name__
+                if name == 'ResizeByShort':
+                    has_resize_op = True
+                    resize_op_idx = idx
+                if name == 'Normalize':
+                    normalize_op_idx = idx
 
-                if not has_resize_op:
-                    self.test_transforms.transforms.insert(
-                        normalize_op_idx,
-                        Resize(
-                            target_size=image_shape,
-                            keep_ratio=True,
-                            interp='CUBIC'))
-                else:
-                    self.test_transforms.transforms[resize_op_idx] = Resize(
+            if not has_resize_op:
+                self.test_transforms.transforms.insert(
+                    normalize_op_idx,
+                    Resize(
                         target_size=image_shape,
                         keep_ratio=True,
-                        interp='CUBIC')
-                self.test_transforms.transforms.append(
-                    Padding(im_padding_value=[0., 0., 0.]))
+                        interp='CUBIC'))
+            else:
+                self.test_transforms.transforms[resize_op_idx] = Resize(
+                    target_size=image_shape, keep_ratio=True, interp='CUBIC')
+            self.test_transforms.transforms.append(
+                Padding(im_padding_value=[0., 0., 0.]))
 
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
@@ -1450,21 +1490,18 @@ class PPYOLO(YOLOv3):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 608, 608]
-            if hasattr(self, 'test_transforms'):
-                if self.test_transforms is not None:
-                    for idx, op in enumerate(self.test_transforms.transforms):
-                        name = op.__class__.__name__
-                        if name == 'Resize':
-                            image_shape = [None, 3] + list(
-                                self.test_transforms.transforms[
-                                    idx].target_size)
+            if getattr(self, 'test_transforms', None) is not None:
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Resize':
+                        image_shape = [None, 3] + list(
+                            self.test_transforms.transforms[idx].target_size)
             logging.warning(
-                '[Important!!!] When exporting inference model for {},'.format(
-                    self.__class__.__name__) +
-                ' if fixed_input_shape is not set, it will be forcibly set to {}. '.
-                format(image_shape) +
-                'Please check image shape after transforms is {}, if not, fixed_input_shape '.
-                format(image_shape[1:]) + 'should be specified manually.')
+                '[Important!!!] When exporting inference model for {}, '
+                'if fixed_input_shape is not set, it will be forcibly set to {}. '
+                'Please ensure image shape after transforms is {}, if not, '
+                'fixed_input_shape should be specified manually.'
+                .format(self.__class__.__name__, image_shape, image_shape[1:]))
 
         self.fixed_input_shape = image_shape
         return self._define_input_spec(image_shape)
@@ -1581,14 +1618,12 @@ class PPYOLOTiny(YOLOv3):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 320, 320]
-            if hasattr(self, 'test_transforms'):
-                if self.test_transforms is not None:
-                    for idx, op in enumerate(self.test_transforms.transforms):
-                        name = op.__class__.__name__
-                        if name == 'Resize':
-                            image_shape = [None, 3] + list(
-                                self.test_transforms.transforms[
-                                    idx].target_size)
+            if getattr(self, 'test_transforms', None) is not None:
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Resize':
+                        image_shape = [None, 3] + list(
+                            self.test_transforms.transforms[idx].target_size)
             logging.warning(
                 '[Important!!!] When exporting inference model for {},'.format(
                     self.__class__.__name__) +
@@ -1730,14 +1765,12 @@ class PPYOLOv2(YOLOv3):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 640, 640]
-            if hasattr(self, 'test_transforms'):
-                if self.test_transforms is not None:
-                    for idx, op in enumerate(self.test_transforms.transforms):
-                        name = op.__class__.__name__
-                        if name == 'Resize':
-                            image_shape = [None, 3] + list(
-                                self.test_transforms.transforms[
-                                    idx].target_size)
+            if getattr(self, 'test_transforms', None) is not None:
+                for idx, op in enumerate(self.test_transforms.transforms):
+                    name = op.__class__.__name__
+                    if name == 'Resize':
+                        image_shape = [None, 3] + list(
+                            self.test_transforms.transforms[idx].target_size)
             logging.warning(
                 '[Important!!!] When exporting inference model for {},'.format(
                     self.__class__.__name__) +
@@ -2094,33 +2127,30 @@ class MaskRCNN(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if hasattr(self, 'test_transforms'):
-            if self.test_transforms is not None:
-                has_resize_op = False
-                resize_op_idx = -1
-                normalize_op_idx = len(self.test_transforms.transforms)
-                for idx, op in enumerate(self.test_transforms.transforms):
-                    name = op.__class__.__name__
-                    if name == 'ResizeByShort':
-                        has_resize_op = True
-                        resize_op_idx = idx
-                    if name == 'Normalize':
-                        normalize_op_idx = idx
+        if getattr(self, 'test_transforms', None) is not None:
+            has_resize_op = False
+            resize_op_idx = -1
+            normalize_op_idx = len(self.test_transforms.transforms)
+            for idx, op in enumerate(self.test_transforms.transforms):
+                name = op.__class__.__name__
+                if name == 'ResizeByShort':
+                    has_resize_op = True
+                    resize_op_idx = idx
+                if name == 'Normalize':
+                    normalize_op_idx = idx
 
-                if not has_resize_op:
-                    self.test_transforms.transforms.insert(
-                        normalize_op_idx,
-                        Resize(
-                            target_size=image_shape,
-                            keep_ratio=True,
-                            interp='CUBIC'))
-                else:
-                    self.test_transforms.transforms[resize_op_idx] = Resize(
+            if not has_resize_op:
+                self.test_transforms.transforms.insert(
+                    normalize_op_idx,
+                    Resize(
                         target_size=image_shape,
                         keep_ratio=True,
-                        interp='CUBIC')
-                self.test_transforms.transforms.append(
-                    Padding(im_padding_value=[0., 0., 0.]))
+                        interp='CUBIC'))
+            else:
+                self.test_transforms.transforms[resize_op_idx] = Resize(
+                    target_size=image_shape, keep_ratio=True, interp='CUBIC')
+            self.test_transforms.transforms.append(
+                Padding(im_padding_value=[0., 0., 0.]))
 
     def _get_test_inputs(self, image_shape):
         if image_shape is not None:
