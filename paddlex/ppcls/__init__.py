@@ -14,7 +14,7 @@
 
 from . import optimizer
 
-from .modeling import *
+from .arch import *
 from .optimizer import *
 from .data import *
 from .utils import *

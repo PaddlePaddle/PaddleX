@@ -36,7 +36,7 @@ def multi_hot_encode(logits, threshold=0.5):
     Encode logits to multi-hot by elementwise for multilabel
     """
 
-    return binarize(logits, threshold)
+    return binarize(logits, threshold=threshold)
 
 
 def hamming_distance(output, target):
