@@ -26,7 +26,7 @@ class TestListModel(unittest.TestCase):
 
     def test_main(self):
         try:
-            paddlex.ppdet.model_zoo.list_model(self._filter)
+            ppdet.model_zoo.list_model(self._filter)
             self.assertTrue(True)
         except:
             self.assertTrue(False)
@@ -58,7 +58,7 @@ class TestListModelError(unittest.TestCase):
 
     def test_main(self):
         try:
-            paddlex.ppdet.model_zoo.list_model(self._filter)
+            ppdet.model_zoo.list_model(self._filter)
             self.assertTrue(False)
         except ValueError:
             self.assertTrue(True)

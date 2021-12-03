@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+this code is based on https://github.com/open-mmlab/mmpose
+"""
 
 import cv2
 import numpy as np
@@ -48,8 +51,7 @@ def get_affine_transform(center,
 
     Args:
         center (np.ndarray[2, ]): Center of the bounding box (x, y).
-        scale (np.ndarray[2, ]): Scale of the bounding box
-            wrt [width, height].
+        input_size (np.ndarray[2, ]): Size of input feature (width, height).
         rot (float): Rotation angle (degree).
         output_size (np.ndarray[2, ]): Size of the destination heatmaps.
         shift (0-100%): Shift translation ratio wrt the width/height.
@@ -61,10 +63,11 @@ def get_affine_transform(center,
         np.ndarray: The transform matrix.
     """
     assert len(center) == 2
-    assert len(input_size) == 2
     assert len(output_size) == 2
     assert len(shift) == 2
 
+    if not isinstance(input_size, (np.ndarray, list)):
+        input_size = np.array([input_size, input_size], dtype=np.float32)
     scale_tmp = input_size
 
     shift = np.array(shift)
@@ -77,6 +80,7 @@ def get_affine_transform(center,
     dst_dir = np.array([0., dst_w * -0.5])
 
     src = np.zeros((3, 2), dtype=np.float32)
+
     src[0, :] = center + scale_tmp * shift
     src[1, :] = center + src_dir + scale_tmp * shift
     src[2, :] = _get_3rd_point(src[0, :], src[1, :])
@@ -94,6 +98,40 @@ def get_affine_transform(center,
     return trans
 
 
+def get_warp_matrix(theta, size_input, size_dst, size_target):
+    """This code is based on
+        https://github.com/open-mmlab/mmpose/blob/master/mmpose/core/post_processing/post_transforms.py
+
+        Calculate the transformation matrix under the constraint of unbiased.
+    Paper ref: Huang et al. The Devil is in the Details: Delving into Unbiased
+    Data Processing for Human Pose Estimation (CVPR 2020).
+
+    Args:
+        theta (float): Rotation angle in degrees.
+        size_input (np.ndarray): Size of input image [w, h].
+        size_dst (np.ndarray): Size of output image [w, h].
+        size_target (np.ndarray): Size of ROI in input plane [w, h].
+
+    Returns:
+        matrix (np.ndarray): A matrix for transformation.
+    """
+    theta = np.deg2rad(theta)
+    matrix = np.zeros((2, 3), dtype=np.float32)
+    scale_x = size_dst[0] / size_target[0]
+    scale_y = size_dst[1] / size_target[1]
+    matrix[0, 0] = np.cos(theta) * scale_x
+    matrix[0, 1] = -np.sin(theta) * scale_x
+    matrix[0, 2] = scale_x * (
+        -0.5 * size_input[0] * np.cos(theta) + 0.5 * size_input[1] *
+        np.sin(theta) + 0.5 * size_target[0])
+    matrix[1, 0] = np.sin(theta) * scale_y
+    matrix[1, 1] = np.cos(theta) * scale_y
+    matrix[1, 2] = scale_y * (
+        -0.5 * size_input[0] * np.sin(theta) - 0.5 * size_input[1] *
+        np.cos(theta) + 0.5 * size_target[1])
+    return matrix
+
+
 def _get_3rd_point(a, b):
     """To calculate the affine matrix, three pairs of points are required. This
     function is used to get the 3rd point, given 2D points a & b.
@@ -108,8 +146,10 @@ def _get_3rd_point(a, b):
     Returns:
         np.ndarray: The 3rd point.
     """
-    assert len(a) == 2
-    assert len(b) == 2
+    assert len(
+        a) == 2, 'input of _get_3rd_point should be point with length of 2'
+    assert len(
+        b) == 2, 'input of _get_3rd_point should be point with length of 2'
     direction = a - b
     third_pt = b + np.array([-direction[1], direction[0]], dtype=np.float32)
 

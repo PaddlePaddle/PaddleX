@@ -41,18 +41,20 @@ class TopDownHRNet(BaseArch):
                  post_process='HRNetPostProcess',
                  flip_perm=None,
                  flip=True,
-                 shift_heatmap=True):
+                 shift_heatmap=True,
+                 use_dark=True):
         """
-        HRNnet network, see https://arxiv.org/abs/1902.09212
+        HRNet network, see https://arxiv.org/abs/1902.09212
 
         Args:
             backbone (nn.Layer): backbone instance
             post_process (object): `HRNetPostProcess` instance
             flip_perm (list): The left-right joints exchange order list
+            use_dark(bool): Whether to use DARK in post processing
         """
         super(TopDownHRNet, self).__init__()
         self.backbone = backbone
-        self.post_process = HRNetPostProcess()
+        self.post_process = HRNetPostProcess(use_dark)
         self.loss = loss
         self.flip_perm = flip_perm
         self.flip = flip
@@ -74,7 +76,12 @@ class TopDownHRNet(BaseArch):
         if self.training:
             return self.loss(hrnet_outputs, self.inputs)
         elif self.deploy:
-            return hrnet_outputs
+            outshape = hrnet_outputs.shape
+            max_idx = paddle.argmax(
+                hrnet_outputs.reshape(
+                    (outshape[0], outshape[1], outshape[2] * outshape[3])),
+                axis=-1)
+            return hrnet_outputs, max_idx
         else:
             if self.flip:
                 self.inputs['image'] = self.inputs['image'].flip([3])
@@ -197,6 +204,10 @@ class HRNetPostProcess(object):
         return coord
 
     def dark_postprocess(self, hm, coords, kernelsize):
+        '''DARK postpocessing, Zhang et al. Distribution-Aware Coordinate
+        Representation for Human Pose Estimation (CVPR 2020).
+        '''
+
         hm = self.gaussian_blur(hm, kernelsize)
         hm = np.maximum(hm, 1e-10)
         hm = np.log(hm)
@@ -218,7 +229,6 @@ class HRNetPostProcess(object):
             preds: numpy.ndarray([batch_size, num_joints, 2]), keypoints coords
             maxvals: numpy.ndarray([batch_size, num_joints, 1]), the maximum confidence of the keypoints
         """
-
         coords, maxvals = self.get_max_preds(heatmaps)
 
         heatmap_height = heatmaps.shape[2]

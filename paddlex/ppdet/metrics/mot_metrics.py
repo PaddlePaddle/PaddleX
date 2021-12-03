@@ -37,7 +37,7 @@ __all__ = ['MOTEvaluator', 'MOTMetric', 'JDEDetMetric', 'KITTIMOTMetric']
 
 def read_mot_results(filename, is_gt=False, is_ignore=False):
     valid_labels = {1}
-    ignore_labels = {2, 7, 8, 12}
+    ignore_labels = {2, 7, 8, 12}  # only in motchallenge datasets like 'MOT16'
     results_dict = dict()
     if os.path.isfile(filename):
         with open(filename, 'r') as f:
@@ -53,11 +53,10 @@ def read_mot_results(filename, is_gt=False, is_ignore=False):
                 box_size = float(linelist[4]) * float(linelist[5])
 
                 if is_gt:
-                    if 'MOT16-' in filename or 'MOT17-' in filename or 'MOT15-' in filename or 'MOT20-' in filename:
-                        label = int(float(linelist[7]))
-                        mark = int(float(linelist[6]))
-                        if mark == 0 or label not in valid_labels:
-                            continue
+                    label = int(float(linelist[7]))
+                    mark = int(float(linelist[6]))
+                    if mark == 0 or label not in valid_labels:
+                        continue
                     score = 1
                 elif is_ignore:
                     if 'MOT16-' in filename or 'MOT17-' in filename or 'MOT15-' in filename or 'MOT20-' in filename:
@@ -376,7 +375,7 @@ class KITTIEvaluation(object):
         # get number of sequences and
         # get number of frames per sequence from test mapping
         # (created while extracting the benchmark)
-        self.gt_path = os.path.join(gt_path, "label_02")
+        self.gt_path = os.path.join(gt_path, "../labels")
         self.n_frames = n_frames
         self.sequence_name = seqs
         self.n_sequences = n_sequences
@@ -539,7 +538,7 @@ class KITTIEvaluation(object):
                         return
 
                 # do not consider objects marked as invalid
-                if t_data.track_id == -1 and t_data.obj_type != "dontcare":
+                if t_data.track_id is -1 and t_data.obj_type != "dontcare":
                     continue
 
                 idx = t_data.frame
@@ -718,7 +717,7 @@ class KITTIEvaluation(object):
                     seq_trajectories[gg.track_id].append(-1)
                     seq_ignored[gg.track_id].append(False)
 
-                if len(g) == 0:
+                if len(g) is 0:
                     cost_matrix = [[]]
                 # associate
                 association_matrix = hm.compute(cost_matrix)
@@ -1180,7 +1179,7 @@ class KITTIMOTMetric(Metric):
         assert data_type == 'kitti', "data_type should 'kitti'"
         self.result_root = result_root
         self.gt_path = data_root
-        gt_path = '{}/label_02/{}.txt'.format(data_root, seq)
+        gt_path = '{}/../labels/{}.txt'.format(data_root, seq)
         gt = open(gt_path, "r")
         max_frame = 0
         for line in gt:

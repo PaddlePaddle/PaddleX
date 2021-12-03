@@ -100,7 +100,7 @@ def clip_bbox(boxes, im_shape):
 def nonempty_bbox(boxes, min_size=0, return_mask=False):
     w = boxes[:, 2] - boxes[:, 0]
     h = boxes[:, 3] - boxes[:, 1]
-    mask = paddle.logical_and(w > min_size, w > min_size)
+    mask = paddle.logical_and(h > min_size, w > min_size)
     if return_mask:
         return mask
     keep = paddle.nonzero(mask).flatten()
@@ -141,6 +141,100 @@ def bbox_overlaps(boxes1, boxes2):
                             (paddle.unsqueeze(area1, 1) + area2 - inter),
                             paddle.zeros_like(inter))
     return overlaps
+
+
+def batch_bbox_overlaps(bboxes1,
+                        bboxes2,
+                        mode='iou',
+                        is_aligned=False,
+                        eps=1e-6):
+    """Calculate overlap between two set of bboxes.
+    If ``is_aligned `` is ``False``, then calculate the overlaps between each
+    bbox of bboxes1 and bboxes2, otherwise the overlaps between each aligned
+    pair of bboxes1 and bboxes2.
+    Args:
+        bboxes1 (Tensor): shape (B, m, 4) in <x1, y1, x2, y2> format or empty.
+        bboxes2 (Tensor): shape (B, n, 4) in <x1, y1, x2, y2> format or empty.
+            B indicates the batch dim, in shape (B1, B2, ..., Bn).
+            If ``is_aligned `` is ``True``, then m and n must be equal.
+        mode (str): "iou" (intersection over union) or "iof" (intersection over
+            foreground).
+        is_aligned (bool, optional): If True, then m and n must be equal.
+            Default False.
+        eps (float, optional): A value added to the denominator for numerical
+            stability. Default 1e-6.
+    Returns:
+        Tensor: shape (m, n) if ``is_aligned `` is False else shape (m,)
+    """
+    assert mode in ['iou', 'iof', 'giou'], 'Unsupported mode {}'.format(mode)
+    # Either the boxes are empty or the length of boxes's last dimenstion is 4
+    assert (bboxes1.shape[-1] == 4 or bboxes1.shape[0] == 0)
+    assert (bboxes2.shape[-1] == 4 or bboxes2.shape[0] == 0)
+
+    # Batch dim must be the same
+    # Batch dim: (B1, B2, ... Bn)
+    assert bboxes1.shape[:-2] == bboxes2.shape[:-2]
+    batch_shape = bboxes1.shape[:-2]
+
+    rows = bboxes1.shape[-2] if bboxes1.shape[0] > 0 else 0
+    cols = bboxes2.shape[-2] if bboxes2.shape[0] > 0 else 0
+    if is_aligned:
+        assert rows == cols
+
+    if rows * cols == 0:
+        if is_aligned:
+            return paddle.full(batch_shape + (rows, ), 1)
+        else:
+            return paddle.full(batch_shape + (rows, cols), 1)
+
+    area1 = (bboxes1[:, 2] - bboxes1[:, 0]) * (bboxes1[:, 3] - bboxes1[:, 1])
+    area2 = (bboxes2[:, 2] - bboxes2[:, 0]) * (bboxes2[:, 3] - bboxes2[:, 1])
+
+    if is_aligned:
+        lt = paddle.maximum(bboxes1[:, :2], bboxes2[:, :2])  # [B, rows, 2]
+        rb = paddle.minimum(bboxes1[:, 2:], bboxes2[:, 2:])  # [B, rows, 2]
+
+        wh = (rb - lt).clip(min=0)  # [B, rows, 2]
+        overlap = wh[:, 0] * wh[:, 1]
+
+        if mode in ['iou', 'giou']:
+            union = area1 + area2 - overlap
+        else:
+            union = area1
+        if mode == 'giou':
+            enclosed_lt = paddle.minimum(bboxes1[:, :2], bboxes2[:, :2])
+            enclosed_rb = paddle.maximum(bboxes1[:, 2:], bboxes2[:, 2:])
+    else:
+        lt = paddle.maximum(bboxes1[:, :2].reshape([rows, 1, 2]),
+                            bboxes2[:, :2])  # [B, rows, cols, 2]
+        rb = paddle.minimum(bboxes1[:, 2:].reshape([rows, 1, 2]),
+                            bboxes2[:, 2:])  # [B, rows, cols, 2]
+
+        wh = (rb - lt).clip(min=0)  # [B, rows, cols, 2]
+        overlap = wh[:, :, 0] * wh[:, :, 1]
+
+        if mode in ['iou', 'giou']:
+            union = area1.reshape([rows,1]) \
+                    + area2.reshape([1,cols]) - overlap
+        else:
+            union = area1[:, None]
+        if mode == 'giou':
+            enclosed_lt = paddle.minimum(bboxes1[:, :2].reshape([rows, 1, 2]),
+                                         bboxes2[:, :2])
+            enclosed_rb = paddle.maximum(bboxes1[:, 2:].reshape([rows, 1, 2]),
+                                         bboxes2[:, 2:])
+
+    eps = paddle.to_tensor([eps])
+    union = paddle.maximum(union, eps)
+    ious = overlap / union
+    if mode in ['iou', 'iof']:
+        return ious
+    # calculate gious
+    enclose_wh = (enclosed_rb - enclosed_lt).clip(min=0)
+    enclose_area = enclose_wh[:, :, 0] * enclose_wh[:, :, 1]
+    enclose_area = paddle.maximum(enclose_area, eps)
+    gious = ious - (enclose_area - union) / enclose_area
+    return 1 - gious
 
 
 def xywh2xyxy(box):
@@ -437,18 +531,18 @@ def poly2rbox(polys):
         rbox_angle = 0
         if edge1 > edge2:
             rbox_angle = np.arctan2(
-                np.float(pt2[1] - pt1[1]), np.float(pt2[0] - pt1[0]))
+                float(pt2[1] - pt1[1]), float(pt2[0] - pt1[0]))
         elif edge2 >= edge1:
             rbox_angle = np.arctan2(
-                np.float(pt4[1] - pt1[1]), np.float(pt4[0] - pt1[0]))
+                float(pt4[1] - pt1[1]), float(pt4[0] - pt1[0]))
 
         def norm_angle(angle, range=[-np.pi / 4, np.pi]):
             return (angle - range[0]) % range[1] + range[0]
 
         rbox_angle = norm_angle(rbox_angle)
 
-        x_ctr = np.float(pt1[0] + pt3[0]) / 2
-        y_ctr = np.float(pt1[1] + pt3[1]) / 2
+        x_ctr = float(pt1[0] + pt3[0]) / 2
+        y_ctr = float(pt1[1] + pt3[1]) / 2
         rotated_box = np.array([x_ctr, y_ctr, width, height, rbox_angle])
         rotated_boxes.append(rotated_box)
     ret_rotated_boxes = np.array(rotated_boxes)
@@ -604,3 +698,81 @@ def bbox_iou_np_expand(box1, box2, x1y1x2y2=True, eps=1e-16):
 
     ious = inter_area / (b1_area + b2_area - inter_area + eps)
     return ious
+
+
+def bbox2distance(points, bbox, max_dis=None, eps=0.1):
+    """Decode bounding box based on distances.
+    Args:
+        points (Tensor): Shape (n, 2), [x, y].
+        bbox (Tensor): Shape (n, 4), "xyxy" format
+        max_dis (float): Upper bound of the distance.
+        eps (float): a small value to ensure target < max_dis, instead <=
+    Returns:
+        Tensor: Decoded distances.
+    """
+    left = points[:, 0] - bbox[:, 0]
+    top = points[:, 1] - bbox[:, 1]
+    right = bbox[:, 2] - points[:, 0]
+    bottom = bbox[:, 3] - points[:, 1]
+    if max_dis is not None:
+        left = left.clip(min=0, max=max_dis - eps)
+        top = top.clip(min=0, max=max_dis - eps)
+        right = right.clip(min=0, max=max_dis - eps)
+        bottom = bottom.clip(min=0, max=max_dis - eps)
+    return paddle.stack([left, top, right, bottom], -1)
+
+
+def distance2bbox(points, distance, max_shape=None):
+    """Decode distance prediction to bounding box.
+        Args:
+            points (Tensor): Shape (n, 2), [x, y].
+            distance (Tensor): Distance from the given point to 4
+                boundaries (left, top, right, bottom).
+            max_shape (tuple): Shape of the image.
+        Returns:
+            Tensor: Decoded bboxes.
+        """
+    x1 = points[:, 0] - distance[:, 0]
+    y1 = points[:, 1] - distance[:, 1]
+    x2 = points[:, 0] + distance[:, 2]
+    y2 = points[:, 1] + distance[:, 3]
+    if max_shape is not None:
+        x1 = x1.clip(min=0, max=max_shape[1])
+        y1 = y1.clip(min=0, max=max_shape[0])
+        x2 = x2.clip(min=0, max=max_shape[1])
+        y2 = y2.clip(min=0, max=max_shape[0])
+    return paddle.stack([x1, y1, x2, y2], -1)
+
+
+def bbox_center(boxes):
+    """Get bbox centers from boxes.
+    Args:
+        boxes (Tensor): boxes with shape (N, 4), "xmin, ymin, xmax, ymax" format.
+    Returns:
+        Tensor: boxes centers with shape (N, 2), "cx, cy" format.
+    """
+    boxes_cx = (boxes[..., 0] + boxes[..., 2]) / 2
+    boxes_cy = (boxes[..., 1] + boxes[..., 3]) / 2
+    return paddle.stack([boxes_cx, boxes_cy], axis=-1)
+
+
+def batch_distance2bbox(points, distance, max_shapes=None):
+    """Decode distance prediction to bounding box for batch.
+    Args:
+        points (Tensor): [B, ..., 2]
+        distance (Tensor): [B, ..., 4]
+        max_shapes (tuple): [B, 2], "h,w" format, Shape of the image.
+    Returns:
+        Tensor: Decoded bboxes.
+    """
+    x1 = points[..., 0] - distance[..., 0]
+    y1 = points[..., 1] - distance[..., 1]
+    x2 = points[..., 0] + distance[..., 2]
+    y2 = points[..., 1] + distance[..., 3]
+    if max_shapes is not None:
+        for i, max_shape in enumerate(max_shapes):
+            x1[i] = x1[i].clip(min=0, max=max_shape[1])
+            y1[i] = y1[i].clip(min=0, max=max_shape[0])
+            x2[i] = x2[i].clip(min=0, max=max_shape[1])
+            y2[i] = y2[i].clip(min=0, max=max_shape[0])
+    return paddle.stack([x1, y1, x2, y2], -1)

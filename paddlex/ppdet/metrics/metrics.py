@@ -21,6 +21,7 @@ import sys
 import json
 import paddle
 import numpy as np
+import typing
 
 from .map_utils import prune_zero_padding, DetectionMAP
 from .coco_utils import get_infer_results, cocoapi_eval
@@ -31,12 +32,8 @@ from paddlex.ppdet.utils.logger import setup_logger
 logger = setup_logger(__name__)
 
 __all__ = [
-    'Metric',
-    'COCOMetric',
-    'VOCMetric',
-    'WiderFaceMetric',
-    'get_infer_results',
-    'RBoxMetric',
+    'Metric', 'COCOMetric', 'VOCMetric', 'WiderFaceMetric',
+    'get_infer_results', 'RBoxMetric', 'SNIPERCOCOMetric'
 ]
 
 COCO_SIGMAS = np.array([
@@ -97,7 +94,11 @@ class COCOMetric(Metric):
         for k, v in outputs.items():
             outs[k] = v.numpy() if isinstance(v, paddle.Tensor) else v
 
-        im_id = inputs['im_id']
+        # multi-scale inputs: all inputs have same im_id
+        if isinstance(inputs, typing.Sequence):
+            im_id = inputs[0]['im_id']
+        else:
+            im_id = inputs['im_id']
         outs['im_id'] = im_id.numpy() if isinstance(im_id,
                                                     paddle.Tensor) else im_id
 
@@ -395,3 +396,39 @@ class RBoxMetric(Metric):
 
     def get_results(self):
         return {'bbox': [self.detection_map.get_map()]}
+
+
+class SNIPERCOCOMetric(COCOMetric):
+    def __init__(self, anno_file, **kwargs):
+        super(SNIPERCOCOMetric, self).__init__(anno_file, **kwargs)
+        self.dataset = kwargs["dataset"]
+        self.chip_results = []
+
+    def reset(self):
+        # only bbox and mask evaluation support currently
+        self.results = {'bbox': [], 'mask': [], 'segm': [], 'keypoint': []}
+        self.eval_results = {}
+        self.chip_results = []
+
+    def update(self, inputs, outputs):
+        outs = {}
+        # outputs Tensor -> numpy.ndarray
+        for k, v in outputs.items():
+            outs[k] = v.numpy() if isinstance(v, paddle.Tensor) else v
+
+        im_id = inputs['im_id']
+        outs['im_id'] = im_id.numpy() if isinstance(im_id,
+                                                    paddle.Tensor) else im_id
+
+        self.chip_results.append(outs)
+
+    def accumulate(self):
+        results = self.dataset.anno_cropper.aggregate_chips_detections(
+            self.chip_results)
+        for outs in results:
+            infer_results = get_infer_results(
+                outs, self.clsid2catid, bias=self.bias)
+            self.results['bbox'] += infer_results[
+                'bbox'] if 'bbox' in infer_results else []
+
+        super(SNIPERCOCOMetric, self).accumulate()
