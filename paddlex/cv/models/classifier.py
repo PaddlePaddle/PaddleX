@@ -20,14 +20,13 @@ import numpy as np
 import paddle
 import paddle.nn.functional as F
 from paddle.static import InputSpec
-from paddlex.utils import logging, TrainingStats, DisablePrint
+from paddlex.utils import logging, TrainingStats
 from paddlex.cv.models.base import BaseModel
 from paddlex.cv.transforms import arrange_transforms
 from paddlex.cv.transforms.operators import Resize
 
-with DisablePrint():
-    from paddlex.ppcls.modeling import architectures
-    from paddlex.ppcls.modeling.loss import CELoss
+from paddlex.ppcls import arch
+from paddlex.ppcls.loss import CELoss
 
 __all__ = [
     "ResNet18", "ResNet34", "ResNet50", "ResNet101", "ResNet152",
@@ -38,7 +37,7 @@ __all__ = [
     "DenseNet121", "DenseNet161", "DenseNet169", "DenseNet201", "DenseNet264",
     "HRNet_W18_C", "HRNet_W30_C", "HRNet_W32_C", "HRNet_W40_C", "HRNet_W44_C",
     "HRNet_W48_C", "HRNet_W64_C", "Xception41", "Xception65", "Xception71",
-    "ShuffleNetV2", "ShuffleNetV2_swish"
+    "ShuffleNetV2", "ShuffleNetV2_swish", "PPLCNet", "PPLCNet_ssld"
 ]
 
 
@@ -57,7 +56,7 @@ class BaseClassifier(BaseModel):
         if 'with_net' in self.init_params:
             del self.init_params['with_net']
         super(BaseClassifier, self).__init__('classifier')
-        if not hasattr(architectures, model_name):
+        if not hasattr(arch, model_name):
             raise Exception("ERROR: There's no model named {}.".format(
                 model_name))
 
@@ -72,9 +71,14 @@ class BaseClassifier(BaseModel):
 
     def build_net(self, **params):
         with paddle.utils.unique_name.guard():
-            net = architectures.__dict__[self.model_name](
-                class_dim=self.num_classes, **params)
+            net = arch.__dict__[self.model_name](class_num=self.num_classes,
+                                                 **params)
         return net
+
+    def build_loss(self, label_smoothing=None):
+        if isinstance(label_smoothing, bool):
+            label_smoothing = .1 if label_smoothing else None
+        self.loss_func = CELoss(epsilon=label_smoothing)
 
     def _fix_transforms_shape(self, image_shape):
         if hasattr(self, 'test_transforms'):
@@ -130,8 +134,7 @@ class BaseClassifier(BaseModel):
         else:
             # mode == 'train'
             labels = inputs[1].reshape([-1, 1])
-            loss = CELoss(class_dim=self.num_classes)
-            loss = loss(net_out, inputs[1])
+            loss = self.loss_func(net_out, inputs[1])['CELoss']
             acc1 = paddle.metric.accuracy(softmax_out, label=labels, k=1)
             k = min(5, self.num_classes)
             acck = paddle.metric.accuracy(softmax_out, label=labels, k=k)
@@ -193,6 +196,7 @@ class BaseClassifier(BaseModel):
               warmup_start_lr=0.0,
               lr_decay_epochs=(30, 60, 90),
               lr_decay_gamma=0.1,
+              label_smoothing=None,
               early_stop=False,
               early_stop_patience=5,
               use_vdl=True,
@@ -220,6 +224,9 @@ class BaseClassifier(BaseModel):
             lr_decay_epochs(List[int] or Tuple[int], optional):
                 Epoch milestones for learning rate decay. Defaults to (20, 60, 90).
             lr_decay_gamma(float, optional): Gamma coefficient of learning rate decay, default .1.
+            label_smoothing(float, bool or None, optional): Whether to adopt label smoothing or not.
+                If float, the value refer to epsilon coefficient of label smoothing. If False or None, label smoothing
+                will not be adopted. Otherwise, adopt label smoothing with epsilon equals to 0.1. Defaults to None.
             early_stop(bool, optional): Whether to adopt early stop strategy. Defaults to False.
             early_stop_patience(int, optional): Early stop patience. Defaults to 5.
             use_vdl(bool, optional): Whether to use VisualDL to monitor the training process. Defaults to True.
@@ -251,6 +258,9 @@ class BaseClassifier(BaseModel):
                 num_steps_each_epoch=num_steps_each_epoch)
         else:
             self.optimizer = optimizer
+
+        # build loss
+        self.build_loss(label_smoothing)
 
         # initiate weights
         if pretrain_weights is not None and not osp.exists(pretrain_weights):
@@ -826,3 +836,28 @@ class ShuffleNetV2_swish(BaseClassifier):
                 shape=image_shape, name='image', dtype='float32')
         ]
         return input_spec
+
+
+class PPLCNet(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1., **params):
+        supported_scale = [.25, .35, .5, .75, 1., 1.5, 2., 2.5]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by PPLCNet, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        model_name = 'PPLCNet_x' + str(float(scale)).replace('.', '_')
+        super(PPLCNet, self).__init__(
+            model_name=model_name, num_classes=num_classes, **params)
+
+
+class PPLCNet_ssld(BaseClassifier):
+    def __init__(self, num_classes=1000, scale=1., **params):
+        supported_scale = [.5, 1., 2.5]
+        if scale not in supported_scale:
+            logging.warning("scale={} is not supported by PPLCNet, "
+                            "scale is forcibly set to 1.0".format(scale))
+            scale = 1.0
+        model_name = 'PPLCNet_x' + str(float(scale)).replace('.', '_')
+        super(PPLCNet_ssld, self).__init__(
+            model_name=model_name, num_classes=num_classes, **params)
+        self.model_name = model_name + '_ssld'

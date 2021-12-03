@@ -12,70 +12,86 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os
+import sys
+
+import logging
 import datetime
+import paddle.distributed as dist
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s: %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S")
+_logger = None
 
 
-def time_zone(sec, fmt):
-    real_time = datetime.datetime.now()
-    return real_time.timetuple()
+def init_logger(name='root', log_file=None, log_level=logging.INFO):
+    """Initialize and get a logger by name.
+    If the logger has not been initialized, this method will initialize the
+    logger by adding one or two handlers, otherwise the initialized logger will
+    be directly returned. During initialization, a StreamHandler will always be
+    added. If `log_file` is specified a FileHandler will also be added.
+    Args:
+        name (str): Logger name.
+        log_file (str | None): The log filename. If specified, a FileHandler
+            will be added to the logger.
+        log_level (int): The logger level. Note that only the process of
+            rank 0 is affected, and other processes will set the level to
+            "Error" thus be silent most of the time.
+    Returns:
+        logging.Logger: The expected logger.
+    """
+    global _logger
+    assert _logger is None, "logger should not be initialized twice or more."
+    _logger = logging.getLogger(name)
 
+    formatter = logging.Formatter(
+        '[%(asctime)s] %(name)s %(levelname)s: %(message)s',
+        datefmt="%Y/%m/%d %H:%M:%S")
 
-logging.Formatter.converter = time_zone
-_logger = logging.getLogger(__name__)
-
-Color = {
-    'RED': '\033[31m',
-    'HEADER': '\033[35m',  # deep purple
-    'PURPLE': '\033[95m',  # purple
-    'OKBLUE': '\033[94m',
-    'OKGREEN': '\033[92m',
-    'WARNING': '\033[93m',
-    'FAIL': '\033[91m',
-    'ENDC': '\033[0m'
-}
-
-
-def coloring(message, color="OKGREEN"):
-    assert color in Color.keys()
-    if os.environ.get('PADDLECLAS_COLORING', False):
-        return Color[color] + str(message) + Color["ENDC"]
+    stream_handler = logging.StreamHandler(stream=sys.stdout)
+    stream_handler.setFormatter(formatter)
+    _logger.addHandler(stream_handler)
+    if log_file is not None and dist.get_rank() == 0:
+        log_file_folder = os.path.split(log_file)[0]
+        os.makedirs(log_file_folder, exist_ok=True)
+        file_handler = logging.FileHandler(log_file, 'a')
+        file_handler.setFormatter(formatter)
+        _logger.addHandler(file_handler)
+    if dist.get_rank() == 0:
+        _logger.setLevel(log_level)
     else:
-        return message
+        _logger.setLevel(logging.ERROR)
 
 
-def anti_fleet(log):
+def log_at_trainer0(log):
     """
     logs will print multi-times when calling Fleet API.
     Only display single log and ignore the others.
     """
 
     def wrapper(fmt, *args):
-        if int(os.getenv("PADDLE_TRAINER_ID", 0)) == 0:
+        if dist.get_rank() == 0:
             log(fmt, *args)
 
     return wrapper
 
 
-@anti_fleet
+@log_at_trainer0
 def info(fmt, *args):
     _logger.info(fmt, *args)
 
 
-@anti_fleet
+@log_at_trainer0
+def debug(fmt, *args):
+    _logger.debug(fmt, *args)
+
+
+@log_at_trainer0
 def warning(fmt, *args):
-    _logger.warning(coloring(fmt, "RED"), *args)
+    _logger.warning(fmt, *args)
 
 
-@anti_fleet
+@log_at_trainer0
 def error(fmt, *args):
-    _logger.error(coloring(fmt, "FAIL"), *args)
+    _logger.error(fmt, *args)
 
 
 def scaler(name, value, step, writer):
@@ -86,6 +102,8 @@ def scaler(name, value, step, writer):
            visualdl --logdir ./scalar --host 0.0.0.0 --port 8830
            to preview loss corve in real time.
     """
+    if writer is None:
+        return
     writer.add_scalar(tag=name, step=step, value=value)
 
 
@@ -108,13 +126,12 @@ def advertise():
     website = "https://github.com/PaddlePaddle/PaddleClas"
     AD_LEN = 6 + len(max([copyright, ad, website], key=len))
 
-    info(
-        coloring("\n{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n".format(
-            "=" * (AD_LEN + 4),
-            "=={}==".format(copyright.center(AD_LEN)),
-            "=" * (AD_LEN + 4),
-            "=={}==".format(' ' * AD_LEN),
-            "=={}==".format(ad.center(AD_LEN)),
-            "=={}==".format(' ' * AD_LEN),
-            "=={}==".format(website.center(AD_LEN)),
-            "=" * (AD_LEN + 4), ), "RED"))
+    info("\n{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n".format(
+        "=" * (AD_LEN + 4),
+        "=={}==".format(copyright.center(AD_LEN)),
+        "=" * (AD_LEN + 4),
+        "=={}==".format(' ' * AD_LEN),
+        "=={}==".format(ad.center(AD_LEN)),
+        "=={}==".format(' ' * AD_LEN),
+        "=={}==".format(website.center(AD_LEN)),
+        "=" * (AD_LEN + 4), ))
