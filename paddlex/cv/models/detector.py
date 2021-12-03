@@ -740,7 +740,7 @@ class PicoDet(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if getattr(self, 'test_transforms', None) is not None:
+        if getattr(self, 'test_transforms', None):
             has_resize_op = False
             resize_op_idx = -1
             normalize_op_idx = len(self.test_transforms.transforms)
@@ -767,7 +767,7 @@ class PicoDet(BaseDetector):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 320, 320]
-            if getattr(self, 'test_transforms', None) is not None:
+            if getattr(self, 'test_transforms', None):
                 for idx, op in enumerate(self.test_transforms.transforms):
                     name = op.__class__.__name__
                     if name == 'Resize':
@@ -912,7 +912,7 @@ class YOLOv3(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if getattr(self, 'test_transforms', None) is not None:
+        if getattr(self, 'test_transforms', None):
             has_resize_op = False
             resize_op_idx = -1
             normalize_op_idx = len(self.test_transforms.transforms)
@@ -1279,7 +1279,7 @@ class FasterRCNN(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if getattr(self, 'test_transforms', None) is not None:
+        if getattr(self, 'test_transforms', None):
             has_resize_op = False
             resize_op_idx = -1
             normalize_op_idx = len(self.test_transforms.transforms)
@@ -1490,7 +1490,7 @@ class PPYOLO(YOLOv3):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 608, 608]
-            if getattr(self, 'test_transforms', None) is not None:
+            if getattr(self, 'test_transforms', None):
                 for idx, op in enumerate(self.test_transforms.transforms):
                     name = op.__class__.__name__
                     if name == 'Resize':
@@ -1618,7 +1618,7 @@ class PPYOLOTiny(YOLOv3):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 320, 320]
-            if getattr(self, 'test_transforms', None) is not None:
+            if getattr(self, 'test_transforms', None):
                 for idx, op in enumerate(self.test_transforms.transforms):
                     name = op.__class__.__name__
                     if name == 'Resize':
@@ -1765,7 +1765,7 @@ class PPYOLOv2(YOLOv3):
             self._fix_transforms_shape(image_shape[-2:])
         else:
             image_shape = [None, 3, 640, 640]
-            if getattr(self, 'test_transforms', None) is not None:
+            if getattr(self, 'test_transforms', None):
                 for idx, op in enumerate(self.test_transforms.transforms):
                     name = op.__class__.__name__
                     if name == 'Resize':
@@ -2127,7 +2127,7 @@ class MaskRCNN(BaseDetector):
         return batch_transforms
 
     def _fix_transforms_shape(self, image_shape):
-        if getattr(self, 'test_transforms', None) is not None:
+        if getattr(self, 'test_transforms', None):
             has_resize_op = False
             resize_op_idx = -1
             normalize_op_idx = len(self.test_transforms.transforms)
