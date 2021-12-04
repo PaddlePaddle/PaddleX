@@ -23,9 +23,8 @@ import shutil
 import tempfile
 
 import paddle
-from paddle.static import load_program_state
-
 from paddlex.ppcls.utils import logger
+from .download import get_weights_path_from_url
 
 __all__ = ['init_model', 'save_model', 'load_dygraph_pretrain']
 
@@ -46,56 +45,42 @@ def _mkdir_if_not_exist(path):
                 raise OSError('Failed to mkdir {}'.format(path))
 
 
-def load_dygraph_pretrain(model, path=None, load_static_weights=False):
+def load_dygraph_pretrain(model, path=None):
     if not (os.path.isdir(path) or os.path.exists(path + '.pdparams')):
         raise ValueError("Model pretrain path {} does not "
                          "exists.".format(path))
-    if load_static_weights:
-        pre_state_dict = load_program_state(path)
-        param_state_dict = {}
-        model_dict = model.state_dict()
-        for key in model_dict.keys():
-            weight_name = model_dict[key].name
-            if weight_name in pre_state_dict.keys():
-                logger.info('Load weight: {}, shape: {}'.format(
-                    weight_name, pre_state_dict[weight_name].shape))
-                param_state_dict[key] = pre_state_dict[weight_name]
-            else:
-                param_state_dict[key] = model_dict[key]
-        model.set_dict(param_state_dict)
-        return
-
     param_state_dict = paddle.load(path + ".pdparams")
     model.set_dict(param_state_dict)
     return
 
 
-def load_distillation_model(model, pretrained_model, load_static_weights):
+def load_dygraph_pretrain_from_url(model, pretrained_url, use_ssld=False):
+    if use_ssld:
+        pretrained_url = pretrained_url.replace("_pretrained",
+                                                "_ssld_pretrained")
+    local_weight_path = get_weights_path_from_url(pretrained_url).replace(
+        ".pdparams", "")
+    load_dygraph_pretrain(model, path=local_weight_path)
+    return
+
+
+def load_distillation_model(model, pretrained_model):
     logger.info("In distillation mode, teacher model will be "
                 "loaded firstly before student model.")
 
     if not isinstance(pretrained_model, list):
         pretrained_model = [pretrained_model]
 
-    if not isinstance(load_static_weights, list):
-        load_static_weights = [load_static_weights] * len(pretrained_model)
-
     teacher = model.teacher if hasattr(model,
                                        "teacher") else model._layers.teacher
     student = model.student if hasattr(model,
                                        "student") else model._layers.student
-    load_dygraph_pretrain(
-        teacher,
-        path=pretrained_model[0],
-        load_static_weights=load_static_weights[0])
+    load_dygraph_pretrain(teacher, path=pretrained_model[0])
     logger.info("Finish initing teacher model from {}".format(
         pretrained_model))
     # load student model
     if len(pretrained_model) >= 2:
-        load_dygraph_pretrain(
-            student,
-            path=pretrained_model[1],
-            load_static_weights=load_static_weights[1])
+        load_dygraph_pretrain(student, path=pretrained_model[1])
         logger.info("Finish initing student model from {}".format(
             pretrained_model))
 
@@ -112,52 +97,40 @@ def init_model(config, net, optimizer=None):
             "Given dir {}.pdopt not exist.".format(checkpoints)
         para_dict = paddle.load(checkpoints + ".pdparams")
         opti_dict = paddle.load(checkpoints + ".pdopt")
+        metric_dict = paddle.load(checkpoints + ".pdstates")
         net.set_dict(para_dict)
         optimizer.set_state_dict(opti_dict)
         logger.info("Finish load checkpoints from {}".format(checkpoints))
-        return
+        return metric_dict
 
     pretrained_model = config.get('pretrained_model')
-    load_static_weights = config.get('load_static_weights', False)
     use_distillation = config.get('use_distillation', False)
     if pretrained_model:
         if use_distillation:
-            load_distillation_model(net, pretrained_model, load_static_weights)
+            load_distillation_model(net, pretrained_model)
         else:  # common load
-            load_dygraph_pretrain(
-                net,
-                path=pretrained_model,
-                load_static_weights=load_static_weights)
+            load_dygraph_pretrain(net, path=pretrained_model)
             logger.info(
                 logger.coloring("Finish load pretrained model from {}".format(
                     pretrained_model), "HEADER"))
 
 
-def _save_student_model(net, model_prefix):
-    """
-    save student model if the net is the network contains student
-    """
-    student_model_prefix = model_prefix + "_student.pdparams"
-    if hasattr(net, "_layers"):
-        net = net._layers
-    if hasattr(net, "student"):
-        paddle.save(net.student.state_dict(), student_model_prefix)
-        logger.info("Already save student model in {}".format(
-            student_model_prefix))
-
-
-def save_model(net, optimizer, model_path, epoch_id, prefix='ppcls'):
+def save_model(net,
+               optimizer,
+               metric_info,
+               model_path,
+               model_name="",
+               prefix='ppcls'):
     """
     save model to the target path
     """
     if paddle.distributed.get_rank() != 0:
         return
-    model_path = os.path.join(model_path, str(epoch_id))
+    model_path = os.path.join(model_path, model_name)
     _mkdir_if_not_exist(model_path)
-    model_prefix = os.path.join(model_path, prefix)
+    model_path = os.path.join(model_path, prefix)
 
-    _save_student_model(net, model_prefix)
-
-    paddle.save(net.state_dict(), model_prefix + ".pdparams")
-    paddle.save(optimizer.state_dict(), model_prefix + ".pdopt")
+    paddle.save(net.state_dict(), model_path + ".pdparams")
+    paddle.save(optimizer.state_dict(), model_path + ".pdopt")
+    paddle.save(metric_info, model_path + ".pdstates")
     logger.info("Already save model in {}".format(model_path))

@@ -28,7 +28,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 
 请根据实际情况选择下载，如若以上版本不满足您的需求，请至[C++预测库下载列表](https://paddleinference.paddlepaddle.org.cn/v2.1/user_guides/download_lib.html)选择符合的版本。
 
-将预测库解压后，其所在目录（例如解压至`PaddleX/deploy/cpp/paddle_inferenc/`）下主要包含的内容有：
+将预测库解压后，其所在目录（例如解压至`PaddleX/deploy/cpp/paddle_inference/`）下主要包含的内容有：
 
 ```
 ├── paddle/ # paddle核心库和头文件
@@ -52,11 +52,15 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 | OPENSSL_DIR    | OPENSSL所在路径，解密所需。默认为`PaddleX/deploy/cpp/deps/penssl-1.1.0k`目录下        |
 
 ### Step 4. 编译
-修改完build.sh后执行编译， **[注意]**: 以下命令在`PaddleX/deploy/cpp`目录下进行执行
-
-```
+修改完build.sh后执行编译:  
+```commandline
 sh script/build.sh
 ```
+
+**[注意]**:
+ - 以上命令在`PaddleX/deploy/cpp`目录下进行执行
+ - opencv依赖libopenblas-dev，如未安装会导致编译失败，可执行`apt-get install libopenblas-dev`进行安装（以ubuntu为例）
+
 #### 编译环境无法联网导致编译失败？
 
 > 编译过程，会调用script/bootstrap.sh联网下载opencv、openssl，以及yaml依赖包，如无法联网，用户按照下操作手动下载

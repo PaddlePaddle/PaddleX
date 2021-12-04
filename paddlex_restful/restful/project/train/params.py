@@ -89,8 +89,8 @@ class Params(object):
     def set_sensitivities_path(self, sensitivities_path):
         self.sensitivities_path = sensitivities_path
 
-    def set_eval_metric_loss(self, eval_metric_loss):
-        self.eval_metric_loss = eval_metric_loss
+    def set_pruned_flops(self, pruned_flops):
+        self.pruned_flops = pruned_flops
 
     def set_image_shape(self, image_shape):
         self.image_shape = image_shape

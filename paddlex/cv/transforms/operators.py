@@ -628,7 +628,7 @@ class CenterCrop(Transform):
         return image
 
     def apply_mask(self, mask):
-        mask = center_crop(mask)
+        mask = center_crop(mask, self.crop_size)
         return mask
 
     def apply(self, sample):
