@@ -18,7 +18,7 @@ cd PaddleX/deploy/cpp
 > 也可手动下载完整的`PaddleX`，进行离线安装(接下来的步骤都相通)
 
 ### Step 2. 下载Jetson下PaddlePaddle C++ 预编译预测库
-PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX支持Paddle预测库2.0+，最新2.1版本下载链接如下所示:
+PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及不同的CUDA版本提供了已经编译好的预测库，目前PaddleX支持Paddle预测库2.0+，当前项目仅测试了Paddle预测库2.1版本，2.1版本下载链接如下所示:
 
 | 版本说明                               | 预测库(2.1)                                                                                                                   | 编译器  |
 | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------- |
@@ -57,13 +57,17 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 | WITH_ENCRYPTION      | ON或OFF，表示是否开启加密模块                             |
 | OPENSSL_DIR    | OPENSSL所在路径，解密所需。默认为`PaddleX/deploy/cpp/deps/penssl-1.1.0k`目录下        |
 
-> **要注意相关参数路径不要有误——特别是CUDA_LIB以及CUDNN_LIB，如果需要启动TensorRt，也需指定当前的路径。**
+**NV Jetson上已默认安装TensorRT，因此不用在特意下载TensorRT——如无TensorRT, 需将路径放在与`PADDLE_DIR`一个同一级路径下。**
+
+**要注意相关参数路径不要有误——特别是CUDA_LIB以及CUDNN_LIB，如果需要启动TensorRt，也需指定当前的路径。**
+
+**Jetson不支持加密，无需开启加密模块。**
 
 <div>
   <img src="../../images/deploy_build_sh.png">
   </div>
 
-> 不需要添加oepncv路径，在jetson中编译可直接使用环境本身预装的opencv进行deploy编译——具体配置在Step4中。
+**不需要添加oepncv路径，在jetson中编译可直接使用环境本身预装的opencv进行deploy编译——具体配置在Step4中。**
 
 
 ### Step 4. 修改build时需对应的CMakeLists.txt
@@ -76,11 +80,13 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 替换具体如下:(xavier为例)
 
 1. /usr/include/opencv --> /usr/include/opencv4
-  > 具体路径，以部署环境中opencv的include路径为准。
-  > opencv4 中包含: opencv, opencv2
+
+    1. 具体路径，以部署环境中opencv的include路径为准。
+
+    2. opencv4 中包含: opencv, opencv2
 
 2. /usr/lib/libopencv_*${CMAKE_SHARED_LIBRARY_SUFFIX} --> /usr/lib/libopencv_*${CMAKE_SHARED_LIBRARY_SUFFIX}
-  > 具体路径，以部署环境中opencv的*.so路径为准, 主要修改libopencv_前的路径。
+    1. 具体路径，以部署环境中opencv的*.so路径为准, 主要修改libopencv_前的路径。
 
 <div>
   <img src="../../images/cmakelist_set.png">
@@ -89,8 +95,9 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 ### Step 5. 添加yaml库源码
 由于Jetson环境下编译还需要yaml，所以这里需要手动下载yaml包，保证编译的正常运行。
 
-> 1. 点击[下载yaml依赖包](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压
-> 2. 修改`PaddleX/deploy/cpp/cmake/yaml.cmake`文件，将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip`中网址替换为第3步中下载的路径，如改为`URL /Users/Download/yaml-cpp.zip`
+  1. 点击[下载yaml依赖包](https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip)，无需解压
+
+  2. 修改`PaddleX/deploy/cpp/cmake/yaml.cmake`文件，将`URL https://bj.bcebos.com/paddlex/deploy/deps/yaml-cpp.zip`中网址替换为第3步中下载的路径，如改为`URL /Users/Download/yaml-cpp.zip`
 
 **这里yaml存放路径为了确保使用最好保证全英文路径**
 eg:
@@ -99,7 +106,10 @@ eg:
   <img src="../../images/yaml_cmakelist.png">
   </div>
 
-> TensorRT操作，可参考[Linux环境编译指南](./linux.md).
+
+  - TensorRT操作，可参考[Linux环境编译指南](./linux.md)——NV Jetson自带TensorRT，无需安装。
+
+  - 注意下载的预测库编译时trt版本与本机的TensorRT版本是否一致。
 
 ### Step 6. 编译
 以上yaml库添加完成，同时也修改完jetson_build.sh后，即可执行编译， **[注意]**: 以下命令在`PaddleX/deploy/cpp`目录下进行执行
@@ -108,12 +118,14 @@ eg:
 sh script/jetson_build.sh
 ```
 
-> 编译时，如果存在cmake多线程问题——请前往`jetson_build.sh`末尾，将`make -j8`改为`make`或者小于8.
+- 编译时，如果存在cmake多线程问题——请前往`jetson_build.sh`末尾，将`make -j8`改为`make`或者小于8.
 
 
 ### Step 7. 编译结果
 
 编译后会在`PaddleX/deploy/cpp/build/demo`目录下生成`model_infer`、`multi_gpu_model_infer`和`batch_infer`等几个可执行二进制文件示例，分别用于在单卡加载模型进行预测，示例使用参考如下文档：
+
+> 当前项目仅测试了model_infer推理。
 
 - [单卡加载模型预测示例](../../demo/model_infer.md)
 
@@ -125,9 +137,9 @@ sh script/jetson_build.sh
 
 通过修改`PaddleX/deploy/cpp/demo/model_infer.cpp`以及`PaddleX/deploy/cpp/demo/CMakeLists.txt`, 再执行`jetson_build.sh`生成`libmodel_infer.so`动态链接库——再将其用于QT应用调用，可执行模型初始化、模型推理预测、模型注销等操作。[现已经在Jetson Xavier上利用原生编译的opencv实现了模型单张预测与文件夹连续预测，由于预编译opencv不支持解析视频格式，因此需额外编译ffmpeg后才能进行视频推理，linux以及windows中已验证完成——单张图片-文件夹连续预测-视频流预测的全流程验证。]
 
-> 该版本对于MaskRCNN模型的推理需要使用GPU进行推理——如果使用CPU环境进行推理可能由于内存使用问题而报错。
-> 
-> 鉴于Qt跨平台属性，因此如果部署环境下opencv支持视频格式，则该Demo-Gui程序可实现完整的推理可视化功能。
+- 该版本对于MaskRCNN模型的推理需要使用GPU进行推理——如果使用CPU环境进行推理可能由于内存使用问题而报错。
+
+- 鉴于Qt跨平台属性，因此如果部署环境下opencv支持视频格式，则该Demo-Gui程序可实现完整的推理可视化功能。
 
 <div>
   <img src="../../images/show_menu.png">
