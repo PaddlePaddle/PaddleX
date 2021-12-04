@@ -17,16 +17,16 @@
 using namespace cv;
 
 // Model inference API: det, seg, clas, mask
-typedef void (*Det_ModelPredict)(const unsigned char* ,
+typedef void (*DetModelPredict)(const unsigned char* ,
                                  int , int , int ,
                                  float* , int* , char* );
-typedef void (*Seg_ModelPredict)(const unsigned char* ,
+typedef void (*SegModelPredict)(const unsigned char* ,
                                  int , int , int ,
                                  unsigned char* );
-typedef void (*Cls_ModelPredict)(const unsigned char* ,
+typedef void (*ClsModelPredict)(const unsigned char* ,
                                  int , int , int ,
                                  float* , char* , int* );
-typedef void (*Mask_ModelPredict)(const unsigned char* ,
+typedef void (*MaskModelPredict)(const unsigned char* ,
                                   int , int , int ,
                                   float* , unsigned char* ,
                                   int* , char* );
@@ -60,10 +60,10 @@ public:
 
 private:
     // Model inference API
-    Det_ModelPredict det_modelpredict_;
-    Seg_ModelPredict seg_modelpredict_;
-    Cls_ModelPredict cls_modelpredict_;
-    Mask_ModelPredict mask_modelpredict_;
+    DetModelPredict det_modelpredict_;
+    SegModelPredict seg_modelpredict_;
+    ClsModelPredict cls_modelpredict_;
+    MaskModelPredict mask_modelpredict_;
 
 private:
     // don`t use
@@ -73,21 +73,21 @@ private:
     QLabel *labelimage2_;   // Image display area-Label--right
 
 public:
-    void setbtnstop(QPushButton *btn);  // control btn state
-    void setbtninfer(QPushButton *btn);
+    void set_btn_stop(QPushButton *btn);  // control btn state
+    void set_btn_infer(QPushButton *btn);
 
-    void setdetthreshold(float threshold);
-    void setinferdelay(int delay);
+    void set_det_threshold(float threshold);
+    void set_infer_delay(int delay);
     void get_color_map_list(int num_classes=256);
 
 public:
     explicit InferThread(QObject *parent = nullptr);
-    void setmodeltype(const QString & model_type);  // Setting the model type of reasoning - use the correct model reasoning interface
-    void setinputimage(const QString & image_path);
-    void setinputimages(const QStringList & images_path);
-    void setinputvideo(const QString & video_path);
-    void setinferfuncs(Det_ModelPredict det_inferfunc, Seg_ModelPredict seg_inferfunc,
-                       Cls_ModelPredict cls_inferfunc, Mask_ModelPredict mask_inferfunc);
+    void set_model_type(const QString & model_type);  // Setting the model type of reasoning - use the correct model reasoning interface
+    void set_input_image(const QString & image_path);
+    void set_input_images(const QStringList & images_path);
+    void set_input_video(const QString & video_path);
+    void set_infer_funcs(DetModelPredict det_inferfunc, SegModelPredict seg_inferfunc,
+                       ClsModelPredict cls_inferfunc, MaskModelPredict mask_inferfunc);
     void RunInferDet();
     void RunInferSeg();
     void RunInferCls();
@@ -102,31 +102,31 @@ private:
 
 // Detecting the inference interface
 public:
-    void Det_Image();
-    void Det_Images();
-    void Det_Video();
+    void DetImageInfer();
+    void DetImagesInfer();
+    void DetVideoInfer();
 
 // Semantic segmentation reasoning interface
 public:
-    void Seg_Image();
-    void Seg_Images();
-    void Seg_Video();
+    void SegImageInfer();
+    void SegImagesInfer();
+    void SegVideoInfer();
 
 // Classification inference interface
 public:
-    void Cls_Image();
-    void Cls_Images();
-    void Cls_Video();
+    void ClsImageInfer();
+    void ClsImagesInfer();
+    void ClsVideoInfer();
 
 // Instance split reasoning interface
 public:
-    void Mask_Image();
-    void Mask_Images();
-    void Mask_Video();
+    void MaskImageInfer();
+    void MaskImagesInfer();
+    void MaskVideoInfer();
 
 signals:
     void InferFinished(QImage* label1, QImage* label2);
-    void SetState_Btn_StopAndInfer(bool stop_state, bool infer_state);
+    void SetStateBtnStopAndInfer(bool stop_state, bool infer_state);
     void SetCostTime(double cost_time);
 
 public slots:

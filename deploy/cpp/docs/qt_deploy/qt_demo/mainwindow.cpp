@@ -60,27 +60,27 @@ void MainWindow::Init_SystemState()
     initmodel_ = (InitModel)inferlibrary_->resolve("InitModel");
     destructmodel_ = (DestructModel)inferlibrary_->resolve("DestructModel");
     // Export A model insertion interface in dynamic graph
-    det_modelpredict_ = (Det_ModelPredict)inferlibrary_->resolve("Det_ModelPredict");
-    seg_modelpredict_ = (Seg_ModelPredict)inferlibrary_->resolve("Seg_ModelPredict");
-    cls_modelpredict_ = (Cls_ModelPredict)inferlibrary_->resolve("Cls_ModelPredict");
-    mask_modelpredict_ = (Mask_ModelPredict)inferlibrary_->resolve("Mask_ModelPredict");
+    det_modelpredict_ = (DetModelPredict)inferlibrary_->resolve("DetModelPredict");
+    seg_modelpredict_ = (SegModelPredict)inferlibrary_->resolve("SegModelPredict");
+    cls_modelpredict_ = (ClsModelPredict)inferlibrary_->resolve("ClsModelPredict");
+    mask_modelpredict_ = (MaskModelPredict)inferlibrary_->resolve("MaskModelPredict");
 
     // Thread initialization - Configures the reasoning function
     inferthread_ = new InferThread(this);
-    inferthread_->setinferfuncs(det_modelpredict_,
+    inferthread_->set_infer_funcs(det_modelpredict_,
                                seg_modelpredict_,
                                cls_modelpredict_,
                                mask_modelpredict_);
-    inferthread_->setbtnstop(ui->btnStop);
-    inferthread_->setbtninfer(ui->btnInfer);
-    inferthread_->setdetthreshold(det_threshold_);
-    inferthread_->setinferdelay(infer_delay_);
+    inferthread_->set_btn_stop(ui->btnStop);
+    inferthread_->set_btn_infer(ui->btnInfer);
+    inferthread_->set_det_threshold(det_threshold_);
+    inferthread_->set_infer_delay(infer_delay_);
 
     // Configure signals and slots
     connect(inferthread_, SIGNAL(InferFinished(QImage*, QImage*)),
             this, SLOT(ImageUpdate(QImage*, QImage*)),
             Qt::BlockingQueuedConnection);
-    connect(inferthread_, SIGNAL(SetState_Btn_StopAndInfer(bool , bool )),
+    connect(inferthread_, SIGNAL(SetStateBtnStopAndInfer(bool , bool )),
             this, SLOT(Btn_StopAndInfer_StateUpdate(bool , bool )),
             Qt::BlockingQueuedConnection);
     connect(inferthread_, SIGNAL(SetCostTime(double )),
@@ -258,7 +258,7 @@ void MainWindow::on_btnInit_clicked()
         return;
     }
 
-    inferthread_->setmodeltype(model_kind_); // Set the reasoning interface type
+    inferthread_->set_model_type(model_kind_); // Set the reasoning interface type
     // Initialization Successful Tips
     QMessageBox::information(this,
         tr("Initialization successful"),
@@ -343,7 +343,7 @@ void MainWindow::on_btnLoadImg_clicked()
     ui->labelImage1->setPixmap(pixmap);
     ui->labelImage1->setScaledContents(true);  // Full Label
 
-    inferthread_->setinputimage(img_file_);  // Introduced into the reasoning data
+    inferthread_->set_input_image(img_file_);  // Introduced into the reasoning data
     img_files_ = QStringList();
     video_file_ = "";
 
@@ -385,7 +385,7 @@ void MainWindow::on_btnLoadImgs_clicked()
     ui->labelImage1->setPixmap(pixmap);
     ui->labelImage1->setScaledContents(true);
 
-    inferthread_->setinputimages(img_files_);
+    inferthread_->set_input_images(img_files_);
     img_file_ = "";
     video_file_ = "";
 
@@ -431,7 +431,7 @@ void MainWindow::on_btnLoadVideo_clicked()
     ui->labelImage1->setScaledContents(true);
     capture.release();
 
-    inferthread_->setinputvideo(video_file_);
+    inferthread_->set_input_video(video_file_);
     img_file_ = "";
     img_files_ = QStringList();
 
@@ -523,7 +523,7 @@ void MainWindow::on_sBoxThreshold_valueChanged(double arg1)
         return;
     }
     det_threshold_ = (float)arg1;
-    inferthread_->setdetthreshold(det_threshold_);
+    inferthread_->set_det_threshold(det_threshold_);
 
     old_det_threshold_ = det_threshold_;
 }
@@ -549,7 +549,7 @@ void MainWindow::on_sBoxDelay_valueChanged(const QString &arg1)
         return;
     }
     infer_delay_ = arg1.toInt(); // If you enter a normal number, resolve to the specified number; otherwise 0
-    inferthread_->setinferdelay(infer_delay_);
+    inferthread_->set_infer_delay(infer_delay_);
 
     old_infer_delay_ = infer_delay_;
 }

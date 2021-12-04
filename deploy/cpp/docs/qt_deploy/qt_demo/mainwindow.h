@@ -15,16 +15,16 @@ typedef void (*InitModel)(const char*,
                           bool , int , char* );
 typedef void (*DestructModel)();
 // Model reasoning API: det, seg, clas, mask
-typedef void (*Det_ModelPredict)(const unsigned char* ,
+typedef void (*DetModelPredict)(const unsigned char* ,
                                  int , int , int ,
                                  float* , int* , char* );
-typedef void (*Seg_ModelPredict)(const unsigned char* ,
+typedef void (*SegModelPredict)(const unsigned char* ,
                                  int , int , int ,
                                  unsigned char* );
-typedef void (*Cls_ModelPredict)(const unsigned char* ,
+typedef void (*ClsModelPredict)(const unsigned char* ,
                                  int , int , int ,
                                  float* , char* , int* );
-typedef void (*Mask_ModelPredict)(const unsigned char* ,
+typedef void (*MaskModelPredict)(const unsigned char* ,
                                   int , int , int ,
                                   float* , unsigned char* ,
                                   int* , char* );
@@ -73,10 +73,10 @@ private: // Library and Infer API
     InitModel initmodel_;
     DestructModel destructmodel_;
     // Model reasoning API
-    Det_ModelPredict det_modelpredict_;
-    Seg_ModelPredict seg_modelpredict_;
-    Cls_ModelPredict cls_modelpredict_;
-    Mask_ModelPredict mask_modelpredict_;
+    DetModelPredict det_modelpredict_;
+    SegModelPredict seg_modelpredict_;
+    ClsModelPredict cls_modelpredict_;
+    MaskModelPredict mask_modelpredict_;
 
 private: // sub thread
     InferThread *inferthread_;

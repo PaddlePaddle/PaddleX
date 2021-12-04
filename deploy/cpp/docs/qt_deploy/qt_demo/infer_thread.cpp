@@ -3,23 +3,23 @@
 #include <ctime>
 
 // control mainwindow btn
-void InferThread::setbtnstop(QPushButton *btn)
+void InferThread::set_btn_stop(QPushButton *btn)
 {
     btnstop_ = btn;
 }
 
 // control mainwindow btn
-void InferThread::setbtninfer(QPushButton *btn)
+void InferThread::set_btn_infer(QPushButton *btn)
 {
     btninfer_ = btn;
 }
 
-void InferThread::setdetthreshold(float threshold)
+void InferThread::set_det_threshold(float threshold)
 {
     det_threshold_ = threshold;
 }
 
-void InferThread::setinferdelay(int delay)
+void InferThread::set_infer_delay(int delay)
 {
     infer_delay_ = delay;
 }
@@ -67,7 +67,7 @@ InferThread::InferThread(QObject *parent) : QThread(parent)
     image2_ = nullptr;
 }
 
-void InferThread::setmodeltype(const QString &model_type)
+void InferThread::set_model_type(const QString &model_type)
 {
     if (model_type=="det")
     {// Check whether the type is met, otherwise set ""
@@ -96,7 +96,7 @@ void InferThread::setmodeltype(const QString &model_type)
     }
 }
 
-void InferThread::setinputimage(const QString &image_path)
+void InferThread::set_input_image(const QString &image_path)
 {
     this->image_path_ = image_path;
     this->images_path_ = QStringList();
@@ -105,7 +105,7 @@ void InferThread::setinputimage(const QString &image_path)
     dataloaded_ = true;
 }
 
-void InferThread::setinputimages(const QStringList &images_path)
+void InferThread::set_input_images(const QStringList &images_path)
 {
     this->images_path_ = images_path;
     this->image_path_ = "";
@@ -114,7 +114,7 @@ void InferThread::setinputimages(const QStringList &images_path)
     dataloaded_ = true;
 }
 
-void InferThread::setinputvideo(const QString &video_path)
+void InferThread::set_input_video(const QString &video_path)
 {
     this->video_path_ = video_path;
     this->image_path_ = "";
@@ -123,10 +123,10 @@ void InferThread::setinputvideo(const QString &video_path)
     dataloaded_ = true;
 }
 
-void InferThread::setinferfuncs(Det_ModelPredict det_inferfunc,
-                                Seg_ModelPredict seg_inferfunc,
-                                Cls_ModelPredict cls_inferfunc,
-                                Mask_ModelPredict mask_inferfunc)
+void InferThread::set_infer_funcs(DetModelPredict det_inferfunc,
+                                SegModelPredict seg_inferfunc,
+                                ClsModelPredict cls_inferfunc,
+                                MaskModelPredict mask_inferfunc)
 {
     det_modelpredict_ = det_inferfunc;
     seg_modelpredict_ = seg_inferfunc;
@@ -140,15 +140,15 @@ void InferThread::RunInferDet()
     {
         if (is_inferimage())
         {
-            Det_Image();
+            DetImageInfer();
         }
         else if (is_inferimages())
         {
-            Det_Images();
+            DetImagesInfer();
         }
         else if (is_infervideo())
         {
-            Det_Video();
+            DetVideoInfer();
         }
     }
 }
@@ -159,15 +159,15 @@ void InferThread::RunInferSeg()
     {
         if (is_inferimage())
         {
-            Seg_Image();
+            SegImageInfer();
         }
         else if (is_inferimages())
         {
-            Seg_Images();
+            SegImagesInfer();
         }
         else if (is_infervideo())
         {
-            Seg_Video();
+            SegVideoInfer();
         }
     }
 }
@@ -178,15 +178,15 @@ void InferThread::RunInferCls()
     {
         if (is_inferimage())
         {
-            Cls_Image();
+            ClsImageInfer();
         }
         else if (is_inferimages())
         {
-            Cls_Images();
+            ClsImagesInfer();
         }
         else if (is_infervideo())
         {
-            Cls_Video();
+            ClsVideoInfer();
         }
     }
 }
@@ -197,15 +197,15 @@ void InferThread::RunInferMask()
     {
         if (is_inferimage())
         {
-            Mask_Image();
+            MaskImageInfer();
         }
         else if (is_inferimages())
         {
-            Mask_Images();
+            MaskImagesInfer();
         }
         else if (is_infervideo())
         {
-            Mask_Video();
+            MaskVideoInfer();
         }
     }
 }
@@ -259,7 +259,7 @@ QString InferThread::makelabelinfo(QString label, int id, float score)
     return describe_str;
 }
 
-void InferThread::Det_Image()
+void InferThread::DetImageInfer()
 {
     // Read the picture
     Mat image = imread(image_path_.toLocal8Bit().toStdString());  //BGR
@@ -294,7 +294,7 @@ void InferThread::Det_Image()
         doing_infer_ = false;
         qDebug() << "Finished Det-Infer, but it is raise a exception." << "\n";
 
-        emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+        emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
         return;
     }
 
@@ -390,10 +390,10 @@ void InferThread::Det_Image()
     doing_infer_ = false;
     qDebug() << "Finished Det-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 }
 
-void InferThread::Det_Images()
+void InferThread::DetImagesInfer()
 {
     doing_infer_ = true;
 
@@ -406,7 +406,7 @@ void InferThread::Det_Images()
 
             qDebug() << "Det-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
             return;
         }
 
@@ -440,7 +440,7 @@ void InferThread::Det_Images()
             doing_infer_ = false;
             qDebug() << "Finished Det-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+            emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
             return;
         }
 
@@ -535,10 +535,10 @@ void InferThread::Det_Images()
     doing_infer_ = false;
     qDebug() << "Finished Det-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 }
 
-void InferThread::Det_Video()
+void InferThread::DetVideoInfer()
 {
     doing_infer_ = true;
 
@@ -565,7 +565,7 @@ void InferThread::Det_Video()
 
             qDebug() << "Det-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
             return;
         }
 
@@ -587,7 +587,7 @@ void InferThread::Det_Video()
             doing_infer_ = false;
             qDebug() << "Finished Det-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -684,10 +684,10 @@ void InferThread::Det_Video()
     doing_infer_ = false;
     qDebug() << "Finished Det-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 }
 
-void InferThread::Seg_Image()
+void InferThread::SegImageInfer()
 {
     Mat image = imread(image_path_.toLocal8Bit().toStdString());  //BGR
 
@@ -717,7 +717,7 @@ void InferThread::Seg_Image()
         doing_infer_ = false;
         qDebug() << "Finished Seg-Infer, but it is raise a exception." << "\n";
 
-        emit SetState_Btn_StopAndInfer(false, true);
+        emit SetStateBtnStopAndInfer(false, true);
 
         return;
     }
@@ -795,11 +795,11 @@ void InferThread::Seg_Image()
     doing_infer_ = false;
     qDebug() << "Finished Seg-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+    emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
 
 }
 
-void InferThread::Seg_Images()
+void InferThread::SegImagesInfer()
 {
 
     doing_infer_ = true;
@@ -813,7 +813,7 @@ void InferThread::Seg_Images()
 
             qDebug() << "Seg-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -846,7 +846,7 @@ void InferThread::Seg_Images()
             doing_infer_ = false;
             qDebug() << "Finished Seg-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+            emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
 
             return;
         }
@@ -929,11 +929,11 @@ void InferThread::Seg_Images()
     doing_infer_ = false;
     qDebug() << "Finished Seg-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Seg_Video()
+void InferThread::SegVideoInfer()
 {
 
     doing_infer_ = true;
@@ -961,7 +961,7 @@ void InferThread::Seg_Video()
 
             qDebug() << "Seg-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -982,7 +982,7 @@ void InferThread::Seg_Video()
             doing_infer_ = false;
             qDebug() << "Finished Seg-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1065,11 +1065,11 @@ void InferThread::Seg_Video()
     doing_infer_ = false;
     qDebug() << "Finished Seg-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Cls_Image()
+void InferThread::ClsImageInfer()
 {
 
     Mat image = imread(image_path_.toLocal8Bit().toStdString());  //BGR
@@ -1103,7 +1103,7 @@ void InferThread::Cls_Image()
         doing_infer_ = false;
         qDebug() << "Finished Clas-Infer, but it is raise a exception." << "\n";
 
-        emit SetState_Btn_StopAndInfer(false, true);
+        emit SetStateBtnStopAndInfer(false, true);
 
         return;
     }
@@ -1186,11 +1186,11 @@ void InferThread::Cls_Image()
     doing_infer_ = false;
     qDebug() << "Finished Clas-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Cls_Images()
+void InferThread::ClsImagesInfer()
 {
 
     doing_infer_ = true;
@@ -1204,7 +1204,7 @@ void InferThread::Cls_Images()
 
             qDebug() << "Clas-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1240,7 +1240,7 @@ void InferThread::Cls_Images()
             doing_infer_ = false;
             qDebug() << "Finished Clas-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1326,11 +1326,11 @@ void InferThread::Cls_Images()
     doing_infer_ = false;
     qDebug() << "Finished Clas-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Cls_Video()
+void InferThread::ClsVideoInfer()
 {
 
     doing_infer_ = true;
@@ -1358,7 +1358,7 @@ void InferThread::Cls_Video()
 
             qDebug() << "Clas-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1381,7 +1381,7 @@ void InferThread::Cls_Video()
             doing_infer_ = false;
             qDebug() << "Finished Clas-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1461,11 +1461,11 @@ void InferThread::Cls_Video()
     doing_infer_ = false;
     qDebug() << "Finished Clas-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Mask_Image()
+void InferThread::MaskImageInfer()
 {
 
     Mat image = imread(image_path_.toLocal8Bit().toStdString());  //BGR
@@ -1500,7 +1500,7 @@ void InferThread::Mask_Image()
         doing_infer_ = false;
         qDebug() << "Finished Mask-Infer, but it is raise a exception." << "\n";
 
-        emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+        emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
 
         return;
     }
@@ -1615,11 +1615,11 @@ void InferThread::Mask_Image()
     doing_infer_ = false;
     qDebug() << "Finished Mask-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Mask_Images()
+void InferThread::MaskImagesInfer()
 {
 
     doing_infer_ = true;
@@ -1633,7 +1633,7 @@ void InferThread::Mask_Images()
 
             qDebug() << "Mask-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1670,7 +1670,7 @@ void InferThread::Mask_Images()
             doing_infer_ = false;
             qDebug() << "Finished Mask-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+            emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
 
             return;
         }
@@ -1787,11 +1787,11 @@ void InferThread::Mask_Images()
     doing_infer_ = false;
     qDebug() << "Finished Mask-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }
 
-void InferThread::Mask_Video()
+void InferThread::MaskVideoInfer()
 {
     doing_infer_ = true;
 
@@ -1818,7 +1818,7 @@ void InferThread::Mask_Video()
 
             qDebug() << "Mask-Infer has Break." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);
+            emit SetStateBtnStopAndInfer(false, true);
 
             return;
         }
@@ -1844,7 +1844,7 @@ void InferThread::Mask_Video()
             doing_infer_ = false;
             qDebug() << "Finished Mask-Infer, but it is raise a exception." << "\n";
 
-            emit SetState_Btn_StopAndInfer(false, true);  // first is stop, second is infer
+            emit SetStateBtnStopAndInfer(false, true);  // first is stop, second is infer
 
             return;
         }
@@ -1959,6 +1959,6 @@ void InferThread::Mask_Video()
     doing_infer_ = false;
     qDebug() << "Finished Mask-Infer." << "\n";
 
-    emit SetState_Btn_StopAndInfer(false, true);
+    emit SetStateBtnStopAndInfer(false, true);
 
 }

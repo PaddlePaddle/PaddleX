@@ -83,7 +83,7 @@ extern "C" void InitModel(const char* model_type, const char* model_filename, co
 * 
 * extern "C"
 */
-extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
+extern "C" void DetModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -143,7 +143,7 @@ extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 * 
 * extern "C"
 */
-extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
+extern "C" void SegModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -192,7 +192,7 @@ extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 * 
 * extern "C" 
 */
-extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
+extern "C" void ClsModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -245,7 +245,7 @@ extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 * 
 * extern "C"
 */
-extern "C" void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
+extern "C" void MaskModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;

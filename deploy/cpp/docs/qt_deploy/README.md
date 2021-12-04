@@ -114,22 +114,22 @@ sh script/jetson_build.sh
 
 - 目标检测推理接口:
 ```cpp
-  Det_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
+  DetModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
 ```
 
 - 语义分割推理接口:
 ```cpp
-Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
+  SegModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
 ```
 
 - 图像识别推理接口:
 ```cpp
-  Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
+  ClsModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
 ```
 
 - 实例分割推理接口:
 ```cpp
-  Mask_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
+  MaskModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
 ```
 
 - 模型销毁接口:
