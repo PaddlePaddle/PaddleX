@@ -26,6 +26,7 @@ from . import workspace_pb2 as w
 from .utils import CustomEncoder, ShareData, is_pic, get_logger, TaskStatus, get_ip
 from paddlex_restful.restful.dataset.utils import get_encoding
 import numpy as np
+import pickle
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -570,7 +571,7 @@ def task_evaluate():
                 'result'] is not None:
             if 'Confusion_Matrix' in ret['result']:
                 ret['result']['Confusion_Matrix'] = ret['result'][
-                    'Confusion_Matrix'].tolist()
+                    'Confusion_Matrix']
             ret['result'] = CustomEncoder().encode(ret['result'])
             ret['result'] = json.loads(ret['result'])
         ret['evaluate_status'] = ret['evaluate_status'].value
@@ -590,7 +591,7 @@ def task_evaluate_file():
             assert os.path.abspath(ret).startswith(
                 os.path.abspath(SD.workspace_dir)
             ) and ".." not in ret, "Illegal path {}.".format(ret)
-            return send_file(ret)
+            return pickle.load(open(os.path.abspath(ret), 'rb'))
         else:
             from .project.task import get_evaluate_result
             from .project.task import import_evaluate_excel

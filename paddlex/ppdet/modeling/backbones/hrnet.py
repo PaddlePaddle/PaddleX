@@ -52,31 +52,23 @@ class ConvNormLayer(nn.Layer):
             stride=stride,
             padding=(filter_size - 1) // 2,
             groups=1,
-            weight_attr=ParamAttr(
-                name=name + "_weights", initializer=Normal(
-                    mean=0., std=0.01)),
+            weight_attr=ParamAttr(initializer=Normal(
+                mean=0., std=0.01)),
             bias_attr=False)
 
         norm_lr = 0. if freeze_norm else 1.
 
-        norm_name = name + '_bn'
         param_attr = ParamAttr(
-            name=norm_name + "_scale",
-            learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay))
+            learning_rate=norm_lr, regularizer=L2Decay(norm_decay))
         bias_attr = ParamAttr(
-            name=norm_name + "_offset",
-            learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay))
+            learning_rate=norm_lr, regularizer=L2Decay(norm_decay))
         global_stats = True if freeze_norm else False
         if norm_type in ['bn', 'sync_bn']:
             self.norm = nn.BatchNorm(
                 ch_out,
                 param_attr=param_attr,
                 bias_attr=bias_attr,
-                use_global_stats=global_stats,
-                moving_mean_name=norm_name + '_mean',
-                moving_variance_name=norm_name + '_variance')
+                use_global_stats=global_stats)
         elif norm_type == 'gn':
             self.norm = nn.GroupNorm(
                 num_groups=norm_groups,
@@ -376,17 +368,13 @@ class SELayer(nn.Layer):
         self.squeeze = Linear(
             num_channels,
             med_ch,
-            weight_attr=ParamAttr(
-                initializer=Uniform(-stdv, stdv), name=name + "_sqz_weights"),
-            bias_attr=ParamAttr(name=name + '_sqz_offset'))
+            weight_attr=ParamAttr(initializer=Uniform(-stdv, stdv)))
 
         stdv = 1.0 / math.sqrt(med_ch * 1.0)
         self.excitation = Linear(
             med_ch,
             num_filters,
-            weight_attr=ParamAttr(
-                initializer=Uniform(-stdv, stdv), name=name + "_exc_weights"),
-            bias_attr=ParamAttr(name=name + '_exc_offset'))
+            weight_attr=ParamAttr(initializer=Uniform(-stdv, stdv)))
 
     def forward(self, input):
         pool = self.pool2d_gap(input)
@@ -581,6 +569,7 @@ class HRNet(nn.Layer):
         freeze_norm (bool): whether to freeze norm in HRNet
         norm_decay (float): weight decay for normalization layer weights
         return_idx (List): the stage to return
+        upsample (bool): whether to upsample and concat the backbone feats
     """
 
     def __init__(self,
@@ -589,7 +578,8 @@ class HRNet(nn.Layer):
                  freeze_at=0,
                  freeze_norm=True,
                  norm_decay=0.,
-                 return_idx=[0, 1, 2, 3]):
+                 return_idx=[0, 1, 2, 3],
+                 upsample=False):
         super(HRNet, self).__init__()
 
         self.width = width
@@ -600,6 +590,7 @@ class HRNet(nn.Layer):
         assert len(return_idx) > 0, "need one or more return index"
         self.freeze_at = freeze_at
         self.return_idx = return_idx
+        self.upsample = upsample
 
         self.channels = {
             18: [[18, 36], [18, 36, 72], [18, 36, 72, 144]],
@@ -614,8 +605,8 @@ class HRNet(nn.Layer):
 
         channels_2, channels_3, channels_4 = self.channels[width]
         num_modules_2, num_modules_3, num_modules_4 = 1, 4, 3
-        self._out_channels = channels_4
-        self._out_strides = [4, 8, 16, 32]
+        self._out_channels = [sum(channels_4)] if self.upsample else channels_4
+        self._out_strides = [4] if self.upsample else [4, 8, 16, 32]
 
         self.conv_layer1_1 = ConvNormLayer(
             ch_in=3,
@@ -707,6 +698,15 @@ class HRNet(nn.Layer):
 
         st4 = self.st4(tr3)
 
+        if self.upsample:
+            # Upsampling
+            x0_h, x0_w = st4[0].shape[2:4]
+            x1 = F.upsample(st4[1], size=(x0_h, x0_w), mode='bilinear')
+            x2 = F.upsample(st4[2], size=(x0_h, x0_w), mode='bilinear')
+            x3 = F.upsample(st4[3], size=(x0_h, x0_w), mode='bilinear')
+            x = paddle.concat([st4[0], x1, x2, x3], 1)
+            return x
+
         res = []
         for i, layer in enumerate(st4):
             if i == self.freeze_at:
@@ -718,6 +718,8 @@ class HRNet(nn.Layer):
 
     @property
     def out_shape(self):
+        if self.upsample:
+            self.return_idx = [0]
         return [
             ShapeSpec(
                 channels=self._out_channels[i], stride=self._out_strides[i])

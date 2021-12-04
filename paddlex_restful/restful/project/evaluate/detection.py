@@ -606,7 +606,8 @@ class DetEvaluator(object):
         '''生成评估报告。
         '''
         report = dict()
-        report['Confusion_Matrix'] = copy.deepcopy(self.cal_confusion_matrix())
+        report['Confusion_Matrix'] = copy.deepcopy(self.cal_confusion_matrix()
+                                                   .tolist())
         report['mAP'] = copy.deepcopy(self.cal_map())
         report['PRAP'] = copy.deepcopy(self.cal_precision_recall())
         report['label_list'] = copy.deepcopy(list(self.cname2cid.keys()))
@@ -769,7 +770,7 @@ class InsSegEvaluator(DetEvaluator):
         '''
         report = dict()
         report['BBox_Confusion_Matrix'] = copy.deepcopy(
-            self.cal_confusion_matrix())
+            self.cal_confusion_matrix().tolist())
         report['BBox_mAP'] = copy.deepcopy(self.cal_map())
         report['BBox_PRAP'] = copy.deepcopy(self.cal_precision_recall())
         report['label_list'] = copy.deepcopy(list(self.cname2cid.keys()))
@@ -779,7 +780,7 @@ class InsSegEvaluator(DetEvaluator):
             report['BBox_PRAP'][k]['AP'] = v
 
         report['Mask_Confusion_Matrix'] = copy.deepcopy(
-            self.cal_confusion_matrix_mask())
+            self.cal_confusion_matrix_mask().tolist())
         report['Mask_mAP'] = copy.deepcopy(self.cal_map_mask())
         report['Mask_PRAP'] = copy.deepcopy(self.cal_precision_recall_mask())
         per_ap_mask = copy.deepcopy(self.cal_ap_mask())

@@ -424,19 +424,19 @@ def gaussian_radius(bbox_size, min_overlap):
     b1 = (height + width)
     c1 = width * height * (1 - min_overlap) / (1 + min_overlap)
     sq1 = np.sqrt(b1**2 - 4 * a1 * c1)
-    radius1 = (b1 - sq1) / (2 * a1)
+    radius1 = (b1 + sq1) / (2 * a1)
 
     a2 = 4
     b2 = 2 * (height + width)
     c2 = (1 - min_overlap) * width * height
     sq2 = np.sqrt(b2**2 - 4 * a2 * c2)
-    radius2 = (b2 - sq2) / (2 * a2)
+    radius2 = (b2 + sq2) / 2
 
     a3 = 4 * min_overlap
     b3 = -2 * min_overlap * (height + width)
     c3 = (min_overlap - 1) * width * height
     sq3 = np.sqrt(b3**2 - 4 * a3 * c3)
-    radius3 = (b3 + sq3) / (2 * a3)
+    radius3 = (b3 + sq3) / 2
     return min(radius1, radius2, radius3)
 
 
@@ -468,60 +468,31 @@ def gaussian2D(shape, sigma_x=1, sigma_y=1):
     return h
 
 
-def transform_bbox(sample,
-                   M,
-                   w,
-                   h,
-                   area_thr=0.25,
-                   wh_thr=2,
-                   ar_thr=20,
-                   perspective=False):
+def draw_umich_gaussian(heatmap, center, radius, k=1):
     """
-    transfrom bbox according to tranformation matrix M,
-    refer to https://github.com/ultralytics/yolov5/blob/develop/utils/datasets.py
+    draw_umich_gaussian, refer to https://github.com/xingyizhou/CenterNet/blob/master/src/lib/utils/image.py#L126
     """
-    bbox = sample['gt_bbox']
-    label = sample['gt_class']
-    # rotate bbox
-    n = len(bbox)
-    xy = np.ones((n * 4, 3), dtype=np.float32)
-    xy[:, :2] = bbox[:, [0, 1, 2, 3, 0, 3, 2, 1]].reshape(n * 4, 2)
-    # xy = xy @ M.T
-    xy = np.matmul(xy, M.T)
-    if perspective:
-        xy = (xy[:, :2] / xy[:, 2:3]).reshape(n, 8)
-    else:
-        xy = xy[:, :2].reshape(n, 8)
-    # get new bboxes
-    x = xy[:, [0, 2, 4, 6]]
-    y = xy[:, [1, 3, 5, 7]]
-    bbox = np.concatenate(
-        (x.min(1), y.min(1), x.max(1), y.max(1))).reshape(4, n).T
-    # clip boxes
-    mask = filter_bbox(bbox, w, h, area_thr)
-    sample['gt_bbox'] = bbox[mask]
-    sample['gt_class'] = sample['gt_class'][mask]
-    if 'is_crowd' in sample:
-        sample['is_crowd'] = sample['is_crowd'][mask]
-    if 'difficult' in sample:
-        sample['difficult'] = sample['difficult'][mask]
-    return sample
+    diameter = 2 * radius + 1
+    gaussian = gaussian2D(
+        (diameter, diameter), sigma_x=diameter / 6, sigma_y=diameter / 6)
+
+    x, y = int(center[0]), int(center[1])
+
+    height, width = heatmap.shape[0:2]
+
+    left, right = min(x, radius), min(width - x, radius + 1)
+    top, bottom = min(y, radius), min(height - y, radius + 1)
+
+    masked_heatmap = heatmap[y - top:y + bottom, x - left:x + right]
+    masked_gaussian = gaussian[radius - top:radius + bottom, radius - left:
+                               radius + right]
+    if min(masked_gaussian.shape) > 0 and min(masked_heatmap.shape) > 0:
+        np.maximum(masked_heatmap, masked_gaussian * k, out=masked_heatmap)
+    return heatmap
 
 
-def filter_bbox(bbox, w, h, area_thr=0.25, wh_thr=2, ar_thr=20):
-    """
-    filter bbox, refer to https://github.com/ultralytics/yolov5/blob/develop/utils/datasets.py
-    """
-    # clip boxes
-    area1 = (bbox[:, 2:4] - bbox[:, 0:2]).prod(1)
-    bbox[:, [0, 2]] = bbox[:, [0, 2]].clip(0, w)
-    bbox[:, [1, 3]] = bbox[:, [1, 3]].clip(0, h)
-    # compute
-    area2 = (bbox[:, 2:4] - bbox[:, 0:2]).prod(1)
-    area_ratio = area2 / (area1 + 1e-16)
-    wh = bbox[:, 2:4] - bbox[:, 0:2]
-    ar_ratio = np.maximum(wh[:, 1] / (wh[:, 0] + 1e-16),
-                          wh[:, 0] / (wh[:, 1] + 1e-16))
-    mask = (area_ratio > area_thr) & (
-        (wh > wh_thr).all(1)) & (ar_ratio < ar_thr)
-    return mask
+def get_border(border, size):
+    i = 1
+    while size - border // i <= border // i:
+        i *= 2
+    return border // i

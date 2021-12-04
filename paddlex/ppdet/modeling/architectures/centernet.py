@@ -29,19 +29,20 @@ class CenterNet(BaseArch):
 
     Args:
         backbone (object): backbone instance
-        neck (object): 'CenterDLAFPN' instance
-        head (object): 'CenterHead' instance
+        neck (object): FPN instance, default use 'CenterNetDLAFPN'
+        head (object): 'CenterNetHead' instance
         post_process (object): 'CenterNetPostProcess' instance
         for_mot (bool): whether return other features used in tracking model
 
     """
     __category__ = 'architecture'
     __inject__ = ['post_process']
+    __shared__ = ['for_mot']
 
     def __init__(self,
-                 backbone='DLA',
-                 neck='CenterDLAFPN',
-                 head='CenterHead',
+                 backbone,
+                 neck='CenterNetDLAFPN',
+                 head='CenterNetHead',
                  post_process='CenterNetPostProcess',
                  for_mot=False):
         super(CenterNet, self).__init__()
@@ -56,25 +57,29 @@ class CenterNet(BaseArch):
         backbone = create(cfg['backbone'])
 
         kwargs = {'input_shape': backbone.out_shape}
-        neck = create(cfg['neck'], **kwargs)
+        neck = cfg['neck'] and create(cfg['neck'], **kwargs)
 
-        kwargs = {'input_shape': neck.out_shape}
+        out_shape = neck and neck.out_shape or backbone.out_shape
+        kwargs = {'input_shape': out_shape}
         head = create(cfg['head'], **kwargs)
 
         return {'backbone': backbone, 'neck': neck, "head": head}
 
     def _forward(self):
-        body_feats = self.backbone(self.inputs)
-        neck_feat = self.neck(body_feats)
+        neck_feat = self.backbone(self.inputs)
+        if self.neck is not None:
+            neck_feat = self.neck(neck_feat)
         head_out = self.head(neck_feat, self.inputs)
         if self.for_mot:
             head_out.update({'neck_feat': neck_feat})
+        elif self.training:
+            head_out['loss'] = head_out.pop('det_loss')
         return head_out
 
     def get_pred(self):
         head_out = self._forward()
         if self.for_mot:
-            bbox, bbox_inds = self.post_process(
+            bbox, bbox_inds, topk_clses = self.post_process(
                 head_out['heatmap'],
                 head_out['size'],
                 head_out['offset'],
@@ -83,10 +88,11 @@ class CenterNet(BaseArch):
             output = {
                 "bbox": bbox,
                 "bbox_inds": bbox_inds,
+                "topk_clses": topk_clses,
                 "neck_feat": head_out['neck_feat']
             }
         else:
-            bbox, bbox_num = self.post_process(
+            bbox, bbox_num, _ = self.post_process(
                 head_out['heatmap'],
                 head_out['size'],
                 head_out['offset'],

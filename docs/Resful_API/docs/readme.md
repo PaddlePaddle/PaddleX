@@ -1,12 +1,12 @@
 # PaddleX_Restful API --快速搭建私有化训练云服务
 
-* ## 什么是Resetful
+* ## 什么是Restful
 * ## PaddleX_Restful API 说明
 * ## 如何快速使用PaddleX_Restful API 快速搭建私有化训练云平台
 
 
 
-## *什么是Resetful*
+## *什么是Restful*
 
 RESTFUL是一种网络应用程序的设计风格和开发方式，基于HTTP，可以使用XML格式定义或JSON格式定义。RESTFUL适用于移动互联网厂商作为业务接口的场景，实现第三方OTT调用移动网络资源的功能，动作类型为新增、变更、删除所调用资源。
 

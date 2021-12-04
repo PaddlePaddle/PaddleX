@@ -22,9 +22,9 @@ import sys
 import paddle
 from paddle import is_compiled_with_cuda
 
-from paddlex.ppcls.modeling import get_architectures
-from paddlex.ppcls.modeling import similar_architectures
-from paddlex.ppcls.modeling import get_blacklist_model_in_static_mode
+from paddlex.ppcls.arch import get_architectures
+from paddlex.ppcls.arch import similar_architectures
+from paddlex.ppcls.arch import get_blacklist_model_in_static_mode
 from paddlex.ppcls.utils import logger
 
 

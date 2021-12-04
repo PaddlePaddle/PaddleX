@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import os
-
+import copy
+import argparse
 import yaml
-
-from paddlex.ppcls.utils import check
 from paddlex.ppcls.utils import logger
-
+from paddlex.ppcls.utils import check
 __all__ = ['get_config']
 
 
@@ -30,6 +30,9 @@ class AttrDict(dict):
             self.__dict__[key] = value
         else:
             self[key] = value
+
+    def __deepcopy__(self, content):
+        return copy.deepcopy(dict(self))
 
 
 def create_attr_dict(yaml_config):
@@ -64,19 +67,14 @@ def print_dict(d, delimiter=0):
     placeholder = "-" * 60
     for k, v in sorted(d.items()):
         if isinstance(v, dict):
-            logger.info("{}{} : ".format(delimiter * " ",
-                                         logger.coloring(k, "HEADER")))
+            logger.info("{}{} : ".format(delimiter * " ", k))
             print_dict(v, delimiter + 4)
         elif isinstance(v, list) and len(v) >= 1 and isinstance(v[0], dict):
-            logger.info("{}{} : ".format(delimiter * " ",
-                                         logger.coloring(str(k), "HEADER")))
+            logger.info("{}{} : ".format(delimiter * " ", k))
             for value in v:
                 print_dict(value, delimiter + 4)
         else:
-            logger.info("{}{} : {}".format(delimiter * " ",
-                                           logger.coloring(k, "HEADER"),
-                                           logger.coloring(v, "OKGREEN")))
-
+            logger.info("{}{} : {}".format(delimiter * " ", k, v))
         if k.isupper():
             logger.info(placeholder)
 
@@ -84,7 +82,6 @@ def print_dict(d, delimiter=0):
 def print_config(config):
     """
     visualize configs
-
     Arguments:
         config: configs
     """
@@ -97,21 +94,15 @@ def check_config(config):
     Check config
     """
     check.check_version()
-
     use_gpu = config.get('use_gpu', True)
     if use_gpu:
         check.check_gpu()
-
     architecture = config.get('ARCHITECTURE')
-    check.check_architecture(architecture)
-    check.check_model_with_running_mode(architecture)
-
+    #check.check_architecture(architecture)
     use_mix = config.get('use_mix', False)
     check.check_mix(architecture, use_mix)
-
     classes_num = config.get('classes_num')
     check.check_classes_num(classes_num)
-
     mode = config.get('mode', 'train')
     if mode.lower() == 'train':
         check.check_function_params(config, 'LEARNING_RATE')
@@ -121,7 +112,6 @@ def check_config(config):
 def override(dl, ks, v):
     """
     Recursively replace dict of list
-
     Args:
         dl(dict or list): dict or list to be replaced
         ks(list): list of keys
@@ -147,19 +137,15 @@ def override(dl, ks, v):
         if len(ks) == 1:
             # assert ks[0] in dl, ('{} is not exist in {}'.format(ks[0], dl))
             if not ks[0] in dl:
-                logger.warning('A new filed ({}) detected!'.format(ks[0]))
+                print('A new filed ({}) detected!'.format(ks[0], dl))
             dl[ks[0]] = str2num(v)
         else:
-            if not ks[0] in dl:
-                logger.warning('A new filed ({}) detected!'.format(ks[0]))
-                dl[ks[0]] = {}
             override(dl[ks[0]], ks[1:], v)
 
 
 def override_config(config, options=None):
     """
     Recursively override the config
-
     Args:
         config(dict): dict to be replaced
         options(list): list of pairs(key0.key1.idx.key2=value)
@@ -167,7 +153,6 @@ def override_config(config, options=None):
                 'topk=2',
                 'VALID.transforms.1.ResizeImage.resize_short=300'
             ]
-
     Returns:
         config(dict): replaced config
     """
@@ -183,11 +168,10 @@ def override_config(config, options=None):
             key, value = pair
             keys = key.split('.')
             override(config, keys, value)
-
     return config
 
 
-def get_config(fname, overrides=None, show=True):
+def get_config(fname, overrides=None, show=False):
     """
     Read config from file
     """
@@ -197,5 +181,30 @@ def get_config(fname, overrides=None, show=True):
     override_config(config, overrides)
     if show:
         print_config(config)
-    check_config(config)
+    # check_config(config)
     return config
+
+
+def parse_args():
+    parser = argparse.ArgumentParser("generic-image-rec train script")
+    parser.add_argument(
+        '-c',
+        '--config',
+        type=str,
+        default='configs/config.yaml',
+        help='config file path')
+    parser.add_argument(
+        '-o',
+        '--override',
+        action='append',
+        default=[],
+        help='config options to be overridden')
+    parser.add_argument(
+        '-p',
+        '--profiler_options',
+        type=str,
+        default=None,
+        help='The option of profiler, which should be in format \"key1=value1;key2=value2;key3=value3\".'
+    )
+    args = parser.parse_args()
+    return args

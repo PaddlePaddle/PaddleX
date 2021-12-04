@@ -91,7 +91,7 @@ class Predictor(object):
 
         if use_gpu:
             # 设置GPU初始显存(单位M)和Device ID
-            config.enable_use_gpu(100, gpu_id)
+            config.enable_use_gpu(200, gpu_id)
             config.switch_ir_optim(True)
             if use_trt:
                 if self._model.model_type == 'segmenter':

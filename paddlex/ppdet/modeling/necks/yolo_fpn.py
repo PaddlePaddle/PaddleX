@@ -30,8 +30,8 @@ def add_coord(x, data_format):
     else:
         h, w = x.shape[1], x.shape[2]
 
-    gx = paddle.arange(w, dtype=x.dtype) / ((w - 1.) * 2.0) - 1.
-    gy = paddle.arange(h, dtype=x.dtype) / ((h - 1.) * 2.0) - 1.
+    gx = paddle.cast(paddle.arange(w) / ((w - 1.) * 2.0) - 1., x.dtype)
+    gy = paddle.cast(paddle.arange(h) / ((h - 1.) * 2.0) - 1., x.dtype)
 
     if data_format == 'NCHW':
         gx = gx.reshape([1, 1, 1, w]).expand([b, 1, h, w])
@@ -180,7 +180,7 @@ class CoordConv(nn.Layer):
                  name='',
                  data_format='NCHW'):
         """
-        CoordConv layer
+        CoordConv layer, see https://arxiv.org/abs/1807.03247
 
         Args:
             ch_in (int): input channel

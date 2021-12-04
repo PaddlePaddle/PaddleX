@@ -29,6 +29,12 @@ seg_pretrain_weights_dict = {
 }
 
 det_pretrain_weights_dict = {
+    'PicoDet_ESNet_s': ['COCO', 'IMAGENET'],
+    'PicoDet_ESNet_m': ['COCO', 'IMAGENET'],
+    'PicoDet_ESNet_l': ['COCO', 'IMAGENET'],
+    'PicoDet_LCNet': ['COCO', 'IMAGENET'],
+    'PicoDet_MobileNetV3': ['COCO', 'IMAGENET'],
+    'PicoDet_ResNet18_vd': ['IMAGENET'],
     'YOLOv3_MobileNetV1': ['COCO', 'PascalVOC', 'IMAGENET'],
     'YOLOv3_MobileNetV1_ssld': ['COCO', 'PascalVOC', 'IMAGENET'],
     'YOLOv3_DarkNet53': ['COCO', 'IMAGENET'],
@@ -80,39 +86,39 @@ cityscapes_weights = {
 
 imagenet_weights = {
     'ResNet18_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet18_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet18_pretrained.pdparams',
     'ResNet34_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet34_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet34_pretrained.pdparams',
     'ResNet50_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet50_pretrained.pdparams',
     'ResNet101_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet101_pretrained.pdparams',
     'ResNet152_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet152_pretrained.pdparams',
     'ResNet18_vd_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet18_vd_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet18_vd_pretrained.pdparams',
     'ResNet34_vd_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet34_vd_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet34_vd_pretrained.pdparams',
     'ResNet50_vd_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_vd_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet50_vd_pretrained.pdparams',
     'ResNet50_vd_ssld_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet50_vd_ssld_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet50_vd_ssld_pretrained.pdparams',
     'ResNet101_vd_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_vd_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet101_vd_pretrained.pdparams',
     'ResNet101_vd_ssld_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet101_vd_ssld_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet101_vd_ssld_pretrained.pdparams',
     'ResNet152_vd_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet152_vd_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet152_vd_pretrained.pdparams',
     'ResNet200_vd_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ResNet200_vd_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet200_vd_pretrained.pdparams',
     'MobileNetV1_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV1_pretrained.pdparams',
     'MobileNetV1_x0_25_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_25_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV1_x0_25_pretrained.pdparams',
     'MobileNetV1_x0_5_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_5_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV1_x0_5_pretrained.pdparams',
     'MobileNetV1_x0_75_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV1_x0_75_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV1_x0_75_pretrained.pdparams',
     'MobileNetV2_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_pretrained.pdparams',
     'MobileNetV2_x0_25_IMAGENET':
@@ -126,31 +132,31 @@ imagenet_weights = {
     'MobileNetV2_x2_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x2_0_pretrained.pdparams',
     'MobileNetV3_small_x0_35_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_35_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x0_35_pretrained.pdparams',
     'MobileNetV3_small_x0_35_ssld_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_35_ssld_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x0_35_ssld_pretrained.pdparams',
     'MobileNetV3_small_x0_5_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_5_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x0_5_pretrained.pdparams',
     'MobileNetV3_small_x0_75_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x0_75_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x0_75_pretrained.pdparams',
     'MobileNetV3_small_x1_0_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x1_0_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x1_0_pretrained.pdparams',
     'MobileNetV3_small_x1_0_ssld_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x1_0_ssld_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x1_0_ssld_pretrained.pdparams',
     'MobileNetV3_small_x1_25_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_small_x1_25_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x1_25_pretrained.pdparams',
     'MobileNetV3_large_x0_35_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x0_35_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x0_35_pretrained.pdparams',
     'MobileNetV3_large_x0_5_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x0_5_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x0_5_pretrained.pdparams',
     'MobileNetV3_large_x0_75_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x0_75_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x0_75_pretrained.pdparams',
     'MobileNetV3_large_x1_0_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x1_0_pretrained.pdparams',
     'MobileNetV3_large_x1_25_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_25_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x1_25_pretrained.pdparams',
     'MobileNetV3_large_x1_0_ssld_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
     'AlexNet_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/AlexNet_pretrained.pdparams',
     'DarkNet53_IMAGENET':
@@ -166,19 +172,19 @@ imagenet_weights = {
     'DenseNet264_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/DenseNet264_pretrained.pdparams',
     'HRNet_W18_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W18_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W18_C_pretrained.pdparams',
     'HRNet_W30_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W30_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W30_C_pretrained.pdparams',
     'HRNet_W32_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W32_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W32_C_pretrained.pdparams',
     'HRNet_W40_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W40_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W40_C_pretrained.pdparams',
     'HRNet_W44_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W44_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W44_C_pretrained.pdparams',
     'HRNet_W48_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W48_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W48_C_pretrained.pdparams',
     'HRNet_W64_C_IMAGENET':
-    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/HRNet_W64_C_pretrained.pdparams',
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/HRNet_W64_C_pretrained.pdparams',
     'Xception41_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/Xception41_pretrained.pdparams',
     'Xception65_IMAGENET':
@@ -197,6 +203,18 @@ imagenet_weights = {
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x1_5_pretrained.pdparams',
     'ShuffleNetV2_x2_0_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/ShuffleNetV2_x2_0_pretrained.pdparams',
+    'PicoDet_ESNet_s_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ESNet_x0_75_pretrained.pdparams',
+    'PicoDet_ESNet_m_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ESNet_x1_0_pretrained.pdparams',
+    'PicoDet_ESNet_l_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ESNet_x1_25_pretrained.pdparams',
+    'PicoDet_LCNet_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/LCNet_x1_5_pretrained.pdparams',
+    'PicoDet_MobileNetV3_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_large_x1_0_ssld_pretrained.pdparams',
+    'PicoDet_ResNet18_vd_IMAGENET':
+    'https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams',
     'FasterRCNN_ResNet50_IMAGENET':
     'https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams',
     'FasterRCNN_ResNet50_fpn_IMAGENET':
@@ -283,6 +301,16 @@ pascalvoc_weights = {
 }
 
 coco_weights = {
+    'PicoDet_ESNet_s_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_s_416_coco.pdparams',
+    'PicoDet_ESNet_m_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_m_416_coco.pdparams',
+    'PicoDet_ESNet_l_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_l_640_coco.pdparams',
+    'PicoDet_LCNet_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_lcnet_1_5x_416_coco.pdparams',
+    'PicoDet_MobileNetV3_COCO':
+    'https://paddledet.bj.bcebos.com/models/picodet_mobilenetv3_large_1x_416_coco.pdparams',
     'YOLOv3_MobileNetV1_COCO':
     'https://paddledet.bj.bcebos.com/models/yolov3_mobilenet_v1_270e_coco.pdparams',
     'YOLOv3_MobileNetV1_ssld_COCO':
@@ -390,7 +418,7 @@ def load_pretrain_weights(model, pretrain_weights=None, model_name=None):
             # hack: fit for faster rcnn. Pretrain weights contain prefix of 'backbone'
             # while res5 module is located in bbox_head.head. Replace the prefix of
             # res5 with 'bbox_head.head' to load pretrain weights correctly.
-            for k in list(param_state_dict.keys()):
+            for k in param_state_dict.keys():
                 if 'backbone.res5' in k:
                     new_k = k.replace('backbone', 'bbox_head.head')
                     if new_k in model_state_dict:
