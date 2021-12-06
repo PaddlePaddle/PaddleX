@@ -39,7 +39,10 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 ```
 
 ### Step 3. 修改编译参数
-根据自己的系统环境，修改`PaddleX/deploy/cpp/script/build.sh`脚本中的参数，主要修改的参数为以下几个
+根据自己的系统环境，修改`PaddleX/deploy/cpp/
+
+
+/build.sh`脚本中的参数，主要修改的参数为以下几个
 | 参数          | 说明                                                                                 |
 | :------------ | :----------------------------------------------------------------------------------- |
 | WITH_GPU      | ON或OFF，表示是否使用GPU，当下载的为CPU预测库时，设为OFF                             |
@@ -54,7 +57,7 @@ PaddlePaddle C++ 预测库针对是否使用GPU、是否支持TensorRT、以及�
 ### Step 4. 编译
 修改完build.sh后执行编译:  
 ```commandline
-sh script/build.sh
+sh scripts/build.sh
 ```
 
 **[注意]**:
@@ -63,7 +66,7 @@ sh script/build.sh
 
 #### 编译环境无法联网导致编译失败？
 
-> 编译过程，会调用script/bootstrap.sh联网下载opencv、openssl，以及yaml依赖包，如无法联网，用户按照下操作手动下载
+> 编译过程，会调用scripts/bootstrap.sh联网下载opencv、openssl，以及yaml依赖包，如无法联网，用户按照下操作手动下载
 >
 > 1. 根据系统版本，点击右侧链接下载不同版本的opencv依赖 [Ubuntu 16.04](https://bj.bcebos.com/paddleseg/deploy/opencv3.4.6gcc4.8ffmpeg.tar.gz2)/[Ubuntu 18.04](https://bj.bcebos.com/paddlex/deploy/opencv3.4.6gcc4.8ffmpeg_ubuntu_18.04.tar.gz2)
 > 2. 解压下载的opencv依赖（解压后目录名为opencv3.4.6gcc4.8ffmpeg)，创建目录`PaddleX/deploy/cpp/deps`，将解压后的目录拷贝至该创建的目录下
