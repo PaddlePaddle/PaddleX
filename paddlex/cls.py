@@ -77,3 +77,6 @@ Xception71 = cv.models.Xception71
 
 ShuffleNetV2 = cv.models.ShuffleNetV2
 ShuffleNetV2_swish = cv.models.ShuffleNetV2_swish
+
+PPLCNet = cv.models.PPLCNet
+PPLCNet_ssld = cv.models.PPLCNet_ssld

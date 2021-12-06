@@ -85,6 +85,28 @@ cityscapes_weights = {
 }
 
 imagenet_weights = {
+    'PPLCNet_x0_25_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x0_25_pretrained.pdparams',
+    'PPLCNet_x0_35_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x0_35_pretrained.pdparams',
+    'PPLCNet_x0_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x0_5_pretrained.pdparams',
+    'PPLCNet_x0_75_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x0_75_pretrained.pdparams',
+    'PPLCNet_x1_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x1_0_pretrained.pdparams',
+    'PPLCNet_x1_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x1_5_pretrained.pdparams',
+    'PPLCNet_x2_0_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x2_0_pretrained.pdparams',
+    'PPLCNet_x2_5_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x2_5_pretrained.pdparams',
+    'PPLCNet_x0_5_ssld_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x0_5_ssld_pretrained.pdparams',
+    'PPLCNet_x1_0_ssld_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x1_0_ssld_pretrained.pdparams',
+    'PPLCNet_x2_5_ssld_IMAGENET':
+    'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x2_5_ssld_pretrained.pdparams',
     'ResNet18_IMAGENET':
     'https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/ResNet18_pretrained.pdparams',
     'ResNet34_IMAGENET':
