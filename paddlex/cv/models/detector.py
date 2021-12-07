@@ -593,8 +593,8 @@ class PicoDet(BaseDetector):
                  num_classes=80,
                  backbone='ESNet_m',
                  nms_score_threshold=.025,
-                 nms_top_k=1000,
-                 nms_keep_top_k=100,
+                 nms_topk=1000,
+                 nms_keep_topk=100,
                  nms_iou_threshold=.6,
                  **params):
         self.init_params = locals()
@@ -691,8 +691,8 @@ class PicoDet(BaseDetector):
             assigner = ppdet.modeling.SimOTAAssigner(
                 candidate_topk=10, iou_weight=6, num_classes=num_classes)
             nms = ppdet.modeling.MultiClassNMS(
-                nms_top_k=nms_top_k,
-                keep_top_k=nms_keep_top_k,
+                nms_top_k=nms_topk,
+                keep_top_k=nms_keep_topk,
                 score_threshold=nms_score_threshold,
                 nms_threshold=nms_iou_threshold)
             head = ppdet.modeling.PicoHead(
