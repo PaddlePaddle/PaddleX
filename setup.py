@@ -13,13 +13,12 @@
 # limitations under the License.
 
 import setuptools
-import sys
 
-long_description = "PaddlePaddle Entire Process Development Toolkit"
+long_description = "PaddlePaddle End-to-End Development Toolkit"
 
 setuptools.setup(
     name="paddlex",
-    version='2.0.0',
+    version='2.1.0',
     author="paddlex",
     author_email="paddlex@baidu.com",
     description=long_description,
@@ -38,8 +37,8 @@ setuptools.setup(
     include_data_files=True,
     setup_requires=['cython', 'numpy'],
     install_requires=[
-        "pycocotools", 'pyyaml', 'colorama', 'tqdm', 'paddleslim==2.1.1',
-        'visualdl>=2.1.1', 'shapely>=1.7.0', 'opencv-python', 'scipy', 'lap',
+        "pycocotools", 'pyyaml', 'colorama', 'tqdm', 'paddleslim==2.2.1',
+        'visualdl>=2.2.2', 'shapely>=1.7.0', 'opencv-python', 'scipy', 'lap',
         'motmetrics', 'scikit-learn==0.23.2', 'chardet', 'flask_cors'
     ],
     classifiers=[
