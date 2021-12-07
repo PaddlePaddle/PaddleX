@@ -6,7 +6,7 @@ pycocotools
 visualdl >= 2.1.1
 paddleslim == 2.1.1
 shapely
-paddlepaddle-gpu == 2.2.0
+paddlepaddle-gpu >= 2.2.0
 opencv-python
 scikit-learn==0.23.2
 lap
