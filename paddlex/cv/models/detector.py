@@ -31,7 +31,7 @@ from paddlex.cv.transforms.batch_operators import BatchCompose, BatchRandomResiz
 from paddlex.cv.transforms import arrange_transforms
 from .base import BaseModel
 from .utils.det_metrics import VOCMetric, COCOMetric
-from .utils.ema import ExponentialMovingAverage
+from paddlex.ppdet.optimizer import ModelEMA
 from paddlex.utils.checkpoint import det_pretrain_weights_dict
 
 __all__ = [
@@ -275,8 +275,7 @@ class BaseDetector(BaseModel):
                                  'ESNet_' in self.backbone_name))
 
         if use_ema:
-            ema = ExponentialMovingAverage(
-                decay=.9998, model=self.net, use_thres_step=True)
+            ema = ModelEMA(model=self.net, decay=.9998, use_thres_step=True)
         else:
             ema = None
         # start train loop
