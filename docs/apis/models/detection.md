@@ -264,7 +264,7 @@ paddlex.det.PPYOLOTiny(num_classes=80, backbone='MobileNetV3', anchors=[[10, 15]
 > - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
 
 
-## <h2 id="4">paddlex.det.YOLOv3</h2>
+## <h2 id="4">paddlex.det.PicoDet</h2>
 
 ```python
 paddlex.det.PicoDet(num_classes=80, backbone='ESNet_m', nms_score_threshold=.025, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=.6)
