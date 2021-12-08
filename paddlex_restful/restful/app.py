@@ -569,9 +569,6 @@ def task_evaluate():
         ret = get_evaluate_result(data, SD.workspace)
         if ret['evaluate_status'] == TaskStatus.XEVALUATED and ret[
                 'result'] is not None:
-            if 'Confusion_Matrix' in ret['result']:
-                ret['result']['Confusion_Matrix'] = ret['result'][
-                    'Confusion_Matrix']
             ret['result'] = CustomEncoder().encode(ret['result'])
             ret['result'] = json.loads(ret['result'])
         ret['evaluate_status'] = ret['evaluate_status'].value
@@ -893,16 +890,11 @@ def model():
                 return ret
         from .model import get_model_details
         ret = get_model_details(data, SD.workspace)
-        ret['eval_result']['Confusion_Matrix'] = ret['eval_result'][
-            'Confusion_Matrix'].tolist()
         ret['eval_result'] = CustomEncoder().encode(ret['eval_result'])
         ret['task_params'] = CustomEncoder().encode(ret['task_params'])
         return ret
     if request.method == 'POST':
         if data['type'] == 'pretrained':
-            if 'eval_results' in data:
-                data['eval_results']['Confusion_Matrix'] = np.array(data[
-                    'eval_results']['Confusion_Matrix'])
             from .model import create_pretrained_model
             ret = create_pretrained_model(data, SD.workspace,
                                           SD.monitored_processes)
