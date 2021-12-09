@@ -11,21 +11,6 @@
     <a href=""><img src="https://img.shields.io/badge/QQ_Group-957286141-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
 </p>
 
-## 近期活动
-为了更好的满足大家对部署需求，PaddleX举办《工业级视觉算法跨平台部署方案深入解析》两日课。
-
-* 基于QT实现的跨平台图形化部署工具，支持Windows、Linux系统和X86、ARM架构[欢迎体验](https://github.com/cjh3020889729/The-PaddleX-QT-Visualize-GUI)
-* 基于C#实现的Windows系统高效部署方案[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/csharp_deploy)
-* 从0-1构建工业级部署线程池，[欢迎体验](https://github.com/ximitiejiang/model_infer_multiThreads)
-
-
-
-<p align="center">
-  <img src="./docs/activities.png" width="800"  />
-</p>
-
-
-
 ## 近期动态
 2021.09.10 PaddleX发布2.0.0正式版本。
 - 全新发布Manufacture SDK，支持多模型串联部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
@@ -54,11 +39,13 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 ## 产业级应用示例
 
 - 安防
-    - [安全帽检测](./examples/helmet_detection)  
+    - [安全帽检测](./examples/Hemtle_Detection) 
+    - [火灾烟雾检测](./examples/Fire&Smoke_Detection)  
 - 工业视觉
-    - [表计读数](./examples/meter_reader)  |  [钢筋计数](./examples/rebar_count)  |  [视觉辅助定位抓取](./examples/robot_grab)
-
-
+    - [表计读数](./examples/Meter_Reader)  
+    - [钢筋计数](./examples/Rebar_Count)  
+    - [视觉辅助定位抓取](./examples/Robot_Grab)
+    - [钢板缺陷检测](./examples/Steel_Detection)
 
 ## PaddleX 使用文档
 本文档介绍了PaddleX从数据准备、模型训练到模型剪裁量化，及最终部署的全流程使用方法。
