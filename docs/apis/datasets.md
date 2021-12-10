@@ -30,7 +30,7 @@ paddlex.datasets.ImageNet(data_dir, file_list, label_list, transforms=None, num_
 ## <h2 id="2">paddlex.datasets.VOCDetection</h2>
 > **用于目标检测模型**  
 ```python
-paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, num_workers='auto', shuffle=False)
+paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, num_workers='auto', shuffle=False, allow_empty=False, empty_ratio=1.)
 ```
 
 > 读取PascalVOC格式的检测数据集，并对样本进行相应的处理。PascalVOC数据集格式的介绍可查看文档:[数据集格式说明](../data/format/detection.md)  
@@ -46,6 +46,7 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
 > > * **allow_empty** (bool): 是否加载负样本。默认为False。
+> > * **empty_ratio** (float): 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
 
 ### <h3 id="21">cluster_yolo_anchor</h3>
 
@@ -144,7 +145,7 @@ model.train(
 ## <h2 id="3">paddlex.datasets.CocoDetection</h2>
 > **用于实例分割/目标检测模型**  
 ```python
-paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers='auto', shuffle=False)
+paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers='auto', shuffle=False, allow_empty=False, empty_ratio=1.)
 ```
 
 > 读取MSCOCO格式的检测数据集，并对样本进行相应的处理，该格式的数据集同样可以应用到实例分割模型的训练中。MSCOCO数据集格式的介绍可查看文档:[数据集格式说明](../data/format/instance_segmentation.md)  
@@ -159,6 +160,7 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
 > > * **allow_empty** (bool): 是否加载负样本。默认为False。
+> > * **empty_ratio** (float): 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
 
 ### <h3 id="31">cluster_yolo_anchor</h3>
 
