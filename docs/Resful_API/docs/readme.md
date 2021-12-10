@@ -31,19 +31,16 @@ PaddleX RESTful是基于PaddleX开发的RESTful API。对于开发者来说只�
 
 在该示例中PaddleX_Restful运行在一台带GPU的linux服务器下，用户通过其他电脑连接该服务器进行远程的操作。
 ### 1  环境准备
+
 在服务器下载PaddlePaddle和PaddleX及其他依赖
 
-* 下载PaddlePaddle
+* 下载安装PaddleX>=2.1.0和PaddlePaddle>= 2.2.0
 
-`pip install paddlepaddle-gpu -i `
-
-* 下载PaddleX
-
-pip install paddlex==1.3.11 -i
+详见[PaddleX API快速安装](../../../docs/quick_start_API.md#PaddleX-200安装)
 
 * 下载pycuda（如果不使用GPU，该项可不进行下载）
 
-pip install pycuda -i
+pip install pycuda
 
 ### 2  启动Restful服务
 
@@ -127,10 +124,10 @@ pip install pycuda -i
 
 
 * ## 客户端图形化界面
-客户端操作流程和Web界面基本一致，提供了MAC和Windows版本两种，用户可自行下载并操作
 
-- [MAC](https://bj.bcebos.com/paddlex/PaddleX_Remote_GUI/mac/PaddleX_Remote_GUI.zip)
-- [Windows](https://bj.bcebos.com/paddlex/PaddleX_Remote_GUI/windows/PaddleX_Remote_GUI.zip)
+客户端操作流程和Web界面基本一致，提供了Windows版本，用户可自行下载并操作
+
+Windows客户端即将到来！
 
 ### 4  Restful 二次开发说明
 
