@@ -17,7 +17,7 @@
 
   * PaddleX Restful API
     - 全面升级，支持飞桨动态图开发模式
-    - 提供GUI和Html Demo两种前端调用方式
+    - 提供Html Demo两种前端调用方式
 
 
 - **2021.09.10 v2.0.0**

@@ -124,9 +124,10 @@ pip install pycuda
 
 
 * ## 客户端图形化界面
+
 客户端操作流程和Web界面基本一致，提供了Windows版本，用户可自行下载并操作
 
-- [Windows](https://bj.bcebos.com/paddlex/PaddleX_Remote_GUI/windows/PaddleX_Remote_GUI.zip)
+Windows客户端即将到来！
 
 ### 4  Restful 二次开发说明
 
