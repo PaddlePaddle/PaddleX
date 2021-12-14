@@ -2,6 +2,24 @@
 
 ## 最新版本信息
 
+- **2021.12.10 v2.1.0**
+
+  * PaddleX API
+    - 新增超轻量分类模型PPLCNet，在Intel CPU上，单张图像预测速度约5ms，ImageNet-1K数据集上Top1识别准确率达到80.82%，超越ResNet152的模型效果
+    - 新增轻量级检测特色模型PP-PicoDet，第一个在1M参数量之内mAP(0.5:0.95)超越30+(输入416像素时)，网络预测在ARM CPU下可达150FPS
+    - 新增检测模型负样本训练策略
+
+  * 预测部署
+    - 新增python轻量级服务化部署
+
+  * PaddleX GUI
+    - 新增超轻量分类模型PPLCNet、轻量级检测特色模型PP-PicoDet
+
+  * PaddleX Restful API
+    - 全面升级，支持飞桨动态图开发模式
+    - 提供Html Demo两种前端调用方式
+
+
 - **2021.09.10 v2.0.0**
 
   * PaddleX API

@@ -12,6 +12,14 @@
 </p>
 
 ## 近期动态
+
+2021.12.10 PaddleX发布2.1.0版本
+* 新增超轻量分类模型PPLCNet，在Intel CPU上，单张图像预测速度约5ms，ImageNet-1K数据集上Top1识别准确率达到80.82%，超越ResNet152的模型效果 [欢迎体验](./tutorials/train/image_classification/pplcnet.py)
+* 新增轻量级检测特色模型PP-PicoDet，第一个在1M参数量之内mAP(0.5:0.95)超越30+(输入416像素时)，网络预测在ARM CPU下可达150FPS [欢迎体验](./tutorials/train/object_detection/picodet.py)
+* 升级PaddleX Restful API，支持飞桨动态图开发模式 [欢迎体验](docs/Resful_API/docs/readme.md)
+* 新增检测模型负样本训练策略 [欢迎体验](docs/data/format/detection.md#3)
+* 新增python轻量级服务化部署 [欢迎体验](./docs/hub_serving_deploy.md)
+
 2021.09.10 PaddleX发布2.0.0正式版本。
 - 全新发布Manufacture SDK，支持多模型串联部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
 - PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp/docs/deployment.md)

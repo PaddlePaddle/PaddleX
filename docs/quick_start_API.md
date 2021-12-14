@@ -3,7 +3,7 @@
 
 ## 目录
 - [快速安装](#快速安装)
-    - [PaddleX 2.0.0安装](#PaddleX-200安装)
+    - [PaddleX 2.1.0安装](#PaddleX-210安装)
     - [PaddleX develop安装](#PaddleX-develop安装)
 - [使用前置说明](#使用前置说明)
     - [PaddleX的模型训练](#PaddleX的模型训练)
@@ -18,17 +18,17 @@
     - <a href=#加载训练保存的模型预测>加载训练保存的模型预测</a>
 
 ## 快速安装
-以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.1.2)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/release/2.0.0/install/pip/windows-pip.html)
+以下安装过程默认用户已安装好**paddlepaddle-gpu或paddlepaddle(版本大于或等于2.2.0)**，paddlepaddle安装方式参照[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/release/2.0.0/install/pip/windows-pip.html)
 
-### PaddleX 2.0.0安装
+### PaddleX 2.1.0安装
 **我们推荐大家先安装Anacaonda，而后在新建的conoda环境中使用上述pip安装方式**。Anaconda是一个开源的Python发行版本，其包含了conda、Python等180多个科学包及其依赖项。使用Anaconda可以通过创建多个独立的Python环境，避免用户的Python环境安装太多不同版本依赖导致冲突。参考[Anaconda安装PaddleX文档](./appendix/anaconda_install.md)
 
 - Linux / macOS 操作系统
 
-使用pip安装方式安装2.0.0版本：
+使用pip安装方式安装2.1.0版本：
 
 ```commandline
-pip install paddlex==2.0.0 -i https://mirror.baidu.com/pypi/simple
+pip install paddlex==2.1.0 -i https://mirror.baidu.com/pypi/simple
 ```
 
 paddlepaddle已集成pycocotools包，但也有pycocotools无法随paddlepaddle成功安装的情况。因PaddleX依赖pycocotools包，如遇到pycocotools安装失败，可参照如下方式安装pycocotools：
@@ -39,10 +39,10 @@ pip install pycocotools
 ```
 
 - Windows 操作系统
-使用pip安装方式安装2.0.0版本：
+使用pip安装方式安装2.1.0版本：
 
 ```commandline
-pip install paddlex==2.0.0 -i https://mirror.baidu.com/pypi/simple
+pip install paddlex==2.1.0 -i https://mirror.baidu.com/pypi/simple
 ```
 
 因PaddleX依赖pycocotools包，Windows安装时可能会提示`Microsoft Visual C++ 14.0 is required`，从而导致安装出错，[点击下载VC build tools](https://go.microsoft.com/fwlink/?LinkId=691126)安装再执行如下pip命令
@@ -65,7 +65,7 @@ pip install -r requirements.txt
 python setup.py install
 ```
 
-如遇到pycocotools安装失败，参考[PaddleX 2.0.0安装](./install.md#paddlex-200安装)中介绍的解决方法。
+如遇到pycocotools安装失败，参考[PaddleX 2.1.0安装](./install.md#paddlex-210安装)中介绍的解决方法。
 
 ## 使用前置说明
 
