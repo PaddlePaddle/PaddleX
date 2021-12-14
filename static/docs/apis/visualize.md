@@ -151,7 +151,7 @@ paddlex.det.coco_error_analysis(eval_details_file=None, gt=None, pred_bbox=None,
 
 ![](images/detection_analysis.jpg)
 
-左图显示的是`person`类的分析结果，有图显示的是所有类别整体的分析结果。
+左图显示的是`person`类的分析结果，右图显示的是所有类别整体的分析结果。
 
 分析图表展示了7条Precision-Recall（PR）曲线，每一条曲线表示的Average Precision （AP）比它左边那条高，原因是逐步放宽了评估要求。以`person`类为例，各条PR曲线的评估要求解释如下：
 
