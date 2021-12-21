@@ -24,7 +24,7 @@ PaddleDeploy::Model* model;
 * paddlex_model_type: When Model_Type is paddlx, the type of actual Paddlex model returned - det, seg, clas
 *
 */
-extern "C" void InitModel(const char* model_type, const char* model_filename, const char* params_filename, const char* cfg_file, bool use_gpu, int gpu_id, char* paddlex_model_type)
+extern "C" __declspec(dllexport) void InitModel(const char* model_type, const char* model_filename, const char* params_filename, const char* cfg_file, bool use_gpu, int gpu_id, char* paddlex_model_type)
 {
 	// create model
 	model = PaddleDeploy::CreateModel(model_type);  //FLAGS_model_type
@@ -83,7 +83,7 @@ extern "C" void InitModel(const char* model_type, const char* model_filename, co
 *
 * extern "C"
 */
-extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
+extern "C" __declspec(dllexport) void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* output, int* nBoxesNum, char* LabelList)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -143,7 +143,7 @@ extern "C" void Det_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 *
 * extern "C"
 */
-extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
+extern "C" __declspec(dllexport) void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, unsigned char* output)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -192,7 +192,7 @@ extern "C" void Seg_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 *
 * extern "C"
 */
-extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
+extern "C" __declspec(dllexport) void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* score, char* category, int* category_id)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -245,7 +245,7 @@ extern "C" void Cls_ModelPredict(const unsigned char* img, int nWidth, int nHeig
 *
 * extern "C"
 */
-extern "C" void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
+extern "C" __declspec(dllexport) void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHeight, int nChannel, float* box_output, unsigned char* mask_output, int* nBoxesNum, char* LabelList)
 {
 	// prepare data
 	std::vector<cv::Mat> imgs;
@@ -305,7 +305,7 @@ extern "C" void Mask_ModelPredict(const unsigned char* img, int nWidth, int nHei
 *
 * extern "C"
 */
-extern "C" void DestructModel()
+extern "C" __declspec(dllexport) void DestructModel()
 {
 	delete model;
 	std::cout << "destruct model success" << std::endl;
