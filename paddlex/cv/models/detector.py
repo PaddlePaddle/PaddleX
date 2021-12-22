@@ -1352,42 +1352,22 @@ class FasterRCNN(BaseDetector):
         """
         if train_dataset.pos_num < len(train_dataset.file_list):
             train_dataset.num_workers = 0
-            if train_batch_size != 1:
-                train_batch_size = 1
-                logging.warning(
-                    "Training RCNN models with negative samples only support batch size equals to 1 "
-                    "on a single gpu/cpu card, `train_batch_size` is forcibly set to 1."
-                )
-            nranks = paddle.distributed.get_world_size()
-            local_rank = paddle.distributed.get_rank()
-            # single card training
-            if nranks < 2 or local_rank == 0:
-                super(FasterRCNN, self).train(
-                    num_epochs, train_dataset, train_batch_size, eval_dataset,
-                    optimizer, save_interval_epochs, log_interval_steps,
-                    save_dir, pretrain_weights, learning_rate, warmup_steps,
-                    warmup_start_lr, lr_decay_epochs, lr_decay_gamma, metric,
-                    use_ema, early_stop, early_stop_patience, use_vdl,
-                    resume_checkpoint)
-        else:
-            super(FasterRCNN, self).train(
-                num_epochs, train_dataset, train_batch_size, eval_dataset,
-                optimizer, save_interval_epochs, log_interval_steps, save_dir,
-                pretrain_weights, learning_rate, warmup_steps, warmup_start_lr,
-                lr_decay_epochs, lr_decay_gamma, metric, use_ema, early_stop,
-                early_stop_patience, use_vdl, resume_checkpoint)
+        super(FasterRCNN, self).train(
+            num_epochs, train_dataset, train_batch_size, eval_dataset,
+            optimizer, save_interval_epochs, log_interval_steps, save_dir,
+            pretrain_weights, learning_rate, warmup_steps, warmup_start_lr,
+            lr_decay_epochs, lr_decay_gamma, metric, use_ema, early_stop,
+            early_stop_patience, use_vdl, resume_checkpoint)
 
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
                 _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
-            collate_batch = False
         else:
             default_batch_transforms = [
                 _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
-            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -1400,7 +1380,7 @@ class FasterRCNN(BaseDetector):
 
         batch_transforms = BatchCompose(
             custom_batch_transforms + default_batch_transforms,
-            collate_batch=collate_batch)
+            collate_batch=False)
 
         return batch_transforms
 
@@ -2200,42 +2180,22 @@ class MaskRCNN(BaseDetector):
         """
         if train_dataset.pos_num < len(train_dataset.file_list):
             train_dataset.num_workers = 0
-            if train_batch_size != 1:
-                train_batch_size = 1
-                logging.warning(
-                    "Training RCNN models with negative samples only support batch size equals to 1 "
-                    "on a single gpu/cpu card, `train_batch_size` is forcibly set to 1."
-                )
-            nranks = paddle.distributed.get_world_size()
-            local_rank = paddle.distributed.get_rank()
-            # single card training
-            if nranks < 2 or local_rank == 0:
-                super(MaskRCNN, self).train(
-                    num_epochs, train_dataset, train_batch_size, eval_dataset,
-                    optimizer, save_interval_epochs, log_interval_steps,
-                    save_dir, pretrain_weights, learning_rate, warmup_steps,
-                    warmup_start_lr, lr_decay_epochs, lr_decay_gamma, metric,
-                    use_ema, early_stop, early_stop_patience, use_vdl,
-                    resume_checkpoint)
-        else:
-            super(MaskRCNN, self).train(
-                num_epochs, train_dataset, train_batch_size, eval_dataset,
-                optimizer, save_interval_epochs, log_interval_steps, save_dir,
-                pretrain_weights, learning_rate, warmup_steps, warmup_start_lr,
-                lr_decay_epochs, lr_decay_gamma, metric, use_ema, early_stop,
-                early_stop_patience, use_vdl, resume_checkpoint)
+        super(MaskRCNN, self).train(
+            num_epochs, train_dataset, train_batch_size, eval_dataset,
+            optimizer, save_interval_epochs, log_interval_steps, save_dir,
+            pretrain_weights, learning_rate, warmup_steps, warmup_start_lr,
+            lr_decay_epochs, lr_decay_gamma, metric, use_ema, early_stop,
+            early_stop_patience, use_vdl, resume_checkpoint)
 
     def _compose_batch_transform(self, transforms, mode='train'):
         if mode == 'train':
             default_batch_transforms = [
                 _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
-            collate_batch = False
         else:
             default_batch_transforms = [
                 _BatchPadding(pad_to_stride=32 if self.with_fpn else -1)
             ]
-            collate_batch = True
         custom_batch_transforms = []
         for i, op in enumerate(transforms.transforms):
             if isinstance(op, (BatchRandomResize, BatchRandomResizeByShort)):
@@ -2248,7 +2208,7 @@ class MaskRCNN(BaseDetector):
 
         batch_transforms = BatchCompose(
             custom_batch_transforms + default_batch_transforms,
-            collate_batch=collate_batch)
+            collate_batch=False)
 
         return batch_transforms
 
