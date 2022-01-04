@@ -126,3 +126,16 @@ class BaseArch(nn.Layer):
 
     def get_pred(self, ):
         raise NotImplementedError("Should implement get_pred method!")
+
+    @classmethod
+    def convert_sync_batchnorm(cls, layer):
+        layer_output = layer
+        if getattr(layer, 'norm_type', None) == 'sync_bn':
+            layer_output = nn.SyncBatchNorm.convert_sync_batchnorm(layer)
+        else:
+            for name, sublayer in layer.named_children():
+                layer_output.add_sublayer(name,
+                                          cls.convert_sync_batchnorm(sublayer))
+
+        del layer
+        return layer_output
