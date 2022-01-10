@@ -217,8 +217,8 @@ class VOCDetection(Dataset):
 
                     if not (x2 >= x1 and y2 >= y1):
                         logging.warning(
-                            "Bounding box for object {} does not satisfy x1 <= x2 and y1 <= y2, "
-                            "so this object is skipped".format(i))
+                            "Bounding box for object {} does not satisfy xmin {} <= xmax {} and ymin {} <= ymax {}, "
+                            "so this object is skipped. xml file: {}".format(i, x1, x2, y1, y2, xml_file))
                         continue
 
                     gt_bbox[i, :] = [x1, y1, x2, y2]
