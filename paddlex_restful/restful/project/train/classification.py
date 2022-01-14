@@ -70,7 +70,7 @@ def build_optimizer(parameters, step_each_epoch, params):
     num_epochs = params.num_epochs
     if params.lr_policy == 'Cosine':
         learning_rate = paddle.optimizer.lr.CosineAnnealingDecay(
-            learning_rate=.001, T_max=step_each_epoch * num_epochs)
+            learning_rate=learning_rate, T_max=step_each_epoch * num_epochs)
     elif params.lr_policy == 'Linear':
         learning_rate = paddle.optimizer.lr.PolynomialDecay(
             learning_rate=learning_rate,
