@@ -5,7 +5,7 @@
 
 <p align="left">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a>
-    <a href="https://github.com/PaddlePaddle/PaddleOCR/releases"><img src="https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg"></a>
+    <a href="https://github.com/PaddlePaddle/PaddleX/releases"><img src="https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/python-3.6+-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/QQ_Group-957286141-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
