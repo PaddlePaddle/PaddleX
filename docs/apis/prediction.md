@@ -21,7 +21,7 @@ Predict Result: [{'category_id': 549, 'category': 'envelope', 'score': 0.2906293
 
 ![](images/test.jpg)
 
-- 分类模型predict接口[说明文档](./apis/models/classification.md#predict)
+- 分类模型predict接口[说明文档](./models/classification.md#predict)
 
 
 ## 目标检测
