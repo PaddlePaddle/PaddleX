@@ -11,8 +11,9 @@
   * [quant_aware_train](#16)
 * [paddlex.det.PPYOLO](#2)
 * [paddlex.det.PPYOLOTiny](#3)
-* [paddlex.det.YOLOv3](#4)
-* [paddlex.det.FasterRCNN](#5)
+* [paddlex.det.PicoDet](#4)
+* [paddlex.det.YOLOv3](#5)
+* [paddlex.det.FasterRCNN](#6)
 
 
 ## <h2 id="1">paddlex.det.PPYOLOv2</h2>
@@ -262,7 +263,33 @@ paddlex.det.PPYOLOTiny(num_classes=80, backbone='MobileNetV3', anchors=[[10, 15]
 > - prune 剪裁接口说明同 [PPYOLOv2模型prune接口](#prune)
 > - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
 
-## <h2 id="4">paddlex.det.YOLOv3</h2>
+
+## <h2 id="4">paddlex.det.PicoDet</h2>
+
+```python
+paddlex.det.PicoDet(num_classes=80, backbone='ESNet_m', nms_score_threshold=.025, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=.6)
+```
+
+> 构建PicoDet检测器。
+
+> **参数**
+>
+> > - **num_classes** (int): 类别数。默认为80。
+> > - **backbone** (str): PicoDet的backbone网络，取值范围为['ESNet_s', 'ESNet_m', 'ESNet_l', 'LCNet', 'MobileNetV3', 'ResNet18_vd']。默认为'ESNet_m'。
+> > - **nms_score_threshold** (float): 检测框的置信度得分阈值，置信度得分低于阈值的框应该被忽略。默认为0.01。
+> > - **nms_topk** (int): 进行NMS时，根据置信度保留的最大检测框数。默认为1000。
+> > - **nms_keep_topk** (int): 进行NMS后，每个图像要保留的总检测框数。默认为100。
+> > - **nms_iou_threshold** (float): 进行NMS时，用于剔除检测框IoU的阈值。默认为0.6。
+
+> - train 训练接口说明同 [PPYOLOv2模型train接口](#train)
+> - evaluate 评估接口说明同 [PPYOLOv2模型evaluate接口](#evaluate)
+> - predict 预测接口说明同 [PPYOLOv2模型predict接口](#predict)
+> - analyze_sensitivity 敏感度分析接口说明同 [PPYOLOv2模型analyze_sensivity接口](#analyze_sensitivity)
+> - prune 剪裁接口说明同 [PPYOLOv2模型prune接口](#prune)
+> - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
+
+
+## <h2 id="5">paddlex.det.YOLOv3</h2>
 
 ```python
 paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45], [59, 119], [116, 90], [156, 198], [373, 326]], anchor_masks=[[6, 7, 8], [3, 4, 5], [0, 1, 2]], ignore_threshold=0.7, nms_score_threshold=0.01, nms_topk=1000, nms_keep_topk=100, nms_iou_threshold=0.45, label_smooth=False)
@@ -291,7 +318,7 @@ paddlex.det.YOLOv3(num_classes=80, backbone='MobileNetV1', anchors=[[10, 13], [1
 > - quant_aware_train 在线量化接口说明同 [PPYOLOv2模型quant_aware_train接口](#quant_aware_train)
 
 
-## <h2 id="5">paddlex.det.FasterRCNN</h2>
+## <h2 id="6">paddlex.det.FasterRCNN</h2>
 
 ```python
 paddlex.det.FasterRCNN(num_classes=80, backbone='ResNet50', with_fpn=True, aspect_ratios=[0.5, 1.0, 2.0], anchor_sizes=[[32], [64], [128], [256], [512]], keep_top_k=100, nms_threshold=0.5, score_threshold=0.05, fpn_num_channels=256, rpn_batch_size_per_im=256, rpn_fg_fraction=0.5, test_pre_nms_top_n=None, test_post_nms_top_n=1000)

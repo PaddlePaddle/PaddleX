@@ -44,15 +44,16 @@ model = pdx.det.PicoDet(num_classes=num_classes, backbone='ESNet_l')
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md
 # 各参数介绍与调整说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/parameters.md
 model.train(
-    num_epochs=300,
+    num_epochs=20,
     train_dataset=train_dataset,
-    train_batch_size=7,
+    train_batch_size=14,
     eval_dataset=eval_dataset,
     pretrain_weights='COCO',
     learning_rate=.05,
-    warmup_steps=300,
-    warmup_start_lr=0.0,
-    save_interval_epochs=5,
-    lr_decay_epochs=[85, 135],
-    save_dir='output/piconet_esnet_l',
+    warmup_steps=24,
+    warmup_start_lr=0.005,
+    save_interval_epochs=1,
+    lr_decay_epochs=[6, 8, 11],
+    use_ema=True,
+    save_dir='output/picodet_esnet_l',
     use_vdl=True)

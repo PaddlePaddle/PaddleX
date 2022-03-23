@@ -42,10 +42,6 @@ class BBoxPostProcess(nn.Layer):
         self.num_classes = num_classes
         self.decode = decode
         self.nms = nms
-        self.fake_bboxes = paddle.to_tensor(
-            np.array(
-                [[-1, 0.0, 0.0, 0.0, 0.0, 0.0]], dtype='float32'))
-        self.fake_bbox_num = paddle.to_tensor(np.array([1], dtype='int32'))
 
     def forward(self, head_out, rois, im_shape, scale_factor):
         """
@@ -91,9 +87,28 @@ class BBoxPostProcess(nn.Layer):
                 including labels, scores and bboxes.
         """
 
-        if bboxes.shape[0] == 0:
-            bboxes = self.fake_bboxes
-            bbox_num = self.fake_bbox_num
+        bboxes_list = []
+        bbox_num_list = []
+        id_start = 0
+        fake_bboxes = paddle.to_tensor(
+            np.array(
+                [[-1, 0.0, 0.0, 0.0, 0.0, 0.0]], dtype='float32'))
+        fake_bbox_num = paddle.to_tensor(np.array([1], dtype='int32'))
+
+        # add fake bbox when output is empty for each batch
+        for i in range(bbox_num.shape[0]):
+            if bbox_num[i] == 0:
+                bboxes_i = fake_bboxes
+                bbox_num_i = fake_bbox_num
+                id_start += 1
+            else:
+                bboxes_i = bboxes[id_start:id_start + bbox_num[i], :]
+                bbox_num_i = bbox_num[i]
+                id_start += bbox_num[i]
+            bboxes_list.append(bboxes_i)
+            bbox_num_list.append(bbox_num_i)
+        bboxes = paddle.concat(bboxes_list)
+        bbox_num = paddle.concat(bbox_num_list)
 
         origin_shape = paddle.floor(im_shape / scale_factor + 0.5)
 
@@ -157,6 +172,7 @@ class MaskPostProcess(object):
         """
         Paste the mask prediction to the original image.
         """
+
         x0, y0, x1, y1 = paddle.split(boxes, 4, axis=1)
         masks = paddle.unsqueeze(masks, [0, 1])
         img_y = paddle.arange(0, im_h, dtype='float32') + 0.5
