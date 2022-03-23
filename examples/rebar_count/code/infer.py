@@ -9,13 +9,17 @@ import cv2
 import json
 import paddlex as pdx
 
-image_name = 'dataset/JPEGImages/6B898244.jpg'
+# 待预测图片路径
+image_name = 'work/dataset_reinforcing_steel_bar_counting/JPEGImages/4B145787.jpg'
 
-model = pdx.load_model('output/ppyolo_r50vd_dcn/best_model')
+# 预测模型加载
+model = pdx.load_model('output/yolov3_mobilnetv1/best_model')
 
+# 读取图片与获取预测结果
 img = cv2.imread(image_name)
 result = model.predict(img)
 
+# 解析预测结果，并保存到txt中
 keep_results = []
 areas = []
 f = open('result.txt', 'a')
@@ -38,5 +42,6 @@ print(count)
 f.write("the total number is :" + str(int(count)))
 f.close()
 
+# 可视化保存
 pdx.det.visualize(
-    image_name, result, threshold=0.5, save_dir='./output/ppyolo_r50vd_dcn')
+    image_name, result, threshold=0.5, save_dir='./output/yolov3_mobilnetv1')
