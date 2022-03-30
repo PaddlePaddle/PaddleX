@@ -62,7 +62,7 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 ## 产业级应用示例
 
 - 安防
-    - [安全帽检测](./examples/helmet_detection)  
+    - [安全帽检测](./examples/helmet_detection)    |  [火灾/烟雾检测](./examples/fireSmoke_detection)
 - 工业视觉
     - [表计读数](./examples/meter_reader)  |  [钢筋计数](./examples/rebar_count)  |  [视觉辅助定位抓取](./examples/robot_grab)
 
