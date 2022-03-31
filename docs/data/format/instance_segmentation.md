@@ -29,7 +29,7 @@ MyDataset/ # 实例分割数据集根目录
 
 ## <h3 id="12">训练集、验证集列表</h3>
 
-为了区分训练集和验证集，在`MyDataset`同级目录，使用不同的json表示数据的划分，例如`train.json`和`val.json`。点击下载[实例分割示例数据集](https://bj.bcebos.com/paddlex/datasets/garbage_ins_det.tar.gz)查看具体的数据格式。
+为了区分训练集和验证集，在`MyDataset`同级目录，使用不同的json表示数据的划分，例如`train.json`和`val.json`。点击下载[实例分割示例数据集](https://bj.bcebos.com/paddlex/datasets/xiaoduxiong_ins_det.tar.gz)查看具体的数据格式。
 
 
 ## <h2 id="2">数据集加载</h2>
