@@ -166,7 +166,7 @@ eval_dataset = pdx.datasets.CocoDetection(
 
 ```python
 num_classes = len(train_dataset.labels)
-model = pdx.models.PPYOLOv2(
+model = pdx.det.PPYOLOv2(
     num_classes=num_classes, backbone='ResNet50_vd_dcn')
 
 ```
@@ -250,7 +250,7 @@ eval_dataset = pdx.datasets.SegDataset(
 
 ```python
 num_classes = len(train_dataset.labels)
-model = pdx.models.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd', use_mixed_loss=True)
+model = pdx.seg.DeepLabV3P(num_classes=num_classes, backbone='ResNet50_vd', use_mixed_loss=True)
 
 ```
 
