@@ -157,7 +157,7 @@ PaddleX提供了5种目标检测模型：FasterRCNN、YOLOv3、PP-YOLO、PP-YOLO
 * eval_transforms：验证预处理参数，可以增加、修改预处理方法和参数；
 * train_dataset：训练使用数据集，修改图片路径、标签路径以及是否进行数据shuffle；
 * eval_dataset：验证使用数据集，修改图片路径、标签路径以及是否进行数据shuffle；
-* pdx.models.*：设置不同的模型，可选[FasterRCNN、YOLOv3、PP-YOLO、PP-YOLO-tiny、PP-YOLOv2，这里选择PP-YOLOv2；
+* pdx.det.*：设置不同的模型，可选[FasterRCNN、YOLOv3、PP-YOLO、PP-YOLO-tiny、PP-YOLOv2，这里选择PP-YOLOv2；
 * model.train：设置训练epoch、训练和验证数据集、batch size、学习率learning rate、warmup step、lr衰减lr_decay_epoch、模型保存间隔save_interval_epoch、模型保存路径save_dir，详细介绍[训练参数](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/models/detection.md)。
 
 PaddleX提供了单卡/多卡训练模型，满足用户多种训练需求
@@ -347,6 +347,3 @@ python infer.py
 ## 开源数据
 
 * 非常感谢[gengyanlei](https://github.com/gengyanlei/fire-smoke-detect-yolov4)和[Thomas-yanxin](https://aistudio.baidu.com/aistudio/datasetdetail/90352/0)开源的火灾和烟雾数据集
-
-  
-
