@@ -11,19 +11,6 @@
     <a href=""><img src="https://img.shields.io/badge/QQ_Group-957286141-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
 </p>
 
-## 近期活动
-为了更好的满足大家对部署需求，PaddleX举办《工业级视觉算法跨平台部署方案深入解析》两日课。
-
-* 基于QT实现的跨平台图形化部署工具，支持Windows、Linux系统和X86、ARM架构[欢迎体验](https://github.com/cjh3020889729/The-PaddleX-QT-Visualize-GUI)
-* 基于C#实现的Windows系统高效部署方案[欢迎体验](https://github.com/PaddlePaddle/PaddleX/tree/develop/deploy/cpp/docs/csharp_deploy)
-* 从0-1构建工业级部署线程池，[欢迎体验](https://github.com/ximitiejiang/model_infer_multiThreads)
-
-
-
-<p align="center">
-  <img src="./docs/activities.png" width="800"  />
-</p>
-
 
 
 ## 近期动态
@@ -35,11 +22,6 @@
 * 新增检测模型负样本训练策略 [欢迎体验](docs/data/format/detection.md#3)
 * 新增python轻量级服务化部署 [欢迎体验](./docs/hub_serving_deploy.md)
 
-2021.09.10 PaddleX发布2.0.0正式版本。
-- 全新发布Manufacture SDK，支持多模型串联部署。[欢迎体验](./deploy/cpp/docs/manufacture_sdk)
-- PaddleX部署全面升级，支持飞桨视觉套件PaddleDetection、PaddleClas、PaddleSeg、PaddleX的端到端统一部署能力。[欢迎体验](./deploy/cpp/docs/deployment.md)
-- 发布产业实践案例：钢筋计数、缺陷检测、机械手抓取、工业表计读数。[欢迎体验](./examples)
-- 升级PaddleX GUI，支持30系列显卡、新增模型PP-YOLO V2、PP-YOLO Tiny 、BiSeNetV2。[欢迎体验](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/install.md#2-padldex-gui%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85)
 
 详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
 
@@ -150,3 +132,5 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 （windows系统，基于pyqt5开发）
 * [工业相机实时目标检测GUI](https://github.com/LiKangyuLKY/PaddleXCsharp)
 （windows系统，基于C#开发）
+* 基于QT实现的跨平台图形化部署工具，支持Windows、Linux系统和X86、ARM架构[欢迎体验](https://github.com/cjh3020889729/The-PaddleX-QT-Visualize-GUI)
+* 从0-1构建工业级部署线程池，[欢迎体验](https://github.com/ximitiejiang/model_infer_multiThreads)
