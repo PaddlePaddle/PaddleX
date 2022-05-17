@@ -240,7 +240,7 @@ paddlex.det.PPYOLOTiny(num_classes=80, backbone='MobileNetV3', anchors=[[10, 15]
 > **参数**
 >
 > > - **num_classes** (int): 类别数。默认为80。
-> > - **backbone** (str): YOLOv3的backbone网络，取值范围为['MobileNetV3']。默认为'MobileNetV3'。
+> > - **backbone** (str): PPYOLOTiny的backbone网络，取值范围为['MobileNetV3']。默认为'MobileNetV3'。
 > > - **anchors** (list|tuple): anchor框的宽度和高度。默认为[[10, 15], [24, 36], [72, 42], [35, 87], [102, 96], [60, 170], [220, 125], [128, 222], [264, 266]]。
 > > - **anchor_masks** (list|tuple): 在计算YOLOv3损失时，使用anchor的mask索引。默认为[[6, 7, 8], [3, 4, 5], [0, 1, 2]]。
 > > - **use_iou_aware** (bool): 是否使用IoU Aware分支。默认为False。
