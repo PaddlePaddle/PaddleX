@@ -4,9 +4,11 @@
 
 * [ImageNet](#1)
 * [VOCDetection](#2)
-  * [cluster_yolo_anchor](#21)
+  * [add_negative_samples](#21)
+  * [cluster_yolo_anchor](#22)
 * [CocoDetection](#3)
-  * [cluster_yolo_anchor](#31)
+  * [add_negative_samples](#31)
+  * [cluster_yolo_anchor](#32)
 * [SegDataset](#4)
 
 ## <h2 id="1">paddlex.datasets.ImageNet</h2>
@@ -45,10 +47,24 @@ paddlex.datasets.VOCDetection(data_dir, file_list, label_list, transforms=None, 
 > > * **transforms** (paddlex.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.transforms](./transforms/transforms.md)。  
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
-> > * **allow_empty** (bool): 是否加载负样本。默认为False。
+> > * **allow_empty** (bool): 是否加载无标注框的图片（即负样本）进行训练。默认为False。该参数设置为True时，也要求每个负样本都有对应的标注文件。
 > > * **empty_ratio** (float): 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
 
-### <h3 id="21">cluster_yolo_anchor</h3>
+### <h3 id="21">add_negative_samples</h3>
+
+```python
+add_negative_samples(image_dir, empty_ratio=1)
+```
+> 将背景图片加入训练。
+>
+> > * **image_dir** (str)：背景图片所在的文件夹目录。不要求准备背景图片的标注文件。
+> > * **empty_ratio** (float or None): 用于指定负样本占总样本数的比例。如果为None，保留数据集初始化是设置的`empty_ratio`值，否则更新原有`empty_ratio`值。如果小于0或大于等于1，则保留全部的负样本。默认为1。
+
+**代码示例**
+
+[火灾烟雾检测](../../examples/fireSmoke_detection#101-%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5) | [训练添加负样本的两种使用方式](../data/format/detection.md#添加负样本)
+
+### <h3 id="22">cluster_yolo_anchor</h3>
 
 ```python
 cluster_yolo_anchor(num_anchors, image_size, cache=True, cache_path=None, iters=300, gen_iters=1000, thresh=.25)
@@ -159,10 +175,25 @@ paddlex.datasets.CocoDetection(data_dir, ann_file, transforms=None, num_workers=
 > > * **transforms** (paddlex.transforms): 数据集中每个样本的预处理/增强算子，详见[paddlex.transforms](./transforms/transforms.md)。
 > > * **num_workers** (int|str)：数据集中样本在预处理过程中的线程或进程数。默认为'auto'。当设为'auto'时，根据系统的实际CPU核数设置`num_workers`: 如果CPU核数的一半大于8，则`num_workers`为8，否则为CPU核数的一半。  
 > > * **shuffle** (bool): 是否需要对数据集中样本打乱顺序。默认为False。
-> > * **allow_empty** (bool): 是否加载负样本。默认为False。
+> > * **allow_empty** (bool): 是否加载无标注框的图片（即负样本）进行训练。默认为False。该参数设置为True时，也要求每个负样本都有对应的标注文件。
 > > * **empty_ratio** (float): 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
 
-### <h3 id="31">cluster_yolo_anchor</h3>
+### <h3 id="31">add_negative_samples</h3>
+
+```python
+add_negative_samples(image_dir, empty_ratio=1)
+```
+> 将背景图片加入训练。
+>
+> > * **image_dir** (str)：背景图片所在的文件夹目录。不要求准备背景图片的标注文件。
+> > * **empty_ratio** (float or None): 用于指定负样本占总样本数的比例。如果为None，保留数据集初始化是设置的`empty_ratio`值，否则更新原有`empty_ratio`值。如果小于0或大于等于1，则保留全部的负样本。默认为1。
+
+**代码示例**
+
+[火灾烟雾检测](../../examples/fireSmoke_detection#101-%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5) | [训练添加负样本的两种使用方式](../data/format/instance_segmentation.md#添加负样本)
+
+
+### <h3 id="32">cluster_yolo_anchor</h3>
 
 ```python
 cluster_yolo_anchor(num_anchors, image_size, cache=True, cache_path=None, iters=300, gen_iters=1000, thresh=.25)
