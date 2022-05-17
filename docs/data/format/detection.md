@@ -119,6 +119,7 @@ train_transforms = T.Compose([
 ])
 
 # 情况一：train_list中已经包含负样本
+# 要求每个负样本都有对应的标注文件，标注文件里没有标注框数据
 train_dataset = pdx.datasets.VOCDetection(
                         data_dir='./MyDataset',
                         file_list='./MyDataset/train_list.txt',
@@ -128,6 +129,7 @@ train_dataset = pdx.datasets.VOCDetection(
                         empty_ratio=1.)   # 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
 
 # 情况二：train_list中仅包含正样本，负样本在单独的路径下
+# 不要求负样本有标注文件
 train_dataset = pdx.datasets.VOCDetection(
                         data_dir='./MyDataset',
                         file_list='./MyDataset/train_list.txt',

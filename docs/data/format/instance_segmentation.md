@@ -87,6 +87,7 @@ train_transforms = T.Compose([
 ])
 
 # 情况一：ann_file中已经包含负样本
+# 要求每个负样本都有对应的标注数据，标注数据里没有标注框
 train_dataset = pdx.dataset.CocoDetection(
                     data_dir='./MyDataset/JPEGImages',
                     ann_file='./MyDataset/train.json',
@@ -95,6 +96,7 @@ train_dataset = pdx.dataset.CocoDetection(
                     empty_ratio=1.)   # 用于指定负样本占总样本数的比例。如果小于0或大于等于1，则保留全部的负样本。默认为1。
 
 # 情况二：train_list中仅包含正样本，负样本在单独的路径下
+# 不要求负样本有标注数据
 train_dataset = pdx.dataset.CocoDetection(
                     data_dir='./MyDataset/JPEGImages',
                     ann_file='./MyDataset/train.json',
