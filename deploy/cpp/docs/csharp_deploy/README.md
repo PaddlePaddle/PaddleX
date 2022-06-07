@@ -1,47 +1,37 @@
-# 兼容并包的PaddleX-Inference部署方式
+# 基于Windows的高性能部署方案
 
-在新版本的PaddleX中，对于CPP的部署代码方式做了非常大的变化：
+在PaddleX 2.0版本中，C++的部署代码方式做了非常大的变化：
 * 支持用户将PaddleDetection PaddleSeg PaddleClas训练出来的模型通过一套部署代码实现快速部署，实现了多个模型的打通。
-* 对于一个视觉任务里面既有检测，又有分割来说，极大的简化了使用的流程。
-* 提供了更好用的tensorRT加速的使用方式。
 
+为了更好的帮助大家进行Windows环境的部署，PaddleX联合产业开发者提供了两个部署Demo进行开发，大家可根据自己的需求自行选择
+* [方案一](#1环境准备) 如下文，侧重一步步引导大家完成一个部署项目。
+* [方案二](https://github.com/Deploy-Demo/PPdeploy) 侧重于在TensorRT加速、多线程部署等。
+-------------------------------------------------------
+该方式为上述**方案一**可以帮助用户快速基于Windows系统构建一个C#部署项目
+ ## 1 环境准备
+* 下载好PaddleX代码和PaddleInference预测库（带trt的预测库）
+* 下载TensorRT（需要和cuda进行匹配）
+* 为了便于项目管理，将所有的文件汇总到一个文件夹中
 
-下面我们具体以Windows系统为例，基于PaddleX的这套CPP，说明一下如何实现工业化的部署（trt加速）
-
-项目使用环境说明：
-
+### 1.1 项目使用环境说明：
 * CUDA10.2  Cudnn 7.6
 * opencv版本3.4.6
 * PaddleInference 10.2的预测库
 * TensorRT 7.0.0
 * Cmake 3.5
 * VS2019 社区版
-
-
- ## 1 环境准备
-
-* 下载好PaddleX代码和PaddleInference预测库
-* 下载Tensorrt，并设置系统环境变量
-在本项目中使用的cuda版本是10.2，下载对应的trt版本
-* 为了便于项目管理，将所有的文件汇总到一个文件夹中
-
-
 <div align="center">
 <img src="./images/1.png"  width = "800" />              </div>
 
-* 设置OpenCV系统环境变量
+### 1.2设置OpenCV系统环境变量
 
 <div align="center">
 <img src="./images/2.png"  width = "400" />              </div>
 
 
-
-
-
-
 ## 2 代码编译
 
-* 使用Cmake进行编译，我们主要对`PaddleX/deploy/cpp`中代码进行编译，并创建`out`文件夹用来承接编译生成的内容，
+* 我们主要对`PaddleX/deploy/cpp`中代码进行编译，并创建`out`文件夹用来承接编译生成的内容，
 <div align="center">
 <img src="./images/3.png"  width = "800" />              </div>
 * 点击Configure进行选项
@@ -54,6 +44,7 @@
 * 点击Generate进行生成，此时生成失败，
 <div align="center">
 <img src="./images/6.png"  width = "800" />              </div>
+
 * 用户在这里补充opencv tensorrt paddle预测库，cuda的lib库的路径，并且勾选WITH_GPU  WITH_MKL WITH_TENSORRT 几项然后重新进行生成
 <div align="center">
 <img src="./images/7.png"  width = "800" />              </div>
@@ -82,6 +73,7 @@
 
 <div align="center">
 <img src="./images/8.5.png"  width = "800" />             </div>
+
 ### 3.2 修改model_infer.cpp并重新生成dll
 
 * 修改后的model_infer.cpp已经提供，请用paddleX/deploy/cpp/docs/csharp_deploy/model_infer.cpp文件替换PaddleX/deploy/cpp/demo/model_infer.cpp
@@ -185,3 +177,4 @@ MaskRCNN实例分割：
 
 > 该流程在任何模型类型下都是成立的，只是det类型只对应目标检测流程，seg类型只对应语义分割流程， clas类型只对应图像识别流程， mask类型只对应实例分割流程(MaskRCNN)。
 > 在paddlex类型下时，底层也是自动转为det、seg、clas类型进行实现的。
+
