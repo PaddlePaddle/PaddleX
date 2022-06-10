@@ -111,8 +111,8 @@ def policy_v2():
         [('Cutout', 0.8, 8), ('Brightness', 0.8, 8), ('Cutout', 0.2, 2)],
         [('Color', 0.8, 4), ('TranslateY_BBox', 1.0, 6),
          ('Rotate_BBox', 0.6, 6)],
-        [('Rotate_BBox', 0.6, 10), ('BBox_Cutout', 1.0, 4), ('Cutout', 0.2, 8)
-         ],
+        [('Rotate_BBox', 0.6, 10), ('BBox_Cutout', 1.0, 4),
+         ('Cutout', 0.2, 8)],
         [('Rotate_BBox', 0.0, 0), ('Equalize', 0.6, 6),
          ('ShearY_BBox', 0.6, 8)],
         [('Brightness', 0.8, 8), ('AutoContrast', 0.4, 2),
@@ -1392,8 +1392,8 @@ def _translate_level_to_arg(level, translate_const):
 def _bbox_cutout_level_to_arg(level, hparams):
     cutout_pad_fraction = (
         level / _MAX_LEVEL) * 0.75  # hparams.cutout_max_pad_fraction
-    return (cutout_pad_fraction, False
-            )  # hparams.cutout_bbox_replace_with_mean
+    return (cutout_pad_fraction,
+            False)  # hparams.cutout_bbox_replace_with_mean
 
 
 def level_to_arg(hparams):
