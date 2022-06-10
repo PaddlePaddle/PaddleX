@@ -62,7 +62,7 @@ def _strip_postfix(path):
     return path
 
 
-def load_weight(model, weight, optimizer=None):
+def load_weight(model, weight, optimizer=None, ema=None):
     if is_url(weight):
         weight = get_weights_path(weight)
 
@@ -72,7 +72,14 @@ def load_weight(model, weight, optimizer=None):
         raise ValueError("Model pretrain path {} does not "
                          "exists.".format(pdparam_path))
 
-    param_state_dict = paddle.load(pdparam_path)
+    if ema is not None and os.path.exists(path + '.pdema'):
+        # Exchange model and ema_model to load
+        ema_state_dict = paddle.load(pdparam_path)
+        param_state_dict = paddle.load(path + '.pdema')
+    else:
+        ema_state_dict = None
+        param_state_dict = paddle.load(pdparam_path)
+
     model_dict = model.state_dict()
     model_weight = {}
     incorrect_keys = 0
@@ -102,6 +109,11 @@ def load_weight(model, weight, optimizer=None):
             last_epoch = optim_state_dict.pop('last_epoch')
         optimizer.set_state_dict(optim_state_dict)
 
+        if ema_state_dict is not None:
+            ema.resume(ema_state_dict,
+                       optim_state_dict['LR_Scheduler']['last_epoch'])
+    elif ema_state_dict is not None:
+        ema.resume(ema_state_dict)
     return last_epoch
 
 
@@ -201,29 +213,42 @@ def load_pretrain_weight(model, pretrain_weight):
     logger.info('Finish loading model weights: {}'.format(weights_path))
 
 
-def save_model(model, optimizer, save_dir, save_name, last_epoch):
+def save_model(model,
+               optimizer,
+               save_dir,
+               save_name,
+               last_epoch,
+               ema_model=None):
     """
     save model into disk.
 
     Args:
-        model (paddle.nn.Layer): the Layer instalce to save parameters.
+        model (dict): the model state_dict to save parameters.
         optimizer (paddle.optimizer.Optimizer): the Optimizer instance to
             save optimizer states.
         save_dir (str): the directory to be saved.
         save_name (str): the path to be saved.
         last_epoch (int): the epoch index.
+        ema_model (dict|None): the ema_model state_dict to save parameters.
     """
     if paddle.distributed.get_rank() != 0:
         return
+    assert isinstance(model, dict), ("model is not a instance of dict, "
+                                     "please call model.state_dict() to get.")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     save_path = os.path.join(save_dir, save_name)
-    if isinstance(model, nn.Layer):
-        paddle.save(model.state_dict(), save_path + ".pdparams")
-    else:
-        assert isinstance(model,
-                          dict), 'model is not a instance of nn.layer or dict'
+    # save model
+    if ema_model is None:
         paddle.save(model, save_path + ".pdparams")
+    else:
+        assert isinstance(ema_model,
+                          dict), ("ema_model is not a instance of dict, "
+                                  "please call model.state_dict() to get.")
+        # Exchange model and ema_model to save
+        paddle.save(ema_model, save_path + ".pdparams")
+        paddle.save(model, save_path + ".pdema")
+    # save optimizer
     state_dict = optimizer.state_dict()
     state_dict['last_epoch'] = last_epoch
     paddle.save(state_dict, save_path + ".pdopt")

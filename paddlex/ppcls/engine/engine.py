@@ -110,7 +110,7 @@ class Engine(object):
                 'FLAGS_cudnn_batchnorm_spatial_persistent': 1,
                 'FLAGS_max_inplace_grad_add': 8,
             }
-            paddle.fluid.set_flags(AMP_RELATED_FLAGS_SETTING)
+            paddle.set_flags(AMP_RELATED_FLAGS_SETTING)
 
         #TODO(gaotingquan): support rec
         class_num = config["Arch"].get("class_num", None)

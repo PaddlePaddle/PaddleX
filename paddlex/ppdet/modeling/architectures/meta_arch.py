@@ -22,23 +22,23 @@ class BaseArch(nn.Layer):
         self.fuse_norm = False
 
     def load_meanstd(self, cfg_transform):
-        self.scale = 1.
-        self.mean = paddle.to_tensor([0.485, 0.456, 0.406]).reshape(
-            (1, 3, 1, 1))
-        self.std = paddle.to_tensor([0.229, 0.224, 0.225]).reshape(
-            (1, 3, 1, 1))
+        scale = 1.
+        mean = np.array([0.485, 0.456, 0.406], dtype=np.float32)
+        std = np.array([0.229, 0.224, 0.225], dtype=np.float32)
         for item in cfg_transform:
             if 'NormalizeImage' in item:
-                self.mean = paddle.to_tensor(item['NormalizeImage'][
-                    'mean']).reshape((1, 3, 1, 1))
-                self.std = paddle.to_tensor(item['NormalizeImage'][
-                    'std']).reshape((1, 3, 1, 1))
+                mean = np.array(
+                    item['NormalizeImage']['mean'], dtype=np.float32)
+                std = np.array(item['NormalizeImage']['std'], dtype=np.float32)
                 if item['NormalizeImage'].get('is_scale', True):
-                    self.scale = 1. / 255.
+                    scale = 1. / 255.
                 break
         if self.data_format == 'NHWC':
-            self.mean = self.mean.reshape(1, 1, 1, 3)
-            self.std = self.std.reshape(1, 1, 1, 3)
+            self.scale = paddle.to_tensor(scale / std).reshape((1, 1, 1, 3))
+            self.bias = paddle.to_tensor(-mean / std).reshape((1, 1, 1, 3))
+        else:
+            self.scale = paddle.to_tensor(scale / std).reshape((1, 3, 1, 1))
+            self.bias = paddle.to_tensor(-mean / std).reshape((1, 3, 1, 1))
 
     def forward(self, inputs):
         if self.data_format == 'NHWC':
@@ -47,7 +47,7 @@ class BaseArch(nn.Layer):
 
         if self.fuse_norm:
             image = inputs['image']
-            self.inputs['image'] = (image * self.scale - self.mean) / self.std
+            self.inputs['image'] = image * self.scale + self.bias
             self.inputs['im_shape'] = inputs['im_shape']
             self.inputs['scale_factor'] = inputs['scale_factor']
         else:
@@ -64,10 +64,15 @@ class BaseArch(nn.Layer):
                 inputs_list.append(inputs)
             else:
                 inputs_list.extend(inputs)
-
             outs = []
             for inp in inputs_list:
-                self.inputs = inp
+                if self.fuse_norm:
+                    self.inputs['image'] = inp[
+                        'image'] * self.scale + self.bias
+                    self.inputs['im_shape'] = inp['im_shape']
+                    self.inputs['scale_factor'] = inp['scale_factor']
+                else:
+                    self.inputs = inp
                 outs.append(self.get_pred())
 
             # multi-scale test
@@ -126,16 +131,3 @@ class BaseArch(nn.Layer):
 
     def get_pred(self, ):
         raise NotImplementedError("Should implement get_pred method!")
-
-    @classmethod
-    def convert_sync_batchnorm(cls, layer):
-        layer_output = layer
-        if getattr(layer, 'norm_type', None) == 'sync_bn':
-            layer_output = nn.SyncBatchNorm.convert_sync_batchnorm(layer)
-        else:
-            for name, sublayer in layer.named_children():
-                layer_output.add_sublayer(name,
-                                          cls.convert_sync_batchnorm(sublayer))
-
-        del layer
-        return layer_output

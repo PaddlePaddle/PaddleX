@@ -321,8 +321,8 @@ class MobileNetV3(nn.Layer):
                 [3, 184, 80, False, "hard_swish", 1],
                 [3, 480, 112, True, "hard_swish", 1],
                 [3, 672, 112, True, "hard_swish", 1],  # YOLOv3 output
-                [5, 672, 160, True, "hard_swish",
-                 2],  # SSD/SSDLite/RCNN output
+                [5, 672, 160, True, "hard_swish", 2
+                 ],  # SSD/SSDLite/RCNN output
                 [5, 960, 160, True, "hard_swish", 1],
                 [5, 960, 160, True, "hard_swish", 1],  # YOLOv3 output
             ]

@@ -19,10 +19,11 @@ try:
     from collections.abc import Sequence
 except Exception:
     from collections import Sequence
-from paddle.fluid.dataloader.collate import default_collate_fn
+
 from .operators import Transform, Resize, ResizeByShort, _Permute, interp_dict
 from .box_utils import jaccard_overlap
 from paddlex.utils import logging
+from paddlex.cv.datasets.utils import default_collate_fn
 
 
 class BatchCompose(Transform):

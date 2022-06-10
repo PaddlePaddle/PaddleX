@@ -482,8 +482,7 @@ class BasicLayer(nn.Layer):
         # calculate attention mask for SW-MSA
         Hp = int(np.ceil(H / self.window_size)) * self.window_size
         Wp = int(np.ceil(W / self.window_size)) * self.window_size
-        img_mask = paddle.fluid.layers.zeros(
-            [1, Hp, Wp, 1], dtype='float32')  # 1 Hp Wp 1
+        img_mask = paddle.zeros([1, Hp, Wp, 1], dtype='float32')  # 1 Hp Wp 1
         h_slices = (slice(0, -self.window_size),
                     slice(-self.window_size, -self.shift_size),
                     slice(-self.shift_size, None))
@@ -691,10 +690,10 @@ class SwinTransformer(nn.Layer):
         if self.frozen_stages >= 0:
             self.patch_embed.eval()
             for param in self.patch_embed.parameters():
-                param.requires_grad = False
+                param.stop_gradient = True
 
         if self.frozen_stages >= 1 and self.ape:
-            self.absolute_pos_embed.requires_grad = False
+            self.absolute_pos_embed.stop_gradient = True
 
         if self.frozen_stages >= 2:
             self.pos_drop.eval()
@@ -702,7 +701,7 @@ class SwinTransformer(nn.Layer):
                 m = self.layers[i]
                 m.eval()
                 for param in m.parameters():
-                    param.requires_grad = False
+                    param.stop_gradient = True
 
     def _init_weights(self, m):
         if isinstance(m, nn.Linear):

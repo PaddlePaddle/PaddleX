@@ -284,8 +284,8 @@ class TTFHead(nn.Layer):
 
         pred_boxes = paddle.concat(
             [
-                0 - pred_wh[:, 0:2, :, :] + base_loc,
-                pred_wh[:, 2:4] + base_loc
+                0 - pred_wh[:, 0:2, :, :] + base_loc, pred_wh[:, 2:4] +
+                base_loc
             ],
             axis=1)
         pred_boxes = paddle.transpose(pred_boxes, [0, 2, 3, 1])
