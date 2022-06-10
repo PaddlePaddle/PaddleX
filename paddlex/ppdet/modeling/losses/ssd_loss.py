@@ -20,8 +20,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddlex.ppdet.core.workspace import register
-from ..ops import iou_similarity
-from ..bbox_utils import bbox2delta
+from ..bbox_utils import iou_similarity, bbox2delta
 
 __all__ = ['SSDLoss']
 

@@ -22,10 +22,12 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 
 from paddlex.ppdet.core.workspace import register
-from ..ops import iou_similarity
+from ..bbox_utils import iou_similarity, batch_iou_similarity
 from ..bbox_utils import bbox_center
-from .utils import (pad_gt, check_points_inside_bboxes, compute_max_iou_anchor,
+from .utils import (check_points_inside_bboxes, compute_max_iou_anchor,
                     compute_max_iou_gt)
+
+__all__ = ['ATSSAssigner']
 
 
 @register
@@ -48,7 +50,6 @@ class ATSSAssigner(nn.Layer):
 
     def _gather_topk_pyramid(self, gt2anchor_distances, num_anchors_list,
                              pad_gt_mask):
-        pad_gt_mask = pad_gt_mask.tile([1, 1, self.topk]).astype(paddle.bool)
         gt2anchor_distances_list = paddle.split(
             gt2anchor_distances, num_anchors_list, axis=-1)
         num_anchors_index = np.cumsum(num_anchors_list).tolist()
@@ -58,17 +59,12 @@ class ATSSAssigner(nn.Layer):
         for distances, anchors_index in zip(gt2anchor_distances_list,
                                             num_anchors_index):
             num_anchors = distances.shape[-1]
-            topk_metrics, topk_idxs = paddle.topk(
+            _, topk_idxs = paddle.topk(
                 distances, self.topk, axis=-1, largest=False)
             topk_idxs_list.append(topk_idxs + anchors_index)
-            topk_idxs = paddle.where(pad_gt_mask, topk_idxs,
-                                     paddle.zeros_like(topk_idxs))
-            is_in_topk = F.one_hot(topk_idxs, num_anchors).sum(axis=-2)
-            is_in_topk = paddle.where(is_in_topk > 1,
-                                      paddle.zeros_like(is_in_topk),
-                                      is_in_topk)
-            is_in_topk_list.append(
-                is_in_topk.astype(gt2anchor_distances.dtype))
+            is_in_topk = F.one_hot(topk_idxs, num_anchors).sum(
+                axis=-2).astype(gt2anchor_distances.dtype)
+            is_in_topk_list.append(is_in_topk * pad_gt_mask)
         is_in_topk_list = paddle.concat(is_in_topk_list, axis=-1)
         topk_idxs_list = paddle.concat(topk_idxs_list, axis=-1)
         return is_in_topk_list, topk_idxs_list
@@ -79,8 +75,10 @@ class ATSSAssigner(nn.Layer):
                 num_anchors_list,
                 gt_labels,
                 gt_bboxes,
+                pad_gt_mask,
                 bg_index,
-                gt_scores=None):
+                gt_scores=None,
+                pred_bboxes=None):
         r"""This code is based on
             https://github.com/fcjian/TOOD/blob/master/mmdet/core/bbox/assigners/atss_assigner.py
 
@@ -101,18 +99,18 @@ class ATSSAssigner(nn.Layer):
             anchor_bboxes (Tensor, float32): pre-defined anchors, shape(L, 4),
                     "xmin, xmax, ymin, ymax" format
             num_anchors_list (List): num of anchors in each level
-            gt_labels (Tensor|List[Tensor], int64): Label of gt_bboxes, shape(B, n, 1)
-            gt_bboxes (Tensor|List[Tensor], float32): Ground truth bboxes, shape(B, n, 4)
+            gt_labels (Tensor, int64|int32): Label of gt_bboxes, shape(B, n, 1)
+            gt_bboxes (Tensor, float32): Ground truth bboxes, shape(B, n, 4)
+            pad_gt_mask (Tensor, float32): 1 means bbox, 0 means no bbox, shape(B, n, 1)
             bg_index (int): background index
-            gt_scores (Tensor|List[Tensor]|None, float32) Score of gt_bboxes,
+            gt_scores (Tensor|None, float32) Score of gt_bboxes,
                     shape(B, n, 1), if None, then it will initialize with one_hot label
+            pred_bboxes (Tensor, float32, optional): predicted bounding boxes, shape(B, L, 4)
         Returns:
             assigned_labels (Tensor): (B, L)
             assigned_bboxes (Tensor): (B, L, 4)
-            assigned_scores (Tensor): (B, L, C)
+            assigned_scores (Tensor): (B, L, C), if pred_bboxes is not None, then output ious
         """
-        gt_labels, gt_bboxes, pad_gt_scores, pad_gt_mask = pad_gt(
-            gt_labels, gt_bboxes, gt_scores)
         assert gt_labels.ndim == gt_bboxes.ndim and \
                gt_bboxes.ndim == 3
 
@@ -121,7 +119,8 @@ class ATSSAssigner(nn.Layer):
 
         # negative batch
         if num_max_boxes == 0:
-            assigned_labels = paddle.full([batch_size, num_anchors], bg_index)
+            assigned_labels = paddle.full(
+                [batch_size, num_anchors], bg_index, dtype=gt_labels.dtype)
             assigned_bboxes = paddle.zeros([batch_size, num_anchors, 4])
             assigned_scores = paddle.zeros(
                 [batch_size, num_anchors, self.num_classes])
@@ -151,9 +150,8 @@ class ATSSAssigner(nn.Layer):
         iou_threshold = iou_threshold.reshape([batch_size, num_max_boxes, -1])
         iou_threshold = iou_threshold.mean(axis=-1, keepdim=True) + \
                         iou_threshold.std(axis=-1, keepdim=True)
-        is_in_topk = paddle.where(
-            iou_candidates > iou_threshold.tile([1, 1, num_anchors]),
-            is_in_topk, paddle.zeros_like(is_in_topk))
+        is_in_topk = paddle.where(iou_candidates > iou_threshold, is_in_topk,
+                                  paddle.zeros_like(is_in_topk))
 
         # 6. check the positive sample's center in gt, [B, n, L]
         is_in_gts = check_points_inside_bboxes(anchor_centers, gt_bboxes)
@@ -180,9 +178,6 @@ class ATSSAssigner(nn.Layer):
                                          mask_positive)
             mask_positive_sum = mask_positive.sum(axis=-2)
         assigned_gt_index = mask_positive.argmax(axis=-2)
-        assert mask_positive_sum.max() == 1, \
-            ("one anchor just assign one gt, but received not equals 1. "
-             "Received: %f" % mask_positive_sum.max().item())
 
         # assigned target
         batch_ind = paddle.arange(
@@ -199,10 +194,19 @@ class ATSSAssigner(nn.Layer):
             gt_bboxes.reshape([-1, 4]), assigned_gt_index.flatten(), axis=0)
         assigned_bboxes = assigned_bboxes.reshape([batch_size, num_anchors, 4])
 
-        assigned_scores = F.one_hot(assigned_labels, self.num_classes)
-        if gt_scores is not None:
+        assigned_scores = F.one_hot(assigned_labels, self.num_classes + 1)
+        ind = list(range(self.num_classes + 1))
+        ind.remove(bg_index)
+        assigned_scores = paddle.index_select(
+            assigned_scores, paddle.to_tensor(ind), axis=-1)
+        if pred_bboxes is not None:
+            # assigned iou
+            ious = batch_iou_similarity(gt_bboxes, pred_bboxes) * mask_positive
+            ious = ious.max(axis=-2).unsqueeze(-1)
+            assigned_scores *= ious
+        elif gt_scores is not None:
             gather_scores = paddle.gather(
-                pad_gt_scores.flatten(), assigned_gt_index.flatten(), axis=0)
+                gt_scores.flatten(), assigned_gt_index.flatten(), axis=0)
             gather_scores = gather_scores.reshape([batch_size, num_anchors])
             gather_scores = paddle.where(mask_positive_sum > 0, gather_scores,
                                          paddle.zeros_like(gather_scores))

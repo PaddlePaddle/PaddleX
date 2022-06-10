@@ -17,6 +17,7 @@ import paddle.nn as nn
 
 from paddlex.ppdet.core.workspace import register
 from ..layers import AnchorGeneratorSSD
+from ..cls_utils import _get_class_default_kwargs
 
 
 @register
@@ -36,14 +37,15 @@ class FaceHead(nn.Layer):
     __shared__ = ['num_classes']
     __inject__ = ['anchor_generator', 'loss']
 
-    def __init__(self,
-                 num_classes=80,
-                 in_channels=[96, 96],
-                 anchor_generator=AnchorGeneratorSSD().__dict__,
-                 kernel_size=3,
-                 padding=1,
-                 conv_decay=0.,
-                 loss='SSDLoss'):
+    def __init__(
+            self,
+            num_classes=80,
+            in_channels=[96, 96],
+            anchor_generator=_get_class_default_kwargs(AnchorGeneratorSSD),
+            kernel_size=3,
+            padding=1,
+            conv_decay=0.,
+            loss='SSDLoss'):
         super(FaceHead, self).__init__()
         # add background class
         self.num_classes = num_classes + 1

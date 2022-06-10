@@ -21,7 +21,7 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle.nn.initializer import Normal, Constant
 from paddle import ParamAttr
-from .resnet import *
+from .resnet import ResNet50, ResNet101
 from paddlex.ppdet.core.workspace import register
 
 __all__ = ['PCBPyramid']
@@ -46,6 +46,7 @@ class PCBPyramid(nn.Layer):
 
     def __init__(self,
                  input_ch=2048,
+                 model_name='ResNet101',
                  num_stripes=6,
                  used_levels=(1, 1, 1, 1, 1, 1),
                  num_classes=751,
@@ -60,10 +61,11 @@ class PCBPyramid(nn.Layer):
         self.num_in_each_level = [i for i in range(self.num_stripes, 0, -1)]
         self.num_branches = sum(self.num_in_each_level)
 
-        self.base = ResNet101(
-            lr_mult=0.1,
-            last_conv_stride=last_conv_stride,
-            last_conv_dilation=last_conv_dilation)
+        assert model_name in ['ResNet50', 'ResNet101'
+                              ], "Unsupported ReID arch: {}".format(model_name)
+        self.base = eval(model_name)(lr_mult=0.1,
+                                     last_conv_stride=last_conv_stride,
+                                     last_conv_dilation=last_conv_dilation)
         self.dropout_layer = nn.Dropout(p=0.2)
         self.pyramid_conv_list0, self.pyramid_fc_list0 = self.basic_branch(
             num_conv_out_channels, input_ch)

@@ -62,8 +62,8 @@ def load_params(exe, prog, path, ignore_params=None):
     """
     Load model from the given path.
     Args:
-        exe (fluid.Executor): The fluid.Executor object.
-        prog (fluid.Program): load weight to which Program object.
+        exe (paddle.static.Executor): The paddle.static.Executor object.
+        prog (paddle.static.Program): load weight to which Program object.
         path (string): URL string or loca model path.
         ignore_params (list): ignore variable to load when finetuning.
             It can be specified by finetune_exclude_pretrained_params

@@ -331,7 +331,7 @@ class DetectionMAP(object):
             num_columns = min(6, len(results_per_category) * 2)
             results_flatten = list(itertools.chain(*results_per_category))
             headers = ['category', 'AP'] * (num_columns // 2)
-            results_2d = itertools.zip_longest(*[
+            results_2d = itertools.zip_longest(* [
                 results_flatten[i::num_columns] for i in range(num_columns)
             ])
             table_data = [headers]

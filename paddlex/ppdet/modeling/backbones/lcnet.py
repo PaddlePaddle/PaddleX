@@ -171,7 +171,7 @@ class LCNet(nn.Layer):
             num_filters=make_divisible(16 * scale),
             stride=2)
 
-        self.blocks2 = nn.Sequential(*[
+        self.blocks2 = nn.Sequential(* [
             DepthwiseSeparable(
                 num_channels=make_divisible(in_c * scale),
                 num_filters=make_divisible(out_c * scale),
@@ -181,7 +181,7 @@ class LCNet(nn.Layer):
             for i, (k, in_c, out_c, s, se) in enumerate(NET_CONFIG["blocks2"])
         ])
 
-        self.blocks3 = nn.Sequential(*[
+        self.blocks3 = nn.Sequential(* [
             DepthwiseSeparable(
                 num_channels=make_divisible(in_c * scale),
                 num_filters=make_divisible(out_c * scale),
@@ -194,7 +194,7 @@ class LCNet(nn.Layer):
         out_channels.append(
             make_divisible(NET_CONFIG["blocks3"][-1][2] * scale))
 
-        self.blocks4 = nn.Sequential(*[
+        self.blocks4 = nn.Sequential(* [
             DepthwiseSeparable(
                 num_channels=make_divisible(in_c * scale),
                 num_filters=make_divisible(out_c * scale),
@@ -207,7 +207,7 @@ class LCNet(nn.Layer):
         out_channels.append(
             make_divisible(NET_CONFIG["blocks4"][-1][2] * scale))
 
-        self.blocks5 = nn.Sequential(*[
+        self.blocks5 = nn.Sequential(* [
             DepthwiseSeparable(
                 num_channels=make_divisible(in_c * scale),
                 num_filters=make_divisible(out_c * scale),
@@ -220,7 +220,7 @@ class LCNet(nn.Layer):
         out_channels.append(
             make_divisible(NET_CONFIG["blocks5"][-1][2] * scale))
 
-        self.blocks6 = nn.Sequential(*[
+        self.blocks6 = nn.Sequential(* [
             DepthwiseSeparable(
                 num_channels=make_divisible(in_c * scale),
                 num_filters=make_divisible(out_c * scale),
