@@ -206,7 +206,7 @@ paddlex.det.PPYOLO(num_classes=80, backbone='ResNet50_vd_dcn', anchors=None, anc
 > **参数**
 >
 > > - **num_classes** (int): 类别数。默认为80。
-> > - **backbone** (str): PPYOLOv2的backbone网络，取值范围为['ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small']。默认为'ResNet50_vd_dcn'。
+> > - **backbone** (str): PPYOLO的backbone网络，取值范围为['ResNet50_vd_dcn', 'ResNet18_vd', 'MobileNetV3_large', 'MobileNetV3_small']。默认为'ResNet50_vd_dcn'。
 > > - **anchors** (list or tuple): anchor框的宽度和高度，为None时表示使用默认值。backbone网络为'ResNet50_vd_dcn'时默认为[[10, 13], [16, 30], [33, 23], [30, 61], [62, 45], [59, 119], [116, 90], [156, 198], [373, 326]]。backbone网络为'ResNet18_vd'时默认为[[10, 14], [23, 27], [37, 58], [81, 82], [135, 169], [344, 319]]。backbone网络为'MobileNetV3_large'或'MobileNetV3_small'时默认为[[11, 18], [34, 47], [51, 126], [115, 71], [120, 195], [254, 235]]。
 > > - **anchor_masks** (list or tuple): 在计算PPYOLO损失时，使用anchor的mask索引，为None时表示使用默认值。backbone网络为'ResNet50_vd_dcn'时默认为[[6, 7, 8], [3, 4, 5], [0, 1, 2]]。backbone网络为'ResNet18_vd'时默认为[[3, 4, 5], [0, 1, 2]]。backbone网络为'MobileNetV3_large'或'MobileNetV3_small'时默认为[[3, 4, 5], [0, 1, 2]]。
 > > - **use_coord_conv** (bool): 是否使用CoordConv。默认为True。
@@ -240,7 +240,7 @@ paddlex.det.PPYOLOTiny(num_classes=80, backbone='MobileNetV3', anchors=[[10, 15]
 > **参数**
 >
 > > - **num_classes** (int): 类别数。默认为80。
-> > - **backbone** (str): YOLOv3的backbone网络，取值范围为['MobileNetV3']。默认为'MobileNetV3'。
+> > - **backbone** (str): PPYOLOTiny的backbone网络，取值范围为['MobileNetV3']。默认为'MobileNetV3'。
 > > - **anchors** (list|tuple): anchor框的宽度和高度。默认为[[10, 15], [24, 36], [72, 42], [35, 87], [102, 96], [60, 170], [220, 125], [128, 222], [264, 266]]。
 > > - **anchor_masks** (list|tuple): 在计算YOLOv3损失时，使用anchor的mask索引。默认为[[6, 7, 8], [3, 4, 5], [0, 1, 2]]。
 > > - **use_iou_aware** (bool): 是否使用IoU Aware分支。默认为False。
