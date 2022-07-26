@@ -7,7 +7,7 @@
 图像分类、目标检测、实例分割、语义分割统一的预测器，实现高性能预测。
 
 ```python
-paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, cpu_thread_num=1, use_mkl=True, mkl_thread_num=4, use_trt=False, use_glog=False, memory_optimize=True, max_trt_batch_size=1, trt_precision_mode='float32')
+paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, gpu_mem=200, cpu_thread_num=1, use_mkl=True, mkl_thread_num=4, use_trt=False, use_glog=False, memory_optimize=True, max_trt_batch_size=1, trt_precision_mode='float32')
 ```
 
 **参数**
@@ -15,6 +15,7 @@ paddlex.deploy.Predictor(model_dir, use_gpu=False, gpu_id=0, cpu_thread_num=1, u
 > * **model_dir** (str): 模型路径（必须是导出的部署或量化模型）
 > * **use_gpu** (bool): 是否使用gpu，默认False
 > * **gpu_id** (int): 使用gpu的id，默认0
+> * **gpu_mem** (int): 使用的GPU显存大小，默认为 200
 > * **cpu_thread_num** (int)：使用cpu进行预测时的线程数，默认为1
 > * **use_mkl** (bool): 是否使用mkldnn计算库，CPU情况下使用，默认False
 > * **mkl_thread_num** (int): mkldnn计算线程数，默认为4

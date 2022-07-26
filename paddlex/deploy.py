@@ -26,6 +26,7 @@ class Predictor(object):
                  model_dir,
                  use_gpu=False,
                  gpu_id=0,
+                 gpu_mem=200,
                  cpu_thread_num=1,
                  use_mkl=True,
                  mkl_thread_num=4,
@@ -39,6 +40,7 @@ class Predictor(object):
                 model_dir: 模型路径（必须是导出的部署或量化模型）
                 use_gpu: 是否使用gpu，默认False
                 gpu_id: 使用gpu的id，默认0
+                gpu_mem: 使用的GPU显存大小，默认为 200
                 cpu_thread_num：使用cpu进行预测时的线程数，默认为1
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
                 mkl_thread_num: mkldnn计算线程数，默认为4
@@ -64,6 +66,7 @@ class Predictor(object):
         self.predictor = self.create_predictor(
             use_gpu=use_gpu,
             gpu_id=gpu_id,
+            gpu_mem=gpu_mem,
             cpu_thread_num=cpu_thread_num,
             use_mkl=use_mkl,
             mkl_thread_num=mkl_thread_num,
@@ -77,6 +80,7 @@ class Predictor(object):
     def create_predictor(self,
                          use_gpu=True,
                          gpu_id=0,
+                         gpu_mem=200,
                          cpu_thread_num=1,
                          use_mkl=True,
                          mkl_thread_num=4,
@@ -91,7 +95,7 @@ class Predictor(object):
 
         if use_gpu:
             # 设置GPU初始显存(单位M)和Device ID
-            config.enable_use_gpu(200, gpu_id)
+            config.enable_use_gpu(gpu_mem, gpu_id)
             config.switch_ir_optim(True)
             if use_trt:
                 if self._model.model_type == 'segmenter':
