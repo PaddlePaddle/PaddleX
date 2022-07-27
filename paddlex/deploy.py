@@ -26,7 +26,6 @@ class Predictor(object):
                  model_dir,
                  use_gpu=False,
                  gpu_id=0,
-                 gpu_mem=200,
                  cpu_thread_num=1,
                  use_mkl=True,
                  mkl_thread_num=4,
@@ -34,13 +33,13 @@ class Predictor(object):
                  use_glog=False,
                  memory_optimize=True,
                  max_trt_batch_size=1,
-                 trt_precision_mode='float32'):
+                 trt_precision_mode='float32',
+                 gpu_mem=200):
         """ 创建Paddle Predictor
             Args:
                 model_dir: 模型路径（必须是导出的部署或量化模型）
                 use_gpu: 是否使用gpu，默认False
                 gpu_id: 使用gpu的id，默认0
-                gpu_mem: 使用的GPU显存大小，默认为 200
                 cpu_thread_num：使用cpu进行预测时的线程数，默认为1
                 use_mkl: 是否使用mkldnn计算库，CPU情况下使用，默认False
                 mkl_thread_num: mkldnn计算线程数，默认为4
@@ -49,6 +48,7 @@ class Predictor(object):
                 memory_optimize: 是否启动内存优化，默认True
                 max_trt_batch_size: 在使用TensorRT时配置的最大batch size，默认1
                 trt_precision_mode：在使用TensorRT时采用的精度，可选值['float32', 'float16']。默认'float32',
+                gpu_mem: 使用的GPU显存大小，默认为 200
         """
         self.model_dir = model_dir
         self._model = load_model(model_dir, with_net=False)
@@ -66,7 +66,6 @@ class Predictor(object):
         self.predictor = self.create_predictor(
             use_gpu=use_gpu,
             gpu_id=gpu_id,
-            gpu_mem=gpu_mem,
             cpu_thread_num=cpu_thread_num,
             use_mkl=use_mkl,
             mkl_thread_num=mkl_thread_num,
@@ -74,13 +73,13 @@ class Predictor(object):
             use_glog=use_glog,
             memory_optimize=memory_optimize,
             max_trt_batch_size=max_trt_batch_size,
-            trt_precision_mode=trt_precision_mode)
+            trt_precision_mode=trt_precision_mode,
+            gpu_mem=gpu_mem)
         self.timer = Timer()
 
     def create_predictor(self,
                          use_gpu=True,
                          gpu_id=0,
-                         gpu_mem=200,
                          cpu_thread_num=1,
                          use_mkl=True,
                          mkl_thread_num=4,
@@ -88,7 +87,8 @@ class Predictor(object):
                          use_glog=False,
                          memory_optimize=True,
                          max_trt_batch_size=1,
-                         trt_precision_mode=PrecisionType.Float32):
+                         trt_precision_mode=PrecisionType.Float32,
+                         gpu_mem=200):
         config = Config(
             osp.join(self.model_dir, 'model.pdmodel'),
             osp.join(self.model_dir, 'model.pdiparams'))
