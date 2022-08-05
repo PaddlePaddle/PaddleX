@@ -270,7 +270,7 @@ class ResizeByShort(DetTransform):
 
 class Padding(DetTransform):
     """1.将图像的长和宽padding至coarsest_stride的倍数。如输入图像为[300, 640],
-       `coarest_stride`为32，则由于300不为32的倍数，因此在图像最右和最下使用0值
+       `coarsest_stride`为32，则由于300不为32的倍数，因此在图像最右和最下使用0值
        进行padding，最终输出图像为[320, 640]。
        2.或者，将图像的长和宽padding到target_size指定的shape，如输入的图像为[300，640]，
          a. `target_size` = 960，在图像最右和最下使用0值进行padding，最终输出
@@ -286,7 +286,7 @@ class Padding(DetTransform):
 
     Args:
         coarsest_stride (int): 填充后的图像长、宽为该参数的倍数，默认为1。
-        target_size (int|list|tuple): 填充后的图像长、宽，默认为None，coarset_stride优先级更高。
+        target_size (int|list|tuple): 填充后的图像长、宽，默认为None，coarsest_stride优先级更高。
 
     Raises:
         TypeError: 形参`target_size`数据类型不满足需求。
