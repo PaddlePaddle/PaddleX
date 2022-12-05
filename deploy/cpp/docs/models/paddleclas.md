@@ -1,3 +1,10 @@
+# 🆕 🆕 🆕 全新更新！
+
+**强烈推荐!** 我们升级了PaddleX对PaddleClas部署支持的代码，现在部署PaddleDetection模型，可使用FastDeploy快速部署（支持Python/C++/Android，以及Serving服务化部署)
+- [FastDeploy部署PaddleClas模型](https://github.com/PaddlePaddle/FastDeploy/tree/develop/examples/vision/classification/paddleclas)
+
+# PaddleDetection模型部署
+
 # PaddleClas模型部署
 
 当前支持PaddleClas release/2.1分支导出的模型进行部署。本文档以ResNet50模型为例，讲述从release/2.1分支导出模型并用PaddleX 进行cpp部署整个流程。 PaddleClas相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.1/README_cn.md)
