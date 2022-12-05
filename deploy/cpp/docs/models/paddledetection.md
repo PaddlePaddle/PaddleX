@@ -1,7 +1,9 @@
-# PaddleDetection模型部署
+# 🆕 🆕 🆕 全新更新！
 
-我们升级了PaddleX对PaddleDetection部署支持的代码，现在部署PaddleDetection模型，可使用FastDeploy快速部署（支持Python/C++/Android，以及Serving服务化部署)
+**强烈推荐!** 我们升级了PaddleX对PaddleDetection部署支持的代码，现在部署PaddleDetection模型，可使用FastDeploy快速部署（支持Python/C++/Android，以及Serving服务化部署)
 - [FastDeploy部署PaddleDetection模型](https://github.com/PaddlePaddle/FastDeploy/tree/develop/examples/vision/detection/paddledetection)
+
+# PaddleDetection模型部署
 
 当前支持PaddleDetection release/0.5和release/2.1分支导出的模型进行部署（仅支持FasterRCNN/MaskRCNN/PPYOLO/PPYOLOv2/YOLOv3)。PaddleDetection相关详细文档可以查看[官网文档](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.1)。
 
