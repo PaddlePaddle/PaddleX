@@ -1,3 +1,8 @@
+# 🆕 🆕 🆕 全新更新！
+
+**强烈推荐!** 我们升级了PaddleX对PaddleDetection部署支持的代码，现在部署PaddleDetection模型，可使用FastDeploy快速部署（支持Python/C++/Android，以及Serving服务化部署)
+- [FastDeploy部署PaddleSeg模型](https://github.com/PaddlePaddle/FastDeploy/tree/develop/examples/vision/segmentation/paddleseg)
+- 
 # PaddleSeg模型部署
 
 当前支持PaddleSeg release/2.1分支训练的模型进行导出及部署。本文档以[Deeplabv3P](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.1/configs/deeplabv3p)模型为例，讲述从release/2.1版本导出模型并进行cpp部署整个流程。 PaddleSeg相关详细文档查看[官网文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.1/README_CN.md)
