@@ -117,9 +117,9 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 ## 交流与反馈
 
 - 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
-- PaddleX用户交流群：957286141 (手机QQ扫描如下二维码快速加入)  
+- PaddleX用户交流群：169608643 (手机QQ扫描如下二维码快速加入)  
   <p align="center">
-    <img src="./docs/gui/images/QR2.png" width="180" height ="180" alt="QR" align="middle" />
+    <img src="./docs/gui/images/QR3.png" width="180" height ="180" alt="QR" align="middle" />
   </p>
 
 ## :hugs: 贡献代码:hugs:
