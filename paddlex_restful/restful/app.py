@@ -70,7 +70,7 @@ def workspace():
         Return:
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -123,7 +123,7 @@ def dataset():
         Return:
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -160,7 +160,7 @@ def dataset_details():
             details(dict)：数据集详细信息,
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -179,7 +179,7 @@ def dataset_split():
     Return:
         status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'PUT':
         from .dataset.dataset import split_dataset
         ret = split_dataset(data, SD.workspace)
@@ -192,7 +192,7 @@ def dataset_img_base64():
     Args:
         GET: 获取图片base64数据，参数：'path' 图片绝对路径
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'GET':
         from .dataset.dataset import img_base64
         ret = img_base64(data)
@@ -205,7 +205,7 @@ def get_image_file():
     Args:
         GET: 获取文件数据，参数：'path' 文件绝对路径
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'GET':
         ret = data['path']
         assert os.path.abspath(ret).startswith(
@@ -220,7 +220,7 @@ def get_npyfile():
     Args:
         GET: 获取文件数据，参数：'path' npy文件绝对路径
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'GET':
         npy = np.load(data['path'], allow_pickle=True).tolist()
         npy['gt_bbox'] = npy['gt_bbox'].tolist()
@@ -241,7 +241,7 @@ def get_file():
 		#数据为log文件
 		ret:json数据
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -287,7 +287,7 @@ def project():
         Return:
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -343,7 +343,7 @@ def task():
         Return:
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -385,7 +385,7 @@ def task_params():
         Return:
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -423,7 +423,7 @@ def task_metrics():
             elif type == 'prune':
                 prune_log(dict):裁剪日志
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -467,7 +467,7 @@ def task_train():
         Return:
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'POST':
         from .project.task import start_train_task
         ret = start_train_task(data, SD.workspace, SD.monitored_processes)
@@ -485,7 +485,7 @@ def task_train():
 
 @app.route('/project/task/train/file', methods=['GET'])
 def log_file():
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'GET':
         path = data['path']
         if not os.path.exists(path):
@@ -521,7 +521,7 @@ def task_prune():
         Return
             status
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -561,7 +561,7 @@ def task_evaluate():
         Return:
             status
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -581,7 +581,7 @@ def task_evaluate():
 
 @app.route('/project/task/evaluate/file', methods=['GET'])
 def task_evaluate_file():
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'GET':
         if 'path' in data:
             ret = data['path']
@@ -628,7 +628,7 @@ def task_predict():
             path(str):服务器上保存预测结果图片的路径
             status
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -688,7 +688,7 @@ def task_export():
             message(str):停止模型导出提示信息
             status
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -731,7 +731,7 @@ def task_vdl():
             url(str):vdl地址
             status
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -754,7 +754,7 @@ def system():
             if type=='gpu_memory_size'
                 gpu_mem_infos(list):GPU内存信息
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -804,7 +804,7 @@ def demo():
         Return:
             status
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -875,7 +875,7 @@ def model():
         Return:
             status
     '''
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data is None:
         data = request.args
     if request.method == 'GET':
@@ -916,7 +916,7 @@ def model():
 
 @app.route('/model/file', methods=['GET'])
 def model_file():
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if request.method == 'GET':
         ret = data['path']
         assert os.path.abspath(ret).startswith(
