@@ -8,22 +8,25 @@
     <a href="https://github.com/PaddlePaddle/PaddleX/releases"><img src="https://img.shields.io/github/release/PaddlePaddle/PaddleX.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/python-3.6+-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-yellow.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/QQ_Group-957286141-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20"></a>
 </p>
 
 
 
 ## 近期动态
+* :fire: 发布飞桨AI套件[PaddleX](https://www.paddlepaddle.org.cn/paddle/paddleX) —— 精选产业实用模型的一站式开发平台。飞桨AI套件沿用旧版本PaddleX（本Repo）的名称和低代码理念，而且做了全面升级。
+* :fire: 飞桨AI套件PaddleX，具有如下优势：
+  - 【丰富的算法库】提供36个精选模型，覆盖了10大AI任务场景，并附带模型推理benchmark数据。开发者可以根据业务需求轻松选择合适的模型，并进行开发和部署。
+  - 【简便的开发方式】支持无代码和低代码开发，只需四个简单步骤，即可完成全流程AI开发，包括数据处理、模型训练、验证和部署。
+  - 【高效的模型部署】平台提供强大的部署能力，支持快速实现产业级部署，实现跨平台、跨硬件的部署。
+  - 【多样的硬件支持】不仅能够在AI Studio云端使用，还支持在Windows本地环境使用，并正在积极扩展支持Linux版本、昆仑芯版本、昇腾版本和寒武纪版本。
+  - 【共赢的合作机会】除了提供便捷的AI应用开发工具，还为企业提供商业收益机会，共同探索更多商业空间，实现共同成长和共赢。
+* :fire: 飞桨AI套件PaddleX的安装和使用，请参考[官网](https://www.paddlepaddle.org.cn/paddle/paddleX)。注意本Repo的代码和文档，只适用于旧版本PaddleX。
+* :fire: 微信扫描下面二维码添加运营同学，并回复【paddlex】，会邀请您加入官方交流群，获得更高效的问题答疑。
+<div align="center">
+<img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dygraph/doc/joinus_paddlex.jpg"  width = "150" height = "150",caption='' />
+<p>飞桨AI套件【PaddleX】技术交流群二维码</p>
+</div>
 
-2021.12.10 PaddleX发布2.1.0版本
-* 新增超轻量分类模型PPLCNet，在Intel CPU上，单张图像预测速度约5ms，ImageNet-1K数据集上Top1识别准确率达到80.82%，超越ResNet152的模型效果 [欢迎体验](./tutorials/train/image_classification/pplcnet.py)
-* 新增轻量级检测特色模型PP-PicoDet，第一个在1M参数量之内mAP(0.5:0.95)超越30+(输入416像素时)，网络预测在ARM CPU下可达150FPS [欢迎体验](./tutorials/train/object_detection/picodet.py)
-* 升级PaddleX Restful API，支持飞桨动态图开发模式 [欢迎体验](docs/Resful_API/docs/readme.md)
-* 新增检测模型负样本训练策略 [欢迎体验](docs/data/format/detection.md#3)
-* 新增python轻量级服务化部署 [欢迎体验](./docs/hub_serving_deploy.md)
-
-
-详情内容请参考[版本更新文档](./docs/CHANGELOG.md)。
 
 ## 产品介绍
 :hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
