@@ -13,14 +13,14 @@
 
 
 ## 近期动态
-* :fire: 发布飞桨AI套件[PaddleX](https://www.paddlepaddle.org.cn/paddle/paddleX) —— 精选产业实用模型的一站式开发平台。飞桨AI套件沿用旧版本PaddleX（本Repo）的名称和低代码理念，而且做了全面升级。
+* :fire: 发布飞桨AI套件[PaddleX](https://aistudio.baidu.com/intro/paddlex) —— 精选产业实用模型的一站式开发平台。飞桨AI套件沿用旧版本PaddleX（本Repo）的名称和低代码理念，而且做了全面升级。
 * :fire: 飞桨AI套件PaddleX，具有如下优势：
   - 【丰富的算法库】提供36个精选模型，覆盖了10大AI任务场景，并附带模型推理benchmark数据。开发者可以根据业务需求轻松选择合适的模型，并进行开发和部署。
   - 【简便的开发方式】支持无代码和低代码开发，只需四个简单步骤，即可完成全流程AI开发，包括数据处理、模型训练、验证和部署。
   - 【高效的模型部署】平台提供强大的部署能力，支持快速实现产业级部署，实现跨平台、跨硬件的部署。
   - 【多样的硬件支持】不仅能够在AI Studio云端使用，还支持在Windows本地环境使用，并正在积极扩展支持Linux版本、昆仑芯版本、昇腾版本和寒武纪版本。
   - 【共赢的合作机会】除了提供便捷的AI应用开发工具，还为企业提供商业收益机会，共同探索更多商业空间，实现共同成长和共赢。
-* :fire: 飞桨AI套件PaddleX的安装和使用，请参考[官网](https://www.paddlepaddle.org.cn/paddle/paddleX)。注意本Repo的代码和文档，只适用于旧版本PaddleX。
+* :fire: 飞桨AI套件PaddleX的安装和使用，请参考[官网](https://aistudio.baidu.com/intro/paddlex)。注意本Repo的代码和文档，只适用于旧版本PaddleX。
 * :fire: 微信扫描下面二维码添加运营同学，并回复【paddlex】，会邀请您加入官方交流群，获得更高效的问题答疑。
 <div align="center">
 <img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dygraph/doc/joinus_paddlex.jpg"  width = "150" height = "150",caption='' />
