@@ -21,12 +21,7 @@
   - 【多样的硬件支持】不仅能够在AI Studio云端使用，还支持在Windows本地环境使用，并正在积极扩展支持Linux版本、昆仑芯版本、昇腾版本和寒武纪版本。
   - 【共赢的合作机会】除了提供便捷的AI应用开发工具，还为企业提供商业收益机会，共同探索更多商业空间，实现共同成长和共赢。
 * :fire: 飞桨AI套件PaddleX的安装和使用，请参考[官网](https://aistudio.baidu.com/intro/paddlex)。注意本Repo的代码和文档，只适用于旧版本PaddleX。
-* :fire: 微信扫描下面二维码添加运营同学，并回复【paddlex】，会邀请您加入官方交流群，获得更高效的问题答疑。
-<div align="center">
-<img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dygraph/doc/joinus_paddlex.jpg"  width = "150" height = "150",caption='' />
-<p>飞桨AI套件【PaddleX】技术交流群二维码</p>
-</div>
-
+* :fire: 欢迎大家进入AI Studio【[PaddleX社区频道](https://aistudio.baidu.com/community/channel/610)】进一步交流～
 
 ## 产品介绍
 :hugs: PaddleX 集成飞桨智能视觉领域**图像分类**、**目标检测**、**语义分割**、**实例分割**任务能力，将深度学习开发全流程从**数据准备**、**模型训练与优化**到**多端部署**端到端打通，并提供**统一任务API接口**及**图形化开发界面Demo**。开发者无需分别安装不同套件，以**低代码**的形式即可快速完成飞桨全流程开发。
@@ -116,14 +111,6 @@ PaddleX提供了图像化开发界面、本地API、Restful-API三种开发模�
 - [GUI相关问题](./docs/FAQ/FAQ.md/#GUI相关问题)
 - [API训练相关问题](./docs/FAQ/FAQ.md/#API训练相关问题)
 - [推理部署问题](./docs/FAQ/FAQ.md/#推理部署问题)
-
-## 交流与反馈
-
-- 项目官网：https://www.paddlepaddle.org.cn/paddle/paddlex
-- PaddleX用户交流群：169608643 (手机QQ扫描如下二维码快速加入)  
-  <p align="center">
-    <img src="./docs/gui/images/QR3.png" width="180" height ="180" alt="QR" align="middle" />
-  </p>
 
 ## :hugs: 贡献代码:hugs:
 
