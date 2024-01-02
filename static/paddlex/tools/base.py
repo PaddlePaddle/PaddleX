@@ -40,8 +40,7 @@ def is_pic(img_name):
 
 
 def get_encoding(path):
-    f = open(path, 'rb')
-    data = f.read()
-    file_encoding = chardet.detect(data).get('encoding')
-    f.close()
-    return file_encoding
+    with open(path, 'rb') as f:
+        data = f.read()
+        file_encoding = chardet.detect(data).get('encoding')
+        return file_encoding
