@@ -108,7 +108,7 @@ predict(self, img_file, transforms=None)
 >
 > **返回值**
 >
-> > - **list**: 预测结果列表。如果输入为单张图像，列表中每个元素均为一个dict，键值包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左上角x, y坐标和框的宽和高。如果输入为多张图像，如果输入为多张图像，返回由每张图像预测结果组成的列表。
+> > - **list**: 预测结果列表。如果输入为单张图像，列表中每个元素均为一个dict，键值包括'bbox', 'category', 'category_id', 'score'，分别表示每个预测目标的框坐标信息、类别、类别id、置信度，其中框坐标信息为[xmin, ymin, w, h]，即左下角x, y坐标和框的宽和高。如果输入为多张图像，如果输入为多张图像，返回由每张图像预测结果组成的列表。
 
 ### <h3 id="14">analyze_sensitivity</h3>
 
