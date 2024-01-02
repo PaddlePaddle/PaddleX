@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<annotation>
+		<folder>JPEGImages</folder>
+		<filename>dogs.jpg</filename>
+		<size>
+			<width>500</width>
+			<height>333</height>
+			<depth>3</depth>
+		</size>
+		<object>
+			<name>足球</name>
+			<difficult>0</difficult>
+			<bndbox>
+				<xmin>77</xmin>
+				<ymin>74.5</ymin>
+				<xmax>221</xmax>
+				<ymax>291.5</ymax>
+			</bndbox>
+		</object>
+	</annotation>
