@@ -31,6 +31,7 @@ import logging.handlers
 import requests
 import json
 from json import JSONEncoder
+import pynvml
 
 
 class CustomEncoder(JSONEncoder):
@@ -465,20 +466,16 @@ def _get_gpu_info(queue):
     mem_free = list()
     mem_used = list()
     mem_total = list()
-    import pycuda.driver as drv
-    from pycuda.tools import clear_context_caches
-    drv.init()
-    driver_version = drv.get_driver_version()
-    gpu_num = drv.Device.count()
+    pynvml.nvmlInit()
+    driver_version = pynvml.nvmlSystemGetCudaDriverVersion()
+    gpu_num = pynvml.nvmlDeviceGetCount()
     for gpu_id in range(gpu_num):
-        dev = drv.Device(gpu_id)
+        handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_id)
         try:
-            context = dev.make_context()
-            free, total = drv.mem_get_info()
-            context.pop()
-            free = free // 1024 // 1024
-            total = total // 1024 // 1024
-            used = total - free
+            meminfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
+            free = meminfo.free // 1024 // 1024
+            total = meminfo.total // 1024 // 1024
+            used = meminfo.used // 1024 // 1024
         except:
             free = 0
             total = 0

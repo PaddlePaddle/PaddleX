@@ -12,3 +12,4 @@ opencv-python
 psutil
 flask_cors
 xlwt
+pynvml
