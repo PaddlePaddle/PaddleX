@@ -39,7 +39,7 @@ setuptools.setup(
     install_requires=[
         "pycocotools", 'pyyaml', 'colorama', 'tqdm', 'paddleslim==2.2.1',
         'visualdl>=2.2.2', 'shapely>=1.7.0', 'opencv-python', 'scipy', 'lap',
-        'motmetrics', 'scikit-learn==0.23.2', 'chardet', 'flask_cors',
+        'motmetrics', 'scikit-learn==1.0.1', 'chardet', 'flask_cors',
         'openpyxl'
     ],
     classifiers=[
