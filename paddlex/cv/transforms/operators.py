@@ -524,8 +524,8 @@ class RandomVerticalFlip(Transform):
     def apply_bbox(self, bbox, height):
         oldy1 = bbox[:, 1].copy()
         oldy2 = bbox[:, 3].copy()
-        bbox[:, 0] = height - oldy2
-        bbox[:, 2] = height - oldy1
+        bbox[:, 1] = height - oldy2
+        bbox[:, 3] = height - oldy1
         return bbox
 
     def apply_segm(self, segms, height, width):
