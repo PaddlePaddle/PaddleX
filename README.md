@@ -13,6 +13,8 @@
 
 
 ## 近期动态
+:fire: PaddleX3.0升级中，6月发布，敬请期待，云端使用请前往飞桨 AI Studio 星河社区：https://aistudio.baidu.com/pipeline/mine
+
 :fire: 发布飞桨低代码开发工具[PaddleX](https://aistudio.baidu.com/intro/paddlex) —— 面向国内外主流AI硬件的飞桨精选模型一站式开发工具。飞桨低代码开发工具沿用旧版本PaddleX（本Repo）的名称和低代码理念，而且做了全面升级。
 
 :fire: 飞桨低代码开发工具PaddleX，具有如下优势：
