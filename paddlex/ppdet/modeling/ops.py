@@ -703,10 +703,14 @@ def multiclass_nms(bboxes,
     helper = LayerHelper('multiclass_nms3', **locals())
 
     if in_dynamic_mode():
-        attrs = ('background_label', background_label, 'score_threshold',
-                 score_threshold, 'nms_top_k', nms_top_k, 'nms_threshold',
-                 nms_threshold, 'keep_top_k', keep_top_k, 'nms_eta', nms_eta,
-                 'normalized', normalized)
+        if paddle.__version__ < '2.4.0':
+            attrs = ('background_label', background_label, 'score_threshold',
+                     score_threshold, 'nms_top_k', nms_top_k, 'nms_threshold',
+                     nms_threshold, 'keep_top_k', keep_top_k, 'nms_eta',
+                     nms_eta, 'normalized', normalized)
+        else:
+            attrs = (score_threshold, nms_top_k, keep_top_k, nms_threshold,
+                     normalized, nms_eta, background_label)
         output, index, nms_rois_num = _C_ops.multiclass_nms3(bboxes, scores,
                                                              rois_num, *attrs)
         if not return_index:
