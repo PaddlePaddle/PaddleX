@@ -1,0 +1,37 @@
+batch_size: 16
+seq_len: 96
+predict_len: 336
+sampling_stride: 1
+do_eval: True
+epoch: 5
+
+
+dataset: 
+  name: TSDataset
+  dataset_root: /data/
+  train_path: /data/train.csv
+  val_path: /data/val.csv
+  time_feat: False
+  scale: True
+
+info_params:
+  time_col: date
+
+model: 
+  name: NLinearModel
+  model_cfg:
+    c_in: 321
+    individual: True
+    optimizer_params:
+      learning_rate: 0.005
+      gamma: 0.5
+    patience: 3
+    #pretrain: NLinear_init.pdparams
+
+test:
+  stride: 1
+
+  
+
+
+

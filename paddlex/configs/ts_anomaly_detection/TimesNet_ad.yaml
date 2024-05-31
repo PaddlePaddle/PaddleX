@@ -1,0 +1,30 @@
+Global:
+  model: TimesNet_ad
+  mode: check_dataset # check_dataset/train/evaluate
+  dataset_dir: "/paddle/dataset/paddlex/ts_ad/ts_anomaly_examples/"
+  device: gpu:0
+  output: "output"
+
+CheckDataset:
+  dst_dataset_name: dataset
+  convert: 
+    enable: False
+    src_dataset_type: nul
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  time_col: timestamp
+  feature_cols: feature_0,feature_1
+  label_col: label
+  freq: 1
+  input_len: 96
+  epochs_iters: 20
+  batch_size: 16
+  learning_rate: 0.0005
+
+
+Evaluate:
+  weight_path: "output/best_accuracy.pdparams.tar"

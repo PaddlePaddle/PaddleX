@@ -1,0 +1,188 @@
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
+#
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
+
+import os
+import os.path as osp
+
+from ...base.register import register_model_info, register_suite_info
+from .model import DetModel
+from .config import DetConfig
+from .runner import DetRunner
+
+REPO_ROOT_PATH = os.environ.get('PADDLE_PDX_PADDLEDETECTION_PATH')
+PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', 'configs'))
+
+register_suite_info({
+    'suite_name': 'Det',
+    'model': DetModel,
+    'runner': DetRunner,
+    'config': DetConfig,
+    'runner_root_path': REPO_ROOT_PATH
+})
+
+################ Models Using Universal Config ################
+register_model_info({
+    'model_name': 'PicoDet-S',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-S.yaml'),
+    'auto_compression_config_path':
+    osp.join(PDX_CONFIG_DIR, 'slim', 'picodet_s_lcnet_qat.yml'),
+    'supported_apis':
+    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    'supported_dataset_types': ['COCODetDataset'],
+})
+
+register_model_info({
+    'model_name': 'PicoDet-L',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-L.yaml'),
+    'auto_compression_config_path':
+    osp.join(PDX_CONFIG_DIR, 'slim', 'picodet_l_lcnet_qat.yml'),
+    'supported_apis':
+    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    'supported_dataset_types': ['COCODetDataset'],
+})
+
+register_model_info({
+    'model_name': 'PP-YOLOE_plus-S',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus-S.yaml'),
+    'auto_compression_config_path':
+    osp.join(PDX_CONFIG_DIR, 'slim', 'ppyoloe_plus_crn_s_qat.yml'),
+    'supported_apis':
+    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx'],
+        'dy2st': False,
+        'amp': ['O1', 'O2']
+    },
+})
+
+register_model_info({
+    'model_name': 'PP-YOLOE_plus-M',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus-M.yaml'),
+    'auto_compression_config_path':
+    osp.join(PDX_CONFIG_DIR, 'slim', 'ppyoloe_plus_crn_l_qat.yml'),
+    'supported_apis':
+    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx'],
+        'dy2st': False,
+        'amp': ['O1', 'O2']
+    },
+})
+
+register_model_info({
+    'model_name': 'PP-YOLOE_plus-L',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus-L.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['O1', 'O2']
+    },
+})
+
+register_model_info({
+    'model_name': 'PP-YOLOE_plus-X',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus-X.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['O1', 'O2']
+    },
+})
+
+register_model_info({
+    'model_name': 'RT-DETR-L',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-L.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ["OFF"]
+    },
+})
+
+register_model_info({
+    'model_name': 'RT-DETR-H',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-H.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ["OFF"]
+    },
+})
+
+register_model_info({
+    'model_name': 'RT-DETR-X',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-X.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ["OFF"]
+    },
+})
+
+register_model_info({
+    'model_name': 'RT-DETR-R18',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-R18.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ["OFF"]
+    },
+})
+
+register_model_info({
+    'model_name': 'RT-DETR-R50',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-R50.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ["OFF"]
+    },
+})
+
+register_model_info({
+    'model_name': 'PicoDet_layout_1x',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet_layout_1x.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})

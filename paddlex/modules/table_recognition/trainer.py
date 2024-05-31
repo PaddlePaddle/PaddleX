@@ -1,0 +1,113 @@
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
+#
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
+
+import os
+from pathlib import Path
+import paddle
+
+from ..base.trainer import BaseTrainer
+from ..base.train_deamon import BaseTrainDeamon
+from ...utils.config import AttrDict
+from .support_models import SUPPORT_MODELS
+
+
+class TableRecTrainer(BaseTrainer):
+    """ Table Recognition Model Trainer """
+    support_models = SUPPORT_MODELS
+
+    def build_deamon(self, config: AttrDict) -> "TableRecTrainDeamon":
+        """build deamon thread for saving training outputs timely
+
+        Args:
+            config (AttrDict): PaddleX pipeline config, which is loaded from pipeline yaml file.
+
+        Returns:
+            TableRecTrainDeamon: the training deamon thread object for saving training outputs timely.
+        """
+        return TableRecTrainDeamon(config)
+
+    def update_config(self):
+        """update training config
+        """
+        if self.train_config.log_interval:
+            self.pdx_config.update_log_interval(self.train_config.log_interval)
+        if self.train_config.eval_interval:
+            self.pdx_config._update_eval_interval_by_epoch(
+                self.train_config.eval_interval)
+        if self.train_config.save_interval:
+            self.pdx_config.update_save_interval(
+                self.train_config.save_interval)
+
+        self.pdx_config.update_dataset(self.global_config.dataset_dir,
+                                       "PubTabTableRecDataset")
+        if self.train_config.pretrain_weight_path:
+            self.pdx_config.update_pretrained_weights(
+                self.train_config.pretrain_weight_path)
+        if self.train_config.batch_size is not None:
+            self.pdx_config.update_batch_size(self.train_config.batch_size)
+        if self.train_config.learning_rate is not None:
+            self.pdx_config.update_learning_rate(
+                self.train_config.learning_rate)
+        if self.train_config.epochs_iters is not None:
+            self.pdx_config._update_epochs(self.train_config.epochs_iters)
+        if self.train_config.resume_path is not None and self.train_config.resume_path != "":
+            self.pdx_config._update_checkpoints(self.train_config.resume_path)
+        if self.global_config.output is not None:
+            self.pdx_config._update_output_dir(self.global_config.output)
+
+    def get_train_kwargs(self) -> dict:
+        """get key-value arguments of model training function
+
+        Returns:
+            dict: the arguments of training function.
+        """
+        return {"device": self.get_device()}
+
+
+class TableRecTrainDeamon(BaseTrainDeamon):
+    """ TableRecTrainDeamon """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def get_the_pdparams_suffix(self):
+        """ get the suffix of pdparams file """
+        return "pdparams"
+
+    def get_the_pdema_suffix(self):
+        """ get the suffix of pdema file """
+        return "pdema"
+
+    def get_the_pdopt_suffix(self):
+        """ get the suffix of pdopt file """
+        return "pdopt"
+
+    def get_the_pdstates_suffix(self):
+        """ get the suffix of pdstates file """
+        return "states"
+
+    def get_ith_ckp_prefix(self, epoch_id):
+        """ get the prefix of the epoch_id checkpoint file """
+        return f"iter_epoch_{epoch_id}"
+
+    def get_best_ckp_prefix(self):
+        """ get the prefix of the best checkpoint file """
+        return "best_accuracy"
+
+    def get_score(self, pdstates_path):
+        """ get the score by pdstates file """
+        if not Path(pdstates_path).exists():
+            return 0
+        return paddle.load(pdstates_path)['best_model_dict']['acc']
+
+    def get_epoch_id_by_pdparams_prefix(self, pdparams_prefix):
+        """ get the epoch_id by pdparams file """
+        return int(pdparams_prefix.split(".")[0].split("_")[-1])

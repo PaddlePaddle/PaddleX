@@ -1,221 +1,182 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
 import os
-import os.path as osp
-import shutil
-import requests
-import tqdm
+import sys
 import time
-import hashlib
+import shutil
 import tarfile
 import zipfile
-import filelock
-import paddle
-from . import logging
+import tempfile
 
-DOWNLOAD_RETRY_LIMIT = 3
+import requests
 
-
-def md5check(fullname, md5sum=None):
-    if md5sum is None:
-        return True
-
-    logging.info("File {} md5 checking...".format(fullname))
-    md5 = hashlib.md5()
-    with open(fullname, 'rb') as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            md5.update(chunk)
-    calc_md5sum = md5.hexdigest()
-
-    if calc_md5sum != md5sum:
-        logging.info("File {} md5 check failed, {}(calc) != "
-                     "{}(base)".format(fullname, calc_md5sum, md5sum))
-        return False
-    return True
+__all__ = ['download', 'extract', 'download_and_extract']
 
 
-def move_and_merge_tree(src, dst):
-    """
-    Move src directory to dst, if dst is already exists,
-    merge src to dst
-    """
-    if not osp.exists(dst):
-        shutil.move(src, dst)
-    else:
-        for fp in os.listdir(src):
-            src_fp = osp.join(src, fp)
-            dst_fp = osp.join(dst, fp)
-            if osp.isdir(src_fp):
-                if osp.isdir(dst_fp):
-                    move_and_merge_tree(src_fp, dst_fp)
-                else:
-                    shutil.move(src_fp, dst_fp)
-            elif osp.isfile(src_fp) and \
-                    not osp.isfile(dst_fp):
-                shutil.move(src_fp, dst_fp)
+class _ProgressPrinter(object):
+    """ ProgressPrinter """
+
+    def __init__(self, flush_interval=0.1):
+        super().__init__()
+        self._last_time = 0
+        self._flush_intvl = flush_interval
+
+    def print(self, str_, end=False):
+        """ print """
+        if end:
+            str_ += '\n'
+            self._last_time = 0
+        if time.time() - self._last_time >= self._flush_intvl:
+            sys.stdout.write(f"\r{str_}")
+            self._last_time = time.time()
+            sys.stdout.flush()
 
 
-def download(url, path, md5sum=None):
-    """
-    Download from url, save to path.
+def _download(url, save_path, print_progress):
+    if print_progress:
+        print(f"Connecting to {url} ...")
 
-    url (str): download url
-    path (str): download to given path
-    """
-    if not osp.exists(path):
-        os.makedirs(path)
+    with requests.get(url, stream=True, timeout=15) as r:
+        r.raise_for_status()
 
-    fname = osp.split(url)[-1]
-    fullname = osp.join(path, fname)
-    retry_cnt = 0
-    while not (osp.exists(fullname) and md5check(fullname, md5sum)):
-        if retry_cnt < DOWNLOAD_RETRY_LIMIT:
-            retry_cnt += 1
+        total_length = r.headers.get('content-length')
+
+        if total_length is None:
+            with open(save_path, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
         else:
-            logging.debug("{} download failed.".format(fname))
-            raise RuntimeError("Download from {} failed. "
-                               "Retry limit reached".format(url))
-
-        logging.info("Downloading {} from {}".format(fname, url))
-
-        req = requests.get(url, stream=True)
-        if req.status_code != 200:
-            raise RuntimeError("Downloading from {} failed with code "
-                               "{}!".format(url, req.status_code))
-
-        # For protecting download interupted, download to
-        # tmp_fullname firstly, move tmp_fullname to fullname
-        # after download finished
-        tmp_fullname = fullname + "_tmp"
-        total_size = req.headers.get('content-length')
-        with open(tmp_fullname, 'wb') as f:
-            if total_size:
-                download_size = 0
-                current_time = time.time()
-                for chunk in tqdm.tqdm(
-                        req.iter_content(chunk_size=1024),
-                        total=(int(total_size) + 1023) // 1024,
-                        unit='KB'):
-                    f.write(chunk)
-                    download_size += 1024
-                    if download_size % 524288 == 0:
-                        total_size_m = round(
-                            int(total_size) / 1024.0 / 1024.0, 2)
-                        download_size_m = round(download_size / 1024.0 /
-                                                1024.0, 2)
-                        speed = int(524288 /
-                                    (time.time() - current_time + 0.01) /
-                                    1024.0)
-                        current_time = time.time()
-                        logging.debug(
-                            "Downloading: TotalSize={}M, DownloadSize={}M, Speed={}KB/s"
-                            .format(total_size_m, download_size_m, speed))
-            else:
-                for chunk in req.iter_content(chunk_size=1024):
-                    if chunk:
-                        f.write(chunk)
-        shutil.move(tmp_fullname, fullname)
-        logging.debug("{} download completed.".format(fname))
-
-    return fullname
+            with open(save_path, 'wb') as f:
+                dl = 0
+                total_length = int(total_length)
+                if print_progress:
+                    printer = _ProgressPrinter()
+                    print(f"Downloading {os.path.basename(save_path)} ...")
+                for data in r.iter_content(chunk_size=4096):
+                    dl += len(data)
+                    f.write(data)
+                    if print_progress:
+                        done = int(50 * dl / total_length)
+                        printer.print(
+                            f"[{'=' * done:<50s}] {float(100 * dl) / total_length:.2f}%"
+                        )
+            if print_progress:
+                printer.print(f"[{'=' * 50:<50s}] {100:.2f}%", end=True)
 
 
-def decompress(fname):
-    """
-    Decompress for zip and tar file
-    """
-    logging.info("Decompressing {}...".format(fname))
+def _extract_zip_file(file_path, extd_dir):
+    """ extract zip file """
+    with zipfile.ZipFile(file_path, 'r') as f:
+        file_list = f.namelist()
+        total_num = len(file_list)
+        for index, file in enumerate(file_list):
+            f.extract(file, extd_dir)
+            yield total_num, index
 
-    # For protecting decompressing interupted,
-    # decompress to fpath_tmp directory firstly, if decompress
-    # successed, move decompress files to fpath and delete
-    # fpath_tmp and remove download compress file.
-    fpath = osp.split(fname)[0]
-    fpath_tmp = osp.join(fpath, 'tmp')
-    if osp.isdir(fpath_tmp):
-        shutil.rmtree(fpath_tmp)
-        os.makedirs(fpath_tmp)
 
-    if fname.find('tar') >= 0 or fname.find('tgz') >= 0:
-        with tarfile.open(fname) as tf:
-            def is_within_directory(directory, target):
-                
-                abs_directory = os.path.abspath(directory)
-                abs_target = os.path.abspath(target)
-            
-                prefix = os.path.commonprefix([abs_directory, abs_target])
-                
-                return prefix == abs_directory
-            
-            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-            
-                for member in tar.getmembers():
-                    member_path = os.path.join(path, member.name)
-                    if not is_within_directory(path, member_path):
-                        raise Exception("Attempted Path Traversal in Tar File")
-            
-                tar.extractall(path, members, numeric_owner=numeric_owner) 
-                
-            
-            safe_extract(tf, path=fpath_tmp)
-    elif fname.find('zip') >= 0:
-        with zipfile.ZipFile(fname) as zf:
-            zf.extractall(path=fpath_tmp)
+def _extract_tar_file(file_path, extd_dir):
+    """ extract tar file """
+    with tarfile.open(file_path, 'r:*') as f:
+        file_list = f.getnames()
+        total_num = len(file_list)
+        for index, file in enumerate(file_list):
+            f.extract(file, extd_dir)
+            yield total_num, index
+
+
+def _extract(file_path, extd_dir, print_progress):
+    """ extract """
+    if print_progress:
+        printer = _ProgressPrinter()
+        print(f"Extracting {os.path.basename(file_path)}")
+
+    if zipfile.is_zipfile(file_path):
+        handler = _extract_zip_file
+    elif tarfile.is_tarfile(file_path):
+        handler = _extract_tar_file
     else:
-        raise TypeError("Unsupport compress file type {}".format(fname))
+        raise RuntimeError("Unsupported file format.")
 
-    for f in os.listdir(fpath_tmp):
-        src_dir = osp.join(fpath_tmp, f)
-        dst_dir = osp.join(fpath, f)
-        move_and_merge_tree(src_dir, dst_dir)
-
-    shutil.rmtree(fpath_tmp)
-    logging.debug("{} decompressed.".format(fname))
-    return dst_dir
-
-
-def url2dir(url, path):
-    download(url, path)
-    if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
-        fname = osp.split(url)[-1]
-        savepath = osp.join(path, fname)
-        return decompress(savepath)
+    for total_num, index in handler(file_path, extd_dir):
+        if print_progress:
+            done = int(50 * float(index) / total_num)
+            printer.print(
+                f"[{'=' * done:<50s}] {float(100 * index) / total_num:.2f}%")
+    if print_progress:
+        printer.print(f"[{'=' * 50:<50s}] {100:.2f}%", end=True)
 
 
-def download_and_decompress(url, path='.'):
-    nranks = paddle.distributed.get_world_size()
-    local_rank = paddle.distributed.get_rank()
-    fname = osp.split(url)[-1]
-    fullname = osp.join(path, fname)
-    # if url.endswith(('tgz', 'tar.gz', 'tar', 'zip')):
-    #     fullname = osp.join(path, fname.split('.')[0])
-    if nranks <= 1:
-        dst_dir = url2dir(url, path)
-        if dst_dir is not None:
-            fullname = dst_dir
-    else:
-        lock_path = fullname + '.lock'
-        if not os.path.exists(fullname):
-            with open(lock_path, 'w'):
-                os.utime(lock_path, None)
-            if local_rank == 0:
-                dst_dir = url2dir(url, path)
-                if dst_dir is not None:
-                    fullname = dst_dir
-                os.remove(lock_path)
+def _remove_if_exists(path):
+    """ remove """
+    if os.path.exists(path):
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        else:
+            os.remove(path)
+
+
+def download(url, save_path, print_progress=True, overwrite=False):
+    """ download """
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    if overwrite:
+        _remove_if_exists(save_path)
+    if not os.path.exists(save_path):
+        _download(url, save_path, print_progress=print_progress)
+
+
+def extract(file_path, extd_dir, print_progress=True):
+    """ extract """
+    return _extract(file_path, extd_dir, print_progress=print_progress)
+
+
+def download_and_extract(url,
+                         save_dir,
+                         dst_name,
+                         print_progress=True,
+                         overwrite=False,
+                         no_interm_dir=True):
+    """ download and extract """
+    # NOTE: `url` MUST come from a trusted source, since we do not provide a solution 
+    # to secure against CVE-2007-4559.
+    os.makedirs(save_dir, exist_ok=True)
+    dst_path = os.path.join(save_dir, dst_name)
+    if overwrite:
+        _remove_if_exists(dst_path)
+
+    if not os.path.exists(dst_path):
+        with tempfile.TemporaryDirectory() as td:
+            arc_file_path = os.path.join(td, url.split('/')[-1])
+            extd_dir = os.path.splitext(arc_file_path)[0]
+            _download(url, arc_file_path, print_progress=print_progress)
+            tmp_extd_dir = os.path.join(td, 'extract')
+            _extract(arc_file_path, tmp_extd_dir, print_progress=print_progress)
+            if no_interm_dir:
+                file_names = os.listdir(tmp_extd_dir)
+                if len(file_names) == 1:
+                    file_name = file_names[0]
+                else:
+                    file_name = dst_name
+                sp = os.path.join(tmp_extd_dir, file_name)
+                if not os.path.exists(sp):
+                    raise FileNotFoundError
+                dp = os.path.join(save_dir, file_name)
+                if os.path.isdir(sp):
+                    shutil.copytree(sp, dp)
+                else:
+                    shutil.copyfile(sp, dp)
+                extd_file = dp
             else:
-                while os.path.exists(lock_path):
-                    time.sleep(1)
-    return fullname
+                shutil.copytree(tmp_extd_dir, extd_dir)
+                extd_file = extd_dir
+
+            if not os.path.exists(dst_path) or not os.path.samefile(extd_file,
+                                                                    dst_path):
+                shutil.move(extd_file, dst_path)

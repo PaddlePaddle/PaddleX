@@ -1,0 +1,39 @@
+batch_size: 16 #
+seq_len: 96 #
+predict_len: 0 #
+label_len: 0 #
+do_eval: True #
+epoch: 30 # max_epochs
+training: True # 
+eval_metrics:  ['acc', ] 
+task: classification
+
+dataset: 
+  name: TSCLSDataset
+  dataset_root: ./data/
+  train_path: ./data/train.csv
+  val_path: ./data/val.csv
+  scale: True
+  time_feat: False
+
+info_params:
+  time_col: time
+  group_id: group_id
+  target_cols: ['dim_0', 'dim_1', 'dim_2']
+  static_cov_cols: label
+
+model: 
+  name: TimesNet_CLS
+  model_cfg:
+    e_layers: 3 #
+    num_kernels: 6 #
+    d_model: 32 #
+    d_ff: 32 #
+    top_k: 3 # 
+    window_sampling_limit: Null # 
+    patience: 10 #
+    optimizer_params:
+      learning_rate: 0.001
+      gamma: 0.9
+
+output: 'output/'

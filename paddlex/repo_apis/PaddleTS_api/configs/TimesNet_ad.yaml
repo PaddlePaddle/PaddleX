@@ -1,0 +1,32 @@
+batch_size: 128
+seq_len: 100
+do_eval: True
+epoch: 5
+training: True 
+task: anomaly
+
+dataset: 
+  name: TSADDataset
+  dataset_root: ./data/
+  train_path: ./data/train.csv
+  val_path: ./data/val.csv
+  scale: True
+  time_feat: False
+
+info_params:
+  freq: 1
+  label_col: "label"
+  time_col: "timestamp"
+  feature_cols: "feature_0,feature_1"
+
+model: 
+  name: TimesNet_AD
+  model_cfg:
+    c_in: 2
+    e_layers: 1
+    num_kernels: 6
+    d_model: 8
+    optimizer_params:
+      learning_rate: 0.001
+      gamma: 0.5
+

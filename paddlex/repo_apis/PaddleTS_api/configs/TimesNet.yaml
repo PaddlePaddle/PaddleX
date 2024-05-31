@@ -1,0 +1,37 @@
+batch_size: 32 #
+seq_len: 96 #
+predict_len: 96 #
+do_eval: True #
+sampling_stride: 1
+epoch: 10 # max_epochs
+
+
+dataset: 
+  name: TSDataset
+  dataset_root: /data/
+  train_path: /data/train.csv
+  val_path: /data/val.csv
+  time_feat: True
+  use_holiday: False
+  scale: True
+
+info_params:
+  freq: 1h
+  target_cols: "OT"
+  time_col: date
+  
+model: 
+  name: TimesNetModel
+  model_cfg:
+    c_in: 1 #
+    c_out: 1 #
+    e_layers: 2 #
+    num_kernels: 6 #
+    d_model: 32 #
+    d_ff: 32 #
+    top_k: 5 # 
+    renorm: Null # 
+    patience: 10 #
+    optimizer_params:
+      learning_rate: 0.0001
+      gamma: 0.5

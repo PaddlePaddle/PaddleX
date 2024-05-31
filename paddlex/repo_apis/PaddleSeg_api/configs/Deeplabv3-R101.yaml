@@ -1,0 +1,57 @@
+batch_size: 2
+iters: 80000
+
+train_dataset:
+  type: Cityscapes
+  dataset_root: data/cityscapes
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.5
+      max_scale_factor: 2.0
+      scale_step_size: 0.25
+    - type: RandomPaddingCrop
+      crop_size: [1024, 512]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Cityscapes
+  dataset_root: data/cityscapes
+  transforms:
+    - type: Normalize
+  mode: val
+
+
+optimizer:
+  type: SGD
+  momentum: 0.9
+  weight_decay: 4.0e-5
+
+lr_scheduler:
+  type: PolynomialDecay
+  learning_rate: 0.01
+  end_lr: 0
+  power: 0.9
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+  coef: [1]
+
+model:
+  type: DeepLabV3
+  backbone:
+    type: ResNet101_vd
+    output_stride: 8
+    multi_grid: [1, 2, 4]
+    pretrained: https://bj.bcebos.com/paddleseg/dygraph/resnet101_vd_ssld.tar.gz
+  backbone_indices: [3]
+  aspp_ratios: [1, 12, 24, 36]
+  aspp_out_channels: 256
+  align_corners: False
+  pretrained: null

@@ -1,5 +1,5 @@
 repos:
--   repo: https://github.com/PaddlePaddle/mirrors-yapf.git
+-   repo: https://github.com/cuicheng01/mirrors-yapf.git
     rev: 0d79c0c469bab64f7229c9aca2b1186ef47f0e37
     hooks:
     -   id: yapf
@@ -9,35 +9,20 @@ repos:
     hooks:
     -   id: check-merge-conflict
     -   id: check-symlinks
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
     -   id: detect-private-key
-    -   id: check-symlinks
-    -   id: check-added-large-files
--   repo: local
-
+        files: (?!.*paddle)^.*$
+    -   id: end-of-file-fixer
+        files: \.md$
+    -   id: trailing-whitespace
+        files: \.md$
+-   repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.0.1
     hooks:
-    -   id: copyright_checker
-        name: copyright_checker
-        entry: python ./.copyright.hook
-        language: system
-        files: \.(c|cc|cxx|cpp|cu|h|hpp|hxx|proto|py)$
-        exclude: (?!.*third_party)^.*$
-
--   repo: local
-    hooks:
-    -   id: clang-format-with-version-check
-        name: clang-format
-        description: Format files with ClangFormat.
-        entry: bash ./tools/codestyle/clang_format.hook -i
-        language: system
-        files: \.(c|cc|cxx|cpp|cu|h|hpp|hxx|proto)$
-
--   repo: local
-    hooks:
-    -   id: cpplint-cpp-source
-        name: cpplint
-        description: Check C++ code style using cpplint.py.
-        entry: bash ./tools/codestyle/cpplint_pre_commit.hook
-        language: system
-        files: \.(c|cc|cxx|cpp|cu|h|hpp|hxx)$
+    -   id: forbid-crlf
+        files: \.md$
+    -   id: remove-crlf
+        files: \.md$
+    -   id: forbid-tabs
+        files: \.md$
+    -   id: remove-tabs
+        files: \.md$
