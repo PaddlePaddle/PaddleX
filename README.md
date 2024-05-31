@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/paddlex.png" width="360" height ="55" alt="PaddleX" align="middle" />
+  <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/63c6d059-234f-4a27-955e-ac89d81409ee" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
  <p align= "center"> PaddleX -- 飞桨低代码开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
 
