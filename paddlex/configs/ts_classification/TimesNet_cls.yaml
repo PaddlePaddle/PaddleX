@@ -1,0 +1,29 @@
+Global:
+  model: TimesNet_cls
+  mode: check_dataset # check_dataset/train/evaluate
+  dataset_dir: "/paddle/dataset/paddlex/ts_cls/ts_classify_examples"
+  device: gpu:0
+  output: "output"
+
+CheckDataset:
+  dst_dataset_name: dataset
+  convert: 
+    enable: False
+    src_dataset_type: nul
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  time_col: time
+  target_cols: dim_0,dim_1,dim_2
+  group_id: group_id
+  static_cov_cols: label
+  freq: 1
+  epochs_iters: 40
+  batch_size: 16
+  learning_rate: 0.0001
+
+Evaluate:
+  weight_path: "output/best_accuracy.pdparams.tar"

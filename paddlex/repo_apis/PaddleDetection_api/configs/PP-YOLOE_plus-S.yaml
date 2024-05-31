@@ -1,0 +1,154 @@
+# Runtime
+epoch: 10
+log_iter: 10
+find_unused_parameters: false
+use_gpu: true
+use_xpu: false
+use_mlu: false
+use_npu: false
+use_ema: True
+save_dir: output
+snapshot_epoch: 1
+print_flops: false
+print_params: false
+
+# Dataset
+metric: COCO
+num_classes: 4
+
+worker_num: 4
+eval_height: &eval_height 640
+eval_width: &eval_width 640
+eval_size: &eval_size [*eval_height, *eval_width]
+
+TrainDataset:
+  name: COCODetDataset
+  image_dir: images
+  anno_path: annotations/instance_train.json
+  dataset_dir: datasets/COCO
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+  name: COCODetDataset
+  image_dir: images
+  anno_path: annotations/instance_val.json
+  dataset_dir: datasets/COCO
+  allow_empty: true
+
+TestDataset:
+  name: ImageFolder
+  anno_path: annotations/instance_val.json
+  dataset_dir: datasets/COCO
+
+TrainReader:
+  sample_transforms:
+    - Decode: {}
+    - RandomDistort: {}
+    - RandomExpand: {fill_value: [123.675, 116.28, 103.53]}
+    - RandomCrop: {}
+    - RandomFlip: {}
+  batch_transforms:
+    - BatchRandomResize: {target_size: [320, 352, 384, 416, 448, 480, 512, 544, 576, 608, 640, 672, 704, 736, 768], random_size: True, random_interp: True, keep_ratio: False}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    - Permute: {}
+    - PadGT: {}
+  batch_size: 8
+  shuffle: true
+  drop_last: true
+  use_shared_memory: true
+  collate_batch: true
+
+EvalReader:
+  sample_transforms:
+    - Decode: {}
+    - Resize: {target_size: *eval_size, keep_ratio: False, interp: 2}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    - Permute: {}
+  batch_size: 2
+
+TestReader:
+  inputs_def:
+    image_shape: [3, *eval_height, *eval_width]
+  sample_transforms:
+    - Decode: {}
+    - Resize: {target_size: *eval_size, keep_ratio: False, interp: 2}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    - Permute: {}
+  batch_size: 1
+
+# Model
+architecture: YOLOv3
+pretrain_weights: https://bj.bcebos.com/v1/paddledet/models/pretrained/ppyoloe_crn_s_obj365_pretrained.pdparams
+
+norm_type: sync_bn
+ema_decay: 0.9998
+ema_black_list: ['proj_conv.weight']
+custom_black_list: ['reduce_mean']
+depth_mult: 0.33
+width_mult: 0.50
+
+YOLOv3:
+  backbone: CSPResNet
+  neck: CustomCSPPAN
+  yolo_head: PPYOLOEHead
+  post_process: ~
+
+CSPResNet:
+  layers: [3, 6, 6, 3]
+  channels: [64, 128, 256, 512, 1024]
+  return_idx: [1, 2, 3]
+  use_large_stem: true
+
+CustomCSPPAN:
+  out_channels: [768, 384, 192]
+  stage_num: 1
+  block_num: 3
+  act: 'swish'
+  spp: true
+
+PPYOLOEHead:
+  fpn_strides: [32, 16, 8]
+  grid_cell_scale: 5.0
+  grid_cell_offset: 0.5
+  static_assigner_epoch: 100
+  use_varifocal_loss: true
+  loss_weight: {class: 1.0, iou: 2.5, dfl: 0.5}
+  static_assigner:
+    name: ATSSAssigner
+    topk: 9
+  assigner:
+    name: TaskAlignedAssigner
+    topk: 13
+    alpha: 1.0
+    beta: 6.0
+  nms:
+    name: MultiClassNMS
+    nms_top_k: 1000
+    keep_top_k: 300
+    score_threshold: 0.01
+    nms_threshold: 0.7
+
+# Optimizer
+LearningRate:
+  base_lr: 0.0001
+  schedulers:
+    - name: CosineDecay
+      max_epochs: 300
+    - name: LinearWarmup
+      start_factor: 0.
+      steps: 100
+
+OptimizerBuilder:
+  optimizer:
+    momentum: 0.9
+    type: Momentum
+  regularizer:
+    factor: 0.0005
+    type: L2
+
+# Export
+export:
+  post_process: true
+  nms: true
+  benchmark: false
+  fuse_conv_bn: false

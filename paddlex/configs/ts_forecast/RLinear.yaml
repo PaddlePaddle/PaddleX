@@ -1,0 +1,30 @@
+Global:
+  model: RLinear
+  mode: check_dataset # check_dataset/train/evaluate
+  dataset_dir: "/paddle/dataset/paddlex/ts_fc/ts_dataset_examples"
+  device: gpu:0
+  output: "output"
+
+CheckDataset:
+  dst_dataset_name: dataset
+  convert: 
+    enable: False
+    src_dataset_type: nul
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  time_col: date
+  target_cols: OT
+  freq: 1h
+  input_len: 96
+  predict_len: 96
+  epochs_iters: 40
+  batch_size: 16
+  learning_rate: 0.0001
+  patience: 10
+
+Evaluate:
+  weight_path: "output/best_accuracy.pdparams.tar"

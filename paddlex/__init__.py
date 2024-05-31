@@ -1,39 +1,34 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
-__version__ = '2.1.0'
+import os
 
-from paddlex.utils.env import get_environ_info, init_parallel_env
-init_parallel_env()
+from .utils import flags
+from . import version
 
-from . import cv
-from . import seg
-from . import cls
-from . import det
-from . import tools
-from . import deploy
 
-from .cv.models.utils.visualize import visualize_detection as visualize_det
-from .cv.models.utils.visualize import visualize_segmentation as visualize_seg
+def _initialize():
+    from . import repo_manager
+    from . import repo_apis
 
-env_info = get_environ_info()
-datasets = cv.datasets
-transforms = cv.transforms
+    __DIR__ = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
+    repo_manager.set_parent_dirs(
+        os.path.join(__DIR__, 'repo_manager', 'repos'), repo_apis)
 
-log_level = 2
+    # setup_logging()
 
-load_model = cv.models.load_model
+    if flags.EAGER_INITIALIZATION:
+        repo_manager.initialize()
 
-visualize_det = visualize_det
-visualize_seg = visualize_seg
+
+_initialize()
+
+__version__ = version.get_pdx_version()

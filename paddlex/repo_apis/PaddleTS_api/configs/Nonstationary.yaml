@@ -1,0 +1,30 @@
+batch_size: 32
+seq_len: 96
+predict_len: 96
+do_eval: True
+epoch: 5
+
+
+dataset: 
+  name: TSDataset
+  dataset_root: /data/
+  train_path: /data/train.csv
+  val_path: /data/val.csv
+  time_feat: True
+  scale: True
+
+info_params:
+  freq: 1h
+  target_cols: "OT"
+  time_col: date
+
+model: 
+  name: Nonstationary_Transformer
+  model_cfg:
+    c_in: 1
+    factor: 3
+    p_hidden_dims: [256, 256]
+    optimizer_params:
+      learning_rate: 0.0001
+      gamma: 0.5
+    patience: 5

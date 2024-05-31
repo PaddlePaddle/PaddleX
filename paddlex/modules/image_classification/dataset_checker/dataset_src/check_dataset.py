@@ -1,0 +1,125 @@
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
+#
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
+
+import os
+import os.path as osp
+import random
+from PIL import Image, ImageOps
+from collections import defaultdict
+
+from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from .utils.visualizer import draw_label
+
+
+def check(dataset_dir, output_dir, sample_num=10):
+    """ check dataset """
+    dataset_dir = osp.abspath(dataset_dir)
+    # Custom dataset
+    if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
+        raise DatasetFileNotFoundError(file_path=dataset_dir)
+
+    tags = ['train', 'val']
+    delim = ' '
+    valid_num_parts = 2
+
+    sample_cnts = dict()
+    label_map_dict = dict()
+    sample_paths = defaultdict(list)
+    labels = []
+
+    label_file = osp.join(dataset_dir, 'label.txt')
+    if not osp.exists(label_file):
+        raise DatasetFileNotFoundError(
+            file_path=label_file,
+            solution=f"Ensure that `label.txt` exist in {dataset_dir}")
+
+    with open(label_file, 'r', encoding='utf-8') as f:
+        all_lines = f.readlines()
+        for line in all_lines:
+            substr = line.strip("\n").split(delim, 1)
+            try:
+                label_idx = int(substr[0])
+                labels.append(label_idx)
+                label_map_dict[label_idx] = str(substr[1])
+            except:
+                raise CheckFailedError(
+                    f"Ensure that the first number in each line in {label_file} should be int."
+                )
+    if min(labels) != 0:
+        raise CheckFailedError(
+            f"Ensure that the index starts from 0 in `{label_file}`.")
+
+    for tag in tags:
+        file_list = osp.join(dataset_dir, f'{tag}.txt')
+        if not osp.exists(file_list):
+            if tag in ('train', 'val'):
+                # train and val file lists must exist
+                raise DatasetFileNotFoundError(
+                    file_path=file_list,
+                    solution=f"Ensure that both `train.txt` and `val.txt` exist in {dataset_dir}"
+                )
+            else:
+                # tag == 'test'
+                continue
+        else:
+            with open(file_list, 'r', encoding='utf-8') as f:
+                all_lines = f.readlines()
+                random.seed(123)
+                random.shuffle(all_lines)
+                sample_cnts[tag] = len(all_lines)
+                for line in all_lines:
+                    substr = line.strip("\n").split(delim)
+                    if len(substr) != valid_num_parts:
+                        raise CheckFailedError(
+                            f"The number of delimiter-separated items in each row in {file_list} \
+                                    should be {valid_num_parts} (current delimiter is '{delim}')."
+                        )
+                    file_name = substr[0]
+                    label = substr[1]
+
+                    img_path = osp.join(dataset_dir, file_name)
+
+                    if not osp.exists(img_path):
+                        raise DatasetFileNotFoundError(file_path=img_path)
+
+                    vis_save_dir = osp.join(output_dir, 'tmp')
+                    if not osp.exists(vis_save_dir):
+                        os.makedirs(vis_save_dir)
+
+                    if len(sample_paths[tag]) < sample_num:
+                        img = Image.open(img_path)
+                        img = ImageOps.exif_transpose(img)
+                        vis_im = draw_label(img, label, label_map_dict)
+                        vis_path = osp.join(vis_save_dir,
+                                            osp.basename(file_name))
+                        vis_im.save(vis_path)
+                        sample_paths[tag].append(
+                            osp.relpath(vis_path, output_dir))
+
+                    try:
+                        label = int(label)
+                    except (ValueError, TypeError) as e:
+                        raise CheckFailedError(
+                            f"Ensure that the second number in each line in {label_file} should be int."
+                        ) from e
+
+    num_classes = max(labels) + 1
+
+    attrs = {}
+    attrs['label_file'] = osp.relpath(label_file, output_dir)
+    attrs['num_classes'] = num_classes
+    attrs['train_samples'] = sample_cnts['train']
+    attrs['train_sample_paths'] = sample_paths['train']
+
+    attrs['val_samples'] = sample_cnts['val']
+    attrs['val_sample_paths'] = sample_paths['val']
+
+    return attrs

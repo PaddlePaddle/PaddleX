@@ -1,0 +1,36 @@
+batch_size: 16
+seq_len: 96
+predict_len: 336
+do_eval: True
+sampling_stride: 1
+epoch: 10
+
+
+dataset: 
+  name: TSDataset
+  dataset_root: /data/
+  train_path: /data/train.csv
+  val_path: /data/val.csv
+  time_feat: False
+  scale: True
+
+info_params:
+  time_col: date
+
+model: 
+  name: RLinearModel
+  model_cfg:
+    c_in: 1
+    dropout: 0.0
+    optimizer_params:
+      learning_rate: 0.001
+      gamma: 0.5
+    patience: 10
+
+test:
+  stride: 1
+
+  
+
+
+

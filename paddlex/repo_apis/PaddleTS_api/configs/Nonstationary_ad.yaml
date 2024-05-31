@@ -1,0 +1,32 @@
+batch_size: 32
+seq_len: 100
+do_eval: True
+epoch: 5
+training: True 
+task: anomaly
+
+dataset: 
+  name: TSADDataset
+  dataset_root: ./data/
+  train_path: ./data/train.csv
+  val_path: ./data/val.csv
+  scale: True
+  time_feat: False
+
+info_params:
+  freq: 1
+  label_col: "label"
+  time_col: "timestamp"
+  feature_cols: "feature_0,feature_1"
+
+model: 
+  name: NonStationary_AD
+  model_cfg:
+    c_in: 2
+    factor: 3
+    p_hidden_dims: [32, 32]
+    d_model: 64
+    d_ff: 64
+    optimizer_params:
+      learning_rate: 0.001
+      gamma: 0.5

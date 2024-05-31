@@ -1,0 +1,27 @@
+batch_size: 128
+seq_len: 100
+epoch: 5
+training: True 
+do_eval: True
+task: anomaly
+
+dataset: 
+  name: TSADDataset
+  dataset_root: ./data/
+  train_path: ./data/train.csv
+  val_path: ./data/val.csv
+  scale: True
+  time_feat: False
+
+info_params:
+  freq: 1
+  label_col: "label"
+  time_col: "timestamp"
+  feature_cols: "feature_0,feature_1"
+
+model: 
+  name: AutoEncoder
+  model_cfg:
+    optimizer_params:
+      learning_rate: 0.001
+      gamma: 0.5
