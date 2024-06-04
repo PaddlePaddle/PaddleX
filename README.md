@@ -45,9 +45,9 @@ PaddleX3.0 分为本地端和云端，本地端提供统一任务API接口，支
 本节将介绍 PaddleX3.0 模型产线的全流程开发流程，此部分内容即将开源，敬请期待...
 
 ## 多硬件支持
-🔥 本项目支持在多种硬件上进行模型的开发，除了GPU外，当前支持的硬件还有**昆仑芯**、**晟腾芯**、**寒武纪芯**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。详情参考[多硬件训练](./docs/tutorials/train/multi_device_train.md)。
+🔥 本项目支持在多种硬件上进行模型的开发，除了GPU外，当前支持的硬件还有**昆仑芯**、**昇腾芯**、**寒武纪芯**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。详情参考[多硬件训练](./docs/tutorials/train/multi_device_train.md)。
 
-- 晟腾芯支持的模型列表请参考 [PaddleX 晟腾芯模型列表](./docs/tutorials/models/support_npu_model_list.md)。
+- 昇腾芯支持的模型列表请参考 [PaddleX 昇腾芯模型列表](./docs/tutorials/models/support_npu_model_list.md)。
 - 昆仑芯支持的模型列表请参考 [PaddleX 昆仑芯模型列表](./docs/tutorials/models/support_xpu_model_list.md)。
 - 寒武纪芯支持的模型列表请参考 [PaddleX 寒武纪芯模型列表](./docs/tutorials/models/support_mlu_model_list.md)。
 
