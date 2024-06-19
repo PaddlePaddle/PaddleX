@@ -1,20 +1,27 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
-from .image_classification import ClsDatasetChecker, ClsTrainer, ClsEvaluator
-from .object_detection import COCODatasetChecker, DetTrainer, DetEvaluator
-from .text_detection import TextDetDatasetChecker, TextDetTrainer, TextDetEvaluator
-from .text_recognition import TextRecDatasetChecker, TextRecTrainer, TextRecEvaluator
-from .table_recognition import TableRecDatasetChecker, TableRecTrainer, TableRecEvaluator
-from .semantic_segmentation import SegDatasetChecker, SegTrainer, SegEvaluator
-from .instance_segmentation import COCOInstSegDatasetChecker, InstanceSegTrainer, InstanceSegEvaluator
-from .ts_anomaly_detection import TSADDatasetChecker, TSADTrainer, TSADEvaluator
-from .ts_classification import TSCLSDatasetChecker, TSCLSTrainer, TSCLSEvaluator
-from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+from .base import build_dataset_checker, build_trainer, build_evaluater, build_predictor, create_model
+from .image_classification import ClsDatasetChecker, ClsTrainer, ClsEvaluator, ClsPredictor
+from .object_detection import COCODatasetChecker, DetTrainer, DetEvaluator, DetPredictor
+from .text_detection import TextDetDatasetChecker, TextDetTrainer, TextDetEvaluator, TextDetPredictor
+from .text_recognition import TextRecDatasetChecker, TextRecTrainer, TextRecEvaluator, TextRecPredictor
+from .table_recognition import TableRecDatasetChecker, TableRecTrainer, TableRecEvaluator, TableRecPredictor
+from .semantic_segmentation import SegDatasetChecker, SegTrainer, SegEvaluator, SegPredictor
+from .instance_segmentation import COCOInstSegDatasetChecker, InstanceSegTrainer, InstanceSegEvaluator, \
+InstanceSegPredictor
+from .ts_anomaly_detection import TSADDatasetChecker, TSADTrainer, TSADEvaluator, TSADPredictor
+from .ts_classification import TSCLSDatasetChecker, TSCLSTrainer, TSCLSEvaluator, TSCLSPredictor
+from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator, TSFCPredictor

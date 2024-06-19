@@ -1,38 +1,42 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 import shutil
 import random
 import json
 from tqdm import tqdm
 
-from .....utils.file_interface import custom_open
+from .....utils.file_interface import custom_open, write_json_file
+from .....utils.logging import info
 
 
-def split_dataset(root_dir, train_rate, val_rate, test_rate=0):
+def split_dataset(root_dir, train_rate, val_rate):
     """ split dataset """
-    assert train_rate + val_rate + test_rate == 100, \
-    f"The sum of train_rate({train_rate}), val_rate({val_rate}) and test_rate({test_rate}) should equal 100!"
+    assert train_rate + val_rate == 100, \
+    f"The sum of train_rate({train_rate}), val_rate({val_rate}) should equal 100!"
     assert train_rate > 0 and val_rate > 0, \
     f"The train_rate({train_rate}) and val_rate({val_rate}) should be greater than 0!"
 
     all_image_info_list = []
     all_category_dict = {}
     max_image_id = 0
-    for fn in [
-            "instance_train.json", "instance_val.json", "instance_test.json"
-    ]:
+    for fn in ["instance_train.json", "instance_val.json"]:
         anno_path = os.path.join(root_dir, "annotations", fn)
         if not os.path.exists(anno_path):
-            print(
+            info(
                 f"The annotation file {anno_path} don't exists, has been ignored!"
             )
             continue
@@ -57,7 +61,7 @@ def split_dataset(root_dir, train_rate, val_rate, test_rate=0):
         if os.path.exists(save_path):
             bak_path = save_path + ".bak"
             shutil.move(save_path, bak_path)
-            print(
+            info(
                 f"The original annotation file {fn} has been backed up to {bak_path}."
             )
         assemble_write(all_image_info_list[start:end], all_category_list,
@@ -87,7 +91,7 @@ def json2list(json_path, base_image_num):
         }
         for image_info in data['images']
     }
-    print(f"Start loading annotation file {json_path}...")
+    info(f"Start loading annotation file {json_path}...")
     for anno in tqdm(data['annotations']):
         global_image_id = anno['image_id'] + base_image_num
         anno['image_id'] = global_image_id
@@ -113,6 +117,5 @@ def assemble_write(image_info_list, category_list, save_path):
     coco_data['images'] = image_list
     coco_data['annotations'] = anno_list
 
-    with custom_open(save_path, 'w') as f:
-        json.dump(coco_data, f)
-    print(f"The splited annotations has been save to {save_path}.")
+    write_json_file(coco_data, save_path)
+    info(f"The splited annotations has been save to {save_path}.")

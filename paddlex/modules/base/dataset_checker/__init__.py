@@ -1,24 +1,25 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
-import shutil
-import json
-import argparse
-from pathlib import Path
 from abc import ABC, abstractmethod
 
 from .utils import build_res_dict
-from ....utils.file_interface import custom_open
 from ....utils.misc import AutoRegisterABCMetaClass
 from ....utils.config import AttrDict
+from ....utils.logging import info
 
 
 def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
@@ -47,6 +48,8 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         self.global_config = config.Global
         self.check_dataset_config = config.CheckDataset
+        self.output_dir = os.path.join(self.global_config.output,
+                                       "check_dataset")
 
     def __call__(self) -> dict:
         """execute dataset checking
@@ -56,21 +59,18 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         dataset_dir = self.get_dataset_root(self.global_config.dataset_dir)
 
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+
         if self.check_dataset_config.get("convert", None):
             if self.check_dataset_config.convert.get("enable", False):
-                dataset_dir = self.convert_dataset(dataset_dir)
+                self.convert_dataset(dataset_dir)
+                info("Convert dataset successfully !")
 
         if self.check_dataset_config.get("split", None):
             if self.check_dataset_config.split.get("enable", False):
-                dataset_dir = self.split_dataset(dataset_dir)
-
-        dst_dataset_path = os.path.join(
-            self.global_config.output,
-            self.check_dataset_config.dst_dataset_name)
-        if os.path.exists(dst_dataset_path):
-            shutil.rmtree(dst_dataset_path)
-        shutil.copytree(dataset_dir, dst_dataset_path)
-        dataset_dir = dst_dataset_path
+                self.split_dataset(dataset_dir)
+                info("Split dataset successfully !")
 
         attrs = self.check_dataset(dataset_dir)
         analysis = self.analyse(dataset_dir)
@@ -78,10 +78,10 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         check_result = build_res_dict(True)
         check_result["attributes"] = attrs
         check_result["analysis"] = analysis
-        check_result[
-            "dataset_path"] = self.check_dataset_config.dst_dataset_name
+        check_result["dataset_path"] = self.global_config.dataset_dir
         check_result["show_type"] = self.get_show_type()
         check_result["dataset_type"] = self.get_dataset_type()
+        info("Check dataset passed !")
         return check_result
 
     def get_dataset_root(self, dataset_dir: str) -> str:

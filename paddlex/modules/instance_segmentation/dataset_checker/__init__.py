@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 
 from .dataset_src import check, convert, split_dataset, deep_analyse
@@ -31,10 +36,8 @@ class COCOInstSegDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of converted dataset.
         """
-        converted_dataset_path = os.path.join(
-            os.getenv("TEMP_DIR"), "converted_dataset")
-        return convert(self.check_dataset_config.src_dataset_type, dataset_dir,
-                       converted_dataset_path)
+        return convert(self.check_dataset_config.convert.src_dataset_type,
+                       src_dataset_dir)
 
     def split_dataset(self, src_dataset_dir: str) -> str:
         """repartition the train and validation dataset
@@ -45,7 +48,7 @@ class COCOInstSegDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of splited dataset.
         """
-        return split_dataset(dataset_dir,
+        return split_dataset(src_dataset_dir,
                              self.check_dataset_config.split_train_percent,
                              self.check_dataset_config.split_val_percent)
 
@@ -59,7 +62,7 @@ class COCOInstSegDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check(dataset_dir, self.global_config.output)
+        return check(dataset_dir, self.output_dir)
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -70,7 +73,7 @@ class COCOInstSegDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return deep_analyse(dataset_dir, self.global_config.output)
+        return deep_analyse(dataset_dir, self.output_dir)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import abc
 import collections.abc
@@ -112,7 +117,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
         Args:
             model_name (str): A registered model name.
             config_path (str|None): Path of a configuration file. Default: None.
-            cfg (BaseConfig|None): `BaseConfig` object to initialize from. 
+            cfg (BaseConfig|None): `BaseConfig` object to initialize from.
                 Default: None.
         """
         super().__init__(cfg=cfg)
@@ -123,6 +128,10 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
                 model_info = get_registered_model_info(self.model_name)
                 config_path = model_info['config_path']
             self.load(config_path)
+
+    def update_device(self, device):
+        """Update the device"""
+        pass
 
     @abc.abstractmethod
     def load(self, config_path):
@@ -152,8 +161,8 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def update_batch_size(self, batch_size, mode='train'):
         """
-        Update batch size. 
-        
+        Update batch size.
+
         By default this method modifies the training batch size.
         """
         raise NotImplementedError
@@ -161,7 +170,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def update_pretrained_weights(self, weight_path, is_backbone=False):
         """
-        Update path to pretrained weights. 
+        Update path to pretrained weights.
 
         By default this method modifies the weight path for the entire model.
         """
@@ -177,8 +186,8 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
 
     def get_batch_size(self, mode='train'):
         """
-        Get batch size. 
-        
+        Get batch size.
+
         By default this method returns the training batch size.
         """
         raise NotImplementedError

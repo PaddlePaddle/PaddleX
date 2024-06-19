@@ -8,14 +8,14 @@
 
 #### 【推荐】使用 Docker 安装
 
-参考下述命令，使用飞桨官方 Docker 镜像，创建一个名为 `paddlx` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录。
+参考下述命令，使用飞桨官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录。
 
 ```shell
 # 对于 GPU 用户
-sudo nvidia-docker run --name paddlx -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:2.6.1-gpu-cuda12.0-cudnn8.9-trt8.6 /bin/bash
+sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:2.6.1-gpu-cuda12.0-cudnn8.9-trt8.6 /bin/bash
 
 # 对于 CPU 用户
-sudo docker run --name paddlx -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:2.6.1 /bin/bash
+sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:2.6.1 /bin/bash
 ```
 
 更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。
@@ -23,28 +23,29 @@ sudo docker run --name paddlx -v $PWD:/paddle --shm-size=8G --network=host -it r
 **注意**：
 * 首次使用该镜像时，下述命令会自动下载该镜像文件，下载需要一定的时间，请耐心等待；
 * 请使用 **2.5.2** 及更高版本的 PaddlePaddle；
-* 上述命令会创建一个名为 paddlx 的 Docker 容器，之后再次使用该容器时无需再次运行该命令；
+* 上述命令会创建一个名为 paddlex 的 Docker 容器，之后再次使用该容器时无需再次运行该命令；
 * 参数 `--shm-size=8G` 将设置容器的共享内存为 8G，如机器环境允许，建议将该参数设置较大，如 `64G`；
 
-#### 使用 Pip 或 Conda 安装
+#### 使用 pip 安装
 
-参考下述命令，用 pip 或 conda 在当前环境中安装飞桨 PaddlePaddle。
+参考下述命令，用 pip 在当前环境中安装飞桨 PaddlePaddle。
 
+<!-- 这里需要指定 paddle3.0 版本 -->
 ```bash
-# pip
+# GPU，该命令仅适用于 CUDA 版本为 12 的机器环境，对于其他 CUDA 版本的支持请参考飞桨官网
 python -m pip install paddlepaddle-gpu==2.6.1.post120 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
 
-pip install paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
-
-# conda
-conda install paddlepaddle==2.6.1 --channel https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/Paddle/
+# CPU
+python -m pip install paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
 ```
 
 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
 #### 更多安装方式
 
+<!-- 这里需要指定内多硬件安装的文档 -->
 关于**源码编译**安装等更多安装方式，及**昆仑芯**、**海光**、**寒武纪**、**昇腾**等飞桨版本，请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=undefined)。
+
 
 ### 1.2 验证
 
@@ -59,6 +60,9 @@ python -c "import paddle; paddle.utils.run_check()"
 ```bash
 python -c "import paddle; print(paddle.__version__)"
 ```
+
+<!-- 这里需要指明输出什么内容则表示正确 -->
+
 
 ## 2. 安装 PaddleX
 
@@ -84,7 +88,12 @@ git clone https://gitee.com/paddlepaddle/PaddleX.git
 
 参考下述命令，按提示操作，完成 PaddleX 依赖的安装。
 
+<!-- 这里需要指明安装成功的状态 -->
 ```bash
 cd PaddleX
+# 安装第三方依赖
+pip install -r requirements.txt
+
+# 获取并安装飞桨开发套件
 python install_pdx.py
 ```

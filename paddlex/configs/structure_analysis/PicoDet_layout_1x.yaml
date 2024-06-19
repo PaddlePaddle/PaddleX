@@ -1,12 +1,11 @@
 Global:
   model: PicoDet_layout_1x
-  mode: check_dataset # check_dataset/train/evaluate
+  mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/layout/det_layout_examples"
   device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
-  dst_dataset_name: dataset
   convert:
     enable: False
     src_dataset_type: nul
@@ -29,3 +28,10 @@ Train:
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 10
+
+Predict:
+  model: "output/best_model"
+  input_path: "/paddle/dataset/paddlex/layout/det_layout_examples/images/JPEGImages/train_0001.jpg"
+  kernel_option:
+    run_mode: paddle
+    batch_size: 1

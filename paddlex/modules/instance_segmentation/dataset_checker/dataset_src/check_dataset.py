@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import json
 import os
 import os.path as osp
@@ -19,11 +24,12 @@ from pycocotools.coco import COCO
 
 from .utils.visualizer import draw_bbox, draw_mask
 from .....utils.errors import DatasetFileNotFoundError
+from .....utils.logging import info
 
 
 def check(dataset_dir, output_dir, sample_num=10):
     """ check dataset """
-    print(dataset_dir)
+    info(dataset_dir)
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
@@ -68,15 +74,15 @@ def check(dataset_dir, output_dir, sample_num=10):
                 vis_path = osp.join(vis_save_dir, file_name)
                 Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
                 vis_im.save(vis_path)
-                sample_paths[tag].append(os.path.relpath(vis_path, output_dir))
+                sample_path = osp.join('check_dataset',
+                                       os.path.relpath(vis_path, output_dir))
+                sample_paths[tag].append(sample_path)
 
     attrs = {}
     attrs['num_classes'] = num_class
     attrs['train_samples'] = sample_cnts['instance_train']
-    # attrs['train_im_sizes'] = im_sizes['instance_train']
     attrs['train_sample_paths'] = sample_paths['instance_train']
 
     attrs['val_samples'] = sample_cnts['instance_val']
-    # attrs['val_im_sizes'] = im_sizes['instance_val']
     attrs['val_sample_paths'] = sample_paths['instance_val']
     return attrs

@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
 import io
@@ -195,6 +200,10 @@ class BaseRunner(metaclass=abc.ABCMeta):
             new_env = os.environ.copy()
             if device == 'xpu':
                 new_env['XPU_VISIBLE_DEVICES'] = dev_ids
+            elif device == 'npu':
+                new_env['ASCEND_RT_VISIBLE_DEVICES'] = dev_ids
+            elif device == 'mlu':
+                new_env['MLU_VISIBLE_DEVICES'] = dev_ids
             else:
                 new_env['CUDA_VISIBLE_DEVICES'] = dev_ids
             return args, new_env
@@ -208,7 +217,7 @@ class BaseRunner(metaclass=abc.ABCMeta):
         else:
             device_type, dev_ids = device.split(':')
             dev_ids = dev_ids.split(',')
-        if device_type not in ('cpu', 'gpu', 'xpu'):
+        if device_type not in ('cpu', 'gpu', 'xpu', 'npu', 'mlu'):
             raise ValueError("Unsupported device type.")
         for dev_id in dev_ids:
             if not dev_id.isdigit():

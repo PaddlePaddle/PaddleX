@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import logging
 import os
 from threading import ThreadError
@@ -150,6 +155,12 @@ def read_jsonl_file(jsonl_path: str):
     with custom_open(jsonl_path, "r") as file:
         jsonl_content = [json.loads(line) for line in file]
     return jsonl_content
+
+
+def write_json_file(content, jsonl_path: str, ensure_ascii=False, **kwargs):
+    """write to json file"""
+    with custom_open(jsonl_path, "w") as file:
+        json.dump(content, file, ensure_ascii=ensure_ascii, **kwargs)
 
 
 # --------------- check webui yaml -----------------

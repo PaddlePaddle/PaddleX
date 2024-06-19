@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 import shutil
 import json
@@ -19,8 +24,9 @@ import numpy as np
 from PIL import Image, ImageDraw
 from tqdm import tqdm
 
-from .....utils.file_interface import custom_open
+from .....utils.file_interface import custom_open, write_json_file
 from .....utils.errors import ConvertFailedError
+from .....utils.logging import info, warning
 
 
 class Indexer(object):
@@ -76,8 +82,7 @@ def check_src_dataset(root_dir, dataset_type):
 
     anno_map = {}
     for dst_anno, src_anno in [("instance_train.json", "train_anno_list.txt"),
-                               ("instance_val.json", "val_anno_list.txt"),
-                               ("instance_test.json", "test_anno_list.txt")]:
+                               ("instance_val.json", "val_anno_list.txt")]:
         src_anno_path = os.path.join(root_dir, src_anno)
         if not os.path.exists(src_anno_path):
             if dst_anno == "instance_train.json":
@@ -97,65 +102,54 @@ def check_src_dataset(root_dir, dataset_type):
     return anno_map
 
 
-def convert(dataset_type, input_dir, output_dir):
+def convert(dataset_type, input_dir):
     """ convert dataset to coco format """
     # check format validity
     anno_map = check_src_dataset(input_dir, dataset_type)
     if dataset_type == "LabelMe":
-        convert_labelme_dataset(input_dir, anno_map, output_dir)
+        convert_labelme_dataset(input_dir, anno_map)
     else:
         raise ValueError
-    return output_dir
 
 
-def split_anno_list(root_dir, anno_map, output_dir):
+def split_anno_list(root_dir, anno_map):
     """Split anno list to 80% train and 20% val """
 
     train_anno_list = []
     val_anno_list = []
-    if not os.path.exists(os.path.join(output_dir, "tmp")):
-        os.makedirs(os.path.join(output_dir, "tmp"))
-    with custom_open(anno_map["instance_train.json"], 'r') as f:
+    anno_list_bak = os.path.join(root_dir, "train_anno_list.txt.bak")
+    shutil.move(anno_map["instance_train.json"], anno_list_bak),
+    with custom_open(anno_list_bak, 'r') as f:
         src_anno = f.readlines()
     random.shuffle(src_anno)
     train_anno_list = src_anno[:int(len(src_anno) * 0.8)]
     val_anno_list = src_anno[int(len(src_anno) * 0.8):]
-    with custom_open(
-            os.path.join(output_dir, "tmp", "train_anno_list.txt"), 'w') as f:
+    with custom_open(os.path.join(root_dir, "train_anno_list.txt"), 'w') as f:
         f.writelines(train_anno_list)
-    with custom_open(
-            os.path.join(output_dir, "tmp", "val_anno_list.txt"), 'w') as f:
+    with custom_open(os.path.join(root_dir, "val_anno_list.txt"), 'w') as f:
         f.writelines(val_anno_list)
-    anno_map["instance_train.json"] = os.path.join(output_dir, "tmp",
+    anno_map["instance_train.json"] = os.path.join(root_dir,
                                                    "train_anno_list.txt")
-    anno_map["instance_val.json"] = os.path.join(output_dir, "tmp",
-                                                 "val_anno_list.txt")
-    print(
-        f"{os.path.join(root_dir, 'val_anno_list.txt')}不存在，数据集已默认按照80%训练集，20%验证集划分."
-    )
+    anno_map["instance_val.json"] = os.path.join(root_dir, "val_anno_list.txt")
+    msg = f"{os.path.join(root_dir,'val_anno_list.txt')}不存在，数据集已默认按照80%训练集，20%验证集划分,\
+        且将原始'train_anno_list.txt'重命名为'train_anno_list.txt.bak'."
+
+    warning(msg)
     return anno_map
 
 
-def convert_labelme_dataset(root_dir, anno_map, output_dir):
+def convert_labelme_dataset(root_dir, anno_map):
     """ convert dataset labeled by LabelMe to coco format """
     label_indexer = Indexer()
     img_indexer = Indexer()
 
-    if os.path.exists(output_dir):
-        print(f"The output_dir ({output_dir}) exists, would be override.")
-        shutil.rmtree(output_dir)
-    print(
-        f"Start copying the original files (such as images, etc.) to {output_dir}."
-    )
-    shutil.copytree(root_dir, output_dir)
-
-    annotations_dir = os.path.join(output_dir, "annotations")
+    annotations_dir = os.path.join(root_dir, "annotations")
     if not os.path.exists(annotations_dir):
         os.makedirs(annotations_dir)
 
     # 不存在val_anno_list，对原始数据集进行划分
     if 'instance_val.json' not in anno_map:
-        anno_map = split_anno_list(root_dir, anno_map, output_dir)
+        anno_map = split_anno_list(root_dir, anno_map)
 
     for dst_anno in anno_map:
         labelme2coco(label_indexer, img_indexer, root_dir, anno_map[dst_anno],
@@ -172,7 +166,7 @@ def labelme2coco(label_indexer, img_indexer, root_dir, anno_path, save_path):
     anno_num = 0
     anno_list = []
     image_list = []
-    print(f"Start loading json annotation files from {anno_path} ...")
+    info(f"Start loading json annotation files from {anno_path} ...")
     for json_path in tqdm(json_list):
         json_path = json_path.strip()
         assert json_path.endswith(".json"), json_path
@@ -220,9 +214,8 @@ def labelme2coco(label_indexer, img_indexer, root_dir, anno_path, save_path):
         'annotations': anno_list
     }
 
-    with custom_open(save_path, 'w') as f:
-        json.dump(data_coco, f)
-    print(f"The converted annotations has been save to {save_path}.")
+    write_json_file(data_coco, save_path)
+    info(f"The converted annotations has been save to {save_path}.")
 
 
 def points_to_mask(img_shape, points):

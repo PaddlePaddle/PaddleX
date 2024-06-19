@@ -1,12 +1,11 @@
 Global:
   model: PP-OCRv4_server_rec
-  mode: check_dataset # check_dataset/train/evaluate
+  mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples"
   device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
-  dst_dataset_name: dataset
   convert: 
     enable: False
     src_dataset_type: null
@@ -28,3 +27,10 @@ Train:
 Evaluate:
   weight_path: "output/best_accuracy.pdparams"
   log_interval: 1
+
+Predict:
+  model_dir: "output/best_accuracy"
+  input_path: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples/images/train_word_1003.png"
+  kernel_option:
+    run_mode: paddle
+    batch_size: 1

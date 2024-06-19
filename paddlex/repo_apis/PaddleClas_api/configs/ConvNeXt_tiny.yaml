@@ -18,9 +18,8 @@ Global:
   update_freq: 4  # for 8 cards
 
 # model ema
-EMA:
-  decay: 0.9999
-
+#EMA:
+#  decay: 0.9999
 
 
 # mixed precision

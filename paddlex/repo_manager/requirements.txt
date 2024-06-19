@@ -1,31 +1,17 @@
 tomark~=0.1.4
 psutil~=5.9.2
 wget
-ruamel.yaml
 grpcio==1.51.3
 pydantic~=1.10.1
 editdistance
-filelock
 openpyxl
 PyMuPDF==1.20.2
 qianfan==0.0.3
 langchain==0.0.292
 erniebot
 premailer
-faiss-cpu
 python-docx
 unstructured
 networkx
-colorlog
-filelock
-numpy
-opencv-python
-paddleslim @ git+https://gitee.com/paddlepaddle/PaddleSlim.git@release/2.5
-parsley
 Pillow
-pyclipper
-PyYAML
 requests <= 2.29
-shapely
-xencrypt-python @ https://fastdeploy.bj.bcebos.com/fastdeploy_paddlex_2_0/xencrypt_python-0.0.0-cp310-cp310-linux_x86_64.whl ; python_version == '3.10' and platform_system == 'Linux'
-xencrypt-python @ https://fastdeploy.bj.bcebos.com/fastdeploy_paddlex_2_0/xencrypt_python-0.0.0-cp310-cp310-win_amd64.whl ; python_version == '3.10' and platform_system == 'Windows'
