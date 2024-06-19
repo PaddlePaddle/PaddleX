@@ -1,12 +1,11 @@
 Global:
   model: RT-DETR-R18
-  mode: check_dataset # check_dataset/train/evaluate
+  mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
   device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
-  dst_dataset_name: dataset
   convert:
     enable: False
     src_dataset_type: nul
@@ -29,3 +28,10 @@ Train:
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 10
+
+Predict:
+  model_dir: "output/best_model"
+  input_path: "/paddle/dataset/paddlex/det/det_coco_examples/images/road0.png"
+  kernel_option:
+    run_mode: paddle
+    batch_size: 1

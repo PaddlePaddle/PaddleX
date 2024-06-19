@@ -1,12 +1,11 @@
 Global:
   model: TiDE
-  mode: check_dataset # check_dataset/train/evaluate
+  mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/ts_fc/ts_dataset_examples"
   device: gpu:0
   output: "output"
 
 CheckDataset:
-  dst_dataset_name: dataset
   convert: 
     enable: False
     src_dataset_type: nul
@@ -28,3 +27,7 @@ Train:
 
 Evaluate:
   weight_path: "output/best_accuracy.pdparams.tar"
+
+Predict:
+  model_dir: "output/best_model/model.pdparams"
+  input_path: "/paddle/dataset/paddlex/ts_fc/ts_dataset_examples/test.csv"

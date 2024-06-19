@@ -1,22 +1,29 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import glob
 import os.path
 import numpy as np
+import shutil
 
 from .....utils.file_interface import custom_open
+from .....utils.logging import info
 
 
-def split_dataset(dataset_root, train_rate, val_rate, test_rate=0):
+def split_dataset(dataset_root, train_rate, val_rate):
     """
     将图像数据集按照比例分成训练集、验证集和测试集，并生成对应的.txt文件。
     
@@ -24,24 +31,30 @@ def split_dataset(dataset_root, train_rate, val_rate, test_rate=0):
         dataset_root (str): 数据集根目录路径。
         train_rate (int): 训练集占总数据集的比例（%）。
         val_rate (int): 验证集占总数据集的比例（%）。
-        test_rate (int): 测试集占总数据集的比例（%）。
     
     Returns:
         str: 数据划分结果信息。
     """
-    sum_rate = train_rate + val_rate + test_rate
+    sum_rate = train_rate + val_rate
     assert sum_rate == 100, \
-        f"训练集、验证集、测试集比例之和需要等于100，请修改后重试"
+        f"训练集、验证集比例之和需要等于100，请修改后重试"
     assert train_rate > 0 and val_rate > 0, \
         f"The train_rate({train_rate}) and val_rate({val_rate}) should be greater than 0!"
 
     image_dir = os.path.join(dataset_root, 'images')
-    tags = ['train.txt', 'val.txt', 'test.txt']
+    tags = ['train.txt', 'val.txt']
 
     image_files = get_files(image_dir,
                             ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG'])
-    label_files = get_labels_files(dataset_root,
-                                   ['train.txt', 'val.txt', 'test.txt'])
+    label_files = get_labels_files(dataset_root, ['train.txt', 'val.txt'])
+
+    for tag in tags:
+        src_file = os.path.join(dataset_root, tag)
+        dst_file = os.path.join(dataset_root, f"{tag}.bak")
+        info(
+            f"The original annotation file {src_file} has been backed up to {dst_file}."
+        )
+        shutil.move(src_file, dst_file)
 
     image_num = len(image_files)
     label_num = len(label_files)
@@ -57,11 +70,11 @@ def split_dataset(dataset_root, train_rate, val_rate, test_rate=0):
     np.random.shuffle(label_files)
 
     start = 0
-    rate_list = [train_rate, val_rate, test_rate]
-    name_list = ['train', 'val', 'test']
+    rate_list = [train_rate, val_rate]
+    name_list = ['train', 'val']
     separator = " "
     for i, name in enumerate(name_list):
-        print("Creating {}.txt...".format(name))
+        info("Creating {}.txt...".format(name))
 
         rate = rate_list[i]
         if rate == 0:

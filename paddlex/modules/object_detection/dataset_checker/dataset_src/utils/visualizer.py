@@ -14,7 +14,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from pycocotools.coco import COCO
 
-from .....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ......utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
 def colormap(rgb=False):

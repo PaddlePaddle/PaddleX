@@ -1,41 +1,40 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
+import json
 import os.path as osp
 from collections import defaultdict
-
-from PIL import Image
-import json
-import numpy as np
-
 from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
 
 
 def check(dataset_dir,
           output_dir,
           dataset_type="PubTabTableRecDataset",
-          mode='fast',
           sample_num=10):
     """
     Check whether the dataset is valid.
     """
-    # dataset_dir = os.path.abspath(dataset_dir)
 
     if dataset_type == 'PubTabTableRecDataset':
         # Custom dataset
         if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
             raise DatasetFileNotFoundError(file_path=dataset_dir)
 
-        tags = ['train', 'val', 'test']
+        tags = ['train', 'val']
         max_recorded_sample_cnts = 50
         sample_cnts = dict()
         sample_paths = defaultdict(list)

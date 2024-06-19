@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 import shutil
 import json
@@ -38,13 +43,12 @@ def check_src_dataset(root_dir):
             continue
 
 
-def convert_excel_dataset(input_dir, output_dir):
+def convert_excel_dataset(input_dir):
     """
     将excel标注的数据集转换为PaddleX需要的格式
     
     Args:
         input_dir (str): 输入的目录，包含多个json格式的Labelme标注文件
-        output_dir (str): 输出的目录，转换后的图片和标注文件都会存储在此目录下
     
     Returns:
         str: 返回一个字符串表示转换的结果，“转换成功”表示转换没有问题。
@@ -53,10 +57,6 @@ def convert_excel_dataset(input_dir, output_dir):
         该函数目前没有特定的异常抛出。
     
     """
-    # prepare dir
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
     # read excel file
     for dst_anno, src_anno in [("train.xlsx", "train.xls"),
                                ("val.xlsx", "val.xls"),
@@ -66,19 +66,19 @@ def convert_excel_dataset(input_dir, output_dir):
 
         if os.path.exists(src_anno_path):
             excel_file = pd.read_excel(src_anno_path)
-            output_csv_dir = os.path.join(output_dir,
+            output_csv_dir = os.path.join(input_dir,
                                           src_anno.replace(".xlsx", ".csv"))
             excel_file.to_csv(output_csv_dir, index=False)
         if os.path.exists(dst_anno_path):
             excel_file = pd.read_excel(dst_anno_path)
-            output_csv_dir = os.path.join(output_dir,
+            output_csv_dir = os.path.join(input_dir,
                                           dst_anno.replace(".xlsx", ".csv"))
             excel_file.to_csv(output_csv_dir, index=False)
 
 
-def convert(input_dir, output_dir):
+def convert(input_dir):
     """ convert dataset to coco format """
     # check format validity
     check_src_dataset(input_dir)
-    convert_excel_dataset(input_dir, output_dir)
-    return output_dir
+    convert_excel_dataset(input_dir)
+    return input_dir

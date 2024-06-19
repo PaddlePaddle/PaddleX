@@ -1,0 +1,15 @@
+colorlog
+prettytable
+PyYAML
+filelock
+ruamel.yaml
+chardet
+numpy==1.23.5
+matplotlib==3.5.2
+opencv-python==4.5.5.64
+pycocotools
+tqdm
+pyclipper
+shapely
+pandas
+parsley

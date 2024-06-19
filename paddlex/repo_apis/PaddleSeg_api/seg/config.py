@@ -1,17 +1,23 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 from functools import lru_cache
 
 import yaml
+from typing import Union
 from paddleseg.utils import NoAliasDumper
 
 from ..base_seg_config import BaseSegConfig
@@ -65,7 +71,7 @@ class SegConfig(BaseSegConfig):
         if 'model' in self:
             self.model['num_classes'] = num_classes
 
-    def update_train_crop_size(self, crop_size: int | list):
+    def update_train_crop_size(self, crop_size: Union[int, list]):
         """update the image cropping size of training preprocessing
 
         Args:

@@ -1,12 +1,11 @@
 Global:
   model: CLIP_vit_base_patch16_224
-  mode: check_dataset # check_dataset/train/evaluate
+  mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
   device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
-  dst_dataset_name: dataset
   convert: 
     enable: False
     src_dataset_type: null
@@ -30,3 +29,10 @@ Train:
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 1
+
+Predict:
+  model_dir: "output/best_model"
+  input_path: "/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg"
+  kernel_option:
+    run_mode: paddle
+    batch_size: 1

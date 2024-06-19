@@ -156,4 +156,19 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml -o Glo
 
 ### 5. 模型推理
 
-模型推理功能正在开发中，敬请期待……
+在训练得到满意的模型后，可以使用训练好的模型进行推理预测：
+
+```bash
+python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml -o Global.mode=predict -o Predict.model_dir="output/best_model" -o Predict.input_path="/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg"
+```
+
+上述命令中，可以通过修改配置文件（`paddlex/configs/image_classification/PP-LCNet_x1_0.yaml`）或`-o`追加参数的方式设置模型推理相关参数：
+
+* `Predict.model_dir`：使用的推理模型文件所在目录，在完成模型训练后，最佳模型的推理文件默认保存在`output/best_model`中，推理模型文件为`inference.pdparams`、`inference.pdmodel`等；
+* `Predict.input_path`：待预测图像路径；
+
+在执行上述命令进行推理后，可以在控制台输出预测结果，如下所示：
+
+```bash
+[{'class_ids': [76], 'scores': [0.66833], 'label_names': ['西番莲']}]
+```

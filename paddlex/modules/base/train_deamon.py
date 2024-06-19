@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 import sys
 import time
@@ -16,8 +21,8 @@ import traceback
 import threading
 from abc import ABC, abstractmethod
 from pathlib import Path
-import paddle
 from .build_model import build_model
+from ...utils.file_interface import write_json_file
 
 
 def try_except_decorator(func):
@@ -132,8 +137,7 @@ class BaseTrainDeamon(ABC):
         for i, result in enumerate(self.results):
             self.save_paths[i].parent.mkdir(parents=True, exist_ok=True)
             self.normlize_path(result, relative_to=self.save_paths[i].parent)
-            with open(self.save_paths[i], "w") as f:
-                json.dump(result, f, indent=2)
+            write_json_file(result, self.save_paths[i], indent=2)
 
     def start(self):
         """ start deamon thread """
@@ -197,7 +201,10 @@ class BaseTrainDeamon(ABC):
     def get_model(self, model_name, config_path):
         """ initialize the model """
         if model_name not in self.models:
-            config, model = build_model(model_name, config_path)
+            config, model = build_model(
+                model_name,
+                device=self.global_config.device,
+                config_path=config_path)
             self.models[model_name] = model
         return self.models[model_name]
 

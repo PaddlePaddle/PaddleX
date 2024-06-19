@@ -1,20 +1,25 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
 import sys
 import json
 import traceback
 from .flags import DEBUG
-from .file_interface import custom_open
+from .file_interface import custom_open, write_json_file
 
 
 def try_except_decorator(func):
@@ -59,5 +64,5 @@ def save_result(run_pass,
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
 
-    with custom_open(os.path.join(output_dir, f"{mode}_result.json"), "w") as f:
-        json.dump(json_data, f, indent=2)
+    write_json_file(
+        json_data, os.path.join(output_dir, f"{mode}_result.json"), indent=2)

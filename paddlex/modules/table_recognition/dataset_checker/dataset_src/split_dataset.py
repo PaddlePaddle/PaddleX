@@ -1,22 +1,25 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
-import shutil
 from random import shuffle
-
 from .....utils.file_interface import custom_open
 
 
-def split_dataset(dataset_root, train_rate, val_rate, test_rate=0.0):
+def split_dataset(dataset_root, train_rate, val_rate):
     """
     将图像数据集按照比例分成训练集、验证集和测试集，并生成对应的.txt文件。
     
@@ -24,15 +27,14 @@ def split_dataset(dataset_root, train_rate, val_rate, test_rate=0.0):
         dataset_root (str): 数据集根目录路径。
         train_rate (int): 训练集占总数据集的比例（%）。
         val_rate (int): 验证集占总数据集的比例（%）。
-        test_rate (int): 测试集占总数据集的比例（%）。
     
     Returns:
         str: 数据划分结果信息。
     """
-    sum_rate = train_rate + val_rate + test_rate
+    sum_rate = train_rate + val_rate
     if sum_rate != 100:
-        return "训练集、验证集、测试集比例之和需要等于100，请修改后重试"
-    tags = ["train", "val", "test"]
+        return "训练集、验证集比例之和需要等于100，请修改后重试"
+    tags = ["train", "val"]
 
     valid_path = False
     image_files = []
@@ -48,17 +50,14 @@ def split_dataset(dataset_root, train_rate, val_rate, test_rate=0.0):
             valid_path = True
             if not os.path.exists(rename_image_list):
                 os.rename(split_image_list, rename_image_list)
-            if test_rate == 0 and tag == "test" and os.path.exists(
-                    split_image_list):
-                os.remove(split_image_list)
 
     if not valid_path:
-        return f"数据集目录下保存待划分文件{tags[0]}.txt、{tags[1]}.txt或{tags[2]}.txt不存在，请检查后重试"
+        return f"数据集目录下保存待划分文件{tags[0]}.txt或{tags[1]}.txt不存在，请检查后重试"
 
     shuffle(image_files)
     start = 0
     image_num = len(image_files)
-    rate_list = [train_rate, val_rate, test_rate]
+    rate_list = [train_rate, val_rate]
     for i, tag in enumerate(tags):
 
         rate = rate_list[i]

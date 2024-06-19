@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 import os.path as osp
 from collections import defaultdict, Counter
@@ -48,7 +53,7 @@ def check(dataset_dir, output_dir, sample_num=10):
             coco = COCO(file_list)
             num_class = len(coco.getCatIds())
 
-            vis_save_dir = osp.join(output_dir, 'tmp')
+            vis_save_dir = osp.join(output_dir, 'demo_img')
 
             image_info = jsondata['images']
             sample_cnts[tag] = len(image_info)
@@ -65,15 +70,15 @@ def check(dataset_dir, output_dir, sample_num=10):
                 vis_path = osp.join(vis_save_dir, file_name)
                 Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
                 vis_im.save(vis_path)
-                sample_paths[tag].append(os.path.relpath(vis_path, output_dir))
+                sample_path = osp.join('check_dataset',
+                                       os.path.relpath(vis_path, output_dir))
+                sample_paths[tag].append(sample_path)
 
     attrs = {}
     attrs['num_classes'] = num_class
     attrs['train_samples'] = sample_cnts['instance_train']
-    # attrs['train_im_sizes'] = im_sizes['instance_train']
     attrs['train_sample_paths'] = sample_paths['instance_train']
 
     attrs['val_samples'] = sample_cnts['instance_val']
-    # attrs['val_im_sizes'] = im_sizes['instance_val']
     attrs['val_sample_paths'] = sample_paths['instance_val']
     return attrs

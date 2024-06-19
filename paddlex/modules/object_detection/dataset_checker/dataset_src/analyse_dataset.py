@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
 import json
@@ -21,19 +26,16 @@ from matplotlib import font_manager
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from pycocotools.coco import COCO
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
 def deep_analyse(dataset_dir, output_dir):
     """class analysis for dataset"""
-    tags = ['train', 'val', 'test']
+    tags = ['train', 'val']
     all_instances = 0
     for tag in tags:
         annotations_path = os.path.abspath(
             os.path.join(dataset_dir, f'annotations/instance_{tag}.json'))
-        if tag == 'test' and not os.path.exists(annotations_path):
-            cnts_test = None
-            continue
         labels_cnt = defaultdict(list)
         coco = COCO(annotations_path)
         cat_ids = coco.getCatIds()
@@ -50,20 +52,14 @@ def deep_analyse(dataset_dir, output_dir):
             cnts_val = [
                 len(cat_ids) for cat_name, cat_ids in labels_cnt.items()
             ]
-        else:
-            cnts_test = [
-                len(cat_ids) for cat_name, cat_ids in labels_cnt.items()
-            ]
     classes = [cat_name for cat_name, cat_ids in labels_cnt.items()]
     sorted_id = sorted(
         range(len(cnts_train)), key=lambda k: cnts_train[k], reverse=True)
     cnts_train_sorted = sorted(cnts_train, reverse=True)
     cnts_val_sorted = [cnts_val[index] for index in sorted_id]
-    if cnts_test:
-        cnts_test_sorted = [cnts_test[index] for index in sorted_id]
     classes_sorted = [classes[index] for index in sorted_id]
     x = np.arange(len(classes))
-    width = 0.5 if not cnts_test else 0.333
+    width = 0.5
 
     # bar
     os_system = platform.system().lower()
@@ -72,18 +68,10 @@ def deep_analyse(dataset_dir, output_dir):
     else:
         font = font_manager.FontProperties(fname=PINGFANG_FONT_FILE_PATH)
     fig, ax = plt.subplots(figsize=(max(8, int(len(classes) / 5)), 5), dpi=120)
-    ax.bar(x,
-           cnts_train_sorted,
-           width=0.5 if not cnts_test else 0.333,
-           label='train')
-    ax.bar(x + width,
-           cnts_val_sorted,
-           width=0.5 if not cnts_test else 0.333,
-           label='val')
-    if cnts_test:
-        ax.bar(x + 2 * width, cnts_test_sorted, width=0.333, label='test')
+    ax.bar(x, cnts_train_sorted, width=0.5, label='train')
+    ax.bar(x + width, cnts_val_sorted, width=0.5, label='val')
     plt.xticks(
-        x + width / 2 if not cnts_test else x + width,
+        x + width / 2,
         classes_sorted,
         rotation=90,
         fontproperties=None if os_system == "windows" else font)
@@ -92,4 +80,4 @@ def deep_analyse(dataset_dir, output_dir):
     fig.tight_layout()
     fig_path = os.path.join(output_dir, "histogram.png")
     fig.savefig(fig_path)
-    return {"histogram": "histogram.png"}
+    return {"histogram": os.path.join("check_dataset", "histogram.png")}

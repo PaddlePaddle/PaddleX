@@ -1,21 +1,31 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
 
-from .utils import flags
 from . import version
+from .paddlex import predict
+from .modules import build_dataset_checker, build_trainer, build_evaluater, build_predictor
+from .pipelines import *
+from .modules.base.predictor.utils.paddle_inference_predictor import PaddleInferenceOption
 
 
 def _initialize():
+    from .utils.logging import setup_logging
+    from .utils import flags
     from . import repo_manager
     from . import repo_apis
 
@@ -23,7 +33,7 @@ def _initialize():
     repo_manager.set_parent_dirs(
         os.path.join(__DIR__, 'repo_manager', 'repos'), repo_apis)
 
-    # setup_logging()
+    setup_logging()
 
     if flags.EAGER_INITIALIZATION:
         repo_manager.initialize()

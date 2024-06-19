@@ -1,13 +1,18 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import os
 import json
@@ -24,7 +29,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib import font_manager
 
 from .....utils.file_interface import custom_open
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from .....utils.logging import warning
+from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
 def simple_analyse(dataset_path, images_dict):
@@ -38,7 +44,7 @@ def simple_analyse(dataset_path, images_dict):
 
     Returns:
         tuple: tuple of sample number, image path and label path for train, val and text subdataset.
-    
+
     """
     tags = ['train', 'val', 'test']
     sample_cnts = defaultdict(int)
@@ -68,23 +74,20 @@ def simple_analyse(dataset_path, images_dict):
 
 def deep_analyse(dataset_path, output_dir):
     """class analysis for dataset"""
-    tags = ['train', 'val', 'test']
+    tags = ['train', 'val']
     all_instances = 0
     labels_cnt = {}
     x_max = []
     classes_max = []
     for tag in tags:
         image_path = os.path.join(dataset_path, f'{tag}.txt')
-        if tag == 'test' and not os.path.exists(image_path):
-            cnts_test = None
-            continue
         str_nums = []
         with custom_open(image_path, 'r') as f:
             lines = f.readlines()
         for line in lines:
             line = line.strip().split("\t")
             if len(line) != 2:
-                print(f"Error in {line}.")
+                warning(f"Error in {line}.")
                 continue
             str_nums.append(len(line[1]))
         max_length = min(100, max(str_nums))
@@ -113,16 +116,8 @@ def deep_analyse(dataset_path, output_dir):
                 classes_max = [
                     cat_name for cat_name, cat_ids in labels_cnt.items()
                 ]
-        else:
-            cnts_test = [cat_ids for cat_name, cat_ids in labels_cnt.items()]
-            x_test = np.arange(len(cnts_test))
-            if len(x_test) > len(x_max):
-                x_max = x_test
-                classes_max = [
-                    cat_name for cat_name, cat_ids in labels_cnt.items()
-                ]
 
-    width = 0.3 if not cnts_test else 0.2
+    width = 0.3
 
     # bar
     os_system = platform.system().lower()
@@ -132,20 +127,9 @@ def deep_analyse(dataset_path, output_dir):
         font = font_manager.FontProperties(
             fname=PINGFANG_FONT_FILE_PATH, size=15)
     fig, ax = plt.subplots(figsize=(10, 5), dpi=120)
-    ax.bar(x_train,
-           cnts_train,
-           width=0.3 if not cnts_test else 0.2,
-           label='train')
-    ax.bar(x_val + width,
-           cnts_val,
-           width=0.3 if not cnts_test else 0.2,
-           label='val')
-    if cnts_test:
-        ax.bar(x_test + 2 * width, cnts_test, width=0.2, label='test')
-    plt.xticks(
-        x_max + width / 2 if not cnts_test else x_max + width,
-        classes_max,
-        rotation=90)
+    ax.bar(x_train, cnts_train, width=0.3, label='train')
+    ax.bar(x_val + width, cnts_val, width=0.3, label='val')
+    plt.xticks(x_max + width / 2, classes_max, rotation=90)
     ax.set_xlabel(
         '文本字长度区间',
         fontproperties=None if os_system == "windows" else font,
@@ -164,4 +148,4 @@ def deep_analyse(dataset_path, output_dir):
     fig1_path = os.path.join(output_dir, "histogram.png")
     cv2.imwrite(fig1_path, pie_array)
 
-    return {"histogram": "histogram.png"}
+    return {"histogram": os.path.join("check_dataset", "histogram.png")}

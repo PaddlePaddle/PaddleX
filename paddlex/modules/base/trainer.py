@@ -1,18 +1,23 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 from .build_model import build_model
-from .utils.device import get_device
+from ...utils.device import get_device
 from ...utils.misc import AutoRegisterABCMetaClass
 from ...utils.config import AttrDict
 
@@ -74,18 +79,18 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
 training!"
 
-    def get_device(self, using_gpu_number: int=None) -> str:
+    def get_device(self, using_device_number: int=None) -> str:
         """get device setting from config
 
         Args:
-            using_gpu_number (int, optional): specify GPU number to use. Defaults to None,
+            using_device_number (int, optional): specify device number to use. Defaults to None,
                 means that base on config setting.
 
         Returns:
-            str: device setting, such as: `gpu:0,1`, `cpu`.
+            str: device setting, such as: `gpu:0,1`, `npu:0,1` `cpu`.
         """
         return get_device(
-            self.global_config.device, using_gpu_number=using_gpu_number)
+            self.global_config.device, using_device_number=using_device_number)
 
     @abstractmethod
     def build_deamon(self):

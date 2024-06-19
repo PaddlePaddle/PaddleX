@@ -1,21 +1,29 @@
-# !/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-################################################################################
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-################################################################################
-"""
-Author: PaddlePaddle Authors
-"""
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 
 import json
 import signal
+from typing import Union
+from pathlib import Path
 
 __all__ = [
     'UnsupportedAPIError', 'UnsupportedParamError', 'CalledProcessError',
     'raise_unsupported_api_error', 'raise_key_not_found_error',
-    'raise_class_not_found_error', 'raise_unsupported_device_error',
+    'raise_class_not_found_error', 'raise_no_entity_registered_error',
+    'raise_unsupported_device_error', 'raise_model_not_found_error',
     'DuplicateRegistrationError'
 ]
 
@@ -37,6 +45,11 @@ class KeyNotFoundError(Exception):
 
 class ClassNotFoundException(Exception):
     """ ClassNotFoundException """
+    pass
+
+
+class NoEntityRegisteredException(Exception):
+    """ NoEntityRegisteredException """
     pass
 
 
@@ -70,6 +83,11 @@ class DuplicateRegistrationError(Exception):
     pass
 
 
+class ModelNotFoundError(Exception):
+    """ Model Not Found Error
+    """
+
+
 def raise_unsupported_api_error(api_name, cls=None):
     """ raise unsupported api error """
     # TODO: Automatically extract `api_name` and `cls` from stack frame
@@ -92,11 +110,18 @@ def raise_key_not_found_error(key, config=None):
 def raise_class_not_found_error(cls_name, base_cls, all_entities=None):
     """ raise class not found error """
     base_cls_name = base_cls.__name__
-    msg = f"`{cls_name}` not registry on {base_cls_name}."
+    msg = f"`{cls_name}` is not registered on {base_cls_name}."
     if all_entities is not None:
         all_entities_str = ",".join(all_entities)
         msg += f"\nThe registied entities:`[{all_entities_str}]`"
     raise ClassNotFoundException(msg)
+
+
+def raise_no_entity_registered_error(base_cls):
+    """ raise no entity registered error """
+    base_cls_name = base_cls.__name__
+    msg = f"There no entity register on {base_cls_name}."
+    raise NoEntityRegisteredException(msg)
 
 
 def raise_unsupported_device_error(device, supported_device=None):
@@ -106,3 +131,13 @@ def raise_unsupported_device_error(device, supported_device=None):
         supported_device_str = ", ".join(supported_device)
         msg += f"The supported device types are: [{supported_device_str}]."
     raise UnsupportedDeviceError(msg)
+
+
+def raise_model_not_found_error(model_path: Union[str, Path]):
+    """raise ModelNotFoundError
+
+    Args:
+        model_path (str|Path): the path to model file.
+    """
+    msg = f"The model file(s)(`{model_path}`) is not found."
+    raise ModelNotFoundError(msg)
