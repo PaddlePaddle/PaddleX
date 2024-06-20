@@ -24,41 +24,36 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .....utils.file_interface import custom_open
+from .....utils import logging
 
 
-def convert_dataset(dataset_type, input_dir, output_dir):
+def convert_dataset(dataset_type, input_dir):
     """ convert to paddlex official format """
     if dataset_type == "LabelMe":
-        return convert_labelme_dataset(input_dir, output_dir)
+        return convert_labelme_dataset(input_dir)
     else:
         raise NotImplementedError(dataset_type)
 
 
-def convert_labelme_dataset(input_dir, output_dir):
+def convert_labelme_dataset(input_dir):
     """ convert labelme format to paddlex official format"""
     bg_name = "_background_"
     ignore_name = '__ignore__'
 
     # prepare dir
-    output_img_dir = osp.join(output_dir, 'images')
-    output_annot_dir = osp.join(output_dir, 'annotations')
-    if not osp.exists(output_dir):
-        os.makedirs(output_dir)
-    if osp.exists(output_img_dir):
-        shutil.rmtree(output_img_dir)
-    os.makedirs(output_img_dir)
-    if osp.exists(output_annot_dir):
-        shutil.rmtree(output_annot_dir)
-    os.makedirs(output_annot_dir)
+    output_img_dir = osp.join(input_dir, 'images')
+    output_annot_dir = osp.join(input_dir, 'annotations')
+    if not osp.exists(output_img_dir):
+        os.makedirs(output_img_dir)
+    if not osp.exists(output_annot_dir):
+        os.makedirs(output_annot_dir)
 
     # collect class_names and set class_name_to_id
     class_names = []
     class_name_to_id = {}
-    split_tags = ["train", "val", "test"]
+    split_tags = ["train", "val"]
     for tag in split_tags:
         mapping_file = osp.join(input_dir, f'{tag}_anno_list.txt')
-        if not osp.exists(mapping_file) and (tag == "test"):
-            continue
         with open(mapping_file, 'r') as f:
             label_files = [
                 osp.join(input_dir, line.strip('\n')) for line in f.readlines()
@@ -96,7 +91,8 @@ def convert_labelme_dataset(input_dir, output_dir):
                 data = json.load(f)
                 img_path = osp.join(osp.dirname(label_file), data['imagePath'])
                 if not os.path.exists(img_path):
-                    print('%s is not existed, skip this image' % img_path)
+                    logging.info('%s is not existed, skip this image' %
+                                 img_path)
                     continue
                 img_name = img_path.split('/')[-1]
                 img_file_list.append(f"images/{img_name}")
@@ -113,18 +109,18 @@ def convert_labelme_dataset(input_dir, output_dir):
                 lbl_pil.save(annotated_img_path)
 
                 shutil.copy(img_path, output_img_dir)
-        with custom_open(osp.join(output_dir, f'{tag}.txt'), 'w') as fp:
+        with custom_open(osp.join(input_dir, f'{tag}.txt'), 'w') as fp:
             for img_path, lbl_path in zip(img_file_list, label_file_list):
                 fp.write(f'{img_path} {lbl_path}\n')
 
-    with custom_open(osp.join(output_dir, 'class_name.txt'), 'w') as fp:
+    with custom_open(osp.join(input_dir, 'class_name.txt'), 'w') as fp:
         for name in class_names:
             fp.write(f'{name}{os.linesep}')
-    with custom_open(osp.join(output_dir, 'class_name_to_id.txt'), 'w') as fp:
+    with custom_open(osp.join(input_dir, 'class_name_to_id.txt'), 'w') as fp:
         for key, val in class_name_to_id.items():
             fp.write(f'{val}: {key}{os.linesep}')
 
-    return output_dir
+    return input_dir
 
 
 def get_color_map_list(num_classes):

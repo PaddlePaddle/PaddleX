@@ -22,20 +22,16 @@ import numpy as np
 from PIL import Image, ImageOps
 
 from .....utils.file_interface import custom_open
+from .....utils.logging import info
 
 
 def anaylse_dataset(dataset_dir, output_dir):
     """class analysis for dataset"""
 
-    split_tags = ["train", "val", "test"]
+    split_tags = ["train", "val"]
     label2count = {tag: dict() for tag in split_tags}
     for tag in split_tags:
         mapping_file = osp.join(dataset_dir, f"{tag}.txt")
-        if not osp.exists(mapping_file) and (tag == "test"):
-            print(
-                f"The mapping file ({mapping_file}) doesn't exist, will be ignored."
-            )
-            continue
         with custom_open(mapping_file, "r") as fp:
             lines = filter(None, (line.strip() for line in fp.readlines()))
             for i, line in enumerate(lines):
@@ -66,22 +62,15 @@ def anaylse_dataset(dataset_dir, output_dir):
     fig, ax = plt.subplots(
         figsize=(max(8, int(len(label_idx) / 5)), 5), dpi=120)
 
-    width = 0.333 if label2count["test"] else 0.5,
+    width = 0.5,
     ax.bar(x, train_list, width=width, label="train")
     ax.bar(x + width, val_list, width=width, label="val")
 
-    if label2count["test"]:
-        ax.bar(x + 2 * width,
-               list(label2count["test"].values()),
-               width=0.33,
-               label="test")
-        plt.xticks(x + 0.33, label_idx)
-    else:
-        plt.xticks(x + 0.25, label_idx)
+    plt.xticks(x + 0.25, label_idx)
     ax.set_xlabel('Label Index')
     ax.set_ylabel('Sample Counts')
     plt.legend()
     fig.tight_layout()
     fig_path = os.path.join(output_dir, "histogram.png")
     fig.savefig(fig_path)
-    return {"histogram": "histogram.png"}
+    return {"histogram": os.path.join("check_dataset", "histogram.png")}

@@ -1,8 +1,29 @@
-# PaddleX 产线（Pipeline）推理
+# PaddleX 模型产线开发工具
 
-PaddleX 中提供了多个产线，包括：OCR、图像分类、目标检测、实例分割、语义分割等，每个产线有多个模型可供选择，并均提供了官方预训练权重，支持通过 Python API、命令行方式直接推理预测。各产线使用方式可参考以下代码。
+PaddleX 中提供了多个模型产线，包括：OCR、图像分类、目标检测、实例分割、语义分割等，每个模型产线有多个模型可供选择，并均提供了官方权重，支持通过命令行方式直接推理预测和 Python API 预测。命令行方式直接推理预测可以快速体验模型推理效果，而 Python API 预测可以方便地集成到自己的项目中进行预测。
 
-## OCR
+## 1.安装 PaddleX
+在使用模型产线工具之前，首先需要安装 PaddleX，安装方式请参考 [PaddleX 安装文档](xxx)。
+
+
+## 2.PaddleX 模型产线工具使用方式
+### 2.1 OCR 产线
+OCR 产线内置了 PP-OCRv4 模型，包括文字检测和文字识别两个部分。文字检测支持的模型有`PP-OCRv4_mobile_det`、`PP-OCRv4_server_det`，文字识别支持的模型有`PP-OCRv4_mobile_rec`、`PP-OCRv4_server_rec`。您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](./train/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+
+<details>
+<summary><b> 命令行使用方式 </b></summary>
+您可以使用命令行将图片的文字识别出来，命令行使用方式如下：
+
+```
+paddlex --task ocrdet --model PP-OCRv4_mobile_det --image /paddle/dataset/paddlex/ocr_det/ocr_det_dataset/xxx
+```
+参数解释：
+- `task`: 任务类型，当前支持 `ocrdet`
+- `model`: 模型名称，当前支持 `PP-OCRv4_mobile_det` 和 `PP-OCRv4_mobile_rec`。
+</details>
+
+<details>
+<summary><b> Python API 使用方式</b></summary>
 
 ```python
 import cv2
@@ -23,62 +44,43 @@ draw_img = draw_ocr_box_txt(result['original_image'],result['dt_polys'], result[
 cv2.imwrite("ocr_result.jpg", draw_img[:, :, ::-1], )
 ```
 
-## 图像分类
+参数解释：
+- `task`: 任务类型，当前支持 `ocrdet`
+- `model`: 模型名称，当前支持 `PP-OCRv4_mobile_det` 和 `PP-OCRv4_mobile_rec`。
+</details>
+
+
+## 2.2 图像分类产线
+图像分类产线内置了多个图像分类的单模型，包含 `ResNet` 系列、`PP-LCNet` 系列、`MobileNetV2` 系列、`MobileNetV3` 系列、`ConvNeXt` 系列、`SwinTransformer` 系列、`PP-HGNet` 系列、`PP-HGNetV2` 系列、`CLIP` 系列等模型。具体支持的分类模型列表，您可以参考[模型库](./models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](./train/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+
+<details>
+<summary><b> 命令行使用方式 </b></summary>
+您可以使用命令行将图片的文字识别出来，命令行使用方式如下：
+
+```
+paddlex --task ocrdet --model PP-OCRv4_mobile_det --image /paddle/dataset/paddlex/ocr_det/ocr_det_dataset/xxx
+```
+参数解释：
+- `task`: 任务类型，当前支持 `ocrdet`
+- `model`: 模型名称，当前支持 `PP-OCRv4_mobile_det` 和 `PP-OCRv4_mobile_rec`。
+</details>
+
+
+<details>
+<summary><b> Python API 使用方式</b></summary>
 
 ```python
 from paddlex import ClsPipeline
 from paddlex import PaddleInferenceOption
 
-models = [
-    "ResNet18",
-    "ResNet34",
-    "ResNet50",
-    "ResNet101",
-    "ResNet152",
-    "PP-LCNet_x0_25",
-    "PP-LCNet_x0_35",
-    "PP-LCNet_x0_5",
-    "PP-LCNet_x0_75",
-    "PP-LCNet_x1_0",
-    "PP-LCNet_x1_5",
-    "PP-LCNet_x2_5",
-    "PP-LCNet_x2_0",
-    "MobileNetV3_large_x0_35",
-    "MobileNetV3_large_x0_5",
-    "MobileNetV3_large_x0_75",
-    "MobileNetV3_large_x1_0",
-    "MobileNetV3_large_x1_25",
-    "MobileNetV3_small_x0_35",
-    "MobileNetV3_small_x0_5",
-    "MobileNetV3_small_x0_75",
-    "MobileNetV3_small_x1_0",
-    "MobileNetV3_small_x1_25",
-    "ConvNeXt_tiny",
-    "MobileNetV2_x0_25",
-    "MobileNetV2_x0_5",
-    "MobileNetV2_x1_0",
-    "MobileNetV2_x1_5",
-    "MobileNetV2_x2_0",
-    "SwinTransformer_base_patch4_window7_224",
-    "PP-HGNet_small",
-    "PP-HGNetV2-B0",
-    "PP-HGNetV2-B4",
-    "PP-HGNetV2-B6",
-    "CLIP_vit_base_patch16_224",
-    "CLIP_vit_large_patch14_224",
-]
+pipeline = ClsPipeline(model_name, kernel_option=PaddleInferenceOption())
+    result = pipeline(
+        "/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00006.jpg"
+    )
+    print(result["cls_result"])
 
-for model_name in models:
-    try:
-        pipeline = ClsPipeline(model_name, kernel_option=PaddleInferenceOption())
-        result = pipeline(
-            "/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00006.jpg"
-        )
-        print(result["cls_result"])
-    except Exception as e:
-        print(f"[ERROR] model: {model_name}; err: {e}")
-    print(f"[INFO] model: {model_name} done!")
-```
+</details>
+
 
 ## 目标检测
 

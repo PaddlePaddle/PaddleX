@@ -18,7 +18,8 @@ import os
 from copy import deepcopy
 from abc import ABC, abstractmethod
 
-from .utils.paddle_inference_predictor import _PaddleInferencePredictor, PaddleInferenceOption
+from .kernel_option import PaddleInferenceOption
+from .utils.paddle_inference_predictor import _PaddleInferencePredictor
 from .utils.mixin import FromDictMixin
 from .utils.batch import batchable_method, Batcher
 from .utils.node import Node
@@ -62,24 +63,20 @@ class BasePredictor(ABC, FromDictMixin, Node):
         if isinstance(input, dict):
             input = [input]
 
-        logging.info(
-            f"Running {self.__class__.__name__}\nModel: {self.model_dir}\nEnv: {self.kernel_option}\n"
-        )
+        logging.debug(
+            f"-------------------- {self.__class__.__name__} --------------------\n\
+Model: {self.model_dir}\nEnv: {self.kernel_option}")
         data = input[0]
         if self.pre_transforms is not None:
             pre_tfs = self.pre_transforms
         else:
             pre_tfs = self._get_pre_transforms_for_data(data)
-        logging.info(
-            f"The following transformation operators will be used for data preprocessing:\n\
-{self._format_transforms(pre_tfs)}\n")
+        logging.debug(f"Preprocess Ops: {self._format_transforms(pre_tfs)}")
         if self.post_transforms is not None:
             post_tfs = self.post_transforms
         else:
             post_tfs = self._get_post_transforms_for_data(data)
-        logging.info(
-            f"The following transformation operators will be used for postprocessing:\n\
-{self._format_transforms(post_tfs)}\n")
+        logging.debug(f"Postprocessing: {self._format_transforms(post_tfs)}")
 
         output = []
         for mini_batch in Batcher(input, batch_size=batch_size):
@@ -132,13 +129,8 @@ class BasePredictor(ABC, FromDictMixin, Node):
 
     def _format_transforms(self, transforms):
         """ format transforms """
-        lines = ['[']
-        for tf in transforms:
-            s = '\t'
-            s += str(tf)
-            lines.append(s)
-        lines.append(']')
-        return '\n'.join(lines)
+        ops_str = ",  ".join([str(tf) for tf in transforms])
+        return f"[{ops_str}]"
 
     def load_other_src(self):
         """ load other source

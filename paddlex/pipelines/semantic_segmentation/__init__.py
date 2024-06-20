@@ -14,4 +14,4 @@
 
 
 
-from .main import SegPipeline
+from .pipeline import SegPipeline

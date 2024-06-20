@@ -14,7 +14,7 @@ pip install paddlex
 
 ```bash
 cd PaddleX
-python setup.py install
+pip install .
 ```
 
 ### 1.2 安装 PaddleX 相关依赖
@@ -27,21 +27,37 @@ paddlex --install
 
 ### 2.1 使用 CLI 进行推理预测
 
-以图像分类模型 `PP-LCNet_x1_0` 为例，使用inference模型文件（`output/best_model`）对图像（`/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg`）进行预测，命令如下：
+以图像分类模型 `PP-LCNet_x1_0` 为例，使用 PaddleX 预置的官方模型对图像（`/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg`）进行预测，命令如下：
 
 ```bash
-paddlex --model_name PP-LCNet_x1_0 --model output/best_model --device gpu:0 --input_path /paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg --output
+paddlex --pipeline image_classification --model PP-LCNet_x1_0 --input /paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00006.jpg
 ```
 
 可以得到预测结果：
 
 ```
-image_00002.jpg:        class id(s): [76, 24, 70, 18, 14], score(s): [0.66, 0.05, 0.02, 0.02, 0.01], label_name(s): ['tarantula', 'great grey owl, great gray owl, Strix nebulosa', 'harvestman, daddy longlegs, Phalangium opilio', 'magpie', 'indigo bunting, indigo finch, indigo bird, Passerina cyanea']
+[{'class_ids': [309], 'scores': [0.19514], 'label_names': ['bee']}]
 ```
+
+以 OCR 为例，使用PaddleX 预置的 `PP-OCRv4_mobile_det` 和 `PP-OCRv4_mobile_rec` 官方模型，对图像（`/paddle/dataset/paddlex/ocr_det/ocr_det_dataset_examples/images/train_img_100.jpg`）进行预测，命令如下：
+
+```bash
+paddlex --pipeline ocr --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input /paddle/dataset/paddlex/ocr_det/ocr_det_dataset_examples/images/train_img_100.jpg  --output ./
+```
+
+可以在当前目录下得到预测结果示例图 `ocr_result.jpg`。
+
 
 ### 2.2 使用 Python 进行推理预测
 
 ```python
 import paddlex
-paddlex.predict("PP-LCNet_x1_0", "output/best_model", "/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg", "gpu", "./output")
+
+model_name = "PP-LCNet_x1_0"
+
+kernel_option = paddlex.PaddleInferenceOption()
+kernel_option.set_device("gpu")
+
+model = paddlex.create_model(model_name, kernel_option=kernel_option)
+model.predict("/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg")
 ```

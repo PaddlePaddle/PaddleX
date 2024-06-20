@@ -16,10 +16,10 @@
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
-from .build_model import build_model
-from ...utils.device import get_device
-from ...utils.misc import AutoRegisterABCMetaClass
-from ...utils.config import AttrDict
+from ..build_model import build_model
+from ....utils.device import get_device
+from ....utils.misc import AutoRegisterABCMetaClass
+from ....utils.config import AttrDict
 
 
 def build_trainer(config: AttrDict) -> "BaseTrainer":
@@ -45,6 +45,7 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         Args:
             config (AttrDict):  PaddleX pipeline config, which is loaded from pipeline yaml file.
         """
+        super().__init__()
         self.global_config = config.Global
         self.train_config = config.Train
 

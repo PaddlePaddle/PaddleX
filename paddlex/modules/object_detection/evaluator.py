@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from ..base.evaluator import BaseEvaluator
+from ..base import BaseEvaluator
 from .support_models import SUPPORT_MODELS
 
 

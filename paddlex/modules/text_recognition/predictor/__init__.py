@@ -15,3 +15,4 @@
 
 
 from .predictor import TextRecPredictor
+from . import transforms

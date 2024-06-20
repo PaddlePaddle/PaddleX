@@ -16,4 +16,4 @@
 from .dataset_checker import SegDatasetChecker
 from .trainer import SegTrainer
 from .evaluator import SegEvaluator
-from .predictor import SegPredictor
+from .predictor import SegPredictor, transforms

@@ -16,4 +16,4 @@
 from .trainer import ClsTrainer
 from .dataset_checker import ClsDatasetChecker
 from .evaluator import ClsEvaluator
-from .predictor import ClsPredictor
+from .predictor import ClsPredictor, transforms

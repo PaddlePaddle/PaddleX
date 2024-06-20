@@ -46,6 +46,7 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         Args:
             config (AttrDict): PaddleX pipeline config, which is loaded from pipeline yaml file.
         """
+        super().__init__()
         self.global_config = config.Global
         self.check_dataset_config = config.CheckDataset
         self.output_dir = os.path.join(self.global_config.output,

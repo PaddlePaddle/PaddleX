@@ -14,10 +14,11 @@
 
 
 __all__ = [
-    'OCRPipeline', 'ClsPipeline', 'DetPipeline', 'InstanceSegPipeline',
-    'SegPipeline'
+    'build_pipeline', 'BasePipeline', 'OCRPipeline', 'ClsPipeline',
+    'DetPipeline', 'InstanceSegPipeline', 'SegPipeline'
 ]
 
+from .base import build_pipeline, BasePipeline
 from .PPOCR import OCRPipeline
 from .image_classification import ClsPipeline
 from .object_detection import DetPipeline

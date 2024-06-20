@@ -16,4 +16,4 @@
 
 from .predictor import BasePredictor, build_predictor, create_model
 from .transform import BaseTransform
-from .utils.paddle_inference_predictor import PaddleInferenceOption
+from .kernel_option import PaddleInferenceOption

@@ -16,9 +16,9 @@
 from pathlib import Path
 import paddle
 
-from ..base.trainer import BaseTrainer
-from ..base.train_deamon import BaseTrainDeamon
+from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict
+from ...utils import logging
 from .support_models import SUPPORT_MODELS
 
 
@@ -77,7 +77,7 @@ class DetTrainer(BaseTrainer):
             try:
                 self.pdx_config.update_static_assigner_epochs(assigner_epochs)
             except Exception:
-                print(
+                logging.info(
                     f"The model({self.global_config.model}) don't support to update_static_assigner_epochs!"
                 )
 

@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-from .base import build_dataset_checker, build_trainer, build_evaluater, build_predictor, create_model
+from .base import build_dataset_checker, build_trainer, build_evaluater, build_predictor, create_model, \
+PaddleInferenceOption
 from .image_classification import ClsDatasetChecker, ClsTrainer, ClsEvaluator, ClsPredictor
 from .object_detection import COCODatasetChecker, DetTrainer, DetEvaluator, DetPredictor
 from .text_detection import TextDetDatasetChecker, TextDetTrainer, TextDetEvaluator, TextDetPredictor

@@ -15,3 +15,4 @@
 
 
 from .predictor import InstanceSegPredictor
+from . import transforms

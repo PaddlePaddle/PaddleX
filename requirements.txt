@@ -13,3 +13,4 @@ pyclipper
 shapely
 pandas
 parsley
+requests

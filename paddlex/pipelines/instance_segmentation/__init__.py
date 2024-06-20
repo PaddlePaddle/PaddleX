@@ -14,4 +14,4 @@
 
 
 
-from .main import InstanceSegPipeline
+from .pipeline import InstanceSegPipeline

@@ -14,4 +14,4 @@
 
 
 
-from .main import DetPipeline
+from .pipeline import DetPipeline

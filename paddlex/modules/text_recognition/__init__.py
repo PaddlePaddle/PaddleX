@@ -16,4 +16,4 @@
 from .dataset_checker import TextRecDatasetChecker
 from .trainer import TextRecTrainer
 from .evaluator import TextRecEvaluator
-from .predictor import TextRecPredictor
+from .predictor import TextRecPredictor, transforms

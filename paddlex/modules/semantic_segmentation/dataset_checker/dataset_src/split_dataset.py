@@ -20,18 +20,19 @@ import random
 import shutil
 
 from .....utils.file_interface import custom_open
+from .....utils import logging
 
 
-def split_dataset(root_dir, train_percent, val_percent, test_percent=0):
+def split_dataset(root_dir, train_percent, val_percent):
     """ split dataset """
     assert train_percent > 0, ValueError(
         f"The train_percent({train_percent}) must greater than 0!")
     assert val_percent > 0, ValueError(
         f"The val_percent({val_percent}) must greater than 0!")
-    if train_percent + val_percent + test_percent != 100:
+    if train_percent + val_percent != 100:
         raise ValueError(
-            f"The sum of train_percent({train_percent}), val_percent({val_percent}) "
-            f"and test_percent({test_percent}) should be 100!")
+            f"The sum of train_percent({train_percent})and val_percent({val_percent}) should be 100!"
+        )
 
     img_dir = osp.join(root_dir, "images")
     assert osp.exists(img_dir), FileNotFoundError(
@@ -51,12 +52,13 @@ def split_dataset(root_dir, train_percent, val_percent, test_percent=0):
     assert img_num == ann_num, ValueError(
         "The number of images and annotations must be equal!")
 
-    split_tags = ["train", "val", "test"]
+    split_tags = ["train", "val"]
     mapping_line_list = []
     for tag in split_tags:
         mapping_file = osp.join(root_dir, f"{tag}.txt")
         if not osp.exists(mapping_file):
-            print(f"The mapping file ({mapping_file}) doesn't exist, ignored.")
+            logging.info(
+                f"The mapping file ({mapping_file}) doesn't exist, ignored.")
             continue
         with custom_open(mapping_file, "r") as fp:
             lines = filter(None, (line.strip() for line in fp.readlines()))
@@ -64,7 +66,7 @@ def split_dataset(root_dir, train_percent, val_percent, test_percent=0):
 
     sample_num = len(mapping_line_list)
     random.shuffle(mapping_line_list)
-    split_percents = [train_percent, val_percent, test_percent]
+    split_percents = [train_percent, val_percent]
     start_idx = 0
     for tag, percent in zip(split_tags, split_percents):
         if tag == 'test' and percent == 0:
@@ -74,8 +76,8 @@ def split_dataset(root_dir, train_percent, val_percent, test_percent=0):
         mapping_file = osp.join(root_dir, f"{tag}.txt")
         if os.path.exists(mapping_file):
             shutil.move(mapping_file, mapping_file + ".bak")
-            print(f"The original mapping file ({mapping_file}) "
-                  f"has been backed up to ({mapping_file}.bak)")
+            logging.info(f"The original mapping file ({mapping_file}) "
+                         f"has been backed up to ({mapping_file}.bak)")
         with custom_open(mapping_file, "w") as fp:
             fp.write("\n".join(mapping_line_list[start_idx:end_idx]))
         start_idx = end_idx

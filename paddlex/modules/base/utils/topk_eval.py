@@ -19,6 +19,8 @@ import argparse
 from paddle import nn
 import paddle
 
+from ....utils import logging
+
 
 def parse_args():
     """Parse all arguments """
@@ -77,7 +79,7 @@ class TopkAcc(AvgMetrics):
             if output_dims < k:
                 if not self.warned:
                     msg = f"The output dims({output_dims}) is less than k({k}), so the Top-{k} metric is meaningless."
-                    print(msg)
+                    logging.info(msg)
                     self.warned = True
                 metric_dict[f"top{k}"] = 1
             else:
@@ -111,7 +113,7 @@ def main(args):
         pred.append(prase_pt_info(pt_info, args.num_classes))
         label.append([gt_info[img_file]])
     metric_dict = TopkAcc()(paddle.to_tensor(pred), paddle.to_tensor(label))
-    print(metric_dict)
+    logging.info(metric_dict)
 
 
 if __name__ == "__main__":

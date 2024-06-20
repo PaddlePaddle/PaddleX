@@ -23,6 +23,7 @@ from PIL import Image, ImageOps
 from .utils.visualizer import visualize
 from .....utils.errors import DatasetFileNotFoundError
 from .....utils.file_interface import custom_open
+from .....utils.logging import info
 
 
 def check_dataset(dataset_dir, output_dir, sample_num=10):
@@ -30,7 +31,7 @@ def check_dataset(dataset_dir, output_dir, sample_num=10):
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
-    vis_save_dir = osp.join(output_dir, 'tmp')
+    vis_save_dir = osp.join(output_dir, 'demo_img')
     if not osp.exists(vis_save_dir):
         os.makedirs(vis_save_dir)
     split_tags = ["train", "val"]
@@ -39,7 +40,7 @@ def check_dataset(dataset_dir, output_dir, sample_num=10):
     for tag in split_tags:
         mapping_file = osp.join(dataset_dir, f"{tag}.txt")
         if not osp.exists(mapping_file):
-            print(f"The mapping file ({mapping_file}) doesn't exist, ignored.")
+            info(f"The mapping file ({mapping_file}) doesn't exist, ignored.")
             continue
         with custom_open(mapping_file, "r") as fp:
             lines = filter(None, (line.strip() for line in fp.readlines()))
@@ -65,6 +66,9 @@ def check_dataset(dataset_dir, output_dir, sample_num=10):
                     vis_save_path = osp.join(vis_save_dir,
                                              osp.basename(img_file))
                     vis_img.save(vis_save_path)
+                    vis_save_path = osp.join(
+                        'check_dataset',
+                        os.path.relpath(vis_save_path, output_dir))
                     if f"{tag}_sample_paths" not in attrs:
                         attrs[f"{tag}_sample_paths"] = [vis_save_path]
                     else:

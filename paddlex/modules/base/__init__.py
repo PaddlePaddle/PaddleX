@@ -15,7 +15,6 @@
 
 
 from .dataset_checker import build_dataset_checker, BaseDatasetChecker
-from .trainer import build_trainer, BaseTrainer
+from .trainer import build_trainer, BaseTrainer, BaseTrainDeamon
 from .evaluator import build_evaluater, BaseEvaluator
-from .predictor import BasePredictor, BaseTransform, PaddleInferenceOption, build_predictor, create_model
-from .train_deamon import BaseTrainDeamon
+from .predictor import build_predictor, BasePredictor, BaseTransform, PaddleInferenceOption, create_model

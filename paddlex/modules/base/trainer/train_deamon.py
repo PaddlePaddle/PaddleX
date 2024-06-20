@@ -21,8 +21,9 @@ import traceback
 import threading
 from abc import ABC, abstractmethod
 from pathlib import Path
-from .build_model import build_model
-from ...utils.file_interface import write_json_file
+from ..build_model import build_model
+from ....utils.file_interface import write_json_file
+from ....utils import logging
 
 
 def try_except_decorator(func):
@@ -34,7 +35,7 @@ def try_except_decorator(func):
         except Exception as e:
             exc_type, exc_value, exc_tb = sys.exc_info()
             self.save_json()
-            traceback.print_exception(exc_type, exc_value, exc_tb)
+            traceback.logging.info_exception(exc_type, exc_value, exc_tb)
         finally:
             self.processing = False
 

@@ -13,7 +13,4 @@
 # limitations under the License.
 
 
-from .dataset_checker import COCOInstSegDatasetChecker
-from .trainer import InstanceSegTrainer
-from .evaluator import InstanceSegEvaluator
-from .predictor import InstanceSegPredictor, transforms
+from .pipeline import build_pipeline, BasePipeline

@@ -17,10 +17,9 @@
 import os
 
 from . import version
-from .paddlex import predict
 from .modules import build_dataset_checker, build_trainer, build_evaluater, build_predictor
+from .modules import create_model, PaddleInferenceOption
 from .pipelines import *
-from .modules.base.predictor.utils.paddle_inference_predictor import PaddleInferenceOption
 
 
 def _initialize():
