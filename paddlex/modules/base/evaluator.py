@@ -94,7 +94,7 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
                 return False
         return True
 
-    def __call__(self) -> dict:
+    def evaluate(self) -> dict:
         """execute model training
 
         Returns:

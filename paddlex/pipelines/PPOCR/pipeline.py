@@ -25,7 +25,7 @@ from .utils import draw_ocr_box_txt
 class OCRPipeline(BasePipeline):
     """OCR Pipeline
     """
-    support_models = "ocr"
+    support_models = "PP-OCRv4"
 
     def __init__(self,
                  text_det_model_name=None,
@@ -35,18 +35,27 @@ class OCRPipeline(BasePipeline):
                  text_det_kernel_option=None,
                  text_rec_kernel_option=None,
                  output_dir=None,
+                 device="gpu",
                  **kwargs):
         self.text_det_model_name = text_det_model_name
         self.text_rec_model_name = text_rec_model_name
         self.text_det_model_dir = text_det_model_dir
         self.text_rec_model_dir = text_rec_model_dir
         self.output_dir = output_dir
+        self.device = device
         self.text_det_kernel_option = self.get_kernel_option(
         ) if text_det_kernel_option is None else text_det_kernel_option
         self.text_rec_kernel_option = self.get_kernel_option(
         ) if text_rec_kernel_option is None else text_rec_kernel_option
 
-        self.text_det_post_transforms = [
+        if self.text_det_model_name is not None and self.text_rec_model_name is not None:
+            self.load_model()
+
+    def load_model(self):
+        """load model predictor
+        """
+        assert self.text_det_model_name is not None and self.text_rec_model_name is not None
+        text_det_post_transforms = [
             text_det_T.DBPostProcess(
                 thresh=0.3,
                 box_thresh=0.6,
@@ -58,27 +67,21 @@ class OCRPipeline(BasePipeline):
             # TODO
             text_det_T.CropByPolys(det_box_type="foo")
         ]
-        if self.text_det_model_name is not None and self.text_rec_model_name is not None:
-            self.load_model()
 
-    def load_model(self):
-        """load model predictor
-        """
-        assert self.text_det_model_name is not None and self.text_rec_model_name is not None
         self.text_det_model = create_model(
             self.text_det_model_name,
             self.text_det_model_dir,
             kernel_option=self.text_det_kernel_option,
-            post_transforms=self.text_det_post_transforms)
+            post_transforms=text_det_post_transforms)
         self.text_rec_model = create_model(
             self.text_rec_model_name,
             self.text_rec_model_dir,
             kernel_option=self.text_rec_kernel_option)
 
-    def predict(self, input_path):
+    def predict(self, input):
         """predict
         """
-        result = self.text_det_model.predict({"input_path": input_path})
+        result = self.text_det_model.predict(input)
         all_rec_result = []
         for i, img in enumerate(result["sub_imgs"]):
             rec_result = self.text_rec_model.predict({"image": img})
@@ -88,8 +91,9 @@ class OCRPipeline(BasePipeline):
         if self.output_dir is not None:
             draw_img = draw_ocr_box_txt(result['original_image'],
                                         result['dt_polys'], result["rec_text"])
+            fn = os.path.basename(result['input_path'])
             cv2.imwrite(
-                os.path.join(self.output_dir, "ocr_result.jpg"),
+                os.path.join(self.output_dir, fn),
                 draw_img[:, :, ::-1], )
 
         return result
@@ -108,5 +112,10 @@ class OCRPipeline(BasePipeline):
         """get kernel option
         """
         kernel_option = PaddleInferenceOption()
-        kernel_option.set_device("gpu")
+        kernel_option.set_device(self.device)
         return kernel_option
+
+    def get_input_keys(self):
+        """get dict keys of input argument input
+        """
+        return self.text_det_model.get_input_keys()

@@ -60,3 +60,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             model_list (list): list of model name.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def get_input_keys(self):
+        """get dict keys of input argument input
+        """
+        raise NotImplementedError

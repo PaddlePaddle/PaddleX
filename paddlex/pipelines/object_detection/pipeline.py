@@ -28,11 +28,12 @@ class DetPipeline(BasePipeline):
                  model_dir=None,
                  output_dir="./output",
                  kernel_option=None,
+                 device="gpu",
                  **kwargs):
         self.model_name = model_name
         self.model_dir = model_dir
         self.output_dir = output_dir
-        self.post_transforms = self.get_post_transforms(model_dir)
+        self.device = device
         self.kernel_option = self.get_kernel_option(
         ) if kernel_option is None else kernel_option
         if self.model_name is not None:
@@ -43,26 +44,21 @@ class DetPipeline(BasePipeline):
         """
         assert self.model_name is not None
         self.model = create_model(
-            self.model_name,
+            model_name=self.model_name,
             model_dir=self.model_dir,
-            kernel_option=self.kernel_option,
-            post_transforms=self.post_transforms)
+            output_dir=self.output_dir,
+            kernel_option=self.kernel_option)
 
-    def predict(self, input_path):
+    def predict(self, input):
         """predict
         """
-        return self.model.predict({"input_path": input_path})
-
-    def get_post_transforms(self, model_dir):
-        """get post transform ops
-        """
-        return [T.SaveDetResults(self.output_dir), T.PrintResult()]
+        return self.model.predict(input)
 
     def get_kernel_option(self):
         """get kernel option
         """
         kernel_option = PaddleInferenceOption()
-        kernel_option.set_device("gpu")
+        kernel_option.set_device(self.device)
 
     def update_model_name(self, model_name_list):
         """update model name and re
@@ -72,3 +68,8 @@ class DetPipeline(BasePipeline):
         """
         assert len(model_name_list) == 1
         self.model_name = model_name_list[0]
+
+    def get_input_keys(self):
+        """get dict keys of input argument input
+        """
+        return self.model.get_input_keys()

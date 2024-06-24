@@ -66,24 +66,16 @@ class TextRecPredictor(BasePredictor):
             dict_[K.REC_PROBS] = probs[np.newaxis, :]
         return pred
 
-    def _get_pre_transforms_for_data(self, data):
-        """ _get_pre_transforms_for_data """
-        if K.IMAGE not in data and K.IM_PATH not in data:
-            raise KeyError(
-                f"Key {repr(K.IMAGE)} or {repr(K.IM_PATH)} is required, but not found."
-            )
-        pre_transforms = []
-        if K.IMAGE not in data:
-            pre_transforms.append(image_common.ReadImage())
-        else:
-            pre_transforms.append(image_common.GetImageInfo())
-        pre_transforms.append(T.OCRReisizeNormImg())
-        return pre_transforms
+    def _get_pre_transforms_from_config(self):
+        """ _get_pre_transforms_from_config """
+        return [
+            image_common.ReadImage(), image_common.GetImageInfo(),
+            T.OCRReisizeNormImg()
+        ]
 
-    def _get_post_transforms_for_data(self, data):
+    def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        post_transforms = [T.CTCLabelDecode(self.other_src.PostProcess)]
-        if data.get('cli_flag', False):
-            output_dir = data.get("output_dir", "./")
-            post_transforms.append(T.PrintResult())
+        post_transforms = [
+            T.CTCLabelDecode(self.other_src.PostProcess), T.PrintResult()
+        ]
         return post_transforms

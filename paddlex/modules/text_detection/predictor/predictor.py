@@ -58,28 +58,18 @@ class TextDetPredictor(BasePredictor):
 
         return pred
 
-    def _get_pre_transforms_for_data(self, data):
+    def _get_pre_transforms_from_config(self):
         """ get preprocess transforms """
-        if K.IMAGE not in data and K.IM_PATH not in data:
-            raise KeyError(
-                f"Key {repr(K.IMAGE)} or {repr(K.IM_PATH)} is required, but not found."
-            )
-        pre_transforms = []
-        if K.IMAGE not in data:
-            pre_transforms.append(image_common.ReadImage())
-        pre_transforms.append(
-            T.DetResizeForTest(
-                limit_side_len=960, limit_type="max"))
-        pre_transforms.append(
-            T.NormalizeImage(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
-                scale=1. / 255,
-                order='hwc'))
-        pre_transforms.append(image_common.ToCHWImage())
-        return pre_transforms
+        return [
+            image_common.ReadImage(), T.DetResizeForTest(
+                limit_side_len=960, limit_type="max"), T.NormalizeImage(
+                    mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225],
+                    scale=1. / 255,
+                    order='hwc'), image_common.ToCHWImage()
+        ]
 
-    def _get_post_transforms_for_data(self, data):
+    def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
         post_transforms = [
             T.DBPostProcess(
@@ -89,9 +79,6 @@ class TextDetPredictor(BasePredictor):
                 unclip_ratio=1.5,
                 use_dilation=False,
                 score_mode='fast',
-                box_type='quad'),
+                box_type='quad'), T.SaveTextDetResults(self.output_dir)
         ]
-        if data.get('cli_flag', False):
-            output_dir = data.get("output_dir", "./")
-            post_transforms.append(T.SaveTextDetResults(output_dir))
         return post_transforms

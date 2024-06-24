@@ -26,3 +26,12 @@ InstanceSegPredictor
 from .ts_anomaly_detection import TSADDatasetChecker, TSADTrainer, TSADEvaluator, TSADPredictor
 from .ts_classification import TSCLSDatasetChecker, TSCLSTrainer, TSCLSEvaluator, TSCLSPredictor
 from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator, TSFCPredictor
+
+from .base.predictor.transforms import image_common
+from .image_classification import transforms as cls_transforms
+from .object_detection import transforms as det_transforms
+from .text_detection import transforms as text_det_transforms
+from .text_recognition import transforms as text_rec_transforms
+from .table_recognition import transforms as table_rec_transforms
+from .semantic_segmentation import transforms as seg_transforms
+from .instance_segmentation import transforms as instance_seg_transforms

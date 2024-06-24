@@ -34,7 +34,7 @@ class InstanceSegPredictor(DetPredictor):
             axis=0).astype(
                 dtype=np.float32, copy=False)
         input_dict["im_shape"] = np.stack(
-            [data[K.IMAGE_SHAPE][::-1] for data in batch_input], axis=0).astype(
+            [data[K.IM_SIZE][::-1] for data in batch_input], axis=0).astype(
                 dtype=np.float32, copy=False)
 
         input_ = [input_dict[i] for i in self._predictor.get_input_names()]

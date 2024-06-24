@@ -24,11 +24,10 @@ class DetKeys(object):
     """
 
     # Common keys
-    IMAGE_PATH = 'input_path'
     IMAGE = 'image'
-    IMAGE_SHAPE = 'image_size'
+    IM_PATH = 'input_path'
+    IM_SIZE = 'image_size'
     SCALE_FACTOR = 'scale_factors'
     # Suite-specific keys
     BOXES = 'boxes'
     MASKS = 'masks'
-    LABELS = 'labels'

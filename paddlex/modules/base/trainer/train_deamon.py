@@ -35,7 +35,7 @@ def try_except_decorator(func):
         except Exception as e:
             exc_type, exc_value, exc_tb = sys.exc_info()
             self.save_json()
-            traceback.logging.info_exception(exc_type, exc_value, exc_tb)
+            traceback.print_exception(exc_type, exc_value, exc_tb)
         finally:
             self.processing = False
 

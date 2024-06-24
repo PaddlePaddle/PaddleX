@@ -34,6 +34,6 @@ def build_model(model_name: str, device: str=None,
     config = Config(model_name, config_path)
 
     if device:
-        config.update_device(get_device(device).split(":")[0])
+        config.update_device(get_device(device))
     model = PaddleModel(config=config)
     return config, model

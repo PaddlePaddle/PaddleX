@@ -583,6 +583,11 @@ class SaveTextDetResults(BaseTransform):
 
     def apply(self, data):
         """ apply """
+        if self.save_dir is None:
+            logging.warning(
+                "The `save_dir` has been set to None, so the text detection result won't to be saved."
+            )
+            return data
         save_path = os.path.join(self.save_dir, self.file_name)
         bbox_res = data[K.DT_POLYS]
         vis_img = self.draw_rectangle(data[K.IM_PATH], bbox_res)

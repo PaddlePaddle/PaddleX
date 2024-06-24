@@ -29,4 +29,3 @@ class ClsKeys(object):
     # Suite-specific keys
     CLS_PRED = 'cls_pred'
     CLS_RESULT = 'cls_result'
-    LABELS = 'labels'

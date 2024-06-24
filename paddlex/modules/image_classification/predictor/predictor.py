@@ -64,32 +64,20 @@ class ClsPredictor(BasePredictor):
             dict_[K.CLS_PRED] = cls_out
         return pred
 
-    def _get_pre_transforms_for_data(self, data):
+    def _get_pre_transforms_from_config(self):
         """ get preprocess transforms """
-        if K.IMAGE not in data:
-            if K.IM_PATH not in data:
-                raise KeyError(
-                    f"Key {repr(K.IM_PATH)} is required, but not found.")
-            logging.info(
-                f"Transformation operators for data preprocessing will be inferred from config file."
-            )
-            pre_transforms = self.other_src.pre_transforms
-            pre_transforms.insert(0, image_common.ReadImage(format='RGB'))
-        else:
-            raise RuntimeError(
-                f"`{self.__class__.__name__}` does not have default transformation operators to preprocess the input. "
-                f"Please set `pre_transforms` when using the {repr(K.IMAGE)} key in input dict."
-            )
-        pre_transforms.insert(0, T.LoadLabels(self.other_src.labels))
+        logging.info(
+            f"Transformation operators for data preprocessing will be inferred from config file."
+        )
+        pre_transforms = self.other_src.pre_transforms
+        pre_transforms.insert(0, image_common.ReadImage(format='RGB'))
         return pre_transforms
 
-    def _get_post_transforms_for_data(self, data):
+    def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        if data.get('cli_flag', False):
-            output_dir = data.get("output_dir", "./")
-            return [
-                # T.SaveDetResults(output_dir, labels=self.other_src.labels),
-                T.Topk(topk=1),
-                T.PrintResult()
-            ]
-        return []
+        post_transforms = self.other_src.post_transforms
+        post_transforms.extend([
+            T.PrintResult(), T.SaveClsResults(self.output_dir,
+                                              self.other_src.labels)
+        ])
+        return post_transforms

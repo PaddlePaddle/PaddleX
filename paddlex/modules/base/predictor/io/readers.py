@@ -16,11 +16,7 @@
 
 import enum
 import itertools
-from pathlib import Path
 import cv2
-
-from .....utils.download import download
-from .....utils.cache import CACHE_DIR
 
 __all__ = ['ImageReader', 'VideoReader', 'ReaderType']
 
@@ -65,14 +61,6 @@ class _BaseReader(object):
         """ get default backend arguments """
         return {}
 
-    def _download_from_url(self, in_path):
-        if in_path.startswith("http"):
-            file_name = Path(in_path).name
-            save_path = Path(CACHE_DIR) / "predict_input" / file_name
-            download(in_path, save_path, overwrite=True)
-            return save_path.as_posix()
-        return in_path
-
 
 class ImageReader(_BaseReader):
     """ ImageReader """
@@ -82,8 +70,6 @@ class ImageReader(_BaseReader):
 
     def read(self, in_path):
         """ read the image file from path """
-        # XXX: auto download for url
-        in_path = self._download_from_url(in_path)
         arr = self._backend.read_file(in_path)
         return arr
 

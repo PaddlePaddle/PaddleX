@@ -112,8 +112,8 @@ def raise_class_not_found_error(cls_name, base_cls, all_entities=None):
     base_cls_name = base_cls.__name__
     msg = f"`{cls_name}` is not registered on {base_cls_name}."
     if all_entities is not None:
-        all_entities_str = ",".join(all_entities)
-        msg += f"\nThe registied entities:`[{all_entities_str}]`"
+        all_entities_str = ",  ".join(all_entities)
+        msg += f"\nThe registied entities: [{all_entities_str}]"
     raise ClassNotFoundException(msg)
 
 

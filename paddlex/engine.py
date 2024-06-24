@@ -35,19 +35,19 @@ class Engine(object):
     def run(self):
         """ the main function """
         if self.config.Global.mode == "check_dataset":
-            check_dataset = build_dataset_checker(self.config)
-            return check_dataset()
+            dataset_checker = build_dataset_checker(self.config)
+            return dataset_checker.check_dataset()
         elif self.config.Global.mode == "train":
-            train = build_trainer(self.config)
-            train()
+            trainer = build_trainer(self.config)
+            trainer.train()
         elif self.config.Global.mode == "evaluate":
-            evaluate = build_evaluater(self.config)
-            return evaluate()
+            evaluator = build_evaluater(self.config)
+            return evaluator.evaluate()
         elif self.config.Global.mode == "export":
             raise_unsupported_api_error("export", self.__class__)
         elif self.config.Global.mode == "predict":
-            predict = build_predictor(self.config)
-            return predict()
+            predictor = build_predictor(self.config)
+            return predictor.predict()
         else:
             raise_unsupported_api_error(f"{self.config.Global.mode}",
                                         self.__class__)

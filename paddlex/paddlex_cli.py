@@ -54,7 +54,7 @@ def args_cfg():
     parser.add_argument('--pipeline', type=str, help="")
     parser.add_argument('--model', nargs='+', help="")
     parser.add_argument('--input', type=str, help="")
-    parser.add_argument('--output', type=str, help="")
+    parser.add_argument('--output', type=str, default="./", help="")
     parser.add_argument('--device', type=str, default='gpu:0', help="")
 
     return parser.parse_args()
@@ -110,7 +110,7 @@ def install(args):
 
 def pipeline_predict(pipeline, model_name_list, input_path, output_dir, device):
     pipeline = build_pipeline(pipeline, model_name_list, output_dir, device)
-    pipeline.predict(input_path)
+    pipeline.predict({"input_path": input_path})
 
 
 # for CLI
@@ -121,6 +121,6 @@ def main():
     if args.install:
         install(args)
     else:
-        print_info()
+        # print_info()
         return pipeline_predict(args.pipeline, args.model, args.input,
                                 args.output, args.device)

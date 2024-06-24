@@ -33,12 +33,14 @@ class TableRecPredictor(BasePredictor):
     def __init__(self,
                  model_dir,
                  kernel_option,
+                 output_dir,
                  pre_transforms=None,
                  post_transforms=None,
                  table_max_len=488):
         super().__init__(
             model_dir=model_dir,
             kernel_option=kernel_option,
+            output_dir=output_dir,
             pre_transforms=pre_transforms,
             post_transforms=post_transforms)
         self.table_max_len = table_max_len
@@ -72,29 +74,17 @@ class TableRecPredictor(BasePredictor):
             dict_[K.LOC_PROB] = bbox_prob[np.newaxis, :]
         return pred
 
-    def _get_pre_transforms_for_data(self, data):
-        """ _get_pre_transforms_for_data """
-        if K.IMAGE not in data and K.IM_PATH not in data:
-            raise KeyError(
-                f"Key {repr(K.IMAGE)} or {repr(K.IM_PATH)} is required, but not found."
-            )
-        pre_transforms = []
-        if K.IMAGE not in data:
-            pre_transforms.append(image_common.ReadImage())
-        pre_transforms.append(
-            image_common.ResizeByLong(target_long_edge=self.table_max_len))
-        pre_transforms.append(
+    def _get_pre_transforms_from_config(self):
+        """ _get_pre_transforms_from_config """
+        return [
+            image_common.ReadImage(),
+            image_common.ResizeByLong(target_long_edge=self.table_max_len),
             image_common.Normalize(
-                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]))
-        pre_transforms.append(
-            image_common.Pad(target_size=self.table_max_len, val=0.0))
-        pre_transforms.append(image_common.ToCHWImage())
-        return pre_transforms
+                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            image_common.Pad(target_size=self.table_max_len, val=0.0),
+            image_common.ToCHWImage()
+        ]
 
-    def _get_post_transforms_for_data(self, data):
+    def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        post_transforms = [T.TableLabelDecode()]
-        if data.get('cli_flag', False):
-            output_dir = data.get("output_dir", "./")
-            post_transforms.append(T.SaveTableResults(output_dir))
-        return post_transforms
+        return [T.TableLabelDecode(), T.SaveTableResults(self.output_dir)]

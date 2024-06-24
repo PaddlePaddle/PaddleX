@@ -38,20 +38,37 @@ class BasePredictor(ABC, FromDictMixin, Node):
     def __init__(self,
                  model_dir,
                  kernel_option,
+                 output_dir,
                  pre_transforms=None,
                  post_transforms=None):
         super().__init__()
         self.model_dir = model_dir
-        self.pre_transforms = pre_transforms
-        self.post_transforms = post_transforms
         self.kernel_option = kernel_option
+        self.output_dir = output_dir
+        self.other_src = self.load_other_src()
+
+        logging.debug(
+            f"-------------------- {self.__class__.__name__} --------------------\n\
+Model: {self.model_dir}\n\
+Env: {self.kernel_option}")
+        self.pre_tfs, self.post_tfs = self.build_transforms(pre_transforms,
+                                                            post_transforms)
 
         param_path = os.path.join(model_dir, f"{self.MODEL_FILE_TAG}.pdiparams")
         model_path = os.path.join(model_dir, f"{self.MODEL_FILE_TAG}.pdmodel")
         self._predictor = _PaddleInferencePredictor(
             param_path=param_path, model_path=model_path, option=kernel_option)
 
-        self.other_src = self.load_other_src()
+    def build_transforms(self, pre_transforms, post_transforms):
+        """ build pre-transforms and post-transforms
+        """
+        pre_tfs = pre_transforms if pre_transforms is not None else self._get_pre_transforms_from_config(
+        )
+        logging.debug(f"Preprocess Ops: {self._format_transforms(pre_tfs)}")
+        post_tfs = post_transforms if post_transforms is not None else self._get_post_transforms_from_config(
+        )
+        logging.debug(f"Postprocessing: {self._format_transforms(post_tfs)}")
+        return pre_tfs, post_tfs
 
     def predict(self, input, batch_size=1):
         """ predict """
@@ -63,24 +80,10 @@ class BasePredictor(ABC, FromDictMixin, Node):
         if isinstance(input, dict):
             input = [input]
 
-        logging.debug(
-            f"-------------------- {self.__class__.__name__} --------------------\n\
-Model: {self.model_dir}\nEnv: {self.kernel_option}")
-        data = input[0]
-        if self.pre_transforms is not None:
-            pre_tfs = self.pre_transforms
-        else:
-            pre_tfs = self._get_pre_transforms_for_data(data)
-        logging.debug(f"Preprocess Ops: {self._format_transforms(pre_tfs)}")
-        if self.post_transforms is not None:
-            post_tfs = self.post_transforms
-        else:
-            post_tfs = self._get_post_transforms_for_data(data)
-        logging.debug(f"Postprocessing: {self._format_transforms(post_tfs)}")
-
         output = []
         for mini_batch in Batcher(input, batch_size=batch_size):
-            mini_batch = self._preprocess(mini_batch, pre_transforms=pre_tfs)
+            mini_batch = self._preprocess(
+                mini_batch, pre_transforms=self.pre_tfs)
 
             for data in mini_batch:
                 self.check_input_keys(data)
@@ -90,7 +93,8 @@ Model: {self.model_dir}\nEnv: {self.kernel_option}")
             for data in mini_batch:
                 self.check_output_keys(data)
 
-            mini_batch = self._postprocess(mini_batch, post_transforms=post_tfs)
+            mini_batch = self._postprocess(
+                mini_batch, post_transforms=self.post_tfs)
 
             output.extend(mini_batch)
 
@@ -104,12 +108,12 @@ Model: {self.model_dir}\nEnv: {self.kernel_option}")
         raise NotImplementedError
 
     @abstractmethod
-    def _get_pre_transforms_for_data(self, data):
+    def _get_pre_transforms_from_config(self):
         """ get preprocess transforms """
         raise NotImplementedError
 
     @abstractmethod
-    def _get_post_transforms_for_data(self, data):
+    def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
         raise NotImplementedError
 
@@ -137,6 +141,11 @@ Model: {self.model_dir}\nEnv: {self.kernel_option}")
         """
         return None
 
+    def get_input_keys(self):
+        """get keys of input dict
+        """
+        return self.pre_tfs[0].get_input_keys()
+
 
 class PredictorBuilderByConfig(object):
     """build model predictor
@@ -149,7 +158,7 @@ class PredictorBuilderByConfig(object):
         """
         model_name = config.Global.model
 
-        device = config.Global.device.split(':')[0]
+        device = config.Global.device
 
         predict_config = deepcopy(config.Predict)
         model_dir = predict_config.pop('model_dir')
@@ -159,17 +168,16 @@ class PredictorBuilderByConfig(object):
 
         self.input_path = predict_config.pop('input_path')
 
-        self.predictor = BasePredictor.get(model_name)(model_dir, kernel_option,
-                                                       **predict_config)
-        self.output = config.Global.output
+        self.predictor = BasePredictor.get(model_name)(
+            model_dir=model_dir,
+            kernel_option=kernel_option,
+            output_dir=config.Global.output_dir,
+            **predict_config)
 
-    def __call__(self):
-        data = {
-            "input_path": self.input_path,
-            "cli_flag": True,
-            "output_dir": self.output
-        }
-        self.predictor.predict(data)
+    def predict(self):
+        """predict
+        """
+        self.predictor.predict({'input_path': self.input_path})
 
 
 def build_predictor(*args, **kwargs):
@@ -181,6 +189,7 @@ def build_predictor(*args, **kwargs):
 def create_model(model_name,
                  model_dir=None,
                  kernel_option=None,
+                 output_dir=None,
                  pre_transforms=None,
                  post_transforms=None,
                  *args,
@@ -189,7 +198,16 @@ def create_model(model_name,
     """
     kernel_option = PaddleInferenceOption(
     ) if kernel_option is None else kernel_option
-    model_dir = official_models[model_name] if model_dir is None else model_dir
-    return BasePredictor.get(model_name)(model_dir, kernel_option,
-                                         pre_transforms, post_transforms, *args,
+    if model_dir is None:
+        if model_name in official_models:
+            model_dir = official_models[model_name]
+        else:
+            # model name is invalid
+            BasePredictor.get(model_name)
+    return BasePredictor.get(model_name)(model_dir=model_dir,
+                                         kernel_option=kernel_option,
+                                         output_dir=output_dir,
+                                         pre_transforms=pre_transforms,
+                                         post_transforms=post_transforms,
+                                         *args,
                                          **kwargs)

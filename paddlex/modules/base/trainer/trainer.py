@@ -52,7 +52,7 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         self.deamon = self.build_deamon(self.global_config)
         self.pdx_config, self.pdx_model = build_model(self.global_config.model)
 
-    def __call__(self, *args, **kwargs):
+    def train(self, *args, **kwargs):
         """execute model training
         """
         os.makedirs(self.global_config.output, exist_ok=True)

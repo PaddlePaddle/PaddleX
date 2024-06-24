@@ -16,6 +16,8 @@
 
 from functools import wraps, partial
 
+from ....utils import logging
+
 
 def register(register_map, key):
     """register the option setting func
@@ -64,6 +66,7 @@ class PaddleInferenceOption(object):
             'run_mode': 'paddle',
             'batch_size': 1,
             'device': 'gpu',
+            'device_id': 0,
             'min_subgraph_size': 3,
             'shape_info_filename': None,
             'trt_calib_mode': False,
@@ -91,16 +94,25 @@ class PaddleInferenceOption(object):
         self._cfg['batch_size'] = batch_size
 
     @register2self('device')
-    def set_device(self, device: str):
+    def set_device(self, device_setting: str):
         """set device
         """
-        device = device.split(":")[0]
+        if len(device_setting.split(":")) == 1:
+            device = device_setting.split(":")[0]
+            device_id = 0
+        else:
+            assert len(device_setting.split(":")) == 2
+            device = device_setting.split(":")[0]
+            device_id = device_setting.split(":")[1].split(",")[0]
+            logging.warning(f"The device id has been set to {device_id}.")
+
         if device.lower() not in self.SUPPORT_DEVICE:
             support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
             raise ValueError(
                 f"`device` must be {support_run_mode_str}, but received {repr(device)}."
             )
         self._cfg['device'] = device.lower()
+        self._cfg['device_id'] = int(device_id)
 
     @register2self('min_subgraph_size')
     def set_min_subgraph_size(self, min_subgraph_size: int):

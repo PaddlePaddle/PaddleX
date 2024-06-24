@@ -41,11 +41,11 @@ self._create(param_path, model_path, option, delete_pass=delete_pass)
                                 len(param_buffer))
 
         if option.device == 'gpu':
-            config.enable_use_gpu(200, 0)
+            config.enable_use_gpu(200, option.device_id)
         elif option.device == 'npu':
             config.enable_custom_device('npu')
-            os.environ["FLAGS_npu_jit_compile"] = 0
-            os.environ["FLAGS_use_stride_kernel"] = 0
+            os.environ["FLAGS_npu_jit_compile"] = "0"
+            os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
         elif option.device == 'xpu':
             config.enable_custom_device('npu')

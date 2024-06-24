@@ -61,7 +61,7 @@ is not exist, use default instead.")
             raise_model_not_found_error(model_dir)
         return None
 
-    def __call__(self, input=None, batch_size=1):
+    def predict(self, input=None, batch_size=1):
         """execute model predict
 
         Returns:
@@ -89,10 +89,10 @@ is not exist, use default instead.")
             "save_dir": self.global_config.output
         }
 
-    def _get_post_transforms_for_data(self):
+    def _get_post_transforms_from_config(self):
         pass
 
-    def _get_pre_transforms_for_data(self):
+    def _get_pre_transforms_from_config(self):
         pass
 
     def _run(self):

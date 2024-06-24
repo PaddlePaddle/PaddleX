@@ -27,8 +27,8 @@ def get_device(device_cfg, using_device_number=None):
     assert device.lower() in SUPPORTED_DEVICE_TYPE
     if device.lower() in ["gpu", "xpu", "npu", "mlu"]:
         if device.lower() == "npu":
-            os.environ["FLAGS_npu_jit_compile"] = 0
-            os.environ["FLAGS_use_stride_kernel"] = 0
+            os.environ["FLAGS_npu_jit_compile"] = "0"
+            os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
         elif device.lower() == "mlu":
             os.environ["CUSTOM_DEVICE_BLACK_LIST"] = "set_value"
