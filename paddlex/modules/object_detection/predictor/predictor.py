@@ -24,12 +24,12 @@ from ...base.predictor.transforms import image_common
 from . import transforms as T
 from .keys import DetKeys as K
 from .utils import InnerConfig
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class DetPredictor(BasePredictor):
     """ Detection Predictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def load_other_src(self):
         """ load the inner config file """
@@ -91,6 +91,6 @@ class DetPredictor(BasePredictor):
         """ get postprocess transforms """
         return [
             T.SaveDetResults(
-                save_dir=self.output_dir, labels=self.other_src.labels),
+                save_dir=self.output, labels=self.other_src.labels),
             T.PrintResult()
         ]

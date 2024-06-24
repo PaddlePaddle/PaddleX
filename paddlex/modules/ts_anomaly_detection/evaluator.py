@@ -17,12 +17,12 @@ import tarfile
 from pathlib import Path
 
 from ..base import BaseEvaluator
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSADEvaluator(BaseEvaluator):
     """ TS Anomaly Detection Model Evaluator """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def update_config(self):
         """update evalution config
@@ -41,16 +41,11 @@ class TSADEvaluator(BaseEvaluator):
             self.eval_config.weight_path = dest_path.joinpath(
                 "best_accuracy.pdparams/best_model/model.pdparams")
 
-    def eval(self):
+    def evaluate(self):
         """firstly, update evaluation config, then evaluate model, finally return the evaluation result
         """
         self.uncompress_tar_file()
-        self.update_config()
-        evaluate_result = self.pdx_model.evaluate(**self.get_eval_kwargs())
-        assert evaluate_result.returncode == 0, f"Encountered an unexpected error({evaluate_result.returncode}) in \
-evaling!"
-
-        return evaluate_result.metrics
+        return super().evaluate()
 
     def get_eval_kwargs(self) -> dict:
         """get key-value arguments of model evalution function

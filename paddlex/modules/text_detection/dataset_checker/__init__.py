@@ -22,13 +22,13 @@ import json
 from ...base import BaseDatasetChecker
 from .dataset_src import check, split_dataset, deep_analyse
 
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class TextDetDatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Text Detection Model
     """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def convert_dataset(self, src_dataset_dir: str) -> str:
         """convert the dataset from other type to specified type
@@ -73,7 +73,7 @@ class TextDetDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return deep_analyse(dataset_dir, self.output_dir)
+        return deep_analyse(dataset_dir, self.output)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

@@ -24,12 +24,12 @@ from ...base import BasePredictor
 from .keys import TextRecKeys as K
 from . import transforms as T
 from .utils import InnerConfig
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class TextRecPredictor(BasePredictor):
     """ TextRecPredictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def load_other_src(self):
         """ load the inner config file """

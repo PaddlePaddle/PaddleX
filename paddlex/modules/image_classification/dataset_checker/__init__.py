@@ -17,13 +17,13 @@ from pathlib import Path
 
 from ...base import BaseDatasetChecker
 from .dataset_src import check, split_dataset, deep_analyse
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class ClsDatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Image Classification Model
     """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
     sample_num = 10
 
     def get_dataset_root(self, dataset_dir: str) -> str:
@@ -74,7 +74,7 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check(dataset_dir, self.output_dir)
+        return check(dataset_dir, self.output)
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -85,7 +85,7 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return deep_analyse(dataset_dir, self.output_dir)
+        return deep_analyse(dataset_dir, self.output)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

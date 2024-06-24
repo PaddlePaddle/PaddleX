@@ -23,12 +23,12 @@ from ....utils import logging
 from ...base import BasePredictor
 from ...base.predictor.transforms import image_common
 from .keys import TextDetKeys as K
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class TextDetPredictor(BasePredictor):
     """ TextDetPredictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     @classmethod
     def get_input_keys(cls):
@@ -79,6 +79,7 @@ class TextDetPredictor(BasePredictor):
                 unclip_ratio=1.5,
                 use_dilation=False,
                 score_mode='fast',
-                box_type='quad'), T.SaveTextDetResults(self.output_dir)
+                box_type='quad'), T.SaveTextDetResults(self.output),
+            T.PrintResult()
         ]
         return post_transforms

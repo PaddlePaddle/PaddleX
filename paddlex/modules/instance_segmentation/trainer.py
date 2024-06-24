@@ -14,12 +14,12 @@
 
 
 from ..object_detection import DetTrainer
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class InstanceSegTrainer(DetTrainer):
     """ Instance Segmentation Model Trainer """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def _update_dataset(self):
         """update dataset settings

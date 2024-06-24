@@ -20,12 +20,12 @@ from ...utils import logging
 from ..base.build_model import build_model
 from ..base.predictor import BasePredictor
 from ...utils.errors import raise_unsupported_api_error, raise_model_not_found_error
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSFCPredictor(BasePredictor):
     """ TS Forecast Model Predictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def __init__(self, config):
         """Initialize the instance.

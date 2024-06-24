@@ -31,7 +31,7 @@ from .....utils.file_interface import custom_open
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
-def deep_analyse(dataset_path, output_dir):
+def deep_analyse(dataset_path, output):
     """class analysis for dataset"""
     tags = ['train', 'val']
     labels_cnt = defaultdict(str)
@@ -90,7 +90,7 @@ def deep_analyse(dataset_path, output_dir):
         fontsize=12)
     plt.legend(loc=1)
     fig.tight_layout()
-    file_path = os.path.join(output_dir, "histogram.png")
+    file_path = os.path.join(output, "histogram.png")
     fig.savefig(file_path, dpi=300)
 
     return {"histogram": os.path.join("check_dataset", "histogram.png")}

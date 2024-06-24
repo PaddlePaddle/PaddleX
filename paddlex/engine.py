@@ -29,14 +29,14 @@ class Engine(object):
         self.config = config.get_config(
             args.config, overrides=args.override, show=False)
         self.mode = self.config.Global.mode
-        self.output_dir = self.config.Global.output
+        self.output = self.config.Global.output
 
     @try_except_decorator
     def run(self):
         """ the main function """
         if self.config.Global.mode == "check_dataset":
             dataset_checker = build_dataset_checker(self.config)
-            return dataset_checker.check_dataset()
+            return dataset_checker.check()
         elif self.config.Global.mode == "train":
             trainer = build_trainer(self.config)
             trainer.train()

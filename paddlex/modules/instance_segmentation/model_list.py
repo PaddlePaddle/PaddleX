@@ -13,4 +13,7 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = ['TimesNet_cls', ]
+MODELS = [
+    'Mask-RT-DETR-H',
+    'Mask-RT-DETR-L',
+]

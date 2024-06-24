@@ -21,7 +21,7 @@ from ...utils.misc import AutoRegisterABCMetaClass
 def build_pipeline(
         pipeline_name: str,
         model_list: list,
-        output_dir: str,
+        output: str,
         device: str, ) -> "BasePipeline":
     """build model evaluater
 
@@ -31,8 +31,7 @@ def build_pipeline(
     Returns:
         BasePipeline: the pipeline, which is subclass of BasePipeline.
     """
-    pipeline = BasePipeline.get(pipeline_name)(output_dir=output_dir,
-                                               device=device)
+    pipeline = BasePipeline.get(pipeline_name)(output=output, device=device)
     pipeline.update_model_name(model_list)
     pipeline.load_model()
     return pipeline

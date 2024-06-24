@@ -171,7 +171,7 @@ class OfficialModelsDict(dict):
     def __getitem__(self, key):
         url = super().__getitem__(key)
         save_dir = Path(CACHE_DIR) / "official_models"
-        download_and_extract(url, save_dir, f"{key}", overwrite=True)
+        download_and_extract(url, save_dir, f"{key}", overwrite=False)
         return save_dir / f"{key}"
 
 

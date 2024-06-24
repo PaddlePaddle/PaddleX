@@ -54,6 +54,6 @@ def simple_analyse(dataset_path):
     return f"训练数据样本数: {sample_cnts[tags[0]]}\t评估数据样本数: {sample_cnts[tags[1]]}"
 
 
-def deep_analyse(dataset_path, output_dir=None):
+def deep_analyse(dataset_path, output=None):
     """class analysis for dataset"""
     return simple_analyse(dataset_path)

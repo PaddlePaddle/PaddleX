@@ -25,13 +25,13 @@ from pycocotools.coco import COCO
 from ...base import BaseDatasetChecker
 from .dataset_src import check, convert, split_dataset, deep_analyse
 
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class COCODatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Object Detection Model
     """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
     sample_num = 10
 
     def get_dataset_root(self, dataset_dir: str) -> str:
@@ -83,7 +83,7 @@ class COCODatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check(dataset_dir, self.output_dir)
+        return check(dataset_dir, self.output)
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -94,7 +94,7 @@ class COCODatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return deep_analyse(dataset_dir, self.output_dir)
+        return deep_analyse(dataset_dir, self.output)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

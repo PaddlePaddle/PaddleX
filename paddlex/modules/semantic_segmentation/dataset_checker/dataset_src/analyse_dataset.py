@@ -25,7 +25,7 @@ from .....utils.file_interface import custom_open
 from .....utils.logging import info
 
 
-def anaylse_dataset(dataset_dir, output_dir):
+def anaylse_dataset(dataset_dir, output):
     """class analysis for dataset"""
 
     split_tags = ["train", "val"]
@@ -71,6 +71,6 @@ def anaylse_dataset(dataset_dir, output_dir):
     ax.set_ylabel('Sample Counts')
     plt.legend()
     fig.tight_layout()
-    fig_path = os.path.join(output_dir, "histogram.png")
+    fig_path = os.path.join(output, "histogram.png")
     fig.savefig(fig_path)
     return {"histogram": os.path.join("check_dataset", "histogram.png")}

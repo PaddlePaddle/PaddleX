@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = [
+MODELS = [
     'PP-OCRv4_mobile_rec',
     'PP-OCRv4_server_rec',
 ]

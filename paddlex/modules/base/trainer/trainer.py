@@ -56,7 +56,12 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         """execute model training
         """
         os.makedirs(self.global_config.output, exist_ok=True)
-        self.train(*args, **kwargs)
+        self.update_config()
+        self.dump_config()
+        train_result = self.pdx_model.train(**self.get_train_kwargs())
+        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
+training!"
+
         self.deamon.stop()
 
     def dump_config(self, config_file_path: str=None):
@@ -70,15 +75,6 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
             config_file_path = os.path.join(self.global_config.output,
                                             "config.yaml")
         self.pdx_config.dump(config_file_path)
-
-    def train(self):
-        """firstly, update and dump train config, then train model
-        """
-        self.update_config()
-        self.dump_config()
-        train_result = self.pdx_model.train(**self.get_train_kwargs())
-        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
-training!"
 
     def get_device(self, using_device_number: int=None) -> str:
         """get device setting from config

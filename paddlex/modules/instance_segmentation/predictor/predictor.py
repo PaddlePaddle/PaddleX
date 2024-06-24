@@ -16,12 +16,12 @@
 import numpy as np
 from ...object_detection import DetPredictor
 from .keys import InstanceSegKeys as K
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class InstanceSegPredictor(DetPredictor):
     """ Instance Seg Predictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def _run(self, batch_input):
         """ run """

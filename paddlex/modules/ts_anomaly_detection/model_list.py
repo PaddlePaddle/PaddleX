@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = [
-    'Deeplabv3_Plus-R101',
-    'Deeplabv3_Plus-R50',
-    'Deeplabv3-R101',
-    'Deeplabv3-R50',
-    'OCRNet_HRNet-W48',
-    'PP-LiteSeg-T',
+MODELS = [
+    'AutoEncoder_ad',
+    'DLinear_ad',
+    'Nonstationary_ad',
+    'PatchTST_ad',
+    'TimesNet_ad',
 ]

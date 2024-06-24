@@ -15,9 +15,9 @@
 
 
 from ..ts_forecast import TSFCPredictor
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSADPredictor(TSFCPredictor):
     """ TS Anomaly Detection Model Predictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS

@@ -72,7 +72,7 @@ def simple_analyse(dataset_path, images_dict):
             img_paths[tags[2]])
 
 
-def deep_analyse(dataset_path, output_dir):
+def deep_analyse(dataset_path, output):
     """class analysis for dataset"""
     tags = ['train', 'val']
     all_instances = 0
@@ -145,7 +145,7 @@ def deep_analyse(dataset_path, output_dir):
     pie_array = np.frombuffer(
         canvas.tostring_rgb(), dtype='uint8').reshape(
             int(height), int(width), 3)
-    fig1_path = os.path.join(output_dir, "histogram.png")
+    fig1_path = os.path.join(output, "histogram.png")
     cv2.imwrite(fig1_path, pie_array)
 
     return {"histogram": os.path.join("check_dataset", "histogram.png")}

@@ -24,7 +24,7 @@ import numpy as np
 from .....utils.errors import DatasetFileNotFoundError
 
 
-def check(dataset_dir, output_dir, sample_num=10):
+def check(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
 
@@ -67,7 +67,7 @@ def check(dataset_dir, output_dir, sample_num=10):
                     img_path = osp.join(dataset_dir, file_name)
                     if len(sample_paths[tag]) < sample_num:
                         sample_paths[tag].append(
-                            os.path.relpath(img_path, output_dir))
+                            os.path.relpath(img_path, output))
                     if not osp.exists(img_path):
                         raise DatasetFileNotFoundError(file_path=img_path)
 

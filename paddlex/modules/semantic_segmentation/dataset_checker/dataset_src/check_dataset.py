@@ -26,12 +26,12 @@ from .....utils.file_interface import custom_open
 from .....utils.logging import info
 
 
-def check_dataset(dataset_dir, output_dir, sample_num=10):
+def check_dataset(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
-    vis_save_dir = osp.join(output_dir, 'demo_img')
+    vis_save_dir = osp.join(output, 'demo_img')
     if not osp.exists(vis_save_dir):
         os.makedirs(vis_save_dir)
     split_tags = ["train", "val"]
@@ -67,8 +67,7 @@ def check_dataset(dataset_dir, output_dir, sample_num=10):
                                              osp.basename(img_file))
                     vis_img.save(vis_save_path)
                     vis_save_path = osp.join(
-                        'check_dataset',
-                        os.path.relpath(vis_save_path, output_dir))
+                        'check_dataset', os.path.relpath(vis_save_path, output))
                     if f"{tag}_sample_paths" not in attrs:
                         attrs[f"{tag}_sample_paths"] = [vis_save_path]
                     else:

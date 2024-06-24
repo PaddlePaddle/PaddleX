@@ -30,7 +30,8 @@ from ...base.predictor import BaseTransform
 from .keys import TextDetKeys as K
 
 __all__ = [
-    'DetResizeForTest', 'NormalizeImage', 'DBPostProcess', 'SaveTextDetResults'
+    'DetResizeForTest', 'NormalizeImage', 'DBPostProcess', 'SaveTextDetResults',
+    'PrintResult'
 ]
 
 
@@ -570,14 +571,10 @@ class CropByPolys(BaseTransform):
 
 class SaveTextDetResults(BaseTransform):
     """ Save Text Det Results """
-    _DEFAULT_FILE_NAME = 'text_det_out.png'
 
-    def __init__(self, save_dir, file_name=None):
+    def __init__(self, save_dir):
         super().__init__()
         self.save_dir = save_dir
-        if file_name is None:
-            file_name = self._DEFAULT_FILE_NAME
-        self.file_name = file_name
         # We use pillow backend to save both numpy arrays and PIL Image objects
         self._writer = ImageWriter(backend='opencv')
 
@@ -588,7 +585,8 @@ class SaveTextDetResults(BaseTransform):
                 "The `save_dir` has been set to None, so the text detection result won't to be saved."
             )
             return data
-        save_path = os.path.join(self.save_dir, self.file_name)
+        fn = os.path.basename(data['input_path'])
+        save_path = os.path.join(self.save_dir, fn)
         bbox_res = data[K.DT_POLYS]
         vis_img = self.draw_rectangle(data[K.IM_PATH], bbox_res)
         self._writer.write(save_path, vis_img)
@@ -613,3 +611,26 @@ class SaveTextDetResults(BaseTransform):
             box = np.reshape(np.array(box), [-1, 1, 2]).astype(np.int64)
             cv2.polylines(img_show, [box], True, (0, 0, 255), 2)
         return img_show
+
+
+class PrintResult(BaseTransform):
+    """ Print Result Transform """
+
+    def apply(self, data):
+        """ apply """
+        logging.info("The prediction result is:")
+        logging.info(data[K.DT_POLYS])
+        return data
+
+    @classmethod
+    def get_input_keys(cls):
+        """ get input keys """
+        return [K.DT_SCORES]
+
+    @classmethod
+    def get_output_keys(cls):
+        """ get output keys """
+        return []
+
+    # DT_SCORES = 'dt_scores'
+    # DT_POLYS = 'dt_polys'

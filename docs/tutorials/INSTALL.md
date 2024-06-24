@@ -88,11 +88,9 @@ git clone https://gitee.com/paddlepaddle/PaddleX.git
 <!-- 这里需要指明安装成功的状态， 廷权 -->
 ```bash
 cd PaddleX
-# 安装第三方依赖
-pip install -r requirements.txt
 
 # 安装 PaddleX whl
-# -e：以可编辑模式安装，当前项目的代码更改，都会作用到 PaddleX Wheel
+# -e：以可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel
 pip install -e .
 
 # 安装 PaddleX 相关依赖

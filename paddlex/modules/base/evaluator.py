@@ -100,7 +100,13 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
         Returns:
             dict: the evaluation metrics
         """
-        metrics = self.eval()
+        self.update_config()
+        # self.dump_config()
+        evaluate_result = self.pdx_model.evaluate(**self.get_eval_kwargs())
+        assert evaluate_result.returncode == 0, f"Encountered an unexpected error({evaluate_result.returncode}) in \
+evaling!"
+
+        metrics = evaluate_result.metrics
         assert self.check_return(
             metrics
         ), f"The return value({metrics}) of Evaluator.eval() is illegal!"
@@ -117,17 +123,6 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
             config_file_path = os.path.join(self.global_config.output,
                                             "config.yaml")
         self.pdx_config.dump(config_file_path)
-
-    def eval(self):
-        """firstly, update evaluation config, then evaluate model, finally return the evaluation result
-        """
-        self.update_config()
-        # self.dump_config()
-        evaluate_result = self.pdx_model.evaluate(**self.get_eval_kwargs())
-        assert evaluate_result.returncode == 0, f"Encountered an unexpected error({evaluate_result.returncode}) in \
-evaling!"
-
-        return evaluate_result.metrics
 
     def get_device(self, using_device_number: int=None) -> str:
         """get device setting from config

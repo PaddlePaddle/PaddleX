@@ -245,7 +245,7 @@ def convert_voc_dataset(root_dir, anno_map):
             annotation_paths=ann_paths,
             label_indexer=label_indexer,
             img_indexer=img_indexer,
-            output_dir=annotations_dir,
+            output=annotations_dir,
             output_file=dst_anno)
 
 
@@ -354,7 +354,7 @@ def voc_get_coco_annotation(obj, label_indexer):
 
 
 def voc_xmls_to_cocojson(root_dir, annotation_paths, label_indexer, img_indexer,
-                         output_dir, output_file):
+                         output, output_file):
     """
     Convert VOC format data to COCO format.
     
@@ -362,7 +362,7 @@ def voc_xmls_to_cocojson(root_dir, annotation_paths, label_indexer, img_indexer,
         annotation_paths (list): A list of paths to the XML files.
         label_indexer: indexer to get category id by label name.
         img_indexer: indexer to get image id by filename.
-        output_dir (str): The directory to save output JSON file.
+        output (str): The directory to save output JSON file.
         output_file (str): Output JSON file name.
     
     Returns:
@@ -425,6 +425,6 @@ def voc_xmls_to_cocojson(root_dir, annotation_paths, label_indexer, img_indexer,
             bnd_id = bnd_id + 1
 
     output_json_dict['categories'] = label_indexer.get_list(key_name="name")
-    output_file = os.path.join(output_dir, output_file)
+    output_file = os.path.join(output, output_file)
     write_json_file(output_json_dict, output_file)
     info(f"The converted annotations has been save to {output_file}.")

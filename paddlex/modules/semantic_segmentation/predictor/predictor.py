@@ -23,24 +23,24 @@ from ...base import BasePredictor
 from .keys import SegKeys as K
 from . import transforms as T
 from .utils import InnerConfig
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class SegPredictor(BasePredictor):
     """ SegPredictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def __init__(self,
                  model_dir,
                  kernel_option,
-                 output_dir,
+                 output,
                  pre_transforms=None,
                  post_transforms=None,
                  has_prob_map=False):
         super().__init__(
             model_dir=model_dir,
             kernel_option=kernel_option,
-            output_dir=output_dir,
+            output=output,
             pre_transforms=pre_transforms,
             post_transforms=post_transforms)
         self.has_prob_map = has_prob_map
@@ -104,6 +104,5 @@ class SegPredictor(BasePredictor):
     def _get_post_transforms_from_config(self):
         """ _get_post_transforms_from_config """
         return [
-            T.GeneratePCMap(), T.SaveSegResults(self.output_dir),
-            T.PrintResult()
+            T.GeneratePCMap(), T.SaveSegResults(self.output), T.PrintResult()
         ]

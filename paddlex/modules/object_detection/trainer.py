@@ -19,12 +19,12 @@ import paddle
 from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict
 from ...utils import logging
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class DetTrainer(BaseTrainer):
     """ Object Detection Model Trainer """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def build_deamon(self, config: AttrDict) -> "DetTrainDeamon":
         """build deamon thread for saving training outputs timely

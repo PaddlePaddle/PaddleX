@@ -103,7 +103,7 @@ class AutoRegisterMetaClass(type):
     Returns:
         class: meta class
     """
-    __model_type_attr_name = 'support_models'
+    __model_type_attr_name = 'entities'
     __base_class_flag = '__is_base'
     __registered_map_name = '__registered_map'
 

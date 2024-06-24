@@ -24,12 +24,12 @@ from .keys import ClsKeys as K
 from .utils import InnerConfig
 from ....utils import logging
 from . import transforms as T
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class ClsPredictor(BasePredictor):
     """ Clssification Predictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def load_other_src(self):
         """ load the inner config file """
@@ -77,7 +77,7 @@ class ClsPredictor(BasePredictor):
         """ get postprocess transforms """
         post_transforms = self.other_src.post_transforms
         post_transforms.extend([
-            T.PrintResult(), T.SaveClsResults(self.output_dir,
+            T.PrintResult(), T.SaveClsResults(self.output,
                                               self.other_src.labels)
         ])
         return post_transforms

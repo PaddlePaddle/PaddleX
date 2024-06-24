@@ -19,13 +19,13 @@ import paddle
 from pathlib import Path
 
 from ..base import BaseTrainer, BaseTrainDeamon
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 from ...utils.config import AttrDict
 
 
 class ClsTrainer(BaseTrainer):
     """ Image Classification Model Trainer """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def dump_label_dict(self, src_label_dict_path: str):
         """dump label dict config

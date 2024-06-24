@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = [
+MODELS = [
     'CLIP_vit_base_patch16_224',
     'CLIP_vit_large_patch14_224',
     'ConvNeXt_tiny',

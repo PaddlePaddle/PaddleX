@@ -19,12 +19,12 @@ import os.path as osp
 from ...base import BaseDatasetChecker
 from .dataset_src import check_dataset, convert_dataset, split_dataset, anaylse_dataset
 
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class SegDatasetChecker(BaseDatasetChecker):
     """ Dataset Checker for Semantic Segmentation Model """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
     sample_num = 10
 
     def convert_dataset(self, src_dataset_dir: str) -> str:
@@ -62,7 +62,7 @@ class SegDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check_dataset(dataset_dir, self.output_dir, sample_num)
+        return check_dataset(dataset_dir, self.output, sample_num)
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -73,7 +73,7 @@ class SegDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return anaylse_dataset(dataset_dir, self.output_dir)
+        return anaylse_dataset(dataset_dir, self.output)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

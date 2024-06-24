@@ -14,12 +14,12 @@
 
 
 from ..base import BaseEvaluator
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TableRecEvaluator(BaseEvaluator):
     """ Table Recognition Model Evaluator """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def update_config(self):
         """update evalution config

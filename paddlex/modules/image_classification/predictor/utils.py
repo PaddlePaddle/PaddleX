@@ -73,13 +73,16 @@ class InnerConfig(object):
     @property
     def post_transforms(self):
         """ read postprocess transforms from config file """
+        IGNORE_OPS = ['main_indicator', 'SavePreLabel']
         tfs_cfg = self.inner_cfg['PostProcess']
         tfs = []
         for tf_key in tfs_cfg:
             if tf_key == 'Topk':
                 tf = T.Topk(
                     topk=tfs_cfg['Topk']['topk'],
-                    class_ids=tfs_cfg['Topk']['label_list'])
+                    class_ids=tfs_cfg['Topk'].get('label_list', None))
+            elif tf_key in IGNORE_OPS:
+                continue
             else:
                 raise RuntimeError(f"Unsupported type: {tf_key}")
             tfs.append(tf)
@@ -88,4 +91,4 @@ class InnerConfig(object):
     @property
     def labels(self):
         """ the labels in inner config """
-        return self.inner_cfg["PostProcess"]["Topk"]["label_list"]
+        return self.inner_cfg['PostProcess']['Topk'].get('label_list', None)

@@ -166,7 +166,7 @@ class SaveClsResults(BaseTransform):
         pred = data[K.CLS_PRED]
         index = pred.argsort(axis=0)[-1].astype("int32")
         score = pred[index].item()
-        label = self.class_id_map[int(index)]
+        label = self.class_id_map[int(index)] if self.class_id_map else ""
         label_str = f"{label} {score:.2f}"
         file_name = os.path.basename(ori_path)
         save_path = os.path.join(self.save_dir, file_name)

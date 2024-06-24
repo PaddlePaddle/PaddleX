@@ -22,7 +22,7 @@ import pandas as pd
 from .....utils.errors import DatasetFileNotFoundError
 
 
-def check(dataset_dir, output_dir, sample_num=10):
+def check(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
@@ -30,7 +30,7 @@ def check(dataset_dir, output_dir, sample_num=10):
 
     sample_cnts = dict()
     tables = defaultdict(list)
-    vis_save_dir = osp.join(output_dir, 'demo_data')
+    vis_save_dir = osp.join(output, 'demo_data')
 
     tags = ['train', 'val']
     for _, tag in enumerate(tags):

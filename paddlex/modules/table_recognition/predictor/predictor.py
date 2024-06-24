@@ -23,24 +23,24 @@ from ...base.predictor.transforms import image_common
 from ...base import BasePredictor
 from .keys import TableRecKeys as K
 from . import transforms as T
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class TableRecPredictor(BasePredictor):
     """ TableRecPredictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def __init__(self,
                  model_dir,
                  kernel_option,
-                 output_dir,
+                 output,
                  pre_transforms=None,
                  post_transforms=None,
                  table_max_len=488):
         super().__init__(
             model_dir=model_dir,
             kernel_option=kernel_option,
-            output_dir=output_dir,
+            output=output,
             pre_transforms=pre_transforms,
             post_transforms=post_transforms)
         self.table_max_len = table_max_len
@@ -87,4 +87,4 @@ class TableRecPredictor(BasePredictor):
 
     def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        return [T.TableLabelDecode(), T.SaveTableResults(self.output_dir)]
+        return [T.TableLabelDecode(), T.SaveTableResults(self.output)]

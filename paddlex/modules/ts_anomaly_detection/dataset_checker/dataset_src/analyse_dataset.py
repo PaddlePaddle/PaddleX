@@ -22,7 +22,7 @@ import pandas as pd
 import numpy as np
 
 
-def deep_analyse(dataset_dir, output_dir):
+def deep_analyse(dataset_dir, output):
     """class analysis for dataset"""
 
     return {"histogram": ""}

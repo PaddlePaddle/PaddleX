@@ -14,6 +14,7 @@
 
 
 from ..base import BasePipeline
+from ...modules.image_classification.model_list import MODELS
 from ...modules import create_model, PaddleInferenceOption
 from ...modules.image_classification import transforms as T
 
@@ -21,24 +22,28 @@ from ...modules.image_classification import transforms as T
 class ClsPipeline(BasePipeline):
     """Cls Pipeline
     """
-    support_models = "image_classification"
+    entities = "image_classification"
 
     def __init__(self,
                  model_name=None,
                  model_dir=None,
-                 output_dir=None,
+                 output=None,
                  kernel_option=None,
                  device="gpu",
                  **kwargs):
         super().__init__()
         self.model_name = model_name
         self.model_dir = model_dir
-        self.output_dir = output_dir
+        self.output = output
         self.device = device
-        self.kernel_option = self.get_kernel_option(
-        ) if kernel_option is None else kernel_option
+        self.kernel_option = kernel_option
         if self.model_name is not None:
             self.load_model()
+
+    def check_model_name(self):
+        """ check that model name is valid
+        """
+        assert self.model_name in MODELS, f"The model name({self.model_name}) error. Only support: {MODELS}."
 
     def predict(self, input):
         """predict
@@ -48,12 +53,14 @@ class ClsPipeline(BasePipeline):
     def load_model(self):
         """load model predictor
         """
-        assert self.model_name is not None
+        self.check_model_name()
+        kernel_option = self.get_kernel_option(
+        ) if self.kernel_option is None else self.kernel_option
         self.model = create_model(
             model_name=self.model_name,
             model_dir=self.model_dir,
-            output_dir=self.output_dir,
-            kernel_option=self.kernel_option)
+            output=self.output,
+            kernel_option=kernel_option)
 
     def get_kernel_option(self):
         """get kernel option

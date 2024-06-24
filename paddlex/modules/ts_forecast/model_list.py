@@ -13,10 +13,12 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = [
-    'AutoEncoder_ad',
-    'DLinear_ad',
-    'Nonstationary_ad',
-    'PatchTST_ad',
-    'TimesNet_ad',
+MODELS = [
+    'DLinear',
+    'NLinear',
+    'Nonstationary',
+    'PatchTST',
+    'RLinear',
+    'TiDE',
+    'TimesNet',
 ]

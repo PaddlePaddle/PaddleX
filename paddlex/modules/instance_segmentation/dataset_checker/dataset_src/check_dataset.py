@@ -27,7 +27,7 @@ from .....utils.errors import DatasetFileNotFoundError
 from .....utils.logging import info
 
 
-def check(dataset_dir, output_dir, sample_num=10):
+def check(dataset_dir, output, sample_num=10):
     """ check dataset """
     info(dataset_dir)
     dataset_dir = osp.abspath(dataset_dir)
@@ -58,7 +58,7 @@ def check(dataset_dir, output_dir, sample_num=10):
             coco = COCO(file_list)
             num_class = len(coco.getCatIds())
 
-            vis_save_dir = osp.join(output_dir, 'demo_img')
+            vis_save_dir = osp.join(output, 'demo_img')
 
             image_info = jsondata['images']
             for i in range(sample_num):
@@ -75,7 +75,7 @@ def check(dataset_dir, output_dir, sample_num=10):
                 Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
                 vis_im.save(vis_path)
                 sample_path = osp.join('check_dataset',
-                                       os.path.relpath(vis_path, output_dir))
+                                       os.path.relpath(vis_path, output))
                 sample_paths[tag].append(sample_path)
 
     attrs = {}

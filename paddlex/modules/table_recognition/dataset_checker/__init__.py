@@ -22,13 +22,13 @@ import json
 from ...base import BaseDatasetChecker
 from .dataset_src import check, split_dataset, deep_analyse
 
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class TableRecDatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Table Recognition Model
     """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def convert_dataset(self, src_dataset_dir: str) -> str:
         """convert the dataset from other type to specified type

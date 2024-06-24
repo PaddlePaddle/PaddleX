@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = [
-    'Mask-RT-DETR-H',
-    'Mask-RT-DETR-L',
+MODELS = [
+    'PP-OCRv4_mobile_det',
+    'PP-OCRv4_server_det',
 ]

@@ -38,13 +38,13 @@ class BasePredictor(ABC, FromDictMixin, Node):
     def __init__(self,
                  model_dir,
                  kernel_option,
-                 output_dir,
+                 output,
                  pre_transforms=None,
                  post_transforms=None):
         super().__init__()
         self.model_dir = model_dir
         self.kernel_option = kernel_option
-        self.output_dir = output_dir
+        self.output = output
         self.other_src = self.load_other_src()
 
         logging.debug(
@@ -171,7 +171,7 @@ class PredictorBuilderByConfig(object):
         self.predictor = BasePredictor.get(model_name)(
             model_dir=model_dir,
             kernel_option=kernel_option,
-            output_dir=config.Global.output_dir,
+            output=config.Global.output,
             **predict_config)
 
     def predict(self):
@@ -189,7 +189,7 @@ def build_predictor(*args, **kwargs):
 def create_model(model_name,
                  model_dir=None,
                  kernel_option=None,
-                 output_dir=None,
+                 output="./",
                  pre_transforms=None,
                  post_transforms=None,
                  *args,
@@ -206,7 +206,7 @@ def create_model(model_name,
             BasePredictor.get(model_name)
     return BasePredictor.get(model_name)(model_dir=model_dir,
                                          kernel_option=kernel_option,
-                                         output_dir=output_dir,
+                                         output=output,
                                          pre_transforms=pre_transforms,
                                          post_transforms=post_transforms,
                                          *args,

@@ -26,7 +26,7 @@ from matplotlib import font_manager
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
-def deep_analyse(dataset_dir, output_dir, label_col='label'):
+def deep_analyse(dataset_dir, output, label_col='label'):
     """class analysis for dataset"""
     tags = ['train', 'val']
     label_unique = None
@@ -72,6 +72,6 @@ def deep_analyse(dataset_dir, output_dir, label_col='label'):
     ax.set_ylabel('Counts')
     plt.legend()
     fig.tight_layout()
-    fig_path = os.path.join(output_dir, "histogram.png")
+    fig_path = os.path.join(output, "histogram.png")
     fig.savefig(fig_path)
     return {"histogram": os.path.join("check_dataset", "histogram.png")}

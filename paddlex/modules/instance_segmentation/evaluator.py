@@ -14,12 +14,12 @@
 
 
 from ..object_detection import DetEvaluator
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class InstanceSegEvaluator(DetEvaluator):
     """ Instance Segmentation Model Evaluator """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def update_config(self):
         """update evalution config

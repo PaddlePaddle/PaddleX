@@ -22,12 +22,12 @@ import paddle
 
 from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSFCTrainer(BaseTrainer):
     """ TS Forecast Model Trainer """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def build_deamon(self, config: AttrDict) -> "TSFCTrainDeamon":
         """build deamon thread for saving training outputs timely
@@ -43,13 +43,9 @@ class TSFCTrainer(BaseTrainer):
     def train(self):
         """firstly, update and dump train config, then train model
         """
-        self.update_config()
-        self.dump_config()
-        train_result = self.pdx_model.train(**self.get_train_kwargs())
-        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
-training!"
-
+        rtn = super().train()
         self.make_tar_file()
+        return rtn
 
     def make_tar_file(self):
         """make tar file to package the training outputs

@@ -15,12 +15,12 @@
 
 from pathlib import Path
 from ..base import BaseEvaluator
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class SegEvaluator(BaseEvaluator):
     """ Semantic Segmentation Model Evaluator """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def update_config(self):
         """update evalution config

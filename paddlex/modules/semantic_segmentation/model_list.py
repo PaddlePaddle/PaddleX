@@ -13,4 +13,11 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = ['SLANet', ]
+MODELS = [
+    'Deeplabv3_Plus-R101',
+    'Deeplabv3_Plus-R50',
+    'Deeplabv3-R101',
+    'Deeplabv3-R50',
+    'OCRNet_HRNet-W48',
+    'PP-LiteSeg-T',
+]

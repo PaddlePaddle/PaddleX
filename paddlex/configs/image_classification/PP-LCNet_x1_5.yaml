@@ -32,7 +32,7 @@ Evaluate:
 
 Predict:
   model_dir: "output/best_model"
-  input_path: "/paddle/dataset/paddlex/cls/cls_flowers_examples/images/image_00002.jpg"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
   kernel_option:
     run_mode: paddle
     batch_size: 1

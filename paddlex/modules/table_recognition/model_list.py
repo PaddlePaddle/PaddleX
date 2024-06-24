@@ -13,12 +13,4 @@
 # limitations under the License.
 
 
-SUPPORT_MODELS = [
-    'DLinear',
-    'NLinear',
-    'Nonstationary',
-    'PatchTST',
-    'RLinear',
-    'TiDE',
-    'TimesNet',
-]
+MODELS = ['SLANet', ]

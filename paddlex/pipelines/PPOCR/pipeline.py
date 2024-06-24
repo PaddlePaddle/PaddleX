@@ -17,6 +17,8 @@ import os
 import cv2
 
 from ..base import BasePipeline
+from ...modules.text_detection.model_list import MODELS as text_det_models
+from ...modules.text_recognition.model_list import MODELS as text_rec_models
 from ...modules import create_model, PaddleInferenceOption
 from ...modules.text_detection import transforms as text_det_T
 from .utils import draw_ocr_box_txt
@@ -25,7 +27,7 @@ from .utils import draw_ocr_box_txt
 class OCRPipeline(BasePipeline):
     """OCR Pipeline
     """
-    support_models = "PP-OCRv4"
+    entities = "PP-OCRv4"
 
     def __init__(self,
                  text_det_model_name=None,
@@ -34,27 +36,37 @@ class OCRPipeline(BasePipeline):
                  text_rec_model_dir=None,
                  text_det_kernel_option=None,
                  text_rec_kernel_option=None,
-                 output_dir=None,
+                 output="./",
                  device="gpu",
                  **kwargs):
         self.text_det_model_name = text_det_model_name
         self.text_rec_model_name = text_rec_model_name
         self.text_det_model_dir = text_det_model_dir
         self.text_rec_model_dir = text_rec_model_dir
-        self.output_dir = output_dir
+        self.output = output
         self.device = device
-        self.text_det_kernel_option = self.get_kernel_option(
-        ) if text_det_kernel_option is None else text_det_kernel_option
-        self.text_rec_kernel_option = self.get_kernel_option(
-        ) if text_rec_kernel_option is None else text_rec_kernel_option
-
+        self.text_det_kernel_option = text_det_kernel_option
+        self.text_rec_kernel_option = text_rec_kernel_option
         if self.text_det_model_name is not None and self.text_rec_model_name is not None:
             self.load_model()
+
+    def check_model_name(self):
+        """ check that model name is valid
+        """
+        assert self.text_det_model_name in text_det_models, f"The model name({self.text_det_model_name}) error. \
+Only support: {text_det_models}."
+
+        assert self.text_rec_model_name in text_rec_models, f"The model name({self.text_rec_model_name}) error. \
+Only support: {text_rec_models}."
 
     def load_model(self):
         """load model predictor
         """
-        assert self.text_det_model_name is not None and self.text_rec_model_name is not None
+        self.check_model_name()
+        text_det_kernel_option = self.get_kernel_option(
+        ) if self.text_det_kernel_option is None else self.text_det_kernel_option
+        text_rec_kernel_option = self.get_kernel_option(
+        ) if self.text_rec_kernel_option is None else self.text_rec_kernel_option
         text_det_post_transforms = [
             text_det_T.DBPostProcess(
                 thresh=0.3,
@@ -71,12 +83,12 @@ class OCRPipeline(BasePipeline):
         self.text_det_model = create_model(
             self.text_det_model_name,
             self.text_det_model_dir,
-            kernel_option=self.text_det_kernel_option,
+            kernel_option=text_det_kernel_option,
             post_transforms=text_det_post_transforms)
         self.text_rec_model = create_model(
             self.text_rec_model_name,
             self.text_rec_model_dir,
-            kernel_option=self.text_rec_kernel_option)
+            kernel_option=text_rec_kernel_option)
 
     def predict(self, input):
         """predict
@@ -88,12 +100,12 @@ class OCRPipeline(BasePipeline):
             all_rec_result.append(rec_result["rec_text"][0])
         result["rec_text"] = all_rec_result
 
-        if self.output_dir is not None:
+        if self.output is not None:
             draw_img = draw_ocr_box_txt(result['original_image'],
                                         result['dt_polys'], result["rec_text"])
             fn = os.path.basename(result['input_path'])
             cv2.imwrite(
-                os.path.join(self.output_dir, fn),
+                os.path.join(self.output, fn),
                 draw_img[:, :, ::-1], )
 
         return result
