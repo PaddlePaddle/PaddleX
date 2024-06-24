@@ -14,4 +14,4 @@
 
 
 
-from .main import OCRPipeline
+from .pipeline import OCRPipeline

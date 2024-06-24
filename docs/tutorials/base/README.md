@@ -1,4 +1,4 @@
-# PaddleX 模型训练和评估
+# PaddleX 模型训练、评估和推理
 
 在训练之前，请确保您的数据集已经经过了[数据校验](../data/README.md)。经过数据校验的数据集才可以进行训练。PaddleX 提供了很多不同的任务模块，不同的模块下又内置了很多被广泛验证的高精度、高效率、精度效率均衡的模型。训练模型时，您只需要一行命令，即可发起相应任务的训练。本文档提供了图像分类任务模块的 `PP-LCNet_x1_0` 模型的训练和评估示例，其他任务模块的训练与图像分类类似。当您按照[PaddleX 数据集标注](../data/annotation/README.md)和 [PaddleX 数据集校验](../data/dataset_check.md)准备好训练数据后，即可参考本文档完成所有 PaddleX 支持的模型训练。
 
@@ -44,10 +44,23 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 
 **注：** 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model.pdparams`。
 
-## 3. 须知事项
-### 3.1 训练须知事项
+# 3. 模型推理
+
+在完成后，即可使用训练好的模型权重进行推理预测。使用 PaddleX 模型，通过命令行的方式进行推理预测，只需如下一条命令：
+
+```bash
+python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir="/output/best_model" \
+    -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
+```
+
+**注：** PaddleX 允许使用 wheel 包进行推理，在此处，当您验证好自己的模型之后，即使用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。模型推理方法请参考 [PaddleX 单模型开发工具](../tools/model_tools.md)。
+
+## 4. 须知事项
+### 4.1 训练须知事项
 - 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以详情[模型库](../models/support_model_list.md)。
 - PaddleX 对您屏蔽了动态图权重和静态图权重的概念，在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
 <!-- 这里需要补充说明，廷权 -->
-### 3.2 训练产出解释
+### 4.2 训练产出解释
 <!-- 这里需要补充说明，廷权 -->

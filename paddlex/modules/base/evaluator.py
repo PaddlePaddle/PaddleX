@@ -48,6 +48,7 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
         Args:
             config (AttrDict):  PaddleX pipeline config, which is loaded from pipeline yaml file.
         """
+        super().__init__()
         self.global_config = config.Global
         self.eval_config = config.Evaluate
 
@@ -93,7 +94,7 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
                 return False
         return True
 
-    def __call__(self) -> dict:
+    def evaluate(self) -> dict:
         """execute model training
 
         Returns:

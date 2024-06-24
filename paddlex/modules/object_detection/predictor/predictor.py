@@ -42,7 +42,7 @@ class DetPredictor(BasePredictor):
     @classmethod
     def get_input_keys(cls):
         """ get input keys """
-        return [[K.IMAGE], [K.IMAGE_PATH]]
+        return [[K.IMAGE], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
@@ -60,7 +60,7 @@ class DetPredictor(BasePredictor):
             axis=0).astype(
                 dtype=np.float32, copy=False)
         input_dict["im_shape"] = np.stack(
-            [data[K.IMAGE_SHAPE][::-1] for data in batch_input], axis=0).astype(
+            [data[K.IM_SIZE][::-1] for data in batch_input], axis=0).astype(
                 dtype=np.float32, copy=False)
 
         input_ = [input_dict[i] for i in self._predictor.get_input_names()]
@@ -78,28 +78,19 @@ class DetPredictor(BasePredictor):
             batch_input[idx][K.BOXES] = np_boxes
         return pred
 
-    def _get_pre_transforms_for_data(self, data):
+    def _get_pre_transforms_from_config(self):
         """ get preprocess transforms """
-        if K.IMAGE not in data:
-            if K.IMAGE_PATH not in data:
-                raise KeyError(
-                    f"Key {repr(K.IMAGE_PATH)} is required, but not found.")
-            logging.info(
-                f"Transformation operators for data preprocessing will be inferred from config file."
-            )
-            pre_transforms = self.other_src.pre_transforms
-            pre_transforms.insert(0, image_common.ReadImage(format='RGB'))
-        else:
-            raise RuntimeError(
-                f"`{self.__class__.__name__}` does not have default transformation operators to preprocess the input. "
-                f"Please set `pre_transforms` when using the {repr(K.IMAGE)} key in input dict."
-            )
-        pre_transforms.insert(0, T.LoadLabels(self.other_src.labels))
+        logging.info(
+            f"Transformation operators for data preprocessing will be inferred from config file."
+        )
+        pre_transforms = self.other_src.pre_transforms
+        pre_transforms.insert(0, image_common.ReadImage(format='RGB'))
         return pre_transforms
 
-    def _get_post_transforms_for_data(self, data):
+    def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        if data.get('cli_flag', False):
-            output_dir = data.get("output_dir", "./")
-            return [T.SaveDetResults(output_dir), T.PrintResult()]
-        return []
+        return [
+            T.SaveDetResults(
+                save_dir=self.output_dir, labels=self.other_src.labels),
+            T.PrintResult()
+        ]

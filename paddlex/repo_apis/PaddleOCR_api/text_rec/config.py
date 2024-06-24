@@ -202,6 +202,9 @@ class TextRecConfig(BaseConfig):
             },
             'mlu': {
                 'Global.use_mlu': True
+            },
+            'npu': {
+                'Global.use_npu': True
             }
         }
         default_cfg.update(device_cfg[device])

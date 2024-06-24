@@ -21,8 +21,9 @@ import traceback
 import threading
 from abc import ABC, abstractmethod
 from pathlib import Path
-from .build_model import build_model
-from ...utils.file_interface import write_json_file
+from ..build_model import build_model
+from ....utils.file_interface import write_json_file
+from ....utils import logging
 
 
 def try_except_decorator(func):

@@ -15,3 +15,4 @@
 
 
 from .predictor import TableRecPredictor
+from . import transforms

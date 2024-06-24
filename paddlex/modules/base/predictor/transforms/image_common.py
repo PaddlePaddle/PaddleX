@@ -15,12 +15,16 @@
 
 
 import math
+from pathlib import Path
 
 import numpy as np
 import cv2
 
+from .....utils.download import download
+from .....utils.cache import CACHE_DIR
 from ..transform import BaseTransform
 from ..io.readers import ImageReader
+from ..io.writers import ImageWriter
 from . import image_functions as F
 
 __all__ = [
@@ -57,26 +61,52 @@ class ReadImage(BaseTransform):
         self.format = format
         flags = self._FLAGS_DICT[self.format]
         self._reader = ImageReader(backend='opencv', flags=flags)
+        self._writer = ImageWriter(backend='opencv')
 
     def apply(self, data):
         """ apply """
+        if 'image' in data:
+            img = data['image']
+            img_path = (Path(CACHE_DIR) / "predict_input" /
+                        "tmp_img.jpg").as_posix()
+            self._writer.write(img_path, img)
+            data['input_path'] = img_path
+            data['original_image'] = img
+            data['original_image_size'] = [img.shape[1], img.shape[0]]
+            return data
+
+        elif 'input_path' not in data:
+            raise KeyError(
+                f"Key {repr('input_path')} is required, but not found.")
+
         im_path = data['input_path']
+        # XXX: auto download for url
+        im_path = self._download_from_url(im_path)
         blob = self._reader.read(im_path)
         if self.format == 'RGB':
             if blob.ndim != 3:
                 raise RuntimeError("Array is not 3-dimensional.")
             # BGR to RGB
             blob = blob[..., ::-1]
+        data['input_path'] = im_path
         data['image'] = blob
         data['original_image'] = blob
         data['original_image_size'] = [blob.shape[1], blob.shape[0]]
         return data
 
+    def _download_from_url(self, in_path):
+        if in_path.startswith("http"):
+            file_name = Path(in_path).name
+            save_path = Path(CACHE_DIR) / "predict_input" / file_name
+            download(in_path, save_path, overwrite=True)
+            return save_path.as_posix()
+        return in_path
+
     @classmethod
     def get_input_keys(cls):
         """ get input keys """
         # input_path: Path of the image.
-        return ['input_path']
+        return [['input_path'], ['image']]
 
     @classmethod
     def get_output_keys(cls):

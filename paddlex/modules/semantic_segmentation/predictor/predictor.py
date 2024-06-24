@@ -33,12 +33,14 @@ class SegPredictor(BasePredictor):
     def __init__(self,
                  model_dir,
                  kernel_option,
+                 output_dir,
                  pre_transforms=None,
                  post_transforms=None,
                  has_prob_map=False):
         super().__init__(
             model_dir=model_dir,
             kernel_option=kernel_option,
+            output_dir=output_dir,
             pre_transforms=pre_transforms,
             post_transforms=post_transforms)
         self.has_prob_map = has_prob_map
@@ -82,8 +84,8 @@ class SegPredictor(BasePredictor):
                 dict_[K.SEG_MAP] = out_map
         return pred
 
-    def _get_pre_transforms_for_data(self, data):
-        """ _get_pre_transforms_for_data """
+    def _get_pre_transforms_from_config(self):
+        """ _get_pre_transforms_from_config """
         # If `K.IMAGE` (the decoded image) is found, return a default list of
         # transformation operators for the input (if possible).
         # If `K.IMAGE` (the decoded image) is not found, `K.IM_PATH` (the image
@@ -91,26 +93,17 @@ class SegPredictor(BasePredictor):
         # transformation operators from the config file.
         # In cases where the input contains both `K.IMAGE` and `K.IM_PATH`,
         # `K.IMAGE` takes precedence over `K.IM_PATH`.
-        if K.IMAGE not in data:
-            if K.IM_PATH not in data:
-                raise KeyError(
-                    f"Key {repr(K.IM_PATH)} is required, but not found.")
-            logging.info(
-                f"Transformation operators for data preprocessing will be inferred from config file."
-            )
-            pre_transforms = self.other_src.pre_transforms
-            pre_transforms.insert(0, image_common.ReadImage())
-            pre_transforms.append(image_common.ToCHWImage())
-        else:
-            raise RuntimeError(
-                f"`{self.__class__.__name__}` does not have default transformation operators to preprocess the input. "
-                f"Please set `pre_transforms` when using the {repr(K.IMAGE)} key in input dict."
-            )
+        logging.info(
+            f"Transformation operators for data preprocessing will be inferred from config file."
+        )
+        pre_transforms = self.other_src.pre_transforms
+        pre_transforms.insert(0, image_common.ReadImage())
+        pre_transforms.append(image_common.ToCHWImage())
         return pre_transforms
 
-    def _get_post_transforms_for_data(self, data):
-        """ _get_post_transforms_for_data """
-        if data.get('cli_flag', False):
-            output_dir = data.get("output_dir", "./")
-            return [T.SaveSegResults(output_dir), T.PrintResult()]
-        return []
+    def _get_post_transforms_from_config(self):
+        """ _get_post_transforms_from_config """
+        return [
+            T.GeneratePCMap(), T.SaveSegResults(self.output_dir),
+            T.PrintResult()
+        ]

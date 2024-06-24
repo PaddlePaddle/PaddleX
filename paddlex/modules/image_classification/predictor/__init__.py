@@ -15,3 +15,4 @@
 
 
 from .predictor import ClsPredictor
+from . import transforms

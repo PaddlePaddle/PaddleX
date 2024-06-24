@@ -19,9 +19,9 @@ import textwrap
 from types import SimpleNamespace
 from prettytable import PrettyTable
 
-from .utils.config import AttrDict
-from .modules.base.predictor import build_predictor, BasePredictor
+from .pipelines import build_pipeline, BasePipeline
 from .repo_manager import setup, get_all_supported_repo_names
+from .utils import logging
 
 
 def args_cfg():
@@ -49,28 +49,15 @@ def args_cfg():
         action='store_true',
         help="Whether to reinstall all packages.")
 
-    ################# infer #################
+    ################# pipeline predict #################
     parser.add_argument('--predict', action='store_true', default=True, help="")
-    parser.add_argument('--model_name', type=str, help="")
-    parser.add_argument('--model', type=str, help="")
-    parser.add_argument('--input_path', type=str, help="")
-    parser.add_argument('--output', type=str, help="")
+    parser.add_argument('--pipeline', type=str, help="")
+    parser.add_argument('--model', nargs='+', help="")
+    parser.add_argument('--input', type=str, help="")
+    parser.add_argument('--output', type=str, default="./", help="")
     parser.add_argument('--device', type=str, default='gpu:0', help="")
 
     return parser.parse_args()
-
-
-def get_all_models():
-    """Get all models that have been registered
-    """
-    all_models = BasePredictor.all()
-    model_map = {}
-    for model in all_models:
-        module = all_models[model].__name__
-        if module not in model_map:
-            model_map[module] = []
-        model_map[module].append(model)
-    return model_map
 
 
 def print_info():
@@ -86,26 +73,19 @@ def print_info():
         second_width = 100
     total_width -= 4
 
-    models_table = PrettyTable()
-    models_table.field_names = ["Modules", "Models"]
-    model_map = get_all_models()
-    for module in model_map:
-        models = model_map[module]
-        models_table.add_row(
-            [
-                textwrap.fill(
-                    f"{module}", width=total_width // 5), textwrap.fill(
-                        "  ".join(models), width=total_width * 4 // 5)
-            ],
-            divider=True)
+    pipeline_table = PrettyTable()
+    pipeline_table.field_names = ["Pipelines"]
+    pipeline_table.add_row(
+        [textwrap.fill(
+            ",  ".join(BasePipeline.all()), width=total_width)])
 
-    table_width = len(str(models_table).split("\n")[0])
+    table_width = len(str(pipeline_table).split("\n")[0])
 
-    print("{}".format("-" * table_width))
-    print("PaddleX".center(table_width))
-    print(models_table)
-    print("Powered by PaddlePaddle!".rjust(table_width))
-    print("{}".format("-" * table_width))
+    logging.info("{}".format("-" * table_width))
+    logging.info("PaddleX".center(table_width))
+    logging.info(pipeline_table)
+    logging.info("Powered by PaddlePaddle!".rjust(table_width))
+    logging.info("{}".format("-" * table_width))
 
 
 def install(args):
@@ -128,39 +108,9 @@ def install(args):
     return
 
 
-def build_predict_config(model_name, model, input_path, device, output):
-    """build predict config for paddlex
-    """
-
-    def dict2attrdict(dict_obj):
-        """convert dict object to AttrDict
-        """
-        for key, value in dict_obj.items():
-            if isinstance(value, dict):
-                dict_obj[key] = dict2attrdict(value)
-        return AttrDict(dict_obj)
-
-    config = {
-        'Global': {
-            'model': model_name,
-            'device': device,
-            'output': output
-        },
-        'Predict': {
-            'model_dir': model,
-            'input_path': input_path,
-        }
-    }
-
-    return dict2attrdict(config)
-
-
-def predict(model_name, model, input_path, device, output):
-    """predict using paddlex
-    """
-    config = build_predict_config(model_name, model, input_path, device, output)
-    predict = build_predictor(config)
-    return predict()
+def pipeline_predict(pipeline, model_name_list, input_path, output_dir, device):
+    pipeline = build_pipeline(pipeline, model_name_list, output_dir, device)
+    pipeline.predict({"input_path": input_path})
 
 
 # for CLI
@@ -171,6 +121,6 @@ def main():
     if args.install:
         install(args)
     else:
-        print_info()
-        return predict(args.model_name, args.model, args.input_path,
-                       args.device, args.output)
+        # print_info()
+        return pipeline_predict(args.pipeline, args.model, args.input,
+                                args.output, args.device)

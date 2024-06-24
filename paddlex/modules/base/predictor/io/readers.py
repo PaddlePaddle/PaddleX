@@ -16,7 +16,6 @@
 
 import enum
 import itertools
-
 import cv2
 
 __all__ = ['ImageReader', 'VideoReader', 'ReaderType']

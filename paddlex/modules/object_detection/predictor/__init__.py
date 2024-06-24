@@ -15,3 +15,4 @@
 
 
 from .predictor import DetPredictor
+from . import transforms

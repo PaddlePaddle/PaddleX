@@ -16,10 +16,6 @@
 
 __all__ = ['get_all_repo_names']
 
-# REPO_NAMES = [
-#     'PaddleSeg', 'Paddle3D', 'PaddleClas', 'PaddleDetection', 'PaddleOCR',
-#     'PaddleTS', 'PaddleNLP', 'PaddleSpeech', 'PARL', 'PaddleMIX']
-
 REPO_NAMES = [
     'PaddleClas', 'PaddleOCR', 'PaddleDetection', 'PaddleSeg', 'PaddleNLP',
     'PaddleTS'
@@ -28,7 +24,8 @@ REPO_NAMES = [
 REPO_META = {
     'PaddleSeg': {
         'repo_url': '/PaddlePaddle/PaddleSeg.git',
-        'branch': 'develop',
+        'platform': 'github',
+        'branch': 'release/2.9.1',
         'pkg_name': 'paddleseg',
         'lib_name': 'paddleseg',
         'pdx_pkg_name': 'PaddleSeg_api',
@@ -36,20 +33,10 @@ REPO_META = {
         'extra_req_files': ['Matting/requirements.txt'],
         'path_env': 'PADDLE_PDX_PADDLESEG_PATH',
     },
-    'Paddle3D': {
-        'repo_url': '/PaddlePaddle/Paddle3D.git',
-        'branch': 'develop',
-        'pkg_name': 'paddle3d',
-        'lib_name': 'paddle3d',
-        'pdx_pkg_name': 'Paddle3D_api',
-        'editable': False,
-        'path_env': 'PADDLE_PDX_PADDLE3D_PATH',
-        'requires': ['PaddleSeg', 'PaddleDetection'],
-        'pdx_pkg_deps': ['nuscenes-devkit', 'pyquaternion'],
-    },
     'PaddleClas': {
         'repo_url': '/PaddlePaddle/PaddleClas.git',
-        'branch': 'develop',
+        'platform': 'github',
+        'branch': 'release/2.5.2',
         'pkg_name': 'paddleclas',
         'lib_name': 'paddleclas',
         'pdx_pkg_name': 'PaddleClas_api',
@@ -60,7 +47,8 @@ REPO_META = {
     },
     'PaddleDetection': {
         'repo_url': '/PaddlePaddle/PaddleDetection.git',
-        'branch': 'develop',
+        'platform': 'github',
+        'branch': 'release/2.7.1',
         'pkg_name': 'paddledet',
         'lib_name': 'ppdet',
         'pdx_pkg_name': 'PaddleDetection_api',
@@ -81,6 +69,7 @@ REPO_META = {
     },
     'PaddleTS': {
         'repo_url': '/PaddlePaddle/PaddleTS.git',
+        'platform': 'github',
         'branch': 'release_v1.1',
         'pkg_name': 'paddlets',
         'lib_name': 'paddlets',
@@ -91,6 +80,7 @@ REPO_META = {
     },
     'PaddleNLP': {
         'repo_url': '/PaddlePaddle/PaddleNLP.git',
+        'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'paddlenlp',
         'lib_name': 'paddlenlp',
@@ -100,6 +90,7 @@ REPO_META = {
     },
     'PaddleSpeech': {
         'repo_url': '/PaddlePaddle/PaddleSpeech.git',
+        'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'paddlespeech',
         'lib_name': 'paddlespeech',
@@ -110,6 +101,7 @@ REPO_META = {
     },
     'PARL': {
         'repo_url': '/PaddlePaddle/PARL.git',
+        'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'parl',
         'lib_name': 'parl',
@@ -119,6 +111,7 @@ REPO_META = {
     },
     'PaddleMIX': {
         'repo_url': '/PaddlePaddle/PaddleMIX.git',
+        'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'paddlemix',
         'lib_name': 'paddlemix',

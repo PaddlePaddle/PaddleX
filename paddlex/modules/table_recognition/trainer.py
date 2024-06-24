@@ -18,8 +18,7 @@ import os
 from pathlib import Path
 import paddle
 
-from ..base.trainer import BaseTrainer
-from ..base.train_deamon import BaseTrainDeamon
+from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict
 from .support_models import SUPPORT_MODELS
 

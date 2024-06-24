@@ -15,3 +15,4 @@
 
 
 from .predictor import SegPredictor
+from . import transforms

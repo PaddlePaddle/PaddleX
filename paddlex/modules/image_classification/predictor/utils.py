@@ -19,6 +19,7 @@ import codecs
 import yaml
 
 from ...base.predictor.transforms import image_common
+from . import transforms as T
 
 
 class InnerConfig(object):
@@ -36,7 +37,7 @@ class InnerConfig(object):
 
     @property
     def pre_transforms(self):
-        """ read preprocess transforms from  config file """
+        """ read preprocess transforms from config file """
         if "RecPreProcess" in list(self.inner_cfg.keys()):
             tfs_cfg = self.inner_cfg['RecPreProcess']['transform_ops']
         else:
@@ -53,7 +54,7 @@ class InnerConfig(object):
                 if "resize_short" in list(cfg[tf_key].keys()):
                     tf = image_common.ResizeByShort(
                         target_short_edge=cfg['ResizeImage'].get("resize_short",
-                                                                 (224, 224)),
+                                                                 224),
                         size_divisor=None,
                         interp='LINEAR')
                 else:
@@ -64,6 +65,21 @@ class InnerConfig(object):
                                                                       224))
             elif tf_key == "ToCHWImage":
                 tf = image_common.ToCHWImage()
+            else:
+                raise RuntimeError(f"Unsupported type: {tf_key}")
+            tfs.append(tf)
+        return tfs
+
+    @property
+    def post_transforms(self):
+        """ read postprocess transforms from config file """
+        tfs_cfg = self.inner_cfg['PostProcess']
+        tfs = []
+        for tf_key in tfs_cfg:
+            if tf_key == 'Topk':
+                tf = T.Topk(
+                    topk=tfs_cfg['Topk']['topk'],
+                    class_ids=tfs_cfg['Topk']['label_list'])
             else:
                 raise RuntimeError(f"Unsupported type: {tf_key}")
             tfs.append(tf)

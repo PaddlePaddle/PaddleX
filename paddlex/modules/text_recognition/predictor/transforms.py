@@ -83,29 +83,9 @@ class OCRReisizeNormImg(BaseTransform):
 class BaseRecLabelDecode(BaseTransform):
     """ Convert between text-label and text-index """
 
-    def __init__(self, character_dict_type='ch', use_space_char=True):
+    def __init__(self, character_str=None):
         self.reverse = False
-        self.character_str = []
-
-        if character_dict_type is None:
-            self.character_str = "0123456789abcdefghijklmnopqrstuvwxyz"
-            dict_character = list(self.character_str)
-        elif character_dict_type == 'ch':
-            character_dict_name = 'ppocr_keys_v1.txt'
-            character_dict_path = osp.abspath(
-                osp.join(osp.dirname(__file__), character_dict_name))
-            with open(character_dict_path, "rb") as fin:
-                lines = fin.readlines()
-                for line in lines:
-                    line = line.decode('utf-8').strip("\n").strip("\r\n")
-                    self.character_str.append(line)
-            if use_space_char:
-                self.character_str.append(" ")
-            dict_character = list(self.character_str)
-            if 'arabic' in character_dict_path:
-                self.reverse = True
-        else:
-            assert False, " character_dict_type must be 'ch' or None "
+        dict_character = character_str if character_str is not None else "0123456789abcdefghijklmnopqrstuvwxyz"
 
         dict_character = self.add_special_char(dict_character)
         self.dict = {}
@@ -199,8 +179,10 @@ class BaseRecLabelDecode(BaseTransform):
 class CTCLabelDecode(BaseRecLabelDecode):
     """ Convert between text-label and text-index """
 
-    def __init__(self, character_dict_type='ch', use_space_char=True):
-        super().__init__(character_dict_type, use_space_char)
+    def __init__(self, post_process_cfg=None):
+        assert post_process_cfg['name'] == 'CTCLabelDecode'
+        character_str = post_process_cfg['character_dict']
+        super().__init__(character_str)
 
     def apply(self, data):
         """ apply """

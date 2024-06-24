@@ -14,4 +14,4 @@
 
 
 
-from .main import ClsPipeline
+from .pipeline import ClsPipeline

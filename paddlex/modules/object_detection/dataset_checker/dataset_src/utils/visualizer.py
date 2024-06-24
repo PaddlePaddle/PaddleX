@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pycocotools.coco import COCO
 
 from ......utils.fonts import PINGFANG_FONT_FILE_PATH
+from ......utils import logging
 
 
 def colormap(rgb=False):
@@ -107,7 +108,7 @@ def draw_bbox(image, coco_info: COCO, img_id):
             xmin = min(x1, x2, x3, x4)
             ymin = min(y1, y2, y3, y4)
         else:
-            print('Error: The shape of bbox must be [M, 4] or [M, 8]!')
+            logging.info('Error: The shape of bbox must be [M, 4] or [M, 8]!')
 
         # draw label
         label = coco_info.loadCats(catid)[0]['name']

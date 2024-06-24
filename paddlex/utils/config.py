@@ -198,7 +198,7 @@ def get_config(fname, overrides=None, show=False):
 
 def parse_args():
     """ parse args """
-    parser = argparse.ArgumentParser("generic-image-rec train script")
+    parser = argparse.ArgumentParser("PaddleX script")
     parser.add_argument(
         '-c',
         '--config',

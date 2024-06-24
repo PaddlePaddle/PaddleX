@@ -101,7 +101,7 @@ def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):
 def create_font(txt, sz, font_path=PINGFANG_FONT_FILE_PATH):
     """create font
     """
-    font_size = int(sz[1] * 0.99)
+    font_size = int(sz[1] * 0.8)
     font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
     if int(PIL.__version__.split(".")[0]) < 10:
         length = font.getsize(txt)[0]

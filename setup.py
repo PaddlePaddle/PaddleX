@@ -60,6 +60,8 @@ def packages_and_package_data():
         'paddlex',
         'paddlex.modules',
         'paddlex.modules.*',
+        'paddlex.pipelines',
+        'paddlex.pipelines.*',
         'paddlex.repo_manager',
         'paddlex.repo_apis',
         'paddlex.repo_apis.*',
@@ -80,8 +82,8 @@ def packages_and_package_data():
         rp = '/'.join(parts[1:])
         pkg_data.append(rp)
     pkg_data.append('.version')
-    pkg_data.append('paddlex/modules/utils/fonts/PingFang-SC-Regular.ttf')
-    pkg_data.append('paddlex/repo_manager/requirements.txt')
+    pkg_data.append('utils/fonts/PingFang-SC-Regular.ttf')
+    pkg_data.append('repo_manager/requirements.txt')
     return pkgs, {'paddlex': pkg_data}
 
 
@@ -89,7 +91,7 @@ def check_paddle_version():
     """check paddle version
     """
     import paddle
-    supported_versions = ['2.5', '2.6', '0.0']
+    supported_versions = ['2.6', '3.0', '0.0']
     version = paddle.__version__
     # Recognizable version number: major.minor.patch
     major, minor, patch = version.split('.')
@@ -110,15 +112,15 @@ if __name__ == '__main__':
     s = setup(
         name='paddlex',
         version=version(),
-        description=('PaddlePaddle ultra API.'),
+        description=('Low-code development tool based on PaddlePaddle.'),
         long_description=readme(),
         author='PaddlePaddle Authors',
         author_email='',
-        # install_requires=dependencies(),
+        install_requires=dependencies(),
         packages=pkgs,
         package_data=pkg_data,
         entry_points={
-            'console_scripts': ['paddlex = paddlex.paddlex:main', ],
+            'console_scripts': ['paddlex = paddlex.paddlex_cli:main', ],
         },
         # PyPI package information
         classifiers=[
@@ -127,8 +129,9 @@ if __name__ == '__main__':
             'Intended Audience :: Education',
             'Intended Audience :: Science/Research',
             'License :: OSI Approved :: Apache Software License',
-            'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
+            'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
             'Topic :: Scientific/Engineering',
             'Topic :: Scientific/Engineering :: Mathematics',
             'Topic :: Scientific/Engineering :: Artificial Intelligence',

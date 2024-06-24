@@ -76,8 +76,12 @@ def setup_logging(verbosity: str=None):
     Args:
         verbosity (str, optional): the logging level, `DEBUG`, `INFO`, `WARNING`. Defaults to None.
     """
-    if verbosity is None and DEBUG:
-        verbosity = 'DEBUG'
+    if verbosity is None:
+        if DEBUG:
+            verbosity = 'DEBUG'
+        else:
+            verbosity = 'INFO'
+
     if verbosity is not None:
         _configure_logger(_logger, verbosity.upper())
 

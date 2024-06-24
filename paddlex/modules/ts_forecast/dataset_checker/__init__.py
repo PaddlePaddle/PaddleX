@@ -20,7 +20,7 @@ from collections import defaultdict, Counter
 from PIL import Image
 import json
 
-from ...base.dataset_checker import BaseDatasetChecker
+from ...base import BaseDatasetChecker
 from .dataset_src import check, convert, split_dataset, deep_analyse
 
 from ..support_models import SUPPORT_MODELS

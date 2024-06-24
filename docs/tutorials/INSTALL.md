@@ -22,7 +22,7 @@ sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it 
 
 **注意**：
 * 首次使用该镜像时，下述命令会自动下载该镜像文件，下载需要一定的时间，请耐心等待；
-* 请使用 **2.5.2** 及更高版本的 PaddlePaddle；
+* 请使用 **3.0** 版本的 PaddlePaddle；
 * 上述命令会创建一个名为 paddlex 的 Docker 容器，之后再次使用该容器时无需再次运行该命令；
 * 参数 `--shm-size=8G` 将设置容器的共享内存为 8G，如机器环境允许，建议将该参数设置较大，如 `64G`；
 
@@ -42,10 +42,7 @@ python -m pip install paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl
 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
 #### 更多安装方式
-
-<!-- 这里需要指定内多硬件安装的文档 -->
-关于**源码编译**安装等更多安装方式，及**昆仑芯**、**海光**、**寒武纪**、**昇腾**等飞桨版本，请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=undefined)。
-
+关于其他硬件安装飞桨，请参考[多硬件安装飞桨](./INSTALL_OTHER_DEVICES.md)。
 
 ### 1.2 验证
 
@@ -76,24 +73,30 @@ python -c "import paddle; print(paddle.__version__)"
 git clone https://github.com/PaddlePaddle/PaddleX.git
 ```
 
-<!-- #### 从 Gitee 下载
+#### 从 Gitee 下载
 
-如果访问 GitHub 网速较慢，可以从 Gitee 下载（Gitee 源码每日同步），命令如下：
+如果访问 GitHub 网速较慢，可以从 Gitee 下载，命令如下：
 
 ```shell
 git clone https://gitee.com/paddlepaddle/PaddleX.git
-``` -->
+```
 
 ### 2.2 安装配置及依赖
 
 参考下述命令，按提示操作，完成 PaddleX 依赖的安装。
 
-<!-- 这里需要指明安装成功的状态 -->
+<!-- 这里需要指明安装成功的状态， 廷权 -->
 ```bash
 cd PaddleX
 # 安装第三方依赖
 pip install -r requirements.txt
 
-# 获取并安装飞桨开发套件
-python install_pdx.py
+# 安装 PaddleX whl
+# -e：以可编辑模式安装，当前项目的代码更改，都会作用到 PaddleX Wheel
+pip install -e .
+
+# 安装 PaddleX 相关依赖
+paddlex --install
 ```
+
+**注 :** 在安装过程中，需要克隆 Paddle 官方模型套件，`--platform` 可以指定克隆源，可选 `github.com`，`gitee.com`，分别代表这些套件从 github 上和 gitee 上克隆，默认为 `github.com`。

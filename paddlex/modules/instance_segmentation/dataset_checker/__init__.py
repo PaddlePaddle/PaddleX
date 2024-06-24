@@ -16,7 +16,7 @@
 import os
 
 from .dataset_src import check, convert, split_dataset, deep_analyse
-from ...base.dataset_checker import BaseDatasetChecker
+from ...base import BaseDatasetChecker
 
 from ..support_models import SUPPORT_MODELS
 

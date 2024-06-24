@@ -17,18 +17,17 @@ import os
 
 import numpy as np
 import math
-from PIL import Image, ImageDraw, ImageFile
+from PIL import Image, ImageDraw, ImageFont
 
-from ....utils import logging
-from ...base import BaseTransform
 from .keys import DetKeys as K
+from ...base import BaseTransform
 from ...base.predictor.io.writers import ImageWriter
 from ...base.predictor.transforms import image_functions as F
 from ...base.predictor.transforms.image_common import _BaseResize, _check_image_size
+from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils import logging
 
-__all__ = [
-    'SaveDetResults', 'PadStride', 'DetResize', 'PrintResult', 'LoadLabels'
-]
+__all__ = ['SaveDetResults', 'PadStride', 'DetResize', 'PrintResult']
 
 
 def get_color_map_list(num_classes):
@@ -52,6 +51,39 @@ def get_color_map_list(num_classes):
     return color_map
 
 
+def colormap(rgb=False):
+    """
+    Get colormap
+
+    The code of this function is copied from https://github.com/facebookresearch/Detectron/blob/main/detectron/\
+utils/colormap.py
+    """
+    color_list = np.array([
+        0xFF, 0x00, 0x00, 0xCC, 0xFF, 0x00, 0x00, 0xFF, 0x66, 0x00, 0x66, 0xFF,
+        0xCC, 0x00, 0xFF, 0xFF, 0x4D, 0x00, 0x80, 0xff, 0x00, 0x00, 0xFF, 0xB2,
+        0x00, 0x1A, 0xFF, 0xFF, 0x00, 0xE5, 0xFF, 0x99, 0x00, 0x33, 0xFF, 0x00,
+        0x00, 0xFF, 0xFF, 0x33, 0x00, 0xFF, 0xff, 0x00, 0x99, 0xFF, 0xE5, 0x00,
+        0x00, 0xFF, 0x1A, 0x00, 0xB2, 0xFF, 0x80, 0x00, 0xFF, 0xFF, 0x00, 0x4D
+    ]).astype(np.float32)
+    color_list = (color_list.reshape((-1, 3)))
+    if not rgb:
+        color_list = color_list[:, ::-1]
+    return color_list.astype('int32')
+
+
+def font_colormap(color_index):
+    """
+    Get font color according to the index of colormap
+    """
+    dark = np.array([0x14, 0x0E, 0x35])
+    light = np.array([0xFF, 0xFF, 0xFF])
+    light_indexs = [0, 3, 4, 8, 9, 13, 14, 18, 19]
+    if color_index in light_indexs:
+        return light.astype('int32')
+    else:
+        return dark.astype('int32')
+
+
 def draw_box(img, np_boxes, labels, threshold=0.5):
     """
     Args:
@@ -63,18 +95,26 @@ def draw_box(img, np_boxes, labels, threshold=0.5):
     Returns:
         img (PIL.Image.Image): visualized image
     """
-    draw_thickness = min(img.size) // 320
+    font_size = int(0.024 * int(img.width)) + 2
+    font = ImageFont.truetype(
+        PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+
+    draw_thickness = int(max(img.size) * 0.005)
     draw = ImageDraw.Draw(img)
     clsid2color = {}
-    color_list = get_color_map_list(len(labels))
+    catid2fontcolor = {}
+    color_list = colormap(rgb=True)
     expect_boxes = (np_boxes[:, 1] > threshold) & (np_boxes[:, 0] > -1)
     np_boxes = np_boxes[expect_boxes, :]
 
-    for dt in np_boxes:
+    for i, dt in enumerate(np_boxes):
         clsid, bbox, score = int(dt[0]), dt[2:], dt[1]
         if clsid not in clsid2color:
-            clsid2color[clsid] = color_list[clsid]
+            color_index = i % len(color_list)
+            clsid2color[clsid] = color_list[color_index]
+            catid2fontcolor[clsid] = font_colormap(color_index)
         color = tuple(clsid2color[clsid])
+        font_color = tuple(catid2fontcolor[clsid])
 
         xmin, ymin, xmax, ymax = bbox
         # draw bbox
@@ -85,11 +125,18 @@ def draw_box(img, np_boxes, labels, threshold=0.5):
             fill=color)
 
         # draw label
-        text = "{} {:.4f}".format(labels[clsid], score)
-        tw, th = draw.textsize(text)
-        draw.rectangle(
-            [(xmin + 1, ymin - th), (xmin + tw + 1, ymin)], fill=color)
-        draw.text((xmin + 1, ymin - th), text, fill=(255, 255, 255))
+        text = "{} {:.2f}".format(labels[clsid], score)
+        tw, th = draw.textsize(text, font=font)
+        if ymin < th:
+            draw.rectangle(
+                [(xmin, ymin), (xmin + tw + 4, ymin + th + 1)], fill=color)
+            draw.text((xmin + 2, ymin - 2), text, fill=font_color, font=font)
+        else:
+            draw.rectangle(
+                [(xmin, ymin - th), (xmin + tw + 4, ymin + 1)], fill=color)
+            draw.text(
+                (xmin + 2, ymin - th - 2), text, fill=font_color, font=font)
+
     return img
 
 
@@ -144,13 +191,11 @@ class SaveDetResults(BaseTransform):
 
     def apply(self, data):
         """ apply """
-        ori_path = data[K.IMAGE_PATH]
+        ori_path = data[K.IM_PATH]
         file_name = os.path.basename(ori_path)
         save_path = os.path.join(self.save_dir, file_name)
 
-        labels = data[
-            K.
-            LABELS] if self.labels is None and K.LABELS in data else self.labels
+        labels = self.labels
         image = Image.open(ori_path)
         if K.MASKS in data:
             image = draw_mask(
@@ -174,7 +219,7 @@ class SaveDetResults(BaseTransform):
     @classmethod
     def get_input_keys(cls):
         """ get input keys """
-        return [K.IMAGE_PATH, K.BOXES]
+        return [K.IM_PATH, K.BOXES]
 
     @classmethod
     def get_output_keys(cls):
@@ -308,25 +353,3 @@ class PrintResult(BaseTransform):
     def get_output_keys(cls):
         """ get output keys """
         return []
-
-
-class LoadLabels(BaseTransform):
-    def __init__(self, labels=None):
-        super().__init__()
-        self.labels = labels
-
-    def apply(self, data):
-        """ apply """
-        if self.labels:
-            data[K.LABELS] = self.labels
-        return data
-
-    @classmethod
-    def get_input_keys(cls):
-        """ get input keys """
-        return []
-
-    @classmethod
-    def get_output_keys(cls):
-        """ get output keys """
-        return [K.LABELS]

@@ -31,8 +31,7 @@ def check_src_dataset(root_dir):
     err_msg_prefix = f"Convert Failed! Only support '.xlsx/.xls' format files."
 
     for dst_anno, src_anno in [("train.xlsx", "train.xls"),
-                               ("val.xlsx", "val.xls"),
-                               ("test.xlsx", "test.xls")]:
+                               ("val.xlsx", "val.xls")]:
         src_anno_path = os.path.join(root_dir, src_anno)
         dst_anno_path = os.path.join(root_dir, dst_anno)
         if not os.path.exists(src_anno_path) and not os.path.exists(
@@ -60,8 +59,7 @@ def convert_excel_dataset(input_dir):
     """
     # read excel file
     for dst_anno, src_anno in [("train.xlsx", "train.xls"),
-                               ("val.xlsx", "val.xls"),
-                               ("test.xlsx", "test.xls")]:
+                               ("val.xlsx", "val.xls")]:
         src_anno_path = os.path.join(input_dir, src_anno)
         dst_anno_path = os.path.join(input_dir, dst_anno)
 

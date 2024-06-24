@@ -23,18 +23,14 @@ from tqdm import tqdm
 from .....utils.logging import info
 
 
-def split_dataset(root_dir,
-                  train_rate,
-                  val_rate,
-                  group_id='group_id',
-                  test_rate=0):
+def split_dataset(root_dir, train_rate, val_rate, group_id='group_id'):
     """ split dataset """
-    assert train_rate + val_rate + test_rate == 100, \
-    f"The sum of train_rate({train_rate}), val_rate({val_rate}) and test_rate({test_rate}) should equal 100!"
+    assert train_rate + val_rate == 100, \
+    f"The sum of train_rate({train_rate}) and val_rate({val_rate}) should equal 100!"
     assert train_rate > 0 and val_rate > 0, \
     f"The train_rate({train_rate}) and val_rate({val_rate}) should be greater than 0!"
 
-    tags = ['train.csv', 'val.csv', 'test.csv']
+    tags = ['train.csv', 'val.csv']
     df = pd.DataFrame()
     group_unique = None
     for tag in tags:
@@ -63,8 +59,7 @@ def split_dataset(root_dir,
     group_len = len(dfs)
     point_train = math.floor((group_len * train_rate / 100))
     point_val = math.floor((group_len * (train_rate + val_rate) / 100))
-    point_test = math.floor(
-        (group_len * (train_rate + val_rate + test_rate) / 100))
+
     assert point_train > 0, f"The train_len is 0, the train_percent should be greater ."
     assert point_val - point_train > 0, f"The train_len is 0, the val_percent should be greater ."
 

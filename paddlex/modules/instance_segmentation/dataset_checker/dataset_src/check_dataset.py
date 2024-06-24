@@ -58,7 +58,7 @@ def check(dataset_dir, output_dir, sample_num=10):
             coco = COCO(file_list)
             num_class = len(coco.getCatIds())
 
-            vis_save_dir = osp.join(output_dir, 'tmp')
+            vis_save_dir = osp.join(output_dir, 'demo_img')
 
             image_info = jsondata['images']
             for i in range(sample_num):
