@@ -24,8 +24,8 @@ PaddleX3.0 分为本地端和云端，本地端提供统一任务API接口，支
 ## 安装与快速开始
 - [安装](./docs/tutorials/INSTALL.md)
 - 快速开始
-  - [单模型开发工具快速开始](./docs/tutorials/QUCK_STARTED.md)
-  - 模型产线开发工具快速开始(comming soon)
+  - [单模型开发工具](./docs/tutorials/tools/model_tools.md)
+  - [模型产线开发工具](./docs/tutorials/tools/pipelines_tools.md)
 
 ## 单模型开发工具
 本节介绍 PaddleX3.0 单模型的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX3.0 支持的模型可以参考 [PaddleX模型库](./docs/tutorials/models/support_model_list.md)。
@@ -35,17 +35,19 @@ PaddleX3.0 分为本地端和云端，本地端提供统一任务API接口，支
 - [数据标注](./docs/tutorials/data/annotation/README.md)
 - [数据校验](./docs/tutorials/data/dataset_check.md)
 ### 2. 模型训练
-- [模型训练/评估](./docs/tutorials/train/README.md)
-- 模型优化(comming soon)
+- [模型训练/评估](./docs/tutorials/base/README.md)
+- [模型优化](./docs/tutorials/base/model_optimize.md)
 
 ### 3. 模型推理
-- 模型推理能力即将开源，敬请期待...
+ - [模型推理](docs/tutorials/inference/model_inference_tools.md)
+ - [模型推理 API 介绍](docs/tutorials/inference/model_infernce_api.md)
 
 ## 模型产线开发工具
-本节将介绍 PaddleX3.0 模型产线的全流程开发流程，此部分内容即将开源，敬请期待...
+ - [模型产线推理](docs/tutorials/inference/pipeline_inference_tools.md)
+ - [模型产线推理 API 介绍](docs/tutorials/inference/pipeline_infernce_api.md)
 
 ## 多硬件支持
-🔥 本项目支持在多种硬件上进行模型的开发，除了GPU外，当前支持的硬件还有**昆仑芯**、**昇腾芯**、**寒武纪芯**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。详情参考[多硬件训练](./docs/tutorials/train/multi_device_train.md)。
+🔥 本项目支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾芯**、**寒武纪芯**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。详情可以参考上述文档。
 
 - 昇腾芯支持的模型列表请参考 [PaddleX 昇腾芯模型列表](./docs/tutorials/models/support_npu_model_list.md)。
 - 昆仑芯支持的模型列表请参考 [PaddleX 昆仑芯模型列表](./docs/tutorials/models/support_xpu_model_list.md)。

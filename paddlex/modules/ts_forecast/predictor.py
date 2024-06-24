@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 from pathlib import Path
 
 from typing import Union
@@ -20,12 +15,12 @@ from ...utils import logging
 from ..base.build_model import build_model
 from ..base.predictor import BasePredictor
 from ...utils.errors import raise_unsupported_api_error, raise_model_not_found_error
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSFCPredictor(BasePredictor):
     """ TS Forecast Model Predictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def __init__(self, config):
         """Initialize the instance.

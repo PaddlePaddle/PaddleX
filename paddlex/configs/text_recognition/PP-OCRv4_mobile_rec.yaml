@@ -30,7 +30,7 @@ Evaluate:
 
 Predict:
   model_dir: "output/best_accuracy"
-  input_path: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples/images/train_word_1003.png"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png"
   kernel_option:
     run_mode: paddle
     batch_size: 1

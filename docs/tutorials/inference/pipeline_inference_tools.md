@@ -38,7 +38,7 @@ result = pipeline.predict(
         {'input_path': "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"}
     )
 print(result["cls_result"])
-```    
+```  
 </details>
 
 ### 2.2 目标检测产线
@@ -71,8 +71,8 @@ from paddlex import PaddleInferenceOption
 model_name =  "RT-DETR-L"
 output_base = Path("output")
 
-output_dir = output_base / model_name
-pipeline = DetPipeline(model_name, output_dir=output_dir, kernel_option=PaddleInferenceOption())
+output = output_base / model_name
+pipeline = DetPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
         {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"})
 print(result["boxes"])
@@ -111,8 +111,8 @@ from paddlex import PaddleInferenceOption
 
 model_name = "PP-LiteSeg-T",
 output_base = Path("output")
-output_dir = output_base / model_name
-pipeline = SegPipeline(model_name, output_dir=output_dir, kernel_option=PaddleInferenceOption())
+output = output_base / model_name
+pipeline = SegPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
     {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png"}
 )
@@ -152,8 +152,8 @@ from paddlex import PaddleInferenceOption
 model_name =  "Mask-RT-DETR-L"
 output_base = Path("output")
 
-output_dir = output_base / model_name
-pipeline = DetPipeline(model_name, output_dir=output_dir, kernel_option=PaddleInferenceOption())
+output = output_base / model_name
+pipeline = DetPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
     {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"})
 print(result["boxes"])

@@ -1,5 +1,4 @@
 colorlog
-prettytable
 PyYAML
 filelock
 ruamel.yaml

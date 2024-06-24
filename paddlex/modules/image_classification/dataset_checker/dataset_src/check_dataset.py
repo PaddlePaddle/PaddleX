@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
 import os
 import os.path as osp
@@ -24,7 +19,7 @@ from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
 from .utils.visualizer import draw_label
 
 
-def check(dataset_dir, output_dir, sample_num=10):
+def check(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
     # Custom dataset
@@ -95,7 +90,7 @@ def check(dataset_dir, output_dir, sample_num=10):
                     if not osp.exists(img_path):
                         raise DatasetFileNotFoundError(file_path=img_path)
 
-                    vis_save_dir = osp.join(output_dir, 'demo_img')
+                    vis_save_dir = osp.join(output, 'demo_img')
                     if not osp.exists(vis_save_dir):
                         os.makedirs(vis_save_dir)
 
@@ -107,8 +102,7 @@ def check(dataset_dir, output_dir, sample_num=10):
                                             osp.basename(file_name))
                         vis_im.save(vis_path)
                         sample_path = osp.join(
-                            'check_dataset',
-                            os.path.relpath(vis_path, output_dir))
+                            'check_dataset', os.path.relpath(vis_path, output))
                         sample_paths[tag].append(sample_path)
 
                     try:
@@ -121,7 +115,7 @@ def check(dataset_dir, output_dir, sample_num=10):
     num_classes = max(labels) + 1
 
     attrs = {}
-    attrs['label_file'] = osp.relpath(label_file, output_dir)
+    attrs['label_file'] = osp.relpath(label_file, output)
     attrs['num_classes'] = num_classes
     attrs['train_samples'] = sample_cnts['train']
     attrs['train_sample_paths'] = sample_paths['train']

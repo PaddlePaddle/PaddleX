@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
 import os
 import os.path as osp
@@ -26,12 +21,12 @@ from .....utils.file_interface import custom_open
 from .....utils.logging import info
 
 
-def check_dataset(dataset_dir, output_dir, sample_num=10):
+def check_dataset(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
-    vis_save_dir = osp.join(output_dir, 'demo_img')
+    vis_save_dir = osp.join(output, 'demo_img')
     if not osp.exists(vis_save_dir):
         os.makedirs(vis_save_dir)
     split_tags = ["train", "val"]
@@ -67,8 +62,7 @@ def check_dataset(dataset_dir, output_dir, sample_num=10):
                                              osp.basename(img_file))
                     vis_img.save(vis_save_path)
                     vis_save_path = osp.join(
-                        'check_dataset',
-                        os.path.relpath(vis_save_path, output_dir))
+                        'check_dataset', os.path.relpath(vis_save_path, output))
                     if f"{tag}_sample_paths" not in attrs:
                         attrs[f"{tag}_sample_paths"] = [vis_save_path]
                     else:

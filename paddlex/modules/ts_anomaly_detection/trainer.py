@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 import json
 import time
@@ -22,12 +17,12 @@ import paddle
 
 from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSADTrainer(BaseTrainer):
     """ TS Anomaly Detection Model Trainer """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def build_deamon(self, config: AttrDict) -> "TSADTrainDeamon":
         """build deamon thread for saving training outputs timely
@@ -43,13 +38,9 @@ class TSADTrainer(BaseTrainer):
     def train(self):
         """firstly, update and dump train config, then train model
         """
-        self.update_config()
-        self.dump_config()
-        train_result = self.pdx_model.train(**self.get_train_kwargs())
-        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
-training!"
-
+        rtn = super().train()
         self.make_tar_file()
+        return rtn
 
     def make_tar_file(self):
         """make tar file to package the training outputs

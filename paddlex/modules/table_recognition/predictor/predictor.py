@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
 import os
 
@@ -23,24 +18,24 @@ from ...base.predictor.transforms import image_common
 from ...base import BasePredictor
 from .keys import TableRecKeys as K
 from . import transforms as T
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class TableRecPredictor(BasePredictor):
     """ TableRecPredictor """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def __init__(self,
                  model_dir,
                  kernel_option,
-                 output_dir,
+                 output,
                  pre_transforms=None,
                  post_transforms=None,
                  table_max_len=488):
         super().__init__(
             model_dir=model_dir,
             kernel_option=kernel_option,
-            output_dir=output_dir,
+            output=output,
             pre_transforms=pre_transforms,
             post_transforms=post_transforms)
         self.table_max_len = table_max_len
@@ -87,4 +82,4 @@ class TableRecPredictor(BasePredictor):
 
     def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        return [T.TableLabelDecode(), T.SaveTableResults(self.output_dir)]
+        return [T.TableLabelDecode(), T.SaveTableResults(self.output)]

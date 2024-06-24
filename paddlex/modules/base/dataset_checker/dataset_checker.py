@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 from abc import ABC, abstractmethod
 
@@ -49,10 +44,9 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         super().__init__()
         self.global_config = config.Global
         self.check_dataset_config = config.CheckDataset
-        self.output_dir = os.path.join(self.global_config.output,
-                                       "check_dataset")
+        self.output = os.path.join(self.global_config.output, "check_dataset")
 
-    def check_dataset(self) -> dict:
+    def check(self) -> dict:
         """execute dataset checking
 
         Returns:
@@ -60,8 +54,8 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         dataset_dir = self.get_dataset_root(self.global_config.dataset_dir)
 
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
+        if not os.path.exists(self.output):
+            os.makedirs(self.output)
 
         if self.check_dataset_config.get("convert", None):
             if self.check_dataset_config.convert.get("enable", False):

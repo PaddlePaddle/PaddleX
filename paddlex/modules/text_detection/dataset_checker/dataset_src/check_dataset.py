@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 import os.path as osp
 from collections import defaultdict
@@ -24,7 +19,7 @@ import numpy as np
 from .....utils.errors import DatasetFileNotFoundError
 
 
-def check(dataset_dir, output_dir, sample_num=10):
+def check(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
 
@@ -67,7 +62,7 @@ def check(dataset_dir, output_dir, sample_num=10):
                     img_path = osp.join(dataset_dir, file_name)
                     if len(sample_paths[tag]) < sample_num:
                         sample_paths[tag].append(
-                            os.path.relpath(img_path, output_dir))
+                            os.path.relpath(img_path, output))
                     if not osp.exists(img_path):
                         raise DatasetFileNotFoundError(file_path=img_path)
 

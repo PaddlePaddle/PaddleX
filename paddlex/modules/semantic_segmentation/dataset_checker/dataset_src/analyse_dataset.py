@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
 import os
 import os.path as osp
@@ -25,7 +20,7 @@ from .....utils.file_interface import custom_open
 from .....utils.logging import info
 
 
-def anaylse_dataset(dataset_dir, output_dir):
+def anaylse_dataset(dataset_dir, output):
     """class analysis for dataset"""
 
     split_tags = ["train", "val"]
@@ -71,6 +66,6 @@ def anaylse_dataset(dataset_dir, output_dir):
     ax.set_ylabel('Sample Counts')
     plt.legend()
     fig.tight_layout()
-    fig_path = os.path.join(output_dir, "histogram.png")
+    fig_path = os.path.join(output, "histogram.png")
     fig.savefig(fig_path)
     return {"histogram": os.path.join("check_dataset", "histogram.png")}

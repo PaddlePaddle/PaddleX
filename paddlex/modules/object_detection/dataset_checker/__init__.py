@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 import os.path as osp
 from pathlib import Path
@@ -25,13 +20,13 @@ from pycocotools.coco import COCO
 from ...base import BaseDatasetChecker
 from .dataset_src import check, convert, split_dataset, deep_analyse
 
-from ..support_models import SUPPORT_MODELS
+from ..model_list import MODELS
 
 
 class COCODatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Object Detection Model
     """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
     sample_num = 10
 
     def get_dataset_root(self, dataset_dir: str) -> str:
@@ -83,7 +78,7 @@ class COCODatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check(dataset_dir, self.output_dir)
+        return check(dataset_dir, self.output)
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -94,7 +89,7 @@ class COCODatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return deep_analyse(dataset_dir, self.output_dir)
+        return deep_analyse(dataset_dir, self.output)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

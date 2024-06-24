@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 import shutil
 import json
@@ -245,7 +240,7 @@ def convert_voc_dataset(root_dir, anno_map):
             annotation_paths=ann_paths,
             label_indexer=label_indexer,
             img_indexer=img_indexer,
-            output_dir=annotations_dir,
+            output=annotations_dir,
             output_file=dst_anno)
 
 
@@ -354,7 +349,7 @@ def voc_get_coco_annotation(obj, label_indexer):
 
 
 def voc_xmls_to_cocojson(root_dir, annotation_paths, label_indexer, img_indexer,
-                         output_dir, output_file):
+                         output, output_file):
     """
     Convert VOC format data to COCO format.
     
@@ -362,7 +357,7 @@ def voc_xmls_to_cocojson(root_dir, annotation_paths, label_indexer, img_indexer,
         annotation_paths (list): A list of paths to the XML files.
         label_indexer: indexer to get category id by label name.
         img_indexer: indexer to get image id by filename.
-        output_dir (str): The directory to save output JSON file.
+        output (str): The directory to save output JSON file.
         output_file (str): Output JSON file name.
     
     Returns:
@@ -425,6 +420,6 @@ def voc_xmls_to_cocojson(root_dir, annotation_paths, label_indexer, img_indexer,
             bnd_id = bnd_id + 1
 
     output_json_dict['categories'] = label_indexer.get_list(key_name="name")
-    output_file = os.path.join(output_dir, output_file)
+    output_file = os.path.join(output, output_file)
     write_json_file(output_json_dict, output_file)
     info(f"The converted annotations has been save to {output_file}.")

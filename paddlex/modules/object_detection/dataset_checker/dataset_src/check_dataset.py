@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 import os.path as osp
 from collections import defaultdict, Counter
@@ -25,7 +20,7 @@ from .....utils.errors import DatasetFileNotFoundError
 from .utils.visualizer import draw_bbox
 
 
-def check(dataset_dir, output_dir, sample_num=10):
+def check(dataset_dir, output, sample_num=10):
     """ check dataset """
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
@@ -53,7 +48,7 @@ def check(dataset_dir, output_dir, sample_num=10):
             coco = COCO(file_list)
             num_class = len(coco.getCatIds())
 
-            vis_save_dir = osp.join(output_dir, 'demo_img')
+            vis_save_dir = osp.join(output, 'demo_img')
 
             image_info = jsondata['images']
             sample_cnts[tag] = len(image_info)
@@ -71,7 +66,7 @@ def check(dataset_dir, output_dir, sample_num=10):
                 Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
                 vis_im.save(vis_path)
                 sample_path = osp.join('check_dataset',
-                                       os.path.relpath(vis_path, output_dir))
+                                       os.path.relpath(vis_path, output))
                 sample_paths[tag].append(sample_path)
 
     attrs = {}

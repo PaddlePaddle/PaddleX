@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 
 from cProfile import label
 import os
@@ -140,7 +135,7 @@ def show_label_img(img_path, dt_boxes):
     return img[:, :, ::-1]
 
 
-def deep_analyse(dataset_path, output_dir):
+def deep_analyse(dataset_path, output):
     """class analysis for dataset"""
     sample_results = simple_analyse(
         dataset_path, max_recorded_sample_cnts=float('inf'), show_label=False)
@@ -191,8 +186,8 @@ def deep_analyse(dataset_path, output_dir):
         canvas.tostring_rgb(), dtype='uint8').reshape(
             int(height), int(width), 3)
 
-    os.makedirs(output_dir, exist_ok=True)
-    fig_path = os.path.join(output_dir, "histogram.png")
+    os.makedirs(output, exist_ok=True)
+    fig_path = os.path.join(output, "histogram.png")
     img_array = np.concatenate((bar_array, pie_array), axis=1)
     cv2.imwrite(fig_path, img_array)
     return {"histogram": os.path.join("check_dataset", "histogram.png")}

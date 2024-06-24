@@ -1,19 +1,15 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 from ..base import BasePipeline
+from ...modules.image_classification.model_list import MODELS
 from ...modules import create_model, PaddleInferenceOption
 from ...modules.image_classification import transforms as T
 
@@ -21,24 +17,28 @@ from ...modules.image_classification import transforms as T
 class ClsPipeline(BasePipeline):
     """Cls Pipeline
     """
-    support_models = "image_classification"
+    entities = "image_classification"
 
     def __init__(self,
                  model_name=None,
                  model_dir=None,
-                 output_dir=None,
+                 output=None,
                  kernel_option=None,
                  device="gpu",
                  **kwargs):
         super().__init__()
         self.model_name = model_name
         self.model_dir = model_dir
-        self.output_dir = output_dir
+        self.output = output
         self.device = device
-        self.kernel_option = self.get_kernel_option(
-        ) if kernel_option is None else kernel_option
+        self.kernel_option = kernel_option
         if self.model_name is not None:
             self.load_model()
+
+    def check_model_name(self):
+        """ check that model name is valid
+        """
+        assert self.model_name in MODELS, f"The model name({self.model_name}) error. Only support: {MODELS}."
 
     def predict(self, input):
         """predict
@@ -48,12 +48,14 @@ class ClsPipeline(BasePipeline):
     def load_model(self):
         """load model predictor
         """
-        assert self.model_name is not None
+        self.check_model_name()
+        kernel_option = self.get_kernel_option(
+        ) if self.kernel_option is None else self.kernel_option
         self.model = create_model(
             model_name=self.model_name,
             model_dir=self.model_dir,
-            output_dir=self.output_dir,
-            kernel_option=self.kernel_option)
+            output=self.output,
+            kernel_option=kernel_option)
 
     def get_kernel_option(self):
         """get kernel option

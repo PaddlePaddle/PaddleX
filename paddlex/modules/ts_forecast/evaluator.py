@@ -1,28 +1,23 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import tarfile
 from pathlib import Path
 
 from ..base import BaseEvaluator
-from .support_models import SUPPORT_MODELS
+from .model_list import MODELS
 
 
 class TSFCEvaluator(BaseEvaluator):
     """ TS Forecast Model Evaluator """
-    support_models = SUPPORT_MODELS
+    entities = MODELS
 
     def update_config(self):
         """update evalution config
@@ -51,13 +46,8 @@ class TSFCEvaluator(BaseEvaluator):
             self.eval_config.weight_path = dest_path.joinpath(
                 "best_accuracy.pdparams/best_model/model.pdparams")
 
-    def eval(self):
+    def evaluate(self):
         """firstly, update evaluation config, then evaluate model, finally return the evaluation result
         """
         self.uncompress_tar_file()
-        self.update_config()
-        evaluate_result = self.pdx_model.evaluate(**self.get_eval_kwargs())
-        assert evaluate_result.returncode == 0, f"Encountered an unexpected error({evaluate_result.returncode}) in \
-evaling!"
-
-        return evaluate_result.metrics
+        return super().evaluate()

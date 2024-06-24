@@ -31,7 +31,7 @@ Evaluate:
 
 Predict:
   model_dir: "output/best_model"
-  input_path: "/paddle/dataset/paddlex/instance_seg/instance_seg_coco_examples/images/aircraft-women-fashion-pilot-48797.png"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
   kernel_option:
     run_mode: paddle
     batch_size: 1

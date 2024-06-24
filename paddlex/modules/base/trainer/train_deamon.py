@@ -1,18 +1,13 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# !/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+################################################################################
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2024 Baidu.com, Inc. All Rights Reserved
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
+################################################################################
+"""
+Author: PaddlePaddle Authors
+"""
 import os
 import sys
 import time
@@ -51,7 +46,7 @@ class BaseTrainDeamon(ABC):
         """ init """
         self.global_config = global_config
         self.init_pre_hook()
-        self.output_dir = global_config.output
+        self.output = global_config.output
         self.train_outputs = self.get_train_outputs()
         self.save_paths = self.get_save_paths()
         self.results = self.init_train_result()
@@ -90,7 +85,7 @@ class BaseTrainDeamon(ABC):
 
     def get_train_outputs(self):
         """ get training outputs dir """
-        return [Path(self.output_dir)]
+        return [Path(self.output)]
 
     def init_model_names(self):
         """ get models name """
@@ -99,8 +94,7 @@ class BaseTrainDeamon(ABC):
     def get_save_paths(self):
         """ get the path to save train_result.json """
         return [
-            Path(self.output_dir, save_name)
-            for save_name in self.get_save_names()
+            Path(self.output, save_name) for save_name in self.get_save_names()
         ]
 
     def init_configs(self):
@@ -125,7 +119,7 @@ class BaseTrainDeamon(ABC):
         return model_pkg
 
     def normlize_path(self, dict_obj, relative_to):
-        """ normlize path to string type path relative to the output_dir """
+        """ normlize path to string type path relative to the output """
         for key in dict_obj:
             if isinstance(dict_obj[key], dict):
                 self.normlize_path(dict_obj[key], relative_to)
