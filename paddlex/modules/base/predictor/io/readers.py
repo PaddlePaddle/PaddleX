@@ -17,6 +17,7 @@
 import enum
 import itertools
 import cv2
+from PIL import Image, ImageOps
 
 __all__ = ['ImageReader', 'VideoReader', 'ReaderType']
 
@@ -77,6 +78,8 @@ class ImageReader(_BaseReader):
         """ init backend """
         if bk_type == 'opencv':
             return OpenCVImageReaderBackend(**bk_args)
+        elif bk_type == 'pil':
+            return PILImageReaderBackend(**bk_args)
         else:
             raise ValueError("Unsupported backend type")
 
@@ -153,6 +156,17 @@ class OpenCVImageReaderBackend(_ImageReaderBackend):
     def read_file(self, in_path):
         """ read image file from path by OpenCV """
         return cv2.imread(in_path, flags=self.flags)
+
+
+class PILImageReaderBackend(_ImageReaderBackend):
+    """ PILImageReaderBackend """
+
+    def __init__(self):
+        super().__init__()
+
+    def read_file(self, in_path):
+        """ read image file from path by PIL """
+        return ImageOps.exif_transpose(Image.open(in_path))
 
 
 class _VideoReaderBackend(_BaseReaderBackend):

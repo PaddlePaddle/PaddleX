@@ -7,9 +7,9 @@
 图片示例：
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/example1.png' width='255px'><img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/example2.png' width='227px'><img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/example3.png' width='118px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/947e5e80-4857-46de-b750-88442128d3e8' width='255px'><img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/d1474723-4f38-4b65-b93f-c99b9adcdb15' width='227px'><img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/f31574a1-c94a-4692-9dc9-ad3793bb5e62' width='118px'>
 <br>
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/example4.png' width='231px'><img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/example5.png' width='197px'><img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/example6.png' width='173px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/631e64de-7c66-43d4-83d0-728098a61a7e' width='231px'><img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/c464aa08-23d8-40aa-92f8-450f3039bae8' width='197px'><img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/fae00720-f8e8-41d8-bb33-d4c079312e5c' width='173px'>
 </center>
 
 ## 2. Labelme标注工具使用
@@ -30,14 +30,14 @@ pip install labelme
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/image_dir.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/82730db4-a19f-4e08-8089-f398d230d266' width='600px'>
 </center>
 
 3. 在hemlet文件夹中创建待标注数据集的类别标签文件label.txt，并在label.txt中按行写入待标注数据集的类别。以安全帽检测数据集的label.txt为例，如下图所示：
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/label_txt.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/6cefbd00-0c4b-4111-bb58-ac5245f79127' width='600px'>
 </center>
 
 #### 2.3.2. 启动Labelme
@@ -56,56 +56,56 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/labelme.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/5c21dd2b-0159-431a-b8b2-d8874e29c8d8' width='600px'>
 </center>
 
 2. 点击"编辑"选择标注类型
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/edit.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/f6a053fc-c9e9-4ebe-89a9-0c8f53248188' width='600px'>
 </center>
 
 3. 选择创建矩形框
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/rectangle.png' width='200px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/03173d0e-1c12-4ebf-8ee6-a4b637b6eaae' width='200px'>
 </center>
 
 4. 在图片上拖动十字框选目标区域
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/select_target_area.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/6b518a79-ead5-4484-94f1-1a9f5f7842de' width='600px'>
 </center>
 
 5. 再次点击选择目标框类别
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/select_category.png' width='200px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/c90d05b7-4e65-4c41-9a68-2cd10082f4da' width='200px'>
 </center>
 
 6. 标注好后点击存储。（若在启动labelme时未指定--output字段，会在第一次存储时提示选择存储路径，若指定--autosave字段使用自动保存，则无需点击存储按钮）
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/save.png' width='100px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/8a3f3e54-68a9-4f9a-8c68-63272fb2e0b6' width='100px'>
 </center>
 
 7. 然后点击"Next Image"进行下一张图片的标注
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/next_image.png' width='100px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/d9be34e1-d44c-4738-8101-3895c70a8b6e' width='100px'>
 </center>
 
 8. 最终标注好的标签文件如图所示
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/annotation_result.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/f172eb8e-5800-4f78-ad21-c8fcfc2d3489' width='600px'>
 </center>
 
 9. 调整目录得到安全帽检测标准labelme格式数据集
@@ -113,14 +113,14 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/anno_list.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/77eaf28a-4d4c-4a02-962a-5b25c7b04b99' width='600px'>
 </center>
 
   b. 经过整理得到的最终目录结构如下：
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/directory_structure.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/b970ce62-fbb9-4cea-b5c0-b2e9565a02f9' width='600px'>
 </center>
 
   c. 将hemlet目录打包压缩为.tar或.zip格式压缩包即可得到安全帽检测标准labelme格式数据集
@@ -134,10 +134,10 @@ conda activate paddlelabel
 同样可以通过pip一键安装
 ```shell
 pip install --upgrade paddlelabel
-pip install a2wsgi uvicorn==0.18.1 
+pip install a2wsgi uvicorn==0.18.1
 pip install connexion==2.14.1
 pip install Flask==2.2.2
-pip install Werkzeug==2.2.2 
+pip install Werkzeug==2.2.2
 ```
 安装成功后，可以在终端使用如下指令启动 PaddleLabel
 paddlelabel  # 启动paddlelabel
@@ -148,14 +148,14 @@ PaddleLabel 启动后会自动在浏览器中打开网页，接下来可以根�
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/welcome.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/275afab8-56d1-4d33-9616-696060dffdf1' width='600px'>
 </center>
 
 2. 填写项目名称，数据集路径，注意路径是本地机器上的 绝对路径。完成后点击创建。
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/create_project.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/36371a57-e0a7-4307-aea8-840968a50b41' width='600px'>
 </center>
 
 3. 首先定义需要标注的类别，以版面分析为例，提供10个类别， 每个类别有唯一对应的id
@@ -174,7 +174,7 @@ PaddleLabel 启动后会自动在浏览器中打开网页，接下来可以根�
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/overview.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/9e89f9cd-3339-4905-83ab-d87c72910821' width='600px'>
 </center>
 
 5. 导出标注文件
@@ -182,21 +182,21 @@ PaddleLabel 启动后会自动在浏览器中打开网页，接下来可以根�
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/export_dataset.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/3a1cbd60-93d4-4590-9165-682fb90ffb82' width='600px'>
 </center>
 
   b. 填写导出路径和导出格式，导出路径依然是一个绝对路径，导出格式请选择coco
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/select_format.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/90acbd86-e265-4bc1-8d43-a1db041127b8' width='600px'>
 </center>
 
   c. 导出成功后，在指定的路径下就可以获得标注文件。
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/labeled_file.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/38216b5c-e601-4281-8442-f8915d1114c3' width='600px'>
 </center>
 
 6. 调整目录得到安全帽检测标准coco格式数据集
@@ -215,8 +215,7 @@ PaddleLabel 启动后会自动在浏览器中打开网页，接下来可以根�
 
 <center>
 
-<img src='https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/object_detection_dataset_prepare/directory_structure2.png' width='600px'>
+<img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/1173c8e5-079c-4281-960d-dc740c6a8920' width='600px'>
 </center>
 
   c. 将hemlet目录打包压缩为.tar或.zip格式压缩包即可得到安全帽检测标准coco格式数据集
-

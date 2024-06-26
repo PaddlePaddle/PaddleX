@@ -56,6 +56,8 @@ class SegTrainer(BaseTrainer):
             dict: the arguments of training function.
         """
         train_args = {"device": self.get_device()}
+        # XXX:
+        os.environ.pop("FLAGS_npu_jit_compile", None)
         if self.train_config.batch_size is not None:
             train_args["batch_size"] = self.train_config.batch_size
         if self.train_config.learning_rate is not None:

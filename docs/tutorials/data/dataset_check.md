@@ -60,7 +60,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/quick_start/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/e2cada1f-337f-4062-8504-077c90a3b8da)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -140,7 +140,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/tutorials/data/dataset_check/object_detection/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/d8a1fc2f-3e92-43d2-a75c-d13a13f3be05)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -219,7 +219,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/tutorials/data/dataset_check/semantic_segmentation/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/2ba78919-4d86-40c7-b3f1-5a850d0a957d)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -298,7 +298,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/tutorials/data/dataset_check/instance_segmentation/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/736f55cd-2102-4caf-8592-3a0d0fccf1f8)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -375,7 +375,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/tutorials/data/dataset_check/text_detection/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/d47d8410-f8ac-4126-9565-c217528951e0)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -452,7 +452,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/tutorials/data/dataset_check/text_recognition/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/2517ab81-e90f-4384-97f5-6f61785b161f)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -862,7 +862,7 @@ python main.py -c paddlex/configs/ts_classify_examples/DLinear_ad.yaml \
 
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
-![样本分布直方图](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/open_source/tutorials/data/dataset_check/ts_classify_examples/histogram.png)
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/2b2d61d6-7d9b-427c-9248-5e45453d443d)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 

@@ -83,15 +83,19 @@ class OCRReisizeNormImg(BaseTransform):
 class BaseRecLabelDecode(BaseTransform):
     """ Convert between text-label and text-index """
 
-    def __init__(self, character_str=None):
+    def __init__(self, character_str=None, use_space_char=True):
         self.reverse = False
-        dict_character = character_str if character_str is not None else "0123456789abcdefghijklmnopqrstuvwxyz"
+        character_list = list(
+            character_str) if character_str is not None else list(
+                "0123456789abcdefghijklmnopqrstuvwxyz")
+        if use_space_char:
+            character_list.append(" ")
 
-        dict_character = self.add_special_char(dict_character)
+        character_list = self.add_special_char(character_list)
         self.dict = {}
-        for i, char in enumerate(dict_character):
+        for i, char in enumerate(character_list):
             self.dict[char] = i
-        self.character = dict_character
+        self.character = character_list
 
     def pred_reverse(self, pred):
         """ pred_reverse """
@@ -110,9 +114,9 @@ class BaseRecLabelDecode(BaseTransform):
 
         return ''.join(pred_re[::-1])
 
-    def add_special_char(self, dict_character):
+    def add_special_char(self, character_list):
         """ add_special_char """
-        return dict_character
+        return character_list
 
     def decode(self, text_index, text_prob=None, is_remove_duplicate=False):
         """ convert text-index into text-label. """
@@ -179,10 +183,10 @@ class BaseRecLabelDecode(BaseTransform):
 class CTCLabelDecode(BaseRecLabelDecode):
     """ Convert between text-label and text-index """
 
-    def __init__(self, post_process_cfg=None):
+    def __init__(self, post_process_cfg=None, use_space_char=True):
         assert post_process_cfg['name'] == 'CTCLabelDecode'
-        character_str = post_process_cfg['character_dict']
-        super().__init__(character_str)
+        character_list = post_process_cfg['character_dict']
+        super().__init__(character_list, use_space_char=use_space_char)
 
     def apply(self, data):
         """ apply """
@@ -199,10 +203,10 @@ class CTCLabelDecode(BaseRecLabelDecode):
             data[K.REC_SCORE].append(t[1])
         return data
 
-    def add_special_char(self, dict_character):
+    def add_special_char(self, character_list):
         """ add_special_char """
-        dict_character = ['blank'] + dict_character
-        return dict_character
+        character_list = ['blank'] + character_list
+        return character_list
 
     @classmethod
     def get_input_keys(cls):

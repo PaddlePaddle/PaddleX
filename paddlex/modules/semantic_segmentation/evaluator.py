@@ -13,7 +13,9 @@
 # limitations under the License.
 
 
+import os
 from pathlib import Path
+
 from ..base import BaseEvaluator
 from .model_list import MODELS
 
@@ -51,7 +53,7 @@ class SegEvaluator(BaseEvaluator):
         Returns:
             dict: the arguments of evaluation function.
         """
-        return {
-            "weight_path": self.eval_config.weight_path,
-            "device": self.get_device(),
-        }
+        device = self.get_device()
+        # XXX:
+        os.environ.pop("FLAGS_npu_jit_compile", None)
+        return {"weight_path": self.eval_config.weight_path, "device": device}

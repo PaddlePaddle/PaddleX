@@ -31,6 +31,7 @@ class TableRecPredictor(BasePredictor):
     entities = MODELS
 
     def __init__(self,
+                 model_name,
                  model_dir,
                  kernel_option,
                  output,
@@ -38,6 +39,7 @@ class TableRecPredictor(BasePredictor):
                  post_transforms=None,
                  table_max_len=488):
         super().__init__(
+            model_name=model_name,
             model_dir=model_dir,
             kernel_option=kernel_option,
             output=output,

@@ -47,11 +47,12 @@ self._create(param_path, model_path, option, delete_pass=delete_pass)
             os.environ["FLAGS_npu_jit_compile"] = "0"
             os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
+            os.environ[
+                "CUSTOM_DEVICE_BLACK_LIST"] = "pad3d,pad3d_grad,set_value,set_value_with_tensor"
         elif option.device == 'xpu':
             config.enable_custom_device('npu')
         elif option.device == 'mlu':
             config.enable_custom_device('mlu')
-            os.environ["CUSTOM_DEVICE_BLACK_LIST"] = "set_value"
         else:
             assert option.device == 'cpu'
             config.disable_gpu()

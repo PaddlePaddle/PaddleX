@@ -30,8 +30,8 @@ def get_device(device_cfg, using_device_number=None):
             os.environ["FLAGS_npu_jit_compile"] = "0"
             os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
-        elif device.lower() == "mlu":
-            os.environ["CUSTOM_DEVICE_BLACK_LIST"] = "set_value"
+            os.environ[
+                "CUSTOM_DEVICE_BLACK_LIST"] = "pad3d,pad3d_grad,set_value,set_value_with_tensor"
         if len(device_cfg.split(":")) == 2:
             device_ids = device_cfg.split(":")[1]
         else:
