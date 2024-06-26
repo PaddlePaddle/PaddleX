@@ -61,12 +61,9 @@ PaddleX 3.0 集成飞桨生态优势能力，覆盖7大场景任务，构建 16 
 - [数据标注](./docs/tutorials/data/annotation/README.md)
 - [数据校验](./docs/tutorials/data/dataset_check.md)
 
-#### 3. 模型训练
-- [模型训练/评估](./docs/tutorials/base/README.md)
-- [模型优化](./docs/tutorials/base/model_optimize.md)
+#### 3. 模型训练/评估/推理
+- [模型训练/评估/推理](./docs/tutorials/base/README.md)
 
-#### 4. 模型推理
-- [模型推理](./docs/tutorials/base/README.md)
 
 ### 二、模型产线开发工具 🔥
 本节将介绍 PaddleX3.0 模型产线的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)

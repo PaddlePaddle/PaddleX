@@ -87,26 +87,7 @@ def packages_and_package_data():
     return pkgs, {'paddlex': pkg_data}
 
 
-def check_paddle_version():
-    """check paddle version
-    """
-    import paddle
-    supported_versions = ['3.0', '0.0']
-    version = paddle.__version__
-    # Recognizable version number: major.minor.patch
-    major, minor, patch = version.split('.')
-    # Ignore patch
-    version = f"{major}.{minor}"
-    if version not in supported_versions:
-        raise RuntimeError(
-            f"The {version} version of PaddlePaddle is not supported. "
-            f"Please install one of the following versions of PaddlePaddle: {supported_versions}."
-        )
-
-
 if __name__ == '__main__':
-    check_paddle_version()
-
     pkgs, pkg_data = packages_and_package_data()
 
     s = setup(

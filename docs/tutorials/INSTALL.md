@@ -85,7 +85,6 @@ git clone https://gitee.com/paddlepaddle/PaddleX.git
 
 参考下述命令，按提示操作，完成 PaddleX 依赖的安装。
 
-<!-- 这里需要指明安装成功的状态， 廷权 -->
 ```bash
 cd PaddleX
 
@@ -95,6 +94,9 @@ pip install -e .
 
 # 安装 PaddleX 相关依赖
 paddlex --install
+
+# 完成安装后会有如下提示：
+# All packages are installed.
 ```
 
 **注 :** 在安装过程中，需要克隆 Paddle 官方模型套件，`--platform` 可以指定克隆源，可选 `github.com`，`gitee.com`，分别代表这些套件从 github 上和 gitee 上克隆，默认为 `github.com`。

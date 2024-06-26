@@ -25,7 +25,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 
 更多超参数介绍，请参考 [PaddleX 超参数介绍](./hyperparameters_introduction.md)。
 
-**注：** 
+**注：**
 - 以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 2 卡 GPU 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
 - 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
 - 在 OCR 和语义分割任务模块中，参数 `epochs_iters` 对应训练 Step 数，在其他任务模块中，参数 `epochs_iters` 对应训练 Epoch 数。
@@ -55,12 +55,20 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
     -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
 ```
 
-**注：** PaddleX 允许使用 wheel 包进行推理，在此处，当您验证好自己的模型之后，即使用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。模型推理方法请参考 [PaddleX 单模型开发工具](../tools/model_tools.md)。
+**注：** PaddleX 允许使用 wheel 包进行推理，在此处，当您验证好自己的模型之后，即使用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。模型推理方法请参考 [PaddleX 单模型开发工具推理预测](../models/model_inference_tools.md)。
 
 ## 4. 须知事项
+
 ### 4.1 训练须知事项
+
 - 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以详情[模型库](../models/support_model_list.md)。
 - PaddleX 对您屏蔽了动态图权重和静态图权重的概念，在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
-<!-- 这里需要补充说明，廷权 -->
+
 ### 4.2 训练产出解释
-<!-- 这里需要补充说明，廷权 -->
+
+在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
+
+* train_result.json：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
+* train.log：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；
+* config.yaml：训练配置文件，记录了本次训练的超参数的配置；
+* .pdparams\.pdema\.pdopt\.pdstate\.pdiparams\.pdmodel：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；

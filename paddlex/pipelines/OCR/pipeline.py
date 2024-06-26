@@ -27,7 +27,7 @@ from .utils import draw_ocr_box_txt
 class OCRPipeline(BasePipeline):
     """OCR Pipeline
     """
-    entities = "PP-OCRv4"
+    entities = "OCR"
 
     def __init__(self,
                  text_det_model_name=None,

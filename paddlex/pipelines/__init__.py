@@ -19,7 +19,7 @@ __all__ = [
 ]
 
 from .base import build_pipeline, BasePipeline
-from .PPOCR import OCRPipeline
+from .OCR import OCRPipeline
 from .image_classification import ClsPipeline
 from .object_detection import DetPipeline
 from .instance_segmentation import InstanceSegPipeline

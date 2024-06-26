@@ -22,9 +22,43 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
 
-执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。相关信息会保存在当前目录的 `./output/check_dataset` 目录下。
+执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
+```
+{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "dataset/label.txt",
+    "num_classes": 102,
+    "train_samples": 1020,
+    "train_sample_paths": [
+      "check_dataset/demo_img/image_01904.jpg",
+      "check_dataset/demo_img/image_06940.jpg"
+    ],
+    "val_samples": 1020,
+    "val_sample_paths": [
+      "check_dataset/demo_img/image_01937.jpg",
+      "check_dataset/demo_img/image_06958.jpg"
+    ]
+  },
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
+  },
+  "dataset_path": "./dataset/cls_flowers_examples",
+  "show_type": "image",
+  "dataset_type": "ClsDataset"
+}
+```
+上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：
 
-<!-- 这里需要增加输出的说明，以及产出的说明，畅达 -->
+- attributes.num_classes：该数据集类别数为 102；
+- attributes.train_samples：该数据集训练集样本数量为 1020；
+- attributes.val_samples：该数据集验证集样本数量为 1020；
+- attributes.train_sample_paths：该数据集训练集样本可视化图片相对路径列表；
+- attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
+
+另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
+![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/e2cada1f-337f-4062-8504-077c90a3b8da)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -36,15 +70,12 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 数据集校验相关的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
 
 * `CheckDataset`:
-    <!-- 这里需要增加详细的说明，比如图像分类这里不支持转换，也需要说明，畅达 -->
-    * `dst_dataset_name`: 生成的数据集目录名，PaddleX 在数据校验时，会产生一个新的数据集；
-
     * `convert`:
-        * `enable`: 是否进行数据集格式转换；
-        * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式；
+        * `enable`: 是否进行数据集格式转换，图像分类不支持格式转换，默认为 `False`;
+        * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，图像分类不支持数据转换，默认为 `null`；
     * `split`:
-        * `enable`: 是否进行重新划分数据集；
-        * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比；
-        * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比；
+        * `enable`: 是否进行重新划分数据集，为 `True` 时进行数据集格式转换，默认为 `False`；
+        * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
+        * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-以上参数同样支持通过追加命令行参数的方式进行设置，如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split=True -o CheckDataset.train_percent=0.8 -o CheckDataset.val_percent=0.2`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。

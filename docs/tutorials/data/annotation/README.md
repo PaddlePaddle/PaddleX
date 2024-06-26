@@ -7,7 +7,5 @@
 |    图像分类   |   [文档链接](ClsAnnoTools.md)  |
 |    目标检测   |   [文档链接](DetAnnoTools.md)  |
 |    语义分割   |   [文档链接](SegAnnoTools.md)  |
-|    实例分割   |   [文档链接](InsSegAnnoTools.md)  |
+|    实例分割   |   [文档链接](InstSegAnnoTools.md)  |
 |    OCR/表格识别   |   [文档链接](OCRAnnoTools.md)  |
-
-
