@@ -20,7 +20,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
     -e ASCEND_RT_VISIBLE_DEVICES="0,1,2,3,4,5,6,7" \
     registry.baidubce.com/device/paddle-npu:cann80RC1-ubuntu20-x86_64-gcc84-py39 /bin/bash
 ```
-### 1.2 安装paddle包
+### 1.2 安装 paddle 包
 当前提供 Python3.9 的 wheel 安装包。如有其他 Python 版本需求，可以参考[飞桨官方文档](https://www.paddlepaddle.org.cn/install/quick)自行编译安装。
 
 - 1.下载安装 Python3.9 的 wheel 安装包
@@ -59,7 +59,7 @@ docker run -it --name paddle-mlu-dev -v $(pwd):/work \
   -v /usr/bin/cnmon:/usr/bin/cnmon \
   registry.baidubce.com/device/paddle-mlu:ctr2.15.0-ubuntu20-gcc84-py310 /bin/bash
 ```
-### 2.2 安装paddle包
+### 2.2 安装 paddle 包
 当前提供 Python3.10 的 wheel 安装包。有其他 Python 版本需求，可以参考[飞桨官方文档](https://www.paddlepaddle.org.cn/install/quick)自行编译安装。
 
 - 1.下载安装 Python3.10 的wheel 安装包。
@@ -97,7 +97,7 @@ docker run -it --name=xxx -m 81920M --memory-swap=81920M \
     registry.baidubce.com/device/paddle-xpu:kylinv10-aarch64-gcc82 bash
 ```
 
-## 3.2 安装paddle包
+## 3.2 安装 paddle 包
 当前提供 Python3.10 的 wheel 安装包。有其他 Python 版本需求，可以参考[飞桨官方文档](https://www.paddlepaddle.org.cn/install/quick)自行编译安装。
 
 - 1.安装 Python3.10 的 wheel 安装包
