@@ -91,7 +91,7 @@ def check_paddle_version():
     """check paddle version
     """
     import paddle
-    supported_versions = ['2.6', '3.0', '0.0']
+    supported_versions = ['3.0', '0.0']
     version = paddle.__version__
     # Recognizable version number: major.minor.patch
     major, minor, patch = version.split('.')

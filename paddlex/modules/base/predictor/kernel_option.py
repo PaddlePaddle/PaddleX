@@ -158,6 +158,11 @@ class PaddleInferenceOption(object):
         """
         return self.SUPPORT_DEVICE
 
+    def get_device(self):
+        """get device
+        """
+        return f"{self._cfg['device']}:{self._cfg['device_id']}"
+
     def __str__(self):
         return ",  ".join([f"{k}: {v}" for k, v in self._cfg.items()])
 

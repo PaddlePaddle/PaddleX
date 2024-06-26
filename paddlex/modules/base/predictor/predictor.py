@@ -36,12 +36,14 @@ class BasePredictor(ABC, FromDictMixin, Node):
     MODEL_FILE_TAG = 'inference'
 
     def __init__(self,
+                 model_name,
                  model_dir,
                  kernel_option,
                  output,
                  pre_transforms=None,
                  post_transforms=None):
         super().__init__()
+        self.model_name = model_name
         self.model_dir = model_dir
         self.kernel_option = kernel_option
         self.output = output
@@ -169,6 +171,7 @@ class PredictorBuilderByConfig(object):
         self.input_path = predict_config.pop('input_path')
 
         self.predictor = BasePredictor.get(model_name)(
+            model_name=model_name,
             model_dir=model_dir,
             kernel_option=kernel_option,
             output=config.Global.output,
@@ -201,10 +204,8 @@ def create_model(model_name,
     if model_dir is None:
         if model_name in official_models:
             model_dir = official_models[model_name]
-        else:
-            # model name is invalid
-            BasePredictor.get(model_name)
-    return BasePredictor.get(model_name)(model_dir=model_dir,
+    return BasePredictor.get(model_name)(model_name=model_name,
+                                         model_dir=model_dir,
                                          kernel_option=kernel_option,
                                          output=output,
                                          pre_transforms=pre_transforms,

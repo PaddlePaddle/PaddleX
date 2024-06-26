@@ -14,6 +14,7 @@
 
 
 from pathlib import Path
+import tarfile
 
 from typing import Union
 from ...utils import logging
@@ -27,18 +28,26 @@ class TSFCPredictor(BasePredictor):
     """ TS Forecast Model Predictor """
     entities = MODELS
 
-    def __init__(self, config):
-        """Initialize the instance.
-
-        Args:
-            config (AttrDict):  PaddleX pipeline config, which is loaded from pipeline yaml file.
+    def __init__(self, model_name, model_dir, kernel_option, output):
+        """initialize
         """
-        self.global_config = config.Global
-        self.predict_config = config.Predict
+        self.model_dir = self.uncompress_tar_file(model_dir)
 
+        self.device = kernel_option.get_device()
+        self.output = output
         config_path = self.get_config_path()
         self.pdx_config, self.pdx_model = build_model(
-            self.global_config.model, config_path=config_path)
+            model_name, config_path=config_path)
+
+    def uncompress_tar_file(self, model_dir):
+        """unpackage the tar file containing training outputs and update weight path
+        """
+        if tarfile.is_tarfile(model_dir):
+            dest_path = Path(model_dir).parent
+            with tarfile.open(model_dir, 'r') as tar:
+                tar.extractall(path=dest_path)
+            return dest_path / "best_accuracy.pdparams/best_model/model.pdparams"
+        return model_dir
 
     def get_config_path(self) -> Union[str, None]:
         """
@@ -48,33 +57,25 @@ class TSFCPredictor(BasePredictor):
             config_path (str): The path to the config
 
         """
-        model_dir = self.predict_config.model_dir
-        if Path(model_dir).exists():
-            config_path = Path(model_dir).parent.parent / "config.yaml"
+        if Path(self.model_dir).exists():
+            config_path = Path(self.model_dir).parent.parent / "config.yaml"
             if config_path.exists():
                 return config_path
             else:
                 logging.warning(
-                    f"The config file(`{config_path}`) related to model weight file(`{self.predict_config.model_dir}`) \
+                    f"The config file(`{config_path}`) related to model weight file(`{self.model_dir}`) \
 is not exist, use default instead.")
         else:
-            raise_model_not_found_error(model_dir)
+            raise_model_not_found_error(self.model_dir)
         return None
 
-    def predict(self, input=None, batch_size=1):
+    def predict(self, input):
         """execute model predict
-
-        Returns:
-            dict: the prediction results
-        """
-        results = self.predict()
-
-    def predict(self):
-        """predict using specified model
         """
         # self.update_config()
-        result = self.pdx_model.predict(**self.get_predict_kwargs())
+        result = self.pdx_model.predict(**input, **self.get_predict_kwargs())
         assert result.returncode == 0, f"Encountered an unexpected error({result.returncode}) in predicting!"
+        return result
 
     def get_predict_kwargs(self) -> dict:
         """get key-value arguments of model predict function
@@ -83,10 +84,9 @@ is not exist, use default instead.")
             dict: the arguments of predict function.
         """
         return {
-            "weight_path": self.predict_config.model_dir,
-            "input_path": self.predict_config.input_path,
-            "device": self.global_config.device,
-            "save_dir": self.global_config.output
+            "weight_path": self.model_dir,
+            "device": self.device,
+            "save_dir": self.output
         }
 
     def _get_post_transforms_from_config(self):
@@ -100,7 +100,7 @@ is not exist, use default instead.")
 
     def get_input_keys(self):
         """ get input keys """
-        pass
+        return ["input_path"]
 
     def get_output_keys(self):
         """ get output keys """

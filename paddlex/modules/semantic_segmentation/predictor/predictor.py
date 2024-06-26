@@ -31,6 +31,7 @@ class SegPredictor(BasePredictor):
     entities = MODELS
 
     def __init__(self,
+                 model_name,
                  model_dir,
                  kernel_option,
                  output,
@@ -38,6 +39,7 @@ class SegPredictor(BasePredictor):
                  post_transforms=None,
                  has_prob_map=False):
         super().__init__(
+            model_name=model_name,
             model_dir=model_dir,
             kernel_option=kernel_option,
             output=output,
@@ -65,6 +67,8 @@ class SegPredictor(BasePredictor):
 
     def _run(self, batch_input):
         """ run """
+        # XXX:
+        os.environ.pop("FLAGS_npu_jit_compile", None)
         images = [data[K.IMAGE] for data in batch_input]
         input_ = np.stack(images, axis=0)
         if input_.ndim == 3:

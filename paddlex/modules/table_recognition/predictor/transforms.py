@@ -16,16 +16,14 @@
 
 import os
 import os.path as osp
-
 import numpy as np
-from PIL import Image
 import cv2
 import paddle
 
-from ....utils import logging
+from .keys import TableRecKeys as K
 from ...base import BaseTransform
 from ...base.predictor.io.writers import ImageWriter
-from .keys import TableRecKeys as K
+from ....utils import logging
 
 __all__ = ['TableLabelDecode', 'TableMasterLabelDecode', 'SaveTableResults']
 

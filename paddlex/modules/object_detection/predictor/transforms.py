@@ -21,7 +21,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from .keys import DetKeys as K
 from ...base import BaseTransform
-from ...base.predictor.io.writers import ImageWriter
+from ...base.predictor.io import ImageWriter, ImageReader
 from ...base.predictor.transforms import image_functions as F
 from ...base.predictor.transforms.image_common import _BaseResize, _check_image_size
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
@@ -196,7 +196,7 @@ class SaveDetResults(BaseTransform):
         save_path = os.path.join(self.save_dir, file_name)
 
         labels = self.labels
-        image = Image.open(ori_path)
+        image = ImageReader(backend='pil').read(ori_path)
         if K.MASKS in data:
             image = draw_mask(
                 image,
@@ -230,7 +230,7 @@ class SaveDetResults(BaseTransform):
 class PadStride(BaseTransform):
     """ padding image for model with FPN , instead PadBatch(pad_to_stride, pad_gt) in original config
     Args:
-        stride (bool): model with FPN need image shape % stride == 0 
+        stride (bool): model with FPN need image shape % stride == 0
     """
 
     def __init__(self, stride=0):

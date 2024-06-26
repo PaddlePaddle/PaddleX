@@ -12,21 +12,33 @@
 ### 2.PP-LCNet系列
 | 模型名称 | config |
 | :--- | :---: |
+| PP-LCNet_x0_25 | [PP-LCNet_x0_25.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_25.yaml)|
+| PP-LCNet_x0_35 | [PP-LCNet_x0_35.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_35.yaml)|
+| PP-LCNet_x0_5 | [PP-LCNet_x0_5.yaml](../../../paddlex/configs/image_classification/ResNet50.yaml)|
+| PP-LCNet_x0_75 | [PP-LCNet_x0_5.yaml](../../../paddlex/configs/image_classification/ResNet101.yaml)|
 | PP-LCNet_x1_0 | [PP-LCNet_x1_0.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x1_0.yaml)|
-
+| PP-LCNet_x1_5 | [PP-LCNet_x1_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x1_5.yaml)|
+| PP-LCNet_x2_0 | [PP-LCNet_x2_0.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_0.yaml)|
+| PP-LCNet_x2_5 | [PP-LCNet_x2_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_5.yaml)|
 ### 3.MobileNetV2系列
 | 模型名称 | config |
 | :--- | :---: |
 | MobileNetV2_x0_25 | [MobileNetV2_x0_25.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x0_25.yaml)|
 | MobileNetV2_x0_5 | [MobileNetV2_x0_5.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x0_5.yaml)|
 | MobileNetV2_x1_0 | [MobileNetV2_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x1_0.yaml)|
-
 ### 4.MobileNetV3系列
 | 模型名称 | config |
 | :--- | :---: |
+| MobileNetV3_small_x0_35 | [MobileNetV3_small_x0_35.yaml](../../../paddlex/configs/image_classification/MobileNetV3_small_x0_35.yaml)|
+| MobileNetV3_small_x0_5 | [MobileNetV3_small_x0_5.yaml](../../../paddlex/configs/image_classification/MobileNetV3_small_x0_5.yaml)|
+| MobileNetV3_small_x0_75 | [MobileNetV3_small_x0_75.yaml](../../../paddlex/configs/image_classification/MobileNetV3_small_x0_75.yaml)|
 | MobileNetV3_small_x1_0 | [MobileNetV3_small_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV3_small_x1_0.yaml)|
+| MobileNetV3_small_x1_25 | [MobileNetV3_small_x1_25.yaml](../../../paddlex/configs/image_classification/MobileNetV3_small_x1_25.yaml)|
+| MobileNetV3_large_x0_35 | [MobileNetV3_large_x0_35.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x0_35.yaml)|
+| MobileNetV3_large_x0_5 | [MobileNetV3_large_x0_5.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x0_5.yaml)|
+| MobileNetV3_large_x0_75 | [MobileNetV3_large_x0_75.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x0_75.yaml)|
 | MobileNetV3_large_x1_0 | [MobileNetV3_large_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x1_0.yaml)|
-
+| MobileNetV3_large_x1_25 | [MobileNetV3_large_x1_25.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x1_25.yaml)|
 ### 5.PP-HGNet系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -36,16 +48,16 @@
 | :--- | :---: |
 | PP-HGNetV2-B0 | [PP-HGNetV2-B0.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B0.yaml)|
 | PP-HGNetV2-B4 | [PP-HGNetV2-B4.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B4.yaml)|
-
+| PP-HGNetV2-B6 | [PP-HGNetV2-B6.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B6.yaml)|
 ### 7.SwinTransformer系列
 | 模型名称 | config |
 | :--- | :---: |
 | SwinTransformer_base_patch4_window7_224 | [SwinTransformer_base_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window7_224.yaml)|
-
 ### 8.ConvNeXt系列
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
+
 ## 二、目标检测
 ### 1. PP-YOLOE_plus系列
 | 模型名称 | config |
@@ -67,6 +79,7 @@
 | :--- | :---: |
 | PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
 | PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
+
 ## 三、语义分割
 ### 1.Deeplabv3系列
 | 模型名称 | config |
@@ -79,15 +92,9 @@
 | 模型名称 | config |
 | :--- | :---: |
 | PP-LiteSeg-T | [PP-LiteSeg-T.yaml](../../../paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml)|
-## 四、文本检测
-### 1.PP-OCRv4系列
-| 模型名称 | config |
-| :--- | :---: |
-| PP-OCRv4_server_det | [PP-OCRv4_server_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_server_det.yaml)|
-| PP-OCRv4_mobile_det | [PP-OCRv4_mobile_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml)|
-## 五、时序预测
+
+## 四、时序预测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear | [DLinear.yaml](../../../paddlex/configs/ts_forecast/DLinear.yaml)|
-| RLinear | [RLinear.yaml](../../../paddlex/configs/ts_forecast/RLinear.yaml)|
 | NLinear | [NLinear.yaml](../../../paddlex/configs/ts_forecast/NLinear.yaml)|

@@ -24,23 +24,13 @@
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNet_small | [PP-HGNet_small.yaml](../../../paddlex/configs/image_classification/PP-HGNet_small.yaml)|
-## 二、目标检测
-### 1. PP-YOLOE_plus系列
-| 模型名称 | config |
-| :--- | :---: |
-| PP-YOLOE_plus-S | [PP-YOLOE_plus-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml)|
-| PP-YOLOE_plus-M | [PP-YOLOE_plus-M.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-M.yaml)|
-| PP-YOLOE_plus-L | [PP-YOLOE_plus-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-L.yaml)|
-| PP-YOLOE_plus-X | [PP-YOLOE_plus-X.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-X.yaml)|
-### 2. PicoDet系列
-| 模型名称 | config |
-| :--- | :---: |
-| PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
-## 三、版面分析
+
+## 二、版面分析
 | 模型名称 | config |
 | :--- | :---: |
 | PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
-## 四、时序预测
+
+## 三、时序预测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear | [DLinear.yaml](../../../paddlex/configs/ts_forecast/DLinear.yaml)|

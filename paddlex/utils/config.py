@@ -97,27 +97,6 @@ def print_config(config):
     print_dict(config)
 
 
-# def check_config(config):
-#     """
-#     Check config
-#     """
-#     from . import check
-#     check.check_version()
-#     use_gpu = config.get('use_gpu', True)
-#     if use_gpu:
-#         check.check_gpu()
-#     architecture = config.get('ARCHITECTURE')
-#     #check.check_architecture(architecture)
-#     use_mix = config.get('use_mix', False)
-#     check.check_mix(architecture, use_mix)
-#     classes_num = config.get('classes_num')
-#     check.check_classes_num(classes_num)
-#     mode = config.get('mode', 'train')
-#     if mode.lower() == 'train':
-#         check.check_function_params(config, 'LEARNING_RATE')
-#         check.check_function_params(config, 'OPTIMIZER')
-
-
 def override(dl, ks, v):
     """
     Recursively replace dict of list

@@ -15,15 +15,14 @@
 
 import os
 import json
-from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
-
 import numpy as np
+from PIL import ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...base import BaseTransform
-from ...base.predictor.io.writers import ImageWriter
 from .keys import ClsKeys as K
+from ...base import BaseTransform
+from ...base.predictor.io import ImageWriter, ImageReader
+from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ....utils import logging
 
 __all__ = ["Topk", "NormalizeFeatures", "PrintResult", "SaveClsResults"]
@@ -171,7 +170,7 @@ class SaveClsResults(BaseTransform):
         file_name = os.path.basename(ori_path)
         save_path = os.path.join(self.save_dir, file_name)
 
-        image = Image.open(ori_path)
+        image = ImageReader(backend='pil').read(ori_path)
         image = image.convert('RGB')
         image_size = image.size
         draw = ImageDraw.Draw(image)
