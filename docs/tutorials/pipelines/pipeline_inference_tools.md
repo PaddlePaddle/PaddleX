@@ -135,14 +135,14 @@ paddlex --pipeline instance_segmentation --model Mask-RT-DETR-L --input https://
 
 ```python
 from pathlib import Path
-from paddlex import DetPipeline
+from paddlex import InstanceSegPipeline
 from paddlex import PaddleInferenceOption
 
 model_name =  "Mask-RT-DETR-L"
 output_base = Path("output")
 
 output = output_base / model_name
-pipeline = DetPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
+pipeline = InstanceSegPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
     {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"})
 print(result["boxes"])

@@ -43,6 +43,9 @@ def _check_paddle_version():
     """
     import paddle
     supported_versions = ['3.0', '0.0']
+    device_type = paddle.device.get_device().split(':')[0]
+    if device_type.lower() == 'xpu':
+        supported_versions.append('2.6')
     version = paddle.__version__
     # Recognizable version number: major.minor.patch
     major, minor, patch = version.split('.')

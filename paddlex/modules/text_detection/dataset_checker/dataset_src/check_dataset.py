@@ -77,7 +77,7 @@ def check(dataset_dir, output, sample_num=10):
                         assert "points" in item and "transcription" in item, \
                             f"line {idx} is not in the correct format."
                         box = np.array(item['points'])
-                        assert box.shape == (4, 2), \
+                        assert box.shape[1] == 2, \
                             f"{box} in line {idx} is not in the correct format."
 
                         txt = item['transcription']
