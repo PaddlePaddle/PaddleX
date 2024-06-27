@@ -19,7 +19,7 @@ model_name = "PP-LCNet_x1_0"
 
 # 实例化 PaddleInferenceOption 设置推理配置
 kernel_option = PaddleInferenceOption()
-kernel_option.set_device("gpu")
+kernel_option.set_device("gpu:0")
 
 # 调用 create_model 函数实例化预测模型
 model = create_model(model_name=model_name, kernel_option=kernel_option)
