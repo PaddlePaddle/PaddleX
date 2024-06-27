@@ -26,7 +26,7 @@ PaddleX 3.0 是飞桨精选模型的低代码开发工具，支持国内外多�
 ## 📣 近期更新
 
 - 🔥 **2024.6.27，PaddleX 3.0 Beta 本地端正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。**
-- 🔥 **2024.3.25，PaddleX 3.0 云端发布，支持在[星河社区](https://aistudio.baidu.com/pipeline/mine )以零代码的方式【创建产线】使用。**
+- 🔥 **2024.3.25，PaddleX 3.0 云端发布，支持在[星河社区](https://aistudio.baidu.com/pipeline/mine)以零代码的方式【创建产线】使用。**
 
 ## 🌟 特性
 
@@ -115,7 +115,7 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
     <td>PicoDet layout_1x</td>
   </tr>
   <tr>
-    <td>表格结构识别</td>
+    <td>表格识别</td>
     <td>SLANet</td>
   </tr>
   <tr>
@@ -203,7 +203,7 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 
 ## 📖 低代码开发教程
 ### 一、单模型开发工具 🚀
-本节介绍 PaddleX3.0 单模型的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX3.0 支持的模型可以参考 [PaddleX 模型库](./docs/tutorials/models/support_model_list.md)。
+本节介绍 PaddleX 3.0 单模型的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX 3.0 支持的模型可以参考 [PaddleX 模型库](./docs/tutorials/models/support_model_list.md)。
 - 快速体验
   - [单模型快速体验](./docs/tutorials/models/model_inference_tools.md)
 - 数据准备
