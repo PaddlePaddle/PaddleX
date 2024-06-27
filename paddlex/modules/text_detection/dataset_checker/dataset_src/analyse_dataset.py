@@ -99,7 +99,7 @@ def simple_analyse(dataset_path, max_recorded_sample_cnts=20, show_label=True):
                                 return res
 
                             box = np.array(item['points'])
-                            if box.shape != (4, 2):
+                            if box.shape[1] != 2:
                                 res.insert(0, "数据集的标注文件不符合规范")
                                 return res
                             boxes.append(box)

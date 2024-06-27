@@ -109,6 +109,8 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 </center>
 
 9. 调整目录得到安全帽检测标准labelme格式数据集
+
+  &emsp;&emsp;
   a. 在数据集根目录创建train_anno_list.txt和val_anno_list.txt两个文本文件，并将annotations目录下的全部json文件路径按一定比例分别写入train_anno_list.txt和val_anno_list.txt，也可全部写入到train_anno_list.txt同时创建一个空的val_anno_list.txt文件，待上传零代码使用数据划分功能进行重新划分。train_anno_list.txt和val_anno_list.txt的具体填写格式如图所示：
 
 <center>
@@ -116,6 +118,7 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 <img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/77eaf28a-4d4c-4a02-962a-5b25c7b04b99' width='600px'>
 </center>
 
+  &emsp;&emsp;
   b. 经过整理得到的最终目录结构如下：
 
 <center>
@@ -123,6 +126,7 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 <img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/b970ce62-fbb9-4cea-b5c0-b2e9565a02f9' width='600px'>
 </center>
 
+  &emsp;&emsp;
   c. 将hemlet目录打包压缩为.tar或.zip格式压缩包即可得到安全帽检测标准labelme格式数据集
 ## 3. PaddleLabel 使用
 ### 3.1.1. 安装与运行

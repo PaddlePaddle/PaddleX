@@ -117,12 +117,11 @@ labelme images --nodata --autosave --output annotations
 
 9. 调整目录得到安全帽检测标准labelme格式数据集
 
-    a. 在数据集根目录 seg_datset 下载并执行[目录整理脚本](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/format_seg_labelme_dataset.py)。执行脚本后的 train_anno_list.txt 和 val_anno_list.txt 中具体内容如图所示：
-
-
-    ```
-    python format_seg_labelme_dataset.py
-    ```
+  &emsp;&emsp;
+  a. 在数据集根目录 seg_datset 下载并执行[目录整理脚本](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/format_seg_labelme_dataset.py)。执行脚本后的 train_anno_list.txt 和 val_anno_list.txt 中具体内容如图所示：
+  ```
+  python format_seg_labelme_dataset.py
+  ```
 
 <center>
 

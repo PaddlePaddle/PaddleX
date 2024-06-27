@@ -80,7 +80,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 
 ## 2.目标检测任务模块数据校验
@@ -160,7 +160,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 3.语义分割任务模块数据校验
 
@@ -239,7 +239,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 4. 实例分割任务模块数据校验
 
@@ -318,7 +318,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 5. 文本检测任务模块数据校验
 
@@ -374,7 +374,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 - attributes.train_sample_paths：该数据集训练集样本可视化图片相对路径列表；
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
+另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 ![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/d47d8410-f8ac-4126-9565-c217528951e0)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
@@ -395,7 +395,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 6. 文本识别任务模块数据校验
 
@@ -451,7 +451,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 - attributes.train_sample_paths：该数据集训练集样本可视化图片相对路径列表；
 - attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
 
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
+另外，数据集校验还对数据集中所有字符长度占比的分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 ![样本分布直方图](https://github.com/PaddlePaddle/PaddleX/assets/142379845/2517ab81-e90f-4384-97f5-6f61785b161f)
 
 **注**：只有通过数据校验的数据才可以训练和评估。
@@ -472,7 +472,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 7. 表格识别任务模块数据校验
 
@@ -496,7 +496,7 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
 
-执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
+执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
 ```
 {
   "done_flag": true,
@@ -544,13 +544,13 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 8. 时序预测任务模块数据校验
 
 ### 8.1 数据准备
 
-您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据标注，您可以参考[PaddleX 数据标注](./annotation/README.md)，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序预测 Demo 数据供您使用。
+您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序预测 Demo 数据供您使用。
 
 ```bash
 cd /path/to/paddlex
@@ -568,7 +568,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
 
-执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
+执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括保存示例数据的 csv 文件。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
 ```
 {
   "done_flag": true,
@@ -644,7 +644,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
   "analysis": {
     "histogram": ""
   },
-  "dataset_path": ".\/dataset\/ts_dataset_examples",
+  "dataset_path": "./dataset/ts_dataset_examples",
   "show_type": "csv",
   "dataset_type": "TSDataset"
 }
@@ -653,8 +653,8 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 - attributes.train_samples：该数据集训练集样本数量为 12194；
 - attributes.val_samples：该数据集验证集样本数量为 3484；
-- attributes.train_table：该数据集训练集样本示例数据表格信息；
-- attributes.val_table：该数据集验证集样本示例数据表格信息；
+- attributes.train_table：该数据集训练集样本示例数据前10行信息；
+- attributes.val_table：该数据集训练集样本示例数据前10行信息；
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -674,13 +674,13 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 9. 时序异常检测任务模块数据校验
 
 ### 9.1 数据准备
 
-您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据标注，您可以参考[PaddleX 数据标注](./annotation/README.md)，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序异常检测 Demo 数据供您使用。
+您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序异常检测 Demo 数据供您使用。
 
 ```bash
 cd /path/to/paddlex
@@ -698,7 +698,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples
 ```
 
-执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
+执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括保存示例数据的 csv 文件。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
 ```
 {
   "done_flag": true,
@@ -751,8 +751,8 @@ python main.py -c paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml \
 
 - attributes.train_samples：该数据集训练集样本数量为 22032；
 - attributes.val_samples：该数据集验证集样本数量为 198290；
-- attributes.train_table：该数据集训练集样本示例数据表格信息；
-- attributes.val_table：该数据集验证集样本示例数据表格信息；
+- attributes.train_table：该数据集训练集样本示例数据前10行信息；
+- attributes.val_table：该数据集训练集样本示例数据前10行信息；
 
 **注**：只有通过数据校验的数据才可以训练和评估。
 
@@ -772,13 +772,13 @@ python main.py -c paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
 ## 10. 时序分类任务模块数据校验
 
 ### 10.1 数据准备
 
-您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据标注，您可以参考[PaddleX 数据标注](./annotation/README.md)，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序分类 Demo 数据供您使用。
+您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序分类 Demo 数据供您使用。
 
 ```bash
 cd /path/to/paddlex
@@ -857,8 +857,8 @@ python main.py -c paddlex/configs/ts_classify_examples/DLinear_ad.yaml \
 
 - attributes.train_samples：该数据集训练集样本数量为 82620；
 - attributes.val_samples：该数据集验证集样本数量为 83025；
-- attributes.train_table：该数据集训练集样本示例数据表格信息；
-- attributes.val_table：该数据集验证集样本示例数据表格信息；
+- attributes.train_table：该数据集训练集样本示例数据前10行信息；
+- attributes.val_table：该数据集训练集样本示例数据前10行信息；
 
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
@@ -882,4 +882,4 @@ python main.py -c paddlex/configs/ts_classify_examples/DLinear_ad.yaml \
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
         * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
 
-数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。

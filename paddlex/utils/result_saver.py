@@ -39,6 +39,7 @@ def try_except_decorator(func):
                 err_type=str(exc_type),
                 err_msg=str(exc_value))
             traceback.print_exception(exc_type, exc_value, exc_tb)
+            sys.exit(1)
 
     return wrap
 

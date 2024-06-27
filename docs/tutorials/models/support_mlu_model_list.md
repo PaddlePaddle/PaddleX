@@ -14,8 +14,8 @@
 | :--- | :---: |
 | PP-LCNet_x0_25 | [PP-LCNet_x0_25.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_25.yaml)|
 | PP-LCNet_x0_35 | [PP-LCNet_x0_35.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_35.yaml)|
-| PP-LCNet_x0_5 | [PP-LCNet_x0_5.yaml](../../../paddlex/configs/image_classification/ResNet50.yaml)|
-| PP-LCNet_x0_75 | [PP-LCNet_x0_5.yaml](../../../paddlex/configs/image_classification/ResNet101.yaml)|
+| PP-LCNet_x0_5 | [PP-LCNet_x0_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_5.yaml)|
+| PP-LCNet_x0_75 | [PP-LCNet_x0_75.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_75.yaml)|
 | PP-LCNet_x1_0 | [PP-LCNet_x1_0.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x1_0.yaml)|
 | PP-LCNet_x1_5 | [PP-LCNet_x1_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x1_5.yaml)|
 | PP-LCNet_x2_0 | [PP-LCNet_x2_0.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_0.yaml)|

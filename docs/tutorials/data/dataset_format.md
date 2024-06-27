@@ -4,7 +4,7 @@
 
 因此，PaddleX 针对常见 AI 任务，给出通用简明的数据集规范说明，涵盖数据集名称、组织结构、标注格式。
 
-**请您在下面找到特定 AI 任务，参考说明准备数据，进而可以通过 PaddleX 的数据校验，最后完成全流程任务开发。**
+**请您在下面找到特定 AI 任务，参考说明准备数据， 通过PaddleX 进行数据校验，并完成全流程任务的开发。**
 
 请注意：
 
@@ -12,7 +12,7 @@
 
 ## 1. 图像分类任务模块
 
-PaddleX 针对图像分类任务定义的数据集，名称是 **ClsDataset**，组织结构和标注格式如下。 
+PaddleX 针对图像分类任务定义的数据集，名称是 **ClsDataset**，组织结构和标注格式如下。
 
 ```plain
 dataset_dir    # 数据集根目录，目录名称可以改变
@@ -27,13 +27,13 @@ dataset_dir    # 数据集根目录，目录名称可以改变
 如果您已有数据集且数据集格式为如下格式，但是没有标注文件，可以使用[脚本](https://paddleclas.bj.bcebos.com/tools/create_cls_trainval_lists.py)将已有的数据集生成标注文件。
 
 ```plain
-dataset_dir          # 数据集根目录，目录名称可以改变      
+dataset_dir          # 数据集根目录，目录名称可以改变  
 ├── images           # 图像的保存目录，目录名称可以改变
    ├── train         # 训练集目录，目录名称可以改变
       ├── class0     # 类名字，最好是有意义的名字，否则生成的类别映射文件label.txt无意义
          ├── xxx.jpg # 图片，此处支持层级嵌套
          ├── xxx.jpg # 图片，此处支持层级嵌套
-         ...      
+         ...  
       ├── class1     # 类名字，最好是有意义的名字，否则生成的类别映射文件label.txt无意义
       ...
    ├── val           # 验证集目录，目录名称可以改变
@@ -74,7 +74,7 @@ dataset_dir                  # 数据集根目录，目录名称可以改变
 标注文件采用 COCO 格式。请大家参考上述规范准备数据，此外可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_coco_examples.tar) 和 [目标检测数据准备](https://github.com/PaddlePaddle/PaddleDetection/blob/develop/docs/tutorials/data/PrepareDetDataSet.md)。
 
 
-当大家使用的是 PaddleX 2.x 版本时的目标检测数据集时，请参考[数据格式转换]()，将 VOC 格式数据集转换为 COCO 数据集。
+当大家使用的是 PaddleX 2.x 版本时的目标检测数据集时，请参考[数据校验](./dataset_check.md)中对应的格式转换部分，将 VOC 格式数据集转换为 COCO 数据集。
 
 ## 3. 实例分割任务模块
 
@@ -91,11 +91,11 @@ dataset_dir                  # 数据集根目录，目录名称可以改变
 标注文件采用 COCO 格式。请大家参考上述规范准备数据，此外可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_coco_examples.tar) 和 [目标检测数据准备](https://github.com/PaddlePaddle/PaddleDetection/blob/develop/docs/tutorials/data/PrepareDetDataSet.md)。
 
 
-当大家使用的是 PaddleX 2.x 版本时的实例分割数据集时，请参考[数据格式转换]()，将 VOC 格式数据集转换为 COCO 数据集。
+当大家使用的是 PaddleX 2.x 版本的实例分割数据集时，请参考[数据校验](./dataset_check.md)中对应的格式转换部分，将 VOC 格式数据集转换为 COCO 数据集。
 
 **注：格式标注要求**
 
-- 实例分割数据要求采用 COCO 数据格式标注出数据集中每张图像各个目标区域的像素边界和类别，采用 [x1,y1,x2,y2,...,xn,yn] 表示物体的多边形边界（segmentation）。其中，(xn,yn) 多边形各个角点坐标。标注信息存放到 annotations 目录下的 json 文件中，训练集 instance_train.json 和验证集 instance_val.json 分开存放。
+- 实例分割数据要求采用 COCO 数据格式标注出数据集中每张图像各个目标区域的像素边界和类别，采用 [x1,y1,x2,y2,...,xn,yn] 表示物体的多边形边界（segmentation）。其中，(xn,yn) 表示多边形各个角点坐标。标注信息存放到 annotations 目录下的 json 文件中，训练集 instance_train.json 和验证集 instance_val.json 分开存放。
 
 - 如果你有一批未标注数据，我们推荐使用 LabelMe 进行数据标注。对于使用 LabelMe 标注的数据集，产线支持进行数据格式转换，请选择对应的格式后，点击「开始校验」按钮。
 
@@ -139,11 +139,11 @@ dataset_dir     # 数据集根目录，目录名称可以改变
 
 标注文件的每行内容是一张图像的路径和一个组成元素是字典的列表，路径和列表必须使用制表符’\t‘进行分隔，不可使用空格进行分隔。
 
-对于组成元素是字典的列表，字典中 points 表示文本框的四个顶点的坐标（x, y），从左上角的顶点开始顺时针排；字典中`transcription`表示该文本框的文字，若`transcription 的`内容为“###”时，表示该文本框无效，不参与训练。
+对于组成元素是字典的列表，字典中 points 表示文本框的四个顶点的坐标（x, y），从左上角的顶点开始按顺时针排序；字典中`transcription`表示该文本框的文字，若`transcription 的`内容为“###”时，表示该文本框无效，不参与训练。
 
 如果您使用了[PPOCRLabel](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README_ch.md)标注数据，只需要在完成数据集划分后将文字检测（det）目录中的`det_gt_train.txt`改名为`train.txt`、`det_gt_test.txt`改名为`val.txt`即可。
 
-请大家参考上述规范准备数据，此外可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ocr_det_dataset_examples.tar) 和 [文本检测数据准备](https://github.com/PaddlePaddle/PaddleOCR/blob/dygraph/doc/doc_ch/dataset/ocr_datasets.md)。
+请大家参考上述规范准备数据，此外可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ocr_det_dataset_examples.tar) 和 [文本检测数据准备](https://github.com/PaddlePaddle/PaddleOCR/blob/main/doc/doc_ch/dataset/ocr_datasets.md)。
 
 ## 6. 文本识别任务模块
 
@@ -201,7 +201,7 @@ dataset_dir    # 数据集根目录，目录名称可以改变
 PaddleX 针对长时序预测任务定义的数据集，名称是**TSDataset**，组织结构和标注格式如下。
 
 ```plain
-dataset_dir         # 数据集根目录，目录名称可以改变     
+dataset_dir         # 数据集根目录，目录名称可以改变  
 ├── train.csv       # 训练集标注文件，文件名称不可改变。表头是每列的列名称，每一行是某一个时间点采集的数据。
 ├── val.csv         # 验证集标注文件，文件名称不可改变。表头是每列的列名称，每一行是某一个时间点采集的数据。
 └── test.csv        # 测试集标注文件（可选），文件名称不可改变。表头是每列的列名称，每一行是某一个时间点采集的数据。
@@ -221,7 +221,7 @@ dataset_dir     # 数据集根目录，目录名称可以改变
 └── test.csv    # 测试集文件，文件名称不可改变
 ```
 
-时序异常检测和多模型融合时序异常检测要求的数据集格式，支持 xls、xlsx 格式的数据集转换为 csv 格式。你可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)。
+时序异常检测和多模型融合时序异常检测要求的数据集格式为 csv 格式，支持 xls、xlsx 格式的数据集转换为 csv 格式。你可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)。
 
 ## 10. 时序分类任务模块
 
@@ -234,4 +234,4 @@ dataset_dir     # 数据集根目录，目录名称可以改变
 └── test.csv    # 测试集文件，文件名称不可改变，群组编号名称固定为"group_id"，标签变量(可不包含)名称固定为"label"
 ```
 
-时序分类要求的数据集格式，支持 xls、xlsx 格式的数据集转换为 csv 格式。你可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_examples.tar)。
+时序分类时序分类要求的数据集格式为 csv 格式，支持 xls、xlsx 格式的数据集转换为 csv 格式。你可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_examples.tar)。
