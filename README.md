@@ -28,7 +28,7 @@ PaddleX 3.0 集成飞桨生态优势能力，覆盖7大场景任务，构建 16 
   - **低代码开发模式（便捷开发部署）：** 提供零代码和低代码两种开发方式。
      - 零代码开发通过用户图形界面（GUI）交互式提交后台训练任务，打通在线&离线部署，支持以 API 的形式调用在线服务。
      - 低代码开发，一套 API 接口实现 16 条模型产线全流程开发，同时支持用户自定义模型串联流程。
-  - **本地端多硬件支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾和寒武纪多硬件上，纯离线使用 
+  - **本地端多硬件支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾和寒武纪多硬件上，纯离线使用
 
 <div align="center">
     <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/61c4738f-735e-4ceb-aa5f-1038d4506d1c">
@@ -37,8 +37,8 @@ PaddleX 3.0 集成飞桨生态优势能力，覆盖7大场景任务，构建 16 
 ## ⚡ 安装与快速开始
 - [安装](./docs/tutorials/INSTALL.md)
 - 快速开始
-  - [单模型开发工具](./docs/tutorials/inference/model_inference_tools.md)
-  - [模型产线开发工具](./docs/tutorials/inference/pipeline_inference_tools.md)
+  - [单模型开发工具](./docs/tutorials/models/model_inference_tools.md)
+  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_inference_tools.md)
 
 ## 🛠️ PaddleX3.0 覆盖的模型和模型产线
   - [单模型列表](./docs/tutorials/models/support_model_list.md)
@@ -79,5 +79,3 @@ PaddleX 3.0 集成飞桨生态优势能力，覆盖7大场景任务，构建 16 
 ## 👀 贡献代码
 
 我们非常欢迎您为 PaddleX 贡献代码或者提供使用建议。如果您可以修复某个 issue 或者增加一个新功能，欢迎给我们提交 Pull Requests。
-
-

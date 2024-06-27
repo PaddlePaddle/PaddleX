@@ -71,4 +71,4 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 * train_result.json：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
 * train.log：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；
 * config.yaml：训练配置文件，记录了本次训练的超参数的配置；
-* .pdparams\.pdema\.pdopt\.pdstate\.pdiparams\.pdmodel：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
+* .pdparams、.pdema、.pdopt.pdstate、.pdiparams、.pdmodel：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
