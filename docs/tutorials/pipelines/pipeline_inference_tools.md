@@ -15,23 +15,31 @@
 您可以使用命令行将图片的类别分出来，命令行使用方式如下：
 
 ```bash
-paddlex --pipeline image_classification --model PP-LCNet_x1_0 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
+paddlex --pipeline image_classification --model PP-LCNet_x1_0 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
 ```
 参数解释：
 - `pipeline`: 产线名称，当前支持的产线名称有 `image_classification`、`object_detection`、`semantic_segmentation`、`instance_segmentation`、`OCR`。
 - `model`: 模型名称，每个产线支持的模型名称不同，请参考 [PaddleX 模型库](../models/support_model_list.md)。对于多模型组合的产线，需要指定多个模型名称，以空格分隔。
 - `input`: 输入图片路径或 URL。
-
+- `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`，除 cpu 外，可指定卡号，如：`gpu:0`。
 
 **Python API 使用方式**
 
 
 ```python
+from pathlib import Path
 from paddlex import ClsPipeline
 from paddlex import PaddleInferenceOption
 
+# 实例化 PaddleInferenceOption 设置推理配置
+kernel_option = PaddleInferenceOption()
+kernel_option.set_device("gpu:0")
+
 model_name = "PP-LCNet_x1_0"
-pipeline = ClsPipeline(model_name, kernel_option=PaddleInferenceOption())
+output_base = Path("output")
+output = output_base / model_name
+
+pipeline = ClsPipeline(model_name, output=output, kernel_option=kernel_option)
 result = pipeline.predict(
         {'input_path': "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"}
     )
@@ -49,13 +57,14 @@ print(result["cls_result"])
 您可以使用命令行将图片中的目标检测出来，命令行使用方式如下：
 
 ```bash
-paddlex --pipeline object_detection --model RT-DETR-L --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png
+paddlex --pipeline object_detection --model RT-DETR-L --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0
 
 ```
 参数解释：
 - `pipeline`: 产线名称，当前支持的产线名称有 `image_classification`、`object_detection`、`semantic_segmentation`、`instance_segmentation`、`OCR`。
 - `model`: 模型名称，每个产线支持的模型名称不同，请参考 [PaddleX 模型库](../models/support_model_list.md)。对于多模型组合的产线，需要指定多个模型名称，以空格分隔。
 - `input`: 输入图片路径或 URL。
+- `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`，除 cpu 外，可指定卡号，如：`gpu:0`。
 
 **Python API 使用方式**
 
@@ -64,15 +73,18 @@ from pathlib import Path
 from paddlex import DetPipeline
 from paddlex import PaddleInferenceOption
 
+# 实例化 PaddleInferenceOption 设置推理配置
+kernel_option = PaddleInferenceOption()
+kernel_option.set_device("gpu:0")
+
 model_name =  "RT-DETR-L"
 output_base = Path("output")
-
 output = output_base / model_name
-pipeline = DetPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
+
+pipeline = DetPipeline(model_name, output=output, kernel_option=kernel_option)
 result = pipeline.predict(
         {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"})
 print(result["boxes"])
-
 ```
 
 
@@ -86,13 +98,14 @@ print(result["boxes"])
 您可以使用命令行将图片的语义信息分割出来，命令行使用方式如下：
 
 ```bash
-paddlex --pipeline semantic_segmentation --model OCRNet_HRNet-W48 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png
+paddlex --pipeline semantic_segmentation --model OCRNet_HRNet-W48 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png --device gpu:0
 
 ```
 参数解释：
 - `pipeline`: 产线名称，当前支持的产线名称有 `image_classification`、`object_detection`、`semantic_segmentation`、`instance_segmentation`、`OCR`。
 - `model`: 模型名称，每个产线支持的模型名称不同，请参考 [PaddleX 模型库](../models/support_model_list.md)。对于多模型组合的产线，需要指定多个模型名称，以空格分隔。
 - `input`: 输入图片路径或 URL。
+- `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`，除 cpu 外，可指定卡号，如：`gpu:0`。
 
 **Python API 使用方式**
 
@@ -101,16 +114,19 @@ from pathlib import Path
 from paddlex import SegPipeline
 from paddlex import PaddleInferenceOption
 
+# 实例化 PaddleInferenceOption 设置推理配置
+kernel_option = PaddleInferenceOption()
+kernel_option.set_device("gpu:0")
 
-model_name = "OCRNet_HRNet-W48",
+model_name = "OCRNet_HRNet-W48"
 output_base = Path("output")
 output = output_base / model_name
-pipeline = SegPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
+
+pipeline = SegPipeline(model_name, output=output, kernel_option=kernel_option)
 result = pipeline.predict(
     {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png"}
 )
 print(result["seg_map"])
-
 ```
 
 ### 2.4 通用实例分割产线
@@ -123,13 +139,14 @@ print(result["seg_map"])
 您可以使用命令行将图片中的实例分割出来，命令行使用方式如下：
 
 ```bash
-paddlex --pipeline instance_segmentation --model Mask-RT-DETR-L --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png
+paddlex --pipeline instance_segmentation --model Mask-RT-DETR-L --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0
 
 ```
 参数解释：
 - `pipeline`: 产线名称，当前支持的产线名称有 `image_classification`、`object_detection`、`semantic_segmentation`、`instance_segmentation`、`OCR`。
 - `model`: 模型名称，每个产线支持的模型名称不同，请参考 [PaddleX 模型库](../models/support_model_list.md)。对于多模型组合的产线，需要指定多个模型名称，以空格分隔。
 - `input`: 输入图片路径或 URL。
+- `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`，除 cpu 外，可指定卡号，如：`gpu:0`。
 
 **Python API 使用方式**
 
@@ -138,15 +155,18 @@ from pathlib import Path
 from paddlex import InstanceSegPipeline
 from paddlex import PaddleInferenceOption
 
+# 实例化 PaddleInferenceOption 设置推理配置
+kernel_option = PaddleInferenceOption()
+kernel_option.set_device("gpu:0")
+
 model_name =  "Mask-RT-DETR-L"
 output_base = Path("output")
-
 output = output_base / model_name
-pipeline = InstanceSegPipeline(model_name, output=output, kernel_option=PaddleInferenceOption())
+
+pipeline = InstanceSegPipeline(model_name, output=output, kernel_option=kernel_option)
 result = pipeline.predict(
     {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"})
 print(result["boxes"])
-
 ```
 
 ### 2.5 OCR 产线
@@ -158,13 +178,14 @@ OCR 产线内置了 PP-OCRv4 模型，包括文本检测和文本识别两个部
 您可以使用命令行将图片的文字识别出来，命令行使用方式如下：
 
 ```bash
-paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png
+paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
 ```
 参数解释：
 - `pipeline`: 产线名称，当前支持的产线名称有 `image_classification`、`object_detection`、`semantic_segmentation`、`instance_segmentation`、`OCR`。
 - `model`: 模型名称，每个产线支持的模型名称不同，请参考 [PaddleX 模型库](../models/support_model_list.md)。对于多模型组合的产线，需要指定多个模型名称，以空格分隔。
 - `input`: 输入图片路径或 URL。
-</details>
+- `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`，除 cpu 外，可指定卡号，如：`gpu:0`。
+
 
 **Python API 使用方式**
 
@@ -172,13 +193,17 @@ paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input h
 import cv2
 from paddlex import OCRPipeline
 from paddlex import PaddleInferenceOption
-from paddlex.pipelines.PPOCR.utils import draw_ocr_box_txt
+from paddlex.pipelines.OCR.utils import draw_ocr_box_txt
+
+# 实例化 PaddleInferenceOption 设置推理配置
+kernel_option = PaddleInferenceOption()
+kernel_option.set_device("gpu:0")
 
 pipeline = OCRPipeline(
     'PP-OCRv4_mobile_det',
     'PP-OCRv4_mobile_rec',
-    text_det_kernel_option=PaddleInferenceOption(),
-    text_rec_kernel_option=PaddleInferenceOption(),)
+    text_det_kernel_option=kernel_option,
+    text_rec_kernel_option=kernel_option,)
 result = pipeline.predict(
     {"input_path": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png"},
 )

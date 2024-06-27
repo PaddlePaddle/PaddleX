@@ -2,9 +2,7 @@
   <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/63c6d059-234f-4a27-955e-ac89d81409ee" width="360" height ="55" alt="PaddleX" align="middle" />
 </p>
 
-<p align= "center"> PaddleX -- 飞桨低代码开发工具，以低代码的形式支持开发者快速实现产业实际项目落地 </p>
-
-<p align="left">
+<p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20windows-orange.svg"></a>
@@ -12,11 +10,11 @@
 </p>
 
 ## 简介
-PaddleX3.0beta 是飞桨精选模型的低代码开发工具，支持国内外多款主流硬件的模型训练和推理，覆盖工业、能源、金融、交通、教育等全行业，助力开发者产业实践落地。
+PaddleX 3.0 是飞桨精选模型的低代码开发工具，支持国内外多款主流硬件的模型训练和推理，覆盖工业、能源、金融、交通、教育等全行业，助力开发者产业实践落地。
 
 |                **通用图像分类**                 |                **通用目标检测**                 |                **通用语义分割**                 |                **通用实例分割**                 |
 | :-------------------------------------------: | :-------------------------------------------: | :-------------------------------------------: | :-------------------------------------------: |
-|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/a8b5df77-72e0-4bdb-afed-4594fe57bfdc" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0565d3c8-cdab-4735-809d-29ab9d3bf684" height="126px" width="180px">|
+|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px">|
 |                  **通用OCR**                   |                **通用表格识别**                 |               **通用场景信息抽取**               |               **文档场景信息抽取**               |
 |<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/04218629-4a7b-48ea-b815-977a05fbbb13" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px">|
 |                  **时序预测**                   |                **时序异常检测**                 |                 **时序分类**                   |              **多模型融合时序预测**              |
@@ -27,19 +25,19 @@ PaddleX3.0beta 是飞桨精选模型的低代码开发工具，支持国内外�
 
 ## 📣 近期更新
 
-- 🔥 **2024.6.27，PaddleX3.0 beta 本地端正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。**
-- 🔥 **2024.3.25，PaddleX3.0 云端发布，支持在[星河社区](https://aistudio.baidu.com/pipeline/mine )以零代码的方式【创建产线】使用。**
+- 🔥 **2024.6.27，PaddleX 3.0 Beta 本地端正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。**
+- 🔥 **2024.3.25，PaddleX 3.0 云端发布，支持在[星河社区](https://aistudio.baidu.com/pipeline/mine )以零代码的方式【创建产线】使用。**
 
 ## 🌟 特性
 
-PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务，构建了 16 条模型产线，提供低代码开发模式，助力开发者在多种主流硬件上实现模型全流程开发。
+PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，构建了 16 条模型产线，提供低代码开发模式，助力开发者在多种主流硬件上实现模型全流程开发。
 
-- **基础模型产线（模型丰富，场景全面）：** 精选 68 个优质飞桨模型，涵盖图像分类、目标检测、图像分割、OCR、文本图像版面分析、时序预测等任务场景。
+- **基础模型产线（模型丰富，场景全面）：** 精选 68 个优质飞桨模型，涵盖图像分类、目标检测、图像分割、OCR、文本图像版面分析、文本图像信息抽取、时序分析任务场景。
 - **特色模型产线（显著提升效率）：** 提供大小模型结合、大模型半监督学习和多模型融合的高效解决方案。
-- **低代码开发模式（便捷开发与部署）：** 提供零代码和低代码两种开发方式。
-  - 零代码开发：用户通过图形界面（GUI）交互式提交后台训练任务，打通在线和离线部署，并支持以 API 形式调用在线服务。
-  - 低代码开发：通过统一的 API 接口实现 16 条模型产线的全流程开发，同时支持用户自定义模型流程串联。
-- **多硬件本地支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾和寒武纪等多种硬件，纯离线使用。
+- **低门槛开发模式（便捷开发与部署）：** 提供零代码和低代码两种开发方式。
+  - **零代码开发：** 用户通过图形界面（GUI）交互式提交后台训练任务，打通在线和离线部署，并支持以 API 形式调用在线服务。
+  - **低代码开发：** 通过统一的 API 接口实现 16 条模型产线的全流程开发，同时支持用户自定义模型流程串联。
+- **多硬件本地支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾芯和寒武纪芯等多种硬件，纯离线使用。
 
 <div align="center">
     <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/61c4738f-735e-4ceb-aa5f-1038d4506d1c">
@@ -51,7 +49,7 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
   - [单模型开发工具](./docs/tutorials/models/model_inference_tools.md)
   - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_inference_tools.md)
 
-## 🛠️ PaddleX3.0 覆盖的模型和模型产线
+## 🛠️ PaddleX 3.0 覆盖的模型和模型产线
 
 <table>
   <tr>
@@ -163,29 +161,29 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
     <td>-</td>
   </tr>
   <tr>
-    <td rowspan="2">时序预测</td>
     <td>时序预测</td>
-    <td>DLinear<br/>NLinear<details>
-  <summary><b>more</b></summary><br/>Nonstationary<br/>PatchTST<br/>RLinear<br/>TiDE<br/>TimesNet</details></td>
+    <td>时序预测</td>
+    <td>DLinear<br/>Nonstationary<br/>TiDE<br/>PatchTST<br/>TimesNet</td>
   </tr>
   <tr>
-    <td>多模型融合的时序预测v2</td>
-    <td>多模型融合的时序预测</td>
+    <td>多模型融合时序预测v2</td>
+    <td>时序预测</td>
+    <td>多模型融合时序预测</td>
   </tr>
   <tr>
-    <td rowspan="2">时序异常检测</td>
     <td>时序异常检测</td>
-    <td>AutoEncoder_ad<br/>DLinear_ad<details>
-  <summary><b>more</b></summary><br/>Nonstationary_ad<br/>PatchTST_ad<br/>TimesNet_ad</details></td>
+    <td>时序异常检测</td>
+    <td>DLinear_ad<br/>Nonstationary_ad<br/>AutoEncoder_ad<br/>PatchTST_ad<br/>TimesNet_ad</td>
   </tr>
   <tr>
-    <td>多模型融合的时序异常检测v2</td>
-    <td>多模型融合的时序异常检测</td>
+    <td>多模型融合时序异常检测v2</td>
+    <td>时序异常检测</td>
+    <td>多模型融合时序异常检测</td>
   </tr>
   <tr>
     <td>时序分类</td>
     <td>时序分类</td>
-    <td>TimesNet cls</td>
+    <td>TimesNet_cls</td>
   </tr>
 </table>
 
@@ -216,7 +214,7 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
 
 
 ### 二、模型产线开发工具 🔥
-本节将介绍 PaddleX3.0 模型产线的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)。
+本节将介绍 PaddleX 3.0 模型产线的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX 3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)。
 - [产线快速体验](./docs/tutorials/pipelines/pipeline_inference_tools.md)
 - [产线模型选择](./docs/tutorials/pipelines/model_select.md)
 - [产线开发流程](./docs/tutorials/pipelines/pipeline_develop.md)
