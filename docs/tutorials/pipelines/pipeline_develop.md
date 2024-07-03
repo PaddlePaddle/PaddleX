@@ -7,7 +7,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 3. 【**选择模型**】（可选）对产线中效果不及预期的模块进行微调，首先根据模块参考文档[模型选择](./model_select.md)选择可替换的模型；
 4. 【**模型微调**】（可选）选择好对应的模型后，即可进行模型训练，具体参考[模型训练、评估和推理](../base/README.md)；
 5. 【**产线测试**】（可选）将产线中的模型替换为微调后的模型进行测试，具体参考[模型产线开发工具推理预测](./pipeline_inference_tools.md);
-6. 【**开发集成/部署**】使用 PaddleX Python API，将模型产线集成到个人项目中，具体参考[模型产线推理 Python API 文档](./pipeline_inference_api.md)。
+6. 【**开发集成/部署**】使用 PaddleX Python API 将模型产线集成到个人项目中（具体参考[模型产线推理 Python API 文档](./pipeline_inference_api.md)），或使用离线部署包实现本地高性能推理/服务化部署（具体参考[模型产线部署](./pipeline_deployment.md)）。
 
 **PaddleX 模型产线开发流程图**
 
