@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import sys
 import time
@@ -203,7 +202,8 @@ class BaseTrainDeamon(ABC):
         if model_name not in self.models:
             config, model = build_model(
                 model_name,
-                device=self.global_config.device,
+                # using CPU to export model
+                device="cpu",
                 config_path=config_path)
             self.models[model_name] = model
         return self.models[model_name]
