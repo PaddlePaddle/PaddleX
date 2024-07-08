@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 import os.path as osp
 import importlib
@@ -317,16 +315,9 @@ class RepositoryGroupInstaller(object):
     def _sort_repos(self, repos, check_missing=False):
         # We sort the repos to ensure that the dependencies precede the
         # dependant in the list.
-        def _parse_repo_deps(name, repo_meta):
-            ret = []
-            for n in repo_meta.get('requires', []):
-                ret.extend(_parse_repo_deps(n, get_repo_meta(n)))
-            ret.append((name, repo_meta))
-            return ret
-
         name_meta_pairs = []
         for repo in repos:
-            name_meta_pairs.extend(_parse_repo_deps(repo.name, repo.meta))
+            name_meta_pairs.append((repo.name, repo.meta))
 
         unique_pairs = []
         hashset = set()

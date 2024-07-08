@@ -12,21 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 import sys
 from collections import OrderedDict
 
 from ..utils import logging
 from .utils import install_deps_using_pip
-from .meta import get_all_repo_names
+from .meta import get_all_repo_names, get_repo_meta
 from .repo import build_repo_instance, build_repo_group_cloner, build_repo_group_installer
 
 __all__ = [
     'set_parent_dirs', 'setup', 'wheel', 'is_initialized', 'initialize',
     'get_versions'
 ]
+
+
+def _parse_repo_deps(repos):
+    ret = []
+    for repo_name in repos:
+        repo_meta = get_repo_meta(repo_name)
+        ret.extend(_parse_repo_deps(repo_meta.get('requires', [])))
+        ret.append(repo_name)
+    return ret
 
 
 class _GlobalContext(object):
@@ -83,6 +90,8 @@ def setup(repo_names,
           platform=None,
           update_repos=False):
     """ setup """
+    repo_names = list(set(_parse_repo_deps(repo_names)))
+
     repos = []
     for repo_name in repo_names:
         repo = _GlobalContext.build_repo_instance(repo_name)
