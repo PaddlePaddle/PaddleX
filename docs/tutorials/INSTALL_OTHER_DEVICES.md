@@ -94,7 +94,7 @@ docker pull registry.baidubce.com/device/paddle-xpu:kylinv10-aarch64-gcc82-py310
 docker run -it --name=xxx -m 81920M --memory-swap=81920M \
     --shm-size=128G --privileged --net=host \
     -v $(pwd):/workspace -w /workspace \
-    registry.baidubce.com/device/paddle-xpu:kylinv10-aarch64-gcc82 bash
+    registry.baidubce.com/device/paddle-xpu:$(uname -m)-py310 bash
 ```
 
 ### 3.2 安装 paddle 包
