@@ -220,7 +220,7 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 - [产线开发流程](./docs/tutorials/pipelines/pipeline_develop.md)
 
 ## 🌟 多硬件支持
-本项目支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾**、**寒武纪**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。
+本项目支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾**、**寒武纪**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。使用方式详情[多硬件使用](./docs/tutorials/base/devices_use_guidance.md)。
 
 - 昇腾芯支持的模型列表请参考 [PaddleX 昇腾模型列表](./docs/tutorials/models/support_npu_model_list.md)。
 - 昆仑芯支持的模型列表请参考 [PaddleX 昆仑芯模型列表](./docs/tutorials/models/support_xpu_model_list.md)。
