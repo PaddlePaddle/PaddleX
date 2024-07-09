@@ -37,7 +37,7 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 - **低门槛开发模式（便捷开发与部署）：** 提供零代码和低代码两种开发方式。
   - **零代码开发：** 用户通过图形界面（GUI）交互式提交后台训练任务，打通在线和离线部署，并支持以 API 形式调用在线服务。
   - **低代码开发：** 通过统一的 API 接口实现 16 条模型产线的全流程开发，同时支持用户自定义模型流程串联。
-- **多硬件本地支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾芯和寒武纪芯等多种硬件，纯离线使用。
+- **多硬件本地支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾和寒武纪等多种硬件，纯离线使用。
 
 <div align="center">
     <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/61c4738f-735e-4ceb-aa5f-1038d4506d1c">
@@ -220,11 +220,11 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 - [产线开发流程](./docs/tutorials/pipelines/pipeline_develop.md)
 
 ## 🌟 多硬件支持
-本项目支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾芯**、**寒武纪芯**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。
+本项目支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾**、**寒武纪**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。使用方式详情[多硬件使用](./docs/tutorials/base/devices_use_guidance.md)。
 
-- 昇腾芯支持的模型列表请参考 [PaddleX 昇腾芯模型列表](./docs/tutorials/models/support_npu_model_list.md)。
+- 昇腾支持的模型列表请参考 [PaddleX 昇腾模型列表](./docs/tutorials/models/support_npu_model_list.md)。
 - 昆仑芯支持的模型列表请参考 [PaddleX 昆仑芯模型列表](./docs/tutorials/models/support_xpu_model_list.md)。
-- 寒武纪芯支持的模型列表请参考 [PaddleX 寒武纪芯模型列表](./docs/tutorials/models/support_mlu_model_list.md)。
+- 寒武纪支持的模型列表请参考 [PaddleX 寒武纪模型列表](./docs/tutorials/models/support_mlu_model_list.md)。
 
 
 ## 👀 贡献代码
