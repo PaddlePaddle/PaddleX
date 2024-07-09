@@ -81,7 +81,6 @@ python -c "import paddle; print(paddle.__version__)"
 3.0.0-beta0
 ```
 
-
 ### 2. 安装 PaddleX
 
 #### 2.1 获取源码
@@ -120,4 +119,6 @@ paddlex --install
 # All packages are installed.
 ```
 
-**注 :** 在安装过程中，需要克隆 Paddle 官方模型套件，`--platform` 可以指定克隆源，可选 `github.com`，`gitee.com`，分别代表这些套件从 github 上和 gitee 上克隆，默认为 `github.com`。
+**注 :**
+1. 在安装过程中，需要克隆 Paddle 官方模型套件，`--platform` 可以指定克隆源，可选 `github.com`，`gitee.com`，分别代表这些套件从 github 上和 gitee 上克隆，默认为 `github.com`；
+2. 如仅需要部分 Paddle 官方模型套件，可在命令中指定，如仅克隆 PaddleOCR 套件可使用命令：`paddlex --install PaddleOCR`。默认获取全部 Paddle 官方模型套件。
