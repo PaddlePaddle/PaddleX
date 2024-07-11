@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from abc import ABC, abstractmethod
 
 from ...utils.misc import AutoRegisterABCMetaClass
@@ -21,6 +20,7 @@ from ...utils.misc import AutoRegisterABCMetaClass
 def build_pipeline(
         pipeline_name: str,
         model_list: list,
+        model_dir_list: list,
         output: str,
         device: str, ) -> "BasePipeline":
     """build model evaluater
@@ -33,6 +33,7 @@ def build_pipeline(
     """
     pipeline = BasePipeline.get(pipeline_name)(output=output, device=device)
     pipeline.update_model_name(model_list)
+    pipeline.update_model(model_list, model_dir_list)
     pipeline.load_model()
     return pipeline
 
@@ -52,11 +53,12 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         raise NotImplementedError
 
     @abstractmethod
-    def update_model_name(self, model_list: list) -> dict:
-        """update model name and re
+    def update_model(self, model_name_list, model_dir_list):
+        """update model
 
         Args:
-            model_list (list): list of model name.
+            model_name_list (list): list of model name.
+            model_dir_list (list): list of model directory.
         """
         raise NotImplementedError
 

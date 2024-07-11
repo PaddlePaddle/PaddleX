@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from ..base import BasePipeline
 from ...modules.object_detection.model_list import MODELS
 from ...modules import create_model, PaddleInferenceOption
@@ -67,14 +66,18 @@ class DetPipeline(BasePipeline):
         kernel_option = PaddleInferenceOption()
         kernel_option.set_device(self.device)
 
-    def update_model_name(self, model_name_list):
-        """update model name and re
+    def update_model(self, model_name_list, model_dir_list):
+        """update model
 
         Args:
-            model_list (list): list of model name.
+            model_name_list (list): list of model name.
+            model_dir_list (list): list of model directory.
         """
         assert len(model_name_list) == 1
         self.model_name = model_name_list[0]
+        if model_dir_list:
+            assert len(model_dir_list) == 1
+            self.model_dir = model_dir_list[0]
 
     def get_input_keys(self):
         """get dict keys of input argument input
