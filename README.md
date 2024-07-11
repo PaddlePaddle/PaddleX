@@ -46,8 +46,8 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 ## ⚡ 安装与快速开始
 - [安装](./docs/tutorials/INSTALL.md)
 - 快速开始
-  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_deploy_tools.md)
-  - [单模型开发工具](./docs/tutorials/models/model_deploy_tools.md)
+  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_develop_tools.md)
+  - [单模型开发工具](./docs/tutorials/models/model_develop_tools.md)
 
 ## 🛠️ PaddleX 3.0 覆盖的模型和模型产线
 
