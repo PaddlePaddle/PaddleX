@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import cv2
 
@@ -110,15 +109,20 @@ Only support: {text_rec_models}."
 
         return result
 
-    def update_model_name(self, model_name_list):
-        """update model name and re
+    def update_model(self, model_name_list, model_dir_list):
+        """update model
 
         Args:
-            model_list (list): list of model name.
+            model_name_list (list): list of model name.
+            model_dir_list (list): list of model directory.
         """
         assert len(model_name_list) == 2
         self.text_det_model_name = model_name_list[0]
         self.text_rec_model_name = model_name_list[1]
+        if model_dir_list:
+            assert len(model_dir_list) == 2
+            self.text_det_model_dir = model_dir_list[0]
+            self.text_rec_model_dir = model_dir_list[1]
 
     def get_kernel_option(self):
         """get kernel option
