@@ -1,14 +1,14 @@
-# PaddleX 模型产线开发工具推理预测
+# PaddleX 模型产线推理预测
 
 模型产线指的是可以独立完成某类任务且具备落地能力的模型或模型组合，其可以是单模型产线，也可以是多模型组合的产线，PaddleX 提供了丰富的模型产线，可以方便地完成 AI 任务的推理和部署。云端使用请前往飞桨 [AI Studio 星河社区](https://aistudio.baidu.com/pipeline/mine)创建产线使用，本地端使用可以参考本文档， PaddleX 中的每个模型产线有多个模型可供选择，并均提供了官方权重，支持通过命令行方式直接推理预测和调用 Python API 预测。命令行方式直接推理预测可以快速体验模型推理效果，而 Python API 预测可以方便地集成到自己的项目中进行预测。
 
 ## 1.安装 PaddleX
 在使用单模型开发工具之前，首先需要安装 PaddleX 的 wheel 包，安装方式请参考 [PaddleX 安装文档](../INSTALL.md)。
 
-## 2.PaddleX 模型产线开发工具使用方式
+## 2.PaddleX 模型产线使推理预测
 
 ### 2.1 通用图像分类产线
-图像分类产线内置了多个图像分类的单模型，包含 `ResNet` 系列、`PP-LCNet` 系列、`MobileNetV2` 系列、`MobileNetV3` 系列、`ConvNeXt` 系列、`PP-HGNet` 系列、`PP-HGNetV2` 系列、`CLIP` 系列等模型。具体支持的分类模型列表，您可以参考[模型库](../models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](../base/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+图像分类产线内置了多个图像分类的单模型，包含 `ResNet` 系列、`PP-LCNet` 系列、`MobileNetV2` 系列、`MobileNetV3` 系列、`ConvNeXt` 系列、`PP-HGNet` 系列、`PP-HGNetV2` 系列、`CLIP` 系列等模型。具体支持的分类模型列表，您可以参考[模型库](../models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 单模型开发工具](../models/model_develop_tools.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
 
 **命令行使用方式**
 
@@ -50,7 +50,7 @@ print(result["cls_result"])
 ### 2.2 通用目标检测产线
 
 
-目标检测产线内置了多个目标检测的单模型，包含`RT-DETR` 系列、`PP-YOLO-E` 系列等模型。具体支持的目标检测模型列表，您可以参考[模型库](../models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](../base/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+目标检测产线内置了多个目标检测的单模型，包含`RT-DETR` 系列、`PP-YOLO-E` 系列等模型。具体支持的目标检测模型列表，您可以参考[模型库](../models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 单模型开发工具](../models/model_develop_tools.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
 
 **命令行使用方式**
 
@@ -91,7 +91,7 @@ print(result["boxes"])
 ### 2.3 通用语义分割产线
 
 
-语义分割产线内置了多个语义分割的单模型，包含`OCRNet` 系列、`DeepLabv3` 系列等模型。具体支持的语义分割模型列表，您可以参考[模型库](../models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](../base/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+语义分割产线内置了多个语义分割的单模型，包含`OCRNet` 系列、`DeepLabv3` 系列等模型。具体支持的语义分割模型列表，您可以参考[模型库](../models/support_model_list.md)，您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 单模型开发工具](../models/model_develop_tools.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
 
 **命令行使用方式**
 
@@ -132,7 +132,7 @@ print(result["seg_map"])
 ### 2.4 通用实例分割产线
 
 
-实例分割产线内置了两个目前 SOTA 的单模型，分别是 `Mask-RT-DETR-L` 和 `Mask-DT-DETR-H`。您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](../base/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+实例分割产线内置了两个目前 SOTA 的单模型，分别是 `Mask-RT-DETR-L` 和 `Mask-DT-DETR-H`。您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 单模型开发工具](../models/model_develop_tools.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
 
 **命令行使用方式**
 
@@ -170,7 +170,7 @@ print(result["boxes"])
 ```
 
 ### 2.5 OCR 产线
-OCR 产线内置了 PP-OCRv4 模型，包括文本检测和文本识别两个部分。文本检测支持的模型有 `PP-OCRv4_mobile_det`、`PP-OCRv4_server_det`，文本识别支持的模型有 `PP-OCRv4_mobile_rec`、`PP-OCRv4_server_rec`。您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 模型训练文档](../base/README.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
+OCR 产线内置了 PP-OCRv4 模型，包括文本检测和文本识别两个部分。文本检测支持的模型有 `PP-OCRv4_mobile_det`、`PP-OCRv4_server_det`，文本识别支持的模型有 `PP-OCRv4_mobile_rec`、`PP-OCRv4_server_rec`。您可以使用以下两种方式进行推理预测，如果在您的场景中，上述模型不能满足您的需求，您可以参考 [PaddleX 单模型开发工具](../models/model_develop_tools.md) 进行训练，训练后的模型可以非常方便地集成到该产线中。
 
 
 **命令行使用方式**
