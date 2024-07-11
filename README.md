@@ -46,8 +46,8 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 ## ⚡ 安装与快速开始
 - [安装](./docs/tutorials/INSTALL.md)
 - 快速开始
-  - [单模型开发工具](./docs/tutorials/models/model_inference_tools.md)
-  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_inference_tools.md)
+  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_deploy_tools.md)
+  - [单模型开发工具](./docs/tutorials/models/model_deploy_tools.md)
 
 ## 🛠️ PaddleX 3.0 覆盖的模型和模型产线
 
@@ -188,10 +188,8 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 </table>
 
 
-
-
-  - [单模型列表](./docs/tutorials/models/support_model_list.md)
   - [模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)
+  - [单模型列表](./docs/tutorials/models/support_model_list.md)
 
 ## 📖 零代码开发教程
 <div align="center">
@@ -202,29 +200,24 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 - [教程《零门槛开发产业级 AI 模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)：提供产业级模型开发经验，并且用 12 个实用的产业实践案例，手把手带你零门槛开发产业级 AI 模型。
 
 ## 📖 低代码开发教程
-### 一、单模型开发工具 🚀
-本节介绍 PaddleX 3.0 单模型的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX 3.0 支持的模型可以参考 [PaddleX 模型库](./docs/tutorials/models/support_model_list.md)。
-- 快速体验
-  - [单模型快速体验](./docs/tutorials/models/model_inference_tools.md)
-- 数据准备
-  - [数据准备流程](./docs/tutorials/data/README.md)
-  - [数据标注](./docs/tutorials/data/annotation/README.md)
-  - [数据校验](./docs/tutorials/data/dataset_check.md)
-- [模型训练/评估/推理](./docs/tutorials/base/README.md)
 
-
-### 二、模型产线开发工具 🔥
-本节将介绍 PaddleX 3.0 模型产线的全流程开发流程，包括数据准备、模型训练/评估、模型推理的使用方法。PaddleX 3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)。
-- [产线快速体验](./docs/tutorials/pipelines/pipeline_inference_tools.md)
+### 一、模型产线开发工具 🔥
+PaddleX 3.0 模型产线开发工具支持开发者通过 6 个步骤，完成产业级落地解决方案的开发。PaddleX 3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)。
+- [产线快速体验](./docs/tutorials/pipelines/pipeline_inference.md)
 - [产线模型选择](./docs/tutorials/pipelines/model_select.md)
-- [产线开发流程](./docs/tutorials/pipelines/pipeline_develop.md)
+- [产线开发流程](./docs/tutorials/pipelines/pipeline_develop_tools.md)
+
+### 二、单模型开发工具 🚀
+PaddleX 3.0 单模型开发工具支持开发者以低代码的方式快速实现模型的开发和优化，包括数据准备、模型训练/评估、模型推理的使用方法，方便低成本集成到模型产线中。PaddleX3.0 支持的模型可以参考 [PaddleX 模型库](./docs/tutorials/models/support_model_list.md)。
+- [数据校验](./docs/tutorials/data/dataset_check.md)
+- [模型开发](./docs/tutorials/models/model_develop_tools.md)
 
 ## 🌟 多硬件支持
-本项目支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾**、**寒武纪**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。使用方式详情[多硬件使用](./docs/tutorials/base/devices_use_guidance.md)。
+PaddleX 3.0 支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾**、**寒武纪**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。使用方式详情[多硬件使用](./docs/tutorials/base/devices_use_guidance.md)。
 
-- 昇腾支持的模型列表请参考 [PaddleX 昇腾模型列表](./docs/tutorials/models/support_npu_model_list.md)。
+- 昇腾芯支持的模型列表请参考 [PaddleX 昇腾模型列表](./docs/tutorials/models/support_npu_model_list.md)。
 - 昆仑芯支持的模型列表请参考 [PaddleX 昆仑芯模型列表](./docs/tutorials/models/support_xpu_model_list.md)。
-- 寒武纪支持的模型列表请参考 [PaddleX 寒武纪模型列表](./docs/tutorials/models/support_mlu_model_list.md)。
+- 寒武纪芯支持的模型列表请参考 [PaddleX 寒武纪模型列表](./docs/tutorials/models/support_mlu_model_list.md)。
 
 
 ## 👀 贡献代码

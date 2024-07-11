@@ -1,6 +1,6 @@
 # PaddleX 模型产线列表
 
-PaddleX 提供了丰富的模型产线，您可以在产线对应的星河社区体验地址里体验，也可以在本地体验，本地体验方式请参考 [PaddleX 模型产线](./pipeline_inference_tools.md)。
+PaddleX 提供了丰富的模型产线，您可以在产线对应的星河社区体验地址里体验，也可以在本地体验，本地体验方式请参考 [PaddleX 模型产线推理预测](./pipeline_inference.md)。
 
 ## 基础模型产线
 
