@@ -8,7 +8,7 @@ Global:
 CheckDataset:
   convert: 
     enable: False
-    src_dataset_type: nul
+    src_dataset_type: null
   split: 
     enable: False
     train_percent: null

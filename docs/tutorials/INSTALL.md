@@ -10,7 +10,7 @@ PaddleX 官方镜像中已经内置了 PaddlePaddle、PaddleX，无需单独安�
 
 ```bash
 # 对于 CUDA11.8 用户
-sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b0-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
+sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
 
 # 对于 CUDA12.3 用户
 sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
@@ -31,7 +31,7 @@ sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it 
 ```bash
 # 对于 gpu 用户
 # CUDA11.8 用户
-sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # CUDA12.3 用户
 sudo nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
