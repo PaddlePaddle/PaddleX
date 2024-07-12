@@ -156,7 +156,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
    </tr>  
 <tr>
     <td rowspan="3">特色产线</td>
-    <td rowspan="3">通用场景信息抽取v2</td>
+    <td rowspan="3">通用场景信息抽取v2<br>(PP-ChatOCRv2-common)</td>
     <td>文本识别</td>
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
   </tr>
@@ -170,7 +170,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
   </tr>
   <tr>
     <td rowspan="5">特色产线</td>
-    <td rowspan="5">文档场景信息抽取v2</td>
+    <td rowspan="5">文档场景信息抽取v2<br>(PP-ChatOCRv2-doc)</td>
     <td>版面分析</td>
     <td>PicoDet layout_1x</td>
   </tr>
@@ -192,13 +192,13 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
   </tr>
   <tr>
     <td>特色产线</td>
-    <td>多模型融合时序预测v2</td>
+    <td>多模型融合时序预测v2<br>(PP-TSv2_forecast)</td>
     <td>时序预测</td>
     <td>多模型融合时序预测</td>
   </tr> 
   <tr>
     <td>特色产线</td>
-    <td>多模型融合时序异常检测v2</td>
+    <td>多模型融合时序异常检测v2<br>(PP-TSv2_anomaly)</td>
     <td>时序异常检测</td>
     <td>多模型融合时序异常检测</td>
   </tr>      
