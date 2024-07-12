@@ -24,9 +24,9 @@ PaddleX 3.0 是飞桨精选模型的低代码开发工具，支持国内外多�
 
 
 ## 📣 近期更新
-
+- 🔥🔥**直播和实战打卡营预告：** 《PaddleX 3.0 Beta 重磅开源：多场景低代码AI开发，本地多硬件全兼容》课程上线，分享 PaddleX 3.0 Beta 版本新特色及全新开发范式，详解基于真实产业用户场景与业务数据，如何利用本地GPU算力，低成本零门槛解决产业实际问题。**直播时间：7月16日（周二）19：00。**[报名链接](https://www.wjx.top/vm/rXqxgT5.aspx?udsid=875333)。
 - 🔥 **2024.6.27，PaddleX 3.0 Beta 本地端正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。**
-- 🔥 **2024.3.25，PaddleX 3.0 云端发布，支持在[星河社区](https://aistudio.baidu.com/pipeline/mine)以零代码的方式【创建产线】使用。**
+- 🔥 **2024.3.25，PaddleX 3.0 云端发布，支持在[AI Studio 星河社区](https://aistudio.baidu.com/pipeline/mine)以零代码的方式【创建产线】使用。**
 
 ## 🌟 特性
 
@@ -46,52 +46,47 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 ## ⚡ 安装与快速开始
 - [安装](./docs/tutorials/INSTALL.md)
 - 快速开始
-  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_deploy_tools.md)
-  - [单模型开发工具](./docs/tutorials/models/model_deploy_tools.md)
+  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_develop_tools.md)
+  - [单模型开发工具](./docs/tutorials/models/model_develop_tools.md)
 
 ## 🛠️ PaddleX 3.0 覆盖的模型和模型产线
-
+PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可以直接使用本仓库离线使用，7 条特色产线可在飞桨 [AI Studio 星河社区](https://aistudio.baidu.com/pipeline/mine)上免费使用。
 <table>
   <tr>
+    <th>产线类型</th>
     <th>模型产线</th>
     <th>产线模块</th>
     <th>具体模型</th>
   </tr>
   <tr>
+    <td>基础产线</td>
     <td>通用图像分类</td>
     <td>图像分类</td>
     <td>CLIP_vit_base_patch16_224<br/>CLIP_vit_large_patch14_224<details>
     <summary><b>more</b></summary><br/>ConvNeXt_tiny<br/>MobileNetV2_x0_25<br/>MobileNetV2_x0_5<br/>MobileNetV2_x1_0<br/>MobileNetV2_x1_5<br/>MobileNetV2_x2_0<br/>MobileNetV3_large_x0_35<br/>MobileNetV3_large_x0_5<br/>MobileNetV3_large_x0_75<br/>MobileNetV3_large_x1_0<br/>MobileNetV3_large_x1_25<br/>MobileNetV3_small_x0_35<br/>MobileNetV3_small_x0_5<br/>MobileNetV3_small_x0_75<br/>MobileNetV3_small_x1_0<br/>MobileNetV3_small_x1_25<br/>PP-HGNet_small<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B6<br/>PP-LCNet_x0_25<br/>PP-LCNet_x0_35<br/>PP-LCNet_x0_5<br/>PP-LCNet_x0_75<br/>PP-LCNet_x1_0<br/>PP-LCNet_x1_5<br/>PP-LCNet_x2_0<br/>PP-LCNet_x2_5<br/>ResNet18<br/>ResNet34<br/>ResNet50<br/>ResNet101<br/>ResNet152<br/>SwinTransformer_base_patch4_window7_224</details></td>
   </tr>
   <tr>
-    <td>大模型半监督学习-图像分类</td>
-    <td>大模型半监督学习-图像分类</td>
-    <td>CLIP_vit_base_patch16_224<br/>MobileNetV3_small_x1_0<br/><details><summary><b>more</b></summary>PP-HGNet_small<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B6<br/>PP-LCNet_x1_0<br/>ResNet50<br/>SwinTransformer_base_patch4_window7_224</details></td>
-  </tr>
-  <tr>
+    <td>基础产线</td>
     <td>通用目标检测</td>
     <td>目标检测</td>
     <td>PicoDet-S<br/>PicoDet-L<details>
     <summary><b>more</b></summary><br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50</details></td>
   </tr>
   <tr>
-    <td>大模型半监督学习-目标检测</td>
-    <td>大模型半监督学习-目标检测</td>
-    <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PP-YOLOE plus-S<br/>PP-YOLOE_plus-L<br/>RT-DETR-H</details></td>
-  </tr>
-  <tr>
+    <td>基础产线</td>
     <td>通用语义分割</td>
     <td>语义分割</td>
     <td>OCRNet_HRNet-W48<br/>PP-LiteSeg-T<details>
     <summary><b>more</b></summary><br/>Deeplabv3-R50<br/>Deeplabv3-R101<br/>Deeplabv3_Plus-R50<br/>Deeplabv3_Plus-R101</details></td>
   </tr>
   <tr>
+    <td>基础产线</td>
     <td>通用实例分割</td>
     <td>实例分割</td>
     <td>Mask-RT-DETR-L<br/>Mask-RT-DETR-H</td>
   </tr>
   <tr>
+    <td rowspan="2">基础产线</td>
     <td rowspan="2">通用OCR</td>
     <td>文本检测</td>
     <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
@@ -100,16 +95,8 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
     <td>文本识别</td>
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
   </tr>
-  </tr>
   <tr>
-    <td rowspan="2">大模型半监督学习-OCR</td>
-    <td>文本检测</td>
-    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
-  </tr>
-  <tr>
-    <td>大模型半监督学习-文本识别</td>
-    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-  <tr>
+    <td rowspan="4">基础产线</td>
     <td rowspan="4">通用表格识别</td>
     <td>版面区域检测</td>
     <td>PicoDet layout_1x</td>
@@ -127,7 +114,49 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
   </tr>
   <tr>
-    <td rowspan="3">通用场景信息抽取v2</td>
+    <td>基础产线</td>
+    <td>时序预测</td>
+    <td>时序预测</td>
+    <td>DLinear<br/>Nonstationary<br/>TiDE<br/>PatchTST<br/>TimesNet</td>
+  </tr>  
+  <tr>
+    <td>基础产线</td>
+    <td>时序异常检测</td>
+    <td>时序异常检测</td>
+    <td>DLinear_ad<br/>Nonstationary_ad<br/>AutoEncoder_ad<br/>PatchTST_ad<br/>TimesNet_ad</td>
+  </tr>
+  <tr>
+    <td>基础产线</td>
+    <td>时序分类</td>
+    <td>时序分类</td>
+    <td>TimesNet_cls</td>
+  </tr>
+ <tr>
+    <td>特色产线</td>
+    <td>大模型半监督学习-图像分类</td>
+    <td>大模型半监督学习-图像分类</td>
+    <td>CLIP_vit_base_patch16_224<br/>MobileNetV3_small_x1_0<br/><details><summary><b>more</b></summary>PP-HGNet_small<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B6<br/>PP-LCNet_x1_0<br/>ResNet50<br/>SwinTransformer_base_patch4_window7_224</details></td>
+  </tr>
+  <tr>
+    <td>特色产线</td>
+    <td>大模型半监督学习-目标检测</td>
+    <td>大模型半监督学习-目标检测</td>
+    <td>PicoDet-S<br/>PicoDet-L<details>
+    <summary><b>more</b></summary><br/>PP-YOLOE plus-S<br/>PP-YOLOE_plus-L<br/>RT-DETR-H</details></td>
+  </tr>
+  <tr>
+    <td rowspan="2">特色产线</td>
+    <td rowspan="2">大模型半监督学习-OCR</td>
+    <td>文本检测</td>
+    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
+  </tr>
+  <tr>
+    <td>大模型半监督学习-文本识别</td>
+    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
+   </tr>  
+<tr>
+    <td rowspan="3">特色产线</td>
+    <td rowspan="3">通用场景信息抽取v2<br>(PP-ChatOCRv2-common)</td>
     <td>文本识别</td>
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
   </tr>
@@ -140,7 +169,8 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
     <td>-</td>
   </tr>
   <tr>
-    <td rowspan="5">文档场景信息抽取v2</td>
+    <td rowspan="5">特色产线</td>
+    <td rowspan="5">文档场景信息抽取v2<br>(PP-ChatOCRv2-doc)</td>
     <td>版面分析</td>
     <td>PicoDet layout_1x</td>
   </tr>
@@ -161,30 +191,17 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
     <td>-</td>
   </tr>
   <tr>
-    <td>时序预测</td>
-    <td>时序预测</td>
-    <td>DLinear<br/>Nonstationary<br/>TiDE<br/>PatchTST<br/>TimesNet</td>
-  </tr>
-  <tr>
-    <td>多模型融合时序预测v2</td>
+    <td>特色产线</td>
+    <td>多模型融合时序预测v2<br>(PP-TSv2_forecast)</td>
     <td>时序预测</td>
     <td>多模型融合时序预测</td>
-  </tr>
+  </tr> 
   <tr>
-    <td>时序异常检测</td>
-    <td>时序异常检测</td>
-    <td>DLinear_ad<br/>Nonstationary_ad<br/>AutoEncoder_ad<br/>PatchTST_ad<br/>TimesNet_ad</td>
-  </tr>
-  <tr>
-    <td>多模型融合时序异常检测v2</td>
+    <td>特色产线</td>
+    <td>多模型融合时序异常检测v2<br>(PP-TSv2_anomaly)</td>
     <td>时序异常检测</td>
     <td>多模型融合时序异常检测</td>
-  </tr>
-  <tr>
-    <td>时序分类</td>
-    <td>时序分类</td>
-    <td>TimesNet_cls</td>
-  </tr>
+  </tr>      
 </table>
 
 
@@ -203,9 +220,10 @@ PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，�
 
 ### 一、模型产线开发工具 🔥
 PaddleX 3.0 模型产线开发工具支持开发者通过 6 个步骤，完成产业级落地解决方案的开发。PaddleX 3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)。
-- [产线快速体验](./docs/tutorials/pipelines/pipeline_inference.md)
-- [产线模型选择](./docs/tutorials/pipelines/model_select.md)
-- [产线开发流程](./docs/tutorials/pipelines/pipeline_develop_tools.md)
+- [模型产线开发流程](./docs/tutorials/pipelines/pipeline_develop_tools.md)
+- [模型产线推理预测](./docs/tutorials/pipelines/pipeline_inference.md)
+- [产线模型选型](./docs/tutorials/pipelines/model_select.md)
+
 
 ### 二、单模型开发工具 🚀
 PaddleX 3.0 单模型开发工具支持开发者以低代码的方式快速实现模型的开发和优化，包括数据准备、模型训练/评估、模型推理的使用方法，方便低成本集成到模型产线中。PaddleX3.0 支持的模型可以参考 [PaddleX 模型库](./docs/tutorials/models/support_model_list.md)。
