@@ -27,8 +27,8 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 
 ```
 # 注意需要先安装飞桨 cpu 版本
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddle-device/npu/paddlepaddle-0.0.0-cp39-cp39-linux_x86_64.whl
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddle-device/npu/paddle_custom_npu-0.0.0-cp39-cp39-linux_x86_64.whl
+pip install https://paddle-whl.bj.bcebos.com/paddlex/npu/paddlepaddle-0.0.0-cp39-cp39-linux_x86_64.whl
+pip install https://paddle-whl.bj.bcebos.com/paddlex/npu/paddle_custom_npu-0.0.0-cp39-cp39-linux_x86_64.whl
 ```
 - 2. 验证安装包
 安装完成之后，运行如下命令。
@@ -65,8 +65,8 @@ docker run -it --name paddle-mlu-dev -v $(pwd):/work \
 - 1. 下载安装 Python3.10 的wheel 安装包。
 ```
 # 注意需要先安装飞桨 cpu 版本
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddle-device/mlu/paddlepaddle-3.0.0.dev20240621-cp310-cp310-linux_x86_64.whl
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddle-device/mlu/paddle_custom_mlu-3.0.0.dev20240621-cp310-cp310-linux_x86_64.whl
+pip install https://paddle-whl.bj.bcebos.com/paddlex/mlu/paddlepaddle-3.0.0.dev20240621-cp310-cp310-linux_x86_64.whl
+pip install https://paddle-whl.bj.bcebos.com/paddlex/mlu/paddle_custom_mlu-3.0.0.dev20240621-cp310-cp310-linux_x86_64.whl
 ```
 - 2. 验证安装包
 安装完成之后，运行如下命令。
@@ -102,8 +102,8 @@ docker run -it --name=xxx -m 81920M --memory-swap=81920M \
 
 - 1. 安装 Python3.10 的 wheel 安装包
 ```
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddle-device/xpu/paddlepaddle_xpu-2.6.1-cp310-cp310-linux_x86_64.whl # X86 架构
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddle-device/xpu/paddlepaddle_xpu-2.6.1-cp310-cp310-linux_aarch64.whl # ARM 架构
+pip install https://paddle-whl.bj.bcebos.com/paddlex/xpu/paddlepaddle_xpu-2.6.1-cp310-cp310-linux_x86_64.whl # X86 架构
+pip install https://paddle-whl.bj.bcebos.com/paddlex/xpu/paddlepaddle_xpu-2.6.1-cp310-cp310-linux_aarch64.whl # ARM 架构
 ```
 - 2. 验证安装包
 安装完成之后，运行如下命令
