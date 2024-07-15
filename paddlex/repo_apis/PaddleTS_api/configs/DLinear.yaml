@@ -1,28 +1,26 @@
 batch_size: 16
 seq_len: 96
 predict_len: 336
+sampling_stride: 1
 do_eval: True
 epoch: 10
-
-dataset: 
+dataset:
   name: TSDataset
-  dataset_root: /data/
-  train_path: /data/train.csv
-  val_path: /data/val.csv
+  dataset_root: /data/ 
+  train_path: /data/train.csv 
+  val_path: /data/val.csv 
   time_feat: False
   scale: True
-
 info_params:
-  freq: 1h
-  target_cols: "OT"
   time_col: date
-
-model: 
+model:
   name: DLinearModel
   model_cfg:
-    c_in: 1
+    c_in: 321
     individual: False
     optimizer_params:
       learning_rate: 0.001
       gamma: 0.5
     patience: 3
+test:
+  stride: 1
