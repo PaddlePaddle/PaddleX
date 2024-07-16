@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 from paddle.inference import Config, create_predictor
 
@@ -42,6 +41,7 @@ self._create(param_path, model_path, option, delete_pass=delete_pass)
 
         if option.device == 'gpu':
             config.enable_use_gpu(200, option.device_id)
+            config.enable_new_ir(True)
         elif option.device == 'npu':
             config.enable_custom_device('npu')
             os.environ["FLAGS_npu_jit_compile"] = "0"
