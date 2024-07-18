@@ -80,7 +80,7 @@ def install_deps_using_pip():
 
 def clone_repos_using_git(url, branch=None):
     """ clone_repos_using_git """
-    args = ['git', 'clone']
+    args = ['git', 'clone', '--depth', '1']
     if isinstance(url, str):
         url = [url]
     args.extend(url)
