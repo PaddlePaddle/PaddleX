@@ -13,12 +13,12 @@ PaddleX 官方镜像中已经内置了 PaddlePaddle、PaddleX，无需单独安�
 sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
 
 # 对于 CUDA12.3 用户
-sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 
 ## 其他自定义方式安装
 
-自定义安装流程主要包括安装飞桨 PaddlePaddle 框架、获取 PaddleX 源码并安装依赖。
+自定义安装流程主要包括安装飞桨 PaddlePaddle 框架、获取 PaddleX 源码并安装依赖，如果已经通过PaddleX 官方镜像安装，则无需进行该步骤。
 
 ### 1. 安装飞桨 PaddlePaddle
 
@@ -34,7 +34,7 @@ sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it 
 sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # CUDA12.3 用户
-sudo nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+sudo nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 
 更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。
@@ -43,7 +43,7 @@ sudo nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=h
 * 首次使用该镜像时，下述命令会自动下载该镜像文件，下载需要一定的时间，请耐心等待；
 * 上述命令会创建一个名为 paddlex 的 Docker 容器，之后再次使用该容器时无需再次运行该命令；
 * 参数 `--shm-size=8G` 将设置容器的共享内存为 8G，如机器环境允许，建议将该参数设置较大，如 `64G`；
-* 上述镜像中默认的 Python 版本为 Python3.10，默认已经安装 PaddlePaddle 3.0beta0，如果您需要创建新的 Python 环境使用 PaddlePaddle，请参考下述 pip 安装方式。
+* 上述镜像中默认的 Python 版本为 Python3.10，默认已经安装 PaddlePaddle 3.0beta1，如果您需要创建新的 Python 环境使用 PaddlePaddle，请参考下述 pip 安装方式。
 
 ##### 使用 pip 安装
 
@@ -51,10 +51,10 @@ sudo nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=h
 
 ```bash
 # gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
- python -m pip install paddlepaddle-gpu==3.0.0b0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
 # gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
- python -m pip install paddlepaddle-gpu==3.0.0b0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 
 ```
 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
@@ -78,7 +78,7 @@ python -c "import paddle; print(paddle.__version__)"
 
 如果安装成功，将输出如下内容：
 ```bash
-3.0.0-beta0
+3.0.0-beta1
 ```
 
 ### 2. 安装 PaddleX
@@ -121,4 +121,4 @@ paddlex --install
 
 **注 :**
 1. 在安装过程中，需要克隆 Paddle 官方模型套件，`--platform` 可以指定克隆源，可选 `github.com`，`gitee.com`，分别代表这些套件从 github 上和 gitee 上克隆，默认为 `github.com`；
-2. 如仅需要部分 Paddle 官方模型套件，可在命令中指定，如仅克隆 PaddleOCR 套件可使用命令：`paddlex --install PaddleOCR`。默认获取全部 Paddle 官方模型套件。
+2. 如仅需要部分 Paddle 官方模型套件，可在命令中指定，如仅克隆 PaddleDetection 套件可使用命令：paddlex --install PaddleDetection。默认获取全部 Paddle 官方模型套件，为方便后续开发使用，建议采用默认安装。
