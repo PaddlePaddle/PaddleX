@@ -150,6 +150,9 @@ class PPRepository(object):
         """ clone_repos """
         branch = self.meta.get('branch', None)
         repo_url = f'https://{platform}{self.repo_url}'
+        # uncomment this if you prefer using ssh connection (requires additional setup)
+        # if platform == 'github.com':
+        #    repo_url = f'git@github.com:{self.repo_url}'
         os.makedirs(self.repo_parent_dir, exist_ok=True)
         with switch_working_dir(self.repo_parent_dir):
             clone_repos_using_git(repo_url, branch=branch)
