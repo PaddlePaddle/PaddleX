@@ -7,7 +7,7 @@ editdistance
 openpyxl
 PyMuPDF==1.20.2
 qianfan==0.0.3
-langchain==0.0.292
+langchain==0.2.3
 erniebot
 premailer
 python-docx
