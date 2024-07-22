@@ -13,5 +13,5 @@ premailer
 python-docx
 unstructured
 networkx
-Pillow==9.5
+Pillow==10.3.0
 requests <= 2.29
