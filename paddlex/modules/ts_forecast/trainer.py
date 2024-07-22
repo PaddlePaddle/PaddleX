@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 import os
 import json
@@ -43,9 +42,16 @@ class TSFCTrainer(BaseTrainer):
     def train(self):
         """firstly, update and dump train config, then train model
         """
-        rtn = super().train()
+        # XXX: using super().train() instead when the train_hook() is supported.
+        os.makedirs(self.global_config.output, exist_ok=True)
+        self.update_config()
+        self.dump_config()
+        train_result = self.pdx_model.train(**self.get_train_kwargs())
+        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
+training!"
+
         self.make_tar_file()
-        return rtn
+        self.deamon.stop()
 
     def make_tar_file(self):
         """make tar file to package the training outputs
