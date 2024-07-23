@@ -29,8 +29,25 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
 
 当体验完该产线之后，需要确定产线是否符合预期（包含精度、速度等），产线包含的模型是否需要继续微调，如果模型的速度或者精度不符合预期，则需要根据模型选择选择可替换的模型继续测试，确定效果是否满意。如果最终效果均不满意，则需要微调模型。本教程希望产出检测行人是否跌倒的模型，显然默认的权重（COCO 数据集训练产出的权重）无法满足要求，需要采集和标注数据，然后进行训练微调。
 
-## 3. 数据准备和校验
-### 3.1 数据准备
+## 3. 选择模型
+
+PaddleX 提供了11个端到端的目标检测模型，具体可参考 [模型列表](../models/support_model_list.md)，其中部分模型的benchmark如下：
+
+| 模型列表         | mAP(%) | GPU 推理耗时(ms) | CPU 推理耗时(ms) | 模型存储大小(M) |
+| --------------- | ------ | ---------------- | ---------------- | --------------- |
+| RT-DETR-H       | 56.3   | 100.65           | 8451.92          | 471             |
+| RT-DETR-L       | 53.0   | 27.89            | 841.00           | 125             |
+| PP-YOLOE_plus-L | 52.9   | 29.67            | 700.97           | 200             |
+| PP-YOLOE_plus-S | 43.7   | 8.11             | 137.23           | 31              |
+| PicoDet-L       | 42.6   | 10.09            | 129.32           | 23              |
+| PicoDet-S       | 29.1   | 3.17             | 13.36            | 5               |
+
+> **注：以上精度指标为 <a href="https://cocodataset.org/#home" target="_blank">COCO2017</a> 验证集 mAP(0.5:0.95)。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+
+简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以PP-YOLOE_plus-S模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
+
+## 4. 数据准备和校验
+### 4.1 数据准备
 
 本教程采用 `行人跌倒检测数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 数据格式介绍](../data/dataset_format.md)。如果您有一批待标注数据，可以参考 [通用目标检测数据标注指南](../data/annotation/DetAnnoTools.md) 完成数据标注。
 
@@ -41,7 +58,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/fall_det.tar -P ./d
 tar -xf ./dataset/fall_det.tar -C ./dataset/
 ```
 
-### 3.2 数据集校验
+### 4.2 数据集校验
 
 在对数据集校验时，只需一行命令：
 
@@ -95,7 +112,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 
-### 3.3 数据集格式转换/数据集划分（非必选）
+### 4.3 数据集格式转换/数据集划分（非必选）
 
 如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。
 
@@ -104,7 +121,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 * `CheckDataset`:
     * `convert`:
         * `enable`: 是否进行数据集格式转换，为 `True` 时进行数据集格式转换，默认为 `False`;
-        * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，数据可选源格式为 `LabelMe`、`LabelMeWithUnlabeled`、`VOC` 和 `VOCWithUnlabeled`；
+        * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，数据可选源格式为 `LabelMe` 和 `VOC`；
     * `split`:
         * `enable`: 是否进行重新划分数据集，为 `True` 时进行数据集格式转换，默认为 `False`；
         * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为 0-100 之间的任意整数，需要保证和 `val_percent` 值加和为 100；
@@ -112,8 +129,8 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 
 数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
-## 4. 模型训练和评估
-### 4.1 模型训练
+## 5. 模型训练和评估
+### 5.1 模型训练
 
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
@@ -151,7 +168,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 * config.yaml：训练配置文件，记录了本次训练的超参数的配置；
 * .pdparams、.pdema、.pdopt.pdstate、.pdiparams、.pdmodel：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
 
-### 4.2 模型评估
+### 5.2 模型评估
 
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
@@ -165,7 +182,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 
 **注：** 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model.pdparams`。
 
-### 4.3 模型调优
+### 5.3 模型调优
 
 在学习了模型训练和评估后，我们可以通过调整超参数来提升模型的精度。通过合理调整训练轮数，您可以控制模型的训练深度，避免过拟合或欠拟合；而学习率的设置则关乎模型收敛的速度和稳定性。因此，在优化模型性能时，务必审慎考虑这两个参数的取值，并根据实际情况进行灵活调整，以获得最佳的训练效果。
 
@@ -191,12 +208,14 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 
 | 实验        | 轮次  | 学习率   | batch\_size | 训练环境 | mAP@0\.5 |
 |-----------|-----|-------|-------------|------|----------|
-| 实验二       | 50  | 0\.06 | 8          | 4卡   | **0\.953**   |
-| 实验二减少训练轮次 | 30  | 0\.06 | 8          | 4卡   | 0\.948   |
-| 实验二增大训练轮次 | 80  | 0\.06 | 8          | 4卡   | 0\.952   |
+| 实验二       | 50  | 0\.0001 | 8          | 4卡   | **0\.953**   |
+| 实验二减少训练轮次 | 30  | 0\.0001 | 8          | 4卡   | 0\.948   |
+| 实验二增大训练轮次 | 80  | 0\.0001 | 8          | 4卡   | 0\.952   |
 </center>
 
-## 5. 产线测试
+** 注：本教程为4卡教程，如果您只有1张GPU，可通过调整训练卡数完成本次实验，但最终指标未必和上述指标对齐，属正常情况。**
+
+## 6. 产线测试
 
 将产线中的模型替换为微调后的模型进行测试，如：
 
@@ -214,8 +233,8 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 
 </center>
 
-## 6. 开发集成/部署
-
+## 7. 开发集成/部署
+1. 此处提供了轻量级的 PaddleX Python API 的集成方式，使用 Python API 方式可以更加方便的将 PaddleX 产出模型集成到自己的项目中进行二次开发，详细集成方式可参考 [PaddleX 模型产线推理预测](../pipelines/pipeline_inference.md)。
 此处提供轻量级的 PaddleX Python API 的集成方式，也提供高性能推理/服务化部署的方式部署模型。 PaddleX Python API 的集成方式如下：
 
 ```python
@@ -223,60 +242,31 @@ from paddlex import DetPipeline
 from paddlex import PaddleInferenceOption
 
 model_name = "PP-YOLOE_plus-S"
-pipeline = DetPipeline(model_name, kernel_option=PaddleInferenceOption())
+model_dir= "./output/best_model"
+pipeline = DetPipeline(model_name, model_dir=model_dir, kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
         {'input_path': "./dataset/fall_det/images/fall_66.jpg"}
     )
 
-print(result["det_result"])
+print(result["boxes"])
 ```  
+2. PaddleX也提供了基于 FastDeploy 的高性能推理/服务化部署的方式进行模型部署。该部署方案支持更多的推理后端，并且提供高性能推理和服务化部署两种部署方式，能够满足更多场景的需求，具体流程可参考 [基于 FastDeploy 的模型产线部署]((../pipelines/pipeline_deployment_with_fastdeploy.md))。高性能推理和服务化部署两种部署方式的特点如下：
+    * 高性能推理：运行脚本执行推理，或在程序中调用 Python/C++ 的推理 API。旨在实现测试样本的高效输入与模型预测结果的快速获取，特别适用于大规模批量刷库的场景，显著提升数据处理效率。
+    * 服务化部署：采用 C/S 架构，以服务形式提供推理能力，客户端可以通过网络请求访问服务，以获取推理结果。
+* PaddleX 高性能离线部署和服务化部署流程如下：
+
+    1. 获取离线部署包。
+        1. 在 [AIStudio 星河社区](https://aistudio.baidu.com/pipeline/mine) 根据本地训练模型产线创建对应产线，在“选择产线”页面点击“直接部署”。
+        2. 在“产线部署”页面选择“导出离线部署包”，使用默认的模型方案，选择与本地测试环境对应的部署包运行环境，点击“导出部署包”。
+        3. 待部署包导出完毕后，点击“下载离线部署包”，将部署包下载到本地。
+        4. 点击“生成部署包序列号”，根据页面提示完成设备指纹的获取以及设备指纹与序列号的绑定，确保序列号对应的激活状态为“已激活“。
+    2. 使用自训练模型替换离线部署包 `model` 目录中的模型。
+    3. 根据需要选择要使用的部署SDK：`offline_sdk` 目录对应高性能推理SDK，`serving_sdk` 目录对应服务化部署SDK。按照SDK文档（README.md）中的说明，完成部署环境准备，建议使用文档提供的官方docker进行环境部署。
+    4. 对于高性能推理方式部署，修改 `offline_sdk/python_example/fd_model_config.yaml` 中的 "model_path_root" 字段值为自训练模型存放目录，并使用如下命令完成模型高性能推理：
+
+```bash
+python infer.py --resource_path . --device gpu --serial_num <serial_number> --update_license True --backend paddle_option  --input_data_path https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/fall.png --is_visualize True
+```
+
 其他产线的 Python API 集成方式可以参考[PaddleX 模型产线推理预测](../pipelines/pipeline_inference.md)。
 PaddleX 同样提供了高性能的离线部署和服务化部署方式，具体参考[基于 FastDeploy 的模型产线部署](../pipelines/pipeline_deployment_with_fastdeploy.md)。
-
-## 7. 星河社区命令行工具（AI Studio CLI）开发体验（非必选）
-
-如果您本地无 GPU 硬件平台，也可通过星河社区命令行工具（AI Studio CLI）的方式提交训练任务到云端环境，命令行工具配置和使用可参考 [使用星河社区命令行工具（AI Studio CLI）高效进行模型训练](https://aistudio.baidu.com/projectdetail/7711823)，提交 PaddleX 训练任务的流程如下：
-
-1. 准备数据集，并上传至 AI Studio 平台；
-2. 本地撰写训练脚本，使用 PaddleX 对数据集进行校验，训练和评估。示例脚本如下：
-
-```bash
-######处理数据集######
-tar -xf ./data/data282749/fall_det.tar -C ./data
-rm -rf ./data/data282749/fall_det.tar
-
-######拉取PaddleX开源代码，安装环境依赖######
-git clone https://gitee.com/paddlepaddle/PaddleX
-cd PaddleX
-pip install -e .
-paddlex --install --platform gitee.com -y
-
-######启动数据校验######
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
-      -o Global.mode=check_dataset \
-      -o Global.dataset_dir=../data/fall_det
-
-######启动单卡训练######
-export CUDA_VISIBLE_DEVICES=0
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
-      -o Global.mode=train \
-      -o Global.dataset_dir=../data/fall_det \
-      -o Global.device='gpu' \
-      -o Train.num_classes=1
-
-######启动模型评估######
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
-    -o Global.mode=evaluate \
-    -o Global.dataset_dir=./dataset/fall_det
-```
-
-3. 提交训练任务至 AI Studio 平台，启动训练（参数含义建议参考 [星河社区命令行工具文档](https://aistudio.baidu.com/projectdetail/7711823)）：
-```bash
-aistudio submit job --name test_paddlex \
-      --path ./code_gpu \
-      --cmd 'bash run.sh' \
-      --payment acoin \
-      --gpus 1 \
-      --mount_dataset 282749
-```
-提交后的任务可在星河社区 AI Sudio 平台的【模型】->【模型产线】中查看模型训练的详细信息和模型的训练产出。
