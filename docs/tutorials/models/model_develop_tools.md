@@ -53,7 +53,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 ```bash
 python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=predict \
-    -o Predict.model_dir="/output/best_model" \
+    -o Predict.model_dir="./output/best_model" \
     -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
 ```
 
@@ -91,6 +91,3 @@ result = model.predict({'input_path': "https://paddle-model-ecology.bj.bcebos.co
 - `train.log`：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；
 - `config.yaml`：训练配置文件，记录了本次训练的超参数的配置；
 - `.pdparams`、`.pdema`、`.pdopt.pdstate`、`.pdiparams`、`.pdmodel`：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
-
-
-

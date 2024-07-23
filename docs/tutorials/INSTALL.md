@@ -1,19 +1,19 @@
 # 环境准备与安装
 
-使用 PaddleX 前，需要进行环境准备，安装依赖项，推荐使用 PaddleX 官方镜像安装，也可使用其他自定义方式安装。
+使用 PaddleX 前，需要进行环境准备，安装依赖项，推荐使用 PaddleX 官方镜像安装，也可使用其他自定义方式安装，目前 PaddleX 仅支持 11.8 和 12.3 版本的 CUDA，请确保已安装的 Nvidia 驱动支持的上述 CUDA 版本。
 
-## 【推荐】 使用 PaddleX 官方镜像安装
+## 使用 PaddleX 官方镜像安装【Linux用户推荐】
 
-PaddleX 官方镜像中已经内置了 PaddlePaddle、PaddleX，无需单独安装，获取 Docker 镜像并启动容器即可使用。
+PaddleX 官方镜像中已经内置了 PaddlePaddle、PaddleX，并配置好了相应的CUDA环境，无需单独安装，获取 Docker 镜像并启动容器即可使用。
 
 参考下述命令，使用 PaddleX 官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录。
 
 ```bash
 # 对于 CUDA11.8 用户
-sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
 
 # 对于 CUDA12.3 用户
-sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlex/paddlex:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 
 ## 其他自定义方式安装
@@ -31,10 +31,10 @@ sudo docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it 
 ```bash
 # 对于 gpu 用户
 # CUDA11.8 用户
-sudo nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # CUDA12.3 用户
-sudo nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 
 更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。
