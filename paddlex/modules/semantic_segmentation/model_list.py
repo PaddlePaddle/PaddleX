@@ -19,5 +19,16 @@ MODELS = [
     'Deeplabv3-R101',
     'Deeplabv3-R50',
     'OCRNet_HRNet-W48',
+    'OCRNet_HRNet-W18',
     'PP-LiteSeg-T',
+    'SegFormer_B0',
+    'SegFormer_B1',
+    'SegFormer_B2',
+    'SegFormer_B3',
+    'SegFormer_B4',
+    'SegFormer_B5',
+    'SeaFormer_base',
+    'SeaFormer_tiny',
+    'SeaFormer_small',
+    'SeaFormer_large'
 ]
