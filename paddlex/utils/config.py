@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import copy
 import argparse
@@ -106,19 +105,30 @@ def override(dl, ks, v):
         v(str): value to be replaced
     """
 
-    def str2num(v):
+    def parse_str(s):
+        """convert str type value 
+           to None type if it is "None", 
+           to bool type if it means True or False,
+           to int type if it can be eval().
+        """
+        if s in ("None"):
+            return None
+        elif s in ("TRUE", "True", "true", "T", "t"):
+            return True
+        elif s in ("FALSE", "False", "false", "F", "f"):
+            return False
         try:
             return eval(v)
         except Exception:
-            return v
+            return s
 
     assert isinstance(dl, (list, dict)), ("{} should be a list or a dict")
     assert len(ks) > 0, ('lenght of keys should larger than 0')
     if isinstance(dl, list):
-        k = str2num(ks[0])
+        k = parse_str(ks[0])
         if len(ks) == 1:
             assert k < len(dl), ('index({}) out of range({})'.format(k, dl))
-            dl[k] = str2num(v)
+            dl[k] = parse_str(v)
         else:
             override(dl[k], ks[1:], v)
     else:
@@ -126,7 +136,7 @@ def override(dl, ks, v):
             # assert ks[0] in dl, ('{} is not exist in {}'.format(ks[0], dl))
             if not ks[0] in dl:
                 logging.warning(f'A new field ({ks[0]}) detected!')
-            dl[ks[0]] = str2num(v)
+            dl[ks[0]] = parse_str(v)
         else:
             if ks[0] not in dl.keys():
                 dl[ks[0]] = {}

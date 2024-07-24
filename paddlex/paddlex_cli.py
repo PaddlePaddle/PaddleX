@@ -26,15 +26,18 @@ def args_cfg():
     """parse cli arguments
     """
 
-    def str2bool(v):
-        """convert str to bool type
+    def parse_str(s):
+        """convert str type value
+           to None type if it is "None", 
+           to bool type if it means True or False.
         """
-        return v.lower() in ("true", "t", "1")
-
-    def str2None(s):
-        """convert to None type if it is "None"
-        """
-        return None if s.lower() == 'none' else s
+        if s in ("None"):
+            return None
+        elif s in ("TRUE", "True", "true", "T", "t"):
+            return True
+        elif s in ("FALSE", "False", "false", "F", "f"):
+            return False
+        return s
 
     parser = argparse.ArgumentParser()
 
@@ -56,7 +59,7 @@ def args_cfg():
     parser.add_argument('--predict', action='store_true', default=True, help="")
     parser.add_argument('--pipeline', type=str, help="")
     parser.add_argument('--model', nargs='+', help="")
-    parser.add_argument('--model_dir', nargs='+', type=str2None, help="")
+    parser.add_argument('--model_dir', nargs='+', type=parse_str, help="")
     parser.add_argument('--input', type=str, help="")
     parser.add_argument('--output', type=str, default="./", help="")
     parser.add_argument('--device', type=str, default='gpu:0', help="")
