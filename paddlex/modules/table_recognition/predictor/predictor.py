@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 
 import numpy as np
@@ -38,6 +36,7 @@ class TableRecPredictor(BasePredictor):
                  pre_transforms=None,
                  post_transforms=None,
                  table_max_len=488):
+        self.table_max_len = table_max_len
         super().__init__(
             model_name=model_name,
             model_dir=model_dir,
@@ -45,7 +44,6 @@ class TableRecPredictor(BasePredictor):
             output=output,
             pre_transforms=pre_transforms,
             post_transforms=post_transforms)
-        self.table_max_len = table_max_len
 
     @classmethod
     def get_input_keys(cls):

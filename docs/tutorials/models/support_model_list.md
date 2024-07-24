@@ -60,6 +60,10 @@
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
+### 9.SwinTransformer系列
+| 模型名称 | config |
+| :--- | :---: |
+| SwinTransformer_base_patch4_window7_224 | [SwinTransformer_base_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window7_224.yaml)|
 ## 二、目标检测
 ### 1. PP-YOLOE_plus 系列
 | 模型名称 | config |
@@ -76,7 +80,11 @@
 | RT-DETR-L | [RT-DETR-L.yaml](../../../paddlex/configs/object_detection/RT-DETR-L.yaml)|
 | RT-DETR-H | [RT-DETR-H.yaml](../../../paddlex/configs/object_detection/RT-DETR-H.yaml)|
 | RT-DETR-X | [RT-DETR-X.yaml](../../../paddlex/configs/object_detection/RT-DETR-X.yaml)|
-
+### 3. PicoDet系列
+| 模型名称 | config |
+| :--- | :---: |
+| PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
+| PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |
@@ -112,20 +120,31 @@
 | SegFormer_B3 | [SegFormer_B3.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer_B3.yaml)|
 | SegFormer_B4 | [SegFormer_B4.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer_B4.yaml)|
 | SegFormer_B5 | [SegFormer_B5.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer_B5.yaml)|
-
-## 五、文本检测
+### 5.PP-LiteSeg系列
+| 模型名称 | config |
+| :--- | :---: |
+| PP-LiteSeg-T | [PP-LiteSeg-T.yaml](../../../paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml)|
+## 五、表格识别
+| 模型名称 | config |
+| :--- | :---: |
+| SLANet | [SLANet.yaml](../../../paddlex/configs/table_recognition/SLANet.yaml)|
+## 六、文本检测
 ### 1.PP-OCRv4 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-OCRv4_server_det | [PP-OCRv4_server_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_server_det.yaml)|
 | PP-OCRv4_mobile_det | [PP-OCRv4_mobile_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml)|
-## 六、文本识别
+## 七、文本识别
 ### 1.PP-OCRv4 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-OCRv4_server_rec | [PP-OCRv4_server_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml)|
 | PP-OCRv4_mobile_rec | [PP-OCRv4_mobile_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml)|
-## 七、时序异常检测
+## 八、版面分析
+| 模型名称 | config |
+| :--- | :---: |
+| PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
+## 九、时序异常检测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear_ad | [DLinear_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml)|
@@ -133,11 +152,11 @@
 | TimesNet_ad | [TimesNet_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/TimesNet_ad.yaml)|
 | AutoEncoder_ad | [AutoEncoder_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml)|
 | Nonstationary_ad | [Nonstationary_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/Nonstationary_ad.yaml)|
-## 八、时序分类
+## 十、时序分类
 | 模型名称 | config |
 | :--- | :---: |
 | TimesNet_cls | [TimesNet_cls.yaml](../../../paddlex/configs/ts_classification/TimesNet_cls.yaml)|
-## 九、时序预测
+## 十一、时序预测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear | [DLinear.yaml](../../../paddlex/configs/ts_forecast/DLinear.yaml)|
