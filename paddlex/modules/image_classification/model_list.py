@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 MODELS = [
     'CLIP_vit_base_patch16_224',
     'CLIP_vit_large_patch14_224',
     'ConvNeXt_tiny',
+    'ConvNeXt_small',
+    'ConvNeXt_base_224',
+    'ConvNeXt_base_384',
+    'ConvNeXt_large_224',
+    'ConvNeXt_large_384',
     'MobileNetV2_x0_25',
     'MobileNetV2_x0_5',
     'MobileNetV2_x1_0',
@@ -44,10 +48,19 @@ MODELS = [
     'PP-LCNet_x1_5',
     'PP-LCNet_x2_0',
     'PP-LCNet_x2_5',
+    'PP-LCNetV2_small',
+    'PP-LCNetV2_base',
+    'PP-LCNetV2_large',
     'ResNet101',
     'ResNet152',
     'ResNet18',
     'ResNet34',
     'ResNet50',
+    'ResNet200_vd',
+    'ResNet101_vd',
+    'ResNet152_vd',
+    'ResNet18_vd',
+    'ResNet34_vd',
+    'ResNet50_vd',
     'SwinTransformer_base_patch4_window7_224',
 ]

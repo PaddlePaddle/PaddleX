@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import os.path as osp
 
@@ -107,6 +106,30 @@ register_model_info({
 })
 
 register_model_info({
+    'model_name': 'PP-LCNetV2_small',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNetV2_small.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'PP-LCNetV2_base',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNetV2_base.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'PP-LCNetV2_large',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNetV2_large.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
     'model_name': 'CLIP_vit_base_patch16_224',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'CLIP_vit_base_patch16_224.yaml'),
@@ -163,9 +186,25 @@ register_model_info({
 })
 
 register_model_info({
+    'model_name': 'ResNet18_vd',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet18_vd.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
     'model_name': 'ResNet34',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet34.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ResNet34_vd',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet34_vd.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
     'infer_config': 'deploy/configs/inference_cls.yaml'
 })
@@ -179,6 +218,14 @@ register_model_info({
 })
 
 register_model_info({
+    'model_name': 'ResNet50_vd',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet50_vd.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
     'model_name': 'ResNet101',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet101.yaml'),
@@ -187,9 +234,33 @@ register_model_info({
 })
 
 register_model_info({
+    'model_name': 'ResNet101_vd',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet101_vd.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
     'model_name': 'ResNet152',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet152.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ResNet152_vd',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet152_vd.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ResNet200_vd',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet200_vd.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
     'infer_config': 'deploy/configs/inference_cls.yaml'
 })
@@ -318,6 +389,38 @@ register_model_info({
     'model_name': 'ConvNeXt_tiny',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_tiny.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ConvNeXt_small',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_small.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ConvNeXt_base_224',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_base_224.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ConvNeXt_base_384',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_base_384.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'ConvNeXt_large_224',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_large_384.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
     'infer_config': 'deploy/configs/inference_cls.yaml'
 })
