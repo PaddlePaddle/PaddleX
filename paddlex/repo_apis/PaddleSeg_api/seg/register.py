@@ -41,6 +41,13 @@ register_model_info({
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
 })
 
+register_model_info({
+    'model_name': 'OCRNet_HRNet-W18',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'OCRNet_HRNet-W18.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
 # PP-LiteSeg
 register_model_info({
     'model_name': 'PP-LiteSeg-T',
@@ -65,7 +72,79 @@ register_model_info({
     'supported_dataset_types': []
 })
 
-# OCRNet
+# seaformer
+register_model_info({
+    'model_name': 'SeaFormer_base',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SeaFormer_base.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SeaFormer_tiny',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SeaFormer_tiny.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SeaFormer_small',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SeaFormer_small.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SeaFormer_large',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SeaFormer_large.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+# SegFormer
+register_model_info({
+    'model_name': 'SegFormer-B0',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SegFormer-B0.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SegFormer-B1',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SegFormer-B1.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SegFormer-B2',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SegFormer-B2.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SegFormer-B3',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SegFormer-B3.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SegFormer-B4',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SegFormer-B4.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'SegFormer-B5',
+    'suite': 'Seg',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SegFormer-B5.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+# deeplab
 register_model_info({
     'model_name': 'Deeplabv3-R50',
     'suite': 'Seg',
@@ -95,6 +174,7 @@ register_model_info({
 })
 
 
+
 # For compatibility
 def _set_alias(model_name, alias):
     from ...base.register import get_registered_model_info
@@ -106,4 +186,5 @@ def _set_alias(model_name, alias):
 
 
 _set_alias('OCRNet_HRNet-W48', 'ocrnet_hrnetw48')
+_set_alias('OCRNet_HRNet-W18', 'ocrnet_hrnetw18')
 _set_alias('PP-LiteSeg-T', 'pp_liteseg_stdc1')
