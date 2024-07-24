@@ -26,4 +26,13 @@ MODELS = [
     'RT-DETR-R50',
     'RT-DETR-X',
     'PicoDet_layout_1x',
+    'YOLOv3-DarkNet53',
+    'YOLOv3-MobileNet-V3',
+    'YOLOv3-ResNet50_vd-DCN',
+    'YOLOX-N',
+    'YOLOX-T',
+    'YOLOX-S',
+    'YOLOX-M',
+    'YOLOX-L',
+    'YOLOX-X',
 ]

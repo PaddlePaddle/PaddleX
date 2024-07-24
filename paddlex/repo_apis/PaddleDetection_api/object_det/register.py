@@ -191,3 +191,120 @@ register_model_info({
         'amp': ['OFF']
     },
 })
+
+register_model_info({
+    'model_name': 'YOLOv3-DarkNet53',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOv3-DarkNet53.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOv3-MobileNet-V3',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOv3-MobileNet-V3.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOv3-ResNet50_vd-DCN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOv3-ResNet50_vd-DCN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOX-N',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOX-N.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOX-T',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOX-T.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOX-S',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOX-S.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOX-M',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOX-M.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOX-L',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOX-L.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'YOLOX-X',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'YOLOX-X.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
