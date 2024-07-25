@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import numpy as np
 import json
 from pathlib import Path
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 from pycocotools.coco import COCO
 
@@ -119,7 +119,11 @@ def draw_bbox(image, coco_info: COCO, img_id):
         # draw label
         label = coco_info.loadCats(catid)[0]['name']
         text = "{}".format(label)
-        tw, th = draw.textsize(text, font=font)
+        if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
+            tw, th = draw.textsize(text, font=font)
+        else:
+            left, top, right, bottom = draw.textbbox((0, 0), text, font)
+            tw, th = right - left, bottom - top
         if ymin < th:
             draw.rectangle(
                 [(xmin, ymin), (xmin + tw + 4, ymin + th + 1)], fill=color)

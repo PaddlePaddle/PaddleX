@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import json
 from pathlib import Path
 import numpy as np
+import PIL
 from PIL import ImageDraw, ImageFont
 
 from .keys import ClsKeys as K
@@ -179,7 +179,12 @@ class SaveClsResults(BaseTransform):
         for font_size in range(max_font_size, min_font_size - 1, -1):
             font = ImageFont.truetype(
                 PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
-            text_width_tmp, text_height_tmp = draw.textsize(label_str, font)
+            if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
+                text_width_tmp, text_height_tmp = draw.textsize(label_str, font)
+            else:
+                left, top, right, bottom = draw.textbbox((0, 0), label_str,
+                                                         font)
+                text_width_tmp, text_height_tmp = right - left, bottom - top
             if text_width_tmp <= image_size[0]:
                 break
             else:
@@ -188,7 +193,11 @@ class SaveClsResults(BaseTransform):
         color_list = self._get_colormap(rgb=True)
         color = tuple(color_list[0])
         font_color = tuple(self._get_font_colormap(3))
-        text_width, text_height = draw.textsize(label_str, font)
+        if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
+            text_width, text_height = draw.textsize(label_str, font)
+        else:
+            left, top, right, bottom = draw.textbbox((0, 0), label_str, font)
+            text_width, text_height = right - left, bottom - top
 
         rect_left = 3
         rect_top = 3
