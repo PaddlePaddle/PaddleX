@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import yaml
 from typing import Union
 from paddleclas.ppcls.utils.config import get_config, override_config
@@ -110,7 +109,11 @@ class ClsConfig(BaseConfig):
             ValueError: `mode` error.
         """
         if mode == 'train':
-            _cfg = [f'DataLoader.Train.sampler.batch_size={batch_size}']
+            if self.DataLoader["Train"]["sampler"].get("batch_size", False):
+                _cfg = [f'DataLoader.Train.sampler.batch_size={batch_size}']
+            else:
+                _cfg = [f'DataLoader.Train.sampler.first_bs={batch_size}']
+                _cfg = [f'DataLoader.Train.dataset.name=MultiScaleDataset']
         elif mode == 'eval':
             _cfg = [f'DataLoader.Eval.sampler.batch_size={batch_size}']
         elif mode == 'test':
