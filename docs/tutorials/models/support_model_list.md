@@ -5,11 +5,17 @@
 | 模型名称 | config |
 | :--- | :---: |
 | ResNet18 | [ResNet18.yaml](../../../paddlex/configs/image_classification/ResNet18.yaml)|
+| ResNet18_vd | [ResNet18_vd.yaml](../../../paddlex/configs/image_classification/ResNet18_vd.yaml)|
 | ResNet34 | [ResNet34.yaml](../../../paddlex/configs/image_classification/ResNet34.yaml)|
+| ResNet34_vd | [ResNet34_vd.yaml](../../../paddlex/configs/image_classification/ResNet34_vd.yaml)|
 | ResNet50 | [ResNet50.yaml](../../../paddlex/configs/image_classification/ResNet50.yaml)|
+| ResNet50_vd | [ResNet50_vd.yaml](../../../paddlex/configs/image_classification/ResNet50_vd.yaml)|
 | ResNet101 | [ResNet101.yaml](../../../paddlex/configs/image_classification/ResNet101.yaml)|
+| ResNet101_vd | [ResNet101_vd.yaml](../../../paddlex/configs/image_classification/ResNet101_vd.yaml)|
 | ResNet152 | [ResNet152.yaml](../../../paddlex/configs/image_classification/ResNet152.yaml)|
-### 2.PP-LCNet 系列
+| ResNet152_vd | [ResNet152_vd.yaml](../../../paddlex/configs/image_classification/ResNet152_vd.yaml)|
+| ResNet200_vd | [ResNet200_vd.yaml](../../../paddlex/configs/image_classification/ResNet200_vd.yaml)|
+### 2.PP-LCNet & PP-LCNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-LCNet_x0_25 | [PP-LCNet_x0_25.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_25.yaml)|
@@ -20,6 +26,9 @@
 | PP-LCNet_x1_5 | [PP-LCNet_x1_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x1_5.yaml)|
 | PP-LCNet_x2_0 | [PP-LCNet_x2_0.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_0.yaml)|
 | PP-LCNet_x2_5 | [PP-LCNet_x2_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_5.yaml)|
+| PP-LCNetV2_small | [PP-LCNetV2_small.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_small.yaml)|
+| PP-LCNetV2_base | [PP-LCNetV2_base.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_base.yaml)|
+| PP-LCNetV2_large | [PP-LCNetV2_large.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_large.yaml)|
 ### 3.MobileNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -60,6 +69,11 @@
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
+| ConvNeXt_small | [ConvNeXt_small.yaml](../../../paddlex/configs/image_classification/ConvNeXt_small.yaml)|
+| ConvNeXt_base_224 | [ConvNeXt_base_224.yaml](../../../paddlex/configs/image_classification/ConvNeXt_base_224.yaml)|
+| ConvNeXt_base_384 | [ConvNeXt_base_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_base_384.yaml)|
+| ConvNeXt_large_224 | [ConvNeXt_large_224.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_224.yaml)|
+| ConvNeXt_large_384 | [ConvNeXt_large_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_384.yaml)|
 ### 9.SwinTransformer系列
 | 模型名称 | config |
 | :--- | :---: |
