@@ -168,6 +168,28 @@ Deeplabv3_Plus-R101_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LiteSeg-T_infer.tar",
     "OCRNet_HRNet-W48":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/OCRNet_HRNet-W48_infer.tar",
+    "OCRNet_HRNet-W18":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/OCRNet_HRNet-W18_infer.tar",
+    "SegFormer-B0":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B0_infer.tar",
+    "SegFormer-B1":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B1_infer.tar",
+    "SegFormer-B2":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B2_infer.tar",
+    "SegFormer-B3":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B3_infer.tar",
+    "SegFormer-B4":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B4_infer.tar",
+    "SegFormer-B5":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B5_infer.tar",
+    "SeaFormer_tiny":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_tiny_infer.tar",
+    "SeaFormer_small":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_small_infer.tar",
+    "SeaFormer_base":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_base_infer.tar",
+    "SeaFormer_large":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_large_infer.tar",
     "Mask-RT-DETR-H":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Mask-RT-DETR-H_infer.tar",
     "Mask-RT-DETR-L":

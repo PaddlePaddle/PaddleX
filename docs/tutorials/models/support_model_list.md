@@ -117,10 +117,27 @@
 | 模型名称 | config |
 | :--- | :---: |
 | OCRNet_HRNet-W48 | [OCRNet_HRNet-W48.yaml](../../../paddlex/configs/semantic_segmentation/OCRNet_HRNet-W48.yaml)|
+| OCRNet_HRNet-W18 | [OCRNet_HRNet-W18.yaml](../../../paddlex/configs/semantic_segmentation/OCRNet_HRNet-W18.yaml)|
 ### 3.PP-LiteSeg系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-LiteSeg-T | [PP-LiteSeg-T.yaml](../../../paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml)|
+### 4.SegFormer 系列
+| 模型名称 | config |
+| :--- | :---: |
+| SegFormer-B0 | [SegFormer-B0.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B0.yaml)|
+| SegFormer-B1 | [SegFormer-B1.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B1.yaml)|
+| SegFormer-B2 | [SegFormer-B2.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B2.yaml)|
+| SegFormer-B3 | [SegFormer-B3.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B3.yaml)|
+| SegFormer-B4 | [SegFormer-B4.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B4.yaml)|
+| SegFormer-B5 | [SegFormer-B5.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B5.yaml)|
+### 5.SeaFormer 系列
+| 模型名称 | config |
+| :--- | :---: |
+| SeaFormer_tiny | [SeaFormer_tiny.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_tiny.yaml)|
+| SeaFormer_small | [SeaFormer_small.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_small.yaml)|
+| SeaFormer_base | [SeaFormer_base.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_base.yaml)|
+| SeaFormer_large | [SeaFormer_large.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_large.yaml)|
 ## 五、表格识别
 | 模型名称 | config |
 | :--- | :---: |
