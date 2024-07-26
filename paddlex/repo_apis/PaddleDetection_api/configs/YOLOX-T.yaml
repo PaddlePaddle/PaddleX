@@ -1,0 +1,144 @@
+use_gpu: true
+use_xpu: false
+use_mlu: false
+use_npu: false
+log_iter: 100
+save_dir: output
+snapshot_epoch: 10
+print_flops: false
+print_params: false
+
+depth_mult: 0.33
+width_mult: 0.375
+
+metric: COCO
+num_classes: 80
+
+TrainDataset:
+  name: COCODataSet
+  image_dir: train2017
+  anno_path: annotations/instances_train2017.json
+  dataset_dir: dataset/coco
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+  name: COCODataSet
+  image_dir: val2017
+  anno_path: annotations/instances_val2017.json
+  dataset_dir: dataset/coco
+  allow_empty: true
+
+TestDataset:
+  name: ImageFolder
+  anno_path: annotations/instances_val2017.json # also support txt (like VOC's label_list.txt)
+  dataset_dir: dataset/coco # if set, anno_path will be 'dataset_dir/anno_path'
+
+worker_num: 4
+TrainReader:
+  sample_transforms:
+    - Decode: {}
+    - Mosaic:
+        prob: 1.0
+        input_dim: [640, 640]
+        degrees: [-10, 10]
+        scale: [0.5, 1.5] # [0.1, 2.0] in YOLOX-s/m/l/x
+        shear: [-2, 2]
+        translate: [-0.1, 0.1]
+        enable_mixup: False # True in YOLOX-s/m/l/x
+    - AugmentHSV: {is_bgr: False, hgain: 5, sgain: 30, vgain: 30}
+    - PadResize: {target_size: 640}
+    - RandomFlip: {}
+  batch_transforms:
+    - Permute: {}
+  batch_size: 8
+  shuffle: True
+  drop_last: True
+  collate_batch: False
+  mosaic_epoch: 285
+
+
+EvalReader:
+  sample_transforms:
+    - Decode: {}
+    - Resize: {target_size: [416, 416], keep_ratio: True, interp: 1}
+    - Pad: {size: [416, 416], fill_value: [114., 114., 114.]}
+    - Permute: {}
+  batch_size: 8
+
+
+TestReader:
+  inputs_def:
+    image_shape: [3, 416, 416]
+  sample_transforms:
+    - Decode: {}
+    - Resize: {target_size: [416, 416], keep_ratio: True, interp: 1}
+    - Pad: {size: [416, 416], fill_value: [114., 114., 114.]}
+    - Permute: {}
+  batch_size: 1
+
+
+architecture: YOLOX
+norm_type: sync_bn
+use_ema: True
+ema_decay: 0.9999
+ema_decay_type: "exponential"
+act: silu
+find_unused_parameters: True
+
+YOLOX:
+  backbone: CSPDarkNet
+  neck: YOLOCSPPAN
+  head: YOLOXHead
+  size_stride: 32
+  size_range: [10, 20] # multi-scale ragne [320*320 ~ 640*640]
+
+CSPDarkNet:
+  arch: "X"
+  return_idx: [2, 3, 4]
+  depthwise: False
+
+YOLOCSPPAN:
+  depthwise: False
+
+YOLOXHead:
+  l1_epoch: 285
+  depthwise: False
+  loss_weight: {cls: 1.0, obj: 1.0, iou: 5.0, l1: 1.0}
+  assigner:
+    name: SimOTAAssigner
+    candidate_topk: 10
+    use_vfl: False
+  nms:
+    name: MultiClassNMS
+    nms_top_k: 10000
+    keep_top_k: 1000
+    score_threshold: 0.001
+    nms_threshold: 0.65
+
+epoch: 300
+
+LearningRate:
+  base_lr: 0.01
+  schedulers:
+  - !CosineDecay
+    max_epochs: 300
+    min_lr_ratio: 0.05
+    last_plateau_epochs: 15
+  - !ExpWarmup
+    epochs: 5
+
+OptimizerBuilder:
+  optimizer:
+    type: Momentum
+    momentum: 0.9
+    use_nesterov: True
+  regularizer:
+    factor: 0.0005
+    type: L2
+
+# Exporting the model
+export:
+  post_process: True  # Whether post-processing is included in the network when export model.
+  nms: True           # Whether NMS is included in the network when export model.
+  benchmark: False    # It is used to testing model performance, if set `True`, post-process and NMS will not be exported.
+  fuse_conv_bn: False

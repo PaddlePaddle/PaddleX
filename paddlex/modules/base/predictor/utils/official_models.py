@@ -119,6 +119,24 @@ CLIP_vit_large_patch14_224_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/RT-DETR-H_infer.tar",
     "RT-DETR-X":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/RT-DETR-X_infer.tar",
+    "YOLOv3-DarkNet53":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-DarkNet53_infer.tar",
+    "YOLOv3-MobileNet-V3":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-MobileNet-V3_infer.tar",
+    "YOLOv3-ResNet50_vd-DCN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-ResNet50_vd-DCN_infer.tar",
+    "YOLOX-L":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-L_infer.tar",
+    "YOLOX-M":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-M_infer.tar",
+    "YOLOX-N":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-N_infer.tar",
+    "YOLOX-S":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-S_infer.tar",
+    "YOLOX-T":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-T_infer.tar",
+    "YOLOX-X":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-X_infer.tar",
     "RT-DETR-R18":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/RT-DETR-R18_infer.tar",
     "RT-DETR-R50":

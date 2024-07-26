@@ -32,7 +32,7 @@ def build_pipeline(
         BasePipeline: the pipeline, which is subclass of BasePipeline.
     """
     pipeline = BasePipeline.get(pipeline_name)(output=output, device=device)
-    pipeline.update_model_name(model_list)
+    pipeline.update_model(model_list, model_dir_list)
     pipeline.update_model(model_list, model_dir_list)
     pipeline.load_model()
     return pipeline
