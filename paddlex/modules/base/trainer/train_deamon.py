@@ -20,6 +20,8 @@ import traceback
 import threading
 from abc import ABC, abstractmethod
 from pathlib import Path
+import paddle
+
 from ..build_model import build_model
 from ....utils.file_interface import write_json_file
 from ....utils import logging
@@ -330,10 +332,10 @@ class BaseTrainDeamon(ABC):
             inference_config = export_save_dir.joinpath("inference.yml")
             if not inference_config.exists():
                 inference_config = ""
-            pdmodel = export_save_dir.joinpath("inference.pdmodel")
+            use_pir = hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
+            pdmodel = export_save_dir.joinpath("inference.json") if use_pir else export_save_dir.joinpath("inference.pdmodel")
             pdiparams = export_save_dir.joinpath("inference.pdiparams")
-            pdiparams_info = export_save_dir.joinpath(
-                "inference.pdiparams.info")
+            pdiparams_info = "" if use_pir else export_save_dir.joinpath("inference.pdiparams.info") 
         else:
             inference_config = ""
             pdmodel = ""

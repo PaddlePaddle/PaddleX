@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import paddle
 from paddle.inference import Config, create_predictor
 
 from .....utils import logging
@@ -21,23 +22,19 @@ from .....utils import logging
 class _PaddleInferencePredictor(object):
     """ Predictor based on Paddle Inference """
 
-    def __init__(self, param_path, model_path, option, delete_pass=[]):
+    def __init__(self, model_dir, model_prefix, option, delete_pass=[]):
         super().__init__()
         self.predictor, self.inference_config, self.input_names, self.input_handlers, self.output_handlers = \
-self._create(param_path, model_path, option, delete_pass=delete_pass)
+self._create(model_dir, model_prefix, option, delete_pass=delete_pass)
 
-    def _create(self, param_path, model_path, option, delete_pass):
+    def _create(self, model_dir, model_prefix, option, delete_pass):
         """ _create """
-        if not os.path.exists(model_path) or not os.path.exists(param_path):
-            raise FileNotFoundError(
-                f"Please ensure {model_path} and {param_path} exist.")
-
-        model_buffer, param_buffer = self._read_model_param(model_path,
-                                                            param_path)
-        config = Config()
-        config.set_model_buffer(model_buffer,
-                                len(model_buffer), param_buffer,
-                                len(param_buffer))
+        use_pir = hasattr(paddle.framework,
+                          "use_pir_api") and paddle.framework.use_pir_api()
+        model_postfix = ".json" if use_pir else ".pdmodel"
+        model_file = os.path.join(model_dir, f"{model_prefix}{model_postfix}")
+        params_file = os.path.join(model_dir, f"{model_prefix}.pdiparams")
+        config = Config(model_file, params_file)
 
         if option.device == 'gpu':
             config.enable_use_gpu(200, option.device_id)
@@ -116,14 +113,6 @@ No need to generate again.")
             output_handler = predictor.get_output_handle(output_name)
             output_handlers.append(output_handler)
         return predictor, config, input_names, input_handlers, output_handlers
-
-    def _read_model_param(self, model_path, param_path):
-        """ read model and param """
-        model_file = open(model_path, 'rb')
-        param_file = open(param_path, 'rb')
-        model_buffer = model_file.read()
-        param_buffer = param_file.read()
-        return model_buffer, param_buffer
 
     def get_input_names(self):
         """ get input names """
