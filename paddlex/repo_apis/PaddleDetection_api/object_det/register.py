@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 import os.path as osp
 
@@ -41,7 +39,7 @@ register_model_info({
     'auto_compression_config_path':
     osp.join(PDX_CONFIG_DIR, 'slim', 'picodet_s_lcnet_qat.yml'),
     'supported_apis':
-    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    ['train', 'evaluate', 'predict', 'export', 'compression'],
     'supported_dataset_types': ['COCODetDataset'],
 })
 
@@ -52,7 +50,7 @@ register_model_info({
     'auto_compression_config_path':
     osp.join(PDX_CONFIG_DIR, 'slim', 'picodet_l_lcnet_qat.yml'),
     'supported_apis':
-    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    ['train', 'evaluate', 'predict', 'export', 'compression'],
     'supported_dataset_types': ['COCODetDataset'],
 })
 
@@ -63,7 +61,7 @@ register_model_info({
     'auto_compression_config_path':
     osp.join(PDX_CONFIG_DIR, 'slim', 'ppyoloe_plus_crn_s_qat.yml'),
     'supported_apis':
-    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    ['train', 'evaluate', 'predict', 'export', 'compression'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx'],
@@ -79,7 +77,7 @@ register_model_info({
     'auto_compression_config_path':
     osp.join(PDX_CONFIG_DIR, 'slim', 'ppyoloe_plus_crn_l_qat.yml'),
     'supported_apis':
-    ['train', 'evaluate', 'predict', 'export', 'infer', 'compression'],
+    ['train', 'evaluate', 'predict', 'export', 'compression'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx'],
@@ -92,7 +90,7 @@ register_model_info({
     'model_name': 'PP-YOLOE_plus-L',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus-L.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -105,7 +103,7 @@ register_model_info({
     'model_name': 'PP-YOLOE_plus-X',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus-X.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -118,7 +116,7 @@ register_model_info({
     'model_name': 'RT-DETR-L',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-L.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -131,7 +129,7 @@ register_model_info({
     'model_name': 'RT-DETR-H',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-H.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -144,7 +142,7 @@ register_model_info({
     'model_name': 'RT-DETR-X',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-X.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -157,7 +155,7 @@ register_model_info({
     'model_name': 'RT-DETR-R18',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-R18.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -170,7 +168,7 @@ register_model_info({
     'model_name': 'RT-DETR-R50',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'RT-DETR-R50.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -183,7 +181,7 @@ register_model_info({
     'model_name': 'PicoDet_layout_1x',
     'suite': 'Det',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet_layout_1x.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCODetDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],

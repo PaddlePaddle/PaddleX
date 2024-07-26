@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import os.path as osp
 
@@ -37,7 +36,7 @@ register_model_info({
     'model_name': 'Mask-RT-DETR-L',
     'suite': 'InstanceSeg',
     'config_path': osp.join(PDX_CONFIG_DIR, 'Mask-RT-DETR-L.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCOInstSegDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
@@ -50,7 +49,7 @@ register_model_info({
     'model_name': 'Mask-RT-DETR-H',
     'suite': 'InstanceSeg',
     'config_path': osp.join(PDX_CONFIG_DIR, 'Mask-RT-DETR-H.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
     'supported_dataset_types': ['COCOInstSegDataset'],
     'supported_train_opts': {
         'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
