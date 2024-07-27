@@ -120,7 +120,12 @@ class TextRecRunner(BaseRunner):
             CompletedProcess: the result of exporting subprocess execution.
         """
         # `device` unused
-        cmd = [self.python, 'tools/export_model.py', '-c', config_path]
+        config_basename = os.path.basename(config_path)
+        if "LaTeX_OCR_rec" in config_basename:
+            cmd = [self.python, 'tools/export_model.py', '-c', config_path,'-o', 'Architecture.Backbone.is_predict=True',
+            'Architecture.Backbone.is_export=True','Architecture.Head.is_export=True']        
+        else:
+            cmd = [self.python, 'tools/export_model.py', '-c', config_path]
         cp = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
         return cp
 

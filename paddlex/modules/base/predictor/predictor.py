@@ -47,7 +47,7 @@ class BasePredictor(ABC, FromDictMixin, Node):
         self.model_dir = model_dir
         self.kernel_option = kernel_option
         self.output = output
-        self.other_src = self.load_other_src()
+        # self.other_src = self.load_other_src()
 
         logging.debug(
             f"-------------------- {self.__class__.__name__} --------------------\n\
@@ -59,7 +59,7 @@ Env: {self.kernel_option}")
         param_path = os.path.join(model_dir, f"{self.MODEL_FILE_TAG}.pdiparams")
         model_path = os.path.join(model_dir, f"{self.MODEL_FILE_TAG}.pdmodel")
         self._predictor = _PaddleInferencePredictor(
-            param_path=param_path, model_path=model_path, option=kernel_option)
+            param_path=param_path, model_path=model_path, model_name = model_name, option=kernel_option)
 
     def build_transforms(self, pre_transforms, post_transforms):
         """ build pre-transforms and post-transforms

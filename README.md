@@ -86,8 +86,8 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>Mask-RT-DETR-L<br/>Mask-RT-DETR-H</td>
   </tr>
   <tr>
-    <td rowspan="2">基础产线</td>
-    <td rowspan="2">通用OCR</td>
+    <td rowspan="3">基础产线</td>
+    <td rowspan="3">通用OCR</td>
     <td>文本检测</td>
     <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
   </tr>
@@ -95,6 +95,10 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>文本识别</td>
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
   </tr>
+   <tr>
+    <td>公式识别</td>
+    <td>LaTeX_OCR_rec</td>
+  </tr> 
   <tr>
     <td rowspan="4">基础产线</td>
     <td rowspan="4">通用表格识别</td>

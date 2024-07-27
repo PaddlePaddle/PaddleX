@@ -58,7 +58,7 @@ REPO_META = {
     'PaddleOCR': {
         'repo_url': '/PaddlePaddle/PaddleOCR.git',
         'platform': 'github',
-        'branch': 'release/2.6.1',
+        'branch': 'main',
         'pkg_name': 'paddleocr',
         'lib_name': 'paddleocr',
         'pdx_pkg_name': 'PaddleOCR_api',

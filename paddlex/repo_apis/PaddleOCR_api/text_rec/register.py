@@ -45,3 +45,10 @@ register_model_info({
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-OCRv4_server_rec.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
 })
+
+register_model_info({
+    'model_name': 'LaTeX_OCR_rec',
+    'suite': 'TextRec',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'rec_latex_ocr.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})

@@ -73,6 +73,7 @@ class TextRecConfig(BaseConfig):
         Raises:
             ValueError: the dataset_type error.
         """
+        
         dataset_path = abspath(dataset_path)
         if dataset_type is None:
             dataset_type = 'TextRecDataset'
@@ -80,7 +81,8 @@ class TextRecConfig(BaseConfig):
             train_list_path = f"{train_list_path}"
         else:
             train_list_path = os.path.join(dataset_path, 'train.txt')
-        if dataset_type == 'TextRecDataset' or "MSTextRecDataset":
+   
+        if (dataset_type == 'TextRecDataset') or (dataset_type=="MSTextRecDataset"):
             _cfg = {
                 'Train.dataset.name': dataset_type,
                 'Train.dataset.data_dir': dataset_path,
@@ -93,7 +95,24 @@ class TextRecConfig(BaseConfig):
                 os.path.join(dataset_path, 'dict.txt')
             }
             self.update(_cfg)
+        elif dataset_type == "LaTeXOCRDataSet":
+            _cfg = {
+                    'Train.dataset.name': dataset_type,
+                    'Train.dataset.data_dir': dataset_path,
+                    'Train.dataset.data': os.path.join(dataset_path, "latexocr_train.pkl"),
+                    'Train.dataset.label_file_list': [train_list_path],
+                    'Eval.dataset.name': dataset_type,
+                    'Eval.dataset.data_dir': dataset_path,
+                    'Eval.dataset.data': os.path.join(dataset_path, "latexocr_val.pkl"),
+                    'Eval.dataset.label_file_list':
+                    [os.path.join(dataset_path, 'val.txt')],
+                    'Global.character_dict_path':
+                    os.path.join(dataset_path, 'dict.txt')
+                }
+            self.update(_cfg)
+            
         else:
+            print("raise support error")
             raise ValueError(f"{repr(dataset_type)} is not supported.")
 
     def update_batch_size(self, batch_size: int, mode: str='train'):
@@ -113,6 +132,25 @@ class TextRecConfig(BaseConfig):
         }
         if "sampler" in self.dict['Train']:
             _cfg['Train.sampler.first_bs'] = batch_size
+        self.update(_cfg)
+
+    def update_batch_size_pair(self, batch_size_train: int, batch_size_val: int, mode: str='train'):
+        """update batch size setting
+
+        Args:
+            batch_size (int): the batch size number to set.
+            mode (str, optional): the mode that to be set batch size, must be one of 'train', 'eval', 'test'.
+                Defaults to 'train'.
+
+        Raises:
+            ValueError: mode error.
+        """
+        _cfg = {
+            'Train.dataset.batch_size_per_pair': batch_size_train,
+            'Eval.dataset.batch_size_per_pair': batch_size_val,
+        }
+        # if "sampler" in self.dict['Train']:
+        #     _cfg['Train.sampler.first_bs'] = 1
         self.update(_cfg)
 
     def update_learning_rate(self, learning_rate: float):
@@ -217,6 +255,14 @@ class TextRecConfig(BaseConfig):
             epochs (int): the epochs number value to set
         """
         self.update({'Global.epoch_num': epochs})
+    
+    def _update_metrics(self, calculate_blue_score: bool):
+        """update metrics setting
+
+        Args:
+            calculate_blue_score (bool): whether to calculate blue score
+        """ 
+        self.update({'Metric.cal_blue_score': calculate_blue_score})
 
     def _update_checkpoints(self, resume_path: Union[None, str]):
         """update checkpoint setting
