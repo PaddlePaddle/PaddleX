@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import json
 import os
 import os.path as osp
@@ -61,6 +60,9 @@ def check(dataset_dir, output, sample_num=10):
             vis_save_dir = osp.join(output, 'demo_img')
 
             image_info = jsondata['images']
+            sample_num = min(sample_num, len(image_info))
+            if sample_num < 10:
+                info('Only {} images in {}.json'.format(len(image_info), tag))
             for i in range(sample_num):
                 file_name = image_info[i]['file_name']
                 img_id = image_info[i]['id']
