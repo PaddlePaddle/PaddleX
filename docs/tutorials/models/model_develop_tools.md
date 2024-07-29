@@ -57,7 +57,11 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
     -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
 ```
 
-**注：** PaddleX 允许使用 wheel 包进行模型集成，在此处，当您验证好自己的模型之后，即可使用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。集成方式如下：
+**注：** 
+ 1. 对于 LaTeX_OCR_rec 模型，您需要将Predict.model_dir设置为"./output/best_accuracy"。
+ 
+ 2. PaddleX 允许使用 wheel 包进行模型集成，在此处，当您验证好自己的模型之后，即可使用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。集成方式如下：
+
 
 ```python
 from paddlex import PaddleInferenceOption, create_model
