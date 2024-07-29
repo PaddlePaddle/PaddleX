@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 import numpy as np
 import math
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from .keys import DetKeys as K
@@ -126,7 +126,11 @@ def draw_box(img, np_boxes, labels, threshold=0.5):
 
         # draw label
         text = "{} {:.2f}".format(labels[clsid], score)
-        tw, th = draw.textsize(text, font=font)
+        if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
+            tw, th = draw.textsize(text, font=font)
+        else:
+            left, top, right, bottom = draw.textbbox((0, 0), text, font)
+            tw, th = right - left, bottom - top
         if ymin < th:
             draw.rectangle(
                 [(xmin, ymin), (xmin + tw + 4, ymin + th + 1)], fill=color)
