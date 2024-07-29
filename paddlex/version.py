@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 
 __all__ = ['get_pdx_version', 'get_version_dict', 'show_versions']
 
 
 def get_pdx_version():
-    """ get_pdx_version """
+    """ get_pdx_version  """
     with open(
             os.path.join(os.path.dirname(__file__), ".version"),
             'r',
