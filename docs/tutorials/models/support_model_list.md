@@ -5,11 +5,17 @@
 | 模型名称 | config |
 | :--- | :---: |
 | ResNet18 | [ResNet18.yaml](../../../paddlex/configs/image_classification/ResNet18.yaml)|
+| ResNet18_vd | [ResNet18_vd.yaml](../../../paddlex/configs/image_classification/ResNet18_vd.yaml)|
 | ResNet34 | [ResNet34.yaml](../../../paddlex/configs/image_classification/ResNet34.yaml)|
+| ResNet34_vd | [ResNet34_vd.yaml](../../../paddlex/configs/image_classification/ResNet34_vd.yaml)|
 | ResNet50 | [ResNet50.yaml](../../../paddlex/configs/image_classification/ResNet50.yaml)|
+| ResNet50_vd | [ResNet50_vd.yaml](../../../paddlex/configs/image_classification/ResNet50_vd.yaml)|
 | ResNet101 | [ResNet101.yaml](../../../paddlex/configs/image_classification/ResNet101.yaml)|
+| ResNet101_vd | [ResNet101_vd.yaml](../../../paddlex/configs/image_classification/ResNet101_vd.yaml)|
 | ResNet152 | [ResNet152.yaml](../../../paddlex/configs/image_classification/ResNet152.yaml)|
-### 2.PP-LCNet 系列
+| ResNet152_vd | [ResNet152_vd.yaml](../../../paddlex/configs/image_classification/ResNet152_vd.yaml)|
+| ResNet200_vd | [ResNet200_vd.yaml](../../../paddlex/configs/image_classification/ResNet200_vd.yaml)|
+### 2.PP-LCNet & PP-LCNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-LCNet_x0_25 | [PP-LCNet_x0_25.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x0_25.yaml)|
@@ -20,6 +26,9 @@
 | PP-LCNet_x1_5 | [PP-LCNet_x1_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x1_5.yaml)|
 | PP-LCNet_x2_0 | [PP-LCNet_x2_0.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_0.yaml)|
 | PP-LCNet_x2_5 | [PP-LCNet_x2_5.yaml](../../../paddlex/configs/image_classification/PP-LCNet_x2_5.yaml)|
+| PP-LCNetV2_small | [PP-LCNetV2_small.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_small.yaml)|
+| PP-LCNetV2_base | [PP-LCNetV2_base.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_base.yaml)|
+| PP-LCNetV2_large | [PP-LCNetV2_large.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_large.yaml)|
 ### 3.MobileNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -60,6 +69,11 @@
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
+| ConvNeXt_small | [ConvNeXt_small.yaml](../../../paddlex/configs/image_classification/ConvNeXt_small.yaml)|
+| ConvNeXt_base_224 | [ConvNeXt_base_224.yaml](../../../paddlex/configs/image_classification/ConvNeXt_base_224.yaml)|
+| ConvNeXt_base_384 | [ConvNeXt_base_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_base_384.yaml)|
+| ConvNeXt_large_224 | [ConvNeXt_large_224.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_224.yaml)|
+| ConvNeXt_large_384 | [ConvNeXt_large_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_384.yaml)|
 ### 9.SwinTransformer系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -118,10 +132,27 @@
 | 模型名称 | config |
 | :--- | :---: |
 | OCRNet_HRNet-W48 | [OCRNet_HRNet-W48.yaml](../../../paddlex/configs/semantic_segmentation/OCRNet_HRNet-W48.yaml)|
+| OCRNet_HRNet-W18 | [OCRNet_HRNet-W18.yaml](../../../paddlex/configs/semantic_segmentation/OCRNet_HRNet-W18.yaml)|
 ### 3.PP-LiteSeg系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-LiteSeg-T | [PP-LiteSeg-T.yaml](../../../paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml)|
+### 4.SegFormer 系列
+| 模型名称 | config |
+| :--- | :---: |
+| SegFormer-B0 | [SegFormer-B0.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B0.yaml)|
+| SegFormer-B1 | [SegFormer-B1.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B1.yaml)|
+| SegFormer-B2 | [SegFormer-B2.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B2.yaml)|
+| SegFormer-B3 | [SegFormer-B3.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B3.yaml)|
+| SegFormer-B4 | [SegFormer-B4.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B4.yaml)|
+| SegFormer-B5 | [SegFormer-B5.yaml](../../../paddlex/configs/semantic_segmentation/SegFormer-B5.yaml)|
+### 5.SeaFormer 系列
+| 模型名称 | config |
+| :--- | :---: |
+| SeaFormer_tiny | [SeaFormer_tiny.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_tiny.yaml)|
+| SeaFormer_small | [SeaFormer_small.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_small.yaml)|
+| SeaFormer_base | [SeaFormer_base.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_base.yaml)|
+| SeaFormer_large | [SeaFormer_large.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_large.yaml)|
 ## 五、表格识别
 | 模型名称 | config |
 | :--- | :---: |

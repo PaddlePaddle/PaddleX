@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from pathlib import Path
 
 from .....utils.cache import CACHE_DIR
@@ -21,14 +20,26 @@ from .....utils.download import download_and_extract
 OFFICIAL_MODELS = {
     "ResNet18":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet18_infer.tar",
+    "ResNet18_vd":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet18_vd_infer.tar",
     "ResNet34":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet34_infer.tar",
+    "ResNet34_vd":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet34_vd_infer.tar",
     "ResNet50":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet50_infer.tar",
+    "ResNet50_vd":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet50_vd_infer.tar",
     "ResNet101":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet101_infer.tar",
+    "ResNet101_vd":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet101_vd_infer.tar",
     "ResNet152":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet152_infer.tar",
+    "ResNet152_vd":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet152_vd_infer.tar",
+    "ResNet200_vd":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ResNet200_vd_infer.tar",
     "PP-LCNet_x0_25":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LCNet_x0_25_infer.tar",
     "PP-LCNet_x0_35":
@@ -45,6 +56,12 @@ OFFICIAL_MODELS = {
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LCNet_x2_5_infer.tar",
     "PP-LCNet_x2_0":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LCNet_x2_0_infer.tar",
+    "PP-LCNetV2_small":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LCNetV2_small_infer.tar",
+    "PP-LCNetV2_base":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LCNetV2_base_infer.tar",
+    "PP-LCNetV2_large":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LCNetV2_large_infer.tar",
     "MobileNetV3_large_x0_35":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
 MobileNetV3_large_x0_35_infer.tar",
@@ -77,6 +94,16 @@ MobileNetV3_small_x1_0_infer.tar",
 MobileNetV3_small_x1_25_infer.tar",
     "ConvNeXt_tiny":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ConvNeXt_tiny_infer.tar",
+    "ConvNeXt_small":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ConvNeXt_small_infer.tar",
+    "ConvNeXt_base_224":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ConvNeXt_base_224_infer.tar",
+    "ConvNeXt_base_384":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ConvNeXt_base_384_infer.tar",
+    "ConvNeXt_large_224":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ConvNeXt_large_224_infer.tar",
+    "ConvNeXt_large_384":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/ConvNeXt_large_384_infer.tar",
     "MobileNetV2_x0_25":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
 MobileNetV2_x0_25_infer.tar",
@@ -159,6 +186,28 @@ Deeplabv3_Plus-R101_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-LiteSeg-T_infer.tar",
     "OCRNet_HRNet-W48":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/OCRNet_HRNet-W48_infer.tar",
+    "OCRNet_HRNet-W18":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/OCRNet_HRNet-W18_infer.tar",
+    "SegFormer-B0":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B0_infer.tar",
+    "SegFormer-B1":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B1_infer.tar",
+    "SegFormer-B2":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B2_infer.tar",
+    "SegFormer-B3":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B3_infer.tar",
+    "SegFormer-B4":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B4_infer.tar",
+    "SegFormer-B5":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SegFormer-B5_infer.tar",
+    "SeaFormer_tiny":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_tiny_infer.tar",
+    "SeaFormer_small":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_small_infer.tar",
+    "SeaFormer_base":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_base_infer.tar",
+    "SeaFormer_large":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SeaFormer_large_infer.tar",
     "Mask-RT-DETR-H":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Mask-RT-DETR-H_infer.tar",
     "Mask-RT-DETR-L":

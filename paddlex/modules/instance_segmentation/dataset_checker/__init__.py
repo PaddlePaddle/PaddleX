@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 from .dataset_src import check, convert, split_dataset, deep_analyse
@@ -49,8 +48,8 @@ class COCOInstSegDatasetChecker(BaseDatasetChecker):
             str: the root directory of splited dataset.
         """
         return split_dataset(src_dataset_dir,
-                             self.check_dataset_config.split_train_percent,
-                             self.check_dataset_config.split_val_percent)
+                             self.check_dataset_config.split.train_percent,
+                             self.check_dataset_config.split.val_percent)
 
     def check_dataset(self, dataset_dir: str,
                       sample_num: int=sample_num) -> dict:
