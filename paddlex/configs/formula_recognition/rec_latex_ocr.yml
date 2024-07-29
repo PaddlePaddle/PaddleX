@@ -2,7 +2,7 @@ Global:
   model: LaTeX_OCR_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "./dataset/ocr_rec_latexocr_dataset_example"
-  device: gpu:7
+  device: gpu:0
   output: "output"
 
 CheckDataset:
