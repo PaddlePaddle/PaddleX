@@ -80,13 +80,18 @@
 | RT-DETR-L | [RT-DETR-L.yaml](../../../paddlex/configs/object_detection/RT-DETR-L.yaml)|
 | RT-DETR-H | [RT-DETR-H.yaml](../../../paddlex/configs/object_detection/RT-DETR-H.yaml)|
 | RT-DETR-X | [RT-DETR-X.yaml](../../../paddlex/configs/object_detection/RT-DETR-X.yaml)|
-## 3. YOLOv3 系列
+### 3. PicoDet系列
+| 模型名称 | config |
+| :--- | :---: |
+| PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
+| PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
+### 4. YOLOv3 系列
 | 模型名称 | config |
 | :--- | :---: |
 | YOLOv3-DarkNet53 | [YOLOv3-DarkNet53.yaml](../../../paddlex/configs/object_detection/YOLOv3-DarkNet53.yaml)|
-| YOLOv3-MobileNet-V3 | [YOLOv3-MobileNet-V3.yaml](../../../paddlex/configs/object_detection/YOLOv3-MobileNet-V3.yaml)|
-| YOLOv3-ResNet50_vd-DCN | [YOLOv3-ResNet50_vd-DCN.yaml](../../../paddlex/configs/object_detection/YOLOv3-ResNet50_vd-DCN.yaml)|
-## 4. YOLOX 系列
+| YOLOv3-MobileNetV3 | [YOLOv3-MobileNetV3.yaml](../../../paddlex/configs/object_detection/YOLOv3-MobileNetV3.yaml)|
+| YOLOv3-ResNet50_vd_DCN | [YOLOv3-ResNet50_vd_DCN.yaml](../../../paddlex/configs/object_detection/YOLOv3-ResNet50_vd_DCN.yaml)|
+### 5. YOLOX 系列
 | 模型名称 | config |
 | :--- | :---: |
 | YOLOX-L | [YOLOX-L.yaml](../../../paddlex/configs/object_detection/YOLOX-L.yaml)|
@@ -95,11 +100,6 @@
 | YOLOX-S | [YOLOX-S.yaml](../../../paddlex/configs/object_detection/YOLOX-S.yaml)|
 | YOLOX-T | [YOLOX-T.yaml](../../../paddlex/configs/object_detection/YOLOX-T.yaml)|
 | YOLOX-X | [YOLOX-X.yaml](../../../paddlex/configs/object_detection/YOLOX-X.yaml)|
-### 3. PicoDet系列
-| 模型名称 | config |
-| :--- | :---: |
-| PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
-| PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |

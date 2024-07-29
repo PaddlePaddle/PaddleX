@@ -121,10 +121,10 @@ CLIP_vit_large_patch14_224_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/RT-DETR-X_infer.tar",
     "YOLOv3-DarkNet53":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-DarkNet53_infer.tar",
-    "YOLOv3-MobileNet-V3":
-    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-MobileNet-V3_infer.tar",
-    "YOLOv3-ResNet50_vd-DCN":
-    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-ResNet50_vd-DCN_infer.tar",
+    "YOLOv3-MobileNetV3":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-MobileNetV3_infer.tar",
+    "YOLOv3-ResNet50_vd_DCN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOv3-ResNet50_vd_DCN_infer.tar",
     "YOLOX-L":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/YOLOX-L_infer.tar",
     "YOLOX-M":
