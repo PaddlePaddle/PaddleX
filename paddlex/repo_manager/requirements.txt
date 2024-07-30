@@ -1,7 +1,7 @@
 tomark~=0.1.4
 psutil~=5.9.2
 wget
-grpcio==1.51.3
+grpcio==1.53.2
 pydantic~=1.10.1
 editdistance
 openpyxl
