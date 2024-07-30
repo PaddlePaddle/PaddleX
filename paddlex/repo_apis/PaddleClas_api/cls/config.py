@@ -315,6 +315,23 @@ indicating that no pretrained model to be used."
         """
         self.update([f'Global.save_interval={save_interval}'])
 
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
+        """
+        log_ranks = device.split(':')[1]
+        self.update([f'Global.log_ranks="{log_ranks}"'])
+
+    def enable_print_mem_info(self):
+        """print memory info"""
+        self.update([f'Global.print_mem_info=True'])
+
+    def disable_print_mem_info(self):
+        """do not print memory info"""
+        self.update([f'Global.print_mem_info=False'])
+
     def _update_predict_img(self, infer_img: str, infer_list: str=None):
         """update image to be predicted
 
