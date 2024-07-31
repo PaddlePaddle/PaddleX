@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import json
 import signal
@@ -120,7 +118,7 @@ def raise_class_not_found_error(cls_name, base_cls, all_entities=None):
 def raise_no_entity_registered_error(base_cls):
     """ raise no entity registered error """
     base_cls_name = base_cls.__name__
-    msg = f"There no entity register on {base_cls_name}."
+    msg = f"There no entity register on {base_cls_name}. Hint: Maybe the subclass is not imported."
     raise NoEntityRegisteredException(msg)
 
 
