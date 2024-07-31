@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .dataset_checker import COCOInstSegDatasetChecker
-from .trainer import InstanceSegTrainer
-from .evaluator import InstanceSegEvaluator
-from .predictor import InstanceSegPredictor, transforms
-from .exportor import InstanceSegExportor
+from ..base import BaseExportor
+from .model_list import MODELS
+
+
+class SegExportor(BaseExportor):
+    """ Semantic Segmentation Model Exportor """
+    entities = MODELS

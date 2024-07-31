@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from .dataset_checker import TextRecDatasetChecker
 from .trainer import TextRecTrainer
 from .evaluator import TextRecEvaluator
 from .predictor import TextRecPredictor, transforms
+from .exportor import TextRecExportor

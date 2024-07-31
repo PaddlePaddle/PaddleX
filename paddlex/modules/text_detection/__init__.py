@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from .dataset_checker import TextDetDatasetChecker
 from .trainer import TextDetTrainer
 from .evaluator import TextDetEvaluator
 from .predictor import TextDetPredictor, transforms
+from .exportor import TextDetExportor

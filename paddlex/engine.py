@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
-from .modules.base import build_dataset_checker, build_trainer, build_evaluater, build_predictor
+from .modules.base import build_dataset_checker, build_trainer, build_evaluater, build_exportor, build_predictor
 from .utils.result_saver import try_except_decorator
 from .utils import config
 from .utils.errors import raise_unsupported_api_error
@@ -44,7 +43,8 @@ class Engine(object):
             evaluator = build_evaluater(self.config)
             return evaluator.evaluate()
         elif self.config.Global.mode == "export":
-            raise_unsupported_api_error("export", self.__class__)
+            exportor = build_exportor(self.config)
+            return exportor.export()
         elif self.config.Global.mode == "predict":
             predictor = build_predictor(self.config)
             return predictor.predict()

@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from .dataset_checker import SegDatasetChecker
 from .trainer import SegTrainer
 from .evaluator import SegEvaluator
 from .predictor import SegPredictor, transforms
+from .exportor import SegExportor

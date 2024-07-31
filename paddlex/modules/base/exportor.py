@@ -23,21 +23,21 @@ from ...utils.config import AttrDict
 from ...utils.logging import *
 
 
-def build_evaluater(config: AttrDict) -> "BaseEvaluator":
-    """build model evaluater
+def build_exportor(config: AttrDict) -> "BaseExportor":
+    """build model exportor
 
     Args:
         config (AttrDict): PaddleX pipeline config, which is loaded from pipeline yaml file.
 
     Returns:
-        BaseEvaluator: the evaluater, which is subclass of BaseEvaluator.
+        BaseExportor: the exportor, which is subclass of BaseExportor.
     """
     model_name = config.Global.model
-    return BaseEvaluator.get(model_name)(config)
+    return BaseExportor.get(model_name)(config)
 
 
-class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
-    """ Base Model Evaluator """
+class BaseExportor(ABC, metaclass=AutoRegisterABCMetaClass):
+    """ Base Model Exportor """
 
     __is_base = True
 
@@ -49,9 +49,9 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         super().__init__()
         self.global_config = config.Global
-        self.eval_config = config.Evaluate
+        self.export_config = config.Export
 
-        config_path = self.get_config_path(self.eval_config.weight_path)
+        config_path = self.get_config_path(self.export_config.weight_path)
 
         self.pdx_config, self.pdx_model = build_model(
             self.global_config.model, config_path=config_path)
@@ -74,54 +74,21 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
                 f"The config file(`{config_path}`) related to weight file(`{weight_path}`) is not exist, use default instead."
             )
             config_path = None
+
         return config_path
 
-    def check_return(self, metrics: dict) -> bool:
-        """check evaluation metrics
-
-        Args:
-            metrics (dict): evaluation output metrics
+    def export(self) -> dict:
+        """execute model exporting
 
         Returns:
-            bool: whether the format of evaluation metrics is legal
-        """
-        if not isinstance(metrics, dict):
-            return False
-        for metric in metrics:
-            val = metrics[metric]
-            if not isinstance(val, float):
-                return False
-        return True
-
-    def evaluate(self) -> dict:
-        """execute model evaluating
-
-        Returns:
-            dict: the evaluation metrics
+            dict: the export metrics
         """
         self.update_config()
-        # self.dump_config()
-        evaluate_result = self.pdx_model.evaluate(**self.get_eval_kwargs())
-        assert evaluate_result.returncode == 0, f"Encountered an unexpected error({evaluate_result.returncode}) in \
-evaling!"
+        export_result = self.pdx_model.export(**self.get_export_kwargs())
+        assert export_result.returncode == 0, f"Encountered an unexpected error({export_result.returncode}) in \
+exporting!"
 
-        metrics = evaluate_result.metrics
-        assert self.check_return(
-            metrics
-        ), f"The return value({metrics}) of Evaluator.eval() is illegal!"
-        return {"metrics": metrics}
-
-    def dump_config(self, config_file_path=None):
-        """dump the config
-
-        Args:
-            config_file_path (str, optional): the path to save dumped config.
-                Defaults to None, means that save in `Global.output` as `config.yaml`.
-        """
-        if config_file_path is None:
-            config_file_path = os.path.join(self.global_config.output,
-                                            "config.yaml")
-        self.pdx_config.dump(config_file_path)
+        return None
 
     def get_device(self, using_device_number: int=None) -> str:
         """get device setting from config
@@ -133,17 +100,19 @@ evaling!"
         Returns:
             str: device setting, such as: `gpu:0,1`, `npu:0,1`, `cpu`.
         """
-        return get_device(
-            self.global_config.device, using_device_number=using_device_number)
+        # return get_device(
+        #     self.global_config.device, using_device_number=using_device_number)
+        return get_device("cpu")
 
-    @abstractmethod
     def update_config(self):
-        """update evalution config
+        """update export config
         """
-        raise NotImplementedError
+        pass
 
-    @abstractmethod
-    def get_eval_kwargs(self):
-        """get key-value arguments of model evalution function
+    def get_export_kwargs(self):
+        """get key-value arguments of model export function
         """
-        raise NotImplementedError
+        return {
+            "weight_path": self.export_config.weight_path,
+            "save_dir": self.global_config.output
+        }

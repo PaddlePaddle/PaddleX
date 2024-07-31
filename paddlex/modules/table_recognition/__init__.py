@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from .dataset_checker import TableRecDatasetChecker
 from .trainer import TableRecTrainer
 from .evaluator import TableRecEvaluator
 from .predictor import TableRecPredictor, transforms
+from .exportor import TableRecExportor
