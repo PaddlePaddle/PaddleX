@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import json
 import shutil
 import paddle
@@ -64,7 +63,7 @@ class ClsTrainer(BaseTrainer):
                                        "ClsDataset")
         if self.train_config.num_classes is not None:
             self.pdx_config.update_num_classes(self.train_config.num_classes)
-        if self.train_config.pretrain_weight_path and self.train_config.pretrain_weight_path != "":
+        if self.train_config.pretrain_weight_path != "":
             self.pdx_config.update_pretrained_weights(
                 self.train_config.pretrain_weight_path)
 
