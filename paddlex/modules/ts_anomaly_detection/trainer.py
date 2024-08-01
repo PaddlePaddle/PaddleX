@@ -74,9 +74,15 @@ training!"
                 'time_col': self.train_config.time_col
             })
         if self.train_config.feature_cols is not None:
-            self.pdx_config.update_basic_info({
-                'feature_cols': self.train_config.feature_cols.split(',')
-            })
+            if isinstance(self.train_config.feature_cols, tuple):
+                feature_cols = [str(item) for item in self.train_config.feature_cols] 
+                self.pdx_config.update_basic_info({
+                    'feature_cols': feature_cols
+                })
+            else:
+                self.pdx_config.update_basic_info({
+                    'feature_cols': self.train_config.feature_cols.split(',')
+                })
         if self.train_config.label_col is not None:
             self.pdx_config.update_basic_info({
                 'label_col': self.train_config.label_col
