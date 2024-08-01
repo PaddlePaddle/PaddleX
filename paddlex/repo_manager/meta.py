@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 __all__ = ['get_all_repo_names']
 
 REPO_NAMES = [
@@ -25,7 +23,7 @@ REPO_META = {
     'PaddleSeg': {
         'repo_url': '/PaddlePaddle/PaddleSeg.git',
         'platform': 'github',
-        'branch': 'release/2.9.1',
+        'branch': 'develop',
         'pkg_name': 'paddleseg',
         'lib_name': 'paddleseg',
         'pdx_pkg_name': 'PaddleSeg_api',
@@ -36,7 +34,7 @@ REPO_META = {
     'PaddleClas': {
         'repo_url': '/PaddlePaddle/PaddleClas.git',
         'platform': 'github',
-        'branch': 'release/2.5.2',
+        'branch': 'develop',
         'pkg_name': 'paddleclas',
         'lib_name': 'paddleclas',
         'pdx_pkg_name': 'PaddleClas_api',
@@ -48,7 +46,7 @@ REPO_META = {
     'PaddleDetection': {
         'repo_url': '/PaddlePaddle/PaddleDetection.git',
         'platform': 'github',
-        'branch': 'release/2.7.1',
+        'branch': 'develop',
         'pkg_name': 'paddledet',
         'lib_name': 'ppdet',
         'pdx_pkg_name': 'PaddleDetection_api',
@@ -58,7 +56,7 @@ REPO_META = {
     'PaddleOCR': {
         'repo_url': '/PaddlePaddle/PaddleOCR.git',
         'platform': 'github',
-        'branch': 'release/2.6.1',
+        'branch': 'main',
         'pkg_name': 'paddleocr',
         'lib_name': 'paddleocr',
         'pdx_pkg_name': 'PaddleOCR_api',
