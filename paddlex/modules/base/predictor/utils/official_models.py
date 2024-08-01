@@ -115,9 +115,36 @@ MobileNetV2_x0_25_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV2_x1_5_infer.tar",
     "MobileNetV2_x2_0":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV2_x2_0_infer.tar",
+    "MobileNetV1_x0_25":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+MobileNetV1_x0_25_infer.tar",
+    "MobileNetV1_x0_5":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+MobileNetV1_x0_5_infer.tar",
+    "MobileNetV1_x0_75":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+MobileNetV1_x0_75_infer.tar",
+    "MobileNetV1_x1_0":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+MobileNetV1_x1_0_infer.tar",
+    "SwinTransformer_tiny_patch4_window7_224":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+SwinTransformer_tiny_patch4_window7_224_infer.tar",
+    "SwinTransformer_small_patch4_window7_224":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+SwinTransformer_small_patch4_window7_224_infer.tar",
     "SwinTransformer_base_patch4_window7_224":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
 SwinTransformer_base_patch4_window7_224_infer.tar",
+    "SwinTransformer_base_patch4_window12_384":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+SwinTransformer_base_patch4_window12_384_infer.tar",
+    "SwinTransformer_large_patch4_window7_224":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+SwinTransformer_large_patch4_window7_224_infer.tar",
+    "SwinTransformer_large_patch4_window12_384":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+SwinTransformer_large_patch4_window12_384_infer.tar",
     "PP-HGNet_small":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNet_small_infer.tar",
     "PP-HGNetV2-B0":
