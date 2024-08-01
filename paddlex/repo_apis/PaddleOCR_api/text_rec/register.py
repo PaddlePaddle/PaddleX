@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import os.path as osp
 
@@ -36,12 +35,12 @@ register_model_info({
     'model_name': 'PP-OCRv4_mobile_rec',
     'suite': 'TextRec',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-OCRv4_mobile_rec.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+    'supported_apis': ['train', 'evaluate', 'predict', 'export']
 })
 
 register_model_info({
     'model_name': 'PP-OCRv4_server_rec',
     'suite': 'TextRec',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-OCRv4_server_rec.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+    'supported_apis': ['train', 'evaluate', 'predict', 'export']
 })

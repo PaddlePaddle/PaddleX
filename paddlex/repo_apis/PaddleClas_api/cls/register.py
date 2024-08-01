@@ -37,390 +37,341 @@ register_model_info({
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR,
                             'SwinTransformer_base_patch4_window7_224.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x0_25',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x0_25.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x0_35',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x0_35.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x0_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x0_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x0_75',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x0_75.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x1_0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x1_0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x1_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x1_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x2_0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x2_0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNet_x2_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNet_x2_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNetV2_small',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNetV2_small.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNetV2_base',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNetV2_base.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-LCNetV2_large',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-LCNetV2_large.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'CLIP_vit_base_patch16_224',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'CLIP_vit_base_patch16_224.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'CLIP_vit_large_patch14_224',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'CLIP_vit_large_patch14_224.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-HGNet_small',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNet_small.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-HGNetV2-B0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-HGNetV2-B4',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B4.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'PP-HGNetV2-B6',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B6.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet18',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet18.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet18_vd',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet18_vd.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet34',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet34.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet34_vd',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet34_vd.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet50',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet50.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet50_vd',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet50_vd.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet101',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet101.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet101_vd',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet101_vd.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet152',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet152.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet152_vd',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet152_vd.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ResNet200_vd',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet200_vd.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV2_x0_25',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV2_x0_25.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV2_x0_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV2_x0_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV2_x1_0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV2_x1_0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV2_x1_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV2_x1_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV2_x2_0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV2_x2_0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_large_x0_35',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_large_x0_35.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_large_x0_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_large_x0_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_large_x0_75',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_large_x0_75.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_large_x1_0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_large_x1_0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_large_x1_25',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_large_x1_25.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_small_x0_35',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_small_x0_35.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_small_x0_5',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_small_x0_5.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_small_x0_75',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_small_x0_75.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_small_x1_0',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_small_x1_0.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'MobileNetV3_small_x1_25',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV3_small_x1_25.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ConvNeXt_tiny',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_tiny.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ConvNeXt_small',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_small.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ConvNeXt_base_224',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_base_224.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ConvNeXt_base_384',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_base_384.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
 register_model_info({
     'model_name': 'ConvNeXt_large_224',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_large_384.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
-    'infer_config': 'deploy/configs/inference_cls.yaml'
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
