@@ -54,6 +54,11 @@ def args_cfg():
         dest='reinstall',
         action='store_true',
         help="Whether to reinstall all packages.")
+    parser.add_argument(
+        '--use_local_repos',
+        action='store_true',
+        default=False,
+        help="Use local repos when installing.")
 
     ################# pipeline predict #################
     parser.add_argument('--predict', action='store_true', default=True, help="")
@@ -83,7 +88,8 @@ def install(args):
         reinstall=args.reinstall or None,
         no_deps=args.no_deps,
         platform=args.platform,
-        update_repos=args.update_repos)
+        update_repos=args.update_repos,
+        use_local_repos=args.use_local_repos)
     return
 
 

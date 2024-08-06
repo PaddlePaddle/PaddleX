@@ -3,9 +3,9 @@ PyYAML
 filelock
 ruamel.yaml
 chardet
-numpy==1.23.5
-matplotlib==3.5.2
-opencv-python==4.5.5.64
+numpy
+matplotlib
+opencv-python
 pycocotools
 tqdm
 pyclipper
