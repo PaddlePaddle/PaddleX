@@ -33,11 +33,56 @@ register_suite_info({
 
 ################ Models Using Universal Config ################
 register_model_info({
+    'model_name': 'SwinTransformer_tiny_patch4_window7_224',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR,
+                            'SwinTransformer_tiny_patch4_window7_224.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'SwinTransformer_small_patch4_window7_224',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR,
+                            'SwinTransformer_small_patch4_window7_224.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
     'model_name': 'SwinTransformer_base_patch4_window7_224',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR,
                             'SwinTransformer_base_patch4_window7_224.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'SwinTransformer_base_patch4_window12_384',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR,
+                            'SwinTransformer_base_patch4_window12_384.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'SwinTransformer_large_patch4_window7_224',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR,
+                            'SwinTransformer_large_patch4_window7_224.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'SwinTransformer_large_patch4_window12_384',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR,
+                            'SwinTransformer_large_patch4_window12_384.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
 })
 
 register_model_info({
@@ -234,6 +279,38 @@ register_model_info({
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ResNet200_vd.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'MobileNetV1_x0_25',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV1_x0_25.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'MobileNetV1_x0_5',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV1_x0_5.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'MobileNetV1_x0_75',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV1_x0_75.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
+})
+
+register_model_info({
+    'model_name': 'MobileNetV1_x1_0',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'MobileNetV1_x1_0.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'infer_config': 'deploy/configs/inference_cls.yaml'
 })
 
 register_model_info({

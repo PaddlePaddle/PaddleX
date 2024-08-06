@@ -29,7 +29,14 @@
 | PP-LCNetV2_small | [PP-LCNetV2_small.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_small.yaml)|
 | PP-LCNetV2_base | [PP-LCNetV2_base.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_base.yaml)|
 | PP-LCNetV2_large | [PP-LCNetV2_large.yaml](../../../paddlex/configs/image_classification/PP-LCNetV2_large.yaml)|
-### 3.MobileNetV2 系列
+### 3.MobileNetV1 系列
+| 模型名称 | config |
+| :--- | :---: |
+| MobileNetV1_x0_25 | [MobileNetV1_x0_25.yaml](../../../paddlex/configs/image_classification/MobileNetV1_x0_25.yaml)|
+| MobileNetV1_x0_5 | [MobileNetV1_x0_5.yaml](../../../paddlex/configs/image_classification/MobileNetV1_x0_5.yaml)|
+| MobileNetV1_x0_75 | [MobileNetV1_x0_75.yaml](../../../paddlex/configs/image_classification/MobileNetV1_x0_75.yaml)|
+| MobileNetV1_x1_0 | [MobileNetV1_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV1_x1_0.yaml)|
+### 4.MobileNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | MobileNetV2_x0_25 | [MobileNetV2_x0_25.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x0_25.yaml)|
@@ -37,7 +44,7 @@
 | MobileNetV2_x1_0 | [MobileNetV2_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x1_0.yaml)|
 | MobileNetV2_x1_5 | [MobileNetV2_x1_5.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x1_5.yaml)|
 | MobileNetV2_x2_0 | [MobileNetV2_x2_0.yaml](../../../paddlex/configs/image_classification/MobileNetV2_x2_0.yaml)|
-### 4.MobileNetV3 系列
+### 5.MobileNetV3 系列
 | 模型名称 | config |
 | :--- | :---: |
 | MobileNetV3_small_x0_35 | [MobileNetV3_small_x0_35.yaml](../../../paddlex/configs/image_classification/MobileNetV3_small_x0_35.yaml)|
@@ -50,22 +57,22 @@
 | MobileNetV3_large_x0_75 | [MobileNetV3_large_x0_75.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x0_75.yaml)|
 | MobileNetV3_large_x1_0 | [MobileNetV3_large_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x1_0.yaml)|
 | MobileNetV3_large_x1_25 | [MobileNetV3_large_x1_25.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x1_25.yaml)|
-### 5.PP-HGNet 系列
+### 6.PP-HGNet 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNet_small | [PP-HGNet_small.yaml](../../../paddlex/configs/image_classification/PP-HGNet_small.yaml)|
-### 6.PP-HGNetV2 系列
+### 7.PP-HGNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNetV2-B0 | [PP-HGNetV2-B0.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B0.yaml)|
 | PP-HGNetV2-B4 | [PP-HGNetV2-B4.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B4.yaml)|
 | PP-HGNetV2-B6 | [PP-HGNetV2-B6.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B6.yaml)|
-### 7.CLIP 系列
+### 8.CLIP 系列
 | 模型名称 | config |
 | :--- | :---: |
 | CLIP_vit_base_patch16_224 | [CLIP_vit_base_patch16_224.yaml](../../../paddlex/configs/image_classification/CLIP_vit_base_patch16_224.yaml)|
 | CLIP_vit_large_patch14_224 | [CLIP_vit_large_patch14_224.yaml](../../../paddlex/configs/image_classification/CLIP_vit_large_patch14_224.yaml)|
-### 8.ConvNeXt 系列
+### 9.ConvNeXt 系列
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
@@ -74,10 +81,15 @@
 | ConvNeXt_base_384 | [ConvNeXt_base_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_base_384.yaml)|
 | ConvNeXt_large_224 | [ConvNeXt_large_224.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_224.yaml)|
 | ConvNeXt_large_384 | [ConvNeXt_large_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_384.yaml)|
-### 9.SwinTransformer系列
+### 10.SwinTransformer系列
 | 模型名称 | config |
 | :--- | :---: |
+| SwinTransformer_tiny_patch4_window7_224 | [SwinTransformer_tiny_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_tiny_patch4_window7_224.yaml)|
+| SwinTransformer_small_patch4_window7_224 | [SwinTransformer_small_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_small_patch4_window7_224.yaml)|
 | SwinTransformer_base_patch4_window7_224 | [SwinTransformer_base_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window7_224.yaml)|
+| SwinTransformer_base_patch4_window12_384 | [SwinTransformer_base_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window12_384.yaml)|
+| SwinTransformer_large_patch4_window7_224 | [SwinTransformer_large_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window7_224.yaml)|
+| SwinTransformer_large_patch4_window12_384 | [SwinTransformer_large_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window12_384.yaml)|
 ## 二、目标检测
 ### 1. PP-YOLOE_plus 系列
 | 模型名称 | config |
