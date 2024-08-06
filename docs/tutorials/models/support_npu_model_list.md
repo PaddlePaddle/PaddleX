@@ -57,6 +57,10 @@
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
+### 9.CLIP 系列
+| 模型名称 | config |
+| :--- | :---: |
+| CLIP_vit_base_patch16_224 | [CLIP_vit_base_patch16_224.yaml](../../../paddlex/configs/image_classification/CLIP_vit_base_patch16_224.yaml)|
 
 ## 二、目标检测
 ### 1. PP-YOLOE_plus系列
@@ -92,9 +96,36 @@
 | 模型名称 | config |
 | :--- | :---: |
 | PP-LiteSeg-T | [PP-LiteSeg-T.yaml](../../../paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml)|
+### 3.OCRNet 系列
+| 模型名称 | config |
+| :--- | :---: |
+| OCRNet_HRNet-W48 | [OCRNet_HRNet-W48.yaml](../../../paddlex/configs/semantic_segmentation/OCRNet_HRNet-W48.yaml)|
 
-## 四、时序预测
+## 四、文本检测
+### 1.PP-OCRv4 系列
+| 模型名称 | config |
+| :--- | :---: |
+| PP-OCRv4_server_det | [PP-OCRv4_server_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_server_det.yaml)|
+| PP-OCRv4_mobile_det | [PP-OCRv4_mobile_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml)|
+
+## 五、文本识别
+### 1.PP-OCRv4 系列
+| 模型名称 | config |
+| :--- | :---: |
+| PP-OCRv4_server_rec | [PP-OCRv4_server_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml)|
+| PP-OCRv4_mobile_rec | [PP-OCRv4_mobile_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml)|
+
+## 六、版面分析
+| 模型名称 | config |
+| :--- | :---: |
+| PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
+
+## 七、时序预测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear | [DLinear.yaml](../../../paddlex/configs/ts_forecast/DLinear.yaml)|
+| RLinear | [RLinear.yaml](../../../paddlex/configs/ts_forecast/RLinear.yaml)|
 | NLinear | [NLinear.yaml](../../../paddlex/configs/ts_forecast/NLinear.yaml)|
+| TimesNet | [TimesNet.yaml](../../../paddlex/configs/ts_forecast/TimesNet.yaml)|
+| Nonstationary | [Nonstationary.yaml](../../../paddlex/configs/ts_forecast/Nonstationary.yaml)|
+| TiDE | [TiDE.yaml](../../../paddlex/configs/ts_forecast/TiDE.yaml)|
