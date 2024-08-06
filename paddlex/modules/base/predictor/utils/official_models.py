@@ -251,6 +251,15 @@ PP-OCRv4_server_det_infer.tar",
     "PP-OCRv4_mobile_det":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
 PP-OCRv4_mobile_det_infer.tar",
+    "RepSVTR_mobile_det":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+openatom_det_repsvtr_ch_infer.tar",
+    "RepSVTR_mobile_rec":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+openatom_rec_repsvtr_ch_infer.tar",
+    "SVTRv2_server_rec":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+openatom_rec_svtrv2_ch_infer.tar",
     "PicoDet_layout_1x":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-L_layout_infer.tar",
     "SLANet":
