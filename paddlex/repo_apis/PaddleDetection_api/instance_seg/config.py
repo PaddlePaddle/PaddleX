@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from ...base import BaseConfig
 from ....utils.misc import abspath
 from ..config_helper import PPDetConfigMixin
@@ -278,6 +277,23 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
             save_interval (int): the save interval value to set.
         """
         self.update({'snapshot_epoch': save_interval})
+
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
+        """
+        log_ranks = device.split(':')[1]
+        self.update({'log_ranks': log_ranks})
+
+    def enable_print_mem_info(self):
+        """print memory info"""
+        self.update({'print_mem_info': True})
+
+    def disable_print_mem_info(self):
+        """do not print memory info"""
+        self.update({'print_mem_info': False})
 
     def update_weights(self, weight_path: str):
         """update model weight

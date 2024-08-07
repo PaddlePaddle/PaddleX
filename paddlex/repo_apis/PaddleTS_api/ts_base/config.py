@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 from urllib.parse import urlparse
 
@@ -132,6 +131,23 @@ class BaseTSConfig(BaseConfig):
                 raise TypeError("`weight_path` must be string or None.")
 
         self.model['pretrain'] = weight_path
+
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
+        """
+        # PaddleTS does not support multi-device training currently.
+        pass
+
+    def enable_print_mem_info(self):
+        """print memory info"""
+        self.update({'print_mem_info': True})
+
+    def disable_print_mem_info(self):
+        """do not print memory info"""
+        self.update({'print_mem_info': False})
 
     def update_dataset(self, dataset_dir: str, dataset_type: str=None):
         """update dataset settings
