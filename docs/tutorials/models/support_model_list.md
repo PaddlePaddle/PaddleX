@@ -60,12 +60,18 @@
 ### 6.PP-HGNet 系列
 | 模型名称 | config |
 | :--- | :---: |
+| PP-HGNet_tiny | [PP-HGNet_tiny.yaml](../../../paddlex/configs/image_classification/PP-HGNet_tiny.yaml)|
 | PP-HGNet_small | [PP-HGNet_small.yaml](../../../paddlex/configs/image_classification/PP-HGNet_small.yaml)|
+| PP-HGNet_base | [PP-HGNet_base.yaml](../../../paddlex/configs/image_classification/PP-HGNet_base.yaml)|
 ### 7.PP-HGNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNetV2-B0 | [PP-HGNetV2-B0.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B0.yaml)|
+| PP-HGNetV2-B1 | [PP-HGNetV2-B1.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B1.yaml)|
+| PP-HGNetV2-B2 | [PP-HGNetV2-B2.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B2.yaml)|
+| PP-HGNetV2-B3 | [PP-HGNetV2-B3.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B3.yaml)|
 | PP-HGNetV2-B4 | [PP-HGNetV2-B4.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B4.yaml)|
+| PP-HGNetV2-B5 | [PP-HGNetV2-B5.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B5.yaml)|
 | PP-HGNetV2-B6 | [PP-HGNetV2-B6.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B6.yaml)|
 ### 8.CLIP 系列
 | 模型名称 | config |

@@ -177,9 +177,23 @@ register_model_info({
 })
 
 register_model_info({
+    'model_name': 'PP-HGNet_tiny',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNet_tiny.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
     'model_name': 'PP-HGNet_small',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNet_small.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'PP-HGNet_base',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNet_base.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
@@ -191,9 +205,37 @@ register_model_info({
 })
 
 register_model_info({
+    'model_name': 'PP-HGNetV2-B1',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B1.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'PP-HGNetV2-B2',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B2.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'PP-HGNetV2-B3',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B3.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
     'model_name': 'PP-HGNetV2-B4',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B4.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'PP-HGNetV2-B5',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-HGNetV2-B5.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export'],
 })
 
