@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -51,6 +50,9 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
 
         self.deamon = self.build_deamon(self.global_config)
         self.pdx_config, self.pdx_model = build_model(self.global_config.model)
+        #TODO: Control by configuration to support benchmark
+        self.pdx_config.update_log_ranks(self.get_device())
+        self.pdx_config.disable_print_mem_info()
 
     def train(self, *args, **kwargs):
         """execute model training

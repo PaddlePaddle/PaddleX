@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 import yaml
@@ -270,6 +269,23 @@ class TextRecConfig(BaseConfig):
     #     self.update({
     #         'Global.eval_batch_step': [eval_start_step, eval_interval]
     #     })
+
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
+        """
+        log_ranks = device.split(':')[1]
+        self.update({'Global.log_ranks': log_ranks})
+
+    def enable_print_mem_info(self):
+        """print memory info"""
+        self.update({'Global.print_mem_info': True})
+
+    def disable_print_mem_info(self):
+        """do not print memory info"""
+        self.update({'Global.print_mem_info': False})
 
     def _update_eval_interval_by_epoch(self, eval_interval):
         """update eval interval(by epoch)

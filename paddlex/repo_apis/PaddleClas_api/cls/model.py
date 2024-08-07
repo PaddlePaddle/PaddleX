@@ -66,8 +66,6 @@ class ClsModel(BaseModel):
             config.update_device(device)
             config._update_to_static(dy2st)
             config._update_use_vdl(use_vdl)
-            config.update_log_ranks(device)
-            config.enable_print_mem_info()
 
             if batch_size is not None:
                 config.update_batch_size(batch_size)

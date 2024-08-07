@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from urllib.parse import urlparse
 
 import yaml
@@ -58,6 +57,23 @@ class BaseSegConfig(BaseConfig):
         else:
             raise ValueError(
                 f"Setting `batch_size` in {repr(mode)} mode is not supported.")
+
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
+        """
+        log_ranks = device.split(':')[1]
+        self.set_val('log_ranks', log_ranks)
+
+    def enable_print_mem_info(self):
+        """print memory info"""
+        self.set_val('print_mem_info', True)
+
+    def disable_print_mem_info(self):
+        """do not print memory info"""
+        self.set_val('print_mem_info', False)
 
     def update_pretrained_weights(self, weight_path, is_backbone=False):
         """ update_pretrained_weights """
