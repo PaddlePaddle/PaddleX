@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import os
 import sys
@@ -149,7 +147,7 @@ def download_and_extract(url,
                          overwrite=False,
                          no_interm_dir=True):
     """ download and extract """
-    # NOTE: `url` MUST come from a trusted source, since we do not provide a solution 
+    # NOTE: `url` MUST come from a trusted source, since we do not provide a solution
     # to secure against CVE-2007-4559.
     os.makedirs(save_dir, exist_ok=True)
     dst_path = os.path.join(save_dir, dst_name)
@@ -174,7 +172,7 @@ def download_and_extract(url,
                     raise FileNotFoundError
                 dp = os.path.join(save_dir, file_name)
                 if os.path.isdir(sp):
-                    shutil.copytree(sp, dp)
+                    shutil.copytree(sp, dp, symlinks=True)
                 else:
                     shutil.copyfile(sp, dp)
                 extd_file = dp
