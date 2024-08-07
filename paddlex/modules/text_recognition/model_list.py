@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 MODELS = [
     'PP-OCRv4_mobile_rec',
     'PP-OCRv4_server_rec',
+    'SVTRv2_server_rec',
+    'RepSVTR_mobile_rec',
 ]

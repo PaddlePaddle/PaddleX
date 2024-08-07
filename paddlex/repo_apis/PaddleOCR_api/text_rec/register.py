@@ -44,3 +44,17 @@ register_model_info({
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-OCRv4_server_rec.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export']
 })
+
+register_model_info({
+    'model_name': 'SVTRv2_server_rec',
+    'suite': 'TextRec',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'SVTRv2_server_rec.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
+
+register_model_info({
+    'model_name': 'RepSVTR_mobile_rec',
+    'suite': 'TextRec',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'RepSVTR_mobile_rec.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
+})
