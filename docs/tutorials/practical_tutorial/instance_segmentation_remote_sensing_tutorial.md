@@ -23,7 +23,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/8a89580b-7103-48db-aae0-192102dabdf7" width=600>
+  <img src="https://github.com/user-attachments/assets/ebf9b8b7-fc38-4ce5-b8c2-07501e2de6e6" width=600>
 
   </center>
 
