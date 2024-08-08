@@ -128,6 +128,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
                 model_info = get_registered_model_info(self.model_name)
                 config_path = model_info['config_path']
             self.load(config_path)
+            # raise ValueError("loading config")
 
     def update_device(self, device):
         """Update the device"""

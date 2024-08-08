@@ -21,8 +21,9 @@ from .....utils import logging
 class _PaddleInferencePredictor(object):
     """ Predictor based on Paddle Inference """
 
-    def __init__(self, param_path, model_path, option, delete_pass=[]):
+    def __init__(self, param_path, model_path, model_name, option, delete_pass=[]):
         super().__init__()
+        self.model_name = model_name
         self.predictor, self.inference_config, self.input_names, self.input_handlers, self.output_handlers = \
 self._create(param_path, model_path, option, delete_pass=delete_pass)
 
@@ -41,7 +42,8 @@ self._create(param_path, model_path, option, delete_pass=delete_pass)
 
         if option.device == 'gpu':
             config.enable_use_gpu(200, option.device_id)
-            config.enable_new_ir(True)
+            if not self.model_name == 'LaTeX_OCR_rec':
+                config.enable_new_ir(True) #raise bug for LaTeXOCR
         elif option.device == 'npu':
             config.enable_custom_device('npu')
             os.environ["FLAGS_npu_jit_compile"] = "0"
@@ -79,7 +81,6 @@ self._create(param_path, model_path, option, delete_pass=delete_pass)
                 precision_mode=precision_map[option.run_mode],
                 trt_use_static=option.trt_use_static,
                 use_calib_mode=option.trt_calib_mode)
-
             if option.shape_info_filename is not None:
                 if not os.path.exists(option.shape_info_filename):
                     config.collect_shape_range_info(option.shape_info_filename)

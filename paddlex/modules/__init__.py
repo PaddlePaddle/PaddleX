@@ -19,6 +19,7 @@ from .image_classification import ClsDatasetChecker, ClsTrainer, ClsEvaluator, C
 from .object_detection import COCODatasetChecker, DetTrainer, DetEvaluator, DetPredictor
 from .text_detection import TextDetDatasetChecker, TextDetTrainer, TextDetEvaluator, TextDetPredictor
 from .text_recognition import TextRecDatasetChecker, TextRecTrainer, TextRecEvaluator, TextRecPredictor
+from .formula_recognition import FormulaRecTrainer, FormulaRecEvaluator, FormulaRecPredictor
 from .table_recognition import TableRecDatasetChecker, TableRecTrainer, TableRecEvaluator, TableRecPredictor
 from .semantic_segmentation import SegDatasetChecker, SegTrainer, SegEvaluator, SegPredictor
 from .instance_segmentation import COCOInstSegDatasetChecker, InstanceSegTrainer, InstanceSegEvaluator, \

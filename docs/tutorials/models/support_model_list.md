@@ -123,11 +123,16 @@
 | :--- | :---: |
 | PP-OCRv4_server_rec | [PP-OCRv4_server_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml)|
 | PP-OCRv4_mobile_rec | [PP-OCRv4_mobile_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml)|
-## 八、版面分析
+## 八、公式识别
+| 模型名称 | config |
+| :--- | :---: |
+| LaTeX_OCR_rec | [rec_latex_ocr.yml](../../../paddlex/configs/formula_recognition/rec_latex_ocr.yml)|
+
+## 九、版面分析
 | 模型名称 | config |
 | :--- | :---: |
 | PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
-## 九、时序异常检测
+## 十、时序异常检测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear_ad | [DLinear_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml)|
@@ -135,11 +140,11 @@
 | TimesNet_ad | [TimesNet_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/TimesNet_ad.yaml)|
 | AutoEncoder_ad | [AutoEncoder_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml)|
 | Nonstationary_ad | [Nonstationary_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/Nonstationary_ad.yaml)|
-## 十、时序分类
+## 十一、时序分类
 | 模型名称 | config |
 | :--- | :---: |
 | TimesNet_cls | [TimesNet_cls.yaml](../../../paddlex/configs/ts_classification/TimesNet_cls.yaml)|
-## 十一、时序预测
+## 十二、时序预测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear | [DLinear.yaml](../../../paddlex/configs/ts_forecast/DLinear.yaml)|
