@@ -1,10 +1,10 @@
-# PaddleX 3.0 通用OCR模型产线———新能源车牌识文本检测教程
+# PaddleX 3.0 通用OCR模型产线———车牌识别教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ PaddleX 安装](../INSTALL.md)。此处以一个新能源车牌识文本检测的任务为例子，介绍模型产线工具的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ PaddleX 安装](../INSTALL.md)。此处以一个车牌识别的任务为例子，介绍模型产线工具的使用流程。
 
 ## 1. 选择产线
 
-首先，需要根据您的任务场景，选择对应的 PaddleX 产线，此处为新能源车牌识文本检测，需要了解到这个任务属于文本检测任务，对应 PaddleX 的通用OCR产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[模型产线列表](../pipelines/support_pipeline_list.md)中了解相关产线的能力介绍。
+首先，需要根据您的任务场景，选择对应的 PaddleX 产线，此处为车牌识别，需要了解到这个任务属于文本检测任务，对应 PaddleX 的通用OCR产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[模型产线列表](../pipelines/support_pipeline_list.md)中了解相关产线的能力介绍。
 
 
 ## 2. 快速体验
@@ -14,7 +14,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   - 本地体验方式：
     ```bash
     paddlex --pipeline OCR \
-        --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec \
+        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
         --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg
     ```
 
@@ -38,13 +38,13 @@ PaddleX 提供了 2 个端到端的文本检测模型，具体可参考 [模型�
 | PP-OCRv4_server	| 82.69       | 79.20               | 	22.20346	    | 2662.158        | 	        198 |
 | PP-OCRv4_mobile	| 77.79       | 78.20	              | 2.719474	      | 79.1097         | 	         15 |
 
-> **注：以上精度指标为 PaddleOCR 自建中文数据集验证集 检测Hmean 和 识别 Avg Accuracy，GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
-简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 `PP-OCRv4_mobile` 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
+**注：以上精度指标为 PaddleOCR 自建中文数据集验证集 检测Hmean 和 识别 Avg Accuracy，GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
+简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 `PP-OCRv4_server` 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
 
 ## 4. 数据准备和校验
 ### 4.1 数据准备
 
-本教程采用 `新能源车牌识文本检测数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 数据格式介绍](../data/dataset_format.md)。如果您有一批待标注数据，可以参考 [通用OCR数据标注指南](../data/annotation/OCRAnnoTools.md) 完成数据标注。
+本教程采用 `车牌识别数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 数据格式介绍](../data/dataset_format.md)。如果您有一批待标注数据，可以参考 [通用OCR数据标注指南](../data/annotation/OCRAnnoTools.md) 完成数据标注。
 
 数据集获取命令：
 ```bash
@@ -58,7 +58,7 @@ tar -xf ./dataset/ccpd_text_det.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -141,7 +141,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -178,7 +178,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -217,23 +217,23 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 | 5	 | 20	 | 99.80   |
 </center>
 
-** 注：本教程为 4 卡教程，如果您只有 1 张 GPU，可通过调整训练卡数完成本次实验，但最终指标未必和上述指标对齐，属正常情况。**
+**注：本教程为 4 卡教程，如果您只有 1 张 GPU，可通过调整训练卡数完成本次实验，但最终指标未必和上述指标对齐，属正常情况。**
 
 ## 6. 产线测试
 
 将产线中的模型替换为微调后的模型进行测试，如：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
-    -o Global.mode=predict \
-    -o Predict.model_dir="output/best_accuracy" \
-    -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg"
+paddlex --pipeline OCR \
+        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
+        --model_dir output/best_accuracy None \
+        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg
 ```
 
 通过上述可在`./output`下生成预测结果，其中`case1.jpg`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/15df0662-fed8-477d-842d-e342a9e6cc34" width="600"/>
+<img src="https://github.com/user-attachments/assets/051c0946-741c-4244-9d74-6a28095fe832" width="600"/>
 
 </center>
 
@@ -245,13 +245,12 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 from paddlex import OCRPipeline
 from paddlex import PaddleInferenceOption
 
-text_det_model_name = "PP-OCRv4_mobile_det"
-text_rec_model_name = "PP-OCRv4_mobile_rec"
+text_det_model_name = "PP-OCRv4_server_det"
+text_rec_model_name = "PP-OCRv4_server_rec"
 
 text_det_model_dir = "./output/best_model_det"
-text_rec_model_dir = "./output/best_model_rec"
 
-pipeline = OCRPipeline(text_det_model_name, text_rec_model_name, text_det_model_dir, text_rec_model_dir, PaddleInferenceOption(), PaddleInferenceOption())
+pipeline = OCRPipeline(text_det_model_name=text_det_model_name, text_rec_model_name=text_rec_model_name, text_det_model_dir=text_det_model_dir, text_det_kernel_option=PaddleInferenceOption(), text_rec_kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
         {'input_path': "./dataset/ccpd_text_det/images/0243359375-92_266-236&396_503&488-499&488_236&486_244&396_503&407-0_0_3_24_26_32_29_33-109-97.jpg"}
     )

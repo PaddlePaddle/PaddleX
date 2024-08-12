@@ -14,7 +14,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   - 本地体验方式：
     ```bash
     paddlex --pipeline OCR \
-        --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec \
+        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
         --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png
     ```
 
@@ -38,8 +38,8 @@ PaddleX 提供了 2 个端到端的OCR模型，具体可参考 [模型列表](..
 |PP-OCRv4_server | 	82.69	 | 79.20	 | 22.20346	 | 2662.158	 | 198|
 |PP-OCRv4_mobile	 | 77.79	 | 78.20 | 	2.719474 | 	79.1097	 | 15|
 
-> **注：评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含1.1w张图片，检测包含500张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32**
-简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 `PP-OCRv4_mobile` 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
+**注：评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含1.1w张图片，检测包含500张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32**
+简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 `PP-OCRv4_server` 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
 
 ## 4. 数据准备和校验
 ### 4.1 数据准备
@@ -58,7 +58,7 @@ tar -xf ./dataset/handwrite_chinese_text_rec.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/handwrite_chinese_text_rec
 ```
@@ -141,7 +141,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/handwrite_chinese_text_rec
 ```
@@ -178,7 +178,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/handwrite_chinese_text_rec
 ```
@@ -219,17 +219,17 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 | 7	 |	80	 |	54.35|
 </center>
 
-** 注：本教程为 4 卡教程，如果您只有 1 张 GPU，可通过调整训练卡数完成本次实验，但最终指标未必和上述指标对齐，属正常情况。**
+**注：本教程为 4 卡教程，如果您只有 1 张 GPU，可通过调整训练卡数完成本次实验，但最终指标未必和上述指标对齐，属正常情况。**
 
 ## 6. 产线测试
 
 将产线中的模型替换为微调后的模型进行测试，如：
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
-    -o Global.mode=predict \
-    -o Predict.model_dir="output/best_accuracy" \
-    -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png"
+paddlex --pipeline OCR \
+        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
+        --model_dir None output/best_accuracy \
+        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png
 ```
 
 通过上述可在`./output`下生成预测结果，其中`case.jpg`的预测结果如下：
@@ -247,13 +247,12 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 from paddlex import OCRPipeline
 from paddlex import PaddleInferenceOption
 
-text_det_model_name = "PP-OCRv4_mobile_det"
-text_rec_model_name = "PP-OCRv4_mobile_rec"
+text_det_model_name = "PP-OCRv4_server_det"
+text_rec_model_name = "PP-OCRv4_server_rec"
 
-text_det_model_dir = "./output/best_model_det"
 text_rec_model_dir = "./output/best_model_rec"
 
-pipeline = OCRPipeline(text_det_model_name, text_rec_model_name, text_det_model_dir, text_rec_model_dir, PaddleInferenceOption(), PaddleInferenceOption())
+pipeline = OCRPipeline(text_det_model_name=text_det_model_name, text_rec_model_name=text_rec_model_name, text_rec_model_dir=text_rec_model_dir, text_det_kernel_option=PaddleInferenceOption(), text_rec_kernel_option=PaddleInferenceOption())
 result = pipeline.predict(
         {'input_path': "./dataset/handwrite_chinese_text_rec/test_data/006-P16_9.jpg"}
     )
