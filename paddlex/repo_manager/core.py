@@ -14,10 +14,11 @@
 
 import os
 import sys
+from pathlib import Path
 from collections import OrderedDict
 
 from ..utils import logging
-from .utils import install_deps_using_pip
+from .utils import install_packages_using_pip
 from .meta import get_all_repo_names, get_repo_meta
 from .repo import build_repo_instance, build_repo_group_getter, build_repo_group_installer
 
@@ -190,9 +191,13 @@ def setup(repo_names,
         logging.info(installer.get_deps())
 
     logging.info("Now installing the packages...")
-    install_deps_using_pip()
+    if update_repos:
+        installer.update()
+        logging.info("All repos are updated.")
     installer.install(
         force_reinstall=False, no_deps=no_deps, constraints=constraints)
+    pdx_req_file = Path(__file__).parent.parent.parent / "requirements.txt"
+    install_packages_using_pip([], req_files=[pdx_req_file])
     logging.info("All packages are installed.")
 
 

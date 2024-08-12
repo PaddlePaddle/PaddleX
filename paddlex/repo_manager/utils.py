@@ -68,16 +68,8 @@ def install_packages_using_pip(pkgs,
     return _check_call(args)
 
 
-def install_deps_using_pip():
-    """ install requirements """
-    current_file_path = os.path.dirname(os.path.abspath(__file__))
-    deps_path = os.path.join(current_file_path, 'requirements.txt')
-    args = [sys.executable, '-m', 'pip', 'install', '-r', deps_path]
-    return _check_call(args)
-
-
-def clone_repo_using_git(url, branch=None):
-    """ clone_repo_using_git """
+def clone_repos_using_git(url, branch=None):
+    """ clone_repos_using_git """
     args = ['git', 'clone', '--depth', '1']
     if isinstance(url, str):
         url = [url]
