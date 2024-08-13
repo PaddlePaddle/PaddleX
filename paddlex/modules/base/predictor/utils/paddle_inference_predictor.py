@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import paddle
 from paddle.inference import Config, create_predictor
 
 from .....utils import logging
