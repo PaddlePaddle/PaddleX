@@ -120,7 +120,6 @@ HybridEncoder:
     dim_feedforward: 1024
     dropout: 0.
     activation: 'gelu'
-  expansion: 0.5
   depth_mult: 1.0
 
 RTDETRTransformer:

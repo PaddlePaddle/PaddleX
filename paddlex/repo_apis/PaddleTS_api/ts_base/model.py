@@ -103,7 +103,7 @@ class TSModel(BaseModel):
                 cli_args.append(CLIArgument('--num_workers', num_workers))
             if envs is not None:
                 for env_name, env_value in envs.items():
-                    os.environ[env_name] = env_value
+                    os.environ[env_name] = str(env_value)
         else:
             if num_workers is not None:
                 cli_args.append(CLIArgument('--num_workers', num_workers))

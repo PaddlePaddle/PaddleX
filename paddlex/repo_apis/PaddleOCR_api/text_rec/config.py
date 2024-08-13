@@ -307,8 +307,8 @@ class TextRecConfig(BaseConfig):
         """
         assert isinstance(shuffle, bool), "shuffle should be a bool"
         _cfg = {
-            f'Train.loader.shuffle': f'{shuffle}',
-            f'Train.loader.shuffle': f'{shuffle}',
+            f'Train.loader.shuffle': shuffle,
+            f'Train.loader.shuffle': shuffle,
         }
         self.update(_cfg)
 
@@ -327,7 +327,7 @@ class TextRecConfig(BaseConfig):
             seed (int): the random seed value to set
         """
         assert isinstance(seed, int), "seed should be an int"
-        self.update({'Global.seed': f'{seed}'})
+        self.update({'Global.seed': seed})
 
     def _update_eval_interval_by_epoch(self, eval_interval):
         """update eval interval(by epoch)

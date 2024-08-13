@@ -147,7 +147,7 @@ class SegModel(BaseModel):
                 cli_args.append(CLIArgument('--amp_level', amp))
             if envs is not None:
                 for env_name, env_value in envs.items():
-                    os.environ[env_name] = env_value
+                    os.environ[env_name] = str(env_value)
         else:
             if amp is not None:
                 if amp != 'OFF':
