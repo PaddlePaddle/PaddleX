@@ -28,7 +28,7 @@ def args_cfg():
 
     def parse_str(s):
         """convert str type value
-           to None type if it is "None", 
+           to None type if it is "None",
            to bool type if it means True or False.
         """
         if s in ("None"):
@@ -54,6 +54,7 @@ def args_cfg():
         dest='reinstall',
         action='store_true',
         help="Whether to reinstall all packages.")
+    parser.add_argument('--force_clone', action='store_true', default=False)
 
     ################# pipeline predict #################
     parser.add_argument('--predict', action='store_true', default=True, help="")
@@ -83,7 +84,8 @@ def install(args):
         reinstall=args.reinstall or None,
         no_deps=args.no_deps,
         platform=args.platform,
-        update_repos=args.update_repos)
+        update_repos=args.update_repos,
+        force_clone=args.force_clone)
     return
 
 
