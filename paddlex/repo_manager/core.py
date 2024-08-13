@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -89,7 +89,8 @@ def setup(repo_names,
           constraints=None,
           platform=None,
           update_repos=False,
-          use_local_repos=False):
+          use_local_repos=False,
+          force_clone=False):
     """ setup """
     repo_names = list(set(_parse_repo_deps(repo_names)))
 
@@ -162,7 +163,7 @@ def setup(repo_names,
     installer = build_repo_group_installer(*repos_to_install)
 
     logging.info("Now cloning the repos...")
-    cloner.clone(force_reclone=False, platform=platform)
+    cloner.clone(force_clone=force_clone, platform=platform)
     logging.info("All repos are existing.")
 
     if not no_deps:

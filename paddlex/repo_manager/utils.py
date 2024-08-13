@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import os
 import sys
@@ -89,10 +87,16 @@ def clone_repos_using_git(url, branch=None):
     return _check_call(args)
 
 
-def update_repos_using_git():
+def update_repos_using_git(branch=None, url=None):
     """ update_repos_using_git """
-    args = ['git', 'pull']
-    return _check_call(args)
+    if url:
+        args = ['git', 'fetch', url, branch]
+        _check_call(args)
+        args = ['git', 'merge', 'FETCH_HEAD']
+        return _check_call(args)
+    else:
+        args = ['git', 'pull']
+        return _check_call(args)
 
 
 def remove_repos_using_rm(name):
