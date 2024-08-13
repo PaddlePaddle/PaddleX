@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 import sys
 import json
@@ -28,8 +26,7 @@ def try_except_decorator(func):
     def wrap(self, *args, **kwargs):
         try:
             result = func(self, *args, **kwargs)
-            if result:
-                save_result(True, self.mode, self.output, result_dict=result)
+            save_result(True, self.mode, self.output, result_dict=result)
         except Exception as e:
             exc_type, exc_value, exc_tb = sys.exc_info()
             save_result(

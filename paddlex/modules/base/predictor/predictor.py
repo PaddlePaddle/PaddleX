@@ -178,7 +178,7 @@ class PredictorBuilderByConfig(object):
     def predict(self):
         """predict
         """
-        self.predictor.predict({'input_path': self.input_path})
+        return self.predictor.predict({'input_path': self.input_path})
 
 
 def build_predictor(*args, **kwargs):
