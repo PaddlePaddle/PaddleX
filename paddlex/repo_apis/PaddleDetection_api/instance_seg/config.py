@@ -15,9 +15,10 @@
 from ...base import BaseConfig
 from ....utils.misc import abspath
 from ..config_helper import PPDetConfigMixin
+from ..object_det.config import DetConfig
 
 
-class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
+class InstanceSegConfig(DetConfig):
     """ InstanceSegConfig """
 
     def load(self, config_path: str):
@@ -287,14 +288,6 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         log_ranks = device.split(':')[1]
         self.update({'log_ranks': log_ranks})
 
-    def enable_print_mem_info(self):
-        """print memory info"""
-        self.update({'print_mem_info': True})
-
-    def disable_print_mem_info(self):
-        """do not print memory info"""
-        self.update({'print_mem_info': False})
-
     def update_weights(self, weight_path: str):
         """update model weight
 
@@ -338,18 +331,6 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
             num_workers (int): the value of train and eval dataloader workers number to set.
         """
         self['worker_num'] = num_workers
-
-    def enable_shared_memory(self):
-        """enable shared memory setting of train and eval dataloader
-        """
-        self.update({'TrainReader': {'use_shared_memory': True}})
-        self.update({'EvalReader': {'use_shared_memory': True}})
-
-    def disable_shared_memory(self):
-        """disable shared memory setting of train and eval dataloader
-        """
-        self.update({'TrainReader': {'use_shared_memory': False}})
-        self.update({'EvalReader': {'use_shared_memory': False}})
 
     def update_static_assigner_epochs(self, static_assigner_epochs: int):
         """update static assigner epochs value

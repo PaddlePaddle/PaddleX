@@ -76,9 +76,6 @@ class DetModel(BaseModel):
             cli_args.append(CLIArgument('--resume', resume_dir))
         if dy2st:
             cli_args.append(CLIArgument('--to_static'))
-        if amp != 'OFF' and amp is not None:
-            # TODO: consider amp is O1 or O2 in ppdet
-            cli_args.append(CLIArgument('--amp'))
         if num_workers is not None:
             config.update_num_workers(num_workers)
         if save_dir is None:
@@ -91,16 +88,41 @@ class DetModel(BaseModel):
             cli_args.append(CLIArgument('--vdl_log_dir', save_dir))
 
         do_eval = kwargs.pop('do_eval', True)
+        enable_ce = kwargs.pop('enable_ce', None)
 
         profile = kwargs.pop('profile', None)
         if profile is not None:
             cli_args.append(CLIArgument('--profiler_options', profile))
 
-        enable_ce = kwargs.pop('enable_ce', None)
-        if enable_ce is not None:
-            cli_args.append(CLIArgument('--enable_ce', enable_ce))
+        # Benchmarking mode settings
+        benchmark = kwargs.pop('benchmark', None)
+        if benchmark is not None:
+            envs = benchmark.get('env', None)
+            amp = benchmark.get('amp', None)
+            do_eval = benchmark.get('do_eval', False)
+            num_workers = benchmark.get('num_workers', None)
+            config.update_log_ranks(device)
+            config.update_shuffle(benchmark.get('shuffle', False))
+            config.update_shared_memory(benchmark.get('shared_memory', True))
+            config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            if num_workers is not None:
+                config.update_num_workers(num_workers)
+            if amp == 'O1':
+                # TODO: ppdet only support ampO1
+                cli_args.append(CLIArgument('--amp'))
+            if envs is not None:
+                for env_name, env_value in envs.items():
+                    os.environ[env_name] = env_value
+            # set seed to 0 for benchmark mode by enable_ce
+            cli_args.append(CLIArgument('--enable_ce', True))
+        else:
+            if amp != 'OFF' and amp is not None:
+                # TODO: consider amp is O1 or O2 in ppdet
+                cli_args.append(CLIArgument('--amp'))
+            if enable_ce is not None:
+                cli_args.append(CLIArgument('--enable_ce', enable_ce))
 
-        self._assert_empty_kwargs(kwargs)
+            self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
