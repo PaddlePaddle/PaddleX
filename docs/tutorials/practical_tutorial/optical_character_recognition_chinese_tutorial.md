@@ -23,7 +23,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/b9bb908f-4fa0-4ffb-ac84-5478c4f87a99" width=600>
+  <img src="https://github.com/user-attachments/assets/a3210910-a76c-4552-b7a5-fe3670205584" width=600>
 
   </center>
 
@@ -235,7 +235,7 @@ paddlex --pipeline OCR \
 通过上述可在`./output`下生成预测结果，其中`case.jpg`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/7cb0c142-6b1f-4ed2-beb9-524b976013e9" width="600"/>
+<img src="https://github.com/user-attachments/assets/a0c28495-6352-4c64-b53e-9903da3e002a" width="600"/>
 
 </center>
 
