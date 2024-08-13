@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,7 +19,8 @@ import tempfile
 import shutil
 
 from ..utils import logging
-from .meta import get_repo_meta
+from ..utils.download import download_and_extract
+from .meta import get_repo_meta, REPO_DOWNLOAD_BASE
 from .utils import (install_packages_using_pip, clone_repos_using_git,
                     update_repos_using_git, uninstall_package_using_pip,
                     remove_repos_using_rm, check_installation_using_pip,
@@ -60,7 +61,7 @@ class PPRepository(object):
         self.root_dir = osp.join(repo_parent_dir, self.name)
 
         self.meta = get_repo_meta(self.name)
-        self.repo_url = self.meta['repo_url']
+        self.git_url = self.meta['git_url']
         self.pkg_name = self.meta['pkg_name']
         self.lib_name = self.meta['lib_name']
         self.pdx_mod_name = pdx_collection_mod.__name__ + '.' + self.meta[
@@ -149,19 +150,30 @@ class PPRepository(object):
     def clone_repos(self, platform=None):
         """ clone_repos """
         branch = self.meta.get('branch', None)
-        repo_url = f'https://{platform}{self.repo_url}'
+        git_url = f'https://{platform}{self.git_url}'
+        # uncomment this if you prefer using ssh connection (requires additional setup)
+        # if platform == 'github.com':
+        #    git_url = f'git@github.com:{self.git_url}'
         os.makedirs(self.repo_parent_dir, exist_ok=True)
         with switch_working_dir(self.repo_parent_dir):
-            clone_repos_using_git(repo_url, branch=branch)
+            clone_repos_using_git(git_url, branch=branch)
 
-    def update_repos(self):
+    def download_repos(self):
+        """ download and pull repos """
+        download_url = f'{REPO_DOWNLOAD_BASE}{self.name}.tar'
+        os.makedirs(self.repo_parent_dir, exist_ok=True)
+        download_and_extract(download_url, self.repo_parent_dir, self.name)
+
+    def update_repos(self, platform=None):
         """ update_repos """
+        branch = self.meta.get('branch', None)
+        git_url = f'https://{platform}{self.git_url}'
         with switch_working_dir(self.root_dir):
             try:
-                update_repos_using_git()
+                update_repos_using_git(branch=branch, url=git_url)
             except Exception as e:
                 logging.warning(
-                    f"Pull {self.name} from {self.repo_url} failed, check your network connection."
+                    f"Pull {self.name} from {self.git_url} failed, check your network connection."
                 )
 
     def remove_repos(self):
@@ -390,12 +402,16 @@ class RepositoryGroupCloner(object):
         super().__init__()
         self.repos = repos
 
-    def clone(self, force_reclone=False, platform=None):
+    def clone(self, force_clone=False, platform=None):
         """ clone """
-        if force_reclone:
+        if force_clone:
             self.remove()
-        for repo in self.repos:
-            repo.clone_repos(platform=platform)
+            for repo in self.repos:
+                repo.clone_repos(platform=platform)
+        else:
+            for repo in self.repos:
+                repo.download_repos()
+                repo.update_repos(platform=platform)
 
     def remove(self):
         """ remove """

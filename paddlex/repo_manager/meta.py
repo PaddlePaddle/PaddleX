@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 __all__ = ['get_all_repo_names']
+
+REPO_DOWNLOAD_BASE = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/repos/"
 
 REPO_NAMES = [
     'PaddleClas', 'PaddleOCR', 'PaddleDetection', 'PaddleSeg', 'PaddleNLP',
@@ -23,7 +23,7 @@ REPO_NAMES = [
 
 REPO_META = {
     'PaddleSeg': {
-        'repo_url': '/PaddlePaddle/PaddleSeg.git',
+        'git_url': '/PaddlePaddle/PaddleSeg.git',
         'platform': 'github',
         'branch': 'release/2.9.1',
         'pkg_name': 'paddleseg',
@@ -34,7 +34,7 @@ REPO_META = {
         'path_env': 'PADDLE_PDX_PADDLESEG_PATH',
     },
     'PaddleClas': {
-        'repo_url': '/PaddlePaddle/PaddleClas.git',
+        'git_url': '/PaddlePaddle/PaddleClas.git',
         'platform': 'github',
         'branch': 'release/2.5.2',
         'pkg_name': 'paddleclas',
@@ -46,7 +46,7 @@ REPO_META = {
         'path_env': 'PADDLE_PDX_PADDLECLAS_PATH',
     },
     'PaddleDetection': {
-        'repo_url': '/PaddlePaddle/PaddleDetection.git',
+        'git_url': '/PaddlePaddle/PaddleDetection.git',
         'platform': 'github',
         'branch': 'release/2.7.1',
         'pkg_name': 'paddledet',
@@ -56,7 +56,7 @@ REPO_META = {
         'path_env': 'PADDLE_PDX_PADDLEDETECTION_PATH',
     },
     'PaddleOCR': {
-        'repo_url': '/PaddlePaddle/PaddleOCR.git',
+        'git_url': '/PaddlePaddle/PaddleOCR.git',
         'platform': 'github',
         'branch': 'release/2.6.1',
         'pkg_name': 'paddleocr',
@@ -68,7 +68,7 @@ REPO_META = {
         'requires': ['PaddleNLP'],
     },
     'PaddleTS': {
-        'repo_url': '/PaddlePaddle/PaddleTS.git',
+        'git_url': '/PaddlePaddle/PaddleTS.git',
         'platform': 'github',
         'branch': 'release_v1.1',
         'pkg_name': 'paddlets',
@@ -79,7 +79,7 @@ REPO_META = {
         'pdx_pkg_deps': ['pandas', 'ruamel.yaml'],
     },
     'PaddleNLP': {
-        'repo_url': '/PaddlePaddle/PaddleNLP.git',
+        'git_url': '/PaddlePaddle/PaddleNLP.git',
         'platform': 'github',
         'branch': 'release/2.9',
         'pkg_name': 'paddlenlp',
@@ -89,7 +89,7 @@ REPO_META = {
         'path_env': 'PADDLE_PDX_PADDLENLP_PATH',
     },
     'PaddleSpeech': {
-        'repo_url': '/PaddlePaddle/PaddleSpeech.git',
+        'git_url': '/PaddlePaddle/PaddleSpeech.git',
         'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'paddlespeech',
@@ -100,7 +100,7 @@ REPO_META = {
         'requires': ['PaddleNLP'],
     },
     'PARL': {
-        'repo_url': '/PaddlePaddle/PARL.git',
+        'git_url': '/PaddlePaddle/PARL.git',
         'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'parl',
@@ -110,7 +110,7 @@ REPO_META = {
         'path_env': 'PADDLE_PDX_PARL_PATH',
     },
     'PaddleMIX': {
-        'repo_url': '/PaddlePaddle/PaddleMIX.git',
+        'git_url': '/PaddlePaddle/PaddleMIX.git',
         'platform': 'github',
         'branch': 'develop',
         'pkg_name': 'paddlemix',
