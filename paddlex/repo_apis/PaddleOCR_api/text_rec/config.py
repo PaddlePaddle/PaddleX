@@ -279,13 +279,55 @@ class TextRecConfig(BaseConfig):
         log_ranks = device.split(':')[1]
         self.update({'Global.log_ranks': log_ranks})
 
-    def enable_print_mem_info(self):
-        """print memory info"""
-        self.update({'Global.print_mem_info': True})
+    def update_print_mem_info(self, print_mem_info: bool):
+        """setting print memory info"""
+        assert isinstance(print_mem_info,
+                          bool), "print_mem_info should be a bool"
+        self.update({'Global.print_mem_info': f'{print_mem_info}'})
 
-    def disable_print_mem_info(self):
-        """do not print memory info"""
-        self.update({'Global.print_mem_info': False})
+    def update_shared_memory(self, shared_memeory: bool):
+        """update shared memory setting of train and eval dataloader
+        
+        Args:
+            shared_memeory (bool): whether or not to use shared memory
+        """
+        assert isinstance(shared_memeory,
+                          bool), "shared_memeory should be a bool"
+        _cfg = {
+            'Train.loader.use_shared_memory': f'{shared_memeory}',
+            'Train.loader.use_shared_memory': f'{shared_memeory}',
+        }
+        self.update(_cfg)
+
+    def update_shuffle(self, shuffle: bool):
+        """update shuffle setting of train and eval dataloader
+        
+        Args:
+            shuffle (bool): whether or not to shuffle the data
+        """
+        assert isinstance(shuffle, bool), "shuffle should be a bool"
+        _cfg = {
+            f'Train.loader.shuffle': f'{shuffle}',
+            f'Train.loader.shuffle': f'{shuffle}',
+        }
+        self.update(_cfg)
+
+    def update_cal_metrics(self, cal_metrics: bool):
+        """update calculate metrics setting
+        Args:
+            cal_metrics (bool): whether or not to calculate metrics during train
+        """
+        assert isinstance(cal_metrics, bool), "cal_metrics should be a bool"
+        self.update({'Global.cal_metric_during_train': f'{cal_metrics}'})
+
+    def update_seed(self, seed: int):
+        """update seed
+
+        Args:
+            seed (int): the random seed value to set
+        """
+        assert isinstance(seed, int), "seed should be an int"
+        self.update({'Global.seed': f'{seed}'})
 
     def _update_eval_interval_by_epoch(self, eval_interval):
         """update eval interval(by epoch)
@@ -369,24 +411,6 @@ class TextRecConfig(BaseConfig):
                 self['Train']['loader']['num_workers'] = num_workers
             else:
                 self['Eval']['loader']['num_workers'] = num_workers
-
-    def enable_shared_memory(self):
-        """enable shared memory setting of train and eval dataloader
-        """
-        _cfg = {
-            'Train.loader.use_shared_memory': True,
-            'Train.loader.use_shared_memory': True,
-        }
-        self.update(_cfg)
-
-    def disable_shared_memory(self):
-        """disable shared memory setting of train and eval dataloader
-        """
-        _cfg = {
-            'Train.loader.use_shared_memory': False,
-            'Train.loader.use_shared_memory': False,
-        }
-        self.update(_cfg)
 
     def _get_model_type(self) -> str:
         """get model type

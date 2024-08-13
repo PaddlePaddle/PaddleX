@@ -67,13 +67,11 @@ class BaseSegConfig(BaseConfig):
         log_ranks = device.split(':')[1]
         self.set_val('log_ranks', log_ranks)
 
-    def enable_print_mem_info(self):
-        """print memory info"""
-        self.set_val('print_mem_info', True)
-
-    def disable_print_mem_info(self):
-        """do not print memory info"""
-        self.set_val('print_mem_info', False)
+    def update_print_mem_info(self, print_mem_info: bool):
+        """setting print memory info"""
+        assert isinstance(print_mem_info,
+                          bool), "print_mem_info should be a bool"
+        self.set_val('print_mem_info', print_mem_info)
 
     def update_pretrained_weights(self, weight_path, is_backbone=False):
         """ update_pretrained_weights """

@@ -141,13 +141,11 @@ class BaseTSConfig(BaseConfig):
         # PaddleTS does not support multi-device training currently.
         pass
 
-    def enable_print_mem_info(self):
-        """print memory info"""
-        self.update({'print_mem_info': True})
-
-    def disable_print_mem_info(self):
-        """do not print memory info"""
-        self.update({'print_mem_info': False})
+    def update_print_mem_info(self, print_mem_info: bool):
+        """setting print memory info"""
+        assert isinstance(print_mem_info,
+                          bool), "print_mem_info should be a bool"
+        self.update({'print_mem_info': print_mem_info})
 
     def update_dataset(self, dataset_dir: str, dataset_type: str=None):
         """update dataset settings
