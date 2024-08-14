@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -45,11 +45,12 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
             config (AttrDict):  PaddleX pipeline config, which is loaded from pipeline yaml file.
         """
         super().__init__()
+        self.config = config
         self.global_config = config.Global
         self.train_config = config.Train
         self.benchmark_config = config.get('Benchmark', None)
 
-        self.deamon = self.build_deamon(self.global_config)
+        self.deamon = self.build_deamon(self.config)
         self.pdx_config, self.pdx_model = build_model(self.global_config.model)
 
     def train(self, *args, **kwargs):
