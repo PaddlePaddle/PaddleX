@@ -28,6 +28,7 @@ def _create_config(model_name, config_path=None):
     """ _create_config """
     # Build config from model name
     try:
+        print(model_name,"model_name")
         model_info = get_registered_model_info(model_name)
     except KeyError as e:
         raise UnsupportedParamError(

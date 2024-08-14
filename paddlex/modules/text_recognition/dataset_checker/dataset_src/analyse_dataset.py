@@ -72,7 +72,7 @@ def simple_analyse(dataset_path, images_dict):
             img_paths[tags[2]])
 
 
-def deep_analyse(dataset_path, output):
+def deep_analyse(dataset_path, output, datatype = "MSTextRecDataset"):
     """class analysis for dataset"""
     tags = ['train', 'val']
     all_instances = 0
@@ -90,10 +90,15 @@ def deep_analyse(dataset_path, output):
                 warning(f"Error in {line}.")
                 continue
             str_nums.append(len(line[1]))
-        max_length = min(100, max(str_nums))
+        if datatype == "LaTeXOCRDataset":
+            max_length = min(768, max(str_nums))
+            interval = 20
+        else:
+            max_length = min(100, max(str_nums))
+            interval = 5
         start = 0
-        for i in range(1, math.ceil((max_length / 5))):
-            stop = i * 5
+        for i in range(1, math.ceil((max_length / interval))):
+            stop = i * interval
             num_str = sum(start < i <= stop for i in str_nums)
             labels_cnt[f'{start}-{stop}'] = num_str
             start = stop
@@ -126,12 +131,18 @@ def deep_analyse(dataset_path, output):
     else:
         font = font_manager.FontProperties(
             fname=PINGFANG_FONT_FILE_PATH, size=15)
-    fig, ax = plt.subplots(figsize=(10, 5), dpi=120)
+    if datatype == "LaTeXOCRDataset":
+        fig, ax = plt.subplots(figsize=(15, 9), dpi=120)
+        xlabel_name = '公式长度区间'
+    else:
+        fig, ax = plt.subplots(figsize=(10, 5), dpi=120)
+        xlabel_name = '文本字长度区间'    
     ax.bar(x_train, cnts_train, width=0.3, label='train')
     ax.bar(x_val + width, cnts_val, width=0.3, label='val')
     plt.xticks(x_max + width / 2, classes_max, rotation=90)
+    plt.legend(prop = {'size':18})
     ax.set_xlabel(
-        '文本字长度区间',
+        xlabel_name,
         fontproperties=None if os_system == "windows" else font,
         fontsize=12)
     ax.set_ylabel(
@@ -149,3 +160,5 @@ def deep_analyse(dataset_path, output):
     cv2.imwrite(fig1_path, pie_array)
 
     return {"histogram": os.path.join("check_dataset", "histogram.png")}
+
+

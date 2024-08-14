@@ -74,7 +74,6 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
 
         attrs = self.check_dataset(dataset_dir)
         analysis = self.analyse(dataset_dir)
-
         check_result = build_res_dict(True)
         check_result["attributes"] = attrs
         check_result["analysis"] = analysis
