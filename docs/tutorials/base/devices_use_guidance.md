@@ -35,7 +35,10 @@ git clone https://gitee.com/paddlepaddle/PaddleX.git
 ```bash
 cd PaddleX
 
-# 注意，如果是 arm64 架构的 xpu 机器，需要先手动安装 tool_helpers，x86 架构机器不需要
+# 注意，如果是 arm64 架构的机器，需要先手动安装 tool_helpers，x86 架构机器不需要
+# python3.9 版本，适用 npu arm64 架构机器
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlenlp-device/tool_helpers-0.1.1-cp39-cp39-linux_aarch64.whl
+# python3.10 版本，适用 xpu arm64 架构机器
 pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlenlp-device/tool_helpers-0.1.1-cp310-cp310-linux_aarch64.whl
 
 # 安装 PaddleX whl
