@@ -44,6 +44,7 @@ REPO_META = {
         # an Import error.
         'editable': False,
         'path_env': 'PADDLE_PDX_PADDLECLAS_PATH',
+        'install_self': False
     },
     'PaddleDetection': {
         'repo_url': '/PaddlePaddle/PaddleDetection.git',
@@ -66,6 +67,7 @@ REPO_META = {
         'extra_req_files': ['ppstructure/kie/requirements.txt'],
         'path_env': 'PADDLE_PDX_PADDLEOCR_PATH',
         'requires': ['PaddleNLP'],
+        'install_self': False
     },
     'PaddleTS': {
         'repo_url': '/PaddlePaddle/PaddleTS.git',

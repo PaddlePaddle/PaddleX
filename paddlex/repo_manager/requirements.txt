@@ -15,3 +15,5 @@ unstructured
 networkx
 Pillow==9.5
 requests <= 2.29
+paddleclas@https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/tookit/paddleclas-2.5.2-py3-none-any.whl
+paddleocr@https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/tookit/paddleocr-2.6.1.0-py3-none-any.whl
