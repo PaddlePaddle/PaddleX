@@ -67,6 +67,7 @@ class PPRepository(object):
         self.pdx_mod_name = pdx_collection_mod.__name__ + '.' + self.meta[
             'pdx_pkg_name']
         self.main_req_file = self.meta.get('main_req_file', 'requirements.txt')
+        self.install_self = self.meta.get('install_self', True)
 
     def initialize(self):
         """ initialize """
@@ -107,6 +108,9 @@ class PPRepository(object):
 
     def install_package(self, no_deps=False, clean=True):
         """ install_package """
+        if self.install_self is False:
+            return
+
         editable = self.meta.get('editable', True)
         extra_editable = self.meta.get('extra_editable', None)
         if editable:
