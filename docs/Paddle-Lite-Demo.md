@@ -1,0 +1,147 @@
+# Paddle-Lite-Demo 使用指南
+
+- [如何运行 Paddle-Lite-Demo](#如何运行-paddle-lite-demo)
+  - [环境准备](#环境准备)
+  - [部署步骤](#部署步骤)
+- [如何更新预测库](#如何更新预测库)
+- [代码介绍、代码讲解、更新模型、更新输入和输出预处理](#代码介绍代码讲解更新模型更新输入和输出预处理)
+
+本文主要介绍 Paddle-Lite-Demo 在 Android shell 上的运行方法和如何在更新模型/输入/输出处理下，保证 Paddle-Lite-Demo 仍可继续运行。
+
+此 Demo 有很好的的易用性和开放性，可在 Demo 中跑自己训练好的模型等。
+
+## 如何运行 Paddle-Lite-Demo
+
+### 环境准备
+
+1. 在本地环境安装好 CMAKE 编译工具，并在 [Android NDK 官网](https://developer.android.google.cn/ndk/downloads)下载当前系统的某个版本的 NDK 软件包。例如，在 Mac 上开发，需要在 Android NDK 官网下载 Mac 平台的 NDK 软件包
+
+    **本指南所使用的测试环境：**
+    -  `cmake == 3.20.0`
+    -  `android-ndk == r20b`
+
+2. 准备一部 Android 手机，并开启 USB 调试模式。开启方法: `手机设置 -> 查找开发者选项 -> 打开开发者选项和 USB 调试模式`
+
+3. 电脑上安装 adb 工具，用于调试。 adb安装方式如下：
+
+    3.1. Mac 电脑安装 ADB:
+
+    ```shell
+     brew cask install android-platform-tools
+    ```
+
+    3.2. Linux 安装 ADB
+
+    ```shell
+     sudo apt update
+     sudo apt install -y wget adb
+    ```
+
+    3.3. Window 安装 ADB
+
+    win 上安装需要去谷歌的安卓平台下载 ADB 软件包进行安装：[链接](https://developer.android.com/studio)
+
+    打开终端，手机连接电脑，在终端中输入
+
+    ```shell
+     adb devices
+    ```
+
+    如果有 device 输出，则表示安装成功。
+
+    ```shell
+     List of devices attached
+     744be294    device
+    ```
+
+### 部署步骤
+1. 克隆 Paddle-Lite-Demo 仓库 
+
+    ```shell
+    git clone https://github.com/PaddlePaddle/Paddle-Lite-Demo.git
+    ```
+
+2. cd `Paddle-Lite-Demo/libs` 目录，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库，此步骤只需执行一次，即可支持每个 Demo 使用。
+
+3. cd `Paddle-Lite-Demo/{Demo Name}/assets` 目录，运行 `download.sh` 脚本，下载 OPT 优化后模型、测试图片和标签文件等
+
+4. cd `Paddle-Lite-Demo/{Demo Name}/android/shell/cxx/{Model Name}` 目录，运行 `build.sh` 脚本，完成可执行文件的编译和运行。
+
+    **注意：**
+
+    - 在运行 `build.sh` 脚本前，需要更改里面 `export NDK_ROOT` 的路径为实际安装的 NDK 路径
+    - 在运行 `build.sh` 脚本时需保持 adb 连接
+    - 若使用 mac 编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `darwin`
+    
+    **目前可选的 Demo**
+
+    | Demo Name | Model Name |
+    |-------|-------|
+    | face_detection  | face_detection  | 
+    | face_keypoints_detection  | face_keypoints_detection  | 
+    | mask_detection  | mask_detection  | 
+    | object_detection  | picodet_detection  | 
+    |   | ssd_mobilenetv1_detection  | 
+    |   | yolov3_mobilenet_v3  | 
+    |   | yolov5n_detection  | 
+    | human_segmentation | human_segmentation |
+    | image_classification | image_classification |
+    | PP-shitu | shitu |
+
+以下为 face_detection 的示例
+```shell
+ # 下载所需要的 Paddle Lite 预测库
+ cd Paddle-Lite-Demo/libs
+ sh download.sh
+
+ # 下载 OPT 优化后模型、测试图片、标签文件
+ cd ../face_detection/assets
+ sh download.sh
+
+ # 完成可执行文件的编译和运行
+ cd ../android/app/shell/cxx/face_detection
+ sh build.sh
+```
+
+运行结果如下所示,并生成一张名叫face_detection.jpg的人脸检测结果图：
+
+```shell
+======= benchmark summary =======
+input_shape(s) (NCHW): {1, 3, 240, 320}
+model_dir:models/model.nb
+warmup:2
+repeats:10
+power_mode:0
+thread_num:1
+*** time info(ms) ***
+1st_duration:30.485
+max_duration:23.106
+min_duration:22.217
+avg_duration:22.6233
+
+====== output summary ====== 
+``` 
+
+## 如何更新预测库
+
+* Paddle Lite 项目：https://github.com/PaddlePaddle/Paddle-Lite
+  * 参考 [Paddle Lite 源码编译文档](https://www.paddlepaddle.org.cn/lite/develop/source_compile/compile_env.html)，编译 Android 预测库
+  * 编译最终产物位于 `build.lite.xxx.xxx.xxx` 下的 `inference_lite_lib.xxx.xxx`
+    * 替换 c++ 库
+        * 头文件
+          将生成的 `build.lite.android.xxx.gcc/inference_lite_lib.android.xxx/cxx/include` 文件夹替换 Demo 中的 `Paddle-Lite-Demo/libs/android/cxx/include`
+        * armeabi-v7a
+          将生成的 `build.lite.android.armv7.gcc/inference_lite_lib.android.armv7/cxx/libs/libpaddle_lite_api_shared.so` 库替换 Demo 中的 `Paddle-Lite-Demo/libs/android/cxx/libs/armeabi-v7a/libpaddle_lite_api_shared.so`
+        * arm64-v8a
+          将生成的 `build.lite.android.armv8.gcc/inference_lite_lib.android.armv8/cxx/libs/libpaddle_lite_api_shared.so` 库替换 Demo 中的 `Paddle-Lite-Demo/libs/android/cxx/libs/arm64-v8a/libpaddle_lite_api_shared.so`
+
+## 代码介绍、代码讲解、更新模型、更新输入和输出预处理
+可参考各自部分的详细介绍：
+
+- [face_detection(人脸检测)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/face_detection/android/shell/cxx/face_detection/README.md)
+- [face_keypoints_detection(人脸关键点检测)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/face_keypoints_detection/android/shell/cxx/face_keypoints_detection/README.md)
+- [mask_detection(口罩检测)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/mask_detection/android/shell/cxx/mask_detection/README.md)
+- [object_detection(目标检测)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/object_detection/android/shell/cxx/picodet_detection/README.md)
+- [human_segmentation(人像分割)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/human_segmentation/android/shell/cxx/human_segmentation/README.md)
+- [image_classification(图像分类)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/image_classification/android/shell/cxx/image_classification/README.md)
+- [PP-shitu(PP识图)](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/develop/PP_shitu/android/shell/cxx/shitu/README.md)
