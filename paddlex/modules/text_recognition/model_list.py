@@ -17,4 +17,5 @@ MODELS = [
     'PP-OCRv4_server_rec',
     'SVTRv2_server_rec',
     'RepSVTR_mobile_rec',
+    'LaTeX_OCR_rec',
 ]
