@@ -47,19 +47,17 @@ def args_cfg():
     parser.add_argument('devkits', nargs='*', default=[])
     parser.add_argument('--no_deps', action='store_true')
     parser.add_argument('--platform', type=str, default='github.com')
-    parser.add_argument('--update_repos', action='store_true')
     parser.add_argument(
         '-y',
         '--yes',
-        dest='reinstall',
+        dest='update_repos',
         action='store_true',
-        help="Whether to reinstall all packages.")
+        help="Whether to update_repos all packages.")
     parser.add_argument(
         '--use_local_repos',
         action='store_true',
         default=False,
-        help="Use local repos when installing.")
-    parser.add_argument('--force_clone', action='store_true', default=False)
+        help="Use local repos when existing.")
 
     ################# pipeline predict #################
     parser.add_argument('--predict', action='store_true', default=True, help="")
@@ -86,12 +84,10 @@ def install(args):
         repo_names = get_all_supported_repo_names()
     setup(
         repo_names=repo_names,
-        reinstall=args.reinstall or None,
         no_deps=args.no_deps,
         platform=args.platform,
         update_repos=args.update_repos,
-        use_local_repos=args.use_local_repos,
-        force_clone=args.force_clone)
+        use_local_repos=args.use_local_repos)
     return
 
 
