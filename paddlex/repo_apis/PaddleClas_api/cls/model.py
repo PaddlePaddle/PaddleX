@@ -62,7 +62,6 @@ class ClsModel(BaseModel):
         with self._create_new_config_file() as config_path:
             # Update YAML config file
             config = self.config.copy()
-            config._update_amp(amp)
             config.update_device(device)
             config._update_to_static(dy2st)
             config._update_use_vdl(use_vdl)
@@ -110,7 +109,9 @@ class ClsModel(BaseModel):
                     config.update_seed(seed)
                 if envs is not None:
                     for env_name, env_value in envs.items():
-                        os.environ[env_name] = env_value
+                        os.environ[env_name] = str(env_value)
+            else:
+                config._update_amp(amp)
 
             config.dump(config_path)
             self._assert_empty_kwargs(kwargs)

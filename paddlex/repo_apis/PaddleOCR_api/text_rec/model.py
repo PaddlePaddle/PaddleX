@@ -122,7 +122,7 @@ class TextRecModel(BaseModel):
                 config.update_seed(seed)
             if envs is not None:
                 for env_name, env_value in envs.items():
-                    os.environ[env_name] = env_value
+                    os.environ[env_name] = str(env_value)
 
         self._assert_empty_kwargs(kwargs)
 

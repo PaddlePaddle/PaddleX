@@ -321,8 +321,8 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
             shuffle (bool): whether or not to shuffle the data
         """
         assert isinstance(shuffle, bool), "shuffle should be a bool"
-        self.update({'TrainReader': {'shuffle': f'{shuffle}'}})
-        self.update({'EvalReader': {'shuffle': f'{shuffle}'}})
+        self.update({'TrainReader': {'shuffle': shuffle}})
+        self.update({'EvalReader': {'shuffle': shuffle}})
 
     def update_weights(self, weight_path: str):
         """update model weight

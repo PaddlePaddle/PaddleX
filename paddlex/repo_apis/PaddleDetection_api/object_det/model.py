@@ -112,7 +112,7 @@ class DetModel(BaseModel):
                 cli_args.append(CLIArgument('--amp'))
             if envs is not None:
                 for env_name, env_value in envs.items():
-                    os.environ[env_name] = env_value
+                    os.environ[env_name] = str(env_value)
             # set seed to 0 for benchmark mode by enable_ce
             cli_args.append(CLIArgument('--enable_ce', True))
         else:
