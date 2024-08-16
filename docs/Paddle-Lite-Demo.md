@@ -73,20 +73,42 @@
     - 在运行 `build.sh` 脚本时需保持 adb 连接
     - 若使用 mac 编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `darwin`
     
-    **目前可选的 Demo**
+  **目前可选的 Demo**
 
-    | Demo Name | Model Name |
-    |-------|-------|
-    | face_detection  | face_detection  | 
-    | face_keypoints_detection  | face_keypoints_detection  | 
-    | mask_detection  | mask_detection  | 
-    | object_detection  | picodet_detection  | 
-    |   | ssd_mobilenetv1_detection  | 
-    |   | yolov3_mobilenet_v3  | 
-    |   | yolov5n_detection  | 
-    | human_segmentation | human_segmentation |
-    | image_classification | image_classification |
-    | PP-shitu | shitu |
+  <table>
+    <tr>
+      <th>Demo Name</th>
+      <th>Model Name</th>
+    </tr>
+    <tr>
+      <td>face_detection</td>
+      <td>face_detection</td>
+    </tr>
+    <tr>
+      <td>face_keypoints_detection</td>
+      <td>face_keypoints_detection</td>
+    </tr>
+    <tr>
+      <td>mask_detection</td>
+      <td>mask_detection</td>
+    </tr>
+    <tr>
+      <td>object_detection</td>
+      <td>picodet_detection<br/>ssd_mobilenetv1_detection<br/>yolov3_mobilenet_v3<br/>yolov5n_detection</td>
+    </tr>
+    <tr>
+      <td>human_segmentation</td>
+      <td>human_segmentation</td>
+    </tr>
+    <tr>
+      <td>image_classification</td>
+      <td>image_classification</td>
+    </tr>
+    <tr>
+      <td>PP-shitu</td>
+      <td>shitu</td>
+    </tr>
+  </table>
 
 以下为 face_detection 的示例
 ```shell
