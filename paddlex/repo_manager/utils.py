@@ -76,8 +76,8 @@ def install_deps_using_pip():
     return _check_call(args)
 
 
-def clone_repos_using_git(url, branch=None):
-    """ clone_repos_using_git """
+def clone_repo_using_git(url, branch=None):
+    """ clone_repo_using_git """
     args = ['git', 'clone', '--depth', '1']
     if isinstance(url, str):
         url = [url]
@@ -87,20 +87,20 @@ def clone_repos_using_git(url, branch=None):
     return _check_call(args)
 
 
-def update_repos_using_git(branch=None, url=None):
-    """ update_repos_using_git """
-    if url:
-        args = ['git', 'fetch', url, branch]
-        _check_call(args)
-        args = ['git', 'merge', 'FETCH_HEAD']
-        return _check_call(args)
-    else:
-        args = ['git', 'pull']
-        return _check_call(args)
+def fetch_repo_using_git(branch, url, depth=1):
+    """ fetch_repo_using_git """
+    args = ['git', 'fetch', url, branch, '--depth', str(depth)]
+    _check_call(args)
 
 
-def remove_repos_using_rm(name):
-    """ remove_repos_using_rm """
+def reset_repo_using_git(pointer, hard=True):
+    """ reset_repo_using_git """
+    args = ['git', 'reset', '--hard', pointer]
+    return _check_call(args)
+
+
+def remove_repo_using_rm(name):
+    """ remove_repo_using_rm """
     return _check_call(['rm', '-rf', name])
 
 
