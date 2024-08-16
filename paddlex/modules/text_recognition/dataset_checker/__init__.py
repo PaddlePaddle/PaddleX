@@ -78,7 +78,6 @@ class TextRecDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        # print(self.global_config,"global")
         if self.global_config['model'] in ['LaTeX_OCR_rec']:
             datatype = "LaTeXOCRDataset"
         else:
