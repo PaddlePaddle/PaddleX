@@ -88,7 +88,8 @@ def setup(repo_names,
           no_deps=False,
           constraints=None,
           platform=None,
-          update_repos=False):
+          update_repos=False,
+          use_local_repos=False):
     """ setup """
     repo_names = list(set(_parse_repo_deps(repo_names)))
 
@@ -101,6 +102,11 @@ def setup(repo_names,
     for repo in repos:
         repo_name = repo.name
         if repo.check_repo_exiting():
+            if use_local_repos:
+                reinstall = True
+                logging.warning(
+                    f"We will use the existing repo of {repo.name}.")
+                continue
             logging.warning(f"Existing of {repo.name} repo.")
             if reinstall is None:
                 if sys.stdin.isatty():
