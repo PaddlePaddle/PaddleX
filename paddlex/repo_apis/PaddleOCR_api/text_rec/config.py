@@ -79,7 +79,7 @@ class TextRecConfig(BaseConfig):
             train_list_path = f"{train_list_path}"
         else:
             train_list_path = os.path.join(dataset_path, 'train.txt')
-        if dataset_type == 'TextRecDataset' or "MSTextRecDataset":
+        if (dataset_type == 'TextRecDataset') or (dataset_type=="MSTextRecDataset"):
             _cfg = {
                 'Train.dataset.name': dataset_type,
                 'Train.dataset.data_dir': dataset_path,
@@ -91,6 +91,21 @@ class TextRecConfig(BaseConfig):
                 'Global.character_dict_path':
                 os.path.join(dataset_path, 'dict.txt')
             }
+            self.update(_cfg)
+        elif dataset_type == "LaTeXOCRDataSet":
+            _cfg = {
+                    'Train.dataset.name': dataset_type,
+                    'Train.dataset.data_dir': dataset_path,
+                    'Train.dataset.data': os.path.join(dataset_path, "latexocr_train.pkl"),
+                    'Train.dataset.label_file_list': [train_list_path],
+                    'Eval.dataset.name': dataset_type,
+                    'Eval.dataset.data_dir': dataset_path,
+                    'Eval.dataset.data': os.path.join(dataset_path, "latexocr_val.pkl"),
+                    'Eval.dataset.label_file_list':
+                    [os.path.join(dataset_path, 'val.txt')],
+                    'Global.character_dict_path':
+                    os.path.join(dataset_path, 'dict.txt')
+                }
             self.update(_cfg)
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
@@ -112,6 +127,23 @@ class TextRecConfig(BaseConfig):
         }
         if "sampler" in self.dict['Train']:
             _cfg['Train.sampler.first_bs'] = batch_size
+        self.update(_cfg)
+
+    def update_batch_size_pair(self, batch_size_train: int, batch_size_val: int, mode: str='train'):
+        """update batch size setting
+        Args:
+            batch_size (int): the batch size number to set.
+            mode (str, optional): the mode that to be set batch size, must be one of 'train', 'eval', 'test'.
+                Defaults to 'train'.
+        Raises:
+            ValueError: mode error.
+        """
+        _cfg = {
+            'Train.dataset.batch_size_per_pair': batch_size_train,
+            'Eval.dataset.batch_size_per_pair': batch_size_val,
+        }
+        # if "sampler" in self.dict['Train']:
+        #     _cfg['Train.sampler.first_bs'] = 1
         self.update(_cfg)
 
     def update_learning_rate(self, learning_rate: float):

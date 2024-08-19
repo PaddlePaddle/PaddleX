@@ -31,24 +31,28 @@ def check(dataset_dir,
           mode='fast',
           sample_num=10):
     """ check dataset """
-    # dataset_dir = osp.abspath(dataset_dir)
-    if dataset_type == 'SimpleDataSet' or 'MSTextRecDataset':
+    if dataset_type == 'SimpleDataSet' or 'MSTextRecDataset' or 'LaTeXOCRDataset':
         # Custom dataset
         if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
             raise DatasetFileNotFoundError(file_path=dataset_dir)
-
         tags = ['train', 'val']
         delim = '\t'
         valid_num_parts = 2
         max_recorded_sample_cnts = 50
         sample_cnts = dict()
         sample_paths = defaultdict(list)
-
-        dict_file = osp.join(dataset_dir, 'dict.txt')
-        if not osp.exists(dict_file):
-            raise DatasetFileNotFoundError(
-                file_path=dict_file,
-                solution=f"Ensure that `dict.txt` exist in {dataset_dir}")
+        if dataset_type == 'LaTeXOCRDataset':
+            dict_file = osp.join(dataset_dir, 'latex_ocr_tokenizer.json')
+            if not osp.exists(dict_file):
+                raise DatasetFileNotFoundError(
+                    file_path=dict_file,
+                    solution=f"Ensure that `latex_ocr_tokenizer.json` exist in {dataset_dir}")
+        else:
+            dict_file = osp.join(dataset_dir, 'dict.txt')
+            if not osp.exists(dict_file):
+                raise DatasetFileNotFoundError(
+                    file_path=dict_file,
+                    solution=f"Ensure that `dict.txt` exist in {dataset_dir}")
         for tag in tags:
             file_list = osp.join(dataset_dir, f'{tag}.txt')
             if not osp.exists(file_list):
@@ -76,7 +80,10 @@ def check(dataset_dir,
                                 "in {file_list} should be {valid_num_parts} (current delimiter is '{delim}')."
                             )
                         file_name = substr[0]
-                        img_path = osp.join(dataset_dir, file_name)
+                        if dataset_type == 'LaTeXOCRDataset':
+                           img_path = osp.join(dataset_dir, tag, file_name)                        
+                        else:
+                            img_path = osp.join(dataset_dir, file_name)
                         if len(sample_paths[tag]) < max_recorded_sample_cnts:
                             sample_paths[tag].append(
                                 os.path.relpath(img_path, output))
@@ -94,3 +101,4 @@ def check(dataset_dir,
         # meta['dict_file'] = dict_file
 
         return meta
+

@@ -28,9 +28,12 @@ class TextRecEvaluator(BaseEvaluator):
         """
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
-
-        self.pdx_config.update_dataset(self.global_config.dataset_dir,
-                                       "MSTextRecDataset")
+        if self.global_config['model']=='LaTeX_OCR_rec':   
+            self.pdx_config.update_dataset(self.global_config.dataset_dir,
+                                        "LaTeXOCRDataSet")
+        else:
+            self.pdx_config.update_dataset(self.global_config.dataset_dir,
+                                        "MSTextRecDataset")
         label_dict_path = None
         if self.eval_config.get("label_dict_path"):
             label_dict_path = self.eval_config.label_dict_path

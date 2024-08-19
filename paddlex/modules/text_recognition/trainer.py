@@ -59,9 +59,14 @@ class TextRecTrainer(BaseTrainer):
         if self.train_config.save_interval:
             self.pdx_config.update_save_interval(
                 self.train_config.save_interval)
-
-        self.pdx_config.update_dataset(self.global_config.dataset_dir,
-                                       "MSTextRecDataset")
+        
+        if self.global_config['model']=='LaTeX_OCR_rec':        
+            self.pdx_config.update_dataset(self.global_config.dataset_dir,
+                                        "LaTeXOCRDataSet")
+        else:
+            self.pdx_config.update_dataset(self.global_config.dataset_dir,
+                                        "MSTextRecDataset")
+        
         label_dict_path = Path(self.global_config.dataset_dir).joinpath(
             "dict.txt")
         if label_dict_path.exists():
@@ -71,8 +76,14 @@ class TextRecTrainer(BaseTrainer):
         if self.train_config.pretrain_weight_path:
             self.pdx_config.update_pretrained_weights(
                 self.train_config.pretrain_weight_path)
-        if self.train_config.batch_size is not None:
-            self.pdx_config.update_batch_size(self.train_config.batch_size)
+        
+        if self.global_config['model']=='LaTeX_OCR_rec':
+            if self.train_config.batch_size_train is not None and self.train_config.batch_size_val:
+                self.pdx_config.update_batch_size_pair(self.train_config.batch_size_train, self.train_config.batch_size_val)
+        else:
+            if self.train_config.batch_size is not None:
+                self.pdx_config.update_batch_size(self.train_config.batch_size)
+        
         if self.train_config.learning_rate is not None:
             self.pdx_config.update_learning_rate(
                 self.train_config.learning_rate)
@@ -126,7 +137,10 @@ class TextRecTrainDeamon(BaseTrainDeamon):
         """ get the score by pdstates file """
         if not Path(pdstates_path).exists():
             return 0
-        return paddle.load(pdstates_path)['best_model_dict']['acc']
+        if self.global_config['model'] == 'LaTeX_OCR_rec': 
+            return paddle.load(pdstates_path)['best_model_dict']['exp_rate']       
+        else:
+            return paddle.load(pdstates_path)['best_model_dict']['acc']
 
     def get_epoch_id_by_pdparams_prefix(self, pdparams_prefix):
         """ get the epoch_id by pdparams file """

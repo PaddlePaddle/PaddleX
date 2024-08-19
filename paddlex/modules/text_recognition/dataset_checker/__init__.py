@@ -21,7 +21,7 @@ from PIL import Image
 import json
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse
+from .dataset_src import check, split_dataset, deep_analyse, convert
 
 from ..model_list import MODELS
 
@@ -41,7 +41,8 @@ class TextRecDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of converted dataset.
         """
-        return src_dataset_dir
+        return convert(self.check_dataset_config.convert.src_dataset_type,
+                       src_dataset_dir)
 
     def split_dataset(self, src_dataset_dir: str) -> str:
         """repartition the train and validation dataset
@@ -66,7 +67,7 @@ class TextRecDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check(dataset_dir, self.global_config.output, sample_num=10)
+        return check(dataset_dir, self.global_config.output, sample_num=10, dataset_type=self.get_dataset_type())
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -77,7 +78,11 @@ class TextRecDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: the deep analysis results.
         """
-        return deep_analyse(dataset_dir, self.output)
+        if self.global_config['model'] in ['LaTeX_OCR_rec']:
+            datatype = "LaTeXOCRDataset"
+        else:
+            datatype = "MSTextRecDataset"
+        return deep_analyse(dataset_dir, self.output, datatype=datatype)
 
     def get_show_type(self) -> str:
         """get the show type of dataset
@@ -93,4 +98,7 @@ class TextRecDatasetChecker(BaseDatasetChecker):
         Returns:
             str: dataset type
         """
-        return "MSTextRecDataset"
+        if self.global_config['model'] in ['LaTeX_OCR_rec']:
+            return "LaTeXOCRDataset"
+        else:
+            return "MSTextRecDataset"
