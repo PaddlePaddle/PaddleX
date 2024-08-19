@@ -26,7 +26,7 @@ class ClsPipeline(BasePipeline):
     def __init__(self,
                  model_name=None,
                  model_dir=None,
-                 output=None,
+                 output="./output",
                  kernel_option=None,
                  device="gpu",
                  **kwargs):
