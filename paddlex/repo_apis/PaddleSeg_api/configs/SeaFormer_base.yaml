@@ -1,0 +1,69 @@
+batch_size: 8
+iters: 80000
+
+model:
+  type: SeaFormerSeg
+  backbone: 
+    type: SeaFormer_base
+    pretrained: https://paddleseg.bj.bcebos.com/dygraph/ade20k/backbone/seaformer_base_imagenet_pretrained.pdparams
+  head_channels: 160
+  embed_dims: [128, 160]
+  is_dw: True
+  dropout_ratio: 0.1
+  align_corners: False
+  input_transform: 'multiple_select'
+
+train_dataset:
+  type: Dataset
+  dataset_root: data/Cityscapes/
+  train_path: datasets/Cityscapes/train.txt
+  num_classes: 19
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.5
+      max_scale_factor: 2.0
+      scale_step_size: 0.25
+    - type: RandomPaddingCrop
+      crop_size: [512, 512]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Dataset
+  dataset_root: datasets/Cityscapes
+  val_path: datasets/Cityscapes/val.txt
+  num_classes: 19
+  transforms:
+    - type: Normalize
+  mode: val
+
+optimizer:
+  type: AdamW
+  beta1: 0.9
+  beta2: 0.999
+  weight_decay: 0.01
+  custom_cfg:
+    - name: pos_emb
+      weight_decay_mult: 0.0
+    - name: head
+      lr_mult: 10.0
+    - name: norm
+      weight_decay_mult: 0.0
+
+lr_scheduler:
+  type: PolynomialDecay
+  learning_rate: 0.00025
+  power: 1.0
+  warmup_iters: 1500
+  warmup_start_lr: 1.0e-6
+  end_lr: 0
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+  coef: [1]
