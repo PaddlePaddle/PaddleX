@@ -46,16 +46,16 @@ register_model_info({
 })
 
 register_model_info({
-    'model_name': 'SVTRv2_server_rec',
+    'model_name': 'ch_SVTRv2_rec',
     'suite': 'TextRec',
-    'config_path': osp.join(PDX_CONFIG_DIR, 'SVTRv2_server_rec.yaml'),
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ch_SVTRv2_rec.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
 })
 
 register_model_info({
-    'model_name': 'RepSVTR_mobile_rec',
+    'model_name': 'ch_RepSVTR_rec',
     'suite': 'TextRec',
-    'config_path': osp.join(PDX_CONFIG_DIR, 'RepSVTR_mobile_rec.yaml'),
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ch_RepSVTR_rec.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
 })
 
