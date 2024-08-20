@@ -5,8 +5,8 @@
   - [部署步骤](#部署步骤)
 - [参考资料](#参考资料)
 
-本指南主要介绍 PaddleX 端侧部署 demo 在 Android shell 上的运行方法。
-本指南适用于下列 7 个任务的 10 个模型，有很好的的易用性和开放性，可在 demo 中使用自己训练的模型。
+本指南主要介绍 PaddleX 端侧部署 demo 在 Android shell 上的运行方法，有很好的的易用性和开放性，读者也可根据自己的需求在 demo 中使用自己训练的模型。
+本指南适用于下列 7 个任务的 10 个模型：
 - face_detection（人脸检测）
 - face_keypoints_detection（人脸关键点检测）
 - mask_detection（口罩检测）
@@ -83,18 +83,18 @@
 
     **注意：**
     - `Demo Name` 和 `Model Name` 为占位符，具体值可参考本节最后的表格。
-    - 在运行 `build.sh` 脚本前，需要更改里面 `export NDK_ROOT` 的路径为实际安装的 NDK 路径。
+    - 在运行 `build.sh` 脚本前，需要更改 `NDK_ROOT` 指定的路径为实际安装的 NDK 路径。
     - 在运行 `build.sh` 脚本时需保持 ADB 连接。
     - 若在 Mac 系统上编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `darwin`。
 
 以下为 face_detection 的示例，其他 demo 需按参考本节最后的表格改变第二步和第三步所切换的目录。
 
 ```shell
- # 1. 下载所需要的 Paddle Lite 预测库
+ # 1. 下载需要的 Paddle Lite 预测库
  cd Paddle-Lite-Demo/libs
  sh download.sh
 
- # 2. 下载 OPT 优化后模型、测试图片、标签文件
+ # 2. 下载 paddle_lite_opt 工具优化后的模型、测试图片、标签文件
  cd ../face_detection/assets
  sh download.sh
 
