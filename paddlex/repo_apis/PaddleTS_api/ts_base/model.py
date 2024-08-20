@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 from ...base import BaseModel
@@ -84,15 +83,30 @@ class TSModel(BaseModel):
             device_type, _ = self.runner.parse_device(device)
             cli_args.append(CLIArgument('--device', device_type))
 
-        if num_workers is not None:
-            cli_args.append(CLIArgument('--num_workers', num_workers))
-
         if save_dir is not None:
             save_dir = abspath(save_dir)
         else:
             # `save_dir` is None
             save_dir = abspath(os.path.join('output', 'train'))
         cli_args.append(CLIArgument('--save_dir', save_dir))
+
+        # Benchmarking mode settings
+        benchmark = kwargs.pop('benchmark', None)
+        if benchmark is not None:
+            envs = benchmark.get('env', None)
+            num_workers = benchmark.get('num_workers', None)
+            config.update_log_ranks(device)
+            config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            if num_workers is not None:
+                assert isinstance(num_workers,
+                                  int), "num_workers must be an integer"
+                cli_args.append(CLIArgument('--num_workers', num_workers))
+            if envs is not None:
+                for env_name, env_value in envs.items():
+                    os.environ[env_name] = str(env_value)
+        else:
+            if num_workers is not None:
+                cli_args.append(CLIArgument('--num_workers', num_workers))
 
         self._assert_empty_kwargs(kwargs)
 

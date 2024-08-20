@@ -68,14 +68,25 @@ class TextRecPredictor(BasePredictor):
 
     def _get_pre_transforms_from_config(self):
         """ _get_pre_transforms_from_config """
-        return [
-            image_common.ReadImage(), image_common.GetImageInfo(),
-            T.OCRReisizeNormImg()
-        ]
+        if self.model_name == 'LaTeX_OCR_rec': 
+            return [
+                image_common.ReadImage(), image_common.GetImageInfo(),
+                T.LaTeXOCRReisizeNormImg()
+            ]
+        else:
+            return [
+                image_common.ReadImage(), image_common.GetImageInfo(),
+                T.OCRReisizeNormImg()
+            ]
 
     def _get_post_transforms_from_config(self):
         """ get postprocess transforms """
-        post_transforms = [
-            T.CTCLabelDecode(self.other_src.PostProcess), T.PrintResult()
-        ]
+        if self.model_name =='LaTeX_OCR_rec': 
+            post_transforms = [
+                T.LaTeXOCRDecode(self.other_src.PostProcess), T.PrintResult()
+            ]
+        else:
+            post_transforms = [
+                T.CTCLabelDecode(self.other_src.PostProcess), T.PrintResult()
+            ]
         return post_transforms

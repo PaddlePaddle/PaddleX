@@ -38,7 +38,10 @@ self._create(model_dir, model_prefix, option, delete_pass=delete_pass)
 
         if option.device == 'gpu':
             config.enable_use_gpu(200, option.device_id)
-            config.enable_new_ir(True)
+            if paddle.is_compiled_with_rocm():
+                os.environ['FLAGS_conv_workspace_size_limit'] = '2000'
+            else:
+                config.enable_new_ir(True)
         elif option.device == 'npu':
             config.enable_custom_device('npu')
             os.environ["FLAGS_npu_jit_compile"] = "0"

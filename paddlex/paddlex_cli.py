@@ -28,7 +28,7 @@ def args_cfg():
 
     def parse_str(s):
         """convert str type value
-           to None type if it is "None", 
+           to None type if it is "None",
            to bool type if it means True or False.
         """
         if s in ("None"):
@@ -47,18 +47,17 @@ def args_cfg():
     parser.add_argument('devkits', nargs='*', default=[])
     parser.add_argument('--no_deps', action='store_true')
     parser.add_argument('--platform', type=str, default='github.com')
-    parser.add_argument('--update_repos', action='store_true')
     parser.add_argument(
         '-y',
         '--yes',
-        dest='reinstall',
+        dest='update_repos',
         action='store_true',
-        help="Whether to reinstall all packages.")
+        help="Whether to update_repos all packages.")
     parser.add_argument(
         '--use_local_repos',
         action='store_true',
         default=False,
-        help="Use local repos when installing.")
+        help="Use local repos when existing.")
 
     ################# pipeline predict #################
     parser.add_argument('--predict', action='store_true', default=True, help="")
@@ -85,7 +84,6 @@ def install(args):
         repo_names = get_all_supported_repo_names()
     setup(
         repo_names=repo_names,
-        reinstall=args.reinstall or None,
         no_deps=args.no_deps,
         platform=args.platform,
         update_repos=args.update_repos,

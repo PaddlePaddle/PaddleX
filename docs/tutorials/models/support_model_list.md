@@ -60,12 +60,18 @@
 ### 6.PP-HGNet 系列
 | 模型名称 | config |
 | :--- | :---: |
+| PP-HGNet_tiny | [PP-HGNet_tiny.yaml](../../../paddlex/configs/image_classification/PP-HGNet_tiny.yaml)|
 | PP-HGNet_small | [PP-HGNet_small.yaml](../../../paddlex/configs/image_classification/PP-HGNet_small.yaml)|
+| PP-HGNet_base | [PP-HGNet_base.yaml](../../../paddlex/configs/image_classification/PP-HGNet_base.yaml)|
 ### 7.PP-HGNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNetV2-B0 | [PP-HGNetV2-B0.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B0.yaml)|
+| PP-HGNetV2-B1 | [PP-HGNetV2-B1.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B1.yaml)|
+| PP-HGNetV2-B2 | [PP-HGNetV2-B2.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B2.yaml)|
+| PP-HGNetV2-B3 | [PP-HGNetV2-B3.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B3.yaml)|
 | PP-HGNetV2-B4 | [PP-HGNetV2-B4.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B4.yaml)|
+| PP-HGNetV2-B5 | [PP-HGNetV2-B5.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B5.yaml)|
 | PP-HGNetV2-B6 | [PP-HGNetV2-B6.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B6.yaml)|
 ### 8.CLIP 系列
 | 模型名称 | config |
@@ -181,11 +187,15 @@
 | :--- | :---: |
 | PP-OCRv4_server_rec | [PP-OCRv4_server_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml)|
 | PP-OCRv4_mobile_rec | [PP-OCRv4_mobile_rec.yaml](../../../paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml)|
-## 八、版面分析
+## 八、公式识别
+| 模型名称 | config |
+| :--- | :---: |
+| LaTeX_OCR_rec | [LaTeX_OCR_rec.yml](../../../paddlex/configs/text_recognition/LaTeX_OCR_rec.yml)|
+## 九、版面分析
 | 模型名称 | config |
 | :--- | :---: |
 | PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
-## 九、时序异常检测
+## 十、时序异常检测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear_ad | [DLinear_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml)|
@@ -193,11 +203,11 @@
 | TimesNet_ad | [TimesNet_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/TimesNet_ad.yaml)|
 | AutoEncoder_ad | [AutoEncoder_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml)|
 | Nonstationary_ad | [Nonstationary_ad.yaml](../../../paddlex/configs/ts_anomaly_detection/Nonstationary_ad.yaml)|
-## 十、时序分类
+## 十一、时序分类
 | 模型名称 | config |
 | :--- | :---: |
 | TimesNet_cls | [TimesNet_cls.yaml](../../../paddlex/configs/ts_classification/TimesNet_cls.yaml)|
-## 十一、时序预测
+## 十二、时序预测
 | 模型名称 | config |
 | :--- | :---: |
 | DLinear | [DLinear.yaml](../../../paddlex/configs/ts_forecast/DLinear.yaml)|

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,7 +19,7 @@ from collections import OrderedDict
 from ..utils import logging
 from .utils import install_deps_using_pip
 from .meta import get_all_repo_names, get_repo_meta
-from .repo import build_repo_instance, build_repo_group_cloner, build_repo_group_installer
+from .repo import build_repo_instance, build_repo_group_getter, build_repo_group_installer
 
 __all__ = [
     'set_parent_dirs', 'setup', 'wheel', 'is_initialized', 'initialize',
@@ -84,13 +84,18 @@ is_initialized = _GlobalContext.is_initialized
 
 
 def setup(repo_names,
-          reinstall=None,
           no_deps=False,
           constraints=None,
           platform=None,
           update_repos=False,
           use_local_repos=False):
     """ setup """
+    if update_repos and use_local_repos:
+        logging.error(
+            f"The `--update_repos` and `--use_local_repos` should not be True at the same time. They are global setting for all repos. `--update_repos` means that update all repos to sync with remote, and `--use_local_repos` means that don't update when local repo is exsting."
+        )
+        raise Exception()
+
     repo_names = list(set(_parse_repo_deps(repo_names)))
 
     repos = []
@@ -98,44 +103,56 @@ def setup(repo_names,
         repo = _GlobalContext.build_repo_instance(repo_name)
         repos.append(repo)
 
-    repos_to_clone = []
+    changed_repos = []
+    repos_to_get = []
     for repo in repos:
         repo_name = repo.name
         if repo.check_repo_exiting():
             if use_local_repos:
-                reinstall = True
+                # when use_local_repos has been set, it can be only assume that the local repo has changed, otherwise there is no need to specify.
+                changed_repos.append(repo_name)
                 logging.warning(
-                    f"We will use the existing repo of {repo.name}.")
+                    f"We will use the existing repo of {repo.name} and the repo will be reinstall."
+                )
                 continue
+
             logging.warning(f"Existing of {repo.name} repo.")
-            if reinstall is None:
+            if update_repos:
+                remove_existing = True
+            else:
                 if sys.stdin.isatty():
                     logging.warning("Should we remove it (y/n)?")
                 try:
                     remove_existing = input()
                 except EOFError:
                     logging.warning(
-                        "Unable to read from stdin. Please set `reinstall` to \
-                        True or False to apply a global setting for reclone repos."
+                        "Unable to read from stdin. Please set `--use_local_repos` to \
+                        True or False to apply a global setting for using exsting or re-getting repos."
                     )
                     raise
                 remove_existing = remove_existing.lower() in ('y', 'yes')
-            else:
-                remove_existing = reinstall
+
             if remove_existing:
+                changed_repos.append(repo_name)
                 repo.remove()
-                repos_to_clone.append(repo)
+                logging.warning(f"Existing {repo.name} repo has been removed.")
+                repos_to_get.append(repo)
             else:
                 logging.warning(
                     f"We will use the existing repo of {repo.name}.")
         else:
-            repos_to_clone.append(repo)
+            changed_repos.append(repo)
+            repos_to_get.append(repo)
+
     repos_to_install = []
     for repo in repos:
         repo_name = repo.name
         if repo.check_installation():
             logging.warning(f"Existing installation of {repo.name} detected.")
-            if reinstall is None and not update_repos:
+            reinstall = repo_name in changed_repos
+            if reinstall:
+                uninstall_existing = True
+            else:
                 if sys.stdin.isatty():
                     logging.warning("Should we uninstall it (y/n)?")
                 try:
@@ -147,9 +164,7 @@ def setup(repo_names,
                     )
                     raise
                 uninstall_existing = uninstall_existing.lower() in ('y', 'yes')
-            else:
-                if reinstall or update_repos:
-                    uninstall_existing = True
+
             if uninstall_existing:
                 repo.uninstall()
                 repos_to_install.append(repo)
@@ -158,12 +173,17 @@ def setup(repo_names,
                     f"We will use the existing installation of {repo.name}.")
         else:
             repos_to_install.append(repo)
-    cloner = build_repo_group_cloner(*repos_to_clone)
+    getter = build_repo_group_getter(*repos_to_get)
     installer = build_repo_group_installer(*repos_to_install)
 
-    logging.info("Now cloning the repos...")
-    cloner.clone(force_reclone=False, platform=platform)
-    logging.info("All repos are existing.")
+    if len(repos_to_get) > 0:
+        logging.info(
+            f"Now download and update the repos: {list(repo.name for repo in repos_to_get)}."
+        )
+        getter.get(force=True, platform=platform)
+        logging.info("All repos are existing.")
+    else:
+        logging.info("No repo need to download or update.")
 
     if not no_deps:
         logging.info("Dependencies are listed below:")
@@ -171,9 +191,6 @@ def setup(repo_names,
 
     logging.info("Now installing the packages...")
     install_deps_using_pip()
-    if update_repos:
-        installer.update()
-        logging.info("All repos are updated.")
     installer.install(
         force_reinstall=False, no_deps=no_deps, constraints=constraints)
     logging.info("All packages are installed.")

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import os
 import sys
@@ -78,8 +76,8 @@ def install_deps_using_pip():
     return _check_call(args)
 
 
-def clone_repos_using_git(url, branch=None):
-    """ clone_repos_using_git """
+def clone_repo_using_git(url, branch=None):
+    """ clone_repo_using_git """
     args = ['git', 'clone', '--depth', '1']
     if isinstance(url, str):
         url = [url]
@@ -89,14 +87,20 @@ def clone_repos_using_git(url, branch=None):
     return _check_call(args)
 
 
-def update_repos_using_git():
-    """ update_repos_using_git """
-    args = ['git', 'pull']
+def fetch_repo_using_git(branch, url, depth=1):
+    """ fetch_repo_using_git """
+    args = ['git', 'fetch', url, branch, '--depth', str(depth)]
+    _check_call(args)
+
+
+def reset_repo_using_git(pointer, hard=True):
+    """ reset_repo_using_git """
+    args = ['git', 'reset', '--hard', pointer]
     return _check_call(args)
 
 
-def remove_repos_using_rm(name):
-    """ remove_repos_using_rm """
+def remove_repo_using_rm(name):
+    """ remove_repo_using_rm """
     return _check_call(['rm', '-rf', name])
 
 

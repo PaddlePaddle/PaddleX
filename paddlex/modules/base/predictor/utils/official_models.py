@@ -145,12 +145,24 @@ SwinTransformer_large_patch4_window7_224_infer.tar",
     "SwinTransformer_large_patch4_window12_384":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
 SwinTransformer_large_patch4_window12_384_infer.tar",
+    "PP-HGNet_tiny":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNet_tiny_infer.tar",
     "PP-HGNet_small":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNet_small_infer.tar",
+    "PP-HGNet_base":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNet_base_infer.tar",
     "PP-HGNetV2-B0":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B0_infer.tar",
+    "PP-HGNetV2-B1":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B1_infer.tar",
+    "PP-HGNetV2-B2":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B2_infer.tar",
+    "PP-HGNetV2-B3":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B3_infer.tar",
     "PP-HGNetV2-B4":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B4_infer.tar",
+    "PP-HGNetV2-B5":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B5_infer.tar",
     "PP-HGNetV2-B6":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-HGNetV2-B6_infer.tar",
     "CLIP_vit_base_patch16_224":
@@ -264,6 +276,8 @@ openatom_rec_svtrv2_ch_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-L_layout_infer.tar",
     "SLANet":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SLANet_infer.tar",
+    "LaTeX_OCR_rec":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/LaTeX_OCR_rec_infer.tar",
 }
 
 

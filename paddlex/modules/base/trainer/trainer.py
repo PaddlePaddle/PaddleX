@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -45,14 +45,13 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
             config (AttrDict):  PaddleX pipeline config, which is loaded from pipeline yaml file.
         """
         super().__init__()
+        self.config = config
         self.global_config = config.Global
         self.train_config = config.Train
+        self.benchmark_config = config.get('Benchmark', None)
 
-        self.deamon = self.build_deamon(self.global_config)
+        self.deamon = self.build_deamon(self.config)
         self.pdx_config, self.pdx_model = build_model(self.global_config.model)
-        #TODO: Control by configuration to support benchmark
-        self.pdx_config.update_log_ranks(self.get_device())
-        self.pdx_config.disable_print_mem_info()
 
     def train(self, *args, **kwargs):
         """execute model training
@@ -60,7 +59,10 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         os.makedirs(self.global_config.output, exist_ok=True)
         self.update_config()
         self.dump_config()
-        train_result = self.pdx_model.train(**self.get_train_kwargs())
+        train_args = self.get_train_kwargs()
+        if self.benchmark_config is not None:
+            train_args.update({'benchmark': self.benchmark_config})
+        train_result = self.pdx_model.train(**train_args)
         assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
 training!"
 

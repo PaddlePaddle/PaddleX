@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,10 +19,11 @@ import tempfile
 import shutil
 
 from ..utils import logging
-from .meta import get_repo_meta
-from .utils import (install_packages_using_pip, clone_repos_using_git,
-                    update_repos_using_git, uninstall_package_using_pip,
-                    remove_repos_using_rm, check_installation_using_pip,
+from ..utils.download import download_and_extract
+from .meta import get_repo_meta, REPO_DOWNLOAD_BASE
+from .utils import (install_packages_using_pip, fetch_repo_using_git,
+                    reset_repo_using_git, uninstall_package_using_pip,
+                    remove_repo_using_rm, check_installation_using_pip,
                     build_wheel_using_pip, mute, switch_working_dir,
                     to_dep_spec_pep508, env_marker_ast2expr)
 
@@ -42,9 +43,9 @@ def build_repo_group_installer(*repos):
     return RepositoryGroupInstaller(list(repos))
 
 
-def build_repo_group_cloner(*repos):
-    """ build_repo_group_cloner """
-    return RepositoryGroupCloner(list(repos))
+def build_repo_group_getter(*repos):
+    """ build_repo_group_getter """
+    return RepositoryGroupGetter(list(repos))
 
 
 class PPRepository(object):
@@ -60,7 +61,7 @@ class PPRepository(object):
         self.root_dir = osp.join(repo_parent_dir, self.name)
 
         self.meta = get_repo_meta(self.name)
-        self.repo_url = self.meta['repo_url']
+        self.git_path = self.meta['git_path']
         self.pkg_name = self.meta['pkg_name']
         self.lib_name = self.meta['lib_name']
         self.pdx_mod_name = pdx_collection_mod.__name__ + '.' + self.meta[
@@ -138,39 +139,30 @@ class PPRepository(object):
         """ uninstall_package """
         uninstall_package_using_pip(self.pkg_name)
 
-    def clone(self, *args, **kwargs):
-        """ clone """
-        return RepositoryGroupCloner([self]).clone(*args, **kwargs)
-
-    def remove(self, *args, **kwargs):
-        """ remove """
-        return RepositoryGroupCloner([self]).remove(*args, **kwargs)
-
-    def clone_repos(self, platform=None):
-        """ clone_repos """
-        branch = self.meta.get('branch', None)
-        repo_url = f'https://{platform}{self.repo_url}'
-        # uncomment this if you prefer using ssh connection (requires additional setup)
-        # if platform == 'github.com':
-        #    repo_url = f'git@github.com:{self.repo_url}'
+    def download(self):
+        """ download from remote """
+        download_url = f'{REPO_DOWNLOAD_BASE}{self.name}.tar'
         os.makedirs(self.repo_parent_dir, exist_ok=True)
-        with switch_working_dir(self.repo_parent_dir):
-            clone_repos_using_git(repo_url, branch=branch)
+        download_and_extract(download_url, self.repo_parent_dir, self.name)
+        # reset_repo_using_git('FETCH_HEAD')
 
-    def update_repos(self):
-        """ update_repos """
+    def remove(self):
+        """ remove """
+        with switch_working_dir(self.repo_parent_dir):
+            remove_repo_using_rm(self.name)
+
+    def update(self, platform=None):
+        """ update """
+        branch = self.meta.get('branch', None)
+        git_url = f'https://{platform}{self.git_path}'
         with switch_working_dir(self.root_dir):
             try:
-                update_repos_using_git()
+                fetch_repo_using_git(branch=branch, url=git_url)
+                reset_repo_using_git('FETCH_HEAD')
             except Exception as e:
                 logging.warning(
-                    f"Pull {self.name} from {self.repo_url} failed, check your network connection."
+                    f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
-
-    def remove_repos(self):
-        """ remove_repos """
-        with switch_working_dir(self.repo_parent_dir):
-            remove_repos_using_rm(self.name)
 
     def wheel(self, dst_dir):
         """ wheel """
@@ -281,11 +273,6 @@ class RepositoryGroupInstaller(object):
                 # NOTE: Dependencies are not uninstalled.
                 repo.uninstall_package()
 
-    def update(self):
-        """ update """
-        for repo in self.repos:
-            repo.update_repos()
-
     def get_deps(self):
         """ get_deps """
         deps_list = []
@@ -386,21 +373,22 @@ class RepositoryGroupInstaller(object):
         return '\n'.join(normed_lines)
 
 
-class RepositoryGroupCloner(object):
-    """ RepositoryGroupCloner """
+class RepositoryGroupGetter(object):
+    """ RepositoryGroupGetter """
 
     def __init__(self, repos):
         super().__init__()
         self.repos = repos
 
-    def clone(self, force_reclone=False, platform=None):
+    def get(self, force=False, platform=None):
         """ clone """
-        if force_reclone:
+        if force:
             self.remove()
         for repo in self.repos:
-            repo.clone_repos(platform=platform)
+            repo.download()
+            repo.update(platform=platform)
 
     def remove(self):
         """ remove """
         for repo in self.repos:
-            repo.remove_repos()
+            repo.remove()

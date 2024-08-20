@@ -147,15 +147,22 @@ class ClsConfig(BaseConfig):
             pretrained_model (str): the local path or url of pretrained weight file to set.
         """
         assert isinstance(
-            pretrained_model, (str, None)
+            pretrained_model, (str, type(None))
         ), "The 'pretrained_model' should be a string, indicating the path to the '*.pdparams' file, or 'None', \
 indicating that no pretrained model to be used."
 
-        if pretrained_model and not pretrained_model.startswith(
-            ('http://', 'https://')):
-            pretrained_model = abspath(
-                pretrained_model.replace(".pdparams", ""))
-        self.update([f'Global.pretrained_model={pretrained_model}'])
+        if pretrained_model is None:
+            self.update(['Global.pretrained_model=None'])
+            self.update(['Arch.pretrained=False'])
+        else:
+            if pretrained_model.lower() == "default":
+                self.update(['Global.pretrained_model=None'])
+                self.update(['Arch.pretrained=True'])
+            else:
+                if not pretrained_model.startswith(('http://', 'https://')):
+                    pretrained_model = abspath(
+                        pretrained_model.replace(".pdparams", ""))
+                self.update([f'Global.pretrained_model={pretrained_model}'])
 
     def update_num_classes(self, num_classes: int):
         """update classes number
@@ -211,22 +218,53 @@ indicating that no pretrained model to be used."
         ]
         self.update(_cfg)
 
-    def enable_shared_memory(self):
-        """enable shared memory setting of train and eval dataloader
+    def update_shared_memory(self, shared_memeory: bool):
+        """update shared memory setting of train and eval dataloader
+        
+        Args:
+            shared_memeory (bool): whether or not to use shared memory
         """
+        assert isinstance(shared_memeory,
+                          bool), "shared_memeory should be a bool"
         _cfg = [
-            f'DataLoader.Train.loader.use_shared_memory=True',
-            f'DataLoader.Eval.loader.use_shared_memory=True',
+            f'DataLoader.Train.loader.use_shared_memory={shared_memeory}',
+            f'DataLoader.Eval.loader.use_shared_memory={shared_memeory}',
         ]
         self.update(_cfg)
 
-    def disable_shared_memory(self):
-        """disable shared memory setting of train and eval dataloader
+    def update_shuffle(self, shuffle: bool):
+        """update shuffle setting of train and eval dataloader
+        
+        Args:
+            shuffle (bool): whether or not to shuffle the data
         """
+        assert isinstance(shuffle, bool), "shuffle should be a bool"
         _cfg = [
-            f'DataLoader.Train.loader.use_shared_memory=False',
-            f'DataLoader.Eval.loader.use_shared_memory=False',
+            f'DataLoader.Train.loader.shuffle={shuffle}',
+            f'DataLoader.Eval.loader.shuffle={shuffle}',
         ]
+        self.update(_cfg)
+
+    def update_dali(self, dali: bool):
+        """enable DALI setting of train and eval dataloader
+        
+        Args:
+            dali (bool): whether or not to use DALI
+        """
+        assert isinstance(dali, bool), "dali should be a bool"
+        _cfg = [
+            f'Global.use_dali={dali}',
+            f'Global.use_dali={dali}',
+        ]
+        self.update(_cfg)
+
+    def update_seed(self, seed: int):
+        """update seed
+
+        Args:
+            seed (int): the random seed value to set
+        """
+        _cfg = [f'Global.seed={seed}']
         self.update(_cfg)
 
     def update_device(self, device: str):
@@ -324,13 +362,11 @@ indicating that no pretrained model to be used."
         log_ranks = device.split(':')[1]
         self.update([f'Global.log_ranks="{log_ranks}"'])
 
-    def enable_print_mem_info(self):
-        """print memory info"""
-        self.update([f'Global.print_mem_info=True'])
-
-    def disable_print_mem_info(self):
-        """do not print memory info"""
-        self.update([f'Global.print_mem_info=False'])
+    def update_print_mem_info(self, print_mem_info: bool):
+        """setting print memory info"""
+        assert isinstance(print_mem_info,
+                          bool), "print_mem_info should be a bool"
+        self.update([f'Global.print_mem_info={print_mem_info}'])
 
     def _update_predict_img(self, infer_img: str, infer_list: str=None):
         """update image to be predicted

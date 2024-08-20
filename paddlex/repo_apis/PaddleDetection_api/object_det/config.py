@@ -298,13 +298,31 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
         log_ranks = device.split(':')[1]
         self.update({'log_ranks': log_ranks})
 
-    def enable_print_mem_info(self):
-        """print memory info"""
-        self.update({'print_mem_info': True})
+    def update_print_mem_info(self, print_mem_info: bool):
+        """setting print memory info"""
+        assert isinstance(print_mem_info,
+                          bool), "print_mem_info should be a bool"
+        self.update({'print_mem_info': f'{print_mem_info}'})
 
-    def disable_print_mem_info(self):
-        """do not print memory info"""
-        self.update({'print_mem_info': False})
+    def update_shared_memory(self, shared_memeory: bool):
+        """update shared memory setting of train and eval dataloader
+        
+        Args:
+            shared_memeory (bool): whether or not to use shared memory
+        """
+        assert isinstance(shared_memeory,
+                          bool), "shared_memeory should be a bool"
+        self.update({'print_mem_info': f'{shared_memeory}'})
+
+    def update_shuffle(self, shuffle: bool):
+        """update shuffle setting of train and eval dataloader
+        
+        Args:
+            shuffle (bool): whether or not to shuffle the data
+        """
+        assert isinstance(shuffle, bool), "shuffle should be a bool"
+        self.update({'TrainReader': {'shuffle': shuffle}})
+        self.update({'EvalReader': {'shuffle': shuffle}})
 
     def update_weights(self, weight_path: str):
         """update model weight
@@ -349,18 +367,6 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
             num_workers (int): the value of train and eval dataloader workers number to set.
         """
         self['worker_num'] = num_workers
-
-    def enable_shared_memory(self):
-        """enable shared memory setting of train and eval dataloader
-        """
-        self.update({'TrainReader': {'use_shared_memory': True}})
-        self.update({'EvalReader': {'use_shared_memory': True}})
-
-    def disable_shared_memory(self):
-        """disable shared memory setting of train and eval dataloader
-        """
-        self.update({'TrainReader': {'use_shared_memory': False}})
-        self.update({'EvalReader': {'use_shared_memory': False}})
 
     def _recursively_set(self, config: dict, update_dict: dict):
         """recursively set config

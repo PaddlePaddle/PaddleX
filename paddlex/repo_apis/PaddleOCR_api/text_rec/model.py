@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 from ...base import BaseModel
@@ -103,6 +102,27 @@ class TextRecModel(BaseModel):
         profile = kwargs.pop('profile', None)
         if profile is not None:
             cli_args.append(CLIArgument('--profiler_options', profile))
+
+        # Benchmarking mode settings
+        benchmark = kwargs.pop('benchmark', None)
+        if benchmark is not None:
+            envs = benchmark.get('env', None)
+            seed = benchmark.get('seed', None)
+            do_eval = benchmark.get('do_eval', False)
+            num_workers = benchmark.get('num_workers', None)
+            config.update_log_ranks(device)
+            config._update_amp(benchmark.get('amp', None))
+            config.update_shuffle(benchmark.get('shuffle', False))
+            config.update_cal_metrics(benchmark.get('cal_metrics', True))
+            config.update_shared_memory(benchmark.get('shared_memory', True))
+            config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            if num_workers is not None:
+                config.update_num_workers(num_workers)
+            if seed is not None:
+                config.update_seed(seed)
+            if envs is not None:
+                for env_name, env_value in envs.items():
+                    os.environ[env_name] = str(env_value)
 
         self._assert_empty_kwargs(kwargs)
 
