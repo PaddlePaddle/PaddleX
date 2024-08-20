@@ -5,7 +5,7 @@ model:
   type: SeaFormerSeg
   backbone: 
     type: SeaFormer_base
-    pretrained: https://paddleseg.bj.bcebos.com/dygraph/backbone/seaformer_base_imagenet_pretrained.zip
+    pretrained: https://paddleseg.bj.bcebos.com/dygraph/ade20k/backbone/seaformer_base_imagenet_pretrained.pdparams
   head_channels: 160
   embed_dims: [128, 160]
   is_dw: True
