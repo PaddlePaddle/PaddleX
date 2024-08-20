@@ -5,7 +5,7 @@
   - [部署步骤](#部署步骤)
 - [参考资料](#参考资料)
 
-本指南主要介绍 PaddleX 端侧部署 demo 在 Android shell 上的运行方法，有很好的的易用性和开放性，读者也可根据自己的需求在 demo 中使用自己训练的模型。
+本指南主要介绍 PaddleX 端侧部署 demo 在 Android shell 上的运行方法。
 本指南适用于下列 7 个任务的 10 个模型：
 - face_detection（人脸检测）
 - face_keypoints_detection（人脸关键点检测）
