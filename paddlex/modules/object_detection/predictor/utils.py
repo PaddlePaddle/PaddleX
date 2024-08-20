@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import codecs
 
 import yaml
 
 from ....utils import logging
 from ...base.predictor.transforms import image_common
-from .transforms import SaveDetResults, PadStride, DetResize
+from .transforms import SaveDetResults, PadStride, DetResize, Pad
 
 
 class InnerConfig(object):
@@ -71,6 +69,10 @@ class InnerConfig(object):
             elif cfg['type'] == 'PadStride':
                 stride = cfg.get('stride', 32)
                 tf = PadStride(stride=stride)
+            elif cfg['type'] == 'Pad':
+                fill_value = cfg.get('fill_value', [114.0, 114.0, 114.0])
+                size = cfg.get('size', [640, 640])
+                tf = Pad(size=size, fill_value=fill_value)
             else:
                 raise RuntimeError(f"Unsupported type: {cfg['type']}")
             tfs.append(tf)
