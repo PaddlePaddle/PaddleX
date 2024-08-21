@@ -46,7 +46,10 @@ class InnerConfig(object):
         for cfg in tfs_cfg:
             tf_key = list(cfg.keys())[0]
             if tf_key == 'NormalizeImage':
+                scale = cfg['NormalizeImage'].get("scale", 1. / 255)
+                scale = 1. / 255 if scale == '1.0/255.0' else scale
                 tf = image_common.Normalize(
+                    scale=scale,
                     mean=cfg['NormalizeImage'].get("mean",
                                                    [0.485, 0.456, 0.406]),
                     std=cfg['NormalizeImage'].get("std", [0.229, 0.224, 0.225]))
