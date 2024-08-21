@@ -81,6 +81,7 @@ def txt2pickle(images, equations, save_dir):
                 ):
                     divide_h = math.ceil(height / 16) * 16
                     divide_w = math.ceil(width / 16) * 16
+                    img_path = os.path.basename(img_path)
                     data[(divide_w, divide_h)].append((equation, img_path))
                     pic_num +=1
         data = dict(data)

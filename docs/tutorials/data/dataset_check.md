@@ -491,7 +491,7 @@ tar -xf ./dataset/ocr_rec_latexocr_dataset_example.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/LaTeX_OCR_rec.yml \
+python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.convert.enable=True \
