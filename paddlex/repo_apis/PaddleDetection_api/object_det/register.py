@@ -306,3 +306,81 @@ register_model_info({
         'amp': ['OFF']
     },
 })
+
+register_model_info({
+    'model_name': 'PicoDet-XS',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-XS.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'PicoDet-M',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-M.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'CenterNet-DLA-34',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'CenterNet-DLA-34.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'CenterNet-ResNet50',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'CenterNet-ResNet50.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FCOS-ResNet50',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FCOS-ResNet50.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'DETR-R50',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'DETR-R50.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})

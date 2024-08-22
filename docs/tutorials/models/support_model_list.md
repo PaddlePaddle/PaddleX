@@ -117,6 +117,8 @@
 | :--- | :---: |
 | PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
 | PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
+| PicoDet-M | [PicoDet-M.yaml](../../../paddlex/configs/object_detection/PicoDet-M.yaml)|
+| PicoDet-XS | [PicoDet-XS.yaml](../../../paddlex/configs/object_detection/PicoDet-XS.yaml)|
 ### 4. YOLOv3 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -132,6 +134,19 @@
 | YOLOX-S | [YOLOX-S.yaml](../../../paddlex/configs/object_detection/YOLOX-S.yaml)|
 | YOLOX-T | [YOLOX-T.yaml](../../../paddlex/configs/object_detection/YOLOX-T.yaml)|
 | YOLOX-X | [YOLOX-X.yaml](../../../paddlex/configs/object_detection/YOLOX-X.yaml)|
+### 6. CenterNet 系列
+| 模型名称 | config |
+| :--- | :---: |
+| CenterNet-DLA-34 | [CenterNet-DLA-34.yaml](../../../paddlex/configs/object_detection/CenterNet-DLA-34.yaml)|
+| CenterNet-ResNet50 | [CenterNet-ResNet50.yaml](../../../paddlex/configs/object_detection/CenterNet-ResNet50.yaml)|
+### 7. FCOS 系列
+| 模型名称 | config |
+| :--- | :---: |
+| FCOS-ResNet50 | [FCOS-ResNet50.yaml](../../../paddlex/configs/object_detection/FCOS-ResNet50.yaml)|
+### 8. DETR 系列
+| 模型名称 | config |
+| :--- | :---: |
+| DETR-R50 | [DETR-R50.yaml](../../../paddlex/configs/object_detection/DETR-R50.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |

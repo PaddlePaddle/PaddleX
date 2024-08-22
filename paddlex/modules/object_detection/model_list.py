@@ -16,6 +16,8 @@
 MODELS = [
     'PicoDet-L',
     'PicoDet-S',
+    'PicoDet-M',
+    'PicoDet-XS',
     'PP-YOLOE_plus-L',
     'PP-YOLOE_plus-M',
     'PP-YOLOE_plus-S',
@@ -35,4 +37,8 @@ MODELS = [
     "YOLOX-S",
     "YOLOX-T",
     "YOLOX-X",
+    "CenterNet-DLA-34",
+    "CenterNet-ResNet50",
+    "FCOS-ResNet50",
+    "DETR-R50",
 ]

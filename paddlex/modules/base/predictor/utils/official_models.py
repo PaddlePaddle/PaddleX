@@ -211,6 +211,10 @@ CLIP_vit_large_patch14_224_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-S.tar",
     "PicoDet-L":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-L.tar",
+    "PicoDet-M":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-M_infer.tar",
+    "PicoDet-XS":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-XS_infer.tar",
     "Deeplabv3-R50":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Deeplabv3-R50_infer.tar",
     "Deeplabv3-R101":
@@ -278,6 +282,14 @@ openatom_rec_svtrv2_ch_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SLANet_infer.tar",
     "LaTeX_OCR_rec":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/LaTeX_OCR_rec_infer.tar",
+    "CenterNet-DLA-34":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/CenterNet-DLA-34_infer.tar",
+    "CenterNet-ResNet50":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/CenterNet-ResNet50_infer.tar",
+    "FCOS-ResNet50":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FCOS-ResNet50_infer.tar",
+    "DETR-R50":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/DETR-R50_infer.tar",
 }
 
 
