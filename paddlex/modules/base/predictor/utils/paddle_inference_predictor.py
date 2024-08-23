@@ -53,10 +53,15 @@ self._create(param_path, model_path, option, delete_pass=delete_pass)
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
             os.environ[
                 "CUSTOM_DEVICE_BLACK_LIST"] = "pad3d,pad3d_grad,set_value,set_value_with_tensor"
+            os.environ["FLAGS_npu_scale_aclnn"] = "True"
+            os.environ["FLAGS_npu_split_aclnn"] = "True"
         elif option.device == 'xpu':
-            config.enable_custom_device('npu')
+            os.environ["BKCL_FORCE_SYNC"] = "1"
+            os.environ["BKCL_TIMEOUT"] = "1800"
+            os.environ["FLAGS_use_stride_kernel"] = "0"
         elif option.device == 'mlu':
             config.enable_custom_device('mlu')
+            os.environ["FLAGS_use_stride_kernel"] = "0"
         else:
             assert option.device == 'cpu'
             config.disable_gpu()

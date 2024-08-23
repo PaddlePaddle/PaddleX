@@ -1,4 +1,4 @@
-# PaddleX模型列表
+# PaddleX模型列表（昇腾）
 
 ## 一、图像分类
 ### 1. ResNet系列
