@@ -1,4 +1,5 @@
 # Runtime
+use_ema: true
 find_unused_parameters: True
 use_gpu: true
 use_xpu: false
