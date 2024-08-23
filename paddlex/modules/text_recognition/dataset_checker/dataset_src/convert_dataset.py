@@ -55,13 +55,14 @@ def convert(dataset_type, input_dir):
 
 def convert_pkl_dataset(root_dir):
     for anno in ['train.txt','val.txt']:
-        src_img_dir = os.path.join(root_dir, anno.replace(".txt",""))
+        src_img_dir = root_dir
         src_anno_path = os.path.join(root_dir, anno)
         txt2pickle(src_img_dir, src_anno_path, root_dir)
 
 def txt2pickle(images, equations, save_dir):
     imagesize = try_import("imagesize")
-    save_p = os.path.join(save_dir, "latexocr_{}.pkl".format(images.split("/")[-1]))
+    phase = os.path.basename(equations).replace(".txt","")
+    save_p = os.path.join(save_dir, "latexocr_{}.pkl".format(phase))
     min_dimensions = (32, 32)
     max_dimensions = (672, 192)
     max_length = 512
@@ -73,7 +74,7 @@ def txt2pickle(images, equations, save_dir):
             for l in tqdm(lines, total = len(lines)):
                 l = l.strip()
                 img_name, equation = l.split("\t")
-                img_path = os.path.join( os.path.abspath(images), img_name)
+                img_path = os.path.join(images,img_name)
                 width, height = imagesize.get(img_path)
                 if (
                     min_dimensions[0] <= width <= max_dimensions[0]
@@ -81,8 +82,7 @@ def txt2pickle(images, equations, save_dir):
                 ):
                     divide_h = math.ceil(height / 16) * 16
                     divide_w = math.ceil(width / 16) * 16
-                    img_path = os.path.basename(img_path)
-                    data[(divide_w, divide_h)].append((equation, img_path))
+                    data[(divide_w, divide_h)].append((equation, img_name))
                     pic_num +=1
         data = dict(data)
         with open(save_p, "wb") as file:

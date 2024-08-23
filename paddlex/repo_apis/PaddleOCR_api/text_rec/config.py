@@ -95,11 +95,11 @@ class TextRecConfig(BaseConfig):
         elif dataset_type == "LaTeXOCRDataSet":
             _cfg = {
                     'Train.dataset.name': dataset_type,
-                    'Train.dataset.data_dir': os.path.join(dataset_path, "train"),
+                    'Train.dataset.data_dir': dataset_path,
                     'Train.dataset.data': os.path.join(dataset_path, "latexocr_train.pkl"),
                     'Train.dataset.label_file_list': [train_list_path],
                     'Eval.dataset.name': dataset_type,
-                    'Eval.dataset.data_dir': os.path.join(dataset_path, "val"),
+                    'Eval.dataset.data_dir': dataset_path,
                     'Eval.dataset.data': os.path.join(dataset_path, "latexocr_val.pkl"),
                     'Eval.dataset.label_file_list':
                     [os.path.join(dataset_path, 'val.txt')],
