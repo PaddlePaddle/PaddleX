@@ -45,10 +45,3 @@ register_model_info({
     'config_path': osp.join(PDX_CONFIG_DIR, 'PP-OCRv4_server_det.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export']
 })
-
-register_model_info({
-    'model_name': 'RepSVTR_mobile_det',
-    'suite': 'TextDet',
-    'config_path': osp.join(PDX_CONFIG_DIR, 'RepSVTR_mobile_det.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export']
-})

@@ -1,27 +1,26 @@
 Global:
-  model: RepSVTR_mobile_det
+  model: ch_SVTRv2_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
-  module: text_det
-  dataset_dir: "/paddle/dataset/paddlex/ocr_det/ocr_det_dataset_examples"
+  dataset_dir: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples"
   device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
-  convert:
+  convert: 
     enable: False
     src_dataset_type: null
-  split:
+  split: 
     enable: False
     train_percent: null
     val_percent: null
 
 Train:
-  epochs_iters: 100
-  batch_size: 4
+  epochs_iters: 20
+  batch_size: 8
   learning_rate: 0.001
   pretrain_weight_path: null
   resume_path: null
-  log_interval: 10
+  log_interval: 20
   eval_interval: 1
   save_interval: 1
 
@@ -31,7 +30,7 @@ Evaluate:
 
 Predict:
   model_dir: "output/best_accuracy"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png"
   kernel_option:
     run_mode: paddle
     batch_size: 1

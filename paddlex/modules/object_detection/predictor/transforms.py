@@ -270,6 +270,45 @@ class PadStride(BaseTransform):
         return [K.IMAGE]
 
 
+class Pad(BaseTransform):
+    def __init__(self, size, fill_value=[114.0, 114.0, 114.0]):
+        """
+        Pad image to a specified size.
+        Args:
+            size (list[int]): image target size
+            fill_value (list[float]): rgb value of pad area, default (114.0, 114.0, 114.0)
+        """
+        super(Pad, self).__init__()
+        if isinstance(size, int):
+            size = [size, size]
+        self.size = size
+        self.fill_value = fill_value
+
+    def apply(self, data):
+        im = data[K.IMAGE]
+        im_h, im_w = im.shape[:2]
+        h, w = self.size
+        if h == im_h and w == im_w:
+            # im = im.astype(np.float32)
+            return data
+
+        canvas = np.ones((h, w, 3), dtype=np.float32)
+        canvas *= np.array(self.fill_value, dtype=np.float32)
+        canvas[0:im_h, 0:im_w, :] = im.astype(np.float32)
+        data[K.IMAGE] = canvas
+        return data
+
+    @classmethod
+    def get_input_keys(cls):
+        """ get input keys """
+        return [K.IMAGE]
+
+    @classmethod
+    def get_output_keys(cls):
+        """ get output keys """
+        return [K.IMAGE]
+
+
 class DetResize(_BaseResize):
     """
     Resize the image.

@@ -87,12 +87,18 @@ def _extract_zip_file(file_path, extd_dir):
 
 def _extract_tar_file(file_path, extd_dir):
     """ extract tar file """
-    with tarfile.open(file_path, 'r:*') as f:
-        file_list = f.getnames()
-        total_num = len(file_list)
-        for index, file in enumerate(file_list):
-            f.extract(file, extd_dir)
-            yield total_num, index
+    try:
+        with tarfile.open(file_path, 'r:*') as f:
+            file_list = f.getnames()
+            total_num = len(file_list)
+            for index, file in enumerate(file_list):
+                try:
+                    f.extract(file, extd_dir)
+                except KeyError:
+                    print(f"File {file} not found in the archive.")
+                yield total_num, index
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
 def _extract(file_path, extd_dir, print_progress):
