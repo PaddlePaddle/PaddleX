@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 import paddle
 from .errors import raise_unsupported_device_error
@@ -35,6 +33,14 @@ def get_device(device_cfg, using_device_number=None):
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
             os.environ[
                 "CUSTOM_DEVICE_BLACK_LIST"] = "pad3d,pad3d_grad,set_value,set_value_with_tensor"
+            os.environ["FLAGS_npu_scale_aclnn"] = "True"
+            os.environ["FLAGS_npu_split_aclnn"] = "True"
+        if device.lower() == "xpu":
+            os.environ["BKCL_FORCE_SYNC"] = "1"
+            os.environ["BKCL_TIMEOUT"] = "1800"
+            os.environ["FLAGS_use_stride_kernel"] = "0"
+        if device.lower() == "mlu":
+            os.environ["FLAGS_use_stride_kernel"] = "0"
 
         if len(device_cfg.split(":")) == 2:
             device_ids = device_cfg.split(":")[1]
