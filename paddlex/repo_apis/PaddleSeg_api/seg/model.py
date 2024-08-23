@@ -18,6 +18,8 @@ from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
 from ....utils.misc import abspath
+from ....utils.download import download
+from ....utils.cache import DEFAULT_CACHE_DIR
 
 
 class SegModel(BaseModel):
@@ -309,7 +311,15 @@ class SegModel(BaseModel):
         config = self.config.copy()
         cli_args = []
 
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith('http'):
+            weight_path = abspath(weight_path)
+        else:
+            filename = os.path.basename(weight_path)
+            save_path = os.path.join(DEFAULT_CACHE_DIR, filename)
+            download(
+                weight_path, save_path, print_progress=True, overwrite=True)
+            weight_path = save_path
+
         cli_args.append(CLIArgument('--model_path', weight_path))
 
         if save_dir is not None:

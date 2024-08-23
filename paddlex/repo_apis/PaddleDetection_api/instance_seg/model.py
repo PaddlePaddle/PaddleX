@@ -241,7 +241,8 @@ class InstanceSegModel(BaseModel):
         config = self.config.copy()
         cli_args = []
 
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith('http'):
+            weight_path = abspath(weight_path)
         config.update_weights(weight_path)
         save_dir = abspath(save_dir)
         cli_args.append(CLIArgument('--output_dir', save_dir))

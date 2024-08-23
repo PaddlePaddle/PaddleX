@@ -30,6 +30,9 @@ Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 1
 
+Export:
+  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/foundation_models/CLIP_vit_large_patch14_224.pdparams
+
 Predict:
   model_dir: "output/best_model"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"

@@ -233,7 +233,8 @@ class TextRecModel(BaseModel):
         """
         config = self.config.copy()
 
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith('http'):
+            weight_path = abspath(weight_path)
         config.update_pretrained_weights(weight_path)
 
         save_dir = abspath(save_dir)

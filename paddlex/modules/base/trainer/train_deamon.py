@@ -51,8 +51,8 @@ class BaseTrainDeamon(ABC):
     def __init__(self, config):
         """ init """
         self.global_config = config.Global
-        self.disable_deamon = config.get("Benchmark", {}).get(
-            "disable_deamon", False)
+        self.disable_deamon = config.get("Benchmark", {}).get("disable_deamon",
+                                                              False)
         self.init_pre_hook()
         self.output = self.global_config.output
         self.train_outputs = self.get_train_outputs()
@@ -329,7 +329,7 @@ class BaseTrainDeamon(ABC):
         """ update inference model """
         export_save_dir.mkdir(parents=True, exist_ok=True)
         export_result = model.export(
-            weight_path=weight_path, save_dir=export_save_dir)
+            weight_path=str(weight_path), save_dir=export_save_dir)
 
         if export_result.returncode == 0:
             inference_config = export_save_dir.joinpath("inference.yml")

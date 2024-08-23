@@ -31,7 +31,7 @@ Evaluate:
   log_interval: 1
 
 Export:
-  weight_path: "output/best_model.pdparams"
+  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/PPLCNet_x1_0_pretrained.pdparams
 
 Predict:
   model_dir: "output/best_model"
