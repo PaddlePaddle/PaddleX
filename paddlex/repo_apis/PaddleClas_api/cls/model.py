@@ -209,7 +209,8 @@ class ClsModel(BaseModel):
         Returns:
             CompletedProcess: the result of exporting subprocess execution.
         """
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith('http'):
+            weight_path = abspath(weight_path)
         save_dir = abspath(save_dir)
 
         with self._create_new_config_file() as config_path:

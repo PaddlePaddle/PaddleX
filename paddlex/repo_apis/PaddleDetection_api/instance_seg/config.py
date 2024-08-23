@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -294,7 +294,7 @@ class InstanceSegConfig(DetConfig):
         Args:
             weight_path (str): the path to weight file of model.
         """
-        self['weights'] = abspath(weight_path)
+        self['weights'] = weight_path
 
     def update_pretrained_weights(self, pretrain_weights: str):
         """update pretrained weight path
