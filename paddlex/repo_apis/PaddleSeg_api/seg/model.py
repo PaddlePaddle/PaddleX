@@ -132,6 +132,7 @@ class SegModel(BaseModel):
             config.update_log_ranks(device)
             amp = benchmark.get('amp', None)
             config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            config.update_shuffle(benchmark.get('shuffle', False))
             if repeats is not None:
                 assert isinstance(repeats, int), 'repeats must be an integer.'
                 cli_args.append(CLIArgument('--repeats', repeats))
