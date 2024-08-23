@@ -73,6 +73,11 @@ class BaseSegConfig(BaseConfig):
                           bool), "print_mem_info should be a bool"
         self.set_val('print_mem_info', print_mem_info)
 
+    def update_shuffle(self, shuffle: bool):
+        """setting print memory info"""
+        assert isinstance(shuffle, bool), "shuffle should be a bool"
+        self.set_val('shuffle', shuffle)
+
     def update_pretrained_weights(self, weight_path, is_backbone=False):
         """ update_pretrained_weights """
         if 'model' not in self:
