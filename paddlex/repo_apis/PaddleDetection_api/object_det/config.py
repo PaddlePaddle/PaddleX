@@ -350,6 +350,10 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
             num_classes (int): the classes number value to set.
         """
         self['num_classes'] = num_classes
+        if 'CenterNet' in self.model_name:
+            for i in range(len(self['TrainReader']['sample_transforms'])):
+                if 'Gt2CenterNetTarget' in self['TrainReader']['sample_transforms'][i].keys():
+                    self['TrainReader']['sample_transforms'][i]['Gt2CenterNetTarget']['num_classes'] = num_classes
 
     def update_random_size(self, randomsize: list[list[int, int]]):
         """update `target_size` of `BatchRandomResize` op in TestReader

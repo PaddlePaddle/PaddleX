@@ -2,7 +2,7 @@ Global:
   model: PicoDet-XS
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
-  device: gpu:4
+  device: gpu:0
   output: "output"
 
 CheckDataset:
@@ -17,7 +17,7 @@ CheckDataset:
 Train:
   num_classes: 80
   epochs_iters: 50
-  batch_size: 1
+  batch_size: 2
   learning_rate: #0.08
   pretrain_weight_path: null
   warmup_steps: #100

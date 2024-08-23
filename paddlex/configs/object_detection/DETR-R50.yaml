@@ -17,7 +17,7 @@ CheckDataset:
 Train:
   num_classes: 4
   epochs_iters: 50
-  batch_size: 16
+  batch_size: 2
   learning_rate: #0.08
   pretrain_weight_path: null
   warmup_steps: #100
