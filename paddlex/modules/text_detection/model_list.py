@@ -15,5 +15,4 @@
 MODELS = [
     'PP-OCRv4_mobile_det',
     'PP-OCRv4_server_det',
-    'RepSVTR_mobile_det',
 ]

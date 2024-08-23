@@ -1,5 +1,5 @@
 Global:
-  model: SVTRv2_server_rec
+  model: ch_RepSVTR_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples"
   device: gpu:0,1,2,3

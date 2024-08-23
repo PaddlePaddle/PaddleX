@@ -15,7 +15,7 @@
 MODELS = [
     'PP-OCRv4_mobile_rec',
     'PP-OCRv4_server_rec',
-    'SVTRv2_server_rec',
-    'RepSVTR_mobile_rec',
+    'ch_SVTRv2_rec',
+    'ch_RepSVTR_rec',
     'LaTeX_OCR_rec',
 ]
