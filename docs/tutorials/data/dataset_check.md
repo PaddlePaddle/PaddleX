@@ -491,11 +491,9 @@ tar -xf ./dataset/ocr_rec_latexocr_dataset_example.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/LaTeX_OCR_rec.yml \
+python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
-    -o CheckDataset.convert.enable=True \
-    -o CheckDataset.convert.src_dataset_type=PKL
+    -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example 
 ```
 
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为

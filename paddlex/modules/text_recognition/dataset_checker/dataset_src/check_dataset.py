@@ -80,10 +80,7 @@ def check(dataset_dir,
                                 "in {file_list} should be {valid_num_parts} (current delimiter is '{delim}')."
                             )
                         file_name = substr[0]
-                        if dataset_type == 'LaTeXOCRDataset':
-                           img_path = osp.join(dataset_dir, tag, file_name)                        
-                        else:
-                            img_path = osp.join(dataset_dir, file_name)
+                        img_path = osp.join(dataset_dir, file_name)
                         if len(sample_paths[tag]) < max_recorded_sample_cnts:
                             sample_paths[tag].append(
                                 os.path.relpath(img_path, output))
