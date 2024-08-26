@@ -144,7 +144,7 @@ class LaTeXOCRReisizeNormImg(BaseTransform):
         shape = (1, 1, 3)
         mean = [0.7931, 0.7931, 0.7931]
         std = [0.1738, 0.1738, 0.1738]
-        scale = 255.0
+        scale = np.float32(1.0 / 255.0)
         min_dimensions = [32, 32]
         max_dimensions = [672, 192]
         mean = np.array(mean).reshape(shape).astype("float32")
