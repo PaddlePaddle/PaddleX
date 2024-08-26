@@ -54,5 +54,5 @@ paddlex --install
 
 ## 2、PaddleX 使用
 
-PaddleX 模型训练/评估/推理的详细使用方法，参考文档：[模型训练/评估/推理](./README.md)
+PaddleX 模型训练/评估/推理的详细使用方法，参考文档：[PaddleX 单模型开发工具](../models/model_develop_tools.md)
 在具体设备上，根据所属硬件平台，添加配置设备的参数，即可在对应硬件上使用上述工具。
