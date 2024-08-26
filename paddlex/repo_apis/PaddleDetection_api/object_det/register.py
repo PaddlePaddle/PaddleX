@@ -306,3 +306,148 @@ register_model_info({
         'amp': ['OFF']
     },
 })
+
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet34-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet34-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet50',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet50-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet50-vd-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50-vd-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet50-vd-SSLDv2-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet101',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet101.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNet101-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet101-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-ResNeXt101-vd-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNeXt101-vd-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'FasterRCNN-Swin-Tiny-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-Swin-Tiny-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+
+register_model_info({
+    'model_name': 'Cascade-FasterRCNN-ResNet50-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'Cascade-FasterRCNN-ResNet50-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
