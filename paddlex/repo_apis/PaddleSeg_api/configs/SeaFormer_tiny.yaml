@@ -6,7 +6,6 @@ model:
   backbone: 
     type: SeaFormer_tiny
     pretrained: https://bj.bcebos.com/paddleseg/dygraph/ade20k/backbone/seaformer_tiny_imagenet_pretrained.pdparams
-  num_classes: 150
   head_channels: 96
   embed_dims: [64, 96]
   is_dw: True
