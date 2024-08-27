@@ -104,7 +104,7 @@ class SegPredictor(BasePredictor):
             f"Transformation operators for data preprocessing will be inferred from config file."
         )
         pre_transforms = self.other_src.pre_transforms
-        pre_transforms.insert(0, image_common.ReadImage())
+        pre_transforms.insert(0, image_common.ReadImage(format="RGB"))
         pre_transforms.append(image_common.ToCHWImage())
         return pre_transforms
 
