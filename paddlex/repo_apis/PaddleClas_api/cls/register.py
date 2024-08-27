@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -490,6 +490,13 @@ register_model_info({
 
 register_model_info({
     'model_name': 'ConvNeXt_large_224',
+    'suite': 'Cls',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_large_224.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export'],
+})
+
+register_model_info({
+    'model_name': 'ConvNeXt_large_384',
     'suite': 'Cls',
     'config_path': osp.join(PDX_CONFIG_DIR, 'ConvNeXt_large_384.yaml'),
     'supported_apis': ['train', 'evaluate', 'predict', 'export'],
