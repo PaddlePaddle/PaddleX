@@ -68,6 +68,8 @@ class _PaddleInferencePredictor(object):
         else:
             assert option.device == "cpu"
             config.disable_gpu()
+            config.enable_new_ir(True)
+            config.enable_new_executor(True)
             if "mkldnn" in option.run_mode:
                 try:
                     config.enable_mkldnn()
