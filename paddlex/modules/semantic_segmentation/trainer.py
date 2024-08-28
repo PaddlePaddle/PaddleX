@@ -79,6 +79,7 @@ class SegTrainer(BaseTrainer):
         if self.train_config.eval_interval:
             train_args["do_eval"] = True
             train_args["save_interval"] = self.train_config.eval_interval
+        train_args["dy2st"] = self.train_config.get("dy2st", False)
         return train_args
 
 

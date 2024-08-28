@@ -74,7 +74,7 @@ class TextDetTrainer(BaseTrainer):
         Returns:
             dict: the arguments of training function.
         """
-        return {"device": self.get_device()}
+        return {"device": self.get_device(), "dy2st": self.train_config.get("dy2st", False)}
 
 
 class TextDetTrainDeamon(BaseTrainDeamon):
