@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 
 from operator import le
@@ -27,21 +26,22 @@ from ..model_list import MODELS
 
 
 class TextDetPredictor(BasePredictor):
-    """ TextDetPredictor """
+    """TextDetPredictor"""
+
     entities = MODELS
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [[K.IMAGE], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.PROB_MAP, K.SHAPE]
 
     def _run(self, batch_input):
-        """ _run """
+        """_run"""
         if len(batch_input) != 1:
             raise ValueError(
                 f"For `{self.__class__.__name__}`, batch size can only be set to 1."
@@ -59,18 +59,21 @@ class TextDetPredictor(BasePredictor):
         return pred
 
     def _get_pre_transforms_from_config(self):
-        """ get preprocess transforms """
+        """get preprocess transforms"""
         return [
-            image_common.ReadImage(), T.DetResizeForTest(
-                limit_side_len=960, limit_type="max"), T.NormalizeImage(
-                    mean=[0.485, 0.456, 0.406],
-                    std=[0.229, 0.224, 0.225],
-                    scale=1. / 255,
-                    order='hwc'), image_common.ToCHWImage()
+            image_common.ReadImage(),
+            T.DetResizeForTest(limit_side_len=960, limit_type="max"),
+            T.NormalizeImage(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+                scale=1.0 / 255,
+                order="hwc",
+            ),
+            image_common.ToCHWImage(),
         ]
 
     def _get_post_transforms_from_config(self):
-        """ get postprocess transforms """
+        """get postprocess transforms"""
         post_transforms = [
             T.DBPostProcess(
                 thresh=0.3,
@@ -78,8 +81,10 @@ class TextDetPredictor(BasePredictor):
                 max_candidates=1000,
                 unclip_ratio=1.5,
                 use_dilation=False,
-                score_mode='fast',
-                box_type='quad'), T.SaveTextDetResults(self.output),
-            T.PrintResult()
+                score_mode="fast",
+                box_type="quad",
+            ),
+            T.SaveTextDetResults(self.output),
+            T.PrintResult(),
         ]
         return post_transforms

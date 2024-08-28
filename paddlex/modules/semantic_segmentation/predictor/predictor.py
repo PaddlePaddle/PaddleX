@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -27,46 +27,49 @@ from ..model_list import MODELS
 
 
 class SegPredictor(BasePredictor):
-    """ SegPredictor """
+    """SegPredictor"""
+
     entities = MODELS
 
-    def __init__(self,
-                 model_name,
-                 model_dir,
-                 kernel_option,
-                 output,
-                 pre_transforms=None,
-                 post_transforms=None,
-                 has_prob_map=False):
+    def __init__(
+        self,
+        model_name,
+        model_dir,
+        kernel_option,
+        output,
+        pre_transforms=None,
+        post_transforms=None,
+        has_prob_map=False,
+    ):
         super().__init__(
             model_name=model_name,
             model_dir=model_dir,
             kernel_option=kernel_option,
             output=output,
             pre_transforms=pre_transforms,
-            post_transforms=post_transforms)
+            post_transforms=post_transforms,
+        )
         self.has_prob_map = has_prob_map
 
     def load_other_src(self):
-        """ load the inner config file """
-        infer_cfg_file_path = os.path.join(self.model_dir, 'inference.yml')
+        """load the inner config file"""
+        infer_cfg_file_path = os.path.join(self.model_dir, "inference.yml")
         if not os.path.exists(infer_cfg_file_path):
-            raise FileNotFoundError(
-                f"Cannot find config file: {infer_cfg_file_path}")
+            raise FileNotFoundError(f"Cannot find config file: {infer_cfg_file_path}")
         return InnerConfig(infer_cfg_file_path)
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [[K.IMAGE], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.SEG_MAP]
 
     def _run(self, batch_input):
-        """ run """
+        """run"""
         # XXX:
         os.environ.pop("FLAGS_npu_jit_compile", None)
         images = [data[K.IMAGE] for data in batch_input]
@@ -89,7 +92,7 @@ class SegPredictor(BasePredictor):
         return pred
 
     def _get_pre_transforms_from_config(self):
-        """ _get_pre_transforms_from_config """
+        """_get_pre_transforms_from_config"""
         # If `K.IMAGE` (the decoded image) is found, return a default list of
         # transformation operators for the input (if possible).
         # If `K.IMAGE` (the decoded image) is not found, `K.IM_PATH` (the image
@@ -106,7 +109,5 @@ class SegPredictor(BasePredictor):
         return pre_transforms
 
     def _get_post_transforms_from_config(self):
-        """ _get_post_transforms_from_config """
-        return [
-            T.GeneratePCMap(), T.SaveSegResults(self.output), T.PrintResult()
-        ]
+        """_get_post_transforms_from_config"""
+        return [T.GeneratePCMap(), T.SaveSegResults(self.output), T.PrintResult()]

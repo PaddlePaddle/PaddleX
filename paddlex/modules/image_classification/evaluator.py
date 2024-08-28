@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,19 +18,18 @@ from .model_list import MODELS
 
 
 class ClsEvaluator(BaseEvaluator):
-    """ Image Classification Model Evaluator """
+    """Image Classification Model Evaluator"""
+
     entities = MODELS
 
     def update_config(self):
-        """update evalution config
-        """
+        """update evalution config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         if self.pdx_config["Arch"]["name"] == "DistillationModel":
             self.pdx_config.update_teacher_model(pretrained=False)
             self.pdx_config.update_student_model(pretrained=False)
-        self.pdx_config.update_dataset(self.global_config.dataset_dir,
-                                       "ClsDataset")
+        self.pdx_config.update_dataset(self.global_config.dataset_dir, "ClsDataset")
         self.pdx_config.update_pretrained_weights(self.eval_config.weight_path)
 
     def get_eval_kwargs(self) -> dict:
@@ -41,5 +40,5 @@ class ClsEvaluator(BaseEvaluator):
         """
         return {
             "weight_path": self.eval_config.weight_path,
-            "device": self.get_device(using_device_number=1)
+            "device": self.get_device(using_device_number=1),
         }

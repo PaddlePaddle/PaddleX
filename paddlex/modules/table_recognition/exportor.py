@@ -17,5 +17,6 @@ from .model_list import MODELS
 
 
 class TableRecExportor(BaseExportor):
-    """ Table Recognition Model Exportor """
+    """Table Recognition Model Exportor"""
+
     entities = MODELS

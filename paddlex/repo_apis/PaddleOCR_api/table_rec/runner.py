@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,10 +18,11 @@ from ...base.utils.subprocess import CompletedProcess
 
 
 class TableRecRunner(TextRecRunner):
-    """ Table Recognition Runner """
+    """Table Recognition Runner"""
 
-    def predict(self, config_path: str, cli_args: list,
-                device: str) -> CompletedProcess:
+    def predict(
+        self, config_path: str, cli_args: list, device: str
+    ) -> CompletedProcess:
         """run predicting using dynamic mode
 
         Args:
@@ -32,11 +33,10 @@ class TableRecRunner(TextRecRunner):
         Returns:
             CompletedProcess: the result of predicting subprocess execution.
         """
-        cmd = [self.python, 'tools/infer_table.py', '-c', config_path]
+        cmd = [self.python, "tools/infer_table.py", "-c", config_path]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
-    def infer(self, config_path: str, cli_args: list,
-              device: str) -> CompletedProcess:
+    def infer(self, config_path: str, cli_args: list, device: str) -> CompletedProcess:
         """run predicting using inference model
 
         Args:
@@ -47,5 +47,5 @@ class TableRecRunner(TextRecRunner):
         Returns:
             CompletedProcess: the result of infering subprocess execution.
         """
-        cmd = [self.python, 'ppstructure/table/predict_structure.py', *cli_args]
+        cmd = [self.python, "ppstructure/table/predict_structure.py", *cli_args]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)

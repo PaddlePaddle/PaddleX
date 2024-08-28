@@ -1,6 +1,6 @@
 # Copyright (c) 2023 PaddlePaddle Authors. All Rights Reserved.
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,11 +18,11 @@ import inspect
 import functools
 import itertools
 
-__all__ = ['batchable_method', 'apply_batch', 'Batcher']
+__all__ = ["batchable_method", "apply_batch", "Batcher"]
 
 
 def batchable_method(func):
-    """ batchable """
+    """batchable"""
 
     @functools.wraps(func)
     def _wrapper(self, input_, *args, **kwargs):
@@ -37,13 +37,12 @@ def batchable_method(func):
 
     sig = inspect.signature(func)
     if not len(sig.parameters) >= 2:
-        raise TypeError(
-            "The function to wrap should have at least two parameters.")
+        raise TypeError("The function to wrap should have at least two parameters.")
     return _wrapper
 
 
 def apply_batch(batch, callable_, *args, **kwargs):
-    """ apply batch  """
+    """apply batch"""
     output = []
     for ele in batch:
         out = callable_(ele, *args, **kwargs)
@@ -52,7 +51,7 @@ def apply_batch(batch, callable_, *args, **kwargs):
 
 
 class Batcher(object):
-    """ Batcher """
+    """Batcher"""
 
     def __init__(self, iterable, batch_size=None):
         super().__init__()

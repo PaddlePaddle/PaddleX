@@ -17,5 +17,6 @@ from .model_list import MODELS
 
 
 class SegExportor(BaseExportor):
-    """ Semantic Segmentation Model Exportor """
+    """Semantic Segmentation Model Exportor"""
+
     entities = MODELS

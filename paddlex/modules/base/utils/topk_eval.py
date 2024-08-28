@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -23,20 +23,19 @@ from ....utils import logging
 
 
 def parse_args():
-    """Parse all arguments """
+    """Parse all arguments"""
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--prediction_json_path', type=str, default='./pre_res.json')
-    parser.add_argument('--gt_val_path', type=str, default='./val.txt')
-    parser.add_argument('--image_dir', type=str)
-    parser.add_argument('--num_classes', type=int)
+    parser.add_argument("--prediction_json_path", type=str, default="./pre_res.json")
+    parser.add_argument("--gt_val_path", type=str, default="./val.txt")
+    parser.add_argument("--image_dir", type=str)
+    parser.add_argument("--num_classes", type=int)
 
     args = parser.parse_args()
     return args
 
 
 class AvgMetrics(nn.Layer):
-    """ Average metrics """
+    """Average metrics"""
 
     def __init__(self):
         super().__init__()
@@ -44,20 +43,19 @@ class AvgMetrics(nn.Layer):
 
     @property
     def avg(self):
-        """ Return average value of each metric """
+        """Return average value of each metric"""
         if self.avg_meters:
             for metric_key in self.avg_meters:
                 return self.avg_meters[metric_key].avg
 
     @property
     def avg_info(self):
-        """ Return a formatted string of average values and names """
-        return ", ".join(
-            [self.avg_meters[key].avg_info for key in self.avg_meters])
+        """Return a formatted string of average values and names"""
+        return ", ".join([self.avg_meters[key].avg_info for key in self.avg_meters])
 
 
 class TopkAcc(AvgMetrics):
-    """ Top-k accuracy metric """
+    """Top-k accuracy metric"""
 
     def __init__(self, topk=(1, 5)):
         super().__init__()
@@ -68,7 +66,7 @@ class TopkAcc(AvgMetrics):
         self.warned = False
 
     def forward(self, x, label):
-        """ forward function """
+        """forward function"""
         if isinstance(x, dict):
             x = x["logits"]
 
@@ -83,13 +81,12 @@ class TopkAcc(AvgMetrics):
                     self.warned = True
                 metric_dict[f"top{k}"] = 1
             else:
-                metric_dict[f"top{k}"] = paddle.metric.accuracy(
-                    x, label, k=k).item()
+                metric_dict[f"top{k}"] = paddle.metric.accuracy(x, label, k=k).item()
         return metric_dict
 
 
 def prase_pt_info(pt_info, num_classes):
-    """ Parse prediction information to probability vector """
+    """Parse prediction information to probability vector"""
     pre_list = [0.0] * num_classes
     for idx, val in zip(pt_info["class_ids"], pt_info["scores"]):
         pre_list[idx] = val
@@ -97,8 +94,8 @@ def prase_pt_info(pt_info, num_classes):
 
 
 def main(args):
-    """ main function """
-    with open(args.prediction_json_path, 'r') as fp:
+    """main function"""
+    with open(args.prediction_json_path, "r") as fp:
         predication_result = json.load(fp)
     gt_info = {}
 
@@ -106,10 +103,10 @@ def main(args):
     label = []
     for line in open(args.gt_val_path):
         img_file, gt_label = line.strip().split(" ")
-        img_file = img_file.split('/')[-1]
+        img_file = img_file.split("/")[-1]
         gt_info[img_file] = int(gt_label)
     for pt_info in predication_result:
-        img_file = os.path.relpath(pt_info['file_name'], args.image_dir)
+        img_file = os.path.relpath(pt_info["file_name"], args.image_dir)
         pred.append(prase_pt_info(pt_info, args.num_classes))
         label.append([gt_info[img_file]])
     metric_dict = TopkAcc()(paddle.to_tensor(pred), paddle.to_tensor(label))

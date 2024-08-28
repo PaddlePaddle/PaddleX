@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,139 +21,126 @@ from ..ts_base.model import TSModel
 from .runner import TSADRunner
 from .config import TSAnomalyConfig
 
-REPO_ROOT_PATH = os.environ.get('PADDLE_PDX_PADDLETS_PATH')
-PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', 'configs'))
+REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLETS_PATH")
+PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
 
-register_suite_info({
-    'suite_name': 'TSAnomaly',
-    'model': TSModel,
-    'runner': TSADRunner,
-    'config': TSAnomalyConfig,
-    'runner_root_path': REPO_ROOT_PATH
-})
+register_suite_info(
+    {
+        "suite_name": "TSAnomaly",
+        "model": TSModel,
+        "runner": TSADRunner,
+        "config": TSAnomalyConfig,
+        "runner_root_path": REPO_ROOT_PATH,
+    }
+)
 
 ################ Models Using Universal Config ################
 
 # timesnet
-TimesNetAD_CFG_PATH = osp.join(PDX_CONFIG_DIR, 'TimesNet_ad.yaml')
-register_model_info({
-    'model_name': 'TimesNet_ad',
-    'suite': 'TSAnomaly',
-    'config_path': TimesNetAD_CFG_PATH,
-    'auto_compression_config_path': TimesNetAD_CFG_PATH,
-    'supported_apis': ['train', 'evaluate', 'predict'],
-    'supported_train_opts': {
-        'device': ['cpu', 'gpu_n1cx'],
-        'dy2st': False,
-        'amp': []
-    },
-    'supported_evaluate_opts': {
-        'device': ['cpu', 'gpu_n1cx'],
-        'amp': []
-    },
-    'supported_predict_opts': {
-        'device': ['cpu', 'gpu']
-    },
-    'supported_infer_opts': {
-        'device': ['cpu', 'gpu']
-    },
-    'supported_compression_opts': {
-        'device': ['cpu', 'gpu_n1cx']
-    },
-})
+TimesNetAD_CFG_PATH = osp.join(PDX_CONFIG_DIR, "TimesNet_ad.yaml")
+register_model_info(
+    {
+        "model_name": "TimesNet_ad",
+        "suite": "TSAnomaly",
+        "config_path": TimesNetAD_CFG_PATH,
+        "auto_compression_config_path": TimesNetAD_CFG_PATH,
+        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_n1cx"],
+            "dy2st": False,
+            "amp": [],
+        },
+        "supported_evaluate_opts": {"device": ["cpu", "gpu_n1cx"], "amp": []},
+        "supported_predict_opts": {"device": ["cpu", "gpu"]},
+        "supported_infer_opts": {"device": ["cpu", "gpu"]},
+        "supported_compression_opts": {"device": ["cpu", "gpu_n1cx"]},
+    }
+)
 
 # autoencoder_anomaly
-AE_CFG_PATH = osp.join(PDX_CONFIG_DIR, 'AutoEncoder_ad.yaml')
-register_model_info({
-    'model_name': 'AutoEncoder_ad',
-    'suite': 'TSAnomaly',
-    'config_path': AE_CFG_PATH,
-    'supported_apis': ['train', 'evaluate', 'predict'],
-    'supported_train_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'dy2st': False,
-        'amp': []
-    },
-    'supported_evaluate_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'amp': []
-    },
-    'supported_predict_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-    'supported_infer_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-})
+AE_CFG_PATH = osp.join(PDX_CONFIG_DIR, "AutoEncoder_ad.yaml")
+register_model_info(
+    {
+        "model_name": "AutoEncoder_ad",
+        "suite": "TSAnomaly",
+        "config_path": AE_CFG_PATH,
+        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": [],
+        },
+        "supported_evaluate_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "amp": [],
+        },
+        "supported_predict_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+        "supported_infer_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+    }
+)
 
 # dlinear_anomaly
-DL_CFG_PATH = osp.join(PDX_CONFIG_DIR, 'DLinear_ad.yaml')
-register_model_info({
-    'model_name': 'DLinear_ad',
-    'suite': 'TSAnomaly',
-    'config_path': DL_CFG_PATH,
-    'supported_apis': ['train', 'evaluate', 'predict'],
-    'supported_train_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'dy2st': False,
-        'amp': []
-    },
-    'supported_evaluate_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'amp': []
-    },
-    'supported_predict_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-    'supported_infer_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-})
+DL_CFG_PATH = osp.join(PDX_CONFIG_DIR, "DLinear_ad.yaml")
+register_model_info(
+    {
+        "model_name": "DLinear_ad",
+        "suite": "TSAnomaly",
+        "config_path": DL_CFG_PATH,
+        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": [],
+        },
+        "supported_evaluate_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "amp": [],
+        },
+        "supported_predict_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+        "supported_infer_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+    }
+)
 
 # patch_anomaly
-PATCHTST_CFG_PATH = osp.join(PDX_CONFIG_DIR, 'PatchTST_ad.yaml')
-register_model_info({
-    'model_name': 'PatchTST_ad',
-    'suite': 'TSAnomaly',
-    'config_path': PATCHTST_CFG_PATH,
-    'supported_apis': ['train', 'evaluate', 'predict'],
-    'supported_train_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'dy2st': False,
-        'amp': []
-    },
-    'supported_evaluate_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'amp': []
-    },
-    'supported_predict_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-    'supported_infer_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-})
+PATCHTST_CFG_PATH = osp.join(PDX_CONFIG_DIR, "PatchTST_ad.yaml")
+register_model_info(
+    {
+        "model_name": "PatchTST_ad",
+        "suite": "TSAnomaly",
+        "config_path": PATCHTST_CFG_PATH,
+        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": [],
+        },
+        "supported_evaluate_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "amp": [],
+        },
+        "supported_predict_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+        "supported_infer_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+    }
+)
 
 # ns_anomaly
-NS_CFG_PATH = osp.join(PDX_CONFIG_DIR, 'Nonstationary_ad.yaml')
-register_model_info({
-    'model_name': 'Nonstationary_ad',
-    'suite': 'TSAnomaly',
-    'config_path': NS_CFG_PATH,
-    'supported_apis': ['train', 'evaluate', 'predict'],
-    'supported_train_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'dy2st': False,
-        'amp': []
-    },
-    'supported_evaluate_opts': {
-        'device': ['cpu', 'gpu_n1cx', 'xpu', 'npu', 'mlu'],
-        'amp': []
-    },
-    'supported_predict_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-    'supported_infer_opts': {
-        'device': ['cpu', 'gpu', 'xpu', 'npu', 'mlu']
-    },
-})
+NS_CFG_PATH = osp.join(PDX_CONFIG_DIR, "Nonstationary_ad.yaml")
+register_model_info(
+    {
+        "model_name": "Nonstationary_ad",
+        "suite": "TSAnomaly",
+        "config_path": NS_CFG_PATH,
+        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": [],
+        },
+        "supported_evaluate_opts": {
+            "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
+            "amp": [],
+        },
+        "supported_predict_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+        "supported_infer_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+    }
+)

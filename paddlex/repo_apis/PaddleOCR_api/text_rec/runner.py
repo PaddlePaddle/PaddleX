@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,15 +21,17 @@ from ...base.utils.subprocess import CompletedProcess
 
 
 class TextRecRunner(BaseRunner):
-    """ Text Recognition Runner """
+    """Text Recognition Runner"""
 
-    def train(self,
-              config_path: str,
-              cli_args: list,
-              device: str,
-              ips: str,
-              save_dir: str,
-              do_eval=True) -> CompletedProcess:
+    def train(
+        self,
+        config_path: str,
+        cli_args: list,
+        device: str,
+        ips: str,
+        save_dir: str,
+        do_eval=True,
+    ) -> CompletedProcess:
         """train model
 
         Args:
@@ -44,13 +46,13 @@ class TextRecRunner(BaseRunner):
             CompletedProcess: the result of training subprocess execution.
         """
         args, env = self.distributed(device, ips, log_dir=save_dir)
-        cmd = [*args, 'tools/train.py', '-c', config_path, *cli_args]
+        cmd = [*args, "tools/train.py", "-c", config_path, *cli_args]
         if do_eval:
             # We simply pass here because in PaddleOCR periodic evaluation cannot be switched off
             pass
         else:
-            inf = int(1.e11)
-            cmd.extend(['-o', f"Global.eval_batch_step={inf}"])
+            inf = int(1.0e11)
+            cmd.extend(["-o", f"Global.eval_batch_step={inf}"])
         return self.run_cmd(
             cmd,
             env=env,
@@ -58,10 +60,12 @@ class TextRecRunner(BaseRunner):
             echo=True,
             silent=False,
             capture_output=True,
-            log_path=self._get_train_log_path(save_dir))
+            log_path=self._get_train_log_path(save_dir),
+        )
 
-    def evaluate(self, config_path: str, cli_args: list, device: str,
-                 ips: str) -> CompletedProcess:
+    def evaluate(
+        self, config_path: str, cli_args: list, device: str, ips: str
+    ) -> CompletedProcess:
         """run model evaluating
 
         Args:
@@ -74,22 +78,19 @@ class TextRecRunner(BaseRunner):
             CompletedProcess: the result of evaluating subprocess execution.
         """
         args, env = self.distributed(device, ips)
-        cmd = [*args, 'tools/eval.py', '-c', config_path]
+        cmd = [*args, "tools/eval.py", "-c", config_path]
 
         cp = self.run_cmd(
-            cmd,
-            env=env,
-            switch_wdir=True,
-            echo=True,
-            silent=False,
-            capture_output=True)
+            cmd, env=env, switch_wdir=True, echo=True, silent=False, capture_output=True
+        )
         if cp.returncode == 0:
             metric_dict = _extract_eval_metrics(cp.stdout)
             cp.metrics = metric_dict
         return cp
 
-    def predict(self, config_path: str, cli_args: list,
-                device: str) -> CompletedProcess:
+    def predict(
+        self, config_path: str, cli_args: list, device: str
+    ) -> CompletedProcess:
         """run predicting using dynamic mode
 
         Args:
@@ -100,14 +101,12 @@ class TextRecRunner(BaseRunner):
         Returns:
             CompletedProcess: the result of predicting subprocess execution.
         """
-        cmd = [self.python, 'tools/infer_rec.py', '-c', config_path]
+        cmd = [self.python, "tools/infer_rec.py", "-c", config_path]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
-    def export(self,
-               config_path: str,
-               cli_args: list,
-               device: str,
-               save_dir: str=None) -> CompletedProcess:
+    def export(
+        self, config_path: str, cli_args: list, device: str, save_dir: str = None
+    ) -> CompletedProcess:
         """run exporting
 
         Args:
@@ -120,12 +119,11 @@ class TextRecRunner(BaseRunner):
             CompletedProcess: the result of exporting subprocess execution.
         """
         # `device` unused
-        cmd = [self.python, 'tools/export_model.py', '-c', config_path]
+        cmd = [self.python, "tools/export_model.py", "-c", config_path]
         cp = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
         return cp
 
-    def infer(self, config_path: str, cli_args: list,
-              device: str) -> CompletedProcess:
+    def infer(self, config_path: str, cli_args: list, device: str) -> CompletedProcess:
         """run predicting using inference model
 
         Args:
@@ -136,15 +134,17 @@ class TextRecRunner(BaseRunner):
         Returns:
             CompletedProcess: the result of infering subprocess execution.
         """
-        cmd = [self.python, 'tools/infer/predict_rec.py', *cli_args]
+        cmd = [self.python, "tools/infer/predict_rec.py", *cli_args]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
-    def compression(self,
-                    config_path: str,
-                    train_cli_args: list,
-                    export_cli_args: list,
-                    device: str,
-                    train_save_dir: str) -> CompletedProcess:
+    def compression(
+        self,
+        config_path: str,
+        train_cli_args: list,
+        export_cli_args: list,
+        device: str,
+        train_save_dir: str,
+    ) -> CompletedProcess:
         """run compression model
 
         Args:
@@ -159,7 +159,7 @@ class TextRecRunner(BaseRunner):
         """
         # Step 1: Train model
         args, env = self.distributed(device, log_dir=train_save_dir)
-        cmd = [*args, 'deploy/slim/quantization/quant.py', '-c', config_path]
+        cmd = [*args, "deploy/slim/quantization/quant.py", "-c", config_path]
         cp_train = self.run_cmd(
             cmd,
             env=env,
@@ -167,16 +167,21 @@ class TextRecRunner(BaseRunner):
             echo=True,
             silent=False,
             capture_output=True,
-            log_path=self._get_train_log_path(train_save_dir))
+            log_path=self._get_train_log_path(train_save_dir),
+        )
 
         # Step 2: Export model
         export_cli_args = [
-            *export_cli_args, '-o',
-            f"Global.checkpoints={train_save_dir}/latest"
+            *export_cli_args,
+            "-o",
+            f"Global.checkpoints={train_save_dir}/latest",
         ]
         cmd = [
-            self.python, 'deploy/slim/quantization/export_model.py', '-c',
-            config_path, *export_cli_args
+            self.python,
+            "deploy/slim/quantization/export_model.py",
+            "-c",
+            config_path,
+            *export_cli_args,
         ]
         cp_export = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
@@ -205,23 +210,24 @@ def _extract_eval_metrics(stdout: str) -> dict:
             if prev_idx >= len(s):
                 break
 
-    _DP = r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
+    _DP = r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?"
     pattern_key_pairs = [
-        (re.compile(r'acc:(_dp)$'.replace('_dp', _DP)), 'acc'),
-        (re.compile(r'norm_edit_dis:(_dp)$'.replace('_dp', _DP)),
-         'norm_edit_dis'),
-        (re.compile(r'Teacher_acc:(_dp)$'.replace('_dp', _DP)), 'teacher_acc'),
-        (re.compile(r'Teacher_norm_edit_dis:(_dp)$'.replace('_dp', _DP)),
-         'teacher_norm_edit_dis'),
-        (re.compile(r'precision:(_dp)$'.replace('_dp', _DP)), 'precision'),
-        (re.compile(r'recall:(_dp)$'.replace('_dp', _DP)), 'recall'),
-        (re.compile(r'hmean:(_dp)$'.replace('_dp', _DP)), 'hmean'),
+        (re.compile(r"acc:(_dp)$".replace("_dp", _DP)), "acc"),
+        (re.compile(r"norm_edit_dis:(_dp)$".replace("_dp", _DP)), "norm_edit_dis"),
+        (re.compile(r"Teacher_acc:(_dp)$".replace("_dp", _DP)), "teacher_acc"),
+        (
+            re.compile(r"Teacher_norm_edit_dis:(_dp)$".replace("_dp", _DP)),
+            "teacher_norm_edit_dis",
+        ),
+        (re.compile(r"precision:(_dp)$".replace("_dp", _DP)), "precision"),
+        (re.compile(r"recall:(_dp)$".replace("_dp", _DP)), "recall"),
+        (re.compile(r"hmean:(_dp)$".replace("_dp", _DP)), "hmean"),
     ]
 
     metric_dict = dict()
     start_match = False
     for line in _lazy_split_lines(stdout):
-        if 'metric eval' in line:
+        if "metric eval" in line:
             start_match = True
         if start_match:
             for pattern, key in pattern_key_pairs:

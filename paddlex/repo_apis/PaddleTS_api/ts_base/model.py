@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,21 +22,23 @@ from ....utils.errors import raise_unsupported_api_error
 
 
 class TSModel(BaseModel):
-    """ TS Model """
+    """TS Model"""
 
-    def train(self,
-              batch_size: int=None,
-              learning_rate: float=None,
-              epochs_iters: int=None,
-              ips: str=None,
-              device: str='gpu',
-              resume_path: str=None,
-              dy2st: bool=False,
-              amp: str='OFF',
-              num_workers: int=None,
-              use_vdl: bool=False,
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def train(
+        self,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        resume_path: str = None,
+        dy2st: bool = False,
+        amp: str = "OFF",
+        num_workers: int = None,
+        use_vdl: bool = False,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """train self
 
         Args:
@@ -59,18 +61,18 @@ class TSModel(BaseModel):
         config = self.config.copy()
         cli_args = []
         if batch_size is not None:
-            cli_args.append(CLIArgument('--batch_size', batch_size))
+            cli_args.append(CLIArgument("--batch_size", batch_size))
 
         if learning_rate is not None:
-            cli_args.append(CLIArgument('--learning_rate', learning_rate))
+            cli_args.append(CLIArgument("--learning_rate", learning_rate))
 
         if epochs_iters is not None:
-            cli_args.append(CLIArgument('--epoch', epochs_iters))
+            cli_args.append(CLIArgument("--epoch", epochs_iters))
 
         if resume_path:
             raise ValueError("`resume_path` is not supported.")
         # No need to handle `ips`
-        if amp is not None and amp != 'OFF':
+        if amp is not None and amp != "OFF":
             raise ValueError(f"`amp`={amp} is not supported.")
 
         if dy2st:
@@ -81,48 +83,48 @@ class TSModel(BaseModel):
 
         if device is not None:
             device_type, _ = self.runner.parse_device(device)
-            cli_args.append(CLIArgument('--device', device_type))
+            cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
             save_dir = abspath(save_dir)
         else:
             # `save_dir` is None
-            save_dir = abspath(os.path.join('output', 'train'))
-        cli_args.append(CLIArgument('--save_dir', save_dir))
+            save_dir = abspath(os.path.join("output", "train"))
+        cli_args.append(CLIArgument("--save_dir", save_dir))
 
         # Benchmarking mode settings
-        benchmark = kwargs.pop('benchmark', None)
+        benchmark = kwargs.pop("benchmark", None)
         if benchmark is not None:
-            envs = benchmark.get('env', None)
-            num_workers = benchmark.get('num_workers', None)
+            envs = benchmark.get("env", None)
+            num_workers = benchmark.get("num_workers", None)
             config.update_log_ranks(device)
-            config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            config.update_print_mem_info(benchmark.get("print_mem_info", True))
             if num_workers is not None:
-                assert isinstance(num_workers,
-                                  int), "num_workers must be an integer"
-                cli_args.append(CLIArgument('--num_workers', num_workers))
+                assert isinstance(num_workers, int), "num_workers must be an integer"
+                cli_args.append(CLIArgument("--num_workers", num_workers))
             if envs is not None:
                 for env_name, env_value in envs.items():
                     os.environ[env_name] = str(env_value)
         else:
             if num_workers is not None:
-                cli_args.append(CLIArgument('--num_workers', num_workers))
+                cli_args.append(CLIArgument("--num_workers", num_workers))
 
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
-            return self.runner.train(config_path, cli_args, device, ips,
-                                     save_dir)
+            return self.runner.train(config_path, cli_args, device, ips, save_dir)
 
-    def evaluate(self,
-                 weight_path: str,
-                 batch_size: int=None,
-                 ips: str=None,
-                 device: str='gpu',
-                 amp: str='OFF',
-                 num_workers: int=None,
-                 **kwargs) -> CompletedProcess:
+    def evaluate(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        amp: str = "OFF",
+        num_workers: int = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """evaluate self using specified weight
 
         Args:
@@ -140,7 +142,7 @@ class TSModel(BaseModel):
         cli_args = []
 
         weight_path = abspath(weight_path)
-        cli_args.append(CLIArgument('--checkpoints', weight_path))
+        cli_args.append(CLIArgument("--checkpoints", weight_path))
 
         if batch_size is not None:
             if batch_size != 1:
@@ -149,14 +151,14 @@ class TSModel(BaseModel):
         # No need to handle `ips`
         if device is not None:
             device_type, _ = self.runner.parse_device(device)
-            cli_args.append(CLIArgument('--device', device_type))
+            cli_args.append(CLIArgument("--device", device_type))
 
         if amp is not None:
-            if amp != 'OFF':
+            if amp != "OFF":
                 raise ValueError(f"`amp`={amp} is not supported.")
 
         if num_workers is not None:
-            cli_args.append(CLIArgument('--num_workers', num_workers))
+            cli_args.append(CLIArgument("--num_workers", num_workers))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -165,12 +167,14 @@ class TSModel(BaseModel):
             cp = self.runner.evaluate(config_path, cli_args, device, ips)
             return cp
 
-    def predict(self,
-                weight_path: str,
-                input_path: str,
-                device: str='gpu',
-                save_dir: str=None,
-                **kwargs) -> CompletedProcess:
+    def predict(
+        self,
+        weight_path: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """predict using specified weight
 
         Args:
@@ -186,21 +190,21 @@ class TSModel(BaseModel):
         cli_args = []
 
         weight_path = abspath(weight_path)
-        cli_args.append(CLIArgument('--checkpoints', weight_path))
+        cli_args.append(CLIArgument("--checkpoints", weight_path))
 
         input_path = abspath(input_path)
-        cli_args.append(CLIArgument('--csv_path', input_path))
+        cli_args.append(CLIArgument("--csv_path", input_path))
 
         if device is not None:
             device_type, _ = self.runner.parse_device(device)
-            cli_args.append(CLIArgument('--device', device_type))
+            cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
             save_dir = abspath(save_dir)
         else:
             # `save_dir` is None
-            save_dir = abspath(os.path.join('output', 'predict'))
-        cli_args.append(CLIArgument('--save_dir', save_dir))
+            save_dir = abspath(os.path.join("output", "predict"))
+        cli_args.append(CLIArgument("--save_dir", save_dir))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -208,30 +212,31 @@ class TSModel(BaseModel):
             config.dump(config_path)
             return self.runner.predict(config_path, cli_args, device)
 
-    def export(self, weight_path: str, save_dir: str=None, **kwargs):
-        """export
-        """
-        raise_unsupported_api_error('export', self.__class__)
+    def export(self, weight_path: str, save_dir: str = None, **kwargs):
+        """export"""
+        raise_unsupported_api_error("export", self.__class__)
 
-    def infer(self,
-              model_dir: str,
-              input_path: str,
-              device: str='gpu',
-              save_dir: str=None,
-              **kwargs):
-        """infer
-        """
-        raise_unsupported_api_error('infer', self.__class__)
+    def infer(
+        self,
+        model_dir: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ):
+        """infer"""
+        raise_unsupported_api_error("infer", self.__class__)
 
-    def compression(self,
-                    weight_path: str,
-                    batch_size=None,
-                    learning_rate=None,
-                    epochs_iters=None,
-                    device: str='gpu',
-                    use_vdl=True,
-                    save_dir=None,
-                    **kwargs):
-        """compression
-        """
-        raise_unsupported_api_error('compression', self.__class__)
+    def compression(
+        self,
+        weight_path: str,
+        batch_size=None,
+        learning_rate=None,
+        epochs_iters=None,
+        device: str = "gpu",
+        use_vdl=True,
+        save_dir=None,
+        **kwargs,
+    ):
+        """compression"""
+        raise_unsupported_api_error("compression", self.__class__)
