@@ -114,13 +114,13 @@ git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.g
  sh download.sh
 
  # 2. 下载 paddle_lite_opt 工具优化后的模型、测试图片、标签文件
- cd ../face_detection/assets
+ cd ../object_detection/assets
  sh download.sh
  # 支持传入模型名来指定下载的模型 支持的模型列表可参考本节最后表格的 Model_Name 列
  # sh download.sh PicoDet-L
 
  # 3. 完成可执行文件的编译
- cd ../android/app/shell/cxx/face_detection
+ cd ../android/app/shell/cxx/picodet_detection
  sh build.sh
 
  # 4. 预测
