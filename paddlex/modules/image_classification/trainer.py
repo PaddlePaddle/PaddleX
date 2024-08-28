@@ -90,6 +90,7 @@ class ClsTrainer(BaseTrainer):
             and self.train_config.resume_path != ""
         ):
             train_args["resume_path"] = self.train_config.resume_path
+        train_args["dy2st"] = self.train_config.get("dy2st", False)
         return train_args
 
 
