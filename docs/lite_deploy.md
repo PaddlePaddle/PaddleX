@@ -91,11 +91,11 @@
 git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.git PaddleX_Lite_Deploy
 ```
 
-1. 将工作目录切换到 `Paddle-Lite-Demo/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 Demo 使用。
+1. 将工作目录切换到 `PaddleX_Lite_Deploy/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 Demo 使用。
 
-2. 将工作目录切换到 `Paddle-Lite-Demo/{Demo_Name}/assets`，运行 `download.sh` 脚本，下载 [paddle_lite_opt 工具](https://www.paddlepaddle.org.cn/lite/v2.10/user_guides/model_optimize_tool.html) 优化后的模型、测试图片和标签文件等。
+2. 将工作目录切换到 `PaddleX_Lite_Deploy/{Demo_Name}/assets`，运行 `download.sh` 脚本，下载 [paddle_lite_opt 工具](https://www.paddlepaddle.org.cn/lite/v2.10/user_guides/model_optimize_tool.html) 优化后的模型、测试图片和标签文件等。
 
-3. 将工作目录切换到 `Paddle-Lite-Demo/{Demo_Name}/android/shell/cxx/{Task_Name}`，运行 `build.sh` 脚本，完成可执行文件的编译和运行。
+3. 将工作目录切换到 `PaddleX_Lite_Deploy/{Demo_Name}/android/shell/cxx/{Task_Name}`，运行 `build.sh` 脚本，完成可执行文件的编译和运行。
 
 4. 将工作目录切换到 `PaddleX-Lite-Deploy/{Demo_Name}/android/shell/cxx/{Task_Name}`，运行 `run.sh` 脚本，完成在端侧的预测。
 
@@ -110,7 +110,7 @@ git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.g
 
 ```shell
  # 1. 下载需要的 Paddle Lite 预测库
- cd Paddle-Lite-Demo/libs
+ cd PaddleX_Lite_Deploy/libs
  sh download.sh
 
  # 2. 下载 paddle_lite_opt 工具优化后的模型、测试图片、标签文件
