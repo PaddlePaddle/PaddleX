@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,65 +22,66 @@ from .....utils.misc import AutoRegisterABCMetaClass
 
 
 class _KeyMissingError(Exception):
-    """ _KeyMissingError """
+    """_KeyMissingError"""
+
     pass
 
 
 class _NodeMeta(AutoRegisterABCMetaClass):
-    """ _Node Meta Class """
+    """_Node Meta Class"""
 
     def __new__(cls, name, bases, attrs):
         def _deco(init_func):
             @functools.wraps(init_func)
             def _wrapper(self, *args, **kwargs):
-                if not hasattr(self, '_raw_args'):
+                if not hasattr(self, "_raw_args"):
                     sig = inspect.signature(init_func)
                     bnd_args = sig.bind(self, *args, **kwargs)
                     raw_args = bnd_args.arguments
                     self_key = next(iter(raw_args.keys()))
                     raw_args.pop(self_key)
-                    setattr(self, '_raw_args', raw_args)
+                    setattr(self, "_raw_args", raw_args)
                 ret = init_func(self, *args, **kwargs)
                 return ret
 
             return _wrapper
 
-        if '__init__' in attrs:
-            old_init_func = attrs['__init__']
-            attrs['__init__'] = _deco(old_init_func)
+        if "__init__" in attrs:
+            old_init_func = attrs["__init__"]
+            attrs["__init__"] = _deco(old_init_func)
         return super().__new__(cls, name, bases, attrs)
 
 
 class Node(metaclass=_NodeMeta):
-    """ Node Class """
+    """Node Class"""
 
     @classmethod
     @abc.abstractmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         raise NotImplementedError
 
     @classmethod
     def check_input_keys(cls, data):
-        """ check input keys """
+        """check input keys"""
         required_keys = cls.get_input_keys()
-        cls._check_keys(data, required_keys, 'input')
+        cls._check_keys(data, required_keys, "input")
 
     @classmethod
     def check_output_keys(cls, data):
-        """ check output keys """
+        """check output keys"""
         required_keys = cls.get_output_keys()
-        cls._check_keys(data, required_keys, 'output')
+        cls._check_keys(data, required_keys, "output")
 
     @classmethod
     def _check_keys(cls, data, required_keys, tag):
-        """ check keys """
+        """check keys"""
         if len(required_keys) == 0:
             return
         if isinstance(required_keys[0], list):
@@ -116,7 +117,8 @@ e3b47b3a127f92541cfeb16abbb44a6f8bf79cc8/albumentations/core/utils.py#L30
                 if isinstance(v, str):
                     v = f"'{v}'"
                 formatted_args.append(f"{k}={v}")
-            return ', '.join(formatted_args)
+            return ", ".join(formatted_args)
 
-        return '{}({})'.format(self.__class__.__name__,
-                               _format_args(getattr(self, '_raw_args', {})))
+        return "{}({})".format(
+            self.__class__.__name__, _format_args(getattr(self, "_raw_args", {}))
+        )

@@ -17,5 +17,6 @@ from .model_list import MODELS
 
 
 class DetExportor(BaseExportor):
-    """ Object Detection Model Exportor """
+    """Object Detection Model Exportor"""
+
     entities = MODELS

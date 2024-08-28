@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,19 +20,19 @@ SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu"]
 
 
 def get_device(device_cfg, using_device_number=None):
-    """get running device setting
-    """
+    """get running device setting"""
     device = device_cfg.split(":")[0]
     assert device.lower() in SUPPORTED_DEVICE_TYPE
     if device.lower() in ["gpu", "xpu", "npu", "mlu"]:
         if device.lower() == "gpu" and paddle.is_compiled_with_rocm():
-            os.environ['FLAGS_conv_workspace_size_limit'] = '2000'
+            os.environ["FLAGS_conv_workspace_size_limit"] = "2000"
         if device.lower() == "npu":
             os.environ["FLAGS_npu_jit_compile"] = "0"
             os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
-            os.environ[
-                "CUSTOM_DEVICE_BLACK_LIST"] = "pad3d,pad3d_grad,set_value,set_value_with_tensor"
+            os.environ["CUSTOM_DEVICE_BLACK_LIST"] = (
+                "pad3d,pad3d_grad,set_value,set_value_with_tensor"
+            )
             os.environ["FLAGS_npu_scale_aclnn"] = "True"
             os.environ["FLAGS_npu_split_aclnn"] = "True"
         if device.lower() == "xpu":

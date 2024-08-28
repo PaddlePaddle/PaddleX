@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -27,8 +27,8 @@ from ..model_list import MODELS
 
 
 class TSADDatasetChecker(BaseDatasetChecker):
-    """Dataset Checker for TS Anomaly Detection Model
-    """
+    """Dataset Checker for TS Anomaly Detection Model"""
+
     entities = MODELS
     sample_num = 10
 
@@ -52,12 +52,13 @@ class TSADDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of splited dataset.
         """
-        return split_dataset(src_dataset_dir,
-                             self.check_dataset_config.split.train_percent,
-                             self.check_dataset_config.split.val_percent)
+        return split_dataset(
+            src_dataset_dir,
+            self.check_dataset_config.split.train_percent,
+            self.check_dataset_config.split.val_percent,
+        )
 
-    def check_dataset(self, dataset_dir: str,
-                      sample_num: int=sample_num) -> dict:
+    def check_dataset(self, dataset_dir: str, sample_num: int = sample_num) -> dict:
         """check if the dataset meets the specifications and get dataset summary
 
         Args:

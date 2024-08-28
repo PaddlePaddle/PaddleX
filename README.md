@@ -125,7 +125,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>时序预测</td>
     <td>时序预测</td>
     <td>DLinear<br/>Nonstationary<br/>TiDE<br/>PatchTST<br/>TimesNet</td>
-  </tr>  
+  </tr>
   <tr>
     <td>基础产线</td>
     <td>时序异常检测</td>
@@ -160,7 +160,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
   <tr>
     <td>大模型半监督学习-文本识别</td>
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-   </tr>  
+   </tr>
 <tr>
     <td rowspan="3">特色产线</td>
     <td rowspan="3">通用场景信息抽取v2<br>(PP-ChatOCRv2-common)</td>
@@ -202,13 +202,13 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>多模型融合时序预测v2<br>(PP-TSv2_forecast)</td>
     <td>时序预测</td>
     <td>多模型融合时序预测</td>
-  </tr> 
+  </tr>
   <tr>
     <td>特色产线</td>
     <td>多模型融合时序异常检测v2<br>(PP-TSv2_anomaly)</td>
     <td>时序异常检测</td>
     <td>多模型融合时序异常检测</td>
-  </tr>      
+  </tr>
 </table>
 
 

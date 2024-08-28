@@ -17,5 +17,6 @@ from .model_list import MODELS
 
 
 class ClsExportor(BaseExportor):
-    """ Image Classification Model Exportor """
+    """Image Classification Model Exportor"""
+
     entities = MODELS

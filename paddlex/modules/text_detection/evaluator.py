@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,17 +18,16 @@ from .model_list import MODELS
 
 
 class TextDetEvaluator(BaseEvaluator):
-    """ Text Detection Model Evaluator """
+    """Text Detection Model Evaluator"""
+
     entities = MODELS
 
     def update_config(self):
-        """update evalution config
-        """
+        """update evalution config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
 
-        self.pdx_config.update_dataset(self.global_config.dataset_dir,
-                                       "TextDetDataset")
+        self.pdx_config.update_dataset(self.global_config.dataset_dir, "TextDetDataset")
 
     def get_eval_kwargs(self) -> dict:
         """get key-value arguments of model evalution function
@@ -38,5 +37,5 @@ class TextDetEvaluator(BaseEvaluator):
         """
         return {
             "weight_path": self.eval_config.weight_path,
-            "device": self.get_device()
+            "device": self.get_device(),
         }

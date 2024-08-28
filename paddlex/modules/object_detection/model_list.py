@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,18 +14,18 @@
 
 
 MODELS = [
-    'PicoDet-L',
-    'PicoDet-S',
-    'PP-YOLOE_plus-L',
-    'PP-YOLOE_plus-M',
-    'PP-YOLOE_plus-S',
-    'PP-YOLOE_plus-X',
-    'RT-DETR-H',
-    'RT-DETR-L',
-    'RT-DETR-R18',
-    'RT-DETR-R50',
-    'RT-DETR-X',
-    'PicoDet_layout_1x',
+    "PicoDet-L",
+    "PicoDet-S",
+    "PP-YOLOE_plus-L",
+    "PP-YOLOE_plus-M",
+    "PP-YOLOE_plus-S",
+    "PP-YOLOE_plus-X",
+    "RT-DETR-H",
+    "RT-DETR-L",
+    "RT-DETR-R18",
+    "RT-DETR-R50",
+    "RT-DETR-X",
+    "PicoDet_layout_1x",
     "YOLOv3-DarkNet53",
     "YOLOv3-MobileNetV3",
     "YOLOv3-ResNet50_vd_DCN",

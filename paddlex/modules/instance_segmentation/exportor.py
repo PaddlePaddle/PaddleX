@@ -17,5 +17,6 @@ from .model_list import MODELS
 
 
 class InstanceSegExportor(BaseExportor):
-    """ Instance Segmentation Model Exportor """
+    """Instance Segmentation Model Exportor"""
+
     entities = MODELS

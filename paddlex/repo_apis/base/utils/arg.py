@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,21 +13,19 @@
 # limitations under the License.
 
 
-
 import os
 import shlex
 
 
 class CLIArgument(object):
-    """ CLIArgument """
+    """CLIArgument"""
 
-    def __init__(self, key, *vals, quote=False, sep=' '):
+    def __init__(self, key, *vals, quote=False, sep=" "):
         super().__init__()
         self.key = str(key)
         self.vals = [str(v) for v in vals]
-        if quote and os.name != 'posix':
-            raise ValueError(
-                "`quote` cannot be True on non-POSIX compliant systems.")
+        if quote and os.name != "posix":
+            raise ValueError("`quote` cannot be True on non-POSIX compliant systems.")
         self.quote = quote
         self.sep = sep
 
@@ -36,7 +34,7 @@ class CLIArgument(object):
 
     @property
     def lst(self):
-        """ lst """
+        """lst"""
         if self.quote:
             vals = [shlex.quote(val) for val in self.vals]
         else:
@@ -45,7 +43,7 @@ class CLIArgument(object):
 
 
 def gather_opts_args(args, opts_key):
-    """ gather_opts_args """
+    """gather_opts_args"""
 
     def _is_opts_arg(arg):
         return arg.key == opts_key

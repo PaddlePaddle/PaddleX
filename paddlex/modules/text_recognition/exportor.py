@@ -17,5 +17,6 @@ from .model_list import MODELS
 
 
 class TextRecExportor(BaseExportor):
-    """ Text Recognition Model Exportor """
+    """Text Recognition Model Exportor"""
+
     entities = MODELS

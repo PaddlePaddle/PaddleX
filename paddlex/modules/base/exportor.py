@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -37,7 +37,7 @@ def build_exportor(config: AttrDict) -> "BaseExportor":
 
 
 class BaseExportor(ABC, metaclass=AutoRegisterABCMetaClass):
-    """ Base Model Exportor """
+    """Base Model Exportor"""
 
     __is_base = True
 
@@ -54,7 +54,8 @@ class BaseExportor(ABC, metaclass=AutoRegisterABCMetaClass):
         config_path = self.get_config_path(self.export_config.weight_path)
 
         self.pdx_config, self.pdx_model = build_model(
-            self.global_config.model, config_path=config_path)
+            self.global_config.model, config_path=config_path
+        )
 
     def get_config_path(self, weight_path):
         """
@@ -85,12 +86,14 @@ class BaseExportor(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         self.update_config()
         export_result = self.pdx_model.export(**self.get_export_kwargs())
-        assert export_result.returncode == 0, f"Encountered an unexpected error({export_result.returncode}) in \
+        assert (
+            export_result.returncode == 0
+        ), f"Encountered an unexpected error({export_result.returncode}) in \
 exporting!"
 
         return None
 
-    def get_device(self, using_device_number: int=None) -> str:
+    def get_device(self, using_device_number: int = None) -> str:
         """get device setting from config
 
         Args:
@@ -105,14 +108,12 @@ exporting!"
         return get_device("cpu")
 
     def update_config(self):
-        """update export config
-        """
+        """update export config"""
         pass
 
     def get_export_kwargs(self):
-        """get key-value arguments of model export function
-        """
+        """get key-value arguments of model export function"""
         return {
             "weight_path": self.export_config.weight_path,
-            "save_dir": self.global_config.output
+            "save_dir": self.global_config.output,
         }
