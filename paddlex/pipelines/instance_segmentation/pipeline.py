@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,17 +19,19 @@ from ...modules.object_detection import transforms as T
 
 
 class InstanceSegPipeline(BasePipeline):
-    """InstanceSeg Pipeline
-    """
+    """InstanceSeg Pipeline"""
+
     entities = "instance_segmentation"
 
-    def __init__(self,
-                 model_name=None,
-                 model_dir=None,
-                 output="./output",
-                 kernel_option=None,
-                 device="gpu",
-                 **kwargs):
+    def __init__(
+        self,
+        model_name=None,
+        model_dir=None,
+        output="./output",
+        kernel_option=None,
+        device="gpu",
+        **kwargs,
+    ):
         self.model_name = model_name
         self.model_dir = model_dir
         self.output = output
@@ -39,30 +41,32 @@ class InstanceSegPipeline(BasePipeline):
             self.load_model()
 
     def check_model_name(self):
-        """ check that model name is valid
-        """
-        assert self.model_name in MODELS, f"The model name({self.model_name}) error. Only support: {MODELS}."
+        """check that model name is valid"""
+        assert (
+            self.model_name in MODELS
+        ), f"The model name({self.model_name}) error. Only support: {MODELS}."
 
     def load_model(self):
-        """load model predictor
-        """
+        """load model predictor"""
         self.check_model_name()
-        kernel_option = self.get_kernel_option(
-        ) if self.kernel_option is None else self.kernel_option
+        kernel_option = (
+            self.get_kernel_option()
+            if self.kernel_option is None
+            else self.kernel_option
+        )
         self.model = create_model(
             model_name=self.model_name,
             model_dir=self.model_dir,
             output=self.output,
-            kernel_option=kernel_option)
+            kernel_option=kernel_option,
+        )
 
     def predict(self, input):
-        """predict
-        """
+        """predict"""
         return self.model.predict(input)
 
     def get_kernel_option(self):
-        """get kernel option
-        """
+        """get kernel option"""
         kernel_option = PaddleInferenceOption()
         kernel_option.set_device(self.device)
         return kernel_option
@@ -81,6 +85,5 @@ class InstanceSegPipeline(BasePipeline):
             self.model_dir = model_dir_list[0]
 
     def get_input_keys(self):
-        """get dict keys of input argument input
-        """
+        """get dict keys of input argument input"""
         return self.model.get_input_keys()

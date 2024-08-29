@@ -29,7 +29,7 @@ AMP:
 # model architecture
 Arch:
   name: PPLCNetV2_large
-  class_num: 102
+  class_num: 1000
 
 # loss function config for traing/eval process
 Loss:

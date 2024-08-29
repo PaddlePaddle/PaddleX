@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -27,12 +27,12 @@ from ...utils.cache import CACHE_DIR
 
 
 class TSFCPredictor(BasePredictor):
-    """ TS Forecast Model Predictor """
+    """TS Forecast Model Predictor"""
+
     entities = MODELS
 
     def __init__(self, model_name, model_dir, kernel_option, output):
-        """initialize
-        """
+        """initialize"""
         model_dir = self._download_from_url(model_dir)
         self.model_dir = self.uncompress_tar_file(model_dir)
 
@@ -40,14 +40,14 @@ class TSFCPredictor(BasePredictor):
         self.output = output
         config_path = self.get_config_path()
         self.pdx_config, self.pdx_model = build_model(
-            model_name, config_path=config_path)
+            model_name, config_path=config_path
+        )
 
     def uncompress_tar_file(self, model_dir):
-        """unpackage the tar file containing training outputs and update weight path
-        """
+        """unpackage the tar file containing training outputs and update weight path"""
         if tarfile.is_tarfile(model_dir):
             dest_path = Path(model_dir).parent
-            with tarfile.open(model_dir, 'r') as tar:
+            with tarfile.open(model_dir, "r") as tar:
                 tar.extractall(path=dest_path)
             return dest_path / "best_accuracy.pdparams/best_model/model.pdparams"
         return model_dir
@@ -67,7 +67,8 @@ class TSFCPredictor(BasePredictor):
             else:
                 logging.warning(
                     f"The config file(`{config_path}`) related to model weight file(`{self.model_dir}`) \
-is not exist, use default instead.")
+is not exist, use default instead."
+                )
         else:
             raise_model_not_found_error(self.model_dir)
         return None
@@ -79,14 +80,15 @@ is not exist, use default instead.")
             download(in_path, save_path, overwrite=True)
             return save_path.as_posix()
         return in_path
-    
+
     def predict(self, input):
-        """execute model predict
-        """
+        """execute model predict"""
         # self.update_config()
-        input['input_path'] = self._download_from_url(input['input_path'])
+        input["input_path"] = self._download_from_url(input["input_path"])
         result = self.pdx_model.predict(**input, **self.get_predict_kwargs())
-        assert result.returncode == 0, f"Encountered an unexpected error({result.returncode}) in predicting!"
+        assert (
+            result.returncode == 0
+        ), f"Encountered an unexpected error({result.returncode}) in predicting!"
         return result
 
     def get_predict_kwargs(self) -> dict:
@@ -98,7 +100,7 @@ is not exist, use default instead.")
         return {
             "weight_path": self.model_dir,
             "device": self.device,
-            "save_dir": self.output
+            "save_dir": self.output,
         }
 
     def _get_post_transforms_from_config(self):
@@ -111,9 +113,9 @@ is not exist, use default instead.")
         pass
 
     def get_input_keys(self):
-        """ get input keys """
+        """get input keys"""
         return ["input_path"]
 
     def get_output_keys(self):
-        """ get output keys """
+        """get output keys"""
         pass

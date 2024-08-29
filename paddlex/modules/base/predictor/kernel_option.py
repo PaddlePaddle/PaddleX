@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,15 +13,13 @@
 # limitations under the License.
 
 
-
 from functools import wraps, partial
 
 from ....utils import logging
 
 
 def register(register_map, key):
-    """register the option setting func
-    """
+    """register the option setting func"""
 
     def decorator(func):
         register_map[key] = func
@@ -36,11 +34,17 @@ def register(register_map, key):
 
 
 class PaddleInferenceOption(object):
-    """Paddle Inference Engine Option
-    """
-    SUPPORT_RUN_MODE = ('paddle', 'trt_fp32', 'trt_fp16', 'trt_int8', 'mkldnn',
-                        'mkldnn_bf16')
-    SUPPORT_DEVICE = ('gpu', 'cpu', 'npu', 'xpu', 'mlu')
+    """Paddle Inference Engine Option"""
+
+    SUPPORT_RUN_MODE = (
+        "paddle",
+        "trt_fp32",
+        "trt_fp16",
+        "trt_int8",
+        "mkldnn",
+        "mkldnn_bf16",
+    )
+    SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu")
     _REGISTER_MAP = {}
 
     register2self = partial(register, _REGISTER_MAP)
@@ -55,48 +59,46 @@ class PaddleInferenceOption(object):
             if k not in self._REGISTER_MAP:
                 raise Exception(
                     f"{k} is not supported to set! The supported option is: \
-{list(self._REGISTER_MAP.keys())}")
+{list(self._REGISTER_MAP.keys())}"
+                )
             self._REGISTER_MAP.get(k)(self, v)
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
     def _get_default_config(cls):
-        """ get default config """
+        """get default config"""
         return {
-            'run_mode': 'paddle',
-            'batch_size': 1,
-            'device': 'gpu',
-            'device_id': 0,
-            'min_subgraph_size': 3,
-            'shape_info_filename': None,
-            'trt_calib_mode': False,
-            'cpu_threads': 1,
-            'trt_use_static': False
+            "run_mode": "paddle",
+            "batch_size": 1,
+            "device": "gpu",
+            "device_id": 0,
+            "min_subgraph_size": 3,
+            "shape_info_filename": None,
+            "trt_calib_mode": False,
+            "cpu_threads": 1,
+            "trt_use_static": False,
         }
 
-    @register2self('run_mode')
+    @register2self("run_mode")
     def set_run_mode(self, run_mode: str):
-        """set run mode
-        """
+        """set run mode"""
         if run_mode not in self.SUPPORT_RUN_MODE:
             support_run_mode_str = ", ".join(self.SUPPORT_RUN_MODE)
             raise ValueError(
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
-        self._cfg['run_mode'] = run_mode
+        self._cfg["run_mode"] = run_mode
 
-    @register2self('batch_size')
+    @register2self("batch_size")
     def set_batch_size(self, batch_size: int):
-        """set batch size
-        """
+        """set batch size"""
         if not isinstance(batch_size, int) or batch_size < 1:
             raise Exception()
-        self._cfg['batch_size'] = batch_size
+        self._cfg["batch_size"] = batch_size
 
-    @register2self('device')
+    @register2self("device")
     def set_device(self, device_setting: str):
-        """set device
-        """
+        """set device"""
         if len(device_setting.split(":")) == 1:
             device = device_setting.split(":")[0]
             device_id = 0
@@ -111,56 +113,48 @@ class PaddleInferenceOption(object):
             raise ValueError(
                 f"`device` must be {support_run_mode_str}, but received {repr(device)}."
             )
-        self._cfg['device'] = device.lower()
-        self._cfg['device_id'] = int(device_id)
+        self._cfg["device"] = device.lower()
+        self._cfg["device_id"] = int(device_id)
 
-    @register2self('min_subgraph_size')
+    @register2self("min_subgraph_size")
     def set_min_subgraph_size(self, min_subgraph_size: int):
-        """set min subgraph size
-        """
+        """set min subgraph size"""
         if not isinstance(min_subgraph_size, int):
             raise Exception()
-        self._cfg['min_subgraph_size'] = min_subgraph_size
+        self._cfg["min_subgraph_size"] = min_subgraph_size
 
-    @register2self('shape_info_filename')
+    @register2self("shape_info_filename")
     def set_shape_info_filename(self, shape_info_filename: str):
-        """set shape info filename
-        """
-        self._cfg['shape_info_filename'] = shape_info_filename
+        """set shape info filename"""
+        self._cfg["shape_info_filename"] = shape_info_filename
 
-    @register2self('trt_calib_mode')
+    @register2self("trt_calib_mode")
     def set_trt_calib_mode(self, trt_calib_mode):
-        """set trt calib mode
-        """
-        self._cfg['trt_calib_mode'] = trt_calib_mode
+        """set trt calib mode"""
+        self._cfg["trt_calib_mode"] = trt_calib_mode
 
-    @register2self('cpu_threads')
+    @register2self("cpu_threads")
     def set_cpu_threads(self, cpu_threads):
-        """set cpu threads
-        """
+        """set cpu threads"""
         if not isinstance(cpu_threads, int) or cpu_threads < 1:
             raise Exception()
-        self._cfg['cpu_threads'] = cpu_threads
+        self._cfg["cpu_threads"] = cpu_threads
 
-    @register2self('trt_use_static')
+    @register2self("trt_use_static")
     def set_trt_use_static(self, trt_use_static):
-        """set trt use static
-        """
-        self._cfg['trt_use_static'] = trt_use_static
+        """set trt use static"""
+        self._cfg["trt_use_static"] = trt_use_static
 
     def get_support_run_mode(self):
-        """get supported run mode
-        """
+        """get supported run mode"""
         return self.SUPPORT_RUN_MODE
 
     def get_support_device(self):
-        """get supported device
-        """
+        """get supported device"""
         return self.SUPPORT_DEVICE
 
     def get_device(self):
-        """get device
-        """
+        """get device"""
         return f"{self._cfg['device']}:{self._cfg['device_id']}"
 
     def __str__(self):

@@ -28,6 +28,9 @@ Evaluate:
   weight_path: "output/best_accuracy.pdparams"
   log_interval: 1
 
+Export:
+  weight_path: https://paddleocr.bj.bcebos.com/pretrained/ch_PP-StructrureV2_SLANet_trained.pdparams
+
 Predict:
   model_dir: "output/best_accuracy"
   input_path: "/paddle/dataset/paddlex/table_rec/table_rec_dataset_examples/images/border_10368_GBUAFQNHRKR5FUQ6ZE50.jpg"

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,7 +22,7 @@ from ..config_utils import load_config, merge_config
 
 
 class TextRecConfig(BaseConfig):
-    """ Text Recognition Config """
+    """Text Recognition Config"""
 
     def update(self, dict_like_obj: list):
         """update self
@@ -53,15 +53,16 @@ class TextRecConfig(BaseConfig):
         Args:
             config_file_path (str): the path to save self as yaml file.
         """
-        with open(config_file_path, 'w', encoding='utf-8') as f:
+        with open(config_file_path, "w", encoding="utf-8") as f:
             yaml.dump(self.dict, f, default_flow_style=False, sort_keys=False)
 
     def update_dataset(
-            self,
-            dataset_path: str,
-            dataset_type: str=None,
-            *,
-            train_list_path: str=None, ):
+        self,
+        dataset_path: str,
+        dataset_type: str = None,
+        *,
+        train_list_path: str = None,
+    ):
         """update dataset settings
 
         Args:
@@ -74,46 +75,39 @@ class TextRecConfig(BaseConfig):
         """
         dataset_path = abspath(dataset_path)
         if dataset_type is None:
-            dataset_type = 'TextRecDataset'
+            dataset_type = "TextRecDataset"
         if train_list_path:
             train_list_path = f"{train_list_path}"
         else:
-            train_list_path = os.path.join(dataset_path, 'train.txt')
-        if (dataset_type == 'TextRecDataset') or (
-                dataset_type == "MSTextRecDataset"):
+            train_list_path = os.path.join(dataset_path, "train.txt")
+        if (dataset_type == "TextRecDataset") or (dataset_type == "MSTextRecDataset"):
             _cfg = {
-                'Train.dataset.name': dataset_type,
-                'Train.dataset.data_dir': dataset_path,
-                'Train.dataset.label_file_list': [train_list_path],
-                'Eval.dataset.name': 'TextRecDataset',
-                'Eval.dataset.data_dir': dataset_path,
-                'Eval.dataset.label_file_list':
-                [os.path.join(dataset_path, 'val.txt')],
-                'Global.character_dict_path':
-                os.path.join(dataset_path, 'dict.txt')
+                "Train.dataset.name": dataset_type,
+                "Train.dataset.data_dir": dataset_path,
+                "Train.dataset.label_file_list": [train_list_path],
+                "Eval.dataset.name": "TextRecDataset",
+                "Eval.dataset.data_dir": dataset_path,
+                "Eval.dataset.label_file_list": [os.path.join(dataset_path, "val.txt")],
+                "Global.character_dict_path": os.path.join(dataset_path, "dict.txt"),
             }
             self.update(_cfg)
         elif dataset_type == "LaTeXOCRDataSet":
             _cfg = {
-                'Train.dataset.name': dataset_type,
-                'Train.dataset.data_dir': dataset_path,
-                'Train.dataset.data':
-                os.path.join(dataset_path, "latexocr_train.pkl"),
-                'Train.dataset.label_file_list': [train_list_path],
-                'Eval.dataset.name': dataset_type,
-                'Eval.dataset.data_dir': dataset_path,
-                'Eval.dataset.data':
-                os.path.join(dataset_path, "latexocr_val.pkl"),
-                'Eval.dataset.label_file_list':
-                [os.path.join(dataset_path, 'val.txt')],
-                'Global.character_dict_path':
-                os.path.join(dataset_path, 'dict.txt')
+                "Train.dataset.name": dataset_type,
+                "Train.dataset.data_dir": dataset_path,
+                "Train.dataset.data": os.path.join(dataset_path, "latexocr_train.pkl"),
+                "Train.dataset.label_file_list": [train_list_path],
+                "Eval.dataset.name": dataset_type,
+                "Eval.dataset.data_dir": dataset_path,
+                "Eval.dataset.data": os.path.join(dataset_path, "latexocr_val.pkl"),
+                "Eval.dataset.label_file_list": [os.path.join(dataset_path, "val.txt")],
+                "Global.character_dict_path": os.path.join(dataset_path, "dict.txt"),
             }
             self.update(_cfg)
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
 
-    def update_batch_size(self, batch_size: int, mode: str='train'):
+    def update_batch_size(self, batch_size: int, mode: str = "train"):
         """update batch size setting
 
         Args:
@@ -125,17 +119,16 @@ class TextRecConfig(BaseConfig):
             ValueError: mode error.
         """
         _cfg = {
-            'Train.loader.batch_size_per_card': batch_size,
-            'Eval.loader.batch_size_per_card': batch_size,
+            "Train.loader.batch_size_per_card": batch_size,
+            "Eval.loader.batch_size_per_card": batch_size,
         }
-        if "sampler" in self.dict['Train']:
-            _cfg['Train.sampler.first_bs'] = batch_size
+        if "sampler" in self.dict["Train"]:
+            _cfg["Train.sampler.first_bs"] = batch_size
         self.update(_cfg)
 
-    def update_batch_size_pair(self,
-                               batch_size_train: int,
-                               batch_size_val: int,
-                               mode: str='train'):
+    def update_batch_size_pair(
+        self, batch_size_train: int, batch_size_val: int, mode: str = "train"
+    ):
         """update batch size setting
         Args:
             batch_size (int): the batch size number to set.
@@ -145,8 +138,8 @@ class TextRecConfig(BaseConfig):
             ValueError: mode error.
         """
         _cfg = {
-            'Train.dataset.batch_size_per_pair': batch_size_train,
-            'Eval.dataset.batch_size_per_pair': batch_size_val,
+            "Train.dataset.batch_size_per_pair": batch_size_train,
+            "Eval.dataset.batch_size_per_pair": batch_size_val,
         }
         # if "sampler" in self.dict['Train']:
         #     _cfg['Train.sampler.first_bs'] = 1
@@ -158,7 +151,9 @@ class TextRecConfig(BaseConfig):
         Args:
             learning_rate (float): the learning rate value to set.
         """
-        _cfg = {'Optimizer.lr.learning_rate': learning_rate, }
+        _cfg = {
+            "Optimizer.lr.learning_rate": learning_rate,
+        }
         self.update(_cfg)
 
     def update_label_dict_path(self, dict_path: str):
@@ -167,7 +162,9 @@ class TextRecConfig(BaseConfig):
         Args:
             dict_path (str): the path to label dict file.
         """
-        _cfg = {'Global.character_dict_path': abspath(dict_path), }
+        _cfg = {
+            "Global.character_dict_path": abspath(dict_path),
+        }
         self.update(_cfg)
 
     def update_warmup_epochs(self, warmup_epochs: int):
@@ -176,7 +173,7 @@ class TextRecConfig(BaseConfig):
         Args:
             warmup_epochs (int): the warmup epochs value to set.
         """
-        _cfg = {'Optimizer.lr.warmup_epoch': warmup_epochs}
+        _cfg = {"Optimizer.lr.warmup_epoch": warmup_epochs}
         self.update(_cfg)
 
     def update_pretrained_weights(self, pretrained_model: str):
@@ -187,12 +184,12 @@ class TextRecConfig(BaseConfig):
         """
         if pretrained_model:
             if not pretrained_model.startswith(
-                    'http://') and not pretrained_model.startswith('https://'):
+                "http://"
+            ) and not pretrained_model.startswith("https://"):
                 pretrained_model = abspath(pretrained_model)
-        self.update({
-            'Global.pretrained_model': pretrained_model,
-            'Global.checkpoints': ''
-        })
+        self.update(
+            {"Global.pretrained_model": pretrained_model, "Global.checkpoints": ""}
+        )
 
     # TODO
     def update_class_path(self, class_path: str):
@@ -201,7 +198,11 @@ class TextRecConfig(BaseConfig):
         Args:
             class_path (str): _description_
         """
-        self.update({'PostProcess.class_path': class_path, })
+        self.update(
+            {
+                "PostProcess.class_path": class_path,
+            }
+        )
 
     def _update_amp(self, amp: Union[None, str]):
         """update AMP settings
@@ -210,8 +211,8 @@ class TextRecConfig(BaseConfig):
             amp (None | str): the AMP level if it is not None or `OFF`.
         """
         _cfg = {
-            'Global.use_amp': amp is not None and amp != 'OFF',
-            'Global.amp_level': amp,
+            "Global.use_amp": amp is not None and amp != "OFF",
+            "Global.amp_level": amp,
         }
         self.update(_cfg)
 
@@ -221,28 +222,20 @@ class TextRecConfig(BaseConfig):
         Args:
             device (str): the running device to set
         """
-        device = device.split(':')[0]
+        device = device.split(":")[0]
         default_cfg = {
-            'Global.use_gpu': False,
-            'Global.use_xpu': False,
-            'Global.use_npu': False,
-            'Global.use_mlu': False,
+            "Global.use_gpu": False,
+            "Global.use_xpu": False,
+            "Global.use_npu": False,
+            "Global.use_mlu": False,
         }
 
         device_cfg = {
-            'cpu': {},
-            'gpu': {
-                'Global.use_gpu': True
-            },
-            'xpu': {
-                'Global.use_xpu': True
-            },
-            'mlu': {
-                'Global.use_mlu': True
-            },
-            'npu': {
-                'Global.use_npu': True
-            }
+            "cpu": {},
+            "gpu": {"Global.use_gpu": True},
+            "xpu": {"Global.use_xpu": True},
+            "mlu": {"Global.use_mlu": True},
+            "npu": {"Global.use_npu": True},
         }
         default_cfg.update(device_cfg[device])
         self.update(default_cfg)
@@ -253,7 +246,7 @@ class TextRecConfig(BaseConfig):
         Args:
             epochs (int): the epochs number value to set
         """
-        self.update({'Global.epoch_num': epochs})
+        self.update({"Global.epoch_num": epochs})
 
     def _update_checkpoints(self, resume_path: Union[None, str]):
         """update checkpoint setting
@@ -262,10 +255,9 @@ class TextRecConfig(BaseConfig):
             resume_path (None | str): the resume training setting. if is `None`, train from scratch, otherwise,
                 train from checkpoint file that path is `.pdparams` file.
         """
-        self.update({
-            'Global.checkpoints': abspath(resume_path),
-            'Global.pretrained_model': ''
-        })
+        self.update(
+            {"Global.checkpoints": abspath(resume_path), "Global.pretrained_model": ""}
+        )
 
     def _update_to_static(self, dy2st: bool):
         """update config to set dynamic to static mode
@@ -273,7 +265,7 @@ class TextRecConfig(BaseConfig):
         Args:
             dy2st (bool): whether or not to use the dynamic to static mode.
         """
-        self.update({'Global.to_static': dy2st})
+        self.update({"Global.to_static": dy2st})
 
     def _update_use_vdl(self, use_vdl: bool):
         """update config to set VisualDL
@@ -281,7 +273,7 @@ class TextRecConfig(BaseConfig):
         Args:
             use_vdl (bool): whether or not to use VisualDL.
         """
-        self.update({'Global.use_visualdl': use_vdl})
+        self.update({"Global.use_visualdl": use_vdl})
 
     def _update_output_dir(self, save_dir: str):
         """update output directory
@@ -289,7 +281,7 @@ class TextRecConfig(BaseConfig):
         Args:
             save_dir (str): the path to save output.
         """
-        self.update({'Global.save_model_dir': abspath(save_dir)})
+        self.update({"Global.save_model_dir": abspath(save_dir)})
 
     # TODO
     # def _update_log_interval(self, log_interval):
@@ -301,7 +293,7 @@ class TextRecConfig(BaseConfig):
         Args:
             log_interval (int): the log interval value to set.
         """
-        self.update({'Global.print_batch_step': log_interval})
+        self.update({"Global.print_batch_step": log_interval})
 
     # def _update_eval_interval(self, eval_start_step, eval_interval):
     #     self.update({
@@ -314,39 +306,37 @@ class TextRecConfig(BaseConfig):
         Args:
             device (str): the running device to set
         """
-        log_ranks = device.split(':')[1]
-        self.update({'Global.log_ranks': log_ranks})
+        log_ranks = device.split(":")[1]
+        self.update({"Global.log_ranks": log_ranks})
 
     def update_print_mem_info(self, print_mem_info: bool):
         """setting print memory info"""
-        assert isinstance(print_mem_info,
-                          bool), "print_mem_info should be a bool"
-        self.update({'Global.print_mem_info': f'{print_mem_info}'})
+        assert isinstance(print_mem_info, bool), "print_mem_info should be a bool"
+        self.update({"Global.print_mem_info": f"{print_mem_info}"})
 
     def update_shared_memory(self, shared_memeory: bool):
         """update shared memory setting of train and eval dataloader
-        
+
         Args:
             shared_memeory (bool): whether or not to use shared memory
         """
-        assert isinstance(shared_memeory,
-                          bool), "shared_memeory should be a bool"
+        assert isinstance(shared_memeory, bool), "shared_memeory should be a bool"
         _cfg = {
-            'Train.loader.use_shared_memory': f'{shared_memeory}',
-            'Train.loader.use_shared_memory': f'{shared_memeory}',
+            "Train.loader.use_shared_memory": f"{shared_memeory}",
+            "Train.loader.use_shared_memory": f"{shared_memeory}",
         }
         self.update(_cfg)
 
     def update_shuffle(self, shuffle: bool):
         """update shuffle setting of train and eval dataloader
-        
+
         Args:
             shuffle (bool): whether or not to shuffle the data
         """
         assert isinstance(shuffle, bool), "shuffle should be a bool"
         _cfg = {
-            f'Train.loader.shuffle': shuffle,
-            f'Train.loader.shuffle': shuffle,
+            f"Train.loader.shuffle": shuffle,
+            f"Train.loader.shuffle": shuffle,
         }
         self.update(_cfg)
 
@@ -356,7 +346,7 @@ class TextRecConfig(BaseConfig):
             cal_metrics (bool): whether or not to calculate metrics during train
         """
         assert isinstance(cal_metrics, bool), "cal_metrics should be a bool"
-        self.update({'Global.cal_metric_during_train': cal_metrics})
+        self.update({"Global.cal_metric_during_train": cal_metrics})
 
     def update_seed(self, seed: int):
         """update seed
@@ -365,7 +355,7 @@ class TextRecConfig(BaseConfig):
             seed (int): the random seed value to set
         """
         assert isinstance(seed, int), "seed should be an int"
-        self.update({'Global.seed': seed})
+        self.update({"Global.seed": seed})
 
     def _update_eval_interval_by_epoch(self, eval_interval):
         """update eval interval(by epoch)
@@ -373,9 +363,9 @@ class TextRecConfig(BaseConfig):
         Args:
             eval_interval (int): the eval interval value to set.
         """
-        self.update({'Global.eval_batch_epoch': eval_interval})
+        self.update({"Global.eval_batch_epoch": eval_interval})
 
-    def update_eval_interval(self, eval_interval: int, eval_start_step: int=0):
+    def update_eval_interval(self, eval_interval: int, eval_start_step: int = 0):
         """update eval interval(by steps)
 
         Args:
@@ -390,7 +380,7 @@ class TextRecConfig(BaseConfig):
         Args:
             save_interval (int): the save interval value to set.
         """
-        self.update({'Global.save_epoch_step': save_interval})
+        self.update({"Global.save_epoch_step": save_interval})
 
     def update_save_interval(self, save_interval: int):
         """update save interval(by steps)
@@ -400,7 +390,7 @@ class TextRecConfig(BaseConfig):
         """
         self._update_save_interval(save_interval)
 
-    def _update_infer_img(self, infer_img: str, infer_list: str=None):
+    def _update_infer_img(self, infer_img: str, infer_list: str = None):
         """update image list to be infered
 
         Args:
@@ -409,8 +399,8 @@ class TextRecConfig(BaseConfig):
                 Defaults to None.
         """
         if infer_list:
-            self.update({'Global.infer_list': infer_list})
-        self.update({'Global.infer_img': infer_img})
+            self.update({"Global.infer_list": infer_list})
+        self.update({"Global.infer_img": infer_img})
 
     def _update_save_inference_dir(self, save_inference_dir: str):
         """update the directory saving infer outputs
@@ -418,7 +408,7 @@ class TextRecConfig(BaseConfig):
         Args:
             save_inference_dir (str): the directory saving infer outputs.
         """
-        self.update({'Global.save_inference_dir': abspath(save_inference_dir)})
+        self.update({"Global.save_inference_dir": abspath(save_inference_dir)})
 
     def _update_save_res_path(self, save_res_path: str):
         """update the .txt file path saving OCR model inference result
@@ -426,11 +416,11 @@ class TextRecConfig(BaseConfig):
         Args:
             save_res_path (str): the .txt file path saving OCR model inference result.
         """
-        self.update({'Global.save_res_path': abspath(save_res_path)})
+        self.update({"Global.save_res_path": abspath(save_res_path)})
 
-    def update_num_workers(self,
-                           num_workers: int,
-                           modes: Union[str, list]=['train', 'eval']):
+    def update_num_workers(
+        self, num_workers: int, modes: Union[str, list] = ["train", "eval"]
+    ):
         """update workers number of train or eval dataloader
 
         Args:
@@ -443,12 +433,12 @@ class TextRecConfig(BaseConfig):
         if not isinstance(modes, list):
             modes = [modes]
         for mode in modes:
-            if not mode in ('train', 'eval'):
+            if not mode in ("train", "eval"):
                 raise ValueError
-            if mode == 'train':
-                self['Train']['loader']['num_workers'] = num_workers
+            if mode == "train":
+                self["Train"]["loader"]["num_workers"] = num_workers
             else:
-                self['Eval']['loader']['num_workers'] = num_workers
+                self["Eval"]["loader"]["num_workers"] = num_workers
 
     def _get_model_type(self) -> str:
         """get model type
@@ -456,10 +446,10 @@ class TextRecConfig(BaseConfig):
         Returns:
             str: model type, i.e. `Architecture.algorithm` or `Architecture.Models.Student.algorithm`.
         """
-        if 'Models' in self.dict['Architecture']:
-            return self.dict['Architecture']['Models']['Student']['algorithm']
+        if "Models" in self.dict["Architecture"]:
+            return self.dict["Architecture"]["Models"]["Student"]["algorithm"]
 
-        return self.dict['Architecture']['algorithm']
+        return self.dict["Architecture"]["algorithm"]
 
     def get_epochs_iters(self) -> int:
         """get epochs
@@ -467,7 +457,7 @@ class TextRecConfig(BaseConfig):
         Returns:
             int: the epochs value, i.e., `Global.epochs` in config.
         """
-        return self.dict['Global']['epoch_num']
+        return self.dict["Global"]["epoch_num"]
 
     def get_learning_rate(self) -> float:
         """get learning rate
@@ -475,9 +465,9 @@ class TextRecConfig(BaseConfig):
         Returns:
             float: the learning rate value, i.e., `Optimizer.lr.learning_rate` in config.
         """
-        return self.dict['Optimizer']['lr']['learning_rate']
+        return self.dict["Optimizer"]["lr"]["learning_rate"]
 
-    def get_batch_size(self, mode='train') -> int:
+    def get_batch_size(self, mode="train") -> int:
         """get batch size
 
         Args:
@@ -487,7 +477,7 @@ class TextRecConfig(BaseConfig):
         Returns:
             int: the batch size value of `mode`, i.e., `DataLoader.{mode}.sampler.batch_size` in config.
         """
-        return self.dict['Train']['loader']['batch_size_per_card']
+        return self.dict["Train"]["loader"]["batch_size_per_card"]
 
     def get_qat_epochs_iters(self) -> int:
         """get qat epochs
@@ -511,7 +501,7 @@ class TextRecConfig(BaseConfig):
         Returns:
             str: the label dict file path, i.e., `Global.character_dict_path` in config.
         """
-        return self.dict['Global']['character_dict_path']
+        return self.dict["Global"]["character_dict_path"]
 
     def _get_dataset_root(self) -> str:
         """get root directory of dataset, i.e. `DataLoader.Train.dataset.data_dir`
@@ -519,7 +509,7 @@ class TextRecConfig(BaseConfig):
         Returns:
             str: the root directory of dataset
         """
-        return self.dict['Train']['dataset']['data_dir']
+        return self.dict["Train"]["dataset"]["data_dir"]
 
     def _get_infer_shape(self) -> str:
         """get resize scale of ResizeImg operation in the evaluation
@@ -528,12 +518,12 @@ class TextRecConfig(BaseConfig):
             str: resize scale, i.e. `Eval.dataset.transforms.ResizeImg.image_shape`
         """
         size = None
-        transforms = self.dict['Eval']['dataset']['transforms']
+        transforms = self.dict["Eval"]["dataset"]["transforms"]
         for op in transforms:
             op_name = list(op)[0]
-            if 'ResizeImg' in op_name:
-                size = op[op_name]['image_shape']
-        return ','.join([str(x) for x in size])
+            if "ResizeImg" in op_name:
+                size = op[op_name]["image_shape"]
+        return ",".join([str(x) for x in size])
 
     def get_train_save_dir(self) -> str:
         """get the directory to save output
@@ -541,7 +531,7 @@ class TextRecConfig(BaseConfig):
         Returns:
             str: the directory to save output
         """
-        return self['Global']['save_model_dir']
+        return self["Global"]["save_model_dir"]
 
     def get_predict_save_dir(self) -> str:
         """get the directory to save output in predicting
@@ -549,4 +539,4 @@ class TextRecConfig(BaseConfig):
         Returns:
             str: the directory to save output
         """
-        return os.path.dirname(self['Global']['save_res_path'])
+        return os.path.dirname(self["Global"]["save_res_path"])

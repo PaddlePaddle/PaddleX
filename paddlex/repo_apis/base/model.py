@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import os
 import abc
 import inspect
@@ -25,34 +24,42 @@ import base64
 from datetime import datetime, timedelta
 
 from .config import Config
-from .register import (get_registered_model_info, build_runner_from_model_info,
-                       build_model_from_model_info)
+from .register import (
+    get_registered_model_info,
+    build_runner_from_model_info,
+    build_model_from_model_info,
+)
 from ...utils import flags
 from ...utils import logging
-from ...utils.errors import UnsupportedAPIError, UnsupportedParamError, raise_unsupported_api_error
+from ...utils.errors import (
+    UnsupportedAPIError,
+    UnsupportedParamError,
+    raise_unsupported_api_error,
+)
 from ...utils.misc import CachedProperty as cached_property
 from ...utils.cache import get_cache_dir
 
-__all__ = ['PaddleModel', 'BaseModel']
+__all__ = ["PaddleModel", "BaseModel"]
 
 
 def _create_model(model_name=None, config=None):
-    """ _create_model """
+    """_create_model"""
     if model_name is None and config is None:
-        raise ValueError(
-            "At least one of `model_name` and `config` must be not None.")
+        raise ValueError("At least one of `model_name` and `config` must be not None.")
     elif model_name is not None and config is not None:
         if model_name != config.model_name:
             raise ValueError(
                 "If both `model_name` and `config` are not None, `model_name` should be the same as \
-`config.model_name`.")
+`config.model_name`."
+            )
     elif model_name is None and config is not None:
         model_name = config.model_name
     try:
         model_info = get_registered_model_info(model_name)
     except KeyError as e:
         raise UnsupportedParamError(
-            f"{repr(model_name)} is not a registered model name.") from e
+            f"{repr(model_name)} is not a registered model name."
+        ) from e
     return build_model_from_model_info(model_info=model_info, config=config)
 
 
@@ -68,9 +75,8 @@ class BaseModel(metaclass=abc.ABCMeta):
     prediction, etc.
     """
 
-    _API_FULL_LIST = ('train', 'evaluate', 'predict', 'export', 'infer',
-                      'compression')
-    _API_SUPPORTED_OPTS_KEY_PATTERN = 'supported_{api_name}_opts'
+    _API_FULL_LIST = ("train", "evaluate", "predict", "export", "infer", "compression")
+    _API_SUPPORTED_OPTS_KEY_PATTERN = "supported_{api_name}_opts"
 
     def __init__(self, model_name, config=None):
         """
@@ -100,19 +106,21 @@ configuration item, "
         self._patch_apis()
 
     @abc.abstractmethod
-    def train(self,
-              batch_size=None,
-              learning_rate=None,
-              epochs_iters=None,
-              ips=None,
-              device='gpu',
-              resume_path=None,
-              dy2st=False,
-              amp='OFF',
-              num_workers=None,
-              use_vdl=True,
-              save_dir=None,
-              **kwargs):
+    def train(
+        self,
+        batch_size=None,
+        learning_rate=None,
+        epochs_iters=None,
+        ips=None,
+        device="gpu",
+        resume_path=None,
+        dy2st=False,
+        amp="OFF",
+        num_workers=None,
+        use_vdl=True,
+        save_dir=None,
+        **kwargs,
+    ):
         """
         Train a model.
 
@@ -149,14 +157,16 @@ configuration item, "
         raise NotImplementedError
 
     @abc.abstractmethod
-    def evaluate(self,
-                 weight_path,
-                 batch_size=None,
-                 ips=None,
-                 device='gpu',
-                 amp='OFF',
-                 num_workers=None,
-                 **kwargs):
+    def evaluate(
+        self,
+        weight_path,
+        batch_size=None,
+        ips=None,
+        device="gpu",
+        amp="OFF",
+        num_workers=None,
+        **kwargs,
+    ):
         """
         Evaluate a model.
 
@@ -181,12 +191,7 @@ configuration item, "
         raise NotImplementedError
 
     @abc.abstractmethod
-    def predict(self,
-                weight_path,
-                input_path,
-                device='gpu',
-                save_dir=None,
-                **kwargs):
+    def predict(self, weight_path, input_path, device="gpu", save_dir=None, **kwargs):
         """
         Make prediction with a pre-trained model.
 
@@ -218,12 +223,7 @@ configuration item, "
         raise NotImplementedError
 
     @abc.abstractmethod
-    def infer(self,
-              model_dir,
-              input_path,
-              device='gpu',
-              save_dir=None,
-              **kwargs):
+    def infer(self, model_dir, input_path, device="gpu", save_dir=None, **kwargs):
         """
         Make inference with an exported inference model.
 
@@ -241,15 +241,17 @@ configuration item, "
         raise NotImplementedError
 
     @abc.abstractmethod
-    def compression(self,
-                    weight_path,
-                    batch_size=None,
-                    learning_rate=None,
-                    epochs_iters=None,
-                    device='gpu',
-                    use_vdl=True,
-                    save_dir=None,
-                    **kwargs):
+    def compression(
+        self,
+        weight_path,
+        batch_size=None,
+        learning_rate=None,
+        epochs_iters=None,
+        device="gpu",
+        use_vdl=True,
+        save_dir=None,
+        **kwargs,
+    ):
         """
         Perform quantization aware training (QAT) and export the quantized
         model.
@@ -278,63 +280,65 @@ configuration item, "
     @contextlib.contextmanager
     def _create_new_config_file(self):
         cls = self.__class__
-        model_name = self.model_info['model_name']
-        tag = '_'.join([cls.__name__.lower(), model_name])
-        yaml_file_name = tag + '.yml'
+        model_name = self.model_info["model_name"]
+        tag = "_".join([cls.__name__.lower(), model_name])
+        yaml_file_name = tag + ".yml"
         if not flags.DEBUG:
             with tempfile.TemporaryDirectory(dir=get_cache_dir()) as td:
                 path = os.path.join(td, yaml_file_name)
-                with open(path, 'w', encoding='utf-8'):
+                with open(path, "w", encoding="utf-8"):
                     pass
                 yield path
         else:
             path = os.path.join(get_cache_dir(), yaml_file_name)
-            with open(path, 'w', encoding='utf-8'):
+            with open(path, "w", encoding="utf-8"):
                 pass
             yield path
 
     @cached_property
     def supported_apis(self):
-        """ supported apis """
-        return self.model_info.get('supported_apis', None)
+        """supported apis"""
+        return self.model_info.get("supported_apis", None)
 
     @cached_property
     def supported_train_opts(self):
-        """ supported train opts """
+        """supported train opts"""
         return self.model_info.get(
-            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name='train'), None)
+            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name="train"), None
+        )
 
     @cached_property
     def supported_evaluate_opts(self):
-        """ supported evaluate opts """
+        """supported evaluate opts"""
         return self.model_info.get(
-            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name='evaluate'),
-            None)
+            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name="evaluate"), None
+        )
 
     @cached_property
     def supported_predict_opts(self):
-        """ supported predcit opts """
+        """supported predcit opts"""
         return self.model_info.get(
-            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name='predict'),
-            None)
+            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name="predict"), None
+        )
 
     @cached_property
     def supported_infer_opts(self):
-        """ supported infer opts """
+        """supported infer opts"""
         return self.model_info.get(
-            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name='infer'), None)
+            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name="infer"), None
+        )
 
     @cached_property
     def supported_compression_opts(self):
-        """ supported copression opts """
+        """supported copression opts"""
         return self.model_info.get(
-            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name='compression'),
-            None)
+            self._API_SUPPORTED_OPTS_KEY_PATTERN.format(api_name="compression"), None
+        )
 
     @cached_property
     def supported_dataset_types(self):
-        """ supported dataset types """
-        return self.model_info.get('supported_dataset_types', None)
+        """supported dataset types"""
+        return self.model_info.get("supported_dataset_types", None)
 
     @staticmethod
     def _assert_empty_kwargs(kwargs):
@@ -352,7 +356,8 @@ configuration item, "
                 model_name = self.name
                 api_name = bnd_method.__name__
                 raise UnsupportedAPIError(
-                    f"{model_name} does not support `{api_name}`.")
+                    f"{model_name} does not support `{api_name}`."
+                )
 
             return _unavailable_api
 
@@ -377,57 +382,57 @@ configuration item, "
             api_name = bnd_method.__name__
             checks = []
             # We hardcode the prechecks for each API here
-            if api_name == 'train':
+            if api_name == "train":
                 opts = self.supported_train_opts
                 if opts is not None:
-                    if 'device' in opts:
+                    if "device" in opts:
                         checks.append(
                             _CheckDevice(
-                                opts['device'],
-                                self.runner.parse_device,
-                                check_mc=True))
-                    if 'dy2st' in opts:
-                        checks.append(_CheckDy2St(opts['dy2st']))
-                    if 'amp' in opts:
-                        checks.append(_CheckAMP(opts['amp']))
-            elif api_name == 'evaluate':
+                                opts["device"], self.runner.parse_device, check_mc=True
+                            )
+                        )
+                    if "dy2st" in opts:
+                        checks.append(_CheckDy2St(opts["dy2st"]))
+                    if "amp" in opts:
+                        checks.append(_CheckAMP(opts["amp"]))
+            elif api_name == "evaluate":
                 opts = self.supported_evaluate_opts
                 if opts is not None:
-                    if 'device' in opts:
+                    if "device" in opts:
                         checks.append(
                             _CheckDevice(
-                                opts['device'],
-                                self.runner.parse_device,
-                                check_mc=True))
-                    if 'amp' in opts:
-                        checks.append(_CheckAMP(opts['amp']))
-            elif api_name == 'predict':
+                                opts["device"], self.runner.parse_device, check_mc=True
+                            )
+                        )
+                    if "amp" in opts:
+                        checks.append(_CheckAMP(opts["amp"]))
+            elif api_name == "predict":
                 opts = self.supported_predict_opts
                 if opts is not None:
-                    if 'device' in opts:
+                    if "device" in opts:
                         checks.append(
                             _CheckDevice(
-                                opts['device'],
-                                self.runner.parse_device,
-                                check_mc=False))
-            elif api_name == 'infer':
+                                opts["device"], self.runner.parse_device, check_mc=False
+                            )
+                        )
+            elif api_name == "infer":
                 opts = self.supported_infer_opts
                 if opts is not None:
-                    if 'device' in opts:
+                    if "device" in opts:
                         checks.append(
                             _CheckDevice(
-                                opts['device'],
-                                self.runner.parse_device,
-                                check_mc=False))
-            elif api_name == 'compression':
+                                opts["device"], self.runner.parse_device, check_mc=False
+                            )
+                        )
+            elif api_name == "compression":
                 opts = self.supported_compression_opts
                 if opts is not None:
-                    if 'device' in opts:
+                    if "device" in opts:
                         checks.append(
                             _CheckDevice(
-                                opts['device'],
-                                self.runner.parse_device,
-                                check_mc=True))
+                                opts["device"], self.runner.parse_device, check_mc=True
+                            )
+                        )
             else:
                 return bnd_method
 
@@ -456,7 +461,8 @@ configuration item, "
 
 
 class _CheckFailed(Exception):
-    """ _CheckFailed """
+    """_CheckFailed"""
+
     # Allow `_CheckFailed` class to be recognized using `hasattr(exc, 'check_failed_error')`
     check_failed_error = True
 
@@ -470,19 +476,19 @@ class _CheckFailed(Exception):
 
 
 class _APICallArgsChecker(object):
-    """ _APICallArgsChecker """
+    """_APICallArgsChecker"""
 
     def __init__(self, legal_vals):
         super().__init__()
         self.legal_vals = legal_vals
 
     def check(self, args):
-        """ check """
+        """check"""
         raise NotImplementedError
 
 
 class _CheckDevice(_APICallArgsChecker):
-    """ _CheckDevice """
+    """_CheckDevice"""
 
     def __init__(self, legal_vals, parse_device, check_mc=False):
         super().__init__(legal_vals)
@@ -490,43 +496,44 @@ class _CheckDevice(_APICallArgsChecker):
         self.check_mc = check_mc
 
     def check(self, args):
-        """ check """
-        assert 'device' in args
-        device = args['device']
+        """check"""
+        assert "device" in args
+        device = args["device"]
         if device is not None:
             device_type, dev_ids = self.parse_device(device)
             if not self.check_mc:
                 if device_type not in self.legal_vals:
-                    raise _CheckFailed('device', device, self.legal_vals)
+                    raise _CheckFailed("device", device, self.legal_vals)
             else:
                 # Currently we only check multi-device settings for GPUs
-                if device_type != 'gpu':
+                if device_type != "gpu":
                     if device_type not in self.legal_vals:
-                        raise _CheckFailed('device', device, self.legal_vals)
+                        raise _CheckFailed("device", device, self.legal_vals)
                 else:
-                    n1c1_desc = f'{device_type}_n1c1'
-                    n1cx_desc = f'{device_type}_n1cx'
-                    nxcx_desc = f'{device_type}_nxcx'
+                    n1c1_desc = f"{device_type}_n1c1"
+                    n1cx_desc = f"{device_type}_n1cx"
+                    nxcx_desc = f"{device_type}_nxcx"
 
                     if len(dev_ids) <= 1:
-                        if (n1c1_desc not in self.legal_vals and
-                                n1cx_desc not in self.legal_vals and
-                                nxcx_desc not in self.legal_vals):
-                            raise _CheckFailed('device', device,
-                                               self.legal_vals)
+                        if (
+                            n1c1_desc not in self.legal_vals
+                            and n1cx_desc not in self.legal_vals
+                            and nxcx_desc not in self.legal_vals
+                        ):
+                            raise _CheckFailed("device", device, self.legal_vals)
                     else:
-                        assert 'ips' in args
-                        if args['ips'] is not None:
+                        assert "ips" in args
+                        if args["ips"] is not None:
                             # Multi-machine
                             if nxcx_desc not in self.legal_vals:
-                                raise _CheckFailed('device', device,
-                                                   self.legal_vals)
+                                raise _CheckFailed("device", device, self.legal_vals)
                         else:
                             # Single-machine multi-device
-                            if (n1cx_desc not in self.legal_vals and
-                                    nxcx_desc not in self.legal_vals):
-                                raise _CheckFailed('device', device,
-                                                   self.legal_vals)
+                            if (
+                                n1cx_desc not in self.legal_vals
+                                and nxcx_desc not in self.legal_vals
+                            ):
+                                raise _CheckFailed("device", device, self.legal_vals)
         else:
             # When `device` is None, we assume that a default device that the
             # current model supports will be used, so we simply do nothing.
@@ -534,12 +541,12 @@ class _CheckDevice(_APICallArgsChecker):
 
 
 class _CheckDy2St(_APICallArgsChecker):
-    """ _CheckDy2St """
+    """_CheckDy2St"""
 
     def check(self, args):
-        """ check """
-        assert 'dy2st' in args
-        dy2st = args['dy2st']
+        """check"""
+        assert "dy2st" in args
+        dy2st = args["dy2st"]
         if isinstance(self.legal_vals, list):
             assert len(self.legal_vals) == 1
             support_dy2st = bool(self.legal_vals[0])
@@ -547,20 +554,20 @@ class _CheckDy2St(_APICallArgsChecker):
             support_dy2st = bool(self.legal_vals)
         if dy2st is not None:
             if dy2st and not support_dy2st:
-                raise _CheckFailed('dy2st', dy2st, [support_dy2st])
+                raise _CheckFailed("dy2st", dy2st, [support_dy2st])
         else:
             pass
 
 
 class _CheckAMP(_APICallArgsChecker):
-    """ _CheckAMP """
+    """_CheckAMP"""
 
     def check(self, args):
-        """ check """
-        assert 'amp' in args
-        amp = args['amp']
+        """check"""
+        assert "amp" in args
+        amp = args["amp"]
         if amp is not None:
-            if amp != 'OFF' and amp not in self.legal_vals:
-                raise _CheckFailed('amp', amp, self.legal_vals)
+            if amp != "OFF" and amp not in self.legal_vals:
+                raise _CheckFailed("amp", amp, self.legal_vals)
         else:
             pass

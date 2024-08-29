@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,15 +18,14 @@ from .model_list import MODELS
 
 
 class InstanceSegTrainer(DetTrainer):
-    """ Instance Segmentation Model Trainer """
+    """Instance Segmentation Model Trainer"""
+
     entities = MODELS
 
     def _update_dataset(self):
-        """update dataset settings
-        """
+        """update dataset settings"""
         self.pdx_config.update_dataset(
             self.global_config.dataset_dir,
             "COCOInstSegDataset",
-            data_fields=[
-                'image', 'gt_bbox', 'gt_class', 'gt_poly', 'is_crowd'
-            ])
+            data_fields=["image", "gt_bbox", "gt_class", "gt_poly", "is_crowd"],
+        )

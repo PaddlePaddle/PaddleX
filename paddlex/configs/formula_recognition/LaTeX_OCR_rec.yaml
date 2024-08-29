@@ -29,6 +29,9 @@ Evaluate:
   weight_path: "output/best_accuracy.pdparams"
   log_interval: 1
 
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/pretrained/rec_latex_ocr_trained.pdparams
+
 Predict:
   model_dir: "output/best_accuracy"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png"

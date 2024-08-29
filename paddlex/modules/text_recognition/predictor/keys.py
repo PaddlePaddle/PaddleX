@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,8 +13,6 @@
 # limitations under the License.
 
 
-
-
 class TextRecKeys(object):
     """
     This class defines a set of keys used for communication of TextRec predictors
@@ -24,12 +22,12 @@ class TextRecKeys(object):
     """
 
     # Common keys
-    IMAGE = 'image'
-    IM_SIZE = 'image_size'
-    IM_PATH = 'input_path'
-    ORI_IM = 'original_image'
-    ORI_IM_SIZE = 'original_image_size'
+    IMAGE = "image"
+    IM_SIZE = "image_size"
+    IM_PATH = "input_path"
+    ORI_IM = "original_image"
+    ORI_IM_SIZE = "original_image_size"
     # Suite-specific keys
-    REC_PROBS = 'probs'
-    REC_TEXT = 'rec_text'
-    REC_SCORE = 'rec_score'
+    REC_PROBS = "probs"
+    REC_TEXT = "rec_text"
+    REC_SCORE = "rec_score"

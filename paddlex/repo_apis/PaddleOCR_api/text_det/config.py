@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,7 +20,7 @@ from ..text_rec.config import TextRecConfig
 
 
 class TextDetConfig(TextRecConfig):
-    """ Text Detection Config """
+    """Text Detection Config"""
 
     def update_batch_size(self, batch_size: int):
         """update batch size setting
@@ -28,7 +28,9 @@ class TextDetConfig(TextRecConfig):
         Args:
             batch_size (int): the batch size number of training loader to set.
         """
-        _cfg = {'Train.loader.batch_size_per_card': batch_size, }
+        _cfg = {
+            "Train.loader.batch_size_per_card": batch_size,
+        }
         self.update(_cfg)
 
     def update_dataset(self, dataset_path: str, dataset_type=None):
@@ -43,17 +45,17 @@ class TextDetConfig(TextRecConfig):
         """
         dataset_path = abspath(dataset_path)
         if dataset_type is None:
-            dataset_type = 'TextDetDataset'
-        if dataset_type == 'TextDetDataset':
+            dataset_type = "TextDetDataset"
+        if dataset_type == "TextDetDataset":
             _cfg = {
-                'Train.dataset.name': dataset_type,
-                'Train.dataset.data_dir': dataset_path,
-                'Train.dataset.label_file_list':
-                [os.path.join(dataset_path, 'train.txt')],
-                'Eval.dataset.name': dataset_type,
-                'Eval.dataset.data_dir': dataset_path,
-                'Eval.dataset.label_file_list':
-                [os.path.join(dataset_path, 'val.txt')]
+                "Train.dataset.name": dataset_type,
+                "Train.dataset.data_dir": dataset_path,
+                "Train.dataset.label_file_list": [
+                    os.path.join(dataset_path, "train.txt")
+                ],
+                "Eval.dataset.name": dataset_type,
+                "Eval.dataset.data_dir": dataset_path,
+                "Eval.dataset.label_file_list": [os.path.join(dataset_path, "val.txt")],
             }
             self.update(_cfg)
         else:
