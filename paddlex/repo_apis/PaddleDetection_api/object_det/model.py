@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -23,21 +23,23 @@ from .config import DetConfig
 
 
 class DetModel(BaseModel):
-    """ Object Detection Model """
+    """Object Detection Model"""
 
-    def train(self,
-              batch_size: int=None,
-              learning_rate: float=None,
-              epochs_iters: int=None,
-              ips: str=None,
-              device: str='gpu',
-              resume_path: str=None,
-              dy2st: bool=False,
-              amp: str='OFF',
-              num_workers: int=None,
-              use_vdl: bool=True,
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def train(
+        self,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        resume_path: str = None,
+        dy2st: bool = False,
+        amp: str = "OFF",
+        num_workers: int = None,
+        use_vdl: bool = True,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """train self
 
         Args:
@@ -61,7 +63,7 @@ class DetModel(BaseModel):
         cli_args = []
 
         if batch_size is not None:
-            config.update_batch_size(batch_size, 'train')
+            config.update_batch_size(batch_size, "train")
         if learning_rate is not None:
             config.update_learning_rate(learning_rate)
         if epochs_iters is not None:
@@ -70,12 +72,13 @@ class DetModel(BaseModel):
         device_type, _ = self.runner.parse_device(device)
         config.update_device(device_type)
         if resume_path is not None:
-            assert resume_path.endswith('.pdparams'), \
-                'resume_path should be endswith .pdparam'
+            assert resume_path.endswith(
+                ".pdparams"
+            ), "resume_path should be endswith .pdparam"
             resume_dir = resume_path[0:-9]
-            cli_args.append(CLIArgument('--resume', resume_dir))
+            cli_args.append(CLIArgument("--resume", resume_dir))
         if dy2st:
-            cli_args.append(CLIArgument('--to_static'))
+            cli_args.append(CLIArgument("--to_static"))
         if num_workers is not None:
             config.update_num_workers(num_workers)
         if save_dir is None:
@@ -84,59 +87,62 @@ class DetModel(BaseModel):
             save_dir = abspath(save_dir)
         config.update_save_dir(save_dir)
         if use_vdl:
-            cli_args.append(CLIArgument('--use_vdl', use_vdl))
-            cli_args.append(CLIArgument('--vdl_log_dir', save_dir))
+            cli_args.append(CLIArgument("--use_vdl", use_vdl))
+            cli_args.append(CLIArgument("--vdl_log_dir", save_dir))
 
-        do_eval = kwargs.pop('do_eval', True)
-        enable_ce = kwargs.pop('enable_ce', None)
+        do_eval = kwargs.pop("do_eval", True)
+        enable_ce = kwargs.pop("enable_ce", None)
 
-        profile = kwargs.pop('profile', None)
+        profile = kwargs.pop("profile", None)
         if profile is not None:
-            cli_args.append(CLIArgument('--profiler_options', profile))
+            cli_args.append(CLIArgument("--profiler_options", profile))
 
         # Benchmarking mode settings
-        benchmark = kwargs.pop('benchmark', None)
+        benchmark = kwargs.pop("benchmark", None)
         if benchmark is not None:
-            envs = benchmark.get('env', None)
-            amp = benchmark.get('amp', None)
-            do_eval = benchmark.get('do_eval', False)
-            num_workers = benchmark.get('num_workers', None)
+            envs = benchmark.get("env", None)
+            amp = benchmark.get("amp", None)
+            do_eval = benchmark.get("do_eval", False)
+            num_workers = benchmark.get("num_workers", None)
             config.update_log_ranks(device)
-            config.update_shuffle(benchmark.get('shuffle', False))
-            config.update_shared_memory(benchmark.get('shared_memory', True))
-            config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            config.update_shuffle(benchmark.get("shuffle", False))
+            config.update_shared_memory(benchmark.get("shared_memory", True))
+            config.update_print_mem_info(benchmark.get("print_mem_info", True))
             if num_workers is not None:
                 config.update_num_workers(num_workers)
-            if amp == 'O1':
+            if amp == "O1":
                 # TODO: ppdet only support ampO1
-                cli_args.append(CLIArgument('--amp'))
+                cli_args.append(CLIArgument("--amp"))
             if envs is not None:
                 for env_name, env_value in envs.items():
                     os.environ[env_name] = str(env_value)
             # set seed to 0 for benchmark mode by enable_ce
-            cli_args.append(CLIArgument('--enable_ce', True))
+            cli_args.append(CLIArgument("--enable_ce", True))
         else:
-            if amp != 'OFF' and amp is not None:
+            if amp != "OFF" and amp is not None:
                 # TODO: consider amp is O1 or O2 in ppdet
-                cli_args.append(CLIArgument('--amp'))
+                cli_args.append(CLIArgument("--amp"))
             if enable_ce is not None:
-                cli_args.append(CLIArgument('--enable_ce', enable_ce))
+                cli_args.append(CLIArgument("--enable_ce", enable_ce))
 
             self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
             return self.runner.train(
-                config_path, cli_args, device, ips, save_dir, do_eval=do_eval)
+                config_path, cli_args, device, ips, save_dir, do_eval=do_eval
+            )
 
-    def evaluate(self,
-                 weight_path: str,
-                 batch_size: int=None,
-                 ips: bool=None,
-                 device: bool='gpu',
-                 amp: bool='OFF',
-                 num_workers: int=None,
-                 **kwargs) -> CompletedProcess:
+    def evaluate(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        ips: bool = None,
+        device: bool = "gpu",
+        amp: bool = "OFF",
+        num_workers: int = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """evaluate self using specified weight
 
         Args:
@@ -156,16 +162,16 @@ class DetModel(BaseModel):
         weight_path = abspath(weight_path)
         config.update_weights(weight_path)
         if batch_size is not None:
-            config.update_batch_size(batch_size, 'eval')
+            config.update_batch_size(batch_size, "eval")
         device_type, device_ids = self.runner.parse_device(device)
         if len(device_ids) > 1:
             raise ValueError(
                 f"multi-{device_type} evaluation is not supported. Please use a single {device_type}."
             )
         config.update_device(device_type)
-        if amp != 'OFF':
+        if amp != "OFF":
             # TODO: consider amp is O1 or O2 in ppdet
-            cli_args.append(CLIArgument('--amp'))
+            cli_args.append(CLIArgument("--amp"))
         if num_workers is not None:
             config.update_num_workers(num_workers)
 
@@ -176,12 +182,14 @@ class DetModel(BaseModel):
             cp = self.runner.evaluate(config_path, cli_args, device, ips)
             return cp
 
-    def predict(self,
-                input_path: str,
-                weight_path: str,
-                device: str='gpu',
-                save_dir: str=None,
-                **kwargs) -> CompletedProcess:
+    def predict(
+        self,
+        input_path: str,
+        weight_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """predict using specified weight
 
         Args:
@@ -198,29 +206,27 @@ class DetModel(BaseModel):
 
         input_path = abspath(input_path)
         if os.path.isfile(input_path):
-            cli_args.append(CLIArgument('--infer_img', input_path))
+            cli_args.append(CLIArgument("--infer_img", input_path))
         else:
-            cli_args.append(CLIArgument('--infer_dir', input_path))
-        if 'infer_list' in kwargs:
-            infer_list = abspath(kwargs.get('infer_list'))
-            cli_args.append(CLIArgument('--infer_list', infer_list))
-        if 'visualize' in kwargs:
-            cli_args.append(CLIArgument('--visualize', kwargs['visualize']))
-        if 'save_results' in kwargs:
-            cli_args.append(
-                CLIArgument('--save_results', kwargs['save_results']))
-        if 'save_threshold' in kwargs:
-            cli_args.append(
-                CLIArgument('--save_threshold', kwargs['save_threshold']))
-        if 'rtn_im_file' in kwargs:
-            cli_args.append(CLIArgument('--rtn_im_file', kwargs['rtn_im_file']))
+            cli_args.append(CLIArgument("--infer_dir", input_path))
+        if "infer_list" in kwargs:
+            infer_list = abspath(kwargs.get("infer_list"))
+            cli_args.append(CLIArgument("--infer_list", infer_list))
+        if "visualize" in kwargs:
+            cli_args.append(CLIArgument("--visualize", kwargs["visualize"]))
+        if "save_results" in kwargs:
+            cli_args.append(CLIArgument("--save_results", kwargs["save_results"]))
+        if "save_threshold" in kwargs:
+            cli_args.append(CLIArgument("--save_threshold", kwargs["save_threshold"]))
+        if "rtn_im_file" in kwargs:
+            cli_args.append(CLIArgument("--rtn_im_file", kwargs["rtn_im_file"]))
         weight_path = abspath(weight_path)
         config.update_weights(weight_path)
         device_type, _ = self.runner.parse_device(device)
         config.update_device(device_type)
         if save_dir is not None:
             save_dir = abspath(save_dir)
-            cli_args.append(CLIArgument('--output_dir', save_dir))
+            cli_args.append(CLIArgument("--output_dir", save_dir))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -228,8 +234,7 @@ class DetModel(BaseModel):
             config.dump(config_path)
             return self.runner.predict(config_path, cli_args, device)
 
-    def export(self, weight_path: str, save_dir: str,
-               **kwargs) -> CompletedProcess:
+    def export(self, weight_path: str, save_dir: str, **kwargs) -> CompletedProcess:
         """export the dynamic model to static model
 
         Args:
@@ -242,24 +247,24 @@ class DetModel(BaseModel):
         config = self.config.copy()
         cli_args = []
 
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith("http"):
+            weight_path = abspath(weight_path)
         config.update_weights(weight_path)
         save_dir = abspath(save_dir)
-        cli_args.append(CLIArgument('--output_dir', save_dir))
-        input_shape = kwargs.pop('input_shape', None)
+        cli_args.append(CLIArgument("--output_dir", save_dir))
+        input_shape = kwargs.pop("input_shape", None)
         if input_shape is not None:
             cli_args.append(
-                CLIArgument('-o',
-                            f"TestReader.inputs_def.image_shape={input_shape}"))
+                CLIArgument("-o", f"TestReader.inputs_def.image_shape={input_shape}")
+            )
 
-        use_trt = kwargs.pop('use_trt', None)
+        use_trt = kwargs.pop("use_trt", None)
         if use_trt is not None:
-            cli_args.append(CLIArgument('-o', f"trt={bool(use_trt)}"))
+            cli_args.append(CLIArgument("-o", f"trt={bool(use_trt)}"))
 
-        exclude_nms = kwargs.pop('exclude_nms', None)
+        exclude_nms = kwargs.pop("exclude_nms", None)
         if exclude_nms is not None:
-            cli_args.append(
-                CLIArgument('-o', f"exclude_nms={bool(exclude_nms)}"))
+            cli_args.append(CLIArgument("-o", f"exclude_nms={bool(exclude_nms)}"))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -267,12 +272,14 @@ class DetModel(BaseModel):
             config.dump(config_path)
             return self.runner.export(config_path, cli_args, None)
 
-    def infer(self,
-              model_dir: str,
-              input_path: str,
-              device: str='gpu',
-              save_dir: str=None,
-              **kwargs):
+    def infer(
+        self,
+        model_dir: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ):
         """predict image using infernece model
 
         Args:
@@ -290,26 +297,28 @@ class DetModel(BaseModel):
             save_dir = abspath(save_dir)
 
         cli_args = []
-        cli_args.append(CLIArgument('--model_dir', model_dir))
-        cli_args.append(CLIArgument('--image_file', input_path))
+        cli_args.append(CLIArgument("--model_dir", model_dir))
+        cli_args.append(CLIArgument("--image_file", input_path))
         if save_dir is not None:
-            cli_args.append(CLIArgument('--output_dir', save_dir))
+            cli_args.append(CLIArgument("--output_dir", save_dir))
         device_type, _ = self.runner.parse_device(device)
-        cli_args.append(CLIArgument('--device', device_type))
+        cli_args.append(CLIArgument("--device", device_type))
 
         self._assert_empty_kwargs(kwargs)
 
         return self.runner.infer(cli_args, device)
 
-    def compression(self,
-                    weight_path: str,
-                    batch_size: int=None,
-                    learning_rate: float=None,
-                    epochs_iters: int=None,
-                    device: str=None,
-                    use_vdl: bool=True,
-                    save_dir: str=None,
-                    **kwargs) -> CompletedProcess:
+    def compression(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        device: str = None,
+        use_vdl: bool = True,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """compression model
 
         Args:
@@ -326,19 +335,19 @@ class DetModel(BaseModel):
         """
         weight_path = abspath(weight_path)
         if save_dir is None:
-            save_dir = self.config['save_dir']
+            save_dir = self.config["save_dir"]
         save_dir = abspath(save_dir)
 
         config = self.config.copy()
         cps_config = DetConfig(
-            self.name,
-            config_path=self.model_info['auto_compression_config_path'])
+            self.name, config_path=self.model_info["auto_compression_config_path"]
+        )
         train_cli_args = []
         export_cli_args = []
 
         cps_config.update_pretrained_weights(weight_path)
         if batch_size is not None:
-            cps_config.update_batch_size(batch_size, 'train')
+            cps_config.update_batch_size(batch_size, "train")
         if learning_rate is not None:
             cps_config.update_learning_rate(learning_rate)
         if epochs_iters is not None:
@@ -352,23 +361,23 @@ class DetModel(BaseModel):
             save_dir = abspath(save_dir)
         cps_config.update_save_dir(save_dir)
         if use_vdl:
-            train_cli_args.append(CLIArgument('--use_vdl', use_vdl))
-            train_cli_args.append(CLIArgument('--vdl_log_dir', save_dir))
+            train_cli_args.append(CLIArgument("--use_vdl", use_vdl))
+            train_cli_args.append(CLIArgument("--vdl_log_dir", save_dir))
 
         export_cli_args.append(
-            CLIArgument('--output_dir', os.path.join(save_dir, 'export')))
+            CLIArgument("--output_dir", os.path.join(save_dir, "export"))
+        )
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
             # TODO: refactor me
-            cps_config_path = config_path[0:-4] + '_compression' + config_path[
-                -4:]
+            cps_config_path = config_path[0:-4] + "_compression" + config_path[-4:]
             cps_config.dump(cps_config_path)
-            train_cli_args.append(CLIArgument('--slim_config', cps_config_path))
-            export_cli_args.append(
-                CLIArgument('--slim_config', cps_config_path))
+            train_cli_args.append(CLIArgument("--slim_config", cps_config_path))
+            export_cli_args.append(CLIArgument("--slim_config", cps_config_path))
 
             self._assert_empty_kwargs(kwargs)
 
-            self.runner.compression(config_path, train_cli_args,
-                                    export_cli_args, device, save_dir)
+            self.runner.compression(
+                config_path, train_cli_args, export_cli_args, device, save_dir
+            )

@@ -1,14 +1,14 @@
 Global:
-  model: SVTRv2_server_rec
+  model: LaTeX_OCR_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples"
-  device: gpu:0,1,2,3
+  dataset_dir: "./dataset/ocr_rec_latexocr_dataset_example"
+  device: gpu:0
   output: "output"
 
 CheckDataset:
   convert: 
-    enable: False
-    src_dataset_type: null
+    enable: True
+    src_dataset_type: PKL
   split: 
     enable: False
     train_percent: null
@@ -16,8 +16,9 @@ CheckDataset:
 
 Train:
   epochs_iters: 20
-  batch_size: 8
-  learning_rate: 0.001
+  batch_size_train: 40
+  batch_size_val: 10
+  learning_rate: 0.0001
   pretrain_weight_path: null
   resume_path: null
   log_interval: 20
@@ -28,9 +29,12 @@ Evaluate:
   weight_path: "output/best_accuracy.pdparams"
   log_interval: 1
 
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/pretrained/rec_latex_ocr_trained.pdparams
+
 Predict:
   model_dir: "output/best_accuracy"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png"
   kernel_option:
     run_mode: paddle
     batch_size: 1

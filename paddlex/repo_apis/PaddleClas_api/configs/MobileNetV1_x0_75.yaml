@@ -29,7 +29,7 @@ AMP:
 # model architecture
 Arch:
   name: MobileNetV1_x0_75
-  class_num: 102
+  class_num: 1000
  
 # loss function config for traing/eval process
 Loss:

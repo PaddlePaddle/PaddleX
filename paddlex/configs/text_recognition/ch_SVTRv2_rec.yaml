@@ -1,5 +1,5 @@
 Global:
-  model: RepSVTR_mobile_rec
+  model: ch_SVTRv2_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/ocr_rec/ocr_rec_dataset_examples"
   device: gpu:0,1,2,3
@@ -27,6 +27,9 @@ Train:
 Evaluate:
   weight_path: "output/best_accuracy.pdparams"
   log_interval: 1
+
+Export:
+  weight_path: https://paddleocr.bj.bcebos.com/pretrained/ch_SVTRv2_rec_server_trained.pdparams
 
 Predict:
   model_dir: "output/best_accuracy"

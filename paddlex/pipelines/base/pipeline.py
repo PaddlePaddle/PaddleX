@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,11 +18,12 @@ from ...utils.misc import AutoRegisterABCMetaClass
 
 
 def build_pipeline(
-        pipeline_name: str,
-        model_list: list,
-        model_dir_list: list,
-        output: str,
-        device: str, ) -> "BasePipeline":
+    pipeline_name: str,
+    model_list: list,
+    model_dir_list: list,
+    output: str,
+    device: str,
+) -> "BasePipeline":
     """build model evaluater
 
     Args:
@@ -38,8 +39,8 @@ def build_pipeline(
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
-    """Base Pipeline
-    """
+    """Base Pipeline"""
+
     __is_base = True
 
     def __init__(self):
@@ -47,8 +48,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
 
     @abstractmethod
     def load_model(self):
-        """load model predictor
-        """
+        """load model predictor"""
         raise NotImplementedError
 
     @abstractmethod
@@ -63,6 +63,5 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
 
     @abstractmethod
     def get_input_keys(self):
-        """get dict keys of input argument input
-        """
+        """get dict keys of input argument input"""
         raise NotImplementedError

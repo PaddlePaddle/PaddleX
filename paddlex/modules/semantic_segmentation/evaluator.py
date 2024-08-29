@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,14 +21,13 @@ from .model_list import MODELS
 
 
 class SegEvaluator(BaseEvaluator):
-    """ Semantic Segmentation Model Evaluator """
+    """Semantic Segmentation Model Evaluator"""
+
     entities = MODELS
 
     def update_config(self):
-        """update evalution config
-        """
-        self.pdx_config.update_dataset(self.global_config.dataset_dir,
-                                       "SegDataset")
+        """update evalution config"""
+        self.pdx_config.update_dataset(self.global_config.dataset_dir, "SegDataset")
         self.pdx_config.update_pretrained_weights(None, is_backbone=True)
 
     def get_config_path(self, weight_path):

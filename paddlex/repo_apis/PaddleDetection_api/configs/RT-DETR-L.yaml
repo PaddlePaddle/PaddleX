@@ -18,7 +18,7 @@ eval_size: [640, 640]
 
 # Dataset
 metric: COCO
-num_classes: 4
+num_classes: 80
 
 worker_num: 4
 

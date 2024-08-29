@@ -31,7 +31,7 @@ AMP:
 # model architecture
 Arch:
   name: ResNet50
-  class_num: 102
+  class_num: 1000
   pretrained: True
  
 # loss function config for traing/eval process

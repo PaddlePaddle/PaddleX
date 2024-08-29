@@ -22,11 +22,11 @@ import tempfile
 
 import requests
 
-__all__ = ['download', 'extract', 'download_and_extract']
+__all__ = ["download", "extract", "download_and_extract"]
 
 
 class _ProgressPrinter(object):
-    """ ProgressPrinter """
+    """ProgressPrinter"""
 
     def __init__(self, flush_interval=0.1):
         super().__init__()
@@ -34,9 +34,9 @@ class _ProgressPrinter(object):
         self._flush_intvl = flush_interval
 
     def print(self, str_, end=False):
-        """ print """
+        """print"""
         if end:
-            str_ += '\n'
+            str_ += "\n"
             self._last_time = 0
         if time.time() - self._last_time >= self._flush_intvl:
             sys.stdout.write(f"\r{str_}")
@@ -51,13 +51,13 @@ def _download(url, save_path, print_progress):
     with requests.get(url, stream=True, timeout=15) as r:
         r.raise_for_status()
 
-        total_length = r.headers.get('content-length')
+        total_length = r.headers.get("content-length")
 
         if total_length is None:
-            with open(save_path, 'wb') as f:
+            with open(save_path, "wb") as f:
                 shutil.copyfileobj(r.raw, f)
         else:
-            with open(save_path, 'wb') as f:
+            with open(save_path, "wb") as f:
                 dl = 0
                 total_length = int(total_length)
                 if print_progress:
@@ -76,8 +76,8 @@ def _download(url, save_path, print_progress):
 
 
 def _extract_zip_file(file_path, extd_dir):
-    """ extract zip file """
-    with zipfile.ZipFile(file_path, 'r') as f:
+    """extract zip file"""
+    with zipfile.ZipFile(file_path, "r") as f:
         file_list = f.namelist()
         total_num = len(file_list)
         for index, file in enumerate(file_list):
@@ -86,17 +86,23 @@ def _extract_zip_file(file_path, extd_dir):
 
 
 def _extract_tar_file(file_path, extd_dir):
-    """ extract tar file """
-    with tarfile.open(file_path, 'r:*') as f:
-        file_list = f.getnames()
-        total_num = len(file_list)
-        for index, file in enumerate(file_list):
-            f.extract(file, extd_dir)
-            yield total_num, index
+    """extract tar file"""
+    try:
+        with tarfile.open(file_path, "r:*") as f:
+            file_list = f.getnames()
+            total_num = len(file_list)
+            for index, file in enumerate(file_list):
+                try:
+                    f.extract(file, extd_dir)
+                except KeyError:
+                    print(f"File {file} not found in the archive.")
+                yield total_num, index
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
 def _extract(file_path, extd_dir, print_progress):
-    """ extract """
+    """extract"""
     if print_progress:
         printer = _ProgressPrinter()
         print(f"Extracting {os.path.basename(file_path)}")
@@ -111,14 +117,13 @@ def _extract(file_path, extd_dir, print_progress):
     for total_num, index in handler(file_path, extd_dir):
         if print_progress:
             done = int(50 * float(index) / total_num)
-            printer.print(
-                f"[{'=' * done:<50s}] {float(100 * index) / total_num:.2f}%")
+            printer.print(f"[{'=' * done:<50s}] {float(100 * index) / total_num:.2f}%")
     if print_progress:
         printer.print(f"[{'=' * 50:<50s}] {100:.2f}%", end=True)
 
 
 def _remove_if_exists(path):
-    """ remove """
+    """remove"""
     if os.path.exists(path):
         if os.path.isdir(path):
             shutil.rmtree(path)
@@ -127,7 +132,7 @@ def _remove_if_exists(path):
 
 
 def download(url, save_path, print_progress=True, overwrite=False):
-    """ download """
+    """download"""
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     if overwrite:
         _remove_if_exists(save_path)
@@ -136,17 +141,14 @@ def download(url, save_path, print_progress=True, overwrite=False):
 
 
 def extract(file_path, extd_dir, print_progress=True):
-    """ extract """
+    """extract"""
     return _extract(file_path, extd_dir, print_progress=print_progress)
 
 
-def download_and_extract(url,
-                         save_dir,
-                         dst_name,
-                         print_progress=True,
-                         overwrite=False,
-                         no_interm_dir=True):
-    """ download and extract """
+def download_and_extract(
+    url, save_dir, dst_name, print_progress=True, overwrite=False, no_interm_dir=True
+):
+    """download and extract"""
     # NOTE: `url` MUST come from a trusted source, since we do not provide a solution
     # to secure against CVE-2007-4559.
     os.makedirs(save_dir, exist_ok=True)
@@ -156,10 +158,10 @@ def download_and_extract(url,
 
     if not os.path.exists(dst_path):
         with tempfile.TemporaryDirectory() as td:
-            arc_file_path = os.path.join(td, url.split('/')[-1])
+            arc_file_path = os.path.join(td, url.split("/")[-1])
             extd_dir = os.path.splitext(arc_file_path)[0]
             _download(url, arc_file_path, print_progress=print_progress)
-            tmp_extd_dir = os.path.join(td, 'extract')
+            tmp_extd_dir = os.path.join(td, "extract")
             _extract(arc_file_path, tmp_extd_dir, print_progress=print_progress)
             if no_interm_dir:
                 file_names = os.listdir(tmp_extd_dir)
@@ -180,6 +182,7 @@ def download_and_extract(url,
                 shutil.copytree(tmp_extd_dir, extd_dir)
                 extd_file = extd_dir
 
-            if not os.path.exists(dst_path) or not os.path.samefile(extd_file,
-                                                                    dst_path):
+            if not os.path.exists(dst_path) or not os.path.samefile(
+                extd_file, dst_path
+            ):
                 shutil.move(extd_file, dst_path)

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,8 +13,6 @@
 # limitations under the License.
 
 
-
-
 class ClsKeys(object):
     """
     This class defines a set of keys used for communication of Cls predictors
@@ -24,8 +22,8 @@ class ClsKeys(object):
     """
 
     # Common keys
-    IMAGE = 'image'
-    IM_PATH = 'input_path'
+    IMAGE = "image"
+    IM_PATH = "input_path"
     # Suite-specific keys
-    CLS_PRED = 'cls_pred'
-    CLS_RESULT = 'cls_result'
+    CLS_PRED = "cls_pred"
+    CLS_RESULT = "cls_result"

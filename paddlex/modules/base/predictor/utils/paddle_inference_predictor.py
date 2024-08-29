@@ -20,56 +20,69 @@ from .....utils import logging
 
 
 class _PaddleInferencePredictor(object):
-    """ Predictor based on Paddle Inference """
+    """Predictor based on Paddle Inference"""
 
     def __init__(self, model_dir, model_prefix, option, delete_pass=[]):
         super().__init__()
-        self.predictor, self.inference_config, self.input_names, self.input_handlers, self.output_handlers = \
-self._create(model_dir, model_prefix, option, delete_pass=delete_pass)
+        (
+            self.predictor,
+            self.inference_config,
+            self.input_names,
+            self.input_handlers,
+            self.output_handlers,
+        ) = self._create(model_dir, model_prefix, option, delete_pass=delete_pass)
 
     def _create(self, model_dir, model_prefix, option, delete_pass):
-        """ _create """
-        use_pir = hasattr(paddle.framework,
-                          "use_pir_api") and paddle.framework.use_pir_api()
+        """_create"""
+        use_pir = (
+            hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
+        )
         model_postfix = ".json" if use_pir else ".pdmodel"
         model_file = os.path.join(model_dir, f"{model_prefix}{model_postfix}")
         params_file = os.path.join(model_dir, f"{model_prefix}.pdiparams")
         config = Config(model_file, params_file)
 
-        if option.device == 'gpu':
+        if option.device == "gpu":
             config.enable_use_gpu(200, option.device_id)
             if paddle.is_compiled_with_rocm():
-                os.environ['FLAGS_conv_workspace_size_limit'] = '2000'
+                os.environ["FLAGS_conv_workspace_size_limit"] = "2000"
             else:
                 config.enable_new_ir(True)
-        elif option.device == 'npu':
-            config.enable_custom_device('npu')
+        elif option.device == "npu":
+            config.enable_custom_device("npu")
             os.environ["FLAGS_npu_jit_compile"] = "0"
             os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
-            os.environ[
-                "CUSTOM_DEVICE_BLACK_LIST"] = "pad3d,pad3d_grad,set_value,set_value_with_tensor"
-        elif option.device == 'xpu':
-            config.enable_custom_device('npu')
-        elif option.device == 'mlu':
-            config.enable_custom_device('mlu')
+            os.environ["CUSTOM_DEVICE_BLACK_LIST"] = (
+                "pad3d,pad3d_grad,set_value,set_value_with_tensor"
+            )
+            os.environ["FLAGS_npu_scale_aclnn"] = "True"
+            os.environ["FLAGS_npu_split_aclnn"] = "True"
+        elif option.device == "xpu":
+            os.environ["BKCL_FORCE_SYNC"] = "1"
+            os.environ["BKCL_TIMEOUT"] = "1800"
+            os.environ["FLAGS_use_stride_kernel"] = "0"
+        elif option.device == "mlu":
+            config.enable_custom_device("mlu")
+            os.environ["FLAGS_use_stride_kernel"] = "0"
         else:
-            assert option.device == 'cpu'
+            assert option.device == "cpu"
             config.disable_gpu()
-            if 'mkldnn' in option.run_mode:
+            if "mkldnn" in option.run_mode:
                 try:
                     config.enable_mkldnn()
                     config.set_cpu_math_library_num_threads(option.cpu_threads)
-                    if 'bf16' in option.run_mode:
+                    if "bf16" in option.run_mode:
                         config.enable_mkldnn_bfloat16()
                 except Exception as e:
                     logging.warning(
-                        "MKL-DNN is not available. We will disable MKL-DNN.")
+                        "MKL-DNN is not available. We will disable MKL-DNN."
+                    )
 
         precision_map = {
-            'trt_int8': Config.Precision.Int8,
-            'trt_fp32': Config.Precision.Float32,
-            'trt_fp16': Config.Precision.Half
+            "trt_int8": Config.Precision.Int8,
+            "trt_fp32": Config.Precision.Float32,
+            "trt_fp16": Config.Precision.Half,
         }
         if option.run_mode in precision_map.keys():
             config.enable_tensorrt_engine(
@@ -78,7 +91,8 @@ self._create(model_dir, model_prefix, option, delete_pass=delete_pass)
                 min_subgraph_size=option.min_subgraph_size,
                 precision_mode=precision_map[option.run_mode],
                 trt_use_static=option.trt_use_static,
-                use_calib_mode=option.trt_calib_mode)
+                use_calib_mode=option.trt_calib_mode,
+            )
 
             if option.shape_info_filename is not None:
                 if not os.path.exists(option.shape_info_filename):
@@ -89,9 +103,11 @@ self._create(model_dir, model_prefix, option, delete_pass=delete_pass)
                 else:
                     logging.info(
                         f"A dynamic shape info file ( {option.shape_info_filename} ) already exists. \
-No need to generate again.")
+No need to generate again."
+                    )
                 config.enable_tuned_tensorrt_dynamic_shape(
-                    option.shape_info_filename, True)
+                    option.shape_info_filename, True
+                )
 
         # Disable paddle inference logging
         config.disable_glog_info()
@@ -118,11 +134,11 @@ No need to generate again.")
         return predictor, config, input_names, input_handlers, output_handlers
 
     def get_input_names(self):
-        """ get input names """
+        """get input names"""
         return self.input_names
 
     def predict(self, x):
-        """ predict """
+        """predict"""
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
             self.input_handlers[idx].copy_from_cpu(x[idx])

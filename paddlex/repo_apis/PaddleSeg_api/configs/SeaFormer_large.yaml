@@ -6,7 +6,6 @@ model:
   backbone: 
     type: SeaFormer_large
     pretrained: https://bj.bcebos.com/paddleseg/dygraph/ade20k/backbone/seaformer_large_imagenet_pretrained.pdparams
-  num_classes: 150
   head_channels: 192
   embed_dims: [128, 160, 192]
   in_index: [0, 1, 2, 3]

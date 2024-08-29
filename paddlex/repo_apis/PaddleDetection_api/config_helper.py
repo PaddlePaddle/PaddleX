@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import os
 import copy
 import collections.abc
@@ -22,17 +21,17 @@ import yaml
 
 
 class PPDetConfigMixin(object):
-    """ PPDetConfigMixin """
+    """PPDetConfigMixin"""
 
     def load_config_literally(self, config_path):
-        """ load_config_literally """
-        # Adapted from 
+        """load_config_literally"""
+        # Adapted from
         # https://github.com/PaddlePaddle/PaddleDetection/blob/e3f8dd16bffca04060ec1edc388c5a618e15bbf8/ppdet/core/workspace.py#L77
         # XXX: This function relies on implementation details of PaddleDetection.
 
-        BASE_KEY = '_BASE_'
+        BASE_KEY = "_BASE_"
 
-        with open(config_path, 'r', encoding='utf-8') as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             dic = yaml.load(f, Loader=_PPDetSerializableLoader)
 
         if not isinstance(dic, dict):
@@ -44,11 +43,10 @@ class PPDetConfigMixin(object):
             for base_yml in base_ymls:
                 if base_yml.startswith("~"):
                     base_yml = os.path.expanduser(base_yml)
-                if not base_yml.startswith('/'):
-                    base_yml = os.path.join(
-                        os.path.dirname(config_path), base_yml)
+                if not base_yml.startswith("/"):
+                    base_yml = os.path.join(os.path.dirname(config_path), base_yml)
 
-                with open(base_yml, 'r', encoding='utf-8') as f:
+                with open(base_yml, "r", encoding="utf-8") as f:
                     base_cfg = self.load_config_literally(base_yml)
                     all_base_cfg = merge_dicts(base_cfg, all_base_cfg)
 
@@ -58,20 +56,21 @@ class PPDetConfigMixin(object):
         return dic
 
     def dump_literal_config(self, config_path, dic):
-        """ dump_literal_config """
-        with open(config_path, 'w', encoding='utf-8') as f:
+        """dump_literal_config"""
+        with open(config_path, "w", encoding="utf-8") as f:
             # XXX: We make an extra copy here by calling `dict()`
             # to ensure that `dic` can be represented.
             yaml.dump(dict(dic), f, Dumper=_PPDetSerializableDumper)
 
     def update_from_dict(self, src_dic, dst_dic):
-        """ update_from_dict """
+        """update_from_dict"""
         return merge_dicts(src_dic, dst_dic)
 
 
 class _PPDetSerializableHandler(collections.abc.MutableMapping):
-    """ _PPDetSerializableHandler """
-    TYPE_KEY = '_type_'
+    """_PPDetSerializableHandler"""
+
+    TYPE_KEY = "_type_"
     EMPTY_TAG = object()
 
     def __init__(self, tag=None, dic=None):
@@ -85,7 +84,7 @@ class _PPDetSerializableHandler(collections.abc.MutableMapping):
 
     def __repr__(self):
         # TODO: Prettier format
-        return repr({self.TYPE_KEY: self.tag, ** self.dic})
+        return repr({self.TYPE_KEY: self.tag, **self.dic})
 
     def __getitem__(self, key):
         if key == self.TYPE_KEY:
@@ -114,12 +113,12 @@ class _PPDetSerializableHandler(collections.abc.MutableMapping):
         yield from self.dic
 
     def has_nonempty_tag(self):
-        """ has_nonempty_tag """
+        """has_nonempty_tag"""
         return self.tag != self.EMPTY_TAG
 
     @classmethod
     def is_convertible(cls, obj):
-        """ is_convertible """
+        """is_convertible"""
         if isinstance(obj, cls):
             return False
         elif isinstance(obj, collections.abc.Mapping):
@@ -129,33 +128,33 @@ class _PPDetSerializableHandler(collections.abc.MutableMapping):
 
     @classmethod
     def build_from_dict(cls, dic):
-        """ build_from_dict """
+        """build_from_dict"""
         dic = copy.deepcopy(dic)
         tag = dic.pop(cls.TYPE_KEY)
         return cls(tag=tag, dic=dic)
 
 
 def merge_dicts(src_dic, dst_dic):
-    """ merge_dicts """
+    """merge_dicts"""
 
-    # Refer to 
+    # Refer to
     # https://github.com/PaddlePaddle/PaddleDetection/blob/e3f8dd16bffca04060ec1edc388c5a618e15bbf8/ppdet/core/workspace.py#L121
-    # Additionally, this function deals with the case when `src_dic` 
+    # Additionally, this function deals with the case when `src_dic`
     # or `dst_dic` contains `_PPDetSerializableHandler` objects.
 
     def _update_sohandler(src_handler, dst_handler):
-        """ _update_sohandler """
+        """_update_sohandler"""
         dst_handler.update(src_handler)
 
     def _convert_to_sohandler_if_possible(obj):
-        """ _convert_to_sohandler_if_possible """
+        """_convert_to_sohandler_if_possible"""
         if _PPDetSerializableHandler.is_convertible(obj):
             return _PPDetSerializableHandler.build_from_dict(obj)
         else:
             return obj
 
     def _convert_dict_to_sohandler_with_tag(dic, tag):
-        """ _convert_dict_to_sohandler_with_tag """
+        """_convert_dict_to_sohandler_with_tag"""
         return _PPDetSerializableHandler(tag, dic)
 
     for k, v in src_dic.items():
@@ -174,8 +173,7 @@ def merge_dicts(src_dic, dst_dic):
                     dst_dic[k] = v
             elif isinstance(dst_dic[k], collections.abc.Mapping):
                 if isinstance(v, _PPDetSerializableHandler):
-                    dst_dic[k] = _convert_dict_to_sohandler_with_tag(dst_dic[k],
-                                                                     v.tag)
+                    dst_dic[k] = _convert_dict_to_sohandler_with_tag(dst_dic[k], v.tag)
                     _update_sohandler(v, dst_dic[k])
                 elif isinstance(v, collections.abc.Mapping):
                     merge_dicts(v, dst_dic[k])
@@ -188,19 +186,18 @@ def merge_dicts(src_dic, dst_dic):
 
 
 class _PPDetSerializableConstructor(yaml.constructor.SafeConstructor):
-    """ _PPDetSerializableConstructor """
+    """_PPDetSerializableConstructor"""
 
     def construct_sohandler(self, tag_suffix, node):
-        """ construct_sohandler """
+        """construct_sohandler"""
         if not isinstance(node, yaml.nodes.MappingNode):
             raise TypeError("Currently, we can only handle a MappingNode.")
         mapping = self.construct_mapping(node)
         return _PPDetSerializableHandler(tag_suffix, mapping)
 
 
-class _PPDetSerializableLoader(_PPDetSerializableConstructor,
-                               yaml.loader.SafeLoader):
-    """ _PPDetSerializableLoader """
+class _PPDetSerializableLoader(_PPDetSerializableConstructor, yaml.loader.SafeLoader):
+    """_PPDetSerializableLoader"""
 
     def __init__(self, stream):
         _PPDetSerializableConstructor.__init__(self)
@@ -208,10 +205,10 @@ class _PPDetSerializableLoader(_PPDetSerializableConstructor,
 
 
 class _PPDetSerializableRepresenter(yaml.representer.SafeRepresenter):
-    """ _PPDetSerializableRepresenter """
+    """_PPDetSerializableRepresenter"""
 
     def represent_sohandler(self, data):
-        """ represent_sohandler """
+        """represent_sohandler"""
         # If `data` has empty tag, we represent `data.dic` as a dict
         if not data.has_nonempty_tag:
             return self.represent_dict(data.dic)
@@ -219,35 +216,37 @@ class _PPDetSerializableRepresenter(yaml.representer.SafeRepresenter):
             # XXX: Manually represent a serializable object according to the rules defined in
             # https://github.com/PaddlePaddle/PaddleDetection/blob/e3f8dd16bffca04060ec1edc388c5a618e15bbf8/ppdet/core/config/yaml_helpers.py#L80
             # We prepend a '!' to reconstruct the complete tag
-            tag = u'!' + data.tag
+            tag = "!" + data.tag
             return self.represent_mapping(tag, data.dic)
 
 
-class _PPDetSerializableDumper(_PPDetSerializableRepresenter,
-                               yaml.dumper.SafeDumper):
-    """ _PPDetSerializableDumper """
+class _PPDetSerializableDumper(_PPDetSerializableRepresenter, yaml.dumper.SafeDumper):
+    """_PPDetSerializableDumper"""
 
-    def __init__(self,
-                 stream,
-                 default_style=None,
-                 default_flow_style=False,
-                 canonical=None,
-                 indent=None,
-                 width=None,
-                 allow_unicode=None,
-                 line_break=None,
-                 encoding=None,
-                 explicit_start=None,
-                 explicit_end=None,
-                 version=None,
-                 tags=None,
-                 sort_keys=True):
+    def __init__(
+        self,
+        stream,
+        default_style=None,
+        default_flow_style=False,
+        canonical=None,
+        indent=None,
+        width=None,
+        allow_unicode=None,
+        line_break=None,
+        encoding=None,
+        explicit_start=None,
+        explicit_end=None,
+        version=None,
+        tags=None,
+        sort_keys=True,
+    ):
 
         _PPDetSerializableRepresenter.__init__(
             self,
             default_style=default_style,
             default_flow_style=default_flow_style,
-            sort_keys=sort_keys)
+            sort_keys=sort_keys,
+        )
 
         yaml.dumper.SafeDumper.__init__(
             self,
@@ -264,17 +263,19 @@ class _PPDetSerializableDumper(_PPDetSerializableRepresenter,
             explicit_end=explicit_end,
             version=version,
             tags=tags,
-            sort_keys=sort_keys)
+            sort_keys=sort_keys,
+        )
 
     def ignore_aliases(self, data):
-        """ ignore_aliases """
+        """ignore_aliases"""
         return True
 
 
 # We note that all custom tags defined in ppdet starts with a '!'.
 # We assume that all unknown tags in the config file corresponds to a serializable class defined in ppdet.
 _PPDetSerializableLoader.add_multi_constructor(
-    u'!', _PPDetSerializableConstructor.construct_sohandler)
+    "!", _PPDetSerializableConstructor.construct_sohandler
+)
 _PPDetSerializableDumper.add_representer(
-    _PPDetSerializableHandler,
-    _PPDetSerializableRepresenter.represent_sohandler)
+    _PPDetSerializableHandler, _PPDetSerializableRepresenter.represent_sohandler
+)

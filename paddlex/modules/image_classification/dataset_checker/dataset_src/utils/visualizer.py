@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -26,17 +26,74 @@ def colormap(rgb=False):
     """
     Get colormap
     """
-    color_list = np.array([
-        0xFF, 0x00, 0x00, 0xCC, 0xFF, 0x00, 0x00, 0xFF, 0x66, 0x00, 0x66, 0xFF,
-        0xCC, 0x00, 0xFF, 0xFF, 0x4D, 0x00, 0x80, 0xff, 0x00, 0x00, 0xFF, 0xB2,
-        0x00, 0x1A, 0xFF, 0xFF, 0x00, 0xE5, 0xFF, 0x99, 0x00, 0x33, 0xFF, 0x00,
-        0x00, 0xFF, 0xFF, 0x33, 0x00, 0xFF, 0xff, 0x00, 0x99, 0xFF, 0xE5, 0x00,
-        0x00, 0xFF, 0x1A, 0x00, 0xB2, 0xFF, 0x80, 0x00, 0xFF, 0xFF, 0x00, 0x4D
-    ]).astype(np.float32)
-    color_list = (color_list.reshape((-1, 3)))
+    color_list = np.array(
+        [
+            0xFF,
+            0x00,
+            0x00,
+            0xCC,
+            0xFF,
+            0x00,
+            0x00,
+            0xFF,
+            0x66,
+            0x00,
+            0x66,
+            0xFF,
+            0xCC,
+            0x00,
+            0xFF,
+            0xFF,
+            0x4D,
+            0x00,
+            0x80,
+            0xFF,
+            0x00,
+            0x00,
+            0xFF,
+            0xB2,
+            0x00,
+            0x1A,
+            0xFF,
+            0xFF,
+            0x00,
+            0xE5,
+            0xFF,
+            0x99,
+            0x00,
+            0x33,
+            0xFF,
+            0x00,
+            0x00,
+            0xFF,
+            0xFF,
+            0x33,
+            0x00,
+            0xFF,
+            0xFF,
+            0x00,
+            0x99,
+            0xFF,
+            0xE5,
+            0x00,
+            0x00,
+            0xFF,
+            0x1A,
+            0x00,
+            0xB2,
+            0xFF,
+            0x80,
+            0x00,
+            0xFF,
+            0xFF,
+            0x00,
+            0x4D,
+        ]
+    ).astype(np.float32)
+    color_list = color_list.reshape((-1, 3))
     if not rgb:
         color_list = color_list[:, ::-1]
-    return color_list.astype('int32')
+    return color_list.astype("int32")
 
 
 def font_colormap(color_index):
@@ -47,27 +104,28 @@ def font_colormap(color_index):
     light = np.array([0xFF, 0xFF, 0xFF])
     light_indexs = [0, 3, 4, 8, 9, 13, 14, 18, 19]
     if color_index in light_indexs:
-        return light.astype('int32')
+        return light.astype("int32")
     else:
-        return dark.astype('int32')
+        return dark.astype("int32")
 
 
 def draw_label(image, label, label_map_dict):
-    """ Draw label on image """
-    image = image.convert('RGB')
+    """Draw label on image"""
+    image = image.convert("RGB")
     image_size = image.size
     draw = ImageDraw.Draw(image)
     min_font_size = int(image_size[0] * 0.02)
     max_font_size = int(image_size[0] * 0.05)
     for font_size in range(max_font_size, min_font_size - 1, -1):
-        font = ImageFont.truetype(
-            PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
-        if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
+        font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+        if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
             text_width_tmp, text_height_tmp = draw.textsize(
-                label_map_dict[int(label)], font)
+                label_map_dict[int(label)], font
+            )
         else:
             left, top, right, bottom = draw.textbbox(
-                (0, 0), label_map_dict[int(label)], font)
+                (0, 0), label_map_dict[int(label)], font
+            )
             text_width_tmp, text_height_tmp = right - left, bottom - top
         if text_width_tmp <= image_size[0]:
             break
@@ -76,12 +134,12 @@ def draw_label(image, label, label_map_dict):
     color_list = colormap(rgb=True)
     color = tuple(color_list[0])
     font_color = tuple(font_colormap(3))
-    if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
-        text_width, text_height = draw.textsize(label_map_dict[int(label)],
-                                                font)
+    if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
+        text_width, text_height = draw.textsize(label_map_dict[int(label)], font)
     else:
         left, top, right, bottom = draw.textbbox(
-            (0, 0), label_map_dict[int(label)], font)
+            (0, 0), label_map_dict[int(label)], font
+        )
         text_width, text_height = right - left, bottom - top
 
     rect_left = 3
@@ -89,15 +147,10 @@ def draw_label(image, label, label_map_dict):
     rect_right = rect_left + text_width + 3
     rect_bottom = rect_top + text_height + 6
 
-    draw.rectangle(
-        [(rect_left, rect_top), (rect_right, rect_bottom)], fill=color)
+    draw.rectangle([(rect_left, rect_top), (rect_right, rect_bottom)], fill=color)
 
     text_x = rect_left + 3
     text_y = rect_top
-    draw.text(
-        (text_x, text_y),
-        label_map_dict[int(label)],
-        fill=font_color,
-        font=font)
+    draw.text((text_x, text_y), label_map_dict[int(label)], fill=font_color, font=font)
 
     return image

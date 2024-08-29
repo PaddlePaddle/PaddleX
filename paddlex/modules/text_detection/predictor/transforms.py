@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -30,35 +30,38 @@ from ...base.predictor import BaseTransform
 from .keys import TextDetKeys as K
 
 __all__ = [
-    'DetResizeForTest', 'NormalizeImage', 'DBPostProcess', 'SaveTextDetResults',
-    'PrintResult'
+    "DetResizeForTest",
+    "NormalizeImage",
+    "DBPostProcess",
+    "SaveTextDetResults",
+    "PrintResult",
 ]
 
 
 class DetResizeForTest(BaseTransform):
-    """ DetResizeForTest """
+    """DetResizeForTest"""
 
     def __init__(self, **kwargs):
         super(DetResizeForTest, self).__init__()
         self.resize_type = 0
         self.keep_ratio = False
-        if 'image_shape' in kwargs:
-            self.image_shape = kwargs['image_shape']
+        if "image_shape" in kwargs:
+            self.image_shape = kwargs["image_shape"]
             self.resize_type = 1
-            if 'keep_ratio' in kwargs:
-                self.keep_ratio = kwargs['keep_ratio']
-        elif 'limit_side_len' in kwargs:
-            self.limit_side_len = kwargs['limit_side_len']
-            self.limit_type = kwargs.get('limit_type', 'min')
-        elif 'resize_long' in kwargs:
+            if "keep_ratio" in kwargs:
+                self.keep_ratio = kwargs["keep_ratio"]
+        elif "limit_side_len" in kwargs:
+            self.limit_side_len = kwargs["limit_side_len"]
+            self.limit_type = kwargs.get("limit_type", "min")
+        elif "resize_long" in kwargs:
             self.resize_type = 2
-            self.resize_long = kwargs.get('resize_long', 960)
+            self.resize_long = kwargs.get("resize_long", 960)
         else:
             self.limit_side_len = 736
-            self.limit_type = 'min'
+            self.limit_type = "min"
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         img = data[K.IMAGE]
         src_h, src_w, _ = img.shape
         if sum([src_h, src_w]) < 64:
@@ -78,25 +81,25 @@ class DetResizeForTest(BaseTransform):
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
 
         return [K.IMAGE]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
 
         return [K.IMAGE, K.SHAPE]
 
     def image_padding(self, im, value=0):
-        """ padding image """
+        """padding image"""
         h, w, c = im.shape
         im_pad = np.zeros((max(32, h), max(32, w), c), np.uint8) + value
         im_pad[:h, :w, :] = im
         return im_pad
 
     def resize_image_type1(self, img):
-        """ resize the image """
+        """resize the image"""
         resize_h, resize_w = self.image_shape
         ori_h, ori_w = img.shape[:2]  # (h, w, c)
         if self.keep_ratio is True:
@@ -121,26 +124,26 @@ class DetResizeForTest(BaseTransform):
         h, w, c = img.shape
 
         # limit the max side
-        if self.limit_type == 'max':
+        if self.limit_type == "max":
             if max(h, w) > limit_side_len:
                 if h > w:
                     ratio = float(limit_side_len) / h
                 else:
                     ratio = float(limit_side_len) / w
             else:
-                ratio = 1.
-        elif self.limit_type == 'min':
+                ratio = 1.0
+        elif self.limit_type == "min":
             if min(h, w) < limit_side_len:
                 if h < w:
                     ratio = float(limit_side_len) / h
                 else:
                     ratio = float(limit_side_len) / w
             else:
-                ratio = 1.
-        elif self.limit_type == 'resize_long':
+                ratio = 1.0
+        elif self.limit_type == "resize_long":
             ratio = float(limit_side_len) / max(h, w)
         else:
-            raise Exception('not support limit type, image ')
+            raise Exception("not support limit type, image ")
         resize_h = int(h * ratio)
         resize_w = int(w * ratio)
 
@@ -159,7 +162,7 @@ class DetResizeForTest(BaseTransform):
         return img, [ratio_h, ratio_w]
 
     def resize_image_type2(self, img):
-        """ resize image size """
+        """resize image size"""
         h, w, _ = img.shape
 
         resize_w = w
@@ -184,40 +187,38 @@ class DetResizeForTest(BaseTransform):
 
 
 class NormalizeImage(BaseTransform):
-    """ normalize image such as substract mean, divide std
-    """
+    """normalize image such as substract mean, divide std"""
 
-    def __init__(self, scale=None, mean=None, std=None, order='chw', **kwargs):
+    def __init__(self, scale=None, mean=None, std=None, order="chw", **kwargs):
         if isinstance(scale, str):
             scale = eval(scale)
         self.scale = np.float32(scale if scale is not None else 1.0 / 255.0)
         mean = mean if mean is not None else [0.485, 0.456, 0.406]
         std = std if std is not None else [0.229, 0.224, 0.225]
 
-        shape = (3, 1, 1) if order == 'chw' else (1, 1, 3)
-        self.mean = np.array(mean).reshape(shape).astype('float32')
-        self.std = np.array(std).reshape(shape).astype('float32')
+        shape = (3, 1, 1) if order == "chw" else (1, 1, 3)
+        self.mean = np.array(mean).reshape(shape).astype("float32")
+        self.std = np.array(std).reshape(shape).astype("float32")
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         img = data[K.IMAGE]
         from PIL import Image
+
         if isinstance(img, Image.Image):
             img = np.array(img)
-        assert isinstance(img,
-                          np.ndarray), "invalid input 'img' in NormalizeImage"
-        data[K.IMAGE] = (
-            img.astype('float32') * self.scale - self.mean) / self.std
+        assert isinstance(img, np.ndarray), "invalid input 'img' in NormalizeImage"
+        data[K.IMAGE] = (img.astype("float32") * self.scale - self.mean) / self.std
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.IMAGE]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.IMAGE]
 
 
@@ -226,15 +227,17 @@ class DBPostProcess(BaseTransform):
     The post process for Differentiable Binarization (DB).
     """
 
-    def __init__(self,
-                 thresh=0.3,
-                 box_thresh=0.7,
-                 max_candidates=1000,
-                 unclip_ratio=2.0,
-                 use_dilation=False,
-                 score_mode="fast",
-                 box_type='quad',
-                 **kwargs):
+    def __init__(
+        self,
+        thresh=0.3,
+        box_thresh=0.7,
+        max_candidates=1000,
+        unclip_ratio=2.0,
+        use_dilation=False,
+        score_mode="fast",
+        box_type="quad",
+        **kwargs
+    ):
         self.thresh = thresh
         self.box_thresh = box_thresh
         self.max_candidates = max_candidates
@@ -243,14 +246,14 @@ class DBPostProcess(BaseTransform):
         self.score_mode = score_mode
         self.box_type = box_type
         assert score_mode in [
-            "slow", "fast"
+            "slow",
+            "fast",
         ], "Score mode must be in [slow, fast] but got: {}".format(score_mode)
 
-        self.dilation_kernel = None if not use_dilation else np.array([[1, 1],
-                                                                       [1, 1]])
+        self.dilation_kernel = None if not use_dilation else np.array([[1, 1], [1, 1]])
 
     def polygons_from_bitmap(self, pred, _bitmap, dest_width, dest_height):
-        """ _bitmap: single map with shape (1, H, W), whose values are binarized as {0, 1} """
+        """_bitmap: single map with shape (1, H, W), whose values are binarized as {0, 1}"""
 
         bitmap = _bitmap
         height, width = bitmap.shape
@@ -258,10 +261,11 @@ class DBPostProcess(BaseTransform):
         boxes = []
         scores = []
 
-        contours, _ = cv2.findContours((bitmap * 255).astype(np.uint8),
-                                       cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(
+            (bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
+        )
 
-        for contour in contours[:self.max_candidates]:
+        for contour in contours[: self.max_candidates]:
             epsilon = 0.002 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
             points = approx.reshape((-1, 2))
@@ -285,22 +289,23 @@ class DBPostProcess(BaseTransform):
                 continue
 
             box = np.array(box)
-            box[:, 0] = np.clip(
-                np.round(box[:, 0] / width * dest_width), 0, dest_width)
+            box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
             box[:, 1] = np.clip(
-                np.round(box[:, 1] / height * dest_height), 0, dest_height)
+                np.round(box[:, 1] / height * dest_height), 0, dest_height
+            )
             boxes.append(box.tolist())
             scores.append(score)
         return boxes, scores
 
     def boxes_from_bitmap(self, pred, _bitmap, dest_width, dest_height):
-        """ _bitmap: single map with shape (1, H, W), whose values are binarized as {0, 1} """
+        """_bitmap: single map with shape (1, H, W), whose values are binarized as {0, 1}"""
 
         bitmap = _bitmap
         height, width = bitmap.shape
 
-        outs = cv2.findContours((bitmap * 255).astype(np.uint8), cv2.RETR_LIST,
-                                cv2.CHAIN_APPROX_SIMPLE)
+        outs = cv2.findContours(
+            (bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
+        )
         if len(outs) == 3:
             img, contours, _ = outs[0], outs[1], outs[2]
         elif len(outs) == 2:
@@ -329,16 +334,16 @@ class DBPostProcess(BaseTransform):
                 continue
             box = np.array(box)
 
-            box[:, 0] = np.clip(
-                np.round(box[:, 0] / width * dest_width), 0, dest_width)
+            box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
             box[:, 1] = np.clip(
-                np.round(box[:, 1] / height * dest_height), 0, dest_height)
+                np.round(box[:, 1] / height * dest_height), 0, dest_height
+            )
             boxes.append(box.astype(np.int16))
             scores.append(score)
         return np.array(boxes, dtype=np.int16), scores
 
     def unclip(self, box, unclip_ratio):
-        """ unclip """
+        """unclip"""
         poly = Polygon(box)
         distance = poly.area * unclip_ratio / poly.length
         offset = pyclipper.PyclipperOffset()
@@ -347,7 +352,7 @@ class DBPostProcess(BaseTransform):
         return expanded
 
     def get_mini_boxes(self, contour):
-        """ get mini boxes """
+        """get mini boxes"""
         bounding_box = cv2.minAreaRect(contour)
         points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
 
@@ -365,13 +370,11 @@ class DBPostProcess(BaseTransform):
             index_2 = 3
             index_3 = 2
 
-        box = [
-            points[index_1], points[index_2], points[index_3], points[index_4]
-        ]
+        box = [points[index_1], points[index_2], points[index_3], points[index_4]]
         return box, min(bounding_box[1])
 
     def box_score_fast(self, bitmap, _box):
-        """ box_score_fast: use bbox mean score as the mean score """
+        """box_score_fast: use bbox mean score as the mean score"""
         h, w = bitmap.shape[:2]
         box = _box.copy()
         xmin = np.clip(np.floor(box[:, 0].min()).astype("int"), 0, w - 1)
@@ -383,10 +386,10 @@ class DBPostProcess(BaseTransform):
         box[:, 0] = box[:, 0] - xmin
         box[:, 1] = box[:, 1] - ymin
         cv2.fillPoly(mask, box.reshape(1, -1, 2).astype(np.int32), 1)
-        return cv2.mean(bitmap[ymin:ymax + 1, xmin:xmax + 1], mask)[0]
+        return cv2.mean(bitmap[ymin : ymax + 1, xmin : xmax + 1], mask)[0]
 
     def box_score_slow(self, bitmap, contour):
-        """ box_score_slow: use polyon mean score as the mean score """
+        """box_score_slow: use polyon mean score as the mean score"""
         h, w = bitmap.shape[:2]
         contour = contour.copy()
         contour = np.reshape(contour, (-1, 2))
@@ -402,10 +405,10 @@ class DBPostProcess(BaseTransform):
         contour[:, 1] = contour[:, 1] - ymin
 
         cv2.fillPoly(mask, contour.reshape(1, -1, 2).astype(np.int32), 1)
-        return cv2.mean(bitmap[ymin:ymax + 1, xmin:xmax + 1], mask)[0]
+        return cv2.mean(bitmap[ymin : ymax + 1, xmin : xmax + 1], mask)[0]
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         pred = data[K.PROB_MAP]
         shape_list = [data[K.SHAPE]]
         pred = pred[0][:, 0, :, :]
@@ -417,15 +420,18 @@ class DBPostProcess(BaseTransform):
             if self.dilation_kernel is not None:
                 mask = cv2.dilate(
                     np.array(segmentation[batch_index]).astype(np.uint8),
-                    self.dilation_kernel)
+                    self.dilation_kernel,
+                )
             else:
                 mask = segmentation[batch_index]
-            if self.box_type == 'poly':
-                boxes, scores = self.polygons_from_bitmap(pred[batch_index],
-                                                          mask, src_w, src_h)
-            elif self.box_type == 'quad':
-                boxes, scores = self.boxes_from_bitmap(pred[batch_index], mask,
-                                                       src_w, src_h)
+            if self.box_type == "poly":
+                boxes, scores = self.polygons_from_bitmap(
+                    pred[batch_index], mask, src_w, src_h
+                )
+            elif self.box_type == "quad":
+                boxes, scores = self.boxes_from_bitmap(
+                    pred[batch_index], mask, src_w, src_h
+                )
             else:
                 raise ValueError("box_type can only be one of ['quad', 'poly']")
 
@@ -436,25 +442,24 @@ class DBPostProcess(BaseTransform):
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.PROB_MAP]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.DT_POLYS, K.DT_SCORES]
 
 
 class CropByPolys(BaseTransform):
-    """Crop Image by Polys
-    """
+    """Crop Image by Polys"""
 
-    def __init__(self, det_box_type='quad'):
+    def __init__(self, det_box_type="quad"):
         super().__init__()
         self.det_box_type = det_box_type
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         ori_im = data[K.ORI_IM]
         # TODO
         # dt_boxes = self.sorted_boxes(data[K.DT_POLYS])
@@ -472,12 +477,12 @@ class CropByPolys(BaseTransform):
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.IM_PATH, K.DT_POLYS]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.SUB_IMGS]
 
     def sorted_boxes(self, dt_boxes):
@@ -496,7 +501,8 @@ class CropByPolys(BaseTransform):
         for i in range(num_boxes - 1):
             for j in range(i, -1, -1):
                 if abs(_boxes[j + 1][0][1] - _boxes[j][0][1]) < 10 and (
-                        _boxes[j + 1][0][0] < _boxes[j][0][0]):
+                    _boxes[j + 1][0][0] < _boxes[j][0][0]
+                ):
                     tmp = _boxes[j]
                     _boxes[j] = _boxes[j + 1]
                     _boxes[j + 1] = tmp
@@ -505,8 +511,7 @@ class CropByPolys(BaseTransform):
         return _boxes
 
     def get_minarea_rect_crop(self, img, points):
-        """get_minarea_rect_crop
-        """
+        """get_minarea_rect_crop"""
         bounding_box = cv2.minAreaRect(np.array(points).astype(np.int32))
         points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
 
@@ -524,9 +529,7 @@ class CropByPolys(BaseTransform):
             index_b = 3
             index_c = 2
 
-        box = [
-            points[index_a], points[index_b], points[index_c], points[index_d]
-        ]
+        box = [points[index_a], points[index_b], points[index_c], points[index_d]]
         crop_img = self.get_rotate_crop_image(img, np.array(box))
         return crop_img
 
@@ -545,24 +548,31 @@ class CropByPolys(BaseTransform):
         img_crop_width = int(
             max(
                 np.linalg.norm(points[0] - points[1]),
-                np.linalg.norm(points[2] - points[3])))
+                np.linalg.norm(points[2] - points[3]),
+            )
+        )
         img_crop_height = int(
             max(
                 np.linalg.norm(points[0] - points[3]),
-                np.linalg.norm(points[1] - points[2])))
-        pts_std = np.float32([
-            [0, 0],
-            [img_crop_width, 0],
-            [img_crop_width, img_crop_height],
-            [0, img_crop_height],
-        ])
+                np.linalg.norm(points[1] - points[2]),
+            )
+        )
+        pts_std = np.float32(
+            [
+                [0, 0],
+                [img_crop_width, 0],
+                [img_crop_width, img_crop_height],
+                [0, img_crop_height],
+            ]
+        )
         M = cv2.getPerspectiveTransform(points, pts_std)
         dst_img = cv2.warpPerspective(
             img,
             M,
             (img_crop_width, img_crop_height),
             borderMode=cv2.BORDER_REPLICATE,
-            flags=cv2.INTER_CUBIC, )
+            flags=cv2.INTER_CUBIC,
+        )
         dst_img_height, dst_img_width = dst_img.shape[0:2]
         if dst_img_height * 1.0 / dst_img_width >= 1.5:
             dst_img = np.rot90(dst_img)
@@ -570,22 +580,22 @@ class CropByPolys(BaseTransform):
 
 
 class SaveTextDetResults(BaseTransform):
-    """ Save Text Det Results """
+    """Save Text Det Results"""
 
     def __init__(self, save_dir):
         super().__init__()
         self.save_dir = save_dir
         # We use pillow backend to save both numpy arrays and PIL Image objects
-        self._writer = ImageWriter(backend='opencv')
+        self._writer = ImageWriter(backend="opencv")
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         if self.save_dir is None:
             logging.warning(
                 "The `save_dir` has been set to None, so the text detection result won't to be saved."
             )
             return data
-        fn = os.path.basename(data['input_path'])
+        fn = os.path.basename(data["input_path"])
         save_path = os.path.join(self.save_dir, fn)
         bbox_res = data[K.DT_POLYS]
         vis_img = self.draw_rectangle(data[K.IM_PATH], bbox_res)
@@ -594,16 +604,16 @@ class SaveTextDetResults(BaseTransform):
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.IM_PATH, K.DT_POLYS, K.DT_SCORES]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return []
 
     def draw_rectangle(self, img_path, boxes):
-        """ draw rectangle """
+        """draw rectangle"""
         boxes = np.array(boxes)
         img = cv2.imread(img_path)
         img_show = img.copy()
@@ -614,22 +624,22 @@ class SaveTextDetResults(BaseTransform):
 
 
 class PrintResult(BaseTransform):
-    """ Print Result Transform """
+    """Print Result Transform"""
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         logging.info("The prediction result is:")
         logging.info(data[K.DT_POLYS])
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.DT_SCORES]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return []
 
     # DT_SCORES = 'dt_scores'

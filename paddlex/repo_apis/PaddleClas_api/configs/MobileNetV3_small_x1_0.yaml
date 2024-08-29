@@ -27,7 +27,7 @@ AMP:
 # model architecture
 Arch:
   name: MobileNetV3_small_x1_0
-  class_num: 102
+  class_num: 1000
   pretrained: True
  
 # loss function config for traing/eval process

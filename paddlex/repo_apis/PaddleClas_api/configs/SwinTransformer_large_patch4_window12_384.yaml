@@ -31,7 +31,7 @@ AMP:
 # model architecture
 Arch:
   name: SwinTransformer_large_patch4_window12_384
-  class_num: 102
+  class_num: 1000
  
 # loss function config for traing/eval process
 Loss:
