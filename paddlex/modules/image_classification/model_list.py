@@ -79,3 +79,12 @@ MODELS = [
     "SwinTransformer_large_patch4_window7_224",
     "SwinTransformer_large_patch4_window12_384",
 ]
+
+ML_MODELS = [
+    "ResNet50_ML",
+    "PP-LCNet_x1_0_ML",
+    "PP-HGNetV2-B0_ML",
+    "PP-HGNetV2-B4_ML",
+    "PP-HGNetV2-B6_ML",
+    "CLIP_vit_base_patch16_448_ML",
+]

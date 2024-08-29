@@ -639,3 +639,63 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-LCNet_x1_0_ML",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0_ML.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "ResNet50_ML",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "ResNet50_ML.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-HGNetV2-B0_ML",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B0_ML.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-HGNetV2-B4_ML",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B4_ML.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-HGNetV2-B6_ML",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B6_ML.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "CLIP_vit_base_patch16_448_ML",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "CLIP_vit_base_patch16_448_ML.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+    }
+)

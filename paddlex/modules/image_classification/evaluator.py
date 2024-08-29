@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from ..base import BaseEvaluator
-from .model_list import MODELS
+from .model_list import MODELS, ML_MODELS
 
 
 class ClsEvaluator(BaseEvaluator):
@@ -42,3 +41,17 @@ class ClsEvaluator(BaseEvaluator):
             "weight_path": self.eval_config.weight_path,
             "device": self.get_device(using_device_number=1),
         }
+
+
+class MlClsEvaluator(ClsEvaluator):
+    entities = ML_MODELS
+
+    def update_config(self):
+        """update evalution config"""
+        if self.eval_config.log_interval:
+            self.pdx_config.update_log_interval(self.eval_config.log_interval)
+        if self.pdx_config["Arch"]["name"] == "DistillationModel":
+            self.pdx_config.update_teacher_model(pretrained=False)
+            self.pdx_config.update_student_model(pretrained=False)
+        self.pdx_config.update_dataset(self.global_config.dataset_dir, "MLClsDataset")
+        self.pdx_config.update_pretrained_weights(self.eval_config.weight_path)

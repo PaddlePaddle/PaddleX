@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from .trainer import ClsTrainer
+from .trainer_ml import MLClsTrainer
 from .dataset_checker import ClsDatasetChecker
 from .evaluator import ClsEvaluator
 from .exportor import ClsExportor

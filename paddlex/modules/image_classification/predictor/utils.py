@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import codecs
 
 import yaml
@@ -80,6 +79,11 @@ class InnerConfig(object):
                     topk=tfs_cfg["Topk"]["topk"],
                     class_ids=tfs_cfg["Topk"].get("label_list", None),
                 )
+            elif tf_key == "MultiLabelThreshOutput":
+                tf = T.MultiLabelThreshOutput(
+                    threshold=0.5,
+                    class_ids=tfs_cfg["MultiLabelThreshOutput"].get("label_list", None),
+                )
             elif tf_key in IGNORE_OPS:
                 continue
             else:
@@ -90,4 +94,12 @@ class InnerConfig(object):
     @property
     def labels(self):
         """the labels in inner config"""
-        return self.inner_cfg["PostProcess"]["Topk"].get("label_list", None)
+        postprocess_name = self.inner_cfg["PostProcess"].keys()
+        if "Topk" in postprocess_name:
+            return self.inner_cfg["PostProcess"]["Topk"].get("label_list", None)
+        elif "MultiLabelThreshOutput" in postprocess_name:
+            return self.inner_cfg["PostProcess"]["MultiLabelThreshOutput"].get(
+                "label_list", None
+            )
+        else:
+            return None
