@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import json
 import math
@@ -30,7 +29,7 @@ from .....utils.file_interface import custom_open
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
-def deep_analyse(dataset_path, output):
+def deep_analyse(dataset_path, output, dataset_type="Cls"):
     """class analysis for dataset"""
     tags = ["train", "val"]
     labels_cnt = defaultdict(str)
@@ -41,15 +40,22 @@ def deep_analyse(dataset_path, output):
         line = line.strip().split()
         labels_cnt[line[0]] = " ".join(line[1:])
     for tag in tags:
-        image_path = os.path.join(dataset_path, f"{tag}.txt")
+        anno_path = os.path.join(dataset_path, f"{tag}.txt")
         classes_num = defaultdict(int)
         for i in range(len(labels_cnt)):
             classes_num[labels_cnt[str(i)]] = 0
-        with custom_open(image_path, "r") as f:
+        with custom_open(anno_path, "r") as f:
             lines = f.readlines()
         for line in lines:
             line = line.strip().split()
-            classes_num[labels_cnt[line[1]]] += 1
+            if dataset_type == "Cls":
+                classes_num[labels_cnt[line[1]]] += 1
+            elif dataset_type == "MLCls":
+                for i, label in enumerate(line[1].split(",")):
+                    if label == "1":
+                        classes_num[labels_cnt[str(i)]] += 1
+            else:
+                raise ValueError(f"dataset_type {dataset_type} is not supported")
         if tag == "train":
             cnts_train = [cat_ids for cat_name, cat_ids in classes_num.items()]
         elif tag == "val":

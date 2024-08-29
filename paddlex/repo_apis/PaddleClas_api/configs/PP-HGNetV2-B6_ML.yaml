@@ -1,0 +1,164 @@
+# global configs
+Global:
+  checkpoints: null
+  pretrained_model: null
+  output_dir: ./output/
+  device: gpu
+  save_interval: 10
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 40
+  print_batch_step: 10
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: [3, 448, 448]
+  save_inference_dir: ./inference
+  # training model under @to_static
+  to_static: False
+  use_multilabel: True
+
+# mixed precision
+AMP:
+  use_amp: True
+  use_fp16_test: False
+  scale_loss: 128.0
+  use_dynamic_loss_scaling: True
+  use_promote: False
+  # O1: mixed fp16, O2: pure fp16
+  level: O1
+
+# model architecture
+Arch:
+  name: PPHGNetV2_B6
+  class_num: 80
+  pretrained: True # ssld pretrained
+  use_ml_decoder: True
+
+# ml-decoder head
+MLDecoder:
+  query_num: 80 # default: 80, query_num <= class_num
+  in_channels: 2048
+
+# loss function config for training/eval process
+Loss:
+  Train:
+    - MultiLabelAsymmetricLoss:
+        weight: 1.0
+        gamma_pos: 0
+        gamma_neg: 4
+        clip: 0.05
+        disable_focal_loss_grad: True
+
+  Eval:
+    - MultiLabelAsymmetricLoss:
+        weight: 1.0
+        gamma_pos: 0
+        gamma_neg: 4
+        clip: 0.05
+        disable_focal_loss_grad: True
+
+Optimizer:
+  name: AdamW
+  beta1: 0.9
+  beta2: 0.999
+  epsilon: 1e-8
+  weight_decay: 1e-4 
+  one_dim_param_no_weight_decay: True
+  lr:
+    name: Cosine
+    learning_rate: 1e-4
+    eta_min: 1e-10
+    warmup_epoch: 5
+    warmup_start_lr: 1e-6
+
+
+# data loader for train and eval
+DataLoader:
+  Train:
+    dataset:
+      name: MultiLabelDataset
+      image_root: dataset/coco_ml/images
+      cls_label_path: dataset/coco_ml/train.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - ResizeImage:
+            size: 448
+            interpolation: bilinear
+            backend: pil
+        - Cutout:
+            length: 224
+            fill_value: none
+        - RandAugmentV4:
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ''
+
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 8
+      drop_last: False
+      shuffle: True
+    loader:
+      num_workers: 8
+      use_shared_memory: True
+
+  Eval:
+    dataset:
+      name: MultiLabelDataset
+      image_root: dataset/coco_ml/images
+      cls_label_path: dataset/coco_ml/val.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - ResizeImage:
+            size: 448
+            interpolation: bilinear
+            backend: pil
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ''
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 4
+      drop_last: False
+      shuffle: False
+    loader:
+      num_workers: 8
+      use_shared_memory: True
+
+Infer:
+  infer_imgs: deploy/images/coco_000000570688.jpg
+  batch_size: 10
+  transforms:
+    - DecodeImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        size: 448
+        interpolation: bilinear
+        backend: pil
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+        order: ''
+    - ToCHWImage:
+  PostProcess:
+    name: MultiLabelThreshOutput
+    threshold: 0.5
+    class_id_map_file: dataset/coco_ml/label.txt
+
+Metric:
+  Train:
+  Eval:
+    - MultiLabelMAP:
+        # support list: integral, 11point
+        # default: integral
+        map_type: integral

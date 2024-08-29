@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import tempfile
 
@@ -22,8 +21,6 @@ from ...base.utils.subprocess import CompletedProcess
 
 class ClsRunner(BaseRunner):
     """Cls Runner"""
-
-    _INFER_CONFIG_REL_PATH = os.path.join("deploy", "configs", "inference_cls.yaml")
 
     def train(
         self,
@@ -125,8 +122,6 @@ class ClsRunner(BaseRunner):
             *cli_args,
             "-o",
             "Global.export_for_fd=True",
-            "-o",
-            f"Global.infer_config_path={os.path.join(self.runner_root_path, self._INFER_CONFIG_REL_PATH)}",
         ]
 
         cp = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)

@@ -84,7 +84,7 @@ class ClsConfig(BaseConfig):
         else:
             train_list_path = f"{dataset_path}/train.txt"
 
-        if dataset_type in ["ClsDataset"]:
+        if dataset_type in ["ClsDataset", "MLClsDataset"]:
             ds_cfg = [
                 f"DataLoader.Train.dataset.name={dataset_type}",
                 f"DataLoader.Train.dataset.image_root={dataset_path}",
@@ -129,7 +129,12 @@ class ClsConfig(BaseConfig):
         Args:
             learning_rate (float): the learning rate value to set.
         """
-        _cfg = [f"Optimizer.lr.learning_rate={learning_rate}"]
+        if self._dict["Optimizer"]["lr"].get("learning_rate", None) is not None:
+            _cfg = [f"Optimizer.lr.learning_rate={learning_rate}"]
+        elif self._dict["Optimizer"]["lr"].get("max_learning_rate", None) is not None:
+            _cfg = [f"Optimizer.lr.max_learning_rate={learning_rate}"]
+        else:
+            raise ValueError("unsupported lr format")
         self.update(_cfg)
 
     def update_warmup_epochs(self, warmup_epochs: int):
@@ -176,7 +181,31 @@ indicating that no pretrained model to be used."
         if self._get_arch_name() == "DistillationModel":
             update_str_list.append(f"Arch.models.0.Teacher.class_num={num_classes}")
             update_str_list.append(f"Arch.models.1.Student.class_num={num_classes}")
+        ml_decoder = self.dict.get("MLDecoder", None)
+        if ml_decoder is not None:
+            self.update_ml_query_num(num_classes)
+            self.update_ml_class_num(num_classes)
         self.update(update_str_list)
+
+    def update_ml_query_num(self, query_num: int):
+        """update MLDecoder query number
+        Args:
+            query_num (int): the query number value to set,qury_num should be less than or equal to num_classes.
+        """
+        base_query_num = self.dict.get("MLDecoder", {}).get("query_num", None)
+        if base_query_num is not None:
+            _cfg = [f"MLDecoder.query_num={query_num}"]
+            self.update(_cfg)
+
+    def update_ml_class_num(self, class_num: int):
+        """update MLDecoder query number
+        Args:
+            num_classes (int): the classes number value to set.
+        """
+        base_class_num = self.dict.get("MLDecoder", {}).get("class_num", None)
+        if base_class_num is not None:
+            _cfg = [f"MLDecoder.class_num={class_num}"]
+            self.update(_cfg)
 
     def _update_slim_config(self, slim_config_path: str):
         """update slim settings

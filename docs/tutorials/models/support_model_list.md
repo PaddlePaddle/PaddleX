@@ -96,6 +96,17 @@
 | SwinTransformer_base_patch4_window12_384 | [SwinTransformer_base_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window12_384.yaml)|
 | SwinTransformer_large_patch4_window7_224 | [SwinTransformer_large_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window7_224.yaml)|
 | SwinTransformer_large_patch4_window12_384 | [SwinTransformer_large_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window12_384.yaml)|
+
+### 11. 多标签分类系列
+| 模型名称 | config |
+| :--- | :---: |
+| ResNet50_ML | [ResNet50_ML.yaml](../../../paddlex/configs/multilabel_classification/ResNet50_ML.yaml)|
+| PP-LCNet_x1_0_ML | [PP-LCNet_x1_0_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml)|
+| PP-HGNetV2-B0_ML | [PP-HGNetV2-B0_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B0_ML.yaml)|
+| PP-HGNetV2-B4_ML | [PP-HGNetV2-B4_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B4_ML.yaml)|
+| PP-HGNetV2-B6_ML | [PP-HGNetV2-B6_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B6_ML.yaml)|
+| CLIP_vit_base_patch16_448_ML | [CLIP_vit_base_patch16_448_ML.yaml](../../../paddlex/configs/multilabel_classification/CLIP_vit_base_patch16_448_ML.yaml)|
+
 ## 二、目标检测
 ### 1. PP-YOLOE_plus 系列
 | 模型名称 | config |
