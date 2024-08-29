@@ -37,8 +37,11 @@ MODELS = [
     "YOLOX-S",
     "YOLOX-T",
     "YOLOX-X",
-    "CenterNet-DLA-34",
-    "CenterNet-ResNet50",
     "FCOS-ResNet50",
     "DETR-R50",
+    "PicoDet-LCNet_x2_5",
+    "PP-YOLOE-human-L",
+    "PP-YOLOE-human-S",
+    "PP-YOLOE-vehicle-L",
+    "PP-YOLOE-vehicle-S",
 ]

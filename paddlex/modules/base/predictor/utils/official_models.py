@@ -165,14 +165,24 @@ openatom_rec_svtrv2_ch_infer.tar",
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SLANet_infer.tar",
     "LaTeX_OCR_rec":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/LaTeX_OCR_rec_infer.tar",
-    "CenterNet-DLA-34":
-    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/CenterNet-DLA-34_infer.tar",
-    "CenterNet-ResNet50":
-    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/CenterNet-ResNet50_infer.tar",
     "FCOS-ResNet50":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FCOS-ResNet50_infer.tar",
     "DETR-R50":
     "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/DETR-R50_infer.tar",
+    "PP-YOLOE-vehicle-L":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE-vehicle-L_infer.tar",
+    "PP-YOLOE-vehicle-S":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE-vehicle-S_infer.tar",
+    "PicoDet-LCNet_x2_5":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-LCNet_x2_5_infer.tar",
+    "PP-YOLOE-human-S":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE-human-S_infer.tar",
+    "PP-YOLOE-human-L":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE-human-L_infer.tar",
+    "PicoDet-M":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-M_infer.tar",
+    "PicoDet-XS":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-XS_infer.tar",
 }
 
 
