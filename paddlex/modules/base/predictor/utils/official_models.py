@@ -162,6 +162,38 @@ openatom_rec_svtrv2_ch_infer.tar",
     "PicoDet_layout_1x": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-L_layout_infer.tar",
     "SLANet": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SLANet_infer.tar",
     "LaTeX_OCR_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/LaTeX_OCR_rec_infer.tar",
+    "PP-YOLOE+_SOD-L":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE+_SOD-L_infer.tar",
+    "PP-YOLOE+_SOD-S":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE+_SOD-S_infer.tar",
+    "PP-YOLOE+_SOD-largesize-L":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-YOLOE+_SOD-largesize-L_infer.tar",
+    "FasterRCNN-ResNet34-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet34-FPN_infer.tar",
+    "FasterRCNN-ResNet50":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet50_infer.tar",
+    "FasterRCNN-ResNet50-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet50-FPN_infer.tar",
+    "FasterRCNN-ResNet50-vd-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet50-vd-FPN_infer.tar",
+    "FasterRCNN-ResNet50-vd-SSLDv2-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar",
+    "FasterRCNN-ResNet101":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet101_infer.tar",
+    "FasterRCNN-ResNet101-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNet101-FPN_infer.tar",
+    "FasterRCNN-ResNeXt101-vd-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar",
+    "FasterRCNN-Swin-Tiny-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterRCNN-Swin-Tiny-FPN_infer.tar",
+    "Cascade-FasterRCNN-ResNet50-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar",
+    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar",
+    "CenterNet-DLA-34":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/CenterNet-DLA-34_infer.tar",
+    "CenterNet-ResNet50":
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/CenterNet-ResNet50_infer.tar",
 }
 
 

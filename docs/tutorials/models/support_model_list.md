@@ -104,6 +104,9 @@
 | PP-YOLOE_plus-M | [PP-YOLOE_plus-M.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-M.yaml)|
 | PP-YOLOE_plus-L | [PP-YOLOE_plus-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-L.yaml)|
 | PP-YOLOE_plus-X | [PP-YOLOE_plus-X.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-X.yaml)|
+| PP-YOLOE+_SOD-L | [PP-YOLOE+_SOD-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE+_SOD-L.yaml)|
+| PP-YOLOE+_SOD-S | [PP-YOLOE+_SOD-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE+_SOD-S.yaml)|
+| PP-YOLOE+_SOD-largesize-L | [PP-YOLOE+_SOD-largesize-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE+_SOD-largesize-L.yaml)|
 ### 2. RT-DETR 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -149,6 +152,11 @@
 | :--- | :---: |
 | Cascade-FasterRCNN-ResNet50-FPN | [Cascade-FasterRCNN-ResNet50-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-FPN.yaml)|
 | Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN | [Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
+### 8. CenterNet 系列
+| 模型名称 | config |
+| :--- | :---: |
+| CenterNet-DLA-34 | [CenterNet-DLA-34.yaml](../../../paddlex/configs/object_detection/CenterNet-DLA-34.yaml)|
+| CenterNet-ResNet50 | [CenterNet-ResNet50.yaml](../../../paddlex/configs/object_detection/CenterNet-ResNet50.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |

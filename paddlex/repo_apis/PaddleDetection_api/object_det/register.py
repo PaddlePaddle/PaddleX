@@ -351,7 +351,6 @@ register_model_info(
     }
 )
 
-
 register_model_info({
     'model_name': 'FasterRCNN-ResNet34-FPN',
     'suite': 'Det',
@@ -495,17 +494,71 @@ register_model_info({
         'amp': ['OFF']
     },
 })
-register_model_info(
-    {
-        "model_name": "YOLOX-X",
-        "suite": "Det",
-        "config_path": osp.join(PDX_CONFIG_DIR, "YOLOX-X.yaml"),
-        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
-        "supported_dataset_types": ["COCODetDataset"],
-        "supported_train_opts": {
-            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
-            "dy2st": False,
-            "amp": ["OFF"],
-        },
-    }
+
+register_model_info({
+    'model_name': 'PP-YOLOE+_SOD-L',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-L.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+}
 )
+
+register_model_info({
+    'model_name': 'PP-YOLOE+_SOD-S',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-S.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+}
+)
+
+register_model_info({
+    'model_name': 'PP-YOLOE+_SOD-largesize-L',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-largesize-L.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+}
+)
+
+register_model_info({
+    'model_name': 'CenterNet-DLA-34',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'CenterNet-DLA-34.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
+
+register_model_info({
+    'model_name': 'CenterNet-ResNet50',
+    'suite': 'Det',
+    'config_path': osp.join(PDX_CONFIG_DIR, 'CenterNet-ResNet50.yaml'),
+    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+    'supported_dataset_types': ['COCODetDataset'],
+    'supported_train_opts': {
+        'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+        'dy2st': False,
+        'amp': ['OFF']
+    },
+})
