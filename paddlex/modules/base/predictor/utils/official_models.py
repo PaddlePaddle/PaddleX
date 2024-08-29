@@ -182,6 +182,8 @@ Deeplabv3_Plus-R101_infer.tar",
     "MaskRCNN-ResNet101-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MaskRCNN-ResNet101-FPN_infer.tar",
     "MaskRCNN-ResNet101-vd-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MaskRCNN-ResNet101-vd-FPN_infer.tar",
     "MaskRCNN-ResNeXt101-vd-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MaskRCNN-ResNeXt101-vd-FPN_infer.tar",
+    "Cascade-MaskRCNN-ResNet50-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Cascade-MaskRCNN-ResNet50-FPN_infer.tar",
+    "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar",
     "PP-OCRv4_server_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
 >>>>>>> add Mask_RCNN, SOLOv2, Mask_RT-DETR models
 PP-OCRv4_server_rec_infer.tar",

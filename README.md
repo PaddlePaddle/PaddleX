@@ -86,7 +86,8 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>基础产线</td>
     <td>通用实例分割</td>
     <td>实例分割</td>
-    <td>Mask-RT-DETR-S<br/>Mask-RT-DETR-M<br/>Mask-RT-DETR-L<br/>Mask-RT-DETR-X<br/>Mask-RT-DETR-H<br/>SOLOv2<br/>MaskRCNN-ResNet50<br/>MaskRCNN-ResNet50-FPN<br/>MaskRCNN-ResNet50-vd-FPN<br/>MaskRCNN-ResNet50-vd-SSLDv2-FPN<br/>MaskRCNN-ResNet101-FPN<br/>MaskRCNN-ResNet101-vd-FPN<br/>MaskRCNN-ResNeXt101-vd-FPN</td>
+    <td>Mask-RT-DETR-S<br/>Mask-RT-DETR-M<details>
+    <summary><b>more</b></summary><br/>Mask-RT-DETR-L<br/>Mask-RT-DETR-X<br/>Mask-RT-DETR-H<br/>SOLOv2<br/>MaskRCNN-ResNet50<br/>MaskRCNN-ResNet50-FPN<br/>MaskRCNN-ResNet50-vd-FPN<br/>MaskRCNN-ResNet50-vd-SSLDv2-FPN<br/>MaskRCNN-ResNet101-FPN<br/>MaskRCNN-ResNet101-vd-FPN<br/>MaskRCNN-ResNeXt101-vd-FPN</td>Cascade-MaskRCNN-ResNet50-FPN</td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
   </tr>
   <tr>
     <td rowspan="3">基础产线</td>
