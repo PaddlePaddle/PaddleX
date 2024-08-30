@@ -32,7 +32,7 @@ class ClsPipeline(BasePipeline):
         device="gpu",
         **kwargs,
     ):
-        super().__init__()
+        super().__init__(**kwargs)
         self.model_name = model_name
         self.model_dir = model_dir
         self.output = output
@@ -64,6 +64,8 @@ class ClsPipeline(BasePipeline):
             model_dir=self.model_dir,
             output=self.output,
             kernel_option=kernel_option,
+            disable_print=self.disable_print,
+            disable_save=self.disable_save,
         )
 
     def get_kernel_option(self):

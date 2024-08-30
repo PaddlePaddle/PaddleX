@@ -83,8 +83,12 @@ class TextDetPredictor(BasePredictor):
                 use_dilation=False,
                 score_mode="fast",
                 box_type="quad",
-            ),
-            T.SaveTextDetResults(self.output),
-            T.PrintResult(),
+            )
         ]
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
+        if not self.disable_save:
+            post_transforms.append(
+                T.SaveTextDetResults(self.output),
+            )
         return post_transforms

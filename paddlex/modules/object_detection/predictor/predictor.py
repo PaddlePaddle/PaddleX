@@ -87,7 +87,11 @@ class DetPredictor(BasePredictor):
 
     def _get_post_transforms_from_config(self):
         """get postprocess transforms"""
-        return [
-            T.SaveDetResults(save_dir=self.output, labels=self.other_src.labels),
-            T.PrintResult(),
-        ]
+        post_transforms = []
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
+        if not self.disable_save:
+            post_transforms.append(
+                T.SaveDetResults(save_dir=self.output, labels=self.other_src.labels)
+            )
+        return post_transforms
