@@ -42,8 +42,10 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
     """
     __is_base = True
 
-    def __init__(self):
+    def __init__(self, disable_print=False, disable_save=False):
         super().__init__()
+        self.disable_print = disable_print
+        self.disable_save = disable_save
 
     @abstractmethod
     def load_model(self):

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import os
 from copy import deepcopy
@@ -33,20 +31,25 @@ class BasePredictor(ABC, FromDictMixin, Node):
     """ Base Predictor """
     __is_base = True
 
-    MODEL_FILE_TAG = 'inference'
+    MODEL_FILE_TAG = "inference"
 
-    def __init__(self,
-                 model_name,
-                 model_dir,
-                 kernel_option,
-                 output,
-                 pre_transforms=None,
-                 post_transforms=None):
+    def __init__(
+            self,
+            model_name,
+            model_dir,
+            kernel_option,
+            output,
+            pre_transforms=None,
+            post_transforms=None,
+            disable_print=False,
+            disable_save=False, ):
         super().__init__()
         self.model_name = model_name
         self.model_dir = model_dir
         self.kernel_option = kernel_option
         self.output = output
+        self.disable_print = disable_print
+        self.disable_save = disable_save
         self.other_src = self.load_other_src()
 
         logging.debug(

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -86,5 +86,8 @@ class TableRecPredictor(BasePredictor):
         ]
 
     def _get_post_transforms_from_config(self):
-        """ get postprocess transforms """
-        return [T.TableLabelDecode(), T.SaveTableResults(self.output)]
+        """get postprocess transforms"""
+        post_transforms = [T.TableLabelDecode()]
+        if not self.disable_save:
+            post_transforms.append(T.SaveTableResults(self.output))
+        return post_transforms

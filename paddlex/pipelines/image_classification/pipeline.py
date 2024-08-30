@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -23,14 +23,15 @@ class ClsPipeline(BasePipeline):
     """
     entities = "image_classification"
 
-    def __init__(self,
-                 model_name=None,
-                 model_dir=None,
-                 output="./output",
-                 kernel_option=None,
-                 device="gpu",
-                 **kwargs):
-        super().__init__()
+    def __init__(
+            self,
+            model_name=None,
+            model_dir=None,
+            output="./output",
+            kernel_option=None,
+            device="gpu",
+            **kwargs, ):
+        super().__init__(**kwargs)
         self.model_name = model_name
         self.model_dir = model_dir
         self.output = output
@@ -59,7 +60,9 @@ class ClsPipeline(BasePipeline):
             model_name=self.model_name,
             model_dir=self.model_dir,
             output=self.output,
-            kernel_option=kernel_option)
+            kernel_option=kernel_option,
+            disable_print=self.disable_print,
+            disable_save=self.disable_save, )
 
     def get_kernel_option(self):
         """get kernel option
