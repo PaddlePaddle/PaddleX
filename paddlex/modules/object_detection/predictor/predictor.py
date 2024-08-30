@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import os
 
@@ -88,9 +86,12 @@ class DetPredictor(BasePredictor):
         return pre_transforms
 
     def _get_post_transforms_from_config(self):
-        """ get postprocess transforms """
-        return [
-            T.SaveDetResults(
-                save_dir=self.output, labels=self.other_src.labels),
-            T.PrintResult()
-        ]
+        """get postprocess transforms"""
+        post_transforms = []
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
+        if not self.disable_save:
+            post_transforms.append(
+                T.SaveDetResults(
+                    save_dir=self.output, labels=self.other_src.labels))
+        return post_transforms

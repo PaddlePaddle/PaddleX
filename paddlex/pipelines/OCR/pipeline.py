@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -28,16 +28,18 @@ class OCRPipeline(BasePipeline):
     """
     entities = "OCR"
 
-    def __init__(self,
-                 text_det_model_name=None,
-                 text_rec_model_name=None,
-                 text_det_model_dir=None,
-                 text_rec_model_dir=None,
-                 text_det_kernel_option=None,
-                 text_rec_kernel_option=None,
-                 output="./",
-                 device="gpu",
-                 **kwargs):
+    def __init__(
+            self,
+            text_det_model_name=None,
+            text_rec_model_name=None,
+            text_det_model_dir=None,
+            text_rec_model_dir=None,
+            text_det_kernel_option=None,
+            text_rec_kernel_option=None,
+            output="./",
+            device="gpu",
+            **kwargs, ):
+        super().__init__(**kwargs)
         self.text_det_model_name = text_det_model_name
         self.text_rec_model_name = text_rec_model_name
         self.text_det_model_dir = text_det_model_dir
@@ -87,7 +89,9 @@ Only support: {text_rec_models}."
         self.text_rec_model = create_model(
             self.text_rec_model_name,
             self.text_rec_model_dir,
-            kernel_option=text_rec_kernel_option)
+            kernel_option=text_rec_kernel_option,
+            disable_print=self.disable_print,
+            disable_save=self.disable_save, )
 
     def predict(self, input):
         """predict

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 
 import os
 
@@ -74,8 +72,11 @@ class TextRecPredictor(BasePredictor):
         ]
 
     def _get_post_transforms_from_config(self):
-        """ get postprocess transforms """
-        post_transforms = [
-            T.CTCLabelDecode(self.other_src.PostProcess), T.PrintResult()
-        ]
+        """get postprocess transforms"""
+        if self.model_name == "LaTeX_OCR_rec":
+            post_transforms = [T.LaTeXOCRDecode(self.other_src.PostProcess)]
+        else:
+            post_transforms = [T.CTCLabelDecode(self.other_src.PostProcess)]
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
         return post_transforms
