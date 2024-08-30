@@ -110,4 +110,9 @@ class SegPredictor(BasePredictor):
 
     def _get_post_transforms_from_config(self):
         """_get_post_transforms_from_config"""
-        return [T.GeneratePCMap(), T.SaveSegResults(self.output), T.PrintResult()]
+        post_transforms = []
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
+        if not self.disable_save:
+            post_transforms.extend([T.GeneratePCMap(), T.SaveSegResults(self.output)])
+        return post_transforms

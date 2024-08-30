@@ -42,12 +42,16 @@ class BasePredictor(ABC, FromDictMixin, Node):
         output,
         pre_transforms=None,
         post_transforms=None,
+        disable_print=False,
+        disable_save=False,
     ):
         super().__init__()
         self.model_name = model_name
         self.model_dir = model_dir
         self.kernel_option = kernel_option
         self.output = output
+        self.disable_print = disable_print
+        self.disable_save = disable_save
         self.other_src = self.load_other_src()
 
         logging.debug(

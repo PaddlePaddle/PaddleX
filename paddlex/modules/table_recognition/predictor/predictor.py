@@ -92,4 +92,7 @@ class TableRecPredictor(BasePredictor):
 
     def _get_post_transforms_from_config(self):
         """get postprocess transforms"""
-        return [T.TableLabelDecode(), T.SaveTableResults(self.output)]
+        post_transforms = [T.TableLabelDecode()]
+        if not self.disable_save:
+            post_transforms.append(T.SaveTableResults(self.output))
+        return post_transforms

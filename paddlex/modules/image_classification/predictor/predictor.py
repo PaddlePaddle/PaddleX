@@ -75,7 +75,8 @@ class ClsPredictor(BasePredictor):
     def _get_post_transforms_from_config(self):
         """get postprocess transforms"""
         post_transforms = self.other_src.post_transforms
-        post_transforms.extend(
-            [T.PrintResult(), T.SaveClsResults(self.output, self.other_src.labels)]
-        )
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
+        if not self.disable_save:
+            post_transforms.append(T.SaveClsResults(self.output, self.other_src.labels))
         return post_transforms

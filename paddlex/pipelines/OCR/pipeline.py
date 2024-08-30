@@ -40,6 +40,7 @@ class OCRPipeline(BasePipeline):
         device="gpu",
         **kwargs,
     ):
+        super().__init__(**kwargs)
         self.text_det_model_name = text_det_model_name
         self.text_rec_model_name = text_rec_model_name
         self.text_det_model_dir = text_det_model_dir
@@ -103,6 +104,8 @@ Only support: {text_rec_models}."
             self.text_rec_model_name,
             self.text_rec_model_dir,
             kernel_option=text_rec_kernel_option,
+            disable_print=self.disable_print,
+            disable_save=self.disable_save,
         )
 
     def predict(self, input):

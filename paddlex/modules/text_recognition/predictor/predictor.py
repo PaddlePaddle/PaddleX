@@ -83,13 +83,9 @@ class TextRecPredictor(BasePredictor):
     def _get_post_transforms_from_config(self):
         """get postprocess transforms"""
         if self.model_name == "LaTeX_OCR_rec":
-            post_transforms = [
-                T.LaTeXOCRDecode(self.other_src.PostProcess),
-                T.PrintResult(),
-            ]
+            post_transforms = [T.LaTeXOCRDecode(self.other_src.PostProcess)]
         else:
-            post_transforms = [
-                T.CTCLabelDecode(self.other_src.PostProcess),
-                T.PrintResult(),
-            ]
+            post_transforms = [T.CTCLabelDecode(self.other_src.PostProcess)]
+        if not self.disable_print:
+            post_transforms.append(T.PrintResult())
         return post_transforms
