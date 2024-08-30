@@ -639,3 +639,39 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "Starnet_s1",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Starnet_s1.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Starnet_s2",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Starnet_s2.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Starnet_s3",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Starnet_s3.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Starnet_s4",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Starnet_s4.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
