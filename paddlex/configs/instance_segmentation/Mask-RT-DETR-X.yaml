@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Export:
-  weight_path: https://paddlex.bj.bcebos.com/models/mask_rtdetr_hgnetv2_h_6x_coco.pdparams
+  weight_path: https://paddledet.bj.bcebos.com/models/mask_rtdetr_hgnetv2_x_6x_coco.pdparams
 
 Predict:
   model_dir: "output/best_model"

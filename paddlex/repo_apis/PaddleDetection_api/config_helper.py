@@ -30,11 +30,10 @@ class PPDetConfigMixin(object):
         # XXX: This function relies on implementation details of PaddleDetection.
 
         BASE_KEY = "_BASE_"
-
         with open(config_path, "r", encoding="utf-8") as f:
             dic = yaml.load(f, Loader=_PPDetSerializableLoader)
-
         if not isinstance(dic, dict):
+            print(dic)
             raise TypeError
 
         if BASE_KEY in dic:

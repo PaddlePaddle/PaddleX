@@ -171,6 +171,21 @@ register_model_info(
 
 register_model_info(
     {
+        "model_name": "MaskRCNN-ResNet50-vd-SSLDv2-FPN",
+        "suite": "InstanceSeg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MaskRCNN-ResNet50-vd-SSLDv2-FPN.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "supported_dataset_types": ["COCOInstSegDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
         "model_name": "MaskRCNN-ResNet101-FPN",
         "suite": "InstanceSeg",
         "config_path": osp.join(PDX_CONFIG_DIR, "MaskRCNN-ResNet101-FPN.yaml"),
@@ -236,6 +251,21 @@ register_model_info(
         "config_path": osp.join(
             PDX_CONFIG_DIR, "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN.yaml"
         ),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "supported_dataset_types": ["COCOInstSegDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-YOLOE_seg-S",
+        "suite": "InstanceSeg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-YOLOE_seg-S.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_dataset_types": ["COCOInstSegDataset"],
         "supported_train_opts": {

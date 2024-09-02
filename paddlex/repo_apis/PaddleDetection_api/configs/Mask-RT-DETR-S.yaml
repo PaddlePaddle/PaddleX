@@ -118,7 +118,7 @@ DETR:
   post_process: DETRPostProcess
 
 PPHGNetV2:
-  arch: 'T'
+  arch: 'S'
   return_idx: [0, 1, 2, 3]
   freeze_stem_only: True
   freeze_at: 0

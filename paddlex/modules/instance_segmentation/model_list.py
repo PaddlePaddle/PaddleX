@@ -16,7 +16,7 @@
 MODELS = [
     "Mask-RT-DETR-S",
     "Mask-RT-DETR-M",
-    "Mask-RT-DETR-H",
+    "Mask-RT-DETR-X",
     "Mask-RT-DETR-H",
     "Mask-RT-DETR-L",
     "SOLOv2",
@@ -29,4 +29,5 @@ MODELS = [
     "MaskRCNN-ResNet50-vd-SSLDv2-FPN",
     "Cascade-MaskRCNN-ResNet50-FPN",
     "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN",
+    "PP-YOLOE_seg-S",
 ]
