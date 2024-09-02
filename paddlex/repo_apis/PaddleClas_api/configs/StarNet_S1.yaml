@@ -28,9 +28,9 @@ AMP:
 
 # model architecture
 Arch:
-  name: Starnet_s2
+  name: StarNet_S1
   drop_rate: 0
-  drop_path_rate: 0.01
+  drop_path_rate: 0
   class_num: 1000
 
 # loss function config for traing/eval process

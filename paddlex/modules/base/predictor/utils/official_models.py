@@ -162,6 +162,16 @@ openatom_rec_svtrv2_ch_infer.tar",
     "PicoDet_layout_1x": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-L_layout_infer.tar",
     "SLANet": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SLANet_infer.tar",
     "LaTeX_OCR_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/LaTeX_OCR_rec_infer.tar",
+    "FasterNet_L": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterNet_L_infer.tar",
+    "FasterNet_M": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterNet_M_infer.tar",
+    "FasterNet_S": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterNet_S_infer.tar",
+    "FasterNet_T0": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterNet_T0_infer.tar",
+    "FasterNet_T1": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterNet_T1_infer.tar",
+    "FasterNet_T2": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/FasterNet_T2_infer.tar",
+    "StarNet_S1": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/StarNet_S1_infer.tar",
+    "StarNet_S2": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/StarNet_S2_infer.tar",
+    "StarNet_S3": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/StarNet_S3_infer.tar",
+    "StarNet_S4": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/StarNet_S4_infer.tar",
 }
 
 
