@@ -12,24 +12,32 @@
   <tr>
     <th>任务名</th>
     <th>模型名</th>
+    <th>GPU</th>
   </tr>
   <tr>
     <td>object_detection（目标检测）</td>
-    <td>PicoDet-S（cpu & gpu）<br/>PicoDet-L（cpu & gpu）<br/>PicoDet_layout_1x（cpu & gpu）</td>
+    <td>PicoDet-S<br/>PicoDet-L<br/>PicoDet_layout_1x</td>
+    <td>✅<br/>✅<br/>✅</td>
   </tr>
   <tr>
     <td>semantic_segmentation（语义分割）</td>
-    <td>PP-LiteSeg-T（cpu & gpu）</td>
+    <td>PP-LiteSeg-T</td>
+    <td>✅</td>
   </tr>
   <tr>
     <td>image_classification（图像分类）</td>
-    <td>PP-LCNet_x1_0（cpu & gpu）<br/>MobileNetV3_small_x1_0（cpu & gpu）</td>
+    <td>PP-LCNet_x1_0<br/>MobileNetV3_small_x1_0</td>
+    <td>✅<br/>✅</td>
   </tr>
   <tr>
     <td>ocr（文字识别）</td>
-    <td>PP-OCRv3_mobile（cpu）<br/>PP-OCRv4_mobile（cpu）</td>
+    <td>PP-OCRv3_mobile<br/>PP-OCRv4_mobile</td>
+    <td></td>
   </tr>
 </table>
+
+**备注**
+- `GPU` 指的是支持 [Paddle Lite 利用 OpenCL 将计算映射到 GPU 上执行](https://www.paddlepaddle.org.cn/lite/develop/demo_guides/opencl.html) ，以充分利用 GPU 硬件算力，提高推理性能。
 
 ## 安装流程与使用方式
 
@@ -93,14 +101,14 @@ git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.g
 
 1. 将工作目录切换到 `PaddleX_Lite_Deploy/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 Demo 使用。
 
-2. 将工作目录切换到 `PaddleX_Lite_Deploy/{Demo_Name}/assets`，运行 `download.sh` 脚本，下载 [paddle_lite_opt 工具](https://www.paddlepaddle.org.cn/lite/v2.10/user_guides/model_optimize_tool.html) 优化后的模型、测试图片和标签文件等。
+2. 将工作目录切换到 `PaddleX_Lite_Deploy/{Task_Name}/assets`，运行 `download.sh` 脚本，下载 [paddle_lite_opt 工具](https://www.paddlepaddle.org.cn/lite/v2.10/user_guides/model_optimize_tool.html) 优化后的模型、测试图片和标签文件等。
 
-3. 将工作目录切换到 `PaddleX_Lite_Deploy/{Demo_Name}/android/shell/cxx/{Task_Name}`，运行 `build.sh` 脚本，完成可执行文件的编译和运行。
+3. 将工作目录切换到 `PaddleX_Lite_Deploy/{Task_Name}/android/shell/cxx/{Demo_Name}`，运行 `build.sh` 脚本，完成可执行文件的编译和运行。
 
-4. 将工作目录切换到 `PaddleX-Lite-Deploy/{Demo_Name}/android/shell/cxx/{Task_Name}`，运行 `run.sh` 脚本，完成在端侧的预测。
+4. 将工作目录切换到 `PaddleX-Lite-Deploy/{Task_Name}/android/shell/cxx/{Demo_Name}`，运行 `run.sh` 脚本，完成在端侧的预测。
 
     **注意：**
-    - `Demo_Name` 和 `Task_Name` 为占位符，具体值可参考本节最后的表格。
+    - `Task_Name` 和 `Demo_Name` 为占位符，具体值可参考本节最后的表格。
     - `download.sh` 和 `run.sh` 支持传入模型名来指定模型，若不指定则使用默认模型。目前适配的模型可参考本节最后表格的 `Model_Name` 列。
     - 在运行 `build.sh` 脚本前，需要更改 `NDK_ROOT` 指定的路径为实际安装的 NDK 路径。
     - 在运行 `build.sh` 脚本时需保持 ADB 连接。
@@ -157,8 +165,8 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
 
   <table>
     <tr>
-      <th>Demo_Name</th>
       <th>Task_Name</th>
+      <th>Demo_Name</th>
       <th>Model_Name</th>
     </tr>
     <tr>
