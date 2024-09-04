@@ -22,13 +22,16 @@ Train:
   pretrain_weight_path: null
   warmup_steps: 5
   resume_path: null
-  log_interval: 1
+  log_interval: 20
   eval_interval: 1
   save_interval: 1
 
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 1
+
+Export:
+  weight_path: https://paddleclas.bj.bcebos.com/models/multi_label/PP-HGNetV2-B4_ml_decoder_448_pretrained.pdparams
 
 Predict:
   model_dir: "output/best_model"
