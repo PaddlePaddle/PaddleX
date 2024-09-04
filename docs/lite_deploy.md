@@ -26,7 +26,7 @@
     <td>PP-LCNet_x1_0（cpu & gpu）<br/>MobileNetV3_small_x1_0（cpu & gpu）</td>
   </tr>
   <tr>
-    <td>ocr（文本识别）</td>
+    <td>ocr（文字识别）</td>
     <td>PP-OCRv3_mobile（cpu）<br/>PP-OCRv4_mobile（cpu）</td>
   </tr>
 </table>
@@ -151,7 +151,7 @@ detection, image size: 768, 576, detect object: truck, score: 0.653789, location
 detection, image size: 768, 576, detect object: dog, score: 0.731584, location: x=128, y=222, width=182, height=319
 ```
 
-![预测结果]()
+![预测结果](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/docs_img/object_detection/PicoDet-S.jpg?raw=true)
 
 本节描述的部署步骤适用于下表中列举的 demo：
 
@@ -186,7 +186,7 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
 ## 参考资料
 本指南仅介绍端侧部署 demo 的基本安装、使用流程，若想要了解更细致的信息，如代码介绍、代码讲解、更新模型、更新输入和输出预处理、更新预测库等，可参考下列文档：
 
-- [object_detection（目标检测）]()
-- [semantic_segmentation（语义分割）]()
-- [image_classification（图像分类）]()
-- [ocr（文本识别）]()
+- [object_detection（目标检测）](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/feature/paddle-x/object_detection/android/shell/cxx/picodet_detection)
+- [semantic_segmentation（语义分割）](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/semantic_segmentation/android/shell/cxx/semantic_segmentation/README.md)
+- [image_classification（图像分类）](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/image_classification/android/shell/cxx/image_classification/README.md)
+- [ocr（文字识别）](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/ocr/android/shell/ppocr_demo/README.md)
