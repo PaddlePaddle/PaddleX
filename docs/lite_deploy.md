@@ -35,7 +35,7 @@
   </tr>
   <tr>
     <td>ocr（文字识别）</td>
-    <td>PP-OCRv4_mobile：PP-OCRv4_mobile_det，PP-OCRv4_mobile_rec</td>
+    <td>PP-OCRv4_mobile：<br/>PP-OCRv4_mobile_det，<br/>PP-OCRv4_mobile_rec</td>
     <td>✅</td>
     <td></td>
   </tr>
@@ -192,7 +192,7 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <tr>
       <td>ocr</td>
       <td>ppocr_demo</td>
-      <td>PP-OCRv4_mobile（default）：PP-OCRv4_mobile_det，PP-OCRv4_mobile_rec</td>
+      <td>PP-OCRv4_mobile（default）：<br/>PP-OCRv4_mobile_det，<br/>PP-OCRv4_mobile_rec</td>PP-OCRv4_mobile_rec</td>
     </tr>
   </table>
 
