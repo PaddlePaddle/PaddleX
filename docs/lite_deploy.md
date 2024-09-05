@@ -12,26 +12,31 @@
   <tr>
     <th>任务名</th>
     <th>模型名</th>
+    <th>CPU</th>
     <th>GPU</th>
   </tr>
   <tr>
     <td>object_detection（目标检测）</td>
     <td>PicoDet-S<br/>PicoDet-L<br/>PicoDet_layout_1x</td>
     <td>✅<br/>✅<br/>✅</td>
+    <td>✅<br/>✅<br/>✅</td>
   </tr>
   <tr>
     <td>semantic_segmentation（语义分割）</td>
     <td>PP-LiteSeg-T</td>
+    <td>✅</td>
     <td>✅</td>
   </tr>
   <tr>
     <td>image_classification（图像分类）</td>
     <td>PP-LCNet_x1_0<br/>MobileNetV3_small_x1_0</td>
     <td>✅<br/>✅</td>
+    <td>✅<br/>✅</td>
   </tr>
   <tr>
     <td>ocr（文字识别）</td>
-    <td>PP-OCRv3_mobile<br/>PP-OCRv4_mobile</td>
+    <td>PP-OCRv4_mobile：PP-OCRv4_mobile_det，PP-OCRv4_mobile_rec</td>
+    <td>✅</td>
     <td></td>
   </tr>
 </table>
@@ -187,7 +192,7 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <tr>
       <td>ocr</td>
       <td>ppocr_demo</td>
-      <td>PP-OCRv3_mobile<br/>PP-OCRv4_mobile（default）</td>
+      <td>PP-OCRv4_mobile（default）：PP-OCRv4_mobile_det，PP-OCRv4_mobile_rec</td>
     </tr>
   </table>
 
