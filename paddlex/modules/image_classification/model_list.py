@@ -21,6 +21,7 @@ MODELS = [
     "ConvNeXt_base_384",
     "ConvNeXt_large_224",
     "ConvNeXt_large_384",
+    "LZ-MobileNetV1_x0_25",
     "MobileNetV1_x0_25",
     "MobileNetV1_x0_5",
     "MobileNetV1_x0_75",
