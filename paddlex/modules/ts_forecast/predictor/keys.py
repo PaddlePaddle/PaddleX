@@ -13,5 +13,15 @@
 # limitations under the License.
 
 
-from .readers import ImageReader, VideoReader, ReaderType, TSReader
-from .writers import ImageWriter, TextWriter, WriterType, TSWriter
+class TSFCKeys(object):
+    """
+    This class defines a set of keys used for communication of Seg predictors
+    and transforms. Both predictors and transforms accept a dict or a list of
+    dicts as input, and they get the objects of their interest from the dict, or
+    put the generated objects into the dict, all based on these keys.
+    """
+
+    # Common keys
+    TS = "ts"
+    TS_PATH = "input_path"
+    PRED = "pred_ts"
