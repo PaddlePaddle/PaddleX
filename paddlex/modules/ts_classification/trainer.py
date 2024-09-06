@@ -134,18 +134,30 @@ class TSCLSTrainDeamon(BaseTrainDeamon):
 
     def update_result(self, result, train_output):
         """update every result"""
-        config = Path(train_output).joinpath("config.yaml")
-        if not config.exists():
+        train_output = Path(train_output).resolve()
+        config_path = Path(train_output).joinpath("config.yaml").resolve()
+        if not config_path.exists():
             return result
 
-        result["config"] = config
+        model_name = result["model_name"]
+        if (
+            model_name in self.config_recorder
+            and self.config_recorder[model_name] != config_path
+        ):
+            result["models"] = self.init_model_pkg()
+        result["config"] = config_path
+        self.config_recorder[model_name] = config_path
+
+        result["config"] = config_path
         result["train_log"] = self.update_train_log(train_output)
         result["visualdl_log"] = self.update_vdl_log(train_output)
         result["label_dict"] = self.update_label_dict(train_output)
-        self.update_models(result, train_output, "best")
+        model = self.get_model(result["model_name"], config_path)
+        self.update_models(result, model, train_output, "best")
+
         return result
 
-    def update_models(self, result, train_output, model_key):
+    def update_models(self, result, model, train_output, model_key):
         """update info of the models to be saved"""
         pdparams = Path(train_output).joinpath("best_accuracy.pdparams.tar")
         if pdparams.exists():
@@ -163,6 +175,47 @@ class TSCLSTrainDeamon(BaseTrainDeamon):
                 "pdiparams": pdparams,
                 "pdiparams.info": "",
             }
+        self.update_inference_model(
+            model,
+            train_output,
+            train_output.joinpath(f"inference"),
+            result["models"][model_key],
+        )
+
+    def update_inference_model(
+        self, model, weight_path, export_save_dir, result_the_model
+    ):
+        """update inference model"""
+        export_save_dir.mkdir(parents=True, exist_ok=True)
+        export_result = model.export(weight_path=weight_path, save_dir=export_save_dir)
+
+        if export_result.returncode == 0:
+            inference_config = export_save_dir.joinpath("inference.yml")
+            if not inference_config.exists():
+                inference_config = ""
+            use_pir = (
+                hasattr(paddle.framework, "use_pir_api")
+                and paddle.framework.use_pir_api()
+            )
+            pdmodel = (
+                export_save_dir.joinpath("inference.json")
+                if use_pir
+                else export_save_dir.joinpath("inference.pdmodel")
+            )
+            pdiparams = export_save_dir.joinpath("inference.pdiparams")
+            pdiparams_info = (
+                "" if use_pir else export_save_dir.joinpath("inference.pdiparams.info")
+            )
+        else:
+            inference_config = ""
+            pdmodel = ""
+            pdiparams = ""
+            pdiparams_info = ""
+
+        result_the_model["inference_config"] = inference_config
+        result_the_model["pdmodel"] = pdmodel
+        result_the_model["pdiparams"] = pdiparams
+        result_the_model["pdiparams.info"] = pdiparams_info
 
     def get_score(self, score_path):
         """get the score by pdstates file"""

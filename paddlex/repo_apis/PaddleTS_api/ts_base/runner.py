@@ -103,7 +103,15 @@ class TSRunner(BaseRunner):
 
     def export(self, config_path, cli_args, device):
         """export"""
-        raise_unsupported_api_error("export", self.__class__)
+        cmd = [
+            self.python,
+            "tools/export.py",
+            "--config",
+            config_path,
+            *cli_args,
+        ]
+        cp = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
+        return cp
 
     def infer(self, config_path, cli_args, device):
         """infer"""

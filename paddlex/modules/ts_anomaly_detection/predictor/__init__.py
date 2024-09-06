@@ -13,12 +13,5 @@
 # limitations under the License.
 
 
-from ..ts_forecast import TSFCPredictor
-from .model_list import MODELS
-from ...utils.errors import raise_unsupported_api_error
-
-
-class TSCLSPredictor(TSFCPredictor):
-    """TS Anomaly Detection Model Predictor"""
-
-    entities = MODELS
+from .predictor import TSADPredictor
+from . import transforms
