@@ -42,7 +42,7 @@
 </table>
 
 **备注**
-- `GPU` 指的是支持 [Paddle Lite 利用 OpenCL 将计算映射到 GPU 上执行](https://www.paddlepaddle.org.cn/lite/develop/demo_guides/opencl.html) ，以充分利用 GPU 硬件算力，提高推理性能。
+- `GPU` 指的是 [使用 OpenCL 将计算映射到 GPU 上执行](https://www.paddlepaddle.org.cn/lite/develop/demo_guides/opencl.html) ，以充分利用 GPU 硬件算力，提高推理性能。
 
 ## 安装流程与使用方式
 
