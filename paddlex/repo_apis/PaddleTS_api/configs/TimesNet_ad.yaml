@@ -29,4 +29,3 @@ model:
     optimizer_params:
       learning_rate: 0.001
       gamma: 0.5
-

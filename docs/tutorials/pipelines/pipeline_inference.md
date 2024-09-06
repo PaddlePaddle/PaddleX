@@ -44,7 +44,7 @@ result = pipeline.predict(
         {'input_path': "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"}
     )
 print(result["cls_result"])
-```  
+```
 
 
 ### 2.2 通用目标检测产线

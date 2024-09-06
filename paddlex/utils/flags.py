@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,24 +13,23 @@
 # limitations under the License.
 
 
-
 import os
 
-__all__ = ['DEBUG', 'DRY_RUN', 'CHECK_OPTS', 'EAGER_INITIALIZATION']
+__all__ = ["DEBUG", "DRY_RUN", "CHECK_OPTS", "EAGER_INITIALIZATION"]
 
 
 def get_flag_from_env_var(name, default):
-    """ get_flag_from_env_var """
+    """get_flag_from_env_var"""
     env_var = os.environ.get(name, None)
-    if env_var in ('True', 'true', 'TRUE', '1'):
+    if env_var in ("True", "true", "TRUE", "1"):
         return True
-    elif env_var in ('False', 'false', 'FALSE', '0'):
+    elif env_var in ("False", "false", "FALSE", "0"):
         return False
     else:
         return default
 
 
-DEBUG = get_flag_from_env_var('PADDLE_PDX_DEBUG', False)
-DRY_RUN = get_flag_from_env_var('PADDLE_PDX_DRY_RUN', False)
-CHECK_OPTS = get_flag_from_env_var('PADDLE_PDX_CHECK_OPTS', False)
-EAGER_INITIALIZATION = get_flag_from_env_var('PADDLE_PDX_EAGER_INIT', True)
+DEBUG = get_flag_from_env_var("PADDLE_PDX_DEBUG", False)
+DRY_RUN = get_flag_from_env_var("PADDLE_PDX_DRY_RUN", False)
+CHECK_OPTS = get_flag_from_env_var("PADDLE_PDX_CHECK_OPTS", False)
+EAGER_INITIALIZATION = get_flag_from_env_var("PADDLE_PDX_EAGER_INIT", True)

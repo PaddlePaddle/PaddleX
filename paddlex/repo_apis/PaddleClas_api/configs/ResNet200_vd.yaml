@@ -29,7 +29,7 @@ AMP:
 # model architecture
 Arch:
   name: ResNet200_vd
-  class_num: 102
+  class_num: 1000
  
 # loss function config for traing/eval process
 Loss:

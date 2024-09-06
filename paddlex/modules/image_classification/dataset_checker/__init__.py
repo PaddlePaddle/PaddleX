@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from pathlib import Path
 
 from ...base import BaseDatasetChecker
 from .dataset_src import check, split_dataset, deep_analyse
-from ..model_list import MODELS
+from ..model_list import MODELS, ML_MODELS
 
 
 class ClsDatasetChecker(BaseDatasetChecker):
-    """Dataset Checker for Image Classification Model
-    """
+    """Dataset Checker for Image Classification Model"""
+
     entities = MODELS
     sample_num = 10
 
@@ -60,12 +59,13 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of splited dataset.
         """
-        return split_dataset(src_dataset_dir,
-                             self.check_dataset_config.split.train_percent,
-                             self.check_dataset_config.split.val_percent)
+        return split_dataset(
+            src_dataset_dir,
+            self.check_dataset_config.split.train_percent,
+            self.check_dataset_config.split.val_percent,
+        )
 
-    def check_dataset(self, dataset_dir: str,
-                      sample_num: int=sample_num) -> dict:
+    def check_dataset(self, dataset_dir: str, sample_num: int = sample_num) -> dict:
         """check if the dataset meets the specifications and get dataset summary
 
         Args:
@@ -102,3 +102,38 @@ class ClsDatasetChecker(BaseDatasetChecker):
             str: dataset type
         """
         return "ClsDataset"
+
+
+class MLClsDatasetChecker(ClsDatasetChecker):
+    entities = ML_MODELS
+    sample_num = 10
+
+    def check_dataset(self, dataset_dir: str, sample_num: int = sample_num) -> dict:
+        """check if the dataset meets the specifications and get dataset summary
+
+        Args:
+            dataset_dir (str): the root directory of dataset.
+            sample_num (int): the number to be sampled.
+        Returns:
+            dict: dataset summary.
+        """
+        return check(dataset_dir, self.output, dataset_type="MLCls")
+
+    def analyse(self, dataset_dir: str) -> dict:
+        """deep analyse dataset
+
+        Args:
+            dataset_dir (str): the root directory of dataset.
+
+        Returns:
+            dict: the deep analysis results.
+        """
+        return deep_analyse(dataset_dir, self.output, dataset_type="MLCls")
+
+    def get_dataset_type(self) -> str:
+        """return the dataset type
+
+        Returns:
+            str: dataset type
+        """
+        return "MLClsDataset"

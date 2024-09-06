@@ -33,11 +33,11 @@ PaddleX 提供了5个端到端的时序预测模型，具体可参考 [模型列
 
 | 模型列表        |  mse   |  mae   | 模型存储大小 |
 |:----------------|:------:|:------:|:--------------:|
-| DLinear	       | 0.386	 | 0.445  | 80k       |
-| Nonstationary   | 0.385	 | 0.463	 | 61M       |
-| TiDE	           | 0.376	 | 0.441	 | 35M       |
-| PatchTST	       | 0.291	 | 0.380	 | 2.2M      |
-| TimesNet	       | 0.284	 | 0.386	 | 5.2M      |
+| DLinear          | 0.386   | 0.445  | 80k       |
+| Nonstationary   | 0.385    | 0.463     | 61M       |
+| TiDE             | 0.376   | 0.441     | 35M       |
+| PatchTST         | 0.291   | 0.380     | 2.2M      |
+| TimesNet         | 0.284   | 0.386     | 5.2M      |
 </center>
 
 > **注：以上精度指标测量自 <a href="https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014">ECL</a> 数据集，输入输出长度均为 96。**
@@ -185,7 +185,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
   "dataset_path": "./dataset/electricity",
   "show_type": "csv",
   "dataset_type": "TSDataset"
-} 
+}
 ```
 上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：
 
@@ -259,7 +259,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 - 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段
 
 
-**训练产出解释:**  
+**训练产出解释:**
 
 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
@@ -343,7 +343,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 
 ## 7. 部署
- 
+
 PaddleX 针对时序分析模型提供了 本地推理部署/服务化部署的方式进行模型部署。目前时序部署方案为动态图部署，提供本地推理和服务化部署两种部署方式，能够满足更多场景的需求。本地部署和服务化部署两种部署方式的特点如下：
 
     * 本地部署：运行脚本执行推理，或在程序中调用 Python 的推理 API。旨在实现测试样本的高效输入与模型预测结果的快速获取，特别适用于大规模批量刷库的场景，显著提升数据处理效率。

@@ -29,6 +29,9 @@ Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 10
 
+Export:
+  weight_path: https://paddleocr.bj.bcebos.com/ppstructure/models/layout/picodet_lcnet_x1_0_layout.pdparams
+
 Predict:
   model_dir: "output/best_model"
   input_path: "/paddle/dataset/paddlex/layout/det_layout_examples/images/JPEGImages/train_0001.jpg"

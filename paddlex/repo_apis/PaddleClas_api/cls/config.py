@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -45,7 +45,7 @@ class ClsConfig(BaseConfig):
         Raises:
             TypeError: the content of yaml file `config_file_path` error.
         """
-        dict_ = yaml.load(open(config_file_path, 'rb'), Loader=yaml.Loader)
+        dict_ = yaml.load(open(config_file_path, "rb"), Loader=yaml.Loader)
         if not isinstance(dict_, dict):
             raise TypeError
         self.reset_from_dict(dict_)
@@ -56,15 +56,16 @@ class ClsConfig(BaseConfig):
         Args:
             config_file_path (str): the path to save self as yaml file.
         """
-        with open(config_file_path, 'w', encoding='utf-8') as f:
+        with open(config_file_path, "w", encoding="utf-8") as f:
             yaml.dump(self.dict, f, default_flow_style=False, sort_keys=False)
 
     def update_dataset(
-            self,
-            dataset_path: str,
-            dataset_type: str=None,
-            *,
-            train_list_path: str=None, ):
+        self,
+        dataset_path: str,
+        dataset_type: str = None,
+        *,
+        train_list_path: str = None,
+    ):
         """update dataset settings
 
         Args:
@@ -77,27 +78,27 @@ class ClsConfig(BaseConfig):
         """
         dataset_path = abspath(dataset_path)
         if dataset_type is None:
-            dataset_type = 'ClsDataset'
+            dataset_type = "ClsDataset"
         if train_list_path:
             train_list_path = f"{train_list_path}"
         else:
             train_list_path = f"{dataset_path}/train.txt"
 
-        if dataset_type in ['ClsDataset']:
+        if dataset_type in ["ClsDataset", "MLClsDataset"]:
             ds_cfg = [
-                f'DataLoader.Train.dataset.name={dataset_type}',
-                f'DataLoader.Train.dataset.image_root={dataset_path}',
-                f'DataLoader.Train.dataset.cls_label_path={train_list_path}',
-                f'DataLoader.Eval.dataset.name={dataset_type}',
-                f'DataLoader.Eval.dataset.image_root={dataset_path}',
-                f'DataLoader.Eval.dataset.cls_label_path={dataset_path}/val.txt',
-                f'Infer.PostProcess.class_id_map_file={dataset_path}/label.txt'
+                f"DataLoader.Train.dataset.name={dataset_type}",
+                f"DataLoader.Train.dataset.image_root={dataset_path}",
+                f"DataLoader.Train.dataset.cls_label_path={train_list_path}",
+                f"DataLoader.Eval.dataset.name={dataset_type}",
+                f"DataLoader.Eval.dataset.image_root={dataset_path}",
+                f"DataLoader.Eval.dataset.cls_label_path={dataset_path}/val.txt",
+                f"Infer.PostProcess.class_id_map_file={dataset_path}/label.txt",
             ]
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
         self.update(ds_cfg)
 
-    def update_batch_size(self, batch_size: int, mode: str='train'):
+    def update_batch_size(self, batch_size: int, mode: str = "train"):
         """update batch size setting
 
         Args:
@@ -108,16 +109,16 @@ class ClsConfig(BaseConfig):
         Raises:
             ValueError: `mode` error.
         """
-        if mode == 'train':
+        if mode == "train":
             if self.DataLoader["Train"]["sampler"].get("batch_size", False):
-                _cfg = [f'DataLoader.Train.sampler.batch_size={batch_size}']
+                _cfg = [f"DataLoader.Train.sampler.batch_size={batch_size}"]
             else:
-                _cfg = [f'DataLoader.Train.sampler.first_bs={batch_size}']
-                _cfg = [f'DataLoader.Train.dataset.name=MultiScaleDataset']
-        elif mode == 'eval':
-            _cfg = [f'DataLoader.Eval.sampler.batch_size={batch_size}']
-        elif mode == 'test':
-            _cfg = [f'DataLoader.Infer.batch_size={batch_size}']
+                _cfg = [f"DataLoader.Train.sampler.first_bs={batch_size}"]
+                _cfg = [f"DataLoader.Train.dataset.name=MultiScaleDataset"]
+        elif mode == "eval":
+            _cfg = [f"DataLoader.Eval.sampler.batch_size={batch_size}"]
+        elif mode == "test":
+            _cfg = [f"DataLoader.Infer.batch_size={batch_size}"]
         else:
             raise ValueError("The input `mode` should be train, eval or test.")
         self.update(_cfg)
@@ -128,7 +129,12 @@ class ClsConfig(BaseConfig):
         Args:
             learning_rate (float): the learning rate value to set.
         """
-        _cfg = [f'Optimizer.lr.learning_rate={learning_rate}']
+        if self._dict["Optimizer"]["lr"].get("learning_rate", None) is not None:
+            _cfg = [f"Optimizer.lr.learning_rate={learning_rate}"]
+        elif self._dict["Optimizer"]["lr"].get("max_learning_rate", None) is not None:
+            _cfg = [f"Optimizer.lr.max_learning_rate={learning_rate}"]
+        else:
+            raise ValueError("unsupported lr format")
         self.update(_cfg)
 
     def update_warmup_epochs(self, warmup_epochs: int):
@@ -137,7 +143,7 @@ class ClsConfig(BaseConfig):
         Args:
             warmup_epochs (int): the warmup epochs value to set.
         """
-        _cfg = [f'Optimizer.lr.warmup_epoch={warmup_epochs}']
+        _cfg = [f"Optimizer.lr.warmup_epoch={warmup_epochs}"]
         self.update(_cfg)
 
     def update_pretrained_weights(self, pretrained_model: str):
@@ -152,17 +158,18 @@ class ClsConfig(BaseConfig):
 indicating that no pretrained model to be used."
 
         if pretrained_model is None:
-            self.update(['Global.pretrained_model=None'])
-            self.update(['Arch.pretrained=False'])
+            self.update(["Global.pretrained_model=None"])
+            self.update(["Arch.pretrained=False"])
         else:
             if pretrained_model.lower() == "default":
-                self.update(['Global.pretrained_model=None'])
-                self.update(['Arch.pretrained=True'])
+                self.update(["Global.pretrained_model=None"])
+                self.update(["Arch.pretrained=True"])
             else:
-                if not pretrained_model.startswith(('http://', 'https://')):
+                if not pretrained_model.startswith(("http://", "https://")):
                     pretrained_model = abspath(
-                        pretrained_model.replace(".pdparams", ""))
-                self.update([f'Global.pretrained_model={pretrained_model}'])
+                        pretrained_model.replace(".pdparams", "")
+                    )
+                self.update([f"Global.pretrained_model={pretrained_model}"])
 
     def update_num_classes(self, num_classes: int):
         """update classes number
@@ -170,13 +177,35 @@ indicating that no pretrained model to be used."
         Args:
             num_classes (int): the classes number value to set.
         """
-        update_str_list = [f'Arch.class_num={num_classes}']
+        update_str_list = [f"Arch.class_num={num_classes}"]
         if self._get_arch_name() == "DistillationModel":
-            update_str_list.append(
-                f"Arch.models.0.Teacher.class_num={num_classes}")
-            update_str_list.append(
-                f"Arch.models.1.Student.class_num={num_classes}")
+            update_str_list.append(f"Arch.models.0.Teacher.class_num={num_classes}")
+            update_str_list.append(f"Arch.models.1.Student.class_num={num_classes}")
+        ml_decoder = self.dict.get("MLDecoder", None)
+        if ml_decoder is not None:
+            self.update_ml_query_num(num_classes)
+            self.update_ml_class_num(num_classes)
         self.update(update_str_list)
+
+    def update_ml_query_num(self, query_num: int):
+        """update MLDecoder query number
+        Args:
+            query_num (int): the query number value to set,qury_num should be less than or equal to num_classes.
+        """
+        base_query_num = self.dict.get("MLDecoder", {}).get("query_num", None)
+        if base_query_num is not None:
+            _cfg = [f"MLDecoder.query_num={query_num}"]
+            self.update(_cfg)
+
+    def update_ml_class_num(self, class_num: int):
+        """update MLDecoder query number
+        Args:
+            num_classes (int): the classes number value to set.
+        """
+        base_class_num = self.dict.get("MLDecoder", {}).get("class_num", None)
+        if base_class_num is not None:
+            _cfg = [f"MLDecoder.class_num={class_num}"]
+            self.update(_cfg)
 
     def _update_slim_config(self, slim_config_path: str):
         """update slim settings
@@ -184,9 +213,10 @@ indicating that no pretrained model to be used."
         Args:
             slim_config_path (str): the path to slim config yaml file.
         """
-        slim_config = yaml.load(
-            open(slim_config_path, 'rb'), Loader=yaml.Loader)['Slim']
-        self.update([f'Slim={slim_config}'])
+        slim_config = yaml.load(open(slim_config_path, "rb"), Loader=yaml.Loader)[
+            "Slim"
+        ]
+        self.update([f"Slim={slim_config}"])
 
     def _update_amp(self, amp: Union[None, str]):
         """update AMP settings
@@ -197,13 +227,13 @@ indicating that no pretrained model to be used."
         Raises:
             ValueError: AMP setting `amp` error, missing field `AMP`.
         """
-        if amp is None or amp == 'OFF':
-            if 'AMP' in self.dict:
-                self._dict.pop('AMP')
+        if amp is None or amp == "OFF":
+            if "AMP" in self.dict:
+                self._dict.pop("AMP")
         else:
-            if 'AMP' not in self.dict:
+            if "AMP" not in self.dict:
                 raise ValueError("Config must have AMP information.")
-            _cfg = ['AMP.use_amp=True', f'AMP.level={amp}']
+            _cfg = ["AMP.use_amp=True", f"AMP.level={amp}"]
             self.update(_cfg)
 
     def update_num_workers(self, num_workers: int):
@@ -213,48 +243,47 @@ indicating that no pretrained model to be used."
             num_workers (int): the value of train and eval dataloader workers number to set.
         """
         _cfg = [
-            f'DataLoader.Train.loader.num_workers={num_workers}',
-            f'DataLoader.Eval.loader.num_workers={num_workers}',
+            f"DataLoader.Train.loader.num_workers={num_workers}",
+            f"DataLoader.Eval.loader.num_workers={num_workers}",
         ]
         self.update(_cfg)
 
     def update_shared_memory(self, shared_memeory: bool):
         """update shared memory setting of train and eval dataloader
-        
+
         Args:
             shared_memeory (bool): whether or not to use shared memory
         """
-        assert isinstance(shared_memeory,
-                          bool), "shared_memeory should be a bool"
+        assert isinstance(shared_memeory, bool), "shared_memeory should be a bool"
         _cfg = [
-            f'DataLoader.Train.loader.use_shared_memory={shared_memeory}',
-            f'DataLoader.Eval.loader.use_shared_memory={shared_memeory}',
+            f"DataLoader.Train.loader.use_shared_memory={shared_memeory}",
+            f"DataLoader.Eval.loader.use_shared_memory={shared_memeory}",
         ]
         self.update(_cfg)
 
     def update_shuffle(self, shuffle: bool):
         """update shuffle setting of train and eval dataloader
-        
+
         Args:
             shuffle (bool): whether or not to shuffle the data
         """
         assert isinstance(shuffle, bool), "shuffle should be a bool"
         _cfg = [
-            f'DataLoader.Train.loader.shuffle={shuffle}',
-            f'DataLoader.Eval.loader.shuffle={shuffle}',
+            f"DataLoader.Train.loader.shuffle={shuffle}",
+            f"DataLoader.Eval.loader.shuffle={shuffle}",
         ]
         self.update(_cfg)
 
     def update_dali(self, dali: bool):
         """enable DALI setting of train and eval dataloader
-        
+
         Args:
             dali (bool): whether or not to use DALI
         """
         assert isinstance(dali, bool), "dali should be a bool"
         _cfg = [
-            f'Global.use_dali={dali}',
-            f'Global.use_dali={dali}',
+            f"Global.use_dali={dali}",
+            f"Global.use_dali={dali}",
         ]
         self.update(_cfg)
 
@@ -264,7 +293,7 @@ indicating that no pretrained model to be used."
         Args:
             seed (int): the random seed value to set
         """
-        _cfg = [f'Global.seed={seed}']
+        _cfg = [f"Global.seed={seed}"]
         self.update(_cfg)
 
     def update_device(self, device: str):
@@ -273,8 +302,8 @@ indicating that no pretrained model to be used."
         Args:
             device (str): the running device to set
         """
-        device = device.split(':')[0]
-        _cfg = [f'Global.device={device}']
+        device = device.split(":")[0]
+        _cfg = [f"Global.device={device}"]
         self.update(_cfg)
 
     def update_label_dict_path(self, dict_path: str):
@@ -283,7 +312,9 @@ indicating that no pretrained model to be used."
         Args:
             dict_path (str): the path of label dict file to set
         """
-        _cfg = [f'PostProcess.Topk.class_id_map_file={abspath(dict_path)}', ]
+        _cfg = [
+            f"PostProcess.Topk.class_id_map_file={abspath(dict_path)}",
+        ]
         self.update(_cfg)
 
     def _update_to_static(self, dy2st: bool):
@@ -292,7 +323,7 @@ indicating that no pretrained model to be used."
         Args:
             dy2st (bool): whether or not to use the dynamic to static mode.
         """
-        self.update([f'Global.to_static={dy2st}'])
+        self.update([f"Global.to_static={dy2st}"])
 
     def _update_use_vdl(self, use_vdl: bool):
         """update config to set VisualDL
@@ -300,7 +331,7 @@ indicating that no pretrained model to be used."
         Args:
             use_vdl (bool): whether or not to use VisualDL.
         """
-        self.update([f'Global.use_visualdl={use_vdl}'])
+        self.update([f"Global.use_visualdl={use_vdl}"])
 
     def _update_epochs(self, epochs: int):
         """update epochs setting
@@ -308,7 +339,7 @@ indicating that no pretrained model to be used."
         Args:
             epochs (int): the epochs number value to set
         """
-        self.update([f'Global.epochs={epochs}'])
+        self.update([f"Global.epochs={epochs}"])
 
     def _update_checkpoints(self, resume_path: Union[None, str]):
         """update checkpoint setting
@@ -319,7 +350,7 @@ indicating that no pretrained model to be used."
         """
         if resume_path is not None:
             resume_path = resume_path.replace(".pdparams", "")
-        self.update([f'Global.checkpoints={resume_path}'])
+        self.update([f"Global.checkpoints={resume_path}"])
 
     def _update_output_dir(self, save_dir: str):
         """update output directory
@@ -327,7 +358,7 @@ indicating that no pretrained model to be used."
         Args:
             save_dir (str): the path to save outputs.
         """
-        self.update([f'Global.output_dir={abspath(save_dir)}'])
+        self.update([f"Global.output_dir={abspath(save_dir)}"])
 
     def update_log_interval(self, log_interval: int):
         """update log interval(steps)
@@ -335,7 +366,7 @@ indicating that no pretrained model to be used."
         Args:
             log_interval (int): the log interval value to set.
         """
-        self.update([f'Global.print_batch_step={log_interval}'])
+        self.update([f"Global.print_batch_step={log_interval}"])
 
     def update_eval_interval(self, eval_interval: int):
         """update eval interval(epochs)
@@ -343,7 +374,7 @@ indicating that no pretrained model to be used."
         Args:
             eval_interval (int): the eval interval value to set.
         """
-        self.update([f'Global.eval_interval={eval_interval}'])
+        self.update([f"Global.eval_interval={eval_interval}"])
 
     def update_save_interval(self, save_interval: int):
         """update eval interval(epochs)
@@ -351,7 +382,7 @@ indicating that no pretrained model to be used."
         Args:
             save_interval (int): the save interval value to set.
         """
-        self.update([f'Global.save_interval={save_interval}'])
+        self.update([f"Global.save_interval={save_interval}"])
 
     def update_log_ranks(self, device):
         """update log ranks
@@ -359,16 +390,15 @@ indicating that no pretrained model to be used."
         Args:
             device (str): the running device to set
         """
-        log_ranks = device.split(':')[1]
+        log_ranks = device.split(":")[1]
         self.update([f'Global.log_ranks="{log_ranks}"'])
 
     def update_print_mem_info(self, print_mem_info: bool):
         """setting print memory info"""
-        assert isinstance(print_mem_info,
-                          bool), "print_mem_info should be a bool"
-        self.update([f'Global.print_mem_info={print_mem_info}'])
+        assert isinstance(print_mem_info, bool), "print_mem_info should be a bool"
+        self.update([f"Global.print_mem_info={print_mem_info}"])
 
-    def _update_predict_img(self, infer_img: str, infer_list: str=None):
+    def _update_predict_img(self, infer_img: str, infer_list: str = None):
         """update image to be predicted
 
         Args:
@@ -376,8 +406,8 @@ indicating that no pretrained model to be used."
             infer_list (str, optional): the path to file that images. Defaults to None.
         """
         if infer_list:
-            self.update([f'Infer.infer_list={infer_list}'])
-        self.update([f'Infer.infer_imgs={infer_img}'])
+            self.update([f"Infer.infer_list={infer_list}"])
+        self.update([f"Infer.infer_imgs={infer_img}"])
 
     def _update_save_inference_dir(self, save_inference_dir: str):
         """update directory path to save inference model files
@@ -385,8 +415,7 @@ indicating that no pretrained model to be used."
         Args:
             save_inference_dir (str): the directory path to set.
         """
-        self.update(
-            [f'Global.save_inference_dir={abspath(save_inference_dir)}'])
+        self.update([f"Global.save_inference_dir={abspath(save_inference_dir)}"])
 
     def _update_inference_model_dir(self, model_dir: str):
         """update inference model directory
@@ -394,7 +423,7 @@ indicating that no pretrained model to be used."
         Args:
             model_dir (str): the directory path of inference model fils that used to predict.
         """
-        self.update([f'Global.inference_model_dir={abspath(model_dir)}'])
+        self.update([f"Global.inference_model_dir={abspath(model_dir)}"])
 
     def _update_infer_img(self, infer_img: str):
         """update path of image that would be predict
@@ -402,7 +431,7 @@ indicating that no pretrained model to be used."
         Args:
             infer_img (str): the image path.
         """
-        self.update([f'Global.infer_imgs={infer_img}'])
+        self.update([f"Global.infer_imgs={infer_img}"])
 
     def _update_infer_device(self, device: str):
         """update the device used in predicting
@@ -418,7 +447,7 @@ indicating that no pretrained model to be used."
         Args:
             enable_mkldnn (bool): `True` is enable, otherwise is disable.
         """
-        self.update([f'Global.enable_mkldnn={enable_mkldnn}'])
+        self.update([f"Global.enable_mkldnn={enable_mkldnn}"])
 
     def _update_infer_img_shape(self, img_shape: str):
         """update image cropping shape in the preprocessing
@@ -427,7 +456,7 @@ indicating that no pretrained model to be used."
             img_shape (str): the shape of cropping in the preprocessing,
                 i.e. `PreProcess.transform_ops.1.CropImage.size`.
         """
-        self.update([f'PreProcess.transform_ops.1.CropImage.size={img_shape}'])
+        self.update([f"PreProcess.transform_ops.1.CropImage.size={img_shape}"])
 
     def _update_save_predict_result(self, save_dir: str):
         """update directory that save predicting output
@@ -435,28 +464,25 @@ indicating that no pretrained model to be used."
         Args:
             save_dir (str): the dicrectory path that save predicting output.
         """
-        self.update([f'Infer.save_dir={save_dir}'])
+        self.update([f"Infer.save_dir={save_dir}"])
 
     def update_model(self, **kwargs):
-        """update model settings
-        """
+        """update model settings"""
         for k in kwargs:
             v = kwargs[k]
-            self.update([f'Arch.{k}={v}'])
+            self.update([f"Arch.{k}={v}"])
 
     def update_teacher_model(self, **kwargs):
-        """update teacher model settings
-        """
+        """update teacher model settings"""
         for k in kwargs:
             v = kwargs[k]
-            self.update([f'Arch.models.0.Teacher.{k}={v}'])
+            self.update([f"Arch.models.0.Teacher.{k}={v}"])
 
     def update_student_model(self, **kwargs):
-        """update student model settings
-        """
+        """update student model settings"""
         for k in kwargs:
             v = kwargs[k]
-            self.update([f'Arch.models.1.Student.{k}={v}'])
+            self.update([f"Arch.models.1.Student.{k}={v}"])
 
     def get_epochs_iters(self) -> int:
         """get epochs
@@ -464,7 +490,7 @@ indicating that no pretrained model to be used."
         Returns:
             int: the epochs value, i.e., `Global.epochs` in config.
         """
-        return self.dict['Global']['epochs']
+        return self.dict["Global"]["epochs"]
 
     def get_log_interval(self) -> int:
         """get log interval(steps)
@@ -472,7 +498,7 @@ indicating that no pretrained model to be used."
         Returns:
             int: the log interval value, i.e., `Global.print_batch_step` in config.
         """
-        return self.dict['Global']['print_batch_step']
+        return self.dict["Global"]["print_batch_step"]
 
     def get_eval_interval(self) -> int:
         """get eval interval(epochs)
@@ -480,7 +506,7 @@ indicating that no pretrained model to be used."
         Returns:
             int: the eval interval value, i.e., `Global.eval_interval` in config.
         """
-        return self.dict['Global']['eval_interval']
+        return self.dict["Global"]["eval_interval"]
 
     def get_save_interval(self) -> int:
         """get save interval(epochs)
@@ -488,7 +514,7 @@ indicating that no pretrained model to be used."
         Returns:
             int: the save interval value, i.e., `Global.save_interval` in config.
         """
-        return self.dict['Global']['save_interval']
+        return self.dict["Global"]["save_interval"]
 
     def get_learning_rate(self) -> float:
         """get learning rate
@@ -496,7 +522,7 @@ indicating that no pretrained model to be used."
         Returns:
             float: the learning rate value, i.e., `Optimizer.lr.learning_rate` in config.
         """
-        return self.dict['Optimizer']['lr']['learning_rate']
+        return self.dict["Optimizer"]["lr"]["learning_rate"]
 
     def get_warmup_epochs(self) -> int:
         """get warmup epochs
@@ -504,7 +530,7 @@ indicating that no pretrained model to be used."
         Returns:
             int: the warmup epochs value, i.e., `Optimizer.lr.warmup_epochs` in config.
         """
-        return self.dict['Optimizer']['lr']['warmup_epoch']
+        return self.dict["Optimizer"]["lr"]["warmup_epoch"]
 
     def get_label_dict_path(self) -> str:
         """get label dict file path
@@ -512,9 +538,9 @@ indicating that no pretrained model to be used."
         Returns:
             str: the label dict file path, i.e., `PostProcess.Topk.class_id_map_file` in config.
         """
-        return self.dict['PostProcess']['Topk']['class_id_map_file']
+        return self.dict["PostProcess"]["Topk"]["class_id_map_file"]
 
-    def get_batch_size(self, mode='train') -> int:
+    def get_batch_size(self, mode="train") -> int:
         """get batch size
 
         Args:
@@ -524,7 +550,7 @@ indicating that no pretrained model to be used."
         Returns:
             int: the batch size value of `mode`, i.e., `DataLoader.{mode}.sampler.batch_size` in config.
         """
-        return self.dict['DataLoader']['Train']['sampler']['batch_size']
+        return self.dict["DataLoader"]["Train"]["sampler"]["batch_size"]
 
     def get_qat_epochs_iters(self) -> int:
         """get qat epochs
@@ -556,7 +582,7 @@ indicating that no pretrained model to be used."
         Returns:
             str: the root directory of dataset
         """
-        return self.dict["DataLoader"]["Train"]['dataset']['image_root']
+        return self.dict["DataLoader"]["Train"]["dataset"]["image_root"]
 
     def get_train_save_dir(self) -> str:
         """get the directory to save output
@@ -564,4 +590,4 @@ indicating that no pretrained model to be used."
         Returns:
             str: the directory to save output
         """
-        return self['Global']['output_dir']
+        return self["Global"]["output_dir"]

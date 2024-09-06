@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,12 +22,10 @@ from pycocotools.cocoeval import COCOeval
 
 
 def parse_args():
-    """ Parse input arguments """
+    """Parse input arguments"""
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--prediction_json_path', type=str, default='./bbox.json')
-    parser.add_argument(
-        '--gt_json_path', type=str, default='./instance_val.json')
+    parser.add_argument("--prediction_json_path", type=str, default="./bbox.json")
+    parser.add_argument("--gt_json_path", type=str, default="./instance_val.json")
 
     args = parser.parse_args()
     return args
@@ -40,18 +38,20 @@ def json_eval_results(args):
     prediction_json_path = args.prediction_json_path
     gt_json_path = args.gt_json_path
     assert os.path.exists(
-        prediction_json_path), "The json directory:{} does not exist".format(
-            prediction_json_path)
+        prediction_json_path
+    ), "The json directory:{} does not exist".format(prediction_json_path)
     cocoapi_eval(prediction_json_path, "bbox", anno_file=gt_json_path)
 
 
-def cocoapi_eval(jsonfile,
-                 style,
-                 coco_gt=None,
-                 anno_file=None,
-                 max_dets=(100, 300, 1000),
-                 sigmas=None,
-                 use_area=True):
+def cocoapi_eval(
+    jsonfile,
+    style,
+    coco_gt=None,
+    anno_file=None,
+    max_dets=(100, 300, 1000),
+    sigmas=None,
+    use_area=True,
+):
     """
     Args:
         jsonfile (str): Evaluation json file, eg: bbox.json
@@ -69,11 +69,11 @@ def cocoapi_eval(jsonfile,
     if coco_gt is None:
         coco_gt = COCO(anno_file)
     coco_dt = coco_gt.loadRes(jsonfile)
-    if style == 'proposal':
-        coco_eval = COCOeval(coco_gt, coco_dt, 'bbox')
+    if style == "proposal":
+        coco_eval = COCOeval(coco_gt, coco_dt, "bbox")
         coco_eval.params.useCats = 0
         coco_eval.params.maxDets = list(max_dets)
-    elif style == 'keypoints_crowd':
+    elif style == "keypoints_crowd":
         coco_eval = COCOeval(coco_gt, coco_dt, style, sigmas, use_area)
     else:
         coco_eval = COCOeval(coco_gt, coco_dt, style)
