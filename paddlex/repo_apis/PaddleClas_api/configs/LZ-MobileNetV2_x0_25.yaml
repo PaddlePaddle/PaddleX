@@ -46,7 +46,7 @@ Optimizer:
   momentum: 0.9
   lr:
     name: Cosine
-    learning_rate: 0.045
+    learning_rate: 0.01
   regularizer:
     name: 'L2'
     coeff: 0.00003
@@ -72,22 +72,6 @@ DataLoader:
             mean: [0.5, 0.5, 0.5]
             std: [0.5, 0.5, 0.5]
             order: ''
-        - RandomErasing:
-            EPSILON: 0.25
-            sl: 0.02
-            sh: 1.0/3.0
-            r1: 0.3
-            attempt: 10
-            use_log_aspect: True
-            mode: pixel
-      batch_transform_ops:
-        - OpSampler:
-            MixupOperator:
-              alpha: 0.8
-              prob: 0.5
-            CutmixOperator:
-              alpha: 1.0
-              prob: 0.5
 
     sampler:
       name: DistributedBatchSampler
