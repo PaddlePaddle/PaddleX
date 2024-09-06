@@ -161,7 +161,11 @@ openatom_rec_repsvtr_ch_infer.tar",
 openatom_rec_svtrv2_ch_infer.tar",
     "PicoDet_layout_1x": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PicoDet-L_layout_infer.tar",
     "SLANet": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/SLANet_infer.tar",
-    "LaTeX_OCR_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/LaTeX_OCR_rec_infer.tar",
+    "MobileNetV4_conv_small": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV4_conv_small_infer.tar",
+    "MobileNetV4_conv_medium": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV4_conv_medium_infer.tar",
+    "MobileNetV4_conv_large": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV4_conv_large_infer.tar",
+    "MobileNetV4_hybrid_medium": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV4_hybrid_medium_infer.tar",
+    "MobileNetV4_hybrid_large": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/MobileNetV4_hybrid_large_infer.tar",
 }
 
 

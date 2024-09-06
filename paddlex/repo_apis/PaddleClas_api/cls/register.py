@@ -588,6 +588,51 @@ register_model_info(
 
 register_model_info(
     {
+        "model_name": "MobileNetV4_conv_small",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_conv_small.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_conv_medium",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_conv_medium.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_conv_large",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_conv_large.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_hybrid_medium",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_hybrid_medium.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_hybrid_large",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_hybrid_large.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
         "model_name": "ConvNeXt_tiny",
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_tiny.yaml"),

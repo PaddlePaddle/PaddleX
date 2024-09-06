@@ -96,6 +96,15 @@
 | SwinTransformer_base_patch4_window12_384 | [SwinTransformer_base_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window12_384.yaml)|
 | SwinTransformer_large_patch4_window7_224 | [SwinTransformer_large_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window7_224.yaml)|
 | SwinTransformer_large_patch4_window12_384 | [SwinTransformer_large_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window12_384.yaml)|
+### 11.MobileNetV4 系列
+| 模型名称 | config |
+| :--- | :---: |
+| MobileNetV4_conv_small | [MobileNetV4_conv_small.yaml](../../../paddlex/configs/image_classification/MobileNetV4_conv_small.yaml)|
+| MobileNetV4_conv_medium | [MobileNetV4_conv_medium.yaml](../../../paddlex/configs/image_classification/MobileNetV4_conv_medium.yaml)|
+| MobileNetV4_conv_large | [MobileNetV4_conv_large.yaml](../../../paddlex/configs/image_classification/MobileNetV4_conv_large.yaml)|
+| MobileNetV4_hybrid_medium | [MobileNetV4_hybrid_medium.yaml](../../../paddlex/configs/image_classification/MobileNetV4_hybrid_medium.yaml)|
+| MobileNetV4_hybrid_large | [MobileNetV4_hybrid_large.yaml](../../../paddlex/configs/image_classification/MobileNetV4_hybrid_large.yaml)|
+
 ## 二、目标检测
 ### 1. PP-YOLOE_plus 系列
 | 模型名称 | config |
