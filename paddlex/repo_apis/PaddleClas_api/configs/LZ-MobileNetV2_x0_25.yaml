@@ -128,13 +128,13 @@ Infer:
     - ToCHWImage:
   PostProcess:
     name: Topk
-    topk: 5
+    topk: 1
     class_id_map_file: /home/aistudio/data/Database/label.txt
 
 Metric:
   Train:
     - TopkAcc:
-        topk: [1, 5]
+        topk: [1, 1]
   Eval:
     - TopkAcc:
-        topk: [1, 5]
+        topk: [1, 1]
