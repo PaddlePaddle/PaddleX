@@ -7,7 +7,6 @@ Global:
   save_interval: 1
   eval_during_train: True
   eval_interval: 1
-  epochs: 20
   print_batch_step: 10
   use_visualdl: False
   # used for static mode and model export
@@ -28,7 +27,7 @@ AMP:
 
 # model architecture
 Arch:
-  name: MobileNetV1_x0_25
+  name: MobileNetV2_x0_25
   class_num: 1000
   pretrained: True
  
@@ -47,8 +46,7 @@ Optimizer:
   momentum: 0.9
   lr:
     name: Cosine
-    learning_rate: 0.1
-    warmup_epoch: 5
+    learning_rate: 0.045
   regularizer:
     name: 'L2'
     coeff: 0.00003
@@ -67,14 +65,8 @@ DataLoader:
             channel_first: False
         - RandCropImage:
             size: 224
-            interpolation: bicubic
-            backend: pil
         - RandFlipImage:
             flip_code: 1
-        - TimmAutoAugment:
-            config_str: rand-m9-mstd0.5-inc1
-            interpolation: bicubic
-            img_size: 224
         - NormalizeImage:
             scale: 1.0/255.0
             mean: [0.5, 0.5, 0.5]

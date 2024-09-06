@@ -1,5 +1,5 @@
 Global:
-  model: LZ-MobileNetV1_x0_25
+  model: LZ-MobileNetV2_x0_25
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/home/aistudio/data/Database"
   device: gpu:0,1,2,3
@@ -16,10 +16,10 @@ CheckDataset:
 
 Train:
   num_classes: 102
-  epochs_iters: 1
+  epochs_iters: 20
   batch_size: 8
   learning_rate: 0.1
-  pretrain_weight_path: null
+  pretrain_weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_25_pretrained.pdparams
   warmup_steps: 5
   resume_path: null
   log_interval: 1
@@ -31,7 +31,7 @@ Evaluate:
   log_interval: 1
 
 Export:
-  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV1_x0_25_pretrained.pdparams
+  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_25_pretrained.pdparams
 
 Predict:
   model_dir: "output/best_model"
