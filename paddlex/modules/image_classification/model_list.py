@@ -26,6 +26,8 @@ MODELS = [
     "MobileNetV1_x0_75",
     "MobileNetV1_x1_0",
     "LZ-MobileNetV2_x0_25",
+    "LZ-MobileNetV2_x0_5",
+    "LZ-MobileNetV2_x1_0",
     "MobileNetV2_x0_25",
     "MobileNetV2_x0_5",
     "MobileNetV2_x1_0",
