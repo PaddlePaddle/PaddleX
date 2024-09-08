@@ -1,0 +1,143 @@
+# global configs
+Global:
+  checkpoints: null
+  pretrained_model: null
+  output_dir: ./output/
+  device: gpu
+  save_interval: 1
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 360
+  print_batch_step: 10
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: [3, 224, 224]
+  save_inference_dir: ./inference
+
+
+# mixed precision
+AMP:
+  use_amp: False
+  use_fp16_test: False
+  scale_loss: 128.0
+  use_dynamic_loss_scaling: True
+  use_promote: False
+  # O1: mixed fp16, O2: pure fp16
+  level: O1
+
+
+# model architecture
+Arch:
+  name: MobileNetV3_small_x0_75
+  class_num: 1000
+  pretrained: True
+ 
+# loss function config for traing/eval process
+Loss:
+  Train:
+    - CELoss:
+        weight: 1.0
+        epsilon: 0.1
+  Eval:
+    - CELoss:
+        weight: 1.0
+
+
+Optimizer:
+  name: Momentum
+  momentum: 0.9
+  lr:
+    name: Cosine
+    learning_rate: 1.3
+    warmup_epoch: 5
+  regularizer:
+    name: 'L2'
+    coeff: 0.00001
+
+
+# data loader for train and eval
+DataLoader:
+  Train:
+    dataset:
+      name: ImageNetDataset
+      image_root: /home/aistudio/data/Database/
+      cls_label_path: /home/aistudio/data/Database/train.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: False
+            channel_first: False
+        - RandCropImage:
+            size: 224
+        - RandFlipImage:
+            flip_code: 1
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+            order: ''
+
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 8
+      drop_last: False
+      shuffle: True
+    loader:
+      num_workers: 4
+      use_shared_memory: True
+
+  Eval:
+    dataset: 
+      name: ImageNetDataset
+      image_root: /home/aistudio/data/Database/
+      cls_label_path: /home/aistudio/data/Database/val.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: False
+            channel_first: False
+        - ResizeImage:
+            resize_short: 256
+        - CropImage:
+            size: 224
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+            order: ''
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 64
+      drop_last: False
+      shuffle: False
+    loader:
+      num_workers: 4
+      use_shared_memory: True
+
+Infer:
+  infer_imgs: docs/images/inference_deployment/whl_demo.jpg
+  batch_size: 1
+  transforms:
+    - DecodeImage:
+        to_rgb: False
+        channel_first: False
+    - ResizeImage:
+        resize_short: 256
+    - CropImage:
+        size: 224
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [0.5, 0.5, 0.5]
+        std: [0.5, 0.5, 0.5]
+        order: ''
+    - ToCHWImage:
+  PostProcess:
+    name: Topk
+    topk: 1
+    class_id_map_file: /home/aistudio/data/Database/label.txt
+
+Metric:
+  Train:
+    - TopkAcc:
+        topk: [1, 1]
+  Eval:
+    - TopkAcc:
+        topk: [1, 1]

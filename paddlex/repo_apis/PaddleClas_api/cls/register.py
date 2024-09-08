@@ -570,6 +570,42 @@ register_model_info(
 
 register_model_info(
     {
+        "model_name": "LZ-MobileNetV3_small_x0_35",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "LZ-MobileNetV3_small_x0_35.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "LZ-MobileNetV3_small_x0_5",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "LZ-MobileNetV3_small_x0_5.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "LZ-MobileNetV3_small_x0_75",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "LZ-MobileNetV3_small_x0_75.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "LZ-MobileNetV3_small_x1_0",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "LZ-MobileNetV3_small_x1_0.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
         "model_name": "MobileNetV3_small_x0_35",
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_small_x0_35.yaml"),
