@@ -31,7 +31,7 @@ Evaluate:
   log_interval: 1
 
 Export:
-  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/MobileNetV2_x0_25_pretrained.pdparams
+  weight_path: "output/best_model.pdparams"
 
 Predict:
   model_dir: "output/best_model"

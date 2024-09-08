@@ -19,7 +19,7 @@ Train:
   epochs_iters: 20
   batch_size: 8
   learning_rate: 0.01
-  pretrain_weight_path: null
+  pretrain_weight_path: "https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x0_35_pretrained.pdparams"
   warmup_steps: 5
   resume_path: null
   log_interval: 1
