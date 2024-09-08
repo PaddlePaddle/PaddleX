@@ -10,9 +10,9 @@ CheckDataset:
     enable: False
     src_dataset_type: null
   split: 
-    enable: False
-    train_percent: null
-    val_percent: null
+    enable: True
+    train_percent: 70
+    val_percent: 30
 
 Train:
   num_classes: 102
