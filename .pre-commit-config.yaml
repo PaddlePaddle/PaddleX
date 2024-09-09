@@ -42,3 +42,12 @@ repos:
             - --select=E9,F63,F7,F82,E721
             - --show-source
             - --statistics
+
+# check license
+-   repo: local
+    hooks:
+    -   id: check-license
+        name: Check License
+        entry: python .check_license.py
+        language: python
+        files: \.py$
