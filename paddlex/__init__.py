@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 from . import version
@@ -64,6 +63,5 @@ def _check_paddle_version():
 
 
 _initialize()
-_check_paddle_version()
 
 __version__ = version.get_pdx_version()
