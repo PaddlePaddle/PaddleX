@@ -17,7 +17,7 @@ import codecs
 from pathlib import Path
 from abc import abstractmethod
 
-from ...utils.misc import AutoRegisterABCMetaClass
+from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..components.base import BaseComponent, ComponentsEngine
 from .official_models import official_models
 

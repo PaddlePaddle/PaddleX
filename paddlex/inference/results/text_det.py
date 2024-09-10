@@ -12,45 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
-import json
 import numpy as np
 import cv2
 
-from ...utils import logging
-from ..utils.io import JsonWriter, ImageWriter, ImageReader
+from ..utils.io import ImageReader
+from .base import BaseResult
 
 
-class TextDetResult(dict):
-    def __init__(self, data):
-        super().__init__(data)
-        self._json_writer = JsonWriter()
-        self._img_reader = ImageReader(backend="opencv")
-        self._img_writer = ImageWriter(backend="opencv")
+class TextDetResult(BaseResult):
 
-    def save_json(self, save_path, indent=4, ensure_ascii=False):
-        if not save_path.endswith(".json"):
-            save_path = Path(save_path) / f"{Path(self['img_path']).stem}.json"
-        self._json_writer.write(save_path, self, indent=4, ensure_ascii=False)
-
-    def save_img(self, save_path):
-        if not save_path.lower().endswith((".jpg", ".png")):
-            save_path = Path(save_path) / f"{Path(self['img_path']).stem}.jpg"
-        res_img = self._draw_rectangle(self["img_path"], self["dt_polys"])
-        self._img_writer.write(save_path.as_posix(), res_img)
-
-    def print(self, json_format=True, indent=4, ensure_ascii=False):
-        str_ = self
-        if json_format:
-            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
-        logging.info(str_)
-
-    def _draw_rectangle(self, img_path, boxes):
+    def _get_res_img(self):
         """draw rectangle"""
-        boxes = np.array(boxes)
-        img = self._img_reader.read(img_path)
-        img_show = img.copy()
+        boxes = np.array(self["dt_polys"])
+        img = self._img_reader.read(self["img_path"])
+        res_img = img.copy()
         for box in boxes.astype(int):
             box = np.reshape(np.array(box), [-1, 1, 2]).astype(np.int64)
-            cv2.polylines(img_show, [box], True, (0, 0, 255), 2)
-        return img_show
+            cv2.polylines(res_img, [box], True, (0, 0, 255), 2)
+        return res_img

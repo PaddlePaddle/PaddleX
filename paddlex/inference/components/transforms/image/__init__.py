@@ -133,7 +133,7 @@ class ReadImage(BaseComponent):
     def _get_image_list(self, img_file):
         imgs_lists = []
         if img_file is None or not os.path.exists(img_file):
-            raise Exception("not found any img file in {}".format(img_file))
+            raise Exception(f"Not found any img file in path: {img_file}")
 
         if os.path.isfile(img_file) and img_file.split(".")[-1] in self.SUFFIX:
             imgs_lists.append(img_file)
