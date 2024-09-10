@@ -12,93 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import os
-import threading
 from abc import ABCMeta
+
+from . import logging
 from .errors import (
     raise_class_not_found_error,
     raise_no_entity_registered_error,
     DuplicateRegistrationError,
 )
-from .logging import *
 
 
-def abspath(path: str):
-    """get absolute path
-
-    Args:
-        path (str): the relative path
-
-    Returns:
-        str: the absolute path
-    """
-    return os.path.abspath(path)
-
-
-class CachedProperty(object):
-    """
-    A property that is only computed once per instance and then replaces itself
-    with an ordinary attribute.
-
-    The implementation refers to
-    https://github.com/pydanny/cached-property/blob/master/cached_property.py .
-
-    Note that this implementation does NOT work in multi-thread or coroutine
-    senarios.
-    """
-
-    def __init__(self, func):
-        super().__init__()
-        self.func = func
-        self.__doc__ = getattr(func, "__doc__", "")
-
-    def __get__(self, obj, cls):
-        if obj is None:
-            return self
-        val = self.func(obj)
-        # Hack __dict__ of obj to inject the value
-        # Note that this is only executed once
-        obj.__dict__[self.func.__name__] = val
-        return val
-
-
-class Constant(object):
-    """Constant"""
-
-    def __init__(self, val):
-        super().__init__()
-        self.val = val
-
-    def __get__(self, obj, type_=None):
-        return self.val
-
-    def __set__(self, obj, val):
-        raise AttributeError("The value of a constant cannot be modified!")
-
-
-class Singleton(type):
-    """singleton meta class
-
-    Args:
-        type (class): type
-
-    Returns:
-        class: meta class
-    """
-
-    _insts = {}
-    _lock = threading.Lock()
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._insts:
-            with cls._lock:
-                if cls not in cls._insts:
-                    cls._insts[cls] = super().__call__(*args, **kwargs)
-        return cls._insts[cls]
-
-
-# TODO(gaotingquan): has been mv to subclass_register.py
 class AutoRegisterMetaClass(type):
     """meta class that automatically registry subclass to its baseclass
 
@@ -153,7 +76,7 @@ class AutoRegisterMetaClass(type):
 `{records[name].__name__}`."
                 )
             records[name] = cls
-            debug(
+            logging.debug(
                 f"The class entity({cls.__name__}) has been register as name(`{name}`)."
             )
         setattr(base, mcs.__registered_map_name, records)

@@ -12,28 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import numpy as np
-from functools import partial, wraps
 
+from ...utils.func_register import FuncRegister
 from ...modules.image_classification.model_list import MODELS
 from ..components import *
 from .base import BasePredictor
-
-
-def register(register_map, key):
-    """register the option setting func"""
-
-    def decorator(func):
-        register_map[key] = func
-
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            return func(self, *args, **kwargs)
-
-        return wrapper
-
-    return decorator
 
 
 class ClasPredictor(BasePredictor):
@@ -45,15 +29,15 @@ class ClasPredictor(BasePredictor):
     DEAULT_INPUTS = {"x": "x"}
     DEAULT_OUTPUTS = {"topk_res": "topk_res"}
 
-    _REGISTER_MAP = {}
-    register2self = partial(register, _REGISTER_MAP)
+    _FUNC_MAP = {}
+    register = FuncRegister(_FUNC_MAP)
 
     def _build_components(self):
         ops = {}
         ops["ReadImage"] = ReadImage(batch_size=self.kwargs.get("batch_size", 1))
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
-            func = self._REGISTER_MAP.get(tf_key)
+            func = self._FUNC_MAP.get(tf_key)
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             ops[tf_key] = op
@@ -70,13 +54,13 @@ class ClasPredictor(BasePredictor):
 
         post_processes = self.config["PostProcess"]
         for key in post_processes:
-            func = self._REGISTER_MAP.get(key)
+            func = self._FUNC_MAP.get(key)
             args = post_processes.get(key, {})
             op = func(self, **args) if args else func(self)
             ops[key] = op
         return ops
 
-    @register2self("ResizeImage")
+    @register("ResizeImage")
     def build_resize(self, resize_short=None, size=None):
         assert resize_short or size
         if resize_short:
@@ -87,11 +71,11 @@ class ClasPredictor(BasePredictor):
             op = Resize(target_size=size)
         return op
 
-    @register2self("CropImage")
+    @register("CropImage")
     def build_crop(self, size=224):
         return Crop(crop_size=size)
 
-    @register2self("NormalizeImage")
+    @register("NormalizeImage")
     def build_normalize(
         self,
         mean=[0.485, 0.456, 0.406],
@@ -104,10 +88,10 @@ class ClasPredictor(BasePredictor):
         assert order == ""
         return Normalize(mean=mean, std=std)
 
-    @register2self("ToCHWImage")
+    @register("ToCHWImage")
     def build_to_chw(self):
         return ToCHWImage()
 
-    @register2self("Topk")
+    @register("Topk")
     def build_topk(self, topk, label_list=None):
         return Topk(topk=int(topk), class_ids=label_list)
