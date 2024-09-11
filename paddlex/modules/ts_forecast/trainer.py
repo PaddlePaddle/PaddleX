@@ -175,12 +175,12 @@ class TSFCTrainDeamon(BaseTrainDeamon):
                 "pdiparams": pdparams,
                 "pdiparams.info": "",
             }
-        self.update_inference_model(
-            model,
-            train_output,
-            train_output.joinpath(f"inference"),
-            result["models"][model_key],
-        )
+            self.update_inference_model(
+                model,
+                train_output,
+                train_output.joinpath(f"inference"),
+                result["models"][model_key],
+            )
 
     def update_inference_model(
         self, model, weight_path, export_save_dir, result_the_model

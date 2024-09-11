@@ -25,6 +25,21 @@ class TSCLSEvaluator(BaseEvaluator):
 
     entities = MODELS
 
+    def get_config_path(self, weight_path):
+        """
+        get config path
+
+        Args:
+            weight_path (str): The path to the weight
+
+        Returns:
+            config_path (str): The path to the config
+
+        """
+        self.uncompress_tar_file()
+        config_path = Path(self.eval_config.weight_path).parent.parent / "config.yaml"
+        return config_path
+
     def update_config(self):
         """update evalution config"""
         self.pdx_config.update_dataset(self.global_config.dataset_dir, "TSCLSDataset")
@@ -49,8 +64,3 @@ class TSCLSEvaluator(BaseEvaluator):
             self.eval_config.weight_path = dest_path.joinpath(
                 "best_accuracy.pdparams/best_model/model.pdparams"
             )
-
-    def evaluate(self):
-        """firstly, update evaluation config, then evaluate model, finally return the evaluation result"""
-        self.uncompress_tar_file()
-        return super().evaluate()
