@@ -350,3 +350,147 @@ register_model_info(
         },
     }
 )
+
+
+register_model_info(
+    {
+        'model_name': 'PicoDet-XS',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-XS.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PicoDet-M',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-M.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FCOS-ResNet50',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FCOS-ResNet50.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'DETR-R50',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'DETR-R50.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+        {
+        'model_name': 'PP-YOLOE-vehicle-L',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-vehicle-L.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE-vehicle-S',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-vehicle-S.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PicoDet-LCNet_x2_5',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-LCNet_x2_5.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE-human-L',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-human-L.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE-human-S',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-human-S.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
