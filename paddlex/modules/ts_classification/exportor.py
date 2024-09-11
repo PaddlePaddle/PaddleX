@@ -38,7 +38,7 @@ class TSCLSExportor(BaseExportor):
         self.uncompress_tar_file()
         config_path = Path(self.export_config.weight_path).parent.parent / "config.yaml"
         return config_path
-    
+
     def uncompress_tar_file(self):
         """unpackage the tar file containing training outputs and update weight path"""
         if tarfile.is_tarfile(self.export_config.weight_path):
@@ -48,4 +48,3 @@ class TSCLSExportor(BaseExportor):
             self.export_config.weight_path = dest_path.joinpath(
                 "best_accuracy.pdparams/best_model/model.pdparams"
             )
-    
