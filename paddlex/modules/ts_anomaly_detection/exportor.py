@@ -48,4 +48,3 @@ class TSADExportor(BaseExportor):
             self.export_config.weight_path = dest_path.joinpath(
                 "best_accuracy.pdparams/best_model/model.pdparams"
             )
-            
