@@ -55,6 +55,7 @@ MODELS = [
     "PP-LCNet_x0_5",
     "PP-LCNet_x0_75",
     "PP-LCNet_x1_0",
+    "PP-LCNet_x1_0_4ori",
     "PP-LCNet_x1_5",
     "PP-LCNet_x2_0",
     "PP-LCNet_x2_5",
