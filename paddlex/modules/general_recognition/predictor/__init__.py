@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+from .predictor import ShiTuRecPredictor
+from . import transforms

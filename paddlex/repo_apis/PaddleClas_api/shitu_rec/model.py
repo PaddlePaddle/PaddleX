@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+from ..cls import ClsModel
+
+
+class ShiTuRecModel(ClsModel):
+    """ShiTu Recognition Model"""
+
+    pass

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+from .trainer import ShiTuRecTrainer
+from .dataset_checker import ShiTuRecDatasetChecker
+from .evaluator import ShiTuRecEvaluator
+from .exportor import ShiTuRecExportor
+from .predictor import ShiTuRecPredictor, transforms

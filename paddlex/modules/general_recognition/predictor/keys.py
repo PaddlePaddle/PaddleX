@@ -13,5 +13,17 @@
 # limitations under the License.
 
 
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+class ShiTuRecKeys(object):
+    """
+    This class defines a set of keys used for communication of ShiTuRec predictors
+    and transforms. Both predictors and transforms accept a dict or a list of
+    dicts as input, and they get the objects of their interest from the dict, or
+    put the generated objects into the dict, all based on these keys.
+    """
+
+    # Common keys
+    IMAGE = "image"
+    IM_PATH = "input_path"
+    # Suite-specific keys
+    SHITU_REC_PRED = "shitu_rec_pred"
+    SHITU_REC_RESULT = "shitu_rec_result"

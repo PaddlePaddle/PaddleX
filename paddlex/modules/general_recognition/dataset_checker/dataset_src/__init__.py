@@ -13,5 +13,6 @@
 # limitations under the License.
 
 
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+from .check_dataset import check
+from .split_dataset import split_dataset
+from .analyse_dataset import deep_analyse
