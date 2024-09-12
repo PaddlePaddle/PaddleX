@@ -14,3 +14,4 @@ pandas
 parsley
 requests
 tokenizers==0.19.1
+GPUtil>=1.4.0

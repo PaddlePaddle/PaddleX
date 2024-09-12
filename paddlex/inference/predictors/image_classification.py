@@ -17,10 +17,10 @@ import numpy as np
 from ...utils.func_register import FuncRegister
 from ...modules.image_classification.model_list import MODELS
 from ..components import *
-from .base import BasePredictor
+from .base import BasicPredictor
 
 
-class ClasPredictor(BasePredictor):
+class ClasPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -43,7 +43,7 @@ class ClasPredictor(BasePredictor):
             ops[tf_key] = op
 
         kernel_option = PaddlePredictorOption()
-        # kernel_option.set_device(self.device)
+        kernel_option.set_device(self.device)
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
