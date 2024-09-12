@@ -25,7 +25,6 @@ from shapely.geometry import Polygon
 
 from ...utils.io import ImageReader
 from ....utils import logging
-from ...results import TextDetResult
 from ..base import BaseComponent
 
 
@@ -206,10 +205,10 @@ class DBPostProcess(BaseComponent):
     The post process for Differentiable Binarization (DB).
     """
 
-    INPUT_KEYS = ["pred", "img_shape", "img_path"]
-    OUTPUT_KEYS = ["text_det_res"]
-    DEAULT_INPUTS = {"pred": "pred", "img_shape": "img_shape", "img_path": "img_path"}
-    DEAULT_OUTPUTS = {"text_det_res": "text_det_res"}
+    INPUT_KEYS = ["pred", "img_shape"]
+    OUTPUT_KEYS = ["dt_polys", "dt_scores"]
+    DEAULT_INPUTS = {"pred": "pred", "img_shape": "img_shape"}
+    DEAULT_OUTPUTS = {"dt_polys": "dt_polys", "dt_scores": "dt_scores"}
 
     def __init__(
         self,
@@ -392,9 +391,9 @@ class DBPostProcess(BaseComponent):
         cv2.fillPoly(mask, contour.reshape(1, -1, 2).astype(np.int32), 1)
         return cv2.mean(bitmap[ymin : ymax + 1, xmin : xmax + 1], mask)[0]
 
-    def apply(self, pred, img_shape, img_path):
+    def apply(self, pred, img_shape):
         """apply"""
-        pred = pred[0, :, :]
+        pred = pred[0][0, :, :]
         segmentation = pred > self.thresh
 
         src_h, src_w, ratio_h, ratio_w = img_shape
@@ -412,10 +411,7 @@ class DBPostProcess(BaseComponent):
         else:
             raise ValueError("box_type can only be one of ['quad', 'poly']")
 
-        text_det_res = TextDetResult(
-            {"img_path": img_path, "dt_polys": boxes, "dt_scores": scores}
-        )
-        return {"text_det_res": text_det_res}
+        return {"dt_polys": boxes, "dt_scores": scores}
 
 
 class CropByPolys(BaseComponent):
