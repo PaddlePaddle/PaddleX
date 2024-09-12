@@ -28,7 +28,7 @@ Evaluate:
   weight_path: "output/best_accuracy.pdparams.tar"
 
 Export:
-  weight_path: https://paddlets.bj.bcebos.com/dygraph/best_accuracy.pdparams.tar
+  weight_path: https://paddlets.bj.bcebos.com/dygraph/AutoEncoder_ad.pdparams.tar
 
 Predict:
   model_dir: "output/inference"
