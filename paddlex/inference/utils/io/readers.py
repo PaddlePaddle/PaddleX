@@ -50,6 +50,11 @@ class _BaseReader(object):
             bk_args = self.bk_args
         return self._init_backend(self.bk_type, bk_args)
 
+    def set_backend(self, backend, **bk_args):
+        self.bk_type = backend
+        self.bk_args = bk_args
+        self._backend = self.get_backend()
+
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
         raise NotImplementedError
@@ -78,7 +83,7 @@ class ImageReader(_BaseReader):
         """init backend"""
         if bk_type == "opencv":
             return OpenCVImageReaderBackend(**bk_args)
-        elif bk_type == "pil":
+        elif bk_type == "pil" or bk_type == "pillow":
             return PILImageReaderBackend(**bk_args)
         else:
             raise ValueError("Unsupported backend type")

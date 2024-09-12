@@ -14,6 +14,7 @@
 
 from pathlib import Path
 
+from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
 
@@ -177,6 +178,9 @@ class OfficialModelsDict(dict):
     def __getitem__(self, key):
         url = super().__getitem__(key)
         save_dir = Path(CACHE_DIR) / "official_models"
+        logging.info(
+            f"Using official model ({key}), the model files will be be automatically downloaded and saved in {save_dir}."
+        )
         download_and_extract(url, save_dir, f"{key}", overwrite=False)
         return save_dir / f"{key}"
 

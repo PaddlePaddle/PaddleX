@@ -12,48 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
-import json
+
 import PIL
 from PIL import ImageDraw, ImageFont
 import numpy as np
 
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...utils import logging
-from ..utils.io import JsonWriter, ImageWriter, ImageReader
 from ..utils.color_map import get_colormap
+from .base import BaseResult
 
 
-class TopkResult(dict):
+class TopkResult(BaseResult):
     def __init__(self, data):
         super().__init__(data)
-        self._json_writer = JsonWriter()
-        self._img_reader = ImageReader(backend="pil")
-        self._img_writer = ImageWriter(backend="pillow")
+        self._img_reader.set_backend("pillow")
+        self._img_writer.set_backend("pillow")
 
-    def save_json(self, save_path, indent=4, ensure_ascii=False):
-        if not save_path.endswith(".json"):
-            save_path = Path(save_path) / f"{Path(self['img_path']).stem}.json"
-        self._json_writer.write(save_path, self, indent=4, ensure_ascii=False)
-
-    def save_img(self, save_path):
-        if not save_path.lower().endswith((".jpg", ".png")):
-            save_path = Path(save_path) / f"{Path(self['img_path']).stem}.jpg"
-        labels = self.get("label_names", self["class_ids"])
-        res_img = self._draw_label(self["img_path"], self["scores"], labels)
-        self._img_writer.write(save_path, res_img)
-
-    def print(self, json_format=True, indent=4, ensure_ascii=False):
-        str_ = self
-        if json_format:
-            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
-        logging.info(str_)
-
-    def _draw_label(self, img_path, scores, class_ids):
+    def _get_res_img(self):
         """Draw label on image"""
-        label_str = f"{class_ids[0]} {scores[0]:.2f}"
+        labels = self.get("label_names", self["class_ids"])
+        label_str = f"{labels[0]} {self['scores'][0]:.2f}"
 
-        image = self._img_reader.read(img_path)
+        image = self._img_reader.read(self["img_path"])
         image = image.convert("RGB")
         image_size = image.size
         draw = ImageDraw.Draw(image)
@@ -104,24 +84,3 @@ class TopkResult(dict):
             return light.astype("int32")
         else:
             return dark.astype("int32")
-
-
-# class SaveClsResults(BaseComponent):
-
-#     INPUT_KEYS = ["img_path", "cls_pred"]
-#     OUTPUT_KEYS = None
-#     DEAULT_INPUTS = {"img_path": "img_path", "cls_pred": "cls_pred"}
-#     DEAULT_OUTPUTS = {}
-
-#     def __init__(self, save_dir, class_ids=None):
-#         super().__init__()
-#         self.save_dir = save_dir
-#         self.class_id_map = _parse_class_id_map(class_ids)
-#         self._json_writer = ImageWriter(backend="pillow")
-
-
-#     def _write_image(self, path, image):
-#         """write image"""
-#         if os.path.exists(path):
-#             logging.warning(f"{path} already exists. Overwriting it.")
-#         self._json_writer.write(path, image)
