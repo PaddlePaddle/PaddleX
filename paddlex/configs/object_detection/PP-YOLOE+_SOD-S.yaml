@@ -31,7 +31,7 @@ Evaluate:
 
 Predict:
   model_dir: "output/best_model"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.png"
   kernel_option:
     run_mode: paddle
     batch_size: 1
