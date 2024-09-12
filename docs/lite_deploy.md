@@ -2,6 +2,7 @@
 
 - [安装流程与使用方式](#安装流程与使用方式)
   - [环境准备](#环境准备)
+  - [物料准备](#物料准备)
   - [部署步骤](#部署步骤)
 - [参考资料](#参考资料)
 
@@ -96,13 +97,54 @@
      744be294    device
     ```
 
+### 物料准备
+
+1. 克隆 `Paddle-Lite-Demo` 仓库的 `feature/paddle-x` 分支到 `PaddleX-Lite-Deploy` 目录。
+
+    ```shell
+    git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.git PaddleX-Lite-Deploy
+    ```
+
+2. 填写 [问卷]() 下载压缩包，切换到指定解压目录后执行解压命令。
+下面是 object_detection 解压操作示例，其他任务可参考后面的表格。
+
+    ```shell
+    # 1. 切换到指定解压目录
+    cd PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection
+
+    # 2. 执行解压命令
+    unzip object_detection.zip
+    ```
+
+    <table>
+      <tr>
+        <th>任务名</th>
+        <th>解压目录</th>
+        <th>解压命令</th>
+      </tr>
+      <tr>
+        <td>object_detection</td>
+        <td>PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection</td>
+        <td>unzip object_detection.zip</td>
+      </tr>
+      <tr>
+        <td>semantic_segmentation</td>
+        <td>PaddleX-Lite-Deploy/semantic_segmentation/android/shell/cxx/semantic_segmentation</td>
+        <td>unzip semantic_segmentation.zip</td>
+      </tr>
+      <tr>
+        <td>image_classification</td>
+        <td>PaddleX-Lite-Deploy/image_classification/android/shell/cxx/image_classification</td>
+        <td>unzip image_classification.zip</td>
+      </tr>
+      <tr>
+        <td>ocr</td>
+        <td>PaddleX-Lite-Deploy/ocr/android/shell/ppocr_demo</td>
+        <td>unzip ocr.zip</td>
+      </tr>
+    </table>
+
 ### 部署步骤
-
-克隆 `Paddle-Lite-Demo` 仓库的 `feature/paddle-x` 分支到 `PaddleX-Lite-Deploy` 目录。
-
-```shell
-git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.git PaddleX_Lite_Deploy
-```
 
 1. 将工作目录切换到 `PaddleX_Lite_Deploy/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 Demo 使用。
 
@@ -117,6 +159,8 @@ git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.g
     - `download.sh` 和 `run.sh` 支持传入模型名来指定模型，若不指定则使用默认模型。目前适配的模型可参考本节最后表格的 `Model_Name` 列。
     - 在运行 `build.sh` 脚本前，需要更改 `NDK_ROOT` 指定的路径为实际安装的 NDK 路径。
     - 在运行 `build.sh` 脚本时需保持 ADB 连接。
+    - 在 Windows 系统上可以使用 `Git Bash` 执行部署步骤。
+    - 若在 Windows 系统上编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `windows`。
     - 若在 Mac 系统上编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `darwin`。
 
 以下为 object_detection 的示例，其他 demo 需按参考本节最后的表格改变第二步和第三步所切换的目录。
