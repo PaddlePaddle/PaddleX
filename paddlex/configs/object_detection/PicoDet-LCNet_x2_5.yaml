@@ -35,3 +35,6 @@ Predict:
   kernel_option:
     run_mode: paddle
     batch_size: 1
+
+Export:
+  weight_path: https://paddledet.bj.bcebos.com/models/picodet_lcnet_x2_5_640_mainbody.pdparams

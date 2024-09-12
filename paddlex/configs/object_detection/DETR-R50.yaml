@@ -35,3 +35,7 @@ Predict:
   kernel_option:
     run_mode: paddle
     batch_size: 1
+
+
+Export:
+  weight_path: https://paddledet.bj.bcebos.com/models/detr_r50_1x_coco.pdparams

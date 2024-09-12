@@ -35,3 +35,7 @@ Predict:
   kernel_option:
     run_mode: paddle
     batch_size: 1
+
+
+Export:
+  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_plus_sod_crn_s_80e_visdrone.pdparams
