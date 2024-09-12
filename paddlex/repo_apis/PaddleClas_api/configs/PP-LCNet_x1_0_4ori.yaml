@@ -13,10 +13,9 @@ Global:
   # used for static mode and model export
   image_shape: [3, 224, 224]
   save_inference_dir: ./inference
-
 # model architecture
 Arch:
-  name: PPLCNet_x1_0_4ori
+  name: PPLCNet_x1_0
   pretrained: True
   use_ssld: True
   class_num: 4
