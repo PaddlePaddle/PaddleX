@@ -1,5 +1,5 @@
 Global:
-  model: PP-YOLOE-human-S
+  model: PP-YOLOE-L_human
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
   device: gpu:0,1,2,3
@@ -38,4 +38,4 @@ Predict:
 
 
 Export:
-  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_crn_s_36e_crowdhuman.pdparams
+  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_crn_l_36e_crowdhuman.pdparams

@@ -1,5 +1,5 @@
 Global:
-  model: PicoDet-LCNet_x2_5
+  model: PP-YOLOE-S_vehicle
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
   device: gpu:0,1,2,3
@@ -36,5 +36,6 @@ Predict:
     run_mode: paddle
     batch_size: 1
 
+
 Export:
-  weight_path: https://paddledet.bj.bcebos.com/models/picodet_lcnet_x2_5_640_mainbody.pdparams
+  weight_path: https://paddledet.bj.bcebos.com/models/mot_ppyoloe_s_36e_ppvehicle.pdparams

@@ -418,9 +418,9 @@ register_model_info(
 
 register_model_info(
         {
-        'model_name': 'PP-YOLOE-vehicle-L',
+        'model_name': 'PP-YOLOE-L_vehicle',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-vehicle-L.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-L_vehicle.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -434,9 +434,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PP-YOLOE-vehicle-S',
+        'model_name': 'PP-YOLOE-S_vehicle',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-vehicle-S.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-S_vehicle.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -450,9 +450,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PicoDet-LCNet_x2_5',
+        'model_name': 'PP-ShiTuV2_det',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-LCNet_x2_5.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-ShiTuV2_det.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -466,9 +466,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PP-YOLOE-human-L',
+        'model_name': 'PP-YOLOE-L_human',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-human-L.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-L_human.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -482,9 +482,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PP-YOLOE-human-S',
+        'model_name': 'PP-YOLOE-S_human',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-human-S.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-S_human.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {

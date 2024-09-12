@@ -70,7 +70,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>通用目标检测</td>
     <td>目标检测</td>
     <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PicoDet-XS<br/>PicoDet-M<br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FCOS-ResNet50<br/>DETR-R50<br/>PP-YOLOE-vehicle-L<br/>PP-YOLOE-vehicle-S<br/>PicoDet-LCNet_x2_5<br/>PP-YOLOE-human-S<br/>PP-YOLOE-human-L<br/>PP-YOLOE+_SOD-L<br/>PP-YOLOE+_SOD-S<br/>PP-YOLOE+_SOD-largesize-L</details></td>
+    <summary><b>more</b></summary><br/>PicoDet-XS<br/>PicoDet-M<br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FCOS-ResNet50<br/>DETR-R50<br/>PP-YOLOE-L_vehicle<br/>PP-YOLOE-S_vehicle<br/>PP-ShiTuV2_det<br/>PP-YOLOE-S_human<br/>PP-YOLOE-L_human<br/>PP-YOLOE+_SOD-L<br/>PP-YOLOE+_SOD-S<br/>PP-YOLOE+_SOD-largesize-L</details></td>
   </tr>
   <tr>
     <td>基础产线</td>
