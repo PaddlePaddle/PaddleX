@@ -164,6 +164,11 @@
 | PP-YOLOE-S_vehicle | [PP-YOLOE-vehicle-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-S_vehicle.yaml)|
 | PP-YOLOE-L_human | [PP-YOLOE-human-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-L_human.yaml)|
 | PP-YOLOE-S_human | [PP-YOLOE-human-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-S_human.yaml)|
+### 9. CenterNet 系列
+| 模型名称 | config |
+| :--- | :---: |
+| CenterNet-DLA-34 | [CenterNet-DLA-34.yaml](../../../paddlex/configs/object_detection/CenterNet-DLA-34.yaml)|
+| CenterNet-ResNet50 | [CenterNet-ResNet50.yaml](../../../paddlex/configs/object_detection/CenterNet-ResNet50.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |

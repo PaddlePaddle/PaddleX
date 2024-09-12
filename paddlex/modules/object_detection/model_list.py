@@ -47,4 +47,6 @@ MODELS = [
     "PP-YOLOE+_SOD-L",
     "PP-YOLOE+_SOD-S",
     "PP-YOLOE+_SOD-largesize-L",
+    "CenterNet-DLA-34",
+    "CenterNet-ResNet50",
 ]

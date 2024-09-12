@@ -180,6 +180,8 @@ openatom_rec_svtrv2_ch_infer.tar",
     "PP-YOLOE+_SOD-L": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-YOLOE+_SOD-L_infer.tar",
     "PP-YOLOE+_SOD-S": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-YOLOE+_SOD-S_infer.tar",
     "PP-YOLOE+_SOD-largesize-L": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-YOLOE+_SOD-largesize-L_infer.tar",
+    "CenterNet-DLA-34": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/CenterNet-DLA-34_infer.tar",
+    "CenterNet-ResNet50": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/CenterNet-ResNet50_infer.tar",
 }
 
 
