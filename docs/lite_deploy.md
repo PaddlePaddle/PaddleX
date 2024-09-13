@@ -146,7 +146,7 @@
 
 ### 部署步骤
 
-1. 将工作目录切换到 `PaddleX_Lite_Deploy/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 Demo 使用。
+1. 将工作目录切换到 `PaddleX_Lite_Deploy/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 demo 使用。
 
 2. 将工作目录切换到 `PaddleX_Lite_Deploy/{Task_Name}/assets`，运行 `download.sh` 脚本，下载 [paddle_lite_opt 工具](https://www.paddlepaddle.org.cn/lite/v2.10/user_guides/model_optimize_tool.html) 优化后的模型、测试图片和标签文件等。
 
@@ -159,7 +159,7 @@
     - `download.sh` 和 `run.sh` 支持传入模型名来指定模型，若不指定则使用默认模型。目前适配的模型可参考本节最后表格的 `Model_Name` 列。
     - 在运行 `build.sh` 脚本前，需要更改 `NDK_ROOT` 指定的路径为实际安装的 NDK 路径。
     - 在运行 `build.sh` 脚本时需保持 ADB 连接。
-    - 在 Windows 系统上可以使用 `Git Bash` 执行部署步骤。
+    - 在 Windows 系统上可以使用 Git Bash 执行部署步骤。
     - 若在 Windows 系统上编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `windows`。
     - 若在 Mac 系统上编译，需要将 `CMakeLists.txt` 中的 `CMAKE_SYSTEM_NAME` 设置为 `darwin`。
 
