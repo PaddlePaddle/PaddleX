@@ -208,6 +208,7 @@
 | PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
 | PicoDet-L_layout | [PicoDet-L_layout.yaml](../../../paddlex/configs/structure_analysis/PicoDet-L_layout.yaml)|
 | RT-DETR-H_layout_3cls | [RT-DETR-H_layout.yaml](../../../paddlex/configs/structure_analysis/RT-DETR-H_layout_3cls.yaml)|
+| RT-DETR-H_layout_17cls | [RT-DETR-H_layout.yaml](../../../paddlex/configs/structure_analysis/RT-DETR-H_layout_17cls.yaml)|
 ## 十、时序异常检测
 | 模型名称 | config |
 | :--- | :---: |

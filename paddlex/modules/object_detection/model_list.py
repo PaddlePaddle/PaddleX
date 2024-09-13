@@ -28,6 +28,7 @@ MODELS = [
     "PicoDet_layout_1x",
     "PicoDet-L_layout",
     "RT-DETR-H_layout_3cls",
+    "RT-DETR-H_layout_17cls",
     "YOLOv3-DarkNet53",
     "YOLOv3-MobileNetV3",
     "YOLOv3-ResNet50_vd_DCN",
