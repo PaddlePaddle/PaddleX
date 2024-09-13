@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Export:
-  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/pretrained/RT-DETR-H_layout_pretrained_v1.pdparams
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/pretrained/RT-DETR-H_layout_pretrained_17cls.pdparams
 
 Predict:
   model_dir: "output/best_model"
