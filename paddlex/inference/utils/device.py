@@ -30,6 +30,6 @@ def parse_device(device):
         for device_id in device_ids:
             if not device_id.isdigit():
                 raise ValueError(f"Invalid device ID: {device_id}")
-        device_id = list(map(int, device_ids))
+        device_ids = list(map(int, device_ids))
     device_type = device_type.lower()
     return device_type, device_ids
