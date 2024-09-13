@@ -14,3 +14,5 @@
 
 from .image_classification import ClasPipeline
 from .ocr import OCRPipeline
+from .object_detection import DetPipeline
+from .instance_segmentation import InstanceSegPipeline

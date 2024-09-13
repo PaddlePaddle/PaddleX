@@ -14,7 +14,7 @@
 
 import os
 from abc import abstractmethod
-
+import numpy as np
 import paddle
 from paddle.inference import Config, create_predictor
 import numpy as np
@@ -150,20 +150,21 @@ No need to generate again."
         """get input names"""
         return self.input_names
 
-    def apply(self, batch_data):
-        x = self.to_batch(batch_data)
+    def apply(self, **kwargs):
+        x = self.to_batch(**kwargs)
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
             self.input_handlers[idx].copy_from_cpu(x[idx])
 
         self.predictor.run()
-
         output = []
         for out_tensor in self.output_handlers:
             batch = out_tensor.copy_to_cpu()
             output.append(batch)
+        return self.format_output(output)
 
-        return [{"pred": res} for res in zip(*output)]
+    def format_output(self, pred):
+        return [{"pred": res} for res in zip(*pred)]
 
     @abstractmethod
     def to_batch(self):
@@ -175,3 +176,55 @@ class ImagePredictor(BasePaddlePredictor):
 
     def to_batch(self, imgs):
         return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]
+
+
+class ImageDetPredictor(BasePaddlePredictor):
+    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"]]
+    OUTPUT_KEYS = [["boxes"], ["boxes", "masks"]]
+    DEAULT_INPUTS = {"img": "img", "scale_factors": "scale_factors"}
+    DEAULT_OUTPUTS = {"boxes": "boxes"}
+
+    def to_batch(self, img, scale_factors, img_size=None):
+        scale_factors = [scale_factor[::-1] for scale_factor in scale_factors]
+        if img_size is None:
+            return [
+                np.stack(img, axis=0).astype(dtype=np.float32, copy=False),
+                np.stack(scale_factors, axis=0).astype(dtype=np.float32, copy=False),
+            ]
+        else:
+            return [
+                np.stack(img_size, axis=0).astype(dtype=np.float32, copy=False),
+                np.stack(img, axis=0).astype(dtype=np.float32, copy=False),
+                np.stack(scale_factors, axis=0).astype(dtype=np.float32, copy=False),
+            ]
+
+    def format_output(self, pred):
+        box_idx_start = 0
+        pred_box = []
+        if len(pred) == 3:
+            pred_mask = []
+        for idx in range(len(pred[1])):
+            np_boxes_num = pred[1][idx]
+            box_idx_end = box_idx_start + np_boxes_num
+            np_boxes = pred[0][box_idx_start:box_idx_end]
+            pred_box.append(np_boxes)
+            if len(pred) == 3:
+                np_masks = pred[2][box_idx_start:box_idx_end]
+                pred_mask.append(np_masks)
+            box_idx_start = box_idx_end
+
+        boxes = [{"boxes": np.array(res)} for res in pred_box]
+        if len(pred) == 3:
+            masks = [{"masks": np.array(res)} for res in pred_mask]
+            return [{"boxes": boxes[0]["boxes"], "masks": masks[0]["masks"]}]
+        else:
+            return [{"boxes": np.array(res)} for res in pred_box]
+
+
+class ImageInstanceSegPredictor(ImageDetPredictor):
+    DEAULT_INPUTS = {
+        "img": "img",
+        "scale_factors": "scale_factors",
+        "img_size": "img_size",
+    }
+    DEAULT_OUTPUTS = {"boxes": "boxes", "masks": "masks"}

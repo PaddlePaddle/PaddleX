@@ -72,6 +72,11 @@ class BaseComponent(ABC):
         def _check_args_key(args):
             sig = inspect.signature(self.apply)
             for param in sig.parameters.values():
+                if param.kind == inspect.Parameter.VAR_KEYWORD:
+                    logging.debug(
+                        f"The apply function parameter of {self.__class__.__name__} is **kwargs, so would not inspect!"
+                    )
+                    continue
                 if param.default == inspect.Parameter.empty and param.name not in args:
                     raise Exception(
                         f"The parameter ({param.name}) is needed by {self.__class__.__name__}, but {list(args.keys())} only found!"
