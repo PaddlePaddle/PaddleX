@@ -64,6 +64,13 @@ from .semantic_segmentation import (
     SegExportor,
     SegPredictor,
 )
+from .anomaly_detection import (
+    UadDatasetChecker,
+    UadTrainer,
+    UadEvaluator,
+    UadExportor,
+    UadPredictor,
+)
 from .instance_segmentation import (
     COCOInstSegDatasetChecker,
     InstanceSegTrainer,

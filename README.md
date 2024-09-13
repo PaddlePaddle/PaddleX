@@ -80,7 +80,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <summary><b>more</b></summary><br/>Deeplabv3-R50<br/>Deeplabv3-R101<br/>Deeplabv3_Plus-R50<br/>Deeplabv3_Plus-R101<br/>SeaFormer_tiny<br/
     >SeaFormer_small<br/>SeaFormer_base<br/>SeaFormer_large<br/
     >SegFormer-B0<br/>SegFormer-B1<br/>SegFormer-B2<br/
-    >SegFormer-B3<br/>SegFormer-B4<br/>SegFormer-B5</details></td>
+    >SegFormer-B3<br/>SegFormer-B4<br/>SegFormer-B5<br/>STFPM</details></td>
   </tr>
   <tr>
     <td>基础产线</td>
