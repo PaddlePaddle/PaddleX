@@ -105,7 +105,7 @@
     git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.git PaddleX-Lite-Deploy
     ```
 
-2. 填写 [问卷]() 下载压缩包，切换到指定解压目录后执行解压命令。
+2. 填写 [问卷]() 下载压缩包，将压缩包放到指定解压目录，切换到指定解压目录后执行解压命令。
 下面是 object_detection 解压操作示例，其他任务可参考后面的表格。
 
     ```shell
