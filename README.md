@@ -106,7 +106,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td rowspan="4">基础产线</td>
     <td rowspan="4">通用表格识别</td>
     <td>版面区域检测</td>
-    <td>PicoDet layout_1x</td>
+    <td>PicoDet layout_1x<br/>PicoDet-L_layout<br/>RT-DETR-H_layout_3cls</td>
   </tr>
   <tr>
     <td>表格识别</td>
