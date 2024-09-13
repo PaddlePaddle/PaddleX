@@ -17,6 +17,8 @@ import numpy as np
 from ...utils.func_register import FuncRegister
 from ...modules.image_classification.model_list import MODELS
 from ..components import *
+from ..results import TopkResult
+from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
@@ -49,7 +51,6 @@ class ClasPredictor(BasicPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=kernel_option,
         )
-        predictor.set_inputs({"imgs": "img"})
         ops["predictor"] = predictor
 
         post_processes = self.config["PostProcess"]
@@ -95,3 +96,10 @@ class ClasPredictor(BasicPredictor):
     @register("Topk")
     def build_topk(self, topk, label_list=None):
         return Topk(topk=int(topk), class_ids=label_list)
+
+    @batchable_method
+    def _pack_res(self, data):
+        keys = ["img_path", "class_ids", "scores"]
+        if "label_names" in data:
+            keys.append("label_names")
+        return {"topk_res": TopkResult({key: data[key] for key in keys})}

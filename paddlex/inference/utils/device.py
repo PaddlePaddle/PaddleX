@@ -13,10 +13,23 @@
 # limitations under the License.
 
 
-def constr_device(device_type, device_id):
-    return f"{device_type}:{device_id}"
+def constr_device(device_type, device_ids):
+    device_ids = ",".join(map(str, device_ids))
+    return f"{device_type}:{device_ids}"
 
 
 def parse_device(device):
-    device_type, device_id = device.split(":")
-    return device_type, int(device_id) if device_id else None
+    parts = device.split(":")
+    if len(parts) > 2:
+        raise ValueError(f"Invalid device: {device}")
+    if len(parts) == 1:
+        device_type, device_ids = parts[0], None
+    else:
+        device_type, device_ids = parts
+        device_ids = device_ids.split(",")
+        for device_id in device_ids:
+            if not device_id.isdigit():
+                raise ValueError(f"Invalid device ID: {device_id}")
+        device_id = list(map(int, device_ids))
+    device_type = device_type.lower()
+    return device_type, device_ids

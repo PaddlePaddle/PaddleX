@@ -22,7 +22,7 @@ import GPUtil
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..utils.device import constr_device
 from ..components.base import BaseComponent, ComponentsEngine
-from .official_models import official_models
+from ..utils.process_hook import generatorable_method
 
 
 def _get_default_device():
@@ -30,43 +30,34 @@ def _get_default_device():
     if not avail_gpus:
         return "cpu"
     else:
-        return constr_device("gpu", avail_gpus[0])
+        return constr_device("gpu", [avail_gpus[0]])
 
 
 class BasePredictor(BaseComponent):
     INPUT_KEYS = "x"
+    OUTPUT_KEYS = None
+
+    KEEP_INPUT = False
 
     MODEL_FILE_PREFIX = "inference"
 
-    def __init__(self, model, device=None, **kwargs):
+    def __init__(self, model_dir, config=None, device=None, **kwargs):
         super().__init__()
-        self.model_dir = self._check_model(model)
+        self.model_dir = Path(model_dir)
+        self.config = config if config else self.load_config(self.model_dir)
         self.device = device if device else _get_default_device()
         self.kwargs = kwargs
-        self.config = self._load_config()
         # alias predict() to the __call__()
         self.predict = self.__call__
-
-    @property
-    def config_path(self):
-        return self.model_dir / f"{self.MODEL_FILE_PREFIX}.yml"
 
     @abstractmethod
     def apply(self, x):
         raise NotImplementedError
 
-    def _check_model(self, model):
-        if Path(model).exists():
-            return Path(model)
-        elif model in official_models:
-            return official_models[model]
-        else:
-            raise ValueError(
-                f"The model ({model}) does not exist! Please use a local model directory or a model name supported by PaddleX!"
-            )
-
-    def _load_config(self):
-        with codecs.open(self.config_path, "r", "utf-8") as file:
+    @classmethod
+    def load_config(cls, model_dir):
+        config_path = model_dir / f"{cls.MODEL_FILE_PREFIX}.yml"
+        with codecs.open(config_path, "r", "utf-8") as file:
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
 
@@ -74,19 +65,23 @@ class BasePredictor(BaseComponent):
 class BasicPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
     __is_base = True
 
-    OUTPUT_KEYS = None
-
-    KEEP_INPUT = False
-
-    def __init__(self, model, device=None, **kwargs):
-        super().__init__(model=model, device=device, **kwargs)
+    def __init__(self, model_dir, config=None, device=None, **kwargs):
+        super().__init__(model_dir=model_dir, config=config, device=device, **kwargs)
         self.components = self._build_components()
         self.engine = ComponentsEngine(self.components)
 
     def apply(self, x):
         """predict"""
-        yield from self.engine(x)
+        yield from self._generate_res(self.engine(x))
+
+    @generatorable_method
+    def _generate_res(self, data):
+        return self._pack_res(data)
 
     @abstractmethod
     def _build_components(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def _pack_res(self, data):
         raise NotImplementedError

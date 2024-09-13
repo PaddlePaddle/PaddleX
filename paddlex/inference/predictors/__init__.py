@@ -12,6 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+from pathlib import Path
+
+from .base import BasePredictor
 from .image_classification import ClasPredictor
 from .text_detection import TextDetPredictor
 from .text_recognition import TextRecPredictor
+from .official_models import official_models
+
+
+def create_predictor(model: str, device: str, *args, **kwargs) -> BasePredictor:
+    model_dir = check_model(model)
+    config = BasePredictor.load_config(model_dir)
+    model_name = config["Global"]["model_name"]
+    return BasePredictor.get(model_name)(
+        model_dir=model_dir, config=config, device=device, *args, **kwargs
+    )
+
+
+def check_model(model):
+    if Path(model).exists():
+        return Path(model)
+    elif model in official_models:
+        return official_models[model]
+    else:
+        raise Exception(
+            f"The model ({model}) is no exists! Please using directory of local model files or model name supported by PaddleX!"
+        )

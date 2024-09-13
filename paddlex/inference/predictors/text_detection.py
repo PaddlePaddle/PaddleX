@@ -17,6 +17,8 @@ import numpy as np
 from ...utils.func_register import FuncRegister
 from ...modules.text_detection.model_list import MODELS
 from ..components import *
+from ..results import TextDetResult
+from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
@@ -49,7 +51,6 @@ class TextDetPredictor(BasicPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=kernel_option,
         )
-        predictor.set_inputs({"imgs": "img"})
         ops["predictor"] = predictor
 
         key, op = self.build_postprocess(**self.config["PostProcess"])
@@ -104,3 +105,8 @@ class TextDetPredictor(BasicPredictor):
     @register("KeepKeys")
     def foo(self, *args, **kwargs):
         return None
+
+    @batchable_method
+    def _pack_res(self, data):
+        keys = ["img_path", "dt_polys", "dt_scores"]
+        return {"text_det_res": TextDetResult({key: data[key] for key in keys})}
