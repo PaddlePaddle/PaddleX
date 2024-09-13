@@ -12,4 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import ImagePredictor, ImageDetPredictor, ImageInstanceSegPredictor
+from .base import BasePipeline
+from ..predictors import create_predictor
+
+
+class DetPipeline(BasePipeline):
+    """Det Pipeline"""
+
+    entities = "object_detection"
+
+    def __init__(self, model, batch_size=1, device="gpu"):
+        super().__init__()
+        self._predict = create_predictor(model, batch_size=batch_size, device=device)
+
+    def predict(self, x):
+        self._check_input(x)
+        yield from self._predict(x)
+
+    def _check_input(self, x):
+        pass

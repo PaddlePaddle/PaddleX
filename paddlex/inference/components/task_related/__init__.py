@@ -16,3 +16,5 @@ from .clas import Topk, MultiLabelThreshOutput
 from .text_det import DetResizeForTest, NormalizeImage, DBPostProcess, CropByPolys
 from .text_rec import OCRReisizeNormImg, CTCLabelDecode
 from .table_rec import TableLabelDecode, TableMasterLabelDecode
+from .det import DetPostProcess
+from .instance_seg import InstanceSegPostProcess

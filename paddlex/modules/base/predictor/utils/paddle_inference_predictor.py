@@ -145,7 +145,6 @@ No need to generate again."
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
             self.input_handlers[idx].copy_from_cpu(x[idx])
-
         self.predictor.run()
 
         res = []

@@ -17,3 +17,5 @@ from .text_det import TextDetResult
 from .text_rec import TextRecResult
 from .table_rec import TableRecResult
 from .ocr import OCRResult
+from .det import DetResults
+from .instance_seg import InstanceSegResults
