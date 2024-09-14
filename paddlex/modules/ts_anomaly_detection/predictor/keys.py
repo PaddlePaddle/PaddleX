@@ -13,12 +13,15 @@
 # limitations under the License.
 
 
-from ..ts_forecast import TSFCPredictor
-from .model_list import MODELS
-from ...utils.errors import raise_unsupported_api_error
+class TSFCKeys(object):
+    """
+    This class defines a set of keys used for communication of Seg predictors
+    and transforms. Both predictors and transforms accept a dict or a list of
+    dicts as input, and they get the objects of their interest from the dict, or
+    put the generated objects into the dict, all based on these keys.
+    """
 
-
-class TSCLSPredictor(TSFCPredictor):
-    """TS Anomaly Detection Model Predictor"""
-
-    entities = MODELS
+    # Common keys
+    TS = "ts"
+    TS_PATH = "input_path"
+    PRED = "pred_ts"

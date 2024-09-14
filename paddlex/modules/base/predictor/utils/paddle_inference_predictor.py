@@ -124,6 +124,7 @@ No need to generate again."
 
         # Get input and output handlers
         input_names = predictor.get_input_names()
+        input_names.sort()
         input_handlers = []
         output_handlers = []
         for input_name in input_names:
