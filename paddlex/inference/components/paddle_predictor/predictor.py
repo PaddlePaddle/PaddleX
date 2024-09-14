@@ -17,6 +17,7 @@ from abc import abstractmethod
 
 import paddle
 from paddle.inference import Config, create_predictor
+import numpy as np
 
 from ..base import BaseComponent
 from ....utils import logging
@@ -25,9 +26,9 @@ from ....utils import logging
 class BasePaddlePredictor(BaseComponent):
     """Predictor based on Paddle Inference"""
 
-    INPUT_KEYS = "imgs"
+    INPUT_KEYS = "batch_data"
     OUTPUT_KEYS = "pred"
-    DEAULT_INPUTS = {"x": "x"}
+    DEAULT_INPUTS = {"batch_data": "batch_data"}
     DEAULT_OUTPUTS = {"pred": "pred"}
     ENABLE_BATCH = True
 
@@ -146,8 +147,8 @@ No need to generate again."
         """get input names"""
         return self.input_names
 
-    def apply(self, imgs):
-        x = self.to_batch(imgs)
+    def apply(self, batch_data):
+        x = self.to_batch(batch_data)
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
             self.input_handlers[idx].copy_from_cpu(x[idx])
@@ -156,15 +157,18 @@ No need to generate again."
 
         output = []
         for out_tensor in self.output_handlers:
-            out_arr = out_tensor.copy_to_cpu()
-            output.append(out_arr)
+            batch = out_tensor.copy_to_cpu()
+            output.append(batch)
 
-        return self.format_output(output)
+        return [{"pred": res} for res in zip(*output)]
 
     @abstractmethod
+    def to_batch(self):
+        raise NotImplementedError
+
+
+class ImagePredictor(BasePaddlePredictor):
+    DEAULT_INPUTS = {"batch_data": "img"}
+
     def to_batch(self, imgs):
-        raise NotImplementedError
-
-    @abstractmethod
-    def format_output(self, output):
-        raise NotImplementedError
+        return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]
