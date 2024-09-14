@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-from .readers import ImageReader, VideoReader, ReaderType
-from .writers import ImageWriter, TextWriter, WriterType
+from .readers import ImageReader, VideoReader, ReaderType, TSReader
+from .writers import ImageWriter, TextWriter, WriterType, TSWriter

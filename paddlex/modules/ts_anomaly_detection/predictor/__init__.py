@@ -12,15 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
 
-from .base_predictor import BasePaddlePredictor
-
-
-class ImagePredictor(BasePaddlePredictor):
-
-    def to_batch(self, imgs):
-        return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]
-
-    def format_output(self, output):
-        return [{"pred": np.array(res)} for res in output[0].tolist()]
+from .predictor import TSADPredictor
+from . import transforms

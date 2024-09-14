@@ -13,4 +13,4 @@
 # limitations under the License.
 
 from .option import PaddlePredictorOption
-from .image_predictor import ImagePredictor
+from .predictor import ImagePredictor

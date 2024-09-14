@@ -17,10 +17,11 @@ import os
 import enum
 
 import cv2
+import pandas as pd
 import numpy as np
 from PIL import Image
 
-__all__ = ["ImageWriter", "TextWriter", "WriterType"]
+__all__ = ["ImageWriter", "TextWriter", "WriterType", "TSWriter"]
 
 
 class WriterType(enum.Enum):
@@ -29,6 +30,7 @@ class WriterType(enum.Enum):
     IMAGE = 1
     VIDEO = 2
     TEXT = 3
+    TS = 4
 
 
 class _BaseWriter(object):
@@ -175,3 +177,46 @@ class PILImageWriterBackend(_ImageWriterBackend):
         else:
             raise TypeError("Unsupported object type")
         return img.save(out_path, format=self.format)
+
+
+class TSWriter(_BaseWriter):
+    """TSWriter"""
+
+    def __init__(self, backend="pandas", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj):
+        """write"""
+        return self._backend.write_obj(out_path, obj)
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "pandas":
+            return PandasTSWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.TS
+
+
+class _TSWriterBackend(_BaseWriterBackend):
+    """_TSWriterBackend"""
+
+    pass
+
+
+class PandasTSWriterBackend(_TSWriterBackend):
+    """PILImageWriterBackend"""
+
+    def __init__(self):
+        super().__init__()
+
+    def _write_obj(self, out_path, obj):
+        """write image object by PIL"""
+        if isinstance(obj, pd.DataFrame):
+            ts = obj
+        else:
+            raise TypeError("Unsupported object type")
+        return ts.to_csv(out_path)

@@ -19,7 +19,7 @@ from abc import abstractmethod
 
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..components.base import BaseComponent, ComponentsEngine
-from .official_models import official_models
+from ..utils.process_hook import generatorable_method
 
 
 class BasePredictor(BaseComponent, metaclass=AutoRegisterABCMetaClass):
@@ -32,36 +32,36 @@ class BasePredictor(BaseComponent, metaclass=AutoRegisterABCMetaClass):
 
     MODEL_FILE_PREFIX = "inference"
 
-    def __init__(self, model, **kwargs):
+    def __init__(self, model_dir, config=None, device="gpu", **kwargs):
         super().__init__()
-        self.model_dir = self._check_model(model)
+        self.model_dir = Path(model_dir)
+        self.config = config if config else self.load_config(self.model_dir)
+        self.device = device
         self.kwargs = kwargs
-        self.config = self._load_config()
         self.components = self._build_components()
         self.engine = ComponentsEngine(self.components)
         # alias predict() to the __call__()
         self.predict = self.__call__
 
-    def _check_model(self, model):
-        if Path(model).exists():
-            return Path(model)
-        elif model in official_models:
-            return official_models[model]
-        else:
-            raise Exception(
-                f"The model ({model}) is no exists! Please using directory of local model files or model name supported by PaddleX!"
-            )
-
-    def _load_config(self):
-        config_path = self.model_dir / f"{self.MODEL_FILE_PREFIX}.yml"
+    @classmethod
+    def load_config(cls, model_dir):
+        config_path = model_dir / f"{cls.MODEL_FILE_PREFIX}.yml"
         with codecs.open(config_path, "r", "utf-8") as file:
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
 
     def apply(self, x):
         """predict"""
-        yield from self.engine(x)
+        yield from self._generate_res(self.engine(x))
+
+    @generatorable_method
+    def _generate_res(self, data):
+        return self._pack_res(data)
 
     @abstractmethod
     def _build_components(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def _pack_res(self, data):
         raise NotImplementedError
