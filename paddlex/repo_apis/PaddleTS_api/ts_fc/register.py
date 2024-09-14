@@ -43,7 +43,7 @@ register_model_info(
         "model_name": "DLinear",
         "suite": "LongForecast",
         "config_path": DLinear_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -64,7 +64,7 @@ register_model_info(
         "model_name": "RLinear",
         "suite": "LongForecast",
         "config_path": DLinear_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -85,7 +85,7 @@ register_model_info(
         "model_name": "NLinear",
         "suite": "LongForecast",
         "config_path": DLinear_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -107,7 +107,7 @@ register_model_info(
         "model_name": "TiDE",
         "suite": "LongForecast",
         "config_path": TiDE_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -129,7 +129,7 @@ register_model_info(
         "model_name": "PatchTST",
         "suite": "LongForecast",
         "config_path": PatchTST_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -148,7 +148,7 @@ register_model_info(
         "model_name": "Nonstationary",
         "suite": "LongForecast",
         "config_path": Nonstationary_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -170,7 +170,7 @@ register_model_info(
         "model_name": "TimesNet",
         "suite": "LongForecast",
         "config_path": TimesNet_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,

@@ -13,8 +13,15 @@
 # limitations under the License.
 
 
-from .dataset_checker import TSADDatasetChecker
-from .trainer import TSADTrainer
-from .evaluator import TSADEvaluator
-from .predictor import TSADPredictor, transforms
-from .exportor import TSADExportor
+class TSFCKeys(object):
+    """
+    This class defines a set of keys used for communication of Seg predictors
+    and transforms. Both predictors and transforms accept a dict or a list of
+    dicts as input, and they get the objects of their interest from the dict, or
+    put the generated objects into the dict, all based on these keys.
+    """
+
+    # Common keys
+    TS = "ts"
+    TS_PATH = "input_path"
+    PRED = "pred_ts"

@@ -212,9 +212,33 @@ class TSModel(BaseModel):
             config.dump(config_path)
             return self.runner.predict(config_path, cli_args, device)
 
-    def export(self, weight_path: str, save_dir: str = None, **kwargs):
+    def export(
+        self, weight_path: str, save_dir: str = None, device: str = "gpu", **kwargs
+    ):
         """export"""
-        raise_unsupported_api_error("export", self.__class__)
+        weight_path = abspath(weight_path)
+        save_dir = abspath(save_dir)
+        cli_args = []
+
+        weight_path = abspath(weight_path)
+        cli_args.append(CLIArgument("--checkpoints", weight_path))
+        if save_dir is not None:
+            save_dir = abspath(save_dir)
+        else:
+            save_dir = abspath(os.path.join("output", "inference"))
+        cli_args.append(CLIArgument("--save_dir", save_dir))
+        if device is not None:
+            device_type, _ = self.runner.parse_device(device)
+            cli_args.append(CLIArgument("--device", device_type))
+
+        self._assert_empty_kwargs(kwargs)
+        with self._create_new_config_file() as config_path:
+            # Update YAML config file
+            config = self.config.copy()
+            config.update_pretrained_weights(weight_path)
+            config.dump(config_path)
+
+            return self.runner.export(config_path, cli_args, device)
 
     def infer(
         self,
