@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import inspect
 import logging
 import sys
 
@@ -36,6 +37,24 @@ _logger = logging.getLogger(LOGGER_NAME)
 
 def debug(msg, *args, **kwargs):
     """debug"""
+    if DEBUG:
+        frame = inspect.currentframe()
+        caller_frame = frame.f_back
+        caller_func_name = caller_frame.f_code.co_name
+
+        if "self" in caller_frame.f_locals:
+            caller_class_name = caller_frame.f_locals["self"].__class__.__name__
+        elif "cls" in caller_frame.f_locals:
+            caller_class_name = caller_frame.f_locals["cls"].__name__
+        else:
+            caller_class_name = None
+
+        if caller_class_name:
+            caller_info = f"{caller_class_name}::{caller_func_name}"
+        else:
+            caller_info = f"{caller_func_name}"
+        msg = f"【{caller_info}】{msg}"
+
     _logger.debug(msg, *args, **kwargs)
 
 

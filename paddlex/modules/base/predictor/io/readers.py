@@ -16,9 +16,10 @@
 import enum
 import itertools
 import cv2
+import pandas as pd
 from PIL import Image, ImageOps
 
-__all__ = ["ImageReader", "VideoReader", "ReaderType"]
+__all__ = ["ImageReader", "VideoReader", "ReaderType", "TSReader"]
 
 
 class ReaderType(enum.Enum):
@@ -27,6 +28,7 @@ class ReaderType(enum.Enum):
     IMAGE = 1
     GENERATIVE = 2
     POINT_CLOUD = 3
+    TS = 4
 
 
 class _BaseReader(object):
@@ -231,3 +233,43 @@ class OpenCVVideoReaderBackend(_VideoReaderBackend):
         if self._cap is not None:
             self._cap_release()
             self._cap = None
+
+
+class TSReader(_BaseReader):
+    """TSReader"""
+
+    def __init__(self, backend="pandas", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def read(self, in_path):
+        """read the image file from path"""
+        arr = self._backend.read_file(in_path)
+        return arr
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "pandas":
+            return PandasTSReaderBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return ReaderType.TS
+
+
+class _TSReaderBackend(_BaseReaderBackend):
+    """_TSReaderBackend"""
+
+    pass
+
+
+class PandasTSReaderBackend(_TSReaderBackend):
+    """PandasTSReaderBackend"""
+
+    def __init__(self):
+        super().__init__()
+
+    def read_file(self, in_path):
+        """read image file from path by OpenCV"""
+        return pd.read_csv(in_path)

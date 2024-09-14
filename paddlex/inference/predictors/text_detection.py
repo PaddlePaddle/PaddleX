@@ -12,29 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import numpy as np
-from functools import partial, wraps
 
+from ...utils.func_register import FuncRegister
 from ...modules.text_detection.model_list import MODELS
-
 from ..components import *
+from ..results import TextDetResult
+from ..utils.process_hook import batchable_method
 from .base import BasePredictor
-
-
-def register(register_map, key):
-    """register the option setting func"""
-
-    def decorator(func):
-        register_map[key] = func
-
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            return func(self, *args, **kwargs)
-
-        return wrapper
-
-    return decorator
 
 
 class TextDetPredictor(BasePredictor):
@@ -46,43 +31,42 @@ class TextDetPredictor(BasePredictor):
     DEAULT_INPUTS = {"x": "x"}
     DEAULT_OUTPUTS = {"text_det_res": "text_det_res"}
 
-    _REGISTER_MAP = {}
-    register2self = partial(register, _REGISTER_MAP)
+    _FUNC_MAP = {}
+    register = FuncRegister(_FUNC_MAP)
 
     def _build_components(self):
         ops = {}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
-            func = self._REGISTER_MAP.get(tf_key)
+            func = self._FUNC_MAP.get(tf_key)
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             if op:
                 ops[tf_key] = op
 
         kernel_option = PaddlePredictorOption()
-        # kernel_option.set_device(self.device)
+        kernel_option.set_device(self.device)
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=kernel_option,
         )
-        predictor.set_inputs({"imgs": "img"})
         ops["predictor"] = predictor
 
         key, op = self.build_postprocess(**self.config["PostProcess"])
         ops[key] = op
         return ops
 
-    @register2self("DecodeImage")
+    @register("DecodeImage")
     def build_readimg(self, channel_first, img_mode):
         assert channel_first == False
         return ReadImage(format=img_mode, batch_size=self.kwargs.get("batch_size", 1))
 
-    @register2self("DetResizeForTest")
+    @register("DetResizeForTest")
     def build_resize(self, resize_long=960):
         return DetResizeForTest(limit_side_len=resize_long, limit_type="max")
 
-    @register2self("NormalizeImage")
+    @register("NormalizeImage")
     def build_normalize(
         self,
         mean=[0.485, 0.456, 0.406],
@@ -95,7 +79,7 @@ class TextDetPredictor(BasePredictor):
             mean=mean, std=std, scale=scale, order=order, channel_num=channel_num
         )
 
-    @register2self("ToCHWImage")
+    @register("ToCHWImage")
     def build_to_chw(self):
         return ToCHWImage()
 
@@ -114,10 +98,15 @@ class TextDetPredictor(BasePredictor):
         else:
             raise Exception()
 
-    @register2self("DetLabelEncode")
+    @register("DetLabelEncode")
     def foo(self, *args, **kwargs):
         return None
 
-    @register2self("KeepKeys")
+    @register("KeepKeys")
     def foo(self, *args, **kwargs):
         return None
+
+    @batchable_method
+    def _pack_res(self, data):
+        keys = ["img_path", "dt_polys", "dt_scores"]
+        return {"text_det_res": TextDetResult({key: data[key] for key in keys})}

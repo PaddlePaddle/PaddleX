@@ -43,7 +43,7 @@ register_model_info(
         "model_name": "TimesNet_cls",
         "suite": "TSClassify",
         "config_path": TimesNetCLS_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
