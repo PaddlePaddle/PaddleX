@@ -25,6 +25,8 @@ from .runner import DetRunner
 REPO_ROOT_PATH = os.environ.get('PADDLE_PDX_PADDLEDETECTION_PATH')
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', 'configs'))
 
+print("new pr here")
+
 register_suite_info({
     'suite_name': 'Det',
     'model': DetModel,
