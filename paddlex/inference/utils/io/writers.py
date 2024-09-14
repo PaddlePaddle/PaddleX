@@ -55,6 +55,11 @@ class _BaseWriter(object):
             bk_args = self.bk_args
         return self._init_backend(self.bk_type, bk_args)
 
+    def set_backend(self, backend, **bk_args):
+        self.bk_type = backend
+        self.bk_args = bk_args
+        self._backend = self.get_backend()
+
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
         raise NotImplementedError
@@ -82,7 +87,7 @@ class ImageWriter(_BaseWriter):
         """init backend"""
         if bk_type == "opencv":
             return OpenCVImageWriterBackend(**bk_args)
-        elif bk_type == "pillow":
+        elif bk_type == "pil" or bk_type == "pillow":
             return PILImageWriterBackend(**bk_args)
         else:
             raise ValueError("Unsupported backend type")

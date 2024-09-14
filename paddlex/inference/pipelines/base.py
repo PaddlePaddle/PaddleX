@@ -14,7 +14,7 @@
 
 from abc import ABC, abstractmethod
 
-from ...utils.misc import AutoRegisterABCMetaClass
+from ...utils.subclass_register import AutoRegisterABCMetaClass
 
 
 def create_pipeline(

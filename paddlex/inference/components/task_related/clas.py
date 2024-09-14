@@ -15,7 +15,6 @@
 import numpy as np
 
 from ....utils import logging
-from ...results import TopkResult
 from ..base import BaseComponent
 
 
@@ -33,10 +32,14 @@ def _parse_class_id_map(class_ids):
 class Topk(BaseComponent):
     """Topk Transform"""
 
-    INPUT_KEYS = ["pred", "img_path"]
-    OUTPUT_KEYS = ["topk_res"]
-    DEAULT_INPUTS = {"pred": "pred", "img_path": "img_path"}
-    DEAULT_OUTPUTS = {"topk_res": "topk_res"}
+    INPUT_KEYS = ["pred"]
+    OUTPUT_KEYS = [["class_ids", "scores"], ["class_ids", "scores", "label_names"]]
+    DEAULT_INPUTS = {"pred": "pred"}
+    DEAULT_OUTPUTS = {
+        "class_ids": "class_ids",
+        "scores": "scores",
+        "label_names": "label_names",
+    }
 
     def __init__(self, topk, class_ids=None):
         super().__init__()
@@ -44,9 +47,9 @@ class Topk(BaseComponent):
         self.topk = topk
         self.class_id_map = _parse_class_id_map(class_ids)
 
-    def apply(self, pred, img_path):
+    def apply(self, pred):
         """apply"""
-        cls_pred = pred
+        cls_pred = pred[0]
         class_id_map = self.class_id_map
 
         index = cls_pred.argsort(axis=0)[-self.topk :][::-1].astype("int32")
@@ -59,14 +62,12 @@ class Topk(BaseComponent):
             if class_id_map is not None:
                 label_name_list.append(class_id_map[i.item()])
         result = {
-            "img_path": img_path,
             "class_ids": clas_id_list,
             "scores": np.around(score_list, decimals=5).tolist(),
         }
         if label_name_list is not None:
             result["label_names"] = label_name_list
-
-        return {"topk_res": TopkResult(result)}
+        return result
 
 
 class NormalizeFeatures(BaseComponent):
