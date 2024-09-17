@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .components.paddle_predictor.option import PaddlePredictorOption
+from .utils.pp_option import PaddlePredictorOption

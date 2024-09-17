@@ -77,6 +77,7 @@ class PaddleInferenceOption(object):
             "trt_calib_mode": False,
             "cpu_threads": 1,
             "trt_use_static": False,
+            "enable_new_ir": True,
         }
 
     @register2self("run_mode")
@@ -144,6 +145,11 @@ class PaddleInferenceOption(object):
     def set_trt_use_static(self, trt_use_static):
         """set trt use static"""
         self._cfg["trt_use_static"] = trt_use_static
+
+    @register2self("enable_new_ir")
+    def set_enable_new_ir(self, enable_new_ir: bool):
+        """set run mode"""
+        self._cfg["enable_new_ir"] = enable_new_ir
 
     def get_support_run_mode(self):
         """get supported run mode"""
