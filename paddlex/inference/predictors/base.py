@@ -23,7 +23,7 @@ from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..utils.device import constr_device
 from ...utils import logging
 from ..components.base import BaseComponent, ComponentsEngine
-from ..components.paddle_predictor.option import PaddlePredictorOption
+from ..utils.pp_option import PaddlePredictorOption
 from ..utils.process_hook import generatorable_method
 
 
