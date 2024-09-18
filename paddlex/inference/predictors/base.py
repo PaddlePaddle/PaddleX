@@ -18,7 +18,9 @@ from pathlib import Path
 from abc import abstractmethod
 
 from ...utils.subclass_register import AutoRegisterABCMetaClass
+from ...utils import logging
 from ..components.base import BaseComponent, ComponentsEngine
+from ..components.paddle_predictor.option import PaddlePredictorOption
 from ..utils.process_hook import generatorable_method
 
 
@@ -26,22 +28,33 @@ class BasePredictor(BaseComponent, metaclass=AutoRegisterABCMetaClass):
     __is_base = True
 
     INPUT_KEYS = "x"
-    OUTPUT_KEYS = None
+    DEAULT_INPUTS = {"x": "x"}
+    OUTPUT_KEYS = "result"
+    DEAULT_OUTPUTS = {"result": "result"}
 
     KEEP_INPUT = False
 
     MODEL_FILE_PREFIX = "inference"
 
-    def __init__(self, model_dir, config=None, device="gpu", **kwargs):
+    def __init__(self, model_dir, config=None, device=None, pp_option=None, **kwargs):
         super().__init__()
         self.model_dir = Path(model_dir)
         self.config = config if config else self.load_config(self.model_dir)
-        self.device = device
-        self.kwargs = kwargs
+        self.kwargs = self._check_args(kwargs)
+
+        self.pp_option = PaddlePredictorOption() if pp_option is None else pp_option
+        if device is not None:
+            self.pp_option.set_device(device)
+
         self.components = self._build_components()
         self.engine = ComponentsEngine(self.components)
+
         # alias predict() to the __call__()
         self.predict = self.__call__
+
+        logging.debug(
+            f"-------------------- {self.__class__.__name__} --------------------\nModel: {self.model_dir}\nEnv: {self.pp_option}"
+        )
 
     @classmethod
     def load_config(cls, model_dir):
@@ -57,6 +70,9 @@ class BasePredictor(BaseComponent, metaclass=AutoRegisterABCMetaClass):
     @generatorable_method
     def _generate_res(self, data):
         return self._pack_res(data)
+
+    def _check_args(self, kwargs):
+        return kwargs
 
     @abstractmethod
     def _build_components(self):
