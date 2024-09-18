@@ -22,12 +22,19 @@ from .text_recognition import TextRecPredictor
 from .official_models import official_models
 
 
-def create_predictor(model: str, device: str, *args, **kwargs) -> BasePredictor:
+def create_predictor(
+    model: str, device: str = None, pp_option=None, *args, **kwargs
+) -> BasePredictor:
     model_dir = check_model(model)
     config = BasePredictor.load_config(model_dir)
     model_name = config["Global"]["model_name"]
     return BasePredictor.get(model_name)(
-        model_dir=model_dir, config=config, device=device, *args, **kwargs
+        model_dir=model_dir,
+        config=config,
+        device=device,
+        pp_option=pp_option,
+        *args,
+        **kwargs,
     )
 
 

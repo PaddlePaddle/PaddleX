@@ -26,11 +26,6 @@ class TextRecPredictor(BasePredictor):
 
     entities = MODELS
 
-    INPUT_KEYS = "x"
-    OUTPUT_KEYS = "text_rec_res"
-    DEAULT_INPUTS = {"x": "x"}
-    DEAULT_OUTPUTS = {"text_rec_res": "text_rec_res"}
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -45,12 +40,10 @@ class TextRecPredictor(BasePredictor):
             if op:
                 ops[tf_key] = op
 
-        kernel_option = PaddlePredictorOption()
-        kernel_option.set_device(self.device)
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
-            option=kernel_option,
+            option=self.pp_option,
         )
         ops["predictor"] = predictor
 
@@ -86,4 +79,4 @@ class TextRecPredictor(BasePredictor):
     @batchable_method
     def _pack_res(self, data):
         keys = ["img_path", "rec_text", "rec_score"]
-        return {"text_rec_res": TextRecResult({key: data[key] for key in keys})}
+        return {"result": TextRecResult({key: data[key] for key in keys})}

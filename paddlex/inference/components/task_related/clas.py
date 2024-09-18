@@ -50,8 +50,6 @@ class Topk(BaseComponent):
     def apply(self, pred):
         """apply"""
         cls_pred = pred[0]
-        class_id_map = self.class_id_map
-
         index = cls_pred.argsort(axis=0)[-self.topk :][::-1].astype("int32")
         clas_id_list = []
         score_list = []
@@ -59,8 +57,49 @@ class Topk(BaseComponent):
         for i in index:
             clas_id_list.append(i.item())
             score_list.append(cls_pred[i].item())
-            if class_id_map is not None:
-                label_name_list.append(class_id_map[i.item()])
+            if self.class_id_map is not None:
+                label_name_list.append(self.class_id_map[i.item()])
+        result = {
+            "class_ids": clas_id_list,
+            "scores": np.around(score_list, decimals=5).tolist(),
+        }
+        if label_name_list is not None:
+            result["label_names"] = label_name_list
+        return result
+
+
+class MultiLabelThreshOutput(BaseComponent):
+
+    INPUT_KEYS = ["pred"]
+    OUTPUT_KEYS = [["class_ids", "scores"], ["class_ids", "scores", "label_names"]]
+    DEAULT_INPUTS = {"pred": "pred"}
+    DEAULT_OUTPUTS = {
+        "class_ids": "class_ids",
+        "scores": "scores",
+        "label_names": "label_names",
+    }
+
+    def __init__(self, threshold=0.5, class_ids=None, delimiter=None):
+        super().__init__()
+        assert isinstance(threshold, (float,))
+        self.threshold = threshold
+        self.delimiter = delimiter if delimiter is not None else " "
+        self.class_id_map = _parse_class_id_map(class_ids)
+
+    def apply(self, pred):
+        """apply"""
+        y = []
+        x = pred[0]
+        pred_index = np.where(x >= self.threshold)[0].astype("int32")
+        index = pred_index[np.argsort(x[pred_index])][::-1]
+        clas_id_list = []
+        score_list = []
+        label_name_list = []
+        for i in index:
+            clas_id_list.append(i.item())
+            score_list.append(x[i].item())
+            if self.class_id_map is not None:
+                label_name_list.append(self.class_id_map[i.item()])
         result = {
             "class_ids": clas_id_list,
             "scores": np.around(score_list, decimals=5).tolist(),
