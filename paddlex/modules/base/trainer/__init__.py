@@ -14,4 +14,3 @@
 
 
 from .trainer import build_trainer, BaseTrainer
-from .train_deamon import BaseTrainDeamon
