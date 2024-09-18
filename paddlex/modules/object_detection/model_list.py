@@ -35,4 +35,5 @@ MODELS = [
     "YOLOX-S",
     "YOLOX-T",
     "YOLOX-X",
+    "PicoDet_LCNet_x2_5_face",
 ]

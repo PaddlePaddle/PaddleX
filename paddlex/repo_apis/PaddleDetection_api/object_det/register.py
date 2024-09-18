@@ -350,3 +350,18 @@ register_model_info(
         },
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PicoDet_LCNet_x2_5_face",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet_LCNet_x2_5_face.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)

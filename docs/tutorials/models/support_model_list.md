@@ -128,6 +128,7 @@
 | :--- | :---: |
 | PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
 | PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
+| PicoDet_LCNet_x2_5_face | [PicoDet_LCNet_x2_5_face.yaml](../../../paddlex/configs/face_detection/PicoDet_LCNet_x2_5_face.yaml)|
 ### 4. YOLOv3 系列
 | 模型名称 | config |
 | :--- | :---: |
