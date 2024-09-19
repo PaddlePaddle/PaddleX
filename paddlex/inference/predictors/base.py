@@ -50,13 +50,25 @@ class BasePredictor(BaseComponent):
         # alias predict() to the __call__()
         self.predict = self.__call__
 
+    @property
+    def config_path(self):
+        return self.get_config_path(self.model_dir)
+    
+    @property
+    def model_name(self) -> str:
+        return self.config["Global"]["model_name"]
+
     @abstractmethod
     def apply(self, x):
         raise NotImplementedError
 
     @classmethod
+    def get_config_path(cls, model_dir):
+        return model_dir / f"{cls.MODEL_FILE_PREFIX}.yml"
+
+    @classmethod
     def load_config(cls, model_dir):
-        config_path = model_dir / f"{cls.MODEL_FILE_PREFIX}.yml"
+        config_path = cls.get_config_path(model_dir)
         with codecs.open(config_path, "r", "utf-8") as file:
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
