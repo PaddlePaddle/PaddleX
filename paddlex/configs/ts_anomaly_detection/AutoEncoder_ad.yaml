@@ -27,6 +27,9 @@ Train:
 Evaluate:
   weight_path: "output/best_accuracy.pdparams.tar"
 
+Export:
+  weight_path: https://paddlets.bj.bcebos.com/dygraph/AutoEncoder_ad.pdparams.tar
+
 Predict:
-  model_dir: "output/best_accuracy.pdparams.tar"
-  input_path: "/paddle/dataset/paddlex/ts_ad/ts_anomaly_examples/test.csv"
+  model_dir: "output/inference"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv"

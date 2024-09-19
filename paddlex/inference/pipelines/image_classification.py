@@ -12,13 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from ..ts_forecast import TSFCPredictor
-from .model_list import MODELS
-from ...utils.errors import raise_unsupported_api_error
+from .base import BasePipeline
+from ..predictors import ClasPredictor
 
 
-class TSCLSPredictor(TSFCPredictor):
-    """TS Anomaly Detection Model Predictor"""
+class ClasPipeline(BasePipeline):
+    """Cls Pipeline"""
 
-    entities = MODELS
+    entities = "image_classification"
+
+    def __init__(self, model, batch_size=1, device="gpu"):
+        super().__init__()
+        self._predict = ClasPredictor(model, batch_size=batch_size)
+
+    def predict(self, x):
+        self._check_input(x)
+        yield from self._predict(x)
+
+    def _check_input(self, x):
+        pass

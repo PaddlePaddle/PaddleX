@@ -98,6 +98,7 @@ class Singleton(type):
         return cls._insts[cls]
 
 
+# TODO(gaotingquan): has been mv to subclass_register.py
 class AutoRegisterMetaClass(type):
     """meta class that automatically registry subclass to its baseclass
 

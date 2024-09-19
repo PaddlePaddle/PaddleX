@@ -27,6 +27,10 @@ AMP:
   # O1: mixed fp16, O2: pure fp16
   level: O2
 
+# model ema
+EMA:
+  decay: 0.9997
+
 # model architecture
 Arch:
   name: CLIP_vit_base_patch16_224
@@ -157,7 +161,7 @@ Infer:
   PostProcess:
     name: MultiLabelThreshOutput
     threshold: 0.5
-    class_id_map_file: dataset/coco_ml/label.txt
+    class_id_map_file: ppcls/utils/COCO2017_label_list.txt
 
 Metric:
   Train:

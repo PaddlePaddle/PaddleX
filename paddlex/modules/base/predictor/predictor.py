@@ -171,6 +171,9 @@ class PredictorBuilderByConfig(object):
 
         predict_config = deepcopy(config.Predict)
         model_dir = predict_config.pop("model_dir")
+        if model_dir is None:
+            if model_name in official_models:
+                model_dir = official_models[model_name]
         kernel_setting = predict_config.pop("kernel_option", {})
         kernel_setting.setdefault("device", device)
         kernel_option = PaddleInferenceOption(**kernel_setting)

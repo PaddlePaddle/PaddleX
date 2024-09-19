@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from ..ts_forecast import TSFCPredictor
-from .model_list import MODELS
+from .base import BaseResult
 
 
-class TSADPredictor(TSFCPredictor):
-    """TS Anomaly Detection Model Predictor"""
+class TextRecResult(BaseResult):
+    def __init__(self, data):
+        super().__init__(data)
 
-    entities = MODELS
+    def _get_res_img(self, save_path):
+        raise Exception("Don't support to save Text Rec result to img!")
