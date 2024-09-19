@@ -19,6 +19,7 @@ from .base import BasePredictor
 from .image_classification import ClasPredictor
 from .text_detection import TextDetPredictor
 from .text_recognition import TextRecPredictor
+from .table_recognition import TablePredictor
 from .official_models import official_models
 
 
