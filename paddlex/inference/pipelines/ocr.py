@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .base import BasePipeline
-from ..predictors import TextDetPredictor, TextRecPredictor
+from ..predictors import create_predictor
 from ..components import CropByPolys
 from ..results import OCRResult
 
@@ -24,8 +24,8 @@ class OCRPipeline(BasePipeline):
     entities = "ocr"
 
     def __init__(self, det_model, rec_model, det_batch_size, rec_batch_size, **kwargs):
-        self._det_predict = TextDetPredictor(det_model, batch_size=det_batch_size)
-        self._rec_predict = TextRecPredictor(rec_model, batch_size=rec_batch_size)
+        self._det_predict = create_predictor(det_model, batch_size=det_batch_size)
+        self._rec_predict = create_predictor(rec_model, batch_size=rec_batch_size)
         # TODO: foo
         self._crop_by_polys = CropByPolys(det_box_type="foo")
 
@@ -33,17 +33,15 @@ class OCRPipeline(BasePipeline):
         batch_ocr_res = []
         for batch_det_res in self._det_predict(x):
             for det_res in batch_det_res:
-                single_img_res = det_res["text_det_res"]
+                single_img_res = det_res["result"]
                 single_img_res["rec_text"] = []
                 single_img_res["rec_score"] = []
                 all_subs_of_img = list(self._crop_by_polys(single_img_res))
                 for batch_rec_res in self._rec_predict(all_subs_of_img):
                     for rec_res in batch_rec_res:
-                        single_img_res["rec_text"].append(
-                            rec_res["text_rec_res"]["rec_text"]
-                        )
+                        single_img_res["rec_text"].append(rec_res["result"]["rec_text"])
                         single_img_res["rec_score"].append(
-                            rec_res["text_rec_res"]["rec_score"]
+                            rec_res["result"]["rec_score"]
                         )
                 # TODO(gaotingquan): using "ocr_res" or new a component or dict only?
                 batch_ocr_res.append({"ocr_res": OCRResult(single_img_res)})

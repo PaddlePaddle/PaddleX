@@ -26,11 +26,6 @@ class TextDetPredictor(BasicPredictor):
 
     entities = MODELS
 
-    INPUT_KEYS = "x"
-    OUTPUT_KEYS = "text_det_res"
-    DEAULT_INPUTS = {"x": "x"}
-    DEAULT_OUTPUTS = {"text_det_res": "text_det_res"}
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -44,12 +39,10 @@ class TextDetPredictor(BasicPredictor):
             if op:
                 ops[tf_key] = op
 
-        kernel_option = PaddlePredictorOption()
-        kernel_option.set_device(self.device)
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
-            option=kernel_option,
+            option=self.pp_option,
         )
         ops["predictor"] = predictor
 
@@ -109,4 +102,4 @@ class TextDetPredictor(BasicPredictor):
     @batchable_method
     def _pack_res(self, data):
         keys = ["img_path", "dt_polys", "dt_scores"]
-        return {"text_det_res": TextDetResult({key: data[key] for key in keys})}
+        return {"result": TextDetResult({key: data[key] for key in keys})}

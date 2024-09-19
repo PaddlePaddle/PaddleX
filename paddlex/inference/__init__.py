@@ -12,12 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from ..ts_forecast import TSFCPredictor
-from .model_list import MODELS
-
-
-class TSADPredictor(TSFCPredictor):
-    """TS Anomaly Detection Model Predictor"""
-
-    entities = MODELS
+from .components.paddle_predictor.option import PaddlePredictorOption

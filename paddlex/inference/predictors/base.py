@@ -21,7 +21,9 @@ import GPUtil
 
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..utils.device import constr_device
+from ...utils import logging
 from ..components.base import BaseComponent, ComponentsEngine
+from ..components.paddle_predictor.option import PaddlePredictorOption
 from ..utils.process_hook import generatorable_method
 
 
@@ -35,7 +37,9 @@ def _get_default_device():
 
 class BasePredictor(BaseComponent):
     INPUT_KEYS = "x"
-    OUTPUT_KEYS = None
+    DEAULT_INPUTS = {"x": "x"}
+    OUTPUT_KEYS = "result"
+    DEAULT_OUTPUTS = {"result": "result"}
 
     KEEP_INPUT = False
 
@@ -46,14 +50,14 @@ class BasePredictor(BaseComponent):
         self.model_dir = Path(model_dir)
         self.config = config if config else self.load_config(self.model_dir)
         self.device = device if device else _get_default_device()
-        self.kwargs = kwargs
+        self.kwargs = self._check_args(kwargs)
         # alias predict() to the __call__()
         self.predict = self.__call__
 
     @property
     def config_path(self):
         return self.get_config_path(self.model_dir)
-    
+
     @property
     def model_name(self) -> str:
         return self.config["Global"]["model_name"]
@@ -73,14 +77,22 @@ class BasePredictor(BaseComponent):
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
 
+    def _check_args(self, kwargs):
+        return kwargs
+
 
 class BasicPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
     __is_base = True
 
-    def __init__(self, model_dir, config=None, device=None, **kwargs):
+    def __init__(self, model_dir, config=None, device=None, pp_option=None, **kwargs):
         super().__init__(model_dir=model_dir, config=config, device=device, **kwargs)
+        self.pp_option = PaddlePredictorOption() if pp_option is None else pp_option
+        self.pp_option.set_device(self.device)
         self.components = self._build_components()
         self.engine = ComponentsEngine(self.components)
+        logging.debug(
+            f"-------------------- {self.__class__.__name__} --------------------\nModel: {self.model_dir}\nEnv: {self.pp_option}"
+        )
 
     def apply(self, x):
         """predict"""

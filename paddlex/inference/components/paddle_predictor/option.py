@@ -40,12 +40,12 @@ class PaddlePredictorOption(object):
 
     def _init_option(self, **kwargs):
         for k, v in kwargs.items():
-            if k not in self._REGISTER_MAP:
+            if k not in self._FUNC_MAP:
                 raise Exception(
                     f"{k} is not supported to set! The supported option is: \
-{list(self._REGISTER_MAP.keys())}"
+{list(self._FUNC_MAP.keys())}"
                 )
-            self._REGISTER_MAP.get(k)(self, v)
+            self._FUNC_MAP.get(k)(self, v)
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 

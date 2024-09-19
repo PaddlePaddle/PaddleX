@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .base import BasePipeline
-from ..predictors import ClasPredictor
+from ..predictors import create_predictor
 
 
 class ClasPipeline(BasePipeline):
@@ -23,7 +23,7 @@ class ClasPipeline(BasePipeline):
 
     def __init__(self, model, batch_size=1, device="gpu"):
         super().__init__()
-        self._predict = ClasPredictor(model, batch_size=batch_size)
+        self._predict = create_predictor(model, batch_size=batch_size, device=device)
 
     def predict(self, x):
         self._check_input(x)

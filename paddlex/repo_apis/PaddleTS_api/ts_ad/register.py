@@ -44,7 +44,7 @@ register_model_info(
         "suite": "TSAnomaly",
         "config_path": TimesNetAD_CFG_PATH,
         "auto_compression_config_path": TimesNetAD_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx"],
             "dy2st": False,
@@ -64,7 +64,7 @@ register_model_info(
         "model_name": "AutoEncoder_ad",
         "suite": "TSAnomaly",
         "config_path": AE_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -86,7 +86,7 @@ register_model_info(
         "model_name": "DLinear_ad",
         "suite": "TSAnomaly",
         "config_path": DL_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -108,7 +108,7 @@ register_model_info(
         "model_name": "PatchTST_ad",
         "suite": "TSAnomaly",
         "config_path": PATCHTST_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,
@@ -130,7 +130,7 @@ register_model_info(
         "model_name": "Nonstationary_ad",
         "suite": "TSAnomaly",
         "config_path": NS_CFG_PATH,
-        "supported_apis": ["train", "evaluate", "predict"],
+        "supported_apis": ["train", "evaluate", "predict", "export"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_n1cx", "xpu", "npu", "mlu"],
             "dy2st": False,

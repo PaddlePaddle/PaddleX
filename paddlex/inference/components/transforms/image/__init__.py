@@ -14,7 +14,9 @@
 
 import os
 import math
+
 from pathlib import Path
+from copy import deepcopy
 
 import numpy as np
 import cv2
@@ -53,9 +55,15 @@ class ReadImage(BaseComponent):
     """Load image from the file."""
 
     INPUT_KEYS = ["img"]
-    OUTPUT_KEYS = ["img", "img_size"]
+    OUTPUT_KEYS = ["img", "img_size", "ori_img", "ori_img_size"]
     DEAULT_INPUTS = {"img": "img"}
-    DEAULT_OUTPUTS = {"img": "img", "img_path": "img_path", "img_size": "img_size"}
+    DEAULT_OUTPUTS = {
+        "img": "img",
+        "img_path": "img_path",
+        "img_size": "img_size",
+        "ori_img": "ori_img",
+        "ori_img_size": "ori_img_size",
+    }
 
     _FLAGS_DICT = {
         "BGR": cv2.IMREAD_COLOR,
@@ -89,6 +97,8 @@ class ReadImage(BaseComponent):
                     "img_path": img_path,
                     "img": img,
                     "img_size": [img.shape[1], img.shape[0]],
+                    "ori_img": deepcopy(img),
+                    "ori_img_size": deepcopy([img.shape[1], img.shape[0]]),
                 }
             ]
         else:
@@ -120,6 +130,8 @@ class ReadImage(BaseComponent):
             "img_path": img_path,
             "img": blob,
             "img_size": [blob.shape[1], blob.shape[0]],
+            "ori_img": deepcopy(blob),
+            "ori_img_size": deepcopy([blob.shape[1], blob.shape[0]]),
         }
 
     def _download_from_url(self, in_path):

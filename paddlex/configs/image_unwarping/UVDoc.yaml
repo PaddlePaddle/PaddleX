@@ -1,0 +1,12 @@
+Global:
+  model: UVDoc
+  mode: predict # check_dataset/train/evaluate/predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  model_dir: "output/best_accuracy"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/doc_test.jpg"
+  kernel_option:
+    run_mode: paddle
+    batch_size: 1
