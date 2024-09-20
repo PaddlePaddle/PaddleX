@@ -19,10 +19,10 @@ from ...modules.text_detection.model_list import MODELS
 from ..components import *
 from ..results import TextDetResult
 from ..utils.process_hook import batchable_method
-from .base import BasePredictor
+from .base import BasicPredictor
 
 
-class TextDetPredictor(BasePredictor):
+class TextDetPredictor(BasicPredictor):
 
     entities = MODELS
 
