@@ -164,6 +164,13 @@ class SegModel(BaseModel):
             if seed is not None:
                 cli_args.append(CLIArgument("--seed", seed))
 
+        # PDX related settings
+        config.set_val("pdx_model_name", self.name)
+        hpi_config_path = self.model_info.get("hpi_config_path", None)
+        if hpi_config_path:
+            hpi_config_path = hpi_config_path.as_posix()
+        config.set_val("hpi_config_path", hpi_config_path)
+
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
@@ -339,6 +346,13 @@ class SegModel(BaseModel):
                 "argmax",
             ], "`output_op` must be 'softmax' or 'argmax'."
             cli_args.append(CLIArgument("--output_op", output_op))
+
+        # PDX related settings
+        config.set_val("pdx_model_name", self.name)
+        hpi_config_path = self.model_info.get("hpi_config_path", None)
+        if hpi_config_path:
+            hpi_config_path = hpi_config_path.as_posix()
+        config.set_val("hpi_config_path", hpi_config_path)
 
         self._assert_empty_kwargs(kwargs)
 

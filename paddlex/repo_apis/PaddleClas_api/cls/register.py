@@ -14,6 +14,7 @@
 
 import os
 import os.path as osp
+from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
 from .model import ClsModel
@@ -22,6 +23,7 @@ from .config import ClsConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLECLAS_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
+HPI_CONFIG_DIR = Path(__file__).parent.parent.parent.parent / "utils" / "hpi_configs"
 
 register_suite_info(
     {
@@ -43,6 +45,8 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR
+        / "SwinTransformer_tiny_patch4_window7_224.yaml",
     }
 )
 
@@ -55,6 +59,8 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR
+        / "SwinTransformer_small_patch4_window7_224.yaml",
     }
 )
 
@@ -66,6 +72,8 @@ register_model_info(
             PDX_CONFIG_DIR, "SwinTransformer_base_patch4_window7_224.yaml"
         ),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR
+        / "SwinTransformer_base_patch4_window7_224.yaml",
     }
 )
 
@@ -78,6 +86,8 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR
+        / "SwinTransformer_base_patch4_window12_384.yaml",
     }
 )
 
@@ -90,6 +100,8 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR
+        / "SwinTransformer_large_patch4_window7_224.yaml",
     }
 )
 
@@ -102,6 +114,8 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR
+        / "SwinTransformer_large_patch4_window12_384.yaml",
     }
 )
 
@@ -111,6 +125,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x0_25.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x0_25.yaml",
     }
 )
 
@@ -120,6 +135,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x0_35.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x0_35.yaml",
     }
 )
 
@@ -129,6 +145,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x0_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x0_5.yaml",
     }
 )
 
@@ -138,6 +155,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x0_75.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x0_75.yaml",
     }
 )
 
@@ -147,6 +165,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x1_0.yaml",
     }
 )
 
@@ -156,6 +175,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x1_5.yaml",
     }
 )
 
@@ -165,6 +185,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x2_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x2_0.yaml",
     }
 )
 
@@ -174,6 +195,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x2_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x2_5.yaml",
     }
 )
 
@@ -183,6 +205,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNetV2_small.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNetV2_small.yaml",
     }
 )
 
@@ -192,6 +215,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNetV2_base.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNetV2_base.yaml",
     }
 )
 
@@ -201,6 +225,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNetV2_large.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNetV2_large.yaml",
     }
 )
 
@@ -210,6 +235,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "CLIP_vit_base_patch16_224.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "CLIP_vit_base_patch16_224.yaml",
     }
 )
 
@@ -219,6 +245,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "CLIP_vit_large_patch14_224.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "CLIP_vit_large_patch14_224.yaml",
     }
 )
 
@@ -228,6 +255,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNet_tiny.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNet_tiny.yaml",
     }
 )
 
@@ -237,6 +265,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNet_small.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNet_small.yaml",
     }
 )
 
@@ -246,6 +275,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNet_base.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNet_base.yaml",
     }
 )
 
@@ -255,6 +285,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B0.yaml",
     }
 )
 
@@ -264,6 +295,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B1.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B1.yaml",
     }
 )
 
@@ -273,6 +305,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B2.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B2.yaml",
     }
 )
 
@@ -282,6 +315,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B3.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B3.yaml",
     }
 )
 
@@ -291,6 +325,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B4.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B4.yaml",
     }
 )
 
@@ -300,6 +335,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B5.yaml",
     }
 )
 
@@ -309,6 +345,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B6.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-HGNetV2-B6.yaml",
     }
 )
 
@@ -318,6 +355,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet18.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet18.yaml",
     }
 )
 
@@ -327,6 +365,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet18_vd.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet18_vd.yaml",
     }
 )
 
@@ -336,6 +375,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet34.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet34.yaml",
     }
 )
 
@@ -345,6 +385,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet34_vd.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet34_vd.yaml",
     }
 )
 
@@ -354,6 +395,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet50.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet50.yaml",
     }
 )
 
@@ -363,6 +405,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet50_vd.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet50_vd.yaml",
     }
 )
 
@@ -372,6 +415,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet101.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet101.yaml",
     }
 )
 
@@ -381,6 +425,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet101_vd.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet101_vd.yaml",
     }
 )
 
@@ -390,6 +435,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet152.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet152.yaml",
     }
 )
 
@@ -399,6 +445,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet152_vd.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet152_vd.yaml",
     }
 )
 
@@ -408,6 +455,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet200_vd.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ResNet200_vd.yaml",
     }
 )
 
@@ -418,6 +466,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV1_x0_25.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV1_x0_25.yaml",
     }
 )
 
@@ -428,6 +477,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV1_x0_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / ".yaml",
     }
 )
 
@@ -438,6 +488,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV1_x0_75.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV1_x0_5.yaml",
     }
 )
 
@@ -448,6 +499,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV1_x1_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV1_x1_0.yaml",
     }
 )
 
@@ -457,6 +509,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV2_x0_25.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV2_x0_25.yaml",
     }
 )
 
@@ -466,6 +519,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV2_x0_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV2_x0_5.yaml",
     }
 )
 
@@ -475,6 +529,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV2_x1_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV2_x1_0.yaml",
     }
 )
 
@@ -484,6 +539,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV2_x1_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV2_x1_5.yaml",
     }
 )
 
@@ -493,6 +549,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV2_x2_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV2_x2_0.yaml",
     }
 )
 
@@ -502,6 +559,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_large_x0_35.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_large_x0_35.yaml",
     }
 )
 
@@ -511,6 +569,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_large_x0_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_large_x0_5.yaml",
     }
 )
 
@@ -520,6 +579,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_large_x0_75.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_large_x0_75.yaml",
     }
 )
 
@@ -529,6 +589,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_large_x1_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_large_x1_0.yaml",
     }
 )
 
@@ -538,6 +599,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_large_x1_25.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / ".yaml",
     }
 )
 
@@ -547,6 +609,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_small_x0_35.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_large_x1_25.yaml",
     }
 )
 
@@ -556,6 +619,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_small_x0_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_small_x0_5.yaml",
     }
 )
 
@@ -565,6 +629,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_small_x0_75.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_small_x0_75.yaml",
     }
 )
 
@@ -574,6 +639,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_small_x1_0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_small_x1_0.yaml",
     }
 )
 
@@ -583,6 +649,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_small_x1_25.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_small_x1_25.yaml",
     }
 )
 
@@ -592,6 +659,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_tiny.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_tiny.yaml",
     }
 )
 
@@ -601,6 +669,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_small.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_small.yaml",
     }
 )
 
@@ -610,6 +679,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_base_224.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_base_224.yaml",
     }
 )
 
@@ -619,6 +689,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_base_384.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_base_384.yaml",
     }
 )
 
@@ -628,6 +699,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_large_224.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_large_224.yaml",
     }
 )
 
@@ -637,6 +709,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_large_384.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_large_384.yaml",
     }
 )
 
@@ -647,6 +720,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0_ML.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
     }
 )
 
@@ -657,6 +731,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "ResNet50_ML.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
     }
 )
 
@@ -667,6 +742,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B0_ML.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
     }
 )
 
@@ -677,6 +753,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B4_ML.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
     }
 )
 
@@ -687,6 +764,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-HGNetV2-B6_ML.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
     }
 )
 
@@ -697,5 +775,6 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "CLIP_vit_base_patch16_448_ML.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
     }
 )
