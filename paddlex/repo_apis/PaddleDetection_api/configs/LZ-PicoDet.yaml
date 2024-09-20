@@ -25,20 +25,20 @@ TrainDataset:
   name: COCODetDataset
   image_dir: images
   anno_path: annotations/instance_train.json
-  dataset_dir: datasets/COCO
+  dataset_dir: /home/aistudio/data/Datasets
   data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
 
 EvalDataset:
   name: COCODetDataset
   image_dir: images
   anno_path: annotations/instance_val.json
-  dataset_dir: datasets/COCO
+  dataset_dir: /home/aistudio/data/Datasets
   allow_empty: true
 
 TestDataset:
   name: ImageFolder
   anno_path: annotations/instance_val.json
-  dataset_dir: datasets/COCO
+  dataset_dir: /home/aistudio/data/Datasets
 
 TrainReader:
   sample_transforms:
