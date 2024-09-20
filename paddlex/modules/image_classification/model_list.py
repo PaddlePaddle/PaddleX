@@ -35,6 +35,7 @@ MODELS = [
     "MobileNetV3_large_x0_75",
     "MobileNetV3_large_x1_0",
     "MobileNetV3_large_x1_25",
+    "LZ-MobileNetV3_large_x1_0",
     "MobileNetV3_small_x0_35",
     "MobileNetV3_small_x0_5",
     "MobileNetV3_small_x0_75",

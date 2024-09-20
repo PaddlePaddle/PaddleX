@@ -77,10 +77,11 @@ labelme images --nodata --autosave --output annotations --flags flags.txt
 <img src='https://github.com/PaddlePaddle/PaddleX/assets/142379845/30432aae-7b5a-4539-ae09-fa476144ef6b' width='600px'>
 </center>
 
-6. 使用 [convert_to_imagenet.py](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/image_classification_dataset_prepare/convert_to_imagenet.py) 脚本将标注好的数据集转换为 ImageNet-1k 数据集格式，生成 train.txt，val.txt 和label.txt。
+6. 使用脚本将标注好的数据集转换为 ImageNet-1k 数据集格式，生成 train.txt，val.txt 和label.txt。
 
 ```shell
-python convert_to_imagenet.py --dataset_path /path/to/dataset
+cd /path/to/PaddleX
+python paddlex/utils/dataset/convert_to_imagenet.py --dataset_path /path/to/dataset
 ```
 * --dataset_path 标注的 labelme 格式分类数据集。
 

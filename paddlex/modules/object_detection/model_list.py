@@ -14,6 +14,7 @@
 
 
 MODELS = [
+    "LZ-PicoDet",
     "PicoDet-L",
     "PicoDet-S",
     "PP-YOLOE_plus-L",
