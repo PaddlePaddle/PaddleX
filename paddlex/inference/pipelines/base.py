@@ -12,30 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from ...utils.subclass_register import AutoRegisterABCMetaClass
-
-
-def create_pipeline(
-    pipeline_name: str,
-    model_list: list,
-    model_dir_list: list,
-    output: str,
-    device: str,
-) -> "BasePipeline":
-    """build model evaluater
-
-    Args:
-        pipeline_name (str): the pipeline name, that is name of pipeline class
-
-    Returns:
-        BasePipeline: the pipeline, which is subclass of BasePipeline.
-    """
-    pipeline = BasePipeline.get(pipeline_name)(output=output, device=device)
-    pipeline.update_model(model_list, model_dir_list)
-    pipeline.load_model()
-    return pipeline
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):

@@ -22,7 +22,7 @@ from .modules import (
     build_predictor,
 )
 from .modules import create_model, PaddleInferenceOption
-from .pipelines import *
+from .inference.pipelines import create_pipeline
 
 
 def _initialize():
