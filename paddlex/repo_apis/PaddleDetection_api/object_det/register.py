@@ -49,6 +49,19 @@ register_model_info(
 
 register_model_info(
     {
+        "model_name": "LZ-PicoDet",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "LZ-PicoDet.yaml"),
+        "auto_compression_config_path": osp.join(
+            PDX_CONFIG_DIR, "slim", "picodet_s_lcnet_qat.yml"
+        ),
+        "supported_apis": ["train", "evaluate", "predict", "export", "compression"],
+        "supported_dataset_types": ["COCODetDataset"],
+    }
+)
+
+register_model_info(
+    {
         "model_name": "PicoDet-L",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-L.yaml"),
