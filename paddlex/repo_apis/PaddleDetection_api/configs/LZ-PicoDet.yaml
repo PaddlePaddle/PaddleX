@@ -25,20 +25,20 @@ TrainDataset:
   name: COCODetDataset
   image_dir: images
   anno_path: annotations/instance_train.json
-  dataset_dir: /home/aistudio/data/Datasets
+  dataset_dir: /home/aistudio/data/Dataset
   data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
 
 EvalDataset:
   name: COCODetDataset
   image_dir: images
   anno_path: annotations/instance_val.json
-  dataset_dir: /home/aistudio/data/Datasets
+  dataset_dir: /home/aistudio/data/Dataset
   allow_empty: true
 
 TestDataset:
   name: ImageFolder
   anno_path: annotations/instance_val.json
-  dataset_dir: /home/aistudio/data/Datasets
+  dataset_dir: /home/aistudio/data/Dataset
 
 TrainReader:
   sample_transforms:
@@ -51,7 +51,7 @@ TrainReader:
   - NormalizeImage: {is_scale: true, mean: [0.5,0.5,0.5], std: [0.5, 0.5,0.5]}
   - Permute: {}
   - PadGT: {}
-  batch_size: 64
+  batch_size: 8
   shuffle: true
   drop_last: true
 
@@ -83,7 +83,7 @@ pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV3_
 PicoDet:
   backbone: MobileNetV3
   neck: CSPPAN
-  head: PicoHeadV2
+  head: PicoHead
 
 MobileNetV3:
   model_name: large
@@ -98,44 +98,35 @@ CSPPAN:
   num_csp_blocks: 1
   num_features: 4
 
-PicoHeadV2:
+PicoHead:
   conv_feat:
     name: PicoFeat
-    feat_in: 96
-    feat_out: 96
-    num_convs: 2
+    feat_in: 128
+    feat_out: 128
+    num_convs: 4
     num_fpn_stride: 4
     norm_type: bn
-    share_cls_reg: true
-    use_se: true
+    share_cls_reg: True
   fpn_stride: [8, 16, 32, 64]
-  feat_in_chan: 96
+  feat_in_chan: 128
   prior_prob: 0.01
   reg_max: 7
   cell_offset: 0.5
-  grid_cell_scale: 5.0
-  static_assigner_epoch: 100
-  use_align_head: true
-  static_assigner:
-    name: ATSSAssigner
-    topk: 9
-    force_gt_matching: false
-  assigner:
-    name: TaskAlignedAssigner
-    topk: 13
-    alpha: 1.0
-    beta: 6.0
   loss_class:
     name: VarifocalLoss
-    use_sigmoid: false
-    iou_weighted: true
+    use_sigmoid: True
+    iou_weighted: True
     loss_weight: 1.0
   loss_dfl:
     name: DistributionFocalLoss
-    loss_weight: 0.5
+    loss_weight: 0.25
   loss_bbox:
     name: GIoULoss
-    loss_weight: 2.5
+    loss_weight: 2.0
+  assigner:
+    name: SimOTAAssigner
+    candidate_topk: 10
+    iou_weight: 6
   nms:
     name: MultiClassNMS
     nms_top_k: 1000
@@ -148,7 +139,7 @@ LearningRate:
   base_lr: 0.05
   schedulers:
   - name: CosineDecay
-    max_epochs: 300
+    max_epochs: 120
   - name: LinearWarmup
     start_factor: 0.1
     steps: 100

@@ -16,9 +16,9 @@ CheckDataset:
 
 Train:
   num_classes: 4
-  epochs_iters: 50
-  batch_size: 16
-  learning_rate: 0.08
+  epochs_iters: 60
+  batch_size: 8
+  learning_rate: 0.1
   pretrain_weight_path: null
   warmup_steps: 100
   resume_path: null
@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Export:
-  weight_path: https://paddledet.bj.bcebos.com/models/picodet_s_320_coco_lcnet.pdparams
+  weight_path: "output/best_model.pdparams"
 
 Predict:
   model_dir: "output/best_model"
