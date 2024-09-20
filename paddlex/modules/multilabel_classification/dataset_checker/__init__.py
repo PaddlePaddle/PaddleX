@@ -19,7 +19,7 @@ from .dataset_src import check, split_dataset, deep_analyse
 from ..model_list import MODELS
 
 
-class ClsDatasetChecker(BaseDatasetChecker):
+class MLClsDatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Image Classification Model"""
 
     entities = MODELS
@@ -101,4 +101,4 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             str: dataset type
         """
-        return "ClsDataset"
+        return "MLClsDataset"

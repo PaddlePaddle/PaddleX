@@ -16,7 +16,7 @@ from ..base import BaseEvaluator
 from .model_list import MODELS
 
 
-class ClsEvaluator(BaseEvaluator):
+class MlClsEvaluator(BaseEvaluator):
     """Image Classification Model Evaluator"""
 
     entities = MODELS
@@ -28,7 +28,7 @@ class ClsEvaluator(BaseEvaluator):
         if self.pdx_config["Arch"]["name"] == "DistillationModel":
             self.pdx_config.update_teacher_model(pretrained=False)
             self.pdx_config.update_student_model(pretrained=False)
-        self.pdx_config.update_dataset(self.global_config.dataset_dir, "ClsDataset")
+        self.pdx_config.update_dataset(self.global_config.dataset_dir, "MLClsDataset")
         self.pdx_config.update_pretrained_weights(self.eval_config.weight_path)
 
     def get_eval_kwargs(self) -> dict:

@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..base import BaseExportor
-from .model_list import MODELS
-
-
-class ClsExportor(BaseExportor):
-    """Image Classification Model Exportor"""
-
-    entities = MODELS
+MODELS = [
+    "ResNet50_ML",
+    "PP-LCNet_x1_0_ML",
+    "PP-HGNetV2-B0_ML",
+    "PP-HGNetV2-B4_ML",
+    "PP-HGNetV2-B6_ML",
+    "CLIP_vit_base_patch16_448_ML",
+]

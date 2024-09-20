@@ -13,5 +13,4 @@
 # limitations under the License.
 
 from .predictor import ClsPredictor
-from .predictor_ml import MLClsPredictor
 from . import transforms
