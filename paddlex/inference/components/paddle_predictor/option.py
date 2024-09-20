@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ...utils.device import parse_device
 from ....utils.func_register import FuncRegister
 from ....utils import logging
 
@@ -81,29 +82,18 @@ class PaddlePredictorOption(object):
         self._cfg["batch_size"] = batch_size
 
     @register("device")
-    def set_device(self, device_setting: str):
+    def set_device(self, device: str):
         """set device"""
-        self._cfg["device"], self._cfg["device_id"] = self.parse_device_setting(
-            device_setting
-        )
-
-    @classmethod
-    def parse_device_setting(cls, device_setting):
-        if len(device_setting.split(":")) == 1:
-            device = device_setting.split(":")[0]
-            device_id = 0
-        else:
-            assert len(device_setting.split(":")) == 2
-            device = device_setting.split(":")[0]
-            device_id = device_setting.split(":")[1].split(",")[0]
-            logging.warning(f"The device id has been set to {device_id}.")
-
-        if device.lower() not in cls.SUPPORT_DEVICE:
-            support_run_mode_str = ", ".join(cls.SUPPORT_DEVICE)
+        device_type, device_ids = parse_device(device)
+        self._cfg["device"] = device_type
+        if device_type not in self.SUPPORT_DEVICE:
+            support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
             raise ValueError(
-                f"`device` must be {support_run_mode_str}, but received {repr(device)}."
+                f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
             )
-        return device.lower(), int(device_id)
+        device_id = device_ids[0] if device_ids is not None else 0
+        self._cfg["device_id"] = device_id
+        logging.warning(f"The device ID has been set to {device_id}.")
 
     @register("min_subgraph_size")
     def set_min_subgraph_size(self, min_subgraph_size: int):

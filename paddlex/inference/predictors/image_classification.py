@@ -19,10 +19,10 @@ from ...modules.image_classification.model_list import MODELS
 from ..components import *
 from ..results import TopkResult
 from ..utils.process_hook import batchable_method
-from .base import BasePredictor
+from .base import BasicPredictor
 
 
-class ClasPredictor(BasePredictor):
+class ClasPredictor(BasicPredictor):
 
     entities = MODELS
 
