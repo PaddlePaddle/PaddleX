@@ -36,14 +36,15 @@ class OCRPipeline(BasePipeline):
                 single_img_res = det_res["result"]
                 single_img_res["rec_text"] = []
                 single_img_res["rec_score"] = []
-                all_subs_of_img = list(self._crop_by_polys(single_img_res))
-                for batch_rec_res in self._rec_predict(all_subs_of_img):
-                    for rec_res in batch_rec_res:
-                        single_img_res["rec_text"].append(rec_res["result"]["rec_text"])
-                        single_img_res["rec_score"].append(
-                            rec_res["result"]["rec_score"]
-                        )
-                # TODO(gaotingquan): using "ocr_res" or new a component or dict only?
-                batch_ocr_res.append({"ocr_res": OCRResult(single_img_res)})
-                # batch_ocr_res.append(OCRResult(single_img_res))
+                if len(single_img_res["dt_polys"]) > 0:
+                    all_subs_of_img = list(self._crop_by_polys(single_img_res))
+                    for batch_rec_res in self._rec_predict(all_subs_of_img):
+                        for rec_res in batch_rec_res:
+                            single_img_res["rec_text"].append(
+                                rec_res["result"]["rec_text"]
+                            )
+                            single_img_res["rec_score"].append(
+                                rec_res["result"]["rec_score"]
+                            )
+                batch_ocr_res.append({"result": OCRResult(single_img_res)})
         yield batch_ocr_res
