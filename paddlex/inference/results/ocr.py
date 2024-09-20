@@ -19,12 +19,17 @@ import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from .base import BaseResult
+from ...utils import logging
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
 from ..utils.io import ImageReader
+from .base import BaseResult
 
 
 class OCRResult(BaseResult):
+
+    def _check_res(self):
+        if len(self["dt_polys"]) == 0:
+            logging.warning("No text detected!")
 
     def _get_res_img(
         self,
