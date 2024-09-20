@@ -1,5 +1,5 @@
 Global:
-  model: LZ-MobileNetV3_small_x1_0
+  model: LZ-MobileNetV3_large_x1_0
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
   device: gpu:0,1,2,3
@@ -19,7 +19,7 @@ Train:
   epochs_iters: 20
   batch_size: 8
   learning_rate: 0.01
-  pretrain_weight_path: "https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x1_0_pretrained.pdparams"
+  pretrain_weight_path: "https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_large_x1_0_pretrained.pdparams"
   warmup_steps: 5
   resume_path: null
   log_interval: 1
@@ -31,7 +31,7 @@ Evaluate:
   log_interval: 1
 
 Export:
-  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/MobileNetV3_small_x1_0_pretrained.pdparams
+  weight_path: "output/best_model.pdparams"
 
 Predict:
   model_dir: "output/best_model"
