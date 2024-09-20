@@ -12,11 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..base import BaseExportor
-from .model_list import MODELS
 
+class ClsKeys(object):
+    """
+    This class defines a set of keys used for communication of Cls predictors
+    and transforms. Both predictors and transforms accept a dict or a list of
+    dicts as input, and they get the objects of their interest from the dict, or
+    put the generated objects into the dict, all based on these keys.
+    """
 
-class ClsExportor(BaseExportor):
-    """Image Classification Model Exportor"""
-
-    entities = MODELS
+    # Common keys
+    IMAGE = "image"
+    IM_PATH = "input_path"
+    # Suite-specific keys
+    CLS_PRED = "cls_pred"
+    CLS_RESULT = "cls_result"

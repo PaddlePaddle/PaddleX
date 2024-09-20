@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..base import BaseExportor
-from .model_list import MODELS
-
-
-class ClsExportor(BaseExportor):
-    """Image Classification Model Exportor"""
-
-    entities = MODELS
+from .predictor import ClsPredictor
+from .predictor_ml import MLClsPredictor
+from . import transforms

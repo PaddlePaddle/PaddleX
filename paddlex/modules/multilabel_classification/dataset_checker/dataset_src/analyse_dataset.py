@@ -48,7 +48,9 @@ def deep_analyse(dataset_path, output):
             lines = f.readlines()
         for line in lines:
             line = line.strip().split()
-            classes_num[labels_cnt[line[1]]] += 1
+            for i, label in enumerate(line[1].split(",")):
+                if label == "1":
+                    classes_num[labels_cnt[str(i)]] += 1
         if tag == "train":
             cnts_train = [cat_ids for cat_name, cat_ids in classes_num.items()]
         elif tag == "val":

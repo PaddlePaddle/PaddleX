@@ -19,7 +19,7 @@ from PIL import Image, ImageOps
 from collections import defaultdict
 
 from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
-from .utils.visualizer import draw_label
+from .utils.visualizer import draw_multi_label
 
 
 def check(dataset_dir, output, sample_num=10):
@@ -30,7 +30,7 @@ def check(dataset_dir, output, sample_num=10):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
 
     tags = ["train", "val"]
-    delim = " "
+    delim = "\t"
     valid_num_parts = 2
 
     sample_cnts = dict()
@@ -102,7 +102,7 @@ def check(dataset_dir, output, sample_num=10):
                     if len(sample_paths[tag]) < sample_num:
                         img = Image.open(img_path)
                         img = ImageOps.exif_transpose(img)
-                        vis_im = draw_label(img, label, label_map_dict)
+                        vis_im = draw_multi_label(img, label, label_map_dict)
                         vis_path = osp.join(vis_save_dir, osp.basename(file_name))
                         vis_im.save(vis_path)
                         sample_path = osp.join(
@@ -111,7 +111,7 @@ def check(dataset_dir, output, sample_num=10):
                         sample_paths[tag].append(sample_path)
 
                     try:
-                        label = int(label)
+                        label = list(map(int, label.split(",")))
                     except (ValueError, TypeError) as e:
                         raise CheckFailedError(
                             f"Ensure that the second number in each line in {label_file} should be int."
