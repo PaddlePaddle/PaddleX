@@ -12,7 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .clas import Topk, MultiLabelThreshOutput
-from .text_det import DetResizeForTest, NormalizeImage, DBPostProcess, CropByPolys
-from .text_rec import OCRReisizeNormImg, CTCLabelDecode
-from .table_rec import TableLabelDecode, TableMasterLabelDecode
+
+class WarpKeys(object):
+    """
+    This class defines a set of keys used for communication of Cls predictors
+    and transforms. Both predictors and transforms accept a dict or a list of
+    dicts as input, and they get the objects of their interest from the dict, or
+    put the generated objects into the dict, all based on these keys.
+    """
+
+    # Common keys
+    IMAGE = "image"
+    IM_PATH = "input_path"
+    # Suite-specific keys
+    DOCTR_IMG = "doc_img"

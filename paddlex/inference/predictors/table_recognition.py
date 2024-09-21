@@ -12,17 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import numpy as np
 
 from ...utils.func_register import FuncRegister
-from ...modules.text_recognition.model_list import MODELS
+from ...modules.table_recognition.model_list import MODELS
 from ..components import *
-from ..results import TextRecResult
+from ..results import TableRecResult
+from .base import BasePredictor
 from ..utils.process_hook import batchable_method
-from .base import BasicPredictor
 
 
-class TextRecPredictor(BasicPredictor):
+class TablePredictor(BasePredictor):
+    """table recognition predictor"""
 
     entities = MODELS
 
@@ -33,7 +35,6 @@ class TextRecPredictor(BasicPredictor):
         ops = {}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
-            assert tf_key in self._FUNC_MAP
             func = self._FUNC_MAP.get(tf_key)
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
@@ -51,26 +52,48 @@ class TextRecPredictor(BasicPredictor):
         ops[key] = op
         return ops
 
-    @register("DecodeImage")
-    def build_readimg(self, channel_first, img_mode):
-        assert channel_first == False
-        return ReadImage(format=img_mode, batch_size=self.kwargs.get("batch_size", 1))
-
-    @register("RecResizeImg")
-    def build_resize(self, image_shape):
-        return OCRReisizeNormImg(rec_image_shape=image_shape)
-
     def build_postprocess(self, **kwargs):
-        if kwargs.get("name") == "CTCLabelDecode":
-            return "CTCLabelDecode", CTCLabelDecode(
-                character_list=kwargs.get("character_dict"),
+        if kwargs.get("name") == "TableLabelDecode":
+            return "TableLabelDecode", TableLabelDecode(
+                merge_no_span_structure=kwargs.get("merge_no_span_structure"),
+                dict_character=kwargs.get("character_dict"),
             )
         else:
             raise Exception()
 
-    @register("MultiLabelEncode")
+    @register("DecodeImage")
+    def build_readimg(self, *args, **kwargs):
+        return ReadImage(batch_size=self.kwargs.get("batch_size", 1))
+
+    @register("TableLabelEncode")
     def foo(self, *args, **kwargs):
         return None
+
+    @register("TableBoxEncode")
+    def foo(self, *args, **kwargs):
+        return None
+
+    @register("ResizeTableImage")
+    def build_resize_table(self, max_len=488):
+        return ResizeByLong(target_long_edge=max_len)
+
+    @register("NormalizeImage")
+    def build_normalize(
+        self,
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225],
+        scale=1 / 255,
+        order="hwc",
+    ):
+        return Normalize(mean=mean, std=std)
+
+    @register("PaddingTableImage")
+    def build_padding(self, size=[488, 448], pad_value=0):
+        return Pad(target_size=size[0], val=pad_value)
+
+    @register("ToCHWImage")
+    def build_to_chw(self):
+        return ToCHWImage()
 
     @register("KeepKeys")
     def foo(self, *args, **kwargs):
@@ -78,5 +101,5 @@ class TextRecPredictor(BasicPredictor):
 
     @batchable_method
     def _pack_res(self, data):
-        keys = ["img_path", "rec_text", "rec_score"]
-        return {"result": TextRecResult({key: data[key] for key in keys})}
+        keys = ["img_path", "bbox", "structure"]
+        return {"result": TableRecResult({key: data[key] for key in keys})}

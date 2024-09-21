@@ -47,7 +47,7 @@ class _PaddleInferencePredictor(object):
             if paddle.is_compiled_with_rocm():
                 os.environ["FLAGS_conv_workspace_size_limit"] = "2000"
             else:
-                config.enable_new_ir(True)
+                config.enable_new_ir(option.enable_new_ir)
         elif option.device == "npu":
             config.enable_custom_device("npu")
             os.environ["FLAGS_npu_jit_compile"] = "0"
@@ -68,7 +68,7 @@ class _PaddleInferencePredictor(object):
         else:
             assert option.device == "cpu"
             config.disable_gpu()
-            config.enable_new_ir(True)
+            config.enable_new_ir(option.enable_new_ir)
             config.enable_new_executor(True)
             if "mkldnn" in option.run_mode:
                 try:

@@ -15,4 +15,5 @@
 from .topk import TopkResult
 from .text_det import TextDetResult
 from .text_rec import TextRecResult
+from .table_rec import TableRecResult
 from .ocr import OCRResult

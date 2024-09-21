@@ -15,19 +15,24 @@
 
 from pathlib import Path
 
-from .base import BasePredictor
+from .base import BasePredictor, BasicPredictor
 from .image_classification import ClasPredictor
 from .text_detection import TextDetPredictor
 from .text_recognition import TextRecPredictor
+from .table_recognition import TablePredictor
 from .official_models import official_models
 
 
-def create_predictor(model: str, device: str, *args, **kwargs) -> BasePredictor:
+def create_predictor(model: str, device: str = None, *args, **kwargs) -> BasePredictor:
     model_dir = check_model(model)
     config = BasePredictor.load_config(model_dir)
     model_name = config["Global"]["model_name"]
-    return BasePredictor.get(model_name)(
-        model_dir=model_dir, config=config, device=device, *args, **kwargs
+    return BasicPredictor.get(model_name)(
+        model_dir=model_dir,
+        config=config,
+        device=device,
+        *args,
+        **kwargs,
     )
 
 
