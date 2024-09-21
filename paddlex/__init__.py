@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .utils.lazy_loader import LazyLoader
+import sys
+
+sys.modules["lazy_paddle"] = LazyLoader("lazy_paddle", globals(), "paddle")
+
 import os
 
 from . import version

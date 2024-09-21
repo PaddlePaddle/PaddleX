@@ -16,8 +16,7 @@
 import os
 import json
 import argparse
-from paddle import nn
-import paddle
+import lazy_paddle as paddle
 
 from ....utils import logging
 
@@ -34,7 +33,7 @@ def parse_args():
     return args
 
 
-class AvgMetrics(nn.Layer):
+class AvgMetrics(paddle.nn.Layer):
     """Average metrics"""
 
     def __init__(self):

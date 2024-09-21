@@ -15,8 +15,6 @@
 from urllib.parse import urlparse
 
 import yaml
-from paddleseg.utils import NoAliasDumper
-from paddleseg.cvlibs.config import parse_from_yaml, merge_config_dicts
 
 from ..base import BaseConfig
 from ...utils.misc import abspath
@@ -27,11 +25,15 @@ class BaseSegConfig(BaseConfig):
 
     def update(self, dict_like_obj):
         """update"""
+        from paddleseg.cvlibs.config import merge_config_dicts
+
         dict_ = merge_config_dicts(dict_like_obj, self.dict)
         self.reset_from_dict(dict_)
 
     def load(self, config_path):
         """load"""
+        from paddleseg.cvlibs.config import parse_from_yaml
+
         dict_ = parse_from_yaml(config_path)
         if not isinstance(dict_, dict):
             raise TypeError
@@ -39,6 +41,8 @@ class BaseSegConfig(BaseConfig):
 
     def dump(self, config_path):
         """dump"""
+        from paddleseg.utils import NoAliasDumper
+
         with open(config_path, "w", encoding="utf-8") as f:
             yaml.dump(self.dict, f, Dumper=NoAliasDumper)
 

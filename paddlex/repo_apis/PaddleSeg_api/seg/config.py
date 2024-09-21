@@ -18,7 +18,6 @@ from functools import lru_cache
 
 import yaml
 from typing import Union
-from paddleseg.utils import NoAliasDumper
 
 from ..base_seg_config import BaseSegConfig
 from ....utils.misc import abspath
