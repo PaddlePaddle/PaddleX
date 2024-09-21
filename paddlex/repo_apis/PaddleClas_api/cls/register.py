@@ -699,3 +699,12 @@ register_model_info(
         "infer_config": "deploy/configs/inference_cls.yaml",
     }
 )
+
+register_model_info(
+    {
+        "model_name": "LZ-MobileNetV3",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "LZ-MobileNetV3.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
