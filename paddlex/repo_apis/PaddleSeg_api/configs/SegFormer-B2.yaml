@@ -1,0 +1,55 @@
+batch_size: 1
+iters: 80000
+
+model:
+  type: SegFormer
+  backbone:
+    type: MixVisionTransformer_B2
+    pretrained: https://bj.bcebos.com/paddleseg/dygraph/backbone/mix_vision_transformer_b2.tar.gz
+  embedding_dim: 768
+
+train_dataset:
+  type: Dataset
+  dataset_root: datasets/Cityscapes
+  train_path: datasets/Cityscapes/train.txt
+  num_classes: 19
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.5
+      max_scale_factor: 2.0
+      scale_step_size: 0.25
+    - type: RandomPaddingCrop
+      crop_size: [512, 512]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Dataset
+  dataset_root: datasets/Cityscapes
+  val_path: datasets/Cityscapes/val.txt
+  num_classes: 19
+  transforms:
+    - type: Normalize
+  mode: val
+
+optimizer:
+  type: AdamW
+  beta1: 0.9
+  beta2: 0.999
+  weight_decay: 0.01
+
+lr_scheduler:
+  type: PolynomialDecay
+  learning_rate: 0.00006
+  power: 1
+  end_lr: 0
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+  coef: [1]

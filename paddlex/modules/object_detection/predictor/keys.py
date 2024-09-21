@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,8 +13,6 @@
 # limitations under the License.
 
 
-
-
 class DetKeys(object):
     """
     This class defines a set of keys used for communication of Det predictors
@@ -24,10 +22,10 @@ class DetKeys(object):
     """
 
     # Common keys
-    IMAGE = 'image'
-    IM_PATH = 'input_path'
-    IM_SIZE = 'image_size'
-    SCALE_FACTOR = 'scale_factors'
+    IMAGE = "image"
+    IM_PATH = "input_path"
+    IM_SIZE = "image_size"
+    SCALE_FACTOR = "scale_factors"
     # Suite-specific keys
-    BOXES = 'boxes'
-    MASKS = 'masks'
+    BOXES = "boxes"
+    MASKS = "masks"

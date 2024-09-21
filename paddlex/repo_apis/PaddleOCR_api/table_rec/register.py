@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import os.path as osp
 
@@ -21,20 +20,24 @@ from .model import TableRecModel
 from .runner import TableRecRunner
 from .config import TableRecConfig
 
-REPO_ROOT_PATH = os.environ.get('PADDLE_PDX_PADDLEOCR_PATH')
-PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', 'configs'))
+REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEOCR_PATH")
+PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
 
-register_suite_info({
-    'suite_name': 'TableRec',
-    'model': TableRecModel,
-    'runner': TableRecRunner,
-    'config': TableRecConfig,
-    'runner_root_path': REPO_ROOT_PATH
-})
+register_suite_info(
+    {
+        "suite_name": "TableRec",
+        "model": TableRecModel,
+        "runner": TableRecRunner,
+        "config": TableRecConfig,
+        "runner_root_path": REPO_ROOT_PATH,
+    }
+)
 
-register_model_info({
-    'model_name': 'SLANet',
-    'suite': 'TableRec',
-    'config_path': osp.join(PDX_CONFIG_DIR, 'SLANet.yaml'),
-    'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer']
-})
+register_model_info(
+    {
+        "model_name": "SLANet",
+        "suite": "TableRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "SLANet.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)

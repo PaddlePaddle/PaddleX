@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,28 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
-from .modules.base import build_dataset_checker, build_trainer, build_evaluater, build_predictor
+from .modules.base import (
+    build_dataset_checker,
+    build_trainer,
+    build_evaluater,
+    build_exportor,
+    build_predictor,
+)
 from .utils.result_saver import try_except_decorator
 from .utils import config
 from .utils.errors import raise_unsupported_api_error
 
 
 class Engine(object):
-    """ Engine """
+    """Engine"""
 
     def __init__(self):
         args = config.parse_args()
         self.config = config.get_config(
-            args.config, overrides=args.override, show=False)
+            args.config, overrides=args.override, show=False
+        )
         self.mode = self.config.Global.mode
         self.output = self.config.Global.output
 
     @try_except_decorator
     def run(self):
-        """ the main function """
+        """the main function"""
         if self.config.Global.mode == "check_dataset":
             dataset_checker = build_dataset_checker(self.config)
             return dataset_checker.check()
@@ -44,10 +50,10 @@ class Engine(object):
             evaluator = build_evaluater(self.config)
             return evaluator.evaluate()
         elif self.config.Global.mode == "export":
-            raise_unsupported_api_error("export", self.__class__)
+            exportor = build_exportor(self.config)
+            return exportor.export()
         elif self.config.Global.mode == "predict":
             predictor = build_predictor(self.config)
             return predictor.predict()
         else:
-            raise_unsupported_api_error(f"{self.config.Global.mode}",
-                                        self.__class__)
+            raise_unsupported_api_error(f"{self.config.Global.mode}", self.__class__)

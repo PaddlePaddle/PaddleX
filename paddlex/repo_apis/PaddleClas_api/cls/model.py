@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 from ...base import BaseModel
@@ -23,21 +22,23 @@ from ....utils import logging
 
 
 class ClsModel(BaseModel):
-    """ Image Classification Model """
+    """Image Classification Model"""
 
-    def train(self,
-              batch_size: int=None,
-              learning_rate: float=None,
-              epochs_iters: int=None,
-              ips: str=None,
-              device: str='gpu',
-              resume_path: str=None,
-              dy2st: bool=False,
-              amp: str='OFF',
-              num_workers: int=None,
-              use_vdl: bool=True,
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def train(
+        self,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        resume_path: str = None,
+        dy2st: bool = False,
+        amp: str = "OFF",
+        num_workers: int = None,
+        use_vdl: bool = True,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """train self
 
         Args:
@@ -63,7 +64,6 @@ class ClsModel(BaseModel):
         with self._create_new_config_file() as config_path:
             # Update YAML config file
             config = self.config.copy()
-            config._update_amp(amp)
             config.update_device(device)
             config._update_to_static(dy2st)
             config._update_use_vdl(use_vdl)
@@ -83,27 +83,53 @@ class ClsModel(BaseModel):
             config._update_output_dir(save_dir)
             if num_workers is not None:
                 config.update_num_workers(num_workers)
-            config.dump(config_path)
 
             cli_args = []
-            do_eval = kwargs.pop('do_eval', True)
-            profile = kwargs.pop('profile', None)
+            do_eval = kwargs.pop("do_eval", True)
+            profile = kwargs.pop("profile", None)
             if profile is not None:
-                cli_args.append(CLIArgument('--profiler_options', profile))
+                cli_args.append(CLIArgument("--profiler_options", profile))
 
+            # Benchmarking mode settings
+            benchmark = kwargs.pop("benchmark", None)
+            if benchmark is not None:
+                envs = benchmark.get("env", None)
+                seed = benchmark.get("seed", None)
+                do_eval = benchmark.get("do_eval", False)
+                num_workers = benchmark.get("num_workers", None)
+                config.update_log_ranks(device)
+                config._update_amp(benchmark.get("amp", None))
+                config.update_dali(benchmark.get("dali", False))
+                config.update_shuffle(benchmark.get("shuffle", False))
+                config.update_shared_memory(benchmark.get("shared_memory", True))
+                config.update_print_mem_info(benchmark.get("print_mem_info", True))
+                if num_workers is not None:
+                    config.update_num_workers(num_workers)
+                if seed is not None:
+                    config.update_seed(seed)
+                if envs is not None:
+                    for env_name, env_value in envs.items():
+                        os.environ[env_name] = str(env_value)
+            else:
+                config._update_amp(amp)
+
+            config.dump(config_path)
             self._assert_empty_kwargs(kwargs)
 
             return self.runner.train(
-                config_path, cli_args, device, ips, save_dir, do_eval=do_eval)
+                config_path, cli_args, device, ips, save_dir, do_eval=do_eval
+            )
 
-    def evaluate(self,
-                 weight_path: str,
-                 batch_size: int=None,
-                 ips: str=None,
-                 device: str='gpu',
-                 amp: str='OFF',
-                 num_workers: int=None,
-                 **kwargs) -> CompletedProcess:
+    def evaluate(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        amp: str = "OFF",
+        num_workers: int = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """evaluate self using specified weight
 
         Args:
@@ -137,13 +163,15 @@ class ClsModel(BaseModel):
             cp = self.runner.evaluate(config_path, [], device, ips)
             return cp
 
-    def predict(self,
-                weight_path: str,
-                input_path: str,
-                input_list_path: str=None,
-                device: str='gpu',
-                save_dir: str=None,
-                **kwargs) -> CompletedProcess:
+    def predict(
+        self,
+        weight_path: str,
+        input_path: str,
+        input_list_path: str = None,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """predict using specified weight
 
         Args:
@@ -175,8 +203,7 @@ class ClsModel(BaseModel):
 
             return self.runner.predict(config_path, [], device)
 
-    def export(self, weight_path: str, save_dir: str,
-               **kwargs) -> CompletedProcess:
+    def export(self, weight_path: str, save_dir: str, **kwargs) -> CompletedProcess:
         """export the dynamic model to static model
 
         Args:
@@ -186,7 +213,8 @@ class ClsModel(BaseModel):
         Returns:
             CompletedProcess: the result of exporting subprocess execution.
         """
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith("http"):
+            weight_path = abspath(weight_path)
         save_dir = abspath(save_dir)
 
         with self._create_new_config_file() as config_path:
@@ -200,13 +228,15 @@ class ClsModel(BaseModel):
 
             return self.runner.export(config_path, [], None, save_dir)
 
-    def infer(self,
-              model_dir: str,
-              input_path: str,
-              device: str='gpu',
-              save_dir: str=None,
-              dict_path: str=None,
-              **kwargs) -> CompletedProcess:
+    def infer(
+        self,
+        model_dir: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        dict_path: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """predict image using infernece model
 
         Args:
@@ -223,7 +253,7 @@ class ClsModel(BaseModel):
         input_path = abspath(input_path)
         if save_dir is not None:
             logging.warning("`save_dir` will not be used.")
-        config_path = os.path.join(model_dir, 'inference.yml')
+        config_path = os.path.join(model_dir, "inference.yml")
         config = self.config.copy()
         config.load(config_path)
         config._update_inference_model_dir(model_dir)
@@ -232,8 +262,8 @@ class ClsModel(BaseModel):
         if dict_path is not None:
             dict_path = abspath(dict_path)
             config.update_label_dict_path(dict_path)
-        if 'enable_mkldnn' in kwargs:
-            config._update_enable_mkldnn(kwargs.pop('enable_mkldnn'))
+        if "enable_mkldnn" in kwargs:
+            config._update_enable_mkldnn(kwargs.pop("enable_mkldnn"))
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
@@ -242,15 +272,17 @@ class ClsModel(BaseModel):
 
             return self.runner.infer(config_path, [], device)
 
-    def compression(self,
-                    weight_path: str,
-                    batch_size: int=None,
-                    learning_rate: float=None,
-                    epochs_iters: int=None,
-                    device: str='gpu',
-                    use_vdl: bool=True,
-                    save_dir: str=None,
-                    **kwargs) -> CompletedProcess:
+    def compression(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        device: str = "gpu",
+        use_vdl: bool = True,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """compression model
 
         Args:
@@ -273,8 +305,7 @@ class ClsModel(BaseModel):
             config._update_amp(None)
             config.update_device(device)
             config._update_use_vdl(use_vdl)
-            config._update_slim_config(self.model_info[
-                'auto_compression_config_path'])
+            config._update_slim_config(self.model_info["auto_compression_config_path"])
             config.update_pretrained_weights(weight_path)
 
             if batch_size is not None:
@@ -294,11 +325,13 @@ class ClsModel(BaseModel):
             export_cli_args = []
             export_cli_args.append(
                 CLIArgument(
-                    '-o',
-                    f"Global.save_inference_dir={os.path.join(save_dir, 'export')}"
-                ))
+                    "-o",
+                    f"Global.save_inference_dir={os.path.join(save_dir, 'export')}",
+                )
+            )
 
             self._assert_empty_kwargs(kwargs)
 
-            return self.runner.compression(config_path, [], export_cli_args,
-                                           device, save_dir)
+            return self.runner.compression(
+                config_path, [], export_cli_args, device, save_dir
+            )

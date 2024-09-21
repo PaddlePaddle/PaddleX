@@ -129,7 +129,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
   "dataset_path": "./dataset/det_coco_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
-}  
+}
 ```
 上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：
 
@@ -474,9 +474,102 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 
 数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
-## 7. 表格识别任务模块数据校验
+## 7. 公式识别任务模块数据校验
 
 ### 7.1 数据准备
+
+您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据标注，您可以参考[PaddleX 数据标注](./annotation/README.md)，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了公式识别 Demo 数据供您使用。
+
+```bash
+cd /path/to/paddlex
+wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ocr_rec_latexocr_dataset_example.tar -P ./dataset
+tar -xf ./dataset/ocr_rec_latexocr_dataset_example.tar -C ./dataset/
+```
+
+### 7.2 数据集校验
+
+在对数据集校验时，只需一行命令：
+
+```bash
+python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
+```
+
+执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在log中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
+```
+{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 10001,
+    "train_sample_paths": [
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0077809.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0161600.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0002077.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0178425.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0010959.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0079266.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0142495.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0196376.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0185513.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/train/0217146.png"
+    ],
+    "val_samples": 501,
+    "val_sample_paths": [
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0053264.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0100521.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0146333.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0072788.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0002022.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0203664.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0082217.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0208199.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0111236.png",
+      "../dataset/ocr_rec_latexocr_dataset_example/val/0204453.png"
+    ]
+  },
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
+  },
+  "dataset_path": "./dataset/ocr_rec_latexocr_dataset_example",
+  "show_type": "image",
+  "dataset_type": "MSTextRecDataset"
+}
+```
+上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：
+
+- attributes.train_samples：该数据集训练集样本数量为 10001；
+- attributes.val_samples：该数据集验证集样本数量为 501；
+- attributes.train_sample_paths：该数据集训练集样本可视化图片相对路径列表；
+- attributes.val_sample_paths：该数据集验证集样本可视化图片相对路径列表；
+
+另外，数据集校验还对数据集中所有字符长度占比的分布情况进行了分析，并绘制了分布直方图（histogram.png）：
+![样本分布直方图](https://github.com/user-attachments/assets/256b1084-ef52-4cf7-87d3-9367f410235b)
+
+**注**：只有通过数据校验的数据才可以训练和评估。
+
+
+### 7.3 数据集格式转换/数据集划分（非必选）
+
+如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。
+
+数据集校验相关的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
+
+* `CheckDataset`:
+    * `convert`:
+        * `enable`: 是否进行数据集格式转换，为 `True` 时进行数据集格式转换，默认为 `False`；
+        * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，数据可选源格式为 `PKL`, 默认为 `null`；
+    * `split`:
+        * `enable`: 是否进行重新划分数据集，公式识别不支持数据集重新划分，默认为 `False`；
+        * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为0-100之间的任意整数，需要保证和 `val_percent` 值加和为100；
+        * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为0-100之间的任意整数，需要保证和 `train_percent` 值加和为100；
+
+数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
+
+## 8. 表格识别任务模块数据校验
+
+### 8.1 数据准备
 
 您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据标注，您可以参考[PaddleX 数据标注](./annotation/README.md)，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了表格识别 Demo 数据供您使用。
 
@@ -486,7 +579,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/table_rec_dataset_e
 tar -xf ./dataset/table_rec_dataset_examples.tar -C ./dataset/
 ```
 
-### 7.2 数据集校验
+### 8.2 数据集校验
 
 在对数据集校验时，只需一行命令：
 
@@ -529,7 +622,7 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 
-### 7.3 数据集格式转换/数据集划分（非必选）
+### 8.3 数据集格式转换/数据集划分（非必选）
 
 如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。
 
@@ -546,9 +639,9 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
 
 数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
-## 8. 时序预测任务模块数据校验
+## 9. 时序预测任务模块数据校验
 
-### 8.1 数据准备
+### 9.1 数据准备
 
 您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序预测 Demo 数据供您使用。
 
@@ -558,7 +651,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_dataset_examples
 tar -xf ./dataset/ts_dataset_examples.tar -C ./dataset/
 ```
 
-### 8.2 数据集校验
+### 9.2 数据集校验
 
 在对数据集校验时，只需一行命令：
 
@@ -659,7 +752,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 
-### 8.3 数据集格式转换/数据集划分（非必选）
+### 9.3 数据集格式转换/数据集划分（非必选）
 
 如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。
 
@@ -676,9 +769,9 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
-## 9. 时序异常检测任务模块数据校验
+## 10. 时序异常检测任务模块数据校验
 
-### 9.1 数据准备
+### 10.1 数据准备
 
 您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序异常检测 Demo 数据供您使用。
 
@@ -688,7 +781,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples
 tar -xf ./dataset/ts_anomaly_examples.tar -C ./dataset/
 ```
 
-### 9.2 数据集校验
+### 10.2 数据集校验
 
 在对数据集校验时，只需一行命令：
 
@@ -757,7 +850,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 
-### 9.3 数据集格式转换/数据集划分（非必选）
+### 10.3 数据集格式转换/数据集划分（非必选）
 
 如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。
 
@@ -774,9 +867,9 @@ python main.py -c paddlex/configs/ts_anomaly_detection/DLinear_ad.yaml \
 
 数据转换和数据划分支持同时开启，对于数据划分原有标注文件会被在原路径下重命名为 `xxx.bak`，以上参数同样支持通过追加命令行参数的方式进行设置，例如重新划分数据集并设置训练集与验证集比例：`-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20`。
 
-## 10. 时序分类任务模块数据校验
+## 11. 时序分类任务模块数据校验
 
-### 10.1 数据准备
+### 11.1 数据准备
 
 您需要按照 PaddleX 支持的数据格式要求准备数据，关于数据格式介绍，您可以参考[PaddleX 数据格式介绍](./dataset_format.md)，此处我们准备了时序分类 Demo 数据供您使用。
 
@@ -786,7 +879,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_example
 tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
 ```
 
-### 10.2 数据集校验
+### 11.2 数据集校验
 
 在对数据集校验时，只需一行命令：
 
@@ -867,7 +960,7 @@ python main.py -c paddlex/configs/ts_classify_examples/DLinear_ad.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 
-### 10.3 数据集格式转换/数据集划分（非必选）
+### 11.3 数据集格式转换/数据集划分（非必选）
 
 如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。
 

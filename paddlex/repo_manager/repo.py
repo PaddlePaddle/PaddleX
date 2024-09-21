@@ -21,17 +21,25 @@ import shutil
 from ..utils import logging
 from ..utils.download import download_and_extract
 from .meta import get_repo_meta, REPO_DOWNLOAD_BASE
-from .utils import (install_packages_using_pip, fetch_repo_using_git,
-                    reset_repo_using_git, uninstall_package_using_pip,
-                    remove_repo_using_rm, check_installation_using_pip,
-                    build_wheel_using_pip, mute, switch_working_dir,
-                    to_dep_spec_pep508, env_marker_ast2expr)
+from .utils import (
+    install_packages_using_pip,
+    fetch_repo_using_git,
+    reset_repo_using_git,
+    uninstall_package_using_pip,
+    remove_repo_using_rm,
+    check_installation_using_pip,
+    build_wheel_using_pip,
+    mute,
+    switch_working_dir,
+    to_dep_spec_pep508,
+    env_marker_ast2expr,
+)
 
-__all__ = ['build_repo_instance', 'build_repo_group_installer']
+__all__ = ["build_repo_instance", "build_repo_group_installer"]
 
 
 def build_repo_instance(repo_name, *args, **kwargs):
-    """ build_repo_instance """
+    """build_repo_instance"""
     # XXX: Hard-code type
     repo_cls = PPRepository
     repo_instance = repo_cls(repo_name, *args, **kwargs)
@@ -39,12 +47,12 @@ def build_repo_instance(repo_name, *args, **kwargs):
 
 
 def build_repo_group_installer(*repos):
-    """ build_repo_group_installer """
+    """build_repo_group_installer"""
     return RepositoryGroupInstaller(list(repos))
 
 
 def build_repo_group_getter(*repos):
-    """ build_repo_group_getter """
+    """build_repo_group_getter"""
     return RepositoryGroupGetter(list(repos))
 
 
@@ -61,27 +69,28 @@ class PPRepository(object):
         self.root_dir = osp.join(repo_parent_dir, self.name)
 
         self.meta = get_repo_meta(self.name)
-        self.git_path = self.meta['git_path']
-        self.pkg_name = self.meta['pkg_name']
-        self.lib_name = self.meta['lib_name']
-        self.pdx_mod_name = pdx_collection_mod.__name__ + '.' + self.meta[
-            'pdx_pkg_name']
-        self.main_req_file = self.meta.get('main_req_file', 'requirements.txt')
+        self.git_path = self.meta["git_path"]
+        self.pkg_name = self.meta["pkg_name"]
+        self.lib_name = self.meta["lib_name"]
+        self.pdx_mod_name = (
+            pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
+        )
+        self.main_req_file = self.meta.get("main_req_file", "requirements.txt")
 
     def initialize(self):
-        """ initialize """
+        """initialize"""
         if not self.check_installation(quick_check=True):
             return False
-        if 'path_env' in self.meta:
+        if "path_env" in self.meta:
             # Set env var
-            os.environ[self.meta['path_env']] = osp.abspath(self.root_dir)
+            os.environ[self.meta["path_env"]] = osp.abspath(self.root_dir)
         # NOTE: By calling `self.get_pdx()` we actually loads the repo PDX package
         # and do all registration.
         self.get_pdx()
         return True
 
     def check_installation(self, quick_check=False):
-        """ check_installation """
+        """check_installation"""
         if quick_check:
             lib = self._get_lib(load=False)
             return lib is not None
@@ -90,101 +99,98 @@ class PPRepository(object):
             return check_installation_using_pip(self.pkg_name)
 
     def check_repo_exiting(self, quick_check=False):
-        """ check_repo_exiting """
-        return os.path.exists(os.path.join(self.root_dir, '.git'))
+        """check_repo_exiting"""
+        return os.path.exists(os.path.join(self.root_dir, ".git"))
 
     def install(self, *args, **kwargs):
-        """ install """
+        """install"""
         return RepositoryGroupInstaller([self]).install(*args, **kwargs)
 
     def uninstall(self, *args, **kwargs):
-        """ uninstall """
+        """uninstall"""
         return RepositoryGroupInstaller([self]).uninstall(*args, **kwargs)
 
     def install_deps(self, *args, **kwargs):
-        """ install_deps """
+        """install_deps"""
         return RepositoryGroupInstaller([self]).install_deps(*args, **kwargs)
 
     def install_package(self, no_deps=False, clean=True):
-        """ install_package """
-        editable = self.meta.get('editable', True)
-        extra_editable = self.meta.get('extra_editable', None)
+        """install_package"""
+        editable = self.meta.get("editable", True)
+        extra_editable = self.meta.get("extra_editable", None)
         if editable:
-            logging.warning(
-                f"{self.pkg_name} will be installed in editable mode.")
+            logging.warning(f"{self.pkg_name} will be installed in editable mode.")
         with switch_working_dir(self.root_dir):
             try:
-                install_packages_using_pip(
-                    ['.'], editable=editable, no_deps=no_deps)
+                install_packages_using_pip(["."], editable=editable, no_deps=no_deps)
             finally:
                 if clean:
                     # Clean build artifacts
-                    tmp_build_dir = os.path.join(self.root_dir, 'build')
+                    tmp_build_dir = os.path.join(self.root_dir, "build")
                     if os.path.exists(tmp_build_dir):
                         shutil.rmtree(tmp_build_dir)
         if extra_editable:
-            with switch_working_dir(
-                    os.path.join(self.root_dir, extra_editable)):
+            with switch_working_dir(os.path.join(self.root_dir, extra_editable)):
                 try:
-                    install_packages_using_pip(
-                        ['.'], editable=True, no_deps=no_deps)
+                    install_packages_using_pip(["."], editable=True, no_deps=no_deps)
                 finally:
                     if clean:
                         # Clean build artifacts
-                        tmp_build_dir = os.path.join(self.root_dir, 'build')
+                        tmp_build_dir = os.path.join(self.root_dir, "build")
                         if os.path.exists(tmp_build_dir):
                             shutil.rmtree(tmp_build_dir)
 
     def uninstall_package(self):
-        """ uninstall_package """
+        """uninstall_package"""
         uninstall_package_using_pip(self.pkg_name)
 
     def download(self):
-        """ download from remote """
-        download_url = f'{REPO_DOWNLOAD_BASE}{self.name}.tar'
+        """download from remote"""
+        download_url = f"{REPO_DOWNLOAD_BASE}{self.name}.tar"
         os.makedirs(self.repo_parent_dir, exist_ok=True)
         download_and_extract(download_url, self.repo_parent_dir, self.name)
         # reset_repo_using_git('FETCH_HEAD')
 
     def remove(self):
-        """ remove """
+        """remove"""
         with switch_working_dir(self.repo_parent_dir):
             remove_repo_using_rm(self.name)
 
     def update(self, platform=None):
-        """ update """
-        branch = self.meta.get('branch', None)
-        git_url = f'https://{platform}{self.git_path}'
+        """update"""
+        branch = self.meta.get("branch", None)
+        git_url = f"https://{platform}{self.git_path}"
         with switch_working_dir(self.root_dir):
             try:
                 fetch_repo_using_git(branch=branch, url=git_url)
-                reset_repo_using_git('FETCH_HEAD')
+                reset_repo_using_git("FETCH_HEAD")
             except Exception as e:
                 logging.warning(
                     f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
 
     def wheel(self, dst_dir):
-        """ wheel """
+        """wheel"""
         with tempfile.TemporaryDirectory() as td:
             tmp_repo_dir = osp.join(td, self.name)
-            tmp_dst_dir = osp.join(td, 'dist')
+            tmp_dst_dir = osp.join(td, "dist")
             shutil.copytree(self.root_dir, tmp_repo_dir, symlinks=False)
 
             # NOTE: Installation of the repo relies on `self.main_req_file` in root directory
             # Thus, we overwrite the content of it.
             main_req_file_path = osp.join(tmp_repo_dir, self.main_req_file)
             deps_str = self.get_deps()
-            with open(main_req_file_path, 'w', encoding='utf-8') as f:
+            with open(main_req_file_path, "w", encoding="utf-8") as f:
                 f.write(deps_str)
             install_packages_using_pip([], req_files=[main_req_file_path])
             with switch_working_dir(tmp_repo_dir):
-                build_wheel_using_pip('.', tmp_dst_dir)
+                build_wheel_using_pip(".", tmp_dst_dir)
             shutil.copytree(tmp_dst_dir, dst_dir)
 
     def _get_lib(self, load=True):
-        """ _get_lib """
+        """_get_lib"""
         import importlib.util
+
         importlib.invalidate_caches()
         if load:
             try:
@@ -200,27 +206,27 @@ class PPRepository(object):
                 return spec
 
     def get_pdx(self):
-        """ get_pdx """
+        """get_pdx"""
         return importlib.import_module(self.pdx_mod_name)
 
     def get_deps(self):
-        """ get_deps """
+        """get_deps"""
         # Merge requirement files
         req_list = [self.main_req_file]
-        req_list.extend(self.meta.get('extra_req_files', []))
+        req_list.extend(self.meta.get("extra_req_files", []))
         deps = []
         for req in req_list:
-            with open(osp.join(self.root_dir, req), 'r', encoding='utf-8') as f:
+            with open(osp.join(self.root_dir, req), "r", encoding="utf-8") as f:
                 deps.append(f.read())
-        for dep in self.meta.get('pdx_pkg_deps', []):
+        for dep in self.meta.get("pdx_pkg_deps", []):
             deps.append(dep)
-        deps = '\n'.join(deps)
+        deps = "\n".join(deps)
         return deps
 
     def get_version(self):
-        """ get_version """
-        version_file = osp.join(self.root_dir, '.pdx_gen.version')
-        with open(version_file, 'r', encoding='utf-8') as f:
+        """get_version"""
+        version_file = osp.join(self.root_dir, ".pdx_gen.version")
+        with open(version_file, "r", encoding="utf-8") as f:
             lines = f.readlines()
         sta_ver = lines[0].rstrip()
         commit = lines[1].rstrip()
@@ -234,14 +240,14 @@ class PPRepository(object):
 
 
 class RepositoryGroupInstaller(object):
-    """ RepositoryGroupInstaller """
+    """RepositoryGroupInstaller"""
 
     def __init__(self, repos):
         super().__init__()
         self.repos = repos
 
     def install(self, force_reinstall=False, no_deps=False, constraints=None):
-        """ install """
+        """install"""
         # Rollback on failure is not yet supported. A failed installation
         # could leave a broken environment.
         if force_reinstall:
@@ -265,7 +271,7 @@ class RepositoryGroupInstaller(object):
                 repo.install_package(no_deps=True)
 
     def uninstall(self):
-        """ uninstall """
+        """uninstall"""
         repos = self._sort_repos(self.repos, check_missing=False)
         repos = repos[::-1]
         for repo in repos:
@@ -274,33 +280,31 @@ class RepositoryGroupInstaller(object):
                 repo.uninstall_package()
 
     def get_deps(self):
-        """ get_deps """
+        """get_deps"""
         deps_list = []
         repos = self._sort_repos(self.repos, check_missing=True)
         for repo in repos:
             deps = repo.get_deps()
-            deps = self._normalize_deps(
-                deps, headline=f"# {repo.name} dependencies")
+            deps = self._normalize_deps(deps, headline=f"# {repo.name} dependencies")
             deps_list.append(deps)
         # Add an extra new line to separate dependencies of different repos.
-        return '\n\n'.join(deps_list)
+        return "\n\n".join(deps_list)
 
     def install_deps(self, constraints):
-        """ install_deps """
+        """install_deps"""
         deps_str = self.get_deps()
         with tempfile.TemporaryDirectory() as td:
-            req_file = os.path.join(td, 'requirements.txt')
-            with open(req_file, 'w', encoding='utf-8') as fr:
+            req_file = os.path.join(td, "requirements.txt")
+            with open(req_file, "w", encoding="utf-8") as fr:
                 fr.write(deps_str)
             if constraints is not None:
-                cons_file = os.path.join(td, 'constraints.txt')
-                with open(cons_file, 'w', encoding='utf-8') as fc:
+                cons_file = os.path.join(td, "constraints.txt")
+                with open(cons_file, "w", encoding="utf-8") as fc:
                     fc.write(constraints)
                 cons_files = [cons_file]
             else:
                 cons_files = []
-            install_packages_using_pip(
-                [], req_files=[req_file], cons_files=cons_files)
+            install_packages_using_pip([], req_files=[req_file], cons_files=cons_files)
 
     def _sort_repos(self, repos, check_missing=False):
         # We sort the repos to ensure that the dependencies precede the
@@ -328,9 +332,8 @@ class RepositoryGroupInstaller(object):
             else:
                 missing_names.append(name)
         if check_missing and len(missing_names) > 0:
-            be = 'is' if len(missing_names) == 1 else 'are'
-            raise RuntimeError(
-                f"{missing_names} {be} required in the installation.")
+            be = "is" if len(missing_names) == 1 else "are"
+            raise RuntimeError(f"{missing_names} {be} required in the installation.")
         else:
             assert len(sorted_repos) == len(self.repos)
         return sorted_repos
@@ -342,46 +345,45 @@ class RepositoryGroupInstaller(object):
             normed_lines.append(headline)
         for line in deps.splitlines():
             line_s = line.strip()
-            if len(line_s) == 0 or line_s.startswith('#'):
+            if len(line_s) == 0 or line_s.startswith("#"):
                 continue
             # If `line` is not a comment, it must be a requirement specifier.
             # Other forms may cause a parse error.
             n, e, v, m = to_dep_spec_pep508(line_s)
             if isinstance(v, str):
-                raise RuntimeError(
-                    "Currently, URL based lookup is not supported.")
+                raise RuntimeError("Currently, URL based lookup is not supported.")
             if n in repo_pkgs:
                 # Skip repo packages
                 continue
             else:
                 line_n = [n]
-                fe = f"[{','.join(e)}]" if e else ''
+                fe = f"[{','.join(e)}]" if e else ""
                 if fe:
                     line_n.append(fe)
                 fv = []
                 for tup in v:
-                    fv.append(' '.join(tup))
-                fv = ', '.join(fv) if fv else ''
+                    fv.append(" ".join(tup))
+                fv = ", ".join(fv) if fv else ""
                 if fv:
                     line_n.append(fv)
                 if m is not None:
                     fm = f"; {env_marker_ast2expr(m)}"
                     line_n.append(fm)
-                line_n = ' '.join(line_n)
+                line_n = " ".join(line_n)
                 normed_lines.append(line_n)
 
-        return '\n'.join(normed_lines)
+        return "\n".join(normed_lines)
 
 
 class RepositoryGroupGetter(object):
-    """ RepositoryGroupGetter """
+    """RepositoryGroupGetter"""
 
     def __init__(self, repos):
         super().__init__()
         self.repos = repos
 
     def get(self, force=False, platform=None):
-        """ clone """
+        """clone"""
         if force:
             self.remove()
         for repo in self.repos:
@@ -389,6 +391,6 @@ class RepositoryGroupGetter(object):
             repo.update(platform=platform)
 
     def remove(self):
-        """ remove """
+        """remove"""
         for repo in self.repos:
             repo.remove()

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import abc
 import collections.abc
 from collections import OrderedDict
@@ -21,21 +20,22 @@ from collections import OrderedDict
 from .register import get_registered_model_info, get_registered_suite_info
 from ...utils.errors import UnsupportedParamError
 
-__all__ = ['Config', 'BaseConfig']
+__all__ = ["Config", "BaseConfig"]
 
 
 def _create_config(model_name, config_path=None):
-    """ _create_config """
+    """_create_config"""
     # Build config from model name
     try:
         model_info = get_registered_model_info(model_name)
     except KeyError as e:
         raise UnsupportedParamError(
-            f"{repr(model_name)} is not a registered model name.") from e
+            f"{repr(model_name)} is not a registered model name."
+        ) from e
 
-    suite_name = model_info['suite']
+    suite_name = model_info["suite"]
     suite_info = get_registered_suite_info(suite_name)
-    config_cls = suite_info['config']
+    config_cls = suite_info["config"]
     config_obj = config_cls(model_name=model_name, config_path=config_path)
     return config_obj
 
@@ -44,7 +44,8 @@ Config = _create_config
 
 
 class _Config(object):
-    """ _Config """
+    """_Config"""
+
     _DICT_TYPE_ = OrderedDict
 
     def __init__(self, cfg=None):
@@ -56,7 +57,7 @@ class _Config(object):
 
     @property
     def dict(self):
-        """ dict """
+        """dict"""
         return dict(self._dict)
 
     def __getattr__(self, key):
@@ -67,7 +68,7 @@ class _Config(object):
             raise AttributeError
 
     def set_val(self, key, val):
-        """ set_val """
+        """set_val"""
         self._dict[key] = val
 
     def __getitem__(self, key):
@@ -80,23 +81,23 @@ class _Config(object):
         return key in self._dict
 
     def new_config(self, **kwargs):
-        """ new_config """
+        """new_config"""
         cfg = self.copy()
         cfg.update(kwargs)
 
     def copy(self):
-        """ copy """
+        """copy"""
         return type(self)(cfg=self)
 
     def pop(self, key):
-        """ pop """
+        """pop"""
         self._dict.pop(key)
 
     def __repr__(self):
         return format_cfg(self, indent=0)
 
     def reset_from_dict(self, dict_like_obj):
-        """ reset_from_dict """
+        """reset_from_dict"""
         self._dict.clear()
         self._dict.update(dict_like_obj)
 
@@ -126,7 +127,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
             # Initialize from file if no `cfg` is specified to initialize from
             if config_path is None:
                 model_info = get_registered_model_info(self.model_name)
-                config_path = model_info['config_path']
+                config_path = model_info["config_path"]
             self.load(config_path)
 
     def update_device(self, device):
@@ -159,7 +160,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def update_batch_size(self, batch_size, mode='train'):
+    def update_batch_size(self, batch_size, mode="train"):
         """
         Update batch size.
 
@@ -184,7 +185,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
         """Get learning rate used in training."""
         raise NotImplementedError
 
-    def get_batch_size(self, mode='train'):
+    def get_batch_size(self, mode="train"):
         """
         Get batch size.
 
@@ -201,37 +202,37 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     def copy(self):
-        """ copy """
+        """copy"""
         return type(self)(model_name=self.model_name, cfg=self)
 
 
 def format_cfg(cfg, indent=0):
-    """ format_cfg """
-    MAP_TYPES = (collections.abc.Mapping, )
+    """format_cfg"""
+    MAP_TYPES = (collections.abc.Mapping,)
     SEQ_TYPES = (list, tuple)
     NESTED_TYPES = (*MAP_TYPES, *SEQ_TYPES)
 
-    s = ' ' * indent
+    s = " " * indent
     if isinstance(cfg, _Config):
         cfg = cfg.dict
     if isinstance(cfg, MAP_TYPES):
         for i, (k, v) in enumerate(sorted(cfg.items())):
-            s += str(k) + ': '
+            s += str(k) + ": "
             if isinstance(v, NESTED_TYPES):
-                s += '\n' + format_cfg(v, indent=indent + 1)
+                s += "\n" + format_cfg(v, indent=indent + 1)
             else:
                 s += str(v)
             if i != len(cfg) - 1:
-                s += '\n'
+                s += "\n"
     elif isinstance(cfg, SEQ_TYPES):
         for i, v in enumerate(cfg):
-            s += '- '
+            s += "- "
             if isinstance(v, NESTED_TYPES):
-                s += '\n' + format_cfg(v, indent=indent + 1)
+                s += "\n" + format_cfg(v, indent=indent + 1)
             else:
                 s += str(v)
             if i != len(cfg) - 1:
-                s += '\n'
+                s += "\n"
     else:
         s += str(cfg)
     return s

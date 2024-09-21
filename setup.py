@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,29 +22,25 @@ from setuptools import setup
 
 
 def readme():
-    """get readme
-    """
-    with open('README.md', 'r', encoding='utf-8') as file:
+    """get readme"""
+    with open("README.md", "r", encoding="utf-8") as file:
         return file.read()
 
 
 def dependencies():
-    """get dependencies
-    """
-    with open('requirements.txt', 'r') as file:
+    """get dependencies"""
+    with open("requirements.txt", "r") as file:
         return file.read()
 
 
 def version():
-    """get version
-    """
-    with open(os.path.join('paddlex', '.version'), 'r') as file:
+    """get version"""
+    with open(os.path.join("paddlex", ".version"), "r") as file:
         return file.read().rstrip()
 
 
 def packages_and_package_data():
-    """get packages and package_data
-    """
+    """get packages and package_data"""
 
     def _recursively_find(pattern, exts=None):
         for dir_ in glob.iglob(pattern):
@@ -56,69 +52,74 @@ def packages_and_package_data():
                             continue
                     yield os.path.join(root, f)
 
-    pkgs = find_packages(include=[
-        'paddlex',
-        'paddlex.modules',
-        'paddlex.modules.*',
-        'paddlex.pipelines',
-        'paddlex.pipelines.*',
-        'paddlex.repo_manager',
-        'paddlex.repo_apis',
-        'paddlex.repo_apis.*',
-        'paddlex.utils',
-        'paddlex.utils.*',
-    ])
+    pkgs = find_packages(
+        include=[
+            "paddlex",
+            "paddlex.modules",
+            "paddlex.modules.*",
+            "paddlex.pipelines",
+            "paddlex.pipelines.*",
+            "paddlex.repo_manager",
+            "paddlex.repo_apis",
+            "paddlex.repo_apis.*",
+            "paddlex.utils",
+            "paddlex.utils.*",
+        ]
+    )
     pkg_data = []
     for p in itertools.chain(
-            # Configuration files
-            _recursively_find(
-                "paddlex/configs/*", exts=['.yml', '.yaml']), ):
+        # Configuration files
+        _recursively_find("paddlex/configs/*", exts=[".yml", ".yaml"]),
+    ):
         parts = os.path.normpath(p).split(os.sep)
         ext = os.path.splitext(p)[1]
         # Globally exclude Python bytecode files
-        if ext in ('.pyc', '.pyo'):
+        if ext in (".pyc", ".pyo"):
             continue
         # According to https://setuptools.pypa.io/en/latest/userguide/datafiles.html
-        rp = '/'.join(parts[1:])
+        rp = "/".join(parts[1:])
         pkg_data.append(rp)
-    pkg_data.append('.version')
-    pkg_data.append('utils/fonts/PingFang-SC-Regular.ttf')
-    pkg_data.append('repo_manager/requirements.txt')
-    return pkgs, {'paddlex': pkg_data}
+    pkg_data.append(".version")
+    pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
+    pkg_data.append("repo_manager/requirements.txt")
+    return pkgs, {"paddlex": pkg_data}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pkgs, pkg_data = packages_and_package_data()
 
     s = setup(
-        name='paddlex',
+        name="paddlex",
         version=version(),
-        description=('Low-code development tool based on PaddlePaddle.'),
+        description=("Low-code development tool based on PaddlePaddle."),
         long_description=readme(),
-        author='PaddlePaddle Authors',
-        author_email='',
+        author="PaddlePaddle Authors",
+        author_email="",
         install_requires=dependencies(),
         packages=pkgs,
         package_data=pkg_data,
         entry_points={
-            'console_scripts': ['paddlex = paddlex.paddlex_cli:main', ],
+            "console_scripts": [
+                "paddlex = paddlex.paddlex_cli:main",
+            ],
         },
         # PyPI package information
         classifiers=[
-            'Development Status :: 4 - Beta',
-            'Intended Audience :: Developers',
-            'Intended Audience :: Education',
-            'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: Apache Software License',
-            'Programming Language :: Python :: 3.8',
-            'Programming Language :: Python :: 3.9',
-            'Programming Language :: Python :: 3.10',
-            'Topic :: Scientific/Engineering',
-            'Topic :: Scientific/Engineering :: Mathematics',
-            'Topic :: Scientific/Engineering :: Artificial Intelligence',
-            'Topic :: Software Development',
-            'Topic :: Software Development :: Libraries',
-            'Topic :: Software Development :: Libraries :: Python Modules',
+            "Development Status :: 4 - Beta",
+            "Intended Audience :: Developers",
+            "Intended Audience :: Education",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: Apache Software License",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Topic :: Scientific/Engineering",
+            "Topic :: Scientific/Engineering :: Mathematics",
+            "Topic :: Scientific/Engineering :: Artificial Intelligence",
+            "Topic :: Software Development",
+            "Topic :: Software Development :: Libraries",
+            "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-        license='Apache 2.0',
-        keywords=['paddlepaddle'])
+        license="Apache 2.0",
+        keywords=["paddlepaddle"],
+    )

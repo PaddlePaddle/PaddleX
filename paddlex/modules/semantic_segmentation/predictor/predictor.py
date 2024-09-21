@@ -26,7 +26,8 @@ from ..model_list import MODELS
 
 
 class SegPredictor(BasePredictor):
-    """ SegPredictor """
+    """SegPredictor"""
+
     entities = MODELS
 
     def __init__(self, has_prob_map=False, *args, **kwargs):
@@ -34,25 +35,24 @@ class SegPredictor(BasePredictor):
         self.has_prob_map = has_prob_map
 
     def load_other_src(self):
-        """ load the inner config file """
-        infer_cfg_file_path = os.path.join(self.model_dir, 'inference.yml')
+        """load the inner config file"""
+        infer_cfg_file_path = os.path.join(self.model_dir, "inference.yml")
         if not os.path.exists(infer_cfg_file_path):
-            raise FileNotFoundError(
-                f"Cannot find config file: {infer_cfg_file_path}")
+            raise FileNotFoundError(f"Cannot find config file: {infer_cfg_file_path}")
         return InnerConfig(infer_cfg_file_path)
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [[K.IMAGE], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.SEG_MAP]
 
     def _run(self, batch_input):
-        """ run """
+        """run"""
         # XXX:
         os.environ.pop("FLAGS_npu_jit_compile", None)
         images = [data[K.IMAGE] for data in batch_input]
@@ -75,7 +75,7 @@ class SegPredictor(BasePredictor):
         return pred
 
     def _get_pre_transforms_from_config(self):
-        """ _get_pre_transforms_from_config """
+        """_get_pre_transforms_from_config"""
         # If `K.IMAGE` (the decoded image) is found, return a default list of
         # transformation operators for the input (if possible).
         # If `K.IMAGE` (the decoded image) is not found, `K.IM_PATH` (the image
@@ -87,7 +87,7 @@ class SegPredictor(BasePredictor):
             f"Transformation operators for data preprocessing will be inferred from config file."
         )
         pre_transforms = self.other_src.pre_transforms
-        pre_transforms.insert(0, image_common.ReadImage())
+        pre_transforms.insert(0, image_common.ReadImage(format="RGB"))
         pre_transforms.append(image_common.ToCHWImage())
         return pre_transforms
 
@@ -97,6 +97,5 @@ class SegPredictor(BasePredictor):
         if not self.disable_print:
             post_transforms.append(T.PrintResult())
         if not self.disable_save:
-            post_transforms.extend(
-                [T.GeneratePCMap(), T.SaveSegResults(self.output)])
+            post_transforms.extend([T.GeneratePCMap(), T.SaveSegResults(self.output)])
         return post_transforms

@@ -33,7 +33,7 @@ PaddleX 提供了1个端到端的时序分类模型，具体可参考 [模型列
 
 | 模型列表          | acc(%) | 模型存储大小(M) |
 |:--------------|:------:|:---------:|
-| TimesNet_cls	 | 87.5	  |   5.3M    |
+| TimesNet_cls   | 87.5   |   5.3M    |
 </center>
 
 > **注：以上精度指标测量自 <a href="https://www.timeseriesclassification.com/index.php">UEA/UWaveGestureLibrary</a> 数据集。**
@@ -60,7 +60,7 @@ tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
   - 时间频率一致：确保所有数据序列的时间频率一致，如每小时、每日或每周，对于不一致的时间序列，可以通过重采样方法调整到统一的时间频率。
 
   - 时间序列长度一致：确保每一个group的时间序列的长度一致。
-  
+
   - 缺失值处理：为了保证数据的质量和完整性，可以基于专家经验或统计方法进行缺失值填充。
 
   - 非重复性：保证数据是安装时间顺序按行收集的，同一个时间点不能重复出现。
@@ -144,7 +144,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
     -o Train.target_cols=dim_0,dim_1,dim_2 \
     -o Train.freq=1 \
     -o Train.group_id=group_id \
-    -o Train.static_cov_cols=label 
+    -o Train.static_cov_cols=label
 ```
 
 在 PaddleX 中模型训练支持：修改训练超参数、单机单卡训练(时序模型仅支持单卡训练)等功能，只需修改配置文件或追加命令行参数。
@@ -172,7 +172,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 - 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段
 
 
-**训练产出解释:**  
+**训练产出解释:**
 
 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
@@ -243,7 +243,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 
 
 ## 7. 开发集成/部署
- 
+
 PaddleX 针对时序分析模型也提供了 本地推理部署/服务化部署的方式进行模型部署。目前时序部署方案为动态图部署，提供本地推理和服务化部署两种部署方式，能够满足更多场景的需求。本地部署和服务化部署两种部署方式的特点如下：
 
     * 本地部署：运行脚本执行推理，或在程序中调用 Python 的推理 API。旨在实现测试样本的高效输入与模型预测结果的快速获取，特别适用于大规模批量刷库的场景，显著提升数据处理效率。

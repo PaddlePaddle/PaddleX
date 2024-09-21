@@ -25,17 +25,20 @@ from ..model_list import MODELS
 
 
 class TableRecPredictor(BasePredictor):
-    """ TableRecPredictor """
+    """TableRecPredictor"""
+
     entities = MODELS
 
-    def __init__(self,
-                 model_name,
-                 model_dir,
-                 kernel_option,
-                 output,
-                 pre_transforms=None,
-                 post_transforms=None,
-                 table_max_len=488):
+    def __init__(
+        self,
+        model_name,
+        model_dir,
+        kernel_option,
+        output,
+        pre_transforms=None,
+        post_transforms=None,
+        table_max_len=488,
+    ):
         self.table_max_len = table_max_len
         super().__init__(
             model_name=model_name,
@@ -43,20 +46,21 @@ class TableRecPredictor(BasePredictor):
             kernel_option=kernel_option,
             output=output,
             pre_transforms=pre_transforms,
-            post_transforms=post_transforms)
+            post_transforms=post_transforms,
+        )
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [[K.IMAGE, K.ORI_IM_SIZE], [K.IM_PATH, K.ORI_IM_SIZE]]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.STRUCTURE_PROB, K.LOC_PROB, K.SHAPE_LIST]
 
     def _run(self, batch_input):
-        """ run """
+        """run"""
         images = [data[K.IMAGE] for data in batch_input]
         input_ = np.stack(images, axis=0)
         if input_.ndim == 3:
@@ -75,14 +79,15 @@ class TableRecPredictor(BasePredictor):
         return pred
 
     def _get_pre_transforms_from_config(self):
-        """ _get_pre_transforms_from_config """
+        """_get_pre_transforms_from_config"""
         return [
             image_common.ReadImage(),
             image_common.ResizeByLong(target_long_edge=self.table_max_len),
             image_common.Normalize(
-                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+            ),
             image_common.Pad(target_size=self.table_max_len, val=0.0),
-            image_common.ToCHWImage()
+            image_common.ToCHWImage(),
         ]
 
     def _get_post_transforms_from_config(self):

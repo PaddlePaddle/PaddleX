@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
-from ..ts_forecast import TSFCPredictor
+from ..base import BaseExportor
 from .model_list import MODELS
-from ...utils.errors import raise_unsupported_api_error
 
 
-class TSCLSPredictor(TSFCPredictor):
-    """ TS Anomaly Detection Model Predictor """
+class InstanceSegExportor(BaseExportor):
+    """Instance Segmentation Model Exportor"""
+
     entities = MODELS
