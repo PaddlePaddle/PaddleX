@@ -57,13 +57,21 @@
 | MobileNetV3_large_x0_75 | [MobileNetV3_large_x0_75.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x0_75.yaml)|
 | MobileNetV3_large_x1_0 | [MobileNetV3_large_x1_0.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x1_0.yaml)|
 | MobileNetV3_large_x1_25 | [MobileNetV3_large_x1_25.yaml](../../../paddlex/configs/image_classification/MobileNetV3_large_x1_25.yaml)|
-### 6.PP-HGNet 系列
+### 6.MobileNetV4 系列
+| 模型名称 | config |
+| :--- | :---: |
+| MobileNetV4_conv_small | [MobileNetV4_conv_small.yaml](../../../paddlex/configs/image_classification/MobileNetV4_conv_small.yaml)|
+| MobileNetV4_conv_medium | [MobileNetV4_conv_medium.yaml](../../../paddlex/configs/image_classification/MobileNetV4_conv_medium.yaml)|
+| MobileNetV4_conv_large | [MobileNetV4_conv_large.yaml](../../../paddlex/configs/image_classification/MobileNetV4_conv_large.yaml)|
+| MobileNetV4_hybrid_medium | [MobileNetV4_hybrid_medium.yaml](../../../paddlex/configs/image_classification/MobileNetV4_hybrid_medium.yaml)|
+| MobileNetV4_hybrid_large | [MobileNetV4_hybrid_large.yaml](../../../paddlex/configs/image_classification/MobileNetV4_hybrid_large.yaml)|
+### 7.PP-HGNet 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNet_tiny | [PP-HGNet_tiny.yaml](../../../paddlex/configs/image_classification/PP-HGNet_tiny.yaml)|
 | PP-HGNet_small | [PP-HGNet_small.yaml](../../../paddlex/configs/image_classification/PP-HGNet_small.yaml)|
 | PP-HGNet_base | [PP-HGNet_base.yaml](../../../paddlex/configs/image_classification/PP-HGNet_base.yaml)|
-### 7.PP-HGNetV2 系列
+### 8.PP-HGNetV2 系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-HGNetV2-B0 | [PP-HGNetV2-B0.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B0.yaml)|
@@ -73,12 +81,12 @@
 | PP-HGNetV2-B4 | [PP-HGNetV2-B4.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B4.yaml)|
 | PP-HGNetV2-B5 | [PP-HGNetV2-B5.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B5.yaml)|
 | PP-HGNetV2-B6 | [PP-HGNetV2-B6.yaml](../../../paddlex/configs/image_classification/PP-HGNetV2-B6.yaml)|
-### 8.CLIP 系列
+### 9.CLIP 系列
 | 模型名称 | config |
 | :--- | :---: |
 | CLIP_vit_base_patch16_224 | [CLIP_vit_base_patch16_224.yaml](../../../paddlex/configs/image_classification/CLIP_vit_base_patch16_224.yaml)|
 | CLIP_vit_large_patch14_224 | [CLIP_vit_large_patch14_224.yaml](../../../paddlex/configs/image_classification/CLIP_vit_large_patch14_224.yaml)|
-### 9.ConvNeXt 系列
+### 10.ConvNeXt 系列
 | 模型名称 | config |
 | :--- | :---: |
 | ConvNeXt_tiny | [ConvNeXt_tiny.yaml](../../../paddlex/configs/image_classification/ConvNeXt_tiny.yaml)|
@@ -87,7 +95,7 @@
 | ConvNeXt_base_384 | [ConvNeXt_base_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_base_384.yaml)|
 | ConvNeXt_large_224 | [ConvNeXt_large_224.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_224.yaml)|
 | ConvNeXt_large_384 | [ConvNeXt_large_384.yaml](../../../paddlex/configs/image_classification/ConvNeXt_large_384.yaml)|
-### 10.SwinTransformer系列
+### 11.SwinTransformer系列
 | 模型名称 | config |
 | :--- | :---: |
 | SwinTransformer_tiny_patch4_window7_224 | [SwinTransformer_tiny_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_tiny_patch4_window7_224.yaml)|
@@ -96,8 +104,24 @@
 | SwinTransformer_base_patch4_window12_384 | [SwinTransformer_base_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window12_384.yaml)|
 | SwinTransformer_large_patch4_window7_224 | [SwinTransformer_large_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window7_224.yaml)|
 | SwinTransformer_large_patch4_window12_384 | [SwinTransformer_large_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window12_384.yaml)|
+### 12.StarNet系列
+| 模型名称 | config |
+| :--- | :---: |
+| StarNet_S1 | [StarNet_S1.yaml](../../../paddlex/configs/image_classification/StarNet_S1.yaml)|
+| StarNet_S2 | [StarNet_S2.yaml](../../../paddlex/configs/image_classification/StarNet_S2.yaml)|
+| StarNet_S3 | [StarNet_S3.yaml](../../../paddlex/configs/image_classification/StarNet_S3.yaml)|
+| StarNet_S4 | [StarNet_S4.yaml](../../../paddlex/configs/image_classification/StarNet_S4.yaml)|
+### 13.FasterNet系列
+| 模型名称 | config |
+| :--- | :---: |
+| FasterNet_L | [FasterNet_L.yaml](../../../paddlex/configs/image_classification/FasterNet_L.yaml)|
+| FasterNet_M | [FasterNet_M.yaml](../../../paddlex/configs/image_classification/FasterNet_M.yaml)|
+| FasterNet_S | [FasterNet_S.yaml](../../../paddlex/configs/image_classification/FasterNet_S.yaml)|
+| FasterNet_T0 | [FasterNet_T0.yaml](../../../paddlex/configs/image_classification/FasterNet_T0.yaml)|
+| FasterNet_T1 | [FasterNet_T1.yaml](../../../paddlex/configs/image_classification/FasterNet_T1.yaml)|
+| FasterNet_T2 | [FasterNet_T2.yaml](../../../paddlex/configs/image_classification/FasterNet_T2.yaml)|
 
-### 11. 多标签分类系列
+### 14. 多标签分类系列
 | 模型名称 | config |
 | :--- | :---: |
 | ResNet50_ML | [ResNet50_ML.yaml](../../../paddlex/configs/multilabel_classification/ResNet50_ML.yaml)|

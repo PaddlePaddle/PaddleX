@@ -40,6 +40,11 @@ MODELS = [
     "MobileNetV3_small_x0_75",
     "MobileNetV3_small_x1_0",
     "MobileNetV3_small_x1_25",
+    "MobileNetV4_conv_small",
+    "MobileNetV4_conv_medium",
+    "MobileNetV4_conv_large",
+    "MobileNetV4_hybrid_medium",
+    "MobileNetV4_hybrid_large",
     "PP-HGNet_tiny",
     "PP-HGNet_small",
     "PP-HGNet_base",
@@ -78,6 +83,16 @@ MODELS = [
     "SwinTransformer_base_patch4_window12_384",
     "SwinTransformer_large_patch4_window7_224",
     "SwinTransformer_large_patch4_window12_384",
+    "StarNet_S1",
+    "StarNet_S2",
+    "StarNet_S3",
+    "StarNet_S4",
+    "FasterNet_L",
+    "FasterNet_M",
+    "FasterNet_S",
+    "FasterNet_T0",
+    "FasterNet_T1",
+    "FasterNet_T2",
 ]
 
 ML_MODELS = [
