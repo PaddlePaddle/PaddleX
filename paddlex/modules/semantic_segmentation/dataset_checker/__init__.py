@@ -38,7 +38,7 @@ class SegDatasetChecker(BaseDatasetChecker):
             str: the root directory of converted dataset.
         """
         return convert_dataset(
-            self.check_dataset_config.src_dataset_type, src_dataset_dir
+            self.check_dataset_config.convert.src_dataset_type, src_dataset_dir
         )
 
     def split_dataset(self, src_dataset_dir: str) -> str:
