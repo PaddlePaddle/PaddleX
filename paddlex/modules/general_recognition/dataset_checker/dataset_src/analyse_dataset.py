@@ -61,7 +61,7 @@ def deep_analyse(dataset_path, output, dataset_type="ShiTuRec"):
 
     fig, ax = plt.subplots()
     rects1 = ax.bar(x - width/2, num_images, width, label="Num Images")
-    rects2 = ax.bar(x + width/2, num_labels, width, label="Num Lables")
+    rects2 = ax.bar(x + width/2, num_labels, width, label="Num Classes")
 
     # 添加一些文本标签
     ax.set_xlabel("集合", fontproperties=None if os_system == "windows" else font)
