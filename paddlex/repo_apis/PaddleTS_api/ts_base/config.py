@@ -16,7 +16,6 @@ import os
 from urllib.parse import urlparse
 
 import ruamel.yaml
-from paddlets.utils.config import parse_from_yaml, merge_config_dicts
 
 from ...base import BaseConfig
 from ....utils.misc import abspath
@@ -31,6 +30,8 @@ class BaseTSConfig(BaseConfig):
         Args:
             dict_like_obj (dict): dict of pairs(key0.key1.idx.key2=value).
         """
+        from paddlets.utils.config import merge_config_dicts
+
         dict_ = merge_config_dicts(dict_like_obj, self.dict)
         self.reset_from_dict(dict_)
 
@@ -43,6 +44,8 @@ class BaseTSConfig(BaseConfig):
         Raises:
             TypeError: the content of yaml file `config_file_path` error.
         """
+        from paddlets.utils.config import parse_from_yaml
+
         dict_ = parse_from_yaml(config_file_path)
         if not isinstance(dict_, dict):
             raise TypeError

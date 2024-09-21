@@ -14,9 +14,7 @@
 
 import os
 from abc import abstractmethod
-import numpy as np
-import paddle
-from paddle.inference import Config, create_predictor
+import lazy_paddle as paddle
 import numpy as np
 
 from ..base import BaseComponent
@@ -44,6 +42,8 @@ class BasePaddlePredictor(BaseComponent):
 
     def _create(self, model_dir, model_prefix, option):
         """_create"""
+        from lazy_paddle.inference import Config, create_predictor
+
         use_pir = (
             hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
         )

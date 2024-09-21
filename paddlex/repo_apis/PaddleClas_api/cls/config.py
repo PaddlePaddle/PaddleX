@@ -14,7 +14,6 @@
 
 import yaml
 from typing import Union
-from paddleclas.ppcls.utils.config import get_config, override_config
 
 from ...base import BaseConfig
 from ....utils.misc import abspath
@@ -33,6 +32,8 @@ class ClsConfig(BaseConfig):
                     'VALID.transforms.1.ResizeImage.resize_short=300'
                 ]
         """
+        from paddleclas.ppcls.utils.config import override_config
+
         dict_ = override_config(self.dict, list_like_obj)
         self.reset_from_dict(dict_)
 
