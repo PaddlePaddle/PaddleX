@@ -5,6 +5,9 @@ Global:
   device: gpu:0,1,2,3
   output: "output"
 
+Benchmark:
+  amp: O1 # O2
+
 CheckDataset:
   convert: 
     enable: False
