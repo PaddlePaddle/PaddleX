@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,16 +19,16 @@ import yaml
 
 
 def load_config(file_path):
-    """ load_config """
+    """load_config"""
     # Refer to https://github.com/PaddlePaddle/PaddleOCR/blob/366ad29d6c202a79bad103c72556c1186915c9c8/tools/program.py#L75
     _, ext = os.path.splitext(file_path)
-    assert ext in ['.yml', '.yaml'], "only support yaml files for now"
-    config = yaml.load(open(file_path, 'rb'), Loader=yaml.Loader)
+    assert ext in [".yml", ".yaml"], "only support yaml files for now"
+    config = yaml.load(open(file_path, "rb"), Loader=yaml.Loader)
     return config
 
 
 def merge_config(config, opts):
-    """ merge_config """
+    """merge_config"""
     # Refer to https://github.com/PaddlePaddle/PaddleOCR/blob/366ad29d6c202a79bad103c72556c1186915c9c8/tools/program.py#L88
     for key, value in opts.items():
         if "." not in key:
@@ -37,12 +37,13 @@ def merge_config(config, opts):
             else:
                 config[key] = value
         else:
-            sub_keys = key.split('.')
-            assert (
-                sub_keys[0] in config
-            ), "the sub_keys can only be one of global_config: {}, but get: " \
-               "{}, please check your running command".format(
-                config.keys(), sub_keys[0])
+            sub_keys = key.split(".")
+            assert sub_keys[0] in config, (
+                "the sub_keys can only be one of global_config: {}, but get: "
+                "{}, please check your running command".format(
+                    config.keys(), sub_keys[0]
+                )
+            )
             cur = config[sub_keys[0]]
             for idx, sub_key in enumerate(sub_keys[1:]):
                 if idx == len(sub_keys) - 2:

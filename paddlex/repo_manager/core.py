@@ -19,11 +19,19 @@ from collections import OrderedDict
 from ..utils import logging
 from .utils import install_deps_using_pip
 from .meta import get_all_repo_names, get_repo_meta
-from .repo import build_repo_instance, build_repo_group_getter, build_repo_group_installer
+from .repo import (
+    build_repo_instance,
+    build_repo_group_getter,
+    build_repo_group_installer,
+)
 
 __all__ = [
-    'set_parent_dirs', 'setup', 'wheel', 'is_initialized', 'initialize',
-    'get_versions'
+    "set_parent_dirs",
+    "setup",
+    "wheel",
+    "is_initialized",
+    "initialize",
+    "get_versions",
 ]
 
 
@@ -31,7 +39,7 @@ def _parse_repo_deps(repos):
     ret = []
     for repo_name in repos:
         repo_meta = get_repo_meta(repo_name)
-        ret.extend(_parse_repo_deps(repo_meta.get('requires', [])))
+        ret.extend(_parse_repo_deps(repo_meta.get("requires", [])))
         ret.append(repo_name)
     return ret
 
@@ -43,36 +51,37 @@ class _GlobalContext(object):
 
     @classmethod
     def set_parent_dirs(cls, repo_parent_dir, pdx_collection_mod):
-        """ set_parent_dirs """
+        """set_parent_dirs"""
         cls.REPO_PARENT_DIR = repo_parent_dir
         cls.PDX_COLLECTION_MOD = pdx_collection_mod
 
     @classmethod
     def build_repo_instance(cls, repo_name):
-        """ build_repo_instance """
-        return build_repo_instance(repo_name, cls.REPO_PARENT_DIR,
-                                   cls.PDX_COLLECTION_MOD)
+        """build_repo_instance"""
+        return build_repo_instance(
+            repo_name, cls.REPO_PARENT_DIR, cls.PDX_COLLECTION_MOD
+        )
 
     @classmethod
     def is_initialized(cls):
-        """ is_initialized """
+        """is_initialized"""
         return cls.REPOS is not None
 
     @classmethod
     def initialize(cls):
-        """ initialize """
+        """initialize"""
         cls.REPOS = []
 
     @classmethod
     def add_repo(cls, repo):
-        """ add_repo """
+        """add_repo"""
         if not cls.is_initialized():
             cls.initialize()
         cls.REPOS.append(repo)
 
     @classmethod
     def add_repos(cls, repos):
-        """ add_repos """
+        """add_repos"""
         if len(repos) == 0 and not cls.is_initialized():
             cls.initialize()
         for repo in repos:
@@ -83,13 +92,15 @@ set_parent_dirs = _GlobalContext.set_parent_dirs
 is_initialized = _GlobalContext.is_initialized
 
 
-def setup(repo_names,
-          no_deps=False,
-          constraints=None,
-          platform=None,
-          update_repos=False,
-          use_local_repos=False):
-    """ setup """
+def setup(
+    repo_names,
+    no_deps=False,
+    constraints=None,
+    platform=None,
+    update_repos=False,
+    use_local_repos=False,
+):
+    """setup"""
     if update_repos and use_local_repos:
         logging.error(
             f"The `--update_repos` and `--use_local_repos` should not be True at the same time. They are global setting for all repos. `--update_repos` means that update all repos to sync with remote, and `--use_local_repos` means that don't update when local repo is exsting."
@@ -130,7 +141,7 @@ def setup(repo_names,
                         True or False to apply a global setting for using exsting or re-getting repos."
                     )
                     raise
-                remove_existing = remove_existing.lower() in ('y', 'yes')
+                remove_existing = remove_existing.lower() in ("y", "yes")
 
             if remove_existing:
                 changed_repos.append(repo_name)
@@ -138,8 +149,7 @@ def setup(repo_names,
                 logging.warning(f"Existing {repo.name} repo has been removed.")
                 repos_to_get.append(repo)
             else:
-                logging.warning(
-                    f"We will use the existing repo of {repo.name}.")
+                logging.warning(f"We will use the existing repo of {repo.name}.")
         else:
             changed_repos.append(repo)
             repos_to_get.append(repo)
@@ -163,14 +173,15 @@ def setup(repo_names,
                         True or False to apply a global setting for reinstalling repos."
                     )
                     raise
-                uninstall_existing = uninstall_existing.lower() in ('y', 'yes')
+                uninstall_existing = uninstall_existing.lower() in ("y", "yes")
 
             if uninstall_existing:
                 repo.uninstall()
                 repos_to_install.append(repo)
             else:
                 logging.warning(
-                    f"We will use the existing installation of {repo.name}.")
+                    f"We will use the existing installation of {repo.name}."
+                )
         else:
             repos_to_install.append(repo)
     getter = build_repo_group_getter(*repos_to_get)
@@ -191,13 +202,12 @@ def setup(repo_names,
 
     logging.info("Now installing the packages...")
     install_deps_using_pip()
-    installer.install(
-        force_reinstall=False, no_deps=no_deps, constraints=constraints)
+    installer.install(force_reinstall=False, no_deps=no_deps, constraints=constraints)
     logging.info("All packages are installed.")
 
 
-def wheel(repo_names, dst_dir='./', fail_fast=False):
-    """ wheel """
+def wheel(repo_names, dst_dir="./", fail_fast=False):
+    """wheel"""
     for repo_name in repo_names:
         repo = _GlobalContext.build_repo_instance(repo_name)
         logging.info(f"Now building Wheel for {repo_name}...")
@@ -217,7 +227,7 @@ def wheel(repo_names, dst_dir='./', fail_fast=False):
 
 
 def initialize(repo_names=None):
-    """ initialize """
+    """initialize"""
     if _GlobalContext.is_initialized():
         raise RuntimeError(
             "PDX has already been initialized. Reinitialization is not supported."
@@ -249,7 +259,7 @@ def initialize(repo_names=None):
 
 
 def get_versions(repo_names=None):
-    """ get_versions """
+    """get_versions"""
     if repo_names is None:
         repo_names = get_all_repo_names()
 

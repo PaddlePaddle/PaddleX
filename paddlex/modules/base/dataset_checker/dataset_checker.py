@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -36,7 +36,7 @@ def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
 
 
 class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
-    """ Base Dataset Checker """
+    """Base Dataset Checker"""
 
     __is_base = True
 
@@ -74,7 +74,6 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
 
         attrs = self.check_dataset(dataset_dir)
         analysis = self.analyse(dataset_dir)
-
         check_result = build_res_dict(True)
         check_result["attributes"] = attrs
         check_result["analysis"] = analysis
@@ -157,7 +156,7 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
 
     @abstractmethod
     def get_dataset_type(self):
-        """ return the dataset type
+        """return the dataset type
 
         Raises:
             NotImplementedError

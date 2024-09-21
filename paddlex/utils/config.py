@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,11 +19,11 @@ import yaml
 from . import logging
 from .errors import raise_key_not_found_error
 
-__all__ = ['get_config']
+__all__ = ["get_config"]
 
 
 class AttrDict(dict):
-    """ Attr Dict """
+    """Attr Dict"""
 
     def __getattr__(self, key):
         if key in self:
@@ -42,8 +42,9 @@ class AttrDict(dict):
 
 
 def create_attr_dict(yaml_config):
-    """ create attr dict """
+    """create attr dict"""
     from ast import literal_eval
+
     for key, value in yaml_config.items():
         if type(value) is dict:
             yaml_config[key] = value = AttrDict(value)
@@ -60,7 +61,7 @@ def create_attr_dict(yaml_config):
 
 def parse_config(cfg_file):
     """Load a config file into AttrDict"""
-    with open(cfg_file, 'r') as fopen:
+    with open(cfg_file, "r") as fopen:
         yaml_config = AttrDict(yaml.load(fopen, Loader=yaml.SafeLoader))
     create_attr_dict(yaml_config)
     return yaml_config
@@ -106,10 +107,10 @@ def override(dl, ks, v):
     """
 
     def parse_str(s):
-        """convert str type value 
-           to None type if it is "None", 
-           to bool type if it means True or False,
-           to int type if it can be eval().
+        """convert str type value
+        to None type if it is "None",
+        to bool type if it means True or False,
+        to int type if it can be eval().
         """
         if s in ("None"):
             return None
@@ -122,12 +123,12 @@ def override(dl, ks, v):
         except Exception:
             return s
 
-    assert isinstance(dl, (list, dict)), ("{} should be a list or a dict")
-    assert len(ks) > 0, ('lenght of keys should larger than 0')
+    assert isinstance(dl, (list, dict)), "{} should be a list or a dict"
+    assert len(ks) > 0, "lenght of keys should larger than 0"
     if isinstance(dl, list):
         k = parse_str(ks[0])
         if len(ks) == 1:
-            assert k < len(dl), ('index({}) out of range({})'.format(k, dl))
+            assert k < len(dl), "index({}) out of range({})".format(k, dl)
             dl[k] = parse_str(v)
         else:
             override(dl[k], ks[1:], v)
@@ -135,7 +136,7 @@ def override(dl, ks, v):
         if len(ks) == 1:
             # assert ks[0] in dl, ('{} is not exist in {}'.format(ks[0], dl))
             if not ks[0] in dl:
-                logging.warning(f'A new field ({ks[0]}) detected!')
+                logging.warning(f"A new field ({ks[0]}) detected!")
             dl[ks[0]] = parse_str(v)
         else:
             if ks[0] not in dl.keys():
@@ -159,15 +160,15 @@ def override_config(config, options=None):
     """
     if options is not None:
         for opt in options:
-            assert isinstance(opt, str), (
-                "option({}) should be a str".format(opt))
+            assert isinstance(opt, str), "option({}) should be a str".format(opt)
             assert "=" in opt, (
                 "option({}) should contain a ="
-                "to distinguish between key and value".format(opt))
-            pair = opt.split('=')
-            assert len(pair) == 2, ("there can be only a = in the option")
+                "to distinguish between key and value".format(opt)
+            )
+            pair = opt.split("=")
+            assert len(pair) == 2, "there can be only a = in the option"
             key, value = pair
-            keys = key.split('.')
+            keys = key.split(".")
             override(config, keys, value)
     return config
 
@@ -176,7 +177,7 @@ def get_config(fname, overrides=None, show=False):
     """
     Read config from file
     """
-    assert os.path.exists(fname), ('config file({}) is not exist'.format(fname))
+    assert os.path.exists(fname), "config file({}) is not exist".format(fname)
     config = parse_config(fname)
     override_config(config, overrides)
     if show:
@@ -186,26 +187,28 @@ def get_config(fname, overrides=None, show=False):
 
 
 def parse_args():
-    """ parse args """
+    """parse args"""
     parser = argparse.ArgumentParser("PaddleX script")
     parser.add_argument(
-        '-c',
-        '--config',
+        "-c",
+        "--config",
         type=str,
-        default='configs/config.yaml',
-        help='config file path')
+        default="configs/config.yaml",
+        help="config file path",
+    )
     parser.add_argument(
-        '-o',
-        '--override',
-        action='append',
+        "-o",
+        "--override",
+        action="append",
         default=[],
-        help='config options to be overridden')
+        help="config options to be overridden",
+    )
     parser.add_argument(
-        '-p',
-        '--profiler_options',
+        "-p",
+        "--profiler_options",
         type=str,
         default=None,
-        help='The option of profiler, which should be in format \"key1=value1;key2=value2;key3=value3\".'
+        help='The option of profiler, which should be in format "key1=value1;key2=value2;key3=value3".',
     )
     args = parser.parse_args()
     return args

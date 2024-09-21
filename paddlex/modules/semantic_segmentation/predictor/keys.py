@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,8 +13,6 @@
 # limitations under the License.
 
 
-
-
 class SegKeys(object):
     """
     This class defines a set of keys used for communication of Seg predictors
@@ -24,11 +22,11 @@ class SegKeys(object):
     """
 
     # Common keys
-    IMAGE = 'image'
-    IM_PATH = 'input_path'
-    IM_SIZE = 'image_size'
+    IMAGE = "image"
+    IM_PATH = "input_path"
+    IM_SIZE = "image_size"
 
     # Suite-specific keys
-    PROB_MAP = 'prob_map'
-    SEG_MAP = 'seg_map'
-    PC_MAP = 'pc_map'
+    PROB_MAP = "prob_map"
+    SEG_MAP = "seg_map"
+    PC_MAP = "pc_map"

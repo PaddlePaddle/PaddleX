@@ -25,7 +25,8 @@ from .model_list import MODELS
 
 
 class TSFCTrainer(BaseTrainer):
-    """ TS Forecast Model Trainer """
+    """TS Forecast Model Trainer"""
+
     entities = MODELS
 
     def build_deamon(self, config: AttrDict) -> "TSFCTrainDeamon":
@@ -40,48 +41,43 @@ class TSFCTrainer(BaseTrainer):
         return TSFCTrainDeamon(config)
 
     def train(self):
-        """firstly, update and dump train config, then train model
-        """
+        """firstly, update and dump train config, then train model"""
         # XXX: using super().train() instead when the train_hook() is supported.
         os.makedirs(self.global_config.output, exist_ok=True)
         self.update_config()
         self.dump_config()
         train_result = self.pdx_model.train(**self.get_train_kwargs())
-        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
+        assert (
+            train_result.returncode == 0
+        ), f"Encountered an unexpected error({train_result.returncode}) in \
 training!"
 
         self.make_tar_file()
         self.deamon.stop()
 
     def make_tar_file(self):
-        """make tar file to package the training outputs
-        """
-        tar_path = Path(
-            self.global_config.output) / "best_accuracy.pdparams.tar"
-        with tarfile.open(tar_path, 'w') as tar:
-            tar.add(self.global_config.output, arcname='best_accuracy.pdparams')
+        """make tar file to package the training outputs"""
+        tar_path = Path(self.global_config.output) / "best_accuracy.pdparams.tar"
+        with tarfile.open(tar_path, "w") as tar:
+            tar.add(self.global_config.output, arcname="best_accuracy.pdparams")
 
     def update_config(self):
-        """update training config
-        """
-        self.pdx_config.update_dataset(self.global_config.dataset_dir,
-                                       "TSDataset")
+        """update training config"""
+        self.pdx_config.update_dataset(self.global_config.dataset_dir, "TSDataset")
         if self.train_config.input_len is not None:
             self.pdx_config.update_input_len(self.train_config.input_len)
         if self.train_config.time_col is not None:
-            self.pdx_config.update_basic_info({
-                'time_col': self.train_config.time_col
-            })
+            self.pdx_config.update_basic_info({"time_col": self.train_config.time_col})
         if self.train_config.target_cols is not None:
-            self.pdx_config.update_basic_info({
-                'target_cols': self.train_config.target_cols.split(',')
-            })
+            self.pdx_config.update_basic_info(
+                {"target_cols": self.train_config.target_cols.split(",")}
+            )
         if self.train_config.freq is not None:
             try:
                 self.train_config.freq = int(self.train_config.freq)
             except ValueError:
                 pass
-            self.pdx_config.update_basic_info({'freq': self.train_config.freq})
+            self.pdx_config.update_basic_info({"freq": self.train_config.freq})
         if self.train_config.predict_len is not None:
             self.pdx_config.update_predict_len(self.train_config.predict_len)
         if self.train_config.patience is not None:
@@ -89,8 +85,7 @@ training!"
         if self.train_config.batch_size is not None:
             self.pdx_config.update_batch_size(self.train_config.batch_size)
         if self.train_config.learning_rate is not None:
-            self.pdx_config.update_learning_rate(
-                self.train_config.learning_rate)
+            self.pdx_config.update_learning_rate(self.train_config.learning_rate)
         if self.train_config.epochs_iters is not None:
             self.pdx_config.update_epochs(self.train_config.epochs_iters)
         if self.global_config.output is not None:
@@ -109,16 +104,16 @@ training!"
 
 
 class TSFCTrainDeamon(BaseTrainDeamon):
-    """ TSFCTrainResultDemon """
+    """TSFCTrainResultDemon"""
 
     def get_watched_model(self):
-        """ get the models needed to be watched """
+        """get the models needed to be watched"""
         watched_models = []
         watched_models.append("best")
         return watched_models
 
     def update(self):
-        """ update train result json """
+        """update train result json"""
         self.processing = True
         for i, result in enumerate(self.results):
             self.results[i] = self.update_result(result, self.train_outputs[i])
@@ -126,30 +121,44 @@ class TSFCTrainDeamon(BaseTrainDeamon):
         self.processing = False
 
     def update_train_log(self, train_output):
-        """ update train log """
+        """update train log"""
         train_log_path = train_output / "train_ct.log"
-        with open(train_log_path, 'w') as f:
+        with open(train_log_path, "w") as f:
             seconds = time.time()
-            f.write('current training time: ' + time.strftime(
-                "%Y-%m-%d %H:%M:%S", time.localtime(seconds)))
+            f.write(
+                "current training time: "
+                + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(seconds))
+            )
         f.close()
         return train_log_path
 
     def update_result(self, result, train_output):
-        """ update every result """
-        config = Path(train_output).joinpath("config.yaml")
-        if not config.exists():
+        """update every result"""
+        train_output = Path(train_output).resolve()
+        config_path = Path(train_output).joinpath("config.yaml").resolve()
+        if not config_path.exists():
             return result
 
-        result["config"] = config
+        model_name = result["model_name"]
+        if (
+            model_name in self.config_recorder
+            and self.config_recorder[model_name] != config_path
+        ):
+            result["models"] = self.init_model_pkg()
+        result["config"] = config_path
+        self.config_recorder[model_name] = config_path
+
+        result["config"] = config_path
         result["train_log"] = self.update_train_log(train_output)
         result["visualdl_log"] = self.update_vdl_log(train_output)
         result["label_dict"] = self.update_label_dict(train_output)
-        self.update_models(result, train_output, "best")
+        model = self.get_model(result["model_name"], config_path)
+        self.update_models(result, model, train_output, "best")
+
         return result
 
-    def update_models(self, result, train_output, model_key):
-        """ update info of the models to be saved """
+    def update_models(self, result, model, train_output, model_key):
+        """update info of the models to be saved"""
         pdparams = Path(train_output).joinpath("best_accuracy.pdparams.tar")
         if pdparams.exists():
 
@@ -164,39 +173,80 @@ class TSFCTrainDeamon(BaseTrainDeamon):
                 "inference_config": "",
                 "pdmodel": "",
                 "pdiparams": pdparams,
-                "pdiparams.info": ""
+                "pdiparams.info": "",
             }
+            self.update_inference_model(
+                model,
+                train_output,
+                train_output.joinpath(f"inference"),
+                result["models"][model_key],
+            )
+
+    def update_inference_model(
+        self, model, weight_path, export_save_dir, result_the_model
+    ):
+        """update inference model"""
+        export_save_dir.mkdir(parents=True, exist_ok=True)
+        export_result = model.export(weight_path=weight_path, save_dir=export_save_dir)
+
+        if export_result.returncode == 0:
+            inference_config = export_save_dir.joinpath("inference.yml")
+            if not inference_config.exists():
+                inference_config = ""
+            use_pir = (
+                hasattr(paddle.framework, "use_pir_api")
+                and paddle.framework.use_pir_api()
+            )
+            pdmodel = (
+                export_save_dir.joinpath("inference.json")
+                if use_pir
+                else export_save_dir.joinpath("inference.pdmodel")
+            )
+            pdiparams = export_save_dir.joinpath("inference.pdiparams")
+            pdiparams_info = (
+                "" if use_pir else export_save_dir.joinpath("inference.pdiparams.info")
+            )
+        else:
+            inference_config = ""
+            pdmodel = ""
+            pdiparams = ""
+            pdiparams_info = ""
+
+        result_the_model["inference_config"] = inference_config
+        result_the_model["pdmodel"] = pdmodel
+        result_the_model["pdiparams"] = pdiparams
+        result_the_model["pdiparams.info"] = pdiparams_info
 
     def get_score(self, score_path):
-        """ get the score by pdstates file """
+        """get the score by pdstates file"""
         if not Path(score_path).exists():
             return 0
         return json.load(open(score_path))["metric"]
 
     def get_best_ckp_prefix(self):
-        """ get the prefix of the best checkpoint file """
+        """get the prefix of the best checkpoint file"""
         pass
 
     def get_epoch_id_by_pdparams_prefix(self):
-        """ get the epoch_id by pdparams file """
+        """get the epoch_id by pdparams file"""
         pass
 
     def get_ith_ckp_prefix(self):
-        """ get the prefix of the epoch_id checkpoint file """
+        """get the prefix of the epoch_id checkpoint file"""
         pass
 
     def get_the_pdema_suffix(self):
-        """ get the suffix of pdema file """
+        """get the suffix of pdema file"""
         pass
 
     def get_the_pdopt_suffix(self):
-        """ get the suffix of pdopt file """
+        """get the suffix of pdopt file"""
         pass
 
     def get_the_pdparams_suffix(self):
-        """ get the suffix of pdparams file """
+        """get the suffix of pdparams file"""
         pass
 
     def get_the_pdstates_suffix(self):
-        """ get the suffix of pdstates file """
+        """get the suffix of pdstates file"""
         pass

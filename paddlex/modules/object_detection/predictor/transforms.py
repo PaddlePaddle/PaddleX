@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -27,7 +27,7 @@ from ...base.predictor.transforms.image_common import _BaseResize, _check_image_
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ....utils import logging
 
-__all__ = ['SaveDetResults', 'PadStride', 'DetResize', 'PrintResult']
+__all__ = ["SaveDetResults", "PadStride", "DetResize", "PrintResult"]
 
 
 def get_color_map_list(num_classes):
@@ -42,12 +42,12 @@ def get_color_map_list(num_classes):
         j = 0
         lab = i
         while lab:
-            color_map[i * 3] |= (((lab >> 0) & 1) << (7 - j))
-            color_map[i * 3 + 1] |= (((lab >> 1) & 1) << (7 - j))
-            color_map[i * 3 + 2] |= (((lab >> 2) & 1) << (7 - j))
+            color_map[i * 3] |= ((lab >> 0) & 1) << (7 - j)
+            color_map[i * 3 + 1] |= ((lab >> 1) & 1) << (7 - j)
+            color_map[i * 3 + 2] |= ((lab >> 2) & 1) << (7 - j)
             j += 1
             lab >>= 3
-    color_map = [color_map[i:i + 3] for i in range(0, len(color_map), 3)]
+    color_map = [color_map[i : i + 3] for i in range(0, len(color_map), 3)]
     return color_map
 
 
@@ -58,17 +58,74 @@ def colormap(rgb=False):
     The code of this function is copied from https://github.com/facebookresearch/Detectron/blob/main/detectron/\
 utils/colormap.py
     """
-    color_list = np.array([
-        0xFF, 0x00, 0x00, 0xCC, 0xFF, 0x00, 0x00, 0xFF, 0x66, 0x00, 0x66, 0xFF,
-        0xCC, 0x00, 0xFF, 0xFF, 0x4D, 0x00, 0x80, 0xff, 0x00, 0x00, 0xFF, 0xB2,
-        0x00, 0x1A, 0xFF, 0xFF, 0x00, 0xE5, 0xFF, 0x99, 0x00, 0x33, 0xFF, 0x00,
-        0x00, 0xFF, 0xFF, 0x33, 0x00, 0xFF, 0xff, 0x00, 0x99, 0xFF, 0xE5, 0x00,
-        0x00, 0xFF, 0x1A, 0x00, 0xB2, 0xFF, 0x80, 0x00, 0xFF, 0xFF, 0x00, 0x4D
-    ]).astype(np.float32)
-    color_list = (color_list.reshape((-1, 3)))
+    color_list = np.array(
+        [
+            0xFF,
+            0x00,
+            0x00,
+            0xCC,
+            0xFF,
+            0x00,
+            0x00,
+            0xFF,
+            0x66,
+            0x00,
+            0x66,
+            0xFF,
+            0xCC,
+            0x00,
+            0xFF,
+            0xFF,
+            0x4D,
+            0x00,
+            0x80,
+            0xFF,
+            0x00,
+            0x00,
+            0xFF,
+            0xB2,
+            0x00,
+            0x1A,
+            0xFF,
+            0xFF,
+            0x00,
+            0xE5,
+            0xFF,
+            0x99,
+            0x00,
+            0x33,
+            0xFF,
+            0x00,
+            0x00,
+            0xFF,
+            0xFF,
+            0x33,
+            0x00,
+            0xFF,
+            0xFF,
+            0x00,
+            0x99,
+            0xFF,
+            0xE5,
+            0x00,
+            0x00,
+            0xFF,
+            0x1A,
+            0x00,
+            0xB2,
+            0xFF,
+            0x80,
+            0x00,
+            0xFF,
+            0xFF,
+            0x00,
+            0x4D,
+        ]
+    ).astype(np.float32)
+    color_list = color_list.reshape((-1, 3))
     if not rgb:
         color_list = color_list[:, ::-1]
-    return color_list.astype('int32')
+    return color_list.astype("int32")
 
 
 def font_colormap(color_index):
@@ -79,9 +136,9 @@ def font_colormap(color_index):
     light = np.array([0xFF, 0xFF, 0xFF])
     light_indexs = [0, 3, 4, 8, 9, 13, 14, 18, 19]
     if color_index in light_indexs:
-        return light.astype('int32')
+        return light.astype("int32")
     else:
-        return dark.astype('int32')
+        return dark.astype("int32")
 
 
 def draw_box(img, np_boxes, labels, threshold=0.5):
@@ -96,8 +153,7 @@ def draw_box(img, np_boxes, labels, threshold=0.5):
         img (PIL.Image.Image): visualized image
     """
     font_size = int(0.024 * int(img.width)) + 2
-    font = ImageFont.truetype(
-        PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+    font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
 
     draw_thickness = int(max(img.size) * 0.005)
     draw = ImageDraw.Draw(img)
@@ -119,27 +175,24 @@ def draw_box(img, np_boxes, labels, threshold=0.5):
         xmin, ymin, xmax, ymax = bbox
         # draw bbox
         draw.line(
-            [(xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin),
-             (xmin, ymin)],
+            [(xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin), (xmin, ymin)],
             width=draw_thickness,
-            fill=color)
+            fill=color,
+        )
 
         # draw label
         text = "{} {:.2f}".format(labels[clsid], score)
-        if tuple(map(int, PIL.__version__.split('.'))) <= (10, 0, 0):
+        if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
             tw, th = draw.textsize(text, font=font)
         else:
             left, top, right, bottom = draw.textbbox((0, 0), text, font)
             tw, th = right - left, bottom - top
         if ymin < th:
-            draw.rectangle(
-                [(xmin, ymin), (xmin + tw + 4, ymin + th + 1)], fill=color)
+            draw.rectangle([(xmin, ymin), (xmin + tw + 4, ymin + th + 1)], fill=color)
             draw.text((xmin + 2, ymin - 2), text, fill=font_color, font=font)
         else:
-            draw.rectangle(
-                [(xmin, ymin - th), (xmin + tw + 4, ymin + 1)], fill=color)
-            draw.text(
-                (xmin + 2, ymin - th - 2), text, fill=font_color, font=font)
+            draw.rectangle([(xmin, ymin - th), (xmin + tw + 4, ymin + 1)], fill=color)
+            draw.text((xmin + 2, ymin - th - 2), text, fill=font_color, font=font)
 
     return img
 
@@ -159,7 +212,7 @@ def draw_mask(im, np_boxes, np_masks, labels, threshold=0.5):
     color_list = get_color_map_list(len(labels))
     w_ratio = 0.4
     alpha = 0.7
-    im = np.array(im).astype('float32')
+    im = np.array(im).astype("float32")
     clsid2color = {}
     expect_boxes = (np_boxes[:, 1] > threshold) & (np_boxes[:, 0] > -1)
     np_boxes = np_boxes[expect_boxes, :]
@@ -178,11 +231,11 @@ def draw_mask(im, np_boxes, np_masks, labels, threshold=0.5):
         color_mask = np.array(color_mask)
         im[idx[0], idx[1], :] *= 1.0 - alpha
         im[idx[0], idx[1], :] += alpha * color_mask
-    return Image.fromarray(im.astype('uint8'))
+    return Image.fromarray(im.astype("uint8"))
 
 
 class SaveDetResults(BaseTransform):
-    """ Save Result Transform """
+    """Save Result Transform"""
 
     def __init__(self, save_dir, threshold=0.5, labels=None):
         super().__init__()
@@ -191,48 +244,48 @@ class SaveDetResults(BaseTransform):
         self.labels = labels
 
         # We use pillow backend to save both numpy arrays and PIL Image objects
-        self._writer = ImageWriter(backend='pillow')
+        self._writer = ImageWriter(backend="pillow")
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         ori_path = data[K.IM_PATH]
         file_name = os.path.basename(ori_path)
         save_path = os.path.join(self.save_dir, file_name)
 
         labels = self.labels
-        image = ImageReader(backend='pil').read(ori_path)
+        image = ImageReader(backend="pil").read(ori_path)
         if K.MASKS in data:
             image = draw_mask(
                 image,
                 data[K.BOXES],
                 data[K.MASKS],
                 threshold=self.threshold,
-                labels=labels)
-        image = draw_box(
-            image, data[K.BOXES], threshold=self.threshold, labels=labels)
+                labels=labels,
+            )
+        image = draw_box(image, data[K.BOXES], threshold=self.threshold, labels=labels)
 
         self._write_image(save_path, image)
         return data
 
     def _write_image(self, path, image):
-        """ write image """
+        """write image"""
         if os.path.exists(path):
             logging.warning(f"{path} already exists. Overwriting it.")
         self._writer.write(path, image)
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.IM_PATH, K.BOXES]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return []
 
 
 class PadStride(BaseTransform):
-    """ padding image for model with FPN , instead PadBatch(pad_to_stride, pad_gt) in original config
+    """padding image for model with FPN , instead PadBatch(pad_to_stride, pad_gt) in original config
     Args:
         stride (bool): model with FPN need image shape % stride == 0
     """
@@ -261,12 +314,51 @@ class PadStride(BaseTransform):
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.IMAGE]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
+        return [K.IMAGE]
+
+
+class Pad(BaseTransform):
+    def __init__(self, size, fill_value=[114.0, 114.0, 114.0]):
+        """
+        Pad image to a specified size.
+        Args:
+            size (list[int]): image target size
+            fill_value (list[float]): rgb value of pad area, default (114.0, 114.0, 114.0)
+        """
+        super(Pad, self).__init__()
+        if isinstance(size, int):
+            size = [size, size]
+        self.size = size
+        self.fill_value = fill_value
+
+    def apply(self, data):
+        im = data[K.IMAGE]
+        im_h, im_w = im.shape[:2]
+        h, w = self.size
+        if h == im_h and w == im_w:
+            # im = im.astype(np.float32)
+            return data
+
+        canvas = np.ones((h, w, 3), dtype=np.float32)
+        canvas *= np.array(self.fill_value, dtype=np.float32)
+        canvas[0:im_h, 0:im_w, :] = im.astype(np.float32)
+        data[K.IMAGE] = canvas
+        return data
+
+    @classmethod
+    def get_input_keys(cls):
+        """get input keys"""
+        return [K.IMAGE]
+
+    @classmethod
+    def get_output_keys(cls):
+        """get output keys"""
         return [K.IMAGE]
 
 
@@ -284,11 +376,7 @@ class DetResize(_BaseResize):
             'LINEAR', 'CUBIC', 'AREA', and 'LANCZOS4'. Default: 'LINEAR'.
     """
 
-    def __init__(self,
-                 target_hw,
-                 keep_ratio=False,
-                 size_divisor=None,
-                 interp='LINEAR'):
+    def __init__(self, target_hw, keep_ratio=False, size_divisor=None, interp="LINEAR"):
         super().__init__(size_divisor=size_divisor, interp=interp)
 
         if isinstance(target_hw, int):
@@ -299,9 +387,9 @@ class DetResize(_BaseResize):
         self.keep_ratio = keep_ratio
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         target_hw = self.target_hw
-        im = data['image']
+        im = data["image"]
         original_size = im.shape[:2]
 
         if self.keep_ratio:
@@ -310,50 +398,50 @@ class DetResize(_BaseResize):
 
         if self.size_divisor:
             target_hw = [
-                math.ceil(i / self.size_divisor) * self.size_divisor
-                for i in target_hw
+                math.ceil(i / self.size_divisor) * self.size_divisor for i in target_hw
             ]
 
         im_scale_w, im_scale_h = [
-            target_hw[1] / original_size[1], target_hw[0] / original_size[0]
+            target_hw[1] / original_size[1],
+            target_hw[0] / original_size[0],
         ]
         im = F.resize(im, target_hw[::-1], interp=self.interp)
 
-        data['image'] = im
-        data['image_size'] = [im.shape[1], im.shape[0]]
-        data['scale_factors'] = [im_scale_w, im_scale_h]
+        data["image"] = im
+        data["image_size"] = [im.shape[1], im.shape[0]]
+        data["scale_factors"] = [im_scale_w, im_scale_h]
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         # image: Image in hw or hwc format.
-        return ['image']
+        return ["image"]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         # image: Image in hw or hwc format.
         # image_size: Width and height of the image.
         # scale_factors: Scale factors for image width and height.
-        return ['image', 'image_size', 'scale_factors']
+        return ["image", "image_size", "scale_factors"]
 
 
 class PrintResult(BaseTransform):
-    """ Print Result Transform """
+    """Print Result Transform"""
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         logging.info("The prediction result is:")
         logging.info(data[K.BOXES])
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.BOXES]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return []

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 from ....utils import logging
@@ -23,16 +22,18 @@ from ..text_rec.model import TextRecModel
 
 
 class TableRecModel(TextRecModel):
-    """ Table Recognition Model """
+    """Table Recognition Model"""
 
-    METRICS = ['acc']
+    METRICS = ["acc"]
 
-    def predict(self,
-                weight_path: str,
-                input_path: str,
-                device: str='gpu',
-                save_dir: str=None,
-                **kwargs) -> CompletedProcess:
+    def predict(
+        self,
+        weight_path: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs
+    ) -> CompletedProcess:
         """predict using specified weight
 
         Args:
@@ -66,12 +67,14 @@ class TableRecModel(TextRecModel):
             config.dump(config_path)
             return self.runner.predict(config_path, [], device)
 
-    def infer(self,
-              model_dir: str,
-              input_path: str,
-              device: str='gpu',
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def infer(
+        self,
+        model_dir: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs
+    ) -> CompletedProcess:
         """predict image using infernece model
 
         Args:
@@ -87,33 +90,33 @@ class TableRecModel(TextRecModel):
         cli_args = []
 
         model_dir = abspath(model_dir)
-        cli_args.append(CLIArgument('--table_model_dir', model_dir))
+        cli_args.append(CLIArgument("--table_model_dir", model_dir))
 
         input_path = abspath(input_path)
-        cli_args.append(CLIArgument('--image_dir', input_path))
+        cli_args.append(CLIArgument("--image_dir", input_path))
 
         device_type, _ = self.runner.parse_device(device)
-        cli_args.append(CLIArgument('--use_gpu', str(device_type == 'gpu')))
+        cli_args.append(CLIArgument("--use_gpu", str(device_type == "gpu")))
 
         if save_dir is not None:
             save_dir = abspath(save_dir)
         else:
             # `save_dir` is None
-            save_dir = abspath(os.path.join('output', 'infer'))
-        cli_args.append(CLIArgument('--output', save_dir))
+            save_dir = abspath(os.path.join("output", "infer"))
+        cli_args.append(CLIArgument("--output", save_dir))
 
-        dict_path = kwargs.pop('dict_path', None)
+        dict_path = kwargs.pop("dict_path", None)
         if dict_path is not None:
             dict_path = abspath(dict_path)
         else:
             dict_path = config.get_label_dict_path()
-        cli_args.append(CLIArgument('--table_char_dict_path', dict_path))
+        cli_args.append(CLIArgument("--table_char_dict_path", dict_path))
 
         model_type = config._get_model_type()
-        cli_args.append(CLIArgument('--table_algorithm', model_type))
+        cli_args.append(CLIArgument("--table_algorithm", model_type))
         infer_shape = config._get_infer_shape()
         if infer_shape is not None:
-            cli_args.append(CLIArgument('--table_max_len', infer_shape))
+            cli_args.append(CLIArgument("--table_max_len", infer_shape))
 
         self._assert_empty_kwargs(kwargs)
 

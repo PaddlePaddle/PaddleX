@@ -15,7 +15,7 @@ CheckDataset:
     val_percent: null
 
 Train:
-  num_classes: 4
+  num_classes: 11
   epochs_iters: 50
   batch_size: 24
   learning_rate: 0.4
@@ -28,6 +28,9 @@ Train:
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 10
+
+Export:
+  weight_path: https://paddleocr.bj.bcebos.com/ppstructure/models/layout/picodet_lcnet_x1_0_layout.pdparams
 
 Predict:
   model_dir: "output/best_model"

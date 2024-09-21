@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,23 +17,24 @@ import os
 import argparse
 from paddlex.repo_manager import setup, get_all_supported_repo_names
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Enable debug info
-    os.environ['PADDLE_PDX_DEBUG'] = 'True'
+    os.environ["PADDLE_PDX_DEBUG"] = "True"
     # Disable eager initialization
-    os.environ['PADDLE_PDX_EAGER_INIT'] = 'False'
+    os.environ["PADDLE_PDX_EAGER_INIT"] = "False"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('devkits', nargs='*', default=[])
-    parser.add_argument('--no_deps', action='store_true')
-    parser.add_argument('--platform', type=str, default='github.com')
-    parser.add_argument('--update_repos', action='store_true')
+    parser.add_argument("devkits", nargs="*", default=[])
+    parser.add_argument("--no_deps", action="store_true")
+    parser.add_argument("--platform", type=str, default="github.com")
+    parser.add_argument("--update_repos", action="store_true")
     parser.add_argument(
-        '-y',
-        '--yes',
-        dest='reinstall',
-        action='store_true',
-        help="Whether to reinstall all packages.")
+        "-y",
+        "--yes",
+        dest="reinstall",
+        action="store_true",
+        help="Whether to reinstall all packages.",
+    )
     args = parser.parse_args()
 
     repo_names = args.devkits
@@ -44,4 +45,5 @@ if __name__ == '__main__':
         reinstall=args.reinstall or None,
         no_deps=args.no_deps,
         platform=args.platform,
-        update_repos=args.update_repos)
+        update_repos=args.update_repos,
+    )

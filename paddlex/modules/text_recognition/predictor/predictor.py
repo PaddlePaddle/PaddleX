@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import os
 
 import numpy as np
@@ -26,29 +27,29 @@ from ..model_list import MODELS
 
 
 class TextRecPredictor(BasePredictor):
-    """ TextRecPredictor """
+    """TextRecPredictor"""
+
     entities = MODELS
 
     def load_other_src(self):
-        """ load the inner config file """
-        infer_cfg_file_path = os.path.join(self.model_dir, 'inference.yml')
+        """load the inner config file"""
+        infer_cfg_file_path = os.path.join(self.model_dir, "inference.yml")
         if not os.path.exists(infer_cfg_file_path):
-            raise FileNotFoundError(
-                f"Cannot find config file: {infer_cfg_file_path}")
+            raise FileNotFoundError(f"Cannot find config file: {infer_cfg_file_path}")
         return InnerConfig(infer_cfg_file_path)
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [[K.IMAGE], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.REC_PROBS]
 
     def _run(self, batch_input):
-        """ run """
+        """run"""
         images = [data[K.IMAGE] for data in batch_input]
         input_ = np.stack(images, axis=0)
         if input_.ndim == 3:
@@ -65,11 +66,19 @@ class TextRecPredictor(BasePredictor):
         return pred
 
     def _get_pre_transforms_from_config(self):
-        """ _get_pre_transforms_from_config """
-        return [
-            image_common.ReadImage(), image_common.GetImageInfo(),
-            T.OCRReisizeNormImg()
-        ]
+        """_get_pre_transforms_from_config"""
+        if self.model_name == "LaTeX_OCR_rec":
+            return [
+                image_common.ReadImage(),
+                image_common.GetImageInfo(),
+                T.LaTeXOCRReisizeNormImg(),
+            ]
+        else:
+            return [
+                image_common.ReadImage(),
+                image_common.GetImageInfo(),
+                T.OCRReisizeNormImg(),
+            ]
 
     def _get_post_transforms_from_config(self):
         """get postprocess transforms"""

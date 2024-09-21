@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import os
 
 import numpy as np
@@ -26,40 +27,39 @@ from ..model_list import MODELS
 
 
 class DetPredictor(BasePredictor):
-    """ Detection Predictor """
+    """Detection Predictor"""
+
     entities = MODELS
 
     def load_other_src(self):
-        """ load the inner config file """
-        infer_cfg_file_path = os.path.join(self.model_dir, 'inference.yml')
+        """load the inner config file"""
+        infer_cfg_file_path = os.path.join(self.model_dir, "inference.yml")
         if not os.path.exists(infer_cfg_file_path):
-            raise FileNotFoundError(
-                f"Cannot find config file: {infer_cfg_file_path}")
+            raise FileNotFoundError(f"Cannot find config file: {infer_cfg_file_path}")
         return InnerConfig(infer_cfg_file_path)
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [[K.IMAGE], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.BOXES]
 
     def _run(self, batch_input):
-        """ run """
+        """run"""
         input_dict = {}
         input_dict["image"] = np.stack(
-            [data[K.IMAGE] for data in batch_input], axis=0).astype(
-                dtype=np.float32, copy=False)
+            [data[K.IMAGE] for data in batch_input], axis=0
+        ).astype(dtype=np.float32, copy=False)
         input_dict["scale_factor"] = np.stack(
-            [data[K.SCALE_FACTOR][::-1] for data in batch_input],
-            axis=0).astype(
-                dtype=np.float32, copy=False)
+            [data[K.SCALE_FACTOR][::-1] for data in batch_input], axis=0
+        ).astype(dtype=np.float32, copy=False)
         input_dict["im_shape"] = np.stack(
-            [data[K.IM_SIZE][::-1] for data in batch_input], axis=0).astype(
-                dtype=np.float32, copy=False)
+            [data[K.IM_SIZE][::-1] for data in batch_input], axis=0
+        ).astype(dtype=np.float32, copy=False)
 
         input_ = [input_dict[i] for i in self._predictor.get_input_names()]
 
@@ -77,12 +77,12 @@ class DetPredictor(BasePredictor):
         return pred
 
     def _get_pre_transforms_from_config(self):
-        """ get preprocess transforms """
+        """get preprocess transforms"""
         logging.info(
             f"Transformation operators for data preprocessing will be inferred from config file."
         )
         pre_transforms = self.other_src.pre_transforms
-        pre_transforms.insert(0, image_common.ReadImage(format='RGB'))
+        pre_transforms.insert(0, image_common.ReadImage(format="RGB"))
         return pre_transforms
 
     def _get_post_transforms_from_config(self):
@@ -92,6 +92,6 @@ class DetPredictor(BasePredictor):
             post_transforms.append(T.PrintResult())
         if not self.disable_save:
             post_transforms.append(
-                T.SaveDetResults(
-                    save_dir=self.output, labels=self.other_src.labels))
+                T.SaveDetResults(save_dir=self.output, labels=self.other_src.labels)
+            )
         return post_transforms

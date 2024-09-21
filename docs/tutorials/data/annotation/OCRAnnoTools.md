@@ -1,5 +1,5 @@
 # 数据标注指南
-本文档将介绍如何使用 [PPOCRLabel](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README_ch.md) 完成 PP-OCR 单模型和表格识别的数据标注。 
+本文档将介绍如何使用 [PPOCRLabel](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README_ch.md) 完成 PP-OCR 单模型和表格识别的数据标注。
 
 点击上述链接，参考首页文档即可安装数据标注工具并查看详细使用流程，以下提供简洁版本说明：
 

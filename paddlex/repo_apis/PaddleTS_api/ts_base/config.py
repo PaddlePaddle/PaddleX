@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 from urllib.parse import urlparse
 
@@ -24,7 +23,7 @@ from ....utils.misc import abspath
 
 
 class BaseTSConfig(BaseConfig):
-    """ Base TS Config """
+    """Base TS Config"""
 
     def update(self, dict_like_obj: list):
         """update self
@@ -56,7 +55,7 @@ class BaseTSConfig(BaseConfig):
             config_file_path (str): the path to save self as yaml file.
         """
         yaml = ruamel.yaml.YAML()
-        with open(config_file_path, 'w', encoding='utf-8') as f:
+        with open(config_file_path, "w", encoding="utf-8") as f:
             yaml.dump(self.dict, f)
 
     def update_epochs(self, epochs: int):
@@ -65,7 +64,7 @@ class BaseTSConfig(BaseConfig):
         Args:
             epochs (int): the epochs number value to set
         """
-        self.update({'epoch': epochs})
+        self.update({"epoch": epochs})
 
     def update_weights(self, weight_path: str):
         """update weight path
@@ -73,25 +72,26 @@ class BaseTSConfig(BaseConfig):
         Args:
             weight_path (str): the local path of weight file to set.
         """
-        self['weights'] = abspath(weight_path)
+        self["weights"] = abspath(weight_path)
 
     def update_learning_rate(self, learning_rate: float):
         """update learning rate
 
         Args:
             learning_rate (float): the learning rate value to set.
-        
+
         Raises:
             RuntimeError: Not able to update learning rate, because no LR scheduler config was found.
         """
-        if 'learning_rate' not in self.model['model_cfg']['optimizer_params']:
+        if "learning_rate" not in self.model["model_cfg"]["optimizer_params"]:
             raise RuntimeError(
                 "Not able to update learning rate, because no LR scheduler config was found."
             )
-        self.model['model_cfg']['optimizer_params']['learning_rate'] = float(
-            learning_rate)
+        self.model["model_cfg"]["optimizer_params"]["learning_rate"] = float(
+            learning_rate
+        )
 
-    def update_batch_size(self, batch_size: int, mode: str='train'):
+    def update_batch_size(self, batch_size: int, mode: str = "train"):
         """update batch size setting
 
         Args:
@@ -102,11 +102,12 @@ class BaseTSConfig(BaseConfig):
         Raises:
             ValueError: `mode` error. `train` is supported only.
         """
-        if mode == 'train':
-            self.set_val('batch_size', batch_size)
+        if mode == "train":
+            self.set_val("batch_size", batch_size)
         else:
             raise ValueError(
-                f"Setting `batch_size` in {repr(mode)} mode is not supported.")
+                f"Setting `batch_size` in {repr(mode)} mode is not supported."
+            )
 
     def update_pretrained_weights(self, weight_path: str):
         """update pretrained weight path
@@ -118,12 +119,12 @@ class BaseTSConfig(BaseConfig):
             RuntimeError: "Not able to update pretrained weight path, because no model config was found.
             TypeError: `weight_path` error. `str` and `None` are supported only.
         """
-        if 'model' not in self:
+        if "model" not in self:
             raise RuntimeError(
                 "Not able to update pretrained weight path, because no model config was found."
             )
         if isinstance(weight_path, str):
-            if urlparse(weight_path).scheme == '':
+            if urlparse(weight_path).scheme == "":
                 # If `weight_path` is a string but not URL (with scheme present),
                 # it will be recognized as a local file path.
                 weight_path = abspath(weight_path)
@@ -131,11 +132,24 @@ class BaseTSConfig(BaseConfig):
             if weight_path is not None:
                 raise TypeError("`weight_path` must be string or None.")
 
-        self.model['pretrain'] = weight_path
+        self.model["pretrain"] = weight_path
 
-    def update_dataset(self, dataset_dir: str, dataset_type: str=None):
-        """update dataset settings
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
         """
+        # PaddleTS does not support multi-device training currently.
+        pass
+
+    def update_print_mem_info(self, print_mem_info: bool):
+        """setting print memory info"""
+        assert isinstance(print_mem_info, bool), "print_mem_info should be a bool"
+        self.update({"print_mem_info": print_mem_info})
+
+    def update_dataset(self, dataset_dir: str, dataset_type: str = None):
+        """update dataset settings"""
         raise NotImplementedError
 
     def update_save_dir(self, save_dir: str):
@@ -144,7 +158,7 @@ class BaseTSConfig(BaseConfig):
         Args:
             save_dir (str): the path to save outputs.
         """
-        self['output_dir'] = abspath(save_dir)
+        self["output_dir"] = abspath(save_dir)
 
     def get_epochs_iters(self) -> int:
         """get epochs
@@ -152,7 +166,7 @@ class BaseTSConfig(BaseConfig):
         Returns:
             int: the epochs value, i.e., `Global.epochs` in config.
         """
-        if 'epoch' in self:
+        if "epoch" in self:
             return self.epoch
         else:
             # Default iters
@@ -164,13 +178,13 @@ class BaseTSConfig(BaseConfig):
         Returns:
             float: the learning rate value, i.e., `Optimizer.lr.learning_rate` in config.
         """
-        if 'learning_rate' not in self.model['model_cfg']['optimizer_params']:
+        if "learning_rate" not in self.model["model_cfg"]["optimizer_params"]:
             # Default lr
             return 0.0001
         else:
-            return self.model['model_cfg']['optimizer_params']['learning_rate']
+            return self.model["model_cfg"]["optimizer_params"]["learning_rate"]
 
-    def get_batch_size(self, mode='train') -> int:
+    def get_batch_size(self, mode="train") -> int:
         """get batch size
 
         Args:
@@ -183,12 +197,13 @@ class BaseTSConfig(BaseConfig):
         Returns:
             int: the batch size value of `mode`, i.e., `DataLoader.{mode}.sampler.batch_size` in config.
         """
-        if mode == 'train':
-            if 'batch_size' in self:
+        if mode == "train":
+            if "batch_size" in self:
                 return self.batch_size
             else:
                 # Default batch size
                 return 16
         else:
             raise ValueError(
-                f"Getting `batch_size` in {repr(mode)} mode is not supported.")
+                f"Getting `batch_size` in {repr(mode)} mode is not supported."
+            )

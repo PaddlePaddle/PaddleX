@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from ...base import BaseConfig
 from ....utils.misc import abspath
 from ..config_helper import PPDetConfigMixin
+from ..object_det.config import DetConfig
 
 
-class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
-    """ InstanceSegConfig """
+class InstanceSegConfig(DetConfig):
+    """InstanceSegConfig"""
 
     def load(self, config_path: str):
         """load the config from config file
@@ -46,15 +46,17 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         """
         self.update_from_dict(dict_like_obj, self._dict)
 
-    def update_dataset(self,
-                       dataset_path: str,
-                       dataset_type: str=None,
-                       *,
-                       data_fields: list[str]=None,
-                       image_dir: str="images",
-                       train_anno_path: str="annotations/instance_train.json",
-                       val_anno_path: str="annotations/instance_val.json",
-                       test_anno_path: str="annotations/instance_val.json"):
+    def update_dataset(
+        self,
+        dataset_path: str,
+        dataset_type: str = None,
+        *,
+        data_fields: list[str] = None,
+        image_dir: str = "images",
+        train_anno_path: str = "annotations/instance_train.json",
+        val_anno_path: str = "annotations/instance_val.json",
+        test_anno_path: str = "annotations/instance_val.json",
+    ):
         """update dataset settings
 
         Args:
@@ -75,24 +77,30 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         dataset_path = abspath(dataset_path)
 
         if dataset_type is None:
-            dataset_type = 'COCOInstSegDataset'
-        if dataset_type == 'COCOInstSegDataset':
-            ds_cfg = self._make_dataset_config(dataset_path, data_fields,
-                                               image_dir, train_anno_path,
-                                               val_anno_path, test_anno_path)
-            self.set_val('metric', 'COCO')
+            dataset_type = "COCOInstSegDataset"
+        if dataset_type == "COCOInstSegDataset":
+            ds_cfg = self._make_dataset_config(
+                dataset_path,
+                data_fields,
+                image_dir,
+                train_anno_path,
+                val_anno_path,
+                test_anno_path,
+            )
+            self.set_val("metric", "COCO")
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
         self.update(ds_cfg)
 
     def _make_dataset_config(
-            self,
-            dataset_root_path: str,
-            data_fields: list[str, ]=None,
-            image_dir: str="images",
-            train_anno_path: str="annotations/instance_train.json",
-            val_anno_path: str="annotations/instance_val.json",
-            test_anno_path: str="annotations/instance_val.json") -> dict:
+        self,
+        dataset_root_path: str,
+        data_fields: list[str,] = None,
+        image_dir: str = "images",
+        train_anno_path: str = "annotations/instance_train.json",
+        val_anno_path: str = "annotations/instance_val.json",
+        test_anno_path: str = "annotations/instance_val.json",
+    ) -> dict:
         """construct the dataset config that meets the format requirements
 
         Args:
@@ -106,35 +114,40 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Returns:
             dict: the dataset config.
         """
-        data_fields = ['image', 'gt_bbox', 'gt_poly', 'gt_class',
-                       'is_crowd'] if data_fields is None else data_fields
+        data_fields = (
+            ["image", "gt_bbox", "gt_poly", "gt_class", "is_crowd"]
+            if data_fields is None
+            else data_fields
+        )
 
         return {
-            'TrainDataset': {
-                'name': 'COCOInstSegDataset',
-                'image_dir': image_dir,
-                'anno_path': train_anno_path,
-                'dataset_dir': dataset_root_path,
-                'data_fields': data_fields
+            "TrainDataset": {
+                "name": "COCOInstSegDataset",
+                "image_dir": image_dir,
+                "anno_path": train_anno_path,
+                "dataset_dir": dataset_root_path,
+                "data_fields": data_fields,
             },
-            'EvalDataset': {
-                'name': 'COCOInstSegDataset',
-                'image_dir': image_dir,
-                'anno_path': val_anno_path,
-                'dataset_dir': dataset_root_path
+            "EvalDataset": {
+                "name": "COCOInstSegDataset",
+                "image_dir": image_dir,
+                "anno_path": val_anno_path,
+                "dataset_dir": dataset_root_path,
             },
-            'TestDataset': {
-                'name': 'ImageFolder',
-                'anno_path': test_anno_path,
-                'dataset_dir': dataset_root_path
+            "TestDataset": {
+                "name": "ImageFolder",
+                "anno_path": test_anno_path,
+                "dataset_dir": dataset_root_path,
             },
         }
 
-    def update_ema(self,
-                   use_ema: bool,
-                   ema_decay: float=0.9999,
-                   ema_decay_type: str="exponential",
-                   ema_filter_no_grad: bool=True):
+    def update_ema(
+        self,
+        use_ema: bool,
+        ema_decay: float = 0.9999,
+        ema_decay_type: str = "exponential",
+        ema_filter_no_grad: bool = True,
+    ):
         """update EMA setting
 
         Args:
@@ -144,12 +157,14 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
             ema_filter_no_grad (bool, optional): whether or not to filter the parameters that been set to stop gradient
                 and are not batch norm parameters. Defaults to True.
         """
-        self.update({
-            'use_ema': use_ema,
-            'ema_decay': ema_decay,
-            'ema_decay_type': ema_decay_type,
-            'ema_filter_no_grad': ema_filter_no_grad
-        })
+        self.update(
+            {
+                "use_ema": use_ema,
+                "ema_decay": ema_decay,
+                "ema_decay_type": ema_decay_type,
+                "ema_filter_no_grad": ema_filter_no_grad,
+            }
+        )
 
     def update_learning_rate(self, learning_rate: float):
         """update learning rate
@@ -157,7 +172,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             learning_rate (float): the learning rate value to set.
         """
-        self.LearningRate['base_lr'] = learning_rate
+        self.LearningRate["base_lr"] = learning_rate
 
     def update_warmup_steps(self, warmup_steps: int):
         """update warmup steps
@@ -165,12 +180,12 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             warmup_steps (int): the warmup steps value to set.
         """
-        schedulers = self.LearningRate['schedulers']
+        schedulers = self.LearningRate["schedulers"]
         for sch in schedulers:
-            key = 'name' if 'name' in sch else '_type_'
-            if sch[key] == 'LinearWarmup':
-                sch['steps'] = warmup_steps
-                sch['epochs_first'] = False
+            key = "name" if "name" in sch else "_type_"
+            if sch[key] == "LinearWarmup":
+                sch["steps"] = warmup_steps
+                sch["epochs_first"] = False
 
     def update_warmup_enable(self, use_warmup: bool):
         """whether or not to enable learning rate warmup
@@ -178,10 +193,10 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             use_warmup (bool): `True` is enable learning rate warmup and `False` is disable.
         """
-        schedulers = self.LearningRate['schedulers']
+        schedulers = self.LearningRate["schedulers"]
         for sch in schedulers:
-            if 'use_warmup' in sch:
-                sch['use_warmup'] = use_warmup
+            if "use_warmup" in sch:
+                sch["use_warmup"] = use_warmup
 
     def update_cossch_epoch(self, max_epochs: int):
         """update max epochs of cosine learning rate scheduler
@@ -189,11 +204,11 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             max_epochs (int): the max epochs value.
         """
-        schedulers = self.LearningRate['schedulers']
+        schedulers = self.LearningRate["schedulers"]
         for sch in schedulers:
-            key = 'name' if 'name' in sch else '_type_'
-            if sch[key] == 'CosineDecay':
-                sch['max_epochs'] = max_epochs
+            key = "name" if "name" in sch else "_type_"
+            if sch[key] == "CosineDecay":
+                sch["max_epochs"] = max_epochs
 
     def update_milestone(self, milestones: list[int]):
         """update milstone of `PiecewiseDecay` learning scheduler
@@ -201,13 +216,13 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             milestones (list[int]): the list of milestone values of `PiecewiseDecay` learning scheduler.
         """
-        schedulers = self.LearningRate['schedulers']
+        schedulers = self.LearningRate["schedulers"]
         for sch in schedulers:
-            key = 'name' if 'name' in sch else '_type_'
-            if sch[key] == 'PiecewiseDecay':
-                sch['milestones'] = milestones
+            key = "name" if "name" in sch else "_type_"
+            if sch[key] == "PiecewiseDecay":
+                sch["milestones"] = milestones
 
-    def update_batch_size(self, batch_size: int, mode: str='train'):
+    def update_batch_size(self, batch_size: int, mode: str = "train"):
         """update batch size setting
 
         Args:
@@ -218,14 +233,17 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Raises:
             ValueError: mode error.
         """
-        assert mode in ('train', 'eval', 'test'), \
-            'mode ({}) should be train, eval or test'.format(mode)
-        if mode == 'train':
-            self.TrainReader['batch_size'] = batch_size
-        elif mode == 'eval':
-            self.EvalReader['batch_size'] = batch_size
+        assert mode in (
+            "train",
+            "eval",
+            "test",
+        ), "mode ({}) should be train, eval or test".format(mode)
+        if mode == "train":
+            self.TrainReader["batch_size"] = batch_size
+        elif mode == "eval":
+            self.EvalReader["batch_size"] = batch_size
         else:
-            self.TestReader['batch_size'] = batch_size
+            self.TestReader["batch_size"] = batch_size
 
     def update_epochs(self, epochs: int):
         """update epochs setting
@@ -233,7 +251,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             epochs (int): the epochs number value to set
         """
-        self.update({'epoch': epochs})
+        self.update({"epoch": epochs})
 
     def update_device(self, device_type: str):
         """update device setting
@@ -242,10 +260,10 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
             device (str): the running device to set
         """
         if device_type.lower() == "gpu":
-            self['use_gpu'] = True
+            self["use_gpu"] = True
         else:
             assert device_type.lower() == "cpu"
-            self['use_gpu'] = False
+            self["use_gpu"] = False
 
     def update_save_dir(self, save_dir: str):
         """update directory to save outputs
@@ -253,7 +271,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             save_dir (str): the directory to save outputs.
         """
-        self['save_dir'] = abspath(save_dir)
+        self["save_dir"] = abspath(save_dir)
 
     def update_log_interval(self, log_interval: int):
         """update log interval(steps)
@@ -261,7 +279,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             log_interval (int): the log interval value to set.
         """
-        self.update({'log_iter': log_interval})
+        self.update({"log_iter": log_interval})
 
     def update_eval_interval(self, eval_interval: int):
         """update eval interval(epochs)
@@ -269,7 +287,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             eval_interval (int): the eval interval value to set.
         """
-        self.update({'snapshot_epoch': eval_interval})
+        self.update({"snapshot_epoch": eval_interval})
 
     def update_save_interval(self, save_interval: int):
         """update eval interval(epochs)
@@ -277,7 +295,16 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             save_interval (int): the save interval value to set.
         """
-        self.update({'snapshot_epoch': save_interval})
+        self.update({"snapshot_epoch": save_interval})
+
+    def update_log_ranks(self, device):
+        """update log ranks
+
+        Args:
+            device (str): the running device to set
+        """
+        log_ranks = device.split(":")[1]
+        self.update({"log_ranks": log_ranks})
 
     def update_weights(self, weight_path: str):
         """update model weight
@@ -285,7 +312,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             weight_path (str): the path to weight file of model.
         """
-        self['weights'] = abspath(weight_path)
+        self["weights"] = weight_path
 
     def update_pretrained_weights(self, pretrain_weights: str):
         """update pretrained weight path
@@ -294,9 +321,10 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
             pretrained_model (str): the local path or url of pretrained weight file to set.
         """
         if not pretrain_weights.startswith(
-                'http://') and not pretrain_weights.startswith('https://'):
+            "http://"
+        ) and not pretrain_weights.startswith("https://"):
             pretrain_weights = abspath(pretrain_weights)
-        self['pretrain_weights'] = pretrain_weights
+        self["pretrain_weights"] = pretrain_weights
 
     def update_num_class(self, num_classes: int):
         """update classes number
@@ -304,7 +332,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             num_classes (int): the classes number value to set.
         """
-        self['num_classes'] = num_classes
+        self["num_classes"] = num_classes
 
     def update_random_size(self, randomsize: list[list[int, int]]):
         """update `target_size` of `BatchRandomResize` op in TestReader
@@ -312,8 +340,9 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             randomsize (list[list[int, int]]): the list of different size scales.
         """
-        self.TestReader['batch_transforms']['BatchRandomResize'][
-            'target_size'] = randomsize
+        self.TestReader["batch_transforms"]["BatchRandomResize"][
+            "target_size"
+        ] = randomsize
 
     def update_num_workers(self, num_workers: int):
         """update workers number of train and eval dataloader
@@ -321,19 +350,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             num_workers (int): the value of train and eval dataloader workers number to set.
         """
-        self['worker_num'] = num_workers
-
-    def enable_shared_memory(self):
-        """enable shared memory setting of train and eval dataloader
-        """
-        self.update({'TrainReader': {'use_shared_memory': True}})
-        self.update({'EvalReader': {'use_shared_memory': True}})
-
-    def disable_shared_memory(self):
-        """disable shared memory setting of train and eval dataloader
-        """
-        self.update({'TrainReader': {'use_shared_memory': False}})
-        self.update({'EvalReader': {'use_shared_memory': False}})
+        self["worker_num"] = num_workers
 
     def update_static_assigner_epochs(self, static_assigner_epochs: int):
         """update static assigner epochs value
@@ -341,8 +358,8 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Args:
             static_assigner_epochs (int): the value of static assigner epochs
         """
-        assert 'PicoHeadV2' in self
-        self.PicoHeadV2['static_assigner_epoch'] = static_assigner_epochs
+        assert "PicoHeadV2" in self
+        self.PicoHeadV2["static_assigner_epoch"] = static_assigner_epochs
 
     def get_epochs_iters(self) -> int:
         """get epochs
@@ -382,9 +399,9 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Returns:
             float: the learning rate value, i.e., `Optimizer.lr.learning_rate` in config.
         """
-        return self.LearningRate['base_lr']
+        return self.LearningRate["base_lr"]
 
-    def get_batch_size(self, mode='train') -> int:
+    def get_batch_size(self, mode="train") -> int:
         """get batch size
 
         Args:
@@ -394,12 +411,12 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Returns:
             int: the batch size value of `mode`, i.e., `DataLoader.{mode}.sampler.batch_size` in config.
         """
-        if mode == 'train':
-            return self.TrainReader['batch_size']
-        elif mode == 'eval':
-            return self.EvalReader['batch_size']
-        elif mode == 'test':
-            return self.TestReader['batch_size']
+        if mode == "train":
+            return self.TrainReader["batch_size"]
+        elif mode == "eval":
+            return self.EvalReader["batch_size"]
+        elif mode == "test":
+            return self.TestReader["batch_size"]
         else:
             raise (f"Unknown mode: {repr(mode)}")
 
@@ -417,7 +434,7 @@ class InstanceSegConfig(BaseConfig, PPDetConfigMixin):
         Returns:
             float: the learning rate value.
         """
-        return self.LearningRate['base_lr'] // 2.0
+        return self.LearningRate["base_lr"] // 2.0
 
     def get_train_save_dir(self) -> str:
         """get the directory to save output
