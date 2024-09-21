@@ -12,6 +12,8 @@
 
 * [寒武纪模型列表](../models/support_mlu_model_list.md)
 
+## 1.1 模型选择
+
 当前PaddleX相关模型的源码放置在各个套件中，部分套件和模型并未接入PaddleX中，因此对模型进行适配前，请务必保证您的模型在PaddleX中已经接入，当前PaddleX模型列表详见 [PaddleX模型库](../models/support_model_list.md)。如果您有特殊的模型需求，请提交 [issue](https://github.com/PaddlePaddle/PaddleX/issues/new?assignees=&labels=&projects=&template=5_other.md&title=) 告知我们。
 
 如果您适配的模型在相关硬件上涉及到模型组网代码的修改，请先提交代码到对应的套件中，参考各套件贡献指南：
@@ -24,7 +26,11 @@
 
 4. https://github.com/PaddlePaddle/PaddleOCR/tree/develop
 
-5. https://github.com/PaddlePaddle/PaddleTS/tree/develop
+5. https://github.com/PaddlePaddle/PaddleTS
+
+## 1.2 数据集选择
+
+请确保您用于精度对齐的数据集是相应任务的标准数据集，如分类的ImageNet，检测的COCO/VOC等，务必确保相关模型在对应数据集上的训练精度可以对齐GPU模型。
 
 # 2. 提交说明issue
 
@@ -49,6 +55,10 @@
   * 硬件驱动版本
 
   * 算子库版本等
+
+* 用于说明训练精度的模型训练日志
+
+* 详细的模型复现脚本，包含环境准备、模型训练、精度验证等
 
 # 3. 更多文档
 
