@@ -1,7 +1,7 @@
 Global:
   model: PP-ShiTuV2_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
+  dataset_dir: "/paddle/dataset/paddlex/shitu_rec/Inshop_examples"
   device: gpu:0,1,2,3
   output: "output"
 
@@ -12,15 +12,16 @@ CheckDataset:
   split: 
     enable: False
     train_percent: null
-    val_percent: null
+    gallery_percent: null
+    query_percent: null
 
 Train:
-  num_classes: 102
-  epochs_iters: 2
+  num_classes: 159
+  epochs_iters: 20
   batch_size: 128
-  learning_rate: 0.1
-  pretrain_weight_path: null
-  warmup_steps: 1
+  learning_rate: 0.01
+  pretrain_weight_path: https://paddleclas.bj.bcebos.com/models/PP-ShiTu/PP-ShiTuV2_rec_pretrained.pdparams
+  warmup_steps: 5
   resume_path: null
   log_interval: 1
   eval_interval: 1
@@ -35,7 +36,7 @@ Export:
 
 Predict:
   model_dir: "output/best_model"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg"
   kernel_option:
     run_mode: paddle
     batch_size: 1
