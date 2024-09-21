@@ -182,6 +182,10 @@
 | SeaFormer_small | [SeaFormer_small.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_small.yaml)|
 | SeaFormer_base | [SeaFormer_base.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_base.yaml)|
 | SeaFormer_large | [SeaFormer_large.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_large.yaml)|
+### 6.STFPM 系列
+| 模型名称 | config |
+| :--- | :---: |
+| STFPM | [STFPM.yaml](../../../paddlex/configs/anomaly_detection/STFPM.yaml)|
 ## 五、表格识别
 | 模型名称 | config |
 | :--- | :---: |

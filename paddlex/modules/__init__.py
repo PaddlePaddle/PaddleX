@@ -29,6 +29,13 @@ from .image_classification import (
     ClsExportor,
     ClsPredictor,
 )
+from .anomaly_detection import (
+    UadDatasetChecker,
+    UadTrainer,
+    UadEvaluator,
+    UadExportor,
+    UadPredictor,
+)
 from .object_detection import (
     COCODatasetChecker,
     DetTrainer,

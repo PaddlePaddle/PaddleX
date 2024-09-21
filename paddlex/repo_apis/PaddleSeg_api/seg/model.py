@@ -332,12 +332,16 @@ class SegModel(BaseModel):
         if input_shape is not None:
             cli_args.append(CLIArgument("--input_shape", *input_shape))
 
-        output_op = kwargs.pop("output_op", None)
+        try:
+            output_op = config['output_op']
+        except:
+            output_op = kwargs.pop("output_op", None)
         if output_op is not None:
             assert output_op in [
                 "softmax",
                 "argmax",
-            ], "`output_op` must be 'softmax' or 'argmax'."
+                "none",
+            ], "`output_op` must be 'none', 'softmax' or 'argmax'."
             cli_args.append(CLIArgument("--output_op", output_op))
 
         self._assert_empty_kwargs(kwargs)
