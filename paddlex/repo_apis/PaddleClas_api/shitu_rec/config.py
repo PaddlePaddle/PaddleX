@@ -90,7 +90,7 @@ class ShiTuRecConfig(ClsConfig):
         Args:
             num_classes (int): the classes number value to set.
         """
-        update_str_list = [f"Arch.Neck.class_num={num_classes}"]
+        update_str_list = [f"Arch.Head.class_num={num_classes}"]
         self.update(update_str_list)
 
 
