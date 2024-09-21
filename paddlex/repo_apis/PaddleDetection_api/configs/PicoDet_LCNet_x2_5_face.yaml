@@ -1,5 +1,5 @@
 architecture: PicoDet
-pretrain_weights: http://10.214.40.33:8071/PicoDet_LCNet_x2_5_face_pretrain.pdparams
+pretrain_weights: https://paddledet.bj.bcebos.com/models/PicoDet_LCNet_x2_5_face_pretrain.pdparams
 weights: output/picodet_lcnet_x2_5_640_mainbody/model_final
 epoch: 300
 find_unused_parameters: True
