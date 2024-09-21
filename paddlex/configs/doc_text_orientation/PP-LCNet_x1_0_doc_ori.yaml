@@ -24,6 +24,7 @@ Train:
   resume_path: null
   log_interval: 10
   eval_interval: 1
+  save_interval: 1
 
 Evaluate:
   weight_path: "output/best_model.pdparams"
