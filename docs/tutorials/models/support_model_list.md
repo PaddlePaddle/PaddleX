@@ -115,9 +115,9 @@
 | PP-YOLOE_plus-M | [PP-YOLOE_plus-M.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-M.yaml)|
 | PP-YOLOE_plus-L | [PP-YOLOE_plus-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-L.yaml)|
 | PP-YOLOE_plus-X | [PP-YOLOE_plus-X.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-X.yaml)|
-| PP-YOLOE+_SOD-L | [PP-YOLOE+_SOD-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE+_SOD-L.yaml)|
-| PP-YOLOE+_SOD-S | [PP-YOLOE+_SOD-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE+_SOD-S.yaml)|
-| PP-YOLOE+_SOD-largesize-L | [PP-YOLOE+_SOD-largesize-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE+_SOD-largesize-L.yaml)|
+| PP-YOLOE+_SOD-L | [PP-YOLOE+_SOD-L.yaml](../../../paddlex/configs/smallobject_detection/PP-YOLOE+_SOD-L.yaml)|
+| PP-YOLOE+_SOD-S | [PP-YOLOE+_SOD-S.yaml](../../../paddlex/configs/smallobject_detection/PP-YOLOE+_SOD-S.yaml)|
+| PP-YOLOE+_SOD-largesize-L | [PP-YOLOE+_SOD-largesize-L.yaml](../../../paddlex/configs/smallobject_detection/PP-YOLOE+_SOD-largesize-L.yaml)|
 ### 2. RT-DETR 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -133,7 +133,7 @@
 | PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
 | PicoDet-M | [PicoDet-M.yaml](../../../paddlex/configs/object_detection/PicoDet-M.yaml)|
 | PicoDet-XS | [PicoDet-XS.yaml](../../../paddlex/configs/object_detection/PicoDet-XS.yaml)|
-| PP-ShiTuV2_det | [PP-ShiTuV2_det.yaml](../../../paddlex/configs/object_detection/PP-ShiTuV2_det.yaml)|
+| PP-ShiTuV2_det | [PP-ShiTuV2_det.yaml](../../../paddlex/configs/mainbody_detection/PP-ShiTuV2_det.yaml)|
 ### 4. YOLOv3 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -160,10 +160,10 @@
 ### 8. PP-YOLOE 系列
 | 模型名称 | config |
 | :--- | :---: |
-| PP-YOLOE-L_vehicle | [PP-YOLOE-vehicle-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-L_vehicle.yaml)|
-| PP-YOLOE-S_vehicle | [PP-YOLOE-vehicle-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-S_vehicle.yaml)|
-| PP-YOLOE-L_human | [PP-YOLOE-human-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-L_human.yaml)|
-| PP-YOLOE-S_human | [PP-YOLOE-human-S.yaml](../../../paddlex/configs/object_detection/PP-YOLOE-S_human.yaml)|
+| PP-YOLOE-L_vehicle | [PP-YOLOE-vehicle-L.yaml](../../../paddlex/configs/vehicle_detection/PP-YOLOE-L_vehicle.yaml)|
+| PP-YOLOE-S_vehicle | [PP-YOLOE-vehicle-S.yaml](../../../paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml)|
+| PP-YOLOE-L_human | [PP-YOLOE-human-L.yaml](../../../paddlex/configs/human_detection/PP-YOLOE-L_human.yaml)|
+| PP-YOLOE-S_human | [PP-YOLOE-human-S.yaml](../../../paddlex/configs/human_detection/PP-YOLOE-S_human.yaml)|
 ### 9. CenterNet 系列
 | 模型名称 | config |
 | :--- | :---: |
