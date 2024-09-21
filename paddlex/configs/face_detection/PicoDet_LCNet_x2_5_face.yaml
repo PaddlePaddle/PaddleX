@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Export:
-  weight_path: http://10.214.40.33:8071/PicoDet_LCNet_x2_5_face_pretrain.pdparams
+  weight_path: https://paddledet.bj.bcebos.com/models/PicoDet_LCNet_x2_5_face_pretrain.pdparams
 
 Predict:
   model_dir: "output/best_model"
