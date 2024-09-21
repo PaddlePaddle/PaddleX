@@ -27,10 +27,10 @@ AMP:
 
 # model architecture
 Arch:
-  name: MobileNetV4_hybrid_large
+  name: MobileNetV4_hybrid_medium
   drop_rate: 0.2
   drop_path_rate: 0.1
-  class_num: 40
+  class_num: 1000
  
  
 # loss function config for traing/eval process
@@ -69,8 +69,8 @@ DataLoader:
   Train:
     dataset:
       name: ImageNetDataset
-      image_root: ./dataset/trash40/
-      cls_label_path: ./dataset/trash40/train.txt
+      image_root: ./dataset/ILSVRC2012/
+      cls_label_path: ./dataset/ILSVRC2012/train_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
@@ -118,8 +118,8 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: ./dataset/trash40/
-      cls_label_path: ./dataset/trash40/val.txt
+      image_root: ./dataset/ILSVRC2012/
+      cls_label_path: ./dataset/ILSVRC2012/val_list_test.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
@@ -141,7 +141,7 @@ DataLoader:
       drop_last: False
       shuffle: False
     loader:
-      num_workers: 0
+      num_workers: 12
       use_shared_memory: True
 
 Infer:

@@ -115,7 +115,6 @@ class ClsModel(BaseModel):
 
             config.dump(config_path)
             self._assert_empty_kwargs(kwargs)
-            print(config)
             return self.runner.train(
                 config_path, cli_args, device, ips, save_dir, do_eval=do_eval
             )
