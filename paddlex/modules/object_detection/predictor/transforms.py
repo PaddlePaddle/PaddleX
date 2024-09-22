@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import cv2
 
 import numpy as np
 import math
@@ -234,6 +235,62 @@ def draw_mask(im, np_boxes, np_masks, labels, threshold=0.5):
     return Image.fromarray(im.astype("uint8"))
 
 
+def draw_segm(im, np_segms, np_label, np_score, labels, threshold=0.5, alpha=0.7):
+    """
+    Draw segmentation on image
+    """
+    mask_color_id = 0
+    w_ratio = 0.4
+    color_list = get_color_map_list(len(labels))
+    im = np.array(im).astype("float32")
+    clsid2color = {}
+    np_segms = np_segms.astype(np.uint8)
+    for i in range(np_segms.shape[0]):
+        mask, score, clsid = np_segms[i], np_score[i], np_label[i]
+        if score < threshold:
+            continue
+
+        if clsid not in clsid2color:
+            clsid2color[clsid] = color_list[clsid]
+        color_mask = clsid2color[clsid]
+        for c in range(3):
+            color_mask[c] = color_mask[c] * (1 - w_ratio) + w_ratio * 255
+        idx = np.nonzero(mask)
+        color_mask = np.array(color_mask)
+        idx0 = np.minimum(idx[0], im.shape[0] - 1)
+        idx1 = np.minimum(idx[1], im.shape[1] - 1)
+        im[idx0, idx1, :] *= 1.0 - alpha
+        im[idx0, idx1, :] += alpha * color_mask
+        sum_x = np.sum(mask, axis=0)
+        x = np.where(sum_x > 0.5)[0]
+        sum_y = np.sum(mask, axis=1)
+        y = np.where(sum_y > 0.5)[0]
+        x0, x1, y0, y1 = x[0], x[-1], y[0], y[-1]
+        cv2.rectangle(
+            im, (x0, y0), (x1, y1), tuple(color_mask.astype("int32").tolist()), 1
+        )
+        bbox_text = "%s %.2f" % (labels[clsid], score)
+        t_size = cv2.getTextSize(bbox_text, 0, 0.3, thickness=1)[0]
+        cv2.rectangle(
+            im,
+            (x0, y0),
+            (x0 + t_size[0], y0 - t_size[1] - 3),
+            tuple(color_mask.astype("int32").tolist()),
+            -1,
+        )
+        cv2.putText(
+            im,
+            bbox_text,
+            (x0, y0 - 2),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.3,
+            (0, 0, 0),
+            1,
+            lineType=cv2.LINE_AA,
+        )
+    return Image.fromarray(im.astype("uint8"))
+
+
 class SaveDetResults(BaseTransform):
     """Save Result Transform"""
 
@@ -262,7 +319,19 @@ class SaveDetResults(BaseTransform):
                 threshold=self.threshold,
                 labels=labels,
             )
-        image = draw_box(image, data[K.BOXES], threshold=self.threshold, labels=labels)
+        if K.SEGM in data:
+            image = draw_segm(
+                image,
+                data[K.SEGM],
+                data[K.LABEL],
+                data[K.SCORE],
+                labels=labels,
+                threshold=self.threshold,
+            )
+        if K.SEGM not in data:
+            image = draw_box(
+                image, data[K.BOXES], threshold=self.threshold, labels=labels
+            )
 
         self._write_image(save_path, image)
         return data
@@ -276,7 +345,7 @@ class SaveDetResults(BaseTransform):
     @classmethod
     def get_input_keys(cls):
         """get input keys"""
-        return [K.IM_PATH, K.BOXES]
+        return [[K.IM_PATH, K.BOXES], [K.IM_PATH]]
 
     @classmethod
     def get_output_keys(cls):
@@ -433,13 +502,13 @@ class PrintResult(BaseTransform):
     def apply(self, data):
         """apply"""
         logging.info("The prediction result is:")
-        logging.info(data[K.BOXES])
+        logging.info(data[K.BOXES] if K.BOXES in data else data[K.SEGM])
         return data
 
     @classmethod
     def get_input_keys(cls):
         """get input keys"""
-        return [K.BOXES]
+        return [[], [K.BOXES]]
 
     @classmethod
     def get_output_keys(cls):
