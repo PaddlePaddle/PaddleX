@@ -30,6 +30,14 @@ from .image_classification import (
     ClsPredictor,
 )
 
+from .multilabel_classification import (
+    MLClsDatasetChecker,
+    MLClsTrainer,
+    MLClsEvaluator,
+    MLClsExportor,
+    MLClsPredictor,
+)
+
 from .general_recognition import (
     ShiTuRecDatasetChecker,
     ShiTuRecTrainer,
