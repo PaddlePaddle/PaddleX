@@ -22,6 +22,7 @@ from .text_recognition import TextRecPredictor
 from .table_recognition import TablePredictor
 from .object_detection import DetPredictor
 from .instance_segmentation import InstanceSegPredictor
+from .semantic_segmentation import SegPredictor
 from .official_models import official_models
 
 

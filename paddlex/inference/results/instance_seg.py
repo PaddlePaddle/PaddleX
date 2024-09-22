@@ -60,7 +60,7 @@ def draw_mask(im, np_boxes, np_masks, labels):
     return Image.fromarray(im.astype("uint8"))
 
 
-class InstanceSegResults(BaseResult):
+class InstanceSegResult(BaseResult):
     """Save Result Transform"""
 
     def __init__(self, data):
