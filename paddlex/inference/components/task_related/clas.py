@@ -112,13 +112,13 @@ class MultiLabelThreshOutput(BaseComponent):
 class NormalizeFeatures(BaseComponent):
     """Normalize Features Transform"""
 
-    INPUT_KEYS = ["cls_pred"]
+    INPUT_KEYS = ["pred"]
     OUTPUT_KEYS = ["cls_res"]
-    DEAULT_INPUTS = {"cls_res": "cls_res"}
-    DEAULT_OUTPUTS = {"cls_pred": "cls_pred"}
+    DEAULT_INPUTS = {"pred": "pred"}
+    DEAULT_OUTPUTS = {"cls_res": "cls_res"}
 
-    def apply(self, cls_pred):
+    def apply(self, pred):
         """apply"""
-        feas_norm = np.sqrt(np.sum(np.square(cls_pred), axis=0, keepdims=True))
-        cls_res = np.divide(cls_pred, feas_norm)
+        feas_norm = np.sqrt(np.sum(np.square(pred[0]), axis=0, keepdims=True))
+        cls_res = np.divide(pred[0], feas_norm)
         return {"cls_res": cls_res}

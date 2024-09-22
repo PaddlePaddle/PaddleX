@@ -23,6 +23,7 @@ from .table_recognition import TablePredictor
 from .object_detection import DetPredictor
 from .instance_segmentation import InstanceSegPredictor
 from .semantic_segmentation import SegPredictor
+from .general_recognition import ShiTuRecPredictor
 from .official_models import official_models
 
 
