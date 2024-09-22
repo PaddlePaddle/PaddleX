@@ -22,12 +22,21 @@ from .base import (
     create_model,
     PaddleInferenceOption,
 )
+
 from .image_classification import (
     ClsDatasetChecker,
     ClsTrainer,
     ClsEvaluator,
     ClsExportor,
     ClsPredictor,
+)
+
+from .multilabel_classification import (
+    MLClsDatasetChecker,
+    MLClsTrainer,
+    MLClsEvaluator,
+    MLClsExportor,
+    MLClsPredictor,
 )
 
 from .general_recognition import (
