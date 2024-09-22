@@ -29,6 +29,9 @@ Evaluate:
   weight_path: "output/best_model/model.pdparams"
   log_interval: 10
 
+Export:
+  weight_path: https://paddleseg.bj.bcebos.com/dygraph/ade20k/seaformer_ade20k_512x512_160k/model.pdparams
+
 Predict:
   model_dir: "output/best_model/model"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_001.jpg"

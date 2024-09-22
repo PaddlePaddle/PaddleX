@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 
 import os
@@ -30,7 +29,7 @@ from ...utils.misc import abspath
 from ...utils.flags import DRY_RUN
 from ...utils.errors import raise_unsupported_api_error, CalledProcessError
 
-__all__ = ['BaseRunner', 'InferOnlyRunner']
+__all__ = ["BaseRunner", "InferOnlyRunner"]
 
 
 class BaseRunner(metaclass=abc.ABCMeta):
@@ -155,8 +154,9 @@ class BaseRunner(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def compression(self, config_path, train_cli_args, export_cli_args, device,
-                    train_save_dir):
+    def compression(
+        self, config_path, train_cli_args, export_cli_args, device, train_save_dir
+    ):
         """
         Execute model compression (quantization aware training and model export)
             commands.
@@ -177,7 +177,7 @@ class BaseRunner(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     def distributed(self, device, ips=None, log_dir=None):
-        """ distributed """
+        """distributed"""
         # TODO: docstring
         args = [self.python]
         if device is None:
@@ -187,52 +187,54 @@ class BaseRunner(metaclass=abc.ABCMeta):
             return args, None
         else:
             num_devices = len(dev_ids)
-            dev_ids = ','.join(dev_ids)
+            dev_ids = ",".join(dev_ids)
         if num_devices > 1:
-            args.extend(['-m', 'paddle.distributed.launch'])
-            args.extend(['--devices', dev_ids])
+            args.extend(["-m", "paddle.distributed.launch"])
+            args.extend(["--devices", dev_ids])
             if ips is not None:
-                args.extend(['--ips', ips])
+                args.extend(["--ips", ips])
             if log_dir is None:
                 log_dir = os.getcwd()
-            args.extend(['--log_dir', self._get_dist_train_log_dir(log_dir)])
+            args.extend(["--log_dir", self._get_dist_train_log_dir(log_dir)])
         elif num_devices == 1:
             new_env = os.environ.copy()
-            if device == 'xpu':
-                new_env['XPU_VISIBLE_DEVICES'] = dev_ids
-            elif device == 'npu':
-                new_env['ASCEND_RT_VISIBLE_DEVICES'] = dev_ids
-            elif device == 'mlu':
-                new_env['MLU_VISIBLE_DEVICES'] = dev_ids
+            if device == "xpu":
+                new_env["XPU_VISIBLE_DEVICES"] = dev_ids
+            elif device == "npu":
+                new_env["ASCEND_RT_VISIBLE_DEVICES"] = dev_ids
+            elif device == "mlu":
+                new_env["MLU_VISIBLE_DEVICES"] = dev_ids
             else:
-                new_env['CUDA_VISIBLE_DEVICES'] = dev_ids
+                new_env["CUDA_VISIBLE_DEVICES"] = dev_ids
             return args, new_env
         return args, None
 
     def parse_device(self, device):
-        """ parse_device """
+        """parse_device"""
         # According to https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/device/set_device_cn.html
-        if ':' not in device:
+        if ":" not in device:
             device_type, dev_ids = device, []
         else:
-            device_type, dev_ids = device.split(':')
-            dev_ids = dev_ids.split(',')
-        if device_type not in ('cpu', 'gpu', 'xpu', 'npu', 'mlu'):
+            device_type, dev_ids = device.split(":")
+            dev_ids = dev_ids.split(",")
+        if device_type not in ("cpu", "gpu", "xpu", "npu", "mlu"):
             raise ValueError("Unsupported device type.")
         for dev_id in dev_ids:
             if not dev_id.isdigit():
                 raise ValueError("Device ID must be an integer.")
         return device_type, dev_ids
 
-    def run_cmd(self,
-                cmd,
-                env=None,
-                switch_wdir=True,
-                silent=False,
-                echo=True,
-                capture_output=False,
-                log_path=None):
-        """ run_cmd """
+    def run_cmd(
+        self,
+        cmd,
+        env=None,
+        switch_wdir=True,
+        silent=False,
+        echo=True,
+        capture_output=False,
+        log_path=None,
+    ):
+        """run_cmd"""
 
         def _trans_args(cmd):
             out = []
@@ -247,10 +249,9 @@ class BaseRunner(metaclass=abc.ABCMeta):
 
         if DRY_RUN:
             # TODO: Accommodate Windows system
-            logging.info(' '.join(shlex.quote(x) for x in cmd))
+            logging.info(" ".join(shlex.quote(x) for x in cmd))
             # Mock return
-            return CompletedProcess(
-                cmd, returncode=0, stdout=str(cmd), stderr=None)
+            return CompletedProcess(cmd, returncode=0, stdout=str(cmd), stderr=None)
 
         if switch_wdir:
             if isinstance(switch_wdir, str):
@@ -264,7 +265,8 @@ class BaseRunner(metaclass=abc.ABCMeta):
         if not capture_output:
             if log_path is not None:
                 logging.warning(
-                    "`log_path` will be ignored when `capture_output` is False.")
+                    "`log_path` will be ignored when `capture_output` is False."
+                )
 
             cp = _run_cmd(
                 cmd,
@@ -274,35 +276,38 @@ class BaseRunner(metaclass=abc.ABCMeta):
                 echo=echo,
                 pipe_stdout=False,
                 pipe_stderr=False,
-                blocking=True)
+                blocking=True,
+            )
             cp = CompletedProcess(
-                cp.args, cp.returncode, stdout=cp.stdout, stderr=cp.stderr)
+                cp.args, cp.returncode, stdout=cp.stdout, stderr=cp.stderr
+            )
         else:
             # Refer to
             # https://stackoverflow.com/questions/17190221/subprocess-popen-cloning-stdout-and-stderr-both-to-terminal-and-variables/25960956
-            async def _read_display_and_record_from_stream(in_stream,
-                                                           out_stream, files):
+            async def _read_display_and_record_from_stream(
+                in_stream, out_stream, files
+            ):
                 # According to
                 # https://docs.python.org/3/library/subprocess.html#frequently-used-arguments
                 _ENCODING = locale.getpreferredencoding(False)
                 chars = []
-                out_stream_is_buffered = hasattr(out_stream, 'buffer')
+                out_stream_is_buffered = hasattr(out_stream, "buffer")
                 while True:
                     flush = False
                     char = await in_stream.read(1)
-                    if char == b'':
+                    if char == b"":
                         break
                     if out_stream_is_buffered:
                         out_stream.buffer.write(char)
                     chars.append(char)
-                    if char == b'\n':
+                    if char == b"\n":
                         flush = True
-                    elif char == b'\r':
+                    elif char == b"\r":
                         # NOTE: In order to get tqdm progress bars to produce normal outputs
                         # we treat '\r' as an ending character of line
                         flush = True
                     if flush:
-                        line = b''.join(chars)
+                        line = b"".join(chars)
                         line = line.decode(_ENCODING)
                         if not out_stream_is_buffered:
                             # We use line buffering
@@ -316,10 +321,13 @@ class BaseRunner(metaclass=abc.ABCMeta):
             async def _tee_proc_call(proc_call, out_files, err_files):
                 proc = await proc_call
                 await asyncio.gather(
-                    _read_display_and_record_from_stream(proc.stdout,
-                                                         sys.stdout, out_files),
-                    _read_display_and_record_from_stream(proc.stderr,
-                                                         sys.stderr, err_files))
+                    _read_display_and_record_from_stream(
+                        proc.stdout, sys.stdout, out_files
+                    ),
+                    _read_display_and_record_from_stream(
+                        proc.stderr, sys.stderr, err_files
+                    ),
+                )
                 # NOTE: https://docs.python.org/3/library/subprocess.html#subprocess.Popen.wait
                 retcode = await proc.wait()
                 return retcode
@@ -335,59 +343,62 @@ class BaseRunner(metaclass=abc.ABCMeta):
                     pipe_stdout=True,
                     pipe_stderr=True,
                     blocking=False,
-                    async_run=True)
+                    async_run=True,
+                )
                 out_files = [stdout_buf]
                 err_files = [stderr_buf]
                 if log_path is not None:
                     log_dir = os.path.dirname(log_path)
                     os.makedirs(log_dir, exist_ok=True)
-                    log_file = open(log_path, 'w', encoding='utf-8')
+                    log_file = open(log_path, "w", encoding="utf-8")
                     logging.info(f"\nLog path: {os.path.abspath(log_path)} \n")
                     out_files.append(log_file)
                     err_files.append(log_file)
                 try:
                     retcode = asyncio.run(
-                        _tee_proc_call(proc_call, out_files, err_files))
+                        _tee_proc_call(proc_call, out_files, err_files)
+                    )
                 finally:
                     if log_path is not None:
                         log_file.close()
-                cp = CompletedProcess(cmd, retcode,
-                                      stdout_buf.getvalue(),
-                                      stderr_buf.getvalue())
+                cp = CompletedProcess(
+                    cmd, retcode, stdout_buf.getvalue(), stderr_buf.getvalue()
+                )
 
         if cp.returncode != 0:
             raise CalledProcessError(
-                cp.returncode, cp.args, output=cp.stdout, stderr=cp.stderr)
+                cp.returncode, cp.args, output=cp.stdout, stderr=cp.stderr
+            )
         return cp
 
     def _get_dist_train_log_dir(self, log_dir):
-        """ _get_dist_train_log_dir """
-        return os.path.join(log_dir, 'distributed_train_logs')
+        """_get_dist_train_log_dir"""
+        return os.path.join(log_dir, "distributed_train_logs")
 
     def _get_train_log_path(self, log_dir):
-        """ _get_train_log_path """
-        return os.path.join(log_dir, 'train.log')
+        """_get_train_log_path"""
+        return os.path.join(log_dir, "train.log")
 
 
 class InferOnlyRunner(BaseRunner):
-    """ InferOnlyRunner """
+    """InferOnlyRunner"""
 
     def train(self, *args, **kwargs):
-        """ train """
-        raise_unsupported_api_error(self.__class__, 'train')
+        """train"""
+        raise_unsupported_api_error(self.__class__, "train")
 
     def evaluate(self, *args, **kwargs):
-        """ evaluate """
-        raise_unsupported_api_error(self.__class__, 'evalaute')
+        """evaluate"""
+        raise_unsupported_api_error(self.__class__, "evalaute")
 
     def predict(self, *args, **kwargs):
-        """ predict """
-        raise_unsupported_api_error(self.__class__, 'predict')
+        """predict"""
+        raise_unsupported_api_error(self.__class__, "predict")
 
     def export(self, *args, **kwargs):
-        """ export """
-        raise_unsupported_api_error(self.__class__, 'export')
+        """export"""
+        raise_unsupported_api_error(self.__class__, "export")
 
     def compression(self, *args, **kwargs):
-        """ compression """
-        raise_unsupported_api_error(self.__class__, 'compression')
+        """compression"""
+        raise_unsupported_api_error(self.__class__, "compression")

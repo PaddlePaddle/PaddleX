@@ -20,7 +20,7 @@ result = pipeline.predict(
         {'input_path': "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"}
     )
 print(result["cls_result"])
-```  
+```
 
 如上代码所示，具体来说需要简单几步：1. 实例化 `PaddleInferenceOption` 进行推理相关设置；2. 实例化模型产线对象；3. 调用模型产线对象的 `predict` 方法进行推理预测。
 

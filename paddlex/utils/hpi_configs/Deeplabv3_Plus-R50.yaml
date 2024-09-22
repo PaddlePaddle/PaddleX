@@ -1,0 +1,32 @@
+Hpi:
+  backend_config:
+    onnx_runtime:
+      cpu_num_threads: 8
+    paddle_infer:
+      cpu_num_threads: 8
+      enable_log_info: false
+    paddle_tensorrt:
+      dynamic_shapes:
+        enable_log_info: false
+        x:
+        - []
+        - []
+        - []
+    tensorrt:
+      dynamic_shapes:
+        x:
+        - []
+        - []
+        - []
+  selected_backends:
+    cpu: onnx_runtime
+    gpu: tensorrt
+  supported_backends:
+    cpu:
+    - paddle_infer
+    - onnx_runtime
+    gpu:
+    - paddle_infer
+    - paddle_tensorrt
+    - onnx_runtime
+    - tensorrt

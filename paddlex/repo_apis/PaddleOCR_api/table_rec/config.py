@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,9 +20,9 @@ from ..text_rec.config import TextRecConfig
 
 
 class TableRecConfig(TextRecConfig):
-    """ Table Recognition Config """
+    """Table Recognition Config"""
 
-    def update_dataset(self, dataset_path: str, dataset_type: str=None):
+    def update_dataset(self, dataset_path: str, dataset_type: str = None):
         """update dataset settings
 
         Args:
@@ -34,17 +34,17 @@ class TableRecConfig(TextRecConfig):
         """
         dataset_path = abspath(dataset_path)
         if dataset_type is None:
-            dataset_type = 'PubTabTableRecDataset'
-        if dataset_type == 'PubTabTableRecDataset':
+            dataset_type = "PubTabTableRecDataset"
+        if dataset_type == "PubTabTableRecDataset":
             _cfg = {
-                'Train.dataset.name': dataset_type,
-                'Train.dataset.data_dir': dataset_path,
-                'Train.dataset.label_file_list':
-                [os.path.join(dataset_path, 'train.txt')],
-                'Eval.dataset.name': dataset_type,
-                'Eval.dataset.data_dir': dataset_path,
-                'Eval.dataset.label_file_list':
-                [os.path.join(dataset_path, 'val.txt')]
+                "Train.dataset.name": dataset_type,
+                "Train.dataset.data_dir": dataset_path,
+                "Train.dataset.label_file_list": [
+                    os.path.join(dataset_path, "train.txt")
+                ],
+                "Eval.dataset.name": dataset_type,
+                "Eval.dataset.data_dir": dataset_path,
+                "Eval.dataset.label_file_list": [os.path.join(dataset_path, "val.txt")],
             }
             self.update(_cfg)
         else:
@@ -57,8 +57,8 @@ class TableRecConfig(TextRecConfig):
             str: resize scale, i.e. `Eval.dataset.transforms.ResizeTableImage.max_len`
         """
         size = None
-        transforms = self.dict['Eval']['dataset']['transforms']
+        transforms = self.dict["Eval"]["dataset"]["transforms"]
         for op in transforms:
-            if list(op)[0] == 'ResizeTableImage':
-                size = op['ResizeTableImage']['max_len']
+            if list(op)[0] == "ResizeTableImage":
+                size = op["ResizeTableImage"]["max_len"]
         return size

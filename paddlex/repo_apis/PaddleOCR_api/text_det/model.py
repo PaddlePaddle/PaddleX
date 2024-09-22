@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,14 +21,16 @@ from ..text_rec.model import TextRecModel
 
 
 class TextDetModel(TextRecModel):
-    """ Text Detection Model """
+    """Text Detection Model"""
 
-    def infer(self,
-              model_dir: str,
-              input_path: str,
-              device: str='gpu',
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def infer(
+        self,
+        model_dir: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs
+    ) -> CompletedProcess:
         """predict image using infernece model
 
         Args:
@@ -44,23 +46,23 @@ class TextDetModel(TextRecModel):
         cli_args = []
 
         model_dir = abspath(model_dir)
-        cli_args.append(CLIArgument('--det_model_dir', model_dir))
+        cli_args.append(CLIArgument("--det_model_dir", model_dir))
 
         input_path = abspath(input_path)
-        cli_args.append(CLIArgument('--image_dir', input_path))
+        cli_args.append(CLIArgument("--image_dir", input_path))
 
         device_type, _ = self.runner.parse_device(device)
-        cli_args.append(CLIArgument('--use_gpu', str(device_type == 'gpu')))
+        cli_args.append(CLIArgument("--use_gpu", str(device_type == "gpu")))
 
         if save_dir is not None:
             save_dir = abspath(save_dir)
         else:
             # `save_dir` is None
-            save_dir = abspath(os.path.join('output', 'infer'))
-        cli_args.append(CLIArgument('--draw_img_save_dir', save_dir))
+            save_dir = abspath(os.path.join("output", "infer"))
+        cli_args.append(CLIArgument("--draw_img_save_dir", save_dir))
 
         model_type = config._get_model_type()
-        cli_args.append(CLIArgument('--det_algorithm', model_type))
+        cli_args.append(CLIArgument("--det_algorithm", model_type))
 
         self._assert_empty_kwargs(kwargs)
 

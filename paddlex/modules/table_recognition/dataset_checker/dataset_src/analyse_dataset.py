@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 
 import os
@@ -28,23 +27,23 @@ def simple_analyse(dataset_path):
 
     Returns:
         tuple: tuple of sample number, image path and label path for train, val and text subdataset.
-    
+
     """
-    tags = ['train', 'val', 'test']
+    tags = ["train", "val", "test"]
     sample_cnts = defaultdict(int)
     img_paths = defaultdict(list)
     res = [None] * 6
 
     for tag in tags:
-        file_list = os.path.join(dataset_path, f'{tag}.txt')
+        file_list = os.path.join(dataset_path, f"{tag}.txt")
         if not os.path.exists(file_list):
-            if tag in ('train', 'val'):
+            if tag in ("train", "val"):
                 res.insert(0, "数据集不符合规范，请先通过数据校准")
                 return res
             else:
                 continue
         else:
-            with custom_open(file_list, 'r') as f:
+            with custom_open(file_list, "r") as f:
                 all_lines = f.readlines()
 
             # Each line corresponds to a sample

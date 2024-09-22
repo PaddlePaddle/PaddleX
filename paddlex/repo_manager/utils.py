@@ -15,10 +15,14 @@
 import os
 import sys
 import json
+import platform
 import subprocess
 import contextlib
 
 from parsley import makeGrammar
+
+
+PLATFORM = platform.system()
 
 
 def _check_call(*args, **kwargs):
@@ -30,35 +34,32 @@ def _check_output(*args, **kwargs):
 
 
 def check_installation_using_pip(pkg):
-    """ check_installation_using_pip """
-    out = _check_output(['pip', 'list', '--format', 'json'])
+    """check_installation_using_pip"""
+    out = _check_output(["pip", "list", "--format", "json"])
     out = out.rstrip()
     lst = json.loads(out)
-    return any(ele['name'] == pkg for ele in lst)
+    return any(ele["name"] == pkg for ele in lst)
 
 
 def uninstall_package_using_pip(pkg):
-    """ uninstall_package_using_pip """
-    return _check_call([sys.executable, '-m', 'pip', 'uninstall', '-y', pkg])
+    """uninstall_package_using_pip"""
+    return _check_call([sys.executable, "-m", "pip", "uninstall", "-y", pkg])
 
 
-def install_packages_using_pip(pkgs,
-                               editable=False,
-                               req_files=None,
-                               cons_files=None,
-                               no_deps=False,
-                               pip_flags=None):
-    """ install_packages_using_pip """
-    args = [sys.executable, '-m', 'pip', 'install']
+def install_packages_using_pip(
+    pkgs, editable=False, req_files=None, cons_files=None, no_deps=False, pip_flags=None
+):
+    """install_packages_using_pip"""
+    args = [sys.executable, "-m", "pip", "install"]
     if editable:
-        args.append('-e')
+        args.append("-e")
     if req_files is not None:
         for req_file in req_files:
-            args.append('-r')
+            args.append("-r")
             args.append(req_file)
     if cons_files is not None:
         for cons_file in cons_files:
-            args.append('-c')
+            args.append("-c")
             args.append(cons_file)
     if isinstance(pkgs, str):
         pkgs = [pkgs]
@@ -69,46 +70,50 @@ def install_packages_using_pip(pkgs,
 
 
 def install_deps_using_pip():
-    """ install requirements """
+    """install requirements"""
     current_file_path = os.path.dirname(os.path.abspath(__file__))
-    deps_path = os.path.join(current_file_path, 'requirements.txt')
-    args = [sys.executable, '-m', 'pip', 'install', '-r', deps_path]
+    deps_path = os.path.join(current_file_path, "requirements.txt")
+    args = [sys.executable, "-m", "pip", "install", "-r", deps_path]
     return _check_call(args)
 
 
 def clone_repo_using_git(url, branch=None):
-    """ clone_repo_using_git """
-    args = ['git', 'clone', '--depth', '1']
+    """clone_repo_using_git"""
+    args = ["git", "clone", "--depth", "1"]
     if isinstance(url, str):
         url = [url]
     args.extend(url)
     if branch is not None:
-        args.extend(['-b', branch])
+        args.extend(["-b", branch])
     return _check_call(args)
 
 
 def fetch_repo_using_git(branch, url, depth=1):
-    """ fetch_repo_using_git """
-    args = ['git', 'fetch', url, branch, '--depth', str(depth)]
+    """fetch_repo_using_git"""
+    args = ["git", "fetch", url, branch, "--depth", str(depth)]
     _check_call(args)
 
 
 def reset_repo_using_git(pointer, hard=True):
-    """ reset_repo_using_git """
-    args = ['git', 'reset', '--hard', pointer]
+    """reset_repo_using_git"""
+    args = ["git", "reset", "--hard", pointer]
     return _check_call(args)
 
 
 def remove_repo_using_rm(name):
-    """ remove_repo_using_rm """
-    return _check_call(['rm', '-rf', name])
+    """remove_repo_using_rm"""
+    if os.path.exists(name):
+        if PLATFORM == "Windows":
+            return _check_call(["rmdir", "/S", "/Q", name], shell=True)
+        else:
+            return _check_call(["rm", "-rf", name])
 
 
-def build_wheel_using_pip(pkg, dst_dir='./', with_deps=False, pip_flags=None):
-    """ build_wheel_using_pip """
-    args = [sys.executable, '-m', 'pip', 'wheel', '--wheel-dir', dst_dir]
+def build_wheel_using_pip(pkg, dst_dir="./", with_deps=False, pip_flags=None):
+    """build_wheel_using_pip"""
+    args = [sys.executable, "-m", "pip", "wheel", "--wheel-dir", dst_dir]
     if not with_deps:
-        args.append('--no-deps')
+        args.append("--no-deps")
     if pip_flags is not None:
         args.extend(pip_flags)
     args.append(pkg)
@@ -118,15 +123,15 @@ def build_wheel_using_pip(pkg, dst_dir='./', with_deps=False, pip_flags=None):
 
 @contextlib.contextmanager
 def mute():
-    """ mute """
-    with open(os.devnull, 'w') as f:
+    """mute"""
+    with open(os.devnull, "w") as f:
         with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
             yield
 
 
 @contextlib.contextmanager
 def switch_working_dir(new_wd):
-    """ switch_working_dir """
+    """switch_working_dir"""
     cwd = os.getcwd()
     os.chdir(new_wd)
     try:
@@ -253,7 +258,7 @@ _pep508_grammar = None
 
 
 def to_dep_spec_pep508(s):
-    """ to_dep_spec_pep508 """
+    """to_dep_spec_pep508"""
     global _pep508_grammar
     if _pep508_grammar is None:
         _pep508_grammar = _build_dep_spec_pep508_grammar()
@@ -262,20 +267,20 @@ def to_dep_spec_pep508(s):
 
 
 def env_marker_ast2expr(marker_ast):
-    """ env_marker_ast2expr """
+    """env_marker_ast2expr"""
     MARKER_VARS = (
-        'python_version',
-        'python_full_version',
-        'os_name',
-        'sys_platform',
-        'platform_release',
-        'platform_system',
-        'platform_version',
-        'platform_machine',
-        'platform_python_implementation',
-        'implementation_name',
-        'implementation_version',
-        'extra'  # ONLY when defined by a containing layer
+        "python_version",
+        "python_full_version",
+        "os_name",
+        "sys_platform",
+        "platform_release",
+        "platform_system",
+        "platform_version",
+        "platform_machine",
+        "platform_python_implementation",
+        "implementation_name",
+        "implementation_version",
+        "extra",  # ONLY when defined by a containing layer
     )
     o, l, r = marker_ast
     if isinstance(l, tuple):

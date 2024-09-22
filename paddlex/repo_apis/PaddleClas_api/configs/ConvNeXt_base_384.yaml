@@ -32,7 +32,7 @@ AMP:
 # model architecture
 Arch:
   name: ConvNeXt_base_384
-  class_num: 102
+  class_num: 1000
   drop_path_rate: 0.1
   layer_scale_init_value: 1e-6
   head_init_scale: 1.0

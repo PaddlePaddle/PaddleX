@@ -27,7 +27,7 @@ AMP:
 # model architecture
 Arch:
   name: CLIP_vit_base_patch16_224
-  class_num: 102
+  class_num: 1000
   return_embed: False
   pretrained: True
 
@@ -157,4 +157,3 @@ Metric:
   Eval:
     - TopkAcc:
         topk: [1, 5]
-

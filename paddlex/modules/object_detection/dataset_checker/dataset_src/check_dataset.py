@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -26,7 +26,7 @@ from .utils.visualizer import draw_bbox
 
 
 def check(dataset_dir, output, sample_num=10):
-    """ check dataset """
+    """check dataset"""
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
@@ -34,34 +34,35 @@ def check(dataset_dir, output, sample_num=10):
     sample_cnts = dict()
     sample_paths = defaultdict(list)
     im_sizes = defaultdict(Counter)
-    tags = ['instance_train', 'instance_val']
+    tags = ["instance_train", "instance_val"]
     for _, tag in enumerate(tags):
-        file_list = osp.join(dataset_dir, f'annotations/{tag}.json')
+        file_list = osp.join(dataset_dir, f"annotations/{tag}.json")
         if not osp.exists(file_list):
-            if tag in ('instance_train', 'instance_val'):
+            if tag in ("instance_train", "instance_val"):
                 # train and val file lists must exist
                 raise DatasetFileNotFoundError(
                     file_path=file_list,
                     solution=f"Ensure that both `instance_train.json` and `instance_val.json` exist in \
-{dataset_dir}/annotations")
+{dataset_dir}/annotations",
+                )
             else:
                 continue
         else:
-            with open(file_list, 'r', encoding='utf-8') as f:
+            with open(file_list, "r", encoding="utf-8") as f:
                 jsondata = json.load(f)
 
             coco = COCO(file_list)
             num_class = len(coco.getCatIds())
 
-            vis_save_dir = osp.join(output, 'demo_img')
+            vis_save_dir = osp.join(output, "demo_img")
 
-            image_info = jsondata['images']
+            image_info = jsondata["images"]
             sample_cnts[tag] = len(image_info)
             sample_num = min(sample_num, len(image_info))
             for i in range(sample_num):
-                file_name = image_info[i]['file_name']
-                img_id = image_info[i]['id']
-                img_path = osp.join(dataset_dir, 'images', file_name)
+                file_name = image_info[i]["file_name"]
+                img_id = image_info[i]["id"]
+                img_path = osp.join(dataset_dir, "images", file_name)
                 if not osp.exists(img_path):
                     raise DatasetFileNotFoundError(file_path=img_path)
                 img = Image.open(img_path)
@@ -70,15 +71,16 @@ def check(dataset_dir, output, sample_num=10):
                 vis_path = osp.join(vis_save_dir, file_name)
                 Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
                 vis_im.save(vis_path)
-                sample_path = osp.join('check_dataset',
-                                       os.path.relpath(vis_path, output))
+                sample_path = osp.join(
+                    "check_dataset", os.path.relpath(vis_path, output)
+                )
                 sample_paths[tag].append(sample_path)
 
     attrs = {}
-    attrs['num_classes'] = num_class
-    attrs['train_samples'] = sample_cnts['instance_train']
-    attrs['train_sample_paths'] = sample_paths['instance_train']
+    attrs["num_classes"] = num_class
+    attrs["train_samples"] = sample_cnts["instance_train"]
+    attrs["train_sample_paths"] = sample_paths["instance_train"]
 
-    attrs['val_samples'] = sample_cnts['instance_val']
-    attrs['val_sample_paths'] = sample_paths['instance_val']
+    attrs["val_samples"] = sample_cnts["instance_val"]
+    attrs["val_sample_paths"] = sample_paths["instance_val"]
     return attrs

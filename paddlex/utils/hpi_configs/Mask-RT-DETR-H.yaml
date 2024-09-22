@@ -1,0 +1,13 @@
+Hpi:
+  backend_config:
+    paddle_infer:
+      cpu_num_threads: 8
+      enable_log_info: false
+  selected_backends:
+    cpu: paddle_infer
+    gpu: paddle_infer
+  supported_backends:
+    cpu:
+    - paddle_infer
+    gpu:
+    - paddle_infer

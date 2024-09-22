@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,7 +21,7 @@ from ....utils.misc import abspath
 
 
 class TSAnomalyConfig(BaseTSConfig):
-    """ TS Anomaly Detection Config """
+    """TS Anomaly Detection Config"""
 
     def update_input_len(self, seq_len: int):
         """
@@ -33,13 +33,13 @@ class TSAnomalyConfig(BaseTSConfig):
         Raises:
             TypeError: if seq_len is not dict, raising TypeError
         """
-        if 'seq_len' not in self:
+        if "seq_len" not in self:
             raise RuntimeError(
                 "Not able to update seq_len, because no seq_len config was found."
             )
-        self.set_val('seq_len', seq_len)
+        self.set_val("seq_len", seq_len)
 
-    def update_dataset(self, dataset_dir: str, dataset_type: str=None):
+    def update_dataset(self, dataset_dir: str, dataset_type: str = None):
         """
         upadte the dataset
 
@@ -48,7 +48,7 @@ class TSAnomalyConfig(BaseTSConfig):
             dataset_type (str, optional): type to set for dataset. Default='TSDataset'
         """
         if dataset_type is None:
-            dataset_type = 'TSADDataset'
+            dataset_type = "TSADDataset"
         dataset_dir = abspath(dataset_dir)
         ds_cfg = self._make_custom_dataset_config(dataset_dir)
         self.update(ds_cfg)
@@ -64,7 +64,7 @@ class TSAnomalyConfig(BaseTSConfig):
             TypeError: if info_params is not dict, raising TypeError
         """
         if isinstance(info_params, dict):
-            self.update({'info_params': info_params})
+            self.update({"info_params": info_params})
         else:
             raise TypeError("`info_params` must be a dict.")
 
@@ -78,11 +78,11 @@ class TSAnomalyConfig(BaseTSConfig):
             dict: the dataset config.
         """
         ds_cfg = {
-            'dataset': {
-                'name': 'TSADDataset',
-                'dataset_root': dataset_root_path,
-                'train_path': os.path.join(dataset_root_path, 'train.csv'),
-                'val_path': os.path.join(dataset_root_path, 'val.csv'),
+            "dataset": {
+                "name": "TSADDataset",
+                "dataset_root": dataset_root_path,
+                "train_path": os.path.join(dataset_root_path, "train.csv"),
+                "val_path": os.path.join(dataset_root_path, "val.csv"),
             },
         }
 

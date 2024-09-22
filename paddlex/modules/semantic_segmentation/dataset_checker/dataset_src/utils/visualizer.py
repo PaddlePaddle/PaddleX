@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 
 import cv2
@@ -26,9 +25,9 @@ def get_color_map_list(length):
         j = 0
         lab = i
         while lab:
-            color_map[i * 3] |= (((lab >> 0) & 1) << (7 - j))
-            color_map[i * 3 + 1] |= (((lab >> 1) & 1) << (7 - j))
-            color_map[i * 3 + 2] |= (((lab >> 2) & 1) << (7 - j))
+            color_map[i * 3] |= ((lab >> 0) & 1) << (7 - j)
+            color_map[i * 3 + 1] |= ((lab >> 1) & 1) << (7 - j)
+            color_map[i * 3 + 2] |= ((lab >> 2) & 1) << (7 - j)
             j += 1
             lab >>= 3
     color_map = color_map[3:]
@@ -36,9 +35,9 @@ def get_color_map_list(length):
 
 
 def visualize(image, result, weight=0.6, use_multilabel=False):
-    """ Convert predict result to color image, and save added image. """
+    """Convert predict result to color image, and save added image."""
     color_map = get_color_map_list(256)
-    color_map = [color_map[i:i + 3] for i in range(0, len(color_map), 3)]
+    color_map = [color_map[i : i + 3] for i in range(0, len(color_map), 3)]
     color_map = np.array(color_map).astype("uint8")
 
     if not use_multilabel:
@@ -56,15 +55,17 @@ def visualize(image, result, weight=0.6, use_multilabel=False):
             c1 = np.where(mask, color_map[i, 0], vis_result[..., 0])
             c2 = np.where(mask, color_map[i, 1], vis_result[..., 1])
             c3 = np.where(mask, color_map[i, 2], vis_result[..., 2])
-            pseudo_img = np.dstack((c3, c2, c1)).astype('uint8')
+            pseudo_img = np.dstack((c3, c2, c1)).astype("uint8")
 
-            contour, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-                                          cv2.CHAIN_APPROX_SIMPLE)
-            vis_result = cv2.addWeighted(vis_result, weight, pseudo_img,
-                                         1 - weight, 0)
-            contour_color = (int(color_map[i, 0]), int(color_map[i, 1]),
-                             int(color_map[i, 2]))
-            vis_result = cv2.drawContours(vis_result, contour, -1,
-                                          contour_color, 1)
+            contour, _ = cv2.findContours(
+                mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+            )
+            vis_result = cv2.addWeighted(vis_result, weight, pseudo_img, 1 - weight, 0)
+            contour_color = (
+                int(color_map[i, 0]),
+                int(color_map[i, 1]),
+                int(color_map[i, 2]),
+            )
+            vis_result = cv2.drawContours(vis_result, contour, -1, contour_color, 1)
 
     return vis_result

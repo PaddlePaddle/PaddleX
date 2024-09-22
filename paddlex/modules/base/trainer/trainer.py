@@ -35,7 +35,8 @@ def build_trainer(config: AttrDict) -> "BaseTrainer":
 
 
 class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
-    """ Base Model Trainer """
+    """Base Model Trainer"""
+
     __is_base = True
 
     def __init__(self, config: AttrDict):
@@ -48,27 +49,28 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         self.config = config
         self.global_config = config.Global
         self.train_config = config.Train
-        self.benchmark_config = config.get('Benchmark', None)
+        self.benchmark_config = config.get("Benchmark", None)
 
         self.deamon = self.build_deamon(self.config)
         self.pdx_config, self.pdx_model = build_model(self.global_config.model)
 
     def train(self, *args, **kwargs):
-        """execute model training
-        """
+        """execute model training"""
         os.makedirs(self.global_config.output, exist_ok=True)
         self.update_config()
         self.dump_config()
         train_args = self.get_train_kwargs()
         if self.benchmark_config is not None:
-            train_args.update({'benchmark': self.benchmark_config})
+            train_args.update({"benchmark": self.benchmark_config})
         train_result = self.pdx_model.train(**train_args)
-        assert train_result.returncode == 0, f"Encountered an unexpected error({train_result.returncode}) in \
+        assert (
+            train_result.returncode == 0
+        ), f"Encountered an unexpected error({train_result.returncode}) in \
 training!"
 
         self.deamon.stop()
 
-    def dump_config(self, config_file_path: str=None):
+    def dump_config(self, config_file_path: str = None):
         """dump the config
 
         Args:
@@ -76,11 +78,10 @@ training!"
                 means that save in `Global.output` as `config.yaml`.
         """
         if config_file_path is None:
-            config_file_path = os.path.join(self.global_config.output,
-                                            "config.yaml")
+            config_file_path = os.path.join(self.global_config.output, "config.yaml")
         self.pdx_config.dump(config_file_path)
 
-    def get_device(self, using_device_number: int=None) -> str:
+    def get_device(self, using_device_number: int = None) -> str:
         """get device setting from config
 
         Args:
@@ -91,22 +92,20 @@ training!"
             str: device setting, such as: `gpu:0,1`, `npu:0,1` `cpu`.
         """
         return get_device(
-            self.global_config.device, using_device_number=using_device_number)
+            self.global_config.device, using_device_number=using_device_number
+        )
 
     @abstractmethod
     def build_deamon(self):
-        """build deamon thread for saving training outputs timely
-        """
+        """build deamon thread for saving training outputs timely"""
         raise NotImplementedError
 
     @abstractmethod
     def update_config(self):
-        """update training config
-        """
+        """update training config"""
         raise NotImplementedError
 
     @abstractmethod
     def get_train_kwargs(self):
-        """get key-value arguments of model training function
-        """
+        """get key-value arguments of model training function"""
         raise NotImplementedError

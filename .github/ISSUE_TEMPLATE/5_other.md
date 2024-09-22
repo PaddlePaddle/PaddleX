@@ -16,7 +16,7 @@ assignees: ''
 
 ## 描述问题
 
-## 复现 
+## 复现
 
 1. 您是否已经正常运行我们提供的[教程](https://github.com/PaddlePaddle/PaddleX/tree/develop/tutorials)？
 

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 
 import os
@@ -27,11 +26,11 @@ from .....utils.logging import info
 
 
 def check_dataset(dataset_dir, output, sample_num=10):
-    """ check dataset """
+    """check dataset"""
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
-    vis_save_dir = osp.join(output, 'demo_img')
+    vis_save_dir = osp.join(output, "demo_img")
     if not osp.exists(vis_save_dir):
         os.makedirs(vis_save_dir)
     split_tags = ["train", "val"]
@@ -49,25 +48,26 @@ def check_dataset(dataset_dir, output, sample_num=10):
                 img_file = osp.join(dataset_dir, img_file)
                 ann_file = osp.join(dataset_dir, ann_file)
                 assert osp.exists(img_file), FileNotFoundError(
-                    f"{img_file} not exist, please check!")
+                    f"{img_file} not exist, please check!"
+                )
                 assert osp.exists(ann_file), FileNotFoundError(
-                    f"{ann_file} not exist, please check!")
-                img = np.array(
-                    ImageOps.exif_transpose(Image.open(img_file)), "uint8")
-                ann = np.array(
-                    ImageOps.exif_transpose(Image.open(ann_file)), "uint8")
+                    f"{ann_file} not exist, please check!"
+                )
+                img = np.array(ImageOps.exif_transpose(Image.open(img_file)), "uint8")
+                ann = np.array(ImageOps.exif_transpose(Image.open(ann_file)), "uint8")
                 assert img.shape[:2] == ann.shape, ValueError(
                     f"The shape of {img_file}:{img.shape[:2]} and "
-                    f"{ann_file}:{ann.shape} must be the same!")
+                    f"{ann_file}:{ann.shape} must be the same!"
+                )
                 class_ids = class_ids | set(ann.reshape([-1]).tolist())
                 if i < sample_num:
                     vis_img = visualize(img, ann)
                     vis_img = Image.fromarray(vis_img)
-                    vis_save_path = osp.join(vis_save_dir,
-                                             osp.basename(img_file))
+                    vis_save_path = osp.join(vis_save_dir, osp.basename(img_file))
                     vis_img.save(vis_save_path)
                     vis_save_path = osp.join(
-                        'check_dataset', os.path.relpath(vis_save_path, output))
+                        "check_dataset", os.path.relpath(vis_save_path, output)
+                    )
                     if f"{tag}_sample_paths" not in attrs:
                         attrs[f"{tag}_sample_paths"] = [vis_save_path]
                     else:

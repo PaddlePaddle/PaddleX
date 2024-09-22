@@ -6,6 +6,8 @@ chardet
 numpy==1.24.4
 matplotlib==3.5.2
 opencv-python==4.5.5.64
+chinese_calendar
+scikit-learn
 pycocotools
 tqdm
 pyclipper
@@ -14,3 +16,4 @@ pandas
 parsley
 requests
 tokenizers==0.19.1
+GPUtil>=1.4.0
