@@ -212,6 +212,7 @@ openatom_rec_svtrv2_ch_infer.tar",
     "PatchTST_ad": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PatchTST_ad_infer.tar",
     "TimesNet_ad": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/TimesNet_ad_infer.tar",
     "TimesNet_cls": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/TimesNet_cls_infer.tar",
+    "STFPM": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/STFPM_infer.tar",
 }
 
 

@@ -73,14 +73,18 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <summary><b>more</b></summary><br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FasterRCNN-ResNet34-FPN<br/>FasterRCNN-ResNet50<br/>FasterRCNN-ResNet50-FPN<br/>FasterRCNN-ResNet50-vd-FPN<br/>FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FasterRCNN-ResNet101<br/>FasterRCNN-ResNet101-FPN<br/>FasterRCNN-ResNeXt101-vd-FPN<br/>FasterRCNN-Swin-Tiny-FPN<br/>Cascade-FasterRCNN-ResNet50-FPN<br/>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</details></td>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用语义分割</td>
+    <td rowspan="2">基础产线</td>
+    <td rowspan="2">通用语义分割</td>
     <td>语义分割</td>
     <td>OCRNet_HRNet-W48<br/>OCRNet_HRNet-W18<br/>PP-LiteSeg-T<details>
     <summary><b>more</b></summary><br/>Deeplabv3-R50<br/>Deeplabv3-R101<br/>Deeplabv3_Plus-R50<br/>Deeplabv3_Plus-R101<br/>SeaFormer_tiny<br/
     >SeaFormer_small<br/>SeaFormer_base<br/>SeaFormer_large<br/
     >SegFormer-B0<br/>SegFormer-B1<br/>SegFormer-B2<br/
     >SegFormer-B3<br/>SegFormer-B4<br/>SegFormer-B5</details></td>
+  </tr>
+  <tr>
+    <td>无监督异常检测</td>
+    <td>Mask-RT-DETR-L<br/>Mask-RT-DETR-H</td>
   </tr>
   <tr>
     <td>基础产线</td>

@@ -29,14 +29,19 @@ from .image_classification import (
     ClsExportor,
     ClsPredictor,
 )
-
+from .anomaly_detection import (
+    UadDatasetChecker,
+    UadTrainer,
+    UadEvaluator,
+    UadExportor,
+    UadPredictor,
+)
 from .general_recognition import (
     ShiTuRecDatasetChecker,
     ShiTuRecTrainer,
     ShiTuRecEvaluator,
     ShiTuRecExportor,
 )
-
 from .object_detection import (
     COCODatasetChecker,
     DetTrainer,
