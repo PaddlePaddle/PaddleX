@@ -15,10 +15,14 @@
 import os
 import sys
 import json
+import platform
 import subprocess
 import contextlib
 
 from parsley import makeGrammar
+
+
+PLATFORM = platform.system()
 
 
 def _check_call(*args, **kwargs):
@@ -98,7 +102,11 @@ def reset_repo_using_git(pointer, hard=True):
 
 def remove_repo_using_rm(name):
     """remove_repo_using_rm"""
-    return _check_call(["rm", "-rf", name])
+    if os.path.exists(name):
+        if PLATFORM == "Windows":
+            return _check_call(["rmdir", "/S", "/Q", name], shell=True)
+        else:
+            return _check_call(["rm", "-rf", name])
 
 
 def build_wheel_using_pip(pkg, dst_dir="./", with_deps=False, pip_flags=None):
