@@ -165,6 +165,7 @@ class SegModel(BaseModel):
                 cli_args.append(CLIArgument("--seed", seed))
 
         # PDX related settings
+        config.set_val("uniform_output_enabled", True)
         config.set_val("pdx_model_name", self.name)
         hpi_config_path = self.model_info.get("hpi_config_path", None)
         if hpi_config_path:

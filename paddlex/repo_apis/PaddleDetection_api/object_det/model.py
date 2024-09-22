@@ -126,6 +126,7 @@ class DetModel(BaseModel):
                 cli_args.append(CLIArgument("--enable_ce", enable_ce))
 
         # PDX related settings
+        config.update({"uniform_output_enabled": True})
         config.update({"pdx_model_name": self.name})
         hpi_config_path = self.model_info.get("hpi_config_path", None)
         if hpi_config_path:
