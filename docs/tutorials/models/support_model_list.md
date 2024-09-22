@@ -143,6 +143,23 @@
 | YOLOX-S | [YOLOX-S.yaml](../../../paddlex/configs/object_detection/YOLOX-S.yaml)|
 | YOLOX-T | [YOLOX-T.yaml](../../../paddlex/configs/object_detection/YOLOX-T.yaml)|
 | YOLOX-X | [YOLOX-X.yaml](../../../paddlex/configs/object_detection/YOLOX-X.yaml)|
+### 6. FasterRCNN 系列
+| 模型名称 | config |
+| :--- | :---: |
+| FasterRCNN-ResNet34-FPN | [FasterRCNN-ResNet34-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet34-FPN.yaml)|
+| FasterRCNN-ResNet50 | [FasterRCNN-ResNet50.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50.yaml)|
+| FasterRCNN-ResNet50-FPN | [FasterRCNN-ResNet50-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50-FPN.yaml)|
+| FasterRCNN-ResNet50-vd-FPN | [FasterRCNN-ResNet50-vd-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50-vd-FPN.yaml)|
+| FasterRCNN-ResNet50-vd-SSLDv2-FPN | [FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
+| FasterRCNN-ResNet101 | [FasterRCNN-ResNet101.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet101.yaml)|
+| FasterRCNN-ResNet101-FPN | [FasterRCNN-ResNet101-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet101-FPN.yaml)|
+| FasterRCNN-ResNeXt101-vd-FPN | [FasterRCNN-ResNeXt101-vd-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNeXt101-vd-FPN.yaml)|
+| FasterRCNN-Swin-Tiny-FPN | [FasterRCNN-Swin-Tiny-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-Swin-Tiny-FPN.yaml)|
+### 7. Cascade 系列
+| 模型名称 | config |
+| :--- | :---: |
+| Cascade-FasterRCNN-ResNet50-FPN | [Cascade-FasterRCNN-ResNet50-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-FPN.yaml)|
+| Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN | [Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |
