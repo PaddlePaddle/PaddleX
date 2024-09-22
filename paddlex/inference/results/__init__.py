@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .base import BaseResult
 from .topk import TopkResult
 from .text_det import TextDetResult
 from .text_rec import TextRecResult

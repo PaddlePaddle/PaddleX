@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .clas import Topk, MultiLabelThreshOutput, NormalizeFeatures
-from .text_det import DetResizeForTest, NormalizeImage, DBPostProcess, CropByPolys
-from .text_rec import OCRReisizeNormImg, CTCLabelDecode
-from .table_rec import TableLabelDecode, TableMasterLabelDecode
-from .det import DetPostProcess
-from .instance_seg import InstanceSegPostProcess
+from .base import BasePipeline
+from ..predictors import create_predictor
+
+
+class ShiTuRecPipeline(BasePipeline):
+    """ShiTu Rec Pipeline"""
+
+    entities = "general_recognition"
+
+    def __init__(self, model, batch_size=1, device="gpu"):
+        super().__init__()
+        self._predict = create_predictor(model, batch_size=batch_size, device=device)
+
+    def predict(self, x):
+        self._check_input(x)
+        yield from self._predict(x)
+
+    def _check_input(self, x):
+        pass
