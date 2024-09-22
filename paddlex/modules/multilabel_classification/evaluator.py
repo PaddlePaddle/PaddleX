@@ -16,7 +16,7 @@ from ..base import BaseEvaluator
 from .model_list import MODELS
 
 
-class MlClsEvaluator(BaseEvaluator):
+class MLClsEvaluator(BaseEvaluator):
     """Image Classification Model Evaluator"""
 
     entities = MODELS
