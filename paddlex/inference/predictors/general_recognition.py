@@ -15,85 +15,95 @@
 import numpy as np
 
 from ...utils.func_register import FuncRegister
-from ...modules.object_detection.model_list import MODELS
+from ...modules.general_recognition.model_list import MODELS
 from ..components import *
-from ..results import DetResult
+from ..results import BaseResult
 from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
-class DetPredictor(BasicPredictor):
+class ShiTuRecPredictor(BasicPredictor):
 
     entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
+    def _check_args(self, kwargs):
+        assert set(kwargs.keys()).issubset(set(["batch_size"]))
+        return kwargs
+
     def _build_components(self):
         ops = {}
         ops["ReadImage"] = ReadImage(
             batch_size=self.kwargs.get("batch_size", 1), format="RGB"
         )
-        for cfg in self.config["Preprocess"]:
-            tf_key = cfg["type"]
+        for cfg in self.config["PreProcess"]["transform_ops"]:
+            tf_key = list(cfg.keys())[0]
             func = self._FUNC_MAP.get(tf_key)
-            cfg.pop("type")
-            args = cfg
+            args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             ops[tf_key] = op
 
-        predictor = ImageDetPredictor(
+        predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-
         ops["predictor"] = predictor
 
-        ops["postprocess"] = DetPostProcess(
-            threshold=self.config["draw_threshold"], labels=self.config["label_list"]
-        )
-
+        post_processes = self.config["PostProcess"]
+        for key in post_processes:
+            func = self._FUNC_MAP.get(key)
+            args = post_processes.get(key, {})
+            op = func(self, **args) if args else func(self)
+            ops[key] = op
         return ops
 
-    @register("Resize")
-    def build_resize(self, target_size, keep_ratio=False, interp=2):
-        assert target_size
-        if isinstance(interp, int):
-            interp = {
-                0: "NEAREST",
-                1: "LINEAR",
-                2: "CUBIC",
-                3: "AREA",
-                4: "LANCZOS4",
-            }[interp]
-        op = Resize(target_size=target_size, keep_ratio=keep_ratio, interp=interp)
+    @register("ResizeImage")
+    # TODO(gaotingquan): backend & interpolation
+    def build_resize(
+        self,
+        resize_short=None,
+        size=None,
+        backend="cv2",
+        interpolation="LINEAR",
+        return_numpy=False,
+    ):
+        assert resize_short or size
+        if resize_short:
+            op = ResizeByShort(
+                target_short_edge=resize_short, size_divisor=None, interp="LINEAR"
+            )
+        else:
+            op = Resize(target_size=size)
         return op
+
+    @register("CropImage")
+    def build_crop(self, size=224):
+        return Crop(crop_size=size)
 
     @register("NormalizeImage")
     def build_normalize(
         self,
-        norm_type=None,
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225],
-        is_scale=None,
+        scale=1 / 255,
+        order="",
+        channel_num=3,
     ):
-        if is_scale:
-            scale = 1.0 / 255.0
-        else:
-            scale = 1
-        if not norm_type or norm_type == "none":
-            norm_type = "mean_std"
-        if norm_type != "mean_std":
-            mean = 0
-            std = 1
+        assert channel_num == 3
         return Normalize(mean=mean, std=std)
 
-    @register("Permute")
+    @register("ToCHWImage")
     def build_to_chw(self):
         return ToCHWImage()
 
+    @register("NormalizeFeatures")
+    def build_normalize_features(self):
+        return NormalizeFeatures()
+
     @batchable_method
     def _pack_res(self, data):
-        keys = ["img_path", "boxes", "labels"]
-        return {"result": DetResult({key: data[key] for key in keys})}
+        keys = ["img_path", "rec_feature"]
+        return {"result": BaseResult({key: data[key] for key in keys})}
