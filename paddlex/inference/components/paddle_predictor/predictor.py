@@ -172,10 +172,10 @@ No need to generate again."
 
 
 class ImagePredictor(BasePaddlePredictor):
-    DEAULT_INPUTS = {"batch_data": "img"}
+    DEAULT_INPUTS = {"img": "img"}
 
-    def to_batch(self, imgs):
-        return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]
+    def to_batch(self, img):
+        return [np.stack(img, axis=0).astype(dtype=np.float32, copy=False)]
 
 
 class ImageDetPredictor(BasePaddlePredictor):

@@ -81,7 +81,7 @@ def draw_box(img, np_boxes, labels):
     return img
 
 
-class DetResults(BaseResult):
+class DetResult(BaseResult):
     """Save Result Transform"""
 
     def __init__(self, data):

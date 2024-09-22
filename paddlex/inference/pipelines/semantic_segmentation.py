@@ -12,8 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .image_classification import ClasPipeline
-from .ocr import OCRPipeline
-from .object_detection import DetPipeline
-from .instance_segmentation import InstanceSegPipeline
-from .semantic_segmentation import SegPipeline
+from .base import BasePipeline
+from ..predictors import create_predictor
+
+
+class SegPipeline(BasePipeline):
+    """Det Pipeline"""
+
+    entities = "semantic_segmentation"
+
+    def __init__(self, model, batch_size=1, device="gpu"):
+        super().__init__()
+        self._predict = create_predictor(model, batch_size=batch_size, device=device)
+
+    def predict(self, x):
+        self._check_input(x)
+        yield from self._predict(x)
+
+    def _check_input(self, x):
+        pass

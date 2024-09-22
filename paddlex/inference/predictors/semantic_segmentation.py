@@ -15,26 +15,31 @@
 import numpy as np
 
 from ...utils.func_register import FuncRegister
-from ...modules.object_detection.model_list import MODELS
+from ...modules.semantic_segmentation.model_list import MODELS
 from ..components import *
-from ..results import DetResult
+from ..results import SegResult
 from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
-class DetPredictor(BasicPredictor):
+class SegPredictor(BasicPredictor):
 
     entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
+    def _check_args(self, kwargs):
+        assert set(kwargs.keys()).issubset(set(["batch_size"]))
+        return kwargs
+
     def _build_components(self):
         ops = {}
         ops["ReadImage"] = ReadImage(
             batch_size=self.kwargs.get("batch_size", 1), format="RGB"
         )
-        for cfg in self.config["Preprocess"]:
+        ops["ToCHWImage"] = ToCHWImage()
+        for cfg in self.config["Deploy"]["transforms"]:
             tf_key = cfg["type"]
             func = self._FUNC_MAP.get(tf_key)
             cfg.pop("type")
@@ -42,56 +47,50 @@ class DetPredictor(BasicPredictor):
             op = func(self, **args) if args else func(self)
             ops[tf_key] = op
 
-        predictor = ImageDetPredictor(
+        predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-
         ops["predictor"] = predictor
-
-        ops["postprocess"] = DetPostProcess(
-            threshold=self.config["draw_threshold"], labels=self.config["label_list"]
-        )
-
         return ops
 
     @register("Resize")
-    def build_resize(self, target_size, keep_ratio=False, interp=2):
+    def build_resize(
+        self, target_size, keep_ratio=False, size_divisor=None, interp="LINEAR"
+    ):
         assert target_size
-        if isinstance(interp, int):
-            interp = {
-                0: "NEAREST",
-                1: "LINEAR",
-                2: "CUBIC",
-                3: "AREA",
-                4: "LANCZOS4",
-            }[interp]
-        op = Resize(target_size=target_size, keep_ratio=keep_ratio, interp=interp)
+        op = Resize(
+            target_size=target_size,
+            keep_ratio=keep_ratio,
+            size_divisor=size_divisor,
+            interp=interp,
+        )
         return op
 
-    @register("NormalizeImage")
+    @register("ResizeByLong")
+    def build_resizebylong(self, long_size):
+        assert long_size
+        return ResizeByLong(
+            target_long_edge=long_size, size_divisor=size_divisor, interp=interp
+        )
+
+    @register("ResizeByShort")
+    def build_resizebylong(self, short_size):
+        assert short_size
+        return ResizeByLong(
+            target_long_edge=short_size, size_divisor=size_divisor, interp=interp
+        )
+
+    @register("Normalize")
     def build_normalize(
         self,
-        norm_type=None,
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-        is_scale=None,
+        mean=0.5,
+        std=0.5,
     ):
-        if is_scale:
-            scale = 1.0 / 255.0
-        else:
-            scale = 1
-        if norm_type != "mean_std":
-            mean = 0
-            std = 1
         return Normalize(mean=mean, std=std)
-
-    @register("Permute")
-    def build_to_chw(self):
-        return ToCHWImage()
 
     @batchable_method
     def _pack_res(self, data):
-        keys = ["img_path", "boxes", "labels"]
-        return {"result": DetResult({key: data[key] for key in keys})}
+        keys = ["img_path", "pred"]
+        return {"result": SegResult({key: data[key] for key in keys})}

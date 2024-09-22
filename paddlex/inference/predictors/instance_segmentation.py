@@ -18,7 +18,7 @@ from .object_detection import DetPredictor
 from ...utils.func_register import FuncRegister
 from ...modules.instance_segmentation.model_list import MODELS
 from ..components import *
-from ..results import InstanceSegResults
+from ..results import InstanceSegResult
 from ..utils.process_hook import batchable_method
 
 
@@ -56,4 +56,4 @@ class InstanceSegPredictor(DetPredictor):
     @batchable_method
     def _pack_res(self, data):
         keys = ["img_path", "boxes", "masks", "labels"]
-        return {"result": InstanceSegResults({key: data[key] for key in keys})}
+        return {"result": InstanceSegResult({key: data[key] for key in keys})}
