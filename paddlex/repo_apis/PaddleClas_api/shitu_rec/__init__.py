@@ -13,5 +13,6 @@
 # limitations under the License.
 
 
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+from .model import ShiTuRecModel
+from .runner import ShiTuRecRunner
+from . import register

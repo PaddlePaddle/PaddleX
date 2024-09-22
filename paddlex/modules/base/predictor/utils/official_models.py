@@ -106,6 +106,11 @@ SwinTransformer_large_patch4_window12_384_infer.tar",
 CLIP_vit_base_patch16_224_infer.tar",
     "CLIP_vit_large_patch14_224": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/\
 CLIP_vit_large_patch14_224_infer.tar",
+    "PP-ShiTuV2_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-ShiTuV2_rec_infer.tar",
+    "PP-ShiTuV2_rec_CLIP_vit_base": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+PP-ShiTuV2_rec_CLIP_vit_base_infer.tar",
+    "PP-ShiTuV2_rec_CLIP_vit_large": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+PP-ShiTuV2_rec_CLIP_vit_large_infer.tar",
     "PP-LCNet_x1_0_ML": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x1_0_ML_infer.tar",
     "PP-HGNetV2-B0_ML": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-HGNetV2-B0_ML_infer.tar",
     "PP-HGNetV2-B4_ML": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-HGNetV2-B4_ML_infer.tar",
@@ -183,6 +188,7 @@ openatom_rec_svtrv2_ch_infer.tar",
     "TimesNet_ad": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/TimesNet_ad_infer.tar",
     "TimesNet_cls": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/TimesNet_cls_infer.tar",
 }
+
 
 
 class OfficialModelsDict(dict):

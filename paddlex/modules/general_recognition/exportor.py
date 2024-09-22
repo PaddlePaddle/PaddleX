@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ..image_classification import ClsExportor
+from .model_list import MODELS
 
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register
+
+class ShiTuRecExportor(ClsExportor):
+    """ShiTu Recognition Model Exportor"""
+    
+    entities = MODELS

@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+MODELS = [
+"PP-ShiTuV2_rec",
+"PP-ShiTuV2_rec_CLIP_vit_base",
+"PP-ShiTuV2_rec_CLIP_vit_large"
+]
 
-from .cls import ClsModel, ClsRunner, register
-from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register

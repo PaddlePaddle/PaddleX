@@ -29,6 +29,14 @@ from .image_classification import (
     ClsExportor,
     ClsPredictor,
 )
+
+from .general_recognition import (
+    ShiTuRecDatasetChecker,
+    ShiTuRecTrainer,
+    ShiTuRecEvaluator,
+    ShiTuRecExportor,
+)
+
 from .object_detection import (
     COCODatasetChecker,
     DetTrainer,
