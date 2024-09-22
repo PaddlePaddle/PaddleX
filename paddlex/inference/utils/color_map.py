@@ -87,3 +87,37 @@ def get_colormap(rgb=False):
     if not rgb:
         color_list = color_list[:, ::-1]
     return color_list.astype("int32")
+
+
+def get_color_map_list(num_classes):
+    """
+    Args:
+        num_classes (int): number of class
+    Returns:
+        color_map (list): RGB color list
+    """
+    color_map = num_classes * [0, 0, 0]
+    for i in range(0, num_classes):
+        j = 0
+        lab = i
+        while lab:
+            color_map[i * 3] |= ((lab >> 0) & 1) << (7 - j)
+            color_map[i * 3 + 1] |= ((lab >> 1) & 1) << (7 - j)
+            color_map[i * 3 + 2] |= ((lab >> 2) & 1) << (7 - j)
+            j += 1
+            lab >>= 3
+    color_map = [color_map[i : i + 3] for i in range(0, len(color_map), 3)]
+    return color_map
+
+
+def font_colormap(color_index):
+    """
+    Get font color according to the index of colormap
+    """
+    dark = np.array([0x14, 0x0E, 0x35])
+    light = np.array([0xFF, 0xFF, 0xFF])
+    light_indexs = [0, 3, 4, 8, 9, 13, 14, 18, 19]
+    if color_index in light_indexs:
+        return light.astype("int32")
+    else:
+        return dark.astype("int32")

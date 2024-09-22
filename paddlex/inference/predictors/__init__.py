@@ -20,6 +20,8 @@ from .image_classification import ClasPredictor
 from .text_detection import TextDetPredictor
 from .text_recognition import TextRecPredictor
 from .table_recognition import TablePredictor
+from .object_detection import DetPredictor
+from .instance_segmentation import InstanceSegPredictor
 from .official_models import official_models
 
 

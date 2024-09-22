@@ -14,3 +14,4 @@
 
 
 from .cls import ClsModel, ClsRunner, register
+from .shitu_rec import ShiTuRecModel, ShiTuRecRunner, register

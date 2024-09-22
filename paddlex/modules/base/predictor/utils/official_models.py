@@ -106,6 +106,11 @@ SwinTransformer_large_patch4_window12_384_infer.tar",
 CLIP_vit_base_patch16_224_infer.tar",
     "CLIP_vit_large_patch14_224": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/\
 CLIP_vit_large_patch14_224_infer.tar",
+    "PP-ShiTuV2_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/PP-ShiTuV2_rec_infer.tar",
+    "PP-ShiTuV2_rec_CLIP_vit_base": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+PP-ShiTuV2_rec_CLIP_vit_base_infer.tar",
+    "PP-ShiTuV2_rec_CLIP_vit_large": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0/\
+PP-ShiTuV2_rec_CLIP_vit_large_infer.tar",
     "PP-LCNet_x1_0_ML": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x1_0_ML_infer.tar",
     "PP-HGNetV2-B0_ML": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-HGNetV2-B0_ML_infer.tar",
     "PP-HGNetV2-B4_ML": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-HGNetV2-B4_ML_infer.tar",
@@ -153,6 +158,20 @@ Deeplabv3_Plus-R101_infer.tar",
     "SeaFormer_large": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/SeaFormer_large_infer.tar",
     "Mask-RT-DETR-H": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Mask-RT-DETR-H_infer.tar",
     "Mask-RT-DETR-L": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Mask-RT-DETR-L_infer.tar",
+    "Mask-RT-DETR-S": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Mask-RT-DETR-S_infer.tar",
+    "Mask-RT-DETR-M": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Mask-RT-DETR-M_infer.tar",
+    "Mask-RT-DETR-X": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Mask-RT-DETR-X_infer.tar",
+    "SOLOv2": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/SOLOv2_infer.tar",
+    "MaskRCNN-ResNet50": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNet50_infer.tar",
+    "MaskRCNN-ResNet50-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNet50-FPN_infer.tar",
+    "MaskRCNN-ResNet50-vd-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNet50-vd-FPN_infer.tar",
+    "MaskRCNN-ResNet50-vd-SSLDv2-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNet50-vd-SSLDv2_infer.tar",
+    "MaskRCNN-ResNet101-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNet101-FPN_infer.tar",
+    "MaskRCNN-ResNet101-vd-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNet101-vd-FPN_infer.tar",
+    "MaskRCNN-ResNeXt101-vd-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/MaskRCNN-ResNeXt101-vd-FPN_infer.tar",
+    "Cascade-MaskRCNN-ResNet50-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Cascade-MaskRCNN-ResNet50-FPN_infer.tar",
+    "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar",
+    "PP-YOLOE_seg-S": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-YOLOE_seg-S_infer.tar",
     "PP-OCRv4_server_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/\
 PP-OCRv4_server_rec_infer.tar",
     "PP-OCRv4_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/\
@@ -184,6 +203,7 @@ openatom_rec_svtrv2_ch_infer.tar",
     "TimesNet_cls": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/TimesNet_cls_infer.tar",
     "STFPM": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/STFPM_infer.tar",
 }
+
 
 
 class OfficialModelsDict(dict):

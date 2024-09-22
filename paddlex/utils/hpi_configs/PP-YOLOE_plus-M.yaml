@@ -1,0 +1,24 @@
+Hpi:
+  backend_config:
+    openvino:
+      cpu_num_threads: 8
+    paddle_infer:
+      cpu_num_threads: 8
+      enable_log_info: false
+    paddle_tensorrt:
+      dynamic_shapes:
+        enable_log_info: false
+        image:
+        - []
+        - []
+        - []
+  selected_backends:
+    cpu: openvino
+    gpu: paddle_tensorrt
+  supported_backends:
+    cpu:
+    - paddle_infer
+    - openvino
+    gpu:
+    - paddle_infer
+    - paddle_tensorrt

@@ -29,3 +29,6 @@ class DetKeys(object):
     # Suite-specific keys
     BOXES = "boxes"
     MASKS = "masks"
+    SEGM = "segm"
+    LABEL = "label"
+    SCORE = "score"

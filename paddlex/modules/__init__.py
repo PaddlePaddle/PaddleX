@@ -36,6 +36,12 @@ from .anomaly_detection import (
     UadExportor,
     UadPredictor,
 )
+from .general_recognition import (
+    ShiTuRecDatasetChecker,
+    ShiTuRecTrainer,
+    ShiTuRecEvaluator,
+    ShiTuRecExportor,
+)
 from .object_detection import (
     COCODatasetChecker,
     DetTrainer,
