@@ -84,7 +84,6 @@ class DetResult(BaseResult):
 
     def __init__(self, data):
         super().__init__(data)
-        self.data = data
         # We use pillow backend to save both numpy arrays and PIL Image objects
         self._img_reader.set_backend("pillow")
         self._img_writer.set_backend("pillow")
@@ -93,7 +92,7 @@ class DetResult(BaseResult):
         """apply"""
         boxes = self["boxes"]
         img_path = self["img_path"]
-        labels = self.data["labels"]
+        labels = self["labels"]
         file_name = os.path.basename(img_path)
 
         image = self._img_reader.read(img_path)
