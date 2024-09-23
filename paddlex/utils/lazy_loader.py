@@ -23,21 +23,29 @@ class LazyLoader(types.ModuleType):
     def __init__(self, local_name, parent_module_globals, name):
         self._local_name = local_name
         self._parent_module_globals = parent_module_globals
+        self._module = None
 
         super(LazyLoader, self).__init__(name)
+
+    @property
+    def loaded(self):
+        return self._module is not None
 
     def _load(self):
         module = importlib.import_module(self.__name__)
         self._parent_module_globals[self._local_name] = module
-
-        self.__dict__.update(module.__dict__)
-
-        return module
+        self._module = module
 
     def __getattr__(self, item):
-        module = self._load()
-        return getattr(module, item)
+        if not self.loaded:
+            # HACK: For circumventing shared library symbol conflicts when
+            # importing paddlex_hpi
+            if item in ("__file__",):
+                raise AttributeError
+            self._load()
+        return getattr(self._module, item)
 
     def __dir__(self):
-        module = self._load()
-        return dir(module)
+        if not self.loaded:
+            self._load()
+        return dir(self._module)

@@ -29,17 +29,56 @@ from .ts_fc import TSFcPredictor
 from .ts_cls import TSClsPredictor
 
 
-def create_predictor(model: str, device: str = None, *args, **kwargs) -> BasePredictor:
-    model_dir = check_model(model)
-    config = BasePredictor.load_config(model_dir)
-    model_name = config["Global"]["model_name"]
-    return BasicPredictor.get(model_name)(
+def _create_hp_predictor(
+    model_name, model_dir, device, config, hpi_params, *args, **kwargs
+):
+    try:
+        from paddlex_hpi.predictors import HPPredictor
+    except ModuleNotFoundError as e:
+        raise RuntimeError(
+            "The PaddleX HPI plugin is not properly installed, and the high-performance model inference features are not available."
+        )
+    if hpi_params is None:
+        raise ValueError("No HPI params given")
+    if "serial_number" not in hpi_params:
+        raise ValueError("The serial number is required but was not provided.")
+    serial_number = hpi_params["serial_number"]
+    update_license = hpi_params.get("update_license", False)
+    return HPPredictor.get(model_name)(
         model_dir=model_dir,
         config=config,
         device=device,
+        serial_number=serial_number,
+        update_license=update_license,
         *args,
         **kwargs,
     )
+
+
+def create_predictor(
+    model: str, device: str = None, *args, use_hpip=False, hpi_params=None, **kwargs
+) -> BasePredictor:
+    model_dir = check_model(model)
+    config = BasePredictor.load_config(model_dir)
+    model_name = config["Global"]["model_name"]
+    if use_hpip:
+        return _create_hp_predictor(
+            model_name=model_name,
+            model_dir=model_dir,
+            device=device,
+            config=config,
+            hpi_params=hpi_params,
+            *args,
+            **kwargs,
+        )
+    else:
+        return BasicPredictor.get(model_name)(
+            model_dir=model_dir,
+            config=config,
+            device=device,
+            *args,
+            **kwargs,
+        )
 
 
 def check_model(model):

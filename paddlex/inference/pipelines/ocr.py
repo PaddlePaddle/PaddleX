@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from .base import BasePipeline
-from ..predictors import create_predictor
-from ...utils import logging
 from ..components import CropByPolys
 from ..results import OCRResult
 
@@ -24,9 +22,18 @@ class OCRPipeline(BasePipeline):
 
     entities = "ocr"
 
-    def __init__(self, det_model, rec_model, det_batch_size, rec_batch_size, **kwargs):
-        self._det_predict = create_predictor(det_model, batch_size=det_batch_size)
-        self._rec_predict = create_predictor(rec_model, batch_size=rec_batch_size)
+    def __init__(
+        self,
+        det_model,
+        rec_model,
+        det_batch_size,
+        rec_batch_size,
+        predictor_kwargs=None,
+        **kwargs
+    ):
+        super().__init__(predictor_kwargs)
+        self._det_predict = self._create_predictor(det_model, batch_size=det_batch_size)
+        self._rec_predict = self._create_predictor(rec_model, batch_size=rec_batch_size)
         # TODO: foo
         self._crop_by_polys = CropByPolys(det_box_type="foo")
 
