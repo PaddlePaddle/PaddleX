@@ -2,7 +2,7 @@ Global:
   model: PP-OCRv4_server_seal_det
   mode: check_dataset # check_dataset/train/evaluate/predict
   module: text_det
-  dataset_dir: "/paddle/dataset/paddlex/ocr_det/ocr_det_dataset_examples"
+  dataset_dir: "/paddle/dataset/paddlex/ocr_det/ocr_curve_det_dataset_examples"
   device: gpu:0,1,2,3
   output: "output"
 
