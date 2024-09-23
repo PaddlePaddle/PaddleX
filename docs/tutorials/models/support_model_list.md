@@ -187,7 +187,7 @@
 | PP-YOLOE-S_vehicle | [PP-YOLOE-vehicle-S.yaml](../../../paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml)|
 | PP-YOLOE-L_human | [PP-YOLOE-human-L.yaml](../../../paddlex/configs/human_detection/PP-YOLOE-L_human.yaml)|
 | PP-YOLOE-S_human | [PP-YOLOE-human-S.yaml](../../../paddlex/configs/human_detection/PP-YOLOE-S_human.yaml)|
-### 9. CenterNet 系列
+### 11. CenterNet 系列
 | 模型名称 | config |
 | :--- | :---: |
 | CenterNet-DLA-34 | [CenterNet-DLA-34.yaml](../../../paddlex/configs/object_detection/CenterNet-DLA-34.yaml)|
