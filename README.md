@@ -69,11 +69,31 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>PP-LCNet_x1_0_doc_ori</td>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用目标检测</td>
+    <td rowspan="6">基础产线</td>
+    <td rowspan="6">通用目标检测</td>
     <td>目标检测</td>
     <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FasterRCNN-ResNet34-FPN<br/>FasterRCNN-ResNet50<br/>FasterRCNN-ResNet50-FPN<br/>FasterRCNN-ResNet50-vd-FPN<br/>FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FasterRCNN-ResNet101<br/>FasterRCNN-ResNet101-FPN<br/>FasterRCNN-ResNeXt101-vd-FPN<br/>FasterRCNN-Swin-Tiny-FPN<br/>Cascade-FasterRCNN-ResNet50-FPN<br/>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</details></td>
+    <summary><b>more</b></summary><br/>PicoDet-XS<br/>PicoDet-M<br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FasterRCNN-ResNet34-FPN<br/>FasterRCNN-ResNet50<br/>FasterRCNN-ResNet50-FPN<br/>FasterRCNN-ResNet50-vd-FPN<br/>FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FasterRCNN-ResNet101<br/>FasterRCNN-ResNet101-FPN<br/>FasterRCNN-ResNeXt101-vd-FPN<br/>FasterRCNN-Swin-Tiny-FPN<br/>Cascade-FasterRCNN-ResNet50-FPN<br/>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FCOS-ResNet50<br/>DETR-R50<br/>CenterNet-DLA-34<br/>CenterNet-ResNet50</details></td>
+  </tr>
+  <tr>
+    <td>行人检测</td>
+    <td>PP-YOLOE-S_human<br/>PP-YOLOE-L_human</td>
+  </tr>
+  <tr>
+    <td>车辆检测</td>
+    <td>PP-YOLOE-L_vehicle<br/>PP-YOLOE-S_vehicle</td>
+  </tr>
+  <tr>
+    <td>小目标检测</td>
+    <td>PP-YOLOE+_SOD-L<br/>PP-YOLOE+_SOD-S<br/>PP-YOLOE+_SOD-largesize-L</td>
+  </tr>
+  <tr>
+    <td>主体检测</td>
+    <td>PP-ShiTuV2_det</td>
+  </tr>
+  <tr>
+    <td>人脸检测</td>
+    <td>PicoDet_LCNet_x2_5_face</td>
   </tr>
   <tr>
     <td rowspan="2">基础产线</td>
