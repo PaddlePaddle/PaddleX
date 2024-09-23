@@ -65,7 +65,6 @@ class InstanceSegResult(BaseResult):
 
     def __init__(self, data):
         super().__init__(data)
-        self.data = data
         # We use pillow backend to save both numpy arrays and PIL Image objects
         self._img_reader.set_backend("pillow")
         self._img_writer.set_backend("pillow")
@@ -75,13 +74,11 @@ class InstanceSegResult(BaseResult):
         boxes = self["boxes"]
         masks = self["masks"]
         img_path = self["img_path"]
-        labels = self.data["labels"]
+        labels = self["labels"]
         file_name = os.path.basename(img_path)
 
         image = self._img_reader.read(img_path)
         image = draw_mask(image, boxes, masks, labels)
         image = draw_box(image, boxes, labels=labels)
-        self["boxes"] = boxes.tolist()
-        self["masks"] = masks.tolist()
 
         return image

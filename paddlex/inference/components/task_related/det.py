@@ -14,7 +14,7 @@
 
 import os
 
-from ....utils import logging
+from ...utils.io import ImageReader
 from ..base import BaseComponent
 
 
@@ -41,3 +41,32 @@ class DetPostProcess(BaseComponent):
         result = {"boxes": boxes, "labels": self.labels}
 
         return result
+
+
+class CropByBoxes(BaseComponent):
+    """Crop Image by Box"""
+
+    INPUT_KEYS = ["img_path", "boxes", "labels"]
+    OUTPUT_KEYS = ["img", "box", "label"]
+    DEAULT_INPUTS = {"img_path": "img_path", "boxes": "boxes", "labels": "labels"}
+    DEAULT_OUTPUTS = {"img": "img", "box": "box", "label": "label"}
+
+    def __init__(self):
+        super().__init__()
+        self._reader = ImageReader(backend="opencv")
+
+    def apply(self, img_path, boxes, labels=None):
+        output_list = []
+        img = self._reader.read(img_path)
+        for bbox in boxes:
+            label_id = int(bbox[0])
+            box = bbox[2:]
+            if labels is not None:
+                label = labels[label_id]
+            else:
+                label = label_id
+            xmin, ymin, xmax, ymax = [int(i) for i in box]
+            img_crop = img[ymin:ymax, xmin:xmax]
+            output_list.append({"img": img_crop, "box": box, "label": label})
+
+        return output_list

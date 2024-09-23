@@ -44,8 +44,6 @@ def draw_box(img, np_boxes, labels):
     clsid2color = {}
     catid2fontcolor = {}
     color_list = get_colormap(rgb=True)
-    expect_boxes = np_boxes[:, 0] > -1
-    np_boxes = np_boxes[expect_boxes, :]
 
     for i, dt in enumerate(np_boxes):
         clsid, bbox, score = int(dt[0]), dt[2:], dt[1]
@@ -86,7 +84,6 @@ class DetResult(BaseResult):
 
     def __init__(self, data):
         super().__init__(data)
-        self.data = data
         # We use pillow backend to save both numpy arrays and PIL Image objects
         self._img_reader.set_backend("pillow")
         self._img_writer.set_backend("pillow")
@@ -95,11 +92,10 @@ class DetResult(BaseResult):
         """apply"""
         boxes = self["boxes"]
         img_path = self["img_path"]
-        labels = self.data["labels"]
+        labels = self["labels"]
         file_name = os.path.basename(img_path)
 
         image = self._img_reader.read(img_path)
         image = draw_box(image, boxes, labels=labels)
-        self["boxes"] = boxes.tolist()
 
         return image

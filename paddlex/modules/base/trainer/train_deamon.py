@@ -20,7 +20,7 @@ import traceback
 import threading
 from abc import ABC, abstractmethod
 from pathlib import Path
-import paddle
+import lazy_paddle as paddle
 
 from ..build_model import build_model
 from ....utils.file_interface import write_json_file

@@ -1,3 +1,4 @@
+imagesize
 colorlog
 PyYAML
 filelock

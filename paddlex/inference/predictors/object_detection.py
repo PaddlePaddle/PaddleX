@@ -82,6 +82,8 @@ class DetPredictor(BasicPredictor):
             scale = 1.0 / 255.0
         else:
             scale = 1
+        if not norm_type or norm_type == "none":
+            norm_type = "mean_std"
         if norm_type != "mean_std":
             mean = 0
             std = 1
