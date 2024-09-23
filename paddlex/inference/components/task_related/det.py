@@ -14,7 +14,6 @@
 
 import os
 
-from ....utils import logging
 from ...utils.io import ImageReader
 from ..base import BaseComponent
 
