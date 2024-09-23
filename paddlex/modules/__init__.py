@@ -29,6 +29,15 @@ from .image_classification import (
     ClsExportor,
     ClsPredictor,
 )
+
+from .multilabel_classification import (
+    MLClsDatasetChecker,
+    MLClsTrainer,
+    MLClsEvaluator,
+    MLClsExportor,
+    MLClsPredictor,
+)
+
 from .anomaly_detection import (
     UadDatasetChecker,
     UadTrainer,
