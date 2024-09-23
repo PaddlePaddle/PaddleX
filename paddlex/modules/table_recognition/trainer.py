@@ -15,7 +15,7 @@
 
 import os
 from pathlib import Path
-import paddle
+import lazy_paddle as paddle
 
 from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict
@@ -76,7 +76,10 @@ class TableRecTrainer(BaseTrainer):
         Returns:
             dict: the arguments of training function.
         """
-        return {"device": self.get_device(), "dy2st": self.train_config.get("dy2st", False)}
+        return {
+            "device": self.get_device(),
+            "dy2st": self.train_config.get("dy2st", False),
+        }
 
 
 class TableRecTrainDeamon(BaseTrainDeamon):

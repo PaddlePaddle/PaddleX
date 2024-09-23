@@ -21,7 +21,7 @@ import random
 import math
 import copy
 
-from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
 def draw_ocr_box_txt(

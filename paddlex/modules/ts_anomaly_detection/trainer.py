@@ -17,7 +17,7 @@ import json
 import time
 from pathlib import Path
 import tarfile
-import paddle
+import lazy_paddle as paddle
 
 from ..base import BaseTrainer, BaseTrainDeamon
 from ...utils.config import AttrDict

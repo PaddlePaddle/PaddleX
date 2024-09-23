@@ -224,6 +224,16 @@ register_model_info(
 )
 
 
+register_model_info(
+    {
+        "model_name": "STFPM",
+        "suite": "Seg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "STFPM.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+
 # For compatibility
 def _set_alias(model_name, alias):
     from ...base.register import get_registered_model_info
