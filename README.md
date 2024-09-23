@@ -100,7 +100,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
   </tr>
   <tr>
-    <td>印章文本识别</td>
+    <td>印章文本检测</td>
     <td>PP-OCRv4_mobile_seal_det<br/>PP-OCRv4_server_seal_det</td>
   </tr>
   <tr>
