@@ -15,7 +15,7 @@
 from pathlib import Path
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse
+from .dataset_src import check, convert, split_dataset, deep_analyse
 from ..model_list import MODELS
 
 
@@ -48,7 +48,7 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of converted dataset.
         """
-        return src_dataset_dir
+        return convert(src_dataset_dir)
 
     def split_dataset(self, src_dataset_dir: str) -> str:
         """repartition the train and validation dataset
