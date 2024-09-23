@@ -75,11 +75,16 @@ Env: {self.kernel_option}"
             else self._get_pre_transforms_from_config()
         )
         logging.debug(f"Preprocess Ops: {self._format_transforms(pre_tfs)}")
-        post_tfs = (
-            post_transforms
-            if post_transforms is not None
-            else self._get_post_transforms_from_config()
-        )
+        if self.model_name == 'STFPM':
+            post_tfs = (
+                self._get_STFPM_post_transforms_from_config()
+            )
+        else:
+            post_tfs = (
+                post_transforms
+                if post_transforms is not None
+                else self._get_post_transforms_from_config()
+            )
         logging.debug(f"Postprocessing: {self._format_transforms(post_tfs)}")
         return pre_tfs, post_tfs
 

@@ -14,6 +14,7 @@
 
 import os
 import os.path as osp
+from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
 from .model import DetModel
@@ -22,6 +23,7 @@ from .runner import DetRunner
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEDETECTION_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
+HPI_CONFIG_DIR = Path(__file__).parent.parent.parent.parent / "utils" / "hpi_configs"
 
 register_suite_info(
     {
@@ -44,6 +46,7 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "compression"],
         "supported_dataset_types": ["COCODetDataset"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PicoDet-S.yaml",
     }
 )
 
@@ -57,6 +60,7 @@ register_model_info(
         ),
         "supported_apis": ["train", "evaluate", "predict", "export", "compression"],
         "supported_dataset_types": ["COCODetDataset"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PicoDet-L.yaml",
     }
 )
 
@@ -75,6 +79,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["O1", "O2"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-YOLOE_plus-S.yaml",
     }
 )
 
@@ -93,6 +98,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["O1", "O2"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-YOLOE_plus-M.yaml",
     }
 )
 
@@ -108,6 +114,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["O1", "O2"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-YOLOE_plus-L.yaml",
     }
 )
 
@@ -123,6 +130,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["O1", "O2"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-YOLOE_plus-X.yaml",
     }
 )
 
@@ -138,6 +146,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "RT-DETR-L.yaml",
     }
 )
 
@@ -153,6 +162,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "RT-DETR-H.yaml",
     }
 )
 
@@ -168,6 +178,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "RT-DETR-X.yaml",
     }
 )
 
@@ -183,6 +194,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "RT-DETR-R18.yaml",
     }
 )
 
@@ -198,6 +210,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "RT-DETR-R50.yaml",
     }
 )
 
@@ -213,6 +226,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "PicoDet_layout_1x.yaml",
     }
 )
 
@@ -228,6 +242,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOv3-DarkNet53.yaml",
     }
 )
 
@@ -243,6 +258,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOv3-MobileNetV3.yaml",
     }
 )
 
@@ -258,6 +274,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOv3-ResNet50_vd_DCN.yaml",
     }
 )
 
@@ -273,6 +290,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOX-L.yaml",
     }
 )
 
@@ -288,6 +306,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOX-M.yaml",
     }
 )
 
@@ -303,6 +322,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOX-N.yaml",
     }
 )
 
@@ -318,6 +338,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOX-S.yaml",
     }
 )
 
@@ -333,6 +354,7 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOX-T.yaml",
     }
 )
 
@@ -341,6 +363,471 @@ register_model_info(
         "model_name": "YOLOX-X",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "YOLOX-X.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+        "hpi_config_path": HPI_CONFIG_DIR / "YOLOX-X.yaml",
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet34-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet34-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet50',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet50-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet50-vd-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50-vd-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet50-vd-SSLDv2-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet101',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet101.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNet101-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNet101-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-ResNeXt101-vd-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-ResNeXt101-vd-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FasterRCNN-Swin-Tiny-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FasterRCNN-Swin-Tiny-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'Cascade-FasterRCNN-ResNet50-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'Cascade-FasterRCNN-ResNet50-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PicoDet-XS',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-XS.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PicoDet-M',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PicoDet-M.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'FCOS-ResNet50',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'FCOS-ResNet50.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'DETR-R50',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'DETR-R50.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+        {
+        'model_name': 'PP-YOLOE-L_vehicle',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-L_vehicle.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE-S_vehicle',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-S_vehicle.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-ShiTuV2_det',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-ShiTuV2_det.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE-L_human',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-L_human.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE-S_human',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE-S_human.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+) 
+
+
+register_model_info(
+    {
+        'model_name': 'CenterNet-DLA-34',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'CenterNet-DLA-34.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'CenterNet-ResNet50',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'CenterNet-ResNet50.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE+_SOD-L',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-L.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE+_SOD-S',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-S.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        'model_name': 'PP-YOLOE+_SOD-largesize-L',
+        'suite': 'Det',
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-largesize-L.yaml'),
+        'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
+        'supported_dataset_types': ['COCODetDataset'],
+        'supported_train_opts': {
+            'device': ['cpu', 'gpu_nxcx', 'xpu', 'npu', 'mlu'],
+            'dy2st': False,
+            'amp': ['OFF']
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "RT-DETR-H_layout_3cls",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "RT-DETR-H_layout_3cls.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "PicoDet-L_layout",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-L_layout.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "RT-DETR-H_layout_17cls",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "RT-DETR-H_layout_17cls.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "PicoDet_LCNet_x2_5_face",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet_LCNet_x2_5_face.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {

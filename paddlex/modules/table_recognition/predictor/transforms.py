@@ -17,7 +17,7 @@ import os
 import os.path as osp
 import numpy as np
 import cv2
-import paddle
+import lazy_paddle as paddle
 
 from .keys import TableRecKeys as K
 from ...base import BaseTransform

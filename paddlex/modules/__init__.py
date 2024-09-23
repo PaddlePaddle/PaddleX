@@ -29,6 +29,28 @@ from .image_classification import (
     ClsExportor,
     ClsPredictor,
 )
+
+from .multilabel_classification import (
+    MLClsDatasetChecker,
+    MLClsTrainer,
+    MLClsEvaluator,
+    MLClsExportor,
+    MLClsPredictor,
+)
+
+from .anomaly_detection import (
+    UadDatasetChecker,
+    UadTrainer,
+    UadEvaluator,
+    UadExportor,
+    UadPredictor,
+)
+from .general_recognition import (
+    ShiTuRecDatasetChecker,
+    ShiTuRecTrainer,
+    ShiTuRecEvaluator,
+    ShiTuRecExportor,
+)
 from .object_detection import (
     COCODatasetChecker,
     DetTrainer,

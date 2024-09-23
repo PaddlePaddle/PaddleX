@@ -39,24 +39,41 @@ class InstanceSegPredictor(DetPredictor):
 
         input_ = [input_dict[i] for i in self._predictor.get_input_names()]
 
-        batch_np_boxes, batch_np_boxes_num, batch_np_masks = self._predictor.predict(
-            input_
-        )
-
         pred = batch_input
         box_idx_start = 0
-        for idx in range(len(batch_input)):
-            np_boxes_num = batch_np_boxes_num[idx]
-            box_idx_end = box_idx_start + np_boxes_num
-            np_boxes = batch_np_boxes[box_idx_start:box_idx_end]
-            np_masks = batch_np_masks[box_idx_start:box_idx_end]
-            box_idx_start = box_idx_end
 
-            batch_input[idx][K.BOXES] = np_boxes
-            batch_input[idx][K.MASKS] = np_masks
-        return pred
+        if self.model_name == "SOLOv2":
+            batch_np_boxes_num, batch_np_label, batch_np_score, batch_np_segm = (
+                self._predictor.predict(input_)
+            )
+            for idx in range(len(batch_input)):
+                np_boxes_num = batch_np_boxes_num
+                box_idx_end = box_idx_start + np_boxes_num
+                np_label = batch_np_label[box_idx_start:box_idx_end]
+                np_score = batch_np_score[box_idx_start:box_idx_end]
+                np_segm = batch_np_segm[box_idx_start:box_idx_end]
+                box_idx_start = box_idx_end
+
+                batch_input[idx][K.LABEL] = np_label
+                batch_input[idx][K.SCORE] = np_score
+                batch_input[idx][K.SEGM] = np_segm
+            return pred
+        else:
+            batch_np_boxes, batch_np_boxes_num, batch_np_masks = (
+                self._predictor.predict(input_)
+            )
+            for idx in range(len(batch_input)):
+                np_boxes_num = batch_np_boxes_num[idx]
+                box_idx_end = box_idx_start + np_boxes_num
+                np_boxes = batch_np_boxes[box_idx_start:box_idx_end]
+                np_masks = batch_np_masks[box_idx_start:box_idx_end]
+                box_idx_start = box_idx_end
+
+                batch_input[idx][K.BOXES] = np_boxes
+                batch_input[idx][K.MASKS] = np_masks
+            return pred
 
     @classmethod
     def get_output_keys(cls):
         """get output keys"""
-        return [K.BOXES, K.MASKS]
+        return [[K.LABEL, K.SCORE, K.SEGM], [K.BOXES, K.MASKS]]

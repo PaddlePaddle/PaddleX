@@ -15,4 +15,6 @@
 
 from .model import ClsModel
 from .runner import ClsRunner
+from .config import ClsConfig
 from . import register
+

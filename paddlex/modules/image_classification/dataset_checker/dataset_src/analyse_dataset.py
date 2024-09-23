@@ -29,7 +29,7 @@ from .....utils.file_interface import custom_open
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
-def deep_analyse(dataset_path, output, dataset_type="Cls"):
+def deep_analyse(dataset_path, output):
     """class analysis for dataset"""
     tags = ["train", "val"]
     labels_cnt = defaultdict(str)
@@ -48,14 +48,7 @@ def deep_analyse(dataset_path, output, dataset_type="Cls"):
             lines = f.readlines()
         for line in lines:
             line = line.strip().split()
-            if dataset_type == "Cls":
-                classes_num[labels_cnt[line[1]]] += 1
-            elif dataset_type == "MLCls":
-                for i, label in enumerate(line[1].split(",")):
-                    if label == "1":
-                        classes_num[labels_cnt[str(i)]] += 1
-            else:
-                raise ValueError(f"dataset_type {dataset_type} is not supported")
+            classes_num[labels_cnt[line[1]]] += 1
         if tag == "train":
             cnts_train = [cat_ids for cat_name, cat_ids in classes_num.items()]
         elif tag == "val":

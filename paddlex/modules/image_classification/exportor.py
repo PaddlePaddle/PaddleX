@@ -13,16 +13,10 @@
 # limitations under the License.
 
 from ..base import BaseExportor
-from .model_list import MODELS, ML_MODELS
+from .model_list import MODELS
 
 
 class ClsExportor(BaseExportor):
     """Image Classification Model Exportor"""
 
     entities = MODELS
-
-
-class MlClsExportor(BaseExportor):
-    """Image Classification Model Exportor"""
-
-    entities = ML_MODELS

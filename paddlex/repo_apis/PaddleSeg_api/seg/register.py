@@ -14,6 +14,7 @@
 
 import os
 import os.path as osp
+from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
 from .model import SegModel
@@ -22,6 +23,7 @@ from .config import SegConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLESEG_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
+HPI_CONFIG_DIR = Path(__file__).parent.parent.parent.parent / "utils" / "hpi_configs"
 
 register_suite_info(
     {
@@ -41,6 +43,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "OCRNet_HRNet-W48.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "OCRNet_HRNet-W48.yaml",
     }
 )
 
@@ -50,6 +53,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "OCRNet_HRNet-W18.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "OCRNet_HRNet-W18.yaml",
     }
 )
 
@@ -72,6 +76,7 @@ register_model_info(
         "supported_predict_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
         "supported_infer_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
         "supported_dataset_types": [],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LiteSeg-T.yaml",
     }
 )
 
@@ -82,6 +87,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SeaFormer_base.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SeaFormer_base.yaml",
     }
 )
 
@@ -91,6 +97,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SeaFormer_tiny.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SeaFormer_tiny.yaml",
     }
 )
 
@@ -100,6 +107,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SeaFormer_small.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SeaFormer_small.yaml",
     }
 )
 
@@ -109,6 +117,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SeaFormer_large.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SeaFormer_large.yaml",
     }
 )
 
@@ -119,6 +128,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SegFormer-B0.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SegFormer-B0.yaml",
     }
 )
 
@@ -128,6 +138,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SegFormer-B1.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SegFormer-B1.yaml",
     }
 )
 
@@ -137,6 +148,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SegFormer-B2.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SegFormer-B2.yaml",
     }
 )
 
@@ -146,6 +158,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SegFormer-B3.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SegFormer-B3.yaml",
     }
 )
 
@@ -155,6 +168,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SegFormer-B4.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SegFormer-B4.yaml",
     }
 )
 
@@ -164,6 +178,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "SegFormer-B5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SegFormer-B5.yaml",
     }
 )
 
@@ -174,6 +189,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "Deeplabv3-R50.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "Deeplabv3-R50.yaml",
     }
 )
 
@@ -183,6 +199,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "Deeplabv3-R101.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "Deeplabv3-R101.yaml",
     }
 )
 
@@ -192,6 +209,7 @@ register_model_info(
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "Deeplabv3_Plus-R50.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "Deeplabv3_Plus-R50.yaml",
     }
 )
 
@@ -200,6 +218,17 @@ register_model_info(
         "model_name": "Deeplabv3_Plus-R101",
         "suite": "Seg",
         "config_path": osp.join(PDX_CONFIG_DIR, "Deeplabv3_Plus-R101.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "Deeplabv3_Plus-R101.yaml",
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "STFPM",
+        "suite": "Seg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "STFPM.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )

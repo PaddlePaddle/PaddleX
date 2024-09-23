@@ -124,6 +124,14 @@ class InstanceSegModel(BaseModel):
             if enable_ce is not None:
                 cli_args.append(CLIArgument("--enable_ce", enable_ce))
 
+        # PDX related settings
+        config.update({"uniform_output_enabled": True})
+        config.update({"pdx_model_name": self.name})
+        hpi_config_path = self.model_info.get("hpi_config_path", None)
+        if hpi_config_path:
+            hpi_config_path = hpi_config_path.as_posix()
+        config.update({"hpi_config_path": hpi_config_path})
+
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
@@ -264,6 +272,13 @@ class InstanceSegModel(BaseModel):
         exclude_nms = kwargs.pop("exclude_nms", None)
         if exclude_nms is not None:
             cli_args.append(CLIArgument("-o", f"exclude_nms={bool(exclude_nms)}"))
+
+        # PDX related settings
+        config.update({"pdx_model_name": self.name})
+        hpi_config_path = self.model_info.get("hpi_config_path", None)
+        if hpi_config_path:
+            hpi_config_path = hpi_config_path.as_posix()
+        config.update({"hpi_config_path": hpi_config_path})
 
         self._assert_empty_kwargs(kwargs)
 

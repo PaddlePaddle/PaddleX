@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .image import *
+from .ts import *

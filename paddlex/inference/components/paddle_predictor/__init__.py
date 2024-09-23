@@ -12,4 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import ImagePredictor
+from .predictor import (
+    ImagePredictor,
+    ImageDetPredictor,
+    ImageInstanceSegPredictor,
+    TSPPPredictor,
+)

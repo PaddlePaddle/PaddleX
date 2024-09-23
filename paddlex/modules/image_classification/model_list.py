@@ -60,6 +60,7 @@ MODELS = [
     "PP-LCNet_x0_5",
     "PP-LCNet_x0_75",
     "PP-LCNet_x1_0",
+    "PP-LCNet_x1_0_doc_ori",
     "PP-LCNet_x1_5",
     "PP-LCNet_x2_0",
     "PP-LCNet_x2_5",
@@ -93,13 +94,4 @@ MODELS = [
     "FasterNet_T0",
     "FasterNet_T1",
     "FasterNet_T2",
-]
-
-ML_MODELS = [
-    "ResNet50_ML",
-    "PP-LCNet_x1_0_ML",
-    "PP-HGNetV2-B0_ML",
-    "PP-HGNetV2-B4_ML",
-    "PP-HGNetV2-B6_ML",
-    "CLIP_vit_base_patch16_448_ML",
 ]

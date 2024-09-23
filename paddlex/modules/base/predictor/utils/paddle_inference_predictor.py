@@ -13,8 +13,7 @@
 # limitations under the License.
 
 import os
-import paddle
-from paddle.inference import Config, create_predictor
+import lazy_paddle as paddle
 
 from .....utils import logging
 
@@ -34,6 +33,8 @@ class _PaddleInferencePredictor(object):
 
     def _create(self, model_dir, model_prefix, option, delete_pass):
         """_create"""
+        from lazy_paddle.inference import Config, create_predictor
+
         use_pir = (
             hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
         )
@@ -145,7 +146,6 @@ No need to generate again."
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
             self.input_handlers[idx].copy_from_cpu(x[idx])
-
         self.predictor.run()
 
         res = []
