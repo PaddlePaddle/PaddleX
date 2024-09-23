@@ -1,4 +1,4 @@
-Hpi:
+hpi_config:
   backend_config:
     paddle_infer:
       cpu_num_threads: 8
