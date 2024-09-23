@@ -1,4 +1,4 @@
-hpi_config:
+Hpi:
   backend_config:
     onnx_runtime:
       cpu_num_threads: 8

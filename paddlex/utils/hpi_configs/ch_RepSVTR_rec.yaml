@@ -1,8 +1,7 @@
-hpi_config:
+Hpi:
   backend_config:
     openvino:
       cpu_num_threads: 8
-      enable_mkldnn: false
     paddle_infer:
       cpu_num_threads: 8
       enable_log_info: false
