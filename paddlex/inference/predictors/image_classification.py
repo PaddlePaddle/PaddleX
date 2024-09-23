@@ -35,7 +35,9 @@ class ClasPredictor(BasicPredictor):
 
     def _build_components(self):
         ops = {}
-        ops["ReadImage"] = ReadImage(batch_size=self.kwargs.get("batch_size", 1))
+        ops["ReadImage"] = ReadImage(
+            format="RGB", batch_size=self.kwargs.get("batch_size", 1)
+        )
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
             func = self._FUNC_MAP.get(tf_key)
