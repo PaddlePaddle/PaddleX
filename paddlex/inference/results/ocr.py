@@ -37,7 +37,7 @@ class OCRResult(BaseResult):
         font_path=PINGFANG_FONT_FILE_PATH,
     ):
         """draw ocr result"""
-        boxes = self["dt_polys"]
+        boxes = np.array(self["dt_polys"])
         txts = self["rec_text"]
         scores = self["rec_score"]
         img = self._img_reader.read(self["img_path"])

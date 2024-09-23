@@ -22,9 +22,22 @@ import numpy as np
 from ..utils.io import JsonWriter, ImageReader, ImageWriter
 
 
+def format_data(obj):
+    if isinstance(obj, np.float32):
+        return float(obj)
+    if isinstance(obj, np.ndarray):
+        return [format_data(item) for item in obj.tolist()]
+    elif isinstance(obj, dict):
+        return type(obj)({k: format_data(v) for k, v in obj.items()})
+    elif isinstance(obj, list):
+        return [format_data(i) for i in obj]
+    else:
+        return obj
+
+
 class BaseResult(dict):
     def __init__(self, data):
-        super().__init__(data)
+        super().__init__(format_data(data))
         self._check_res()
         self._json_writer = JsonWriter()
         self._img_reader = ImageReader(backend="opencv")
