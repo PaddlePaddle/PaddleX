@@ -171,15 +171,6 @@ register_model_info(
 
 register_model_info(
     {
-        "model_name": "PP-LCNet_x1_0_doc_ori",
-        "suite": "Cls",
-        "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0_doc_ori.yaml"),
-        "supported_apis": ["train", "evaluate", "predict", "export"],
-    }
-)
-
-register_model_info(
-    {
         "model_name": "PP-LCNet_x1_5",
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_5.yaml"),
