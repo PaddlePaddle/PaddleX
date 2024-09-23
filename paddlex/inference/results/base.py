@@ -18,14 +18,8 @@ import numpy as np
 import json
 
 from ...utils import logging
+import numpy as np
 from ..utils.io import JsonWriter, ImageReader, ImageWriter
-
-
-class NumpyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return super(NumpyEncoder, self).default(obj)
 
 
 class BaseResult(dict):
@@ -39,13 +33,13 @@ class BaseResult(dict):
     def save_to_json(self, save_path, indent=4, ensure_ascii=False):
         if not save_path.endswith(".json"):
             save_path = Path(save_path) / f"{Path(self['img_path']).stem}.json"
-        self._json_writer.write(
-            save_path, self, indent=4, ensure_ascii=False, cls=NumpyEncoder
-        )
+        self._json_writer.write(save_path, self, indent=4, ensure_ascii=False)
 
     def save_to_img(self, save_path):
         if not save_path.lower().endswith((".jpg", ".png")):
             save_path = Path(save_path) / f"{Path(self['img_path']).stem}.jpg"
+        else:
+            save_path = Path(save_path)
         res_img = self._get_res_img()
         if res_img is not None:
             self._img_writer.write(save_path.as_posix(), res_img)
@@ -54,9 +48,7 @@ class BaseResult(dict):
     def print(self, json_format=True, indent=4, ensure_ascii=False):
         str_ = self
         if json_format:
-            str_ = json.dumps(
-                str_, indent=indent, ensure_ascii=ensure_ascii, cls=NumpyEncoder
-            )
+            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
         logging.info(str_)
 
     def _check_res(self):

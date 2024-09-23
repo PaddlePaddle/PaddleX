@@ -38,7 +38,7 @@ class OCRResult(BaseResult):
     ):
         """draw ocr result"""
         boxes = self["dt_polys"]
-        txts = (self["rec_text"],)
+        txts = self["rec_text"]
         scores = self["rec_score"]
         img = self._img_reader.read(self["img_path"])
         image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))

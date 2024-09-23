@@ -44,8 +44,6 @@ def draw_box(img, np_boxes, labels):
     clsid2color = {}
     catid2fontcolor = {}
     color_list = get_colormap(rgb=True)
-    expect_boxes = np_boxes[:, 0] > -1
-    np_boxes = np_boxes[expect_boxes, :]
 
     for i, dt in enumerate(np_boxes):
         clsid, bbox, score = int(dt[0]), dt[2:], dt[1]
@@ -100,6 +98,5 @@ class DetResult(BaseResult):
 
         image = self._img_reader.read(img_path)
         image = draw_box(image, boxes, labels=labels)
-        self["boxes"] = boxes.tolist()
 
         return image

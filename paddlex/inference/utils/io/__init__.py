@@ -14,4 +14,11 @@
 
 
 from .readers import ImageReader, VideoReader, ReaderType
-from .writers import ImageWriter, TextWriter, JsonWriter, WriterType
+from .writers import (
+    ImageWriter,
+    TextWriter,
+    JsonWriter,
+    WriterType,
+    HtmlWriter,
+    XlsxWriter,
+)

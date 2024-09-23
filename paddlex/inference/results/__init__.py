@@ -15,7 +15,7 @@
 from .topk import TopkResult
 from .text_det import TextDetResult
 from .text_rec import TextRecResult
-from .table_rec import TableRecResult
+from .table_rec import TableRecResult, StructureTableResult, TableResult
 from .ocr import OCRResult
 from .det import DetResult
 from .seg import SegResult
