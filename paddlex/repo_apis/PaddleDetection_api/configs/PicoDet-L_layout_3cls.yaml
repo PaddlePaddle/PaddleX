@@ -78,7 +78,7 @@ TestReader:
 
 # Model
 architecture: PicoDet
-pretrain_weights: https://paddle-model-ecology.bj.bcebos.com/paddlex/pretrained/PicoDet-L_layout_3cls_pretrained_v1.pdparams
+pretrain_weights: https://paddle-model-ecology.bj.bcebos.com/paddlex/pretrained/PicoDet-L_layout_pretrained_v1.pdparams
 
 PicoDet:
   backbone: LCNet
