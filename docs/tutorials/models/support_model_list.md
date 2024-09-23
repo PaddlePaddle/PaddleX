@@ -107,6 +107,11 @@
 | PP-HGNetV2-B6_ML | [PP-HGNetV2-B6_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B6_ML.yaml)|
 | CLIP_vit_base_patch16_448_ML | [CLIP_vit_base_patch16_448_ML.yaml](../../../paddlex/configs/multilabel_classification/CLIP_vit_base_patch16_448_ML.yaml)|
 
+### 12. 文档图像方向分类
+| 模型名称 | config |
+| :--- | :---: |
+| PP-LCNet_x1_0_doc_ori | [PP-LCNet_x1_0_doc_ori.yaml](../../../paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml)|
+
 ## 二、目标检测
 ### 1. PP-YOLOE_plus 系列
 | 模型名称 | config |

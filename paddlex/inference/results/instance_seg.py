@@ -81,7 +81,5 @@ class InstanceSegResult(BaseResult):
         image = self._img_reader.read(img_path)
         image = draw_mask(image, boxes, masks, labels)
         image = draw_box(image, boxes, labels=labels)
-        self["boxes"] = boxes.tolist()
-        self["masks"] = masks.tolist()
 
         return image

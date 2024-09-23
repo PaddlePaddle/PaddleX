@@ -34,6 +34,7 @@ OFFICIAL_MODELS = {
     "PP-LCNet_x0_5": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x0_5_infer.tar",
     "PP-LCNet_x0_75": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x0_75_infer.tar",
     "PP-LCNet_x1_0": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x1_0_infer.tar",
+    "PP-LCNet_x1_0_doc_ori": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x1_0_doc_ori_infer.tar",
     "PP-LCNet_x1_5": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x1_5_infer.tar",
     "PP-LCNet_x2_5": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x2_5_infer.tar",
     "PP-LCNet_x2_0": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LCNet_x2_0_infer.tar",

@@ -5,11 +5,26 @@ Hpi:
       enable_log_info: false
     paddle_tensorrt:
       dynamic_shapes:
-        enable_log_info: false
         image:
         - []
         - []
         - []
+      enable_log_info: false
+      im_shape:
+      - - 1
+        - 2
+      - - 1
+        - 2
+      - - 1
+        - 2
+      max_batch_size: null
+      scale_factor:
+      - - 1
+        - 2
+      - - 1
+        - 2
+      - - 1
+        - 2
   selected_backends:
     cpu: paddle_infer
     gpu: paddle_tensorrt
