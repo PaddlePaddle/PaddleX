@@ -14,7 +14,6 @@
 
 import numpy as np
 from ..base import BasePipeline
-from ...predictors import create_predictor
 from ..ocr import OCRPipeline
 from ...components import CropByBoxes
 from ...results import TableResult, StructureTableResult
@@ -23,6 +22,8 @@ from .utils import *
 
 class TableRecPipeline(BasePipeline):
     """Table Recognition Pipeline"""
+
+    entities = "table_recognition"
 
     def __init__(
         self,
@@ -33,21 +34,26 @@ class TableRecPipeline(BasePipeline):
         batch_size=1,
         device="gpu",
         chat_ocr=False,
+        predictor_kwargs=None,
     ):
+        super().__init__(predictor_kwargs)
 
-        self.layout_predictor = create_predictor(
+        self.layout_predictor = self._create_predictor(
             model=layout_model, device=device, batch_size=batch_size
         )
         self.ocr_pipeline = OCRPipeline(
-            text_det_model, text_rec_model, batch_size, device
+            text_det_model,
+            text_rec_model,
+            batch_size,
+            device,
+            predictor_kwargs=predictor_kwargs,
         )
-        self.table_predictor = create_predictor(
+        self.table_predictor = self._create_predictor(
             model=table_model, device=device, batch_size=batch_size
         )
         self._crop_by_boxes = CropByBoxes()
         self._match = TableMatch(filter_ocr_result=False)
         self.chat_ocr = chat_ocr
-        super().__init__()
 
     def predict(self, x):
         batch_structure_res = []

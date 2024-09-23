@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from .base import BasePipeline
-from ..predictors import create_predictor
 
 
 class SegPipeline(BasePipeline):
@@ -21,9 +20,11 @@ class SegPipeline(BasePipeline):
 
     entities = "semantic_segmentation"
 
-    def __init__(self, model, batch_size=1, device="gpu"):
-        super().__init__()
-        self._predict = create_predictor(model, batch_size=batch_size, device=device)
+    def __init__(self, model, batch_size=1, device="gpu", predictor_kwargs=None):
+        super().__init__(predictor_kwargs)
+        self._predict = self._create_predictor(
+            model, batch_size=batch_size, device=device
+        )
 
     def predict(self, x):
         self._check_input(x)
