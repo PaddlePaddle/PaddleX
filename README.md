@@ -66,11 +66,31 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <summary><b>more</b></summary><br/>ConvNeXt_tiny<br/>ConvNeXt_small<br/>ConvNeXt_base_224<br/>ConvNeXt_base_384<br/>ConvNeXt_large_224<br/>ConvNeXt_large_384<br/>MobileNetV1_x0_25<br/>MobileNetV1_x0_5<br/>MobileNetV1_x0_75<br/>MobileNetV1_x1_0<br/>MobileNetV2_x0_25<br/>MobileNetV2_x0_5<br/>MobileNetV2_x1_0<br/>MobileNetV2_x1_5<br/>MobileNetV2_x2_0<br/>MobileNetV3_large_x0_35<br/>MobileNetV3_large_x0_5<br/>MobileNetV3_large_x0_75<br/>MobileNetV3_large_x1_0<br/>MobileNetV3_large_x1_25<br/>MobileNetV3_small_x0_35<br/>MobileNetV3_small_x0_5<br/>MobileNetV3_small_x0_75<br/>MobileNetV3_small_x1_0<br/>MobileNetV3_small_x1_25<br/>PP-HGNet_tiny<br/>PP-HGNet_small<br/>PP-HGNet_base<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B1<br/>PP-HGNetV2-B2<br/>PP-HGNetV2-B3<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B5<br/>PP-HGNetV2-B6<br/>PP-LCNet_x0_25<br/>PP-LCNet_x0_35<br/>PP-LCNet_x0_5<br/>PP-LCNet_x0_75<br/>PP-LCNet_x1_0<br/>PP-LCNet_x1_5<br/>PP-LCNet_x2_0<br/>PP-LCNet_x2_5<br/>PP-LCNetV2_small<br/>PP-LCNetV2_base<br/>PP-LCNetV2_large<br/>ResNet18<br/>ResNet18_vd<br/>ResNet34<br/>ResNet34_vd<br/>ResNet50<br/>ResNet50_vd<br/>ResNet101<br/>ResNet101_vd<br/>ResNet152<br/>ResNet152_vd<br/>ResNet200_vd<br/>SwinTransformer_tiny_patch4_window7_224<br/>SwinTransformer_small_patch4_window7_224<br/>SwinTransformer_base_patch4_window7_224<br/>SwinTransformer_base_patch4_window12_384<br/>SwinTransformer_large_patch4_window7_224<br/>SwinTransformer_large_patch4_window12_384</details></td>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用目标检测</td>
+    <td rowspan="6">基础产线</td>
+    <td rowspan="6">通用目标检测</td>
     <td>目标检测</td>
     <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FasterRCNN-ResNet34-FPN<br/>FasterRCNN-ResNet50<br/>FasterRCNN-ResNet50-FPN<br/>FasterRCNN-ResNet50-vd-FPN<br/>FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FasterRCNN-ResNet101<br/>FasterRCNN-ResNet101-FPN<br/>FasterRCNN-ResNeXt101-vd-FPN<br/>FasterRCNN-Swin-Tiny-FPN<br/>Cascade-FasterRCNN-ResNet50-FPN<br/>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</details></td>
+    <summary><b>more</b></summary><br/>PicoDet-XS<br/>PicoDet-M<br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FasterRCNN-ResNet34-FPN<br/>FasterRCNN-ResNet50<br/>FasterRCNN-ResNet50-FPN<br/>FasterRCNN-ResNet50-vd-FPN<br/>FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FasterRCNN-ResNet101<br/>FasterRCNN-ResNet101-FPN<br/>FasterRCNN-ResNeXt101-vd-FPN<br/>FasterRCNN-Swin-Tiny-FPN<br/>Cascade-FasterRCNN-ResNet50-FPN<br/>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FCOS-ResNet50<br/>DETR-R50<br/>CenterNet-DLA-34<br/>CenterNet-ResNet50</details></td>
+  </tr>
+  <tr>
+    <td>行人检测</td>
+    <td>PP-YOLOE-S_human<br/>PP-YOLOE-L_human</td>
+  </tr>
+  <tr>
+    <td>车辆检测</td>
+    <td>PP-YOLOE-L_vehicle<br/>PP-YOLOE-S_vehicle</td>
+  </tr>
+  <tr>
+    <td>小目标检测</td>
+    <td>PP-YOLOE+_SOD-L<br/>PP-YOLOE+_SOD-S<br/>PP-YOLOE+_SOD-largesize-L</td>
+  </tr>
+  <tr>
+    <td>主体检测</td>
+    <td>PP-ShiTuV2_det</td>
+  </tr>
+  <tr>
+    <td>人脸检测</td>
+    <td>PicoDet_LCNet_x2_5_face</td>
   </tr>
   <tr>
     <td rowspan="2">基础产线</td>
