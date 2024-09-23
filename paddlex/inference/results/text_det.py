@@ -23,10 +23,10 @@ class TextDetResult(BaseResult):
 
     def _get_res_img(self):
         """draw rectangle"""
-        boxes = np.array(self["dt_polys"])
+        boxes = self["dt_polys"]
         img = self._img_reader.read(self["img_path"])
         res_img = img.copy()
-        for box in boxes.astype(int):
-            box = np.reshape(np.array(box), [-1, 1, 2]).astype(np.int64)
+        for box in boxes:
+            box = np.reshape(np.array(box).astype(int), [-1, 1, 2]).astype(np.int64)
             cv2.polylines(res_img, [box], True, (0, 0, 255), 2)
         return res_img

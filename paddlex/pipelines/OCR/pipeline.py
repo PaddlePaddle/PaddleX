@@ -49,6 +49,11 @@ class OCRPipeline(BasePipeline):
         self.device = device
         self.text_det_kernel_option = text_det_kernel_option
         self.text_rec_kernel_option = text_rec_kernel_option
+        if self.text_det_model_name in ['PP-OCRv4_server_seal_det', 'PP-OCRv4_mobile_seal_det']:
+            self.task = "poly"
+        else:
+            self.task = "quad"
+        
         if (
             self.text_det_model_name is not None
             and self.text_rec_model_name is not None
@@ -80,19 +85,34 @@ Only support: {text_rec_models}."
             if self.text_rec_kernel_option is None
             else self.text_rec_kernel_option
         )
-        text_det_post_transforms = [
-            text_det_T.DBPostProcess(
-                thresh=0.3,
-                box_thresh=0.6,
-                max_candidates=1000,
-                unclip_ratio=1.5,
-                use_dilation=False,
-                score_mode="fast",
-                box_type="quad",
-            ),
-            # TODO
-            text_det_T.CropByPolys(det_box_type="foo"),
-        ]
+        if self.task == "poly":
+            text_det_post_transforms = [
+                text_det_T.DBPostProcess(
+                    thresh=0.2,
+                    box_thresh=0.6,
+                    max_candidates=1000,
+                    unclip_ratio=1.5,
+                    use_dilation=False,
+                    score_mode="fast",
+                    box_type="poly",
+                ),
+                # TODO
+                text_det_T.CropByPolys(det_box_type="poly"),
+            ]
+        else:
+            text_det_post_transforms = [
+                text_det_T.DBPostProcess(
+                    thresh=0.3,
+                    box_thresh=0.6,
+                    max_candidates=1000,
+                    unclip_ratio=1.5,
+                    use_dilation=False,
+                    score_mode="fast",
+                    box_type="quad",
+                ),
+                # TODO
+                text_det_T.CropByPolys(det_box_type="quad"),
+            ]
 
         self.text_det_model = create_model(
             self.text_det_model_name,
