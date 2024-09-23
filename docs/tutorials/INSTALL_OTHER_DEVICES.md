@@ -67,8 +67,8 @@ docker run -it --name paddle-mlu-dev -v $(pwd):/work \
 - 1. 下载安装 Python3.10 的wheel 安装包。
 ```
 # 注意需要先安装飞桨 cpu 版本
-pip install https://paddle-whl.bj.bcebos.com/paddlex/mlu/paddlepaddle-3.0.0.dev20240621-cp310-cp310-linux_x86_64.whl
-pip install https://paddle-whl.bj.bcebos.com/paddlex/mlu/paddle_custom_mlu-3.0.0.dev20240621-cp310-cp310-linux_x86_64.whl
+python -m pip install paddlepaddle==3.0.0.dev20240624 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
+python -m pip install paddle-custom-mlu==3.0.0.dev20240806 -i https://www.paddlepaddle.org.cn/packages/nightly/mlu/
 ```
 - 2. 验证安装包
 安装完成之后，运行如下命令。

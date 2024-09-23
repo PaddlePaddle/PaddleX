@@ -14,7 +14,7 @@ print_params: false
 
 # Dataset
 metric: COCO
-num_classes: 4
+num_classes: 80
 
 worker_num: 6
 eval_height: &eval_height 640

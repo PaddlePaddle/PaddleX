@@ -31,7 +31,7 @@ AMP:
 # model architecture
 Arch:
   name: SwinTransformer_base_patch4_window12_384
-  class_num: 102
+  class_num: 1000
  
 # loss function config for traing/eval process
 Loss:
@@ -135,7 +135,7 @@ DataLoader:
             order: ''
     sampler:
       name: DistributedBatchSampler
-      batch_size: 128
+      batch_size: 64
       drop_last: False
       shuffle: False
     loader:

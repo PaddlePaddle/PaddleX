@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,18 +14,18 @@
 
 
 MODELS = [
-    'PicoDet-L',
-    'PicoDet-S',
-    'PP-YOLOE_plus-L',
-    'PP-YOLOE_plus-M',
-    'PP-YOLOE_plus-S',
-    'PP-YOLOE_plus-X',
-    'RT-DETR-H',
-    'RT-DETR-L',
-    'RT-DETR-R18',
-    'RT-DETR-R50',
-    'RT-DETR-X',
-    'PicoDet_layout_1x',
+    "PicoDet-L",
+    "PicoDet-S",
+    "PP-YOLOE_plus-L",
+    "PP-YOLOE_plus-M",
+    "PP-YOLOE_plus-S",
+    "PP-YOLOE_plus-X",
+    "RT-DETR-H",
+    "RT-DETR-L",
+    "RT-DETR-R18",
+    "RT-DETR-R50",
+    "RT-DETR-X",
+    "PicoDet_layout_1x",
     "YOLOv3-DarkNet53",
     "YOLOv3-MobileNetV3",
     "YOLOv3-ResNet50_vd_DCN",
@@ -35,4 +35,15 @@ MODELS = [
     "YOLOX-S",
     "YOLOX-T",
     "YOLOX-X",
+    "FasterRCNN-ResNet34-FPN",
+    "FasterRCNN-ResNet50",
+    "FasterRCNN-ResNet50-FPN",
+    "FasterRCNN-ResNet50-vd-FPN",
+    "FasterRCNN-ResNet50-vd-SSLDv2-FPN",
+    "FasterRCNN-ResNet101",
+    "FasterRCNN-ResNet101-FPN",
+    "FasterRCNN-ResNeXt101-vd-FPN",
+    "FasterRCNN-Swin-Tiny-FPN",
+    "Cascade-FasterRCNN-ResNet50-FPN",
+    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN",
 ]

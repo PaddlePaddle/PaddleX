@@ -1,0 +1,22 @@
+Hpi:
+  backend_config:
+    paddle_infer:
+      cpu_num_threads: 8
+      enable_log_info: false
+    paddle_tensorrt:
+      dynamic_shapes:
+        x:
+        - []
+        - []
+        - []
+      enable_log_info: false
+      max_batch_size: null
+  selected_backends:
+    cpu: paddle_infer
+    gpu: paddle_infer
+  supported_backends:
+    cpu:
+    - paddle_infer
+    gpu:
+    - paddle_infer
+    - paddle_tensorrt

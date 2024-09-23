@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,6 +21,7 @@ from filelock import FileLock
 import yaml
 import ruamel.yaml
 import chardet
+
 try:
     import ujson as json
 except:
@@ -46,47 +47,47 @@ def custom_open(file_path, mode):
         FileNotFoundError: 当文件不存在时，raise FileNotFoundError
         ValueError: 当 mode 参数不是 'r'， 'w' 和 'a' 时，raise ValueError
     """
-    if mode == 'r':
+    if mode == "r":
         if not os.path.exists(file_path):
             raise FileNotFoundError("file {} not found".format(file_path))
-        file = open(file_path, "r", encoding='utf-8')
+        file = open(file_path, "r", encoding="utf-8")
         try:
             file.read()
             file.seek(0)
             yield file
         except UnicodeDecodeError:
-            file = open(file_path, "r", encoding='gbk')
+            file = open(file_path, "r", encoding="gbk")
             try:
                 file.read()
                 file.seek(0)
                 yield file
             except UnicodeDecodeError:
-                with open(file_path, 'rb') as f:
-                    encoding = chardet.detect(f.read())['encoding']
+                with open(file_path, "rb") as f:
+                    encoding = chardet.detect(f.read())["encoding"]
                 file = open(file_path, "r", encoding=encoding)
                 yield file
         finally:
             file.close()
-    elif mode == 'w':
-        file = open(file_path, "w", encoding='utf-8')
+    elif mode == "w":
+        file = open(file_path, "w", encoding="utf-8")
         yield file
         file.close()
-    elif mode == 'a':
-        encoding = 'utf-8'
+    elif mode == "a":
+        encoding = "utf-8"
         if os.path.exists(file_path):
             file = open(file_path, "r", encoding=encoding)
             try:
                 file.read()
                 file.seek(0)
             except UnicodeDecodeError:
-                encoding = 'gbk'
+                encoding = "gbk"
                 file = open(file_path, "r", encoding=encoding)
                 try:
                     file.read()
                     file.seek(0)
                 except UnicodeDecodeError:
-                    with open(file_path, 'rb') as f:
-                        encoding = chardet.detect(f.read())['encoding']
+                    with open(file_path, "rb") as f:
+                        encoding = chardet.detect(f.read())["encoding"]
             finally:
                 file.close()
 
@@ -94,8 +95,7 @@ def custom_open(file_path, mode):
         yield file
         file.close()
     else:
-        raise ValueError("mode must be 'r', 'w' or 'a', but got {}".format(
-            mode))
+        raise ValueError("mode must be 'r', 'w' or 'a', but got {}".format(mode))
 
 
 # --------------- yaml ---------------
@@ -104,10 +104,10 @@ def custom_open(file_path, mode):
 def read_yaml_file(yaml_path: str, to_dict=True):
     """read from yaml file"""
     try:
-        with open(yaml_path, "r", encoding='utf-8') as file:
+        with open(yaml_path, "r", encoding="utf-8") as file:
             yaml_content = yaml.full_load(file)
     except UnicodeDecodeError:
-        with open(yaml_path, "r", encoding='gbk') as file:
+        with open(yaml_path, "r", encoding="gbk") as file:
             yaml_content = yaml.full_load(file)
     yaml_content = dict(yaml_content) if to_dict else yaml_content
     return yaml_content
@@ -116,15 +116,15 @@ def read_yaml_file(yaml_path: str, to_dict=True):
 def write_config_file(yaml_dict: dict, yaml_path: str):
     """write to config yaml file"""
     yaml = ruamel.yaml.YAML()
-    lock = FileLock(yaml_path + '.lock')
+    lock = FileLock(yaml_path + ".lock")
     with lock:
-        with open(yaml_path, "w", encoding='utf-8') as file:
+        with open(yaml_path, "w", encoding="utf-8") as file:
             # yaml.safe_dump(yaml_dict, file, sort_keys=False)
             yaml.dump(yaml_dict, file)
 
 
 def update_yaml_file_with_dict(yaml_path, key_values: dict):
-    """ update yaml file with key_values
+    """update yaml file with key_values
     key_values is a dict
     """
     yaml_dict = read_yaml_file(yaml_path)
@@ -142,12 +142,12 @@ def get_yaml_keys(yaml_path):
 
 
 def generate_markdown_from_dict(metrics):
-    """ generate_markdown_from_dict """
+    """generate_markdown_from_dict"""
     mk = ""
     keys = metrics.keys()
     mk += "| ".join(keys())
     mk += os.linesep
-    mk += "|".join([' :----: '])
+    mk += "|".join([" :----: "])
 
 
 # ------------------- jsonl ---------------------
@@ -182,13 +182,18 @@ def check_dict_keys(to_checked_dict, standard_dict, escape_list=None):
         if not isinstance(standard_dict[key], type(to_checked_dict[key])):
             logging.error(
                 f"value type of key {key} is not the same as standard: "
-                f"{type(standard_dict[key])}, {type(to_checked_dict[key])}")
+                f"{type(standard_dict[key])}, {type(to_checked_dict[key])}"
+            )
             return False
 
-        if isinstance(standard_dict[key], dict) and isinstance(
-                to_checked_dict[key], dict) and key not in escape_list:
-            return check_dict_keys(to_checked_dict[key], standard_dict[key],
-                                   escape_list)
+        if (
+            isinstance(standard_dict[key], dict)
+            and isinstance(to_checked_dict[key], dict)
+            and key not in escape_list
+        ):
+            return check_dict_keys(
+                to_checked_dict[key], standard_dict[key], escape_list
+            )
     if len(to_checked_dict.keys()) != len(standard_dict.keys()):
         logging.error(f"yaml file has extra keys")
         return False

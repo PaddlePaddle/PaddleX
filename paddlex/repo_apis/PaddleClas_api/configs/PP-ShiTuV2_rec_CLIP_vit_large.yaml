@@ -1,0 +1,169 @@
+# global configs
+Global:
+  checkpoints: null
+  pretrained_model: null
+  output_dir: ./output/
+  device: gpu
+  save_interval: 5
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 10
+  print_batch_step: 10
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: [3, 224, 224]
+  save_inference_dir: ./inference
+  eval_mode: retrieval
+  use_dali: False
+  to_static: False
+
+# mixed precision
+AMP:
+  use_amp: False
+  use_fp16_test: False
+  scale_loss: 128.0
+  use_dynamic_loss_scaling: True
+  use_promote: False
+  # O1: mixed fp16, O2: pure fp16
+  level: O1
+
+# model architecture
+Arch:
+  name: RecModel
+  infer_output_key: features
+  infer_add_softmax: False
+
+  Backbone:
+    name: CLIP_vit_large_patch14_224
+    pretrained: True
+    return_embed: True
+    return_mean_embed: True 
+  BackboneStopLayer:
+    name: "flatten"
+  Neck:
+    name: FC
+    embedding_size: 512
+    class_num: 512
+  Head:
+    name: ArcMargin
+    embedding_size: 512
+    class_num: 192613
+    margin: 0.2
+    scale: 30
+
+# loss function config for traing/eval process
+Loss:
+  Train:
+    - CELoss:
+        weight: 1.0
+  Eval:
+    - CELoss:
+        weight: 1.0
+
+Optimizer:
+  name: Momentum
+  momentum: 0.9
+  lr:
+    name: Cosine
+    learning_rate: 0.0025
+    warmup_epoch: 1
+  regularizer:
+    name: "L2"
+    coeff: 0.00002
+
+# data loader for train and eval
+DataLoader:
+  Train:
+    dataset:
+      name: ImageNetDataset
+      image_root: ./dataset/
+      cls_label_path: ./dataset/train_reg_all_data_v2.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - RandCropImage:
+            size: 224
+        - RandFlipImage:
+            flip_code: 1
+        - TimmAutoAugment:
+            config_str: rand-m7-mstd0.5-inc1
+            interpolation: bicubic
+            img_size: 224  
+        - RandomRotation:
+            prob: 0.3
+            degrees: 90
+            interpolation: bicubic
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ""
+
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 32
+      drop_last: False
+      shuffle: True
+    loader:
+      num_workers: 4
+      use_shared_memory: True
+
+  Eval:
+    Query:
+      dataset:
+        name: ImageNetDataset
+        image_root: ./dataset/Inshop
+        cls_label_path: ./dataset/Inshop/query_list.txt
+        transform_ops:
+          - DecodeImage:
+              to_rgb: True
+              channel_first: False
+          - ResizeImage:
+              size: 224
+              interpolation: bicubic
+          - NormalizeImage:
+              scale: 1.0/255.0
+              mean: [0.485, 0.456, 0.406]
+              std: [0.229, 0.224, 0.225]
+              order: ""
+      sampler:
+        name: DistributedBatchSampler
+        batch_size: 32
+        drop_last: False
+        shuffle: False
+      loader:
+        num_workers: 12
+        use_shared_memory: True
+
+    Gallery:
+      dataset:
+        name: ImageNetDataset
+        image_root: ./dataset/Inshop/
+        cls_label_path: ./dataset/Inshop/gallery_list.txt
+        transform_ops:
+          - DecodeImage:
+              to_rgb: True
+              channel_first: False
+          - ResizeImage:
+              size: 224
+              interpolation: bicubic
+          - NormalizeImage:
+              scale: 1.0/255.0
+              mean: [0.485, 0.456, 0.406]
+              std: [0.229, 0.224, 0.225]
+              order: ""
+      sampler:
+        name: DistributedBatchSampler
+        batch_size: 32
+        drop_last: False
+        shuffle: False
+      loader:
+        num_workers: 12
+        use_shared_memory: True
+
+Metric:
+  Eval:
+    - Recallk:
+        topk: [1, 5]
+    - mAP: {}

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,9 +21,9 @@ from ....utils.misc import abspath
 
 
 class TSClassifyConfig(BaseTSConfig):
-    """ TS Classify Config """
+    """TS Classify Config"""
 
-    def update_dataset(self, dataset_dir: str, dataset_type: str=None):
+    def update_dataset(self, dataset_dir: str, dataset_type: str = None):
         """
         upadte the dataset
 
@@ -32,7 +32,7 @@ class TSClassifyConfig(BaseTSConfig):
             dataset_type (str, optional): type to set for dataset. Default='TSDataset'
         """
         if dataset_type is None:
-            dataset_type = 'TSCLSDataset'
+            dataset_type = "TSCLSDataset"
         dataset_dir = abspath(dataset_dir)
         ds_cfg = self._make_custom_dataset_config(dataset_dir)
         self.update(ds_cfg)
@@ -48,7 +48,7 @@ class TSClassifyConfig(BaseTSConfig):
             TypeError: if info_params is not dict, raising TypeError
         """
         if isinstance(info_params, dict):
-            self.update({'info_params': info_params})
+            self.update({"info_params": info_params})
         else:
             raise TypeError("`info_params` must be a dict.")
 
@@ -62,11 +62,11 @@ class TSClassifyConfig(BaseTSConfig):
             dict: the dataset config.
         """
         ds_cfg = {
-            'dataset': {
-                'name': 'TSCLSDataset',
-                'dataset_root': dataset_root_path,
-                'train_path': os.path.join(dataset_root_path, 'train.csv'),
-                'val_path': os.path.join(dataset_root_path, 'val.csv'),
+            "dataset": {
+                "name": "TSCLSDataset",
+                "dataset_root": dataset_root_path,
+                "train_path": os.path.join(dataset_root_path, "train.csv"),
+                "val_path": os.path.join(dataset_root_path, "val.csv"),
             },
         }
 

@@ -6,7 +6,6 @@ model:
   backbone: 
     type: SeaFormer_large
     pretrained: https://bj.bcebos.com/paddleseg/dygraph/ade20k/backbone/seaformer_large_imagenet_pretrained.pdparams
-  num_classes: 150
   head_channels: 192
   embed_dims: [128, 160, 192]
   in_index: [0, 1, 2, 3]
@@ -15,7 +14,7 @@ train_dataset:
   type: Dataset
   dataset_root: data/Cityscapes/
   train_path: datasets/Cityscapes/train.txt
-  num_classes: 19
+  num_classes: 150
   transforms:
     - type: ResizeStepScaling
       min_scale_factor: 0.5
@@ -35,7 +34,7 @@ val_dataset:
   type: Dataset
   dataset_root: datasets/Cityscapes
   val_path: datasets/Cityscapes/val.txt
-  num_classes: 19
+  num_classes: 150
   transforms:
     - type: Normalize
   mode: val

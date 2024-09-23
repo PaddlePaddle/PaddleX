@@ -1,0 +1,38 @@
+Hpi:
+  backend_config:
+    onnx_runtime:
+      cpu_num_threads: 8
+    openvino:
+      cpu_num_threads: 8
+    paddle_infer:
+      cpu_num_threads: 8
+      enable_log_info: false
+      enable_mkldnn: false
+    paddle_tensorrt:
+      dynamic_shapes:
+        x:
+        - []
+        - []
+        - []
+      enable_log_info: false
+      max_batch_size: null
+    tensorrt:
+      dynamic_shapes:
+        x:
+        - []
+        - []
+        - []
+      max_batch_size: null
+  selected_backends:
+    cpu: onnx_runtime
+    gpu: paddle_tensorrt
+  supported_backends:
+    cpu:
+    - paddle_infer
+    - openvino
+    - onnx_runtime
+    gpu:
+    - paddle_infer
+    - paddle_tensorrt
+    - onnx_runtime
+    - tensorrt

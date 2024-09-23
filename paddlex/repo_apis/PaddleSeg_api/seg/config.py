@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,7 +18,6 @@ from functools import lru_cache
 
 import yaml
 from typing import Union
-from paddleseg.utils import NoAliasDumper
 
 from ..base_seg_config import BaseSegConfig
 from ....utils.misc import abspath
@@ -26,9 +25,9 @@ from ....utils import logging
 
 
 class SegConfig(BaseSegConfig):
-    """ Semantic Segmentation Config """
+    """Semantic Segmentation Config"""
 
-    def update_dataset(self, dataset_path: str, dataset_type: str=None):
+    def update_dataset(self, dataset_path: str, dataset_type: str = None):
         """update dataset settings
 
         Args:
@@ -40,21 +39,23 @@ class SegConfig(BaseSegConfig):
         """
         dataset_dir = abspath(dataset_path)
         if dataset_type is None:
-            dataset_type = 'SegDataset'
-        if dataset_type == 'SegDataset':
+            dataset_type = "SegDataset"
+        if dataset_type == "SegDataset":
             # TODO: Prune extra keys
             ds_cfg = self._make_custom_dataset_config(dataset_dir)
             self.update(ds_cfg)
-        elif dataset_type == '_dummy':
+        elif dataset_type == "_dummy":
             # XXX: A special dataset type to tease PaddleSeg val dataset checkers
-            self.update({
-                'val_dataset': {
-                    'type': 'SegDataset',
-                    'dataset_root': dataset_dir,
-                    'val_path': os.path.join(dataset_dir, 'val.txt'),
-                    'mode': 'val'
-                },
-            })
+            self.update(
+                {
+                    "val_dataset": {
+                        "type": "SegDataset",
+                        "dataset_root": dataset_dir,
+                        "val_path": os.path.join(dataset_dir, "val.txt"),
+                        "mode": "val",
+                    },
+                }
+            )
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
 
@@ -64,12 +65,12 @@ class SegConfig(BaseSegConfig):
         Args:
             num_classes (int): the classes number value to set.
         """
-        if 'train_dataset' in self:
-            self.train_dataset['num_classes'] = num_classes
-        if 'val_dataset' in self:
-            self.val_dataset['num_classes'] = num_classes
-        if 'model' in self:
-            self.model['num_classes'] = num_classes
+        if "train_dataset" in self:
+            self.train_dataset["num_classes"] = num_classes
+        if "val_dataset" in self:
+            self.val_dataset["num_classes"] = num_classes
+        if "model" in self:
+            self.model["num_classes"] = num_classes
 
     def update_train_crop_size(self, crop_size: Union[int, list]):
         """update the image cropping size of training preprocessing
@@ -89,16 +90,17 @@ class SegConfig(BaseSegConfig):
                 raise ValueError
             crop_size = [int(crop_size[0]), int(crop_size[1])]
 
-        tf_cfg_list = self.train_dataset['transforms']
+        tf_cfg_list = self.train_dataset["transforms"]
         modified = False
         for tf_cfg in tf_cfg_list:
-            if tf_cfg['type'] == 'RandomPaddingCrop':
-                tf_cfg['crop_size'] = crop_size
+            if tf_cfg["type"] == "RandomPaddingCrop":
+                tf_cfg["crop_size"] = crop_size
                 modified = True
         if not modified:
             logging.warning(
                 "Could not find configuration item of image cropping transformation operator. "
-                "Therefore, the crop size was not updated.")
+                "Therefore, the crop size was not updated."
+            )
 
     def get_epochs_iters(self) -> int:
         """get epochs
@@ -106,7 +108,7 @@ class SegConfig(BaseSegConfig):
         Returns:
             int: the epochs value, i.e., `Global.epochs` in config.
         """
-        if 'iters' in self:
+        if "iters" in self:
             return self.iters
         else:
             # Default iters
@@ -118,13 +120,13 @@ class SegConfig(BaseSegConfig):
         Returns:
             float: the learning rate value, i.e., `Optimizer.lr.learning_rate` in config.
         """
-        if 'lr_scheduler' not in self or 'learning_rate' not in self.lr_scheduler:
+        if "lr_scheduler" not in self or "learning_rate" not in self.lr_scheduler:
             # Default lr
             return 0.0001
         else:
-            return self.lr_scheduler['learning_rate']
+            return self.lr_scheduler["learning_rate"]
 
-    def get_batch_size(self, mode='train') -> int:
+    def get_batch_size(self, mode="train") -> int:
         """get batch size
 
         Args:
@@ -137,15 +139,16 @@ class SegConfig(BaseSegConfig):
         Returns:
             int: the batch size value of `mode`, i.e., `DataLoader.{mode}.sampler.batch_size` in config.
         """
-        if mode == 'train':
-            if 'batch_size' in self:
+        if mode == "train":
+            if "batch_size" in self:
                 return self.batch_size
             else:
                 # Default batch size
                 return 4
         else:
             raise ValueError(
-                f"Getting `batch_size` in {repr(mode)} mode is not supported.")
+                f"Getting `batch_size` in {repr(mode)} mode is not supported."
+            )
 
     def _make_custom_dataset_config(self, dataset_root_path: str) -> dict:
         """construct the dataset config that meets the format requirements
@@ -157,17 +160,17 @@ class SegConfig(BaseSegConfig):
             dict: the dataset config.
         """
         ds_cfg = {
-            'train_dataset': {
-                'type': 'SegDataset',
-                'dataset_root': dataset_root_path,
-                'train_path': os.path.join(dataset_root_path, 'train.txt'),
-                'mode': 'train'
+            "train_dataset": {
+                "type": "SegDataset",
+                "dataset_root": dataset_root_path,
+                "train_path": os.path.join(dataset_root_path, "train.txt"),
+                "mode": "train",
             },
-            'val_dataset': {
-                'type': 'SegDataset',
-                'dataset_root': dataset_root_path,
-                'val_path': os.path.join(dataset_root_path, 'val.txt'),
-                'mode': 'val'
+            "val_dataset": {
+                "type": "SegDataset",
+                "dataset_root": dataset_root_path,
+                "val_path": os.path.join(dataset_root_path, "val.txt"),
+                "mode": "val",
             },
         }
 

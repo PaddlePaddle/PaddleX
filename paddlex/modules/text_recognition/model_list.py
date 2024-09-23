@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,9 +13,9 @@
 # limitations under the License.
 
 MODELS = [
-    'PP-OCRv4_mobile_rec',
-    'PP-OCRv4_server_rec',
-    'SVTRv2_server_rec',
-    'RepSVTR_mobile_rec',
-    'LaTeX_OCR_rec',
+    "PP-OCRv4_mobile_rec",
+    "PP-OCRv4_server_rec",
+    "ch_SVTRv2_rec",
+    "ch_RepSVTR_rec",
+    "LaTeX_OCR_rec",
 ]

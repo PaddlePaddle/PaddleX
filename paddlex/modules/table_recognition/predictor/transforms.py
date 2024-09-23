@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,44 +13,43 @@
 # limitations under the License.
 
 
-
 import os
 import os.path as osp
 import numpy as np
 import cv2
-import paddle
+import lazy_paddle as paddle
 
 from .keys import TableRecKeys as K
 from ...base import BaseTransform
 from ...base.predictor.io.writers import ImageWriter
 from ....utils import logging
 
-__all__ = ['TableLabelDecode', 'TableMasterLabelDecode', 'SaveTableResults']
+__all__ = ["TableLabelDecode", "TableMasterLabelDecode", "SaveTableResults"]
 
 
 class TableLabelDecode(BaseTransform):
-    """ decode the table model outputs(probs) to character str"""
+    """decode the table model outputs(probs) to character str"""
 
-    def __init__(self,
-                 character_dict_type='TableAttn_ch',
-                 merge_no_span_structure=True):
+    def __init__(
+        self, character_dict_type="TableAttn_ch", merge_no_span_structure=True
+    ):
         dict_character = []
-        supported_dict = ['TableAttn_ch', 'TableAttn_en', 'TableMaster']
-        if character_dict_type == 'TableAttn_ch':
-            character_dict_name = 'table_structure_dict_ch.txt'
-        elif character_dict_type == 'TableAttn_en':
-            character_dict_name = 'table_structure_dict.txt'
-        elif character_dict_type == 'TableMaster':
-            character_dict_name = 'table_master_structure_dict.txt'
+        supported_dict = ["TableAttn_ch", "TableAttn_en", "TableMaster"]
+        if character_dict_type == "TableAttn_ch":
+            character_dict_name = "table_structure_dict_ch.txt"
+        elif character_dict_type == "TableAttn_en":
+            character_dict_name = "table_structure_dict.txt"
+        elif character_dict_type == "TableMaster":
+            character_dict_name = "table_master_structure_dict.txt"
         else:
-            assert False, " character_dict_type must in %s " \
-                          % supported_dict
+            assert False, " character_dict_type must in %s " % supported_dict
         character_dict_path = osp.abspath(
-            osp.join(osp.dirname(__file__), character_dict_name))
+            osp.join(osp.dirname(__file__), character_dict_name)
+        )
         with open(character_dict_path, "rb") as fin:
             lines = fin.readlines()
             for line in lines:
-                line = line.decode('utf-8').strip("\n").strip("\r\n")
+                line = line.decode("utf-8").strip("\n").strip("\r\n")
                 dict_character.append(line)
 
         if merge_no_span_structure:
@@ -64,10 +63,10 @@ class TableLabelDecode(BaseTransform):
         for i, char in enumerate(dict_character):
             self.dict[char] = i
         self.character = dict_character
-        self.td_token = ['<td>', '<td', '<td></td>']
+        self.td_token = ["<td>", "<td", "<td></td>"]
 
     def add_special_char(self, dict_character):
-        """ add_special_char """
+        """add_special_char"""
         self.beg_str = "sos"
         self.end_str = "eos"
         dict_character = dict_character
@@ -75,24 +74,23 @@ class TableLabelDecode(BaseTransform):
         return dict_character
 
     def get_ignored_tokens(self):
-        """ get_ignored_tokens """
+        """get_ignored_tokens"""
         beg_idx = self.get_beg_end_flag_idx("beg")
         end_idx = self.get_beg_end_flag_idx("end")
         return [beg_idx, end_idx]
 
     def get_beg_end_flag_idx(self, beg_or_end):
-        """ get_beg_end_flag_idx """
+        """get_beg_end_flag_idx"""
         if beg_or_end == "beg":
             idx = np.array(self.dict[self.beg_str])
         elif beg_or_end == "end":
             idx = np.array(self.dict[self.end_str])
         else:
-            assert False, "unsupported type %s in get_beg_end_flag_idx" \
-                          % beg_or_end
+            assert False, "unsupported type %s in get_beg_end_flag_idx" % beg_or_end
         return idx
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         shape_list = data[K.SHAPE_LIST]
 
         structure_probs = data[K.STRUCTURE_PROB]
@@ -102,29 +100,30 @@ class TableLabelDecode(BaseTransform):
         if isinstance(bbox_preds, paddle.Tensor):
             bbox_preds = bbox_preds.numpy()
         post_result = self.decode(structure_probs, bbox_preds, shape_list)
-        structure_str_list = post_result['structure_batch_list'][0]
-        bbox_list = post_result['bbox_batch_list'][0]
+        structure_str_list = post_result["structure_batch_list"][0]
+        bbox_list = post_result["bbox_batch_list"][0]
         structure_str_list = structure_str_list[0]
-        structure_str_list = [
-            '<html>', '<body>', '<table>'
-        ] + structure_str_list + ['</table>', '</body>', '</html>']
+        structure_str_list = (
+            ["<html>", "<body>", "<table>"]
+            + structure_str_list
+            + ["</table>", "</body>", "</html>"]
+        )
         data[K.BBOX_RES] = bbox_list
         data[K.HTML_RES] = structure_str_list
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.STRUCTURE_PROB, K.LOC_PROB, K.SHAPE_LIST]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return [K.BBOX_RES, K.HTML_RES]
 
     def decode(self, structure_probs, bbox_preds, shape_list):
-        """convert text-label into text-index.
-        """
+        """convert text-label into text-index."""
         ignored_tokens = self.get_ignored_tokens()
         end_idx = self.dict[self.end_str]
 
@@ -154,14 +153,13 @@ class TableLabelDecode(BaseTransform):
             structure_batch_list.append([structure_list, np.mean(score_list)])
             bbox_batch_list.append(np.array(bbox_list))
         result = {
-            'bbox_batch_list': bbox_batch_list,
-            'structure_batch_list': structure_batch_list,
+            "bbox_batch_list": bbox_batch_list,
+            "structure_batch_list": structure_batch_list,
         }
         return result
 
     def decode_label(self, batch):
-        """convert text-label into text-index.
-        """
+        """convert text-label into text-index."""
         structure_idx = batch[1]
         gt_bbox_list = batch[2]
         shape_list = batch[-1]
@@ -189,8 +187,8 @@ class TableLabelDecode(BaseTransform):
             structure_batch_list.append(structure_list)
             bbox_batch_list.append(bbox_list)
         result = {
-            'bbox_batch_list': bbox_batch_list,
-            'structure_batch_list': structure_batch_list,
+            "bbox_batch_list": bbox_batch_list,
+            "structure_batch_list": structure_batch_list,
         }
         return result
 
@@ -202,33 +200,40 @@ class TableLabelDecode(BaseTransform):
 
 
 class TableMasterLabelDecode(TableLabelDecode):
-    """ decode the table model outputs(probs) to character str"""
+    """decode the table model outputs(probs) to character str"""
 
-    def __init__(self,
-                 character_dict_type='TableMaster',
-                 box_shape='pad',
-                 merge_no_span_structure=True):
-        super(TableMasterLabelDecode, self).__init__(character_dict_type,
-                                                     merge_no_span_structure)
+    def __init__(
+        self,
+        character_dict_type="TableMaster",
+        box_shape="pad",
+        merge_no_span_structure=True,
+    ):
+        super(TableMasterLabelDecode, self).__init__(
+            character_dict_type, merge_no_span_structure
+        )
         self.box_shape = box_shape
         assert box_shape in [
-            'ori', 'pad'
-        ], 'The shape used for box normalization must be ori or pad'
+            "ori",
+            "pad",
+        ], "The shape used for box normalization must be ori or pad"
 
     def add_special_char(self, dict_character):
-        """ add_special_char """
-        self.beg_str = '<SOS>'
-        self.end_str = '<EOS>'
-        self.unknown_str = '<UKN>'
-        self.pad_str = '<PAD>'
+        """add_special_char"""
+        self.beg_str = "<SOS>"
+        self.end_str = "<EOS>"
+        self.unknown_str = "<UKN>"
+        self.pad_str = "<PAD>"
         dict_character = dict_character
         dict_character = dict_character + [
-            self.unknown_str, self.beg_str, self.end_str, self.pad_str
+            self.unknown_str,
+            self.beg_str,
+            self.end_str,
+            self.pad_str,
         ]
         return dict_character
 
     def get_ignored_tokens(self):
-        """ get_ignored_tokens """
+        """get_ignored_tokens"""
         pad_idx = self.dict[self.pad_str]
         start_idx = self.dict[self.beg_str]
         end_idx = self.dict[self.end_str]
@@ -236,9 +241,9 @@ class TableMasterLabelDecode(TableLabelDecode):
         return [start_idx, end_idx, pad_idx, unknown_idx]
 
     def _bbox_decode(self, bbox, shape):
-        """ _bbox_decode """
+        """_bbox_decode"""
         h, w, ratio_h, ratio_w, pad_h, pad_w = shape
-        if self.box_shape == 'pad':
+        if self.box_shape == "pad":
             h, w = pad_h, pad_w
         bbox[0::2] *= w
         bbox[1::2] *= h
@@ -251,9 +256,10 @@ class TableMasterLabelDecode(TableLabelDecode):
 
 
 class SaveTableResults(BaseTransform):
-    """ SaveTableResults """
-    _TABLE_RES_SUFFIX = '_bbox'
-    _FILE_EXT = '.png'
+    """SaveTableResults"""
+
+    _TABLE_RES_SUFFIX = "_bbox"
+    _FILE_EXT = ".png"
 
     # _DEFAULT_FILE_NAME = 'table_res_out.png'
 
@@ -262,10 +268,10 @@ class SaveTableResults(BaseTransform):
         self.save_dir = save_dir
 
         # We use pillow backend to save both numpy arrays and PIL Image objects
-        self._writer = ImageWriter(backend='pillow')
+        self._writer = ImageWriter(backend="pillow")
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         ori_path = data[K.IM_PATH]
         bbox_res = data[K.BBOX_RES]
         file_name = os.path.basename(ori_path)
@@ -276,41 +282,42 @@ class SaveTableResults(BaseTransform):
             vis_img = self.draw_rectangle(data[K.ORI_IM], bbox_res)
         else:
             vis_img = self.draw_bbox(data[K.ORI_IM], bbox_res)
-        table_res_save_path = self._add_suffix(table_res_save_path,
-                                               self._TABLE_RES_SUFFIX)
+        table_res_save_path = self._add_suffix(
+            table_res_save_path, self._TABLE_RES_SUFFIX
+        )
         self._write_im(table_res_save_path, vis_img)
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.IM_PATH, K.ORI_IM, K.BBOX_RES]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return []
 
     def _write_im(self, path, im):
-        """ write image """
+        """write image"""
         if os.path.exists(path):
             logging.warning(f"{path} already exists. Overwriting it.")
         self._writer.write(path, im)
 
     @staticmethod
     def _add_suffix(path, suffix):
-        """ _add_suffix """
+        """_add_suffix"""
         stem, ext = os.path.splitext(path)
         return stem + suffix + ext
 
     @staticmethod
     def _replace_ext(path, new_ext):
-        """ _replace_ext """
+        """_replace_ext"""
         stem, _ = os.path.splitext(path)
         return stem + new_ext
 
     def draw_rectangle(self, img_path, boxes):
-        """ draw_rectangle """
+        """draw_rectangle"""
         boxes = np.array(boxes)
         img = cv2.imread(img_path)
         img_show = img.copy()
@@ -320,7 +327,7 @@ class SaveTableResults(BaseTransform):
         return img_show
 
     def draw_bbox(self, image, boxes):
-        """ draw_bbox """
+        """draw_bbox"""
         for box in boxes:
             box = np.reshape(np.array(box), [-1, 1, 2]).astype(np.int64)
             image = cv2.polylines(np.array(image), [box], True, (255, 0, 0), 2)
@@ -328,20 +335,20 @@ class SaveTableResults(BaseTransform):
 
 
 class PrintResult(BaseTransform):
-    """ Print Result Transform """
+    """Print Result Transform"""
 
     def apply(self, data):
-        """ apply """
+        """apply"""
         logging.info("The prediction result is:")
         logging.info(data[K.BOXES])
         return data
 
     @classmethod
     def get_input_keys(cls):
-        """ get input keys """
+        """get input keys"""
         return [K.BOXES]
 
     @classmethod
     def get_output_keys(cls):
-        """ get output keys """
+        """get output keys"""
         return []

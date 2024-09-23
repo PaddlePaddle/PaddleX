@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 import tempfile
 
@@ -21,17 +20,17 @@ from ...base.utils.subprocess import CompletedProcess
 
 
 class ClsRunner(BaseRunner):
-    """ Cls Runner """
-    _INFER_CONFIG_REL_PATH = os.path.join('deploy', 'configs',
-                                          'inference_cls.yaml')
+    """Cls Runner"""
 
-    def train(self,
-              config_path: str,
-              cli_args: list,
-              device: str,
-              ips: str,
-              save_dir: str,
-              do_eval=True) -> CompletedProcess:
+    def train(
+        self,
+        config_path: str,
+        cli_args: list,
+        device: str,
+        ips: str,
+        save_dir: str,
+        do_eval=True,
+    ) -> CompletedProcess:
         """train model
 
         Args:
@@ -46,8 +45,8 @@ class ClsRunner(BaseRunner):
             CompletedProcess: the result of training subprocess execution.
         """
         args, env = self.distributed(device, ips, log_dir=save_dir)
-        cmd = [*args, 'tools/train.py', '-c', config_path, *cli_args]
-        cmd.extend(['-o', f"Global.eval_during_train={do_eval}"])
+        cmd = [*args, "tools/train.py", "-c", config_path, *cli_args]
+        cmd.extend(["-o", f"Global.eval_during_train={do_eval}"])
         return self.run_cmd(
             cmd,
             env=env,
@@ -55,10 +54,12 @@ class ClsRunner(BaseRunner):
             echo=True,
             silent=False,
             capture_output=True,
-            log_path=self._get_train_log_path(save_dir))
+            log_path=self._get_train_log_path(save_dir),
+        )
 
-    def evaluate(self, config_path: str, cli_args: list, device: str,
-                 ips: str) -> CompletedProcess:
+    def evaluate(
+        self, config_path: str, cli_args: list, device: str, ips: str
+    ) -> CompletedProcess:
         """run model evaluating
 
         Args:
@@ -71,21 +72,18 @@ class ClsRunner(BaseRunner):
             CompletedProcess: the result of evaluating subprocess execution.
         """
         args, env = self.distributed(device, ips)
-        cmd = [*args, 'tools/eval.py', '-c', config_path, *cli_args]
+        cmd = [*args, "tools/eval.py", "-c", config_path, *cli_args]
         cp = self.run_cmd(
-            cmd,
-            env=env,
-            switch_wdir=True,
-            echo=True,
-            silent=False,
-            capture_output=True)
+            cmd, env=env, switch_wdir=True, echo=True, silent=False, capture_output=True
+        )
         if cp.returncode == 0:
             metric_dict = _extract_eval_metrics(cp.stdout)
             cp.metrics = metric_dict
         return cp
 
-    def predict(self, config_path: str, cli_args: list,
-                device: str) -> CompletedProcess:
+    def predict(
+        self, config_path: str, cli_args: list, device: str
+    ) -> CompletedProcess:
         """run predicting using dynamic mode
 
         Args:
@@ -97,14 +95,12 @@ class ClsRunner(BaseRunner):
             CompletedProcess: the result of predicting subprocess execution.
         """
         # `device` unused
-        cmd = [self.python, 'tools/infer.py', '-c', config_path, *cli_args]
+        cmd = [self.python, "tools/infer.py", "-c", config_path, *cli_args]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
-    def export(self,
-               config_path: str,
-               cli_args: list,
-               device: str,
-               save_dir: str=None) -> CompletedProcess:
+    def export(
+        self, config_path: str, cli_args: list, device: str, save_dir: str = None
+    ) -> CompletedProcess:
         """run exporting
 
         Args:
@@ -119,16 +115,19 @@ class ClsRunner(BaseRunner):
         # `device` unused
 
         cmd = [
-            self.python, 'tools/export_model.py', '-c', config_path, *cli_args,
-            '-o', 'Global.export_for_fd=True', '-o',
-            f"Global.infer_config_path={os.path.join(self.runner_root_path, self._INFER_CONFIG_REL_PATH)}"
+            self.python,
+            "tools/export_model.py",
+            "-c",
+            config_path,
+            *cli_args,
+            "-o",
+            "Global.export_for_fd=True",
         ]
 
         cp = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
         return cp
 
-    def infer(self, config_path: str, cli_args: list,
-              device: str) -> CompletedProcess:
+    def infer(self, config_path: str, cli_args: list, device: str) -> CompletedProcess:
         """run predicting using inference model
 
         Args:
@@ -140,17 +139,17 @@ class ClsRunner(BaseRunner):
             CompletedProcess: the result of infering subprocess execution.
         """
         # `device` unused
-        cmd = [
-            self.python, 'python/predict_cls.py', '-c', config_path, *cli_args
-        ]
-        return self.run_cmd(cmd, switch_wdir='deploy', echo=True, silent=False)
+        cmd = [self.python, "python/predict_cls.py", "-c", config_path, *cli_args]
+        return self.run_cmd(cmd, switch_wdir="deploy", echo=True, silent=False)
 
-    def compression(self,
-                    config_path: str,
-                    train_cli_args: list,
-                    export_cli_args: list,
-                    device: str,
-                    train_save_dir: str) -> CompletedProcess:
+    def compression(
+        self,
+        config_path: str,
+        train_cli_args: list,
+        export_cli_args: list,
+        device: str,
+        train_save_dir: str,
+    ) -> CompletedProcess:
         """run compression model
 
         Args:
@@ -164,13 +163,14 @@ class ClsRunner(BaseRunner):
             CompletedProcess: the result of compression subprocess execution.
         """
         # Step 1: Train model
-        cp_train = self.train(config_path, train_cli_args, device, None,
-                              train_save_dir)
+        cp_train = self.train(config_path, train_cli_args, device, None, train_save_dir)
 
         # Step 2: Export model
-        weight_path = os.path.join(train_save_dir, 'best_model', 'model')
+        weight_path = os.path.join(train_save_dir, "best_model", "model")
         export_cli_args = [
-            *export_cli_args, '-o', f"Global.pretrained_model={weight_path}"
+            *export_cli_args,
+            "-o",
+            f"Global.pretrained_model={weight_path}",
         ]
         cp_export = self.export(config_path, export_cli_args, device)
 
@@ -188,14 +188,14 @@ def _extract_eval_metrics(stdout: str) -> dict:
     """
     import re
 
-    _DP = r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
+    _DP = r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?"
     patterns = [
-        r'\[Eval\]\[Epoch 0\]\[Avg\].*top1: (_dp), top5: (_dp)'.replace('_dp',
-                                                                        _DP),
-        r'\[Eval\]\[Epoch 0\]\[Avg\].*recall1: (_dp), recall5: (_dp), mAP: (_dp)'.
-        replace('_dp', _DP),
+        r"\[Eval\]\[Epoch 0\]\[Avg\].*top1: (_dp), top5: (_dp)".replace("_dp", _DP),
+        r"\[Eval\]\[Epoch 0\]\[Avg\].*recall1: (_dp), recall5: (_dp), mAP: (_dp)".replace(
+            "_dp", _DP
+        ),
     ]
-    keys = [['val.top1', 'val.top5'], ['recall1', 'recall5', 'mAP']]
+    keys = [["val.top1", "val.top5"], ["recall1", "recall5", "mAP"]]
 
     metric_dict = dict()
     for pattern, key in zip(patterns, keys):

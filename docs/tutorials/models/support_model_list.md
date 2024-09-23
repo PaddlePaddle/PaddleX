@@ -96,6 +96,22 @@
 | SwinTransformer_base_patch4_window12_384 | [SwinTransformer_base_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_base_patch4_window12_384.yaml)|
 | SwinTransformer_large_patch4_window7_224 | [SwinTransformer_large_patch4_window7_224.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window7_224.yaml)|
 | SwinTransformer_large_patch4_window12_384 | [SwinTransformer_large_patch4_window12_384.yaml](../../../paddlex/configs/image_classification/SwinTransformer_large_patch4_window12_384.yaml)|
+
+### 11. 多标签分类系列
+| 模型名称 | config |
+| :--- | :---: |
+| ResNet50_ML | [ResNet50_ML.yaml](../../../paddlex/configs/multilabel_classification/ResNet50_ML.yaml)|
+| PP-LCNet_x1_0_ML | [PP-LCNet_x1_0_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml)|
+| PP-HGNetV2-B0_ML | [PP-HGNetV2-B0_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B0_ML.yaml)|
+| PP-HGNetV2-B4_ML | [PP-HGNetV2-B4_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B4_ML.yaml)|
+| PP-HGNetV2-B6_ML | [PP-HGNetV2-B6_ML.yaml](../../../paddlex/configs/multilabel_classification/PP-HGNetV2-B6_ML.yaml)|
+| CLIP_vit_base_patch16_448_ML | [CLIP_vit_base_patch16_448_ML.yaml](../../../paddlex/configs/multilabel_classification/CLIP_vit_base_patch16_448_ML.yaml)|
+
+### 12. 文档图像方向分类
+| 模型名称 | config |
+| :--- | :---: |
+| PP-LCNet_x1_0_doc_ori | [PP-LCNet_x1_0_doc_ori.yaml](../../../paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml)|
+
 ## 二、目标检测
 ### 1. PP-YOLOE_plus 系列
 | 模型名称 | config |
@@ -132,6 +148,23 @@
 | YOLOX-S | [YOLOX-S.yaml](../../../paddlex/configs/object_detection/YOLOX-S.yaml)|
 | YOLOX-T | [YOLOX-T.yaml](../../../paddlex/configs/object_detection/YOLOX-T.yaml)|
 | YOLOX-X | [YOLOX-X.yaml](../../../paddlex/configs/object_detection/YOLOX-X.yaml)|
+### 6. FasterRCNN 系列
+| 模型名称 | config |
+| :--- | :---: |
+| FasterRCNN-ResNet34-FPN | [FasterRCNN-ResNet34-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet34-FPN.yaml)|
+| FasterRCNN-ResNet50 | [FasterRCNN-ResNet50.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50.yaml)|
+| FasterRCNN-ResNet50-FPN | [FasterRCNN-ResNet50-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50-FPN.yaml)|
+| FasterRCNN-ResNet50-vd-FPN | [FasterRCNN-ResNet50-vd-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50-vd-FPN.yaml)|
+| FasterRCNN-ResNet50-vd-SSLDv2-FPN | [FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
+| FasterRCNN-ResNet101 | [FasterRCNN-ResNet101.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet101.yaml)|
+| FasterRCNN-ResNet101-FPN | [FasterRCNN-ResNet101-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNet101-FPN.yaml)|
+| FasterRCNN-ResNeXt101-vd-FPN | [FasterRCNN-ResNeXt101-vd-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-ResNeXt101-vd-FPN.yaml)|
+| FasterRCNN-Swin-Tiny-FPN | [FasterRCNN-Swin-Tiny-FPN.yaml](../../../paddlex/configs/object_detection/FasterRCNN-Swin-Tiny-FPN.yaml)|
+### 7. Cascade 系列
+| 模型名称 | config |
+| :--- | :---: |
+| Cascade-FasterRCNN-ResNet50-FPN | [Cascade-FasterRCNN-ResNet50-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-FPN.yaml)|
+| Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN | [Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |
@@ -171,6 +204,10 @@
 | SeaFormer_small | [SeaFormer_small.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_small.yaml)|
 | SeaFormer_base | [SeaFormer_base.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_base.yaml)|
 | SeaFormer_large | [SeaFormer_large.yaml](../../../paddlex/configs/semantic_segmentation/SeaFormer_large.yaml)|
+### 6.STFPM 系列
+| 模型名称 | config |
+| :--- | :---: |
+| STFPM | [STFPM.yaml](../../../paddlex/configs/anomaly_detection/STFPM.yaml)|
 ## 五、表格识别
 | 模型名称 | config |
 | :--- | :---: |

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import os
 import os.path as osp
 import inspect
@@ -23,14 +22,14 @@ import hashlib
 
 import filelock
 
-DEFAULT_CACHE_DIR = osp.abspath(osp.join(os.path.expanduser('~'), '.paddlex'))
-CACHE_DIR = os.environ.get('PADDLE_PDX_CACHE_HOME', DEFAULT_CACHE_DIR)
-FUNC_CACHE_DIR = osp.join(CACHE_DIR, 'func_ret')
-FILE_LOCK_DIR = osp.join(CACHE_DIR, 'locks')
+DEFAULT_CACHE_DIR = osp.abspath(osp.join(os.path.expanduser("~"), ".paddlex"))
+CACHE_DIR = os.environ.get("PADDLE_PDX_CACHE_HOME", DEFAULT_CACHE_DIR)
+FUNC_CACHE_DIR = osp.join(CACHE_DIR, "func_ret")
+FILE_LOCK_DIR = osp.join(CACHE_DIR, "locks")
 
 
 def create_cache_dir(*args, **kwargs):
-    """ create cache dir """
+    """create cache dir"""
     # `args` and `kwargs` reserved for extension
     os.makedirs(CACHE_DIR, exist_ok=True)
     os.makedirs(FUNC_CACHE_DIR, exist_ok=True)
@@ -39,24 +38,24 @@ def create_cache_dir(*args, **kwargs):
 
 
 def get_cache_dir(*args, **kwargs):
-    """ get cache dir """
+    """get cache dir"""
     # `args` and `kwargs` reserved for extension
     return CACHE_DIR
 
 
 def persist(cond=None):
-    """ persist """
+    """persist"""
     # FIXME: Current implementation creates files in cache dir and we do
     # not set a limit on number of files
     # TODO: Faster implementation and support more arg types
-    FILENAME_PATTERN = 'persist_{key}.pkl'
+    FILENAME_PATTERN = "persist_{key}.pkl"
     SUPPORTED_ARG_TYPES = (str, int, float)
 
     if cond is None:
         cond = lambda ret: ret is not None
 
     def _to_bytes(obj):
-        return str(obj).encode('utf-8')
+        return str(obj).encode("utf-8")
 
     def _make_key(func, bnd_args):
         # Use MD5 algorithm to make deterministic hashing
@@ -83,16 +82,17 @@ def persist(cond=None):
             bnd_args.apply_defaults()
             key = _make_key(func, bnd_args)
             cache_file_path = osp.join(
-                FUNC_CACHE_DIR, FILENAME_PATTERN.format(key=str(key)))
+                FUNC_CACHE_DIR, FILENAME_PATTERN.format(key=str(key))
+            )
             lock = filelock.FileLock(osp.join(FILE_LOCK_DIR, f"{key}.lock"))
             with lock:
                 if osp.exists(cache_file_path):
-                    with open(cache_file_path, 'rb') as f:
+                    with open(cache_file_path, "rb") as f:
                         ret = pickle.load(f)
                 else:
                     ret = func(*args, **kwargs)
                     if cond(ret):
-                        with open(cache_file_path, 'wb') as f:
+                        with open(cache_file_path, "wb") as f:
                             pickle.dump(ret, f)
             return ret
 

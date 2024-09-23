@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 import cv2
@@ -22,18 +21,18 @@ import random
 import math
 import copy
 
-from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
 def draw_ocr_box_txt(
-        img,
-        boxes,
-        txts=None,
-        scores=None,
-        drop_score=0.5,
-        font_path=PINGFANG_FONT_FILE_PATH, ):
-    """draw ocr result
-    """
+    img,
+    boxes,
+    txts=None,
+    scores=None,
+    drop_score=0.5,
+    font_path=PINGFANG_FONT_FILE_PATH,
+):
+    """draw ocr result"""
     image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     h, w = image.height, image.width
     img_left = image.copy()
@@ -46,8 +45,7 @@ def draw_ocr_box_txt(
     for idx, (box, txt) in enumerate(zip(boxes, txts)):
         if scores is not None and scores[idx] < drop_score:
             continue
-        color = (random.randint(0, 255), random.randint(0, 255),
-                 random.randint(0, 255))
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         draw_left.polygon(box, fill=color)
         img_right_text = draw_box_txt_fine((w, h), box, txt, font_path)
         pts = np.array(box, np.int32).reshape((-1, 1, 2))
@@ -61,12 +59,13 @@ def draw_ocr_box_txt(
 
 
 def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):
-    """draw box text
-    """
+    """draw box text"""
     box_height = int(
-        math.sqrt((box[0][0] - box[3][0])**2 + (box[0][1] - box[3][1])**2))
+        math.sqrt((box[0][0] - box[3][0]) ** 2 + (box[0][1] - box[3][1]) ** 2)
+    )
     box_width = int(
-        math.sqrt((box[0][0] - box[1][0])**2 + (box[0][1] - box[1][1])**2))
+        math.sqrt((box[0][0] - box[1][0]) ** 2 + (box[0][1] - box[1][1]) ** 2)
+    )
 
     if box_height > 2 * box_width and box_height > 30:
         img_text = Image.new("RGB", (box_height, box_width), (255, 255, 255))
@@ -83,7 +82,8 @@ def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):
             draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font)
 
     pts1 = np.float32(
-        [[0, 0], [box_width, 0], [box_width, box_height], [0, box_height]])
+        [[0, 0], [box_width, 0], [box_width, box_height], [0, box_height]]
+    )
     pts2 = np.array(box, dtype=np.float32)
     M = cv2.getPerspectiveTransform(pts1, pts2)
 
@@ -94,13 +94,13 @@ def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):
         img_size,
         flags=cv2.INTER_NEAREST,
         borderMode=cv2.BORDER_CONSTANT,
-        borderValue=(255, 255, 255), )
+        borderValue=(255, 255, 255),
+    )
     return img_right_text
 
 
 def create_font(txt, sz, font_path=PINGFANG_FONT_FILE_PATH):
-    """create font
-    """
+    """create font"""
     font_size = int(sz[1] * 0.8)
     font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
     if int(PIL.__version__.split(".")[0]) < 10:

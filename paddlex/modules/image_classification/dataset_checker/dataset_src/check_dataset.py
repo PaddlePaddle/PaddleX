@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import os
 import os.path as osp
 import random
@@ -25,14 +23,14 @@ from .utils.visualizer import draw_label
 
 
 def check(dataset_dir, output, sample_num=10):
-    """ check dataset """
+    """check dataset"""
     dataset_dir = osp.abspath(dataset_dir)
     # Custom dataset
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
 
-    tags = ['train', 'val']
-    delim = ' '
+    tags = ["train", "val"]
+    delim = " "
     valid_num_parts = 2
 
     sample_cnts = dict()
@@ -40,16 +38,17 @@ def check(dataset_dir, output, sample_num=10):
     sample_paths = defaultdict(list)
     labels = []
 
-    label_file = osp.join(dataset_dir, 'label.txt')
+    label_file = osp.join(dataset_dir, "label.txt")
     if not osp.exists(label_file):
         raise DatasetFileNotFoundError(
             file_path=label_file,
-            solution=f"Ensure that `label.txt` exist in {dataset_dir}")
+            solution=f"Ensure that `label.txt` exist in {dataset_dir}",
+        )
 
-    with open(label_file, 'r', encoding='utf-8') as f:
+    with open(label_file, "r", encoding="utf-8") as f:
         all_lines = f.readlines()
         for line in all_lines:
-            substr = line.strip("\n").split(delim, 1)
+            substr = line.strip("\n").split(" ", 1)
             try:
                 label_idx = int(substr[0])
                 labels.append(label_idx)
@@ -60,22 +59,23 @@ def check(dataset_dir, output, sample_num=10):
                 )
     if min(labels) != 0:
         raise CheckFailedError(
-            f"Ensure that the index starts from 0 in `{label_file}`.")
+            f"Ensure that the index starts from 0 in `{label_file}`."
+        )
 
     for tag in tags:
-        file_list = osp.join(dataset_dir, f'{tag}.txt')
+        file_list = osp.join(dataset_dir, f"{tag}.txt")
         if not osp.exists(file_list):
-            if tag in ('train', 'val'):
+            if tag in ("train", "val"):
                 # train and val file lists must exist
                 raise DatasetFileNotFoundError(
                     file_path=file_list,
-                    solution=f"Ensure that both `train.txt` and `val.txt` exist in {dataset_dir}"
+                    solution=f"Ensure that both `train.txt` and `val.txt` exist in {dataset_dir}",
                 )
             else:
                 # tag == 'test'
                 continue
         else:
-            with open(file_list, 'r', encoding='utf-8') as f:
+            with open(file_list, "r", encoding="utf-8") as f:
                 all_lines = f.readlines()
                 random.seed(123)
                 random.shuffle(all_lines)
@@ -95,7 +95,7 @@ def check(dataset_dir, output, sample_num=10):
                     if not osp.exists(img_path):
                         raise DatasetFileNotFoundError(file_path=img_path)
 
-                    vis_save_dir = osp.join(output, 'demo_img')
+                    vis_save_dir = osp.join(output, "demo_img")
                     if not osp.exists(vis_save_dir):
                         os.makedirs(vis_save_dir)
 
@@ -103,11 +103,11 @@ def check(dataset_dir, output, sample_num=10):
                         img = Image.open(img_path)
                         img = ImageOps.exif_transpose(img)
                         vis_im = draw_label(img, label, label_map_dict)
-                        vis_path = osp.join(vis_save_dir,
-                                            osp.basename(file_name))
+                        vis_path = osp.join(vis_save_dir, osp.basename(file_name))
                         vis_im.save(vis_path)
                         sample_path = osp.join(
-                            'check_dataset', os.path.relpath(vis_path, output))
+                            "check_dataset", os.path.relpath(vis_path, output)
+                        )
                         sample_paths[tag].append(sample_path)
 
                     try:
@@ -120,12 +120,12 @@ def check(dataset_dir, output, sample_num=10):
     num_classes = max(labels) + 1
 
     attrs = {}
-    attrs['label_file'] = osp.relpath(label_file, output)
-    attrs['num_classes'] = num_classes
-    attrs['train_samples'] = sample_cnts['train']
-    attrs['train_sample_paths'] = sample_paths['train']
+    attrs["label_file"] = osp.relpath(label_file, output)
+    attrs["num_classes"] = num_classes
+    attrs["train_samples"] = sample_cnts["train"]
+    attrs["train_sample_paths"] = sample_paths["train"]
 
-    attrs['val_samples'] = sample_cnts['val']
-    attrs['val_sample_paths'] = sample_paths['val']
+    attrs["val_samples"] = sample_cnts["val"]
+    attrs["val_sample_paths"] = sample_paths["val"]
 
     return attrs

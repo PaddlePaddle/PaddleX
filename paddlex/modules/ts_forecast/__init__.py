@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,4 +16,5 @@
 from .dataset_checker import TSFCDatasetChecker
 from .trainer import TSFCTrainer
 from .evaluator import TSFCEvaluator
-from .predictor import TSFCPredictor
+from .predictor import TSFCPredictor, transforms
+from .exportor import TSFCExportor

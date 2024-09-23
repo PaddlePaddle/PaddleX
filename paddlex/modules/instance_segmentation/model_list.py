@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,6 +14,20 @@
 
 
 MODELS = [
-    'Mask-RT-DETR-H',
-    'Mask-RT-DETR-L',
+    "Mask-RT-DETR-S",
+    "Mask-RT-DETR-M",
+    "Mask-RT-DETR-X",
+    "Mask-RT-DETR-H",
+    "Mask-RT-DETR-L",
+    "SOLOv2",
+    "MaskRCNN-ResNet50",
+    "MaskRCNN-ResNet50-FPN",
+    "MaskRCNN-ResNet50-vd-FPN",
+    "MaskRCNN-ResNet101-FPN",
+    "MaskRCNN-ResNet101-vd-FPN",
+    "MaskRCNN-ResNeXt101-vd-FPN",
+    "MaskRCNN-ResNet50-vd-SSLDv2-FPN",
+    "Cascade-MaskRCNN-ResNet50-FPN",
+    "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN",
+    "PP-YOLOE_seg-S",
 ]
