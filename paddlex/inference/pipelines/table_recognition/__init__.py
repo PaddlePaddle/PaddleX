@@ -12,9 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .clas import Topk, MultiLabelThreshOutput, NormalizeFeatures
-from .text_det import DetResizeForTest, NormalizeImage, DBPostProcess, CropByPolys
-from .text_rec import OCRReisizeNormImg, CTCLabelDecode
-from .table_rec import TableLabelDecode
-from .det import DetPostProcess, CropByBoxes
-from .instance_seg import InstanceSegPostProcess
+from .table_recognition import TableRecPipeline

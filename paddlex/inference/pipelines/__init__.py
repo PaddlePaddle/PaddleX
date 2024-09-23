@@ -14,6 +14,7 @@
 
 from .image_classification import ClasPipeline
 from .ocr import OCRPipeline
+from .table_recognition import TableRecPipeline
 from .object_detection import DetPipeline
 from .instance_segmentation import InstanceSegPipeline
 from .semantic_segmentation import SegPipeline

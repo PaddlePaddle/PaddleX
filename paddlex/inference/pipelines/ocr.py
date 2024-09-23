@@ -14,6 +14,7 @@
 
 from .base import BasePipeline
 from ..predictors import create_predictor
+from ...utils import logging
 from ..components import CropByPolys
 from ..results import OCRResult
 
