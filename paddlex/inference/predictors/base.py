@@ -36,12 +36,13 @@ def _get_default_device():
 
 
 class BasePredictor(BaseComponent):
+    KEEP_INPUT = False
+    YIELD_BATCH = False
+
     INPUT_KEYS = "x"
     DEAULT_INPUTS = {"x": "x"}
     OUTPUT_KEYS = "result"
     DEAULT_OUTPUTS = {"result": "result"}
-
-    KEEP_INPUT = False
 
     MODEL_FILE_PREFIX = "inference"
 
@@ -53,6 +54,10 @@ class BasePredictor(BaseComponent):
         self.kwargs = self._check_args(kwargs)
         # alias predict() to the __call__()
         self.predict = self.__call__
+
+    def __call__(self, *args, **kwargs):
+        for res in super().__call__(*args, **kwargs):
+            yield res["result"]
 
     @property
     def config_path(self):
@@ -82,6 +87,7 @@ class BasePredictor(BaseComponent):
 
 
 class BasicPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
+
     __is_base = True
 
     def __init__(self, model_dir, config=None, device=None, pp_option=None, **kwargs):
@@ -99,8 +105,8 @@ class BasicPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
         yield from self._generate_res(self.engine(x))
 
     @generatorable_method
-    def _generate_res(self, data):
-        return self._pack_res(data)
+    def _generate_res(self, batch_data):
+        return [{"result": self._pack_res(data)} for data in batch_data]
 
     @abstractmethod
     def _build_components(self):

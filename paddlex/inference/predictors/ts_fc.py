@@ -80,8 +80,5 @@ class TSFcPredictor(BasicPredictor):
             )
         return ops
 
-    @batchable_method
-    def _pack_res(self, data):
-        return {
-            "result": TSFcResult({"ts_path": data["ts_path"], "forecast": data["pred"]})
-        }
+    def _pack_res(self, single):
+        return TSFcResult({"ts_path": single["ts_path"], "forecast": single["pred"]})

@@ -103,9 +103,8 @@ class ClasPredictor(BasicPredictor):
     def build_threshoutput(self, threshold, label_list=None):
         return MultiLabelThreshOutput(threshold=float(threshold), class_ids=label_list)
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "class_ids", "scores"]
-        if "label_names" in data:
+        if "label_names" in single:
             keys.append("label_names")
-        return {"result": TopkResult({key: data[key] for key in keys})}
+        return TopkResult({key: single[key] for key in keys})

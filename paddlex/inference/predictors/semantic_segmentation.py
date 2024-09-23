@@ -90,7 +90,6 @@ class SegPredictor(BasicPredictor):
     ):
         return Normalize(mean=mean, std=std)
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "pred"]
-        return {"result": SegResult({key: data[key] for key in keys})}
+        return SegResult({key: single[key] for key in keys})

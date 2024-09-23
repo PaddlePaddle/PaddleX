@@ -93,7 +93,6 @@ class DetPredictor(BasicPredictor):
     def build_to_chw(self):
         return ToCHWImage()
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "boxes", "labels"]
-        return {"result": DetResult({key: data[key] for key in keys})}
+        return DetResult({key: single[key] for key in keys})
