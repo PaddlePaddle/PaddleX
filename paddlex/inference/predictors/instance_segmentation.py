@@ -53,7 +53,6 @@ class InstanceSegPredictor(DetPredictor):
 
         return ops
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "boxes", "masks", "labels"]
-        return {"result": InstanceSegResult({key: data[key] for key in keys})}
+        return InstanceSegResult({key: single[key] for key in keys})
