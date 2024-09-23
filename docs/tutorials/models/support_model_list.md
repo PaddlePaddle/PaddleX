@@ -120,6 +120,9 @@
 | PP-YOLOE_plus-M | [PP-YOLOE_plus-M.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-M.yaml)|
 | PP-YOLOE_plus-L | [PP-YOLOE_plus-L.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-L.yaml)|
 | PP-YOLOE_plus-X | [PP-YOLOE_plus-X.yaml](../../../paddlex/configs/object_detection/PP-YOLOE_plus-X.yaml)|
+| PP-YOLOE+_SOD-L | [PP-YOLOE+_SOD-L.yaml](../../../paddlex/configs/smallobject_detection/PP-YOLOE+_SOD-L.yaml)|
+| PP-YOLOE+_SOD-S | [PP-YOLOE+_SOD-S.yaml](../../../paddlex/configs/smallobject_detection/PP-YOLOE+_SOD-S.yaml)|
+| PP-YOLOE+_SOD-largesize-L | [PP-YOLOE+_SOD-largesize-L.yaml](../../../paddlex/configs/smallobject_detection/PP-YOLOE+_SOD-largesize-L.yaml)|
 ### 2. RT-DETR 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -133,6 +136,10 @@
 | :--- | :---: |
 | PicoDet-S | [PicoDet-S.yaml](../../../paddlex/configs/object_detection/PicoDet-S.yaml)|
 | PicoDet-L | [PicoDet-L.yaml](../../../paddlex/configs/object_detection/PicoDet-L.yaml)|
+| PicoDet-M | [PicoDet-M.yaml](../../../paddlex/configs/object_detection/PicoDet-M.yaml)|
+| PicoDet-XS | [PicoDet-XS.yaml](../../../paddlex/configs/object_detection/PicoDet-XS.yaml)|
+| PP-ShiTuV2_det | [PP-ShiTuV2_det.yaml](../../../paddlex/configs/mainbody_detection/PP-ShiTuV2_det.yaml)|
+| PicoDet_LCNet_x2_5_face | [PicoDet_LCNet_x2_5_face.yaml](../../../paddlex/configs/face_detection/PicoDet_LCNet_x2_5_face.yaml)|
 ### 4. YOLOv3 系列
 | 模型名称 | config |
 | :--- | :---: |
@@ -165,6 +172,26 @@
 | :--- | :---: |
 | Cascade-FasterRCNN-ResNet50-FPN | [Cascade-FasterRCNN-ResNet50-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-FPN.yaml)|
 | Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN | [Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../../paddlex/configs/object_detection/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
+### 8. FCOS 系列
+| 模型名称 | config |
+| :--- | :---: |
+| FCOS-ResNet50 | [FCOS-ResNet50.yaml](../../../paddlex/configs/object_detection/FCOS-ResNet50.yaml)|
+### 9. DETR 系列
+| 模型名称 | config |
+| :--- | :---: |
+| DETR-R50 | [DETR-R50.yaml](../../../paddlex/configs/object_detection/DETR-R50.yaml)|
+### 10. PP-YOLOE 系列
+| 模型名称 | config |
+| :--- | :---: |
+| PP-YOLOE-L_vehicle | [PP-YOLOE-vehicle-L.yaml](../../../paddlex/configs/vehicle_detection/PP-YOLOE-L_vehicle.yaml)|
+| PP-YOLOE-S_vehicle | [PP-YOLOE-vehicle-S.yaml](../../../paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml)|
+| PP-YOLOE-L_human | [PP-YOLOE-human-L.yaml](../../../paddlex/configs/human_detection/PP-YOLOE-L_human.yaml)|
+| PP-YOLOE-S_human | [PP-YOLOE-human-S.yaml](../../../paddlex/configs/human_detection/PP-YOLOE-S_human.yaml)|
+### 11. CenterNet 系列
+| 模型名称 | config |
+| :--- | :---: |
+| CenterNet-DLA-34 | [CenterNet-DLA-34.yaml](../../../paddlex/configs/object_detection/CenterNet-DLA-34.yaml)|
+| CenterNet-ResNet50 | [CenterNet-ResNet50.yaml](../../../paddlex/configs/object_detection/CenterNet-ResNet50.yaml)|
 ## 三、实例分割
 ### 1.Mask-RT-DETR 系列
 | 模型名称 | config |
@@ -232,6 +259,9 @@
 | 模型名称 | config |
 | :--- | :---: |
 | PicoDet_layout_1x | [PicoDet_layout_1x.yaml](../../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
+| PicoDet-L_layout | [PicoDet-L_layout.yaml](../../../paddlex/configs/structure_analysis/PicoDet-L_layout.yaml)|
+| RT-DETR-H_layout_3cls | [RT-DETR-H_layout.yaml](../../../paddlex/configs/structure_analysis/RT-DETR-H_layout_3cls.yaml)|
+| RT-DETR-H_layout_17cls | [RT-DETR-H_layout.yaml](../../../paddlex/configs/structure_analysis/RT-DETR-H_layout_17cls.yaml)|
 ## 十、时序异常检测
 | 模型名称 | config |
 | :--- | :---: |
