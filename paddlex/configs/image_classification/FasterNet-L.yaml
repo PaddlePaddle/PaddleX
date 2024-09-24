@@ -1,5 +1,5 @@
 Global:
-  model: FasterNet_L
+  model: FasterNet-L
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
   device: gpu:0,1,2,3

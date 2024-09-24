@@ -107,19 +107,19 @@
 ### 12.StarNet系列
 | 模型名称 | config |
 | :--- | :---: |
-| StarNet_S1 | [StarNet_S1.yaml](../../../paddlex/configs/image_classification/StarNet_S1.yaml)|
-| StarNet_S2 | [StarNet_S2.yaml](../../../paddlex/configs/image_classification/StarNet_S2.yaml)|
-| StarNet_S3 | [StarNet_S3.yaml](../../../paddlex/configs/image_classification/StarNet_S3.yaml)|
-| StarNet_S4 | [StarNet_S4.yaml](../../../paddlex/configs/image_classification/StarNet_S4.yaml)|
+| StarNet-S1 | [StarNet-S1.yaml](../../../paddlex/configs/image_classification/StarNet-S1.yaml)|
+| StarNet-S2 | [StarNet-S2.yaml](../../../paddlex/configs/image_classification/StarNet-S2.yaml)|
+| StarNet-S3 | [StarNet-S3.yaml](../../../paddlex/configs/image_classification/StarNet-S3.yaml)|
+| StarNet-S4 | [StarNet-S4.yaml](../../../paddlex/configs/image_classification/StarNet-S4.yaml)|
 ### 13.FasterNet系列
 | 模型名称 | config |
 | :--- | :---: |
-| FasterNet_L | [FasterNet_L.yaml](../../../paddlex/configs/image_classification/FasterNet_L.yaml)|
-| FasterNet_M | [FasterNet_M.yaml](../../../paddlex/configs/image_classification/FasterNet_M.yaml)|
-| FasterNet_S | [FasterNet_S.yaml](../../../paddlex/configs/image_classification/FasterNet_S.yaml)|
-| FasterNet_T0 | [FasterNet_T0.yaml](../../../paddlex/configs/image_classification/FasterNet_T0.yaml)|
-| FasterNet_T1 | [FasterNet_T1.yaml](../../../paddlex/configs/image_classification/FasterNet_T1.yaml)|
-| FasterNet_T2 | [FasterNet_T2.yaml](../../../paddlex/configs/image_classification/FasterNet_T2.yaml)|
+| FasterNet-L | [FasterNet-L.yaml](../../../paddlex/configs/image_classification/FasterNet-L.yaml)|
+| FasterNet-M | [FasterNet-M.yaml](../../../paddlex/configs/image_classification/FasterNet-M.yaml)|
+| FasterNet-S | [FasterNet-S.yaml](../../../paddlex/configs/image_classification/FasterNet-S.yaml)|
+| FasterNet-T0 | [FasterNet-T0.yaml](../../../paddlex/configs/image_classification/FasterNet-T0.yaml)|
+| FasterNet-T1 | [FasterNet-T1.yaml](../../../paddlex/configs/image_classification/FasterNet-T1.yaml)|
+| FasterNet-T2 | [FasterNet-T2.yaml](../../../paddlex/configs/image_classification/FasterNet-T2.yaml)|
 
 ### 14. 多标签分类系列
 | 模型名称 | config |

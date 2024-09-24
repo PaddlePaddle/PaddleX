@@ -1,5 +1,5 @@
 Global:
-  model: StarNet_S3
+  model: StarNet-S3
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
   device: gpu:0,1,2,3

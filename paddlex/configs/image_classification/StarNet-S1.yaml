@@ -1,5 +1,5 @@
 Global:
-  model: FasterNet_M
+  model: StarNet-S1
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
   device: gpu:0,1,2,3
@@ -17,7 +17,7 @@ CheckDataset:
 Train:
   num_classes: 102
   epochs_iters: 20
-  batch_size: 64
+  batch_size: 128
   learning_rate: 3e-3
   pretrain_weight_path: null
   warmup_steps: 5
@@ -29,8 +29,9 @@ Train:
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 1
+
 Export:
-  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/FasterNet_M_pretrained.pdparams
+  weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/StarNet_S1_pretrained.pdparams
 
 Predict:
   model_dir: "output/best_model"
