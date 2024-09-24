@@ -15,10 +15,14 @@
 from .base import BasePipeline
 
 
-class InstanceSegPipeline(BasePipeline):
-    """InstanceSeg Pipeline"""
+class SingleModelPipeline(BasePipeline):
 
-    entities = "instance_segmentation"
+    entities = [
+        "image_classification",
+        "object_detection",
+        "instance_segmentation",
+        "semantic_segmentation",
+    ]
 
     def __init__(self, model, batch_size=1, device="gpu", predictor_kwargs=None):
         super().__init__(predictor_kwargs)
@@ -27,8 +31,4 @@ class InstanceSegPipeline(BasePipeline):
         )
 
     def predict(self, x):
-        self._check_input(x)
         yield from self._predict(x)
-
-    def _check_input(self, x):
-        pass

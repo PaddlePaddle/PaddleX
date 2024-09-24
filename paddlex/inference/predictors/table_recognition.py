@@ -99,7 +99,6 @@ class TablePredictor(BasicPredictor):
     def foo(self, *args, **kwargs):
         return None
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "bbox", "structure"]
-        return {"result": TableRecResult({key: data[key] for key in keys})}
+        return TableRecResult({key: single[key] for key in keys})

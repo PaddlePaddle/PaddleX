@@ -56,10 +56,5 @@ class TSClsPredictor(BasicPredictor):
 
         return ops
 
-    @batchable_method
-    def _pack_res(self, data):
-        return {
-            "result": TSClsResult(
-                {"ts_path": data["ts_path"], "forecast": data["pred"]}
-            )
-        }
+    def _pack_res(self, single):
+        return TSClsResult({"ts_path": single["ts_path"], "forecast": single["pred"]})

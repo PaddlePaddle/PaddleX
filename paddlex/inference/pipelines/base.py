@@ -17,6 +17,7 @@ from typing import Any, Dict, Optional
 
 from ..predictors import create_predictor
 from ...utils.subclass_register import AutoRegisterABCMetaClass
+from ..predictors import create_predictor
 
 
 def create_pipeline(

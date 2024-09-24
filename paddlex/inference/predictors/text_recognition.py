@@ -76,7 +76,6 @@ class TextRecPredictor(BasicPredictor):
     def foo(self, *args, **kwargs):
         return None
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "rec_text", "rec_score"]
-        return {"result": TextRecResult({key: data[key] for key in keys})}
+        return TextRecResult({key: single[key] for key in keys})

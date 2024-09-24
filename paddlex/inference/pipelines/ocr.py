@@ -23,17 +23,10 @@ class OCRPipeline(BasePipeline):
     entities = "ocr"
 
     def __init__(
-        self,
-        det_model,
-        rec_model,
-        det_batch_size,
-        rec_batch_size,
-        predictor_kwargs=None,
-        is_curve=False,
-        **kwargs
+        self, det_model, rec_model, rec_batch_size, predictor_kwargs=None, is_curve=False, **kwargs
     ):
         super().__init__(predictor_kwargs)
-        self._det_predict = self._create_predictor(det_model, batch_size=det_batch_size)
+        self._det_predict = self._create_predictor(det_model)
         self._rec_predict = self._create_predictor(rec_model, batch_size=rec_batch_size)
         # TODO: foo
         if is_curve:
@@ -43,21 +36,13 @@ class OCRPipeline(BasePipeline):
         self._crop_by_polys = CropByPolys(det_box_type=det_box_type)
 
     def predict(self, x):
-        batch_ocr_res = []
-        for batch_det_res in self._det_predict(x):
-            for det_res in batch_det_res:
-                single_img_res = det_res["result"]
-                single_img_res["rec_text"] = []
-                single_img_res["rec_score"] = []
-                if len(single_img_res["dt_polys"]) > 0:
-                    all_subs_of_img = list(self._crop_by_polys(single_img_res))
-                    for batch_rec_res in self._rec_predict(all_subs_of_img):
-                        for rec_res in batch_rec_res:
-                            single_img_res["rec_text"].append(
-                                rec_res["result"]["rec_text"]
-                            )
-                            single_img_res["rec_score"].append(
-                                rec_res["result"]["rec_score"]
-                            )
-                batch_ocr_res.append({"result": OCRResult(single_img_res)})
-        yield batch_ocr_res
+        for det_res in self._det_predict(x):
+            single_img_res = det_res
+            single_img_res["rec_text"] = []
+            single_img_res["rec_score"] = []
+            if len(single_img_res["dt_polys"]) > 0:
+                all_subs_of_img = list(self._crop_by_polys(single_img_res))
+                for rec_res in self._rec_predict(all_subs_of_img):
+                    single_img_res["rec_text"].append(rec_res["rec_text"])
+                    single_img_res["rec_score"].append(rec_res["rec_score"])
+            yield single_img_res

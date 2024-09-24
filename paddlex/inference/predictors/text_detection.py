@@ -99,7 +99,6 @@ class TextDetPredictor(BasicPredictor):
     def foo(self, *args, **kwargs):
         return None
 
-    @batchable_method
-    def _pack_res(self, data):
+    def _pack_res(self, single):
         keys = ["img_path", "dt_polys", "dt_scores"]
-        return {"result": TextDetResult({key: data[key] for key in keys})}
+        return TextDetResult({key: single[key] for key in keys})
