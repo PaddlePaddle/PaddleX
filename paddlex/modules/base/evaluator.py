@@ -71,8 +71,11 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
 
         config_path = Path(weight_path).parent / "config.yaml"
         if not config_path.exists():
+            config_path = config_path.parent.parent / "config.yaml"
+
+        if not config_path.exists():
             warning(
-                f"The config file(`{config_path}`) related to weight file(`{weight_path}`) is not exist, use default instead."
+                f"The config file (`{config_path}`) related to weight file (`{weight_path}`) does not exist. Using default instead."
             )
             config_path = None
         return config_path

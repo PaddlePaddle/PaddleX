@@ -108,6 +108,8 @@ class TSModel(BaseModel):
         else:
             if num_workers is not None:
                 cli_args.append(CLIArgument("--num_workers", num_workers))
+        config.update({"uniform_output_enabled": True})
+        config.update({"pdx_model_name": self.name})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -236,6 +238,7 @@ class TSModel(BaseModel):
             # Update YAML config file
             config = self.config.copy()
             config.update_pretrained_weights(weight_path)
+            config.update({"pdx_model_name": self.name})
             config.dump(config_path)
 
             return self.runner.export(config_path, cli_args, device)
