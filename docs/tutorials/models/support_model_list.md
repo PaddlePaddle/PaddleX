@@ -240,7 +240,7 @@
 | :--- | :---: |
 | SLANet | [SLANet.yaml](../../../paddlex/configs/table_recognition/SLANet.yaml)|
 ## 六、文本检测
-### 1.PP-OCRv4常规文本检测 系列
+### 1.PP-OCRv4常规文本检测系列
 | 模型名称 | config |
 | :--- | :---: |
 | PP-OCRv4_server_det | [PP-OCRv4_server_det.yaml](../../../paddlex/configs/text_detection/PP-OCRv4_server_det.yaml)|
