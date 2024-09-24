@@ -1,0 +1,16 @@
+Global:
+  pipeline_name: table_recognition
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png
+  
+######################################## Setting ########################################
+# Please select the model from bellow `Support`
+
+Pipeline:
+  layout_model: PicoDet_layout_1x
+  table_model: SLANet
+  text_det_model: PP-OCRv4_mobile_det
+  text_rec_model: PP-OCRv4_mobile_rec
+  batch_size: 1
+  device: "gpu"
+
+######################################## Support ########################################

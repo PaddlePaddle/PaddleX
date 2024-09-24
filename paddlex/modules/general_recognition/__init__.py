@@ -16,4 +16,3 @@ from .trainer import ShiTuRecTrainer
 from .dataset_checker import ShiTuRecDatasetChecker
 from .evaluator import ShiTuRecEvaluator
 from .exportor import ShiTuRecExportor
-from .predictor import ShiTuRecPredictor, transforms

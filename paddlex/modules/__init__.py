@@ -18,16 +18,15 @@ from .base import (
     build_trainer,
     build_evaluater,
     build_exportor,
-    build_predictor,
-    create_model,
-    PaddleInferenceOption,
 )
+
+from .predictor import build_predictor
+
 from .image_classification import (
     ClsDatasetChecker,
     ClsTrainer,
     ClsEvaluator,
     ClsExportor,
-    ClsPredictor,
 )
 
 from .multilabel_classification import (
@@ -35,7 +34,6 @@ from .multilabel_classification import (
     MLClsTrainer,
     MLClsEvaluator,
     MLClsExportor,
-    MLClsPredictor,
 )
 
 from .anomaly_detection import (
@@ -43,7 +41,6 @@ from .anomaly_detection import (
     UadTrainer,
     UadEvaluator,
     UadExportor,
-    UadPredictor,
 )
 from .general_recognition import (
     ShiTuRecDatasetChecker,
@@ -56,68 +53,48 @@ from .object_detection import (
     DetTrainer,
     DetEvaluator,
     DetExportor,
-    DetPredictor,
 )
 from .text_detection import (
     TextDetDatasetChecker,
     TextDetTrainer,
     TextDetEvaluator,
     TextDetExportor,
-    TextDetPredictor,
 )
 from .text_recognition import (
     TextRecDatasetChecker,
     TextRecTrainer,
     TextRecEvaluator,
     TextRecExportor,
-    TextRecPredictor,
 )
 from .table_recognition import (
     TableRecDatasetChecker,
     TableRecTrainer,
     TableRecEvaluator,
     TableRecExportor,
-    TableRecPredictor,
 )
 from .semantic_segmentation import (
     SegDatasetChecker,
     SegTrainer,
     SegEvaluator,
     SegExportor,
-    SegPredictor,
 )
 from .instance_segmentation import (
     COCOInstSegDatasetChecker,
     InstanceSegTrainer,
     InstanceSegEvaluator,
     InstanceSegExportor,
-    InstanceSegPredictor,
 )
 from .ts_anomaly_detection import (
     TSADDatasetChecker,
     TSADTrainer,
     TSADEvaluator,
     TSADExportor,
-    TSADPredictor,
 )
 from .ts_classification import (
     TSCLSDatasetChecker,
     TSCLSTrainer,
     TSCLSEvaluator,
     TSCLSExportor,
-    TSCLSPredictor,
 )
 
-from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator, TSFCPredictor
-from .image_unwarping import WarpPredictor
-
-
-from .base.predictor.transforms import image_common
-from .image_classification import transforms as cls_transforms
-from .object_detection import transforms as det_transforms
-from .text_detection import transforms as text_det_transforms
-from .text_recognition import transforms as text_rec_transforms
-from .table_recognition import transforms as table_rec_transforms
-from .semantic_segmentation import transforms as seg_transforms
-from .instance_segmentation import transforms as instance_seg_transforms
-from .image_unwarping import transforms as image_unwarping_transforms
+from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator

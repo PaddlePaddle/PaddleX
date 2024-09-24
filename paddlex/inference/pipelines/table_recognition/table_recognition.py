@@ -41,11 +41,13 @@ class TableRecPipeline(BasePipeline):
         self.layout_predictor = self._create_predictor(
             model=layout_model, device=device, batch_size=batch_size
         )
+
         self.ocr_pipeline = OCRPipeline(
             text_det_model,
             text_rec_model,
-            batch_size,
-            device,
+            rec_batch_size=batch_size,
+            rec_device=device,
+            det_device=device,
             predictor_kwargs=predictor_kwargs,
         )
         self.table_predictor = self._create_predictor(

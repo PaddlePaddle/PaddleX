@@ -136,12 +136,18 @@ class BaseComponent(ABC):
                 output_list = []
                 for ori_item, output_item in zip(ori_data, output):
                     data = ori_item.copy() if self.keep_input else {}
-                    for k, v in self.outputs.items():
-                        if k not in output_item:
-                            raise Exception(
-                                f"The value ({k}) is needed by {self.__class__.__name__}. But not found in Data ({output_item.keys()})!"
-                            )
-                        data.update({v: output_item[k]})
+                    if isinstance(self.outputs, type(None)):
+                        logging.debug(
+                            f"The `output_key` of {self.__class__.__name__} is None, so would not inspect!"
+                        )
+                        data.update(output_item)
+                    else:
+                        for k, v in self.outputs.items():
+                            if k not in output_item:
+                                raise Exception(
+                                    f"The value ({k}) is needed by {self.__class__.__name__}. But not found in Data ({output_item.keys()})!"
+                                )
+                            data.update({v: output_item[k]})
                     output_list.append(data)
                 return output_list
             else:
@@ -149,24 +155,36 @@ class BaseComponent(ABC):
                 output_list = []
                 for output_item in output:
                     data = ori_data.copy() if self.keep_input else {}
-                    for k, v in self.outputs.items():
-                        if k not in output_item:
-                            raise Exception(
-                                f"The value ({k}) is needed by {self.__class__.__name__}. But not found in Data ({output_item.keys()})!"
-                            )
-                        data.update({v: output_item[k]})
+                    if isinstance(self.outputs, type(None)):
+                        logging.debug(
+                            f"The `output_key` of {self.__class__.__name__} is None, so would not inspect!"
+                        )
+                        data.update(output_item)
+                    else:
+                        for k, v in self.outputs.items():
+                            if k not in output_item:
+                                raise Exception(
+                                    f"The value ({k}) is needed by {self.__class__.__name__}. But not found in Data ({output_item.keys()})!"
+                                )
+                            data.update({v: output_item[k]})
                     output_list.append(data)
                 return output_list
         else:
             assert isinstance(ori_data, dict) and isinstance(output, dict)
             data = ori_data.copy() if self.keep_input else {}
-            for k, v in self.outputs.items():
-                if k not in output:
-                    raise Exception(
-                        f"The value of key ({k}) is needed add to Data. But not found in output of {self.__class__.__name__}: ({output.keys()})!"
-                    )
-                data.update({v: output[k]})
-            return [data]
+            if isinstance(self.outputs, type(None)):
+                logging.debug(
+                    f"The `output_key` of {self.__class__.__name__} is None, so would not inspect!"
+                )
+                data.update(output)
+            else:
+                for k, v in self.outputs.items():
+                    if k not in output:
+                        raise Exception(
+                            f"The value of key ({k}) is needed add to Data. But not found in output of {self.__class__.__name__}: ({output.keys()})!"
+                        )
+                    data.update({v: output[k]})
+        return [data]
 
     def set_inputs(self, inputs):
         assert isinstance(inputs, dict)

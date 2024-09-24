@@ -16,10 +16,3 @@ from .dataset_checker import build_dataset_checker, BaseDatasetChecker
 from .trainer import build_trainer, BaseTrainer, BaseTrainDeamon
 from .evaluator import build_evaluater, BaseEvaluator
 from .exportor import build_exportor, BaseExportor
-from .predictor import (
-    build_predictor,
-    BasePredictor,
-    BaseTransform,
-    PaddleInferenceOption,
-    create_model,
-)

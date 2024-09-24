@@ -14,7 +14,7 @@
 
 import os
 
-from .modules.base import (
+from .modules import (
     build_dataset_checker,
     build_trainer,
     build_evaluater,

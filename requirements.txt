@@ -19,3 +19,6 @@ requests
 tokenizers==0.19.1
 GPUtil>=1.4.0
 scikit-image
+lxml
+openpyxl
+premailer

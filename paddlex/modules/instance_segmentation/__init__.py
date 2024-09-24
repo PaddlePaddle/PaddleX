@@ -15,5 +15,4 @@
 from .dataset_checker import COCOInstSegDatasetChecker
 from .trainer import InstanceSegTrainer
 from .evaluator import InstanceSegEvaluator
-from .predictor import InstanceSegPredictor, transforms
 from .exportor import InstanceSegExportor

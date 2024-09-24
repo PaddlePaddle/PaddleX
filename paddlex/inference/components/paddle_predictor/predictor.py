@@ -182,7 +182,7 @@ class ImageDetPredictor(BasePaddlePredictor):
     INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"]]
     OUTPUT_KEYS = [["boxes"], ["boxes", "masks"]]
     DEAULT_INPUTS = {"img": "img", "scale_factors": "scale_factors"}
-    DEAULT_OUTPUTS = {"boxes": "boxes"}
+    DEAULT_OUTPUTS = None
 
     def to_batch(self, img, scale_factors, img_size=None):
         scale_factors = [scale_factor[::-1] for scale_factor in scale_factors]
@@ -219,15 +219,6 @@ class ImageDetPredictor(BasePaddlePredictor):
             return [{"boxes": boxes[0]["boxes"], "masks": masks[0]["masks"]}]
         else:
             return [{"boxes": np.array(res)} for res in pred_box]
-
-
-class ImageInstanceSegPredictor(ImageDetPredictor):
-    DEAULT_INPUTS = {
-        "img": "img",
-        "scale_factors": "scale_factors",
-        "img_size": "img_size",
-    }
-    DEAULT_OUTPUTS = {"boxes": "boxes", "masks": "masks"}
 
 
 class TSPPPredictor(BasePaddlePredictor):
