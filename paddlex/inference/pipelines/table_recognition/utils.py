@@ -297,18 +297,11 @@ def get_ori_coordinate_for_table(x, y, table_bbox):
     Returns:
         list: list of original coordinates, eg. [[x1, y1, x2, y2, x3, y3, x4, y4]]
     """
-    bbox_list = []
-    for x1, y1, x2, y2, x3, y3, x4, y4 in table_bbox:
-        x1 = x + x1
-        y1 = y + y1
-        x2 = x + x2
-        y2 = y + y2
-        x3 = x + x3
-        y3 = y + y3
-        x4 = x + x4
-        y4 = y + y4
-        bbox_list.append([x1, y1, x2, y2, x3, y3, x4, y4])
-    return bbox_list
+    offset = np.array([x, y] * 4)
+    table_bbox = np.array(table_bbox)
+    if table_bbox.shape[-1] == 2:
+        offset = offset.reshape(4, 2)
+    return offset + table_bbox
 
 
 def is_inside(target_box, text_box):
