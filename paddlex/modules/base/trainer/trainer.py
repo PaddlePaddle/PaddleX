@@ -51,7 +51,6 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         self.train_config = config.Train
         self.benchmark_config = config.get("Benchmark", None)
 
-        self.deamon = self.build_deamon(self.config)
         self.pdx_config, self.pdx_model = build_model(self.global_config.model)
 
     def train(self, *args, **kwargs):
@@ -67,8 +66,6 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
             train_result.returncode == 0
         ), f"Encountered an unexpected error({train_result.returncode}) in \
 training!"
-
-        self.deamon.stop()
 
     def dump_config(self, config_file_path: str = None):
         """dump the config
@@ -94,11 +91,6 @@ training!"
         return get_device(
             self.global_config.device, using_device_number=using_device_number
         )
-
-    @abstractmethod
-    def build_deamon(self):
-        """build deamon thread for saving training outputs timely"""
-        raise NotImplementedError
 
     @abstractmethod
     def update_config(self):
