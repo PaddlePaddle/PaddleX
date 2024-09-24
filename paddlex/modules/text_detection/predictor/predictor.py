@@ -60,9 +60,15 @@ class TextDetPredictor(BasePredictor):
 
     def _get_pre_transforms_from_config(self):
         """get preprocess transforms"""
+
+        if self.model_name in ['PP-OCRv4_server_seal_det', 'PP-OCRv4_mobile_seal_det']:
+            limit_side_len = 736
+        else:
+            limit_side_len = 960
+    
         return [
             image_common.ReadImage(),
-            T.DetResizeForTest(limit_side_len=960, limit_type="max"),
+            T.DetResizeForTest(limit_side_len=limit_side_len, limit_type="max"),
             T.NormalizeImage(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
@@ -74,21 +80,36 @@ class TextDetPredictor(BasePredictor):
 
     def _get_post_transforms_from_config(self):
         """get postprocess transforms"""
-        post_transforms = [
-            T.DBPostProcess(
-                thresh=0.3,
-                box_thresh=0.6,
-                max_candidates=1000,
-                unclip_ratio=1.5,
-                use_dilation=False,
-                score_mode="fast",
-                box_type="quad",
-            )
-        ]
+        if self.model_name in ['PP-OCRv4_server_seal_det', 'PP-OCRv4_mobile_seal_det']:
+            task = 'poly'
+            post_transforms = [
+                T.DBPostProcess(
+                    thresh=0.2,
+                    box_thresh=0.6,
+                    max_candidates=1000,
+                    unclip_ratio=1.5,
+                    use_dilation=False,
+                    score_mode="fast",
+                    box_type="poly",
+                )
+            ]
+        else:
+            task = 'quad'
+            post_transforms = [
+                T.DBPostProcess(
+                    thresh=0.3,
+                    box_thresh=0.6,
+                    max_candidates=1000,
+                    unclip_ratio=1.5,
+                    use_dilation=False,
+                    score_mode="fast",
+                    box_type="quad",
+                )
+            ]
         if not self.disable_print:
             post_transforms.append(T.PrintResult())
         if not self.disable_save:
             post_transforms.append(
-                T.SaveTextDetResults(self.output),
+                T.SaveTextDetResults(self.output, task),
             )
         return post_transforms

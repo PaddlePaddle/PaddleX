@@ -31,13 +31,35 @@ class OCRResult(BaseResult):
         if len(self["dt_polys"]) == 0:
             logging.warning("No text detected!")
 
+    def get_minarea_rect(self, points):
+        bounding_box = cv2.minAreaRect(points)
+        points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
+
+        index_a, index_b, index_c, index_d = 0, 1, 2, 3
+        if points[1][1] > points[0][1]:
+            index_a = 0
+            index_d = 1
+        else:
+            index_a = 1
+            index_d = 0
+        if points[3][1] > points[2][1]:
+            index_b = 2
+            index_c = 3
+        else:
+            index_b = 3
+            index_c = 2
+
+        box = np.array([points[index_a], points[index_b], points[index_c], points[index_d]]).astype(np.int32)
+
+        return box
+
     def _get_res_img(
         self,
         drop_score=0.5,
         font_path=PINGFANG_FONT_FILE_PATH,
     ):
         """draw ocr result"""
-        boxes = np.array(self["dt_polys"])
+        boxes = self["dt_polys"]
         txts = self["rec_text"]
         scores = self["rec_score"]
         img = self._img_reader.read(self["img_path"])
@@ -46,23 +68,33 @@ class OCRResult(BaseResult):
         img_left = image.copy()
         img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
         random.seed(0)
-
         draw_left = ImageDraw.Draw(img_left)
         if txts is None or len(txts) != len(boxes):
             txts = [None] * len(boxes)
         for idx, (box, txt) in enumerate(zip(boxes, txts)):
-            if scores is not None and scores[idx] < drop_score:
+            try:
+                if scores is not None and scores[idx] < drop_score:
+                    continue
+                color = (
+                    random.randint(0, 255),
+                    random.randint(0, 255),
+                    random.randint(0, 255),
+                )
+                box = np.array(box)
+                if len(box) > 4:
+                    pts = [(x, y) for x, y in box.tolist()]
+                    draw_left.polygon(pts, outline=color, width=8)
+                    box = self.get_minarea_rect(box)
+                    height = int(0.5 * (max(box[:,1]) - min(box[:,1])))
+                    box[:2,1] = np.mean(box[:,1])
+                    box[2:,1] = np.mean(box[:,1]) + min(20, height)
+                draw_left.polygon(box, fill=color)
+                img_right_text = draw_box_txt_fine((w, h), box, txt, font_path)
+                pts = np.array(box, np.int32).reshape((-1, 1, 2))
+                cv2.polylines(img_right_text, [pts], True, color, 1)
+                img_right = cv2.bitwise_and(img_right, img_right_text)
+            except:
                 continue
-            color = (
-                random.randint(0, 255),
-                random.randint(0, 255),
-                random.randint(0, 255),
-            )
-            draw_left.polygon(box, fill=color)
-            img_right_text = draw_box_txt_fine((w, h), box, txt, font_path)
-            pts = np.array(box, np.int32).reshape((-1, 1, 2))
-            cv2.polylines(img_right_text, [pts], True, color, 1)
-            img_right = cv2.bitwise_and(img_right, img_right_text)
         img_left = Image.blend(image, img_left, 0.5)
         img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))

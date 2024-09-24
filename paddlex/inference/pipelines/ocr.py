@@ -23,13 +23,17 @@ class OCRPipeline(BasePipeline):
     entities = "ocr"
 
     def __init__(
-        self, det_model, rec_model, rec_batch_size, predictor_kwargs=None, **kwargs
+        self, det_model, rec_model, rec_batch_size, predictor_kwargs=None, is_curve=False, **kwargs
     ):
         super().__init__(predictor_kwargs)
         self._det_predict = self._create_predictor(det_model)
         self._rec_predict = self._create_predictor(rec_model, batch_size=rec_batch_size)
         # TODO: foo
-        self._crop_by_polys = CropByPolys(det_box_type="foo")
+        if is_curve:
+            det_box_type = 'poly'
+        else:
+            det_box_type = 'quad'
+        self._crop_by_polys = CropByPolys(det_box_type=det_box_type)
 
     def predict(self, x):
         for det_res in self._det_predict(x):

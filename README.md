@@ -117,10 +117,14 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <summary><b>more</b></summary><br/>Mask-RT-DETR-L<br/>Mask-RT-DETR-X<br/>Mask-RT-DETR-H<br/>SOLOv2<br/>MaskRCNN-ResNet50<br/>MaskRCNN-ResNet50-FPN<br/>MaskRCNN-ResNet50-vd-FPN<br/>MaskRCNN-ResNet50-vd-SSLDv2-FPN<br/>MaskRCNN-ResNet101-FPN<br/>MaskRCNN-ResNet101-vd-FPN<br/>MaskRCNN-ResNeXt101-vd-FPN</td>Cascade-MaskRCNN-ResNet50-FPN</td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>PP-YOLOE_seg-S</td>
   </tr>
   <tr>
-    <td rowspan="3">基础产线</td>
-    <td rowspan="3">通用OCR</td>
+    <td rowspan="4">基础产线</td>
+    <td rowspan="4">通用OCR</td>
     <td>文本检测</td>
     <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
+  </tr>
+  <tr>
+    <td>印章文本检测</td>
+    <td>PP-OCRv4_mobile_seal_det<br/>PP-OCRv4_server_seal_det</td>
   </tr>
   <tr>
     <td>文本识别</td>

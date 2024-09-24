@@ -40,7 +40,7 @@ register_model_info(
     {
         "model_name": "PP-OCRv4_mobile_det",
         "suite": "TextDet",
-        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv4_mobile_det.yaml"),
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv4_mobile_seal_det.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
         "hpi_config_path": HPI_CONFIG_DIR / "PP-OCRv4_mobile_det.yaml",
     }
@@ -53,5 +53,25 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv4_server_det.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
         "hpi_config_path": HPI_CONFIG_DIR / "PP-OCRv4_server_det.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv4_server_seal_det",
+        "suite": "TextDet",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv4_server_seal_det.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-OCRv4_server_seal_det.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv4_mobile_seal_det",
+        "suite": "TextDet",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv4_mobile_seal_det.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-OCRv4_mobile_seal_det.yaml",
     }
 )
