@@ -20,7 +20,7 @@ Train:
   batch_size: 4
   learning_rate: 0.002
   pretrain_weight_path: null
-  warmup_steps: # 100
+  warmup_steps: 100
   resume_path: null
   log_interval: 10
   eval_interval: 1

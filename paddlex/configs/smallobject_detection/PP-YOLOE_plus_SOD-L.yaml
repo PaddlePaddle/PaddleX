@@ -1,5 +1,5 @@
 Global:
-  model: PP-YOLOE+_SOD-L
+  model: PP-YOLOE_plus_SOD-L
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
   device: gpu:0,1,2,3
