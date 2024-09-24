@@ -94,7 +94,8 @@ class OCRResult(BaseResult):
                 pts = np.array(box, np.int32).reshape((-1, 1, 2))
                 cv2.polylines(img_right_text, [pts], True, color, 1)
                 img_right = cv2.bitwise_and(img_right, img_right_text)
-            continue
+            except:
+                continue
         img_left = Image.blend(image, img_left, 0.5)
         img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))
