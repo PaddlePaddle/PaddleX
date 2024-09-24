@@ -436,10 +436,10 @@ class CropByPolys(BaseComponent):
         # TODO
         # dt_boxes = self.sorted_boxes(data[K.DT_POLYS])
         if self.det_box_type == "quad":
-            dt_boxes = np.array(dt_polys)
+            dt_boxes = self.sorted_boxes(dt_polys)
+            dt_boxes = np.array(dt_boxes)
             output_list = []
             for bno in range(len(dt_boxes)):
-                dt_boxes = self.sorted_boxes(dt_polys)
                 tmp_box = copy.deepcopy(dt_boxes[bno])
                 img_crop = self.get_rotate_crop_image(img, tmp_box)
                 output_list.append(
