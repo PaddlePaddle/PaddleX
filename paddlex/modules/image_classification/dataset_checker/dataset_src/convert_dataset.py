@@ -18,7 +18,6 @@ import json
 from .....utils.file_interface import custom_open
 
 
-
 def convert(input_dir):
     """
     Convert json in file into imagenet format.
@@ -49,3 +48,4 @@ def convert(input_dir):
     with custom_open(train_list, "w") as file:
         file.write("".join(label_info))
     with custom_open(val_list, "w") as file:
+        pass
