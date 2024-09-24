@@ -132,6 +132,7 @@ class TextRecModel(BaseModel):
                     os.environ[env_name] = str(env_value)
 
         # PDX related settings
+        config.update({"Global.uniform_output_enabled": True})
         config.update({"Global.pdx_model_name": self.name})
         hpi_config_path = self.model_info.get("hpi_config_path", None)
         config.update({"Global.hpi_config_path": hpi_config_path})

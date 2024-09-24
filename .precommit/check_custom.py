@@ -31,12 +31,15 @@ LICENSE_TEXT = """# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
 """
 
 
-def check_license(file_path):
+def check(file_path):
     with open(file_path, "r") as f:
         content = f.read()
-        if not content.startswith(LICENSE_TEXT):
-            print(f"License header missing in {file_path}")
-            return False
+    if not content.startswith(LICENSE_TEXT):
+        print(f"License header missing in {file_path}")
+        return False
+    if "import paddle" in content or "from paddle import " in content:
+        print(f"Please using `lazy_paddle` instead `paddle` when import in {file_path}")
+        return False
     return True
 
 
@@ -44,7 +47,7 @@ def main():
     files = sys.argv[1:]
     all_files_valid = True
     for file in files:
-        if not check_license(file):
+        if not check(file):
             all_files_valid = False
     if not all_files_valid:
         sys.exit(1)

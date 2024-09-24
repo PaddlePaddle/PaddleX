@@ -21,7 +21,7 @@ import numpy as np
 from PIL import Image
 import cv2
 import math
-import paddle
+import lazy_paddle as paddle
 import json
 import tempfile
 from tokenizers import Tokenizer as TokenizerFast

@@ -21,8 +21,11 @@ from pathlib import Path
 import cv2
 import numpy as np
 from PIL import Image
+import pandas as pd
+from .tablepyxl import document_to_xl
 
-__all__ = ["ImageWriter", "TextWriter", "JsonWriter", "WriterType"]
+
+__all__ = ["WriterType", "ImageWriter", "TextWriter", "JsonWriter", "TSWriter", "HtmlWriter", "XlsxWriter"]
 
 
 class WriterType(enum.Enum):
@@ -32,6 +35,9 @@ class WriterType(enum.Enum):
     VIDEO = 2
     TEXT = 3
     JSON = 4
+    HTML = 5
+    XLSX = 6
+    TS = 7
 
 
 class _BaseWriter(object):
@@ -139,6 +145,42 @@ class JsonWriter(_BaseWriter):
         return WriterType.JSON
 
 
+class HtmlWriter(_BaseWriter):
+    def __init__(self, backend="html", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj, **bk_args):
+        return self._backend.write_obj(out_path, obj, **bk_args)
+
+    def _init_backend(self, bk_type, bk_args):
+        if bk_type == "html":
+            return HtmlWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.HTML
+
+
+class XlsxWriter(_BaseWriter):
+    def __init__(self, backend="xlsx", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj, **bk_args):
+        return self._backend.write_obj(out_path, obj, **bk_args)
+
+    def _init_backend(self, bk_type, bk_args):
+        if bk_type == "xlsx":
+            return XlsxWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.XLSX
+
+
 class _BaseWriterBackend(object):
     """_BaseWriterBackend"""
 
@@ -165,6 +207,23 @@ class TextWriterBackend(_BaseWriterBackend):
         """write text object"""
         with open(out_path, mode=self.mode, encoding=self.encoding) as f:
             f.write(obj)
+
+
+class HtmlWriterBackend(_BaseWriterBackend):
+
+    def __init__(self, mode="w", encoding="utf-8"):
+        super().__init__()
+        self.mode = mode
+        self.encoding = encoding
+
+    def _write_obj(self, out_path, obj, **bk_args):
+        with open(out_path, mode=self.mode, encoding=self.encoding) as f:
+            f.write(obj)
+
+
+class XlsxWriterBackend(_BaseWriterBackend):
+    def _write_obj(self, out_path, obj, **bk_args):
+        document_to_xl(obj, out_path)
 
 
 class _ImageWriterBackend(_BaseWriterBackend):
@@ -229,3 +288,46 @@ class UJsonWriterBackend(_BaseJsonWriterBackend):
     # TODO
     def _write_obj(self, out_path, obj, **bk_args):
         raise NotImplementedError
+
+
+class TSWriter(_BaseWriter):
+    """TSWriter"""
+
+    def __init__(self, backend="pandas", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj):
+        """write"""
+        return self._backend.write_obj(out_path, obj)
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "pandas":
+            return PandasTSWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.TS
+
+
+class _TSWriterBackend(_BaseWriterBackend):
+    """_TSWriterBackend"""
+
+    pass
+
+
+class PandasTSWriterBackend(_TSWriterBackend):
+    """PILImageWriterBackend"""
+
+    def __init__(self):
+        super().__init__()
+
+    def _write_obj(self, out_path, obj):
+        """write image object by PIL"""
+        if isinstance(obj, pd.DataFrame):
+            ts = obj
+        else:
+            raise TypeError("Unsupported object type")
+        return ts.to_csv(out_path)

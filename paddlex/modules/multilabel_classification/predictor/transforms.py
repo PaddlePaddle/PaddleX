@@ -62,7 +62,7 @@ class PrintResult(BaseTransform):
 
 class SaveMLClsResults(BaseTransform):
     def __init__(self, save_dir, class_ids=None):
-        super().__init__(save_dir=save_dir)
+        super().__init__()
         self.save_dir = save_dir
         self.class_id_map = _parse_class_id_map(class_ids)
         self._writer = ImageWriter(backend="pillow")

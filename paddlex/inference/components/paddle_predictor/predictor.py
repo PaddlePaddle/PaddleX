@@ -14,9 +14,7 @@
 
 import os
 from abc import abstractmethod
-import numpy as np
-import paddle
-from paddle.inference import Config, create_predictor
+import lazy_paddle as paddle
 import numpy as np
 
 from ..base import BaseComponent
@@ -26,9 +24,7 @@ from ....utils import logging
 class BasePaddlePredictor(BaseComponent):
     """Predictor based on Paddle Inference"""
 
-    INPUT_KEYS = "batch_data"
     OUTPUT_KEYS = "pred"
-    DEAULT_INPUTS = {"batch_data": "batch_data"}
     DEAULT_OUTPUTS = {"pred": "pred"}
     ENABLE_BATCH = True
 
@@ -44,6 +40,8 @@ class BasePaddlePredictor(BaseComponent):
 
     def _create(self, model_dir, model_prefix, option):
         """_create"""
+        from lazy_paddle.inference import Config, create_predictor
+
         use_pir = (
             hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
         )
@@ -172,6 +170,8 @@ No need to generate again."
 
 
 class ImagePredictor(BasePaddlePredictor):
+
+    INPUT_KEYS = "img"
     DEAULT_INPUTS = {"img": "img"}
 
     def to_batch(self, img):
@@ -228,3 +228,14 @@ class ImageInstanceSegPredictor(ImageDetPredictor):
         "img_size": "img_size",
     }
     DEAULT_OUTPUTS = {"boxes": "boxes", "masks": "masks"}
+
+
+class TSPPPredictor(BasePaddlePredictor):
+
+    INPUT_KEYS = "ts"
+    DEAULT_INPUTS = {"ts": "ts"}
+
+    def to_batch(self, ts):
+        n = len(ts[0])
+        x = [np.stack([lst[i] for lst in ts], axis=0) for i in range(n)]
+        return x

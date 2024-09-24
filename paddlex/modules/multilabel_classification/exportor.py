@@ -16,7 +16,7 @@ from ..base import BaseExportor
 from .model_list import MODELS
 
 
-class MlClsExportor(BaseExportor):
+class MLClsExportor(BaseExportor):
     """Image Classification Model Exportor"""
 
     entities = MODELS

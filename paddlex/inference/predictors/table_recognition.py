@@ -19,11 +19,11 @@ from ...utils.func_register import FuncRegister
 from ...modules.table_recognition.model_list import MODELS
 from ..components import *
 from ..results import TableRecResult
-from .base import BasePredictor
+from .base import BasicPredictor
 from ..utils.process_hook import batchable_method
 
 
-class TablePredictor(BasePredictor):
+class TablePredictor(BasicPredictor):
     """table recognition predictor"""
 
     entities = MODELS

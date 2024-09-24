@@ -21,7 +21,7 @@ import math
 import pickle
 from tqdm import tqdm
 from collections import defaultdict
-from paddle.utils import try_import
+import imagesize
 from .....utils.errors import ConvertFailedError
 from .....utils.logging import info, warning
 
@@ -66,7 +66,6 @@ def convert_pkl_dataset(root_dir):
 
 
 def txt2pickle(images, equations, save_dir):
-    imagesize = try_import("imagesize")
     phase = os.path.basename(equations).replace(".txt", "")
     save_p = os.path.join(save_dir, "latexocr_{}.pkl".format(phase))
     min_dimensions = (32, 32)

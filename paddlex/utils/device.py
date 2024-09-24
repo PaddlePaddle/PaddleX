@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-import paddle
+import lazy_paddle as paddle
 from .errors import raise_unsupported_device_error
 
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu"]

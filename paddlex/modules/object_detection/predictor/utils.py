@@ -74,6 +74,11 @@ class InnerConfig(object):
                 fill_value = cfg.get("fill_value", [114.0, 114.0, 114.0])
                 size = cfg.get("size", [640, 640])
                 tf = Pad(size=size, fill_value=fill_value)
+            elif cfg['type'] == 'WarpAffine':
+                input_h = cfg.get('input_h', 512)
+                input_w = cfg.get('input_w', 512)
+                keep_res = cfg.get('keep_res', True)
+                tf = image_common.WarpAffine(input_h=input_h, input_w=input_w, keep_res=keep_res)
             else:
                 raise RuntimeError(f"Unsupported type: {cfg['type']}")
             tfs.append(tf)

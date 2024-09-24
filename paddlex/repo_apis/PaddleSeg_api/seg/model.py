@@ -165,6 +165,7 @@ class SegModel(BaseModel):
                 cli_args.append(CLIArgument("--seed", seed))
 
         # PDX related settings
+        config.set_val("uniform_output_enabled", True)
         config.set_val("pdx_model_name", self.name)
         hpi_config_path = self.model_info.get("hpi_config_path", None)
         if hpi_config_path:
@@ -339,12 +340,16 @@ class SegModel(BaseModel):
         if input_shape is not None:
             cli_args.append(CLIArgument("--input_shape", *input_shape))
 
-        output_op = kwargs.pop("output_op", None)
+        try:
+            output_op = config['output_op']
+        except:
+            output_op = kwargs.pop("output_op", None)
         if output_op is not None:
             assert output_op in [
                 "softmax",
                 "argmax",
-            ], "`output_op` must be 'softmax' or 'argmax'."
+                "none",
+            ], "`output_op` must be 'none', 'softmax' or 'argmax'."
             cli_args.append(CLIArgument("--output_op", output_op))
 
         # PDX related settings

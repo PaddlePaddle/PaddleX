@@ -7,17 +7,19 @@ Hpi:
       enable_log_info: false
     paddle_tensorrt:
       dynamic_shapes:
-        enable_log_info: false
         x:
         - []
         - []
         - []
+      enable_log_info: false
+      max_batch_size: null
     tensorrt:
       dynamic_shapes:
         x:
         - []
         - []
         - []
+      max_batch_size: null
   selected_backends:
     cpu: onnx_runtime
     gpu: paddle_tensorrt

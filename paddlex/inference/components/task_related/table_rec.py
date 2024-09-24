@@ -16,7 +16,7 @@ import numpy as np
 
 from ..base import BaseComponent
 
-__all__ = ["TableLabelDecode", "TableMasterLabelDecode"]
+__all__ = ["TableLabelDecode"]
 
 
 class TableLabelDecode(BaseComponent):
@@ -25,9 +25,13 @@ class TableLabelDecode(BaseComponent):
     ENABLE_BATCH = True
 
     INPUT_KEYS = ["pred", "ori_img_size"]
-    OUTPUT_KEYS = ["bbox", "structure"]
+    OUTPUT_KEYS = ["bbox", "structure", "structure_score"]
     DEAULT_INPUTS = {"pred": "pred", "ori_img_size": "ori_img_size"}
-    DEAULT_OUTPUTS = {"bbox": "bbox", "structure": "structure"}
+    DEAULT_OUTPUTS = {
+        "bbox": "bbox",
+        "structure": "structure",
+        "structure_score": "structure_score",
+    }
 
     def __init__(self, merge_no_span_structure=True, dict_character=[]):
         super().__init__()
@@ -78,7 +82,7 @@ class TableLabelDecode(BaseComponent):
         bbox_preds = np.array(bbox_preds)
         structure_probs = np.array(structure_probs)
 
-        bbox_list, structure_str_list = self.decode(
+        bbox_list, structure_str_list, structure_score = self.decode(
             structure_probs, bbox_preds, ori_img_size
         )
         structure_str_list = [
@@ -89,9 +93,8 @@ class TableLabelDecode(BaseComponent):
             )
             for structure in structure_str_list
         ]
-
         return [
-            {"bbox": bbox, "structure": structure}
+            {"bbox": bbox, "structure": structure, "structure_score": structure_score}
             for bbox, structure in zip(bbox_list, structure_str_list)
         ]
 
@@ -123,10 +126,11 @@ class TableLabelDecode(BaseComponent):
                     bbox_list.append(bbox.tolist())
                 structure_list.append(text)
                 score_list.append(structure_probs[batch_idx, idx])
-            structure_batch_list.append([structure_list, float(np.mean(score_list))])
+            structure_batch_list.append([structure_list])
+            structure_score = np.mean(score_list)
             bbox_batch_list.append(bbox_list)
 
-        return bbox_batch_list, structure_batch_list
+        return bbox_batch_list, structure_batch_list, structure_score
 
     def decode_label(self, batch):
         """convert text-label into text-index."""
@@ -162,60 +166,4 @@ class TableLabelDecode(BaseComponent):
         w, h = shape[:2]
         bbox[0::2] *= w
         bbox[1::2] *= h
-        return bbox
-
-
-class TableMasterLabelDecode(TableLabelDecode):
-    """decode the table model outputs(probs) to character str"""
-
-    def __init__(
-        self,
-        character_dict_type="TableMaster",
-        box_shape="pad",
-        merge_no_span_structure=True,
-    ):
-        super(TableMasterLabelDecode, self).__init__(
-            character_dict_type, merge_no_span_structure
-        )
-        self.box_shape = box_shape
-        assert box_shape in [
-            "ori",
-            "pad",
-        ], "The shape used for box normalization must be ori or pad"
-
-    def add_special_char(self, dict_character):
-        """add_special_char"""
-        self.beg_str = "<SOS>"
-        self.end_str = "<EOS>"
-        self.unknown_str = "<UKN>"
-        self.pad_str = "<PAD>"
-        dict_character = dict_character
-        dict_character = dict_character + [
-            self.unknown_str,
-            self.beg_str,
-            self.end_str,
-            self.pad_str,
-        ]
-        return dict_character
-
-    def get_ignored_tokens(self):
-        """get_ignored_tokens"""
-        pad_idx = self.dict[self.pad_str]
-        start_idx = self.dict[self.beg_str]
-        end_idx = self.dict[self.end_str]
-        unknown_idx = self.dict[self.unknown_str]
-        return [start_idx, end_idx, pad_idx, unknown_idx]
-
-    def _bbox_decode(self, bbox, shape):
-        """_bbox_decode"""
-        h, w, ratio_h, ratio_w, pad_h, pad_w = shape
-        if self.box_shape == "pad":
-            h, w = pad_h, pad_w
-        bbox[0::2] *= w
-        bbox[1::2] *= h
-        bbox[0::2] /= ratio_w
-        bbox[1::2] /= ratio_h
-        x, y, w, h = bbox
-        x1, y1, x2, y2 = x - w // 2, y - h // 2, x + w // 2, y + h // 2
-        bbox = np.array([x1, y1, x2, y2])
         return bbox
