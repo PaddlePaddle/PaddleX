@@ -440,7 +440,7 @@ class CropByPolys(BaseComponent):
             output_list = []
             for bno in range(len(dt_boxes)):
                 tmp_box = copy.deepcopy(dt_boxes[bno])
-                img_crop = self.get_rotate_crop_image(img, tmp_box)
+                img_crop = self.get_minarea_rect_crop(img, tmp_box)
                 output_list.append(
                 {"img": img_crop, "img_size": [img_crop.shape[1], img_crop.shape[0]]}
             )
@@ -449,7 +449,7 @@ class CropByPolys(BaseComponent):
             dt_boxes = dt_polys
             for bno in range(len(dt_boxes)):
                 tmp_box = copy.deepcopy(dt_boxes[bno])
-                img_crop = self.get_minarea_rect_crop(img.copy(), tmp_box)
+                img_crop = self.get_poly_rect_crop(img.copy(), tmp_box)
                 output_list.append(
                 {"img": img_crop, "img_size": [img_crop.shape[1], img_crop.shape[0]]}
                 )
@@ -482,6 +482,29 @@ class CropByPolys(BaseComponent):
                 else:
                     break
         return _boxes
+
+    def get_minarea_rect_crop(self, img, points):
+        """get_minarea_rect_crop"""
+        bounding_box = cv2.minAreaRect(np.array(points).astype(np.int32))
+        points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
+
+        index_a, index_b, index_c, index_d = 0, 1, 2, 3
+        if points[1][1] > points[0][1]:
+            index_a = 0
+            index_d = 1
+        else:
+            index_a = 1
+            index_d = 0
+        if points[3][1] > points[2][1]:
+            index_b = 2
+            index_c = 3
+        else:
+            index_b = 3
+            index_c = 2
+
+        box = [points[index_a], points[index_b], points[index_c], points[index_d]]
+        crop_img = self.get_rotate_crop_image(img, np.array(box))
+        return crop_img
 
     def get_rotate_crop_image(self, img, points):
         """
@@ -798,7 +821,7 @@ class CropByPolys(BaseComponent):
         resampled_line = np.array(mean_positions)
         return resampled_line
 
-    def get_minarea_rect_crop(self, img, points):
+    def get_poly_rect_crop(self, img, points):
         '''
             修改该函数，实现使用polygon，对不规则、弯曲文本的矫正以及crop
             args： img: 图片 ndarrary格式
