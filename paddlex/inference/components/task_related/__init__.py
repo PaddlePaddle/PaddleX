@@ -18,3 +18,4 @@ from .text_rec import OCRReisizeNormImg, CTCLabelDecode
 from .table_rec import TableLabelDecode
 from .det import DetPostProcess, CropByBoxes
 from .instance_seg import InstanceSegPostProcess
+from .warp import DocTrPostProcess

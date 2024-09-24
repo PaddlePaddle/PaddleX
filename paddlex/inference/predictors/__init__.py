@@ -27,6 +27,7 @@ from .semantic_segmentation import SegPredictor
 from .general_recognition import ShiTuRecPredictor
 from .ts_fc import TSFcPredictor
 from .ts_cls import TSClsPredictor
+from .image_unwarping import WarpPredictor
 
 
 def _create_hp_predictor(
