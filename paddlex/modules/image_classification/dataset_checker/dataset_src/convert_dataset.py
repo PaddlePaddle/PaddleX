@@ -15,6 +15,7 @@
 import argparse
 import os
 import json
+from .....utils.file_interface import custom_open
 
 
 def convert(input_dir):
@@ -24,13 +25,13 @@ def convert(input_dir):
     label_path = os.path.join(input_dir, "flags.txt")
     label_dict = {}
     label_content = []
-    with open(label_path, "r") as f:
+    with custom_open(label_path, "r") as f:
         lines = f.readlines()
         for idx, line in enumerate(lines):
             line = line.strip()
             label_dict[line] = str(idx)
             label_content.append(f"{str(idx)} {line}\n")
-    with open(os.path.join(input_dir, "label.txt"), "w", encoding='utf-8') as f:
+    with custom_open(os.path.join(input_dir, "label.txt"), "w") as f:
         f.write("".join(label_content))
     anno_path = os.path.join(input_dir, "annotations")
     jsons_path = os.listdir()
@@ -38,13 +39,13 @@ def convert(input_dir):
     val_list = os.path.join(input_dir, "val.txt")
     label_info = []
     for json_file in os.listdir(anno_path):
-        with open(os.path.join(anno_path, json_file), "r", encoding='utf-8') as f:
+        with custom_open(os.path.join(anno_path, json_file), "r") as f:
             data = json.load(f)
             file_name = os.path.join("images", data["imagePath"].strip().split("/")[2])
             for label, value in data["flags"].items():
                 if value:
                     label_info.append(f"{file_name} {label_dict[label]}\n")
-    with open(train_list, "w", encoding='utf-8') as file:
+    with custom_open(train_list, "w") as file:
         file.write("".join(label_info))
-    with open(val_list, "w", encoding='utf-8') as file:
+    with custom_open(val_list, "w") as file:
         pass
