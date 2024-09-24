@@ -565,29 +565,6 @@ class CropByPolys(BaseTransform):
             dst_img = np.rot90(dst_img)
         return dst_img
 
-    def get_minarea_rect_crop(self, img, points):
-        """get_minarea_rect_crop"""
-        bounding_box = cv2.minAreaRect(np.array(points).astype(np.int32))
-        points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
-
-        index_a, index_b, index_c, index_d = 0, 1, 2, 3
-        if points[1][1] > points[0][1]:
-            index_a = 0
-            index_d = 1
-        else:
-            index_a = 1
-            index_d = 0
-        if points[3][1] > points[2][1]:
-            index_b = 2
-            index_c = 3
-        else:
-            index_b = 3
-            index_c = 2
-
-        box = [points[index_a], points[index_b], points[index_c], points[index_d]]
-        crop_img = self.get_rotate_crop_image(img, np.array(box))
-        return crop_img
-
     def reorder_poly_edge(self, points):
         """Get the respective points composing head edge, tail edge, top
         sideline and bottom sideline.
