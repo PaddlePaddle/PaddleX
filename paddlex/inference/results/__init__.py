@@ -22,3 +22,4 @@ from .det import DetResult
 from .seg import SegResult
 from .instance_seg import InstanceSegResult
 from .ts import TSFcResult, TSClsResult
+from .warp import DocTrResult

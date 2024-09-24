@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .clas import Topk, MultiLabelThreshOutput, NormalizeFeatures
-from .text_det import (
-    DetResizeForTest,
-    NormalizeImage,
-    DBPostProcess,
-    SortBoxes,
-    CropByPolys,
-)
-from .text_rec import OCRReisizeNormImg, CTCLabelDecode
-from .table_rec import TableLabelDecode
-from .det import DetPostProcess, CropByBoxes
-from .instance_seg import InstanceSegPostProcess
-from .warp import DocTrPostProcess
+import numpy as np
+from .base import BaseResult
+
+
+class DocTrResult(BaseResult):
+    def __init__(self, data):
+        super().__init__(data)
+        # We use opencv backend to save both numpy arrays
+        self._img_writer.set_backend("opencv")
+
+    def _get_res_img(self):
+        doctr_img = np.array(self["doctr_img"])
+        return doctr_img
