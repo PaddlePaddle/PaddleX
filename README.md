@@ -85,7 +85,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
   </tr>
   <tr>
     <td>小目标检测</td>
-    <td>PP-YOLOE+_SOD-L<br/>PP-YOLOE+_SOD-S<br/>PP-YOLOE+_SOD-largesize-L</td>
+    <td>PP-YOLOE_plus_SOD-L<br/>PP-YOLOE_plus_SOD-S<br/>PP-YOLOE_plus_SOD-largesize-L</td>
   </tr>
   <tr>
     <td>主体检测</td>

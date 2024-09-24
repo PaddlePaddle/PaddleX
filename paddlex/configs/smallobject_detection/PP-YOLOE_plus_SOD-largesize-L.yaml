@@ -1,7 +1,7 @@
 Global:
-  model: PicoDet-L_layout
+  model: PP-YOLOE_plus_SOD-largesize-L
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/layout/det_layout_examples"
+  dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
   device: gpu:0,1,2,3
   output: "output"
 
@@ -15,26 +15,27 @@ CheckDataset:
     val_percent: null
 
 Train:
-  num_classes: 11
-  epochs_iters: 50
+  num_classes: 4
+  epochs_iters: 10
   batch_size: 2
-  learning_rate: #0.4
+  learning_rate: 0.0001
   pretrain_weight_path: null
-  warmup_steps: #100
+  warmup_steps: 100
   resume_path: null
-  log_interval: 10
+  log_interval: 3
   eval_interval: 1
 
 Evaluate:
   weight_path: "output/best_model.pdparams"
   log_interval: 10
 
-Export:
-  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/pretrained/PicoDet-L_layout_pretrained_v1.pdparams
-
 Predict:
   model_dir: "output/best_model"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg"
   kernel_option:
     run_mode: paddle
     batch_size: 1
+
+
+Export:
+  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_plus_sod_crn_l_largesize_80e_visdrone.pdparams

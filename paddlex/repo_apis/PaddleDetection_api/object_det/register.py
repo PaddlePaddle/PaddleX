@@ -729,9 +729,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PP-YOLOE+_SOD-L',
+        'model_name': 'PP-YOLOE_plus_SOD-L',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-L.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus_SOD-L.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -745,9 +745,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PP-YOLOE+_SOD-S',
+        'model_name': 'PP-YOLOE_plus_SOD-S',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-S.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus_SOD-S.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -761,9 +761,9 @@ register_model_info(
 
 register_model_info(
     {
-        'model_name': 'PP-YOLOE+_SOD-largesize-L',
+        'model_name': 'PP-YOLOE_plus_SOD-largesize-L',
         'suite': 'Det',
-        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE+_SOD-largesize-L.yaml'),
+        'config_path': osp.join(PDX_CONFIG_DIR, 'PP-YOLOE_plus_SOD-largesize-L.yaml'),
         'supported_apis': ['train', 'evaluate', 'predict', 'export', 'infer'],
         'supported_dataset_types': ['COCODetDataset'],
         'supported_train_opts': {
@@ -793,9 +793,9 @@ register_model_info(
 
 register_model_info(
     {
-        "model_name": "PicoDet-L_layout",
+        "model_name": "PicoDet-L_layout_3cls",
         "suite": "Det",
-        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-L_layout.yaml"),
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-L_layout_3cls.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {
