@@ -432,7 +432,7 @@ class CropByPolys(BaseComponent):
     def apply(self, img_path, dt_polys):
         """apply"""
         img = self._reader.read(img_path)
-        
+
         # TODO
         # dt_boxes = self.sorted_boxes(data[K.DT_POLYS])
         if self.det_box_type == "quad":
@@ -443,8 +443,11 @@ class CropByPolys(BaseComponent):
                 tmp_box = copy.deepcopy(dt_boxes[bno])
                 img_crop = self.get_minarea_rect_crop(img, tmp_box)
                 output_list.append(
-                {"img": img_crop, "img_size": [img_crop.shape[1], img_crop.shape[0]]}
-            )
+                    {
+                        "img": img_crop,
+                        "img_size": [img_crop.shape[1], img_crop.shape[0]],
+                    }
+                )
         elif self.det_box_type == "poly":
             output_list = []
             dt_boxes = dt_polys
@@ -452,7 +455,10 @@ class CropByPolys(BaseComponent):
                 tmp_box = copy.deepcopy(dt_boxes[bno])
                 img_crop = self.get_poly_rect_crop(img.copy(), tmp_box)
                 output_list.append(
-                {"img": img_crop, "img_size": [img_crop.shape[1], img_crop.shape[0]]}
+                    {
+                        "img": img_crop,
+                        "img_size": [img_crop.shape[1], img_crop.shape[0]],
+                    }
                 )
         else:
             raise NotImplementedError
@@ -574,22 +580,21 @@ class CropByPolys(BaseComponent):
         assert points.shape[0] >= 4
         assert points.shape[1] == 2
 
-        orientation_thr=2.0             # 一个经验超参数
+        orientation_thr = 2.0  # 一个经验超参数
 
         head_inds, tail_inds = self.find_head_tail(points, orientation_thr)
         head_edge, tail_edge = points[head_inds], points[tail_inds]
 
-
         pad_points = np.vstack([points, points])
         if tail_inds[1] < 1:
             tail_inds[1] = len(points)
-        sideline1 = pad_points[head_inds[1]:tail_inds[1]]
-        sideline2 = pad_points[tail_inds[1]:(head_inds[1] + len(points))]
+        sideline1 = pad_points[head_inds[1] : tail_inds[1]]
+        sideline2 = pad_points[tail_inds[1] : (head_inds[1] + len(points))]
         return head_edge, tail_edge, sideline1, sideline2
 
     def vector_slope(self, vec):
         assert len(vec) == 2
-        return abs(vec[1] / (vec[0] + 1e-8)) 
+        return abs(vec[1] / (vec[0] + 1e-8))
 
     def find_head_tail(self, points, orientation_thr):
         """Find the head edge and tail edge of a text polygon.
@@ -619,20 +624,19 @@ class CropByPolys(BaseComponent):
             for i, edge_vec1 in enumerate(edge_vec):
                 adjacent_ind = [x % len(edge_vec) for x in [i - 1, i + 1]]
                 adjacent_edge_vec = edge_vec[adjacent_ind]
-                temp_theta_sum = np.sum(
-                    self.vector_angle(edge_vec1, adjacent_edge_vec))
-                temp_adjacent_theta = self.vector_angle(adjacent_edge_vec[0],
-                                                        adjacent_edge_vec[1])
+                temp_theta_sum = np.sum(self.vector_angle(edge_vec1, adjacent_edge_vec))
+                temp_adjacent_theta = self.vector_angle(
+                    adjacent_edge_vec[0], adjacent_edge_vec[1]
+                )
                 theta_sum.append(temp_theta_sum)
                 adjacent_vec_theta.append(temp_adjacent_theta)
             theta_sum_score = np.array(theta_sum) / np.pi
             adjacent_theta_score = np.array(adjacent_vec_theta) / np.pi
             poly_center = np.mean(points, axis=0)
             edge_dist = np.maximum(
-                norm(
-                    pad_points[1:] - poly_center, axis=-1),
-                norm(
-                    pad_points[:-1] - poly_center, axis=-1))
+                norm(pad_points[1:] - poly_center, axis=-1),
+                norm(pad_points[:-1] - poly_center, axis=-1),
+            )
             dist_score = edge_dist / np.max(edge_dist)
             position_score = np.zeros(len(edge_vec))
             score = 0.5 * theta_sum_score + 0.15 * adjacent_theta_score
@@ -644,15 +648,21 @@ class CropByPolys(BaseComponent):
             pad_score = np.concatenate([score, score])
             score_matrix = np.zeros((len(score), len(score) - 3))
             x = np.arange(len(score) - 3) / float(len(score) - 4)
-            gaussian = 1. / (np.sqrt(2. * np.pi) * 0.5) * np.exp(-np.power(
-                (x - 0.5) / 0.5, 2.) / 2)
+            gaussian = (
+                1.0
+                / (np.sqrt(2.0 * np.pi) * 0.5)
+                * np.exp(-np.power((x - 0.5) / 0.5, 2.0) / 2)
+            )
             gaussian = gaussian / np.max(gaussian)
             for i in range(len(score)):
-                score_matrix[i, :] = score[i] + pad_score[(i + 2):(i + len(
-                    score) - 1)] * gaussian * 0.3
+                score_matrix[i, :] = (
+                    score[i]
+                    + pad_score[(i + 2) : (i + len(score) - 1)] * gaussian * 0.3
+                )
 
-            head_start, tail_increment = np.unravel_index(score_matrix.argmax(),
-                                                            score_matrix.shape)
+            head_start, tail_increment = np.unravel_index(
+                score_matrix.argmax(), score_matrix.shape
+            )
             tail_start = (head_start + tail_increment + 2) % len(points)
             head_end = (head_start + 1) % len(points)
             tail_end = (tail_start + 1) % len(points)
@@ -663,22 +673,27 @@ class CropByPolys(BaseComponent):
             head_inds = [head_start, head_end]
             tail_inds = [tail_start, tail_end]
         else:
-            if vector_slope(points[1] - points[0]) + vector_slope(points[
-                    3] - points[2]) < vector_slope(points[2] - points[
-                        1]) + vector_slope(points[0] - points[3]):
+            if self.vector_slope(points[1] - points[0]) + self.vector_slope(
+                points[3] - points[2]
+            ) < self.vector_slope(points[2] - points[1]) + self.vector_slope(
+                points[0] - points[3]
+            ):
                 horizontal_edge_inds = [[0, 1], [2, 3]]
                 vertical_edge_inds = [[3, 0], [1, 2]]
             else:
                 horizontal_edge_inds = [[3, 0], [1, 2]]
                 vertical_edge_inds = [[0, 1], [2, 3]]
 
-            vertical_len_sum = norm(points[vertical_edge_inds[0][0]] - points[
-                vertical_edge_inds[0][1]]) + norm(points[vertical_edge_inds[1][
-                    0]] - points[vertical_edge_inds[1][1]])
-            horizontal_len_sum = norm(points[horizontal_edge_inds[0][
-                0]] - points[horizontal_edge_inds[0][1]]) + norm(points[
-                    horizontal_edge_inds[1][0]] - points[horizontal_edge_inds[1]
-                                                            [1]])
+            vertical_len_sum = norm(
+                points[vertical_edge_inds[0][0]] - points[vertical_edge_inds[0][1]]
+            ) + norm(
+                points[vertical_edge_inds[1][0]] - points[vertical_edge_inds[1][1]]
+            )
+            horizontal_len_sum = norm(
+                points[horizontal_edge_inds[0][0]] - points[horizontal_edge_inds[0][1]]
+            ) + norm(
+                points[horizontal_edge_inds[1][0]] - points[horizontal_edge_inds[1][1]]
+            )
 
             if vertical_len_sum > horizontal_len_sum * orientation_thr:
                 head_inds = horizontal_edge_inds[0]
@@ -699,7 +714,6 @@ class CropByPolys(BaseComponent):
         else:
             unit_vec2 = vec2 / (norm(vec2, axis=-1) + 1e-8)
         return np.arccos(np.clip(np.sum(unit_vec1 * unit_vec2, axis=-1), -1.0, 1.0))
-
 
     def get_minarea_rect(self, img, points):
         bounding_box = cv2.minAreaRect(points)
@@ -734,6 +748,7 @@ class CropByPolys(BaseComponent):
             resampled_line (ndarray): The points composing the resampled line.
         """
         from numpy.linalg import norm
+
         # 断言检查输入参数的有效性
         assert line.ndim == 2
         assert line.shape[0] >= 2
@@ -741,9 +756,7 @@ class CropByPolys(BaseComponent):
         assert isinstance(n, int)
         assert n > 0
 
-        length_list = [
-            norm(line[i + 1] - line[i]) for i in range(len(line) - 1)
-        ]
+        length_list = [norm(line[i + 1] - line[i]) for i in range(len(line) - 1)]
         total_length = sum(length_list)
         length_cumsum = np.cumsum([0.0] + length_list)
         delta_length = total_length / (float(n) + 1e-8)
@@ -752,19 +765,20 @@ class CropByPolys(BaseComponent):
 
         for i in range(1, n):
             current_line_len = i * delta_length
-            while current_edge_ind + 1 < len(
-                    length_cumsum) and current_line_len >= length_cumsum[
-                        current_edge_ind + 1]:
+            while (
+                current_edge_ind + 1 < len(length_cumsum)
+                and current_line_len >= length_cumsum[current_edge_ind + 1]
+            ):
                 current_edge_ind += 1
-            current_edge_end_shift = current_line_len - length_cumsum[
-                current_edge_ind]
+            current_edge_end_shift = current_line_len - length_cumsum[current_edge_ind]
             if current_edge_ind >= len(length_list):
                 break
-            end_shift_ratio = current_edge_end_shift / length_list[
-                current_edge_ind]
-            current_point = line[current_edge_ind] + (line[current_edge_ind + 1]
-                                                    - line[current_edge_ind]
-                                                    ) * end_shift_ratio
+            end_shift_ratio = current_edge_end_shift / length_list[current_edge_ind]
+            current_point = (
+                line[current_edge_ind]
+                + (line[current_edge_ind + 1] - line[current_edge_ind])
+                * end_shift_ratio
+            )
             resampled_line.append(current_point)
         resampled_line.append(line[-1])
         resampled_line = np.array(resampled_line)
@@ -786,14 +800,12 @@ class CropByPolys(BaseComponent):
         assert isinstance(n, int)
         assert n > 0
 
-        length_list = [
-            norm(line[i + 1] - line[i]) for i in range(len(line) - 1)
-        ]
+        length_list = [norm(line[i + 1] - line[i]) for i in range(len(line) - 1)]
         total_length = sum(length_list)
         mean_length = total_length / (len(length_list) + 1e-8)
         group = [[0]]
         for i in range(len(length_list)):
-            point_id = i+1
+            point_id = i + 1
             if length_list[i] < 0.9 * mean_length:
                 for g in group:
                     if i in g:
@@ -807,36 +819,37 @@ class CropByPolys(BaseComponent):
         if top_tail_len < 0.9 * mean_length:
             group[0].extend(g)
             group.remove(g)
-        mean_positions = []  
-        for indices in group:  
-            x_sum = 0  
-            y_sum = 0  
-            for index in indices:  
-                x, y = line[index]  
-                x_sum += x  
-                y_sum += y  
-            num_points = len(indices)  
-            mean_x = x_sum / num_points  
-            mean_y = y_sum / num_points  
-            mean_positions.append((mean_x, mean_y)) 
+        mean_positions = []
+        for indices in group:
+            x_sum = 0
+            y_sum = 0
+            for index in indices:
+                x, y = line[index]
+                x_sum += x
+                y_sum += y
+            num_points = len(indices)
+            mean_x = x_sum / num_points
+            mean_y = y_sum / num_points
+            mean_positions.append((mean_x, mean_y))
         resampled_line = np.array(mean_positions)
         return resampled_line
 
     def get_poly_rect_crop(self, img, points):
-        '''
-            修改该函数，实现使用polygon，对不规则、弯曲文本的矫正以及crop
-            args： img: 图片 ndarrary格式
-            points： polygon格式的多点坐标 N*2 shape， ndarray格式
-            return： 矫正后的图片 ndarray格式
-        '''
+        """
+        修改该函数，实现使用polygon，对不规则、弯曲文本的矫正以及crop
+        args： img: 图片 ndarrary格式
+        points： polygon格式的多点坐标 N*2 shape， ndarray格式
+        return： 矫正后的图片 ndarray格式
+        """
         points = np.array(points).astype(np.int32).reshape(-1, 2)
         temp_crop_img, temp_box = self.get_minarea_rect(img, points)
+
         # 计算最小外接矩形与polygon的IoU
         def get_union(pD, pG):
             return Polygon(pD).union(Polygon(pG)).area
 
         def get_intersection_over_union(pD, pG):
-            return get_intersection(pD, pG) / (get_union(pD, pG)+ 1e-10)
+            return get_intersection(pD, pG) / (get_union(pD, pG) + 1e-10)
 
         def get_intersection(pD, pG):
             return Polygon(pD).intersection(Polygon(pG)).area
@@ -854,9 +867,9 @@ class CropByPolys(BaseComponent):
         resample_top_line = self.sample_points_on_bbox_bp(top_line, 15)
         resample_bot_line = self.sample_points_on_bbox_bp(bot_line, 15)
 
-        sideline_mean_shift = np.mean(
-            resample_top_line, axis=0) - np.mean(
-                resample_bot_line, axis=0)
+        sideline_mean_shift = np.mean(resample_top_line, axis=0) - np.mean(
+            resample_bot_line, axis=0
+        )
         if sideline_mean_shift[1] > 0:
             resample_bot_line, resample_top_line = resample_top_line, resample_bot_line
         rectifier = AutoRectifier()
@@ -864,6 +877,6 @@ class CropByPolys(BaseComponent):
         new_points_list = list(new_points.astype(np.float32).reshape(1, -1).tolist())
 
         if len(img.shape) == 2:
-            img = np.stack((img,)*3, axis=-1)
-        img_crop, image = rectifier.run(img, new_points_list, mode='homography')
+            img = np.stack((img,) * 3, axis=-1)
+        img_crop, image = rectifier.run(img, new_points_list, mode="homography")
         return img_crop[0]

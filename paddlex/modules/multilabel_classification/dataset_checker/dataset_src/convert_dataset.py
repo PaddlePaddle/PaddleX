@@ -45,7 +45,7 @@ def convert(dataset_type, input_dir):
     """convert dataset to multilabel format"""
     # check format validity
     check_src_dataset(input_dir, dataset_type)
-    
+
     if dataset_type in ("COCO"):
         convert_coco_dataset(input_dir)
     else:
@@ -55,7 +55,7 @@ def convert(dataset_type, input_dir):
 
 
 def convert_coco_dataset(root_dir):
-    for anno in  ["annotations/instance_train.json", "annotations/instance_val.json"]:
+    for anno in ["annotations/instance_train.json", "annotations/instance_val.json"]:
         src_img_dir = root_dir
         src_anno_path = os.path.join(root_dir, anno)
         coco2multilabels(src_img_dir, src_anno_path, root_dir)
@@ -63,33 +63,37 @@ def convert_coco_dataset(root_dir):
 
 def coco2multilabels(src_img_dir, src_anno_path, root_dir):
     image_dir = os.path.join(root_dir, "images")
-    label_type = os.path.basename(src_anno_path).replace("instance_","").replace(".json","")
-    anno_save_path = os.path.join(root_dir, "{}.txt".format(label_type))  
+    label_type = (
+        os.path.basename(src_anno_path).replace("instance_", "").replace(".json", "")
+    )
+    anno_save_path = os.path.join(root_dir, "{}.txt".format(label_type))
     coco = COCO(src_anno_path)
     cat_id_map = {
-        old_cat_id: new_cat_id
-        for new_cat_id, old_cat_id in enumerate(coco.getCatIds())
+        old_cat_id: new_cat_id for new_cat_id, old_cat_id in enumerate(coco.getCatIds())
     }
     num_classes = len(list(cat_id_map.keys()))
 
-    with open(anno_save_path, 'w') as fp:
+    with open(anno_save_path, "w") as fp:
         lines = []
         for img_id in tqdm(sorted(coco.getImgIds())):
             img_info = coco.loadImgs([img_id])[0]
-            img_filename = img_info['file_name']
-            img_w = img_info['width']
-            img_h = img_info['height']
+            img_filename = img_info["file_name"]
+            img_w = img_info["width"]
+            img_h = img_info["height"]
 
             img_filepath = os.path.join(image_dir, img_filename)
             if not os.path.exists(img_filepath):
-                warning('Illegal image file: {}, '
-                               'and it will be ignored'.format(img_filepath))
+                warning(
+                    "Illegal image file: {}, "
+                    "and it will be ignored".format(img_filepath)
+                )
                 continue
 
             if img_w < 0 or img_h < 0:
-                warning(msg)(
-                    'Illegal width: {} or height: {} in annotation, '
-                    'and im_id: {} will be ignored'.format(img_w, img_h, img_id))
+                warning(
+                    "Illegal width: {} or height: {} in annotation, "
+                    "and im_id: {} will be ignored".format(img_w, img_h, img_id)
+                )
                 continue
 
             ins_anno_ids = coco.getAnnIds(imgIds=[img_id])
@@ -97,13 +101,13 @@ def coco2multilabels(src_img_dir, src_anno_path, root_dir):
 
             label = [0] * num_classes
             for instance in instances:
-                label[cat_id_map[instance['category_id']]] = 1
+                label[cat_id_map[instance["category_id"]]] = 1
             img_filename = os.path.join("images", img_filename)
-            fp.writelines("{}\t{}\n".format(img_filename, ','.join(map(str, label))))
+            fp.writelines("{}\t{}\n".format(img_filename, ",".join(map(str, label))))
         fp.close()
     if label_type == "train":
         label_txt_save_path = os.path.join(root_dir, "label.txt")
-        with open(label_txt_save_path, 'w') as fp:
+        with open(label_txt_save_path, "w") as fp:
             label_name_list = []
             for cat in coco.cats.values():
                 id = cat["id"]
@@ -111,4 +115,3 @@ def coco2multilabels(src_img_dir, src_anno_path, root_dir):
                 fp.writelines("{} {}\n".format(id, name))
             fp.close()
             info("Save label names to {}.".format(label_txt_save_path))
-
