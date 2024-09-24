@@ -664,6 +664,51 @@ register_model_info(
 
 register_model_info(
     {
+        "model_name": "MobileNetV4_conv_small",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_conv_small.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_conv_medium",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_conv_medium.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_conv_large",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_conv_large.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_hybrid_medium",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_hybrid_medium.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "MobileNetV4_hybrid_large",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV4_hybrid_large.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
         "model_name": "ConvNeXt_tiny",
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_tiny.yaml"),
@@ -719,6 +764,96 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "ConvNeXt_large_384.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
         "hpi_config_path": HPI_CONFIG_DIR / "ConvNeXt_large_384.yaml",
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "StarNet-S1",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "StarNet-S1.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "StarNet-S2",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "StarNet-S2.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "StarNet-S3",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "StarNet-S3.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "StarNet-S4",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "StarNet-S4.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "FasterNet-L",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FasterNet-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "FasterNet-M",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FasterNet-M.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "FasterNet-S",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FasterNet-S.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "FasterNet-T0",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FasterNet-T0.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "FasterNet-T1",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FasterNet-T1.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "FasterNet-T2",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FasterNet-T2.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
 
