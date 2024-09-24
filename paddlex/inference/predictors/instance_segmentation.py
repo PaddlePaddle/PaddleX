@@ -39,11 +39,21 @@ class InstanceSegPredictor(DetPredictor):
             op = func(self, **args) if args else func(self)
             ops[tf_key] = op
 
-        predictor = ImageInstanceSegPredictor(
+        predictor = ImageDetPredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
+        if self.model_name in [
+            "Mask-RT-DETR-S",
+            "Mask-RT-DETR-M",
+            "Mask-RT-DETR-L",
+            "Mask-RT-DETR-H",
+            "Mask-RT-DETR-X",
+        ]:
+            predictor.set_inputs(
+                {"img": "img", "scale_factors": "scale_factors", "img_size": "img_size"}
+            )
 
         ops["predictor"] = predictor
 

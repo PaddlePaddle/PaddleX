@@ -15,5 +15,4 @@
 from .trainer import DetTrainer
 from .dataset_checker import COCODatasetChecker
 from .evaluator import DetEvaluator
-from .predictor import DetPredictor, transforms
 from .exportor import DetExportor

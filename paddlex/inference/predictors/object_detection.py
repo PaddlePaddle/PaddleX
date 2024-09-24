@@ -47,6 +47,20 @@ class DetPredictor(BasicPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
+        if self.model_name in [
+            "RT-DETR-R18",
+            "RT-DETR-R50",
+            "RT-DETR-L",
+            "RT-DETR-H",
+            "RT-DETR-X",
+        ]:
+            predictor.set_inputs(
+                {
+                    "img": "img",
+                    "scale_factors": "scale_factors",
+                    "img_size": "img_size",
+                }
+            )
 
         ops["predictor"] = predictor
 

@@ -20,28 +20,35 @@ from .base import BasePipeline
 class OCRPipeline(BasePipeline):
     """OCR Pipeline"""
 
-    entities = "ocr"
+    entities = "OCR"
 
     def __init__(
         self,
         det_model,
         rec_model,
-        rec_batch_size,
+        rec_batch_size=1,
+        device="gpu",
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs)
-        self._det_predict = self._create_predictor(det_model)
-        self._rec_predict = self._create_predictor(rec_model, batch_size=rec_batch_size)
-        is_curve = self._det_predict.model_name in [
+        self._det_predict = self._create_predictor(det_model, device=device)
+        self._rec_predict = self._create_predictor(
+            rec_model, batch_size=rec_batch_size, device=device
+        )
+        self.is_curve = self._det_predict.model_name in [
             "PP-OCRv4_mobile_seal_det",
             "PP-OCRv4_server_seal_det",
         ]
         self._sort_boxes = SortBoxes()
-        self._crop_by_polys = CropByPolys(det_box_type="poly" if is_curve else "quad")
+        self._crop_by_polys = CropByPolys(
+            det_box_type="poly" if self.is_curve else "quad"
+        )
 
     def predict(self, x):
         for det_res in self._det_predict(x):
-            single_img_res = next(self._sort_boxes(det_res))
+            single_img_res = (
+                det_res if self.is_curve else next(self._sort_boxes(det_res))
+            )
             single_img_res["rec_text"] = []
             single_img_res["rec_score"] = []
             if len(single_img_res["dt_polys"]) > 0:

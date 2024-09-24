@@ -15,7 +15,8 @@
 from .utils.lazy_loader import LazyLoader
 import sys
 
-sys.modules["lazy_paddle"] = LazyLoader("lazy_paddle", globals(), "paddle")
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+sys.modules["lazy_paddle"] = paddle
 
 import os
 
@@ -26,8 +27,9 @@ from .modules import (
     build_evaluater,
     build_predictor,
 )
-from .modules import create_model, PaddleInferenceOption
-from .pipelines import *
+
+
+from .inference import create_predictor, create_pipeline
 
 
 def _initialize():
@@ -49,7 +51,6 @@ def _initialize():
 
 def _check_paddle_version():
     """check paddle version"""
-    import paddle
 
     supported_versions = ["3.0", "0.0"]
     device_type = paddle.device.get_device().split(":")[0]

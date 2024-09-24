@@ -17,7 +17,7 @@ import argparse
 import textwrap
 from types import SimpleNamespace
 
-from .pipelines import build_pipeline, BasePipeline
+from . import create_pipeline
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils import logging
 
@@ -65,7 +65,7 @@ def args_cfg():
     parser.add_argument("--model", nargs="+", help="")
     parser.add_argument("--model_dir", nargs="+", type=parse_str, help="")
     parser.add_argument("--input", type=str, help="")
-    parser.add_argument("--output", type=str, default="./", help="")
+    parser.add_argument("--save_dir", type=str, default="./", help="")
     parser.add_argument("--device", type=str, default="gpu:0", help="")
 
     return parser.parse_args()
@@ -91,12 +91,15 @@ def install(args):
     return
 
 
-def pipeline_predict(
-    pipeline, model_name_list, model_dir_list, input_path, output, device
-):
+def pipeline_predict(pipeline, input_path, device=None, save_dir=None):
     """pipeline predict"""
-    pipeline = build_pipeline(pipeline, model_name_list, model_dir_list, output, device)
-    pipeline.predict({"input_path": input_path})
+    pipeline = create_pipeline(pipeline, device=device)
+    result = pipeline(input_path)
+    for res in result:
+        res.print()
+        # TODO(gaotingquan): support to save all
+        # if save_dir:
+        #     i["result"].save()
 
 
 # for CLI
@@ -108,9 +111,7 @@ def main():
     else:
         return pipeline_predict(
             args.pipeline,
-            args.model,
-            args.model_dir,
             args.input,
-            args.output,
             args.device,
+            args.save_dir,
         )

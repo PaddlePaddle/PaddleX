@@ -12,40 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Any, Dict, Optional
 
-from ..predictors import create_predictor
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..predictors import create_predictor
-
-
-def create_pipeline(
-    pipeline_name: str,
-    model_list: list,
-    model_dir_list: list,
-    output: str,
-    device: str,
-    use_hpip: bool,
-    hpi_params: Optional[Dict[str, Any]] = None,
-) -> "BasePipeline":
-    """build model evaluater
-
-    Args:
-        pipeline_name (str): the pipeline name, that is name of pipeline class
-
-    Returns:
-        BasePipeline: the pipeline, which is subclass of BasePipeline.
-    """
-    predictor_kwargs = {"use_hpip": use_hpip}
-    if hpi_params is not None:
-        predictor_kwargs["hpi_params"] = hpi_params
-    pipeline = BasePipeline.get(pipeline_name)(
-        output=output, device=device, predictor_kwargs=predictor_kwargs
-    )
-    pipeline.update_model(model_list, model_dir_list)
-    pipeline.load_model()
-    return pipeline
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):

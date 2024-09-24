@@ -15,5 +15,4 @@
 from .dataset_checker import UadDatasetChecker
 from .trainer import UadTrainer
 from .evaluator import UadEvaluator
-from .predictor import UadPredictor, transforms
 from .exportor import UadExportor

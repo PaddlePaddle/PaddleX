@@ -15,6 +15,5 @@
 from .predictor import (
     ImagePredictor,
     ImageDetPredictor,
-    ImageInstanceSegPredictor,
     TSPPPredictor,
 )
