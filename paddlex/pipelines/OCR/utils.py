@@ -69,8 +69,8 @@ def draw_ocr_box_txt(
             if scores is not None and scores[idx] < drop_score:
                 continue
             color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            box = np.array(box)
             if len(box) > 4:
-                box = np.array(box)
                 pts = [(x, y) for x, y in box.tolist()]
                 draw_left.polygon(pts, outline=color, width=8)
                 box = get_minarea_rect(box)

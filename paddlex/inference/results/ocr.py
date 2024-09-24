@@ -80,9 +80,8 @@ class OCRResult(BaseResult):
                     random.randint(0, 255),
                     random.randint(0, 255),
                 )
-
+                box = np.array(box)
                 if len(box) > 4:
-                    box = np.array(box)
                     pts = [(x, y) for x, y in box.tolist()]
                     draw_left.polygon(pts, outline=color, width=8)
                     box = self.get_minarea_rect(box)
