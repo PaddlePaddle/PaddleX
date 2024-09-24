@@ -17,7 +17,7 @@ import shutil
 import lazy_paddle as paddle
 from pathlib import Path
 
-from ..base import BaseTrainer, BaseTrainDeamon
+from ..base import BaseTrainer
 from .model_list import MODELS
 from ...utils.config import AttrDict
 
@@ -35,17 +35,6 @@ class ClsTrainer(BaseTrainer):
         """
         dst_label_dict_path = Path(self.global_config.output).joinpath("label_dict.txt")
         shutil.copyfile(src_label_dict_path, dst_label_dict_path)
-
-    def build_deamon(self, config: AttrDict) -> "ClsTrainDeamon":
-        """build deamon thread for saving training outputs timely
-
-        Args:
-            config (AttrDict): PaddleX pipeline config, which is loaded from pipeline yaml file.
-
-        Returns:
-            ClsTrainDeamon: the training deamon thread object for saving training outputs timely.
-        """
-        return ClsTrainDeamon(config)
 
     def update_config(self):
         """update training config"""
@@ -92,51 +81,3 @@ class ClsTrainer(BaseTrainer):
             train_args["resume_path"] = self.train_config.resume_path
         train_args["dy2st"] = self.train_config.get("dy2st", False)
         return train_args
-
-
-class ClsTrainDeamon(BaseTrainDeamon):
-    """ClsTrainResultDemon"""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def get_the_pdparams_suffix(self):
-        """get the suffix of pdparams file"""
-        return "pdparams"
-
-    def get_the_pdema_suffix(self):
-        """get the suffix of pdema file"""
-        return "pdema"
-
-    def get_the_pdopt_suffix(self):
-        """get the suffix of pdopt file"""
-        return "pdopt"
-
-    def get_the_pdstates_suffix(self):
-        """get the suffix of pdstates file"""
-        return "pdstates"
-
-    def get_ith_ckp_prefix(self, epoch_id):
-        """get the prefix of the epoch_id checkpoint file"""
-        return f"epoch_{epoch_id}"
-
-    def get_best_ckp_prefix(self):
-        """get the prefix of the best checkpoint file"""
-        return "best_model"
-
-    def get_score(self, pdstates_path):
-        """get the score by pdstates file"""
-        if not Path(pdstates_path).exists():
-            return 0
-        return paddle.load(pdstates_path)["metric"]
-
-    def get_epoch_id_by_pdparams_prefix(self, pdparams_prefix):
-        """get the epoch_id by pdparams file"""
-        return int(pdparams_prefix.split("_")[-1])
-
-    def update_label_dict(self, train_output):
-        """update label dict"""
-        dict_path = train_output.joinpath("label_dict.txt")
-        if not dict_path.exists():
-            return ""
-        return dict_path
