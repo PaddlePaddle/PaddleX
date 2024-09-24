@@ -464,13 +464,14 @@ class CropByPolys(BaseTransform):
         """apply"""
         ori_im = data[K.ORI_IM]
         # TODO
-        # dt_boxes = self.sorted_boxes(data[K.DT_POLYS])
+        # 
         if self.det_box_type == "quad":
-            dt_boxes = np.array(data[K.DT_POLYS])
+            dt_boxes = self.sorted_boxes(data[K.DT_POLYS])
+            dt_boxes = np.array(dt_boxes)
             img_crop_list = []
             for bno in range(len(dt_boxes)):
                 tmp_box = copy.deepcopy(dt_boxes[bno])
-                img_crop = self.get_minarea_rect_crop(ori_im, tmp_box)
+                img_crop = self.get_rotate_crop_image(ori_im, tmp_box)
                 img_crop_list.append(img_crop)
         elif self.det_box_type == "poly":
             img_crop_list = []
