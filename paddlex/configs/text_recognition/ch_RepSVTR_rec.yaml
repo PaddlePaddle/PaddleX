@@ -25,14 +25,14 @@ Train:
   save_interval: 1
 
 Evaluate:
-  weight_path: "output/best_accuracy.pdparams"
+  weight_path: "output/best_accuracy/best_accuracy.pdparams"
   log_interval: 1
 
 Export:
   weight_path: https://paddleocr.bj.bcebos.com/pretrained/ch_SVTRv2_rec_mobile_trained.pdparams
 
 Predict:
-  model_dir: "output/best_accuracy"
+  model_dir: "output/best_accuracy/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png"
   batch_size: 1
   kernel_option:

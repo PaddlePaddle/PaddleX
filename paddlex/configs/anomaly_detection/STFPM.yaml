@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Predict:
-  model_dir: "output/best_model/model"
+  model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
   kernel_option:
     run_mode: paddle

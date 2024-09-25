@@ -33,7 +33,7 @@ Export:
   weight_path: https://bj.bcebos.com/paddleseg/dygraph/cityscapes/segformer_b5_cityscapes_1024x1024_160k/model.pdparams
 
 Predict:
-  model_dir: "output/best_model/model"
+  model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png"
   batch_size: 1
   kernel_option:
