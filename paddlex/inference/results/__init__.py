@@ -21,4 +21,5 @@ from .ocr import OCRResult
 from .det import DetResult
 from .seg import SegResult
 from .instance_seg import InstanceSegResult
-from .ts import TSFcResult, TSClsResult
+from .ts import TSFcResult, TSAdResult, TSClsResult
+from .warp import DocTrResult

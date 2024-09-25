@@ -38,17 +38,19 @@ class TableRecPipeline(BasePipeline):
     ):
         super().__init__(predictor_kwargs)
 
-        self.layout_predictor = self._create_predictor(
+        self.layout_predictor = self._create_model(
             model=layout_model, device=device, batch_size=batch_size
         )
+
         self.ocr_pipeline = OCRPipeline(
             text_det_model,
             text_rec_model,
-            batch_size,
-            device,
+            rec_batch_size=batch_size,
+            rec_device=device,
+            det_device=device,
             predictor_kwargs=predictor_kwargs,
         )
-        self.table_predictor = self._create_predictor(
+        self.table_predictor = self._create_model(
             model=table_model, device=device, batch_size=batch_size
         )
         self._crop_by_boxes = CropByBoxes()

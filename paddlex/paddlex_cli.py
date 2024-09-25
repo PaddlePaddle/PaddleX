@@ -17,7 +17,7 @@ import argparse
 import textwrap
 from types import SimpleNamespace
 
-from .pipelines import build_pipeline, BasePipeline
+from . import create_pipeline
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils import logging
 
@@ -66,14 +66,12 @@ def args_cfg():
     parser.add_argument("--model", nargs="+", help="")
     parser.add_argument("--model_dir", nargs="+", type=parse_str, help="")
     parser.add_argument("--input", type=str, help="")
-    parser.add_argument("--output", type=str, default="./", help="")
+    parser.add_argument("--save_dir", type=str, default="./", help="")
     parser.add_argument("--device", type=str, default="gpu:0", help="")
 
     ################# serving #################
     serving_parser = subparsers.add_parser("serve")
     serving_parser.add_argument("pipeline", type=str)
-    serving_parser.add_argument("--model_names", type=str, nargs="+")
-    serving_parser.add_argument("--model_dirs", type=str, nargs="+")
     serving_parser.add_argument("--device", type=str)
     serving_parser.add_argument("--host", type=str, default="0.0.0.0")
     serving_parser.add_argument("--port", type=int, default=8000)
@@ -102,19 +100,22 @@ def install(args):
     return
 
 
-def pipeline_predict(
-    pipeline, model_name_list, model_dir_list, input_path, output, device
-):
+def pipeline_predict(pipeline, input_path, device=None, save_dir=None):
     """pipeline predict"""
-    pipeline = build_pipeline(pipeline, model_name_list, model_dir_list, output, device)
-    pipeline.predict({"input_path": input_path})
+    pipeline = create_pipeline(pipeline, device=device)
+    result = pipeline(input_path)
+    for res in result:
+        res.print()
+        # TODO(gaotingquan): support to save all
+        # if save_dir:
+        #     i["result"].save()
 
 
-def serve(pipeline, model_names, model_dirs, host, port, debug):
+def serve(pipeline, device, host, port, debug):
     from .inference.serving import create_pipeline_app, run_server
 
-    pipeline = build_pipeline(pipeline, model_names, model_dirs)
-    app = create_pipeline_app(pipeline, pipeline.config)
+    pipeline = create_pipeline(pipeline, device)
+    app = create_pipeline_app(pipeline)
     run_server(app, host=host, port=port, debug=debug)
 
 
@@ -126,15 +127,20 @@ def main():
         if args.install:
             install(args)
         else:
-            return pipeline_predict(
+            pipeline_predict(
                 args.pipeline,
-                args.model,
-                args.model_dir,
                 args.input,
-                args.output,
                 args.device,
+                args.save_dir,
             )
     elif args.cmd == "serve":
-        pass
+        serve(
+            args.pipeline,
+            args.input,
+            args.device,
+            host=args.host,
+            port=args.port,
+            debug=args.debug,
+        )
     else:
         raise AssertionError(f"Unknown command {args.cmd}")

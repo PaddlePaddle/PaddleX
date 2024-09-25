@@ -49,7 +49,9 @@ class OCRResult(BaseResult):
             index_b = 3
             index_c = 2
 
-        box = np.array([points[index_a], points[index_b], points[index_c], points[index_d]]).astype(np.int32)
+        box = np.array(
+            [points[index_a], points[index_b], points[index_c], points[index_d]]
+        ).astype(np.int32)
 
         return box
 
@@ -85,9 +87,9 @@ class OCRResult(BaseResult):
                     pts = [(x, y) for x, y in box.tolist()]
                     draw_left.polygon(pts, outline=color, width=8)
                     box = self.get_minarea_rect(box)
-                    height = int(0.5 * (max(box[:,1]) - min(box[:,1])))
-                    box[:2,1] = np.mean(box[:,1])
-                    box[2:,1] = np.mean(box[:,1]) + min(20, height)
+                    height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
+                    box[:2, 1] = np.mean(box[:, 1])
+                    box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
                 draw_left.polygon(box, fill=color)
                 img_right_text = draw_box_txt_fine((w, h), box, txt, font_path)
                 pts = np.array(box, np.int32).reshape((-1, 1, 2))
@@ -99,7 +101,7 @@ class OCRResult(BaseResult):
         img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))
         img_show.paste(Image.fromarray(img_right), (w, 0, w * 2, h))
-        return np.array(img_show)
+        return cv2.cvtColor(np.array(img_show), cv2.COLOR_RGB2BGR)
 
 
 def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):

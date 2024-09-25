@@ -34,11 +34,14 @@ LICENSE_TEXT = """# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
 def check(file_path):
     with open(file_path, "r") as f:
         content = f.read()
+    # Exclude shebang line
+    if content.startswith("#!"):
+        content = content[content.index("\n") + 1 :]
     if not content.startswith(LICENSE_TEXT):
         print(f"License header missing in {file_path}")
         return False
     if "import paddle" in content or "from paddle import " in content:
-        print(f"Please using `lazy_paddle` instead `paddle` when import in {file_path}")
+        print(f"Please use `lazy_paddle` instead `paddle` when import in {file_path}")
         return False
     return True
 

@@ -34,6 +34,6 @@ Export:
 Predict:
   model_dir: "output/best_accuracy"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg"
+  batch_size: 1
   kernel_option:
     run_mode: paddle
-    batch_size: 1

@@ -15,5 +15,4 @@
 from .dataset_checker import TextDetDatasetChecker
 from .trainer import TextDetTrainer
 from .evaluator import TextDetEvaluator
-from .predictor import TextDetPredictor, transforms
 from .exportor import TextDetExportor

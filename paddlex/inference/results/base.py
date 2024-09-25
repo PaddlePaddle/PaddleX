@@ -18,7 +18,6 @@ import numpy as np
 import json
 
 from ...utils import logging
-import numpy as np
 from ..utils.io import JsonWriter, ImageReader, ImageWriter
 
 
@@ -29,7 +28,7 @@ def format_data(obj):
         return [format_data(item) for item in obj.tolist()]
     elif isinstance(obj, dict):
         return type(obj)({k: format_data(v) for k, v in obj.items()})
-    elif isinstance(obj, list):
+    elif isinstance(obj, (list, tuple)):
         return [format_data(i) for i in obj]
     else:
         return obj

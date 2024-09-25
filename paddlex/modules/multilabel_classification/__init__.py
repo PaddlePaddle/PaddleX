@@ -16,4 +16,3 @@ from .trainer import MLClsTrainer
 from .dataset_checker import MLClsDatasetChecker
 from .evaluator import MLClsEvaluator
 from .exportor import MLClsExportor
-from .predictor import MLClsPredictor, transforms

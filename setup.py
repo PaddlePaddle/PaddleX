@@ -109,7 +109,7 @@ if __name__ == "__main__":
         package_data=pkg_data,
         entry_points={
             "console_scripts": [
-                "paddlex = paddlex.paddlex_cli:main",
+                "paddlex = paddlex.__main__:console_entry",
             ],
         },
         # PyPI package information
