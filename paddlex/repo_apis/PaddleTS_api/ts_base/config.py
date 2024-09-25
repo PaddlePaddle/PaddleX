@@ -18,7 +18,7 @@ from urllib.parse import urlparse
 import ruamel.yaml
 
 from ...base import BaseConfig
-from ....utils.misc import abspath
+from ....utils.misc import abspath, convert_and_remove_types
 
 
 class BaseTSConfig(BaseConfig):
@@ -59,7 +59,9 @@ class BaseTSConfig(BaseConfig):
         """
         yaml = ruamel.yaml.YAML()
         with open(config_file_path, "w", encoding="utf-8") as f:
-            yaml.dump(self.dict, f)
+            dict_to_dump = self.dict
+            dict_to_dump = convert_and_remove_types(dict_to_dump)
+            yaml.dump(dict_to_dump, f)
 
     def update_epochs(self, epochs: int):
         """update epochs setting
