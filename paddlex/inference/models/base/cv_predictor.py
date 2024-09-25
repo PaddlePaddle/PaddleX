@@ -12,26 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import BasePipeline
+from ..utils.predict_set import BatchSetMixin
+from .base_predictor import BasicPredictor
 
 
-class SingleModelPipeline(BasePipeline):
-
-    entities = [
-        "image_classification",
-        "object_detection",
-        "instance_segmentation",
-        "semantic_segmentation",
-        "ts_fc",
-        "ts_ad",
-        "ts_cls",
-        "multi_label_image_classification",
-        "small_object_detection" "anomaly_detection",
-    ]
-
-    def __init__(self, model, predictor_kwargs=None):
-        super().__init__(predictor_kwargs)
-        self._predict = self._create_model(model)
-
-    def predict(self, input, **kwargs):
-        yield from self._predict(input, **kwargs)
+class CVPredictor(BasicPredictor, BatchSetMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._pred_set_register("batch_size")(self.set_batch_size)

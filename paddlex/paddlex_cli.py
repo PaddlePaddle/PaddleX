@@ -93,10 +93,10 @@ def install(args):
 
 def pipeline_predict(pipeline, input_path, device=None, save_dir=None):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline, device=device)
-    result = pipeline(input_path)
+    pipeline = create_pipeline(pipeline)
+    result = pipeline(input_path, device=device)
     for res in result:
-        res.print()
+        res.print(json_format=False)
         # TODO(gaotingquan): support to save all
         # if save_dir:
         #     i["result"].save()

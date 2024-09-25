@@ -7,11 +7,13 @@ Global:
 
 Pipeline:
   model: PicoDet-S
-  batch_size: 1
-  device: "gpu"
-  # enable_hpi: False
 
 ######################################## Support ########################################
 NOTE:
+  device: 
+    - gpu
+    - gpu:2
+    - cpu
+  batch_size: "任意正整数"
   model:
     - PicoDet-S
