@@ -191,6 +191,10 @@ PP-OCRv4_mobile_seal_det_infer.tar",
 openatom_rec_repsvtr_ch_infer.tar",
     "ch_SVTRv2_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/\
 openatom_rec_svtrv2_ch_infer.tar",
+    "PP-LCNet_x1_0_pedestrian_attribute": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/\
+PP-LCNet_x1_0_pedestrian_attribute_infer.tar",
+    "PP-LCNet_x1_0_vehicle_attribute": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/\
+PP-LCNet_x1_0_vehicle_attribute_infer.tar",
     "PicoDet_layout_1x": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PicoDet-L_layout_infer.tar",
     "SLANet": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/SLANet_infer.tar",
     "LaTeX_OCR_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/LaTeX_OCR_rec_infer.tar",
