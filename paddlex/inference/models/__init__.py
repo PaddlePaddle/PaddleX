@@ -56,7 +56,7 @@ def _create_hp_predictor(
     )
 
 
-def create_predictor(
+def create_model(
     model: str, device: str = None, *args, use_hpip=False, hpi_params=None, **kwargs
 ) -> BasePredictor:
     model_dir = check_model(model)

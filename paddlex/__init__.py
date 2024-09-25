@@ -25,11 +25,10 @@ from .modules import (
     build_dataset_checker,
     build_trainer,
     build_evaluater,
-    build_predictor,
 )
 
 
-from .inference import create_predictor, create_pipeline
+from .inference import create_model, create_pipeline
 
 
 def _initialize():

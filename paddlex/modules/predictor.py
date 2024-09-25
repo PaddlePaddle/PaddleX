@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from copy import deepcopy
-from ..inference.predictors import create_predictor
+from ..inference.models import create_model
 from ..inference.utils.pp_option import PaddlePredictorOption
 from ..utils.config import AttrDict
 
@@ -28,10 +28,10 @@ class Predictor(object):
         model = model_name if model_dir is None else model_dir
         self.input_path = predict_config.pop("input_path")
         pp_option = PaddlePredictorOption(**predict_config.pop("kernel_option", {}))
-        self.predictor = create_predictor(model, pp_option=pp_option, **predict_config)
+        self.model = create_model(model, pp_option=pp_option, **predict_config)
 
     def predict(self):
-        for res in self.predictor(self.input_path):
+        for res in self.model(self.input_path):
             res.print()
 
 
