@@ -22,6 +22,11 @@ class SingleModelPipeline(BasePipeline):
         "object_detection",
         "instance_segmentation",
         "semantic_segmentation",
+        "ts_fc",
+        "ts_ad",
+        "ts_cls",
+        "multi_label_image_classification",
+        "anomaly_detection",
     ]
 
     def __init__(self, model, batch_size=1, device="gpu", predictor_kwargs=None):

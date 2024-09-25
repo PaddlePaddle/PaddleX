@@ -18,7 +18,6 @@ import numpy as np
 import json
 
 from ...utils import logging
-import numpy as np
 from ..utils.io import JsonWriter, ImageReader, ImageWriter
 
 
