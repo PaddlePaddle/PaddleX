@@ -486,7 +486,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV1_x0_5.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
-        "hpi_config_path": HPI_CONFIG_DIR / ".yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV1_x0_5.yaml",
     }
 )
 
@@ -497,7 +497,7 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV1_x0_75.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "infer_config": "deploy/configs/inference_cls.yaml",
-        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV1_x0_5.yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV1_x0_75.yaml",
     }
 )
 
@@ -608,7 +608,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "MobileNetV3_large_x1_25.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
-        "hpi_config_path": HPI_CONFIG_DIR / ".yaml",
+        "hpi_config_path": HPI_CONFIG_DIR / "MobileNetV3_large_x1_25.yaml",
     }
 )
 
