@@ -26,11 +26,11 @@ Train:
   eval_interval: 1
 
 Evaluate:
-  weight_path: "output/best_model.pdparams"
+  weight_path: "output/best_model/best_model.pdparams"
   log_interval: 10
 
 Predict:
-  model_dir: "output/best_model"
+  model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg"
   kernel_option:
     run_mode: paddle

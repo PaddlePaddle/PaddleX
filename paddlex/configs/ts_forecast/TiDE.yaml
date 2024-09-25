@@ -26,7 +26,7 @@ Train:
   patience: 10
 
 Evaluate:
-  weight_path: "output/best_accuracy.pdparams.tar"
+  weight_path: "output/best_model/model.pdparams"
 
 Export:
   weight_path: https://paddlets.bj.bcebos.com/dygraph/TiDE.pdparams.tar
