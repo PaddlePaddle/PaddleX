@@ -33,6 +33,14 @@ def dependencies():
         return file.read()
 
 
+def extra_dependencies():
+    with open("serving_requirements.txt", "r", encoding="ascii") as f:
+        serving_deps = f.read()
+    return {
+        "serving": serving_deps,
+    }
+
+
 def version():
     """get version"""
     with open(os.path.join("paddlex", ".version"), "r") as file:
@@ -96,6 +104,7 @@ if __name__ == "__main__":
         author="PaddlePaddle Authors",
         author_email="",
         install_requires=dependencies(),
+        extra_require=extra_dependencies(),
         packages=pkgs,
         package_data=pkg_data,
         entry_points={

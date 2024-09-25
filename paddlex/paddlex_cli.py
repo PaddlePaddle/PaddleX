@@ -39,6 +39,7 @@ def args_cfg():
         return s
 
     parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest="cmd")
 
     ################# install pdx #################
     parser.add_argument("--install", action="store_true", default=False, help="")
@@ -67,6 +68,16 @@ def args_cfg():
     parser.add_argument("--input", type=str, help="")
     parser.add_argument("--output", type=str, default="./", help="")
     parser.add_argument("--device", type=str, default="gpu:0", help="")
+
+    ################# serving #################
+    serving_parser = subparsers.add_parser("serve")
+    serving_parser.add_argument("pipeline", type=str)
+    serving_parser.add_argument("--model_names", type=str, nargs="+")
+    serving_parser.add_argument("--model_dirs", type=str, nargs="+")
+    serving_parser.add_argument("--device", type=str)
+    serving_parser.add_argument("--host", type=str, default="0.0.0.0")
+    serving_parser.add_argument("--port", type=int, default=8000)
+    serving_parser.add_argument("--debug", action="store_true")
 
     return parser.parse_args()
 
@@ -99,18 +110,31 @@ def pipeline_predict(
     pipeline.predict({"input_path": input_path})
 
 
+def serve(pipeline, model_names, model_dirs, host, port, debug):
+    from .inference.serving import create_pipeline_app, run_server
+
+    pipeline = build_pipeline(pipeline, model_names, model_dirs)
+    app = create_pipeline_app(pipeline, pipeline.config)
+    run_server(app, host=host, port=port, debug=debug)
+
+
 # for CLI
 def main():
     """API for commad line"""
     args = args_cfg()
-    if args.install:
-        install(args)
+    if args.cmd is None:
+        if args.install:
+            install(args)
+        else:
+            return pipeline_predict(
+                args.pipeline,
+                args.model,
+                args.model_dir,
+                args.input,
+                args.output,
+                args.device,
+            )
+    elif args.cmd == "serve":
+        pass
     else:
-        return pipeline_predict(
-            args.pipeline,
-            args.model,
-            args.model_dir,
-            args.input,
-            args.output,
-            args.device,
-        )
+        raise AssertionError(f"Unknown command {args.cmd}")

@@ -1,0 +1,7 @@
+aiohttp>=3.9
+fastapi>=0.110
+pydantic>=2
+starlette>=0.36
+typing_extensions>=4.11
+uvicorn>=0.16
+yarl>=1.9
