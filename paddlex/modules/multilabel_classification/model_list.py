@@ -19,4 +19,6 @@ MODELS = [
     "PP-HGNetV2-B4_ML",
     "PP-HGNetV2-B6_ML",
     "CLIP_vit_base_patch16_448_ML",
+    "PP-LCNet_x1_0_pedestrian_attribute",
+    "PP-LCNet_x1_0_vehicle_attribute",
 ]
