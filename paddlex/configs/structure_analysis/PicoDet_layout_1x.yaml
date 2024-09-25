@@ -33,8 +33,9 @@ Export:
   weight_path: https://paddleocr.bj.bcebos.com/ppstructure/models/layout/picodet_lcnet_x1_0_layout.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "/paddle/dataset/paddlex/layout/det_layout_examples/images/JPEGImages/train_0001.jpg"
-  batch_size: 1
+
   kernel_option:
     run_mode: paddle

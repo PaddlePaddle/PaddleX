@@ -35,8 +35,8 @@ Export:
   weight_path: https://paddleclas.bj.bcebos.com/models/PP-ShiTu/PP-ShiTuV2_rec_pretrained.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg"
   kernel_option:
     run_mode: paddle
-    batch_size: 1
