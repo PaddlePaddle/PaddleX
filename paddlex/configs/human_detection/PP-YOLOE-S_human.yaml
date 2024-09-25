@@ -30,11 +30,12 @@ Evaluate:
   log_interval: 10
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg"
   kernel_option:
     run_mode: paddle
-    batch_size: 1
+
 
 
 Export:

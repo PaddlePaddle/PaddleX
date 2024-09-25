@@ -34,8 +34,9 @@ Export:
   weight_path: https://paddleclas.bj.bcebos.com/models/Attr/PPLCNet_x1_0_vehicle_attribute_pretrained.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
-  batch_size: 1
+
   kernel_option:
     run_mode: paddle

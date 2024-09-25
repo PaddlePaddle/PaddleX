@@ -34,8 +34,9 @@ Export:
   weight_path: https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/legendary_models/SwinTransformer_tiny_patch4_window7_224_pretrained.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
-  batch_size: 1
+
   kernel_option:
     run_mode: paddle

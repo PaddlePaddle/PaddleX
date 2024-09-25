@@ -33,8 +33,9 @@ Export:
   weight_path: https://paddlex.bj.bcebos.com/models/mask_rtdetr_hgnetv2_h_6x_coco.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
-  batch_size: 1
+
   kernel_option:
     run_mode: paddle

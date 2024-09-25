@@ -33,8 +33,8 @@ Export:
   weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/pretrained/RT-DETR-H_layout_pretrained_v1.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_model/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
   kernel_option:
     run_mode: paddle
-    batch_size: 1

@@ -33,8 +33,8 @@ Export:
   weight_path: https://paddleocr.bj.bcebos.com/pretrained/ch_PP-OCRv4_det_curve_trained.pdparams
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_accuracy/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png"
   kernel_option:
     run_mode: paddle
-    batch_size: 1
