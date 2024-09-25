@@ -34,7 +34,7 @@ class TSClsPredictor(BasicPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        return {**preprocess, "predictor": predictor}
+        return {**preprocess, "predictor": predictor, "GetCls": GetCls()}
 
     def _build_preprocess(self):
         if not self.config.get("info_params", None):
@@ -57,4 +57,6 @@ class TSClsPredictor(BasicPredictor):
         return ops
 
     def _pack_res(self, single):
-        return TSClsResult({"ts_path": single["ts_path"], "forecast": single["pred"]})
+        return TSClsResult(
+            {"ts_path": single["ts_path"], "classification": single["classification"]}
+        )

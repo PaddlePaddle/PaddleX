@@ -23,7 +23,7 @@ from .....utils.cache import CACHE_DIR
 from ....utils.io.readers import TSReader
 from ....utils.io.writers import TSWriter
 from ...base import BaseComponent
-from .ts_functions import load_from_dataframe, time_feature
+from .funcs import load_from_dataframe, time_feature
 
 
 __all__ = [
@@ -36,6 +36,8 @@ __all__ = [
     "BuildPadMask",
     "ArraytoTS",
     "TSDeNormalize",
+    "GetAnomaly",
+    "GetCls",
 ]
 
 
@@ -311,17 +313,18 @@ class ArraytoTS(BaseComponent):
 
 class GetAnomaly(BaseComponent):
 
-    INPUT_KEYS = ["ori_ts", "pred_ts"]
-    OUTPUT_KEYS = ["pred_ts"]
-    DEAULT_INPUTS = {"ori_ts": "ori_ts", "pred_ts": "pred_ts"}
-    DEAULT_OUTPUTS = {"pred_ts": "pred_ts"}
+    INPUT_KEYS = ["ori_ts", "pred"]
+    OUTPUT_KEYS = ["anomaly"]
+    DEAULT_INPUTS = {"ori_ts": "ori_ts", "pred": "pred"}
+    DEAULT_OUTPUTS = {"anomaly": "anomaly"}
 
     def __init__(self, model_threshold, info_params):
         super().__init__()
         self.model_threshold = model_threshold
         self.info_params = info_params
 
-    def apply(self, ori_ts, pred_ts):
+    def apply(self, ori_ts, pred):
+        pred = pred[0]
         if ori_ts.get("past_target", None) is not None:
             ts = ori_ts["past_target"]
         elif ori_ts.get("observed_cov_numeric", None) is not None:
@@ -338,14 +341,35 @@ class GetAnomaly(BaseComponent):
             else self.info_params["feature_cols"]
         )
 
-        anomaly_score = np.mean(np.square(pred_ts - np.array(ts)), axis=-1)
+        anomaly_score = np.mean(np.square(pred - np.array(ts)), axis=-1)
         anomaly_label = (anomaly_score >= self.model_threshold) + 0
 
         past_target_index = ts.index
         past_target_index.name = self.info_params["time_col"]
         anomaly_label = pd.DataFrame(
-            np.reshape(anomaly_label, newshape=[pred_ts.shape[0], -1]),
+            np.reshape(anomaly_label, newshape=[pred.shape[0], -1]),
             index=past_target_index,
             columns=["label"],
         )
-        return {"pred_ts": anomaly_label}
+        return {"anomaly": anomaly_label}
+
+
+class GetCls(BaseComponent):
+
+    INPUT_KEYS = ["pred"]
+    OUTPUT_KEYS = ["classification"]
+    DEAULT_INPUTS = {"pred": "pred"}
+    DEAULT_OUTPUTS = {"classification": "classification"}
+
+    def __init__(self):
+        super().__init__()
+
+    def apply(self, pred):
+        pred_ts = pred[0]
+        pred_ts -= np.max(pred_ts, axis=-1, keepdims=True)
+        pred_ts = np.exp(pred_ts) / np.sum(np.exp(pred_ts), axis=-1, keepdims=True)
+        classid = np.argmax(pred_ts, axis=-1)
+        pred_score = pred_ts[classid]
+        result = pd.DataFrame.from_dict({"classid": [classid], "score": [pred_score]})
+        result.index.name = "sample"
+        return {"classification": result}

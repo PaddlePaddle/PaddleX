@@ -14,15 +14,14 @@
 
 import os
 
-from ...utils.func_register import FuncRegister
-from ...modules.ts_forecast.model_list import MODELS
+from ...modules.ts_anomaly_detection.model_list import MODELS
 from ..components import *
-from ..results import TSResult
+from ..results import TSAdResult
 from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
-class TSPredictor(BasicPredictor):
+class TSAdPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -69,20 +68,12 @@ class TSPredictor(BasicPredictor):
     def _build_postprocess(self):
         if not self.config.get("info_params", None):
             raise Exception("info_params is not found in config file")
-
         ops = {}
-        ops["ArraytoTS"] = ArraytoTS(self.config["info_params"])
-        if self.config.get("scale", None):
-            scaler_file_path = os.path.join(self.model_dir, "scaler.pkl")
-            if not os.path.exists(scaler_file_path):
-                raise Exception(f"Cannot find scaler file: {scaler_file_path}")
-            ops["TSDeNormalize"] = TSDeNormalize(
-                scaler_file_path, self.config["info_params"]
-            )
+        ops["GetAnomaly"] = GetAnomaly(
+            self.config["model_threshold"], self.config["info_params"]
+        )
         return ops
 
     @batchable_method
-    def _pack_res(self, data):
-        return {
-            "result": TSResult({"ts_path": data["ts_path"], "forecast": data["pred"]})
-        }
+    def _pack_res(self, single):
+        return TSAdResult({"ts_path": single["ts_path"], "anomaly": single["anomaly"]})
