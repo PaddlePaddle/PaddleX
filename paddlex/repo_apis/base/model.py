@@ -295,6 +295,24 @@ configuration item, "
                 pass
             yield path
 
+    @contextlib.contextmanager
+    def _create_new_val_json_file(self):
+        cls = self.__class__
+        model_name = self.model_info["model_name"]
+        tag = "_".join([cls.__name__.lower(), model_name])
+        json_file_name = tag + "_test.json"
+        if not flags.DEBUG:
+            with tempfile.TemporaryDirectory(dir=get_cache_dir()) as td:
+                path = os.path.join(td, json_file_name)
+                with open(path, "w", encoding="utf-8"):
+                    pass
+                yield path
+        else:
+            path = os.path.join(get_cache_dir(), json_file_name)
+            with open(path, "w", encoding="utf-8"):
+                pass
+            yield path
+
     @cached_property
     def supported_apis(self):
         """supported apis"""
