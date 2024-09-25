@@ -19,10 +19,10 @@ from ...modules.text_detection.model_list import MODELS
 from ..components import *
 from ..results import TextDetResult
 from ..utils.process_hook import batchable_method
-from .base import BasicPredictor
+from .base import CVPredictor
 
 
-class TextDetPredictor(BasicPredictor):
+class TextDetPredictor(CVPredictor):
 
     entities = MODELS
 
@@ -30,30 +30,28 @@ class TextDetPredictor(BasicPredictor):
     register = FuncRegister(_FUNC_MAP)
 
     def _build_components(self):
-        ops = {}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
             func = self._FUNC_MAP.get(tf_key)
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             if op:
-                ops[tf_key] = op
+                self._add_component(op)
 
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        ops["predictor"] = predictor
+        self._add_component(("Predictor", predictor))
 
-        key, op = self.build_postprocess(**self.config["PostProcess"])
-        ops[key] = op
-        return ops
+        op = self.build_postprocess(**self.config["PostProcess"])
+        self._add_component(op)
 
     @register("DecodeImage")
     def build_readimg(self, channel_first, img_mode):
         assert channel_first == False
-        return ReadImage(format=img_mode, batch_size=self.kwargs.get("batch_size", 1))
+        return ReadImage(format=img_mode)
 
     @register("DetResizeForTest")
     def build_resize(self, resize_long=960):
@@ -78,7 +76,7 @@ class TextDetPredictor(BasicPredictor):
 
     def build_postprocess(self, **kwargs):
         if kwargs.get("name") == "DBPostProcess":
-            return "DBPostProcess", DBPostProcess(
+            return DBPostProcess(
                 thresh=kwargs.get("thresh", 0.3),
                 box_thresh=kwargs.get("box_thresh", 0.7),
                 max_candidates=kwargs.get("max_candidates", 1000),

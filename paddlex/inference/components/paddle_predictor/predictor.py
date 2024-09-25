@@ -17,8 +17,9 @@ from abc import abstractmethod
 import lazy_paddle as paddle
 import numpy as np
 
-from ..base import BaseComponent
 from ....utils import logging
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BaseComponent
 
 
 class BasePaddlePredictor(BaseComponent):
@@ -28,17 +29,27 @@ class BasePaddlePredictor(BaseComponent):
     DEAULT_OUTPUTS = {"pred": "pred"}
     ENABLE_BATCH = True
 
-    def __init__(self, model_dir, model_prefix, option):
+    def __init__(self, model_dir, model_prefix, option: PaddlePredictorOption = None):
         super().__init__()
+        self.model_dir = model_dir
+        self.model_prefix = model_prefix
+        self.option = option
+        self._is_initialized = False
+
+    def _build(self):
+        if not self.option:
+            self.option = PaddlePredictorOption()
         (
             self.predictor,
             self.inference_config,
             self.input_names,
             self.input_handlers,
             self.output_handlers,
-        ) = self._create(model_dir, model_prefix, option)
+        ) = self._create()
+        self._is_initialized = True
+        logging.debug(f"Env: {self.option}")
 
-    def _create(self, model_dir, model_prefix, option):
+    def _create(self):
         """_create"""
         from lazy_paddle.inference import Config, create_predictor
 
@@ -46,17 +57,17 @@ class BasePaddlePredictor(BaseComponent):
             hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
         )
         model_postfix = ".json" if use_pir else ".pdmodel"
-        model_file = (model_dir / f"{model_prefix}{model_postfix}").as_posix()
-        params_file = (model_dir / f"{model_prefix}.pdiparams").as_posix()
+        model_file = (self.model_dir / f"{self.model_prefix}{model_postfix}").as_posix()
+        params_file = (self.model_dir / f"{self.model_prefix}.pdiparams").as_posix()
         config = Config(model_file, params_file)
 
-        if option.device == "gpu":
-            config.enable_use_gpu(200, option.device_id)
+        if self.option.device == "gpu":
+            config.enable_use_gpu(200, self.option.device_id)
             if paddle.is_compiled_with_rocm():
                 os.environ["FLAGS_conv_workspace_size_limit"] = "2000"
             elif hasattr(config, "enable_new_ir"):
-                config.enable_new_ir(option.enable_new_ir)
-        elif option.device == "npu":
+                config.enable_new_ir(self.option.enable_new_ir)
+        elif self.option.device == "npu":
             config.enable_custom_device("npu")
             os.environ["FLAGS_npu_jit_compile"] = "0"
             os.environ["FLAGS_use_stride_kernel"] = "0"
@@ -66,23 +77,25 @@ class BasePaddlePredictor(BaseComponent):
             )
             os.environ["FLAGS_npu_scale_aclnn"] = "True"
             os.environ["FLAGS_npu_split_aclnn"] = "True"
-        elif option.device == "xpu":
+        elif self.option.device == "xpu":
             os.environ["BKCL_FORCE_SYNC"] = "1"
             os.environ["BKCL_TIMEOUT"] = "1800"
             os.environ["FLAGS_use_stride_kernel"] = "0"
-        elif option.device == "mlu":
+        elif self.option.device == "mlu":
             config.enable_custom_device("mlu")
             os.environ["FLAGS_use_stride_kernel"] = "0"
         else:
-            assert option.device == "cpu"
+            assert self.option.device == "cpu"
             config.disable_gpu()
-            config.enable_new_ir(option.enable_new_ir)
-            config.enable_new_executor(True)
-            if "mkldnn" in option.run_mode:
+            if hasattr(config, "enable_new_ir"):
+                config.enable_new_ir(self.option.enable_new_ir)
+            if hasattr(config, "enable_new_executor"):
+                config.enable_new_executor(True)
+            if "mkldnn" in self.option.run_mode:
                 try:
                     config.enable_mkldnn()
-                    config.set_cpu_math_library_num_threads(option.cpu_threads)
-                    if "bf16" in option.run_mode:
+                    config.set_cpu_math_library_num_threads(self.option.cpu_threads)
+                    if "bf16" in self.option.run_mode:
                         config.enable_mkldnn_bfloat16()
                 except Exception as e:
                     logging.warning(
@@ -94,34 +107,34 @@ class BasePaddlePredictor(BaseComponent):
             "trt_fp32": Config.Precision.Float32,
             "trt_fp16": Config.Precision.Half,
         }
-        if option.run_mode in precision_map.keys():
+        if self.option.run_mode in precision_map.keys():
             config.enable_tensorrt_engine(
-                workspace_size=(1 << 25) * option.batch_size,
-                max_batch_size=option.batch_size,
-                min_subgraph_size=option.min_subgraph_size,
-                precision_mode=precision_map[option.run_mode],
-                trt_use_static=option.trt_use_static,
-                use_calib_mode=option.trt_calib_mode,
+                workspace_size=(1 << 25) * self.option.batch_size,
+                max_batch_size=self.option.batch_size,
+                min_subgraph_size=self.option.min_subgraph_size,
+                precision_mode=precision_map[self.option.run_mode],
+                trt_use_static=self.option.trt_use_static,
+                use_calib_mode=self.option.trt_calib_mode,
             )
 
-            if option.shape_info_filename is not None:
-                if not os.path.exists(option.shape_info_filename):
-                    config.collect_shape_range_info(option.shape_info_filename)
+            if self.option.shape_info_filename is not None:
+                if not os.path.exists(self.option.shape_info_filename):
+                    config.collect_shape_range_info(self.option.shape_info_filename)
                     logging.info(
-                        f"Dynamic shape info is collected into: {option.shape_info_filename}"
+                        f"Dynamic shape info is collected into: {self.option.shape_info_filename}"
                     )
                 else:
                     logging.info(
-                        f"A dynamic shape info file ( {option.shape_info_filename} ) already exists. \
+                        f"A dynamic shape info file ( {self.option.shape_info_filename} ) already exists. \
 No need to generate again."
                     )
                 config.enable_tuned_tensorrt_dynamic_shape(
-                    option.shape_info_filename, True
+                    self.option.shape_info_filename, True
                 )
 
         # Disable paddle inference logging
         config.disable_glog_info()
-        for del_p in option.delete_pass:
+        for del_p in self.option.delete_pass:
             config.delete_pass(del_p)
         # Enable shared memory
         config.enable_memory_optim()
@@ -149,6 +162,9 @@ No need to generate again."
         return self.input_names
 
     def apply(self, **kwargs):
+        if not self._is_initialized:
+            self._build()
+
         x = self.to_batch(**kwargs)
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
@@ -163,6 +179,11 @@ No need to generate again."
 
     def format_output(self, pred):
         return [{"pred": res} for res in zip(*pred)]
+
+    def set_option(self, option):
+        if option != self.option:
+            self.option = option
+            self._build()
 
     @abstractmethod
     def to_batch(self):

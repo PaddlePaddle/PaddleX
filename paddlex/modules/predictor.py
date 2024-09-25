@@ -21,18 +21,22 @@ from ..utils.config import AttrDict
 class Predictor(object):
     def __init__(self, config):
         model_name = config.Global.model
-        predict_config = deepcopy(config.Predict)
+        self.predict_config = deepcopy(config.Predict)
 
-        model_dir = predict_config.pop("model_dir", None)
+        model_dir = self.predict_config.pop("model_dir", None)
         # if model_dir is None, using official
         model = model_name if model_dir is None else model_dir
-        self.input_path = predict_config.pop("input_path")
-        pp_option = PaddlePredictorOption(**predict_config.pop("kernel_option", {}))
-        self.model = create_model(model, pp_option=pp_option, **predict_config)
+        self.input_path = self.predict_config.pop("input_path")
+        self.pp_option = PaddlePredictorOption(
+            **self.predict_config.pop("kernel_option", {})
+        )
+        self.model = create_model(model)
 
     def predict(self):
-        for res in self.model(self.input_path):
-            res.print()
+        for res in self.model(
+            input=self.input_path, pp_option=self.pp_option, **self.predict_config
+        ):
+            res.print(json_format=False)
 
 
 def build_predictor(config: AttrDict):

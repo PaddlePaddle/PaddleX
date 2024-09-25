@@ -19,11 +19,11 @@ from ...utils.func_register import FuncRegister
 from ...modules.table_recognition.model_list import MODELS
 from ..components import *
 from ..results import TableRecResult
-from .base import BasicPredictor
 from ..utils.process_hook import batchable_method
+from .base import CVPredictor
 
 
-class TablePredictor(BasicPredictor):
+class TablePredictor(CVPredictor):
     """table recognition predictor"""
 
     entities = MODELS
@@ -32,29 +32,27 @@ class TablePredictor(BasicPredictor):
     register = FuncRegister(_FUNC_MAP)
 
     def _build_components(self):
-        ops = {}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
             func = self._FUNC_MAP.get(tf_key)
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             if op:
-                ops[tf_key] = op
+                self._add_component(op)
 
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        ops["predictor"] = predictor
+        self._add_component(("Predictor", predictor))
 
-        key, op = self.build_postprocess(**self.config["PostProcess"])
-        ops[key] = op
-        return ops
+        op = self.build_postprocess(**self.config["PostProcess"])
+        self._add_component(op)
 
     def build_postprocess(self, **kwargs):
         if kwargs.get("name") == "TableLabelDecode":
-            return "TableLabelDecode", TableLabelDecode(
+            return TableLabelDecode(
                 merge_no_span_structure=kwargs.get("merge_no_span_structure"),
                 dict_character=kwargs.get("character_dict"),
             )
@@ -63,7 +61,7 @@ class TablePredictor(BasicPredictor):
 
     @register("DecodeImage")
     def build_readimg(self, *args, **kwargs):
-        return ReadImage(batch_size=self.kwargs.get("batch_size", 1))
+        return ReadImage(*args, **kwargs)
 
     @register("TableLabelEncode")
     def foo(self, *args, **kwargs):

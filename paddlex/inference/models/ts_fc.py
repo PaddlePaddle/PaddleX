@@ -25,9 +25,6 @@ class TSFcPredictor(BasicPredictor):
 
     entities = MODELS
 
-    def _check_args(self, kwargs):
-        pass
-
     def _build_components(self):
         preprocess = self._build_preprocess()
         predictor = TSPPPredictor(

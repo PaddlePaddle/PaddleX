@@ -7,10 +7,13 @@ Global:
 
 Pipeline:
   model: PP-LiteSeg-T
-  batch_size: 1
-  device: "gpu"
 
 ######################################## Support ########################################
 NOTE:
+  device: 
+    - gpu
+    - gpu:2
+    - cpu
+  batch_size: "任意正整数"
   model:
     - PP-LiteSeg-T
