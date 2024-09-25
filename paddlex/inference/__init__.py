@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictors import create_predictor
+from .models import create_model
 from .pipelines import create_pipeline
 from .utils.pp_option import PaddlePredictorOption

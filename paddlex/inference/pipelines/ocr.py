@@ -31,8 +31,8 @@ class OCRPipeline(BasePipeline):
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs)
-        self._det_predict = self._create_predictor(det_model, device=device)
-        self._rec_predict = self._create_predictor(
+        self._det_predict = self._create_model(det_model, device=device)
+        self._rec_predict = self._create_model(
             rec_model, batch_size=rec_batch_size, device=device
         )
         self.is_curve = self._det_predict.model_name in [
