@@ -26,13 +26,11 @@ from ..utils.color_map import get_colormap, font_colormap
 from .base import BaseResult
 
 
-def draw_box(img, np_boxes, labels):
+def draw_box(img, boxes):
     """
     Args:
         img (PIL.Image.Image): PIL image
-        np_boxes (np.ndarray): shape:[N,6], N: number of box,
-                               matix element:[class, score, x_min, y_min, x_max, y_max]
-        labels (list): labels:['class1', ..., 'classn']
+        boxes (list): a list of dictionaries representing detection box information.
     Returns:
         img (PIL.Image.Image): visualized image
     """
@@ -45,8 +43,8 @@ def draw_box(img, np_boxes, labels):
     catid2fontcolor = {}
     color_list = get_colormap(rgb=True)
 
-    for i, dt in enumerate(np_boxes):
-        clsid, bbox, score = int(dt[0]), dt[2:], dt[1]
+    for i, dt in enumerate(boxes):
+        clsid, bbox, score = dt["cls_id"], dt["coordinate"], dt["score"]
         if clsid not in clsid2color:
             color_index = i % len(color_list)
             clsid2color[clsid] = color_list[color_index]
@@ -63,7 +61,7 @@ def draw_box(img, np_boxes, labels):
         )
 
         # draw label
-        text = "{} {:.2f}".format(labels[clsid], score)
+        text = "{} {:.2f}".format(dt["label"], score)
         if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
             tw, th = draw.textsize(text, font=font)
         else:
@@ -92,10 +90,9 @@ class DetResult(BaseResult):
         """apply"""
         boxes = self["boxes"]
         img_path = self["img_path"]
-        labels = self["labels"]
         file_name = os.path.basename(img_path)
 
         image = self._img_reader.read(img_path)
-        image = draw_box(image, boxes, labels=labels)
+        image = draw_box(image, boxes)
 
         return image

@@ -22,34 +22,51 @@ from PIL import Image, ImageDraw, ImageFont
 from ...utils import logging
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
 from ..utils.io import ImageWriter, ImageReader
-from ..utils.color_map import get_color_map_list, font_colormap
+from ..utils.color_map import get_colormap, font_colormap
 from .base import BaseResult
 from .det import draw_box
 
 
-def draw_mask(im, np_boxes, np_masks, labels):
+def restore_to_draw_masks(img_size, boxes, masks):
+    """
+    Restores extracted masks to the original shape and draws them on a blank image.
+
+    """
+
+    restored_masks = []
+
+    for i, (box, mask) in enumerate(zip(boxes, masks)):
+        restored_mask = np.zeros(img_size, dtype=np.uint8)
+        x_min, y_min, x_max, y_max = map(lambda x: int(round(x)), box["coordinate"])
+        restored_mask[y_min:y_max, x_min:x_max] = mask
+        restored_masks.append(restored_mask)
+
+    return np.array(restored_masks)
+
+
+def draw_mask(im, boxes, np_masks, img_size):
     """
     Args:
         im (PIL.Image.Image): PIL image
-        np_boxes (np.ndarray): shape:[N,6], N: number of box,
-            matix element:[class, score, x_min, y_min, x_max, y_max]
+        boxes (list): a list of dictionaries representing detection box information.
         np_masks (np.ndarray): shape:[N, im_h, im_w]
-        labels (list): labels:['class1', ..., 'classn']
     Returns:
         im (PIL.Image.Image): visualized image
     """
-    color_list = get_color_map_list(len(labels))
+    color_list = get_colormap(rgb=True)
     w_ratio = 0.4
     alpha = 0.7
     im = np.array(im).astype("float32")
     clsid2color = {}
+    np_masks = restore_to_draw_masks(img_size, boxes, np_masks)
     im_h, im_w = im.shape[:2]
     np_masks = np_masks[:, :im_h, :im_w]
     for i in range(len(np_masks)):
-        clsid, score = int(np_boxes[i][0]), np_boxes[i][1]
+        clsid, score = int(boxes[i]["cls_id"]), boxes[i]["score"]
         mask = np_masks[i]
         if clsid not in clsid2color:
-            clsid2color[clsid] = color_list[clsid]
+            color_index = i % len(color_list)
+            clsid2color[clsid] = color_list[color_index]
         color_mask = clsid2color[clsid]
         for c in range(3):
             color_mask[c] = color_mask[c] * (1 - w_ratio) + w_ratio * 255
@@ -71,14 +88,14 @@ class InstanceSegResult(BaseResult):
 
     def _get_res_img(self):
         """apply"""
-        boxes = self["boxes"]
+        boxes = np.array(self["boxes"])
         masks = self["masks"]
         img_path = self["img_path"]
-        labels = self["labels"]
         file_name = os.path.basename(img_path)
 
         image = self._img_reader.read(img_path)
-        image = draw_mask(image, boxes, masks, labels)
-        image = draw_box(image, boxes, labels=labels)
+        ori_img_size = list(image.size)[::-1]
+        image = draw_mask(image, boxes, masks, ori_img_size)
+        image = draw_box(image, boxes)
 
         return image

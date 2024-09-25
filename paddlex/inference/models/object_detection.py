@@ -108,5 +108,5 @@ class DetPredictor(BasicPredictor):
         return ToCHWImage()
 
     def _pack_res(self, single):
-        keys = ["img_path", "boxes", "labels"]
+        keys = ["img_path", "boxes"]
         return DetResult({key: single[key] for key in keys})

@@ -64,5 +64,5 @@ class InstanceSegPredictor(DetPredictor):
         return ops
 
     def _pack_res(self, single):
-        keys = ["img_path", "boxes", "masks", "labels"]
+        keys = ["img_path", "boxes", "masks"]
         return InstanceSegResult({key: single[key] for key in keys})
