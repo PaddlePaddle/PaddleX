@@ -36,25 +36,16 @@ def _create_hp_predictor(
 ):
     try:
         from paddlex_hpi.models import HPPredictor
-    except ModuleNotFoundError as e:
+    except ModuleNotFoundError:
         raise RuntimeError(
             "The PaddleX HPI plugin is not properly installed, and the high-performance model inference features are not available."
-        )
-    if hpi_params is None:
-        raise ValueError("No HPI params given")
-    if "serial_number" not in hpi_params:
-        raise ValueError("The serial number is required but was not provided.")
-    serial_number = hpi_params["serial_number"]
-    if not serial_number:
-        raise ValueError("Invalid serial number")
-    update_license = hpi_params.get("update_license", False)
+        ) from None
     return HPPredictor.get(model_name)(
         model_dir=model_dir,
         config=config,
         device=device,
-        serial_number=serial_number,
-        update_license=update_license,
         *args,
+        hpi_params=hpi_params,
         **kwargs,
     )
 

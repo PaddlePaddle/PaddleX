@@ -81,6 +81,7 @@ class PipelineWrapper(Generic[_PipelineT]):
 
 
 class AppConfig(BaseModel):
+    device: str = "cpu"
     extra: Optional[Dict[str, Any]] = None
 
 

@@ -133,9 +133,9 @@ def serve(
     hpi_params = _get_hpi_params(serial_number, update_license)
     pipeline_config = load_pipeline_config(pipeline)
     pipeline = create_pipeline_from_config(
-        pipeline_config, device=device, use_hpip=use_hpip, hpi_params=hpi_params
+        pipeline_config, use_hpip=use_hpip, hpi_params=hpi_params
     )
-    app = create_pipeline_app(pipeline, pipeline_config)
+    app = create_pipeline_app(pipeline, pipeline_config, device)
     run_server(app, host=host, port=port, debug=debug)
 
 
@@ -168,4 +168,4 @@ def main():
             debug=args.debug,
         )
     else:
-        raise AssertionError(f"Unknown command {args.cmd}")
+        raise AssertionError(f"Unknown command: {args.cmd}")

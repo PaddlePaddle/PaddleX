@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from fastapi import FastAPI
 
@@ -39,10 +39,13 @@ from ...table_recognition import TableRecPipeline
 # on a specific pipeline class, and a pipeline name must be provided (in the
 # pipeline config) to specify the type of the pipeline.
 def create_pipeline_app(
-    pipeline: BasePipeline, pipeline_config: Dict[str, Any]
+    pipeline: BasePipeline, pipeline_config: Dict[str, Any], device: Optional[str]
 ) -> FastAPI:
     pipeline_name = pipeline_config["Global"]["pipeline_name"]
-    app_config = create_app_config(pipeline_config)
+    if device is not None:
+        app_config = create_app_config(pipeline_config, device=device)
+    else:
+        app_config = create_app_config(pipeline_config)
     if pipeline_name == "image_classification":
         if not isinstance(pipeline, SingleModelPipeline):
             raise TypeError(

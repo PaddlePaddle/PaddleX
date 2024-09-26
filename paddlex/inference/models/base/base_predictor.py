@@ -65,7 +65,7 @@ class BasePredictor(BaseComponent):
         raise NotImplementedError
 
     @abstractmethod
-    def set_predict(self):
+    def set_predict(self, **kwargs):
         raise NotImplementedError
 
     @classmethod
