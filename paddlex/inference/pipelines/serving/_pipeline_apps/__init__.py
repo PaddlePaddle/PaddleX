@@ -26,6 +26,9 @@ from .semantic_segmentation import (
     create_pipeline_app as create_semantic_segmentation_app,
 )
 from .table_recognition import create_pipeline_app as create_table_recognition_app
+from .ts_ad import create_pipeline_app as create_ts_ad_app
+from .ts_cls import create_pipeline_app as create_ts_cls_app
+from .ts_fc import create_pipeline_app as create_ts_fc_app
 from ..app import create_app_config
 from ...base import BasePipeline
 from ...single_model_pipeline import SingleModelPipeline
@@ -80,6 +83,24 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `TableRecPipeline`."
             )
         return create_table_recognition_app(pipeline, app_config)
+    elif pipeline_name == "ts_ad":
+        if not isinstance(pipeline, SingleModelPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+            )
+        return create_ts_ad_app(pipeline, app_config)
+    elif pipeline_name == "ts_cls":
+        if not isinstance(pipeline, SingleModelPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+            )
+        return create_ts_cls_app(pipeline, app_config)
+    elif pipeline_name == "ts_fc":
+        if not isinstance(pipeline, SingleModelPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+            )
+        return create_ts_fc_app(pipeline, app_config)
     else:
         if BasePipeline.get(pipeline_name):
             raise ValueError(

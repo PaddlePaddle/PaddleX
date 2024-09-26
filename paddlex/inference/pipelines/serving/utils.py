@@ -20,6 +20,7 @@ import uuid
 import aiohttp
 import cv2
 import numpy as np
+import pandas as pd
 import yarl
 from PIL import Image
 
@@ -53,3 +54,13 @@ def image_to_base64(image: Image.Image) -> str:
         image.save(f, format="JPEG")
         image_base64 = base64.b64encode(f.getvalue()).decode("ascii")
     return image_base64
+
+
+def csv_bytes_to_data_frame(data: bytes) -> pd.DataFrame:
+    with io.StringIO(data.decode("utf-8")) as f:
+        df = pd.read_csv(f)
+    return df
+
+
+def data_frame_to_base64(df: str) -> str:
+    return base64.b64encode(df.to_csv()).decode("ascii")
