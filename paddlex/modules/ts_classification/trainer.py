@@ -42,7 +42,6 @@ class TSCLSTrainer(BaseTrainer):
 training!"
 
         self.make_tar_file()
-        self.deamon.stop()
 
     def make_tar_file(self):
         """make tar file to package the training outputs"""

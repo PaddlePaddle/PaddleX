@@ -19,10 +19,10 @@ from ...modules.object_detection.model_list import MODELS
 from ..components import *
 from ..results import DetResult
 from ..utils.process_hook import batchable_method
-from .base import BasicPredictor
+from .base import CVPredictor
 
 
-class DetPredictor(BasicPredictor):
+class DetPredictor(CVPredictor):
 
     entities = MODELS
 
@@ -30,17 +30,14 @@ class DetPredictor(BasicPredictor):
     register = FuncRegister(_FUNC_MAP)
 
     def _build_components(self):
-        ops = {}
-        ops["ReadImage"] = ReadImage(
-            batch_size=self.kwargs.get("batch_size", 1), format="RGB"
-        )
+        self._add_component(ReadImage(format="RGB"))
         for cfg in self.config["Preprocess"]:
             tf_key = cfg["type"]
             func = self._FUNC_MAP.get(tf_key)
             cfg.pop("type")
             args = cfg
             op = func(self, **args) if args else func(self)
-            ops[tf_key] = op
+            self._add_component(op)
 
         predictor = ImageDetPredictor(
             model_dir=self.model_dir,
@@ -62,13 +59,15 @@ class DetPredictor(BasicPredictor):
                 }
             )
 
-        ops["predictor"] = predictor
-
-        ops["postprocess"] = DetPostProcess(
-            threshold=self.config["draw_threshold"], labels=self.config["label_list"]
+        self._add_component(
+            [
+                ("Predictor", predictor),
+                DetPostProcess(
+                    threshold=self.config["draw_threshold"],
+                    labels=self.config["label_list"],
+                ),
+            ]
         )
-
-        return ops
 
     @register("Resize")
     def build_resize(self, target_size, keep_ratio=False, interp=2):
@@ -108,5 +107,5 @@ class DetPredictor(BasicPredictor):
         return ToCHWImage()
 
     def _pack_res(self, single):
-        keys = ["img_path", "boxes", "labels"]
+        keys = ["img_path", "boxes"]
         return DetResult({key: single[key] for key in keys})

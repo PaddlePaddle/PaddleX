@@ -14,20 +14,39 @@
 
 import os
 
+import numpy as np
 from ....utils import logging
 from ..base import BaseComponent
+from .det import restructured_boxes
+
+
+def extract_masks_from_boxes(boxes, masks):
+    """
+    Extracts the portion of each mask that is within the corresponding box.
+    """
+    new_masks = []
+
+    for i, box in enumerate(boxes):
+        x_min, y_min, x_max, y_max = box["coordinate"]
+        x_min, y_min, x_max, y_max = map(
+            lambda x: int(round(x)), [x_min, y_min, x_max, y_max]
+        )
+
+        cropped_mask = masks[i][y_min:y_max, x_min:x_max]
+        new_masks.append(cropped_mask)
+
+    return new_masks
 
 
 class InstanceSegPostProcess(BaseComponent):
     """Save Result Transform"""
 
     INPUT_KEYS = ["boxes", "masks"]
-    OUTPUT_KEYS = ["img_path", "boxes", "masks", "labels"]
+    OUTPUT_KEYS = ["img_path", "boxes", "masks"]
     DEAULT_INPUTS = {"boxes": "boxes", "masks": "masks"}
     DEAULT_OUTPUTS = {
         "boxes": "boxes",
         "masks": "masks",
-        "labels": "labels",
     }
 
     def __init__(self, threshold=0.5, labels=None):
@@ -39,11 +58,9 @@ class InstanceSegPostProcess(BaseComponent):
         """apply"""
         expect_boxes = (boxes[:, 1] > self.threshold) & (boxes[:, 0] > -1)
         boxes = boxes[expect_boxes, :]
+        boxes = restructured_boxes(boxes, self.labels)
         masks = masks[expect_boxes, :, :]
-        result = {
-            "boxes": boxes,
-            "masks": masks,
-            "labels": self.labels,
-        }
+        masks = extract_masks_from_boxes(boxes, masks)
+        result = {"boxes": boxes, "masks": masks}
 
         return result

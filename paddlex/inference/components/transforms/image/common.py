@@ -159,6 +159,9 @@ class ReadImage(BaseComponent):
         imgs_lists = sorted(imgs_lists)
         return imgs_lists
 
+    def set_batch_size(self, batch_size):
+        self.batch_size = batch_size
+
 
 class GetImageInfo(BaseComponent):
     """Get Image Info"""

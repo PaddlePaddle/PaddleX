@@ -33,8 +33,9 @@ Export:
   weight_path: https://paddleseg.bj.bcebos.com/dygraph/ade20k/seaformer_ade20k_512x512_160k/model.pdparams
 
 Predict:
-  model_dir: "output/best_model/model"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_001.jpg"
   batch_size: 1
+  model_dir: "output/best_model/inference"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_001.jpg"
+
   kernel_option:
     run_mode: paddle

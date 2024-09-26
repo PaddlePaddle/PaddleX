@@ -17,25 +17,18 @@ import codecs
 from pathlib import Path
 from abc import abstractmethod
 
-import GPUtil
-
-from ...utils.subclass_register import AutoRegisterABCMetaClass
-from ..utils.device import constr_device
-from ...utils import logging
-from ..components.base import BaseComponent, ComponentsEngine
-from ..utils.pp_option import PaddlePredictorOption
-from ..utils.process_hook import generatorable_method
-
-
-def _get_default_device():
-    avail_gpus = GPUtil.getAvailable()
-    if not avail_gpus:
-        return "cpu"
-    else:
-        return constr_device("gpu", [avail_gpus[0]])
+from ....utils.subclass_register import AutoRegisterABCMetaClass
+from ....utils.func_register import FuncRegister
+from ....utils import logging
+from ...utils.device import constr_device
+from ...components.base import BaseComponent, ComponentsEngine
+from ...utils.pp_option import PaddlePredictorOption
+from ...utils.process_hook import generatorable_method
+from ..utils.predict_set import DeviceSetMixin, PPOptionSetMixin
 
 
 class BasePredictor(BaseComponent):
+
     KEEP_INPUT = False
     YIELD_BATCH = False
 
@@ -46,17 +39,20 @@ class BasePredictor(BaseComponent):
 
     MODEL_FILE_PREFIX = "inference"
 
-    def __init__(self, model_dir, config=None, device=None, **kwargs):
+    def __init__(self, model_dir, config=None):
         super().__init__()
         self.model_dir = Path(model_dir)
         self.config = config if config else self.load_config(self.model_dir)
-        self.device = device if device else _get_default_device()
-        self.kwargs = self._check_args(kwargs)
+
+        self._pred_set_func_map = {}
+        self._pred_set_register = FuncRegister(self._pred_set_func_map)
+
         # alias predict() to the __call__()
         self.predict = self.__call__
 
-    def __call__(self, *args, **kwargs):
-        for res in super().__call__(*args, **kwargs):
+    def __call__(self, input, **kwargs):
+        self._set_predict(**kwargs)
+        for res in super().__call__(input):
             yield res["result"]
 
     @property
@@ -82,22 +78,28 @@ class BasePredictor(BaseComponent):
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
 
-    def _check_args(self, kwargs):
-        return kwargs
+    def _set_predict(self, **kwargs):
+        for k in kwargs:
+            self._pred_set_func_map[k](kwargs[k])
 
 
-class BasicPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
+class BasicPredictor(
+    BasePredictor, DeviceSetMixin, PPOptionSetMixin, metaclass=AutoRegisterABCMetaClass
+):
 
     __is_base = True
 
-    def __init__(self, model_dir, config=None, device=None, pp_option=None, **kwargs):
-        super().__init__(model_dir=model_dir, config=config, device=device, **kwargs)
-        self.pp_option = PaddlePredictorOption() if pp_option is None else pp_option
-        self.pp_option.set_device(self.device)
-        self.components = self._build_components()
+    def __init__(self, model_dir, config=None):
+        super().__init__(model_dir=model_dir, config=config)
+        self._pred_set_register("device")(self.set_device)
+        self._pred_set_register("pp_option")(self.set_pp_option)
+
+        self.pp_option = PaddlePredictorOption()
+        self.components = {}
+        self._build_components()
         self.engine = ComponentsEngine(self.components)
         logging.debug(
-            f"-------------------- {self.__class__.__name__} --------------------\nModel: {self.model_dir}\nEnv: {self.pp_option}"
+            f"-------------------- {self.__class__.__name__} --------------------\nModel: {self.model_dir}"
         )
 
     def apply(self, x):
@@ -107,6 +109,24 @@ class BasicPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
     @generatorable_method
     def _generate_res(self, batch_data):
         return [{"result": self._pack_res(data)} for data in batch_data]
+
+    def _add_component(self, cmps):
+        if not isinstance(cmps, list):
+            cmps = [cmps]
+
+        for cmp in cmps:
+            if not isinstance(cmp, (list, tuple)):
+                key = cmp.__class__.__name__
+            else:
+                assert len(cmp) == 2
+                key = cmp[0]
+                cmp = cmp[1]
+            assert isinstance(key, str)
+            assert isinstance(cmp, BaseComponent)
+            assert (
+                key not in self.components
+            ), f"The key ({key}) has been used: {self.components}!"
+            self.components[key] = cmp
 
     @abstractmethod
     def _build_components(self):

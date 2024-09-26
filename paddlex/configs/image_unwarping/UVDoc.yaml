@@ -5,8 +5,9 @@ Global:
   output: "output"
 
 Predict:
+  batch_size: 1
   model_dir: "output/best_accuracy"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/doc_test.jpg"
-  batch_size: 1
+
   kernel_option:
     run_mode: paddle

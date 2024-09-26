@@ -27,17 +27,14 @@ class InstanceSegPredictor(DetPredictor):
     entities = MODELS
 
     def _build_components(self):
-        ops = {}
-        ops["ReadImage"] = ReadImage(
-            batch_size=self.kwargs.get("batch_size", 1), format="RGB"
-        )
+        self._add_component(ReadImage(format="RGB"))
         for cfg in self.config["Preprocess"]:
             tf_key = cfg["type"]
             func = self._FUNC_MAP.get(tf_key)
             cfg.pop("type")
             args = cfg
             op = func(self, **args) if args else func(self)
-            ops[tf_key] = op
+            self._add_component(op)
 
         predictor = ImageDetPredictor(
             model_dir=self.model_dir,
@@ -54,15 +51,16 @@ class InstanceSegPredictor(DetPredictor):
             predictor.set_inputs(
                 {"img": "img", "scale_factors": "scale_factors", "img_size": "img_size"}
             )
-
-        ops["predictor"] = predictor
-
-        ops["postprocess"] = InstanceSegPostProcess(
-            threshold=self.config["draw_threshold"], labels=self.config["label_list"]
+        self._add_component(
+            [
+                ("Predictor", predictor),
+                InstanceSegPostProcess(
+                    threshold=self.config["draw_threshold"],
+                    labels=self.config["label_list"],
+                ),
+            ]
         )
 
-        return ops
-
     def _pack_res(self, single):
-        keys = ["img_path", "boxes", "masks", "labels"]
+        keys = ["img_path", "boxes", "masks"]
         return InstanceSegResult({key: single[key] for key in keys})

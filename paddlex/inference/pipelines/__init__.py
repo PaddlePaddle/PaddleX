@@ -26,6 +26,7 @@ def create_pipeline(
     pipeline: str,
     use_hpip: bool = False,
     hpi_params: Optional[Dict[str, Any]] = None,
+    *args,
     **kwargs,
 ) -> BasePipeline:
     """build model evaluater
@@ -49,6 +50,6 @@ def create_pipeline(
     if hpi_params is not None:
         predictor_kwargs["hpi_params"] = hpi_params
     pipeline = BasePipeline.get(pipeline_name)(
-        predictor_kwargs=predictor_kwargs, **{**config["Pipeline"], **kwargs}
+        predictor_kwargs=predictor_kwargs, *args, **config["Pipeline"], **kwargs
     )
     return pipeline
