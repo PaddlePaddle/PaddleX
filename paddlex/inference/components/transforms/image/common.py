@@ -37,6 +37,7 @@ __all__ = [
     "Pad",
     "Normalize",
     "ToCHWImage",
+    "PadStride",
 ]
 
 
@@ -486,6 +487,7 @@ class PadStride(BaseComponent):
     DEAULT_OUTPUTS = {"img": "img"}
 
     def __init__(self, stride=0):
+        super().__init__()
         self.coarsest_stride = stride
 
     def apply(self, img):
