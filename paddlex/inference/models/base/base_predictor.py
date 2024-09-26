@@ -44,14 +44,11 @@ class BasePredictor(BaseComponent):
         self.model_dir = Path(model_dir)
         self.config = config if config else self.load_config(self.model_dir)
 
-        self._pred_set_func_map = {}
-        self._pred_set_register = FuncRegister(self._pred_set_func_map)
-
         # alias predict() to the __call__()
         self.predict = self.__call__
 
     def __call__(self, input, **kwargs):
-        self._set_predict(**kwargs)
+        self.set_predict(**kwargs)
         for res in super().__call__(input):
             yield res["result"]
 
@@ -67,6 +64,10 @@ class BasePredictor(BaseComponent):
     def apply(self, x):
         raise NotImplementedError
 
+    @abstractmethod
+    def set_predict(self):
+        raise NotImplementedError
+
     @classmethod
     def get_config_path(cls, model_dir):
         return model_dir / f"{cls.MODEL_FILE_PREFIX}.yml"
@@ -78,10 +79,6 @@ class BasePredictor(BaseComponent):
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
 
-    def _set_predict(self, **kwargs):
-        for k in kwargs:
-            self._pred_set_func_map[k](kwargs[k])
-
 
 class BasicPredictor(
     BasePredictor, DeviceSetMixin, PPOptionSetMixin, metaclass=AutoRegisterABCMetaClass
@@ -89,12 +86,15 @@ class BasicPredictor(
 
     __is_base = True
 
-    def __init__(self, model_dir, config=None):
+    def __init__(self, model_dir, config=None, device=None, pp_option=None):
         super().__init__(model_dir=model_dir, config=config)
+        self._pred_set_func_map = {}
+        self._pred_set_register = FuncRegister(self._pred_set_func_map)
         self._pred_set_register("device")(self.set_device)
         self._pred_set_register("pp_option")(self.set_pp_option)
 
-        self.pp_option = PaddlePredictorOption()
+        self.pp_option = pp_option if pp_option else PaddlePredictorOption()
+        self.pp_option.set_device(device)
         self.components = {}
         self._build_components()
         self.engine = ComponentsEngine(self.components)
@@ -127,6 +127,10 @@ class BasicPredictor(
                 key not in self.components
             ), f"The key ({key}) has been used: {self.components}!"
             self.components[key] = cmp
+
+    def set_predict(self, **kwargs):
+        for k in kwargs:
+            self._pred_set_func_map[k](kwargs[k])
 
     @abstractmethod
     def _build_components(self):

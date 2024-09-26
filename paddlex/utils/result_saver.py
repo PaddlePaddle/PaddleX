@@ -28,13 +28,13 @@ def try_except_decorator(func):
         try:
             result = func(self, *args, **kwargs)
             if result:
-                save_result(True, self.mode, self.output, result_dict=result)
+                save_result(True, self._mode, self._output, result_dict=result)
         except Exception as e:
             exc_type, exc_value, exc_tb = sys.exc_info()
             save_result(
                 False,
-                self.mode,
-                self.output,
+                self._mode,
+                self._output,
                 err_type=str(exc_type),
                 err_msg=str(exc_value),
             )
@@ -46,10 +46,7 @@ def try_except_decorator(func):
 
 def save_result(run_pass, mode, output, result_dict=None, err_type=None, err_msg=None):
     """format, build and save result"""
-    json_data = {
-        # "model_name": self.args.model_name,
-        "done_flag": run_pass
-    }
+    json_data = {"done_flag": run_pass}
     if not run_pass:
         assert result_dict is None and err_type is not None and err_msg is not None
         json_data.update({"err_type": err_type, "err_msg": err_msg})

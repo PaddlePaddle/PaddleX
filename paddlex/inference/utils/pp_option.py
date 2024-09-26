@@ -77,6 +77,8 @@ class PaddlePredictorOption(object):
     @register("device")
     def set_device(self, device: str):
         """set device"""
+        if not device:
+            return
         device_type, device_ids = parse_device(device)
         self._cfg["device"] = device_type
         if device_type not in self.SUPPORT_DEVICE:
@@ -147,3 +149,8 @@ class PaddlePredictorOption(object):
         if key not in self._cfg:
             raise Exception(f"The key ({key}) is not found in cfg: \n {self._cfg}")
         return self._cfg.get(key)
+
+    def __eq__(self, obj):
+        if isinstance(obj, PaddlePredictorOption):
+            return obj._cfg == self._cfg
+        return False

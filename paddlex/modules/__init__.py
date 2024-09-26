@@ -20,8 +20,6 @@ from .base import (
     build_exportor,
 )
 
-from .predictor import build_predictor
-
 from .image_classification import (
     ClsDatasetChecker,
     ClsTrainer,
