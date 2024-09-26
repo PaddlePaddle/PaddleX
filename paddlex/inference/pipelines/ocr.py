@@ -29,9 +29,9 @@ class OCRPipeline(BasePipeline):
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs)
-        self._det_predict = self._create_model(det_model)
-        self._rec_predict = self._create_model(rec_model)
-        self.is_curve = self._det_predict.model_name in [
+        self.det_model = self._create_model(det_model)
+        self.rec_model = self._create_model(rec_model)
+        self.is_curve = self.det_model.model_name in [
             "PP-OCRv4_mobile_seal_det",
             "PP-OCRv4_server_seal_det",
         ]
@@ -42,7 +42,7 @@ class OCRPipeline(BasePipeline):
 
     def predict(self, input, **kwargs):
         device = kwargs.get("device", "gpu")
-        for det_res in self._det_predict(
+        for det_res in self.det_model(
             input, batch_size=kwargs.get("det_batch_size", 1), device=device
         ):
             single_img_res = (
@@ -52,7 +52,7 @@ class OCRPipeline(BasePipeline):
             single_img_res["rec_score"] = []
             if len(single_img_res["dt_polys"]) > 0:
                 all_subs_of_img = list(self._crop_by_polys(single_img_res))
-                for rec_res in self._rec_predict(
+                for rec_res in self.rec_model(
                     all_subs_of_img,
                     batch_size=kwargs.get("rec_batch_size", 1),
                     device=device,

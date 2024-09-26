@@ -1,7 +1,7 @@
 Global:
   model: STFPM
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/mnt/yys/dataset/mv_dataset"
+  dataset_dir: "/paddle/dataset/paddlex/seg/mvtec_examples"
   device: gpu:0,1,2,3
   output: "output"
 
@@ -18,9 +18,9 @@ Train:
   epochs_iters: 50
   num_classes: 1
   batch_size: 1
-  learning_rate: #0.01
+  learning_rate: 0.4
   pretrain_weight_path: null
-  warmup_steps: #0
+  warmup_steps: 100
   resume_path: null
   log_interval: 10
   eval_interval: 100
@@ -32,10 +32,10 @@ Evaluate:
 Predict:
   batch_size: 1
   model_dir: "output/best_model/inference"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
   kernel_option:
     run_mode: paddle
 
   
 Export:
-  weight_path: https://bj.bcebos.com/paddleseg/dygraph/mvtec_ad/stfpm/model.pdparams
+  weight_path: https://paddleseg.bj.bcebos.com/dygraph/mvtec_ad/stfpm/stfpm.pdparams

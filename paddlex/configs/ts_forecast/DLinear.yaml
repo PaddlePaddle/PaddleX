@@ -34,4 +34,4 @@ Export:
 Predict:
   batch_size: 1
   model_dir: "output/inference"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv"

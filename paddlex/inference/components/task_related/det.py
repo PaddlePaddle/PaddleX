@@ -14,6 +14,7 @@
 
 import os
 
+import numpy as np
 from ...utils.io import ImageReader
 from ..base import BaseComponent
 
@@ -80,3 +81,37 @@ class CropByBoxes(BaseComponent):
             output_list.append({"img": img_crop, "box": box, "label": label})
 
         return output_list
+
+
+class DetPad(BaseComponent):
+
+    INPUT_KEYS = "img"
+    OUTPUT_KEYS = "img"
+    DEAULT_INPUTS = {"img": "img"}
+    DEAULT_OUTPUTS = {"img": "img"}
+
+    def __init__(self, size, fill_value=[114.0, 114.0, 114.0]):
+        """
+        Pad image to a specified size.
+        Args:
+            size (list[int]): image target size
+            fill_value (list[float]): rgb value of pad area, default (114.0, 114.0, 114.0)
+        """
+
+        super().__init__()
+        if isinstance(size, int):
+            size = [size, size]
+        self.size = size
+        self.fill_value = fill_value
+
+    def apply(self, img):
+        im = img
+        im_h, im_w = im.shape[:2]
+        h, w = self.size
+        if h == im_h and w == im_w:
+            return {"img": im}
+
+        canvas = np.ones((h, w, 3), dtype=np.float32)
+        canvas *= np.array(self.fill_value, dtype=np.float32)
+        canvas[0:im_h, 0:im_w, :] = im.astype(np.float32)
+        return {"img": canvas}

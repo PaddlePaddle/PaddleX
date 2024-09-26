@@ -44,7 +44,7 @@ class DetPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if "RT-DETR" in self.model_name:
+        if "DETR" in self.model_name:
             predictor.set_inputs(
                 {
                     "img": "img",
@@ -99,6 +99,18 @@ class DetPredictor(CVPredictor):
     @register("Permute")
     def build_to_chw(self):
         return ToCHWImage()
+
+    @register("Pad")
+    def build_pad(self, fill_value=None, size=None):
+        if fill_value is None:
+            fill_value = [127.5, 127.5, 127.5]
+        if size is None:
+            size = [3, 640, 640]
+        return DetPad(size=size, fill_value=fill_value)
+
+    @register("PadStride")
+    def build_pad_stride(self, stride=32):
+        return PadStride(stride=stride)
 
     def _pack_res(self, single):
         keys = ["img_path", "boxes"]

@@ -28,7 +28,8 @@ from .modules import (
 )
 
 
-from .inference import create_model, create_pipeline
+from .model import create_model
+from .inference import create_predictor, create_pipeline
 
 
 def _initialize():

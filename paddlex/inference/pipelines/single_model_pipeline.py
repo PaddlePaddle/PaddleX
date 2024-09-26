@@ -31,7 +31,7 @@ class SingleModelPipeline(BasePipeline):
 
     def __init__(self, model, predictor_kwargs=None):
         super().__init__(predictor_kwargs)
-        self._predict = self._create_model(model)
+        self.model = self._create_model(model)
 
     def predict(self, input, **kwargs):
-        yield from self._predict(input, **kwargs)
+        yield from self.model(input, **kwargs)

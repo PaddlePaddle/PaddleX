@@ -14,46 +14,36 @@
 
 import os
 
-from .modules import (
-    build_dataset_checker,
-    build_trainer,
-    build_evaluater,
-    build_exportor,
-    build_predictor,
-)
+
 from .utils.result_saver import try_except_decorator
-from .utils import config
+from .utils.config import parse_args, get_config
 from .utils.errors import raise_unsupported_api_error
+from .model import _ModelBasedConfig
 
 
 class Engine(object):
     """Engine"""
 
     def __init__(self):
-        args = config.parse_args()
-        self.config = config.get_config(
-            args.config, overrides=args.override, show=False
-        )
-        self.mode = self.config.Global.mode
-        self.output = self.config.Global.output
+        args = parse_args()
+        config = get_config(args.config, overrides=args.override, show=False)
+        self._mode = config.Global.mode
+        self._output = config.Global.output
+        self._model = _ModelBasedConfig(config)
 
     @try_except_decorator
     def run(self):
         """the main function"""
-        if self.config.Global.mode == "check_dataset":
-            dataset_checker = build_dataset_checker(self.config)
-            return dataset_checker.check()
-        elif self.config.Global.mode == "train":
-            trainer = build_trainer(self.config)
-            trainer.train()
-        elif self.config.Global.mode == "evaluate":
-            evaluator = build_evaluater(self.config)
-            return evaluator.evaluate()
-        elif self.config.Global.mode == "export":
-            exportor = build_exportor(self.config)
-            return exportor.export()
-        elif self.config.Global.mode == "predict":
-            predictor = build_predictor(self.config)
-            return predictor.predict()
+        if self._mode == "check_dataset":
+            return self._model.check_dataset()
+        elif self._mode == "train":
+            self._model.train()
+        elif self._mode == "evaluate":
+            return self._model.evaluate()
+        elif self._mode == "export":
+            return self._model.export()
+        elif self._mode == "predict":
+            for res in self._model.predict():
+                res.print(json_format=False)
         else:
-            raise_unsupported_api_error(f"{self.config.Global.mode}", self.__class__)
+            raise_unsupported_api_error(f"{self._mode}", self.__class__)

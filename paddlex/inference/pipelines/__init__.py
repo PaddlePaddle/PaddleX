@@ -42,15 +42,16 @@ def create_pipeline_from_config(
     **kwargs,
 ) -> BasePipeline:
     pipeline_name = config["Global"]["pipeline_name"]
+    pipeline_setting = config["Pipeline"]
+    pipeline_setting.update(kwargs)
+
     predictor_kwargs = {"use_hpip": use_hpip}
     if hpi_params is not None:
         predictor_kwargs["hpi_params"] = hpi_params
-    kwargs = {
-        **config["Pipeline"],
-        "predictor_kwargs": predictor_kwargs,
-        **kwargs,
-    }
-    pipeline = BasePipeline.get(pipeline_name)(*args, **kwargs)
+
+    pipeline = BasePipeline.get(pipeline_name)(
+        predictor_kwargs=predictor_kwargs, *args, **pipeline_setting
+    )
     return pipeline
 
 

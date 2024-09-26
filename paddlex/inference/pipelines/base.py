@@ -16,7 +16,7 @@ from abc import ABC
 from typing import Any, Dict, Optional
 
 from ...utils.subclass_register import AutoRegisterABCMetaClass
-from ..models import create_model
+from ..models import create_predictor
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
@@ -35,4 +35,4 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         yield from self.predict(*args, **kwargs)
 
     def _create_model(self, *args, **kwargs):
-        return create_model(*args, **kwargs, **self._predictor_kwargs)
+        return create_predictor(*args, **kwargs, **self._predictor_kwargs)

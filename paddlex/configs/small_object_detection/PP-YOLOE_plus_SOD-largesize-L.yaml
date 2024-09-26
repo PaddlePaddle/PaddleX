@@ -1,40 +1,42 @@
 Global:
-  model: MaskRCNN-ResNet50-vd-SSLDv2-FPN
+  model: PP-YOLOE_plus_SOD-largesize-L
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/instance_seg/instance_seg_coco_examples/"
+  dataset_dir: "/paddle/dataset/paddlex/det/small_det_examples"
   device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
-  convert: 
+  convert:
     enable: False
     src_dataset_type: null
-  split: 
+  split:
     enable: False
     train_percent: null
     val_percent: null
 
 Train:
-  num_classes: 2
-  epochs_iters: 40
+  num_classes: 4
+  epochs_iters: 10
   batch_size: 2
-  learning_rate: 0.01
+  learning_rate: 0.00125
   pretrain_weight_path: null
   warmup_steps: 100
   resume_path: null
-  log_interval: 10
+  log_interval: 3
   eval_interval: 1
 
 Evaluate:
   weight_path: "output/best_model/best_model.pdparams"
   log_interval: 10
 
-Export:
-  weight_path: https://paddledet.bj.bcebos.com/models/cascade_mask_rcnn_r50_vd_fpn_ssld_1x_coco.pdparams
-
 Predict:
   batch_size: 1
   model_dir: "output/best_model/inference"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg"
   kernel_option:
     run_mode: paddle
+
+
+
+Export:
+  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_plus_sod_crn_l_largesize_80e_visdrone.pdparams

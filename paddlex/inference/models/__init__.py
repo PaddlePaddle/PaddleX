@@ -59,8 +59,14 @@ def _create_hp_predictor(
     )
 
 
-def create_model(
-    model: str, *args, use_hpip=False, hpi_params=None, **kwargs
+def create_predictor(
+    model: str,
+    *args,
+    device=None,
+    pp_option=None,
+    use_hpip=False,
+    hpi_params=None,
+    **kwargs,
 ) -> BasePredictor:
     model_dir = check_model(model)
     config = BasePredictor.load_config(model_dir)
@@ -71,6 +77,7 @@ def create_model(
             model_dir=model_dir,
             config=config,
             hpi_params=hpi_params,
+            device=device,
             *args,
             **kwargs,
         )
@@ -78,6 +85,8 @@ def create_model(
         return BasicPredictor.get(model_name)(
             model_dir=model_dir,
             config=config,
+            device=device,
+            pp_option=pp_option,
             *args,
             **kwargs,
         )
