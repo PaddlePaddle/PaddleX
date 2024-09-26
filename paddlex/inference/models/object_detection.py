@@ -44,7 +44,7 @@ class DetPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if "DETR" in self.model_name:
+        if "DETR" in self.model_name or "RCNN" in self.model_name:
             predictor.set_inputs(
                 {
                     "img": "img",
