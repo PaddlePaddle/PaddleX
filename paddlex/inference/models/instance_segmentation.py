@@ -41,13 +41,7 @@ class InstanceSegPredictor(DetPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if self.model_name in [
-            "Mask-RT-DETR-S",
-            "Mask-RT-DETR-M",
-            "Mask-RT-DETR-L",
-            "Mask-RT-DETR-H",
-            "Mask-RT-DETR-X",
-        ]:
+        if "RT-DETR" in self.model_name:
             predictor.set_inputs(
                 {"img": "img", "scale_factors": "scale_factors", "img_size": "img_size"}
             )
