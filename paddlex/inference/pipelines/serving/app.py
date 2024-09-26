@@ -16,7 +16,7 @@ import asyncio
 import contextlib
 import functools
 import json
-from typing import Any, AsyncGenerator, Dict, Optional, Tuple, Type
+from typing import Any, AsyncGenerator, Callable, Dict, Optional, Tuple, TypeVar
 
 import aiohttp
 import fastapi
@@ -25,10 +25,17 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException
+from typing_extensions import Final, ParamSpec
 
 from ..pipelines.base import BasePipeline
 from .models import Response
-from .utils import config_logger, generate_log_id
+from .utils import generate_log_id
+
+
+SERVING_CONFIG_KEY: Final[str] = "Serving"
+
+_P = ParamSpec("_P")
+_T = TypeVar("_T")
 
 
 class PipelineWrapper(object):
@@ -49,11 +56,16 @@ class PipelineWrapper(object):
                 None, functools.partial(_infer, data)
             )
 
+    async def call(
+        self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
+    ) -> _T:
+        async with self._lock:
+            return await asyncio.get_event_loop().run_in_executor(
+                None, functools.partial(func, *args, **kwargs)
+            )
+
 
 class AppConfig(BaseModel):
-    pipeline_init_kwargs: Dict[str, Any]
-    config_logger: bool = False
-    debug: bool = False
     extra: Optional[Dict[str, Any]] = None
 
 
@@ -61,6 +73,7 @@ class AppContext(object):
     def __init__(self, *, config: AppConfig) -> None:
         super().__init__()
         self._config = config
+        self.extra: Dict[str, Any] = {}
         self._pipeline: Optional[PipelineWrapper] = None
         self._aiohttp_session: Optional[aiohttp.ClientSession] = None
 
@@ -89,21 +102,22 @@ class AppContext(object):
         self._aiohttp_session = val
 
 
+def create_app_config(pipeline_config: Dict[str, Any], **kwargs: Any) -> AppConfig:
+    app_config = pipeline_config.get(SERVING_CONFIG_KEY, {})
+    app_config.update(kwargs)
+    return AppConfig.model_validate(app_config)
+
+
 def create_app(
-    *,
-    pipeline_cls: Type[BasePipeline],
-    app_config: AppConfig,
-    app_aiohttp_session: bool = True
+    *, pipeline: BasePipeline, app_config: AppConfig, app_aiohttp_session: bool = True
 ) -> Tuple[fastapi.FastAPI, AppContext]:
     @contextlib.asynccontextmanager
     async def _app_lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
-        ctx.pipeline = pipeline_cls(**ctx.config.pipeline_init_kwargs)
+        ctx.pipeline = pipeline
         if app_aiohttp_session:
             ctx.aiohttp_session = aiohttp.ClientSession(
                 cookie_jar=aiohttp.DummyCookieJar()
             )
-        if ctx.config.config_logger:
-            config_logger(debug=ctx.config.debug)
         yield
         if app_aiohttp_session:
             await ctx.aiohttp_session.close()

@@ -12,52 +12,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-from typing import List, Optional
+from typing import List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated, TypeAlias
+from typing_extensions import Annotated
 
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...pipelines import OCRPipeline
-
-
-_logger = logging.getLogger(__name__)
-
-
-class InferenceParams(BaseModel):
-    maxLongSide: Optional[Annotated[int, Field(gt=0)]] = None
+from ...single_model_pipeline import SingleModelPipeline
+from .....utils import logging
 
 
 class InferRequest(BaseModel):
     image: str
-    inferenceParams: Optional[InferenceParams] = None
-
-
-Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
-BoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
-
-
-class Text(BaseModel):
-    bbox: BoundingBox
-    text: str
-    score: float
 
 
 class InferResult(BaseModel):
-    texts: List[Text]
+    labelMap: List[int]
+    size: Annotated[List[int], Field(min_length=2, max_length=2)]
     image: str
 
 
-def create_pipeline_app(app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(
+    pipeline: SingleModelPipeline, app_config: AppConfig
+) -> FastAPI:
     app, ctx = create_app(
-        pipeline_cls=OCRPipeline, app_config=app_config, app_aiohttp_session=True
+        pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
-    @app.post("/ocr", operation_id="infer", responses={422: {"model": Response}})
+    @app.post(
+        "/semantic-segmentation",
+        operation_id="infer",
+        responses={422: {"model": Response}},
+    )
     async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
@@ -67,33 +56,24 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
                 request.image, aiohttp_session
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
-            top_k: Optional[int] = None
-            if request.inferenceParams is not None:
-                if request.inferenceParams.topK is not None:
-                    top_k = request.inferenceParams.topK
 
             result = await pipeline.infer(image)
 
-            categories: List[Category] = []
-            for id_, score in islice(
-                zip(result["class_ids"], result["scores"]), None, top_k
-            ):
-                if "label_names" in result:
-                    name = result["label_names"][id_]
-                else:
-                    name = str(id_)
-                categories.append(cat=Category(id=id_, name=name, score=score))
+            size = [len(result["pred"]), len(result["pred"][0])]
+            label_map = [item for sublist in result["pred"] for item in sublist]
             output_image_base64 = result.to_base64()
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(categories=categories, image=output_image_base64),
+                result=InferResult(
+                    labelMap=label_map, size=size, image=output_image_base64
+                ),
             )
 
         except Exception as e:
-            _logger.exception(e)
+            logging.exception(e)
             raise HTTPException(status_code=500, detail="Internal server error")
 
     return app

@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
@@ -22,10 +21,8 @@ from typing_extensions import Annotated, TypeAlias
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...pipelines import TableRecPipeline
-
-
-_logger = logging.getLogger(__name__)
+from ...table_recognition import TableRecPipeline
+from .....utils import logging
 
 
 class InferenceParams(BaseModel):
@@ -52,9 +49,9 @@ class InferResult(BaseModel):
     ocrImage: str
 
 
-def create_pipeline_app(app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> FastAPI:
     app, ctx = create_app(
-        pipeline_cls=TableRecPipeline, app_config=app_config, app_aiohttp_session=True
+        pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
@@ -64,38 +61,43 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
+        if request.inferenceParams:
+            max_long_side = request.inferenceParams.maxLongSide
+            if max_long_side:
+                raise HTTPException(
+                    status_code=422,
+                    detail="`max_long_side` is currently not supported.",
+                )
+
         try:
             file_bytes = await serving_utils.get_raw_bytes(
                 request.image, aiohttp_session
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
-            top_k: Optional[int] = None
-            if request.inferenceParams is not None:
-                if request.inferenceParams.topK is not None:
-                    top_k = request.inferenceParams.topK
 
             result = await pipeline.infer(image)
 
-            categories: List[Category] = []
-            for id_, score in islice(
-                zip(result["class_ids"], result["scores"]), None, top_k
+            tables: List[Table] = []
+            for bbox, html in zip(
+                result["table_result"]["bbox"], result["table_result"]["html"]
             ):
-                if "label_names" in result:
-                    name = result["label_names"][id_]
-                else:
-                    name = str(id_)
-                categories.append(cat=Category(id=id_, name=name, score=score))
-            output_image_base64 = result.to_base64()
+                tables.append(Table(bbox=bbox, html=html))
+            table_image_base64 = result["table_result"].to_base64()
+            ocr_iamge_base64 = result["ocr_result"].to_base64()
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(categories=categories, image=output_image_base64),
+                result=InferResult(
+                    tables=tables,
+                    tableImage=table_image_base64,
+                    ocrImage=ocr_iamge_base64,
+                ),
             )
 
         except Exception as e:
-            _logger.exception(e)
+            logging.exception(e)
             raise HTTPException(status_code=500, detail="Internal server error")
 
     return app

@@ -12,52 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-from itertools import islice
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from typing_extensions import Annotated, TypeAlias
 
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...pipelines import ClasPipeline
-
-
-_logger = logging.getLogger(__name__)
-
-
-class InferenceParams(BaseModel):
-    topK: Optional[Annotated[int, Field(gt=0)]] = None
+from ...single_model_pipeline import SingleModelPipeline
+from .....utils import logging
 
 
 class InferRequest(BaseModel):
     image: str
-    inferenceParams: Optional[InferenceParams] = None
 
 
-class Category(BaseModel):
-    id: int
-    name: str
+BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
+
+
+class DetectedObject(BaseModel):
+    bbox: BoundingBox
+    categoryId: int
     score: float
 
 
 class InferResult(BaseModel):
-    categories: List[Category]
+    detectedObjects: List[DetectedObject]
     image: str
 
 
-def create_pipeline_app(app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(
+    pipeline: SingleModelPipeline, app_config: AppConfig
+) -> FastAPI:
     app, ctx = create_app(
-        pipeline_cls=ClasPipeline, app_config=app_config, app_aiohttp_session=True
+        pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
-        "/image-classification",
-        operation_id="infer",
-        responses={422: {"model": Response}},
+        "/object-detection", operation_id="infer", responses={422: {"model": Response}}
     )
     async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
         pipeline = ctx.pipeline
@@ -83,7 +77,7 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
                     name = result["label_names"][id_]
                 else:
                     name = str(id_)
-                categories.append(Category(id=id_, name=name, score=score))
+                categories.append(cat=Category(id=id_, name=name, score=score))
             output_image_base64 = result.to_base64()
 
             return ResultResponse(
@@ -94,7 +88,7 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
             )
 
         except Exception as e:
-            _logger.exception(e)
+            logging.exception(e)
             raise HTTPException(status_code=500, detail="Internal server error")
 
     return app

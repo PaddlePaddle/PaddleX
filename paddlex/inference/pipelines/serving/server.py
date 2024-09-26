@@ -12,4 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .pipelines import create_pipeline_app
+import uvicorn
+from fastapi import FastAPI
+
+
+def run_server(app: FastAPI, *, host: str, port: int, debug: bool) -> None:
+    if debug:
+        kwargs = {
+            "reload": True,
+        }
+    else:
+        kwargs = {}
+    uvicorn.run(app, host=host, port=port, log_level="info", **kwargs)

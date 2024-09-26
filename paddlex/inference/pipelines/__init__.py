@@ -22,6 +22,38 @@ from .ocr import OCRPipeline
 from .table_recognition import TableRecPipeline
 
 
+def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
+    if not Path(pipeline).exists():
+        # XXX: using dict class to handle all pipeline configs
+        pipeline = (
+            Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline}.yaml"
+        )
+        if not Path(pipeline).exists():
+            raise Exception(f"The pipeline does not exist! ({pipeline})")
+    config = parse_config(pipeline)
+    return config
+
+
+def create_pipeline_from_config(
+    config: Dict[str, Any],
+    use_hpip: bool,
+    hpi_params: Optional[Dict[str, Any]],
+    *args,
+    **kwargs,
+) -> BasePipeline:
+    pipeline_name = config["Global"]["pipeline_name"]
+    predictor_kwargs = {"use_hpip": use_hpip}
+    if hpi_params is not None:
+        predictor_kwargs["hpi_params"] = hpi_params
+    kwargs = {
+        **config["Pipeline"],
+        "predictor_kwargs": predictor_kwargs,
+        **kwargs,
+    }
+    pipeline = BasePipeline.get(pipeline_name)(*args, **kwargs)
+    return pipeline
+
+
 def create_pipeline(
     pipeline: str,
     use_hpip: bool = False,
@@ -37,19 +69,7 @@ def create_pipeline(
     Returns:
         BasePipeline: the pipeline, which is subclass of BasePipeline.
     """
-    if not Path(pipeline).exists():
-        # XXX: using dict class to handle all pipeline configs
-        pipeline = (
-            Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline}.yaml"
-        )
-        if not Path(pipeline).exists():
-            raise Exception(f"The pipeline don't exist! ({pipeline})")
-    config = parse_config(pipeline)
-    pipeline_name = config["Global"]["pipeline_name"]
-    predictor_kwargs = {"use_hpip": use_hpip}
-    if hpi_params is not None:
-        predictor_kwargs["hpi_params"] = hpi_params
-    pipeline = BasePipeline.get(pipeline_name)(
-        predictor_kwargs=predictor_kwargs, *args, **config["Pipeline"], **kwargs
+    config = load_pipeline_config(pipeline)
+    return create_pipeline_from_config(
+        config, use_hpip=use_hpip, hpi_params=hpi_params, *args, **kwargs
     )
-    return pipeline

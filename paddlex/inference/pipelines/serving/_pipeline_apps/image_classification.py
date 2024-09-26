@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
+from itertools import islice
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -22,29 +22,39 @@ from typing_extensions import Annotated
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...pipelines import SegPipeline
+from ...single_model_pipeline import SingleModelPipeline
+from .....utils import logging
 
 
-_logger = logging.getLogger(__name__)
+class InferenceParams(BaseModel):
+    topK: Optional[Annotated[int, Field(gt=0)]] = None
 
 
 class InferRequest(BaseModel):
     image: str
+    inferenceParams: Optional[InferenceParams] = None
+
+
+class Category(BaseModel):
+    id: int
+    name: str
+    score: float
 
 
 class InferResult(BaseModel):
-    labelMap: List[int]
-    size: Annotated[List[int], Field(min_length=2, max_length=2)]
+    categories: List[Category]
     image: str
 
 
-def create_pipeline_app(app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(
+    pipeline: SingleModelPipeline, app_config: AppConfig
+) -> FastAPI:
     app, ctx = create_app(
-        pipeline_cls=SegPipeline, app_config=app_config, app_aiohttp_session=True
+        pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
-        "/semantic-segmentation",
+        "/image-classification",
         operation_id="infer",
         responses={422: {"model": Response}},
     )
@@ -72,7 +82,7 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
                     name = result["label_names"][id_]
                 else:
                     name = str(id_)
-                categories.append(cat=Category(id=id_, name=name, score=score))
+                categories.append(Category(id=id_, name=name, score=score))
             output_image_base64 = result.to_base64()
 
             return ResultResponse(
@@ -83,7 +93,7 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
             )
 
         except Exception as e:
-            _logger.exception(e)
+            logging.exception(e)
             raise HTTPException(status_code=500, detail="Internal server error")
 
     return app

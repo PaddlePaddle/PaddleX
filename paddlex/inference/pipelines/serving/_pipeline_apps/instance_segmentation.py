@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 from typing import List
 
 import numpy as np
@@ -24,10 +23,8 @@ from typing_extensions import Annotated, TypeAlias
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...pipelines import InstanceSegPipeline
-
-
-_logger = logging.getLogger(__name__)
+from ...single_model_pipeline import SingleModelPipeline
+from .....utils import logging
 
 
 class InferRequest(BaseModel):
@@ -59,9 +56,11 @@ def _rle(mask: np.ndarray) -> str:
     return rle_res["counts"].decode("utf-8")
 
 
-def create_pipeline_app(app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(
+    pipeline: SingleModelPipeline, app_config: AppConfig
+) -> FastAPI:
     app, ctx = create_app(
-        pipeline_cls=InstanceSegPipeline,
+        pipeline=pipeline,
         app_config=app_config,
         app_aiohttp_session=True,
     )
@@ -108,7 +107,7 @@ def create_pipeline_app(app_config: AppConfig) -> FastAPI:
             )
 
         except Exception as e:
-            _logger.exception(e)
+            logging.exception(e)
             raise HTTPException(status_code=500, detail="Internal server error")
 
     return app

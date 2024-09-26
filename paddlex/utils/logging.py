@@ -78,6 +78,11 @@ def critical(msg, *args, **kwargs):
     _logger.critical(msg, *args, **kwargs)
 
 
+def exception(msg, *args, **kwargs):
+    """exception"""
+    _logger.exception(msg, *args, **kwargs)
+
+
 def setup_logging(verbosity: str = None):
     """setup logging level
 

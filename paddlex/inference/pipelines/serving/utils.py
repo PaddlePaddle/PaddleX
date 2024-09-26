@@ -14,7 +14,6 @@
 
 import base64
 import io
-import logging
 import urllib.parse
 import uuid
 
@@ -54,18 +53,3 @@ def image_to_base64(image: Image.Image) -> str:
         image.save(f, format="JPEG")
         image_base64 = base64.b64encode(f.getvalue()).decode("ascii")
     return image_base64
-
-
-def config_logger(logger: logging.Logger, *, debug: bool = False) -> None:
-    if debug:
-        logging_level = logging.DEBUG
-    else:
-        logging_level = logging.INFO
-    logger.setLevel(logging_level)
-    handler = logging.StreamHandler()
-    handler.setLevel(logging_level)
-    formatter = logging.Formatter(
-        "%(asctime)s - %(funcName)s - %(levelname)s - %(message)s"
-    )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)

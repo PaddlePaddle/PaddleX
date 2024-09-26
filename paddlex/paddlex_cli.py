@@ -18,6 +18,7 @@ import textwrap
 from types import SimpleNamespace
 
 from . import create_pipeline
+from .inference.pipelines import create_pipeline_from_config, load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils import logging
 
@@ -68,13 +69,19 @@ def args_cfg():
     parser.add_argument("--input", type=str, help="")
     parser.add_argument("--save_dir", type=str, default="./", help="")
     parser.add_argument("--device", type=str, default="gpu:0", help="")
+    parser.add_argument("--use_hpip", action="store_true")
+    parser.add_argument("--serial_number", type=str)
+    parser.add_argument("--update_license", action="store_true")
 
     ################# serving #################
     serving_parser = subparsers.add_parser("serve")
     serving_parser.add_argument("pipeline", type=str)
     serving_parser.add_argument("--device", type=str)
+    serving_parser.add_argument("--use_hpip", action="store_true")
+    serving_parser.add_argument("--serial_number", type=str)
+    serving_parser.add_argument("--update_license", action="store_true")
     serving_parser.add_argument("--host", type=str, default="0.0.0.0")
-    serving_parser.add_argument("--port", type=int, default=8000)
+    serving_parser.add_argument("--port", type=int, default=8080)
     serving_parser.add_argument("--debug", action="store_true")
 
     return parser.parse_args()
@@ -100,9 +107,16 @@ def install(args):
     return
 
 
-def pipeline_predict(pipeline, input_path, device=None, save_dir=None):
+def _get_hpi_params(serial_number, update_license):
+    return {"serial_number": serial_number, "update_license": update_license}
+
+
+def pipeline_predict(
+    pipeline, input_path, device, save_dir, use_hpip, serial_number, update_license
+):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline)
+    hpi_params = _get_hpi_params(serial_number, update_license)
+    pipeline = create_pipeline(pipeline, use_hpip=use_hpip, hpi_params=hpi_params)
     result = pipeline(input_path, device=device)
     for res in result:
         res.print(json_format=False)
@@ -111,11 +125,17 @@ def pipeline_predict(pipeline, input_path, device=None, save_dir=None):
         #     i["result"].save()
 
 
-def serve(pipeline, device, host, port, debug):
-    from .inference.serving import create_pipeline_app, run_server
+def serve(
+    pipeline, *, device, use_hpip, serial_number, update_license, host, port, debug
+):
+    from .inference.pipelines.serving import create_pipeline_app, run_server
 
-    pipeline = create_pipeline(pipeline, device)
-    app = create_pipeline_app(pipeline)
+    hpi_params = _get_hpi_params(serial_number, update_license)
+    pipeline_config = load_pipeline_config(pipeline)
+    pipeline = create_pipeline_from_config(
+        pipeline_config, device=device, use_hpip=use_hpip, hpi_params=hpi_params
+    )
+    app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port, debug=debug)
 
 
@@ -132,12 +152,17 @@ def main():
                 args.input,
                 args.device,
                 args.save_dir,
+                use_hpip=args.use_hpip,
+                serial_number=args.serial_number,
+                update_license=args.update_license,
             )
     elif args.cmd == "serve":
         serve(
             args.pipeline,
-            args.input,
-            args.device,
+            device=args.device,
+            use_hpip=args.use_hpip,
+            serial_number=args.serial_number,
+            update_license=args.update_license,
             host=args.host,
             port=args.port,
             debug=args.debug,
