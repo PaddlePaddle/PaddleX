@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .device import parse_device
 from ...utils.func_register import FuncRegister
 from ...utils import logging
+from .device import parse_device
+from .new_ir_blacklist import NEWIR_BLOCKLIST
 
 
 class PaddlePredictorOption(object):
@@ -33,8 +34,9 @@ class PaddlePredictorOption(object):
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, **kwargs):
+    def __init__(self, model_name=None, **kwargs):
         super().__init__()
+        self.model_name = model_name
         self._cfg = {}
         self._init_option(**kwargs)
 
@@ -49,7 +51,7 @@ class PaddlePredictorOption(object):
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
-    def _get_default_config(cls):
+    def _get_default_config(self):
         """get default config"""
         return {
             "run_mode": "paddle",
@@ -61,7 +63,7 @@ class PaddlePredictorOption(object):
             "cpu_threads": 1,
             "trt_use_static": False,
             "delete_pass": [],
-            "enable_new_ir": True,
+            "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
         }
 
     @register("run_mode")
