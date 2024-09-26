@@ -38,7 +38,9 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 ## 📣 近期更新
 
 🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供**200+模型**通过极简的Python API一键调用；实现基于统一命令的**模型全流程开发**，并开源**PP-ChatOCRv3**特色模型产线基础能力；支持**100+模型高性能推理和服务化部署**（持续迭代中），7类重点视觉模型**端侧部署**；70+模型开发全流程适配昇腾910B，15+模型开发全流程适配昆仑芯和寒武纪
+
 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
+
 🔥 **2024.3.25**，PaddleX 3.0 云端发布，支持在AI Studio 星河社区 以零代码的方式【创建产线】使用。
 
 
@@ -701,7 +703,7 @@ pip install paddlepaddle
 ### 💻 命令行使用
 
 一行命令即可快速体验产线效果，以通用OCR产线为例：
-```ruby
+```bash
 paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png --device gpu:0
 ```
 
