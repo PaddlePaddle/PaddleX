@@ -27,7 +27,7 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 from typing_extensions import Final, ParamSpec
 
-from ..pipelines.base import BasePipeline
+from ..base import BasePipeline
 from .models import Response
 from .utils import generate_log_id
 
@@ -52,17 +52,20 @@ class PipelineWrapper(object):
             return output[0]
 
         async with self._lock:
-            return await asyncio.get_event_loop().run_in_executor(
-                None, functools.partial(_infer, data)
-            )
+            return self._run_in_executor(functools.partial(_infer), data)
 
     async def call(
         self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
     ) -> _T:
         async with self._lock:
-            return await asyncio.get_event_loop().run_in_executor(
-                None, functools.partial(func, *args, **kwargs)
-            )
+            return await self._run_in_executor(func, *args, **kwargs)
+
+    async def _run_in_executor(
+        self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
+    ) -> _T:
+        return await asyncio.get_event_loop().run_in_executor(
+            None, func, *args, **kwargs
+        )
 
 
 class AppConfig(BaseModel):

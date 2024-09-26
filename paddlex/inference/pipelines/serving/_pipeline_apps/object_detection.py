@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Optional
+from typing import List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
@@ -62,29 +62,25 @@ def create_pipeline_app(
                 request.image, aiohttp_session
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
-            top_k: Optional[int] = None
-            if request.inferenceParams is not None:
-                if request.inferenceParams.topK is not None:
-                    top_k = request.inferenceParams.topK
 
             result = await pipeline.infer(image)
 
-            categories: List[Category] = []
-            for id_, score in islice(
-                zip(result["class_ids"], result["scores"]), None, top_k
-            ):
-                if "label_names" in result:
-                    name = result["label_names"][id_]
-                else:
-                    name = str(id_)
-                categories.append(cat=Category(id=id_, name=name, score=score))
+            objects: List[DetectedObject] = []
+            for obj in result["boxes"]:
+                objects.append(
+                    DetectedObject(
+                        bbox=obj["coordinate"],
+                        categoryId=obj["cls_id"],
+                        score=obj["score"],
+                    )
+                )
             output_image_base64 = result.to_base64()
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(categories=categories, image=output_image_base64),
+                result=InferResult(detectedObjects=objects, image=output_image_base64),
             )
 
         except Exception as e:

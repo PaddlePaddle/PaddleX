@@ -83,17 +83,15 @@ def create_pipeline_app(
             result = await pipeline.infer(image)
 
             instances: List[Instance] = []
-            for bbox, cat_id, score, mask in zip(
-                result["boxes"], result["labels"], result["scores"], result["masks"]
-            ):
+            for obj, mask in zip(result["boxes"], result["masks"]):
                 mask = np.array(mask, dtype=np.uint8)
                 rle_res = _rle(mask)
                 mask = Mask(rleResult=rle_res, size=mask.shape)
                 instances.append(
                     Instance(
-                        bbox=bbox,
-                        categoryId=cat_id,
-                        score=score,
+                        bbox=obj["coordinate"],
+                        categoryId=obj["cls_id"],
+                        score=obj["score"],
                         mask=mask,
                     )
                 )

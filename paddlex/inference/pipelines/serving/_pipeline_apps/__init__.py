@@ -33,6 +33,11 @@ from ...ocr import OCRPipeline
 from ...table_recognition import TableRecPipeline
 
 
+# XXX (Bobholamovic): This is tightly coupled to the name-pipeline mapping,
+# which is dirty but necessary. I want to keep the pipeline definition code
+# untouched while adding the pipeline serving feature. Each pipeline app depends
+# on a specific pipeline class, and a pipeline name must be provided (in the
+# pipeline config) to specify the type of the pipeline.
 def create_pipeline_app(
     pipeline: BasePipeline, pipeline_config: Dict[str, Any]
 ) -> FastAPI:
