@@ -97,7 +97,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 ß在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
 
 <details>
-  <summary>👉 <b>格式转换/数据集划分详情</b></summary>
+  <summary>👉 格式转换/数据集划分详情</summary>
 
 
 **（1）数据集格式转换**
