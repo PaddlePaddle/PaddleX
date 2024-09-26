@@ -16,6 +16,8 @@ import os
 
 import numpy as np
 import math
+import copy
+import json
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
@@ -99,3 +101,10 @@ class InstanceSegResult(BaseResult):
         image = draw_box(image, boxes)
 
         return image
+
+    def print(self, json_format=True, indent=4, ensure_ascii=False):
+        str_ = copy.deepcopy(self)
+        del str_["masks"]
+        if json_format:
+            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
+        logging.info(str_)

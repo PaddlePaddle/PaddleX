@@ -14,7 +14,7 @@ snapshot_epoch: 2
 
 # Dataset
 metric: COCO
-num_classes: 80
+num_classes: 1
 
 TrainDataset:
   name: COCODataSet

@@ -1,5 +1,5 @@
 Global:
-  model: MaskRCNN-ResNet50-vd-SSLDv2-FPN
+  model: SOLOv2
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "/paddle/dataset/paddlex/instance_seg/instance_seg_coco_examples/"
   device: gpu:0,1,2,3
@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Export:
-  weight_path: https://paddledet.bj.bcebos.com/models/cascade_mask_rcnn_r50_vd_fpn_ssld_1x_coco.pdparams
+  weight_path: https://paddledet.bj.bcebos.com/models/solov2_r50_fpn_1x_coco.pdparams
 
 Predict:
   batch_size: 1
