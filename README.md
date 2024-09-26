@@ -9,8 +9,14 @@
     <a href=""><img src="https://img.shields.io/badge/hardware-intel cpu%2C%20gpu%2C%20xpu%2C%20npu%2C%20mlu-yellow.svg"></a>
 </p>
 
-## 简介
-PaddleX 3.0 是飞桨精选模型的低代码开发工具，支持国内外多款主流硬件的模型训练和推理，覆盖工业、能源、金融、交通、教育等全行业，助力开发者产业实践落地。
+<h4 align="center">
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-安装>🛠️ 安装</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=##-文档> 📖 教程</a> | <a href=#-模型产线支持> 🔥模型产线列表</a>
+</h4>
+
+## 🔍 简介
+
+
+PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，它集成了众多开箱即用的**预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
 |                **通用图像分类**                 |                **通用目标检测**                 |                **通用语义分割**                 |                **通用实例分割**                 |
 | :-------------------------------------------: | :-------------------------------------------: | :-------------------------------------------: | :-------------------------------------------: |
@@ -20,227 +26,266 @@ PaddleX 3.0 是飞桨精选模型的低代码开发工具，支持国内外多�
 |                  **时序预测**                   |                **时序异常检测**                 |                 **时序分类**                   |              **多模型融合时序预测**              |
 |<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px">|<img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0959d099-a17c-40bc-9c2b-13f4f5e24ddc" height="126px" width="180px">|
 
+## 🌟 特性
+  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的**200+飞桨模型**整合为**14条模型产线**，通过极简的Python API一键调用，快速体验模型效果。同时支持**20+单功能模块**，方便开发者进行模型组合使用。
 
+  🚀 **提高效率降低门槛**：实现基于图形界面和统一命令的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的**8条特色模型产线**，大幅度降低迭代模型的成本。  
 
+  🌐 **多种场景灵活部署**：支持**高性能部署**、**服务化部署**和**端侧部署**等多种部署方式，确保不同应用场景下模型的高效运行和快速响应。
+
+  🔧 **主流硬件高效支持**：支持英伟达 GPU、昆仑芯、昇腾和寒武纪等**多种主流硬件**的无缝切换，确保高效运行。
+
+ ## 📊 能力支持
+
+||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
+|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
+| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+
+<details>
+  <summary>👉 昇腾能力支持</summary>
+
+||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
+|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
+| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+</details>
+
+<details>
+  <summary>👉 昆仑芯能力支持</summary>
+
+||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
+|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
+| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+</details>
+
+<details>
+  <summary>👉 寒武纪能力支持</summary>
+
+||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
+|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
+| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+</details>
 
 ## 📣 近期更新
-- 🔥🔥《PaddleX文本图像智能分析重磅升级》，PP-ChatOCRv3创新性融入文本识别数据融合与微调技术，实现更高的通用模型精度，更强的垂类微调能力。支持多行表、无线表表格与扭曲文档矫正识别，高精度完成文档版面分析、合同印章与表格关键信息抽取。适用自动化办公、金融风控、医疗健康、教育出版、法律党政等产业实际场景。**9月12日（周四）19：00**直播为您详细解读文本图像智能分析场景任务以及全新开发范式。 [报名链接](https://www.wjx.top/vm/wXSqVrD.aspx?udsid=130646)。
-- 🔥 **2024.6.27，PaddleX 3.0 Beta 本地端正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。**
-- 🔥 **2024.3.25，PaddleX 3.0 云端发布，支持在[AI Studio 星河社区](https://aistudio.baidu.com/pipeline/mine)以零代码的方式【创建产线】使用。**
 
-## 🌟 特性
+## 🛠️ 安装
 
-PaddleX 3.0 集成了飞桨生态的优势能力，覆盖 7 大场景任务，构建了 16 条模型产线，提供低代码开发模式，助力开发者在多种主流硬件上实现模型全流程开发。
+> ❗安装PaddleX前请先确保您有基础的Python运行环境，如果您还未安装Python环境，可以参考[运行环境准备](/docs_new/installation/installation.md#1-运行环境准备)进行安装
 
-- **基础模型产线（模型丰富，场景全面）：** 精选 68 个优质飞桨模型，涵盖图像分类、目标检测、图像分割、OCR、文本图像版面分析、文本图像信息抽取、时序分析任务场景。
-- **特色模型产线（显著提升效率）：** 提供大小模型结合、大模型半监督学习和多模型融合的高效解决方案。
-- **低门槛开发模式（便捷开发与部署）：** 提供零代码和低代码两种开发方式。
-  - **零代码开发：** 用户通过图形界面（GUI）交互式提交后台训练任务，打通在线和离线部署，并支持以 API 形式调用在线服务。
-  - **低代码开发：** 通过统一的 API 接口实现 16 条模型产线的全流程开发，同时支持用户自定义模型流程串联。
-- **多硬件本地支持（兼容性强）：** 支持英伟达 GPU、昆仑芯、昇腾和寒武纪等多种硬件，纯离线使用。
+* **安装PaddlePaddle**
+```python
+# 您的机器安装的是CUDA 11，请运行以下命令安装
+pip install paddlepaddle-gpu
+# 您的机器是CPU，请运行以下命令安装
+pip install paddlepaddle
+```
+  更多的版本需求，请参照[飞桨官网安装文档](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/windows-pip.html)中的说明进行操作。 
 
-<div align="center">
-    <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/61c4738f-735e-4ceb-aa5f-1038d4506d1c">
-</div>
+* **安装PaddleX Wheel包**
+...
+  
+*更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)*
 
-## ⚡ 安装与快速开始
-- [安装](./docs/tutorials/INSTALL.md)
-- 快速开始
-  - [模型产线开发工具](./docs/tutorials/pipelines/pipeline_develop_tools.md)
-  - [单模型开发工具](./docs/tutorials/models/model_develop_tools.md)
-
-## 🛠️ PaddleX 3.0 覆盖的模型和模型产线
-PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可以直接使用本仓库离线使用，7 条特色产线可在飞桨 [AI Studio 星河社区](https://aistudio.baidu.com/pipeline/mine)上免费使用。
-<table>
-  <tr>
-    <th>产线类型</th>
-    <th>模型产线</th>
-    <th>产线模块</th>
-    <th>具体模型</th>
-  </tr>
-  <tr>
-    <td>基础产线</td>
-    <td>通用图像分类</td>
-    <td>图像分类</td>
-    <td>CLIP_vit_base_patch16_224<br/>CLIP_vit_large_patch14_224<details>
-    <summary><b>more</b></summary><br/>ConvNeXt_tiny<br/>MobileNetV2_x0_25<br/>MobileNetV2_x0_5<br/>MobileNetV2_x1_0<br/>MobileNetV2_x1_5<br/>MobileNetV2_x2_0<br/>MobileNetV3_large_x0_35<br/>MobileNetV3_large_x0_5<br/>MobileNetV3_large_x0_75<br/>MobileNetV3_large_x1_0<br/>MobileNetV3_large_x1_25<br/>MobileNetV3_small_x0_35<br/>MobileNetV3_small_x0_5<br/>MobileNetV3_small_x0_75<br/>MobileNetV3_small_x1_0<br/>MobileNetV3_small_x1_25<br/>PP-HGNet_small<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B6<br/>PP-LCNet_x0_25<br/>PP-LCNet_x0_35<br/>PP-LCNet_x0_5<br/>PP-LCNet_x0_75<br/>PP-LCNet_x1_0<br/>PP-LCNet_x1_5<br/>PP-LCNet_x2_0<br/>PP-LCNet_x2_5<br/>ResNet18<br/>ResNet34<br/>ResNet50<br/>ResNet101<br/>ResNet152<br/>SwinTransformer_base_patch4_window7_224</details></td>
-  </tr>
-  <tr>
-    <td>基础产线</td>
-    <td>通用目标检测</td>
-    <td>目标检测</td>
-    <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50</details></td>
-  </tr>
-  <tr>
-    <td>基础产线</td>
-    <td>通用语义分割</td>
-    <td>语义分割</td>
-    <td>OCRNet_HRNet-W48<br/>PP-LiteSeg-T<details>
-    <summary><b>more</b></summary><br/>Deeplabv3-R50<br/>Deeplabv3-R101<br/>Deeplabv3_Plus-R50<br/>Deeplabv3_Plus-R101</details></td>
-  </tr>
-  <tr>
-    <td>基础产线</td>
-    <td>通用实例分割</td>
-    <td>实例分割</td>
-    <td>Mask-RT-DETR-L<br/>Mask-RT-DETR-H</td>
-  </tr>
-  <tr>
-    <td rowspan="2">基础产线</td>
-    <td rowspan="2">通用OCR</td>
-    <td>文本检测</td>
-    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
-  </tr>
-  <tr>
-    <td>文本识别</td>
-    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-  </tr>
-  <tr>
-    <td rowspan="4">基础产线</td>
-    <td rowspan="4">通用表格识别</td>
-    <td>版面区域检测</td>
-    <td>PicoDet layout_1x</td>
-  </tr>
-  <tr>
-    <td>表格识别</td>
-    <td>SLANet</td>
-  </tr>
-  <tr>
-    <td>文本检测</td>
-    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
-  </tr>
-  <tr>
-    <td>文本识别</td>
-    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-  </tr>
-  <tr>
-    <td>基础产线</td>
-    <td>时序预测</td>
-    <td>时序预测</td>
-    <td>DLinear<br/>Nonstationary<br/>TiDE<br/>PatchTST<br/>TimesNet</td>
-  </tr>  
-  <tr>
-    <td>基础产线</td>
-    <td>时序异常检测</td>
-    <td>时序异常检测</td>
-    <td>DLinear_ad<br/>Nonstationary_ad<br/>AutoEncoder_ad<br/>PatchTST_ad<br/>TimesNet_ad</td>
-  </tr>
-  <tr>
-    <td>基础产线</td>
-    <td>时序分类</td>
-    <td>时序分类</td>
-    <td>TimesNet_cls</td>
-  </tr>
- <tr>
-    <td>特色产线</td>
-    <td>大模型半监督学习-图像分类</td>
-    <td>大模型半监督学习-图像分类</td>
-    <td>CLIP_vit_base_patch16_224<br/>MobileNetV3_small_x1_0<br/><details><summary><b>more</b></summary>PP-HGNet_small<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B6<br/>PP-LCNet_x1_0<br/>ResNet50<br/>SwinTransformer_base_patch4_window7_224</details></td>
-  </tr>
-  <tr>
-    <td>特色产线</td>
-    <td>大模型半监督学习-目标检测</td>
-    <td>大模型半监督学习-目标检测</td>
-    <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PP-YOLOE plus-S<br/>PP-YOLOE_plus-L<br/>RT-DETR-H</details></td>
-  </tr>
-  <tr>
-    <td rowspan="2">特色产线</td>
-    <td rowspan="2">大模型半监督学习-OCR</td>
-    <td>文本检测</td>
-    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
-  </tr>
-  <tr>
-    <td>大模型半监督学习-文本识别</td>
-    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-   </tr>  
-<tr>
-    <td rowspan="3">特色产线</td>
-    <td rowspan="3">通用场景信息抽取v2<br>(PP-ChatOCRv2-common)</td>
-    <td>文本识别</td>
-    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-  </tr>
-  <tr>
-    <td>文本检测</td>
-    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
-  </tr>
-  <tr>
-    <td>prompt工程</td>
-    <td>-</td>
-  </tr>
-  <tr>
-    <td rowspan="5">特色产线</td>
-    <td rowspan="5">文档场景信息抽取v2<br>(PP-ChatOCRv2-doc)</td>
-    <td>版面分析</td>
-    <td>PicoDet layout_1x</td>
-  </tr>
-  <tr>
-    <td>文本检测</td>
-    <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
-  </tr>
-  <tr>
-    <td>文本识别</td>
-    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-  </tr>
-  <tr>
-    <td>表格识别</td>
-    <td>SLANet</td>
-  </tr>
-  <tr>
-    <td>prompt工程</td>
-    <td>-</td>
-  </tr>
-  <tr>
-    <td>特色产线</td>
-    <td>多模型融合时序预测v2<br>(PP-TSv2_forecast)</td>
-    <td>时序预测</td>
-    <td>多模型融合时序预测</td>
-  </tr> 
-  <tr>
-    <td>特色产线</td>
-    <td>多模型融合时序异常检测v2<br>(PP-TSv2_anomaly)</td>
-    <td>时序异常检测</td>
-    <td>多模型融合时序异常检测</td>
-  </tr>      
-</table>
+## ⏭️ 快速开始
 
 
-  - [模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)
-  - [单模型列表](./docs/tutorials/models/support_model_list.md)
 
-## 📖 零代码开发教程
-<div align="center">
-    <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/f3238aae-76e3-4b25-8e4f-238fb6096bf8">
-</div>
+### 命令行使用
 
-- [云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)：支持开发者使用零代码产线产出高质量模型和部署包。
-- [教程《零门槛开发产业级 AI 模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)：提供产业级模型开发经验，并且用 12 个实用的产业实践案例，手把手带你零门槛开发产业级 AI 模型。
-
-## 📖 低代码开发教程
-
-### 一、模型产线开发工具 🔥
-PaddleX 3.0 模型产线开发工具支持开发者通过 6 个步骤，完成产业级落地解决方案的开发。PaddleX 3.0 支持的模型产线可以参考 [PaddleX 模型产线列表](./docs/tutorials/pipelines/support_pipeline_list.md)。
-- [模型产线开发流程](./docs/tutorials/pipelines/pipeline_develop_tools.md)
-- [模型产线推理预测](./docs/tutorials/pipelines/pipeline_inference.md)
-- [产线模型选型](./docs/tutorials/pipelines/model_select.md)
+一行命令即可快速体验产线效果，以通用OCR产线为例：
+```ruby
+paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+```
 
 
-### 二、单模型开发工具 🚀
-PaddleX 3.0 单模型开发工具支持开发者以低代码的方式快速实现模型的开发和优化，包括数据准备、模型训练/评估、模型推理的使用方法，方便低成本集成到模型产线中。PaddleX3.0 支持的模型可以参考 [PaddleX 模型库](./docs/tutorials/models/support_model_list.md)。
-- [数据校验](./docs/tutorials/data/dataset_check.md)
-- [模型开发](./docs/tutorials/models/model_develop_tools.md)
+<details>
+  <summary>👉 更多产线的命令行使用</summary>
 
-## 🌟 多硬件支持
-PaddleX 3.0 支持在多种硬件上进行模型的开发，除了 GPU 外，当前支持的硬件还有**昆仑芯**、**昇腾**、**寒武纪**。只需添加一个配置设备的参数，即可在对应硬件上使用上述工具。使用方式详情[多硬件使用](./docs/tutorials/base/devices_use_guidance.md)。
+图像分类产线：
+```ruby
+paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+```
 
-- 昇腾芯支持的模型列表请参考 [PaddleX 昇腾模型列表](./docs/tutorials/models/support_npu_model_list.md)。
-- 昆仑芯支持的模型列表请参考 [PaddleX 昆仑芯模型列表](./docs/tutorials/models/support_xpu_model_list.md)。
-- 寒武纪芯支持的模型列表请参考 [PaddleX 寒武纪模型列表](./docs/tutorials/models/support_mlu_model_list.md)。
+目标检测产线：
+```ruby
+paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/object_detection/FashionPedia_demo.png --device gpu:0
+```
+</details>
+
+### Python脚本使用
+
+几行代码即可完成产线的快速推理，以通用OCR产线为例：
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="ocr")
+output = pipeline.predict("pre_image.jpg")
+for batch in output:
+    for item in batch:
+        res = item['result']
+        res.print()
+        res.save_to_img("./output/")
+        res.save_to_json("./output/")
+```
 
 
-## 👀 贡献代码
+<details>
+  <summary>👉 更多产线的Python脚本使用</summary>
 
-我们非常欢迎您为 PaddleX 贡献代码或者提供使用建议。如果您可以修复某个 issue 或者增加一个新功能，欢迎给我们提交 Pull Requests。
+图像分类产线：
+```python
+from paddlex import create_pipeline
 
-## 许可证书
-本项目的发布受[Apache 2.0 license](./LICENSE)许可认证。
+pipeline = create_pipeline(pipeline="object_detection")
+output = pipeline.predict("pre_image.jpg")
+for res in output:
+    res.print() # 打印预测的结构化输出
+    res.save_to_img("./output/") # 保存结果可视化图像
+    res.save_to_json("./output/") # 保存预测的结构化输出
+```
+
+目标检测产线：
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="object_detection")
+output = pipeline.predict("pre_image.jpg")
+for res in output:
+    res.print() # 打印预测的结构化输出
+    res.save_to_img("./output/") # 保存结果可视化图像
+    res.save_to_json("./output/") # 保存预测的结构化输出
+```
+</details>
+
+更多的产线开发步骤请参考[完整文档](#-文档)
+
+
+## 🔥 模型产线列表
+<details>
+  <summary> <b>通用OCR产线 </summary>
+
+| 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
+|----------|---------------------|-------|-------------------|-------------|------------------|
+| 文本检测 | PP-OCRv4_mobile_det | 77.79 | 2.719474          | 79.1097     | 15               | 
+|          | PP-OCRv4_server_det | 82.69 | 22.20346          | 2662.158    | 198              | 
+| 文本识别 | PP-OCRv4_mobile_rec | 78.20 | 2.719474          | 79.1097     | 15               | 
+|          | PP-OCRv4_server_rec | 79.20 | 22.20346          | 2662.158    | 198              | 
+
+**注：文本检测模型精度指标为 Hmean(%)，文本识别模型精度指标为 Accuracy(%)。**
+
+</details>
+
+<details>
+  <summary> <b> 通用图像分类产线 </summary>
+
+| 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
+|----------|---------------------|-------|-------------------|-------------|------------------|
+| 文本检测 | PP-OCRv4_mobile_det | 77.79 | 2.719474          | 79.1097     | 15               | 
+|          | PP-OCRv4_server_det | 82.69 | 22.20346          | 2662.158    | 198              | 
+| 文本识别 | PP-OCRv4_mobile_rec | 78.20 | 2.719474          | 79.1097     | 15               | 
+|          | PP-OCRv4_server_rec | 79.20 | 22.20346          | 2662.158    | 198              | 
+
+**注：文本检测模型精度指标为 Hmean(%)，文本识别模型精度指标为 Accuracy(%)。**
+
+</details>
+
+<details>
+  <summary> <b> 通用目标检测产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用实例分割产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用语义分割产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用表格识别产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用时序预测产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用时序异常检测产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用时序分类产线 </summary>
+</details>
+
+## 📖 文档
+<details>
+  <summary> <b> 快速安装 </summary>
+
+* [PaddleX安装教程](/docs_new/installation/installation.md)  
+
+...
+</details>
+<details>
+  <summary> <b> 产线开发 </summary>
+</details>
+<details>
+  <summary> <b> 模块开发 </summary>
+</details>
+<details>
+  <summary> <b> 集成部署 </summary>
+</details>
+
+## 📄 许可证书
+## 🤔 FAQ
+## 💬 Discussion
