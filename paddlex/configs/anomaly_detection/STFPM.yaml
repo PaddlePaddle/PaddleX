@@ -32,7 +32,7 @@ Evaluate:
 Predict:
   batch_size: 1
   model_dir: "output/best_model/inference"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
   kernel_option:
     run_mode: paddle
 

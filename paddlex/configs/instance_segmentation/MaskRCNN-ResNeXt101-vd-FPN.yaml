@@ -34,6 +34,6 @@ Export:
 Predict:
   batch_size: 1
   model_dir: "output/best_model/inference"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
   kernel_option:
     run_mode: paddle
