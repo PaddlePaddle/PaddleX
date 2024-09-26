@@ -82,7 +82,7 @@ class ClasPredictor(CVPredictor):
     ):
         assert channel_num == 3
         assert order == ""
-        return Normalize(mean=mean, std=std)
+        return Normalize(scale=scale, mean=mean, std=std)
 
     @register("ToCHWImage")
     def build_to_chw(self):
