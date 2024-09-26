@@ -35,24 +35,37 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
   🔧 **主流硬件高效支持**：支持英伟达 GPU、昆仑芯、昇腾和寒武纪等**多种主流硬件**的无缝切换，确保高效运行。
 
+## 📣 近期更新
+
+* 2024.9.30，PaddleX 3.0 Beta1 开源版正式发布，提供200+模型通过极简的Python API一键调用；实现基于统一命令的模型全流程开发，并开源PP-ChatOCRv3特色模型产线基础能力；支持100+模型高性能推理和服务化部署（持续迭代中），7类重点视觉模型端侧部署；70+模型开发全流程适配升腾910B，15+模型开发全流程适配昆仑芯和寒武纪
+* 🔥 2024.6.27，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
+* 🔥 2024.3.25，PaddleX 3.0 云端发布，支持在AI Studio 星河社区 以零代码的方式【创建产线】使用。
+
+
  ## 📊 能力支持
 
-||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
-|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
-| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+|       | [在线体验](https://aistudio.baidu.com/pipeline/mine) | 快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
+|-------|---|---|---|---|---|---|
+| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                                | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)                          | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                              | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)                         | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)                         | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                             | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)                       | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md)             | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)                    | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)         | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)                      | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)                             | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)                   | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md) | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+
+在PaddleX中，我们致力于实现产线级别的训练、推理与部署，产线是指一系列预定义好的、针对特定AI任务的开发流程，其中包含能够独立完成某类任务的单功能模块或模块组合，通过构建产线，我们将任务完成的各个阶段有机地结合起来，确保AI模型开发的流畅性与整体性。
+
+PaddleX的各个产线均支持**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**集成部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。
+
+此外，[PaddleX星河零代码产线](https://aistudio.baidu.com/pipeline/mine)为开发者提供的基于图形用户界面(GUI)的全流程高效模型训练与部署工具。开发者**无需代码开发经验**，只需要准备符合产线要求的数据集即可快速启动模型训练,详细可以参考[零代码产线教程](https://ai.baidu.com/ai-doc/AISTUDIO/6lu57ycbb)
 
 <details>
   <summary>👉 昇腾能力支持</summary>
@@ -117,29 +130,24 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 | [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
 </details>
 
-## 📣 近期更新
 
-## 🛠️ 安装
+
+
+## ⏭️ 快速开始
+
+### 🛠️ 安装
 
 > ❗安装PaddleX前请先确保您有基础的Python运行环境，如果您还未安装Python环境，可以参考[运行环境准备](/docs_new/installation/installation.md#1-运行环境准备)进行安装
 
-* **安装PaddlePaddle**
 ```python
 # 您的机器安装的是CUDA 11，请运行以下命令安装
 pip install paddlepaddle-gpu
 # 您的机器是CPU，请运行以下命令安装
 pip install paddlepaddle
-```
-  更多的版本需求，请参照[飞桨官网安装文档](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/windows-pip.html)中的说明进行操作。 
-
-* **安装PaddleX Wheel包**
 ...
+```
   
 *更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)*
-
-## ⏭️ 快速开始
-
-
 
 ### 命令行使用
 
@@ -210,6 +218,23 @@ for res in output:
 
 更多的产线开发步骤请参考[完整文档](#-文档)
 
+## 📖 文档
+<details>
+  <summary> <b> 快速安装 </summary>
+
+* [PaddleX安装教程](/docs_new/installation/installation.md)  
+
+...
+</details>
+<details>
+  <summary> <b> 产线开发 </summary>
+</details>
+<details>
+  <summary> <b> 模块开发 </summary>
+</details>
+<details>
+  <summary> <b> 集成部署 </summary>
+</details>
 
 ## 🔥 模型产线列表
 <details>
@@ -268,24 +293,6 @@ for res in output:
   <summary> <b> 通用时序分类产线 </summary>
 </details>
 
-## 📖 文档
-<details>
-  <summary> <b> 快速安装 </summary>
-
-* [PaddleX安装教程](/docs_new/installation/installation.md)  
-
-...
-</details>
-<details>
-  <summary> <b> 产线开发 </summary>
-</details>
-<details>
-  <summary> <b> 模块开发 </summary>
-</details>
-<details>
-  <summary> <b> 集成部署 </summary>
-</details>
-
-## 📄 许可证书
 ## 🤔 FAQ
 ## 💬 Discussion
+## 📄 许可证书
