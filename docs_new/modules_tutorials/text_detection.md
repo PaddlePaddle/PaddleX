@@ -93,7 +93,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/pipelines/text_detection/01.png)
+![](/tmp/images/modules/01.png)
 </details>
 
 * **数据集格式转换/数据集划分（可选）**
