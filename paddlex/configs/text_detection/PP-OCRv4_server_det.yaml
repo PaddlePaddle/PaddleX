@@ -26,12 +26,16 @@ Train:
   save_interval: 1
 
 Evaluate:
-  weight_path: "output/best_accuracy.pdparams"
+  weight_path: "output/best_accuracy/best_accuracy.pdparams"
   log_interval: 1
 
+Export:
+  weight_path: https://paddleocr.bj.bcebos.com/pretrained/ch_PP-OCRv4_det_server_trained.pdparams
+
 Predict:
-  model_dir: "output/best_accuracy"
+  batch_size: 1
+  model_dir: "output/best_accuracy/inference"
   input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png"
+
   kernel_option:
     run_mode: paddle
-    batch_size: 1

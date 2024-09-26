@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from pathlib import Path
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse
+from .dataset_src import check, convert, split_dataset, deep_analyse
 from ..model_list import MODELS
 
 
 class ClsDatasetChecker(BaseDatasetChecker):
-    """Dataset Checker for Image Classification Model
-    """
+    """Dataset Checker for Image Classification Model"""
+
     entities = MODELS
     sample_num = 10
 
@@ -49,7 +48,7 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of converted dataset.
         """
-        return src_dataset_dir
+        return convert(src_dataset_dir)
 
     def split_dataset(self, src_dataset_dir: str) -> str:
         """repartition the train and validation dataset
@@ -60,12 +59,13 @@ class ClsDatasetChecker(BaseDatasetChecker):
         Returns:
             str: the root directory of splited dataset.
         """
-        return split_dataset(src_dataset_dir,
-                             self.check_dataset_config.split.train_percent,
-                             self.check_dataset_config.split.val_percent)
+        return split_dataset(
+            src_dataset_dir,
+            self.check_dataset_config.split.train_percent,
+            self.check_dataset_config.split.val_percent,
+        )
 
-    def check_dataset(self, dataset_dir: str,
-                      sample_num: int=sample_num) -> dict:
+    def check_dataset(self, dataset_dir: str, sample_num: int = sample_num) -> dict:
         """check if the dataset meets the specifications and get dataset summary
 
         Args:

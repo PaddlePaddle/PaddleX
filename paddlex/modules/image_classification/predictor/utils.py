@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,49 +21,48 @@ from . import transforms as T
 
 
 class InnerConfig(object):
-    """Inner Config
-    """
+    """Inner Config"""
 
     def __init__(self, config_path):
         self.inner_cfg = self.load(config_path)
 
     def load(self, config_path):
-        """ load infer config """
-        with codecs.open(config_path, 'r', 'utf-8') as file:
+        """load infer config"""
+        with codecs.open(config_path, "r", "utf-8") as file:
             dic = yaml.load(file, Loader=yaml.FullLoader)
         return dic
 
     @property
     def pre_transforms(self):
-        """ read preprocess transforms from config file """
+        """read preprocess transforms from config file"""
         if "RecPreProcess" in list(self.inner_cfg.keys()):
-            tfs_cfg = self.inner_cfg['RecPreProcess']['transform_ops']
+            tfs_cfg = self.inner_cfg["RecPreProcess"]["transform_ops"]
         else:
-            tfs_cfg = self.inner_cfg['PreProcess']['transform_ops']
+            tfs_cfg = self.inner_cfg["PreProcess"]["transform_ops"]
         tfs = []
         for cfg in tfs_cfg:
             tf_key = list(cfg.keys())[0]
-            if tf_key == 'NormalizeImage':
-                scale = cfg['NormalizeImage'].get("scale", 1. / 255)
-                scale = 1. / 255 if scale == '1.0/255.0' else scale
+            if tf_key == "NormalizeImage":
+                scale = cfg["NormalizeImage"].get("scale", 1.0 / 255)
+                scale = 1.0 / 255 if scale == "1.0/255.0" else scale
                 tf = image_common.Normalize(
                     scale=scale,
-                    mean=cfg['NormalizeImage'].get("mean",
-                                                   [0.485, 0.456, 0.406]),
-                    std=cfg['NormalizeImage'].get("std", [0.229, 0.224, 0.225]))
-            elif tf_key == 'ResizeImage':
+                    mean=cfg["NormalizeImage"].get("mean", [0.485, 0.456, 0.406]),
+                    std=cfg["NormalizeImage"].get("std", [0.229, 0.224, 0.225]),
+                )
+            elif tf_key == "ResizeImage":
                 if "resize_short" in list(cfg[tf_key].keys()):
                     tf = image_common.ResizeByShort(
-                        target_short_edge=cfg['ResizeImage'].get("resize_short",
-                                                                 224),
+                        target_short_edge=cfg["ResizeImage"].get("resize_short", 224),
                         size_divisor=None,
-                        interp='LINEAR')
+                        interp="LINEAR",
+                    )
                 else:
                     tf = image_common.Resize(
-                        target_size=cfg['ResizeImage'].get('size', (224, 224)))
+                        target_size=cfg["ResizeImage"].get("size", (224, 224))
+                    )
             elif tf_key == "CropImage":
-                tf = image_common.Crop(crop_size=cfg["CropImage"].get('size',
-                                                                      224))
+                tf = image_common.Crop(crop_size=cfg["CropImage"].get("size", 224))
             elif tf_key == "ToCHWImage":
                 tf = image_common.ToCHWImage()
             else:
@@ -73,15 +72,16 @@ class InnerConfig(object):
 
     @property
     def post_transforms(self):
-        """ read postprocess transforms from config file """
-        IGNORE_OPS = ['main_indicator', 'SavePreLabel']
-        tfs_cfg = self.inner_cfg['PostProcess']
+        """read postprocess transforms from config file"""
+        IGNORE_OPS = ["main_indicator", "SavePreLabel"]
+        tfs_cfg = self.inner_cfg["PostProcess"]
         tfs = []
         for tf_key in tfs_cfg:
-            if tf_key == 'Topk':
+            if tf_key == "Topk":
                 tf = T.Topk(
-                    topk=tfs_cfg['Topk']['topk'],
-                    class_ids=tfs_cfg['Topk'].get('label_list', None))
+                    topk=tfs_cfg["Topk"]["topk"],
+                    class_ids=tfs_cfg["Topk"].get("label_list", None),
+                )
             elif tf_key in IGNORE_OPS:
                 continue
             else:
@@ -91,5 +91,5 @@ class InnerConfig(object):
 
     @property
     def labels(self):
-        """ the labels in inner config """
-        return self.inner_cfg['PostProcess']['Topk'].get('label_list', None)
+        """the labels in inner config"""
+        return self.inner_cfg["PostProcess"]["Topk"].get("label_list", None)

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,21 +14,21 @@
 
 
 MODELS = [
-    'Deeplabv3_Plus-R101',
-    'Deeplabv3_Plus-R50',
-    'Deeplabv3-R101',
-    'Deeplabv3-R50',
-    'OCRNet_HRNet-W48',
-    'OCRNet_HRNet-W18',
-    'PP-LiteSeg-T',
-    'SegFormer-B0',
-    'SegFormer-B1',
-    'SegFormer-B2',
-    'SegFormer-B3',
-    'SegFormer-B4',
-    'SegFormer-B5',
-    'SeaFormer_base',
-    'SeaFormer_tiny',
-    'SeaFormer_small',
-    'SeaFormer_large'
+    "Deeplabv3_Plus-R101",
+    "Deeplabv3_Plus-R50",
+    "Deeplabv3-R101",
+    "Deeplabv3-R50",
+    "OCRNet_HRNet-W48",
+    "OCRNet_HRNet-W18",
+    "PP-LiteSeg-T",
+    "SegFormer-B0",
+    "SegFormer-B1",
+    "SegFormer-B2",
+    "SegFormer-B3",
+    "SegFormer-B4",
+    "SegFormer-B5",
+    "SeaFormer_base",
+    "SeaFormer_tiny",
+    "SeaFormer_small",
+    "SeaFormer_large",
 ]

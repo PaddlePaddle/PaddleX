@@ -31,7 +31,7 @@ AMP:
 # model architecture
 Arch:
   name: PPHGNetV2_B1
-  class_num: 102
+  class_num: 1000
   pretrained: True # ssld pretrained
  
 # loss function config for traing/eval process

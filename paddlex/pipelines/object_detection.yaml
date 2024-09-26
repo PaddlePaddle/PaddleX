@@ -1,0 +1,19 @@
+Global:
+  pipeline_name: object_detection
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png
+  
+######################################## Setting ########################################
+# Please select the model from bellow `Support`
+
+Pipeline:
+  model: PicoDet-S
+
+######################################## Support ########################################
+NOTE:
+  device: 
+    - gpu
+    - gpu:2
+    - cpu
+  batch_size: "任意正整数"
+  model:
+    - PicoDet-S

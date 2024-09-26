@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,12 +13,38 @@
 # limitations under the License.
 
 
-
 import os
 import threading
+import numpy as np
 from abc import ABCMeta
-from .errors import raise_class_not_found_error, raise_no_entity_registered_error, DuplicateRegistrationError
+from .errors import (
+    raise_class_not_found_error,
+    raise_no_entity_registered_error,
+    DuplicateRegistrationError,
+)
 from .logging import *
+
+
+def convert_and_remove_types(data):
+    if isinstance(data, dict):
+        return {
+            k: convert_and_remove_types(v)
+            for k, v in data.items()
+            if not isinstance(v, type)
+        }
+    elif isinstance(data, list):
+        return [convert_and_remove_types(v) for v in data]
+    elif isinstance(data, np.ndarray):
+        return data.tolist()
+    elif isinstance(data, (np.float32, np.float64)):
+        return float(data)
+    elif isinstance(data, (np.int32, np.int64)):
+        return int(data)
+    elif isinstance(data, np.bool_):
+        return bool(data)
+    elif isinstance(data, (np.str_, np.unicode_)):
+        return str(data)
+    return data
 
 
 def abspath(path: str):
@@ -48,7 +74,7 @@ class CachedProperty(object):
     def __init__(self, func):
         super().__init__()
         self.func = func
-        self.__doc__ = getattr(func, '__doc__', '')
+        self.__doc__ = getattr(func, "__doc__", "")
 
     def __get__(self, obj, cls):
         if obj is None:
@@ -61,7 +87,7 @@ class CachedProperty(object):
 
 
 class Constant(object):
-    """ Constant """
+    """Constant"""
 
     def __init__(self, val):
         super().__init__()
@@ -83,6 +109,7 @@ class Singleton(type):
     Returns:
         class: meta class
     """
+
     _insts = {}
     _lock = threading.Lock()
 
@@ -94,6 +121,7 @@ class Singleton(type):
         return cls._insts[cls]
 
 
+# TODO(gaotingquan): has been mv to subclass_register.py
 class AutoRegisterMetaClass(type):
     """meta class that automatically registry subclass to its baseclass
 
@@ -103,9 +131,10 @@ class AutoRegisterMetaClass(type):
     Returns:
         class: meta class
     """
-    __model_type_attr_name = 'entities'
-    __base_class_flag = '__is_base'
-    __registered_map_name = '__registered_map'
+
+    __model_type_attr_name = "entities"
+    __base_class_flag = "__is_base"
+    __registered_map_name = "__registered_map"
 
     def __new__(mcs, name, bases, attrs):
         cls = super().__new__(mcs, name, bases, attrs)
@@ -144,7 +173,8 @@ class AutoRegisterMetaClass(type):
             if name in records and records[name] is not cls:
                 raise DuplicateRegistrationError(
                     f"The name(`{name}`) duplicated registration! The class entities are: `{cls.__name__}` and \
-`{records[name].__name__}`.")
+`{records[name].__name__}`."
+                )
             records[name] = cls
             debug(
                 f"The class entity({cls.__name__}) has been register as name(`{name}`)."
@@ -152,13 +182,13 @@ class AutoRegisterMetaClass(type):
         setattr(base, mcs.__registered_map_name, records)
 
     def all(cls):
-        """ get all subclass """
+        """get all subclass"""
         if not hasattr(cls, type(cls).__registered_map_name):
             raise_no_entity_registered_error(cls)
         return getattr(cls, type(cls).__registered_map_name)
 
     def get(cls, name: str):
-        """ get the registried class by name """
+        """get the registried class by name"""
         all_entities = cls.all()
         if name not in all_entities:
             raise_class_not_found_error(name, cls, all_entities)
@@ -166,5 +196,6 @@ class AutoRegisterMetaClass(type):
 
 
 class AutoRegisterABCMetaClass(ABCMeta, AutoRegisterMetaClass):
-    """ AutoRegisterABCMetaClass """
+    """AutoRegisterABCMetaClass"""
+
     pass

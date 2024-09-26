@@ -59,22 +59,45 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <th>具体模型</th>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用图像分类</td>
+    <td rowspan="2">基础产线</td>
+    <td rowspan="2">通用图像分类</td>
     <td>图像分类</td>
     <td>CLIP_vit_base_patch16_224<br/>CLIP_vit_large_patch14_224<details>
-    <summary><b>more</b></summary><br/>ConvNeXt_tiny<br/>ConvNeXt_small<br/>ConvNeXt_base_224<br/>ConvNeXt_base_384<br/>ConvNeXt_large_224<br/>ConvNeXt_large_384<br/>MobileNetV1_x0_25<br/>MobileNetV1_x0_5<br/>MobileNetV1_x0_75<br/>MobileNetV1_x1_0<br/>MobileNetV2_x0_25<br/>MobileNetV2_x0_5<br/>MobileNetV2_x1_0<br/>MobileNetV2_x1_5<br/>MobileNetV2_x2_0<br/>MobileNetV3_large_x0_35<br/>MobileNetV3_large_x0_5<br/>MobileNetV3_large_x0_75<br/>MobileNetV3_large_x1_0<br/>MobileNetV3_large_x1_25<br/>MobileNetV3_small_x0_35<br/>MobileNetV3_small_x0_5<br/>MobileNetV3_small_x0_75<br/>MobileNetV3_small_x1_0<br/>MobileNetV3_small_x1_25<br/>PP-HGNet_tiny<br/>PP-HGNet_small<br/>PP-HGNet_base<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B1<br/>PP-HGNetV2-B2<br/>PP-HGNetV2-B3<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B5<br/>PP-HGNetV2-B6<br/>PP-LCNet_x0_25<br/>PP-LCNet_x0_35<br/>PP-LCNet_x0_5<br/>PP-LCNet_x0_75<br/>PP-LCNet_x1_0<br/>PP-LCNet_x1_5<br/>PP-LCNet_x2_0<br/>PP-LCNet_x2_5<br/>PP-LCNetV2_small<br/>PP-LCNetV2_base<br/>PP-LCNetV2_large<br/>ResNet18<br/>ResNet18_vd<br/>ResNet34<br/>ResNet34_vd<br/>ResNet50<br/>ResNet50_vd<br/>ResNet101<br/>ResNet101_vd<br/>ResNet152<br/>ResNet152_vd<br/>ResNet200_vd<br/>SwinTransformer_tiny_patch4_window7_224<br/>SwinTransformer_small_patch4_window7_224<br/>SwinTransformer_base_patch4_window7_224<br/>SwinTransformer_base_patch4_window12_384<br/>SwinTransformer_large_patch4_window7_224<br/>SwinTransformer_large_patch4_window12_384</details></td>
+    <summary><b>more</b></summary><br/>ConvNeXt_tiny<br/>ConvNeXt_small<br/>ConvNeXt_base_224<br/>ConvNeXt_base_384<br/>ConvNeXt_large_224<br/>ConvNeXt_large_384<br/>MobileNetV1_x0_25<br/>MobileNetV1_x0_5<br/>MobileNetV1_x0_75<br/>MobileNetV1_x1_0<br/>MobileNetV2_x0_25<br/>MobileNetV2_x0_5<br/>MobileNetV2_x1_0<br/>MobileNetV2_x1_5<br/>MobileNetV2_x2_0<br/>MobileNetV3_large_x0_35<br/>MobileNetV3_large_x0_5<br/>MobileNetV3_large_x0_75<br/>MobileNetV3_large_x1_0<br/>MobileNetV3_large_x1_25<br/>MobileNetV3_small_x0_35<br/>MobileNetV3_small_x0_5<br/>MobileNetV3_small_x0_75<br/>MobileNetV3_small_x1_0<br/>MobileNetV3_small_x1_25<br/>MobileNetV4_conv_small<br/>MobileNetV4_conv_medium<br/>MobileNetV4_conv_large<br/>MobileNetV4_hybrid_medium<br/>MobileNetV4_hybrid_large<br/>PP-HGNet_tiny<br/>PP-HGNet_small<br/>PP-HGNet_base<br/>PP-HGNetV2-B0<br/>PP-HGNetV2-B1<br/>PP-HGNetV2-B2<br/>PP-HGNetV2-B3<br/>PP-HGNetV2-B4<br/>PP-HGNetV2-B5<br/>PP-HGNetV2-B6<br/>PP-LCNet_x0_25<br/>PP-LCNet_x0_35<br/>PP-LCNet_x0_5<br/>PP-LCNet_x0_75<br/>PP-LCNet_x1_0<br/>PP-LCNet_x1_5<br/>PP-LCNet_x2_0<br/>PP-LCNet_x2_5<br/>PP-LCNetV2_small<br/>PP-LCNetV2_base<br/>PP-LCNetV2_large<br/>ResNet18<br/>ResNet18_vd<br/>ResNet34<br/>ResNet34_vd<br/>ResNet50<br/>ResNet50_vd<br/>ResNet101<br/>ResNet101_vd<br/>ResNet152<br/>ResNet152_vd<br/>ResNet200_vd<br/>SwinTransformer_tiny_patch4_window7_224<br/>SwinTransformer_small_patch4_window7_224<br/>SwinTransformer_base_patch4_window7_224<br/>SwinTransformer_base_patch4_window12_384<br/>SwinTransformer_large_patch4_window7_224<br/>SwinTransformer_large_patch4_window12_384<br/>StarNet-S1<br/>StarNet-S2<br/>StarNet-S3<br/>StarNet-S4<br/>FasterNet-L<br/>FasterNet-M<br/>FasterNet-S<br/>FasterNet-T0<br/>FasterNet-T1<br/>FasterNet-T2</details></td>
+  <tr>
+    <td>文档图像方向分类</td>
+    <td>PP-LCNet_x1_0_doc_ori</td>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用目标检测</td>
+    <td rowspan="6">基础产线</td>
+    <td rowspan="6">通用目标检测</td>
     <td>目标检测</td>
     <td>PicoDet-S<br/>PicoDet-L<details>
-    <summary><b>more</b></summary><br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X</details></td>
+    <summary><b>more</b></summary><br/>PicoDet-XS<br/>PicoDet-M<br/>PP-YOLOE_plus-S<br/>PP-YOLOE_plus-M<br/>PP-YOLOE_plus-L<br/>PP-YOLOE_plus-X<br/>RT-DETR-L<br/>RT-DETR-H<br/>RT-DETR-X<br/>RT-DETR-R18<br/>RT-DETR-R50<br/>YOLOv3-DarkNet53<br/>YOLOv3-MobileNetV3<br/>YOLOv3-ResNet50_vd_DCN<br/>YOLOX-L<br/>YOLOX-M<br/>YOLOX-N<br/>YOLOX-S<br/>YOLOX-T<br/>YOLOX-X<br/>FasterRCNN-ResNet34-FPN<br/>FasterRCNN-ResNet50<br/>FasterRCNN-ResNet50-FPN<br/>FasterRCNN-ResNet50-vd-FPN<br/>FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FasterRCNN-ResNet101<br/>FasterRCNN-ResNet101-FPN<br/>FasterRCNN-ResNeXt101-vd-FPN<br/>FasterRCNN-Swin-Tiny-FPN<br/>Cascade-FasterRCNN-ResNet50-FPN<br/>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN<br/>FCOS-ResNet50<br/>DETR-R50<br/>CenterNet-DLA-34<br/>CenterNet-ResNet50</details></td>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用语义分割</td>
+    <td>行人检测</td>
+    <td>PP-YOLOE-S_human<br/>PP-YOLOE-L_human</td>
+  </tr>
+  <tr>
+    <td>车辆检测</td>
+    <td>PP-YOLOE-L_vehicle<br/>PP-YOLOE-S_vehicle</td>
+  </tr>
+  <tr>
+    <td>小目标检测</td>
+    <td>PP-YOLOE_plus_SOD-L<br/>PP-YOLOE_plus_SOD-S<br/>PP-YOLOE_plus_SOD-largesize-L</td>
+  </tr>
+  <tr>
+    <td>主体检测</td>
+    <td>PP-ShiTuV2_det</td>
+  </tr>
+  <tr>
+    <td>人脸检测</td>
+    <td>PicoDet_LCNet_x2_5_face</td>
+  </tr>
+  <tr>
+    <td rowspan="2">基础产线</td>
+    <td rowspan="2">通用语义分割</td>
     <td>语义分割</td>
     <td>OCRNet_HRNet-W48<br/>OCRNet_HRNet-W18<br/>PP-LiteSeg-T<details>
     <summary><b>more</b></summary><br/>Deeplabv3-R50<br/>Deeplabv3-R101<br/>Deeplabv3_Plus-R50<br/>Deeplabv3_Plus-R101<br/>SeaFormer_tiny<br/
@@ -83,16 +106,25 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     >SegFormer-B3<br/>SegFormer-B4<br/>SegFormer-B5</details></td>
   </tr>
   <tr>
-    <td>基础产线</td>
-    <td>通用实例分割</td>
-    <td>实例分割</td>
+    <td>无监督异常检测</td>
     <td>Mask-RT-DETR-L<br/>Mask-RT-DETR-H</td>
   </tr>
   <tr>
-    <td rowspan="3">基础产线</td>
-    <td rowspan="3">通用OCR</td>
+    <td>基础产线</td>
+    <td>通用实例分割</td>
+    <td>实例分割</td>
+    <td>Mask-RT-DETR-S<br/>Mask-RT-DETR-M<details>
+    <summary><b>more</b></summary><br/>Mask-RT-DETR-L<br/>Mask-RT-DETR-X<br/>Mask-RT-DETR-H<br/>SOLOv2<br/>MaskRCNN-ResNet50<br/>MaskRCNN-ResNet50-FPN<br/>MaskRCNN-ResNet50-vd-FPN<br/>MaskRCNN-ResNet50-vd-SSLDv2-FPN<br/>MaskRCNN-ResNet101-FPN<br/>MaskRCNN-ResNet101-vd-FPN<br/>MaskRCNN-ResNeXt101-vd-FPN</td>Cascade-MaskRCNN-ResNet50-FPN</td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>PP-YOLOE_seg-S</td>
+  </tr>
+  <tr>
+    <td rowspan="4">基础产线</td>
+    <td rowspan="4">通用OCR</td>
     <td>文本检测</td>
     <td>PP-OCRv4_mobile_det<br/>PP-OCRv4_server_det</td>
+  </tr>
+  <tr>
+    <td>印章文本检测</td>
+    <td>PP-OCRv4_mobile_seal_det<br/>PP-OCRv4_server_seal_det</td>
   </tr>
   <tr>
     <td>文本识别</td>
@@ -125,7 +157,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>时序预测</td>
     <td>时序预测</td>
     <td>DLinear<br/>Nonstationary<br/>TiDE<br/>PatchTST<br/>TimesNet</td>
-  </tr>  
+  </tr>
   <tr>
     <td>基础产线</td>
     <td>时序异常检测</td>
@@ -160,7 +192,7 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
   <tr>
     <td>大模型半监督学习-文本识别</td>
     <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
-   </tr>  
+   </tr>
 <tr>
     <td rowspan="3">特色产线</td>
     <td rowspan="3">通用场景信息抽取v2<br>(PP-ChatOCRv2-common)</td>
@@ -202,13 +234,13 @@ PaddleX 3.0 覆盖了 16 条产业级模型产线，其中 9 条基础产线可�
     <td>多模型融合时序预测v2<br>(PP-TSv2_forecast)</td>
     <td>时序预测</td>
     <td>多模型融合时序预测</td>
-  </tr> 
+  </tr>
   <tr>
     <td>特色产线</td>
     <td>多模型融合时序异常检测v2<br>(PP-TSv2_anomaly)</td>
     <td>时序异常检测</td>
     <td>多模型融合时序异常检测</td>
-  </tr>      
+  </tr>
 </table>
 
 

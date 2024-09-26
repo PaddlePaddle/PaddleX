@@ -44,7 +44,7 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
 
 ### PaddleX v2.0.0rc0(5.19/2021)
 * 全面支持飞桨2.0动态图，更易用的开发模式
-* 目标检测任务新增[PP-YOLOv2](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/tutorials/train/object_detection/ppyolov2.py), COCO test数据集精度达到49.5%、V100预测速度达到68.9 FPS 
+* 目标检测任务新增[PP-YOLOv2](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/tutorials/train/object_detection/ppyolov2.py), COCO test数据集精度达到49.5%、V100预测速度达到68.9 FPS
 * 目标检测任务新增4.2MB的超轻量级模型[PP-YOLO tiny](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/tutorials/train/object_detection/ppyolotiny.py)
 * 语义分割任务新增实时分割模型[BiSeNetV2](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/tutorials/train/semantic_segmentation/bisenetv2.py)
 * C++部署模块全面升级
@@ -57,7 +57,7 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
 ### PaddleX v1.3.0(12.19/2020)
 
 - 模型更新
-  > - 图像分类模型ResNet50_vd新增10万分类预训练模型 
+  > - 图像分类模型ResNet50_vd新增10万分类预训练模型
   > - 目标检测模型FasterRCNN新增模型裁剪支持
   > - 目标检测模型新增多通道图像训练支持
 
@@ -125,5 +125,3 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
 - **易用易集成**
   - 统一易用的全流程API，5步完成模型训练，10行代码实现Python/C++高性能部署。
   - 提供以PaddleX为核心集成的跨平台可视化工具PaddleX-GUI，快速体验飞桨深度学习全流程。
-
-

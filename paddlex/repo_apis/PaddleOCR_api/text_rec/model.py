@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,26 +22,33 @@ from ....utils import logging
 
 
 class TextRecModel(BaseModel):
-    """ Text Recognition Model """
+    """Text Recognition Model"""
 
     METRICS = [
-        'acc', 'norm_edit_dis', 'Teacher_acc', 'Teacher_norm_edit_dis',
-        'precision', 'recall', 'hmean'
+        "acc",
+        "norm_edit_dis",
+        "Teacher_acc",
+        "Teacher_norm_edit_dis",
+        "precision",
+        "recall",
+        "hmean",
     ]
 
-    def train(self,
-              batch_size: int=None,
-              learning_rate: float=None,
-              epochs_iters: int=None,
-              ips: str=None,
-              device: str='gpu',
-              resume_path: str=None,
-              dy2st: bool=False,
-              amp: str='OFF',
-              num_workers: int=None,
-              use_vdl: bool=True,
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def train(
+        self,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        resume_path: str = None,
+        dy2st: bool = False,
+        amp: str = "OFF",
+        num_workers: int = None,
+        use_vdl: bool = True,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """train self
 
         Args:
@@ -85,7 +92,7 @@ class TextRecModel(BaseModel):
         config._update_amp(amp)
 
         if num_workers is not None:
-            config.update_num_workers(num_workers, 'train')
+            config.update_num_workers(num_workers, "train")
 
         config._update_use_vdl(use_vdl)
 
@@ -97,25 +104,25 @@ class TextRecModel(BaseModel):
 
         cli_args = []
 
-        do_eval = kwargs.pop('do_eval', True)
+        do_eval = kwargs.pop("do_eval", True)
 
-        profile = kwargs.pop('profile', None)
+        profile = kwargs.pop("profile", None)
         if profile is not None:
-            cli_args.append(CLIArgument('--profiler_options', profile))
+            cli_args.append(CLIArgument("--profiler_options", profile))
 
         # Benchmarking mode settings
-        benchmark = kwargs.pop('benchmark', None)
+        benchmark = kwargs.pop("benchmark", None)
         if benchmark is not None:
-            envs = benchmark.get('env', None)
-            seed = benchmark.get('seed', None)
-            do_eval = benchmark.get('do_eval', False)
-            num_workers = benchmark.get('num_workers', None)
+            envs = benchmark.get("env", None)
+            seed = benchmark.get("seed", None)
+            do_eval = benchmark.get("do_eval", False)
+            num_workers = benchmark.get("num_workers", None)
             config.update_log_ranks(device)
-            config._update_amp(benchmark.get('amp', None))
-            config.update_shuffle(benchmark.get('shuffle', False))
-            config.update_cal_metrics(benchmark.get('cal_metrics', True))
-            config.update_shared_memory(benchmark.get('shared_memory', True))
-            config.update_print_mem_info(benchmark.get('print_mem_info', True))
+            config._update_amp(benchmark.get("amp", None))
+            config.update_shuffle(benchmark.get("shuffle", False))
+            config.update_cal_metrics(benchmark.get("cal_metrics", True))
+            config.update_shared_memory(benchmark.get("shared_memory", True))
+            config.update_print_mem_info(benchmark.get("print_mem_info", True))
             if num_workers is not None:
                 config.update_num_workers(num_workers)
             if seed is not None:
@@ -124,22 +131,31 @@ class TextRecModel(BaseModel):
                 for env_name, env_value in envs.items():
                     os.environ[env_name] = str(env_value)
 
+        # PDX related settings
+        config.update({"Global.uniform_output_enabled": True})
+        config.update({"Global.pdx_model_name": self.name})
+        hpi_config_path = self.model_info.get("hpi_config_path", None)
+        config.update({"Global.hpi_config_path": hpi_config_path})
+
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
 
             return self.runner.train(
-                config_path, cli_args, device, ips, save_dir, do_eval=do_eval)
+                config_path, cli_args, device, ips, save_dir, do_eval=do_eval
+            )
 
-    def evaluate(self,
-                 weight_path: str,
-                 batch_size: int=None,
-                 ips: str=None,
-                 device: str='gpu',
-                 amp: str='OFF',
-                 num_workers: int=None,
-                 **kwargs) -> CompletedProcess:
+    def evaluate(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        ips: str = None,
+        device: str = "gpu",
+        amp: str = "OFF",
+        num_workers: int = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """evaluate self using specified weight
 
         Args:
@@ -168,7 +184,7 @@ class TextRecModel(BaseModel):
         config._update_amp(amp)
 
         if num_workers is not None:
-            config.update_num_workers(num_workers, 'eval')
+            config.update_num_workers(num_workers, "eval")
 
         self._assert_empty_kwargs(kwargs)
 
@@ -177,12 +193,14 @@ class TextRecModel(BaseModel):
             cp = self.runner.evaluate(config_path, [], device, ips)
             return cp
 
-    def predict(self,
-                weight_path: str,
-                input_path: str,
-                device: str='gpu',
-                save_dir: str=None,
-                **kwargs) -> CompletedProcess:
+    def predict(
+        self,
+        weight_path: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """predict using specified weight
 
         Args:
@@ -201,7 +219,8 @@ class TextRecModel(BaseModel):
 
         input_path = abspath(input_path)
         config._update_infer_img(
-            input_path, infer_list=kwargs.pop('input_list_path', None))
+            input_path, infer_list=kwargs.pop("input_list_path", None)
+        )
 
         config.update_device(device)
 
@@ -212,7 +231,7 @@ class TextRecModel(BaseModel):
             save_dir = abspath(save_dir)
         else:
             save_dir = abspath(config.get_predict_save_dir())
-        config._update_save_res_path(os.path.join(save_dir, 'res.txt'))
+        config._update_save_res_path(os.path.join(save_dir, "res.txt"))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -220,8 +239,7 @@ class TextRecModel(BaseModel):
             config.dump(config_path)
             return self.runner.predict(config_path, [], device)
 
-    def export(self, weight_path: str, save_dir: str,
-               **kwargs) -> CompletedProcess:
+    def export(self, weight_path: str, save_dir: str, **kwargs) -> CompletedProcess:
         """export the dynamic model to static model
 
         Args:
@@ -233,15 +251,21 @@ class TextRecModel(BaseModel):
         """
         config = self.config.copy()
 
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith("http"):
+            weight_path = abspath(weight_path)
         config.update_pretrained_weights(weight_path)
 
         save_dir = abspath(save_dir)
         config._update_save_inference_dir(save_dir)
 
-        class_path = kwargs.pop('class_path', None)
+        class_path = kwargs.pop("class_path", None)
         if class_path is not None:
             config.update_class_path(class_path)
+
+        # PDX related settings
+        config.update({"Global.pdx_model_name": self.name})
+        hpi_config_path = self.model_info.get("hpi_config_path", None)
+        config.update({"Global.hpi_config_path": hpi_config_path})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -249,12 +273,14 @@ class TextRecModel(BaseModel):
             config.dump(config_path)
             return self.runner.export(config_path, [], None, save_dir)
 
-    def infer(self,
-              model_dir: str,
-              input_path: str,
-              device: str='gpu',
-              save_dir: str=None,
-              **kwargs) -> CompletedProcess:
+    def infer(
+        self,
+        model_dir: str,
+        input_path: str,
+        device: str = "gpu",
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """predict image using infernece model
 
         Args:
@@ -270,29 +296,29 @@ class TextRecModel(BaseModel):
         cli_args = []
 
         model_dir = abspath(model_dir)
-        cli_args.append(CLIArgument('--rec_model_dir', model_dir))
+        cli_args.append(CLIArgument("--rec_model_dir", model_dir))
 
         input_path = abspath(input_path)
-        cli_args.append(CLIArgument('--image_dir', input_path))
+        cli_args.append(CLIArgument("--image_dir", input_path))
 
         device_type, _ = self.runner.parse_device(device)
-        cli_args.append(CLIArgument('--use_gpu', str(device_type == 'gpu')))
+        cli_args.append(CLIArgument("--use_gpu", str(device_type == "gpu")))
 
         if save_dir is not None:
             logging.warning("`save_dir` will not be used.")
 
-        dict_path = kwargs.pop('dict_path', None)
+        dict_path = kwargs.pop("dict_path", None)
         if dict_path is not None:
             dict_path = abspath(dict_path)
         else:
             dict_path = config.get_label_dict_path()
-        cli_args.append(CLIArgument('--rec_char_dict_path', dict_path))
+        cli_args.append(CLIArgument("--rec_char_dict_path", dict_path))
 
         model_type = config._get_model_type()
-        cli_args.append(CLIArgument('--rec_algorithm', model_type))
+        cli_args.append(CLIArgument("--rec_algorithm", model_type))
         infer_shape = config._get_infer_shape()
         if infer_shape is not None:
-            cli_args.append(CLIArgument('--rec_image_shape', infer_shape))
+            cli_args.append(CLIArgument("--rec_image_shape", infer_shape))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -300,15 +326,17 @@ class TextRecModel(BaseModel):
             config.dump(config_path)
             return self.runner.infer(config_path, cli_args, device)
 
-    def compression(self,
-                    weight_path: str,
-                    batch_size: int=None,
-                    learning_rate: float=None,
-                    epochs_iters: int=None,
-                    device: str='gpu',
-                    use_vdl: bool=True,
-                    save_dir: str=None,
-                    **kwargs) -> CompletedProcess:
+    def compression(
+        self,
+        weight_path: str,
+        batch_size: int = None,
+        learning_rate: float = None,
+        epochs_iters: int = None,
+        device: str = "gpu",
+        use_vdl: bool = True,
+        save_dir: str = None,
+        **kwargs,
+    ) -> CompletedProcess:
         """compression model
 
         Args:
@@ -349,13 +377,15 @@ class TextRecModel(BaseModel):
         config._update_output_dir(save_dir)
         export_cli_args.append(
             CLIArgument(
-                '-o',
-                f"Global.save_inference_dir={os.path.join(save_dir, 'export')}"))
+                "-o", f"Global.save_inference_dir={os.path.join(save_dir, 'export')}"
+            )
+        )
 
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
             config.dump(config_path)
 
-            return self.runner.compression(config_path, [], export_cli_args,
-                                           device, save_dir)
+            return self.runner.compression(
+                config_path, [], export_cli_args, device, save_dir
+            )

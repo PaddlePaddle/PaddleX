@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,13 +14,18 @@
 
 
 __all__ = [
-    'FailedError', 'CheckFailedError', 'ConvertFailedError', 'SplitFailedError',
-    'AnalyseFailedError', 'CheckFailedError', 'DatasetFileNotFoundError'
+    "FailedError",
+    "CheckFailedError",
+    "ConvertFailedError",
+    "SplitFailedError",
+    "AnalyseFailedError",
+    "CheckFailedError",
+    "DatasetFileNotFoundError",
 ]
 
 
 class FailedError(Exception):
-    """ base error class """
+    """base error class"""
 
     def __init__(self, err_info=None, solution=None, message=None):
         if message is None:
@@ -31,40 +36,42 @@ class FailedError(Exception):
         if err_info is None:
             return ""
         else:
-            msg = f"{self.mode} failed. We encountered the following error:\n  {err_info}"
+            msg = (
+                f"{self.mode} failed. We encountered the following error:\n  {err_info}"
+            )
             if solution is not None:
                 msg += f"\nPlease try to resolve the issue as follows:\n  {solution}"
             return msg
 
 
 class CheckFailedError(FailedError):
-    """ check dataset error """
+    """check dataset error"""
+
     mode = "Check dataset"
 
 
 class ConvertFailedError(FailedError):
-    """ convert dataset error """
+    """convert dataset error"""
+
     mode = "Convert dataset"
 
 
 class SplitFailedError(FailedError):
-    """ split dataset error """
+    """split dataset error"""
+
     mode = "Split dataset"
 
 
 class AnalyseFailedError(FailedError):
-    """ analyse dataset error """
+    """analyse dataset error"""
+
     mode = "Analyse dataset"
 
 
 class DatasetFileNotFoundError(CheckFailedError):
-    """ dataset file not found error """
+    """dataset file not found error"""
 
-    def __init__(self,
-                 file_path=None,
-                 err_info=None,
-                 solution=None,
-                 message=None):
+    def __init__(self, file_path=None, err_info=None, solution=None, message=None):
         if err_info is None:
             if file_path is not None:
                 err_info = f"{file_path} does not exist."

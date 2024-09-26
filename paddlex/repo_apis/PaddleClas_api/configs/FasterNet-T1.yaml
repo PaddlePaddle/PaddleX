@@ -1,0 +1,163 @@
+# global configs
+Global:
+  checkpoints: null
+  pretrained_model: null
+  output_dir: ./output/
+  device: gpu
+  save_interval: 1
+  eval_during_train: False
+  eval_interval: 1
+  epochs: 300
+  print_batch_step: 10
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: [3, 224, 224]
+  save_inference_dir: ./inference
+
+
+# mixed precision
+AMP:
+  use_amp: True
+  use_fp16_test: False
+  scale_loss: 128.0
+  use_dynamic_loss_scaling: True
+  use_promote: False
+  # O1: mixed fp16, O2: pure fp16
+  level: O1
+
+
+# model architecture
+Arch:
+  name: FasterNet_T1
+  class_num: 1000
+
+
+# loss function config for traing/eval process
+Loss:
+  Train:
+    - CELoss:
+        weight: 1.0
+        epsilon: 0.1
+  Eval:
+    - CELoss:
+        weight: 1.0
+
+
+Optimizer:
+  name: AdamW
+  beta1: 0.9
+  beta2: 0.999
+  epsilon: 1e-8
+  weight_decay: 0.01
+  clip_grad: null
+  no_weight_decay_name: null
+  one_dim_param_no_weight_decay: True
+  lr:
+    name: Cosine
+    learning_rate: 0.0006
+    warmup_start_lr: 0.000001
+    warmup_epoch: 20
+    eta_min: 0.00001
+
+
+# data loader for train and eval
+DataLoader:
+  Train:
+    dataset:
+      name: ImageNetDataset
+      image_root: ./dataset/ILSVRC2012/
+      cls_label_path: ./dataset/ILSVRC2012/train_list.txt
+      transform_ops:
+        - DecodeImage:
+            backend: pil
+            channel_first: False
+        - RandCropImage:
+            size: 224
+            interpolation: bicubic
+            backend: pil
+        - RandFlipImage:
+            flip_code: 1
+        - TimmAutoAugment:
+            config_str: rand-m3-mstd0.5-inc1 
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ''
+      batch_transform_ops:
+        - OpSampler:
+            MixupOperator:
+              alpha: 0.05
+              prob: 0.5
+            CutmixOperator: 
+              alpha: 1.0
+              prob: 0.5
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 64
+      drop_last: False
+      shuffle: True
+    loader:
+      num_workers: 12
+      use_shared_memory: True
+
+  Eval:
+    dataset: 
+      name: ImageNetDataset
+      image_root: ./dataset/ILSVRC2012/
+      cls_label_path: ./dataset/ILSVRC2012/val_list.txt
+      transform_ops:
+        - DecodeImage:
+            backend: pil
+            to_np: False
+            channel_first: False
+        - ResizeImage:  
+            interpolation: bicubic
+            backend: pil
+            resize_short: 248
+        - CropImage:
+            size: 224
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: 'hwc'
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 4
+      drop_last: False
+      shuffle: False
+    loader:
+      num_workers: 6
+      use_shared_memory: True
+
+
+Infer:
+  infer_imgs: docs/images/inference_deployment/whl_demo.jpg
+  batch_size: 10
+  transforms:
+    - DecodeImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        resize_short: 256
+    - CropImage:
+        size: 224
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+        order: ''
+    - ToCHWImage:
+  PostProcess:
+    name: Topk
+    topk: 5
+    class_id_map_file: ppcls/utils/imagenet1k_label_list.txt
+
+Metric:
+  Train:
+    - TopkAcc:
+        topk: [1, 5]
+  Eval:
+    - TopkAcc:
+        topk: [1, 5]

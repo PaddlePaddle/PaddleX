@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,10 +18,11 @@ from ...base.utils.subprocess import CompletedProcess
 
 
 class TextDetRunner(TextRecRunner):
-    """ Text Detection Runner """
+    """Text Detection Runner"""
 
-    def predict(self, config_path: str, cli_args: list,
-                device: str) -> CompletedProcess:
+    def predict(
+        self, config_path: str, cli_args: list, device: str
+    ) -> CompletedProcess:
         """run predicting using dynamic mode
 
         Args:
@@ -33,11 +34,10 @@ class TextDetRunner(TextRecRunner):
             CompletedProcess: the result of predicting subprocess execution.
         """
         # `cli_args` and `device` unused
-        cmd = [self.python, 'tools/infer_det.py', '-c', config_path]
+        cmd = [self.python, "tools/infer_det.py", "-c", config_path]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
-    def infer(self, config_path: str, cli_args: list,
-              device: str) -> CompletedProcess:
+    def infer(self, config_path: str, cli_args: list, device: str) -> CompletedProcess:
         """run predicting using inference model
 
         Args:
@@ -49,5 +49,5 @@ class TextDetRunner(TextRecRunner):
             CompletedProcess: the result of infering subprocess execution.
         """
         # `config_path` and `device` unused
-        cmd = [self.python, 'tools/infer/predict_det.py', *cli_args]
+        cmd = [self.python, "tools/infer/predict_det.py", *cli_args]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)

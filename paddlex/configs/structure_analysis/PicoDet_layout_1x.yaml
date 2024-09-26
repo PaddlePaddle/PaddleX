@@ -26,12 +26,16 @@ Train:
   eval_interval: 1
 
 Evaluate:
-  weight_path: "output/best_model.pdparams"
+  weight_path: "output/best_model/best_model.pdparams"
   log_interval: 10
 
+Export:
+  weight_path: https://paddleocr.bj.bcebos.com/ppstructure/models/layout/picodet_lcnet_x1_0_layout.pdparams
+
 Predict:
-  model_dir: "output/best_model"
+  batch_size: 1
+  model_dir: "output/best_model/inference"
   input_path: "/paddle/dataset/paddlex/layout/det_layout_examples/images/JPEGImages/train_0001.jpg"
+
   kernel_option:
     run_mode: paddle
-    batch_size: 1

@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,14 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .utils.lazy_loader import LazyLoader
+import sys
 
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+sys.modules["lazy_paddle"] = paddle
 
 import os
 
 from . import version
-from .modules import build_dataset_checker, build_trainer, build_evaluater, build_predictor
-from .modules import create_model, PaddleInferenceOption
-from .pipelines import *
+from .modules import (
+    build_dataset_checker,
+    build_trainer,
+    build_evaluater,
+)
+
+
+from .inference import create_model, create_pipeline
 
 
 def _initialize():
@@ -30,7 +39,8 @@ def _initialize():
 
     __DIR__ = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
     repo_manager.set_parent_dirs(
-        os.path.join(__DIR__, 'repo_manager', 'repos'), repo_apis)
+        os.path.join(__DIR__, "repo_manager", "repos"), repo_apis
+    )
 
     setup_logging()
 
@@ -39,16 +49,15 @@ def _initialize():
 
 
 def _check_paddle_version():
-    """check paddle version
-    """
-    import paddle
-    supported_versions = ['3.0', '0.0']
-    device_type = paddle.device.get_device().split(':')[0]
-    if device_type.lower() == 'xpu':
-        supported_versions.append('2.6')
+    """check paddle version"""
+
+    supported_versions = ["3.0", "0.0"]
+    device_type = paddle.device.get_device().split(":")[0]
+    if device_type.lower() == "xpu":
+        supported_versions.append("2.6")
     version = paddle.__version__
     # Recognizable version number: major.minor.patch
-    major, minor, patch = version.split('.')
+    major, minor, patch = version.split(".")
     # Ignore patch
     version = f"{major}.{minor}"
     if version not in supported_versions:
@@ -59,6 +68,5 @@ def _check_paddle_version():
 
 
 _initialize()
-_check_paddle_version()
 
 __version__ = version.get_pdx_version()

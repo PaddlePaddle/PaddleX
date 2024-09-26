@@ -1,5 +1,5 @@
 # copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import os
 import shutil
 from random import shuffle
@@ -24,12 +23,12 @@ from .....utils.file_interface import custom_open
 def split_dataset(dataset_root, train_rate, val_rate):
     """
     将图像数据集按照比例分成训练集、验证集和测试集，并生成对应的.txt文件。
-    
+
     Args:
         dataset_root (str): 数据集根目录路径。
         train_rate (int): 训练集占总数据集的比例（%）。
         val_rate (int): 验证集占总数据集的比例（%）。
-    
+
     Returns:
         str: 数据划分结果信息。
     """
@@ -41,12 +40,12 @@ def split_dataset(dataset_root, train_rate, val_rate):
     valid_path = False
     image_files = []
     for tag in tags:
-        split_image_list = os.path.abspath(
-            os.path.join(dataset_root, f'{tag}.txt'))
+        split_image_list = os.path.abspath(os.path.join(dataset_root, f"{tag}.txt"))
         rename_image_list = os.path.abspath(
-            os.path.join(dataset_root, f'{tag}.txt.bak'))
+            os.path.join(dataset_root, f"{tag}.txt.bak")
+        )
         if os.path.exists(split_image_list):
-            with custom_open(split_image_list, 'r') as f:
+            with custom_open(split_image_list, "r") as f:
                 lines = f.readlines()
             image_files = image_files + lines
             valid_path = True
@@ -69,11 +68,11 @@ def split_dataset(dataset_root, train_rate, val_rate):
             return f"{tag} 数据集的比例应该在0~100之间."
 
         end = start + round(image_num * rate / 100)
-        if sum(rate_list[i + 1:]) == 0:
+        if sum(rate_list[i + 1 :]) == 0:
             end = image_num
 
-        txt_file = os.path.abspath(os.path.join(dataset_root, tag + '.txt'))
-        with custom_open(txt_file, 'w') as f:
+        txt_file = os.path.abspath(os.path.join(dataset_root, tag + ".txt"))
+        with custom_open(txt_file, "w") as f:
             m = 0
             for id in range(start, end):
                 m += 1
