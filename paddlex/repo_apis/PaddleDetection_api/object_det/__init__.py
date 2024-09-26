@@ -16,3 +16,4 @@
 from .model import DetModel
 from .runner import DetRunner
 from . import register
+from .official_categories import official_categories
