@@ -26,12 +26,12 @@ class SingleModelPipeline(BasePipeline):
         "ts_ad",
         "ts_cls",
         "multi_label_image_classification",
-        "anomaly_detection",
+        "small_object_detection" "anomaly_detection",
     ]
 
-    def __init__(self, model, batch_size=1, device="gpu", predictor_kwargs=None):
+    def __init__(self, model, predictor_kwargs=None):
         super().__init__(predictor_kwargs)
-        self._predict = self._create_model(model, batch_size=batch_size, device=device)
+        self._predict = self._create_model(model)
 
-    def predict(self, x):
-        yield from self._predict(x)
+    def predict(self, input, **kwargs):
+        yield from self._predict(input, **kwargs)

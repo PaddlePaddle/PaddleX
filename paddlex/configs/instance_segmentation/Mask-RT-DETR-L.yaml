@@ -26,15 +26,16 @@ Train:
   eval_interval: 1
 
 Evaluate:
-  weight_path: "output/best_model.pdparams"
+  weight_path: "output/best_model/best_model.pdparams"
   log_interval: 10
 
 Export:
   weight_path: https://paddlex.bj.bcebos.com/models/mask_rtdetr_hgnetv2_l_6x_coco.pdparams
 
 Predict:
-  model_dir: "output/best_model"
-  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
   batch_size: 1
+  model_dir: "output/best_model/inference"
+  input_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
+
   kernel_option:
     run_mode: paddle

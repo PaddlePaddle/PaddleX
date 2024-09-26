@@ -16,34 +16,28 @@ from ...modules.image_unwarping.model_list import MODELS
 from ..components import *
 from ..results import DocTrResult
 from ..utils.process_hook import batchable_method
-from .base import BasicPredictor
+from .base import CVPredictor
 
 
-class WarpPredictor(BasicPredictor):
+class WarpPredictor(CVPredictor):
 
     entities = MODELS
 
-    def _check_args(self, kwargs):
-        assert set(kwargs.keys()).issubset(set(["batch_size"]))
-        return kwargs
-
     def _build_components(self):
-        ops = {}
-        ops["ReadImage"] = ReadImage(
-            format="RGB", batch_size=self.kwargs.get("batch_size", 1)
+        self._add_component(
+            [
+                ReadImage(format="RGB"),
+                Normalize(mean=0.0, std=1.0, scale=1.0 / 255),
+                ToCHWImage(),
+            ]
         )
-        ops["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
-        ops["ToCHWImage"] = ToCHWImage()
 
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        ops["predictor"] = predictor
-
-        ops["postprocess"] = DocTrPostProcess()
-        return ops
+        self._add_component([("Predictor", predictor), DocTrPostProcess()])
 
     @batchable_method
     def _pack_res(self, single):

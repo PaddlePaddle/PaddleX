@@ -15,6 +15,7 @@
 
 import os
 import threading
+import numpy as np
 from abc import ABCMeta
 from .errors import (
     raise_class_not_found_error,
@@ -22,6 +23,28 @@ from .errors import (
     DuplicateRegistrationError,
 )
 from .logging import *
+
+
+def convert_and_remove_types(data):
+    if isinstance(data, dict):
+        return {
+            k: convert_and_remove_types(v)
+            for k, v in data.items()
+            if not isinstance(v, type)
+        }
+    elif isinstance(data, list):
+        return [convert_and_remove_types(v) for v in data]
+    elif isinstance(data, np.ndarray):
+        return data.tolist()
+    elif isinstance(data, (np.float32, np.float64)):
+        return float(data)
+    elif isinstance(data, (np.int32, np.int64)):
+        return int(data)
+    elif isinstance(data, np.bool_):
+        return bool(data)
+    elif isinstance(data, (np.str_, np.unicode_)):
+        return str(data)
+    return data
 
 
 def abspath(path: str):

@@ -19,46 +19,38 @@ from ...modules.general_recognition.model_list import MODELS
 from ..components import *
 from ..results import BaseResult
 from ..utils.process_hook import batchable_method
-from .base import BasicPredictor
+from .base import CVPredictor
 
 
-class ShiTuRecPredictor(BasicPredictor):
+class ShiTuRecPredictor(CVPredictor):
 
     entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def _check_args(self, kwargs):
-        assert set(kwargs.keys()).issubset(set(["batch_size"]))
-        return kwargs
-
     def _build_components(self):
-        ops = {}
-        ops["ReadImage"] = ReadImage(
-            batch_size=self.kwargs.get("batch_size", 1), format="RGB"
-        )
+        self._add_component(ReadImage(format="RGB"))
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
             func = self._FUNC_MAP.get(tf_key)
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
-            ops[tf_key] = op
+            self._add_component(op)
 
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        ops["predictor"] = predictor
+        self._add_component(("Predictor", predictor))
 
         post_processes = self.config["PostProcess"]
         for key in post_processes:
             func = self._FUNC_MAP.get(key)
             args = post_processes.get(key, {})
             op = func(self, **args) if args else func(self)
-            ops[key] = op
-        return ops
+            self._add_component(op)
 
     @register("ResizeImage")
     # TODO(gaotingquan): backend & interpolation

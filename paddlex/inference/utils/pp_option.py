@@ -86,7 +86,9 @@ class PaddlePredictorOption(object):
             )
         device_id = device_ids[0] if device_ids is not None else 0
         self._cfg["device_id"] = device_id
-        logging.warning(f"The device ID has been set to {device_id}.")
+        if device_type not in ("cpu"):
+            if device_ids is None or len(device_ids) > 1:
+                logging.warning(f"The device ID has been set to {device_id}.")
 
     @register("min_subgraph_size")
     def set_min_subgraph_size(self, min_subgraph_size: int):

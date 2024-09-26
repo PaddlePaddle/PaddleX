@@ -1,0 +1,147 @@
+# global configs
+Global:
+  checkpoints: null
+  pretrained_model: null
+  output_dir: "./output/"
+  device: "gpu"
+  save_interval: 1
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 30
+  print_batch_step: 20
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: [3, 192, 256]
+  save_inference_dir: "./inference"
+  use_multilabel: True
+
+# model architecture
+Arch:
+  name: "PPLCNet_x1_0"
+  pretrained: True
+  class_num: 19
+  use_ssld: True
+  lr_mult_list: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+  infer_add_softmax: False
+
+# loss function config for traing/eval process
+Loss:
+  Train:
+    - MultiLabelLoss:
+        weight: 1.0
+        weight_ratio: True
+        size_sum: True
+  Eval:
+    - MultiLabelLoss:
+        weight: 1.0
+        weight_ratio: True
+        size_sum: True
+
+Optimizer:
+  name: Momentum
+  momentum: 0.9
+  lr:
+    name: Cosine
+    learning_rate: 0.0125
+    warmup_epoch: 5
+  regularizer:
+    name: 'L2'
+    coeff: 0.0005
+
+# data loader for train and eval
+DataLoader:
+  Train:
+    dataset:
+      name: MultiLabelDataset
+      image_root: "dataset/VeRi/"
+      cls_label_path: "dataset/VeRi/train_list.txt"
+      label_ratio: True
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - ResizeImage:
+            size: [256, 192]
+        - TimmAutoAugment:
+            prob: 0.0
+            config_str: rand-m9-mstd0.5-inc1
+            interpolation: bicubic
+            img_size: [256, 192]
+        - Padv2:
+            size: [276, 212]
+            pad_mode: 1
+            fill_value: 0
+        - RandomCropImage:
+            size: [256, 192]
+        - RandFlipImage:
+            flip_code: 1
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ''
+        - RandomErasing:
+            EPSILON: 0.5
+            sl: 0.02
+            sh: 1.0/3.0
+            r1: 0.3
+            attempt: 10
+            use_log_aspect: True
+            mode: pixel
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 64
+      drop_last: True
+      shuffle: True
+    loader:
+      num_workers: 8
+      use_shared_memory: True
+  Eval:
+    dataset:
+      name: MultiLabelDataset
+      image_root: "dataset/VeRi/"
+      cls_label_path: "dataset/VeRi/test_list.txt"
+      label_ratio: True
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - ResizeImage:
+            size: [256, 192]
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ''
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 128
+      drop_last: False
+      shuffle: False
+    loader:
+      num_workers: 8
+      use_shared_memory: True
+
+Infer:
+  infer_imgs: ./deploy/images/PULC/vehicle_attribute/0002_c002_00030670_0.jpg
+  batch_size: 10
+  transforms:
+    - DecodeImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        size: [256, 192]
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+        order: ''
+    - ToCHWImage:
+  PostProcess:
+    name: MultiLabelThreshOutput
+    threshold: 0.5
+    class_id_map_file: ppcls/utils/vehicle_attribute_label_list.txt
+
+Metric:
+  Eval:
+    - ATTRMetric:

@@ -19,10 +19,10 @@ from ...modules.text_recognition.model_list import MODELS
 from ..components import *
 from ..results import TextRecResult
 from ..utils.process_hook import batchable_method
-from .base import BasicPredictor
+from .base import CVPredictor
 
 
-class TextRecPredictor(BasicPredictor):
+class TextRecPredictor(CVPredictor):
 
     entities = MODELS
 
@@ -30,7 +30,6 @@ class TextRecPredictor(BasicPredictor):
     register = FuncRegister(_FUNC_MAP)
 
     def _build_components(self):
-        ops = {}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
             assert tf_key in self._FUNC_MAP
@@ -38,23 +37,22 @@ class TextRecPredictor(BasicPredictor):
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             if op:
-                ops[tf_key] = op
+                self._add_component(op)
 
         predictor = ImagePredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        ops["predictor"] = predictor
+        self._add_component(("Predictor", predictor))
 
-        key, op = self.build_postprocess(**self.config["PostProcess"])
-        ops[key] = op
-        return ops
+        op = self.build_postprocess(**self.config["PostProcess"])
+        self._add_component(op)
 
     @register("DecodeImage")
     def build_readimg(self, channel_first, img_mode):
         assert channel_first == False
-        return ReadImage(format=img_mode, batch_size=self.kwargs.get("batch_size", 1))
+        return ReadImage(format=img_mode)
 
     @register("RecResizeImg")
     def build_resize(self, image_shape):
@@ -62,7 +60,7 @@ class TextRecPredictor(BasicPredictor):
 
     def build_postprocess(self, **kwargs):
         if kwargs.get("name") == "CTCLabelDecode":
-            return "CTCLabelDecode", CTCLabelDecode(
+            return CTCLabelDecode(
                 character_list=kwargs.get("character_dict"),
             )
         else:
