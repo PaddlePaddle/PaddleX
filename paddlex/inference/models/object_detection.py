@@ -44,13 +44,7 @@ class DetPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if self.model_name in [
-            "RT-DETR-R18",
-            "RT-DETR-R50",
-            "RT-DETR-L",
-            "RT-DETR-H",
-            "RT-DETR-X",
-        ]:
+        if "RT-DETR" in self.model_name:
             predictor.set_inputs(
                 {
                     "img": "img",
