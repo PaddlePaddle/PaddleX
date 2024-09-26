@@ -17,10 +17,5 @@ from fastapi import FastAPI
 
 
 def run_server(app: FastAPI, *, host: str, port: int, debug: bool) -> None:
-    if debug:
-        kwargs = {
-            "reload": True,
-        }
-    else:
-        kwargs = {}
-    uvicorn.run(app, host=host, port=port, log_level="info", **kwargs)
+    # XXX: Currently, `debug` is not used.
+    uvicorn.run(app, host=host, port=port, log_level="info")

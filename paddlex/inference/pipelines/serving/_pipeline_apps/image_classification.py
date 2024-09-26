@@ -74,14 +74,14 @@ def create_pipeline_app(
 
             result = await pipeline.infer(image)
 
+            if "label_names" in result:
+                cat_names = result["label_names"]
+            else:
+                cat_names = [str(id_) for id_ in result["class_ids"]]
             categories: List[Category] = []
-            for id_, score in islice(
-                zip(result["class_ids"], result["scores"]), None, top_k
+            for id_, name, score in islice(
+                zip(result["class_ids"], cat_names, result["scores"]), None, top_k
             ):
-                if "label_names" in result:
-                    name = result["label_names"][id_]
-                else:
-                    name = str(id_)
                 categories.append(Category(id=id_, name=name, score=score))
             output_image_base64 = result.to_base64()
 

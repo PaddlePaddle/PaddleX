@@ -16,7 +16,16 @@ import asyncio
 import contextlib
 import functools
 import json
-from typing import Any, AsyncGenerator, Callable, Dict, Optional, Tuple, TypeVar
+from typing import (
+    Any,
+    AsyncGenerator,
+    Callable,
+    Dict,
+    Generic,
+    Optional,
+    Tuple,
+    TypeVar,
+)
 
 import aiohttp
 import fastapi
@@ -34,25 +43,28 @@ from .utils import generate_log_id
 
 SERVING_CONFIG_KEY: Final[str] = "Serving"
 
+_PipelineT = TypeVar("_PipelineT", bound=BasePipeline)
 _P = ParamSpec("_P")
 _T = TypeVar("_T")
 
 
-class PipelineWrapper(object):
-    def __init__(self, pipeline: BasePipeline) -> None:
+class PipelineWrapper(Generic[_PipelineT]):
+    def __init__(self, pipeline: _PipelineT) -> None:
         super().__init__()
         self._pipeline = pipeline
         self._lock = asyncio.Lock()
 
     async def infer(self, data: Any) -> Any:
-        def _infer(pipeline: BasePipeline, input_: Any) -> Any:
+        def _infer(pipeline: _PipelineT, input_: Any) -> Any:
             output = list(pipeline(input_))
             if len(output) != 1:
                 raise RuntimeError("Expected exactly one item from the generator")
             return output[0]
 
         async with self._lock:
-            return self._run_in_executor(functools.partial(_infer), data)
+            return await self._run_in_executor(
+                functools.partial(_infer, self._pipeline), data
+            )
 
     async def call(
         self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
@@ -72,12 +84,12 @@ class AppConfig(BaseModel):
     extra: Optional[Dict[str, Any]] = None
 
 
-class AppContext(object):
+class AppContext(Generic[_PipelineT]):
     def __init__(self, *, config: AppConfig) -> None:
         super().__init__()
         self._config = config
         self.extra: Dict[str, Any] = {}
-        self._pipeline: Optional[PipelineWrapper] = None
+        self._pipeline: Optional[PipelineWrapper[_PipelineT]] = None
         self._aiohttp_session: Optional[aiohttp.ClientSession] = None
 
     @property
@@ -85,20 +97,20 @@ class AppContext(object):
         return self._config
 
     @property
-    def pipeline(self) -> PipelineWrapper:
+    def pipeline(self) -> PipelineWrapper[_PipelineT]:
         if not self._pipeline:
             raise AttributeError("`pipeline` has not been set.")
         return self._pipeline
 
     @pipeline.setter
-    def pipeline(self, val: PipelineWrapper) -> None:
+    def pipeline(self, val: PipelineWrapper[_PipelineT]) -> None:
         self._pipeline = val
 
     @property
     def aiohttp_session(self) -> aiohttp.ClientSession:
         if not self._aiohttp_session:
             raise AttributeError("`aiohttp_session` has not been set.")
-        return self.aiohttp_session
+        return self._aiohttp_session
 
     @aiohttp_session.setter
     def aiohttp_session(self, val: aiohttp.ClientSession) -> None:
@@ -112,11 +124,11 @@ def create_app_config(pipeline_config: Dict[str, Any], **kwargs: Any) -> AppConf
 
 
 def create_app(
-    *, pipeline: BasePipeline, app_config: AppConfig, app_aiohttp_session: bool = True
-) -> Tuple[fastapi.FastAPI, AppContext]:
+    *, pipeline: _PipelineT, app_config: AppConfig, app_aiohttp_session: bool = True
+) -> Tuple[fastapi.FastAPI, AppContext[_PipelineT]]:
     @contextlib.asynccontextmanager
     async def _app_lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
-        ctx.pipeline = pipeline
+        ctx.pipeline = PipelineWrapper[_PipelineT](pipeline)
         if app_aiohttp_session:
             ctx.aiohttp_session = aiohttp.ClientSession(
                 cookie_jar=aiohttp.DummyCookieJar()
@@ -126,7 +138,7 @@ def create_app(
             await ctx.aiohttp_session.close()
 
     app = fastapi.FastAPI(lifespan=_app_lifespan)
-    ctx = AppContext(config=app_config)
+    ctx = AppContext[_PipelineT](config=app_config)
 
     @app.get("/health", operation_id="checkHealth")
     async def _check_health() -> Response:
