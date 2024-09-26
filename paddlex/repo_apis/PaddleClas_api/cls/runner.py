@@ -190,12 +190,13 @@ def _extract_eval_metrics(stdout: str) -> dict:
 
     _DP = r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?"
     patterns = [
+        r"\[Eval\]\[Epoch 0\]\[Avg\].*top1: (_dp)".replace("_dp", _DP),
         r"\[Eval\]\[Epoch 0\]\[Avg\].*top1: (_dp), top5: (_dp)".replace("_dp", _DP),
         r"\[Eval\]\[Epoch 0\]\[Avg\].*recall1: (_dp), recall5: (_dp), mAP: (_dp)".replace(
             "_dp", _DP
         ),
     ]
-    keys = [["val.top1", "val.top5"], ["recall1", "recall5", "mAP"]]
+    keys = [["val.top1"], ["val.top1", "val.top5"], ["recall1", "recall5", "mAP"]]
 
     metric_dict = dict()
     for pattern, key in zip(patterns, keys):
