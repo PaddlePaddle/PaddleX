@@ -46,10 +46,14 @@ def create_pipeline(
             raise Exception(f"The pipeline don't exist! ({pipeline})")
     config = parse_config(pipeline)
     pipeline_name = config["Global"]["pipeline_name"]
+    pipeline_setting = config["Pipeline"]
+    pipeline_setting.update(kwargs)
+
     predictor_kwargs = {"use_hpip": use_hpip}
     if hpi_params is not None:
         predictor_kwargs["hpi_params"] = hpi_params
+
     pipeline = BasePipeline.get(pipeline_name)(
-        predictor_kwargs=predictor_kwargs, *args, **config["Pipeline"], **kwargs
+        predictor_kwargs=predictor_kwargs, *args, **pipeline_setting
     )
     return pipeline

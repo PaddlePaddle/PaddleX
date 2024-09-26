@@ -98,4 +98,4 @@ class ShiTuRecPredictor(CVPredictor):
     @batchable_method
     def _pack_res(self, data):
         keys = ["img_path", "rec_feature"]
-        return {"result": BaseResult({key: data[key] for key in keys})}
+        return BaseResult({key: data[key] for key in keys})
