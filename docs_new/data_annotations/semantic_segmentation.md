@@ -24,7 +24,7 @@
 ### 2.2 Labelme安装
 为避免环境冲突，建议在 `conda` 环境下安装。
 
-```python
+```bash
 conda create -n labelme python=3.10
 conda activate labelme
 pip install pyqt5
@@ -39,13 +39,13 @@ pip install labelme
 #### 2.3.2 启动Labelme
 终端进入到待标注数据集根目录，并启动 `labelme` 标注工具。
 
-```ruby
+```bash
 # Windows
 cd C:\path\to\seg_dataset
 # Mac/Linux
 cd path/to/seg_dataset
 ```
-```ruby
+```bash
 labelme images --nodata --autosave --output annotations
 ```
 * `nodata` 停止将图像数据存储到JSON文件
@@ -103,7 +103,7 @@ b. 经过整理得到的最终目录结构如下：
 #### 2.3.4 格式转换
 使用`LabelMe`标注完成后，需要将数据格式转换为`Seg` 数据格式。下面给出了按照上述教程使用`LableMe`标注完成的数据和进行数据格式转换的代码示例。
 
-```python
+```bash
 cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/seg_dataset_to_convert.tar -P ./dataset
 tar -xf ./dataset/seg_dataset_to_convert.tar -C ./dataset/
@@ -117,7 +117,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 ## 数据格式
 PaddleX 针对图像分割任务定义的数据集，名称是**SegDataset**，组织结构和标注格式如下：
 
-```ruby
+```bash
 dataset_dir         # 数据集根目录，目录名称可以改变
 ├── annotations     # 存放标注图像的目录，目录名称可以改变，注意与标识文件的内容相对应
 ├── images          # 存放原始图像的目录，目录名称可以改变，注意与标识文件的内容相对应

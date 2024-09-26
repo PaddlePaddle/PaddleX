@@ -21,7 +21,7 @@
 ### 2.2 Labelme 安装
 为避免环境冲突，建议在 `conda` 环境下安装。
 
-```python
+```bash
 conda create -n labelme python=3.10
 conda activate labelme
 pip install pyqt5
@@ -41,7 +41,7 @@ pip install labelme
 #### 2.3.2 启动 Labelme
 终端进入到带标注数据集根目录，并启动 `labelme` 标注工具。
 
-```ruby
+```bash
 cd path/to/fruit
 labelme images --labels label.txt --nodata --autosave --output annotations
 ```
@@ -85,7 +85,7 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 ##  3. 数据格式
 PaddleX 针对实例分割任务定义的数据集，名称是 **COCOInstSegDataset**，组织结构和标注格式如下：
 
-```ruby
+```bash
 dataset_dir                  # 数据集根目录，目录名称可以改变
 ├── annotations              # 标注文件的保存目录，目录名称不可改变
 │   ├── instance_train.json  # 训练集标注文件，文件名称不可改变，采用COCO标注格式

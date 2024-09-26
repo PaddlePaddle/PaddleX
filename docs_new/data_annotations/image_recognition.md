@@ -10,7 +10,7 @@
 ### 1.2 Labelme 安装
 为避免环境冲突，建议在 `conda` 环境下安装。
 
-```ruby
+```bash
 conda create -n labelme python=3.10
 conda activate labelme
 pip install pyqt5
@@ -29,7 +29,7 @@ pip install labelme
 #### 1.3.2 启动 Labelme
 终端进入到待标注数据集根目录，并启动 `labelme` 标注工具。
 
-```ruby
+```bash
 cd path/to/pets
 labelme images --nodata --autosave --output annotations --flags flags.txt
 ```
@@ -54,7 +54,7 @@ labelme images --nodata --autosave --output annotations --flags flags.txt
 
 * 完成全部图片的标注后，使用[convert_to_imagenet.py](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/image_classification_dataset_prepare/convert_to_imagenet.py)脚本将标注好的数据集转换为 `ImageNet-1k` 数据集格式，生成 `train.txt`，`val.txt` 和`label.txt`。
 
-```python
+```bash
 python convert_to_imagenet.py --dataset_path /path/to/dataset
 ```
 `dataset_path`为标注的 `labelme` 格式分类数据集。
@@ -66,7 +66,7 @@ python convert_to_imagenet.py --dataset_path /path/to/dataset
 #### 1.3.4 数据格式转换
 在获得 `LabelMe` 格式数据后，需要将数据格式转换为`ShiTuRecDataset`格式。下面给出了按照上述教程使用`LableMel`标注完成的数据并进行数据格式转换的代码示例。
 
-```ruby
+```bash
 # 下载并解压 LabelMe 格式示例数据集
 cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/image_classification_labelme_examples.tar -P ./dataset
@@ -81,7 +81,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 ## 3. 数据格式
 PaddleX 针对图像分类任务定义的数据集，名称是 **ShiTuRecDataset**，组织结构和标注格式如下：
 
-```ruby
+```bash
 dataset_dir    # 数据集根目录，目录名称可以改变
 ├── images     # 图像的保存目录，目录名称可以改变，但要注意与train.txt、query.txt、 gallery.txt 的内容对应
 ├── gallery.txt   # 验证集标注文件，文件名称不可改变。每行给出待检索图像路径和图像特征标签，使用空格分隔，内容举例：images/WOMEN/Blouses_Shirts/id_00000001/02_2_side.jpg 3997

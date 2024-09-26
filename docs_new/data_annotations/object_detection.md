@@ -24,7 +24,7 @@
 ### 2.2 Labelme 安装
 为避免环境冲突，建议在 `conda` 环境下安装。
 
-```ruby
+```bash
 conda create -n labelme python=3.10
 conda activate labelme
 pip install pyqt5
@@ -42,7 +42,7 @@ pip install labelme
 ![alt text](/tmp/images/data_prepare/obeject_detection/02.png)
 #### 2.3.2 启动 Labelme
 终端进入到待标注数据集根目录，并启动 `Labelme` 标注工具:
-```python
+```bash
 cd path/to/hemlet
 labelme images --labels label.txt --nodata --autosave --output annotations
 ```
@@ -84,7 +84,7 @@ labelme images --labels label.txt --nodata --autosave --output annotations
   ![alt text](/tmp/images/data_prepare/obeject_detection/10.png)
 #### 2.3.4 格式转换
 使用`Labelme`标注完成后，需要将数据格式转换为`coco`格式。下面给出了按照上述教程使用`Lableme`标注完成的数据和进行数据格式转换的代码示例：
-```ruby
+```bash
 cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_labelme_examples.tar -P ./dataset
 tar -xf ./dataset/det_labelme_examples.tar -C ./dataset/
@@ -98,12 +98,12 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 ## 3. PaddleLabel 标注
 ### 3.1 PaddleLabel的安装和启动
 * 为避免环境冲突，建议创建一个干净的`conda`环境：
-```python
+```bash
 conda create -n paddlelabel python=3.11
 conda activate paddlelabel
 ```
 * 同样可以通过`pip`一键安装
-```python
+```bash
 pip install --upgrade paddlelabel
 pip install a2wsgi uvicorn==0.18.1
 pip install connexion==2.14.1
@@ -111,7 +111,7 @@ pip install Flask==2.2.2
 pip install Werkzeug==2.2.2
 ```
 * 安装成功后，可以在终端使用如下指令之一启动 ：
-```ruby
+```bash
 paddlelabel  # 启动paddlelabel
 pdlabel # 缩写，和paddlelabel完全相同
 ```
@@ -159,7 +159,7 @@ PaddleLabel 启动后会自动在浏览器中打开网页，接下来可以根�
 
 ## 4. 数据格式
 PaddleX 针对目标检测任务定义的数据集，名称是 `COCODetDataset`，组织结构和标注格式如下：
-```ruby
+```bash
 dataset_dir                  # 数据集根目录，目录名称可以改变
 ├── annotations              # 标注文件的保存目录，目录名称不可改变
 │   ├── instance_train.json  # 训练集标注文件，文件名称不可改变，采用COCO标注格式

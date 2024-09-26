@@ -48,7 +48,7 @@ tar -xf ./dataset/ocr_det_dataset_examples.tar -C ./dataset/
 
 一行命令即可完成数据校验：
 
-```python
+```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
@@ -98,7 +98,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 * **数据集格式转换/数据集划分（可选）**
 
-在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
+在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details>
   <summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
@@ -132,7 +132,7 @@ CheckDataset:
 ```
 随后执行命令：
 
-```python
+```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
@@ -141,7 +141,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 以上参数同样支持通过追加命令行参数的方式进行设置：
 
-```python
+```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples \
@@ -154,7 +154,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml  \
 ### 4.2 模型训练
 一条命令即可完成模型的训练，以此处PP-OCRv4移动端文本检测模型（`PP-OCRv4_mobile_det`）的训练为例：
 
-```python
+```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
@@ -183,7 +183,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 ## **4.3 模型评估**
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
-```python
+```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
@@ -199,9 +199,9 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
 
-在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./`output/best_accuracy/best_accuracy.pdparams。
+在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams`。
 
-在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 precision、recall、hmean；
+在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 `precision`、`recall`、`hmean`；
 
 </details>
 
@@ -225,7 +225,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 * 指定输入数据路径：`-o Predict.input_path="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](/docs_new/modules_tutorials/config_parameters_common.md)。
 
-* 也可以用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。"。
+* 也可以用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。
 #### 4.4.2 模型集成
 模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
 

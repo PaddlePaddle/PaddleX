@@ -25,7 +25,7 @@
 ### 2.2 Labelme 安装
 为避免环境冲突，建议在 `conda` 环境下安装。
 
-```ruby
+```bash
 conda create -n labelme python=3.10
 conda activate labelme
 pip install pyqt5
@@ -42,7 +42,7 @@ pip install labelme
 ![alt text](/tmp/images/data_prepare/obeject_detection/02.png)
 #### 2.3.2 启动 Labelme
 终端进入到待标注数据集根目录，并启动 `Labelme` 标注工具:
-```python
+```bash
 cd path/to/hemlet
 labelme images --labels label.txt --nodata --autosave --output annotations
 ```
@@ -84,7 +84,7 @@ labelme images --labels label.txt --nodata --autosave --output annotations
   ![alt text](/tmp/images/data_prepare/obeject_detection/10.png)
 #### 2.3.4 格式转换
 使用`Labelme`标注完成后，需要将数据格式转换为`coco`格式。下面给出了按照上述教程使用`Lableme`标注完成的数据和进行数据格式转换的代码示例：
-```ruby
+```bash
 cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_labelme_examples.tar -P ./dataset
 tar -xf ./dataset/det_labelme_examples.tar -C ./dataset/
@@ -98,12 +98,12 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 ## 3. PaddleLabel 标注
 ### 3.1 PaddleLabel的安装和启动
 * 为避免环境冲突，建议创建一个干净的`conda`环境：
-```python
+```bash
 conda create -n paddlelabel python=3.11
 conda activate paddlelabel
 ```
 * 同样可以通过`pip`一键安装
-```python
+```bash
 pip install --upgrade paddlelabel
 pip install a2wsgi uvicorn==0.18.1
 pip install connexion==2.14.1
@@ -111,7 +111,7 @@ pip install Flask==2.2.2
 pip install Werkzeug==2.2.2
 ```
 * 安装成功后，可以在终端使用如下指令之一启动 ：
-```ruby
+```bash
 paddlelabel  # 启动paddlelabel
 pdlabel # 缩写，和paddlelabel完全相同
 ```
@@ -161,7 +161,7 @@ pdlabel # 缩写，和paddlelabel完全相同
 ## 4. 图像多标签分类数据格式转换
 在获得COCO格式数据后，需要将数据格式转换为`MLClsDataset`格式。下面给出了按照上述教程使用`LableMe`或`PaddleLabel`标注完成的数据并进行数据格式转换的代码示例：
 
-```ruby
+```bash
 # 下载并解压COCO示例数据集
 cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_coco_examples.tar -P ./dataset
@@ -176,7 +176,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 ## 5. 数据格式
 PaddleX 针对图像多标签分类任务定义的数据集，名称是 **MLClsDataset**，组织结构和标注格式如下：
 
-```ruby
+```bash
 dataset_dir    # 数据集根目录，目录名称可以改变
 ├── images     # 图像的保存目录，目录名称可以改变，但要注意与train.txt、val.txt的内容对应
 ├── label.txt  # 标注id和类别名称的对应关系，文件名称不可改变。每行给出类别id和类别名称，内容举例：45 wallflower

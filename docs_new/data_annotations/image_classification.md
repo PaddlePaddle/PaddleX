@@ -10,7 +10,7 @@
 ### 1.2 Labelme 安装
 为避免环境冲突，建议在 `conda` 环境下安装。
 
-```ruby
+```bash
 conda create -n labelme python=3.10
 conda activate labelme
 pip install pyqt5
@@ -29,7 +29,7 @@ pip install labelme
 #### 1.3.2 启动 Labelme
 终端进入到待标注数据集根目录，并启动 `labelme` 标注工具。
 
-```ruby
+```bash
 cd path/to/pets
 labelme images --nodata --autosave --output annotations --flags flags.txt
 ```
@@ -54,7 +54,7 @@ labelme images --nodata --autosave --output annotations --flags flags.txt
 
 * 完成全部图片的标注后，使用[convert_to_imagenet.py](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/image_classification_dataset_prepare/convert_to_imagenet.py)脚本将标注好的数据集转换为 `ImageNet-1k` 数据集格式，生成 `train.txt`，`val.txt` 和`label.txt`。
 
-```python
+```bash
 python convert_to_imagenet.py --dataset_path /path/to/dataset
 ```
 `dataset_path`为标注的 `labelme` 格式分类数据集。
@@ -65,7 +65,7 @@ python convert_to_imagenet.py --dataset_path /path/to/dataset
 ##  2. 数据格式
 * PaddleX 针对图像分类任务定义的数据集，名称是 **ClsDataset**，组织结构和标注格式如下：
 
-```ruby
+```bash
 dataset_dir    # 数据集根目录，目录名称可以改变
 ├── images     # 图像的保存目录，目录名称可以改变，但要注意与train.txt、val.txt的内容对应
 ├── label.txt  # 标注id和类别名称的对应关系，文件名称不可改变。每行给出类别id和类别名称，内容举例：45 wallflower
@@ -74,7 +74,7 @@ dataset_dir    # 数据集根目录，目录名称可以改变
 ```
 * 如果您已有数据集且数据集格式为如下格式，但是没有标注文件，可以使用[脚本](https://paddleclas.bj.bcebos.com/tools/create_cls_trainval_lists.py)将已有的数据集生成标注文件。
 
-```ruby
+```bash
 dataset_dir          # 数据集根目录，目录名称可以改变  
 ├── images           # 图像的保存目录，目录名称可以改变
    ├── train         # 训练集目录，目录名称可以改变
@@ -90,7 +90,7 @@ dataset_dir          # 数据集根目录，目录名称可以改变
 
 原版`label.txt`：
 
-```ruby
+```bash
 classname1
 classname2
 classname3
@@ -98,7 +98,7 @@ classname3
 ```
 修改后的`label.txt`：
 
-```ruby
+```bash
 0 classname1
 1 classname2
 2 classname3

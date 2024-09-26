@@ -66,7 +66,7 @@ PPOCRLabel --lang ch  # 启动【普通模式】，用于打【检测+识别】�
 
 如果需要数据划分，可以按照如下步骤操作：
 
-```python
+```bash
 cd ./PPOCRLabel # 将目录切换到PPOCRLabel文件夹下
 python gen_ocr_train_val_test.py --trainValTestRatio 7:3:0 --datasetRootPath ../train_data
 ```
