@@ -34,7 +34,7 @@ class TablePredictor(CVPredictor):
     def _build_components(self):
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
-            func = self._FUNC_MAP.get(tf_key)
+            func = self._FUNC_MAP[tf_key]
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             if op:
@@ -60,8 +60,10 @@ class TablePredictor(CVPredictor):
             raise Exception()
 
     @register("DecodeImage")
-    def build_readimg(self, *args, **kwargs):
-        return ReadImage(*args, **kwargs)
+    def build_readimg(self, channel_first=False, img_mode="BGR"):
+        assert channel_first is False
+        assert img_mode == "BGR"
+        return ReadImage()
 
     @register("TableLabelEncode")
     def foo(self, *args, **kwargs):
