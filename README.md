@@ -62,7 +62,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>OCR</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -72,7 +72,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>图像分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -82,7 +82,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>目标检测</td>
-        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -92,7 +92,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>语义分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -102,7 +102,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>实例分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -112,7 +112,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>表格识别</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -122,7 +122,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序预测</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -132,7 +132,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序异常检测</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -142,7 +142,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -204,11 +204,11 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
 
 
-> ❗**注：上述能力是PaddleX基于GPU/CPU实现的能力，PaddleX还对昆仑、昇腾和寒武纪三种国产化芯片进行了适配，并且实现了各个硬件之间的高效切换，但不同芯片支持的功能有所差异，以下列出了其他三种硬件支持的能力：**
+> ❗**注：上述能力是PaddleX基于GPU/CPU实现的能力，PaddleX还支持英伟达 GPU、昆仑芯、昇腾和寒武纪等多种主流硬件的无缝切换，但不同芯片支持的功能有所差异，以下列出了其他三种硬件支持的能力：**
 <details>
   <summary>👉 昇腾芯能力支持</summary>
 
-<table class="centered-table">
+<table align="center">
     <tr>
         <td></td>
         <td>在线体验</td>
@@ -221,7 +221,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>OCR</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -231,7 +231,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>图像分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -241,7 +241,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>目标检测</td>
-        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -251,7 +251,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>语义分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -261,7 +261,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>实例分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -271,7 +271,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>表格识别</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -281,7 +281,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序预测</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -291,7 +291,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序异常检测</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -301,7 +301,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -360,14 +360,13 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
         <td>✅</td>
     </tr>
 </table>
-
 </details>
 
 
 <details>
   <summary>👉 昆仑芯能力支持</summary>
 
-<table class="centered-table">
+<table align="center">
     <tr>
         <td></td>
         <td>在线体验</td>
@@ -380,7 +379,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>OCR</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -390,7 +389,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>图像分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -400,7 +399,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>目标检测</td>
-        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -410,7 +409,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>语义分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -420,7 +419,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>实例分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -430,7 +429,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>表格识别</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -440,7 +439,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序预测</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -450,7 +449,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序异常检测</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -460,7 +459,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
     </tr>
     <tr>
         <td>时序分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -519,7 +518,6 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
         <td>✅</td>
     </tr>
 </table>
-
 </details>
 
 <details>
