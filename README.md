@@ -10,13 +10,13 @@
 </p>
 
 <h4 align="center">
-  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-安装>🛠️ 安装</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=##-文档> 📖 教程</a> | <a href=#-模型产线支持> 🔥模型产线列表</a>
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 教程</a> | <a href=#-模型产线列表> 🔥模型产线列表</a>
 </h4>
 
 ## 🔍 简介
 
 
-PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，它集成了众多开箱即用的**预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
+PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
 |                **通用图像分类**                 |                **通用目标检测**                 |                **通用语义分割**                 |                **通用实例分割**                 |
 | :-------------------------------------------: | :-------------------------------------------: | :-------------------------------------------: | :-------------------------------------------: |
@@ -37,9 +37,9 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
 ## 📣 近期更新
 
-* 2024.9.30，PaddleX 3.0 Beta1 开源版正式发布，提供200+模型通过极简的Python API一键调用；实现基于统一命令的模型全流程开发，并开源PP-ChatOCRv3特色模型产线基础能力；支持100+模型高性能推理和服务化部署（持续迭代中），7类重点视觉模型端侧部署；70+模型开发全流程适配升腾910B，15+模型开发全流程适配昆仑芯和寒武纪
-* 🔥 2024.6.27，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
-* 🔥 2024.3.25，PaddleX 3.0 云端发布，支持在AI Studio 星河社区 以零代码的方式【创建产线】使用。
+* 🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供**200+模型**通过极简的Python API一键调用；实现基于统一命令的**模型全流程开发**，并开源**PP-ChatOCRv3**特色模型产线基础能力；支持**100+模型高性能推理和服务化部署**（持续迭代中），7类重点视觉模型**端侧部署**；70+模型开发全流程适配昇腾910B，15+模型开发全流程适配昆仑芯和寒武纪
+* 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
+* 🔥 **2024.3.25**，PaddleX 3.0 云端发布，支持在AI Studio 星河社区 以零代码的方式【创建产线】使用。
 
 
  ## 📊 能力支持
@@ -61,14 +61,15 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 | [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)                   | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
 | [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md) | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
 
-在PaddleX中，我们致力于实现产线级别的训练、推理与部署，产线是指一系列预定义好的、针对特定AI任务的开发流程，其中包含能够独立完成某类任务的单功能模块或模块组合，通过构建产线，我们将任务完成的各个阶段有机地结合起来，确保AI模型开发的流畅性与整体性。
+* 在PaddleX中，我们致力于实现**产线**级别的训练、推理与部署，产线是指**一系列预定义好的、针对特定AI任务的开发流程**，其中包含能够独立完成某类任务的单功能模块或模块组合，通过构建产线，我们将任务完成的各个阶段有机地结合起来，确保AI模型开发的流畅性与整体性。
 
-PaddleX的各个产线均支持**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**集成部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。
+* PaddleX的各个产线均支持**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**集成部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。详细请参考[文档](#-文档)
+* 此外，[PaddleX星河零代码产线](https://aistudio.baidu.com/pipeline/mine)为开发者提供的基于图形用户界面(GUI)的全流程高效模型训练与部署工具。开发者**无需代码开发经验**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细可以参考[零代码产线教程](https://ai.baidu.com/ai-doc/AISTUDIO/6lu57ycbb)
 
-此外，[PaddleX星河零代码产线](https://aistudio.baidu.com/pipeline/mine)为开发者提供的基于图形用户界面(GUI)的全流程高效模型训练与部署工具。开发者**无需代码开发经验**，只需要准备符合产线要求的数据集即可快速启动模型训练,详细可以参考[零代码产线教程](https://ai.baidu.com/ai-doc/AISTUDIO/6lu57ycbb)
 
+**注：上述能力是基于GPU/CPU的能力，其他硬件支持的能力如下：**
 <details>
-  <summary>👉 昇腾能力支持</summary>
+  <summary>👉 昇腾芯能力支持</summary>
 
 ||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
 |--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
@@ -87,6 +88,7 @@ PaddleX的各个产线均支持**快速推理**，您可以快速体验各个产
 | [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
 | [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
 </details>
+
 
 <details>
   <summary>👉 昆仑芯能力支持</summary>
@@ -147,31 +149,46 @@ pip install paddlepaddle
 ...
 ```
   
-*更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)*
+更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)
 
-### 命令行使用
+### 💻 命令行使用
 
 一行命令即可快速体验产线效果，以通用OCR产线为例：
 ```ruby
-paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png --device gpu:0
 ```
 
+只需指定三个参数：
+* `pipeline`：产线名称
+* `input`：待处理的输入图片的本地路径或URL
+* `device`: 使用的GPU序号（例如`gpu:0`表示使用第0块GPU），也可选择使用CPU（`cpu`）
+
+
+
+其他产线的命令行使用，只需将`pipeline`参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
 
 <details>
   <summary>👉 更多产线的命令行使用</summary>
 
-图像分类产线：
-```ruby
-paddlex --pipeline OCR --model PP-OCRv4_mobile_det PP-OCRv4_mobile_rec --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
-```
+| 产线名称     | 对应参数                 | 详细说明 |
+|----------|----------------------|------|
+| 通用图像分类产线 | `image_classification` |   [通用图像分类产线命令行使用说明](/docs_new/pipelines_tutorials/image_classification.md)   |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
 
-目标检测产线：
-```ruby
-paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/object_detection/FashionPedia_demo.png --device gpu:0
-```
 </details>
 
-### Python脚本使用
+### 📝 Python脚本使用
 
 几行代码即可完成产线的快速推理，以通用OCR产线为例：
 ```python
@@ -186,54 +203,49 @@ for batch in output:
         res.save_to_img("./output/")
         res.save_to_json("./output/")
 ```
+执行了如下几个步骤：
 
+* `create_pipeline()` 实例化产线对象
+* 调用产线对象的`predict` 方法进行推理预测
+* 对预测结果进行处理
 
+其他产线的Python脚本使用，只需将`create_pipeline()`方法的`pipeline`参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
 <details>
   <summary>👉 更多产线的Python脚本使用</summary>
 
-图像分类产线：
-```python
-from paddlex import create_pipeline
+| 产线名称     | 对应参数                 | 详细说明 |
+|----------|----------------------|------|
+| 通用图像分类产线 | `image_classification` |   [通用图像分类产线Python脚本使用说明](/docs_new/pipelines_tutorials/image_classification.md)   |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
+|          |                      |      |
 
-pipeline = create_pipeline(pipeline="object_detection")
-output = pipeline.predict("pre_image.jpg")
-for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
-```
-
-目标检测产线：
-```python
-from paddlex import create_pipeline
-
-pipeline = create_pipeline(pipeline="object_detection")
-output = pipeline.predict("pre_image.jpg")
-for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
-```
 </details>
 
 更多的产线开发步骤请参考[完整文档](#-文档)
 
 ## 📖 文档
 <details>
-  <summary> <b> 快速安装 </summary>
+  <summary> <b> 安装 </summary>
 
 * [PaddleX安装教程](/docs_new/installation/installation.md)  
 
 ...
 </details>
 <details>
-  <summary> <b> 产线开发 </summary>
+  <summary> <b> 产线使用教程 </summary>
 </details>
 <details>
-  <summary> <b> 模块开发 </summary>
-</details>
-<details>
-  <summary> <b> 集成部署 </summary>
+  <summary> <b> 单功能模块开发教程 </summary>
 </details>
 
 ## 🔥 模型产线列表
@@ -291,6 +303,26 @@ for res in output:
 
 <details>
   <summary> <b> 通用时序分类产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用图像多标签分类产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 小目标检测分类产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 通用图像识别产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 图像异常检测产线 </summary>
+</details>
+
+<details>
+  <summary> <b> 文档场景信息抽取产线 </summary>
 </details>
 
 ## 🤔 FAQ

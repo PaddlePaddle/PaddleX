@@ -159,14 +159,14 @@ pdlabel # 缩写，和paddlelabel完全相同
 
 
 ## 4. 图像多标签分类数据格式转换
-在获得COCO格式数据后，需要将数据格式转换为多标签分类格式。下面给出了按照上述教程使用`LableMe`或`PaddleLabel`标注完成的数据并进行数据格式转换的代码示例：
+在获得COCO格式数据后，需要将数据格式转换为`MLClsDataset`格式。下面给出了按照上述教程使用`LableMe`或`PaddleLabel`标注完成的数据并进行数据格式转换的代码示例：
 
 ```ruby
 # 下载并解压COCO示例数据集
 cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_coco_examples.tar -P ./dataset
 tar -xf ./dataset/det_coco_examples.tar -C ./dataset/
-#将COCO示例数据集转化为图像多标签分类数据集
+#将COCO示例数据集转化为MLClsDataset数据集
 python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
