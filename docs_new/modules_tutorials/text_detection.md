@@ -36,7 +36,7 @@ API 解释（待补充）
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。
 此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX文本检测/文本识别任务模块数据标注教程](/docs_new/data_annotations/text_detection\regognition.md)
 
-* **Demo 数据下载**
+#### 4.1.1 Demo 数据下载
 
 您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
 
@@ -44,7 +44,7 @@ API 解释（待补充）
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ocr_det_dataset_examples.tar -P ./dataset
 tar -xf ./dataset/ocr_det_dataset_examples.tar -C ./dataset/
 ```
-* **数据校验**
+#### 4.1.2 数据校验
 
 一行命令即可完成数据校验：
 
@@ -96,7 +96,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 ![](/tmp/images/modules/01.png)
 </details>
 
-* **数据集格式转换/数据集划分（可选）**
+#### 4.1.3 数据集格式转换/数据集划分（可选）
 
 在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
@@ -180,7 +180,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 * `.pdparams`、`.pdema`、`.pdopt.pdstate`、`.pdiparams`、`.pdmodel`：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
 </details>
 
-## **4.3 模型评估**
+### **4.3 模型评估**
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
