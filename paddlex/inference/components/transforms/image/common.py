@@ -474,6 +474,39 @@ class Pad(BaseComponent):
         return {"img": img, "img_size": [img.shape[1], img.shape[0]]}
 
 
+class PadStride(BaseComponent):
+    """padding image for model with FPN , instead PadBatch(pad_to_stride, pad_gt) in original config
+    Args:
+        stride (bool): model with FPN need image shape % stride == 0
+    """
+
+    INPUT_KEYS = "img"
+    OUTPUT_KEYS = "img"
+    DEAULT_INPUTS = {"img": "img"}
+    DEAULT_OUTPUTS = {"img": "img"}
+
+    def __init__(self, stride=0):
+        self.coarsest_stride = stride
+
+    def apply(self, img):
+        """
+        Args:
+            im (np.ndarray): image (np.ndarray)
+        Returns:
+            im (np.ndarray):  processed image (np.ndarray)
+        """
+        im = img
+        coarsest_stride = self.coarsest_stride
+        if coarsest_stride <= 0:
+            return {"img": im}
+        im_c, im_h, im_w = im.shape
+        pad_h = int(np.ceil(float(im_h) / coarsest_stride) * coarsest_stride)
+        pad_w = int(np.ceil(float(im_w) / coarsest_stride) * coarsest_stride)
+        padding_im = np.zeros((im_c, pad_h, pad_w), dtype=np.float32)
+        padding_im[:, :im_h, :im_w] = im
+        return {"img": padding_im}
+
+
 class Normalize(BaseComponent):
     """Normalize the image."""
 

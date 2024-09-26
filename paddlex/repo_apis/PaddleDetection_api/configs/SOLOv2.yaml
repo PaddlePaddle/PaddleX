@@ -97,7 +97,7 @@ OptimizerBuilder:
 
 # Model
 architecture: SOLOv2
-pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams
+pretrain_weights: https://paddledet.bj.bcebos.com/models/solov2_r50_fpn_1x_coco.pdparams
 
 SOLOv2:
   backbone: ResNet

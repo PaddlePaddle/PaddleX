@@ -15,7 +15,7 @@ print_params: false
 
 # Dataset
 metric: COCO
-num_classes: 80
+num_classes: 5
 
 worker_num: 8
 
