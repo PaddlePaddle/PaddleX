@@ -291,7 +291,6 @@ class DetModel(BaseModel):
                 temp_anno = {'images': [], 'annotations': [], 'categories': categories}
                 with self._create_new_val_json_file() as anno_file:
                     json.dump(temp_anno, open(anno_file, 'w'))
-                    import ;.set_trace()
                     config.update({"TestDataset": {"dataset_dir": '', "anno_path": anno_file}})
                     logging.warning(f"{self.name} does not have validate annotations, use {anno_file} default instead.")
                     self._assert_empty_kwargs(kwargs)
