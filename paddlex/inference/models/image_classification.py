@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import numpy as np
-import re
 
 from ...utils.func_register import FuncRegister
 from ...modules.image_classification.model_list import MODELS
