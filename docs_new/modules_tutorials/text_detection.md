@@ -11,7 +11,9 @@
 
 
 ## 三、快速集成
-在快速集成前，首先需要安装 PaddleX 的 wheel 包，wheel的安装方式请参考[PaddleX本地安装教程](/docs_new/installation/installation.md)。完成 wheel 包的安装后，几行代码即可完成文本检测模块的推理，可以任意切换该模块下的模型，您也可以将文本检测的模块中的模型推理集成到您的项目中。
+> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考[PaddleX本地安装教程](/docs_new/installation/installation.md)。
+> 
+几行代码即可完成文本检测模块的推理，可以任意切换该模块下的模型，您也可以将文本检测的模块中的模型推理集成到您的项目中。
 
 ```python
 from paddlex import create_model
@@ -23,25 +25,27 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-API 解释[@郜廷权](https://ku.baidu-int.com?t=mention&mt=contact&id=374db2a0-7b25-11ef-8b64-99a71690028b)
+API 解释（待补充）
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](/docs_new/modules_tutorials/model_python_API.MD)。
 
 ## 四、二次开发
-如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的文本检测模型。在使用 PaddleX 开发文本检测模型之前，请务必安装 PaddleX 的 OCR 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](/docs_new/installation/installation.md)中的二次开发部分。
+如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力开发更好的文本检测模型。在使用 PaddleX 开发文本检测模型之前，请务必安装 PaddleX 的 OCR 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](/docs_new/installation/installation.md)中的二次开发部分。
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。
 此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX文本检测/文本识别任务模块数据标注教程](/docs_new/data_annotations/text_detection\regognition.md)
 
 * **Demo 数据下载**
+
 您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
 
-```ruby
+```bash
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ocr_det_dataset_examples.tar -P ./dataset
 tar -xf ./dataset/ocr_det_dataset_examples.tar -C ./dataset/
 ```
 * **数据校验**
+
 一行命令即可完成数据校验：
 
 ```python
@@ -52,10 +56,10 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
 <details>
-  <summary>👉 校验结果详情</summary>
+  <summary>👉 <b>校验结果详情（点击展开）</b></summary>
 校验结果文件具体内容为：
 
-```ruby
+```bash
 {
   "done_flag": true,
   "check_pass": true,
@@ -94,10 +98,10 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 * **数据集格式转换/数据集划分（可选）**
 
-ß在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
+在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
 
 <details>
-  <summary>👉 格式转换/数据集划分详情</summary>
+  <summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
 
 
 **（1）数据集格式转换**
@@ -116,7 +120,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 例如，您想重新划分数据集为 训练集占比90%、验证集占比10%，则需将配置文件修改为：
 
-```ruby
+```bash
 ......
 CheckDataset:
   ......
@@ -163,7 +167,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](/docs_new/modules_tutorials/config_parameters_common.md)。
 
 <details>
-  <summary>👉 <b>更多说明</b></summary>
+  <summary>👉 <b>更多说明（点击展开）</b></summary>
 
 * 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
 * PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
@@ -193,7 +197,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 
 <details>
-  <summary>👉 <b>更多说明</b></summary>
+  <summary>👉 <b>更多说明（点击展开）</b></summary>
 
 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./`output/best_accuracy/best_accuracy.pdparams。
 
@@ -207,7 +211,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 #### 4.4.1 模型推理
 通过命令行的方式进行推理预测，只需如下一条命令：
 
-```python
+```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
