@@ -34,7 +34,7 @@ class ClasPredictor(CVPredictor):
         self._add_component(ReadImage(format="RGB"))
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
-            func = self._FUNC_MAP.get(tf_key)
+            func = self._FUNC_MAP[tf_key]
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             self._add_component(op)
@@ -82,7 +82,7 @@ class ClasPredictor(CVPredictor):
     ):
         assert channel_num == 3
         assert order == ""
-        return Normalize(mean=mean, std=std)
+        return Normalize(scale=scale, mean=mean, std=std)
 
     @register("ToCHWImage")
     def build_to_chw(self):

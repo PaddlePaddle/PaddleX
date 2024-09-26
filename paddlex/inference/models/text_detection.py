@@ -32,7 +32,7 @@ class TextDetPredictor(CVPredictor):
     def _build_components(self):
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
-            func = self._FUNC_MAP.get(tf_key)
+            func = self._FUNC_MAP[tf_key]
             args = cfg.get(tf_key, {})
             op = func(self, **args) if args else func(self)
             if op:

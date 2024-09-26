@@ -34,7 +34,7 @@ class SegPredictor(CVPredictor):
         self._add_component(ToCHWImage())
         for cfg in self.config["Deploy"]["transforms"]:
             tf_key = cfg["type"]
-            func = self._FUNC_MAP.get(tf_key)
+            func = self._FUNC_MAP[tf_key]
             cfg.pop("type")
             args = cfg
             op = func(self, **args) if args else func(self)

@@ -13,13 +13,16 @@
 # limitations under the License.
 
 import os
+import json
 
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
 from ....utils.misc import abspath
+from ....utils import logging
 
 from .config import DetConfig
+from .official_categories import official_categories
 
 
 class DetModel(BaseModel):
@@ -281,6 +284,20 @@ class DetModel(BaseModel):
             hpi_config_path = hpi_config_path.as_posix()
         config.update({"hpi_config_path": hpi_config_path})
 
+        if self.name in official_categories.keys():
+            anno_val_file = abspath(os.path.join(config.TestDataset['dataset_dir'], config.TestDataset['anno_path']))
+            if anno_val_file == None or (not os.path.isfile(anno_val_file)):
+                categories = official_categories[self.name]
+                temp_anno = {'images': [], 'annotations': [], 'categories': categories}
+                with self._create_new_val_json_file() as anno_file:
+                    json.dump(temp_anno, open(anno_file, 'w'))
+                    config.update({"TestDataset": {"dataset_dir": '', "anno_path": anno_file}})
+                    logging.warning(f"{self.name} does not have validate annotations, use {anno_file} default instead.")
+                    self._assert_empty_kwargs(kwargs)
+                    with self._create_new_config_file() as config_path:
+                        config.dump(config_path)
+                        return self.runner.export(config_path, cli_args, None)
+                
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
