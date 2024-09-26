@@ -44,9 +44,9 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
  ## 📊 能力支持
 
-* PaddleX的各个产线均支持在[AI Studio星河社区](https://aistudio.baidu.com/pipeline/mine)上**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**高性能部署/服务化部署/端侧部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。完整的产线开发流程请参考[PaddleX产线开发工具本地使用教程](/docs_new/pipelines_usage/pipeline_develop_guide.md)。
+PaddleX的各个产线均支持在[AI Studio星河社区](https://aistudio.baidu.com/pipeline/mine)上**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**高性能部署/服务化部署/端侧部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。完整的产线开发流程请参考[PaddleX产线开发工具本地使用教程](/docs_new/pipelines_usage/pipeline_develop_guide.md)。
 
-* 此外，为开发者提供的基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程高效模型训练与部署工具。开发者**无需代码开发**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
+此外，为开发者提供的基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程高效模型训练与部署工具。开发者**无需代码开发**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
 
 
 <table align="center">
