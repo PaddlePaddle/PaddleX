@@ -10,7 +10,7 @@
 </p>
 
 <h4 align="center">
-  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 教程</a> | <a href=#-模型产线列表> 🔥模型产线列表</a>
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=#-模型产线列表> 🔥模型产线列表</a>
 </h4>
 
 ## 🔍 简介
@@ -688,7 +688,7 @@ PaddleX的各个产线均支持在[AI Studio星河社区](https://aistudio.baidu
 
 > ❗安装PaddleX前请先确保您有基础的Python运行环境，如果您还未安装Python环境，可以参考[运行环境准备](/docs_new/installation/installation.md#1-运行环境准备)进行安装
 
-```python
+```bash
 # 您的机器安装的是CUDA 11，请运行以下命令安装
 pip install paddlepaddle-gpu
 # 您的机器是CPU，请运行以下命令安装
