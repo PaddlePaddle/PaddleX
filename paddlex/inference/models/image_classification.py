@@ -83,12 +83,6 @@ class ClasPredictor(CVPredictor):
     ):
         assert channel_num == 3
         assert order == ""
-
-        if isinstance(scale, str) and re.fullmatch(
-            r"1(?:\.|\.0)?\s*/\s*255(?:\.|\.0)?", scale
-        ):
-            scale = 1.0 / 255.0
-
         return Normalize(scale=scale, mean=mean, std=std)
 
     @register("ToCHWImage")
