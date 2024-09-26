@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import numpy as np
+import re
 
 from ...utils.func_register import FuncRegister
 from ...modules.image_classification.model_list import MODELS
@@ -82,7 +83,13 @@ class ClasPredictor(CVPredictor):
     ):
         assert channel_num == 3
         assert order == ""
-        return Normalize(mean=mean, std=std)
+
+        if isinstance(scale, str) and re.fullmatch(
+            r"1(?:\.|\.0)?\s*/\s*255(?:\.|\.0)?", scale
+        ):
+            scale = 1.0 / 255.0
+
+        return Normalize(scale=scale, mean=mean, std=std)
 
     @register("ToCHWImage")
     def build_to_chw(self):
