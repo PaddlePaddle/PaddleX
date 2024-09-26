@@ -1,7 +1,7 @@
 Global:
-  model: PP-YOLOE_plus_SOD-S
+  model: PP-YOLOE_plus_SOD-L
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
+  dataset_dir: "/paddle/dataset/paddlex/det/small_det_examples"
   device: gpu:0,1,2,3
   output: "output"
 
@@ -18,9 +18,9 @@ Train:
   num_classes: 4
   epochs_iters: 50
   batch_size: 2
-  learning_rate: 0.001
+  learning_rate: 0.01
   pretrain_weight_path: null
-  warmup_steps: #100
+  warmup_steps: 100
   resume_path: null
   log_interval: 10
   eval_interval: 1
@@ -39,4 +39,4 @@ Predict:
 
 
 Export:
-  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_plus_sod_crn_s_80e_visdrone.pdparams
+  weight_path: https://paddledet.bj.bcebos.com/models/ppyoloe_plus_sod_crn_l_80e_visdrone.pdparams
