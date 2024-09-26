@@ -30,7 +30,7 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
     DEAULT_OUTPUTS = {"pred": "pred"}
     ENABLE_BATCH = True
 
-    def __init__(self, model_dir, model_prefix, option: PaddlePredictorOption = None):
+    def __init__(self, model_dir, model_prefix, option):
         super().__init__()
         PPEngineMixin.__init__(self, option)
         self.model_dir = model_dir
