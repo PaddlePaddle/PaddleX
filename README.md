@@ -44,25 +44,168 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
  ## 📊 能力支持
 
-|       | [在线体验](https://aistudio.baidu.com/pipeline/mine) | 快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
-|-------|---|---|---|---|---|---|
-| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                                | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)                          | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                              | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)                         | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)                         | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                             | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)                       | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md)             | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)                    | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)         | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)                      | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)                             | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)                   | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md) | ✅                  | ✅        | ✅          | ✅          | ✅        | ✅ |
+PaddleX的各个产线均支持在[AI Studio星河社区](https://aistudio.baidu.com/pipeline/mine)上**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**高性能部署/服务化部署/端侧部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。详细请参考[文档](#-文档)
+此外，[PaddleX星河零代码产线](https://aistudio.baidu.com/pipeline/mine)为开发者提供的基于图形用户界面(GUI)的全流程高效模型训练与部署工具。开发者**无需代码开发经验**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细可以参考[零代码产线教程](https://ai.baidu.com/ai-doc/AISTUDIO/6lu57ycbb)
 
+<style>
+  .centered-table td {
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>
 
-
+<table class="centered-table">
+    <tr>
+        <td></td>
+        <td>在线体验</td>
+        <td>快速推理</td>
+        <td>高性能部署</td>
+        <td>服务化部署</td>
+        <td>端侧部署</td>
+        <td>二次开发</td>
+        <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
+    </tr>
+    <tr>
+        <td>OCR</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>目标检测</td>
+        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>语义分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>实例分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>表格识别</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序预测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序异常检测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像多标签分类</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>小目标检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像识别</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像异常检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>文档场景信息抽取</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+</table>
 
 
 
@@ -70,70 +213,480 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 <details>
   <summary>👉 昇腾芯能力支持</summary>
 
-||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
-|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
-| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+<table class="centered-table">
+    <tr>
+        <td></td>
+        <td>在线体验</td>
+        <td>快速推理</td>
+        <td>高性能部署</td>
+        <td>服务化部署</td>
+        <td>端侧部署</td>
+        <td>二次开发</td>
+        <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
+    </tr>
+    <tr>
+        <td>OCR</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>目标检测</td>
+        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>语义分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>实例分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>表格识别</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序预测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序异常检测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像多标签分类</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>小目标检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像识别</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像异常检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>文档场景信息抽取</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+</table>
+
 </details>
 
 
 <details>
   <summary>👉 昆仑芯能力支持</summary>
 
-||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
-|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
-| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+<table class="centered-table">
+    <tr>
+        <td></td>
+        <td>在线体验</td>
+        <td>快速推理</td>
+        <td>高性能部署</td>
+        <td>服务化部署</td>
+        <td>端侧部署</td>
+        <td>二次开发</td>
+        <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
+    </tr>
+    <tr>
+        <td>OCR</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>目标检测</td>
+        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>语义分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>实例分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>表格识别</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序预测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序异常检测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像多标签分类</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>小目标检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像识别</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像异常检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>文档场景信息抽取</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+</table>
+
 </details>
 
 <details>
   <summary>👉 寒武纪能力支持</summary>
 
-||快速推理 | 二次开发 | 高性能部署 | 服务化部署 | 端侧部署 |
-|--------------------------------------------------------------------------------|----------|----------|------------|------------|------------|
-| [OCR](/docs_new/pipelines_tutorials/OCR.md)                                    | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像分类](/docs_new/pipelines_tutorials/image_classification.md)              | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [目标检测](/docs_new/pipelines_tutorials/object_detection.md)                  | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [语义分割](/docs_new/pipelines_tutorials/semantic_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [实例分割](/docs_new/pipelines_tutorials/instance_segmentation.md)             | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [表格识别](/docs_new/pipelines_tutorials/table_recognition.md)                 | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序预测](/docs_new/pipelines_tutorials/time_series_forecasting.md)           | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序异常检测](/docs_new/pipelines_tutorials/time_series_anomaly_detection.md) | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [时序分类](/docs_new/pipelines_tutorials/time_series_classification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像多标签分类](/docs_new/pipelines_tutorials/image_multi_label_lassification.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [小目标检测](/docs_new/pipelines_tutorials/small_object_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像识别](/docs_new/pipelines_tutorials/image_recognition.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [图像异常检测](/docs_new/pipelines_tutorials/image_anomaly_detection.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
-| [文档场景信息抽取](/docs_new/pipelines_tutorials/document_scene_information_extraction.md)        | ✅        | ✅        | ✅          | ✅          | ✅        | ✅ |
+<table class="centered-table">
+    <tr>
+        <td></td>
+        <td>在线体验</td>
+        <td>快速推理</td>
+        <td>高性能部署</td>
+        <td>服务化部署</td>
+        <td>端侧部署</td>
+        <td>二次开发</td>
+        <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
+    </tr>
+    <tr>
+        <td>OCR</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>目标检测</td>
+        <td><a href = "hhttps://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>语义分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>实例分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>表格识别</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序预测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序异常检测</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>时序分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">体验链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像多标签分类</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>小目标检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像识别</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>图像异常检测</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>文档场景信息抽取</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+</table>
+
 </details>
 
 
-* PaddleX的各个产线均支持**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行**集成部署**，如果不满意，您也可以对产线中的单功能模块进行**二次开发**提升产线效果。详细请参考[文档](#-文档)
-* 此外，[PaddleX星河零代码产线](https://aistudio.baidu.com/pipeline/mine)为开发者提供的基于图形用户界面(GUI)的全流程高效模型训练与部署工具。开发者**无需代码开发经验**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细可以参考[零代码产线教程](https://ai.baidu.com/ai-doc/AISTUDIO/6lu57ycbb)
+
 
 
 ## ⏭️ 快速开始
@@ -173,7 +726,7 @@ paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.
 
 | 产线名称     | 对应参数                 | 详细说明 |
 |----------|----------------------|------|
-| 通用图像分类产线 | `image_classification` |   [通用图像分类产线命令行使用说明](/docs_new/pipelines_tutorials/image_classification.md)   |
+| 通用图像分类产线 | `image_classification` |   [通用图像分类产线命令行使用说明](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)   |
 |          |                      |      |
 |          |                      |      |
 |          |                      |      |
@@ -216,7 +769,7 @@ for batch in output:
 
 | 产线名称     | 对应参数                 | 详细说明 |
 |----------|----------------------|------|
-| 通用图像分类产线 | `image_classification` |   [通用图像分类产线Python脚本使用说明](/docs_new/pipelines_tutorials/image_classification.md)   |
+| 通用图像分类产线 | `image_classification` |   [通用图像分类产线Python脚本使用说明](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)   |
 |          |                      |      |
 |          |                      |      |
 |          |                      |      |
@@ -246,7 +799,17 @@ for batch in output:
   <summary> <b> 产线使用教程 </summary>
 </details>
 <details>
-  <summary> <b> 单功能模块开发教程 </summary>
+  <summary> <b> 单功能模块使用教程 </summary>
+</details>
+
+<details>
+  <summary> <b> 多模块组合使用教程 </summary>
+</details>
+<details>
+  <summary> <b> 模型产线部署教程 </summary>
+</details>
+<details>
+  <summary> <b> 多硬件使用教程 </summary>
 </details>
 
 ## 🔥 模型产线列表
