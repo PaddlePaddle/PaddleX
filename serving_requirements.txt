@@ -1,6 +1,8 @@
 aiohttp>=3.9
+bce-python-sdk >= 0.8
 fastapi>=0.110
 pydantic>=2
+PyMuPDF>=1.20
 starlette>=0.36
 typing_extensions>=4.11
 uvicorn>=0.16

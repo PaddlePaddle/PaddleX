@@ -14,10 +14,13 @@
 
 import base64
 import io
+import mimetypes
 import urllib.parse
 import uuid
+from typing import List, Optional
 
 import aiohttp
+import fitz
 import cv2
 import numpy as np
 import pandas as pd
@@ -64,3 +67,31 @@ def csv_bytes_to_data_frame(data: bytes) -> pd.DataFrame:
 
 def data_frame_to_base64(df: str) -> str:
     return base64.b64encode(df.to_csv()).decode("ascii")
+
+
+def read_pdf(
+    bytes_: bytes, resize: bool = False, max_num_imgs: Optional[int] = None
+) -> List[np.ndarray]:
+    images: List[np.ndarray] = []
+    img_size = None
+    with fitz.open("pdf", bytes_) as doc:
+        for page in doc:
+            if max_num_imgs is not None and len(images) >= max_num_imgs:
+                break
+            # TODO: Do not always use zoom=2.0
+            zoom = 2.0
+            deg = 0
+            mat = fitz.Matrix(zoom, zoom).prerotate(deg)
+            pixmap = page.get_pixmap(matrix=mat, alpha=False)
+            image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
+                pixmap.h, pixmap.w, pixmap.n
+            )
+            image = np.ascontiguousarray(image[..., ::-1])
+            if resize:
+                if img_size is None:
+                    img_size = (image.shape[1], image.shape[0])
+                else:
+                    if (image.shape[1], image.shape[0]) != img_size:
+                        image = cv2.resize(image, img_size)
+            images.append(image)
+    return images

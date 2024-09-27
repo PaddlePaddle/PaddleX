@@ -50,9 +50,6 @@ class InferResult(BaseModel):
 
 
 def create_pipeline_app(pipeline: OCRPipeline, app_config: AppConfig) -> FastAPI:
-    pipeline.det_model.set_predict(device=app_config.device)
-    pipeline.rec_model.set_predict(device=app_config.device)
-
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )

@@ -42,13 +42,10 @@ from ...table_recognition import TableRecPipeline
 # on a specific pipeline class, and a pipeline name must be provided (in the
 # pipeline config) to specify the type of the pipeline.
 def create_pipeline_app(
-    pipeline: BasePipeline, pipeline_config: Dict[str, Any], device: Optional[str]
+    pipeline: BasePipeline, pipeline_config: Dict[str, Any]
 ) -> FastAPI:
     pipeline_name = pipeline_config["Global"]["pipeline_name"]
-    if device is not None:
-        app_config = create_app_config(pipeline_config, device=device)
-    else:
-        app_config = create_app_config(pipeline_config)
+    app_config = create_app_config(pipeline_config)
     if pipeline_name == "image_classification":
         if not isinstance(pipeline, SingleModelPipeline):
             raise TypeError(
@@ -101,6 +98,18 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `SingleModelPipeline`."
             )
         return create_ts_fc_app(pipeline, app_config)
+    elif pipeline_name == "multi_label_image_classification":
+        if not isinstance(pipeline, SingleModelPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+            )
+        return create_image_classification_app(pipeline, app_config)
+    elif pipeline_name == "small_object_detection":
+        if not isinstance(pipeline, SingleModelPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+            )
+        return create_object_detection_app(pipeline, app_config)
     else:
         if BasePipeline.get(pipeline_name):
             raise ValueError(

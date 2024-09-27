@@ -26,6 +26,7 @@ from typing import (
     Tuple,
     TypeVar,
 )
+from functools import partial
 
 import aiohttp
 import fastapi
@@ -75,13 +76,12 @@ class PipelineWrapper(Generic[_PipelineT]):
     async def _run_in_executor(
         self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
     ) -> _T:
-        return await asyncio.get_event_loop().run_in_executor(
-            None, func, *args, **kwargs
+        return await asyncio.get_running_loop().run_in_executor(
+            None, partial(func, *args, **kwargs)
         )
 
 
 class AppConfig(BaseModel):
-    device: str = "cpu"
     extra: Optional[Dict[str, Any]] = None
 
 

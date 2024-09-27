@@ -59,8 +59,6 @@ def _rle(mask: np.ndarray) -> str:
 def create_pipeline_app(
     pipeline: SingleModelPipeline, app_config: AppConfig
 ) -> FastAPI:
-    pipeline.model.set_predict(device=app_config.device)
-
     app, ctx = create_app(
         pipeline=pipeline,
         app_config=app_config,
