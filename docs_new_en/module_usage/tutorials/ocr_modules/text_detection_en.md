@@ -50,10 +50,14 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
-After executing the above command, PaddleX will validate the dataset, summarize its basic information, and print `Check dataset passed !` in the log upon successful completion. The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the current directory's `./output/check_dataset` directory, including visualized sample images and sample distribution histograms.
+After executing the above command, PaddleX will validate the dataset, summarize its basic information, and print `Check dataset passed !` in the log upon successful completion. 
 
 <details>
-  <summary>👉 <b>Validation Results Details (Click to Expand)
+<summary>👉 <b>Validation Results Details (Click to Expand)</b></summary>
+
+The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the current directory's `./output/check_dataset` directory, including visualized sample images and sample distribution histograms.
+
+</details>
 
 ### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 
@@ -128,7 +132,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
 * PaddleX abstracts away the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
-* When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.md
+* When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md)
 </details>
 
 ### **4.4 Model Inference and Model Integration**
