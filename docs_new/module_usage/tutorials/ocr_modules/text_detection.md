@@ -212,14 +212,14 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png"
+    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv4_mobile_det.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_accuracy/inference"`
-* 指定输入数据路径：`-o Predict.input_path="..."`
+* 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
 
 * 也可以用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。
