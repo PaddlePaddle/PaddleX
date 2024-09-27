@@ -757,34 +757,34 @@ for batch in output:
 * <details open>
     <summary> <b> cv相关产线 </b></summary>
 
-   * [通用图像分类产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)
-   * [通用目标检测产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/object_detection.md)
-   * [通用实例分割产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/instance_segmentation.md)
-   * [通用语义分割产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/semantic_segmentation.md)
-   * [通用图像多标签分类产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
-   * [小目标检测产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/small_object_detection.md)
-   * [图像异常检测产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
+   * [通用图像分类产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)
+   * [通用目标检测产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/object_detection.md)
+   * [通用实例分割产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/instance_segmentation.md)
+   * [通用语义分割产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/semantic_segmentation.md)
+   * [通用图像多标签分类产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
+   * [小目标检测产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/small_object_detection.md)
+   * [图像异常检测产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   </details>
   
 * <details open>
     <summary> <b> ocr相关产线 </b></summary>
 
-    * [通用OCR产线](/docs_new/pipelines_usage/tutorials/ocr_pipelies/OCR.md)
-    * [通用表格识别产线](/docs_new/pipelines_usage/tutorials/ocr_pipelies/table_recognition.md)
+    * [通用OCR产线使用教程](/docs_new/pipelines_usage/tutorials/ocr_pipelies/OCR.md)
+    * [通用表格识别产线使用教程](/docs_new/pipelines_usage/tutorials/ocr_pipelies/table_recognition.md)
   </details>
 
 * <details open>
     <summary> <b> 时序相关产线</b> </summary>
 
-   * [通用时序预测产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
-   * [通用时序异常检测产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
-   * [通用时序分类产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_classification.md)
+   * [通用时序预测产线使用教程](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
+   * [通用时序异常检测产线使用教程](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
+   * [通用时序分类产线使用教程](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_classification.md)
   </details>
 
 * <details open>
     <summary> <b> 信息抽取相关产线 </b></summary>
 
-   * [文档场景信息抽取产线](/docs_new/pipelines_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+   * [文档场景信息抽取产线使用教程](/docs_new/pipelines_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
 * <details>
@@ -802,40 +802,40 @@ for batch in output:
 * <details>
   <summary> <b> cv相关模块 </b></summary>
   
-  * [图像分类模块]()
-  * [图像识别模块]()
-  * [目标检测模块]()
-  * [小目标检测模块]()
-  * [人脸检测模块]()
-  * [主体检测模块]()
-  * [行人检测模块]()
-  * [车辆检测模块]()
-  * [语义分割模块]()
-  * [实例分割模块]()
-  * [文档图像方向分类]()
-  * [图像多标签分类]()
-  * [行人属性识别]()
-  * [车辆属性识别]()
-  * [图像矫正模块]()
-  * [无监督异常检测模块]()
+  * [图像分类模块使用教程]()
+  * [图像识别模块使用教程]()
+  * [目标检测模块使用教程]()
+  * [小目标检测模块使用教程]()
+  * [人脸检测模块使用教程]()
+  * [主体检测模块使用教程]()
+  * [行人检测模块使用教程]()
+  * [车辆检测模块使用教程]()
+  * [语义分割模块使用教程]()
+  * [实例分割模块使用教程]()
+  * [文档图像方向分类使用教程]()
+  * [图像多标签分类使用教程]()
+  * [行人属性识别使用教程]()
+  * [车辆属性识别使用教程]()
+  * [图像矫正模块使用教程]()
+  * [无监督异常检测模块使用教程]()
   </details> 
   
 * <details>
   <summary> <b> ocr相关模块 </b></summary>
 
-  * [文本检测模块]()
-  * [印章文本检测模块]()
-  * [文本识别模块]()
-  * [版面区域定位模块]()
-  * [表格结构识别模块]()
+  * [文本检测模块使用教程]()
+  * [印章文本检测模块使用教程]()
+  * [文本识别模块使用教程]()
+  * [版面区域定位模块使用教程]()
+  * [表格结构识别模块使用教程]()
   </details>
 
 * <details>
   <summary> <b> 时序相关产线 </b></summary>
 
-  * [时序预测模块]()
-  * [时序异常检测模块]()
-  * [时序分类模块]()
+  * [时序预测模块使用教程]()
+  * [时序异常检测模块使用教程]()
+  * [时序分类模块使用教程]()
   </details>
     
 * <details>
@@ -874,6 +874,7 @@ for batch in output:
 
 <details>
   <summary> <a herf = ""><b>通用OCR产线  </b></a></summary>
+
 
 | 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
 |----------|---------------------|-------|-------------------|-------------|------------------|
