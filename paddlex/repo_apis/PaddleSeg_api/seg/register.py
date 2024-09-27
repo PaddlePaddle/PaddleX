@@ -80,6 +80,29 @@ register_model_info(
     }
 )
 
+# PP-LiteSeg
+register_model_info(
+    {
+        "model_name": "PP-LiteSeg-B",
+        "suite": "Seg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-LiteSeg-B.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": True,
+            "amp": ["O1", "O2"],
+        },
+        "supported_evaluate_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "amp": [],
+        },
+        "supported_predict_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+        "supported_infer_opts": {"device": ["cpu", "gpu", "xpu", "npu", "mlu"]},
+        "supported_dataset_types": [],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LiteSeg-B.yaml",
+    }
+)
+
 # seaformer
 register_model_info(
     {
