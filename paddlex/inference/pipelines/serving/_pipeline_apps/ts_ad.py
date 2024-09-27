@@ -18,7 +18,7 @@ from pydantic import BaseModel
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...single_model_pipeline import SingleModelPipeline
+from ...single_model_pipeline import TSAd
 from .....utils import logging
 
 
@@ -31,9 +31,7 @@ class InferResult(BaseModel):
     image: str
 
 
-def create_pipeline_app(
-    pipeline: SingleModelPipeline, app_config: AppConfig
-) -> FastAPI:
+def create_pipeline_app(pipeline: TSAd, app_config: AppConfig) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )

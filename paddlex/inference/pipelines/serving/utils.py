@@ -14,9 +14,8 @@
 
 import base64
 import io
-import mimetypes
-import urllib.parse
 import uuid
+from urllib.parse import urlparse
 from typing import List, Optional
 
 import aiohttp
@@ -36,7 +35,7 @@ def is_url(s: str) -> bool:
     if not (s.startswith("http://") or s.startswith("https://")):
         # Quick rejection
         return False
-    result = urllib.parse.urlparse(s)
+    result = urlparse(s)
     return all([result.scheme, result.netloc]) and result.scheme in ("http", "https")
 
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from fastapi import FastAPI
 
@@ -29,9 +29,21 @@ from .table_recognition import create_pipeline_app as create_table_recognition_a
 from .ts_ad import create_pipeline_app as create_ts_ad_app
 from .ts_cls import create_pipeline_app as create_ts_cls_app
 from .ts_fc import create_pipeline_app as create_ts_fc_app
+from .ts_fc import create_pipeline_app as create_anomaly_detection_app
 from ..app import create_app_config
 from ...base import BasePipeline
-from ...single_model_pipeline import SingleModelPipeline
+from ...single_model_pipeline import (
+    ImageClassification,
+    ObjectDetection,
+    InstanceSegmentation,
+    SemanticSegmentation,
+    TSFc,
+    TSAd,
+    TSCls,
+    MultiLableImageClas,
+    SmallObjDet,
+    AnomalyDetection,
+)
 from ...ocr import OCRPipeline
 from ...table_recognition import TableRecPipeline
 
@@ -47,21 +59,21 @@ def create_pipeline_app(
     pipeline_name = pipeline_config["Global"]["pipeline_name"]
     app_config = create_app_config(pipeline_config)
     if pipeline_name == "image_classification":
-        if not isinstance(pipeline, SingleModelPipeline):
+        if not isinstance(pipeline, ImageClassification):
             raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+                "Expected `pipeline` to be an instance of `ImageClassification`."
             )
         return create_image_classification_app(pipeline, app_config)
     elif pipeline_name == "instance_segmentation":
-        if not isinstance(pipeline, SingleModelPipeline):
+        if not isinstance(pipeline, InstanceSegmentation):
             raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+                "Expected `pipeline` to be an instance of `InstanceSegmentation`."
             )
         return create_instance_segmentation_app(pipeline, app_config)
     elif pipeline_name == "object_detection":
-        if not isinstance(pipeline, SingleModelPipeline):
+        if not isinstance(pipeline, ObjectDetection):
             raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+                "Expected `pipeline` to be an instance of `ObjectDetection`."
             )
         return create_object_detection_app(pipeline, app_config)
     elif pipeline_name == "ocr":
@@ -69,9 +81,9 @@ def create_pipeline_app(
             raise TypeError("Expected `pipeline` to be an instance of `OCRPipeline`.")
         return create_ocr_app(pipeline, app_config)
     elif pipeline_name == "semantic_segmentation":
-        if not isinstance(pipeline, SingleModelPipeline):
+        if not isinstance(pipeline, SemanticSegmentation):
             raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+                "Expected `pipeline` to be an instance of `SemanticSegmentation`."
             )
         return create_semantic_segmentation_app(pipeline, app_config)
     elif pipeline_name == "table_recognition":
@@ -81,35 +93,33 @@ def create_pipeline_app(
             )
         return create_table_recognition_app(pipeline, app_config)
     elif pipeline_name == "ts_ad":
-        if not isinstance(pipeline, SingleModelPipeline):
-            raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
-            )
+        if not isinstance(pipeline, TSAd):
+            raise TypeError("Expected `pipeline` to be an instance of `TSAd`.")
         return create_ts_ad_app(pipeline, app_config)
     elif pipeline_name == "ts_cls":
-        if not isinstance(pipeline, SingleModelPipeline):
-            raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
-            )
+        if not isinstance(pipeline, TSCls):
+            raise TypeError("Expected `pipeline` to be an instance of `TSCls`.")
         return create_ts_cls_app(pipeline, app_config)
     elif pipeline_name == "ts_fc":
-        if not isinstance(pipeline, SingleModelPipeline):
-            raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
-            )
+        if not isinstance(pipeline, TSFc):
+            raise TypeError("Expected `pipeline` to be an instance of `TSFc`.")
         return create_ts_fc_app(pipeline, app_config)
     elif pipeline_name == "multi_label_image_classification":
-        if not isinstance(pipeline, SingleModelPipeline):
+        if not isinstance(pipeline, MultiLableImageClas):
             raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
+                "Expected `pipeline` to be an instance of `MultiLableImageClas`."
             )
         return create_image_classification_app(pipeline, app_config)
     elif pipeline_name == "small_object_detection":
-        if not isinstance(pipeline, SingleModelPipeline):
-            raise TypeError(
-                "Expected `pipeline` to be an instance of `SingleModelPipeline`."
-            )
+        if not isinstance(pipeline, SmallObjDet):
+            raise TypeError("Expected `pipeline` to be an instance of `SmallObjDet`.")
         return create_object_detection_app(pipeline, app_config)
+    elif pipeline_name == "anomaly_detection":
+        if not isinstance(pipeline, AnomalyDetection):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `AnomalyDetection`."
+            )
+        return create_anomaly_detection_app(pipeline, app_config)
     else:
         if BasePipeline.get(pipeline_name):
             raise ValueError(

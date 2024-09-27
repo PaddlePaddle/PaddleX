@@ -12,33 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import List
+
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...single_model_pipeline import TSCls
+from ...single_model_pipeline import AnomalyDetection
 from .....utils import logging
 
 
 class InferRequest(BaseModel):
-    csv: str
-
-
-class InferResult(BaseModel):
-    label: str
-    score: float
     image: str
 
 
-def create_pipeline_app(pipeline: TSCls, app_config: AppConfig) -> FastAPI:
+class InferResult(BaseModel):
+    labelMap: List[int]
+    size: Annotated[List[int], Field(min_length=2, max_length=2)]
+    image: str
+
+
+def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
-        "/time-series-classification",
+        "/anomaly-detection",
         operation_id="infer",
         responses={422: {"model": Response}},
     )
@@ -47,20 +50,24 @@ def create_pipeline_app(pipeline: TSCls, app_config: AppConfig) -> FastAPI:
         aiohttp_session = ctx.aiohttp_session
 
         try:
-            file_bytes = await serving_utils.get_raw_bytes(request.csv, aiohttp_session)
-            df = serving_utils.csv_bytes_to_data_frame(file_bytes)
+            file_bytes = await serving_utils.get_raw_bytes(
+                request.image, aiohttp_session
+            )
+            image = serving_utils.image_bytes_to_array(file_bytes)
 
-            result = await pipeline.infer(df)
+            result = await pipeline.infer(image)
 
-            label = result["classification"]["classid"]
-            score = result["classification"]["score"]
+            size = [len(result["pred"]), len(result["pred"][0])]
+            label_map = [item for sublist in result["pred"] for item in sublist]
             output_image_base64 = result.to_base64()
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(label=label, score=score, image=output_image_base64),
+                result=InferResult(
+                    labelMap=label_map, size=size, image=output_image_base64
+                ),
             )
 
         except Exception as e:

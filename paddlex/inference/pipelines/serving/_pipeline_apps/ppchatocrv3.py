@@ -20,7 +20,6 @@ from typing import List, Optional, Literal, Final, Tuple
 from functools import partial
 from urllib.parse import urlparse, parse_qs
 
-import fastapi
 import cv2
 import numpy as np
 from fastapi import FastAPI, HTTPException
@@ -192,12 +191,12 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
                     file_type = _infer_file_type(request.file)
                 except Exception as e:
                     logging.exception(e)
-                    raise fastapi.HTTPException(
+                    raise HTTPException(
                         status_code=422,
                         detail="The file type cannot be inferred from the URL. Please specify the file type explicitly.",
                     )
             else:
-                raise fastapi.HTTPException(status_code=422, detail="Unknown file type")
+                raise HTTPException(status_code=422, detail="Unknown file type")
         else:
             file_type = request.fileType
 
@@ -333,6 +332,6 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
 
         except Exception as e:
             logging.exception(e)
-            raise fastapi.HTTPException(status_code=500, detail="Internal server error")
+            raise HTTPException(status_code=500, detail="Internal server error")
 
     return app

@@ -28,7 +28,7 @@ from .single_model_pipeline import (
     TSCls,
     MultiLableImageClas,
     SmallObjDet,
-    AnomolyDetection,
+    AnomalyDetection,
 )
 from .ocr import OCRPipeline
 from .table_recognition import TableRecPipeline

@@ -68,5 +68,5 @@ class SmallObjDet(_SingleModelPipeline):
     entities = "small_object_detection"
 
 
-class AnomolyDetection(_SingleModelPipeline):
+class AnomalyDetection(_SingleModelPipeline):
     entities = "anomaly_detection"
