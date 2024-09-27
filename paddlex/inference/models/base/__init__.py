@@ -14,3 +14,4 @@
 
 from .base_predictor import BasePredictor, BasicPredictor
 from .cv_predictor import CVPredictor
+from .ts_predictor import TSPredictor

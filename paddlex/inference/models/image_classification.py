@@ -19,7 +19,6 @@ from ...modules.image_classification.model_list import MODELS
 from ...modules.multilabel_classification.model_list import MODELS as ML_MODELS
 from ..components import *
 from ..results import TopkResult
-from ..utils.process_hook import batchable_method
 from .base import CVPredictor
 
 

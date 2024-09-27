@@ -18,7 +18,6 @@ from ...utils.func_register import FuncRegister
 from ...modules.text_detection.model_list import MODELS
 from ..components import *
 from ..results import TextDetResult
-from ..utils.process_hook import batchable_method
 from .base import CVPredictor
 
 

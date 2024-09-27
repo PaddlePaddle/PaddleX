@@ -130,6 +130,9 @@ class BasicPredictor(
 
     def set_predict(self, **kwargs):
         for k in kwargs:
+            assert (
+                k in self._pred_set_func_map
+            ), f"The arg({k}) is not supported to specify in predict() func! Only supports: {self._pred_set_func_map.keys()}"
             self._pred_set_func_map[k](kwargs[k])
 
     @abstractmethod

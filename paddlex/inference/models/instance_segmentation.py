@@ -19,7 +19,6 @@ from ...utils.func_register import FuncRegister
 from ...modules.instance_segmentation.model_list import MODELS
 from ..components import *
 from ..results import InstanceSegResult
-from ..utils.process_hook import batchable_method
 
 
 class InstanceSegPredictor(DetPredictor):

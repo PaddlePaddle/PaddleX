@@ -15,7 +15,6 @@
 from ...modules.image_unwarping.model_list import MODELS
 from ..components import *
 from ..results import DocTrResult
-from ..utils.process_hook import batchable_method
 from .base import CVPredictor
 
 
@@ -39,7 +38,6 @@ class WarpPredictor(CVPredictor):
         )
         self._add_component([("Predictor", predictor), DocTrPostProcess()])
 
-    @batchable_method
     def _pack_res(self, single):
         keys = ["img_path", "doctr_img"]
         return DocTrResult({key: single[key] for key in keys})
