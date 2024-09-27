@@ -6,15 +6,15 @@ This section will introduce how to use [Labelme](https://github.com/wkentaro/lab
 ## 1. Annotation Data Examples
 
 <div style="display: flex;">
-  <img src="/tmp/images/data_prepare/object_detection/20.png" alt="Example Image 1">
-  <img src="/tmp/images/data_prepare/object_detection/21.png" alt="Example Image 2">
-  <img src="/tmp/images/data_prepare/object_detection/22.png" alt="Example Image 3">
+  <img src="/tmp/images/data_prepare/obeject_detection/20.png" alt="Example Image 1">
+  <img src="/tmp/images/data_prepare/obeject_detection/21.png" alt="Example Image 2">
+  <img src="/tmp/images/data_prepare/obeject_detection/22.png" alt="Example Image 3">
 </div>
 
 <div style="display: flex;">
-  <img src="/tmp/images/data_prepare/object_detection/23.png" alt="Example Image 4">
-  <img src="/tmp/images/data_prepare/object_detection/24.png" alt="Example Image 5">
-  <img src="/tmp/images/data_prepare/object_detection/25.png" alt="Example Image 6">
+  <img src="/tmp/images/data_prepare/obeject_detection/23.png" alt="Example Image 4">
+  <img src="/tmp/images/data_prepare/obeject_detection/24.png" alt="Example Image 5">
+  <img src="/tmp/images/data_prepare/obeject_detection/25.png" alt="Example Image 6">
 </div>
 
 ## 2. Labelme Annotation
@@ -38,10 +38,10 @@ pip install labelme
 * Create a root directory for the dataset, e.g., `helmet`.
 * Create an `images` directory (must be named `images`) within `helmet` and store the images to be annotated in the `images` directory, as shown below:
 
-![alt text](/tmp/images/data_prepare/object_detection/01.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/01.png)
 * Create a category label file `label.txt` in the `helmet` folder and write the categories of the dataset to be annotated, line by line. For example, for a helmet detection dataset, `label.txt` would look like this:
 
-![alt text](/tmp/images/data_prepare/object_detection/02.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/02.png)
 
 #### 2.3.2 Start Labelme
 Navigate to the root directory of the dataset to be annotated in the terminal and start the `Labelme` annotation tool:
@@ -57,19 +57,19 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 #### 2.3.3 Begin Image Annotation
 * After starting `Labelme`, it will look like this:
 
-![alt text](/tmp/images/data_prepare/object_detection/03.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/03.png)
 * Click "Edit" to select the annotation type.
 
-![alt text](/tmp/images/data_prepare/object_detection/04.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/04.png)
 * Choose to create a rectangular box.
 
-![alt text](/tmp/images/data_prepare/object_detection/05.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/05.png)
 * Drag the crosshair to select the target area on the image.
 
-![alt text](/tmp/images/data_prepare/object_detection/06.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/06.png)
 * Click again to select the category of the target box.
 
-![alt text](/tmp/images/data_prepare/object_detection/07.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/07.png)
 * After annotation, click Save. (If `output` is not specified when starting `Labelme`, it will prompt to select a save path upon the first save. If `autosave` is enabled, no need to click Save.)
 
 ![alt text](/tmp/images/data_prepare/image_classification/05.png)
@@ -78,14 +78,14 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 ![alt text](/tmp/images/data_prepare/image_classification/06.png)
 * The final labeled tag file looks like this:
 
-![alt text](/tmp/images/data_prepare/object_detection/08.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/08.png)
 * Adjust the directory to obtain the safety helmet detection dataset in the standard `Labelme` format
   * Create two text files, `train_anno_list.txt` and `val_anno_list.txt`, in the root directory of the dataset. Write the paths of all `json` files in the `annotations` directory into `train_anno_list.txt` and `val_anno_list.txt` at a certain ratio, or write all of them into `train_anno_list.txt` and create an empty `val_anno_list.txt` file. Use the data splitting function to re-split. The specific filling format of `train_anno_list.txt` and `val_anno_list.txt` is shown below:
   
-  ![alt text](/tmp/images/data_prepare/object_detection/09.png)
+  ![alt text](/tmp/images/data_prepare/obeject_detection/09.png)
   * The final directory structure after organization is as follows:
   
-  ![alt text](/tmp/images/data_prepare/object_detection/10.png)
+  ![alt text](/tmp/images/data_prepare/obeject_detection/10.png)
 
 #### 2.3.4 Format Conversion
 After labeling with `Labelme`, the data format needs to be converted to `coco` format. Below is a code example for converting the data labeled using `Labelme` according to the above tutorial:
@@ -94,7 +94,7 @@ cd /path/to/paddlex
 wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_labelme_examples.tar -P ./dataset
 tar -xf ./dataset/det_labelme_examples.tar -C ./dataset/
 
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/obeject_detection/PicoDet-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -127,10 +127,10 @@ PaddleLabel will automatically open a webpage in your browser after startup. You
 ### 3.2 Annotation Process of PaddleLabel
 * Open the automatically popped-up webpage, click on the sample project, and then click on Object Detection.
 
-![alt text](/tmp/images/data_prepare/object_detection/11.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/11.png)
 * Fill in the project name and dataset path. Note that the path should be an absolute path on your local machine. Click Create when done.
 
-![alt text](/tmp/images/data_prepare/object_detection/12.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/12.png)
 * First, define the categories that need to be annotated. Taking layout analysis as an example, provide 10 categories, each with a unique corresponding ID. Click Add Category to create the required category names.
 * Start Annotating
   * First, select the label you need to annotate.
@@ -139,17 +139,17 @@ PaddleLabel will automatically open a webpage in your browser after startup. You
   * After completing the annotation, the annotation result will appear in the lower right corner. You can check if the annotation is correct.
   * When all annotations are complete, click **Project Overview**.
 
-![alt text](/tmp/images/data_prepare/object_detection/13.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/13.png)
 * Export Annotation Files
   * In Project Overview, divide the dataset as needed, then click Export Dataset.
 
-![alt text](/tmp/images/data_prepare/object_detection/14.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/14.png)
   * Fill in the export path and export format. The export path should also be an absolute path, and the export format should be selected as `coco`.
 
-![alt text](/tmp/images/data_prepare/object_detection/15.png)
+![alt text](/tmp/images/data_prepare/obeject_detection/15.png)
   * After successful export, you can obtain the annotation files in the specified path.
   
-  ![alt text](/tmp/images/data_prepare/object_detection/16.png)
+  ![alt text](/tmp/images/data_prepare/obeject_detection/16.png)
 * Adjust the directory to obtain the standard `coco` format dataset for helmet detection
   * Rename the three `json` files and the `image` directory according to the following correspondence:
 
@@ -162,7 +162,7 @@ PaddleLabel will automatically open a webpage in your browser after startup. You
 
   * Create an `annotations` directory in the root directory of the dataset and move all `json` files to the `annotations` directory. The final dataset directory structure will look like this:
   
-  ![alt text](/tmp/images/data_prepare/object_detection/17.png)
+  ![alt text](/tmp/images/data_prepare/obeject_detection/17.png)
   * Compress the `helmet` directory into a `.tar` or `.zip` format compressed package to obtain the standard `coco` format dataset for helmet detection.
 
 ## 4. Data Format

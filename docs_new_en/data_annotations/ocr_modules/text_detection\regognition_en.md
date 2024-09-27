@@ -52,7 +52,7 @@ PPOCRLabel --lang ch  # Start in [Normal Mode] for [Detection + Recognition] sce
 10. Export Results: Users can manually export results through "File - Export Annotation Results" or enable automatic export by clicking "File - Auto Export Annotation Results". Manually confirmed annotations will be stored in `Label.txt` under the opened image folder. Clicking "File - Export Recognition Results" in the menu bar will save the recognition training data of such images in the `crop_img` folder, and the recognition labels will be saved in `rec_gt.txt`.
 
 
-![alt text](../images/data_prepare/ocr/06.png)
+![alt text](/tmp/images/data_prepare/ocr/06.png)
 **Notes**:
 
 * PPOCRLabel uses **folders** as the basic unit for labeling. After opening the folder containing images to be labeled, the images will not be displayed in the window bar. Instead, clicking "Select Folder" will directly import the images under the folder into the program.
