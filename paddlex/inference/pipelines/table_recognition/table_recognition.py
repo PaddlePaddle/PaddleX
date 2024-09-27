@@ -31,12 +31,18 @@ class TableRecPipeline(BasePipeline):
         text_det_model,
         text_rec_model,
         table_model,
-        batch_size=1,
-        device="gpu",
+        layout_batch_size=1,
+        text_rec_batch_size=1,
+        table_batch_size=1,
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs)
+        self._build_predictor(layout_model, text_det_model, text_rec_model, table_model)
+        self.set_predictor(layout_batch_size, text_rec_batch_size, table_batch_size)
 
+    def _build_predictor(
+        self, layout_model, text_det_model, text_rec_model, table_model
+    ):
         self.layout_predictor = self._create_model(model=layout_model)
         self.ocr_pipeline = OCRPipeline(
             text_det_model,
@@ -46,13 +52,11 @@ class TableRecPipeline(BasePipeline):
         self.table_predictor = self._create_model(model=table_model)
         self._crop_by_boxes = CropByBoxes()
         self._match = TableMatch(filter_ocr_result=False)
-        self.set_predictor(batch_size=batch_size, device=device)
 
-    def set_predictor(self, batch_size, device):
-        self.layout_predictor.set_predict(device=device, batch_size=batch_size)
-        self.ocr_pipeline.det_model.set_predict(device=device)
-        self.ocr_pipeline.rec_model.set_predict(device=device, batch_size=batch_size)
-        self.table_predictor.set_predict(device=device, batch_size=batch_size)
+    def set_predictor(self, layout_batch_size, text_rec_batch_size, table_batch_size):
+        self.layout_predictor.set_predictor(batch_size=layout_batch_size)
+        self.ocr_pipeline.rec_model.set_predictor(batch_size=text_rec_batch_size)
+        self.table_predictor.set_predictor(batch_size=table_batch_size)
 
     def predict(self, x):
         for layout_pred, ocr_pred in zip(

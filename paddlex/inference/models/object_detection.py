@@ -18,10 +18,10 @@ from ...utils.func_register import FuncRegister
 from ...modules.object_detection.model_list import MODELS
 from ..components import *
 from ..results import DetResult
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class DetPredictor(CVPredictor):
+class DetPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -54,7 +54,7 @@ class DetPredictor(CVPredictor):
 
         self._add_component(
             [
-                ("Predictor", predictor),
+                predictor,
                 DetPostProcess(
                     threshold=self.config["draw_threshold"],
                     labels=self.config["label_list"],

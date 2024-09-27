@@ -26,9 +26,14 @@ class OCRPipeline(BasePipeline):
         self,
         det_model,
         rec_model,
+        batch_size=1,
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs)
+        self._build_predictor(det_model, rec_model)
+        self.set_predictor(batch_size)
+
+    def _build_predictor(self, det_model, rec_model):
         self.det_model = self._create_model(det_model)
         self.rec_model = self._create_model(rec_model)
         self.is_curve = self.det_model.model_name in [
@@ -39,6 +44,9 @@ class OCRPipeline(BasePipeline):
         self._crop_by_polys = CropByPolys(
             det_box_type="poly" if self.is_curve else "quad"
         )
+
+    def set_predictor(self, batch_size):
+        self.rec_model.set_predictor(batch_size=batch_size)
 
     def predict(self, input, **kwargs):
         device = kwargs.get("device", "gpu")

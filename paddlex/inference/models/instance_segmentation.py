@@ -46,7 +46,7 @@ class InstanceSegPredictor(DetPredictor):
             )
         self._add_component(
             [
-                ("Predictor", predictor),
+                predictor,
                 InstanceSegPostProcess(
                     threshold=self.config["draw_threshold"],
                     labels=self.config["label_list"],
