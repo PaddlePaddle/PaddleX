@@ -787,7 +787,7 @@ for batch in output:
    * [文档场景信息抽取产线](/docs_new/pipelines_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
-* <details open>
+* <details>
     <summary> <b> 相关说明文件</b> </summary>
 
    * [PaddleX产线命令行使用说明](/docs_new/pipelines_usage/instructions/pipeline_CLI_usage.md)
