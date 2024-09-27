@@ -19,10 +19,10 @@ from ...modules.anomaly_detection.model_list import MODELS
 from ..components import *
 from ..results import SegResult
 from ..utils.process_hook import batchable_method
-from .base import CVPredictor
-from ..components.transforms.image.common import Map_to_mask 
+from .base import BasicPredictor
 
-class UadPredictor(CVPredictor):
+
+class UadPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -44,7 +44,7 @@ class UadPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
         self._add_component(Map_to_mask())
 
     @register("Resize")
