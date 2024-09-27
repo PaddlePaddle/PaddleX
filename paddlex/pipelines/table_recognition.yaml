@@ -1,6 +1,6 @@
 Global:
   pipeline_name: table_recognition
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg
   
 ######################################## Setting ########################################
 # Please select the model from bellow `Support`

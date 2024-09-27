@@ -21,6 +21,7 @@ MODELS = [
     "OCRNet_HRNet-W48",
     "OCRNet_HRNet-W18",
     "PP-LiteSeg-T",
+    "PP-LiteSeg-B",
     "SegFormer-B0",
     "SegFormer-B1",
     "SegFormer-B2",

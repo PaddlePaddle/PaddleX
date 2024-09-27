@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .device import parse_device
 from ...utils.func_register import FuncRegister
+from ...utils.device import parse_device, set_env_for_device, get_default_device
 from ...utils import logging
+from .new_ir_blacklist import NEWIR_BLOCKLIST
 
 
 class PaddlePredictorOption(object):
@@ -33,8 +34,9 @@ class PaddlePredictorOption(object):
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, **kwargs):
+    def __init__(self, model_name=None, **kwargs):
         super().__init__()
+        self.model_name = model_name
         self._cfg = {}
         self._init_option(**kwargs)
 
@@ -49,11 +51,11 @@ class PaddlePredictorOption(object):
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
-    def _get_default_config(cls):
+    def _get_default_config(self):
         """get default config"""
         return {
             "run_mode": "paddle",
-            "device": "gpu",
+            "device": get_default_device(),
             "device_id": 0,
             "min_subgraph_size": 3,
             "shape_info_filename": None,
@@ -61,7 +63,7 @@ class PaddlePredictorOption(object):
             "cpu_threads": 1,
             "trt_use_static": False,
             "delete_pass": [],
-            "enable_new_ir": True,
+            "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
         }
 
     @register("run_mode")
@@ -88,6 +90,7 @@ class PaddlePredictorOption(object):
             )
         device_id = device_ids[0] if device_ids is not None else 0
         self._cfg["device_id"] = device_id
+        set_env_for_device(device)
         if device_type not in ("cpu"):
             if device_ids is None or len(device_ids) > 1:
                 logging.warning(f"The device ID has been set to {device_id}.")

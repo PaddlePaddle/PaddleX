@@ -36,6 +36,7 @@ from ...utils.errors import (
     UnsupportedParamError,
     raise_unsupported_api_error,
 )
+from ...utils.device import parse_device
 from ...utils.misc import CachedProperty as cached_property
 from ...utils.cache import get_cache_dir
 
@@ -404,11 +405,7 @@ configuration item, "
                 opts = self.supported_train_opts
                 if opts is not None:
                     if "device" in opts:
-                        checks.append(
-                            _CheckDevice(
-                                opts["device"], self.runner.parse_device, check_mc=True
-                            )
-                        )
+                        checks.append(_CheckDevice(opts["device"], check_mc=True))
                     if "dy2st" in opts:
                         checks.append(_CheckDy2St(opts["dy2st"]))
                     if "amp" in opts:
@@ -417,40 +414,24 @@ configuration item, "
                 opts = self.supported_evaluate_opts
                 if opts is not None:
                     if "device" in opts:
-                        checks.append(
-                            _CheckDevice(
-                                opts["device"], self.runner.parse_device, check_mc=True
-                            )
-                        )
+                        checks.append(_CheckDevice(opts["device"], check_mc=True))
                     if "amp" in opts:
                         checks.append(_CheckAMP(opts["amp"]))
             elif api_name == "predict":
                 opts = self.supported_predict_opts
                 if opts is not None:
                     if "device" in opts:
-                        checks.append(
-                            _CheckDevice(
-                                opts["device"], self.runner.parse_device, check_mc=False
-                            )
-                        )
+                        checks.append(_CheckDevice(opts["device"], check_mc=False))
             elif api_name == "infer":
                 opts = self.supported_infer_opts
                 if opts is not None:
                     if "device" in opts:
-                        checks.append(
-                            _CheckDevice(
-                                opts["device"], self.runner.parse_device, check_mc=False
-                            )
-                        )
+                        checks.append(_CheckDevice(opts["device"], check_mc=False))
             elif api_name == "compression":
                 opts = self.supported_compression_opts
                 if opts is not None:
                     if "device" in opts:
-                        checks.append(
-                            _CheckDevice(
-                                opts["device"], self.runner.parse_device, check_mc=True
-                            )
-                        )
+                        checks.append(_CheckDevice(opts["device"], check_mc=True))
             else:
                 return bnd_method
 
@@ -508,9 +489,8 @@ class _APICallArgsChecker(object):
 class _CheckDevice(_APICallArgsChecker):
     """_CheckDevice"""
 
-    def __init__(self, legal_vals, parse_device, check_mc=False):
+    def __init__(self, legal_vals, check_mc=False):
         super().__init__(legal_vals)
-        self.parse_device = parse_device
         self.check_mc = check_mc
 
     def check(self, args):
@@ -518,7 +498,7 @@ class _CheckDevice(_APICallArgsChecker):
         assert "device" in args
         device = args["device"]
         if device is not None:
-            device_type, dev_ids = self.parse_device(device)
+            device_type, dev_ids = parse_device(device)
             if not self.check_mc:
                 if device_type not in self.legal_vals:
                     raise _CheckFailed("device", device, self.legal_vals)

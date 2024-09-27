@@ -15,10 +15,9 @@
 
 import os
 from ...repo_apis.base import Config, PaddleModel
-from ...utils.device import get_device
 
 
-def build_model(model_name: str, device: str = None, config_path: str = None) -> tuple:
+def build_model(model_name: str, config_path: str = None) -> tuple:
     """build Config and PaddleModel
 
     Args:
@@ -31,8 +30,5 @@ def build_model(model_name: str, device: str = None, config_path: str = None) ->
         tuple(Config, PaddleModel): the Config and PaddleModel
     """
     config = Config(model_name, config_path)
-
-    if device:
-        config.update_device(get_device(device))
     model = PaddleModel(config=config)
     return config, model

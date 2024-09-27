@@ -17,6 +17,7 @@ import os
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
+from ....utils.device import parse_device
 from ....utils.misc import abspath
 from ....utils.errors import raise_unsupported_api_error
 
@@ -82,7 +83,7 @@ class TSModel(BaseModel):
             raise ValueError(f"`use_vdl`={use_vdl} is not supported.")
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
@@ -152,7 +153,7 @@ class TSModel(BaseModel):
 
         # No need to handle `ips`
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if amp is not None:
@@ -198,7 +199,7 @@ class TSModel(BaseModel):
         cli_args.append(CLIArgument("--csv_path", input_path))
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
@@ -230,7 +231,7 @@ class TSModel(BaseModel):
             save_dir = abspath(os.path.join("output", "inference"))
         cli_args.append(CLIArgument("--save_dir", save_dir))
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         self._assert_empty_kwargs(kwargs)

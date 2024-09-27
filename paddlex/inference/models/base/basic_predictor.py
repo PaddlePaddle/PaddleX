@@ -34,7 +34,9 @@ class BasicPredictor(
 
     __is_base = True
 
-    def __init__(self, model_dir, config=None, device=None, pp_option=None):
+    def __init__(
+        self, model_dir, config=None, device=None, pp_option=None, **option_kwargs
+    ):
         super().__init__(model_dir=model_dir, config=config)
         self._pred_set_func_map = {}
         self._pred_set_register = FuncRegister(self._pred_set_func_map)
@@ -42,14 +44,16 @@ class BasicPredictor(
         self._pred_set_register("pp_option")(self.set_pp_option)
         self._pred_set_register("batch_size")(self.set_batch_size)
 
-        self.pp_option = pp_option if pp_option else PaddlePredictorOption()
+        self.pp_option = (
+            pp_option
+            if pp_option
+            else PaddlePredictorOption(model_name=self.model_name, **option_kwargs)
+        )
         self.pp_option.set_device(device)
         self.components = {}
         self._build_components()
         self.engine = ComponentsEngine(self.components)
-        logging.debug(
-            f"-------------------- {self.__class__.__name__} --------------------\nModel: {self.model_dir}"
-        )
+        logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
 
     def apply(self, x):
         """predict"""

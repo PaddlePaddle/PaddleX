@@ -17,6 +17,7 @@ import os
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
+from ....utils.device import parse_device
 from ....utils.misc import abspath
 from ....utils.download import download
 from ....utils.cache import DEFAULT_CACHE_DIR
@@ -74,7 +75,7 @@ class SegModel(BaseModel):
         # No need to handle `ips`
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         # For compatibility
@@ -217,7 +218,7 @@ class SegModel(BaseModel):
         # No need to handle `ips`
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if amp is not None:
@@ -264,7 +265,7 @@ class SegModel(BaseModel):
         cli_args.append(CLIArgument("--image_path", input_path))
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
@@ -289,7 +290,7 @@ class SegModel(BaseModel):
         cli_args.append(CLIArgument("--model_path", weight_path))
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
@@ -341,7 +342,7 @@ class SegModel(BaseModel):
             cli_args.append(CLIArgument("--input_shape", *input_shape))
 
         try:
-            output_op = config['output_op']
+            output_op = config["output_op"]
         except:
             output_op = kwargs.pop("output_op", None)
         if output_op is not None:
@@ -392,7 +393,7 @@ class SegModel(BaseModel):
         cli_args.append(CLIArgument("--image_path", input_path))
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
 
         if save_dir is not None:
@@ -455,7 +456,7 @@ class SegModel(BaseModel):
             train_cli_args.append(CLIArgument("--iters", epochs_iters))
 
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             train_cli_args.append(CLIArgument("--device", device_type))
 
         if use_vdl:

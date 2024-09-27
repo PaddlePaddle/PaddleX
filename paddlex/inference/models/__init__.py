@@ -29,6 +29,7 @@ from .ts_fc import TSFcPredictor
 from .ts_ad import TSAdPredictor
 from .ts_cls import TSClsPredictor
 from .image_unwarping import WarpPredictor
+from .anomaly_detection import UadPredictor
 
 
 def _create_hp_predictor(
@@ -52,11 +53,11 @@ def _create_hp_predictor(
 
 def create_predictor(
     model: str,
-    *args,
     device=None,
     pp_option=None,
     use_hpip=False,
     hpi_params=None,
+    *args,
     **kwargs,
 ) -> BasePredictor:
     model_dir = check_model(model)

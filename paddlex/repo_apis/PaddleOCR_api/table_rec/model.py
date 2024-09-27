@@ -17,6 +17,7 @@ import os
 from ....utils import logging
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
+from ....utils.device import parse_device
 from ....utils.misc import abspath
 from ..text_rec.model import TextRecModel
 
@@ -95,7 +96,7 @@ class TableRecModel(TextRecModel):
         input_path = abspath(input_path)
         cli_args.append(CLIArgument("--image_dir", input_path))
 
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         cli_args.append(CLIArgument("--use_gpu", str(device_type == "gpu")))
 
         if save_dir is not None:

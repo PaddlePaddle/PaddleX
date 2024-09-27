@@ -13,20 +13,67 @@
 # limitations under the License.
 
 import os
+import GPUtil
 import lazy_paddle as paddle
 from .errors import raise_unsupported_device_error
 
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu"]
 
 
-def get_device(device_cfg, using_device_number=None):
-    """get running device setting"""
-    device = device_cfg.split(":")[0]
-    assert device.lower() in SUPPORTED_DEVICE_TYPE
-    if device.lower() in ["gpu", "xpu", "npu", "mlu"]:
-        if device.lower() == "gpu" and paddle.is_compiled_with_rocm():
+def _constr_device(device_type, device_ids):
+    if device_ids:
+        device_ids = ",".join(map(str, device_ids))
+        return f"{device_type}:{device_ids}"
+    else:
+        return f"{device_type}"
+
+
+def get_default_device():
+    avail_gpus = GPUtil.getAvailable()
+    if not avail_gpus:
+        return "cpu"
+    else:
+        return _constr_device("gpu", [avail_gpus[0]])
+
+
+def parse_device(device):
+    """parse_device"""
+    # According to https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/device/set_device_cn.html
+    parts = device.split(":")
+    if len(parts) > 2:
+        raise ValueError(f"Invalid device: {device}")
+    if len(parts) == 1:
+        device_type, device_ids = parts[0], None
+    else:
+        device_type, device_ids = parts
+        device_ids = device_ids.split(",")
+        for device_id in device_ids:
+            if not device_id.isdigit():
+                raise ValueError(
+                    f"Device ID must be an integer. Invalid device ID: {device_id}"
+                )
+        device_ids = list(map(int, device_ids))
+    device_type = device_type.lower()
+    # raise_unsupported_device_error(device_type, SUPPORTED_DEVICE_TYPE)
+    assert device_type.lower() in SUPPORTED_DEVICE_TYPE
+    return device_type, device_ids
+
+
+def update_device_num(device, num):
+    device_type, device_ids = parse_device(device)
+    if device_ids:
+        assert len(device_ids) >= num
+        return _constr_device(device_type, device_ids[:num])
+    else:
+        return _constr_device(device_type, device_ids)
+
+
+def set_env_for_device(device):
+    device_type, device_ids = parse_device(device)
+    if device_type.lower() in ["gpu", "xpu", "npu", "mlu"]:
+        if device_type.lower() == "gpu" and paddle.is_compiled_with_rocm():
             os.environ["FLAGS_conv_workspace_size_limit"] = "2000"
-        if device.lower() == "npu":
+        if device_type.lower() == "npu":
             os.environ["FLAGS_npu_jit_compile"] = "0"
             os.environ["FLAGS_use_stride_kernel"] = "0"
             os.environ["FLAGS_allocator_strategy"] = "auto_growth"
@@ -35,22 +82,9 @@ def get_device(device_cfg, using_device_number=None):
             )
             os.environ["FLAGS_npu_scale_aclnn"] = "True"
             os.environ["FLAGS_npu_split_aclnn"] = "True"
-        if device.lower() == "xpu":
+        if device_type.lower() == "xpu":
             os.environ["BKCL_FORCE_SYNC"] = "1"
             os.environ["BKCL_TIMEOUT"] = "1800"
             os.environ["FLAGS_use_stride_kernel"] = "0"
-        if device.lower() == "mlu":
+        if device_type.lower() == "mlu":
             os.environ["FLAGS_use_stride_kernel"] = "0"
-
-        if len(device_cfg.split(":")) == 2:
-            device_ids = device_cfg.split(":")[1]
-        else:
-            device_ids = 0
-
-        if using_device_number:
-            device_ids = f"{device_ids[:using_device_number]}"
-        return "{}:{}".format(device.lower(), device_ids)
-    if device.lower() == "cpu":
-        return "cpu"
-    else:
-        raise_unsupported_device_error(device, SUPPORTED_DEVICE_TYPE)
