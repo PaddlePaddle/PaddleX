@@ -306,7 +306,7 @@ class Resize(_BaseResize):
 
         if self.keep_ratio:
             h, w = img.shape[0:2]
-            target_size, _ = self._rescale_size((w, h), self.target_size)
+            target_size, _ = self._rescale_size((h, w), self.target_size)
 
         if self.size_divisor:
             target_size = [
