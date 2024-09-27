@@ -19,24 +19,35 @@ from ...utils.io import ImageReader
 from ..base import BaseComponent
 
 
-def restructured_boxes(boxes, labels):
-    return [
-        {
-            "cls_id": int(box[0]),
-            "label": labels[int(box[0])],
-            "score": float(box[1]),
-            "coordinate": list(map(int, box[2:])),
-        }
-        for box in boxes
-    ]
+def restructured_boxes(boxes, labels, img_size):
+
+    box_list = []
+    w, h = img_size
+
+    for box in boxes:
+        xmin, ymin, xmax, ymax = list(map(int, box[2:]))
+        xmin = max(0, xmin)
+        ymin = max(0, ymin)
+        xmax = min(w, xmax)
+        ymax = min(h, ymax)
+        box_list.append(
+            {
+                "cls_id": int(box[0]),
+                "label": labels[int(box[0])],
+                "score": float(box[1]),
+                "coordinate": [xmin, ymin, xmax, ymax],
+            }
+        )
+
+    return box_list
 
 
 class DetPostProcess(BaseComponent):
     """Save Result Transform"""
 
-    INPUT_KEYS = ["img_path", "boxes"]
+    INPUT_KEYS = ["img_path", "boxes", "img_size"]
     OUTPUT_KEYS = ["boxes"]
-    DEAULT_INPUTS = {"boxes": "boxes"}
+    DEAULT_INPUTS = {"boxes": "boxes", "img_size": "ori_img_size"}
     DEAULT_OUTPUTS = {"boxes": "boxes"}
 
     def __init__(self, threshold=0.5, labels=None):
@@ -44,11 +55,11 @@ class DetPostProcess(BaseComponent):
         self.threshold = threshold
         self.labels = labels
 
-    def apply(self, boxes):
+    def apply(self, boxes, img_size):
         """apply"""
         expect_boxes = (boxes[:, 1] > self.threshold) & (boxes[:, 0] > -1)
         boxes = boxes[expect_boxes, :]
-        boxes = restructured_boxes(boxes, self.labels)
+        boxes = restructured_boxes(boxes, self.labels, img_size)
         result = {"boxes": boxes}
 
         return result
@@ -57,25 +68,23 @@ class DetPostProcess(BaseComponent):
 class CropByBoxes(BaseComponent):
     """Crop Image by Box"""
 
-    INPUT_KEYS = ["img_path", "boxes", "labels"]
+    YIELD_BATCH = False
+    INPUT_KEYS = ["img_path", "boxes"]
     OUTPUT_KEYS = ["img", "box", "label"]
-    DEAULT_INPUTS = {"img_path": "img_path", "boxes": "boxes", "labels": "labels"}
+    DEAULT_INPUTS = {"img_path": "img_path", "boxes": "boxes"}
     DEAULT_OUTPUTS = {"img": "img", "box": "box", "label": "label"}
 
     def __init__(self):
         super().__init__()
         self._reader = ImageReader(backend="opencv")
 
-    def apply(self, img_path, boxes, labels=None):
+    def apply(self, img_path, boxes):
         output_list = []
         img = self._reader.read(img_path)
         for bbox in boxes:
-            label_id = int(bbox[0])
-            box = bbox[2:]
-            if labels is not None:
-                label = labels[label_id]
-            else:
-                label = label_id
+            label_id = bbox["cls_id"]
+            box = bbox["coordinate"]
+            label = bbox.get("label", label_id)
             xmin, ymin, xmax, ymax = [int(i) for i in box]
             img_crop = img[ymin:ymax, xmin:xmax]
             output_list.append({"img": img_crop, "box": box, "label": label})
