@@ -29,6 +29,7 @@ from .ts_fc import TSFcPredictor
 from .ts_ad import TSAdPredictor
 from .ts_cls import TSClsPredictor
 from .image_unwarping import WarpPredictor
+from .anomaly_detection import UadPredictor
 
 
 def _create_hp_predictor(
