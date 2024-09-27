@@ -253,6 +253,10 @@ class BaseComponent(ABC):
     def keep_input(self):
         return getattr(self, "KEEP_INPUT", True)
 
+    @property
+    def name(self):
+        return getattr(self, "NAME", self.__class__.__name__)
+
 
 class ComponentsEngine(object):
     def __init__(self, ops):

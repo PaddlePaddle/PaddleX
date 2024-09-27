@@ -23,6 +23,7 @@ from .....utils.cache import CACHE_DIR
 from ....utils.io.readers import TSReader
 from ....utils.io.writers import TSWriter
 from ...base import BaseComponent
+from ..read_data import _BaseRead
 from .funcs import load_from_dataframe, time_feature
 
 
@@ -41,15 +42,17 @@ __all__ = [
 ]
 
 
-class ReadTS(BaseComponent):
+class ReadTS(_BaseRead):
 
     INPUT_KEYS = ["ts"]
     OUTPUT_KEYS = ["ts_path", "ts", "ori_ts"]
     DEAULT_INPUTS = {"ts": "ts"}
     DEAULT_OUTPUTS = {"ts_path": "ts_path", "ts": "ts", "ori_ts": "ori_ts"}
 
-    def __init__(self):
-        super().__init__()
+    SUFFIX = ["csv"]
+
+    def __init__(self, batch_size=1):
+        super().__init__(batch_size)
         self._reader = TSReader(backend="pandas")
         self._writer = TSWriter(backend="pandas")
 
@@ -60,18 +63,19 @@ class ReadTS(BaseComponent):
             return {"ts_path": ts_path, "ts": ts, "ori_ts": deepcopy(ts)}
 
         ts_path = ts
-        # XXX: auto download for url
         ts_path = self._download_from_url(ts_path)
-        ts = self._reader.read(ts_path)
-        return {"ts_path": ts_path, "ts": ts, "ori_ts": deepcopy(ts)}
-
-    def _download_from_url(self, in_path):
-        if in_path.startswith("http"):
-            file_name = Path(in_path).name
-            save_path = Path(CACHE_DIR) / "predict_input" / file_name
-            download(in_path, save_path, overwrite=True)
-            return save_path.as_posix()
-        return in_path
+        file_list = self._get_files_list(ts_path)
+        batch = []
+        for ts_path in file_list:
+            ts_data = self._reader.read(ts_path)
+            batch.append(
+                {"ts_path": ts_path, "ts": ts_data, "ori_ts": deepcopy(ts_data)}
+            )
+            if len(batch) >= self.batch_size:
+                yield batch
+                batch = []
+        if len(batch) > 0:
+            yield batch
 
 
 class TSCutOff(BaseComponent):

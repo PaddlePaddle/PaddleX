@@ -18,11 +18,10 @@ from ...utils.func_register import FuncRegister
 from ...modules.semantic_segmentation.model_list import MODELS
 from ..components import *
 from ..results import SegResult
-from ..utils.process_hook import batchable_method
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class SegPredictor(CVPredictor):
+class SegPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -45,7 +44,7 @@ class SegPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
     @register("Resize")
     def build_resize(

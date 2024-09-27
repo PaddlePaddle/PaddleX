@@ -16,10 +16,12 @@
 import enum
 import itertools
 import cv2
+import fitz
 from PIL import Image, ImageOps
 import pandas as pd
+import numpy as np
 
-__all__ = ["ReaderType", "ImageReader", "VideoReader", "TSReader"]
+__all__ = ["ReaderType", "ImageReader", "VideoReader", "TSReader", "PDFReader"]
 
 
 class ReaderType(enum.Enum):
@@ -30,6 +32,7 @@ class ReaderType(enum.Enum):
     POINT_CLOUD = 3
     JSON = 4
     TS = 5
+    PDF = 6
 
 
 class _BaseReader(object):
@@ -69,6 +72,22 @@ class _BaseReader(object):
     def get_default_backend_args(self):
         """get default backend arguments"""
         return {}
+
+
+class PDFReader(_BaseReader):
+    """PDFReader"""
+
+    def __init__(self, backend="fitz", **bk_args):
+        super().__init__(backend, **bk_args)
+
+    def read(self, in_path):
+        return self._backend.read_file(in_path)
+
+    def _init_backend(self, bk_type, bk_args):
+        return PDFReaderBackend(**bk_args)
+
+    def get_type(self):
+        return ReaderType.PDF
 
 
 class ImageReader(_BaseReader):
@@ -178,6 +197,25 @@ class PILImageReaderBackend(_ImageReaderBackend):
     def read_file(self, in_path):
         """read image file from path by PIL"""
         return ImageOps.exif_transpose(Image.open(in_path))
+
+
+class PDFReaderBackend(_BaseReaderBackend):
+
+    def __init__(self, rotate=0, zoom_x=2.0, zoom_y=2.0):
+        super().__init__()
+        print(rotate)
+        self.mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
+
+    def read_file(self, in_path):
+        images = []
+        for page in fitz.open(in_path):
+            pix = page.get_pixmap(matrix=self.mat, alpha=False)
+            getpngdata = pix.tobytes(output="png")
+            # decode as np.uint8
+            image_array = np.frombuffer(getpngdata, dtype=np.uint8)
+            img_cv = cv2.imdecode(image_array, cv2.IMREAD_ANYCOLOR)
+            images.append(img_cv)
+        return images
 
 
 class _VideoReaderBackend(_BaseReaderBackend):

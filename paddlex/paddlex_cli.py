@@ -117,7 +117,8 @@ def pipeline_predict(
     """pipeline predict"""
     hpi_params = _get_hpi_params(serial_number, update_license)
     pipeline = create_pipeline(pipeline, use_hpip=use_hpip, hpi_params=hpi_params)
-    result = pipeline(input_path, device=device)
+    pipeline = create_pipeline(pipeline)
+    result = pipeline(input, device=device)
     for res in result:
         res.print(json_format=False)
         # TODO(gaotingquan): support to save all

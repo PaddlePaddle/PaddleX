@@ -133,6 +133,5 @@ class TableResult(BaseResult):
         layout_result.save_to_img(layout_save_path)
         ocr_result = self["ocr_result"]
         ocr_result.save_to_img(ocr_save_path)
-        for batch_table_result in self["table_result"]:
-            for table_result in batch_table_result:
-                table_result.save_to_img(table_save_path)
+        for table_result in self["table_result"]:
+            table_result.save_to_img(table_save_path)

@@ -17,6 +17,7 @@ from pathlib import Path
 import numpy as np
 import json
 
+from copy import deepcopy
 from ...utils import logging
 from ..utils.io import JsonWriter, ImageReader, ImageWriter
 
@@ -36,7 +37,7 @@ def format_data(obj):
 
 class BaseResult(dict):
     def __init__(self, data):
-        super().__init__(format_data(data))
+        super().__init__(format_data(deepcopy(data)))
         self._check_res()
         self._json_writer = JsonWriter()
         self._img_reader = ImageReader(backend="opencv")

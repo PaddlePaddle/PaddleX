@@ -19,11 +19,10 @@ from ...modules.image_classification.model_list import MODELS
 from ...modules.multilabel_classification.model_list import MODELS as ML_MODELS
 from ..components import *
 from ..results import TopkResult
-from ..utils.process_hook import batchable_method
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class ClasPredictor(CVPredictor):
+class ClasPredictor(BasicPredictor):
 
     entities = [*MODELS, *ML_MODELS]
 
@@ -44,7 +43,7 @@ class ClasPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
         post_processes = self.config["PostProcess"]
         for key in post_processes:

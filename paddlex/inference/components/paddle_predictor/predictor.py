@@ -19,10 +19,11 @@ import numpy as np
 
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
+from ..utils.mixin import PPEngineMixin
 from ..base import BaseComponent
 
 
-class BasePaddlePredictor(BaseComponent):
+class BasePaddlePredictor(BaseComponent, PPEngineMixin):
     """Predictor based on Paddle Inference"""
 
     OUTPUT_KEYS = "pred"
@@ -31,12 +32,12 @@ class BasePaddlePredictor(BaseComponent):
 
     def __init__(self, model_dir, model_prefix, option: PaddlePredictorOption = None):
         super().__init__()
+        PPEngineMixin.__init__(self, option)
         self.model_dir = model_dir
         self.model_prefix = model_prefix
-        self.option = option
         self._is_initialized = False
 
-    def _build(self):
+    def _reset(self):
         if not self.option:
             self.option = PaddlePredictorOption()
         (
@@ -163,7 +164,7 @@ No need to generate again."
 
     def apply(self, **kwargs):
         if not self._is_initialized:
-            self._build()
+            self._reset()
 
         x = self.to_batch(**kwargs)
         for idx in range(len(x)):
@@ -179,11 +180,6 @@ No need to generate again."
 
     def format_output(self, pred):
         return [{"pred": res} for res in zip(*pred)]
-
-    def set_option(self, option):
-        if option != self.option:
-            self.option = option
-            self._build()
 
     @abstractmethod
     def to_batch(self):

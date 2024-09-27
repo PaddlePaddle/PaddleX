@@ -19,7 +19,6 @@ from ...utils.func_register import FuncRegister
 from ...modules.instance_segmentation.model_list import MODELS
 from ..components import *
 from ..results import InstanceSegResult
-from ..utils.process_hook import batchable_method
 
 
 class InstanceSegPredictor(DetPredictor):
@@ -47,7 +46,7 @@ class InstanceSegPredictor(DetPredictor):
             )
         self._add_component(
             [
-                ("Predictor", predictor),
+                predictor,
                 InstanceSegPostProcess(
                     threshold=self.config["draw_threshold"],
                     labels=self.config["label_list"],

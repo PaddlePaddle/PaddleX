@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import math
 
 from pathlib import Path
@@ -21,10 +20,11 @@ from copy import deepcopy
 import numpy as np
 import cv2
 
-from .....utils.download import download
 from .....utils.cache import CACHE_DIR
 from ....utils.io import ImageReader, ImageWriter
+from ...utils.mixin import BatchSizeMixin
 from ...base import BaseComponent
+from ..read_data import _BaseRead
 from . import funcs as F
 
 __all__ = [
@@ -37,6 +37,7 @@ __all__ = [
     "Pad",
     "Normalize",
     "ToCHWImage",
+    "PadStride",
 ]
 
 
@@ -51,7 +52,7 @@ def _check_image_size(input_):
         raise TypeError(f"{input_} cannot represent a valid image size.")
 
 
-class ReadImage(BaseComponent):
+class ReadImage(_BaseRead):
     """Load image from the file."""
 
     INPUT_KEYS = ["img"]
@@ -70,6 +71,7 @@ class ReadImage(BaseComponent):
         "RGB": cv2.IMREAD_COLOR,
         "GRAY": cv2.IMREAD_GRAYSCALE,
     }
+
     SUFFIX = ["jpg", "png", "jpeg", "JPEG", "JPG", "bmp"]
 
     def __init__(self, batch_size=1, format="BGR"):
@@ -80,8 +82,7 @@ class ReadImage(BaseComponent):
             format (str, optional): Target color format to convert the image to.
                 Choices are 'BGR', 'RGB', and 'GRAY'. Default: 'BGR'.
         """
-        super().__init__()
-        self.batch_size = batch_size
+        super().__init__(batch_size)
         self.format = format
         flags = self._FLAGS_DICT[self.format]
         self._reader = ImageReader(backend="opencv", flags=flags)
@@ -103,11 +104,10 @@ class ReadImage(BaseComponent):
             ]
         else:
             img_path = img
-            # XXX: auto download for url
             img_path = self._download_from_url(img_path)
-            image_list = self._get_image_list(img_path)
+            file_list = self._get_files_list(img_path)
             batch = []
-            for img_path in image_list:
+            for img_path in file_list:
                 img = self._read_img(img_path)
                 batch.append(img)
                 if len(batch) >= self.batch_size:
@@ -133,34 +133,6 @@ class ReadImage(BaseComponent):
             "ori_img": deepcopy(blob),
             "ori_img_size": deepcopy([blob.shape[1], blob.shape[0]]),
         }
-
-    def _download_from_url(self, in_path):
-        if in_path.startswith("http"):
-            file_name = Path(in_path).name
-            save_path = Path(CACHE_DIR) / "predict_input" / file_name
-            download(in_path, save_path, overwrite=True)
-            return save_path.as_posix()
-        return in_path
-
-    def _get_image_list(self, img_file):
-        imgs_lists = []
-        if img_file is None or not os.path.exists(img_file):
-            raise Exception(f"Not found any img file in path: {img_file}")
-
-        if os.path.isfile(img_file) and img_file.split(".")[-1] in self.SUFFIX:
-            imgs_lists.append(img_file)
-        elif os.path.isdir(img_file):
-            for root, dirs, files in os.walk(img_file):
-                for single_file in files:
-                    if single_file.split(".")[-1] in self.SUFFIX:
-                        imgs_lists.append(os.path.join(root, single_file))
-        if len(imgs_lists) == 0:
-            raise Exception("not found any img file in {}".format(img_file))
-        imgs_lists = sorted(imgs_lists)
-        return imgs_lists
-
-    def set_batch_size(self, batch_size):
-        self.batch_size = batch_size
 
 
 class GetImageInfo(BaseComponent):
@@ -486,6 +458,7 @@ class PadStride(BaseComponent):
     DEAULT_OUTPUTS = {"img": "img"}
 
     def __init__(self, stride=0):
+        super().__init__()
         self.coarsest_stride = stride
 
     def apply(self, img):

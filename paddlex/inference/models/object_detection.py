@@ -18,11 +18,10 @@ from ...utils.func_register import FuncRegister
 from ...modules.object_detection.model_list import MODELS
 from ..components import *
 from ..results import DetResult
-from ..utils.process_hook import batchable_method
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class DetPredictor(CVPredictor):
+class DetPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -44,7 +43,7 @@ class DetPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if "DETR" in self.model_name:
+        if "DETR" in self.model_name or "RCNN" in self.model_name:
             predictor.set_inputs(
                 {
                     "img": "img",
@@ -55,7 +54,7 @@ class DetPredictor(CVPredictor):
 
         self._add_component(
             [
-                ("Predictor", predictor),
+                predictor,
                 DetPostProcess(
                     threshold=self.config["draw_threshold"],
                     labels=self.config["label_list"],

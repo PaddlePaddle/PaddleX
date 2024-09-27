@@ -18,11 +18,10 @@ from ...utils.func_register import FuncRegister
 from ...modules.text_detection.model_list import MODELS
 from ..components import *
 from ..results import TextDetResult
-from ..utils.process_hook import batchable_method
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class TextDetPredictor(CVPredictor):
+class TextDetPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -43,7 +42,7 @@ class TextDetPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
         op = self.build_postprocess(**self.config["PostProcess"])
         self._add_component(op)

@@ -15,23 +15,58 @@
 from .base import BasePipeline
 
 
-class SingleModelPipeline(BasePipeline):
+class _SingleModelPipeline(BasePipeline):
 
-    entities = [
-        "image_classification",
-        "object_detection",
-        "instance_segmentation",
-        "semantic_segmentation",
-        "ts_fc",
-        "ts_ad",
-        "ts_cls",
-        "multi_label_image_classification",
-        "small_object_detection" "anomaly_detection",
-    ]
-
-    def __init__(self, model, predictor_kwargs=None):
+    def __init__(self, model, batch_size=1, predictor_kwargs=None):
         super().__init__(predictor_kwargs)
+        self._build_predictor(model)
+        self.set_predictor(batch_size)
+
+    def _build_predictor(self, model):
         self.model = self._create_model(model)
+
+    def set_predictor(self, batch_size):
+        self.model.set_predictor(batch_size=batch_size)
 
     def predict(self, input, **kwargs):
         yield from self.model(input, **kwargs)
+
+
+class ImageClassification(_SingleModelPipeline):
+    entities = "image_classification"
+
+
+class ObjectDetection(_SingleModelPipeline):
+    entities = "object_detection"
+
+
+class InstanceSegmentation(_SingleModelPipeline):
+    entities = "instance_segmentation"
+
+
+class SemanticSegmentation(_SingleModelPipeline):
+    entities = "semantic_segmentation"
+
+
+class TSFc(_SingleModelPipeline):
+    entities = "ts_fc"
+
+
+class TSAd(_SingleModelPipeline):
+    entities = "ts_ad"
+
+
+class TSCls(_SingleModelPipeline):
+    entities = "ts_cls"
+
+
+class MultiLableImageClas(_SingleModelPipeline):
+    entities = "multi_label_image_classification"
+
+
+class SmallObjDet(_SingleModelPipeline):
+    entities = "small_object_detection"
+
+
+class AnomolyDetection(_SingleModelPipeline):
+    entities = "anomaly_detection"

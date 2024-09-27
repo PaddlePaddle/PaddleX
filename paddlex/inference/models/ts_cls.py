@@ -16,7 +16,6 @@ import os
 from ...modules.ts_classification.model_list import MODELS
 from ..components import *
 from ..results import TSClsResult
-from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
@@ -25,33 +24,29 @@ class TSClsPredictor(BasicPredictor):
     entities = MODELS
 
     def _build_components(self):
-        preprocess = self._build_preprocess()
+        if not self.config.get("info_params", None):
+            raise Exception("info_params is not found in config file")
+
+        self._add_component(ReadTS())
+        if self.config.get("scale", None):
+            scaler_file_path = os.path.join(self.model_dir, "scaler.pkl")
+            if not os.path.exists(scaler_file_path):
+                raise Exception(f"Cannot find scaler file: {scaler_file_path}")
+            self._add_component(
+                TSNormalize(scaler_file_path, self.config["info_params"])
+            )
+
+        self._add_component(BuildTSDataset(self.config["info_params"]))
+        self._add_component(BuildPadMask(self.config["input_data"]))
+        self._add_component(TStoArray(self.config["input_data"]))
+
         predictor = TSPPPredictor(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        return {**preprocess, "predictor": predictor, "GetCls": GetCls()}
-
-    def _build_preprocess(self):
-        if not self.config.get("info_params", None):
-            raise Exception("info_params is not found in config file")
-
-        ops = {}
-        ops["ReadTS"] = ReadTS()
-        if self.config.get("scale", None):
-            scaler_file_path = os.path.join(self.model_dir, "scaler.pkl")
-            if not os.path.exists(scaler_file_path):
-                raise Exception(f"Cannot find scaler file: {scaler_file_path}")
-            ops["TSNormalize"] = TSNormalize(
-                scaler_file_path, self.config["info_params"]
-            )
-
-        ops["BuildTSDataset"] = BuildTSDataset(self.config["info_params"])
-        ops["BuildPadMask"] = BuildPadMask(self.config["input_data"])
-        ops["TStoArray"] = TStoArray(self.config["input_data"])
-
-        return ops
+        self._add_component(predictor)
+        self._add_component(GetCls())
 
     def _pack_res(self, single):
         return TSClsResult(

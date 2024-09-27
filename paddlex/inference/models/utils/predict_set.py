@@ -13,18 +13,18 @@
 # limitations under the License.
 
 
-class BatchSetMixin:
+class BatchSizeSetMixin:
     def set_batch_size(self, batch_size):
-        self.components["ReadImage"].set_batch_size(batch_size)
+        self.components["ReadCmp"].batch_size = batch_size
 
 
 class DeviceSetMixin:
     def set_device(self, device):
         self.pp_option.set_device(device)
-        self.components["Predictor"].set_option(self.pp_option)
+        self.components["PPEngineCmp"].option = self.pp_option
 
 
 class PPOptionSetMixin:
     def set_pp_option(self, pp_option):
         self.pp_option = pp_option
-        self.components["Predictor"].set_option(self.pp_option)
+        self.components["PPEngineCmp"].option = self.pp_option
