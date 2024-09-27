@@ -18,6 +18,7 @@ import json
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
+from ....utils.device import parse_device
 from ....utils.misc import abspath
 from ....utils import logging
 
@@ -72,7 +73,7 @@ class DetModel(BaseModel):
         if epochs_iters is not None:
             config.update_epochs(epochs_iters)
             config.update_cossch_epoch(epochs_iters)
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         config.update_device(device_type)
         if resume_path is not None:
             assert resume_path.endswith(
@@ -174,7 +175,7 @@ class DetModel(BaseModel):
         config.update_weights(weight_path)
         if batch_size is not None:
             config.update_batch_size(batch_size, "eval")
-        device_type, device_ids = self.runner.parse_device(device)
+        device_type, device_ids = parse_device(device)
         if len(device_ids) > 1:
             raise ValueError(
                 f"multi-{device_type} evaluation is not supported. Please use a single {device_type}."
@@ -233,7 +234,7 @@ class DetModel(BaseModel):
             cli_args.append(CLIArgument("--rtn_im_file", kwargs["rtn_im_file"]))
         weight_path = abspath(weight_path)
         config.update_weights(weight_path)
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         config.update_device(device_type)
         if save_dir is not None:
             save_dir = abspath(save_dir)
@@ -285,19 +286,27 @@ class DetModel(BaseModel):
         config.update({"hpi_config_path": hpi_config_path})
 
         if self.name in official_categories.keys():
-            anno_val_file = abspath(os.path.join(config.TestDataset['dataset_dir'], config.TestDataset['anno_path']))
+            anno_val_file = abspath(
+                os.path.join(
+                    config.TestDataset["dataset_dir"], config.TestDataset["anno_path"]
+                )
+            )
             if anno_val_file == None or (not os.path.isfile(anno_val_file)):
                 categories = official_categories[self.name]
-                temp_anno = {'images': [], 'annotations': [], 'categories': categories}
+                temp_anno = {"images": [], "annotations": [], "categories": categories}
                 with self._create_new_val_json_file() as anno_file:
-                    json.dump(temp_anno, open(anno_file, 'w'))
-                    config.update({"TestDataset": {"dataset_dir": '', "anno_path": anno_file}})
-                    logging.warning(f"{self.name} does not have validate annotations, use {anno_file} default instead.")
+                    json.dump(temp_anno, open(anno_file, "w"))
+                    config.update(
+                        {"TestDataset": {"dataset_dir": "", "anno_path": anno_file}}
+                    )
+                    logging.warning(
+                        f"{self.name} does not have validate annotations, use {anno_file} default instead."
+                    )
                     self._assert_empty_kwargs(kwargs)
                     with self._create_new_config_file() as config_path:
                         config.dump(config_path)
                         return self.runner.export(config_path, cli_args, None)
-                
+
         self._assert_empty_kwargs(kwargs)
 
         with self._create_new_config_file() as config_path:
@@ -333,7 +342,7 @@ class DetModel(BaseModel):
         cli_args.append(CLIArgument("--image_file", input_path))
         if save_dir is not None:
             cli_args.append(CLIArgument("--output_dir", save_dir))
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         cli_args.append(CLIArgument("--device", device_type))
 
         self._assert_empty_kwargs(kwargs)
@@ -385,7 +394,7 @@ class DetModel(BaseModel):
         if epochs_iters is not None:
             cps_config.update_epochs(epochs_iters)
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             config.update_device(device_type)
         if save_dir is not None:
             save_dir = abspath(config.get_train_save_dir())
