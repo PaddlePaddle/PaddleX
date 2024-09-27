@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..utils.predict_set import BatchSizeSetMixin
 from .base_predictor import BasicPredictor
 
 
-class CVPredictor(BasicPredictor, BatchSizeSetMixin):
+class TSPredictor(BasicPredictor):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._pred_set_register("batch_size")(self.set_batch_size)

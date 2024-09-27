@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class BatchSetMixin:
+class BatchSizeSetMixin:
     def set_batch_size(self, batch_size):
         self.components["ReadImage"].set_batch_size(batch_size)
 
