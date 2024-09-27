@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from ...utils.func_register import FuncRegister
+from ...utils.device import parse_device, set_env_for_device, get_default_device
 from ...utils import logging
-from .device import parse_device
 from .new_ir_blacklist import NEWIR_BLOCKLIST
 
 
@@ -55,7 +55,7 @@ class PaddlePredictorOption(object):
         """get default config"""
         return {
             "run_mode": "paddle",
-            "device": "gpu",
+            "device": get_default_device(),
             "device_id": 0,
             "min_subgraph_size": 3,
             "shape_info_filename": None,
@@ -90,6 +90,7 @@ class PaddlePredictorOption(object):
             )
         device_id = device_ids[0] if device_ids is not None else 0
         self._cfg["device_id"] = device_id
+        set_env_for_device(device)
         if device_type not in ("cpu"):
             if device_ids is None or len(device_ids) > 1:
                 logging.warning(f"The device ID has been set to {device_id}.")

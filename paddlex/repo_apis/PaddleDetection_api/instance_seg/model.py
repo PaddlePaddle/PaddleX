@@ -17,6 +17,7 @@ import os
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
+from ....utils.device import parse_device
 from ....utils.misc import abspath
 from .config import InstanceSegConfig
 
@@ -68,7 +69,7 @@ class InstanceSegModel(BaseModel):
         if epochs_iters is not None:
             config.update_epochs(epochs_iters)
             config.update_cossch_epoch(epochs_iters)
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         config.update_device(device_type)
         if resume_path is not None:
             assert resume_path.endswith(
@@ -170,7 +171,7 @@ class InstanceSegModel(BaseModel):
         config.update_weights(weight_path)
         if batch_size is not None:
             config.update_batch_size(batch_size, "eval")
-        device_type, device_ids = self.runner.parse_device(device)
+        device_type, device_ids = parse_device(device)
         if len(device_ids) > 1:
             raise ValueError(
                 f"multi-{device_type} evaluation is not supported. Please use a single {device_type}."
@@ -229,7 +230,7 @@ class InstanceSegModel(BaseModel):
             cli_args.append(CLIArgument("--rtn_im_file", kwargs["rtn_im_file"]))
         weight_path = abspath(weight_path)
         config.update_weights(weight_path)
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         config.update_device(device_type)
         if save_dir is not None:
             save_dir = abspath(save_dir)
@@ -315,7 +316,7 @@ class InstanceSegModel(BaseModel):
         cli_args.append(CLIArgument("--image_file", input_path))
         if save_dir is not None:
             cli_args.append(CLIArgument("--output_dir", save_dir))
-        device_type, _ = self.runner.parse_device(device)
+        device_type, _ = parse_device(device)
         cli_args.append(CLIArgument("--device", device_type))
 
         self._assert_empty_kwargs(kwargs)
@@ -367,7 +368,7 @@ class InstanceSegModel(BaseModel):
         if epochs_iters is not None:
             cps_config.update_epochs(epochs_iters)
         if device is not None:
-            device_type, _ = self.runner.parse_device(device)
+            device_type, _ = parse_device(device)
             config.update_device(device_type)
         if save_dir is not None:
             save_dir = abspath(config.get_train_save_dir())

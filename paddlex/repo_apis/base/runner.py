@@ -26,6 +26,7 @@ from .utils.subprocess import run_cmd as _run_cmd, CompletedProcess
 
 from ...utils import logging
 from ...utils.misc import abspath
+from ...utils.device import parse_device
 from ...utils.flags import DRY_RUN
 from ...utils.errors import raise_unsupported_api_error, CalledProcessError
 
@@ -182,12 +183,12 @@ class BaseRunner(metaclass=abc.ABCMeta):
         args = [self.python]
         if device is None:
             return args, None
-        device, dev_ids = self.parse_device(device)
+        device, dev_ids = parse_device(device)
         if len(dev_ids) == 0:
             return args, None
         else:
             num_devices = len(dev_ids)
-            dev_ids = ",".join(dev_ids)
+            dev_ids = ",".join([str(n) for n in dev_ids])
         if num_devices > 1:
             args.extend(["-m", "paddle.distributed.launch"])
             args.extend(["--devices", dev_ids])
@@ -208,21 +209,6 @@ class BaseRunner(metaclass=abc.ABCMeta):
                 new_env["CUDA_VISIBLE_DEVICES"] = dev_ids
             return args, new_env
         return args, None
-
-    def parse_device(self, device):
-        """parse_device"""
-        # According to https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/device/set_device_cn.html
-        if ":" not in device:
-            device_type, dev_ids = device, []
-        else:
-            device_type, dev_ids = device.split(":")
-            dev_ids = dev_ids.split(",")
-        if device_type not in ("cpu", "gpu", "xpu", "npu", "mlu"):
-            raise ValueError("Unsupported device type.")
-        for dev_id in dev_ids:
-            if not dev_id.isdigit():
-                raise ValueError("Device ID must be an integer.")
-        return device_type, dev_ids
 
     def run_cmd(
         self,
