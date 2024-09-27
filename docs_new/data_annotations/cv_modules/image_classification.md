@@ -8,7 +8,7 @@
 `Labelme` 是一个 `python` 语言编写，带有图形界面的图像标注软件。可用于图像分类、目标检测、图像分割等任务，在实例分割的标注任务中，标签存储为 `JSON` 文件。
 
 ### 1.2 Labelme 安装
-为避免环境冲突，建议在 `conda` 环境下安装。
+为避免环境冲突，建议在 `conda` 环境下安装。.
 
 ```bash
 conda create -n labelme python=3.10
