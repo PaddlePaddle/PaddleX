@@ -754,7 +754,7 @@ for batch in output:
 
 * [PaddleX产线开发工具使用教程](/docs_new/pipelines_usage/pipeline_develop_guide.md)
 
-* <details>
+* <details open>
     <summary> <b> cv相关产线 </b></summary>
 
    * [通用图像分类产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)
@@ -766,14 +766,14 @@ for batch in output:
    * [图像异常检测产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   </details>
   
-* <details>
+* <details open>
     <summary> <b> ocr相关产线 </b></summary>
 
     * [通用OCR产线](/docs_new/pipelines_usage/tutorials/ocr_pipelies/OCR.md)
     * [通用表格识别产线](/docs_new/pipelines_usage/tutorials/ocr_pipelies/table_recognition.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 时序相关产线</b> </summary>
 
    * [通用时序预测产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
@@ -781,13 +781,13 @@ for batch in output:
    * [通用时序分类产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_classification.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 信息抽取相关产线 </b></summary>
 
    * [文档场景信息抽取产线](/docs_new/pipelines_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 相关说明文件</b> </summary>
 
    * [PaddleX产线命令行使用说明](/docs_new/pipelines_usage/instructions/pipeline_CLI_usage.md)
@@ -796,7 +796,7 @@ for batch in output:
    
 </details>
 
-<details open>
+<details>
 <summary> <b> 单功能模块使用 </b></summary>
 
 * <details>
