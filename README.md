@@ -742,20 +742,20 @@ for batch in output:
 
 ## 📖 文档
 <details>
-  <summary> <b> 安装 </summary>
-
-* [PaddleX安装教程](/docs_new/installation/installation.md) 
-* [PaddlePaddle安装教程](/docs_new/installation/paddlepaddle_install.md)
+  <summary> <b> 安装 </b></summary>
+  
+  * [PaddleX安装教程](/docs_new/installation/installation.md) 
+  * [PaddlePaddle安装教程](/docs_new/installation/paddlepaddle_install.md)
 
 </details>
 
 <details open>
-<summary> <b> 产线使用 </summary>
+<summary> <b> 产线使用 </b></summary>
 
 * [PaddleX产线开发工具使用教程](/docs_new/pipelines_usage/pipeline_develop_guide.md)
 
 * <details>
-    <summary> <b> cv相关产线 </summary>
+    <summary> <b> cv相关产线 </b></summary>
 
    * [通用图像分类产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)
    * [通用目标检测产线](/docs_new/pipelines_usage/tutorials/cv_pipelines/object_detection.md)
@@ -767,14 +767,14 @@ for batch in output:
   </details>
   
 * <details>
-    <summary> <b> ocr相关产线 </summary>
+    <summary> <b> ocr相关产线 </b></summary>
 
     * [通用OCR产线](/docs_new/pipelines_usage/tutorials/ocr_pipelies/OCR.md)
     * [通用表格识别产线](/docs_new/pipelines_usage/tutorials/ocr_pipelies/table_recognition.md)
   </details>
 
 * <details>
-    <summary> <b> 时序相关产线 </summary>
+    <summary> <b> 时序相关产线</b> </summary>
 
    * [通用时序预测产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
    * [通用时序异常检测产线](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
@@ -782,13 +782,13 @@ for batch in output:
   </details>
 
 * <details>
-    <summary> <b> 信息抽取相关产线 </summary>
+    <summary> <b> 信息抽取相关产线 </b></summary>
 
    * [文档场景信息抽取产线](/docs_new/pipelines_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
 * <details>
-    <summary> <b> 相关说明文件 </summary>
+    <summary> <b> 相关说明文件</b> </summary>
 
    * [PaddleX产线命令行使用说明](/docs_new/pipelines_usage/instructions/pipeline_CLI_usage.md)
    * [PaddleX产线Python脚本使用说明](/docs_new/pipelines_usage/instructions/pipeline_python_API.md)
@@ -797,10 +797,10 @@ for batch in output:
 </details>
 
 <details open>
-<summary> <b> 单功能模块使用 </summary>
+<summary> <b> 单功能模块使用 </b></summary>
 
 * <details>
-  <summary> <b> cv相关模块 </summary>
+  <summary> <b> cv相关模块 </b></summary>
   
   * [图像分类模块]()
   * [图像识别模块]()
@@ -821,7 +821,7 @@ for batch in output:
   </details> 
   
 * <details>
-  <summary> <b> ocr相关模块 </summary>
+  <summary> <b> ocr相关模块 </b></summary>
 
   * [文本检测模块]()
   * [印章文本检测模块]()
@@ -831,7 +831,7 @@ for batch in output:
   </details>
 
 * <details>
-  <summary> <b> 时序相关产线 </summary>
+  <summary> <b> 时序相关产线 </b></summary>
 
   * [时序预测模块]()
   * [时序异常检测模块]()
@@ -839,7 +839,7 @@ for batch in output:
   </details>
     
 * <details>
-  <summary> <b> 相关说明文件 </summary>
+  <summary> <b> 相关说明文件 </b></summary>
 
   * [PaddleX单模型Python脚本使用说明]()
   * [PaddleX通用模型配置文件参数说明]()
@@ -849,19 +849,19 @@ for batch in output:
 </details>
 
 <details>
-  <summary> <b> 多模块组合使用 </summary>
+  <summary> <b> 多模块组合使用 </b></summary>
 
   * [多功能模块组合使用教程]()
 </details>
 <details>
-  <summary> <b> 模型产线部署 </summary>
+  <summary> <b> 模型产线部署 </b></summary>
 
   * [PaddleX 服务化部署指南]()
   * [PaddleX端侧部署指南]()
   * [PaddleX 高性能部署指南]()
 </details>
 <details>
-  <summary> <b> 多硬件使用 </summary>
+  <summary> <b> 多硬件使用 </b></summary>
 
   * [多硬件使用指南]()
 </details>
@@ -869,11 +869,11 @@ for batch in output:
 ## 🔥 模型产线列表
 
 <details>
-  <summary><a herf = ""> <b> 文档场景信息抽取产线 </a></summary>
+  <summary><a herf = ""> <b> 文档场景信息抽取产线 </b></a></summary>
 </details>
 
 <details>
-  <summary> <a herf = ""><b>通用OCR产线  </a></summary>
+  <summary> <a herf = ""><b>通用OCR产线  </b></a></summary>
 
 | 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
 |----------|---------------------|-------|-------------------|-------------|------------------|
@@ -887,11 +887,11 @@ for batch in output:
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用表格识别产线  </a></summary>
+  <summary><a herf = ""> <b> 通用表格识别产线 </b> </a></summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用图像分类产线  </a></summary>
+  <summary><a herf = ""> <b> 通用图像分类产线  </b></a></summary>
 
 | 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
 |----------|---------------------|-------|-------------------|-------------|------------------|
@@ -905,41 +905,41 @@ for batch in output:
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用目标检测产线  </a></summary>
+  <summary><a herf = ""> <b> 通用目标检测产线  </b></a></summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用实例分割产线  </a></summary>
+  <summary><a herf = ""> <b> 通用实例分割产线  </b></a></summary>
 </details>
 
 <details>
-  <summary> <a herf = ""><b> 通用语义分割产线  </a></summary>
+  <summary> <a herf = ""><b> 通用语义分割产线 </b> </a></summary>
 </details>
 
 <details>
-  <summary> <a herf = ""><b> 通用图像多标签分类产线  </a></summary>
+  <summary> <a herf = ""><b> 通用图像多标签分类产线 </b> </a></summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 小目标检测分类产线  </a></summary>
-</details>
-
-
-<details>
-  <summary><a herf = ""> <b> 图像异常检测产线  </a></summary>
+  <summary><a herf = ""> <b> 小目标检测分类产线 </b> </a></summary>
 </details>
 
 
 <details>
-  <summary><a herf = ""> <b> 通用时序预测产线  </a></summary>
+  <summary><a herf = ""> <b> 图像异常检测产线 </b> </a></summary>
+</details>
+
+
+<details>
+  <summary><a herf = ""> <b> 通用时序预测产线 </b> </a></summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用时序异常检测产线  </a></summary>
+  <summary><a herf = ""> <b> 通用时序异常检测产线 </b> </a></summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用时序分类产线  </a></summary>
+  <summary><a herf = ""> <b> 通用时序分类产线</b>  </a></summary>
 </details>
 
 
@@ -948,6 +948,8 @@ for batch in output:
 
 关于我们项目的一些常见问题解答，请参考[FAQ](/docs_new/FAQ.md)。如果您的问题没有得到解答，请随时在 [Issues](https://github.com/PaddlePaddle/PaddleX/issues) 中提出
 ## 💬 Discussion
+
 我们非常欢迎并鼓励社区成员在[Discussions](https://github.com/PaddlePaddle/PaddleX/discussions)板块中提出问题、分享想法和反馈。无论您是想要报告一个bug、讨论一个功能请求、寻求帮助还是仅仅想要了解项目的最新动态，这里都是一个绝佳的平台。
 ## 📄 许可证书
+
 本项目的发布受[Apache 2.0 license](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/LICENSE)许可认证。
