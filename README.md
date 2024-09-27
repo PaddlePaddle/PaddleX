@@ -46,7 +46,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
  ## 📊 能力支持
 
-PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行[高性能部署](/docs_new/pipeline_deploy/high_performance_deploy.md)/[服务化部署](/docs_new/pipeline_deploy/service_deploy.md)/[端侧部署](/docs_new/pipeline_deploy/lite_deploy.md)，如果不满意，您也可以对产线进行**二次开发**提升产线效果。完整的产线开发流程请参考[PaddleX产线开发工具本地使用教程](/docs_new/pipelines_usage/pipeline_develop_guide.md)。
+PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行[高性能部署](/docs_new/pipeline_deploy/high_performance_deploy.md)/[服务化部署](/docs_new/pipeline_deploy/service_deploy.md)/[端侧部署](/docs_new/pipeline_deploy/lite_deploy.md)，如果不满意，您也可以对产线进行**二次开发**提升产线效果。完整的产线开发流程请参考[PaddleX产线开发工具本地使用教程](/docs_new/pipeline_usage/pipeline_develop_guide.md)。
 
 
 此外，PaddleX为开发者提供了基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程高效模型训练与部署工具。开发者**无需代码开发**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
@@ -682,7 +682,7 @@ paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.
 
 | 产线名称     | 对应参数                 | 详细说明 |
 |----------|----------------------|------|
-| 通用图像分类产线 | `image_classification` |   [通用图像分类产线命令行使用说明](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)   |
+| 通用图像分类产线 | `image_classification` |   [通用图像分类产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)   |
 |          |                      |      |
 |          |                      |      |
 |          |                      |      |
@@ -725,7 +725,7 @@ for batch in output:
 
 | 产线名称     | 对应参数                 | 详细说明 |
 |----------|----------------------|------|
-| 通用图像分类产线 | `image_classification` |   [通用图像分类产线Python脚本使用说明](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)   |
+| 通用图像分类产线 | `image_classification` |   [通用图像分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)   |
 |          |                      |      |
 |          |                      |      |
 |          |                      |      |
@@ -753,46 +753,46 @@ for batch in output:
 <details open>
 <summary> <b> 产线使用 </b></summary>
 
-* [PaddleX产线开发工具使用教程](/docs_new/pipelines_usage/pipeline_develop_guide.md)
+* [PaddleX产线开发工具使用教程](/docs_new/pipeline_usage/pipeline_develop_guide.md)
 
 * <details open>
     <summary> <b> cv相关产线 </b></summary>
 
-   * [通用图像分类产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_classification.md)
-   * [通用目标检测产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/object_detection.md)
-   * [通用实例分割产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/instance_segmentation.md)
-   * [通用语义分割产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/semantic_segmentation.md)
-   * [通用图像多标签分类产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
-   * [小目标检测产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/small_object_detection.md)
-   * [图像异常检测产线使用教程](/docs_new/pipelines_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
+   * [通用图像分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)
+   * [通用目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/object_detection.md)
+   * [通用实例分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)
+   * [通用语义分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
+   * [通用图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
+   * [小目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
+   * [图像异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   </details>
   
 * <details open>
     <summary> <b> ocr相关产线 </b></summary>
 
-    * [通用OCR产线使用教程](/docs_new/pipelines_usage/tutorials/ocr_pipelies/OCR.md)
-    * [通用表格识别产线使用教程](/docs_new/pipelines_usage/tutorials/ocr_pipelies/table_recognition.md)
+    * [通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md)
+    * [通用表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)
   </details>
 
 * <details open>
     <summary> <b> 时序相关产线</b> </summary>
 
-   * [通用时序预测产线使用教程](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
-   * [通用时序异常检测产线使用教程](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
-   * [通用时序分类产线使用教程](/docs_new/pipelines_usage/tutorials/time_series_pipelines/time_series_classification.md)
+   * [通用时序预测产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
+   * [通用时序异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
+   * [通用时序分类产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)
   </details>
 
 * <details open>
     <summary> <b> 信息抽取相关产线 </b></summary>
 
-   * [文档场景信息抽取产线使用教程](/docs_new/pipelines_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+   * [文档场景信息抽取产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
 * <details>
     <summary> <b> 相关说明文件</b> </summary>
 
-   * [PaddleX产线命令行使用说明](/docs_new/pipelines_usage/instructions/pipeline_CLI_usage.md)
-   * [PaddleX产线Python脚本使用说明](/docs_new/pipelines_usage/instructions/pipeline_python_API.md)
+   * [PaddleX产线命令行使用说明](/docs_new/pipeline_usage/instructions/pipeline_CLI_usage.md)
+   * [PaddleX产线Python脚本使用说明](/docs_new/pipeline_usage/instructions/pipeline_python_API.md)
   </details>
    
 </details>
