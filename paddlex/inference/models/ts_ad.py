@@ -17,10 +17,10 @@ import os
 from ...modules.ts_anomaly_detection.model_list import MODELS
 from ..components import *
 from ..results import TSAdResult
-from .base import TSPredictor
+from .base import BasicPredictor
 
 
-class TSAdPredictor(TSPredictor):
+class TSAdPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -56,7 +56,7 @@ class TSAdPredictor(TSPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
         self._add_component(
             GetAnomaly(self.config["model_threshold"], self.config["info_params"])

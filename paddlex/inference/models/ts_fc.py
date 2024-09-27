@@ -17,10 +17,10 @@ import os
 from ...modules.ts_forecast.model_list import MODELS
 from ..components import *
 from ..results import TSFcResult
-from .base import TSPredictor
+from .base import BasicPredictor
 
 
-class TSFcPredictor(TSPredictor):
+class TSFcPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -56,7 +56,7 @@ class TSFcPredictor(TSPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
         self._add_component(ArraytoTS(self.config["info_params"]))
         if self.config.get("scale", None):

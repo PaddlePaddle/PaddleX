@@ -17,13 +17,27 @@ from typing import Any, Dict, Optional
 
 from ...utils.config import parse_config
 from .base import BasePipeline
-from .single_model_pipeline import SingleModelPipeline
+from .single_model_pipeline import (
+    _SingleModelPipeline,
+    ImageClassification,
+    ObjectDetection,
+    InstanceSegmentation,
+    SemanticSegmentation,
+    TSFc,
+    TSAd,
+    TSCls,
+    MultiLableImageClas,
+    SmallObjDet,
+    AnomolyDetection,
+)
 from .ocr import OCRPipeline
 from .table_recognition import TableRecPipeline
 
 
 def create_pipeline(
     pipeline: str,
+    device=None,
+    pp_option=None,
     use_hpip: bool = False,
     hpi_params: Optional[Dict[str, Any]] = None,
     *args,
@@ -39,17 +53,18 @@ def create_pipeline(
     """
     if not Path(pipeline).exists():
         # XXX: using dict class to handle all pipeline configs
-        pipeline = (
+        build_in_pipeline = (
             Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline}.yaml"
         )
-        if not Path(pipeline).exists():
+        if not Path(build_in_pipeline).exists():
             raise Exception(f"The pipeline don't exist! ({pipeline})")
+        pipeline = build_in_pipeline
     config = parse_config(pipeline)
     pipeline_name = config["Global"]["pipeline_name"]
     pipeline_setting = config["Pipeline"]
     pipeline_setting.update(kwargs)
 
-    predictor_kwargs = {"use_hpip": use_hpip}
+    predictor_kwargs = {"device": device, "pp_option": pp_option, "use_hpip": use_hpip}
     if hpi_params is not None:
         predictor_kwargs["hpi_params"] = hpi_params
 

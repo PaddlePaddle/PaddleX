@@ -18,10 +18,10 @@ from ...utils.func_register import FuncRegister
 from ...modules.text_recognition.model_list import MODELS
 from ..components import *
 from ..results import TextRecResult
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class TextRecPredictor(CVPredictor):
+class TextRecPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -43,7 +43,7 @@ class TextRecPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
         op = self.build_postprocess(**self.config["PostProcess"])
         self._add_component(op)

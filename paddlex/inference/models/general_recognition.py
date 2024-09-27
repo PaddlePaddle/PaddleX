@@ -18,10 +18,10 @@ from ...utils.func_register import FuncRegister
 from ...modules.general_recognition.model_list import MODELS
 from ..components import *
 from ..results import BaseResult
-from .base import CVPredictor
+from .base import BasicPredictor
 
 
-class ShiTuRecPredictor(CVPredictor):
+class ShiTuRecPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -42,7 +42,7 @@ class ShiTuRecPredictor(CVPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
 
         post_processes = self.config["PostProcess"]
         for key in post_processes:

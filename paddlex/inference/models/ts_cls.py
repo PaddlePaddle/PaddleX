@@ -16,10 +16,10 @@ import os
 from ...modules.ts_classification.model_list import MODELS
 from ..components import *
 from ..results import TSClsResult
-from .base import TSPredictor
+from .base import BasicPredictor
 
 
-class TSClsPredictor(TSPredictor):
+class TSClsPredictor(BasicPredictor):
 
     entities = MODELS
 
@@ -45,7 +45,7 @@ class TSClsPredictor(TSPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        self._add_component(("Predictor", predictor))
+        self._add_component(predictor)
         self._add_component(GetCls())
 
     def _pack_res(self, single):
