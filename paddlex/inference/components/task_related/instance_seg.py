@@ -20,6 +20,10 @@ from ..base import BaseComponent
 from .det import restructured_boxes
 
 
+import cv2
+import numpy as np
+
+
 def extract_masks_from_boxes(boxes, masks):
     """
     Extracts the portion of each mask that is within the corresponding box.
@@ -41,7 +45,7 @@ def extract_masks_from_boxes(boxes, masks):
 class InstanceSegPostProcess(BaseComponent):
     """Save Result Transform"""
 
-    INPUT_KEYS = ["boxes", "masks", "img_size"]
+    INPUT_KEYS = [["boxes", "masks", "img_size"], ["class_id", "masks", "img_size"]]
     OUTPUT_KEYS = ["img_path", "boxes", "masks"]
     DEAULT_INPUTS = {"boxes": "boxes", "masks": "masks", "img_size": "ori_img_size"}
     DEAULT_OUTPUTS = {
@@ -54,13 +58,32 @@ class InstanceSegPostProcess(BaseComponent):
         self.threshold = threshold
         self.labels = labels
 
-    def apply(self, boxes, masks, img_size):
+    def apply(self, masks, img_size, boxes=None, class_id=None):
         """apply"""
-        expect_boxes = (boxes[:, 1] > self.threshold) & (boxes[:, 0] > -1)
-        boxes = boxes[expect_boxes, :]
-        boxes = restructured_boxes(boxes, self.labels, img_size)
-        masks = masks[expect_boxes, :, :]
-        masks = extract_masks_from_boxes(boxes, masks)
-        result = {"boxes": boxes, "masks": masks}
+        if boxes is not None:
+            expect_boxes = (boxes[:, 1] > self.threshold) & (boxes[:, 0] > -1)
+            boxes = boxes[expect_boxes, :]
+            boxes = restructured_boxes(boxes, self.labels, img_size)
+            masks = masks[expect_boxes, :, :]
+            masks = extract_masks_from_boxes(boxes, masks)
+            result = {"boxes": boxes, "masks": masks}
+        else:
+            mask_info = []
+            class_id = [list(item) for item in zip(class_id[0], class_id[1])]
+
+            selected_masks = []
+            for i, info in enumerate(class_id):
+                label_id = int(info[0])
+                if info[1] < self.threshold:
+                    continue
+                mask_info.append(
+                    {
+                        "label": self.labels[label_id],
+                        "score": info[1],
+                        "class_id": label_id,
+                    }
+                )
+                selected_masks.append(masks[i])
+            result = {"boxes": mask_info, "masks": selected_masks}
 
         return result

@@ -40,19 +40,26 @@ class InstanceSegPredictor(DetPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if "RT-DETR" in self.model_name:
+        model_names = ["RT-DETR", "SOLOv2", "RCNN"]
+        if any(name in self.model_name for name in model_names):
             predictor.set_inputs(
                 {"img": "img", "scale_factors": "scale_factors", "img_size": "img_size"}
             )
-        self._add_component(
-            [
-                predictor,
-                InstanceSegPostProcess(
-                    threshold=self.config["draw_threshold"],
-                    labels=self.config["label_list"],
-                ),
-            ]
+
+        postprecss = InstanceSegPostProcess(
+            threshold=self.config["draw_threshold"],
+            labels=self.config["label_list"],
         )
+
+        if "SOLOv2" in self.model_name:
+            postprecss.set_inputs(
+                {
+                    "class_id": "class_id",
+                    "masks": "masks",
+                    "img_size": "img_size",
+                }
+            )
+        self._add_component([predictor, postprecss])
 
     def _pack_res(self, single):
         keys = ["img_path", "boxes", "masks"]

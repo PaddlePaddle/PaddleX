@@ -13,6 +13,10 @@
 # limitations under the License.
 
 import numpy as np
+import copy
+import json
+
+from ...utils import logging
 from .base import BaseResult
 
 
@@ -25,3 +29,10 @@ class DocTrResult(BaseResult):
     def _get_res_img(self):
         doctr_img = np.array(self["doctr_img"])
         return doctr_img
+
+    def print(self, json_format=True, indent=4, ensure_ascii=False):
+        str_ = copy.deepcopy(self)
+        del str_["doctr_img"]
+        if json_format:
+            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
+        logging.info(str_)
