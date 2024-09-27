@@ -162,7 +162,7 @@ PP-ShiTuV2_rec_CLIP_vit_base_infer.tar",
     "PP-ShiTuV2_rec_CLIP_vit_large": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/\
 PP-ShiTuV2_rec_CLIP_vit_large_infer.tar",
     "PP-LiteSeg-T": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-LiteSeg-T_infer.tar",
-    "PP-LiteSeg-B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-LiteSeg-B_infer.tar",
+    "PP-LiteSeg-B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1/PP-LiteSeg-B_infer.tar",
     "OCRNet_HRNet-W48": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/OCRNet_HRNet-W48_infer.tar",
     "OCRNet_HRNet-W18": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/OCRNet_HRNet-W18_infer.tar",
     "SegFormer-B0": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/SegFormer-B0_infer.tar",
