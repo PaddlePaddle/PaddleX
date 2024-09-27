@@ -25,7 +25,15 @@ import pandas as pd
 from .tablepyxl import document_to_xl
 
 
-__all__ = ["WriterType", "ImageWriter", "TextWriter", "JsonWriter", "TSWriter", "HtmlWriter", "XlsxWriter"]
+__all__ = [
+    "WriterType",
+    "ImageWriter",
+    "TextWriter",
+    "JsonWriter",
+    "TSWriter",
+    "HtmlWriter",
+    "XlsxWriter",
+]
 
 
 class WriterType(enum.Enum):
@@ -261,6 +269,8 @@ class PILImageWriterBackend(_ImageWriterBackend):
             img = Image.fromarray(obj)
         else:
             raise TypeError("Unsupported object type")
+        if len(img.getbands()) == 4:
+            self.format = "PNG"
         return img.save(out_path, format=self.format)
 
 

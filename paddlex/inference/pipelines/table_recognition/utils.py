@@ -396,7 +396,7 @@ class TableMatch(object):
         td_index = 0
         head_structure = pred_structures[0:3]
         html = "".join(head_structure)
-        table_structure = pred_structures[3]
+        table_structure = pred_structures[3:-3]
         for tag in table_structure:
             if "</td>" in tag:
                 if "<td></td>" == tag:

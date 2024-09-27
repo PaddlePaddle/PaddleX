@@ -24,9 +24,13 @@ class TableLabelDecode(BaseComponent):
 
     ENABLE_BATCH = True
 
-    INPUT_KEYS = ["pred", "ori_img_size"]
+    INPUT_KEYS = ["pred", "img_size", "ori_img_size"]
     OUTPUT_KEYS = ["bbox", "structure", "structure_score"]
-    DEAULT_INPUTS = {"pred": "pred", "ori_img_size": "ori_img_size"}
+    DEAULT_INPUTS = {
+        "pred": "pred",
+        "img_size": "img_size",
+        "ori_img_size": "ori_img_size",
+    }
     DEAULT_OUTPUTS = {
         "bbox": "bbox",
         "structure": "structure",
@@ -73,7 +77,7 @@ class TableLabelDecode(BaseComponent):
             assert False, "unsupported type %s in get_beg_end_flag_idx" % beg_or_end
         return idx
 
-    def apply(self, pred, ori_img_size):
+    def apply(self, pred, img_size, ori_img_size):
         """apply"""
         bbox_preds, structure_probs = [], []
         for bbox_pred, stru_prob in pred:
@@ -83,7 +87,7 @@ class TableLabelDecode(BaseComponent):
         structure_probs = np.array(structure_probs)
 
         bbox_list, structure_str_list, structure_score = self.decode(
-            structure_probs, bbox_preds, ori_img_size
+            structure_probs, bbox_preds, img_size, ori_img_size
         )
         structure_str_list = [
             (
@@ -98,7 +102,7 @@ class TableLabelDecode(BaseComponent):
             for bbox, structure in zip(bbox_list, structure_str_list)
         ]
 
-    def decode(self, structure_probs, bbox_preds, shape_list):
+    def decode(self, structure_probs, bbox_preds, padding_size, ori_img_size):
         """convert text-label into text-index."""
         ignored_tokens = self.get_ignored_tokens()
         end_idx = self.dict[self.end_str]
@@ -122,11 +126,13 @@ class TableLabelDecode(BaseComponent):
                 text = self.character[char_idx]
                 if text in self.td_token:
                     bbox = bbox_preds[batch_idx, idx]
-                    bbox = self._bbox_decode(bbox, shape_list[batch_idx])
+                    bbox = self._bbox_decode(
+                        bbox, padding_size[batch_idx], ori_img_size[batch_idx]
+                    )
                     bbox_list.append(bbox.tolist())
                 structure_list.append(text)
                 score_list.append(structure_probs[batch_idx, idx])
-            structure_batch_list.append([structure_list])
+            structure_batch_list.append(structure_list)
             structure_score = np.mean(score_list)
             bbox_batch_list.append(bbox_list)
 
@@ -162,8 +168,17 @@ class TableLabelDecode(BaseComponent):
             bbox_batch_list.append(bbox_list)
         return bbox_batch_list, structure_batch_list
 
-    def _bbox_decode(self, bbox, shape):
-        w, h = shape[:2]
-        bbox[0::2] *= w
-        bbox[1::2] *= h
+    def _bbox_decode(self, bbox, padding_shape, ori_shape):
+
+        pad_w, pad_h = padding_shape
+        w, h = ori_shape
+        ratio_w = pad_w / w
+        ratio_h = pad_h / h
+        ratio = min(ratio_w, ratio_h)
+
+        bbox[0::2] *= pad_w
+        bbox[1::2] *= pad_h
+        bbox[0::2] /= ratio
+        bbox[1::2] /= ratio
+
         return bbox
