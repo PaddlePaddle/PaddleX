@@ -22,3 +22,4 @@ scikit-image
 lxml
 openpyxl
 premailer
+PyMuPDF
