@@ -3,6 +3,8 @@
 ## 一、概述
 图像多标签分类模块是计算机视觉系统中的重要组件，负责对输入的图像进行多标签的分类。与传统的图像分类任务只将图像分到一个类别不同，图像多标签分类任务需要将图像分到多个相关的类别。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。图像多标签分类模块通常会接收图像作为输入，然后通过深度学习或其他机器学习算法，根据图像的特性和内容，将其分类到多个预定义的类别中。例如，对于一张包含猫和狗的图像，图像多标签分类模块可能需要将其同时标记为“猫”和“狗”。这些分类标签将作为输出，供其他模块或系统进行后续的处理和分析。
 
+## 二、支持模型列表
+
 <details>
    <summary> 👉模型列表详情</summary>
 
@@ -84,7 +86,7 @@ for res in output:
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
-如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的图像多标签分类模型。在使用 PaddleX 开发图像多标签分类模型之前，请务必安装 PaddleX 的 图像分类 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc)中的二次开发部分。
+如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的图像多标签分类模型。在使用 PaddleX 开发图像多标签分类模型之前，请务必安装 PaddleX 的 图像分类 相关模型训练插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX多标签分类任务模块数据标注教程](../../../data_annotations/cv_modules/ml_classification.md)
@@ -277,7 +279,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 
 * 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
 * PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
-* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/0PKFjfhs0UN4Qs?t=mention&mt=doc&dt=doc)。
+* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)。
 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
 * `train_result.json`：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
