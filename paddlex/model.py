@@ -80,7 +80,7 @@ class _ModelBasedConfig(_BaseModel):
         kernel_option = predict_kwargs.pop("kernel_option", {})
         kernel_option.update({"device": device})
 
-        pp_option = PaddlePredictorOption(**kernel_option)
+        pp_option = PaddlePredictorOption(self._model_name, **kernel_option)
         predictor = create_predictor(model, pp_option=pp_option)
         assert "input" in predict_kwargs
         return predict_kwargs, predictor

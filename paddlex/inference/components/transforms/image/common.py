@@ -19,7 +19,6 @@ from copy import deepcopy
 
 import numpy as np
 import cv2
-from skimage import measure, morphology
 
 from .....utils.cache import CACHE_DIR
 from ....utils.io import ImageReader, ImageWriter
@@ -307,7 +306,7 @@ class Resize(_BaseResize):
 
         if self.keep_ratio:
             h, w = img.shape[0:2]
-            target_size, _ = self._rescale_size((w, h), self.target_size)
+            target_size, _ = self._rescale_size((h, w), self.target_size)
 
         if self.size_divisor:
             target_size = [
@@ -540,30 +539,3 @@ class ToCHWImage(BaseComponent):
         """apply"""
         img = img.transpose((2, 0, 1))
         return {"img": img}
-
-
-class Map_to_mask(BaseComponent):
-    """Map_to_mask"""
-    INPUT_KEYS = "pred"
-    OUTPUT_KEYS = "pred"
-    DEAULT_INPUTS = {"pred": "pred"}
-    DEAULT_OUTPUTS = {"pred": "pred"}
-
-    def apply(self, pred):
-        """apply"""
-        # from skimage import measure, morphology
-        # import cv2
-        # from PIL import Image
-        # import numpy as np
-        # import imageio
-
-        score_map = pred[0]
-        thred = 0.01
-        mask = score_map[0]
-        mask[mask > thred] = 255
-        mask[mask <= thred] = 0
-        kernel = morphology.disk(4)
-        mask = morphology.opening(mask, kernel)
-        mask = mask.astype(np.uint8)
-
-        return {"pred": mask[None, :, :]}

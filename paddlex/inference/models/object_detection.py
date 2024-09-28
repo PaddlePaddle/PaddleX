@@ -43,7 +43,8 @@ class DetPredictor(BasicPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        if "DETR" in self.model_name or "RCNN" in self.model_name:
+        model_names = ["DETR", "RCNN", "YOLOv3", "CenterNet"]
+        if any(name in self.model_name for name in model_names):
             predictor.set_inputs(
                 {
                     "img": "img",
@@ -110,6 +111,10 @@ class DetPredictor(BasicPredictor):
     @register("PadStride")
     def build_pad_stride(self, stride=32):
         return PadStride(stride=stride)
+
+    @register("WarpAffine")
+    def build_warp_affine(self, input_h=512, input_w=512, keep_res=True):
+        return WarpAffine(input_h=input_h, input_w=input_w, keep_res=keep_res)
 
     def _pack_res(self, single):
         keys = ["img_path", "boxes"]

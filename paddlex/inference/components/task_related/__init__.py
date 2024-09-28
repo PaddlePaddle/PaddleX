@@ -22,6 +22,7 @@ from .text_det import (
 )
 from .text_rec import OCRReisizeNormImg, CTCLabelDecode
 from .table_rec import TableLabelDecode
-from .det import DetPostProcess, CropByBoxes, DetPad
+from .det import DetPostProcess, CropByBoxes, DetPad, WarpAffine
 from .instance_seg import InstanceSegPostProcess
 from .warp import DocTrPostProcess
+from .seg import Map_to_mask

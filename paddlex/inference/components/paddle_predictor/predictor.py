@@ -209,6 +209,7 @@ class ImageDetPredictor(BasePaddlePredictor):
                 np.stack(scale_factors, axis=0).astype(dtype=np.float32, copy=False),
             ]
         else:
+            # img_size = [img_size[::-1] for img_size in img_size]
             return [
                 np.stack(img_size, axis=0).astype(dtype=np.float32, copy=False),
                 np.stack(img, axis=0).astype(dtype=np.float32, copy=False),
@@ -218,7 +219,23 @@ class ImageDetPredictor(BasePaddlePredictor):
     def format_output(self, pred):
         box_idx_start = 0
         pred_box = []
+
+        if len(pred) == 4:
+            # Adapt to SOLOv2
+            pred_class_id = []
+            pred_mask = []
+            pred_class_id.append([pred[1], pred[2]])
+            pred_mask.append(pred[3])
+            return [
+                {
+                    "class_id": np.array(pred_class_id[i]),
+                    "masks": np.array(pred_mask[i]),
+                }
+                for i in range(len(pred_class_id))
+            ]
+
         if len(pred) == 3:
+            # Adapt to Instance Segmentation
             pred_mask = []
         for idx in range(len(pred[1])):
             np_boxes_num = pred[1][idx]
@@ -230,10 +247,11 @@ class ImageDetPredictor(BasePaddlePredictor):
                 pred_mask.append(np_masks)
             box_idx_start = box_idx_end
 
-        boxes = [{"boxes": np.array(res)} for res in pred_box]
         if len(pred) == 3:
-            masks = [{"masks": np.array(res)} for res in pred_mask]
-            return [{"boxes": boxes[0]["boxes"], "masks": masks[0]["masks"]}]
+            return [
+                {"boxes": np.array(pred_box[i]), "masks": np.array(pred_mask[i])}
+                for i in range(len(pred_box))
+            ]
         else:
             return [{"boxes": np.array(res)} for res in pred_box]
 

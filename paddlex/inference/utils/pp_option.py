@@ -53,10 +53,11 @@ class PaddlePredictorOption(object):
 
     def _get_default_config(self):
         """get default config"""
+        device_type, device_id = parse_device(get_default_device())
         return {
             "run_mode": "paddle",
-            "device": get_default_device(),
-            "device_id": 0,
+            "device": device_type,
+            "device_id": device_id[0],
             "min_subgraph_size": 3,
             "shape_info_filename": None,
             "trt_calib_mode": False,
