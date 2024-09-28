@@ -10,8 +10,8 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 
 |Model Name| Hmean（%）|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)| Introduce |
 |-|-|-|-|-|-|
-|PP-OCRv4_server_seal_det |98.21|||109 M|The server-side seal text detection model of PP-OCRv4 boasts higher accuracy and is suitable for deployment on better-equipped servers.|
-|PP-OCRv4_mobile_seal_det|96.47|||4.6 M| The mobile-side seal text detection model of PP-OCRv4, on the other hand, offers greater efficiency and is suitable for deployment on end devices.|
+|PP-OCRv4_server_seal_det |98.21|84.341|2425.06|109 M|The server-side seal text detection model of PP-OCRv4 boasts higher accuracy and is suitable for deployment on better-equipped servers.|
+|PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.6 M| The mobile-side seal text detection model of PP-OCRv4, on the other hand, offers greater efficiency and is suitable for deployment on end devices.|
 
 
 **Note: The evaluation set for the above accuracy metrics is a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
