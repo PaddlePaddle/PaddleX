@@ -7,6 +7,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 
 
 ![](/tmp/images/pipelines/ocr/01.png)
+
 **通用OCR产线中包含了文本检测模块和文本识别模块**，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。**如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
 <table>
@@ -84,7 +85,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，您可以直接从云端下载部署包，也可以使用[2.2节本地集成](#3-开发集成部署)的方式。如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
-> ❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](/docs_new/installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
 * 一行命令即可快速体验OCR产线效果:
@@ -249,9 +250,9 @@ for res in output:
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
-* **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](/docs_new/pipeline_deploy/high_performance_deploy.md)。
-* **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](/docs_new/pipeline_deploy/service_deploy.md)。
-* **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](/docs_new/pipeline_deploy/lite_deploy.md)。
+🚀 **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_deploy.md)。
+☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/lite_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 
@@ -261,7 +262,7 @@ for res in output:
 ### 4.1 模型微调
 由于通用OCR产线包含两个模块（文本检测和文本识别），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](/docs_new/module_usage/tutorials/ocr_modules/text_detection.md)中的[二次开发](/docs_new/module_usage/tutorials/ocr_modules/text_detection.md#四二次开发)章节，使用您的私有数据集对文本检测模型进行微调；如果在已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](/docs_new/module_usage/tutorials/ocr_modules/text_recognition.md)中的中的[二次开发](/docs_new/module_usage/tutorials/ocr_modules/text_recognition.md#四二次开发)章节,对文本识别模型进行微调。 
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/text_detection.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_detection.md#四二次开发)章节，使用您的私有数据集对文本检测模型进行微调；如果在已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_recognition.md#四二次开发)章节,对文本识别模型进行微调。 
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
@@ -293,4 +294,4 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 ```bash
 paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](/docs_new/installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
