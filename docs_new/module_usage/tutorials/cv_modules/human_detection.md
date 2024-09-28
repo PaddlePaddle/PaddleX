@@ -22,8 +22,8 @@
     <td>PP-YOLOE-L_human</td>
     <td>48.0</td>
     <td>81.9</td>
-    <td></td>
-    <td></td>
+    <td>32.8</td>
+    <td>777.7</td>
     <td>196.02</td>
     <td rowspan="2">基于PP-YOLOE的行人检测模型</td>
   </tr>
@@ -31,12 +31,13 @@
     <td>PP-YOLOE-S_human</td>
     <td>42.5</td>
     <td>77.9</td>
-    <td></td>
-    <td></td>
+    <td>15.0</td>
+    <td>179.3</td>
     <td>28.79</td>
   </tr>
 </table>
 
+注：以上精度指标为CrowdHuman数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。
 </details>
 
 
@@ -144,7 +145,7 @@ python main.py -c paddlex/configs/human_detection/PP-YOLOE-S_human.yaml \
 
 **（1）数据集格式转换**
 
-人脸检测不支持数据格式转换。
+行人检测不支持数据格式转换。
 
 **（2）数据集划分**
 
