@@ -215,7 +215,7 @@
  # sh run.sh PicoDet-L
 ```
 
-运行结果如下所示,并生成一张名叫 `dog_picodet_detection_result.jpg` 的结果图：
+运行结果如下所示，并生成一张名叫 `dog_picodet_detection_result.jpg` 的结果图：
 
 ```text
 ======= benchmark summary =======
@@ -256,15 +256,15 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td rowspan="3">目标检测</td>
     <td rowspan="3">picodet_detection</td>
     <td>PicoDet-S</td>
-    <td>PicoDet-S（default）</td>
+    <td>PicoDet-S（default）</br>PicoDet-S_gpu</td>
   </tr>
   <tr>
     <td>PicoDet-L</td>
-    <td>PicoDet-L</td>
+    <td>PicoDet-L</br>PicoDet-L_gpu</td>
   </tr>
   <tr>
     <td>PicoDet_layout_1x</td>
-    <td>PicoDet_layout_1x</td>
+    <td>PicoDet_layout_1x</br>PicoDet_layout_1x_gpu</td>
   </tr>
   <tr>
     <td>通用语义分割</td>
@@ -272,19 +272,19 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td>语义分割</td>
     <td>semantic_segmentation</td>
     <td>PP-LiteSeg-T</td>
-    <td>PP-LiteSeg-T（default）</td>
+    <td>PP-LiteSeg-T（default）</br>PP-LiteSeg-T_gpu</td>
   </tr>
   <tr>
     <td rowspan="2">通用图像分类</td>
     <td rowspan="2">image_classification</td>
     <td rowspan="2">图像分类</td>
     <td rowspan="2">image_classification</td>
-    <td>PP-LCNet_x1_0</td>
-    <td>PP-LCNet_x1_0</td>
+    <td>PP-LCNet_x1_0（default）</td>
+    <td>PP-LCNet_x1_0</br>PP-LCNet_x1_0_gpu</td>
   </tr>
   <tr>
     <td>MobileNetV3_small_x1_0</td>
-    <td>MobileNetV3_small_x1_0</td>
+    <td>MobileNetV3_small_x1_0</br>MobileNetV3_small_x1_0_gpu</td>
   </tr>
   <tr>
     <td rowspan="2">通用OCR</td>
@@ -292,12 +292,12 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td>文本检测</td>
     <td rowspan="2">ppocr_demo</td>
     <td>PP-OCRv4_mobile_det</td>
-    <td>PP-OCRv4_mobile_det</td>
+    <td>PP-OCRv4_mobile_det（default）</td>
   </tr>
   <tr>
     <td>文本识别</td>
     <td>PP-OCRv4_mobile_rec</td>
-    <td>PP-OCRv4_mobile_rec</td>
+    <td>PP-OCRv4_mobile_rec（default）</td>
   </tr>
 </table>
 
