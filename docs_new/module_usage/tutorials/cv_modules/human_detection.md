@@ -22,8 +22,8 @@
     <td>PP-YOLOE-L_human</td>
     <td>48.0</td>
     <td>81.9</td>
-    <td></td>
-    <td></td>
+    <td>32.8</td>
+    <td>777.7</td>
     <td>196.02</td>
     <td rowspan="2">基于PP-YOLOE的行人检测模型</td>
   </tr>
@@ -31,8 +31,8 @@
     <td>PP-YOLOE-S_human</td>
     <td>42.5</td>
     <td>77.9</td>
-    <td></td>
-    <td></td>
+    <td>15.0</td>
+    <td>179.3</td>
     <td>28.79</td>
   </tr>
 </table>
