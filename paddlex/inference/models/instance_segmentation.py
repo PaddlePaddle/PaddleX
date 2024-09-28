@@ -40,7 +40,7 @@ class InstanceSegPredictor(DetPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        model_names = ["RT-DETR", "SOLOv2", "RCNN"]
+        model_names = ["RT-DETR", "SOLOv2", "RCNN", "YOLO"]
         if any(name in self.model_name for name in model_names):
             predictor.set_inputs(
                 {"img": "img", "scale_factors": "scale_factors", "img_size": "img_size"}
