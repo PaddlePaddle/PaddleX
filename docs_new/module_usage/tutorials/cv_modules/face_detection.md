@@ -16,7 +16,9 @@
 </details>
 
 ## 三、快速集成
-在快速集成前，首先需要安装PaddleX的whl包，whl的安装方式请参考 [PaddleX本地安装教程](../../../installation/installation.md)。完成whl包的安装后，几行代码即可完成人脸检测模块的推理，可以任意切换该模块下的模型，您也可以将人脸检测的模块中的模型推理集成到您的项目中。
+> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
+
+完成whl包的安装后，几行代码即可完成人脸检测模块的推理，可以任意切换该模块下的模型，您也可以将人脸检测的模块中的模型推理集成到您的项目中。
 
 ```python
 from paddlex.inference import create_model 

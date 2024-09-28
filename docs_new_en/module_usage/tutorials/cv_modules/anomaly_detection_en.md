@@ -38,7 +38,7 @@ For more information on the usage of PaddleX's single-model inference API, pleas
 If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better unsupervised anomaly detection models. Before using PaddleX to develop unsupervised anomaly detection models, ensure you have installed the PaddleDetection plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 ### 4.1 Data Preparation
-Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides a data validation function for each module, and **only data that passes the validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development based on the official demos. If you wish to use private datasets for subsequent model training, refer to the [PaddleX Object Detection Task Module Data Annotation Tutorial](/data_annotations/cv_modules/semantic_segmentation_en.md).
+Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides a data validation function for each module, and **only data that passes the validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development based on the official demos. If you wish to use private datasets for subsequent model training, refer to the [PaddleX Semantic Segmentation Task Module Data Annotation Tutorial](/docs_new_en/data_annotations/cv_modules/semantic_segmentation_en.md).
 
 #### 4.1.1 Demo Data Download
 You can use the following commands to download the demo dataset to a specified folder:
@@ -148,7 +148,7 @@ Similar to model training, the process involves the following steps:
 * Specify the path to the `.yaml` configuration file for the model（here it's `STFPM.yaml`）
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to[PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.md)。
+Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
@@ -184,7 +184,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. **Pipeline Integration**
 
-The unsupervised anomaly detection module can be integrated into PaddleX pipelines such as **Image_anomaly_detection** (../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md). Simply replace the model path to update the unsupervised anomaly detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
+The unsupervised anomaly detection module can be integrated into PaddleX pipelines such as [Image_anomaly_detection](../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md). Simply replace the model path to update the unsupervised anomaly detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
 
 2. **Module Integration**
 
