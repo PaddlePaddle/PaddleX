@@ -14,7 +14,7 @@
 
 
 import PIL
-from PIL import ImageDraw, ImageFont
+from PIL import ImageDraw, ImageFont, Image
 import numpy as np
 
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
@@ -84,3 +84,54 @@ class TopkResult(BaseResult):
             return light.astype("int32")
         else:
             return dark.astype("int32")
+
+
+class MLClassResult(TopkResult):
+
+    def __init__(self, data):
+        super().__init__(data)
+        self._img_reader.set_backend("pillow")
+        self._img_writer.set_backend("pillow")
+
+    def _get_res_img(self):
+        """Draw label on image"""
+        image = self._img_reader.read(self["img_path"])
+        label_names = self["label_names"]
+        scores = self["scores"]
+        image = image.convert("RGB")
+        image_width, image_height = image.size
+        font_size = int(image_width * 0.06)
+
+        font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size)
+        text_lines = []
+        row_width = 0
+        row_height = 0
+        row_text = "\t"
+        for label_name, score in zip(label_names, scores):
+            text = f"{label_name}({score})\t"
+            text_width, row_height = font.getsize(text)
+            if row_width + text_width <= image_width:
+                row_text += text
+                row_width += text_width
+            else:
+                text_lines.append(row_text)
+                row_text = "\t" + text
+                row_width = text_width
+        text_lines.append(row_text)
+        color_list = get_colormap(rgb=True)
+        color = tuple(color_list[0])
+        new_image_height = image_height + len(text_lines) * int(row_height * 1.2)
+        new_image = Image.new("RGB", (image_width, new_image_height), color)
+        new_image.paste(image, (0, 0))
+
+        draw = ImageDraw.Draw(new_image)
+        font_color = tuple(self._get_font_colormap(3))
+        for i, text in enumerate(text_lines):
+            text_width, _ = font.getsize(text)
+            draw.text(
+                (0, image_height + i * int(row_height * 1.2)),
+                text,
+                fill=font_color,
+                font=font,
+            )
+        return new_image

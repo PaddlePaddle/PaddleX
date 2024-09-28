@@ -12,14 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import BaseResult
-from .clas import TopkResult, MLClassResult
-from .text_det import TextDetResult
-from .text_rec import TextRecResult
-from .table_rec import TableRecResult, StructureTableResult, TableResult
-from .ocr import OCRResult
-from .det import DetResult
-from .seg import SegResult
-from .instance_seg import InstanceSegResult
-from .ts import TSFcResult, TSAdResult, TSClsResult
-from .warp import DocTrResult
+import numpy as np
+
+from ...utils.func_register import FuncRegister
+from ...modules.multilabel_classification.model_list import MODELS
+from ..components import *
+from ..results import MLClassResult
+from ..utils.process_hook import batchable_method
+from .image_classification import ClasPredictor
+
+
+class MLClasPredictor(ClasPredictor):
+
+    entities = [*MODELS]
+
+    def _pack_res(self, single):
+        keys = ["img_path", "class_ids", "scores"]
+        if "label_names" in single:
+            keys.append("label_names")
+        return MLClassResult({key: single[key] for key in keys})
