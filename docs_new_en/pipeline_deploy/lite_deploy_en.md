@@ -18,7 +18,7 @@ This guide applies to 8 models across 6 modules:
     <th>GPU</th>
   </tr>
   <tr>
-    <td rowspan="2">object_detection</td>
+    <td rowspan="2">Object Detection</td>
     <td>PicoDet-S</td>
     <td>✅</td>
     <td>✅</td>
@@ -29,19 +29,19 @@ This guide applies to 8 models across 6 modules:
     <td>✅</td>
   </tr>
   <tr>
-    <td>layout_area_detection</td>
+    <td>Layout Area Detection</td>
     <td>PicoDet_layout_1x</td>
     <td>✅</td>
     <td>✅</td>
   </tr>
   <tr>
-    <td>semantic_segmentation</td>
+    <td>Semantic Segmentation</td>
     <td>PP-LiteSeg-T</td>
     <td>✅</td>
     <td>✅</td>
   </tr>
   <tr>
-    <td rowspan="2">image_classification</td>
+    <td rowspan="2">Image Classification</td>
     <td>PP-LCNet_x1_0</td>
     <td>✅</td>
     <td>✅</td>
@@ -52,13 +52,13 @@ This guide applies to 8 models across 6 modules:
     <td>✅</td>
   </tr>
   <tr>
-    <td>text_detection</td>
+    <td>Text Detection</td>
     <td>PP-OCRv4_mobile_det</td>
     <td>✅</td>
     <td></td>
   </tr>
   <tr>
-    <td>text_recognition</td>
+    <td>Text Recognition</td>
     <td>PP-OCRv4_mobile_rec</td>
     <td>✅</td>
     <td></td>
@@ -72,7 +72,7 @@ This guide applies to 8 models across 6 modules:
 
 ### Environment Preparation
 
-1. Install CMake build tool locally and download the required version of NDK software package from the [Android NDK official website](https://developer.android.google.cn/ndk/downloads). For example, if developing on a Mac, download the NDK software package for the Mac platform from the Android NDK official website.
+1. Install CMake build tool locally and download the required version of NDK software package from the [Android NDK official website](https://developer.android.google.cn/ndk/downloads?hl=en). For example, if developing on a Mac, download the NDK software package for the Mac platform from the Android NDK official website.
 
     **Environment Requirements**
     - `CMake >= 3.10` (Minimum version not verified, recommend 3.20 and above)
@@ -105,7 +105,7 @@ This guide applies to 8 models across 6 modules:
 
     3.3. For Windows:
 
-    Install ADB by downloading the ADB software package from Google's Android platform: [Link](https://developer.android.com/studio)
+    Install ADB by downloading the ADB software package from Google's Android platform: [Link](https://developer.android.com/studio?hl=en)
 
     Open a terminal, connect your phone to the computer, and enter in the terminal:
 
@@ -129,12 +129,12 @@ This guide applies to 8 models across 6 modules:
     ```
 
 2. Fill out the **survey** to download the compressed package, place the compressed package in the specified unzip directory, switch to the specified unzip directory, and execute the unzip command.
-    - [object_detection Survey](https://paddle.wjx.cn/vm/OjV8gAb.aspx#)
-    - [semantic_segmentation Survey](https://paddle.wjx.cn/vm/Q2F1L37.aspx#)
-    - [image_classification Survey](https://paddle.wjx.cn/vm/rWPncBm.aspx#)
-    - [ocr Survey](https://paddle.wjx.cn/vm/eaaBo0H.aspx#)
+    - [Object Detection Survey](https://paddle.wjx.cn/vm/OjV8gAb.aspx#)
+    - [Semantic Segmentation Survey](https://paddle.wjx.cn/vm/Q2F1L37.aspx#)
+    - [Image Classification Survey](https://paddle.wjx.cn/vm/rWPncBm.aspx#)
+    - [OCR Survey](https://paddle.wjx.cn/vm/eaaBo0H.aspx#)
 
-    Below is an example of the unzip operation for object_detection. Refer to the table below for other tasks.
+    Below is an example of the unzip operation for object_detection. Refer to the table below for other pipelines.
 
       ```shell
       # 1. Switch to the specified unzip directory
@@ -146,27 +146,27 @@ This guide applies to 8 models across 6 modules:
 
       <table>
         <tr>
-          <th>Task Name</th>
+          <th>Pipeline Name</th>
           <th>Unzip Directory</th>
           <th>Unzip Command</th>
         </tr>
         <tr>
-          <td>object_detection</td>
+          <td>Object Detection</td>
           <td>PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection</td>
           <td>unzip object_detection.zip</td>
         </tr>
         <tr>
-          <td>semantic_segmentation</td>
+          <td>Semantic Segmentation</td>
           <td>PaddleX-Lite-Deploy/semantic_segmentation/android/shell/cxx/semantic_segmentation</td>
           <td>unzip semantic_segmentation.zip</td>
         </tr>
         <tr>
-          <td>image_classification</td>
+          <td>Image Classification</td>
           <td>PaddleX-Lite-Deploy/image_classification/android/shell/cxx/image_classification</td>
           <td>unzip image_classification.zip</td>
         </tr>
         <tr>
-          <td>ocr</td>
+          <td>OCR</td>
           <td>PaddleX-Lite-Deploy/ocr/android/shell/ppocr_demo</td>
           <td>unzip ocr.zip</td>
         </tr>
@@ -251,7 +251,7 @@ This section describes the deployment steps applicable to the demos listed in th
   <tr>
     <td rowspan="3">General Object Detection</td>
     <td rowspan="3">object_detection</td>
-    <td rowspan="3">object_detection</td>
+    <td rowspan="3">Object Detection</td>
     <td rowspan="3">picodet_detection</td>
     <td>PicoDet-S</td>
     <td>PicoDet-S（default）</br>PicoDet-S_gpu</td>
@@ -267,7 +267,7 @@ This section describes the deployment steps applicable to the demos listed in th
   <tr>
     <td>General Semantic Segmentation</td>
     <td>semantic_segmentation</td>
-    <td>semantic_segmentation</td>
+    <td>Semantic Segmentation</td>
     <td>semantic_segmentation</td>
     <td>PP-LiteSeg-T</td>
     <td>PP-LiteSeg-T（default）</br>PP-LiteSeg-T_gpu</td>
@@ -275,7 +275,7 @@ This section describes the deployment steps applicable to the demos listed in th
   <tr>
     <td rowspan="2">General Image Classification</td>
     <td rowspan="2">image_classification</td>
-    <td rowspan="2">image_classification</td>
+    <td rowspan="2">Image Classification</td>
     <td rowspan="2">image_classification</td>
     <td>PP-LCNet_x1_0</td>
     <td>PP-LCNet_x1_0（default）</br>PP-LCNet_x1_0_gpu</td>
@@ -287,30 +287,30 @@ This section describes the deployment steps applicable to the demos listed in th
   <tr>
     <td rowspan="2">General OCR</td>
     <td rowspan="2">ocr</td>
-    <td>text_detection</td>
+    <td>Text Detection</td>
     <td rowspan="2">ppocr_demo</td>
     <td>PP-OCRv4_mobile_det</td>
     <td>PP-OCRv4_mobile_det</td>
   </tr>
   <tr>
-    <td>text_recognition</td>
+    <td>Text Recognition</td>
     <td>PP-OCRv4_mobile_rec</td>
     <td>PP-OCRv4_mobile_rec</td>
   </tr>
 </table>
 
 **Note**
-- Currently, there is no demo for deploying the layout area detection module on the edge side, so the `picodet_detection` demo is reused to deploy the `PicoDet_layout_1x` model.
+- Currently, there is no demo for deploying the Layout Area Detection module on the edge side, so the `picodet_detection` demo is reused to deploy the `PicoDet_layout_1x` model.
 
 ## Reference Materials
 
 This guide only introduces the basic installation and usage process of the edge-side deployment demo. If you want to learn more detailed information, such as code introduction, code explanation, updating models, updating input and output preprocessing, updating prediction libraries, etc., please refer to the following documents:
 
-- [object_detection](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/feature/paddle-x/object_detection/android/shell/cxx/picodet_detection)
-- [semantic_segmentation](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/semantic_segmentation/android/shell/cxx/semantic_segmentation/README.md)
-- [image_classification](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/image_classification/android/shell/cxx/image_classification/README.md)
-- [ocr](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/ocr/android/shell/ppocr_demo/README.md)
+- [Object Detection](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/feature/paddle-x/object_detection/android/shell/cxx/picodet_detection)
+- [Semantic Segmentation](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/semantic_segmentation/android/shell/cxx/semantic_segmentation/README.md)
+- [Image Classification](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/image_classification/android/shell/cxx/image_classification/README.md)
+- [OCR](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/ocr/android/shell/ppocr_demo/README.md)
 
 ## Feedback Section
 
-The edge-side deployment capabilities are continuously optimized. Welcome to submit [issues](https://github.com/PaddlePaddle/PaddleX/issues/new/choose) to report problems and needs, and we will follow up promptly.
+The edge-side deployment capabilities are continuously optimized. Welcome to submit [issue](https://github.com/PaddlePaddle/PaddleX/issues/new/choose) to report problems and needs, and we will follow up promptly.
