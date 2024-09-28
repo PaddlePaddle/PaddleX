@@ -8,9 +8,9 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
+|模型|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
-|PicoDet_LCNet_x2_5_face||||28.9|基于PicoDet_LCNet_x2_5的人脸检测模型|
+|PicoDet_LCNet_x2_5_face|35.8|33.7|537.0|28.9|基于PicoDet_LCNet_x2_5的人脸检测模型|
 
 </details>
 
