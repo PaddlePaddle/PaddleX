@@ -47,7 +47,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 ## 语义分割模块
 |模型名称|mloU（%）|模型存储大小（M)|
 |-|-|-|
-|PP-LiteSeg-T（套件分辨率有问题，应该改为1024x512）|73.10|28.5 M|
+|PP-LiteSeg-T|73.10|28.5 M|
 
 **注：以上精度指标为**[Cityscapes](https://www.cityscapes-dataset.com/)**数据集 mloU。**
 

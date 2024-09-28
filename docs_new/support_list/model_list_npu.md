@@ -196,6 +196,6 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |-|-|-|
 |TimesNet_cls|87.5|792K|
 
-**注：以上精度指标测量自UWaveGestureLibrary：**[训练](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TRAIN.csv)****[评测](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv)**数据集。**
+**注：以上精度指标测量自UWaveGestureLibrary：[训练](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TRAIN.csv)、[评测](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv)数据集。**
 
 ****
