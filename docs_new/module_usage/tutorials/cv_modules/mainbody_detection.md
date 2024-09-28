@@ -22,13 +22,14 @@
     <td>PP-ShiTuV2_det</td>
     <td>41.5</td>
     <td>62.0</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>27.54</td>
     <td>基于PicoDet_LCNet_x2_5的主体检测模型，模型可能会同时检测出多个常见主体。</td>
   </tr>
 </table>
 
+注：以上精度指标为 PaddleClas主体检测数据集  mAP(0.5:0.95)。
 </details>
 
 ## 三、快速集成

@@ -92,7 +92,7 @@ dataset_dir                  # 数据集根目录，目录名称可以改变
 │   └── instance_val.json    # 验证集标注文件，文件名称不可改变，采用COCO标注格式
 └── images                   # 图像的保存目录，目录名称不可改变
 ```
-标注文件采用 `COCO` 格式。请大家参考上述规范准备数据，此外可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/det_coco_examples.tar)。
+标注文件采用 `COCO` 格式。请大家参考上述规范准备数据，此外可以参考：[示例数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/instance_seg_coco_examples.tar)。
 
 当大家使用的是 PaddleX 2.x 版本的实例分割数据集时，请参考[数据校验](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/docs/tutorials/data/dataset_check.md)中对应的格式转换部分，将 VOC 格式数据集转换为 COCO 数据集。（模块开发文件中注明）
 
