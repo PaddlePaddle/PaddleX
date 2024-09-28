@@ -7,6 +7,7 @@ Global:
 
 Pipeline:
   model: PP-LCNet_x0_5
+  device: cpu
 
 ######################################## Support ########################################
 NOTE:

@@ -34,9 +34,9 @@ class TableRecPipeline(BasePipeline):
         layout_batch_size=1,
         text_rec_batch_size=1,
         table_batch_size=1,
-        predictor_kwargs=None,
+        **predictor_kwargs,
     ):
-        super().__init__(predictor_kwargs)
+        super().__init__(**predictor_kwargs)
         self._build_predictor(layout_model, text_det_model, text_rec_model, table_model)
         self.set_predictor(layout_batch_size, text_rec_batch_size, table_batch_size)
 

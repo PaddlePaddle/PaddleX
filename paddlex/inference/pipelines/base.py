@@ -24,10 +24,8 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
 
     __is_base = True
 
-    def __init__(self, predictor_kwargs: Optional[Dict[str, Any]]) -> None:
+    def __init__(self, **predictor_kwargs) -> None:
         super().__init__()
-        if predictor_kwargs is None:
-            predictor_kwargs = {}
         self._predictor_kwargs = predictor_kwargs
 
     # alias the __call__() to predict()
