@@ -280,4 +280,4 @@ The small object detection module can be integrated into the [Small Object Detec
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the small object detection module. You can refer to the Python example code in [Quick Integration](#三Quick Integration), simply replacing the model with the path to your trained model.
+The weights you produce can be directly integrated into the small object detection module. You can refer to the Python example code in [Quick Integration](#三快速集成), simply replacing the model with the path to your trained model.
