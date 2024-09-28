@@ -10,7 +10,7 @@ The document image orientation classification module is aim to distinguish the o
 
 | Model | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
 |-|-|-|-|-|-|
-| PP-LCNet_x1_0_doc_ori | 99.06 | | | 7 | A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270° |
+| PP-LCNet_x1_0_doc_ori | 99.06 | 3.84845|9.23735 | 7 | A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270° |
 
 **Note: The above accuracy metrics are evaluated on a self-built dataset covering various scenarios such as IDs and documents, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
