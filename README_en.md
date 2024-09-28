@@ -10,7 +10,7 @@
 </p>
 
 <h4 align="center">
-  <a href=#-features>🌟 Features</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=#-documentation> 📖 Documentation</a> | <a href=#-model-pipeline-list List> 🔥Model Production Line List</a>
+  <a href=#-features>🌟 Features</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=#-documentation> 📖 Documentation</a> | <a href=#-model-pipeline-list List> 🔥Model Pipelines List</a>
 </h4>
 
 
@@ -1052,7 +1052,7 @@ For answers to some common questions about our project, please refer to the [FAQ
 
 We warmly welcome and encourage community members to raise questions, share ideas, and feedback in the [Discussions](https://github.com/PaddlePaddle/PaddleX/discussions) section. Whether you want to report a bug, discuss a feature request, seek help, or just want to keep up with the latest project news, this is a great platform.
 
-## 🔥 Model Pipeline List
+## 🔥 Model Pipelines List
 
 <details>
   <summary><b> Document Scene Information Extraction Pipeline </b></summary>
