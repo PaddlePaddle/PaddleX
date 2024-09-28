@@ -8,14 +8,17 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
+|模型|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
-|PicoDet_LCNet_x2_5_face||||28.9|基于PicoDet_LCNet_x2_5的人脸检测模型|
+|PicoDet_LCNet_x2_5_face|35.8|33.7|537.0|28.9|基于PicoDet_LCNet_x2_5的人脸检测模型|
 
+注：以上精度指标为wider_face数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。
 </details>
 
 ## 三、快速集成
-在快速集成前，首先需要安装PaddleX的whl包，whl的安装方式请参考 [PaddleX本地安装教程](../../../installation/installation.md)。完成whl包的安装后，几行代码即可完成人脸检测模块的推理，可以任意切换该模块下的模型，您也可以将人脸检测的模块中的模型推理集成到您的项目中。
+> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
+
+完成whl包的安装后，几行代码即可完成人脸检测模块的推理，可以任意切换该模块下的模型，您也可以将人脸检测的模块中的模型推理集成到您的项目中。
 
 ```python
 from paddlex.inference import create_model 
