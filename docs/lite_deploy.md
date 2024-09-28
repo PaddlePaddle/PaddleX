@@ -113,13 +113,13 @@
 
     下面是 object_detection 解压操作示例，其他任务可参考后面的表格。
 
-        ```shell
-        # 1. 切换到指定解压目录
-        cd PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection
+      ```shell
+      # 1. 切换到指定解压目录
+      cd PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection
 
-        # 2. 执行解压命令
-        unzip object_detection.zip
-        ```
+      # 2. 执行解压命令
+      unzip object_detection.zip
+      ```
 
       <table>
         <tr>
