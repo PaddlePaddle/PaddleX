@@ -15,4 +15,5 @@
 
 MODELS = [
     "SLANet",
+    "SLANet_plus",
 ]

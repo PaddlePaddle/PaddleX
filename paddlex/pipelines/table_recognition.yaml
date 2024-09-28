@@ -7,7 +7,7 @@ Global:
 
 Pipeline:
   layout_model: PicoDet_layout_1x
-  table_model: SLANet
+  table_model: SLANet_plus
   text_det_model: PP-OCRv4_mobile_det
   text_rec_model: PP-OCRv4_mobile_rec
   layout_batch_size: 1
