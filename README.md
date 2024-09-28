@@ -10,11 +10,14 @@
 </p>
 
 <h4 align="center">
-  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=#-模型产线列表> 🔥模型产线列表</a>
+  <a href=#README.md>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=#-模型产线列表> 🔥模型产线列表</a>
 </h4>
 
-## 🔍 简介
+<h5 align="center">
+  <a href="README.md">🇨🇳 简体中文</a> | <a href="README_en.md">🇬🇧 English</a></a>
+</h5>
 
+## 🔍 简介
 
 PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
@@ -37,7 +40,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
 ## 📣 近期更新
 
-🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供**200+模型**通过极简的Python API一键调用；实现基于统一命令的**模型全流程开发**，并开源**PP-ChatOCRv3**特色模型产线基础能力；支持**100+模型高性能推理和服务化部署**（持续迭代中），7类重点视觉模型**端侧部署**；70+模型开发全流程适配昇腾910B，15+模型开发全流程适配昆仑芯和寒武纪
+🔥🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供**200+模型**通过极简的Python API一键调用；实现基于统一命令的模型全流程开发，并开源**PP-ChatOCRv3**特色模型产线基础能力；支持**100+模型高性能推理和服务化部署**（持续迭代中），**7类重点视觉模型端侧部署**；**70+模型开发全流程适配昇腾910B**，**15+模型开发全流程适配昆仑芯和寒武纪**
 
 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
 
@@ -203,14 +206,14 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 <table>
     <tr>
-        <td></td>
-        <td>在线体验</td>
-        <td>快速推理</td>
-        <td>高性能部署</td>
-        <td>服务化部署</td>
-        <td>端侧部署</td>
-        <td>二次开发</td>
-        <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
+        <th> </th>
+        <th>在线体验</th>
+        <th>快速推理</th>
+        <th>高性能部署</th>
+        <th>服务化部署</th>
+        <th>端侧部署</th>
+        <th>二次开发</th>
+        <th><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></th>
     </tr>
     <tr>
         <td>OCR</td>
@@ -753,10 +756,16 @@ for batch in output:
 <details open>
 <summary> <b> 产线使用 </b></summary>
 
-* [PaddleX产线开发工具使用教程](/docs_new/pipeline_usage/pipeline_develop_guide.md)
+* [PaddleX模型产线使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
 
 * <details open>
-    <summary> <b> cv相关产线 </b></summary>
+    <summary> <b> 文本图像智能分析 </b></summary>
+
+   * [文档场景信息抽取产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+  </details>
+
+* <details open>
+    <summary> <b> 计算机视觉 </b></summary>
 
    * [通用图像分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)
    * [通用目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/object_detection.md)
@@ -768,25 +777,21 @@ for batch in output:
   </details>
   
 * <details open>
-    <summary> <b> ocr相关产线 </b></summary>
+    <summary> <b> OCR </b></summary>
 
     * [通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md)
     * [通用表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)
   </details>
 
 * <details open>
-    <summary> <b> 时序相关产线</b> </summary>
+    <summary> <b> 时序分析</b> </summary>
 
    * [通用时序预测产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
    * [通用时序异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
    * [通用时序分类产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)
   </details>
 
-* <details open>
-    <summary> <b> 信息抽取相关产线 </b></summary>
 
-   * [文档场景信息抽取产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
-  </details>
 
 * <details>
     <summary> <b> 相关说明文件</b> </summary>
@@ -797,11 +802,13 @@ for batch in output:
    
 </details>
 
-<details>
+<details open>
 <summary> <b> 单功能模块使用 </b></summary>
 
+* [PaddleX单功能模块使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
+
 * <details>
-  <summary> <b> cv相关模块 </b></summary>
+  <summary> <b> 计算机视觉 </b></summary>
   
   * [图像分类模块使用教程]()
   * [图像识别模块使用教程]()
@@ -822,7 +829,7 @@ for batch in output:
   </details> 
   
 * <details>
-  <summary> <b> ocr相关模块 </b></summary>
+  <summary> <b> OCR </b></summary>
 
   * [文本检测模块使用教程]()
   * [印章文本检测模块使用教程]()
@@ -832,7 +839,7 @@ for batch in output:
   </details>
 
 * <details>
-  <summary> <b> 时序相关产线 </b></summary>
+  <summary> <b> 时序分析 </b></summary>
 
   * [时序预测模块使用教程]()
   * [时序异常检测模块使用教程]()
