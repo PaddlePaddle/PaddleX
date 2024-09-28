@@ -254,8 +254,8 @@ python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_
 
 1.**产线集成**
 
-图像多标签分类模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)，只需要替换模型路径即可完成相关产线的图像多标签分类模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+行人属性识别模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)，只需要替换模型路径即可完成相关产线的行人属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.**模块集成**
 
-您产出的权重可以直接集成到图像多标签分类模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+您产出的权重可以直接集成到行人属性识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。

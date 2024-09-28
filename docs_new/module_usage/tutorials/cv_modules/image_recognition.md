@@ -20,23 +20,23 @@
   <tr>
     <td>PP-ShiTuV2_rec</td>
     <td>84.2</td>
-    <td></td>
-    <td></td>
+    <td>5.23428</td>
+    <td>19.6005</td>
     <td>16.3 M</td>
     <td rowspan="3">PP-ShiTuV2是一个通用图像识别系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
   </tr>
   <tr>
     <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
     <td>88.69</td>
-    <td></td>
-    <td></td>
+    <td>13.1957</td>
+    <td>285.493</td>
     <td>306.6 M</td>
   </tr>
   <tr>
     <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
     <td>91.03</td>
-    <td></td>
-    <td></td>
+    <td>51.1284</td>
+    <td>1131.28</td>
     <td>1.05 G</td>
   </tr>
 </table>
@@ -295,7 +295,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-ShiTuV2_rec.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
-* 指定验证数据集路径：`-o Global.dataset_dir`
+* 指定验证数据集路径：`-o Global.dataset_dir`. 
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
@@ -325,7 +325,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-ShiTuV2_rec.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
-* 指定输入数据路径：`-o Predict.input="..."`
+* 指定输入数据路径：`-o Predict.input="..."`. 
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 > ❗ 注意：识别模型的推理结果为一组向量，需要配合检索模块完成图像的识别。
