@@ -72,7 +72,7 @@ This guide applies to 8 models across 6 modules:
 
 ### Environment Preparation
 
-1. Install CMake build tool locally and download the required version of NDK software package from the [Android NDK official website](https://developer.android.google.cn/ndk/downloads). For example, if developing on a Mac, download the NDK software package for the Mac platform from the Android NDK official website.
+1. Install CMake build tool locally and download the required version of NDK software package from the [Android NDK official website](https://developer.android.google.cn/ndk/downloads?hl=en). For example, if developing on a Mac, download the NDK software package for the Mac platform from the Android NDK official website.
 
     **Environment Requirements**
     - `CMake >= 3.10` (Minimum version not verified, recommend 3.20 and above)
@@ -105,7 +105,7 @@ This guide applies to 8 models across 6 modules:
 
     3.3. For Windows:
 
-    Install ADB by downloading the ADB software package from Google's Android platform: [Link](https://developer.android.com/studio)
+    Install ADB by downloading the ADB software package from Google's Android platform: [Link](https://developer.android.com/studio?hl=en)
 
     Open a terminal, connect your phone to the computer, and enter in the terminal:
 
@@ -313,4 +313,4 @@ This guide only introduces the basic installation and usage process of the edge-
 
 ## Feedback Section
 
-The edge-side deployment capabilities are continuously optimized. Welcome to submit [issues](https://github.com/PaddlePaddle/PaddleX/issues/new/choose) to report problems and needs, and we will follow up promptly.
+The edge-side deployment capabilities are continuously optimized. Welcome to submit [issue](https://github.com/PaddlePaddle/PaddleX/issues/new/choose) to report problems and needs, and we will follow up promptly.
