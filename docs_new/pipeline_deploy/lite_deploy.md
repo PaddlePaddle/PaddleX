@@ -148,7 +148,9 @@ unzip object_detection.zip
   </tr>
 </table>
 ```
+
 ### 部署步骤
+
 1. 将工作目录切换到 `PaddleX_Lite_Deploy/libs`，运行 `download.sh` 脚本，下载所需要的 Paddle Lite 预测库。此步骤只需执行一次，即可支持每个 demo 使用。
 2. 将工作目录切换到 `PaddleX_Lite_Deploy/{Pipeline_Name}/assets`，运行 `download.sh` 脚本，下载 [paddle_lite_opt 工具](https://www.paddlepaddle.org.cn/lite/v2.10/user_guides/model_optimize_tool.html) 优化后的模型、测试图片和标签文件等。
 3. 将工作目录切换到 `PaddleX_Lite_Deploy/{Pipeline_Name}/android/shell/cxx/{Demo_Name}`，运行 `build.sh` 脚本，完成可执行文件的编译和运行。
