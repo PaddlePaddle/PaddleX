@@ -353,5 +353,5 @@ The Time Series Forecasting module can be integrated into PaddleX pipelines such
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the Time Series Forecasting module. You can refer to the Python sample code in [Quick Integration](#quick-integration) and just replace the model with the path to the model you trained.
+The weights you produce can be directly integrated into the Time Series Forecasting module. You can refer to the Python sample code in [Quick Integration](#iii-quick-integration) and just replace the model with the path to the model you trained.
     

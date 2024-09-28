@@ -10,30 +10,30 @@
 
 |模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
-|Deeplabv3_Plus-R50 |80.36|||94.9 M|
-|Deeplabv3_Plus-R101|81.10|||162.5 M|
-|Deeplabv3-R50|79.90|||138.3 M|
-|Deeplabv3-R101|80.85|||205.9 M|
-|OCRNet_HRNet-W18|80.67|||43.1 M|
-|OCRNet_HRNet-W48|82.15|||249.8 M|
-|PP-LiteSeg-T|73.10|||28.5 M|
-|PP-LiteSeg-B|75.25|||47 M|
-|SegFormer-B0|76.73|||13.2 M|
-|SegFormer-B1|78.35|||48.5 M|
-|SegFormer-B2|81.60|||96.9 M|
-|SegFormer-B3|82.47|||167.3 M|
-|SegFormer-B4|82.38|||226.7 M|
-|SegFormer-B5|82.58|||229.7 M|
+|Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
+|Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|
+|Deeplabv3-R50|79.90|82.2631|1735.83|138.3 M|
+|Deeplabv3-R101|80.85|121.492|2685.51|205.9 M|
+|OCRNet_HRNet-W18|80.67|48.2335|906.385|43.1 M|
+|OCRNet_HRNet-W48|82.15|78.9976|2226.95|249.8 M|
+|PP-LiteSeg-T|73.10|7.6827|138.683|28.5 M|
+|PP-LiteSeg-B|75.25|-|-|47.0 M|
+|SegFormer-B0 (slice)|76.73|11.1946|268.929|13.2 M|
+|SegFormer-B1 (slice)|78.35|17.9998|403.393|48.5 M|
+|SegFormer-B2 (slice)|81.60|48.0371|1248.52|96.9 M|
+|SegFormer-B3 (slice)|82.47|64.341|1666.35|167.3 M|
+|SegFormer-B4 (slice)|82.38|82.4336|1995.42|226.7 M|
+|SegFormer-B5 (slice)|82.58|97.3717|2420.19|229.7 M|
 
 **以上模型精度指标测量自[Cityscapes](https://www.cityscapes-dataset.com/)数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
 
 |模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
-|SeaFormer_base|40.92|||30.8 M|
-|SeaFormer_large|43.66|||49.8 M|
-|SeaFormer_small|38.73|||14.3 M|
-|SeaFormer_tiny|34.58|||6.1M |
+|SeaFormer_base(slice)|40.92|24.4073|397.574|30.8 M|
+|SeaFormer_large (slice)|43.66|27.8123|550.464|49.8 M|
+|SeaFormer_small (slice)|38.73|19.2295|358.343|14.3 M|
+|SeaFormer_tiny (slice)|34.58|13.9496|330.132|6.1M |
 
 **SeaFormer系列模型的精度指标测量自[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 

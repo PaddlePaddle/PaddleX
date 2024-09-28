@@ -6,12 +6,12 @@ The primary purpose of image unwarping is to perform geometric transformations o
 ## II. Supported Model List
 
 
-|Model Name|MS-SSIM （%）|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)| information|
+|Model Name|MS-SSIM （%）|Model Size (M)| information|
 |-|-|-|-|-|-|
-|UVDoc |54.4|||31 M|High-precision Document Image Unwarping Model|
+|UVDoc |54.4|31 M|High-precision Document Image Unwarping Model|
 
 
-**The accuracy metrics of the above models are measured on the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html) dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**The accuracy metrics of the above models are measured on the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html) dataset.**
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
