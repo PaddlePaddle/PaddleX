@@ -796,6 +796,9 @@ python main.py -c  paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
 </details>
 
 ### **4.4 模型推理和模型集成**
+
+在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
+
 #### 4.4.1 模型推理
 通过命令行的方式进行推理预测，只需如下一条命令：
 

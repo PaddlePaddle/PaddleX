@@ -20,46 +20,46 @@
   <tr>
     <td>CLIP_vit_base_patch16_448_ML</td>
     <td>89.15</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>325.6</td>
     <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B0_ML</td>
     <td>80.98</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>39.6</td>
     <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B4_ML</td>
     <td>87.96</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>88.5</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>286.0</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
     <td>77.96</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>29.4</td>
     <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>ResNet50_ML</td>
     <td>83.50</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>108.9</td>
     <td>ResNet50_ML是一种基于ResNet50的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
@@ -183,6 +183,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
   * `convert`:
     * `enable`: 是否进行数据集格式转换，图像多标签分类支持 `COCO`格式的数据集转换为 `MLClsDataset`格式，默认为 `False`;
     * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，默认为 `null`，可选值为 `COCO` ；
+  
 例如，您想将`COCO`格式的数据集转换为 `MLClsDataset`格式，则需将配置文件修改为：
 
 ```bash
@@ -226,6 +227,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
     * `enable`: 是否进行重新划分数据集，为 `True` 时进行数据集格式转换，默认为 `False`；
     * `train_percent`: 如果重新划分数据集，则需要设置训练集的百分比，类型为 0-100 之间的任意整数，需要保证和 `val_percent` 值加和为 100；
     * `val_percent`: 如果重新划分数据集，则需要设置验证集的百分比，类型为 0-100 之间的任意整数，需要保证和 `train_percent` 值加和为 100；
+
 例如，您想重新划分数据集为 训练集占比 90%、验证集占比 10%，则需将配置文件修改为：
 
 ```bash
@@ -308,7 +310,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 
 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/best_model.pdparams`。
 
-在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，无产出？》；
+在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包括 MultiLabelMAP；
 
 </details>
 
@@ -316,9 +318,6 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
-
-在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测。在PaddleX中实现模型推理预测可以通过两种方式：命令行和wheel 包。
 
 * 通过命令行的方式进行推理预测，只需如下一条命令：
 ```bash

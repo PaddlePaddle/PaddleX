@@ -789,6 +789,7 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 </details>
 
 ### **4.4 Model Inference and Model Integration**
+After completing model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
 To perform inference prediction through the command line, simply use the following command:
