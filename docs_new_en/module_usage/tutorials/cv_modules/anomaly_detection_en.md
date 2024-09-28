@@ -184,7 +184,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. **Pipeline Integration**
 
-The unsupervised anomaly detection module can be integrated into PaddleX pipelines such as **Image_anomaly_detection** (../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md). Simply replace the model path to update the unsupervised anomaly detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
+The unsupervised anomaly detection module can be integrated into PaddleX pipelines such as [Image_anomaly_detection](../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md). Simply replace the model path to update the unsupervised anomaly detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
 
 2. **Module Integration**
 
