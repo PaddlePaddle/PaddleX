@@ -191,7 +191,7 @@ Similar to model training, the following steps are required:
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../../instructions/config_parameters_time_series_en.md).
 
-## 7.开发集成/部署
+## 7.Integration/Deployment
 If the general-purpose time series anomaly detection pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
 1. If you need to apply the general-purpose time series anomaly detection pipeline directly in your Python project, you can refer to the following sample code:
