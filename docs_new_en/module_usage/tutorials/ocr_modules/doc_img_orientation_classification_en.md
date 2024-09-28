@@ -135,6 +135,60 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 
 </details>
 
+
+#### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
+After completing data validation, you can convert the dataset format and re-split the training/validation ratio by **modifying the configuration file** or **appending hyperparameters**.
+
+<details>
+  <summary>👉 <b>Details of Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
+
+**(1) Dataset Format Conversion**
+
+Document image orientation classification does not currently support dataset format conversion.
+
+**(2) Dataset Splitting**
+
+Parameters for dataset splitting can be set by modifying the fields under `CheckDataset` in the configuration file. Examples of some parameters in the configuration file are as follows:
+
+* `CheckDataset`:
+  * `split`:
+    * `enable`: Whether to re-split the dataset. Set to `True` to enable dataset splitting, default is `False`;
+    * `train_percent`: If re-splitting the dataset, set the percentage of the training set. The type is any integer between 0-100, ensuring the sum with `val_percent` is 100;
+
+For example, if you want to re-split the dataset with a 90% training set and a 10% validation set, modify the configuration file as follows:
+
+```bash
+......
+CheckDataset:
+  ......
+  split:
+    enable: True
+    train_percent: 90
+    val_percent: 10
+  ......
+```
+Then execute the command:
+
+```bash
+python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/text_image_orientation
+```
+After dataset splitting, the original annotation files will be renamed to `xxx.bak` in the original path.
+
+The above parameters also support setting through appending command line arguments:
+
+```bash
+python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/text_image_orientation \
+    -o CheckDataset.split.enable=True \
+    -o CheckDataset.split.train_percent=90 \
+    -o CheckDataset.split.val_percent=10
+```
+</details>
+
+
 ### 4.2 Model Training
 
 Model training can be completed with just one command. Here, we use the document image orientation classification model (PP-LCNet_x1_0_doc_ori) as an example:
