@@ -655,20 +655,27 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 > ❗安装PaddleX前请先确保您有基础的Python运行环境，如果您还未安装Python环境，可以参考[运行环境准备](/docs_new/installation/installation.md#1-运行环境准备)进行安装
 
 ```bash
-# 您的机器安装的是CUDA 11，请运行以下命令安装
-pip install paddlepaddle-gpu
-# 您的机器是CPU，请运行以下命令安装
-pip install paddlepaddle
-...
+# 安装PaddlePaddle
+python -m pip install paddlepaddle # cpu
+ # gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+# gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+
+# 安装PaddleX
+git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+pip install -e .
 ```
   
 更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)
 
 ### 💻 命令行使用
 
-一行命令即可快速体验产线效果，以通用OCR产线为例：
+一行命令即可快速体验产线效果，统一的命令行格式为：
+
 ```bash
-paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png --device gpu:0
+paddlex --pipeline [产线名称] --input [输入图片] --device [运行设备]
 ```
 
 只需指定三个参数：
@@ -677,38 +684,60 @@ paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.
 * `device`: 使用的GPU序号（例如`gpu:0`表示使用第0块GPU），也可选择使用CPU（`cpu`）
 
 
+以通用OCR产线为例：
+```bash
+paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+```
+<details>
+  <summary>👉 点击查看运行结果</summary>
+
+```bash
+The prediction result is:
+['登机口于起飞前10分钟关闭']
+The prediction result is:
+['GATES CLOSE 1O MINUTESBEFORE DEPARTURE TIME']
+The prediction result is:
+['ETKT7813699238489/1']
+......
+```
+
+可视化结果如下：
+
+![alt text](tmp/images/boardingpass.png)
+
+</details>
 
 其他产线的命令行使用，只需将`pipeline`参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
 
 <details>
-  <summary>👉 更多产线的命令行使用</summary>
+  <summary>👉 更多产线的命令行使用及说明</summary>
 
-| 产线名称     | 对应参数                 | 详细说明 |
-|----------|----------------------|------|
-| 通用图像分类产线 | `image_classification` |   [通用图像分类产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)   |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
+| 产线名称           | 对应参数               | 详细说明                                                                                                      |
+|--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
+| 文档场景信息抽取v3   | `pp_chatocrv3` | [文档场景信息抽取v3产线命令行使用说明](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
+| 通用目标检测       | `object_detection` | [通用目标检测产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
+| 通用实例分割       | `instance_segmentation` | [通用实例分割产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
+| 通用语义分割       | `semantic_segmentation` | [通用语义分割产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
+| 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md) |
+| 小目标检测         | `smallobject_detection` | [小目标检测产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
+| 图像异常检测       | `image_classification` | [图像异常检测产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
+| 通用OCR            | `OCR` | [通用OCR产线命令行使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md) |
+| 通用表格识别       | `table_recognition` | [通用表格识别产线命令行使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md) |
+| 通用时序预测       | `ts_forecast` | [通用时序预测产线命令行使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
+| 通用时序异常检测   | `ts_anomaly_detection` | [通用时序异常检测产线命令行使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
+| 通用时序分类       | `ts_classification` | [通用时序分类产线命令行使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
 
 </details>
 
 ### 📝 Python脚本使用
 
-几行代码即可完成产线的快速推理，以通用OCR产线为例：
+几行代码即可完成产线的快速推理，统一的Python脚本格式如下：
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ocr")
-output = pipeline.predict("pre_image.jpg")
+pipeline = create_pipeline(pipeline=[产线名称])
+output = pipeline.predict([输入图片名称])
 for batch in output:
     for item in batch:
         res = item['result']
@@ -719,29 +748,28 @@ for batch in output:
 执行了如下几个步骤：
 
 * `create_pipeline()` 实例化产线对象
-* 调用产线对象的`predict` 方法进行推理预测
+* 传入图片并调用产线对象的`predict` 方法进行推理预测
 * 对预测结果进行处理
 
 其他产线的Python脚本使用，只需将`create_pipeline()`方法的`pipeline`参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
 <details>
   <summary>👉 更多产线的Python脚本使用</summary>
 
-| 产线名称     | 对应参数                 | 详细说明 |
-|----------|----------------------|------|
-| 通用图像分类产线 | `image_classification` |   [通用图像分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)   |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-|          |                      |      |
-
+| 产线名称           | 对应参数               | 详细说明                                                                                                      |
+|--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
+| 文档场景信息抽取v3   | `pp_chatocrv3` | [文档场景信息抽取v3产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
+| 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
+| 通用实例分割       | `instance_segmentation` | [通用实例分割产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
+| 通用语义分割       | `semantic_segmentation` | [通用语义分割产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
+| 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md) |
+| 小目标检测         | `smallobject_detection` | [小目标检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
+| 图像异常检测       | `image_classification` | [图像异常检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
+| 通用OCR            | `OCR` | [通用OCR产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md) |
+| 通用表格识别       | `table_recognition` | [通用表格识别产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md) |
+| 通用时序预测       | `ts_forecast` | [通用时序预测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
+| 通用时序异常检测   | `ts_anomaly_detection` | [通用时序异常检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
+| 通用时序分类       | `ts_classification` | [通用时序分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
 </details>
 
 ## 📖 文档
@@ -810,48 +838,48 @@ for batch in output:
 * <details>
   <summary> <b> 计算机视觉 </b></summary>
   
-  * [图像分类模块使用教程]()
-  * [图像识别模块使用教程]()
-  * [目标检测模块使用教程]()
-  * [小目标检测模块使用教程]()
-  * [人脸检测模块使用教程]()
-  * [主体检测模块使用教程]()
-  * [行人检测模块使用教程]()
-  * [车辆检测模块使用教程]()
-  * [语义分割模块使用教程]()
-  * [实例分割模块使用教程]()
-  * [文档图像方向分类使用教程]()
-  * [图像多标签分类使用教程]()
-  * [行人属性识别使用教程]()
-  * [车辆属性识别使用教程]()
-  * [图像矫正模块使用教程]()
-  * [无监督异常检测模块使用教程]()
+  * [图像分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_classification.md)
+  * [图像识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_recognition.md)
+  * [目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/object_detection.md)
+  * [小目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/small_object_detection.md)
+  * [人脸检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/face_detection.md)
+  * [主体检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/mainbody_detection.md)
+  * [行人检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/human_detection.md)
+  * [车辆检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_detection.md)
+  * [语义分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/semantic_segmentation.md)
+  * [实例分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/instance_segmentation.md)
+  * [文档图像方向分类使用教程](/docs_new/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
+  * [图像多标签分类使用教程](/docs_new/module_usage/tutorials/cv_modules/ml_classification.md)
+  * [行人属性识别使用教程](/docs_new/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
+  * [车辆属性识别使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
+  * [图像矫正模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_correction.md)
+  * [无监督异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)
   </details> 
   
 * <details>
   <summary> <b> OCR </b></summary>
 
-  * [文本检测模块使用教程]()
-  * [印章文本检测模块使用教程]()
-  * [文本识别模块使用教程]()
-  * [版面区域定位模块使用教程]()
-  * [表格结构识别模块使用教程]()
+  * [文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_detection.md)
+  * [印章文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/curved_text_detection.md)
+  * [文本识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_recognition.md)
+  * [版面区域定位模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/structure_analysis.md)
+  * [表格结构识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/table_structure_recognition.md)
   </details>
 
 * <details>
   <summary> <b> 时序分析 </b></summary>
 
-  * [时序预测模块使用教程]()
-  * [时序异常检测模块使用教程]()
-  * [时序分类模块使用教程]()
+  * [时序预测模块使用教程](/docs_new/module_usage/tutorials/time_series_modules/time_series_forecasting.md)
+  * [时序异常检测模块使用教程](/docs_new/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
+  * [时序分类模块使用教程](/docs_new/module_usage/tutorials/time_series_modules/time_series_classification.md)
   </details>
     
 * <details>
   <summary> <b> 相关说明文件 </b></summary>
 
-  * [PaddleX单模型Python脚本使用说明]()
-  * [PaddleX通用模型配置文件参数说明]()
-  * [PaddleX时序任务模型配置文件参数说明]()
+  * [PaddleX单模型Python脚本使用说明](/docs_new/module_usage/instructions/model_python_API.md)
+  * [PaddleX通用模型配置文件参数说明](/docs_new/module_usage/instructions/config_parameters_common.md)
+  * [PaddleX时序任务模型配置文件参数说明](/docs_new/module_usage/instructions/config_parameters_time_series.md)
   </details>
 
 </details>
@@ -864,17 +892,16 @@ for batch in output:
 <details>
   <summary> <b> 模型产线部署 </b></summary>
 
-  * [PaddleX 服务化部署指南]()
-  * [PaddleX端侧部署指南]()
-  * [PaddleX 高性能部署指南]()
+  * [PaddleX高性能部署指南](/docs_new/pipeline_deploy/high_performance_deploy.md)
+  * [PaddleX服务化部署指南](/docs_new/pipeline_deploy/service_deploy.md)
+  * [PaddleX端侧部署指南](/docs_new/pipeline_deploy/lite_deploy.md)
+
 </details>
 <details>
   <summary> <b> 多硬件使用 </b></summary>
 
-  * [多硬件使用指南]()
+  * [多硬件使用指南](/docs_new/other_devices_support/installation_other_devices.md)
 </details>
-
-
 
 
 ## 🤔 FAQ
@@ -887,11 +914,11 @@ for batch in output:
 ## 🔥 模型产线列表
 
 <details>
-  <summary><a herf = ""> <b> 文档场景信息抽取产线 </b></a></summary>
+  <summary><b> 文档场景信息抽取产线 </b>/summary>
 </details>
 
 <details>
-  <summary> <a herf = ""><b>通用OCR产线  </b></a></summary>
+  <summary> b>通用OCR产线  </b></summary>
 
 
 | 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
@@ -906,11 +933,11 @@ for batch in output:
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用表格识别产线 </b> </a></summary>
+  <summary><b> 通用表格识别产线 </b> </summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用图像分类产线  </b></a></summary>
+  <summary> <b> 通用图像分类产线  </b></summary>
 
 | 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
 |----------|---------------------|-------|-------------------|-------------|------------------|
@@ -924,43 +951,44 @@ for batch in output:
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用目标检测产线  </b></a></summary>
+  <summary> <b> 通用目标检测产线  </b></summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用实例分割产线  </b></a></summary>
+  <summary><b> 通用实例分割产线  </b></summary>
 </details>
 
 <details>
-  <summary> <a herf = ""><b> 通用语义分割产线 </b> </a></summary>
+  <summary> <b> 通用语义分割产线 </b> </summary>
 </details>
 
 <details>
-  <summary> <a herf = ""><b> 通用图像多标签分类产线 </b> </a></summary>
+  <summary> <b> 通用图像多标签分类产线 </b> </summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 小目标检测分类产线 </b> </a></summary>
-</details>
-
-
-<details>
-  <summary><a herf = ""> <b> 图像异常检测产线 </b> </a></summary>
+  <summary><b> 小目标检测分类产线 </b> </summary>
 </details>
 
 
 <details>
-  <summary><a herf = ""> <b> 通用时序预测产线 </b> </a></summary>
+  <summary> <b> 图像异常检测产线 </b> </summary>
+</details>
+
+
+<details>
+  <summary><b> 通用时序预测产线 </b> </summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用时序异常检测产线 </b> </a></summary>
+  <summary><b> 通用时序异常检测产线 </b> </summary>
 </details>
 
 <details>
-  <summary><a herf = ""> <b> 通用时序分类产线</b>  </a></summary>
+  <summary><b> 通用时序分类产线</b> </summary>
 </details>
 
 ## 📄 许可证书
 
 本项目的发布受[Apache 2.0 license](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/LICENSE)许可认证。
+
