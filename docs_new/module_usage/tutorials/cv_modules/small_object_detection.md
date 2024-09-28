@@ -23,8 +23,8 @@
     <td>PP-YOLOE_plus_SOD-L</td>
     <td>31.9</td>
     <td>52.1</td>
-    <td></td>
-    <td></td>
+    <td>57.1</td>
+    <td>1007.0</td>
     <td>324.93</td>
     <td rowspan="3">基于VisDrone训练的PP-YOLOE_plus小目标检测模型</td>
     
@@ -33,20 +33,21 @@
     <td>PP-YOLOE_plus_SOD-S</td>
     <td>25.1</td>
     <td>42.8</td>
-    <td></td>
-    <td></td>
+    <td>65.5</td>
+    <td>324.4</td>
     <td>77.29</td>
   </tr>
   <tr>
     <td>PP-YOLOE_plus_SOD-largesize-L</td>
     <td>42.7</td>
     <td>65.9</td>
-    <td></td>
-    <td></td>
+    <td>458.5</td>
+    <td>11172.7</td>
     <td>340.42</td>
   </tr>
 </table>
 
+注：以上精度指标为 VisDrone-DET 验证集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。
 </details>
 
 ## 三、快速集成
