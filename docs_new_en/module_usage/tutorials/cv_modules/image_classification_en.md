@@ -1,4 +1,3 @@
-
 # Tutorial on Developing Image Classification Modules
 
 ## I. Overview

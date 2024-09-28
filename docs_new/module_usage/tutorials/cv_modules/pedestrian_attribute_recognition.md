@@ -10,7 +10,7 @@
 
 |模型|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
-|PP-LCNet_x1_0_pedestrian_attribute|92.2|||6.7M  |PP-LCNet_x1_0_pedestrian_attribute 是一种基于PP-LCNet的轻量级行人属性识别模型，包含26个类别|
+|PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7M  |PP-LCNet_x1_0_pedestrian_attribute 是一种基于PP-LCNet的轻量级行人属性识别模型，包含26个类别|
 
 **注：以上精度指标为 PaddleX 内部自建数据集 mA。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 </details>
@@ -224,7 +224,7 @@ python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_
 
 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/best_model.pdparams`。
 
-在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，无产出？；
+在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包括 MultiLabelMAP；
 
 </details>
 
@@ -248,5 +248,14 @@ python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
+
 #### 4.4.2 模型集成
-模型可以直接集成到您自己的项目中。您产出的权重可以直接集成到行人属性识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
+
+1.**产线集成**
+
+图像多标签分类模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)，只需要替换模型路径即可完成相关产线的图像多标签分类模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+
+2.**模块集成**
+
+您产出的权重可以直接集成到图像多标签分类模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
