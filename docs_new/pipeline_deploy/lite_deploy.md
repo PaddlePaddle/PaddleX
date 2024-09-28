@@ -279,8 +279,8 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td rowspan="2">image_classification</td>
     <td rowspan="2">图像分类</td>
     <td rowspan="2">image_classification</td>
-    <td>PP-LCNet_x1_0（default）</td>
-    <td>PP-LCNet_x1_0</br>PP-LCNet_x1_0_gpu</td>
+    <td>PP-LCNet_x1_0</td>
+    <td>PP-LCNet_x1_0（default）</br>PP-LCNet_x1_0_gpu</td>
   </tr>
   <tr>
     <td>MobileNetV3_small_x1_0</td>
@@ -292,12 +292,12 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td>文本检测</td>
     <td rowspan="2">ppocr_demo</td>
     <td>PP-OCRv4_mobile_det</td>
-    <td>PP-OCRv4_mobile_det（default）</td>
+    <td>PP-OCRv4_mobile_det</td>
   </tr>
   <tr>
     <td>文本识别</td>
     <td>PP-OCRv4_mobile_rec</td>
-    <td>PP-OCRv4_mobile_rec（default）</td>
+    <td>PP-OCRv4_mobile_rec</td>
   </tr>
 </table>
 
