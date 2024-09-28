@@ -22,8 +22,8 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
     <td>PP-ShiTuV2_det</td>
     <td>41.5</td>
     <td>62.0</td>
-    <td>-</td>
-    <td>-</td>
+    <td>33.7</td>
+    <td>537.0</td>
     <td>27.54</td>
     <td>A mainbody detection model based on PicoDet_LCNet_x2_5, which may detect multiple common subjects simultaneously.</td>
   </tr>
