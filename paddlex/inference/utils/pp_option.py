@@ -77,6 +77,7 @@ class PaddlePredictorOption(object):
             )
         self._cfg["run_mode"] = run_mode
 
+    # TODO(gaotingquan): setter
     @register("device")
     def set_device(self, device: str):
         """set device"""

@@ -44,7 +44,7 @@ class PPEngineMixin:
 
     @option.setter
     def option(self, value):
-        if value != self.option:
+        if value is not None and value != self.option:
             self._option = value
             self._reset()
 

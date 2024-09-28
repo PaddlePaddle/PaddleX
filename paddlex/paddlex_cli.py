@@ -66,7 +66,7 @@ def args_cfg():
     parser.add_argument("--model_dir", nargs="+", type=parse_str, help="")
     parser.add_argument("--input", type=str, help="")
     parser.add_argument("--save_dir", type=str, default="./", help="")
-    parser.add_argument("--device", type=str, default="gpu:0", help="")
+    parser.add_argument("--device", type=str, default=None, help="")
 
     return parser.parse_args()
 

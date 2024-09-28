@@ -63,12 +63,15 @@ def create_pipeline(
     pipeline_name = config["Global"]["pipeline_name"]
     pipeline_setting = config["Pipeline"]
     pipeline_setting.update(kwargs)
+    if device:
+        pipeline_setting["device"] = device
+    if pp_option:
+        pipeline_setting["pp_option"] = pp_option
+    if use_hpip:
+        pipeline_setting["use_hpip"] = use_hpip
 
-    predictor_kwargs = {"device": device, "pp_option": pp_option, "use_hpip": use_hpip}
-    if hpi_params is not None:
-        predictor_kwargs["hpi_params"] = hpi_params
+    if hpi_params:
+        pipeline_setting["hpi_params"] = hpi_params
 
-    pipeline = BasePipeline.get(pipeline_name)(
-        predictor_kwargs=predictor_kwargs, *args, **pipeline_setting
-    )
+    pipeline = BasePipeline.get(pipeline_name)(*args, **pipeline_setting)
     return pipeline
