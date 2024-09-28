@@ -11,6 +11,6 @@ Pipeline:
   text_det_model: PP-OCRv4_mobile_det
   text_rec_model: PP-OCRv4_mobile_rec
   batch_size: 1
-  device: "gpu"
+  device: "gpu:0"
 
 ######################################## Support ########################################
