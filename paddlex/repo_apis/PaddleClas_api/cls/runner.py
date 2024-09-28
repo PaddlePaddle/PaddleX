@@ -195,8 +195,16 @@ def _extract_eval_metrics(stdout: str) -> dict:
         r"\[Eval\]\[Epoch 0\]\[Avg\].*recall1: (_dp), recall5: (_dp), mAP: (_dp)".replace(
             "_dp", _DP
         ),
+        r"\[Eval\]\[Epoch 0\]\[Avg\].*MultiLabelMAP\(integral\): (_dp)".replace(
+            "_dp", _DP
+        ),
     ]
-    keys = [["val.top1"], ["val.top1", "val.top5"], ["recall1", "recall5", "mAP"]]
+    keys = [
+        ["val.top1"],
+        ["val.top1", "val.top5"],
+        ["recall1", "recall5", "mAP"],
+        ["MultiLabelMAP"],
+    ]
 
     metric_dict = dict()
     for pattern, key in zip(patterns, keys):

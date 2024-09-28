@@ -31,6 +31,7 @@ from .ts_cls import TSClsPredictor
 from .image_unwarping import WarpPredictor
 from .multilabel_classification import MLClasPredictor
 from .anomaly_detection import UadPredictor
+from .formula_recognition import LaTeXOCRPredictor
 
 
 def _create_hp_predictor(

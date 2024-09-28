@@ -20,7 +20,12 @@ from .text_det import (
     SortBoxes,
     CropByPolys,
 )
-from .text_rec import OCRReisizeNormImg, CTCLabelDecode
+from .text_rec import (
+    OCRReisizeNormImg,
+    LaTeXOCRReisizeNormImg,
+    CTCLabelDecode,
+    LaTeXOCRDecode,
+)
 from .table_rec import TableLabelDecode
 from .det import DetPostProcess, CropByBoxes, DetPad, WarpAffine
 from .instance_seg import InstanceSegPostProcess

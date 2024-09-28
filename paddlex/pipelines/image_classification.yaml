@@ -7,8 +7,8 @@ Global:
 
 Pipeline:
   model: PP-LCNet_x0_5
-  device: cpu
-
+  batch_size: 1
+  device: "gpu:0"
 ######################################## Support ########################################
 NOTE:
   device: 
