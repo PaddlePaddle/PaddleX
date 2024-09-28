@@ -12,6 +12,7 @@
 |-|-|-|-|-|-|
 |PicoDet_LCNet_x2_5_face|35.8|33.7|537.0|28.9|基于PicoDet_LCNet_x2_5的人脸检测模型|
 
+注：以上精度指标为wider_face数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。
 </details>
 
 ## 三、快速集成
