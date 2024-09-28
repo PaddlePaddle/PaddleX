@@ -30,6 +30,9 @@ from .ts_ad import create_pipeline_app as create_ts_ad_app
 from .ts_cls import create_pipeline_app as create_ts_cls_app
 from .ts_fc import create_pipeline_app as create_ts_fc_app
 from .ts_fc import create_pipeline_app as create_anomaly_detection_app
+from .multi_label_image_classification import (
+    create_pipeline_app as create_multi_label_image_classification_app,
+)
 from ..app import create_app_config
 from ...base import BasePipeline
 from ...single_model_pipeline import (
@@ -76,7 +79,7 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `ObjectDetection`."
             )
         return create_object_detection_app(pipeline, app_config)
-    elif pipeline_name == "ocr":
+    elif pipeline_name == "OCR":
         if not isinstance(pipeline, OCRPipeline):
             raise TypeError("Expected `pipeline` to be an instance of `OCRPipeline`.")
         return create_ocr_app(pipeline, app_config)
@@ -109,7 +112,7 @@ def create_pipeline_app(
             raise TypeError(
                 "Expected `pipeline` to be an instance of `MultiLableImageClas`."
             )
-        return create_image_classification_app(pipeline, app_config)
+        return create_multi_label_image_classification_app(pipeline, app_config)
     elif pipeline_name == "small_object_detection":
         if not isinstance(pipeline, SmallObjDet):
             raise TypeError("Expected `pipeline` to be an instance of `SmallObjDet`.")

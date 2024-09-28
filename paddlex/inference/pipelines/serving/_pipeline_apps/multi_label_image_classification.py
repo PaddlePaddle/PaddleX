@@ -15,13 +15,12 @@
 from typing import List
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel
 
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...single_model_pipeline import SemanticSegmentation
+from ...single_model_pipeline import ImageClassification
 from .....utils import logging
 
 
@@ -29,21 +28,26 @@ class InferRequest(BaseModel):
     image: str
 
 
+class Category(BaseModel):
+    id: int
+    name: str
+    score: float
+
+
 class InferResult(BaseModel):
-    labelMap: List[int]
-    size: Annotated[List[int], Field(min_length=2, max_length=2)]
+    categories: List[Category]
     image: str
 
 
 def create_pipeline_app(
-    pipeline: SemanticSegmentation, app_config: AppConfig
+    pipeline: ImageClassification, app_config: AppConfig
 ) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
-        "/semantic-segmentation",
+        "/multilabel-image-classification",
         operation_id="infer",
         responses={422: {"model": Response}},
     )
@@ -59,18 +63,22 @@ def create_pipeline_app(
 
             result = await pipeline.infer(image)
 
-            pred = result["pred"][0]
-            size = [len(pred), len(pred[0])]
-            label_map = [item for sublist in pred for item in sublist]
+            if "label_names" in result:
+                cat_names = result["label_names"]
+            else:
+                cat_names = [str(id_) for id_ in result["class_ids"]]
+            categories: List[Category] = []
+            for id_, name, score in zip(
+                result["class_ids"], cat_names, result["scores"]
+            ):
+                categories.append(Category(id=id_, name=name, score=score))
             output_image_base64 = result.to_base64()
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(
-                    labelMap=label_map, size=size, image=output_image_base64
-                ),
+                result=InferResult(categories=categories, image=output_image_base64),
             )
 
         except Exception as e:

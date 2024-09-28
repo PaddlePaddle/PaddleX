@@ -173,7 +173,7 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
     ctx.extra.setdefault("max_num_imgs", _DEFAULT_MAX_NUM_IMGS)
 
     @app.post(
-        "/chatocr_visual", operation_id="analyze", responses={422: {"model": Response}}
+        "/chatocr-visual", operation_id="analyze", responses={422: {"model": Response}}
     )
     async def _analyze_image(
         request: InferVisualRequest,
