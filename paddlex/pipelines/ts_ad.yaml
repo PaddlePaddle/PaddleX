@@ -1,11 +1,11 @@
 Global:
-  pipeline_name: small_object_detection
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg
+  pipeline_name: ts_ad
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv
   
 ######################################## Setting ########################################
 # Please select the model from bellow `Support`
 
 Pipeline:
-  model: PP-YOLOE_plus_SOD-L
+  model: DLinear_ad
   batch_size: 1
   device: "gpu:0"
