@@ -1,8 +1,8 @@
-PaddleX模型列表（CPU/GPU）
+# PaddleX模型列表（CPU/GPU）
 
 PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模块包含若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型。
 
-# 图像分类模块
+## 图像分类模块
 |模型名称|Top1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |CLIP_vit_base_patch16_224|85.36|13.1957|285.493|306.5 M|
@@ -88,7 +88,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[ImageNet-1k](https://www.image-net.org/index.php)** 验证集 Top1 Acc。**
 
-# 图像多标签分类模块
+## 图像多标签分类模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |CLIP_vit_base_patch16_448_ML|89.15|-|-|325.6|
@@ -100,21 +100,21 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 [COCO2017](https://cocodataset.org/#home) 的多标签分类任务mAP。**
 
-# 行人属性模块
+## 行人属性模块
 |模型名称|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7M  |
 
 **注：以上精度指标为 PaddleX 内部自建数据集mA。**
 
-# 车辆属性模块
+## 车辆属性模块
 |模型名称|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-LCNet_x1_0_vehicle_attribute|91.7|3.84845|9.23735|6.7 M|
 
 **注：以上精度指标为 VeRi 数据集 mA。**
 
-# 图像识别模块
+## 图像识别模块
 |模型名称|recall@1（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-ShiTuV2_rec|84.2|5.23428|19.6005|16.3 M|
@@ -123,21 +123,21 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[AliProducts](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/feature_extraction.md)** recall@1。**
 
-# 文档方向分类模块
+## 文档方向分类模块
 |模型名称|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-LCNet_x1_0_doc_ori|99.26|3.84845|9.23735|7.1M|
 
 **注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。**
 
-# 主体检测模块
+## 主体检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-ShiTuV2_det|41.5|33.7426|537.003|27.6 M|
 
 **注：以上精度指标为 [PaddleClas主体检测数据集](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/mainbody_detection.md) mAP(0.5:0.95)。**
 
-# 目标检测模块
+## 目标检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |Cascade-FasterRCNN-ResNet50-FPN|41.1|-|-|245.4 M|
@@ -180,7 +180,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 mAP(0.5:0.95)。**
 
-# 小目标检测模块
+## 小目标检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-YOLOE_plus_SOD-S|25.1|65.4608|324.37|77.3 M|
@@ -189,7 +189,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)** 验证集 mAP(0.5:0.95)。**
 
-# 行人检测模块
+## 行人检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-YOLOE-L_human|48.0|32.7754|777.691|196.1 M|
@@ -197,7 +197,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[CrowdHuman](https://bj.bcebos.com/v1/paddledet/data/crowdhuman.zip)** 验证集 mAP(0.5:0.95)。**
 
-# 车辆检测模块
+## 车辆检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-YOLOE-L_vehicle|63.9|32.5619|775.633|196.1 M|
@@ -205,21 +205,21 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)** 验证集 mAP(0.5:0.95)。**
 
-# 人脸检测模块
+## 人脸检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PicoDet_LCNet_x2_5_face|35.8|33.7426|537.003|27.7 M|
 
 **注：以上精度指标为 **[wider_face](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)** 评估集 mAP(0.5:0.95)。**
 
-# 异常检测模块
+## 异常检测模块
 |模型名称|Avg（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |STFPM|96.2|-|-|21.5 M|
 
 **注：以上精度指标为 **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** 验证集 平均异常分数。**
 
-# 语义分割模块
+## 语义分割模块
 |模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
@@ -248,7 +248,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)** 数据集, slice 表示对输入图像进行了切图操作。**
 
-# 实例分割模块
+## 实例分割模块
 |模型名称|Mask AP|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |Mask-RT-DETR-H|50.6|132.693|4896.17|449.9|
@@ -269,7 +269,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 Mask AP(0.5:0.95)。**
 
-# 文本检测模块
+## 文本检测模块
 |模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_det |77.79|10.6923|120.177|4.2 M|
@@ -277,7 +277,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。**
 
-# 印章文本检测模块
+## 印章文本检测模块
 |模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.7M |
@@ -285,7 +285,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标的评估集是 PaddleX 自建的印章数据集，包含500印章图像。**
 
-# 文本识别模块
+## 文本识别模块
 |模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_rec |78.20|7.95018|46.7868|10.6 M|
@@ -297,35 +297,36 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |-|-|-|-|-|
 |ch_SVTRv2_rec|68.81|8.36801|165.706|73.9 M|
 
-**注：以上精度指标的评估集是 **[PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)A榜。**
+**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)A榜。**
 
 |模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |ch_RepSVTR_rec|65.07|10.5047|51.5647|22.1 M|
 
-**注：以上精度指标的评估集是 **[PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜。**
+**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜。**
 
-# 公式识别模块
+## 公式识别模块
 |模型名称|BLEU score|normed edit distance|ExpRate （%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|-|-|
 |LaTeX_OCR_rec|0.8821|0.0823|40.01|-|-|89.7 M|
 
-**注：以上精度指标测量自 **[LaTeX-OCR公式识别测试集](https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO)**。**
+**注：以上精度指标测量自 [LaTeX-OCR公式识别测试集](https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO)。**
 
-# 表格结构识别模块
+## 表格结构识别模块
 |模型名称|精度（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |SLANet|76.31|522.536|1845.37|6.9 M |
+
 **注：以上精度指标测量自 ****PubtabNet英文表格识别数据集****。**
 
-# 图像矫正模块
+## 图像矫正模块
 |模型名称|MS-SSIM （%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |UVDoc|54.40|-|-|30.3 M|
 
 **注：以上精度指标测量自 ****PaddleX自建的图像矫正数据集****。**
 
-# 版面区域分析模块
+## 版面区域分析模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4M |
@@ -335,7 +336,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标的评估集是 ****PaddleX 自建的版面区域分析数据集****，包含 1w 张图片。**
 
-# 时序预测模块
+## 时序预测模块
 |模型名称|mse|mae|模型存储大小（M)|
 |-|-|-|-|
 |DLinear|0.382|0.394|72K|
@@ -348,7 +349,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标测量自 **[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)** 数据集 ****（在测试集test.csv上的评测结果）****。**
 
-# 时序异常检测模块
+## 时序异常检测模块
 |模型名称|precison|recall|f1_score|模型存储大小（M)|
 |-|-|-|-|-|
 |AutoEncoder_ad|99.36|84.36|91.25|52K |
@@ -359,7 +360,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标测量自 **[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)** 数据集。**
 
-# 时序分类模块
+## 时序分类模块
 |模型名称|acc(%)|模型存储大小（M)|
 |-|-|-|
 |TimesNet_cls|87.5|792K|
