@@ -105,44 +105,49 @@
     git clone -b feature/paddle-x https://github.com/PaddlePaddle/Paddle-Lite-Demo.git PaddleX-Lite-Deploy
     ```
 
-2. 填写 [问卷]() 下载压缩包，将压缩包放到指定解压目录，切换到指定解压目录后执行解压命令。
-下面是 object_detection 解压操作示例，其他任务可参考后面的表格。
+2. 填写 **问卷** 下载压缩包，将压缩包放到指定解压目录，切换到指定解压目录后执行解压命令。
+    - [object_detection（目标检测）问卷](https://paddle.wjx.cn/vm/OjV8gAb.aspx#)
+    - [semantic_segmentation（语义分割）问卷](https://paddle.wjx.cn/vm/Q2F1L37.aspx#)
+    - [image_classification（图像分类）问卷](https://paddle.wjx.cn/vm/rWPncBm.aspx#)
+    - [ocr（文字识别）问卷](https://paddle.wjx.cn/vm/eaaBo0H.aspx#)
 
-    ```shell
-    # 1. 切换到指定解压目录
-    cd PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection
+    下面是 object_detection 解压操作示例，其他任务可参考后面的表格。
 
-    # 2. 执行解压命令
-    unzip object_detection.zip
-    ```
+        ```shell
+        # 1. 切换到指定解压目录
+        cd PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection
 
-    <table>
-      <tr>
-        <th>任务名</th>
-        <th>解压目录</th>
-        <th>解压命令</th>
-      </tr>
-      <tr>
-        <td>object_detection</td>
-        <td>PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection</td>
-        <td>unzip object_detection.zip</td>
-      </tr>
-      <tr>
-        <td>semantic_segmentation</td>
-        <td>PaddleX-Lite-Deploy/semantic_segmentation/android/shell/cxx/semantic_segmentation</td>
-        <td>unzip semantic_segmentation.zip</td>
-      </tr>
-      <tr>
-        <td>image_classification</td>
-        <td>PaddleX-Lite-Deploy/image_classification/android/shell/cxx/image_classification</td>
-        <td>unzip image_classification.zip</td>
-      </tr>
-      <tr>
-        <td>ocr</td>
-        <td>PaddleX-Lite-Deploy/ocr/android/shell/ppocr_demo</td>
-        <td>unzip ocr.zip</td>
-      </tr>
-    </table>
+        # 2. 执行解压命令
+        unzip object_detection.zip
+        ```
+
+        <table>
+          <tr>
+            <th>任务名</th>
+            <th>解压目录</th>
+            <th>解压命令</th>
+          </tr>
+          <tr>
+            <td>object_detection</td>
+            <td>PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection</td>
+            <td>unzip object_detection.zip</td>
+          </tr>
+          <tr>
+            <td>semantic_segmentation</td>
+            <td>PaddleX-Lite-Deploy/semantic_segmentation/android/shell/cxx/semantic_segmentation</td>
+            <td>unzip semantic_segmentation.zip</td>
+          </tr>
+          <tr>
+            <td>image_classification</td>
+            <td>PaddleX-Lite-Deploy/image_classification/android/shell/cxx/image_classification</td>
+            <td>unzip image_classification.zip</td>
+          </tr>
+          <tr>
+            <td>ocr</td>
+            <td>PaddleX-Lite-Deploy/ocr/android/shell/ppocr_demo</td>
+            <td>unzip ocr.zip</td>
+          </tr>
+        </table>
 
 ### 部署步骤
 
