@@ -7,7 +7,8 @@ Global:
 
 Pipeline:
   model: Mask-RT-DETR-S
-
+  batch_size: 1
+  device: "gpu"
 ######################################## Support ########################################
 NOTE:
   device: 
