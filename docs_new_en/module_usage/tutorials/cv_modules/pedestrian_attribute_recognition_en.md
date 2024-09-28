@@ -132,7 +132,7 @@ Pedestrian attribute recognition does not support data format conversion.
 
 **(2) Dataset Splitting**
 
-Parameters for dataset splitting can be set by modifying the `CheckDataset` section in the configuration file. Some example parameter descriptions in the configuration file are as follows:
+The dataset splitting parameters can be set by modifying the fields under `CheckDataset` in the configuration file. An example of part of the configuration file is shown below:
 
 * `CheckDataset`:
   * `split`:
@@ -250,8 +250,8 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.**Pipeline Integration**
 
-The image multi-label classification module can be integrated into the [General Image Multi-label Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) of PaddleX. Simply replace the model path to update the image multi-label classification module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
+The pedestrian attribute recognition module can be integrated into the [General Image Multi-label Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) of PaddleX. Simply replace the model path to update the pedestrian attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
 
 2.**Module Integration**
 
-The weights you produce can be directly integrated into the image multi-label classification module. Refer to the Python example code in [Quick Integration](#三快速集成) and simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the pedestrian attribute recognition module. Refer to the Python example code in [Quick Integration](#三快速集成) and simply replace the model with the path to your trained model.
