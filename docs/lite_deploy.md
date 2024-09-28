@@ -121,33 +121,33 @@
         unzip object_detection.zip
         ```
 
-        <table>
-          <tr>
-            <th>任务名</th>
-            <th>解压目录</th>
-            <th>解压命令</th>
-          </tr>
-          <tr>
-            <td>object_detection</td>
-            <td>PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection</td>
-            <td>unzip object_detection.zip</td>
-          </tr>
-          <tr>
-            <td>semantic_segmentation</td>
-            <td>PaddleX-Lite-Deploy/semantic_segmentation/android/shell/cxx/semantic_segmentation</td>
-            <td>unzip semantic_segmentation.zip</td>
-          </tr>
-          <tr>
-            <td>image_classification</td>
-            <td>PaddleX-Lite-Deploy/image_classification/android/shell/cxx/image_classification</td>
-            <td>unzip image_classification.zip</td>
-          </tr>
-          <tr>
-            <td>ocr</td>
-            <td>PaddleX-Lite-Deploy/ocr/android/shell/ppocr_demo</td>
-            <td>unzip ocr.zip</td>
-          </tr>
-        </table>
+      <table>
+        <tr>
+          <th>任务名</th>
+          <th>解压目录</th>
+          <th>解压命令</th>
+        </tr>
+        <tr>
+          <td>object_detection</td>
+          <td>PaddleX-Lite-Deploy/object_detection/android/shell/cxx/picodet_detection</td>
+          <td>unzip object_detection.zip</td>
+        </tr>
+        <tr>
+          <td>semantic_segmentation</td>
+          <td>PaddleX-Lite-Deploy/semantic_segmentation/android/shell/cxx/semantic_segmentation</td>
+          <td>unzip semantic_segmentation.zip</td>
+        </tr>
+        <tr>
+          <td>image_classification</td>
+          <td>PaddleX-Lite-Deploy/image_classification/android/shell/cxx/image_classification</td>
+          <td>unzip image_classification.zip</td>
+        </tr>
+        <tr>
+          <td>ocr</td>
+          <td>PaddleX-Lite-Deploy/ocr/android/shell/ppocr_demo</td>
+          <td>unzip ocr.zip</td>
+        </tr>
+      </table>
 
 ### 部署步骤
 
