@@ -24,13 +24,13 @@ pip install -e .
 
 PaddleX支持的插件如下，请您根据开发需求，确定所需的一个或多个插件名称：
 
-| 插件名称          | 插件基本功能                                  | 插件支持产线                                                                       | 参考文档                 |
-|-------------------|-----------------------------------------------|------------------------------------------------------------------------------------|--------------------------|
-| `PaddleClas`      | 图像分类、特征抽取                            | 通用图像分类产线、通用图像多标签分类产线、通用图像识别产线、文档场景信息抽取v3产线 | [通用图像分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
-| `PaddleDetection` | 目标检测、实例分割                            | 通用目标检测产线、小目标检测产线、文档场景信息抽取v3产线                           | [通用目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md) |
-| `PaddleOCR`       | OCR（文字检测、文字识别）、表格识别、公式识别 | 通用OCR产线、通用表格识别产线、文档场景信息抽取v3产线                              | [通用OCR产线使用教程](../pipeline_usage/tutorials/ocr_pipelies/OCR.md)      |
-| `PaddleSeg`       | 语义分割、图像异常检测                        | 通用实例分割产线、通用语义分割产线                                                 | [通用语义分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
-| `PaddleTS`        | 时序预测、时序分类、时序异常检测              | 时序预测产线、时序分类产线、时序异常检测产线                                       | [时序预测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)     |
+| 插件名称          | 插件基本功能                                  | 插件支持产线                                                                       | 
+|-------------------|-----------------------------------------------|------------------------------------------------------------------------------------|
+| `PaddleClas`      | 图像分类、特征抽取                            | 通用图像分类产线、通用图像多标签分类产线、通用图像识别产线、文档场景信息抽取v3产线 | 
+| `PaddleDetection` | 目标检测、实例分割                            | 通用目标检测产线、小目标检测产线、文档场景信息抽取v3产线                           | 
+| `PaddleOCR`       | OCR（文字检测、文字识别）、表格识别、公式识别 | 通用OCR产线、通用表格识别产线、文档场景信息抽取v3产线                              | 
+| `PaddleSeg`       | 语义分割、图像异常检测                        | 通用实例分割产线、通用语义分割产线                                                 | 
+| `PaddleTS`        | 时序预测、时序分类、时序异常检测              | 时序预测产线、时序分类产线、时序异常检测产线                                       | 
 
 若您需要安装的插件为`PaddleXXX`，在参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)安装飞桨后，您可以直接执行如下指令快速安装PaddleX的对应插件：
 
@@ -129,4 +129,4 @@ paddlex --install --platform gitee.com
 ```
 All packages are installed.
 ```
-更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](../other_devices_support/installation_other_devices.md)
+更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](installation_other_devices.md)
