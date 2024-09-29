@@ -129,8 +129,6 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。**
 
-****
-
 ## 文本识别模块
 |模型名称|识别Avg Accuracy(%)|模型存储大小（M)|
 |-|-|-|
@@ -157,8 +155,6 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |SLANet|76.31|6.9 M |
 
 **注：以上精度指标测量自PubtabNet英文表格识别数据集。**
-
-****
 
 ## 版面区域分析模块
 |模型名称|mAP（%）|模型存储大小（M)|
@@ -197,5 +193,3 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |TimesNet_cls|87.5|792K|
 
 **注：以上精度指标测量自UWaveGestureLibrary：[训练](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TRAIN.csv)、[评测](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv)数据集。**
-
-****

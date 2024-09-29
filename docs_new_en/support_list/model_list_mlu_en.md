@@ -1,4 +1,3 @@
-```markdown
 # PaddleX Model List (Cambricon MLU)
 
 PaddleX incorporates multiple pipelines, each containing several modules, and each module encompasses various models. You can select the appropriate models based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model size, select models with smaller storage requirements.
@@ -50,4 +49,36 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 |-|-|-|
 | PP-LiteSeg-T | 73.10 | 28.5 M |
 
-**Note: The above accuracy metrics are mIoU on
+**Note: The above accuracy metrics are based on the mIoU of the [Cityscapes](https://www.cityscapes-dataset.com/) dataset.**
+
+## Text Detection Module
+|Model Name|Detection Hmean (%)|Model Size (M)|
+|-|-|-|
+|PP-OCRv4_mobile_det |77.79|4.2 M|
+|PP-OCRv4_server_det |82.69|100.1M|
+
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, handwriting, and more scenarios, with 500 images for detection.**
+
+## Text Recognition Module
+|Model Name|Recognition Avg Accuracy (%)|Model Size (M)|
+|-|-|-|
+|PP-OCRv4_mobile_rec |78.20|10.6 M|
+|PP-OCRv4_server_rec |79.20|71.2 M|
+
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, handwriting, and more scenarios, with 11,000 images for text recognition.**
+
+## Layout Analysis Module
+|Model Name|mAP (%)|Model Size (M)|
+|-|-|-|
+|PicoDet_layout_1x|86.8|7.4M |
+
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout analysis dataset, containing 10,000 images.**
+
+## Time Series Forecasting Module
+|Model Name|mse|mae|Model Size (M)|
+|-|-|-|-|
+|DLinear|0.382|0.394|72K|
+|NLinear|0.386|0.392|40K |
+|RLinear|0.384|0.392|40K|
+
+**Note: The above accuracy metrics are measured on the [ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar) dataset (evaluation results on the test set test.csv).**

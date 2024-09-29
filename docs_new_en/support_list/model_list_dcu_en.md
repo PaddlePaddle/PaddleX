@@ -1,4 +1,3 @@
-```markdown
 # PaddleX Model List (Hygon DCU)
 
 PaddleX incorporates multiple pipelines, each containing several modules, and each module encompasses various models. The specific models to use can be selected based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model storage size, select models with smaller storage sizes.
@@ -21,4 +20,3 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 | Deeplabv3_Plus-R101 | 81.10 | 162.5 M |
 
 **Note: The above accuracy metrics are mIoU on the [Cityscapes](https://www.cityscapes-dataset.com/) dataset.**
-```

@@ -1,4 +1,3 @@
-```markdown
 # Ascend NPU PaddlePaddle Installation Tutorial
 
 Currently, PaddleX supports the Ascend 910B chip (more models are under support. If you have a related need for other models, please submit an issue to inform us). The Ascend driver version is 23.0.3. Considering the differences in environments, we recommend using the **Ascend development image provided by PaddlePaddle** to complete the environment preparation.
@@ -41,5 +40,4 @@ Running verify PaddlePaddle program ...
 PaddlePaddle works well on 1 npu.
 PaddlePaddle works well on 8 npus.
 PaddlePaddle is installed successfully! Let's start deep learning with PaddlePaddle now.
-```
 ```

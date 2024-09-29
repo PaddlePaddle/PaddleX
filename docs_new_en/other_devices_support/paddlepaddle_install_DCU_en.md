@@ -1,4 +1,3 @@
-```markdown
 # Hygon DCU PaddlePaddle Installation Tutorial
 
 Currently, PaddleX supports Haiguang Z100 series chips. Considering environmental differences, we recommend using the **officially released Haiguang DCU development image by PaddlePaddle**, which is pre-installed with the Haiguang DCU basic runtime library (DTK).
@@ -37,5 +36,4 @@ The expected output is as follows:
 
 ```
 PaddlePaddle is installed successfully! Let's start deep learning with PaddlePaddle now.
-```
 ```

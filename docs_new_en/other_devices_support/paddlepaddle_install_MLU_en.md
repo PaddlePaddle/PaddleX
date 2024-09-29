@@ -1,4 +1,3 @@
-```markdown
 # Cambricon MLU Installation Tutorial for PaddlePaddle
 
 Currently, PaddleX supports the Cambricon MLU370X8 chip. Considering environmental differences, we recommend using the **Cambricon MLU development image provided by PaddlePaddle** to prepare your environment.
@@ -44,5 +43,4 @@ Running verify PaddlePaddle program ...
 PaddlePaddle works well on 1 mlu.
 PaddlePaddle works well on 16 mlus.
 PaddlePaddle is installed successfully! Let's start deep learning with PaddlePaddle now.
-```
 ```

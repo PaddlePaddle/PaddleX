@@ -1,4 +1,3 @@
-```markdown
 # Kunlun XPU PaddlePaddle Installation Tutorial
 
 Currently, PaddleX supports Kunlun R200/R300 and other chips. Considering environmental differences, we recommend using the **Kunlun XPU development image officially released by PaddlePaddle**, which is pre-installed with the Kunlun basic runtime environment library (XRE).
@@ -39,5 +38,4 @@ The expected output is:
 
 ```
 PaddlePaddle is installed successfully! Let's start deep learning with PaddlePaddle now.
-```
 ```
