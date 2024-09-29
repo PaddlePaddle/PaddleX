@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-from .readers import ReaderType, ImageReader, VideoReader, TSReader, PDFReader
+from .readers import ReaderType, ImageReader, VideoReader, CSVReader, PDFReader
 from .writers import (
     WriterType,
     ImageWriter,
     TextWriter,
     JsonWriter,
-    TSWriter,
+    CSVWriter,
     HtmlWriter,
     XlsxWriter,
 )

@@ -14,14 +14,15 @@
 
 from pathlib import Path
 from copy import deepcopy
+import tempfile
 import joblib
 import numpy as np
 import pandas as pd
 
 from .....utils.download import download
 from .....utils.cache import CACHE_DIR
-from ....utils.io.readers import TSReader
-from ....utils.io.writers import TSWriter
+from ....utils.io.readers import CSVReader
+from ....utils.io.writers import CSVWriter
 from ...base import BaseComponent
 from ..read_data import _BaseRead
 from .funcs import load_from_dataframe, time_feature
@@ -45,22 +46,24 @@ __all__ = [
 class ReadTS(_BaseRead):
 
     INPUT_KEYS = ["ts"]
-    OUTPUT_KEYS = ["ts_path", "ts", "ori_ts"]
+    OUTPUT_KEYS = ["input_path", "ts", "ori_ts"]
     DEAULT_INPUTS = {"ts": "ts"}
-    DEAULT_OUTPUTS = {"ts_path": "ts_path", "ts": "ts", "ori_ts": "ori_ts"}
+    DEAULT_OUTPUTS = {"input_path": "input_path", "ts": "ts", "ori_ts": "ori_ts"}
 
     SUFFIX = ["csv"]
 
     def __init__(self, batch_size=1):
         super().__init__(batch_size)
-        self._reader = TSReader(backend="pandas")
-        self._writer = TSWriter(backend="pandas")
+        self._reader = CSVReader(backend="pandas")
+        self._writer = CSVWriter(backend="pandas")
 
     def apply(self, ts):
         if not isinstance(ts, str):
-            ts_path = (Path(CACHE_DIR) / "predict_input" / "tmp_ts.csv").as_posix()
-            self._writer.write(ts_path, ts)
-            return {"ts_path": ts_path, "ts": ts, "ori_ts": deepcopy(ts)}
+            with tempfile.NamedTemporaryFile(suffix=".csv", delete=True) as temp_file:
+                input_path = Path(temp_file.name)
+                ts_path = input_path.as_posix()
+                self._writer.write(ts_path, ts)
+                yield {"input_path": input_path, "ts": ts, "ori_ts": deepcopy(ts)}
 
         ts_path = ts
         ts_path = self._download_from_url(ts_path)
@@ -69,7 +72,11 @@ class ReadTS(_BaseRead):
         for ts_path in file_list:
             ts_data = self._reader.read(ts_path)
             batch.append(
-                {"ts_path": ts_path, "ts": ts_data, "ori_ts": deepcopy(ts_data)}
+                {
+                    "input_path": Path(ts_path).name,
+                    "ts": ts_data,
+                    "ori_ts": deepcopy(ts_data),
+                }
             )
             if len(batch) >= self.batch_size:
                 yield batch

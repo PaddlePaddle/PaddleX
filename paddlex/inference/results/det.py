@@ -13,17 +13,13 @@
 # limitations under the License.
 
 import os
-
-import numpy as np
-import math
+import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ...utils import logging
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
-from ..utils.io import ImageWriter, ImageReader
 from ..utils.color_map import get_colormap, font_colormap
-from .base import BaseResult
+from .base import CVResult
 
 
 def draw_box(img, boxes):
@@ -77,22 +73,12 @@ def draw_box(img, boxes):
     return img
 
 
-class DetResult(BaseResult):
+class DetResult(CVResult):
     """Save Result Transform"""
 
-    def __init__(self, data):
-        super().__init__(data)
-        # We use pillow backend to save both numpy arrays and PIL Image objects
-        self._img_reader.set_backend("pillow")
-        self._img_writer.set_backend("pillow")
-
-    def _get_res_img(self):
+    def _to_img(self):
         """apply"""
         boxes = self["boxes"]
-        img_path = self["img_path"]
-        file_name = os.path.basename(img_path)
-
-        image = self._img_reader.read(img_path)
+        image = self._img_reader.read(self["input_path"])
         image = draw_box(image, boxes)
-
         return image

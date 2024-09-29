@@ -83,5 +83,5 @@ class UadPredictor(BasicPredictor):
         return Normalize(mean=mean, std=std)
 
     def _pack_res(self, single):
-        keys = ["img_path", "pred"]
+        keys = ["input_path", "pred"]
         return SegResult({key: single[key] for key in keys})

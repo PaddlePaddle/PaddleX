@@ -19,21 +19,20 @@ import copy
 import json
 
 from ...utils import logging
-from .base import BaseResult
+from .utils.mixin import ImgMixin
+from .base import CVResult
 
 
-class SegResult(BaseResult):
+class SegResult(CVResult):
     """Save Result Transform"""
 
     def __init__(self, data):
         super().__init__(data)
-        self.data = data
-        # We use pillow backend to save both numpy arrays and PIL Image objects
         self._img_writer.set_backend("pillow", format_="PNG")
 
-    def _get_res_img(self):
+    def _to_img(self):
         """apply"""
-        seg_map = self.data["pred"]
+        seg_map = self["pred"]
         pc_map = self.get_pseudo_color_map(seg_map[0])
         return pc_map
 
@@ -67,9 +66,7 @@ class SegResult(BaseResult):
             color_map[: len(custom_color)] = custom_color
         return color_map
 
-    def print(self, json_format=True, indent=4, ensure_ascii=False):
+    def _to_str(self):
         str_ = copy.deepcopy(self)
-        del str_["pred"]
-        if json_format:
-            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
-        logging.info(str_)
+        str_["pred"] = "..."
+        return str(str_)

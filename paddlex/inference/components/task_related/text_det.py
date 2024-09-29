@@ -419,9 +419,9 @@ class DBPostProcess(BaseComponent):
 class CropByPolys(BaseComponent):
     """Crop Image by Polys"""
 
-    INPUT_KEYS = ["img_path", "dt_polys"]
+    INPUT_KEYS = ["input_path", "dt_polys"]
     OUTPUT_KEYS = ["img"]
-    DEAULT_INPUTS = {"img_path": "img_path", "dt_polys": "dt_polys"}
+    DEAULT_INPUTS = {"input_path": "input_path", "dt_polys": "dt_polys"}
     DEAULT_OUTPUTS = {"img": "img"}
 
     def __init__(self, det_box_type="quad"):
@@ -429,9 +429,9 @@ class CropByPolys(BaseComponent):
         self.det_box_type = det_box_type
         self._reader = ImageReader(backend="opencv")
 
-    def apply(self, img_path, dt_polys):
+    def apply(self, input_path, dt_polys):
         """apply"""
-        img = self._reader.read(img_path)
+        img = self._reader.read(input_path)
 
         if self.det_box_type == "quad":
             dt_boxes = np.array(dt_polys)

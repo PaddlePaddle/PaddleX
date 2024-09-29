@@ -39,5 +39,5 @@ class WarpPredictor(BasicPredictor):
         self._add_component([predictor, DocTrPostProcess()])
 
     def _pack_res(self, single):
-        keys = ["img_path", "doctr_img"]
+        keys = ["input_path", "doctr_img"]
         return DocTrResult({key: single[key] for key in keys})

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import math
-
+import tempfile
 from pathlib import Path
 from copy import deepcopy
 
@@ -21,7 +21,7 @@ import numpy as np
 import cv2
 
 from .....utils.cache import CACHE_DIR
-from ....utils.io import ImageReader, ImageWriter
+from ....utils.io import ImageReader, ImageWriter, PDFReader
 from ...utils.mixin import BatchSizeMixin
 from ...base import BaseComponent
 from ..read_data import _BaseRead
@@ -60,7 +60,7 @@ class ReadImage(_BaseRead):
     DEAULT_INPUTS = {"img": "img"}
     DEAULT_OUTPUTS = {
         "img": "img",
-        "img_path": "img_path",
+        "input_path": "input_path",
         "img_size": "img_size",
         "ori_img": "ori_img",
         "ori_img_size": "ori_img_size",
@@ -72,7 +72,7 @@ class ReadImage(_BaseRead):
         "GRAY": cv2.IMREAD_GRAYSCALE,
     }
 
-    SUFFIX = ["jpg", "png", "jpeg", "JPEG", "JPG", "bmp"]
+    SUFFIX = ["jpg", "png", "jpeg", "JPEG", "JPG", "bmp", "PDF", "pdf"]
 
     def __init__(self, batch_size=1, format="BGR"):
         """
@@ -85,39 +85,47 @@ class ReadImage(_BaseRead):
         super().__init__(batch_size)
         self.format = format
         flags = self._FLAGS_DICT[self.format]
-        self._reader = ImageReader(backend="opencv", flags=flags)
+        self._img_reader = ImageReader(backend="opencv", flags=flags)
+        self._pdf_reader = PDFReader()
         self._writer = ImageWriter(backend="opencv")
 
     def apply(self, img):
         """apply"""
         if not isinstance(img, str):
-            img_path = (Path(CACHE_DIR) / "predict_input" / "tmp_img.jpg").as_posix()
-            self._writer.write(img_path, img)
-            yield [
-                {
-                    "img_path": img_path,
-                    "img": img,
-                    "img_size": [img.shape[1], img.shape[0]],
-                    "ori_img": deepcopy(img),
-                    "ori_img_size": deepcopy([img.shape[1], img.shape[0]]),
-                }
-            ]
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=True) as temp_file:
+                img_path = Path(temp_file.name)
+                self._writer.write(img_path, img)
+                yield [
+                    {
+                        "input_path": img_path,
+                        "img": img,
+                        "img_size": [img.shape[1], img.shape[0]],
+                        "ori_img": deepcopy(img),
+                        "ori_img_size": deepcopy([img.shape[1], img.shape[0]]),
+                    }
+                ]
         else:
-            img_path = img
-            img_path = self._download_from_url(img_path)
-            file_list = self._get_files_list(img_path)
+            file_path = img
+            file_path = self._download_from_url(file_path)
+            file_list = self._get_files_list(file_path)
             batch = []
-            for img_path in file_list:
-                img = self._read_img(img_path)
-                batch.append(img)
+            for file_path in file_list:
+                img = self._read_img(file_path)
+                batch.extend(img)
                 if len(batch) >= self.batch_size:
                     yield batch
                     batch = []
             if len(batch) > 0:
                 yield batch
 
+    def _read(self, file_path):
+        if file_path:
+            return self._read_pdf(file_path)
+        else:
+            return self._read_img(file_path)
+
     def _read_img(self, img_path):
-        blob = self._reader.read(img_path)
+        blob = self._img_reader.read(img_path)
         if blob is None:
             raise Exception("Image read Error")
 
@@ -126,13 +134,28 @@ class ReadImage(_BaseRead):
                 raise RuntimeError("Array is not 3-dimensional.")
             # BGR to RGB
             blob = blob[..., ::-1]
-        return {
-            "img_path": img_path,
-            "img": blob,
-            "img_size": [blob.shape[1], blob.shape[0]],
-            "ori_img": deepcopy(blob),
-            "ori_img_size": deepcopy([blob.shape[1], blob.shape[0]]),
-        }
+        return [
+            {
+                "input_path": img_path,
+                "img": blob,
+                "img_size": [blob.shape[1], blob.shape[0]],
+                "ori_img": deepcopy(blob),
+                "ori_img_size": deepcopy([blob.shape[1], blob.shape[0]]),
+            }
+        ]
+
+    def _read_pdf(self, pdf_path):
+        img_list = self._pdf_reader.read(pdf_path)
+        return [
+            {
+                "input_path": pdf_path,
+                "img": img,
+                "img_size": [img.shape[1], img.shape[0]],
+                "ori_img": deepcopy(img),
+                "ori_img_size": deepcopy([img.shape[1], img.shape[0]]),
+            }
+            for img in img_list
+        ]
 
 
 class GetImageInfo(BaseComponent):

@@ -97,5 +97,5 @@ class TextDetPredictor(BasicPredictor):
         return None
 
     def _pack_res(self, single):
-        keys = ["img_path", "dt_polys", "dt_scores"]
+        keys = ["input_path", "dt_polys", "dt_scores"]
         return TextDetResult({key: single[key] for key in keys})

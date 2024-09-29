@@ -63,4 +63,6 @@ class TSAdPredictor(BasicPredictor):
         )
 
     def _pack_res(self, single):
-        return TSAdResult({"ts_path": single["ts_path"], "anomaly": single["anomaly"]})
+        return TSAdResult(
+            {"input_path": single["input_path"], "anomaly": single["anomaly"]}
+        )

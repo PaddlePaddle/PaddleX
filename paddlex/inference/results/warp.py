@@ -23,7 +23,6 @@ from .base import BaseResult
 class DocTrResult(BaseResult):
     def __init__(self, data):
         super().__init__(data)
-        # We use opencv backend to save both numpy arrays
         self._img_writer.set_backend("opencv")
 
     def _get_res_img(self):

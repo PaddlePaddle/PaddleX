@@ -51,5 +51,5 @@ class LaTeXOCRPredictor(BasicPredictor):
             raise Exception()
 
     def _pack_res(self, single):
-        keys = ["img_path", "rec_text"]
+        keys = ["input_path", "rec_text"]
         return TextRecResult({key: single[key] for key in keys})

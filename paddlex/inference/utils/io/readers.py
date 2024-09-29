@@ -21,7 +21,7 @@ from PIL import Image, ImageOps
 import pandas as pd
 import numpy as np
 
-__all__ = ["ReaderType", "ImageReader", "VideoReader", "TSReader", "PDFReader"]
+__all__ = ["ReaderType", "ImageReader", "VideoReader", "CSVReader", "PDFReader"]
 
 
 class ReaderType(enum.Enum):
@@ -203,7 +203,6 @@ class PDFReaderBackend(_BaseReaderBackend):
 
     def __init__(self, rotate=0, zoom_x=2.0, zoom_y=2.0):
         super().__init__()
-        print(rotate)
         self.mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
 
     def read_file(self, in_path):
@@ -279,8 +278,8 @@ class OpenCVVideoReaderBackend(_VideoReaderBackend):
             self._cap = None
 
 
-class TSReader(_BaseReader):
-    """TSReader"""
+class CSVReader(_BaseReader):
+    """CSVReader"""
 
     def __init__(self, backend="pandas", **bk_args):
         super().__init__(backend=backend, **bk_args)
@@ -293,7 +292,7 @@ class TSReader(_BaseReader):
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
         if bk_type == "pandas":
-            return PandasTSReaderBackend(**bk_args)
+            return PandasCSVReaderBackend(**bk_args)
         else:
             raise ValueError("Unsupported backend type")
 
@@ -302,14 +301,14 @@ class TSReader(_BaseReader):
         return ReaderType.TS
 
 
-class _TSReaderBackend(_BaseReaderBackend):
-    """_TSReaderBackend"""
+class _CSVReaderBackend(_BaseReaderBackend):
+    """_CSVReaderBackend"""
 
     pass
 
 
-class PandasTSReaderBackend(_TSReaderBackend):
-    """PandasTSReaderBackend"""
+class PandasCSVReaderBackend(_CSVReaderBackend):
+    """PandasCSVReaderBackend"""
 
     def __init__(self):
         super().__init__()
