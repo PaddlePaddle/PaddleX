@@ -318,9 +318,10 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 ## Table Structure Recognition Module
 |Model Name|Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
-|SLANet|76.31|522.536|1845.37|6.9 M |
-
-**Note: The above accuracy metrics are measured on the ****PubtabNet English table recognition dataset****.**
+|SLANet|59.52|522.536|1845.37|6.9 M |
+|SLANet_plus|63.69|522.536|1845.37|6.9 M |
+ 
+**Note: The above accuracy metrics are evaluated on a self-built English table recognition dataset by PaddleX.**
 
 ## Image Rectification Module
 |Model Name|MS-SSIM (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|

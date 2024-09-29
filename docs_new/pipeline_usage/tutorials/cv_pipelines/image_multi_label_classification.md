@@ -3,7 +3,7 @@
 ## 1. 通用图像多标签分类产线介绍
 图像多标签分类是一种将一张图像同时分配到多个相关类别的技术，广泛应用于图像标注、内容推荐和社交媒体分析等领域。它能够识别图像中存在的多个物体或特征，例如一张图片中同时包含“狗”和“户外”这两个标签。通过使用深度学习模型，图像多标签分类能够自动提取图像特征并进行准确分类，以便为用户提供更加全面的信息。这项技术在智能搜索引擎和自动内容生成等应用中具有重要意义。
 
-![](https://github.com/user-attachments/assets/6a38e0f0-8ab2-4710-89e5-32facb6d4f85 "")
+![](/tmp/images/pipelines/image_multi_label_classification/01.png)
 
 **通用图像多标签分类产线中包含了图像多标签分类模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -31,7 +31,7 @@ PaddleX 支持在本地使用命令行或 Python 体验通用图像多标签分�
 在本地使用通用图像多标签分类产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 ### 2.1 命令行方式体验
-一行命令即可快速体验图像多标签分类产线效果 
+一行命令即可快速体验图像多标签分类产线效果
 
 ```
 paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
@@ -73,11 +73,11 @@ paddlex --pipeline ./multi_label_image_classification.yaml --input https://paddl
 ```
 {'img_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
 ```
-![](https://github.com/user-attachments/assets/089a23d0-0aa3-475c-aa25-41c05dbadd2d "")
+![](/tmp/images/pipelines/image_multi_label_classification/02.png)
 
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
 
-### 2.2 Python脚本方式集成 
+### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用图像多标签分类产线为例：
 
 ``` python
@@ -96,7 +96,7 @@ for res in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
