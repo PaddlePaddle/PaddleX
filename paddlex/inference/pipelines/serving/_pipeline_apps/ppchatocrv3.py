@@ -16,8 +16,7 @@ import asyncio
 import os
 import re
 import uuid
-from typing import Awaitable, List, Optional, Literal, Final, Tuple
-from functools import partial
+from typing import Awaitable, List, Optional, Literal, Final, Tuple, Union
 from urllib.parse import urlparse, parse_qs
 
 import cv2
@@ -82,20 +81,49 @@ class AnalyzeImageResult(BaseModel):
     visionInfo: dict
 
 
+class AIStudioParams(BaseModel):
+    accessToken: str
+    apiType: Literal["aistudio"] = "aistudio"
+
+
+class QianfanParams(BaseModel):
+    ak: str
+    sk: str
+    apiType: Literal["qianfan"] = "qianfan"
+
+
+LLMName: TypeAlias = Literal[
+    "ernie-3.5",
+    "ernie-3.5-8k",
+    "ernie-lite",
+    "ernie-4.0",
+    "ernie-4.0-turbo-8k",
+    "ernie-speed",
+    "ernie-speed-128k",
+    "ernie-tiny-8k",
+    "ernie-char-8k",
+]
+LLMParams: TypeAlias = Union[AIStudioParams, QianfanParams]
+
+
 class BuildVectorStoreRequest(BaseModel):
     visionInfo: dict
-    maxTokens: Optional[int] = None
+    minChars: Optional[int] = None
     llmRequestInterval: Optional[int] = None
+    llmName: Optional[LLMName] = None
+    llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
 
 class BuildVectorStoreResult(BaseModel):
-    vectorStore: str
+    vectorStore: dict
 
 
 class RetrieveKnowledgeRequest(BaseModel):
     keys: List[str]
-    vectorStore: str
+    vectorStore: dict
     visionInfo: dict
+    llmName: Optional[LLMName] = None
+    llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
 
 class RetrieveKnowledgeResult(BaseModel):
@@ -109,9 +137,11 @@ class ChatRequest(BaseModel):
     rules: Optional[str] = None
     fewShot: Optional[str] = None
     useVectorStore: bool = True
-    vectorStore: Optional[str] = None
+    vectorStore: Optional[dict] = None
     retrievalResult: Optional[str] = None
     returnPrompt: bool = True
+    llmName: Optional[LLMName] = None
+    llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
 
 class Prompts(BaseModel):
@@ -163,6 +193,19 @@ def _infer_file_type(url: str) -> FileType:
         return 1
     else:
         raise ValueError("Unsupported file type")
+
+
+def _llm_params_to_dict(llm_params: LLMParams) -> dict:
+    if llm_params.apiType == "aistudio":
+        return {"api_type": "aistudio", "access_token": llm_params.accessToken}
+    elif llm_params.apiType == "qianfan":
+        return {
+            "api_type": "qianfan",
+            "ak": llm_params.ak,
+            "sk": llm_params.sk,
+        }
+    else:
+        assert_never(llm_params.apiType)
 
 
 def _bytes_to_arrays(
@@ -269,12 +312,12 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
                 max_img_size=ctx.extra["max_img_size"],
                 max_num_imgs=ctx.extra["max_num_imgs"],
             )
-            use_oricls = request.useOricls
-            use_curve = request.useCurve
-            use_uvdoc = request.useUvdoc
 
             result = await pipeline.infer(
-                images, use_oricls=use_oricls, use_curve=use_curve, use_uvdoc=use_uvdoc
+                images,
+                use_oricls=request.useOricls,
+                use_curve=request.useCurve,
+                use_uvdoc=request.useUvdoc,
             )
 
             vision_results: List[VisionResult] = []
@@ -351,18 +394,25 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
         pipeline = ctx.pipeline
 
         try:
+            kwargs = {"visual_info": request.visionInfo}
+            if request.minChars is not None:
+                kwargs["min_characters"] = request.minChars
+            if request.llmRequestInterval is not None:
+                kwargs["llm_request_interval"] = request.llmRequestInterval
+            if request.llmName is not None:
+                kwargs["llm_name"] = request.llmName
+            if request.llmParams is not None:
+                kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
+
             result = await serving_utils.call_async(
-                pipeline.pipeline.get_vector_text,
-                visual_info=request.visionInfo,
-                max_tokens=request.maxTokens,
-                llm_request_interval=request.llmRequestInterval,
+                pipeline.pipeline.get_vector_text, **kwargs
             )
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=BuildVectorStoreResult(vectorStore=result["vector"]),
+                result=BuildVectorStoreResult(vectorStore=result),
             )
 
         except Exception as e:
@@ -380,11 +430,18 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
         pipeline = ctx.pipeline
 
         try:
+            kwargs = {
+                "key_list": request.keys,
+                "vector": request.vectorStore,
+                "visual_info": request.visionInfo,
+            }
+            if request.llmName is not None:
+                kwargs["llm_name"] = request.llmName
+            if request.llmParams is not None:
+                kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
+
             result = await serving_utils.call_async(
-                pipeline.pipeline.get_retrieval_text,
-                key_list=request.keys,
-                vector=request.vectorStore,
-                visual_info=request.visionInfo,
+                pipeline.pipeline.get_retrieval_text, **kwargs
             )
 
             return ResultResponse(
@@ -414,17 +471,21 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
                 "visual_info": request.visionInfo,
             }
             if request.taskDescription is not None:
-                kwargs["task_description"] = request.taskDescription
+                kwargs["user_task_description"] = request.taskDescription
             if request.rules is not None:
                 kwargs["rules"] = request.rules
             if request.fewShot is not None:
                 kwargs["few_shot"] = request.fewShot
             kwargs["use_vector"] = request.useVectorStore
             if request.vectorStore is not None:
-                kwargs["vector"] = request.vectorStore
+                kwargs["vector_store"] = request.vectorStore
             if request.retrievalResult is not None:
                 kwargs["retrieval_result"] = request.retrievalResult
             kwargs["save_prompt"] = request.returnPrompt
+            if request.llmName is not None:
+                kwargs["llm_name"] = request.llmName
+            if request.llmParams is not None:
+                kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
 
             result = await serving_utils.call_async(pipeline.pipeline.chat, **kwargs)
 

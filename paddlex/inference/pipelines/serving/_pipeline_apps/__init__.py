@@ -29,7 +29,7 @@ from .table_recognition import create_pipeline_app as create_table_recognition_a
 from .ts_ad import create_pipeline_app as create_ts_ad_app
 from .ts_cls import create_pipeline_app as create_ts_cls_app
 from .ts_fc import create_pipeline_app as create_ts_fc_app
-from .ts_fc import create_pipeline_app as create_anomaly_detection_app
+from .anomaly_detection import create_pipeline_app as create_anomaly_detection_app
 from .multi_label_image_classification import (
     create_pipeline_app as create_multi_label_image_classification_app,
 )

@@ -58,13 +58,13 @@ class PipelineWrapper(Generic[_PipelineT]):
         return self._pipeline
 
     async def infer(self, *args: Any, **kwargs: Any) -> Any:
-        def _infer(pipeline: _PipelineT, *args: Any, **kwargs: Any) -> Any:
-            output = list(pipeline(*args, **kwargs))
+        def _infer() -> Any:
+            output = list(self._pipeline(*args, **kwargs))
             if len(output) != 1:
                 raise RuntimeError("Expected exactly one item from the generator")
             return output[0]
 
-        return await self.call(_infer, *args, **kwargs)
+        return await self.call(_infer)
 
     async def call(
         self, func: Callable[_P, _R], *args: _P.args, **kwargs: _P.kwargs
