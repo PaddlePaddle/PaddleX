@@ -121,7 +121,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 |PP-ShiTuV2_rec_CLIP_vit_base|88.69|13.1957|285.493|306.6 M|
 |PP-ShiTuV2_rec_CLIP_vit_large|91.03|51.1284|1131.28|1.05 G|
 
-**Note: The above accuracy metrics are recall@1 on [AliProducts](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/training/PP-ShiTu/feature_extraction.md).**
+**Note: The above accuracy metrics are recall@1 on AliProducts.**
 
 
 ## Document Orientation Classification Module

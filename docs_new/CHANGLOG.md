@@ -73,12 +73,12 @@ PaddleX 3.0beta 集成了飞桨生态的优势能力，覆盖 7 大场景任务�
   > - 树莓派部署新增Arm V8支持
 
 - 产业案例更新
- > - 新增工业质检产业案例，提供基于GPU和CPU两种部署场景下的工业质检方案，及与质检相关的优化策略 [详情链接](https://paddlex.readthedocs.io/zh_CN/develop/examples/industrial_quality_inspection)
+ > - 新增工业质检产业案例，提供基于GPU和CPU两种部署场景下的工业质检方案，及与质检相关的优化策略
 
 - **新增RestFUL API模块**
 新增RestFUL API模块，开发者可通过此模块快速开发基于PaddleX的训练平台
- > - 增加基于RestFUL API的HTML Demo [详情链接](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/introduction.md#paddlex-web-demo)
- > - 增加基于RestFUL API的Remote版可视化客户端 [详情链接](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/gui/introduction.md#paddlex-remote-gui)
+ > - 增加基于RestFUL API的HTML Demo
+ > - 增加基于RestFUL API的Remote版可视化客户端
 新增模型通过OpenVINO的部署方案[详情链接](https://paddlex.readthedocs.io/zh_CN/develop/deploy/openvino/index.html)
 
 ### PaddleX v1.2.0(9.9/2020)

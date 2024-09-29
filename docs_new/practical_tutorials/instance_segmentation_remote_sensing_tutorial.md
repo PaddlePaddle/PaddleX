@@ -233,7 +233,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 
 ## 7. 开发集成/部署
 如果通用实例分割产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 若您需要将通用实例分割产线直接应用在您的 Python 项目中，可以参考如下示例代码：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/instance_segmentation.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="paddlex/pipelines/instance_segmentation.yaml")

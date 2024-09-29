@@ -1,11 +1,11 @@
-# PaddleX Image Recognition Task Module Data Annotation Tutorial
+# PaddleX Image Feature Task Module Data Annotation Tutorial
 
-This section will introduce how to use the [Labelme](https://github.com/wkentaro/labelme) annotation tool to complete data annotation for image recognition-related single models. 
+This section will introduce how to use the [Labelme](https://github.com/wkentaro/labelme) annotation tool to complete data annotation for image feature-related single models. 
 Click the link above to install the data annotation tool and view detailed usage instructions by referring to the homepage documentation.
 
 ## 1. Labelme Annotation
 ### 1.1 Introduction to Labelme Annotation Tool
-`Labelme` is a Python-based image annotation software with a graphical user interface. It can be used for tasks such as image classification, object detection, and image segmentation. In image recognition annotation tasks, labels are stored as `JSON` files.
+`Labelme` is a Python-based image annotation software with a graphical user interface. It can be used for tasks such as image classification, object detection, and image segmentation. In image feature annotation tasks, labels are stored as `JSON` files.
 
 ### 1.2 Labelme Installation
 To avoid environment conflicts, it is recommended to install in a `conda` environment.
