@@ -32,7 +32,7 @@ Table structure recognition is a crucial component in table recognition systems,
 </details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the table structure recognition module. You can easily switch models within this module and integrate the model inference into your project.
 
@@ -45,10 +45,10 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-For more information on using PaddleX's single-model inference APIs, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using PaddleX's single-model inference APIs, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API_en.md).
 
 ## IV. Custom Development
-If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better table structure recognition models. Before developing table structure recognition models with PaddleX, ensure you have installed the PaddleOCR plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation.md)
+If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better table structure recognition models. Before developing table structure recognition models with PaddleX, ensure you have installed the PaddleOCR plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 ### 4.1 Data Preparation
 Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides data validation functionality for each module, and **only data that passes validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to [PaddleX Table Structure Recognition Task Module Data Annotation Tutorial](../../../data_annotations/ocr_modules/table_recognition_en.md)
@@ -191,7 +191,7 @@ the following steps are required:
 
 * Specify the path of the model's `.yaml` configuration file (here it is `SLANet.yaml`)
 * Specify the mode as model training: `-o Global.mode=train`
-* Specify the path of the training dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file parameter instructions for the corresponding task module of the model [PaddleX Common Model Configuration File Parameters](../../instructions/config_parameters_common.md).
+* Specify the path of the training dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file parameter instructions for the corresponding task module of the model [PaddleX Common Model Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
 
 <details>
@@ -219,7 +219,7 @@ Similar to model training, the following steps are required:
 * Specify the `.yaml` configuration file path for the model (here it's `SLANet.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
@@ -256,8 +256,8 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.**Pipeline Integration**
 
-The table structure recognition module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md). Simply replace the model path to update the table structure recognition module in the relevant pipelines. For pipeline integration, you can deploy your obtained model using high-performance deployment and service-oriented deployment.
+The table structure recognition module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the table structure recognition module in the relevant pipelines. For pipeline integration, you can deploy your obtained model using high-performance deployment and service-oriented deployment.
 
 2.**Module Integration**
 
-The model weights you produce can be directly integrated into the table structure recognition module. Refer to the Python example code in [Quick Integration](#三Quick-Integration), and simply replace the model with the path to your trained model.
+The model weights you produce can be directly integrated into the table structure recognition module. Refer to the Python example code in [Quick Integration](#iii-quick-integration) , and simply replace the model with the path to your trained model.
