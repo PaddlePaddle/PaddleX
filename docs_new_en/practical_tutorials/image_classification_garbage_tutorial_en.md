@@ -50,7 +50,7 @@ In short, the models listed from top to bottom have faster inference speeds, whi
 ## 4. Data Preparation and Verification
 ### 4.1 Data Preparation
 
-This tutorial uses the `Garbage Classification Dataset` as an example dataset. You can obtain the example dataset using the following commands. If you are using your own annotated dataset, you need to adjust it according to PaddleX's format requirements to meet PaddleX's data format specifications. For an introduction to data formats, you can refer to the [PaddleX Image Classification Task Module Data Annotation Tutorial](../data_annotations/cv_modules/image_classification.md).
+This tutorial uses the `Garbage Classification Dataset` as an example dataset. You can obtain the example dataset using the following commands. If you are using your own annotated dataset, you need to adjust it according to PaddleX's format requirements to meet PaddleX's data format specifications. For an introduction to data formats, you can refer to the [PaddleX Image Classification Task Module Data Annotation Tutorial](../data_annotations/cv_modules/image_classification_en.md).
 
 Dataset acquisition commands:
 

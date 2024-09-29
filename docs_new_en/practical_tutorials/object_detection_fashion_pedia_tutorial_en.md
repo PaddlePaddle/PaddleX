@@ -47,7 +47,7 @@ In summary, models with faster inference speed are placed higher in the table, w
 ## 4. Data Preparation and Verification
 ### 4.1 Data Preparation
 
-This tutorial uses the "Fashion Element Detection Dataset" as an example dataset. You can obtain the example dataset using the following commands. If you use your own annotated dataset, you need to adjust it according to PaddleX's format requirements to meet PaddleX's data format specifications. For data format introductions, you can refer to the [PaddleX Object Detection Task Module Data Preparation Tutorial](../data_annotations/cv_modules/object_detection.md).
+This tutorial uses the "Fashion Element Detection Dataset" as an example dataset. You can obtain the example dataset using the following commands. If you use your own annotated dataset, you need to adjust it according to PaddleX's format requirements to meet PaddleX's data format specifications. For data format introductions, you can refer to the [PaddleX Object Detection Task Module Data Preparation Tutorial](../data_annotations/cv_modules/object_detection_en.md).
 
 Dataset acquisition commands:
 ```bash
