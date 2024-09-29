@@ -11,7 +11,8 @@
 |模型名称|Avg（%）|模型存储大小（M)|
 |-|-|-|
 |STFPM|96.2|21.5 M|
-**注：以上精度指标为 **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** 验证集 平均异常分数。**
+
+**注：以上精度指标为 **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** 验证集 平均异常分数。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 ## 2. 快速开始
 PaddleX 所提供的预训练的模型产线均可以快速体验效果，您可以在本地使用命令行或 Python 体验图像异常检测产线的效果。
@@ -31,16 +32,31 @@ paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bce
 --input：待处理的输入图片的本地路径或URL
 --device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
 ```
-执行后，将提示选择图像异常检测产线配置文件保存路径，默认保存至**当前目录**，也可**自定义路径**。
 
-此外，也可在执行命令时加入 `-y` 参数，则可跳过路径选择，直接将产线配置文件保存至当前目录。
+在执行上述 Python 脚本时，加载的是默认的图像异常检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+
+<details>
+   <summary> 👉点击展开</summary>
+
+```
+paddlex --get_pipeline_config anomaly_detection
+```
+
+执行后，图像异常检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 ` ./my_path` ）：
+
+```
+paddlex --get_pipeline_config anomaly_detection --config_save_path ./my_path
+```
 
 获取产线配置文件后，可将 --pipeline 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./anomaly_detection.yaml`，只需执行：
 
 ```
 paddlex --pipeline ./anomaly_detection.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png
 ```
+
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
+
+</details>
 
 运行后，得到的结果为：
 
@@ -54,7 +70,7 @@ paddlex --pipeline ./anomaly_detection.yaml --input https://paddle-model-ecology
 ### 2.2 Python脚本方式集成 
 几行代码即可完成产线的快速推理，以图像异常检测产线为例：
 
-```
+```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="anomaly_detection")
@@ -94,25 +110,15 @@ for res in output:
 
 | 方法         | 说明                        | 方法参数                                                                                               |
 |--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | 打印结果到终端              | - format_json：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>- indent：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>- ensure_ascii：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
-| save_to_json | 将结果保存为json格式的文件   | - save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>- indent：int类型，json格式化设置，默认为4；<br>- ensure_ascii：bool类型，json格式化设置，默认为False； |
-| save_to_img  | 将结果保存为图像格式的文件  | - save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
+| print        | 打印结果到终端              | `- format_json`：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>`- indent`：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
+| save_to_json | 将结果保存为json格式的文件   | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>`- indent`：int类型，json格式化设置，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，默认为False； |
+| save_to_img  | 将结果保存为图像格式的文件  | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
 
-在执行上述 Python 脚本时，加载的是默认的图像异常检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-```
-paddlex --get_pipeline_config anomaly_detection
-```
-执行后，图像异常检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 ` ./my_path` ）：
-
-```
-paddlex --get_pipeline_config anomaly_detection --config_save_path ./my_path
-```
-获取配置文件后，您即可对图像异常检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
+若您获取了配置文件，即可对图像异常检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/*anomaly_detection.yaml` ，则只需执行：
 
-```
+```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/anomaly_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png")
@@ -146,7 +152,7 @@ for res in output:
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```
+```python
 ......
 Pipeline:
   model: STFPM   #可修改为微调后模型的本地路径
