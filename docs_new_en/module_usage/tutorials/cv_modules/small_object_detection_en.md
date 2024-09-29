@@ -73,10 +73,7 @@ For more information on using PaddleX's single-model inference API, refer to the
 If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better small object detection models. Before using PaddleX to develop small object detection models, ensure you have installed PaddleX's Detection-related model training capabilities. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 ### 4.1 Data Preparation
-Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides data validation functionality for each module, and **only data that passes validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for subsequent model training, refer to the [PaddleX Object Detection Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/object_detection.md).
-
-### 4.1 Data Preparation
-Before model training, you need to prepare a dataset for the specific task module. PaddleX provides a data validation function for each module, and **only data that passes validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to [PaddleX Object Detection Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/object_detection.md).
+Before model training, you need to prepare a dataset for the specific task module. PaddleX provides a data validation function for each module, and **only data that passes validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to [PaddleX Object Detection Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/object_detection_en.md).
 
 #### 4.1.1 Demo Data Download
 You can download the demo dataset to a specified folder using the following commands:
@@ -276,7 +273,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 
 1. **Pipeline Integration**
 
-The small object detection module can be integrated into the [Small Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) of PaddleX. Simply replace the model path to update the small object detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your obtained model.
+The small object detection module can be integrated into the [Small Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) of PaddleX. Simply replace the model path to update the small object detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your obtained model.
 
 2. **Module Integration**
 
