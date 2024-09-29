@@ -6,7 +6,7 @@
 ## 二、支持模型列表
 |模型|MS-SSIM （%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
-|UVDoc（超链接）|54.40|-|-|31|高精度文档图像矫正模型|
+|UVDoc|54.40|-|-|31|高精度文档图像矫正模型|
 
 **模型的精度指标测量自**[DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html)。**GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
@@ -22,7 +22,7 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](docs_new/module_usage/instructions/model_python_API.md)。
+关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](/docs_new/module_usage/instructions/model_python_API.md)。
 
 ## 四、二次开发
 当前模块暂时不支持微调训练，仅支持推理集成。关于该模块的微调训练，计划在未来支持。
