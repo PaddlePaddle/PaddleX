@@ -84,7 +84,6 @@ def create_pipeline_app(
 
             instances: List[Instance] = []
             for obj, mask in zip(result["boxes"], result["masks"]):
-                mask = np.array(mask, dtype=np.uint8)
                 rle_res = _rle(mask)
                 mask = Mask(rleResult=rle_res, size=mask.shape)
                 instances.append(

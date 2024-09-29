@@ -221,9 +221,7 @@ def _bytes_to_arrays(
             file_bytes, resize=True, max_num_imgs=max_num_imgs
         )
     elif file_type == 1:
-        images = [
-            cv2.imdecode(np.frombuffer(file_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
-        ]
+        images = [serving_utils.image_bytes_to_array(file_bytes)]
     else:
         assert_never(file_type)
     h, w = images[0].shape[0:2]

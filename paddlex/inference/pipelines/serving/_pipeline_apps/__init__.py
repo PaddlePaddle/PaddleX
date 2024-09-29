@@ -125,10 +125,10 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `AnomalyDetection`."
             )
         return create_anomaly_detection_app(pipeline, app_config)
-    elif pipeline_name == "PP-ChatOCRv3":
+    elif pipeline_name == "PP-ChatOCRv3-doc":
         if not isinstance(pipeline, PPChatOCRPipeline):
             raise TypeError(
-                "Expected `pipeline` to be an instance of `AnomalyDetection`."
+                "Expected `pipeline` to be an instance of `PPChatOCRPipeline`."
             )
         return create_ppchatocrv3_app(pipeline, app_config)
     else:

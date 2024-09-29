@@ -57,7 +57,7 @@ def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> Fa
 
             result = await pipeline.infer(image)[0]
 
-            pred = result["pred"][0]
+            pred = result["pred"][0].tolist()
             size = [len(pred), len(pred[0])]
             label_map = [item for sublist in pred for item in sublist]
             output_image_base64 = serving_utils.image_to_base64(result.img)
