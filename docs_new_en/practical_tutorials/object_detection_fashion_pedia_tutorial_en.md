@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: locally through the PaddleX 
 Quick Trial Output Example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/96e6c6ff-e446-4819-9db7-e9c43b0fc8e8" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/04.png" width=600>
 
 </center>
 
@@ -104,7 +104,7 @@ The above verification results indicate that the dataset format meets the requir
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (`histogram.png`) for visualization:
 <center>
 
-<img src="https://github.com/user-attachments/assets/ac5c9c35-d1c3-4df5-ae9d-979e3c096620" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/05.png" width=600>
 
 </center>
 
@@ -228,18 +228,18 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `FashionPedia_demo.png` is as follows:
 <center>
 
-<img src="https://github.com/user-attachments/assets/60f0cfcb-07c2-4e37-8786-09f208a8c584" width="600"/>
+<img src="/tmp/images/practical_tutorials/obeject_detection/06.png" width="600"/>
 
 </center>
 
 ## 7. Development Integration/Deployment
 If the General Object Detection Pipeline meets your requirements for inference speed and precision in your production line, you can proceed directly with development integration/deployment.
 
-1. If you need to apply the General Object Detection Pipeline directly in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/object_detection.yaml` configuration file to your own model path:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/object_detection.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/object_detection/FashionPedia_demo.png")
 for res in output:
     res.print() # Print the structured output of the prediction

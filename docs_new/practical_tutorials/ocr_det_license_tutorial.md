@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/513f93b8-6f21-41d7-a214-016b21aa93d5" width=600>
+  <img src="/tmp/images/practical_tutorials/ocr/01.png" width=600>
 
   </center>
 
@@ -113,7 +113,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://github.com/user-attachments/assets/0b642f7d-437d-437d-8b20-c5806cd11308" width=600>
+<img src="/tmp/images/practical_tutorials/ocr/02.png" width=600>
 
 </center>
 
@@ -232,13 +232,13 @@ paddlex --pipeline OCR \
 通过上述可在`./output`下生成预测结果，其中`case1.jpg`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/e16674f8-2beb-482c-8760-71fb06f0b51f" width="600"/>
+<img src="/tmp/images/practical_tutorials/ocr/03.png" width="600"/>
 
 </center>
 
 ## 7. 开发集成/部署
 如果通用 OCR 产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 若您需要将通用 OCR 产线直接应用在您的 Python 项目中，可以参考如下示例代码：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/OCR.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="paddlex/pipelines/OCR.yaml")

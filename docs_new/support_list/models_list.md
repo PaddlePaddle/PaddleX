@@ -121,14 +121,9 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |PP-ShiTuV2_rec_CLIP_vit_base|88.69|13.1957|285.493|306.6 M|
 |PP-ShiTuV2_rec_CLIP_vit_large|91.03|51.1284|1131.28|1.05 G|
 
-**注：以上精度指标为 **[AliProducts](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/feature_extraction.md)** recall@1。**
+**注：以上精度指标为 AliProducts recall@1。**
 
-## 文档方向分类模块
-|模型名称|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
-|-|-|-|-|-|
-|PP-LCNet_x1_0_doc_ori|99.26|3.84845|9.23735|7.1M|
 
-**注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。**
 
 ## 主体检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
@@ -212,7 +207,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标为 **[wider_face](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)** 评估集 mAP(0.5:0.95)。**
 
-## 异常检测模块
+## 图像异常检测模块
 |模型名称|Avg（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |STFPM|96.2|-|-|21.5 M|
@@ -319,14 +314,14 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 
 **注：以上精度指标测量自 ****PubtabNet英文表格识别数据集****。**
 
-## 图像矫正模块
+## 文档图像矫正模块
 |模型名称|MS-SSIM （%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |UVDoc|54.40|-|-|30.3 M|
 
 **注：以上精度指标测量自 ****PaddleX自建的图像矫正数据集****。**
 
-## 版面区域分析模块
+## 版面区域检测模块
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4M |
@@ -335,6 +330,13 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
 
 **注：以上精度指标的评估集是 ****PaddleX 自建的版面区域分析数据集****，包含 1w 张图片。**
+
+## 文档方向分类模块
+|模型名称|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|-|-|-|-|-|
+|PP-LCNet_x1_0_doc_ori|99.26|3.84845|9.23735|7.1M|
+
+**注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。**
 
 ## 时序预测模块
 |模型名称|mse|mae|模型存储大小（M)|

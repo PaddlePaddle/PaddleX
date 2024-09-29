@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipelines: one is through the PaddleX 
 Quick Trial Output Example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/b813cdc6-cb96-4a34-9503-ba40c7e6562d" width=600>
+<img src="/tmp/images/practical_tutorials/image_classification/01.png" width=600>
 
 </center>
 
@@ -110,7 +110,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 In addition, the dataset verification also analyzes the sample number distribution of all categories in the dataset and draws a distribution histogram (`histogram.png`):
 <center>
 
-<img src="https://github.com/user-attachments/assets/5f64f7cf-f4ab-4532-9193-890780c89f64" width=600>
+<img src="/tmp/images/practical_tutorials/image_classification/02.png" width=600>
 
 </center>
 
@@ -232,16 +232,16 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `garbage_demo.png` is shown below:
 <center>
 
-<img src="https://github.com/user-attachments/assets/14bdde62-1643-4876-9c66-2a02228988be" width="600"/>
+<img src="/tmp/images/practical_tutorials/image_classification/03.png" width="600"/>
 
 </center>
 
 ## 7. Development Integration/Deployment
 If the General Image Classification Pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. If you need to directly apply the General Image Classification Pipeline in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/image_classification.yaml` configuration file to your own model path:
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/image_classification.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/image_classification.yaml")
 output = pipeline.predict("./dataset/trash40/images/test/0/img_154.jpg")
 for res in output:
     res.print() # Print the structured output of the prediction

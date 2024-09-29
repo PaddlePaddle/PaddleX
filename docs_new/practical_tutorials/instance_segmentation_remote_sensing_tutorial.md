@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/8a89580b-7103-48db-aae0-192102dabdf7" width=600>
+  <img src="/tmp/images/practical_tutorials/instance_segmentation/01.png" width=600>
 
   </center>
 
@@ -102,7 +102,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://github.com/user-attachments/assets/ee95e154-92ec-48b1-a911-bfd38e58bac1" width=600>
+<img src="/tmp/images/practical_tutorials/instance_segmentation/02.png" width=600>
 
 </center>
 
@@ -227,13 +227,13 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 通过上述可在`./output`下生成预测结果，其中`remotesensing_demo.png`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/9a89681b-e12c-4870-9384-e1a383b7075b" width="600"/>
+<img src="/tmp/images/practical_tutorials/instance_segmentation/03.png" width="600"/>
 
 </center>
 
 ## 7. 开发集成/部署
 如果通用实例分割产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 若您需要将通用实例分割产线直接应用在您的 Python 项目中，可以参考如下示例代码：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/instance_segmentation.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="paddlex/pipelines/instance_segmentation.yaml")

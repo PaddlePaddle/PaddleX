@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/b194c08f-c837-4a1c-8b46-dc26b0ca88b4" width=600>
+  <img src="/tmp/images/practical_tutorials/obeject_detection/01.png" width=600>
 
   </center>
 
@@ -104,7 +104,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://github.com/user-attachments/assets/10fb6eab-f0aa-4e09-ba6e-65a28706f083" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/02.png" width=600>
 
 </center>
 
@@ -228,16 +228,16 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 通过上述可在`./output`下生成预测结果，其中`fall.png`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/3fc1c127-0893-4362-8721-4701d914a42f" width="600"/>
+<img src="/tmp/images/practical_tutorials/obeject_detection/03.png" width="600"/>
 
 </center>
 
 ## 7. 开发集成/部署
 如果通用目标检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 若您需要将通用目标检测产线直接应用在您的 Python 项目中，可以参考如下示例代码：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/object_detection.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/object_detection.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/fall.png")
 for res in output:
     res.print() # 打印预测的结构化输出

@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: one is through the PaddleX w
 Quick trial output example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/a3210910-a76c-4552-b7a5-fe3670205584" width=600>
+<img src="/tmp/images/practical_tutorials/ocr/04.png" width=600>
 
 </center>
 
@@ -29,7 +29,7 @@ After experiencing the pipeline, determine if it meets your expectations (includ
 
 ## 3. Select a Model
 
-PaddleX provides four end-to-end OCR models. For details, refer to the [Model List](../models/support_model_list_en.md). Benchmarks for some models are as follows:
+PaddleX provides four end-to-end OCR models. For details, refer to the [Model List](../support_list/models_list_en.md). Benchmarks for some models are as follows:
 
 | Model List         | Detection Hmean(%) | Recognition Avg Accuracy(%) | GPU Inference Time(ms) | CPU Inference Time(ms) | Model Size(M) |
 | --------------- | ----------- | ------------------- | --------------- | --------------- |---------------|
@@ -115,7 +115,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all categories in the dataset and plots a histogram (`histogram.png`):
 <center>
 
-<img src="https://github.com/user-attachments/assets/1734db3d-59f1-4278-ace1-741cf57755db" width=600>
+<img src="/tmp/images/practical_tutorials/ocr/05.png" width=600>
 
 </center>
 
@@ -237,13 +237,13 @@ paddlex --pipeline OCR \
 The prediction results will be generated under `./output`, and the prediction result for `case.jpg` is shown below:
 <center>
 
-<img src="https://github.com/user-attachments/assets/a0c28495-6352-4c64-b53e-9903da3e002a" width="600"/>
+<img src="/tmp/images/practical_tutorials/ocr/06.png" width="600"/>
 
 </center>
 
 ## 7. Development Integration/Deployment
 If the general OCR pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. If you need to apply the general OCR pipeline directly in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/OCR.yaml` configuration file to your own model path:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="paddlex/pipelines/OCR.yaml")

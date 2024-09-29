@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: one is through the PaddleX w
 Quick trial output example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/a00489ba-9e43-44a3-829b-460bd559a48b" width=600>
+<img src="/tmp/images/practical_tutorials/semantic_seg/01.png" width=600>
 
 </center>
 
@@ -101,7 +101,7 @@ In the verification results above, `check_pass` being `True` indicates that the 
 Additionally, the dataset verification also analyzes the sample distribution across all classes and plots a histogram (`histogram.png`):
 <center>
 
-<img src="https://github.com/user-attachments/assets/d0ed9524-9aaf-4ca8-bff7-de87599a3a30" width=600>
+<img src="/tmp/images/practical_tutorials/semantic_seg/02.png" width=600>
 
 </center>
 
@@ -228,13 +228,13 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 The prediction results will be generated under `./output`, where the prediction result for `makassaridn-road_demo.png` is shown below:
 <center>
 
-<img src="https://github.com/user-attachments/assets/01e847d8-f65e-42b2-8e24-89d5e05366f6" width="600"/>
+<img src="/tmp/images/practical_tutorials/semantic_seg/03.png" width="600"/>
 
 </center>
 
 ## 7. Development Integration/Deployment
 If the general semantic segmentation pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. If you need to apply the general semantic segmentation pipeline directly in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/semantic_segmentation.yaml` configuration file to your own model path:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="paddlex/pipelines/semantic_segmentation.yaml")

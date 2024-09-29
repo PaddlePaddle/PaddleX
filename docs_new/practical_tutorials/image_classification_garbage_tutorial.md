@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/b813cdc6-cb96-4a34-9503-ba40c7e6562d" width=600>
+  <img src="/tmp/images/practical_tutorials/image_classification/01.png" width=600>
 
   </center>
 
@@ -108,7 +108,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://github.com/user-attachments/assets/5f64f7cf-f4ab-4532-9193-890780c89f64" width=600>
+<img src="/tmp/images/practical_tutorials/image_classification/02.png" width=600>
 
 </center>
 
@@ -229,16 +229,16 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 通过上述可在`./output`下生成预测结果，其中`garbage_demo.png`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/14bdde62-1643-4876-9c66-2a02228988be" width="600"/>
+<img src="/tmp/images/practical_tutorials/image_classification/03.png" width="600"/>
 
 </center>
 
 ## 7. 开发集成/部署
 如果通用图像分类产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 若您需要将通用图像分类产线直接应用在您的 Python 项目中，可以参考如下示例代码：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/image_classification.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/image_classification.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/image_classification.yaml")
 output = pipeline.predict("./dataset/trash40/images/test/0/img_154.jpg")
 for res in output:
     res.print() # 打印预测的结构化输出

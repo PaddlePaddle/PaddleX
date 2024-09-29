@@ -134,7 +134,7 @@ The instance segmentation module is a crucial component in computer vision syste
 
 </details>
 
-## III. Quick Integration
+## <span id="lable">III. Quick Integration</span>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the instance segmentation module. You can switch models under this module freely, and you can also integrate the model inference of the instance segmentation module into your project.

@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipelines: locally through the PaddleX
 Quick trial output example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/b194c08f-c837-4a1c-8b46-dc26b0ca88b4" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/01.png" width=600>
 
 </center>
 
@@ -104,7 +104,7 @@ The above verification results indicate that the `check_pass` being `True` means
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (`histogram.png`) for visualization:
 <center>
 
-<img src="https://github.com/user-attachments/assets/10fb6eab-f0aa-4e09-ba6e-65a28706f083" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/02.png" width=600>
 
 </center>
 
@@ -230,16 +230,16 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `fall.png` is shown below:
 <center>
 
-<img src="https://github.com/user-attachments/assets/3fc1c127-0893-4362-8721-4701d914a42f" width="600"/>
+<img src="/tmp/images/practical_tutorials/obeject_detection/03.png" width="600"/>
 
 </center>
 
 ## 7. Development Integration/Deployment
 If the General Object Detection Pipeline meets your requirements for inference speed and precision in the production line, you can proceed directly with development integration/deployment.
-1. If you need to apply the General Object Detection Pipeline directly in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/object_detection.yaml` configuration file to your own model path:
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/object_detection.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/fall.png")
 for res in output:
     res.print() # Print the structured output of the prediction
