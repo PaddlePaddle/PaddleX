@@ -36,7 +36,7 @@ for res in output:
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。
-此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考 [PaddleX文本检测/文本识别任务模块数据标注教程](../../../data_annotations/ocr_modules/text_detection_regognition.md)。
+此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考 [PaddleX文本检测/文本识别任务模块数据标注教程](../../../data_annotations/ocr_modules/text_detection_recognition.md)。
 
 #### 4.1.1 Demo 数据下载
 
@@ -233,7 +233,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 1.**产线集成**
 
-文本检测模块可以集成的 PaddleX 产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelies/OCR.md)、[表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本检测模块的模型更新。
+文本检测模块可以集成的 PaddleX 产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本检测模块的模型更新。
 
 2.**模块集成**
 
