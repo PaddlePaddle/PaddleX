@@ -240,7 +240,7 @@ Similar to model training, the process involves the following steps:
 * Specify the path to the `.yaml` configuration file for the model（here it's `PP-YOLOE_plus_SOD-S.yaml`）
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to[PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.md)。
+Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
