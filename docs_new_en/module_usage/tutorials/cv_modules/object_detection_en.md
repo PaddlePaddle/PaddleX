@@ -320,7 +320,7 @@ The object detection module is a crucial component in computer vision systems, r
 
 ## III. Quick Integration
 
-> ❗ Before proceeding with quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+> ❗ Before proceeding with quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 After installing the wheel package, you can perform object detection inference with just a few lines of code. You can easily switch between models within the module and integrate the object detection inference into your projects.
 
@@ -334,15 +334,15 @@ for res in output:
     res.save_to_json("./output/res.json")
 ```
 
-For more information on using PaddleX's single-model inference APIs, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using PaddleX's single-model inference APIs, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API_en.md).
 
 ## IV. Custom Development
 
-If you seek higher precision from existing models, you can leverage PaddleX's custom development capabilities to develop better object detection models. Before developing object detection models with PaddleX, ensure you have installed the object detection related training plugins. For installation instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+If you seek higher precision from existing models, you can leverage PaddleX's custom development capabilities to develop better object detection models. Before developing object detection models with PaddleX, ensure you have installed the object detection related training plugins. For installation instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 ### 4.1 Data Preparation
 
-Before model training, prepare the corresponding dataset for the task module. PaddleX provides a data validation feature for each module, and **only datasets that pass validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to the [PaddleX Object Detection Task Module Data Annotation Guide](../../../data_annotations/cv_modules/object_detection.md).
+Before model training, prepare the corresponding dataset for the task module. PaddleX provides a data validation feature for each module, and **only datasets that pass validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to the [PaddleX Object Detection Task Module Data Annotation Guide](../../../data_annotations/cv_modules/object_detection_en.md).
 
 #### 4.1.1 Download Demo Data
 
@@ -528,14 +528,14 @@ The following steps are required:
 * Specify the `.yaml` configuration file path for the model (here it is `PicoDet-S.yaml`)
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`. 
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
 
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/0PKFjfhs0UN4Qs?t=mention&mt=doc&dt=doc). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
 * `train.log`: Training log file, recording changes in model metrics and loss during training;
@@ -555,7 +555,7 @@ Similar to model training, the following steps are required:
 
 * Specify the `.yaml` configuration file path for the model (here it is `PicoDet-S.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
-* Specify the path to the validation dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+* Specify the path to the validation dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
@@ -584,7 +584,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the input data path: `-o Predict.input="..."`
-Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipelines or directly into your own project.
@@ -595,6 +595,6 @@ The object detection module can be integrated into the [General Object Detection
 
 2.**Module Integration**
 
-The weights you produce can be directly integrated into the object detection module. Refer to the Python example code in [Quick Integration](#三快速集成), and simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the object detection module. Refer to the Python example code in [Quick Integration](#iii-quick-integration), and simply replace the model with the path to your trained model.
 
 
