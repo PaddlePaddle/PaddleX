@@ -33,7 +33,7 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
 </details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, you can perform mainbody detection inference with just a few lines of code. You can easily switch between models under this module, and integrate the mainbody detection model inference into your project.
 
@@ -54,10 +54,10 @@ for res in output:
 For more information on using PaddleX's single-model inference APIs, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.md).
 
 ## IV. Custom Development
-If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better mainbody detection models. Before developing mainbody detection models with PaddleX, ensure you have installed the PaddleDetection plugin for PaddleX. The installation process can be found in [PaddleX Local Installation Guide](../../../installation/installation.md).
+If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better mainbody detection models. Before developing mainbody detection models with PaddleX, ensure you have installed the PaddleDetection plugin for PaddleX. The installation process can be found in [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 ### 4.1 Data Preparation
-Before model training, you need to prepare a dataset for the specific task module. PaddleX provides a data validation function for each module, and **only data that passes validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to [PaddleX Object Detection Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/object_detection.md).
+Before model training, you need to prepare a dataset for the specific task module. PaddleX provides a data validation function for each module, and **only data that passes validation can be used for model training**. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use a private dataset for model training, refer to [PaddleX Object Detection Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/object_detection_en.md).
 
 #### 4.1.1 Demo Data Download
 You can download the demo dataset to a specified folder using the following commands:
