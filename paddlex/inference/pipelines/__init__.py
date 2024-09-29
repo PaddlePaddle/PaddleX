@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from ...utils.config import parse_config
+from ..utils.get_pipeline_path import get_pipeline_path
 from .base import BasePipeline
 from .single_model_pipeline import (
     _SingleModelPipeline,
@@ -53,14 +54,12 @@ def create_pipeline(
         BasePipeline: the pipeline, which is subclass of BasePipeline.
     """
     if not Path(pipeline).exists():
-        # XXX: using dict class to handle all pipeline configs
-        build_in_pipeline = (
-            Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline}.yaml"
-        ).resolve()
-        if not Path(build_in_pipeline).exists():
-            raise Exception(f"The pipeline don't exist! ({pipeline})")
-        pipeline = build_in_pipeline
-    config = parse_config(pipeline)
+        pipeline_path = get_pipeline_path(pipeline)
+        if pipeline_path is None:
+            raise Exception(
+                f"The pipeline({pipeline}) don't exist! Please use the pipeline name or config yaml file!"
+            )
+    config = parse_config(pipeline_path)
     pipeline_name = config["Global"]["pipeline_name"]
     pipeline_setting = config["Pipeline"]
 

@@ -20,6 +20,7 @@ from types import SimpleNamespace
 from . import create_pipeline
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils import logging
+from .utils.interactive_get_pipeline import interactive_get_pipeline
 
 
 def args_cfg():
@@ -61,7 +62,7 @@ def args_cfg():
 
     ################# pipeline predict #################
     parser.add_argument("--pipeline", type=str, help="")
-    parser.add_argument("--input", type=str, help="")
+    parser.add_argument("--input", type=str, default=None, help="")
     parser.add_argument("--save_path", type=str, default=None, help="")
     parser.add_argument("--device", type=str, default=None, help="")
 
@@ -90,7 +91,8 @@ def install(args):
 
 def pipeline_predict(pipeline, input, device=None, save_path=None):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline, device=device)
+    predictor_kwargs = {"device": device} if device else {}
+    pipeline = create_pipeline(pipeline)
     result = pipeline(input)
     for res in result:
         res.print(json_format=False)
@@ -105,9 +107,12 @@ def main():
     if args.install:
         install(args)
     else:
-        return pipeline_predict(
-            args.pipeline,
-            args.input,
-            args.device,
-            args.save_path,
-        )
+        if args.input is None:
+            interactive_get_pipeline(args.pipeline)
+        else:
+            return pipeline_predict(
+                args.pipeline,
+                args.input,
+                args.device,
+                args.save_path,
+            )

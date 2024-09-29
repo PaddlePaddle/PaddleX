@@ -1,5 +1,5 @@
 Global:
-  pipeline_name: PP-ChatOCRv3
+  pipeline_name: PP-ChatOCRv3-doc
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf
   #input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/report.png
 Pipeline:
