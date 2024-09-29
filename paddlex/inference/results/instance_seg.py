@@ -13,20 +13,13 @@
 # limitations under the License.
 
 import os
-
-import numpy as np
-import math
-import copy
-import json
 import cv2
-import PIL
-from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+import copy
+from PIL import Image
 
-from ...utils import logging
-from ...utils.fonts import PINGFANG_FONT_FILE_PATH
-from ..utils.io import ImageWriter, ImageReader
-from ..utils.color_map import get_colormap, font_colormap
-from .base import BaseResult
+from ..utils.color_map import get_colormap
+from .base import CVResult
 from .det import draw_box
 
 
@@ -136,20 +129,12 @@ def draw_mask(im, boxes, np_masks, img_size):
     return Image.fromarray(im.astype("uint8"))
 
 
-class InstanceSegResult(BaseResult):
+class InstanceSegResult(CVResult):
     """Save Result Transform"""
 
-    def __init__(self, data):
-        super().__init__(data)
-        # We use pillow backend to save both numpy arrays and PIL Image objects
-        self._img_reader.set_backend("pillow")
-        self._img_writer.set_backend("pillow")
-
-    def _get_res_img(self):
+    def _to_img(self):
         """apply"""
-        img_path = self["img_path"]
-        file_name = os.path.basename(img_path)
-        image = self._img_reader.read(img_path)
+        image = self._img_reader.read(self["input_path"])
         ori_img_size = list(image.size)[::-1]
         boxes = self["boxes"]
         masks = self["masks"]
@@ -161,9 +146,7 @@ class InstanceSegResult(BaseResult):
 
         return image
 
-    def print(self, json_format=True, indent=4, ensure_ascii=False):
+    def _to_str(self):
         str_ = copy.deepcopy(self)
-        del str_["masks"]
-        if json_format:
-            str_ = json.dumps(str_, indent=indent, ensure_ascii=ensure_ascii)
-        logging.info(str_)
+        str_["masks"] = "..."
+        return str(str_)

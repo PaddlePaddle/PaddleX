@@ -12,52 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
-import numpy as np
-import pandas as pd
-
-from ...utils import logging
-from ..utils.io import TSWriter
+from .utils.mixin import JsonMixin, CSVMixin
 from .base import BaseResult
 
 
-class TSFcResult(BaseResult):
-
+class _BaseTSResult(BaseResult, CSVMixin):
     def __init__(self, data):
         super().__init__(data)
-        self._writer = TSWriter(backend="pandas")
-
-    def save_to_csv(self, save_path):
-        """write ts"""
-        if not save_path.endswith(".csv"):
-            save_path = Path(save_path) / f"{Path(self['ts_path']).stem}.csv"
-        self._writer.write(save_path, self["forecast"])
-        logging.info(f"The result has been saved in {save_path}.")
+        CSVMixin.__init__(self)
 
 
-class TSClsResult(BaseResult):
-
-    def __init__(self, data):
-        super().__init__(data)
-        self._writer = TSWriter(backend="pandas")
-
-    def save_to_csv(self, save_path):
-        """write ts"""
-        if not save_path.endswith(".csv"):
-            save_path = Path(save_path) / f"{Path(self['ts_path']).stem}.csv"
-        self._writer.write(save_path, self["classification"])
-        logging.info(f"The result has been saved in {save_path}.")
+class TSFcResult(_BaseTSResult):
+    def _to_csv(self):
+        return self["forecast"]
 
 
-class TSAdResult(BaseResult):
+class TSClsResult(_BaseTSResult):
+    def _to_csv(self):
+        return self["classification"]
 
-    def __init__(self, data):
-        super().__init__(data)
-        self._writer = TSWriter(backend="pandas")
 
-    def save_to_csv(self, save_path):
-        """write ts"""
-        if not save_path.endswith(".csv"):
-            save_path = Path(save_path) / f"{Path(self['ts_path']).stem}.csv"
-        self._writer.write(save_path, self["anomaly"])
-        logging.info(f"The result has been saved in {save_path}.")
+class TSAdResult(_BaseTSResult):
+    def _to_csv(self):
+        return self["anomaly"]

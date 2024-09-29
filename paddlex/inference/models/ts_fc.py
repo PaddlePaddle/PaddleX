@@ -68,4 +68,6 @@ class TSFcPredictor(BasicPredictor):
             )
 
     def _pack_res(self, single):
-        return TSFcResult({"ts_path": single["ts_path"], "forecast": single["pred"]})
+        return TSFcResult(
+            {"input_path": single["input_path"], "forecast": single["pred"]}
+        )

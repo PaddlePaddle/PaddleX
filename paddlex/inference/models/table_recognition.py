@@ -99,5 +99,5 @@ class TablePredictor(BasicPredictor):
         return None
 
     def _pack_res(self, single):
-        keys = ["img_path", "bbox", "structure"]
+        keys = ["input_path", "bbox", "structure"]
         return TableRecResult({key: single[key] for key in keys})

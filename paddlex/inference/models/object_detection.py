@@ -117,5 +117,5 @@ class DetPredictor(BasicPredictor):
         return WarpAffine(input_h=input_h, input_w=input_w, keep_res=keep_res)
 
     def _pack_res(self, single):
-        keys = ["img_path", "boxes"]
+        keys = ["input_path", "boxes"]
         return DetResult({key: single[key] for key in keys})

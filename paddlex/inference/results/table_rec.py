@@ -16,20 +16,23 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-from .base import BaseResult
-from ...utils import logging
-from ..utils.io import HtmlWriter, XlsxWriter
+from .utils.mixin import HtmlMixin, XlsxMixin
+from .base import BaseResult, CVResult
 
 
-class TableRecResult(BaseResult):
+class TableRecResult(CVResult, HtmlMixin):
     """SaveTableResults"""
 
     def __init__(self, data):
         super().__init__(data)
-        self._img_writer.set_backend("pillow")
+        HtmlMixin.__init__(self)
+        self._show_func_register("save_to_html")(self.save_to_html)
 
-    def _get_res_img(self):
-        image = self._img_reader.read(self["img_path"])
+    def _to_html(self):
+        return self["html"]
+
+    def _to_img(self):
+        image = self._img_reader.read(self["input_path"])
         bbox_res = self["bbox"]
         if len(bbox_res) > 0 and len(bbox_res[0]) == 4:
             vis_img = self.draw_rectangle(image, bbox_res)
@@ -54,76 +57,21 @@ class TableRecResult(BaseResult):
         return image
 
 
-class StructureTableResult(TableRecResult):
+class StructureTableResult(TableRecResult, XlsxMixin):
     """StructureTableResult"""
 
     def __init__(self, data):
-        """__init__"""
         super().__init__(data)
-        self._img_writer.set_backend("pillow")
-        self._html_writer = HtmlWriter()
-        self._xlsx_writer = XlsxWriter()
-
-    def save_to_html(self, save_path):
-        """save_to_html"""
-        img_idx = self["img_idx"]
-        if not save_path.endswith(".html"):
-            if img_idx > 0:
-                save_path = (
-                    Path(save_path) / f"{Path(self['img_path']).stem}_{img_idx}.html"
-                )
-            else:
-                save_path = Path(save_path) / f"{Path(self['img_path']).stem}.html"
-        elif img_idx > 0:
-            save_path = Path(save_path).stem / f"_{img_idx}.html"
-        self._html_writer.write(save_path.as_posix(), self["html"])
-        logging.info(f"The result has been saved in {save_path}.")
-
-    def save_to_excel(self, save_path):
-        """save_to_excel"""
-        img_idx = self["img_idx"]
-        if not save_path.endswith(".xlsx"):
-            if img_idx > 0:
-                save_path = (
-                    Path(save_path) / f"{Path(self['img_path']).stem}_{img_idx}.xlsx"
-                )
-            else:
-                save_path = Path(save_path) / f"{Path(self['img_path']).stem}.xlsx"
-        elif img_idx > 0:
-            save_path = Path(save_path).stem / f"_{img_idx}.xlsx"
-        self._xlsx_writer.write(save_path.as_posix(), self["html"])
-        logging.info(f"The result has been saved in {save_path}.")
-
-    def save_to_img(self, save_path):
-        img_idx = self["img_idx"]
-        if not save_path.endswith((".jpg", ".png")):
-            if img_idx > 0:
-                save_path = (
-                    Path(save_path) / f"{Path(self['img_path']).stem}_{img_idx}.jpg"
-                )
-            else:
-                save_path = Path(save_path) / f"{Path(self['img_path']).stem}.jpg"
-        elif img_idx > 0:
-            save_path = Path(save_path).stem / f"_{img_idx}.jpg"
-        else:
-            save_path = Path(save_path)
-        res_img = self._get_res_img()
-        if res_img is not None:
-            self._img_writer.write(save_path.as_posix(), res_img)
-            logging.info(f"The result has been saved in {save_path}.")
+        XlsxMixin.__init__(self)
 
 
 class TableResult(BaseResult):
     """TableResult"""
 
-    def __init__(self, data):
-        """__init__"""
-        super().__init__(data)
-
     def save_to_img(self, save_path):
         if not save_path.lower().endswith((".jpg", ".png")):
-            img_path = self["img_path"]
-            save_path = Path(save_path) / f"{Path(img_path).stem}"
+            input_path = self["input_path"]
+            save_path = Path(save_path) / f"{Path(input_path).stem}"
         else:
             save_path = Path(save_path).stem
         layout_save_path = f"{save_path}_layout.jpg"

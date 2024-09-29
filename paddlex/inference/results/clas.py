@@ -14,27 +14,23 @@
 
 
 import PIL
-from PIL import ImageDraw, ImageFont, Image
+from PIL import Image, ImageDraw, ImageFont
 import numpy as np
+import cv2
 
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
 from ..utils.color_map import get_colormap
-from .base import BaseResult
+from .base import CVResult
 
 
-class TopkResult(BaseResult):
-    def __init__(self, data):
-        super().__init__(data)
-        self._img_reader.set_backend("pillow")
-        self._img_writer.set_backend("pillow")
+class TopkResult(CVResult):
 
-    def _get_res_img(self):
+    def _to_img(self):
         """Draw label on image"""
         labels = self.get("label_names", self["class_ids"])
         label_str = f"{labels[0]} {self['scores'][0]:.2f}"
 
-        image = self._img_reader.read(self["img_path"])
-        image = image.convert("RGB")
+        image = self._img_reader.read(self["input_path"])
         image_size = image.size
         draw = ImageDraw.Draw(image)
         min_font_size = int(image_size[0] * 0.02)
@@ -87,15 +83,10 @@ class TopkResult(BaseResult):
 
 
 class MLClassResult(TopkResult):
-
-    def __init__(self, data):
-        super().__init__(data)
-        self._img_reader.set_backend("pillow")
-        self._img_writer.set_backend("pillow")
-
-    def _get_res_img(self):
+    def _to_img(self):
         """Draw label on image"""
-        image = self._img_reader.read(self["img_path"])
+        image = self._img_reader.read(self["input_path"])
+        image = image.convert("RGB")
         label_names = self["label_names"]
         scores = self["scores"]
         image = image.convert("RGB")

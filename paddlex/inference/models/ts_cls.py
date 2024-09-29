@@ -50,5 +50,8 @@ class TSClsPredictor(BasicPredictor):
 
     def _pack_res(self, single):
         return TSClsResult(
-            {"ts_path": single["ts_path"], "classification": single["classification"]}
+            {
+                "input_path": single["input_path"],
+                "classification": single["classification"],
+            }
         )

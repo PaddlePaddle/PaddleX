@@ -112,18 +112,17 @@ def _get_hpi_params(serial_number, update_license):
 
 
 def pipeline_predict(
-    pipeline, input_path, device, save_dir, use_hpip, serial_number, update_license
+    pipeline, input, device, save_dir, use_hpip, serial_number, update_license
 ):
     """pipeline predict"""
     hpi_params = _get_hpi_params(serial_number, update_license)
     pipeline = create_pipeline(pipeline, use_hpip=use_hpip, hpi_params=hpi_params)
-    pipeline = create_pipeline(pipeline)
-    result = pipeline(input, device=device)
+    pipeline = create_pipeline(pipeline, device=device)
+    result = pipeline(input)
     for res in result:
         res.print(json_format=False)
-        # TODO(gaotingquan): support to save all
-        # if save_dir:
-        #     i["result"].save()
+        if save_dir:
+            res.save_all(save_path=save_dir)
 
 
 def serve(
