@@ -208,7 +208,7 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
 * `.pdparams`、`.pdema`、`.pdopt.pdstate`、`.pdiparams`、`.pdmodel`：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
 </details>
 
-## **4.3 模型评估**
+### **4.3 模型评估**
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
