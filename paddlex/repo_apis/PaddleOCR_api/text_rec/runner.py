@@ -222,6 +222,7 @@ def _extract_eval_metrics(stdout: str) -> dict:
         (re.compile(r"precision:(_dp)$".replace("_dp", _DP)), "precision"),
         (re.compile(r"recall:(_dp)$".replace("_dp", _DP)), "recall"),
         (re.compile(r"hmean:(_dp)$".replace("_dp", _DP)), "hmean"),
+        (re.compile(r"exp_rate:(_dp)$".replace("_dp", _DP)), "exp_rate"),
     ]
 
     metric_dict = dict()
