@@ -44,3 +44,13 @@ register_model_info(
         "hpi_config_path": HPI_CONFIG_DIR / "SLANet.yaml",
     }
 )
+
+register_model_info(
+    {
+        "model_name": "SLANet_plus",
+        "suite": "TableRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "SLANet_plus.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "SLANet.yaml",
+    }
+)
