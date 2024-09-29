@@ -12,61 +12,47 @@
   <tr>
     <th>模型</th>
     <th>mAP(%)</th>
-    <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
   <tr>
     <td>CLIP_vit_base_patch16_448_ML</td>
     <td>89.15</td>
-    <td>-</td>
-    <td>-</td>
     <td>325.6</td>
     <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B0_ML</td>
     <td>80.98</td>
-    <td>-</td>
-    <td>-</td>
     <td>39.6</td>
     <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B4_ML</td>
     <td>87.96</td>
-    <td>-</td>
-    <td>-</td>
     <td>88.5</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td>-</td>
-    <td>-</td>
     <td>286.0</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
     <td>77.96</td>
-    <td>-</td>
-    <td>-</td>
     <td>29.4</td>
     <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>ResNet50_ML</td>
     <td>83.50</td>
-    <td>-</td>
-    <td>-</td>
     <td>108.9</td>
     <td>ResNet50_ML是一种基于ResNet50的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
 </table>
 
 
-**注：以上精度指标为[COCO2017](https://cocodataset.org/#home)的多标签分类任务mAP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+**注：以上精度指标为[COCO2017](https://cocodataset.org/#home)的多标签分类任务mAP。**
 </details>
 
 ## 三、快速集成
