@@ -91,7 +91,7 @@ python gen_ocr_train_val_test.py --trainValTestRatio 7:3:0 --datasetRootPath ../
   |- word_003.jpg
   | ...
 ```
-For more tool usage instructions, please refer to [Detailed Instructions](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README_en.md)
+For more tool usage instructions, please refer to [Detailed Instructions](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README.md)
 
 
 ## 3. Data Format
@@ -109,4 +109,4 @@ Each line in the annotation files contains the path to an image and a list of di
 
 For the list of dictionaries, the `points` key represents the coordinates `(x, y)` of the four vertices of the text box, starting from the top-left vertex and proceeding clockwise. The `transcription` key indicates the text within the text box. If the `transcription` content is "###", it indicates that the text box is invalid and will not be used for training. For reference, see the [example dataset](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ocr_det_dataset_examples.tar).
 
-If you use [PPOCRLabel](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README_ch.md) to annotate your data, simply rename `det_gt_train.txt` in the text detection (det) directory to `train.txt` and `det_gt_test.txt` to `val.txt` after dividing your dataset.
+If you use [PPOCRLabel](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README.md) to annotate your data, simply rename `det_gt_train.txt` in the text detection (det) directory to `train.txt` and `det_gt_test.txt` to `val.txt` after dividing your dataset.

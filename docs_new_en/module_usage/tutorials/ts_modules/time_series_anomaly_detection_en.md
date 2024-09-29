@@ -21,7 +21,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 </details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the time series anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the time series anomaly detection module into your project.
 
@@ -36,10 +36,10 @@ for res in output:
 For more information on using PaddleX's single model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.md).
 
 ## IV. Custom Development
-If you seek higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better time series anomaly detection models. Before developing time series anomaly models with PaddleX, please ensure that the PaddleTS plugin is installed. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation.md).
+If you seek higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better time series anomaly detection models. Before developing time series anomaly models with PaddleX, please ensure that the PaddleTS plugin is installed. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 ### 4.1 Data Preparation
-Before model training, you need to prepare the dataset for the corresponding task module. PaddleX provides data validation functionality for each module, and only data that passes validation can be used for model training. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for subsequent model training, refer to the [PaddleX Time Series Anomaly Detection Task Module Data Annotation Tutorial](../../../data_annotations/time_series_modules/time_series_anomaly_detection.md).
+Before model training, you need to prepare the dataset for the corresponding task module. PaddleX provides data validation functionality for each module, and only data that passes validation can be used for model training. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for subsequent model training, refer to the [PaddleX Time Series Anomaly Detection Task Module Data Annotation Tutorial](../../../data_annotations/time_series_modules/time_series_anomaly_detection_en.md).
 
 #### 4.1.1 Demo Data Download
 You can use the following command to download the demo dataset to a specified folder:

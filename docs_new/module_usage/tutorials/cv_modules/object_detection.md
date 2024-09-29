@@ -19,296 +19,296 @@
   <tr>
     <td>Cascade-FasterRCNN-ResNet50-FPN</td>
     <td>41.1</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>245.4 M</td>
     <td rowspan="2">Cascade-FasterRCNN 是一种改进的Faster R-CNN目标检测模型，通过耦联多个检测器，利用不同IoU阈值优化检测结果，解决训练和预测阶段的mismatch问题，提高目标检测的准确性。</td>
   </tr>
   <tr>
     <td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
     <td>45.0</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>246.2 M</td>
     <td></td>
   </tr>
   <tr>
     <td>CenterNet-DLA-34</td>
     <td>37.6</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>75.4 M</td>
     <td rowspan="2">CenterNet是一种anchor-free目标检测模型，把待检测物体的关键点视为单一点-即其边界框的中心点，并通过关键点进行回归。</td>
   </tr>
   <tr>
     <td>CenterNet-ResNet50</td>
     <td>38.9</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>319.7 M</td>
     <td></td>
   </tr>
   <tr>
     <td>DETR-R50</td>
     <td>42.3</td>
-    <td></td>
-    <td></td>
+    <td>59.2132</td>
+    <td>5334.52</td>
     <td>159.3 M</td>
     <td >DETR 是Facebook提出的一种transformer目标检测模型，该模型在不需要预定义的先验框anchor和NMS的后处理策略的情况下，就可以实现端到端的目标检测。</td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet34-FPN</td>
     <td>37.8</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>137.5 M</td>
     <td rowspan="9">Faster R-CNN是典型的two-stage目标检测模型，即先生成区域建议（Region Proposal），然后在生成的Region Proposal上做分类和回归。相较于前代R-CNN和Fast R-CNN，Faster R-CNN的改进主要在于区域建议方面，使用区域建议网络（Region Proposal Network, RPN）提供区域建议，以取代传统选择性搜索。RPN是卷积神经网络，并与检测网络共享图像的卷积特征，减少了区域建议的计算开销。</td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-FPN</td>
     <td>38.4</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>148.1 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-FPN</td>
     <td>39.5</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>148.1 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
     <td>41.4</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>148.1 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50</td>
     <td>36.7</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>120.2 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101-FPN</td>
     <td>41.4</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>216.3 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101</td>
     <td>39.0</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>188.1 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-ResNeXt101-vd-FPN</td>
     <td>43.4</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>360.6 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FasterRCNN-Swin-Tiny-FPN</td>
     <td>42.6</td>
-    <td></td>
-    <td></td>
+    <td>-</td>
+    <td>-</td>
     <td>159.8 M</td>
     <td></td>
   </tr>
   <tr>
     <td>FCOS-ResNet50</td>
     <td>39.6</td>
-    <td></td>
-    <td></td>
+    <td>103.367</td>
+    <td>3424.91</td>
     <td>124.2 M</td>
     <td>FCOS是一种密集预测的anchor-free目标检测模型，使用RetinaNet的骨架，直接在feature map上回归目标物体的长宽，并预测物体的类别以及centerness（feature map上像素点离物体中心的偏移程度），centerness最终会作为权重来调整物体得分。</td>
   </tr>
   <tr>
     <td>PicoDet-L</td>
     <td>42.6</td>
-    <td></td>
-    <td></td>
+    <td>16.6715</td>
+    <td>169.904</td>
     <td>20.9 M</td>
     <td rowspan="4">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
   </tr>
   <tr>
     <td>PicoDet-M</td>
     <td>37.5</td>
-    <td></td>
-    <td></td>
+    <td>16.2311</td>
+    <td>71.7257</td>
     <td>16.8 M</td>
     <td></td>
   </tr>
   <tr>
     <td>PicoDet-S</td>
     <td>29.1</td>
-    <td></td>
-    <td></td>
+    <td>14.097</td>
+    <td>37.6563</td>
     <td>4.4 M</td>
     <td></td>
   </tr>
   <tr>
     <td>PicoDet-XS</td>
     <td>26.2</td>
-    <td></td>
-    <td></td>
+    <td>13.8102</td>
+    <td>48.3139</td>
     <td>5.7 M</td>
     <td></td>
   </tr>
     <tr>
     <td>PP-YOLOE_plus-L</td>
     <td>52.9</td>
-    <td></td>
-    <td></td>
+    <td>33.5644</td>
+    <td>814.825</td>
     <td>185.3 M</td>
-    <td rowspan="4">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的动边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集，优化预处理、大模型扩展增强训练策略。</td>
+    <td rowspan="4">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
   </tr>
   <tr>
     <td>PP-YOLOE_plus-M</td>
     <td>49.8</td>
-    <td></td>
-    <td></td>
+    <td>19.843</td>
+    <td>449.261</td>
     <td>82.3 M</td>
     <td></td>
   </tr>
   <tr>
     <td>PP-YOLOE_plus-S</td>
     <td>43.7</td>
-    <td></td>
-    <td></td>
+    <td>16.8884</td>
+    <td>223.059</td>
     <td>28.3 M</td>
     <td></td>
   </tr>
   <tr>
     <td>PP-YOLOE_plus-X</td>
     <td>54.7</td>
-    <td></td>
-    <td></td>
+    <td>57.8995</td>
+    <td>1439.93</td>
     <td>349.4 M</td>
     <td></td>
   </tr>
   <tr>
     <td>RT-DETR-H</td>
     <td>56.3</td>
-    <td></td>
-    <td></td>
+    <td>114.814</td>
+    <td>3933.39</td>
     <td>435.8 M</td>
     <td rowspan="5">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
   </tr>
   <tr>
     <td>RT-DETR-L</td>
     <td>53.0</td>
-    <td></td>
-    <td></td>
+    <td>34.5252</td>
+    <td>1454.27</td>
     <td>113.7 M</td>
     <td></td>
   </tr>
   <tr>
     <td>RT-DETR-R18</td>
     <td>46.5</td>
-    <td></td>
-    <td></td>
+    <td>19.89</td>
+    <td>784.824</td>
     <td>70.7 M</td>
     <td></td>
   </tr>
   <tr>
     <td>RT-DETR-R50</td>
     <td>53.1</td>
-    <td></td>
-    <td></td>
+    <td>41.9327</td>
+    <td>1625.95</td>
     <td>149.1 M</td>
     <td></td>
   </tr>
   <tr>
     <td>RT-DETR-X</td>
     <td>54.8</td>
-    <td></td>
-    <td></td>
+    <td>61.8042</td>
+    <td>2246.64</td>
     <td>232.9 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOv3-DarkNet53</td>
     <td>39.1</td>
-    <td></td>
-    <td></td>
+    <td>40.1055</td>
+    <td>883.041</td>
     <td>219.7 M</td>
     <td rowspan="3">YOLOv3是一种实时的端到端目标检测器。它使用一个独特的单个卷积神经网络，将目标检测问题分解为一个回归问题，从而实现实时的检测。该模型采用了多个尺度的检测，提高了不同尺度目标物体的检测性能。</td>
   </tr>
   <tr>
     <td>YOLOv3-MobileNetV3</td>
     <td>31.4</td>
-    <td></td>
-    <td></td>
+    <td>18.6692</td>
+    <td>267.214</td>
     <td>83.8 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOv3-ResNet50_vd_DCN</td>
     <td>40.6</td>
-    <td></td>
-    <td></td>
+    <td>31.6276</td>
+    <td>856.047</td>
     <td>163.0 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOX-L</td>
     <td>50.1</td>
-    <td></td>
-    <td></td>
+    <td>185.691</td>
+    <td>1250.58</td>
     <td>192.5 M</td>
     <td rowspan="6">YOLOX模型以YOLOv3作为目标检测网络的框架，通过设计Decoupled Head、Data Aug、Anchor Free以及SimOTA组件，显著提升了模型在各种复杂场景下的检测性能。</td>
   </tr>
   <tr>
     <td>YOLOX-M</td>
     <td>46.9</td>
-    <td></td>
-    <td></td>
+    <td>123.324</td>
+    <td>688.071</td>
     <td>90.0 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOX-N</td>
     <td>26.1</td>
-    <td></td>
-    <td></td>
+    <td>79.1665</td>
+    <td>155.59</td>
     <td>3.4 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOX-S</td>
     <td>40.4</td>
-    <td></td>
-    <td></td>
+    <td>184.828</td>
+    <td>474.446</td>
     <td>32.0 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOX-T</td>
     <td>32.9</td>
-    <td></td>
-    <td></td>
+    <td>102.748</td>
+    <td>212.52</td>
     <td>18.1 M</td>
     <td></td>
   </tr>
   <tr>
     <td>YOLOX-X</td>
     <td>51.8</td>
-    <td></td>
-    <td></td>
+    <td>227.361</td>
+    <td>2067.84</td>
     <td>351.5 M</td>
     <td></td>
   </tr>
@@ -412,6 +412,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 * `attributes.val_samples`：该数据集验证集样本数量为 176；
 * `attributes.train_sample_paths`：该数据集训练集样本可视化图片相对路径列表；
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
+
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
 ![](/tmp/images/modules/obj_det/01.png)
@@ -566,9 +567,6 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
-
-在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测。在PaddleX中实现模型推理预测可以通过两种方式：命令行和wheel 包。
 
 * 通过命令行的方式进行推理预测，只需如下一条命令：
 ```bash
