@@ -41,7 +41,7 @@ Human detection is a subtask of object detection, which utilizes computer vision
 </details>
 
 
-## III. Quick Integration
+## III. Quick Integration  <a id="quick"> </a> 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, you can perform human detection with just a few lines of code. You can easily switch between models in this module and integrate the human detection model inference into your project.
@@ -263,4 +263,4 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 #### 4.4.2 Model Integration
-The weights you produce can be directly integrated into the human detection module. You can refer to the Python sample code in [Quick Integration](#Quick-Integration) and simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the human detection module. You can refer to the Python sample code in [Quick Integration](#quick) and simply replace the model with the path to your trained model.
