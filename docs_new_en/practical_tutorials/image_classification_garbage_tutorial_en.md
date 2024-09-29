@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipelines: one is through the PaddleX 
 Quick Trial Output Example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/b813cdc6-cb96-4a34-9503-ba40c7e6562d" width=600>
+<img src="/tmp/images/practical_tutorials/image_classification/01.png" width=600>
 
 </center>
 
@@ -110,7 +110,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 In addition, the dataset verification also analyzes the sample number distribution of all categories in the dataset and draws a distribution histogram (`histogram.png`):
 <center>
 
-<img src="https://github.com/user-attachments/assets/5f64f7cf-f4ab-4532-9193-890780c89f64" width=600>
+<img src="/tmp/images/practical_tutorials/image_classification/02.png" width=600>
 
 </center>
 
@@ -232,7 +232,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `garbage_demo.png` is shown below:
 <center>
 
-<img src="https://github.com/user-attachments/assets/14bdde62-1643-4876-9c66-2a02228988be" width="600"/>
+<img src="/tmp/images/practical_tutorials/image_classification/03.png" width="600"/>
 
 </center>
 

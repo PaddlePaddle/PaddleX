@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/a3210910-a76c-4552-b7a5-fe3670205584" width=600>
+  <img src="/tmp/images/practical_tutorials/ocr/04.png" width=600>
 
   </center>
 
@@ -113,7 +113,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://github.com/user-attachments/assets/1734db3d-59f1-4278-ace1-741cf57755db" width=600>
+<img src="/tmp/images/practical_tutorials/ocr/05.png" width=600>
 
 </center>
 
@@ -234,7 +234,7 @@ paddlex --pipeline OCR \
 通过上述可在`./output`下生成预测结果，其中`case.jpg`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/a0c28495-6352-4c64-b53e-9903da3e002a" width="600"/>
+<img src="/tmp/images/practical_tutorials/ocr/06.png" width="600"/>
 
 </center>
 

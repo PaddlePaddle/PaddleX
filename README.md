@@ -10,7 +10,8 @@
 </p>
 
 <h4 align="center">
-  <a href=#README.md>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=#-模型产线列表> 🔥模型产线列表</a>
+  <a href=#README.md>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=/docs_new/support_list/pipelines_list.md> 🔥模型产线列表</a>
+
 </h4>
 
 <h5 align="center">
@@ -19,7 +20,7 @@
 
 ## 🔍 简介
 
-PaddleX 3.0是基于飞桨框架构建的一套AI模型全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
+PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
 |                                                            **通用图像分类**                                                            |                                                            **图像多标签分类**                                                            |                                                            **通用目标检测**                                                            |                                                            **通用实例分割**                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
@@ -39,6 +40,8 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型全流程开发工具，�
   🔧 **主流硬件高效支持**：支持英伟达 GPU、昆仑芯、昇腾和寒武纪等**多种主流硬件**的无缝切换，确保高效运行。
 
 ## 📣 近期更新
+
+🔥🔥《PaddleX文档信息个性化抽取新升级》，PP-ChatOCRv3创新性提供了基于数据融合技术的OCR模型二次开发功能，具备更强的模型微调能力。百万级高质量通用OCR文本识别数据，按特定比例自动融入垂类模型训练数据，破解产业垂类模型训练导致通用文本识别能力减弱难题。适用自动化办公、金融风控、医疗健康、教育出版、法律党政等产业实际场景。**10月10日（周四）19：00**直播为您详细解读数据融合技术以及如何利用提示词工程实现更好的信息抽取效果。 [报名链接](https://www.wjx.top/vm/mFhGfwx.aspx?udsid=772552)
 
 🔥🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供**200+模型**通过极简的Python API一键调用；实现基于统一命令的模型全流程开发，并开源**PP-ChatOCRv3**特色模型产线基础能力；支持**100+模型高性能推理和服务化部署**（持续迭代中），**7类重点视觉模型端侧部署**；**70+模型开发全流程适配昇腾910B**，**15+模型开发全流程适配昆仑芯和寒武纪**
 
@@ -78,7 +81,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
     </tr>
     <tr>
-        <td>文档场景信息抽取</td>
+        <td>文档场景信息抽取v3</td>
         <td><a href = "https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -780,7 +783,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 ### 🛠️ 安装
 
-> ❗安装PaddleX前请先确保您有基础的Python运行环境
+> ❗安装PaddleX前请先确保您有基础的Python运行环境。如果您没有基础的Python运行环境，请参考运行环境准备。
 
 * **安装PaddlePaddle**
 ```bash
@@ -848,7 +851,7 @@ The prediction result is:
 
 | 产线名称           | 对应参数               | 详细说明                                                                                                      |
 |--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取v3   | `pp_chatocrv3` | [文档场景信息抽取v3产线命令行使用说明](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 文档场景信息抽取   | `pp_chatocrv3` | [文档场景信息抽取v3产线命令行使用说明](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
 | 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用目标检测       | `object_detection` | [通用目标检测产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用实例分割       | `instance_segmentation` | [通用实例分割产线命令行使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
@@ -891,7 +894,7 @@ for batch in output:
 
 | 产线名称           | 对应参数               | 详细说明                                                                                                      |
 |--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取v3   | `pp_chatocrv3` | [文档场景信息抽取v3产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 文档场景信息抽取   | `pp_chatocrv3` | [文档场景信息抽取v3产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
 | 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用实例分割       | `instance_segmentation` | [通用实例分割产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
@@ -910,20 +913,28 @@ for batch in output:
 <details>
   <summary> <b> 安装 </b></summary>
   
-  * [PaddleX安装教程](/docs_new/installation/installation.md) 
   * [PaddlePaddle安装教程](/docs_new/installation/paddlepaddle_install.md)
+  * [PaddleX安装教程](/docs_new/installation/installation.md) 
+
 
 </details>
 
 <details open>
 <summary> <b> 产线使用 </b></summary>
 
-* [PaddleX模型产线使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
+* [PaddleX产线使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
 
 * <details open>
     <summary> <b> 文本图像智能分析 </b></summary>
 
-   * [文档场景信息抽取产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+   * [文档场景信息抽取v3产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+  </details>
+
+* <details open>
+    <summary> <b> OCR </b></summary>
+
+    * [通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md)
+    * [表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)
   </details>
 
 * <details open>
@@ -933,17 +944,11 @@ for batch in output:
    * [通用目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/object_detection.md)
    * [通用实例分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)
    * [通用语义分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
-   * [通用图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
+   * [图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
    * [小目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
    * [图像异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   </details>
   
-* <details open>
-    <summary> <b> OCR </b></summary>
-
-    * [通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md)
-    * [通用表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)
-  </details>
 
 * <details open>
     <summary> <b> 时序分析</b> </summary>
@@ -970,34 +975,53 @@ for batch in output:
 * [PaddleX单功能模块使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
 
 * <details>
-  <summary> <b> 计算机视觉 </b></summary>
-  
+  <summary> <b> OCR </b></summary>
+
+  * [文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_detection.md)
+  * [印章文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/curved_text_detection.md)
+  * [文本识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_recognition.md)
+  * [版面区域检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/structure_analysis.md)
+  * [表格结构识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/table_structure_recognition.md)
+  * [文档图像方向分类使用教程](/docs_new/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
+  * [文档图像矫正模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_correction.md)
+  *  公式识别模块使用教程(coming soon)
+  </details>
+
+* <details>
+  <summary> <b> 图像分类 </b></summary>
+
   * [图像分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_classification.md)
-  * [图像识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_recognition.md)
+  * [图像多标签分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/ml_classification.md)
+
+  * [行人属性识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
+  * [车辆属性识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
+
+  </details>
+
+* <details>
+  <summary> <b> 图像特征 </b></summary>
+
+    * [通用图像特征模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_recognition.md)
+  </details>
+
+* <details>
+  <summary> <b> 目标检测 </b></summary>
+
   * [目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/object_detection.md)
   * [小目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/small_object_detection.md)
   * [人脸检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/face_detection.md)
   * [主体检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/mainbody_detection.md)
   * [行人检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/human_detection.md)
   * [车辆检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_detection.md)
+
+  </details>
+
+* <details>
+  <summary> <b> 图像分割 </b></summary>
+
   * [语义分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/semantic_segmentation.md)
   * [实例分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/instance_segmentation.md)
-  * [文档图像方向分类使用教程](/docs_new/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
-  * [图像多标签分类使用教程](/docs_new/module_usage/tutorials/cv_modules/ml_classification.md)
-  * [行人属性识别使用教程](/docs_new/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
-  * [车辆属性识别使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
-  * [图像矫正模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_correction.md)
-  * [无监督异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)
-  </details> 
-  
-* <details>
-  <summary> <b> OCR </b></summary>
-
-  * [文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_detection.md)
-  * [印章文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/curved_text_detection.md)
-  * [文本识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_recognition.md)
-  * [版面区域定位模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/structure_analysis.md)
-  * [表格结构识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/table_structure_recognition.md)
+  * [图像异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)
   </details>
 
 * <details>
@@ -1045,82 +1069,6 @@ for batch in output:
 
 我们非常欢迎并鼓励社区成员在[Discussions](https://github.com/PaddlePaddle/PaddleX/discussions)板块中提出问题、分享想法和反馈。无论您是想要报告一个bug、讨论一个功能请求、寻求帮助还是仅仅想要了解项目的最新动态，这里都是一个绝佳的平台。
 
-## 🔥 模型产线列表
-
-<details>
-  <summary><b> 文档场景信息抽取产线 </b></summary>
-</details>
-
-<details>
-  <summary> <b>通用OCR产线  </b></summary>
-
-
-| 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
-|----------|---------------------|-------|-------------------|-------------|------------------|
-| 文本检测 | PP-OCRv4_mobile_det | 77.79 | 2.719474          | 79.1097     | 15               | 
-|          | PP-OCRv4_server_det | 82.69 | 22.20346          | 2662.158    | 198              | 
-| 文本识别 | PP-OCRv4_mobile_rec | 78.20 | 2.719474          | 79.1097     | 15               | 
-|          | PP-OCRv4_server_rec | 79.20 | 22.20346          | 2662.158    | 198              | 
-
-**注：文本检测模型精度指标为 Hmean(%)，文本识别模型精度指标为 Accuracy(%)。**
-
-</details>
-
-<details>
-  <summary><b> 通用表格识别产线 </b> </summary>
-</details>
-
-<details>
-  <summary> <b> 通用图像分类产线  </b></summary>
-
-| 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
-|----------|---------------------|-------|-------------------|-------------|------------------|
-| 文本检测 | PP-OCRv4_mobile_det | 77.79 | 2.719474          | 79.1097     | 15               | 
-|          | PP-OCRv4_server_det | 82.69 | 22.20346          | 2662.158    | 198              | 
-| 文本识别 | PP-OCRv4_mobile_rec | 78.20 | 2.719474          | 79.1097     | 15               | 
-|          | PP-OCRv4_server_rec | 79.20 | 22.20346          | 2662.158    | 198              | 
-
-**注：文本检测模型精度指标为 Hmean(%)，文本识别模型精度指标为 Accuracy(%)。**
-
-</details>
-
-<details>
-  <summary> <b> 通用目标检测产线  </b></summary>
-</details>
-
-<details>
-  <summary><b> 通用实例分割产线  </b></summary>
-</details>
-
-<details>
-  <summary> <b> 通用语义分割产线 </b> </summary>
-</details>
-
-<details>
-  <summary> <b> 通用图像多标签分类产线 </b> </summary>
-</details>
-
-<details>
-  <summary><b> 小目标检测分类产线 </b> </summary>
-</details>
-
-
-<details>
-  <summary> <b> 图像异常检测产线 </b> </summary>
-</details>
-
-
-<details>
-  <summary><b> 通用时序预测产线 </b> </summary>
-</details>
-
-<details>
-  <summary><b> 通用时序异常检测产线 </b> </summary>
-</details>
-
-<details>
-  <summary><b> 通用时序分类产线</b> </summary>
-</details>
 
 ## 📄 许可证书
 

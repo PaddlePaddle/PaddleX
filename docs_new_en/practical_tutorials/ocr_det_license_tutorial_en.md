@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: one is through the PaddleX w
 Quick trial output example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/513f93b8-6f21-41d7-a214-016b21aa93d5" width=600>
+<img src="/tmp/images/practical_tutorials/ocr/01.png" width=600>
 
 </center>
 
@@ -115,7 +115,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all categories in the dataset and plots a histogram (`histogram.png`):
 <center>
 
-<img src="https://github.com/user-attachments/assets/0b642f7d-437d-437d-8b20-c5806cd11308" width=600>
+<img src="/tmp/images/practical_tutorials/ocr/02.png" width=600>
 
 </center>
 
@@ -234,7 +234,7 @@ paddlex --pipeline OCR \
 This will generate prediction results under `./output`, where the prediction result for `case1.jpg` is shown below:
 <center>
 
-<img src="https://github.com/user-attachments/assets/e16674f8-2beb-482c-8760-71fb06f0b51f" width="600"/>
+<img src="/tmp/images/practical_tutorials/ocr/03.png" width="600"/>
 
 </center>
 

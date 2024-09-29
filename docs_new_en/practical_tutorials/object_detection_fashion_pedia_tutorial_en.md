@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: locally through the PaddleX 
 Quick Trial Output Example:
 <center>
 
-<img src="https://github.com/user-attachments/assets/96e6c6ff-e446-4819-9db7-e9c43b0fc8e8" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/04.png" width=600>
 
 </center>
 
@@ -104,7 +104,7 @@ The above verification results indicate that the dataset format meets the requir
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (`histogram.png`) for visualization:
 <center>
 
-<img src="https://github.com/user-attachments/assets/ac5c9c35-d1c3-4df5-ae9d-979e3c096620" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/05.png" width=600>
 
 </center>
 
@@ -228,7 +228,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `FashionPedia_demo.png` is as follows:
 <center>
 
-<img src="https://github.com/user-attachments/assets/60f0cfcb-07c2-4e37-8786-09f208a8c584" width="600"/>
+<img src="/tmp/images/practical_tutorials/obeject_detection/06.png" width="600"/>
 
 </center>
 

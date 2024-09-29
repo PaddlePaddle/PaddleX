@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://github.com/user-attachments/assets/96e6c6ff-e446-4819-9db7-e9c43b0fc8e8" width=600>
+  <img src="/tmp/images/practical_tutorials/obeject_detection/04.png" width=600>
 
   </center>
 
@@ -104,7 +104,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://github.com/user-attachments/assets/ac5c9c35-d1c3-4df5-ae9d-979e3c096620" width=600>
+<img src="/tmp/images/practical_tutorials/obeject_detection/05.png" width=600>
 
 </center>
 
@@ -229,7 +229,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 通过上述可在`./output`下生成预测结果，其中`FashionPedia_demo.png`的预测结果如下：
 <center>
 
-<img src="https://github.com/user-attachments/assets/60f0cfcb-07c2-4e37-8786-09f208a8c584" width="600"/>
+<img src="/tmp/images/practical_tutorials/obeject_detection/06.png" width="600"/>
 
 </center>
 
