@@ -1,10 +1,7 @@
 Global:
-  pipeline_name: chatocrv3
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg
-  
-######################################## Setting ########################################
-# Please select the model from bellow `Support`
-
+  pipeline_name: PP-ChatOCRv3
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf
+  #input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/report.png
 Pipeline:
   layout_model: PicoDet_layout_1x
   table_model: SLANet
@@ -29,5 +26,3 @@ Pipeline:
   oricls_batch_size: 1
   recovery: True
   device: "gpu"
-
-######################################## Support ########################################

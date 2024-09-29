@@ -2,9 +2,6 @@ Global:
   pipeline_name: ts_ad
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv
   
-######################################## Setting ########################################
-# Please select the model from bellow `Support`
-
 Pipeline:
   model: DLinear_ad
   batch_size: 1

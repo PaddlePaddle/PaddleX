@@ -2,19 +2,7 @@ Global:
   pipeline_name: image_classification
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
   
-######################################## Setting ########################################
-# Please select the model from bellow `Support`
-
 Pipeline:
   model: PP-LCNet_x0_5
   batch_size: 1
   device: "gpu:0"
-######################################## Support ########################################
-NOTE:
-  device: 
-    - gpu
-    - gpu:2
-    - cpu
-  batch_size: "任意正整数"
-  model:
-    - PP-LCNet_x0_5

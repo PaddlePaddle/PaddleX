@@ -2,9 +2,6 @@ Global:
   pipeline_name: table_recognition
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg
   
-######################################## Setting ########################################
-# Please select the model from bellow `Support`
-
 Pipeline:
   layout_model: PicoDet_layout_1x
   table_model: SLANet
@@ -14,5 +11,3 @@ Pipeline:
   text_rec_batch_size: 1
   table_batch_size: 1
   device: "gpu:0"
-
-######################################## Support ########################################

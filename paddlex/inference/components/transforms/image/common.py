@@ -91,7 +91,8 @@ class ReadImage(_BaseRead):
 
     def apply(self, img):
         """apply"""
-        if not isinstance(img, str):
+        if isinstance(img, np.ndarray):
+            # TODO(gaotingquan): set delete to True
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
                 img_path = Path(temp_file.name)
                 self._writer.write(img_path, img)
@@ -104,7 +105,7 @@ class ReadImage(_BaseRead):
                         "ori_img_size": deepcopy([img.shape[1], img.shape[0]]),
                     }
                 ]
-        else:
+        elif isinstance(img, str):
             file_path = img
             file_path = self._download_from_url(file_path)
             file_list = self._get_files_list(file_path)
@@ -117,6 +118,13 @@ class ReadImage(_BaseRead):
                     batch = []
             if len(batch) > 0:
                 yield batch
+        else:
+            raise TypeError(
+                f"ReadImage only supports the following types:\n"
+                f"1. str, indicating a image file path or a directory containing image files.\n"
+                f"2. numpy.ndarray.\n"
+                f"However, got type: {type(img).__name__}."
+            )
 
     def _read(self, file_path):
         if file_path:

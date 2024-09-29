@@ -16,6 +16,7 @@
 import os
 import glob
 import itertools
+from pathlib import Path
 
 from setuptools import find_packages
 from setuptools import setup
@@ -52,33 +53,19 @@ def packages_and_package_data():
                             continue
                     yield os.path.join(root, f)
 
-    pkgs = find_packages(
-        include=[
-            "paddlex",
-            "paddlex.modules",
-            "paddlex.modules.*",
-            "paddlex.pipelines",
-            "paddlex.pipelines.*",
-            "paddlex.repo_manager",
-            "paddlex.repo_apis",
-            "paddlex.repo_apis.*",
-            "paddlex.utils",
-            "paddlex.utils.*",
-        ]
-    )
+    pkgs = find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"])
     pkg_data = []
     for p in itertools.chain(
-        # Configuration files
         _recursively_find("paddlex/configs/*", exts=[".yml", ".yaml"]),
     ):
-        parts = os.path.normpath(p).split(os.sep)
-        ext = os.path.splitext(p)[1]
-        # Globally exclude Python bytecode files
-        if ext in (".pyc", ".pyo"):
+        if Path(p).suffix in (".pyc", ".pyo"):
             continue
-        # According to https://setuptools.pypa.io/en/latest/userguide/datafiles.html
-        rp = "/".join(parts[1:])
-        pkg_data.append(rp)
+        pkg_data.append(Path(p).relative_to("paddlex").as_posix())
+    pipeline_config = [
+        Path(p).relative_to("paddlex").as_posix()
+        for p in glob.glob("paddlex/pipelines/*.yaml")
+    ]
+    pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
     pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
     pkg_data.append("repo_manager/requirements.txt")

@@ -2,19 +2,7 @@ Global:
   pipeline_name: instance_segmentation
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png
   
-######################################## Setting ########################################
-# Please select the model from bellow `Support`
-
 Pipeline:
   model: Mask-RT-DETR-S
   batch_size: 1
   device: "gpu:0"
-######################################## Support ########################################
-NOTE:
-  device: 
-    - gpu
-    - gpu:2
-    - cpu
-  batch_size: "任意正整数"
-  model:
-    - Mask-RT-DETR-S

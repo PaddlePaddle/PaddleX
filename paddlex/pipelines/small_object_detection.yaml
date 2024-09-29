@@ -2,9 +2,6 @@ Global:
   pipeline_name: small_object_detection
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg
   
-######################################## Setting ########################################
-# Please select the model from bellow `Support`
-
 Pipeline:
   model: PP-YOLOE_plus_SOD-L
   batch_size: 1

@@ -56,7 +56,7 @@ def create_pipeline(
         # XXX: using dict class to handle all pipeline configs
         build_in_pipeline = (
             Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline}.yaml"
-        )
+        ).resolve()
         if not Path(build_in_pipeline).exists():
             raise Exception(f"The pipeline don't exist! ({pipeline})")
         pipeline = build_in_pipeline
