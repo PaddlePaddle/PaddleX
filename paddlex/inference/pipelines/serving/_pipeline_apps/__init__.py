@@ -16,12 +16,34 @@ from typing import Any, Dict
 
 from fastapi import FastAPI
 
+from ...base import BasePipeline
+from ...ocr import OCRPipeline
+from ...ppchatocrv3 import PPChatOCRPipeline
+from ...single_model_pipeline import (
+    AnomalyDetection,
+    ImageClassification,
+    InstanceSegmentation,
+    MultiLableImageClas,
+    ObjectDetection,
+    SemanticSegmentation,
+    SmallObjDet,
+    TSAd,
+    TSCls,
+    TSFc,
+)
+from ...table_recognition import TableRecPipeline
+from ..app import create_app_config
+from .anomaly_detection import create_pipeline_app as create_anomaly_detection_app
 from .image_classification import create_pipeline_app as create_image_classification_app
 from .instance_segmentation import (
     create_pipeline_app as create_instance_segmentation_app,
 )
+from .multi_label_image_classification import (
+    create_pipeline_app as create_multi_label_image_classification_app,
+)
 from .object_detection import create_pipeline_app as create_object_detection_app
 from .ocr import create_pipeline_app as create_ocr_app
+from .ppchatocrv3 import create_pipeline_app as create_ppchatocrv3_app
 from .semantic_segmentation import (
     create_pipeline_app as create_semantic_segmentation_app,
 )
@@ -29,26 +51,6 @@ from .table_recognition import create_pipeline_app as create_table_recognition_a
 from .ts_ad import create_pipeline_app as create_ts_ad_app
 from .ts_cls import create_pipeline_app as create_ts_cls_app
 from .ts_fc import create_pipeline_app as create_ts_fc_app
-from .anomaly_detection import create_pipeline_app as create_anomaly_detection_app
-from .multi_label_image_classification import (
-    create_pipeline_app as create_multi_label_image_classification_app,
-)
-from ..app import create_app_config
-from ...base import BasePipeline
-from ...single_model_pipeline import (
-    ImageClassification,
-    ObjectDetection,
-    InstanceSegmentation,
-    SemanticSegmentation,
-    TSFc,
-    TSAd,
-    TSCls,
-    MultiLableImageClas,
-    SmallObjDet,
-    AnomalyDetection,
-)
-from ...ocr import OCRPipeline
-from ...table_recognition import TableRecPipeline
 
 
 # XXX (Bobholamovic): This is tightly coupled to the name-pipeline mapping,
@@ -123,6 +125,12 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `AnomalyDetection`."
             )
         return create_anomaly_detection_app(pipeline, app_config)
+    elif pipeline_name == "PP-ChatOCRv3":
+        if not isinstance(pipeline, PPChatOCRPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `AnomalyDetection`."
+            )
+        return create_ppchatocrv3_app(pipeline, app_config)
     else:
         if BasePipeline.get(pipeline_name):
             raise ValueError(

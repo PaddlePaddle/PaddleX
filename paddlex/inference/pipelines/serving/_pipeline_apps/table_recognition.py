@@ -18,11 +18,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
+from .....utils import logging
+from ...table_recognition import TableRecPipeline
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...table_recognition import TableRecPipeline
-from .....utils import logging
 
 
 class InferenceParams(BaseModel):

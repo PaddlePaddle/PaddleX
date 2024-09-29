@@ -18,11 +18,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
+from .....utils import logging
+from ...single_model_pipeline import SemanticSegmentation
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...single_model_pipeline import SemanticSegmentation
-from .....utils import logging
 
 
 class InferRequest(BaseModel):

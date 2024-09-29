@@ -17,11 +17,11 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
+from .....utils import logging
+from ...single_model_pipeline import ImageClassification
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from ...single_model_pipeline import ImageClassification
-from .....utils import logging
 
 
 class InferRequest(BaseModel):

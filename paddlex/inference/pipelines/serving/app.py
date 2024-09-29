@@ -37,8 +37,7 @@ from typing_extensions import Final, ParamSpec
 
 from ..base import BasePipeline
 from .models import Response
-from .utils import generate_log_id, async_call
-
+from .utils import async_call, generate_log_id
 
 SERVING_CONFIG_KEY: Final[str] = "Serving"
 

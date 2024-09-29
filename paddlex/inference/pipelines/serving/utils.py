@@ -16,19 +16,18 @@ import asyncio
 import base64
 import io
 import uuid
-from urllib.parse import urlparse
-from typing import Callable, Awaitable, List, Optional, TypeVar
 from functools import partial
+from typing import Awaitable, Callable, List, Optional, TypeVar
+from urllib.parse import urlparse
 
 import aiohttp
-import fitz
 import cv2
+import fitz
 import numpy as np
 import pandas as pd
 import yarl
 from PIL import Image
 from typing_extensions import ParamSpec
-
 
 _P = ParamSpec("_P")
 _R = TypeVar("_R")

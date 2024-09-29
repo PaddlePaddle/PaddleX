@@ -16,8 +16,8 @@ import asyncio
 import os
 import re
 import uuid
-from typing import Awaitable, List, Optional, Literal, Final, Tuple, Union
-from urllib.parse import urlparse, parse_qs
+from typing import Awaitable, Final, List, Literal, Optional, Tuple, Union
+from urllib.parse import parse_qs, urlparse
 
 import cv2
 import numpy as np
@@ -26,12 +26,12 @@ from numpy.typing import ArrayLike
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias, assert_never
 
+from .....utils import logging
+from ...ppchatocrv3 import PPChatOCRPipeline
+from .. import file_storage
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
-from .. import file_storage
-from ...table_recognition import TableRecPipeline
-from .....utils import logging
 
 _DEFAULT_MAX_IMG_SIZE: Final[Tuple[int, int]] = (2000, 2000)
 _DEFAULT_MAX_NUM_IMGS: Final[int] = 10
@@ -86,8 +86,8 @@ class AIStudioParams(BaseModel):
 
 
 class QianfanParams(BaseModel):
-    ak: str
-    sk: str
+    apiKey: str
+    secretKey: str
     apiType: Literal["qianfan"] = "qianfan"
 
 
@@ -200,8 +200,8 @@ def _llm_params_to_dict(llm_params: LLMParams) -> dict:
     elif llm_params.apiType == "qianfan":
         return {
             "api_type": "qianfan",
-            "ak": llm_params.ak,
-            "sk": llm_params.sk,
+            "ak": llm_params.apiKey,
+            "sk": llm_params.secretKey,
         }
     else:
         assert_never(llm_params.apiType)
@@ -250,7 +250,7 @@ async def _postprocess_image(
     )
 
 
-def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )

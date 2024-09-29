@@ -14,14 +14,13 @@
 
 import base64
 import uuid
-from typing import Any, Dict, Union, Optional, Literal
+from typing import Any, Dict, Literal, Optional, Union
 
-from baidubce.bce_client_configuration import BceClientConfiguration
 from baidubce.auth.bce_credentials import BceCredentials
+from baidubce.bce_client_configuration import BceClientConfiguration
 from baidubce.services.bos.bos_client import BosClient
-from pydantic import TypeAdapter, Discriminator
+from pydantic import BaseModel, Discriminator, SecretStr, TypeAdapter
 from typing_extensions import Annotated, assert_never
-from pydantic import BaseModel, SecretStr
 
 
 class InMemoryStorageConfig(BaseModel):
