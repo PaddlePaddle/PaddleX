@@ -1,4 +1,4 @@
-文本识别模块开发教程
+# 文本识别模块开发教程
 
 ## 一、概述
 文本识别模块是OCR（光学字符识别）系统中的核心部分，负责从图像中的文本区域提取出文本信息。该模块的性能直接影响到整个OCR系统的准确性和效率。文本识别模块通常接收文本检测模块输出的文本区域的边界框（Bounding Boxes）作为输入，然后通过复杂的图像处理和深度学习算法，将图像中的文本转化为可编辑和可搜索的电子文本。文本识别结果的准确性，对于后续的信息提取和数据挖掘等应用至关重要。
@@ -18,35 +18,69 @@
         <th>介绍</th>
     </tr>
     <tr>
-        <td>PP-OCRv4_server_rec</td>
-        <td>79.20</td>
-        <td rowspan="2"></td>
-        <td rowspan="2"></td>
-        <td>71.2 M</td>
+        <td>PP-OCRv4_mobile_rec</td>
+        <td>78.20</td>
+        <td>7.95018</td>
+        <td>46.7868</td>
+        <td>10.6 M</td>
         <td rowspan="2">PP-OCRv4是百度飞桨视觉团队自研的文本识别模型PP-OCRv3的下一个版本，通过引入数据增强方案、GTC-NRTR指导分支等策略，在模型推理速度不变的情况下，进一步提升了文本识别精度。该模型提供了服务端（server）和移动端（mobile）两个不同版本，来满足不同场景下的工业需求。</td>
     </tr>
     <tr>
-        <td>PP-OCRv4_mobile_rec</td>
-        <td>78.20</td>
-        <td>10.6 M</td>
+        <td>PP-OCRv4_server_rec </td>
+        <td>79.20</td>
+        <td>7.19439</td>
+        <td>140.179</td>
+        <td>71.2 M</td>
     </tr>
+</table>
+
+**注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+
+
+<table >
     <tr>
-        <td>ch_RepSVTR_rec</td>
-        <td>65.07</td>
-        <td rowspan="2"></td>
-        <td rowspan="2"></td>
-        <td>22.1 M</td>
-        <td rowspan="2">RepSVTR 文本识别模型是一种基于SVTRv2的轻量级文本文识别模型，其在<a href = "https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法硬件挑战赛·赛题一：OCR端到端识别任务</a>中荣获第一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
+        <th>模型</th>
+        <th>识别 Avg Accuracy(%)</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
     </tr>
     <tr>
         <td>ch_SVTRv2_rec</td>
         <td>68.81</td>
+        <td>8.36801</td>
+        <td>165.706</td>
         <td>73.9 M</td>
+        <td rowspan="1">
+        SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队研发的服务端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，A榜端到端识别精度相比PP-OCRv4提升6%。
+    </td>
     </tr>
 </table>
 
 
-**注：除了ch_RepSVTR_rec和ch_SVTRv2_rec，以上精度指标的评估集是 PaddleOCR 自建的中文数据集。该数据集覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。ch_SVTRv2_rec精度指标的评估集是[PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)A榜测试集， ch_RepSVTR_rec精度指标的评估集是[PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜测试集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)A榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+
+<table >
+    <tr>
+        <th>模型</th>
+        <th>识别 Avg Accuracy(%)</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
+    </tr>
+    <tr>
+        <td>ch_RepSVTR_rec</td>
+        <td>65.07</td>
+        <td>10.5047</td>
+        <td>51.5647</td>
+        <td>22.1 M</td>
+        <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
+    </tr>
+</table>
+
+**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 </details>
 
@@ -263,7 +297,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 
 1.**产线集成**
 
-文本识别模块可以集成的PaddleX产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelies/OCR.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本识别模块的模型更新。
+文本识别模块可以集成的PaddleX产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelies/OCR.md)、[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本识别模块的模型更新。
 
 2.**模块集成**
 

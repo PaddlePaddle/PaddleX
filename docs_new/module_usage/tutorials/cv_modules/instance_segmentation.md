@@ -21,108 +21,110 @@
     <tr>
         <td>Cascade-MaskRCNN-ResNet50-FPN</td>
         <td>36.3</td>
-        <td ></td>
-        <td ></td>
+        <td >-</td>
+        <td >-</td>
         <td>254.8</td>
         <td rowspan="2">Cascade-MaskRCNN 是一种改进的Mask RCNN实例分割模型，通过级联多个检测器，利用不同IOU阈值优化分割结果，解决检测与推理阶段的mismatch问题，提高了实例分割的准确性。</td>
     </tr>
     <tr>
         <td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
         <td>39.1</td>
+        <td >-</td>
+        <td >-</td>
         <td>254.7</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-H</td>
         <td>50.6</td>
-        <td></td>
-        <td></td>
+        <td>132.693</td>
+        <td>4896.17</td>
         <td>449.9</td>
-        <td rowspan="5">Mask-RT-DETR 是一种基于RTDETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
+        <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-L</td>
         <td>45.7</td>
-        <td></td>
-        <td></td>
+        <td>46.5059</td>
+        <td>2575.92</td>
         <td>113.6</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-M</td>
         <td>42.7</td>
-        <td></td>
-        <td></td>
+        <td>36.8329</td>
+        <td>-</td>
         <td>66.6 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-S</td>
         <td>41.0</td>
-        <td></td>
-        <td></td>
+        <td>33.5007</td>
+        <td>-</td>
         <td>51.8 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-X</td>
         <td>47.5</td>
-        <td></td>
-        <td></td>
+        <td>75.755</td>
+        <td>3358.04</td>
         <td>237.5 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50-FPN</td>
         <td>35.6</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>157.5 M</td>
         <td rowspan="7">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50-vd-FPN</td>
         <td>36.4</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>157.5 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
         <td>38.2</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>127.2 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50</td>
         <td>32.8</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>128.7 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet101-FPN</td>
         <td>36.6</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>225.4 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet101-vd-FPN</td>
         <td>38.1</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>225.4 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNeXt101-vd-FPN</td>
         <td>39.5</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>370.0 M</td>
         <td></td>
     </tr>
     <tr>
         <td>PP-YOLOE_seg-S</td>
         <td>32.5</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>-</td>
         <td>31.5 M</td>
         <td>PP-YOLOE_seg 是一种基于PP-YOLOE的实例分割模型。该模型沿用了PP-YOLOE的backbone和head，通过设计PP-YOLOE实例分割头，大幅提升了实例分割的性能和推理速度。</td>
     </tr>
@@ -391,5 +393,5 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 
 实例分割模块可以集成的PaddleX产线有[通用实例分割产线](../../../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)，只需要替换模型路径即可完成相关产线的实例分割模块的模型更新。
 
-1. **模块集成**
+2.**模块集成**
 您产出的权重可以直接集成到实例分割模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
