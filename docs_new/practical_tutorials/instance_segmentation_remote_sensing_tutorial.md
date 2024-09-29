@@ -1,10 +1,10 @@
 # PaddleX 3.0 通用实例分割模型产线———遥感图像实例分割教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ PaddleX 安装](../INSTALL.md)。此处以一个遥感图像分割的任务为例子，介绍模型产线工具的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ PaddleX 安装](../installation/installation.md)。此处以一个遥感图像分割的任务为例子，介绍模型产线工具的使用流程。
 
 ## 1. 选择产线
 
-首先，需要根据您的任务场景，选择对应的 PaddleX 产线，此处为遥感图像分割，需要了解到这个任务属于实例分割任务，对应 PaddleX 的通用实例分割产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[模型产线列表](../pipelines/support_pipeline_list.md)中了解相关产线的能力介绍。
+首先，需要根据您的任务场景，选择对应的 PaddleX 产线，此处为遥感图像分割，需要了解到这个任务属于实例分割任务，对应 PaddleX 的通用实例分割产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[模型产线列表](../support_list/pipelines_list.md)中了解相关产线的能力介绍。
 
 
 ## 2. 快速体验
@@ -14,7 +14,6 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   - 本地体验方式：
     ```bash
     paddlex --pipeline instance_segmentation \
-        --model Mask-RT-DETR-H \
         --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png
     ```
 
@@ -31,21 +30,23 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
 
 ## 3. 选择模型
 
-PaddleX 提供了 2 个端到端的实例分割模型，具体可参考 [模型列表](../models/support_model_list.md)，其中部分模型的 benchmark 如下：
+PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型列表](../support_list/models_list.md)，其中部分模型的 benchmark 如下：
 
-| 模型列表        | mAP(%) | GPU 推理耗时(ms) | CPU 推理耗时(ms) | 模型存储大小(M) |
-| --------------- | ------ | ---------------- | ---------------- | --------------- |
-| Mask-RT-DETR-H       | 48.8   | -           | -         | 486             |
-| Mask-RT-DETR-L       | 45.7   | -            | -           | 124             |
+| 模型列表        | mAP(%) | GPU 推理耗时(ms) |  模型存储大小(M) |
+| --------------- | ------ | ---------------- | --------------- |
+| Mask-RT-DETR-H       | 48.8   | 61.40           |486             |
+| Mask-RT-DETR-X       | 47.5   | 45.70             |257             |
+| Mask-RT-DETR-L       | 45.7   | 37.40             |123             |
+| Mask-RT-DETR-S       | 40.9   | 32.40             |57             |
 
-> **注：以上精度指标为 [COCO2017](https://cocodataset.org/#home) 验证集 mAP(0.5:0.95)，GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基>于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
+> **注：以上精度指标为 [COCO2017](https://cocodataset.org/#home) 验证集 mAP(0.5:0.95)，GPU 推理耗时基于 NVIDIA  V100 机器，精度类型为 FP32。**
 
 简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 `Mask-RT-DETR-H` 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
 
 ## 4. 数据准备和校验
 ### 4.1 数据准备
 
-本教程采用 `遥感图像实例分割数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 数据格式介绍](../data/dataset_format.md)。如果您有一批待标注数据，可以参考 [通用实例分割数据标注指南](../data/annotation/InstSegAnnoTools.md) 完成数据标注。
+本教程采用 `遥感图像实例分割数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 实例分割任务模块数据标注教程](../data_annotations/cv_modules/instance_segmentation.md)。
 
 数据集获取命令：
 ```bash
@@ -148,7 +149,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
     * `epochs_iters`：训练轮次数设置；
     * `learning_rate`：训练学习率设置；
 
-更多超参数介绍，请参考 [PaddleX 超参数介绍](../base/hyperparameters_introduction.md)。
+更多超参数介绍，请参考 [PaddleX 超参数介绍](../module_usage/instructions/config_parameters_common.md)。
 
 **注：**
 - 以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
@@ -176,7 +177,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 
 与模型训练类似，模型评估支持修改配置文件或追加命令行参数的方式设置。
 
-**注：** 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model.pdparams`。
+**注：** 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/best_model.pdparams`。
 
 ### 5.3 模型调优
 
@@ -186,7 +187,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 
 1. 首先固定训练轮次为 80，批大小为 2。
 2. 基于 `Mask-RT-DETR-H` 模型启动三个实验，学习率分别为：0.0005，0.005，0.0001
-3. 可以发现实验二精度最高的配置为学习率为 0.0001，在该训练超参数基础上，改变训练论次数，观察不同轮次的精度结果，发现轮次在 1000epoch 时基本达到了最佳精度。
+3. 可以发现实验二精度最高的配置为学习率为 0.0001，在该训练超参数基础上，改变训练论次数，观察不同轮次的精度结果。
 
 学习率探寻实验结果：
 <center>
@@ -207,7 +208,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 | 实验二       | 80  | 0\.0001 | 2          | 4卡   | 0\.825   |
 | 实验二减少训练轮次 | 30  | 0\.0001 | 2          | 4卡   | 0\.287   |
 | 实验二减少训练轮次 | 50  | 0\.0001 | 2          | 4卡   | 0\.545   |
-| 实验二增大训练轮次 | 100 | 0\.0001 | 2          | 4卡   | **0\.813**   |
+| 实验二增大训练轮次 | 100 | 0\.0001 | 2          | 4卡   | 0\.813  |
 </center>
 
 ** 注：本教程为 4 卡教程，如果您只有 1 张GPU，可通过调整训练卡数完成本次实验，但最终指标未必和上述指标对齐，属正常情况。**
@@ -219,8 +220,8 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=predict \
-    -o Predict.model_dir="output/best_model" \
-    -o Predict.input_path="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png"
+    -o Predict.model_dir="output/best_model/inference" \
+    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png"
 ```
 
 通过上述可在`./output`下生成预测结果，其中`remotesensing_demo.png`的预测结果如下：
@@ -231,39 +232,23 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 </center>
 
 ## 7. 开发集成/部署
-1. 此处提供了轻量级的 PaddleX Python API 的集成方式，使用 Python API 方式可以更加方便的将 PaddleX 产出模型集成到自己的项目中进行二次开发，详细集成方式可参考 [PaddleX 模型产线推理预测](../pipelines/pipeline_inference.md)。
-此处提供轻量级的 PaddleX Python API 的集成方式，也提供高性能推理/服务化部署的方式部署模型。 PaddleX Python API 的集成方式如下：
-
+如果通用实例分割产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
+1. 若您需要将通用实例分割产线直接应用在您的 Python 项目中，可以参考如下示例代码：
 ```python
-from paddlex import InstanceSegPipeline
-from paddlex import PaddleInferenceOption
-
-model_name = "Mask-RT-DETR-H"
-model_dir= "./output/best_model"
-pipeline = InstanceSegPipeline(model_name, model_dir=model_dir, kernel_option=PaddleInferenceOption())
-result = pipeline.predict(
-        {'input_path': "./dataset/intseg_remote_sense_coco/images/017.jpg"}
-    )
-
-print(result["boxes"])
+from paddlex import create_pipeline
+pipeline = create_pipeline(pipeline="paddlex/pipelines/instance_segmentation.yaml")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png")
+for res in output:
+    res.print() # 打印预测的结构化输出
+    res.save_to_img("./output/") # 保存结果可视化图像
+    res.save_to_json("./output/") # 保存预测的结构化输出
 ```  
-2. PaddleX也提供了基于 FastDeploy 的高性能推理/服务化部署的方式进行模型部署。该部署方案支持更多的推理后端，并且提供高性能推理和服务化部署两种部署方式，能够满足更多场景的需求，具体流程可参考 [基于 FastDeploy 的模型产线部署]((../pipelines/pipeline_deployment_with_fastdeploy.md))。高性能推理和服务化部署两种部署方式的特点如下：
-    * 高性能推理：运行脚本执行推理，或在程序中调用 Python/C++ 的推理 API。旨在实现测试样本的高效输入与模型预测结果的快速获取，特别适用于大规模批量刷库的场景，显著提升数据处理效率。
-    * 服务化部署：采用 C/S 架构，以服务形式提供推理能力，客户端可以通过网络请求访问服务，以获取推理结果。
-* PaddleX 高性能离线部署和服务化部署流程如下：
+更多参数请参考 [实例分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)。
 
-    1. 获取离线部署包。
-        1. 在 [AIStudio 星河社区](https://aistudio.baidu.com/pipeline/mine) 根据本地训练模型产线创建对应产线，在“选择产线”页面点击“直接部署”。
-        2. 在“产线部署”页面选择“导出离线部署包”，使用默认的模型方案，选择与本地测试环境对应的部署包运行环境，点击“导出部署包”。
-        3. 待部署包导出完毕后，点击“下载离线部署包”，将部署包下载到本地。
-        4. 点击“生成部署包序列号”，根据页面提示完成设备指纹的获取以及设备指纹与序列号的绑定，确保序列号对应的激活状态为“已激活“。
-    2. 使用自训练模型替换离线部署包 `model` 目录中的模型。
-    3. 根据需要选择要使用的部署SDK：`offline_sdk` 目录对应高性能推理SDK，`serving_sdk` 目录对应服务化部署SDK。按照SDK文档（README.md）中的说明，完成部署环境准备，建议使用文档提供的官方docker进行环境部署。
-    4. 对于高性能推理方式部署，修改 `offline_sdk/python_example/fd_model_config.yaml` 中的 "model_path_root" 字段值为自训练模型存放目录，并使用如下命令完成模型高性能推理：
+2. 此外，PaddleX 也提供了服务化部署方式，详细说明如下：
 
-```bash
-python infer.py --resource_path . --device gpu --serial_num <serial_number> --update_license True --backend paddle_option  --input_data_path https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png --is_visualize True
-```
+* 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能部署指南](../pipeline_deploy/high_performance_deploy.md)。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
+* 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/lite_deploy.md)。
 
-其他产线的 Python API 集成方式可以参考[PaddleX 模型产线推理预测](../pipelines/pipeline_inference.md)。
-PaddleX 同样提供了高性能的离线部署和服务化部署方式，具体参考[基于 FastDeploy 的模型产线部署](../pipelines/pipeline_deployment_with_fastdeploy.md)。
+您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
