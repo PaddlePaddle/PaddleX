@@ -111,7 +111,7 @@ class ReadImage(_BaseRead):
             file_list = self._get_files_list(file_path)
             batch = []
             for file_path in file_list:
-                img = self._read_img(file_path)
+                img = self._read(file_path)
                 batch.extend(img)
                 if len(batch) >= self.batch_size:
                     yield batch
@@ -127,7 +127,7 @@ class ReadImage(_BaseRead):
             )
 
     def _read(self, file_path):
-        if file_path:
+        if str(file_path).lower().endswith(".pdf"):
             return self._read_pdf(file_path)
         else:
             return self._read_img(file_path)
