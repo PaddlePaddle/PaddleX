@@ -11,21 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import numpy as np
-import copy
-import json
-
-from ...utils import logging
-from .base import CVResult
+from .base import BaseLLM
+from .erniebot import ErnieBot
 
 
-class DocTrResult(CVResult):
-
-    def _to_img(self):
-        return np.array(self["doctr_img"])
-
-    def _to_str(self, json_format=True, indent=4, ensure_ascii=False):
-        str_ = copy.deepcopy(self)
-        str_.pop("doctr_img")
-        return str_
+def create_llm_api(model_name: str, params={}) -> BaseLLM:
+    return BaseLLM.get(model_name)(
+        model_name=model_name,
+        params=params,
+    )

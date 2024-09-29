@@ -12,20 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-import copy
-import json
-
-from ...utils import logging
-from .base import CVResult
-
-
-class DocTrResult(CVResult):
-
-    def _to_img(self):
-        return np.array(self["doctr_img"])
-
-    def _to_str(self, json_format=True, indent=4, ensure_ascii=False):
-        str_ = copy.deepcopy(self)
-        str_.pop("doctr_img")
-        return str_
+from .ppchatocrv3 import PPChatOCRPipeline
