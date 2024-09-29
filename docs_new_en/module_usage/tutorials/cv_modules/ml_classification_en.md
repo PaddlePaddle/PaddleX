@@ -69,7 +69,7 @@ The image multi-label classification module is a crucial component in computer v
 </details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide]((../../../installation/installation_en.md))
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, you can complete multi-label classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the multi-label classification module into your project.
 ```bash
@@ -81,7 +81,7 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-For more information on using PaddleX's single-model inference APIs, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using PaddleX's single-model inference APIs, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API_en.md).
 ## IV. Custom Development
 If you are seeking higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better multi-label classification models. Before using PaddleX to develop multi-label classification models, please ensure that you have installed the relevant model training plugins for image classification in PaddleX. The installation process can be found in the custom development section of the [PaddleX Local Installation Guide](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc).
 
@@ -271,7 +271,7 @@ the following steps are required:
 
 * Specify the path of the model's `.yaml` configuration file (here it is `PP-LCNet_x1_0_ML.yaml`)
 * Specify the mode as model training: `-o Global.mode=train`
-* Specify the path of the training dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file parameter instructions for the corresponding task module of the model [PaddleX Common Model Configuration File Parameters](../../instructions/config_parameters_common.md).
+* Specify the path of the training dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file parameter instructions for the corresponding task module of the model [PaddleX Common Model Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
 
 <details>
@@ -302,7 +302,7 @@ Similar to model training, the following steps are required:
 * Specify the `.yaml` configuration file path for the model (here it's `PP-LCNet_x1_0_ML.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
