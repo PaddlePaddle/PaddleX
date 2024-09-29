@@ -65,6 +65,7 @@ def packages_and_package_data():
         Path(p).relative_to("paddlex").as_posix()
         for p in glob.glob("paddlex/pipelines/*.yaml")
     ]
+    pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
     pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
