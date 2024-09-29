@@ -19,6 +19,8 @@ import cv2
 import copy
 import time
 
+from ....utils import logging
+
 
 def Homography(
     image,
@@ -852,7 +854,7 @@ class AutoRectifier:
                     dst_img = img_list[loss_list.index(min_loss)]
 
                     if min_loss >= loss_thresh:
-                        print(
+                        logging.warning(
                             "calibration loss: {} is too large for spatial transformer. It is failed. Using get_rotate_crop_image".format(
                                 loss
                             )
@@ -860,9 +862,8 @@ class AutoRectifier:
                         dst_img = self.get_rotate_crop_image(
                             image_data, points, interpolation, ratio_width, ratio_height
                         )
-                        print("here")
             except Exception as e:
-                print(e)
+                logging.warning(f"Exception caught: {e}")
                 dst_img = self.get_rotate_crop_image(
                     image_data, points, interpolation, ratio_width, ratio_height
                 )

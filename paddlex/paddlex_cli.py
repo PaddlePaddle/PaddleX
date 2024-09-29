@@ -93,8 +93,8 @@ def install(args):
 
 def pipeline_predict(pipeline, input, device=None, save_dir=None):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline)
-    result = pipeline(input, device=device)
+    pipeline = create_pipeline(pipeline, device=device)
+    result = pipeline(input)
     for res in result:
         res.print(json_format=False)
         if save_dir:
