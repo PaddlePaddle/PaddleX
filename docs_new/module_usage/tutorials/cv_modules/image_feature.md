@@ -248,7 +248,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o CheckDataset.split.gallery_percent=20 \
     -o CheckDataset.split.query_percent=10 
 ```
-> ❗注意 ：由于图像特征模型评估的特殊性，当且仅当 train、query、gallery 集合属于同一类别体系下，数据切分才有意义，在识别模型的评估过程中，必须满足 gallery 集合和 query 集合属于同一类别体系，其允许和 train 集合不在同一类别体系， 如果 gallery 集合和 query 集合与 train 集合不在同一类别体系，则数据划分后的评估没有意义，建议谨慎操作。
+> ❗注意 ：由于图像特征模型评估的特殊性，当且仅当 train、query、gallery 集合属于同一类别体系下，数据切分才有意义，在图像特征模的评估过程中，必须满足 gallery 集合和 query 集合属于同一类别体系，其允许和 train 集合不在同一类别体系， 如果 gallery 集合和 query 集合与 train 集合不在同一类别体系，则数据划分后的评估没有意义，建议谨慎操作。
 
 </details>
 
@@ -327,7 +327,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
 * 指定输入数据路径：`-o Predict.input="..."`. 
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-> ❗ 注意：识别模型的推理结果为一组向量，需要配合检索模块完成图像的识别。
+> ❗ 注意：图像特征模型的推理结果为一组向量，需要配合检索模块完成图像的识别。
 
 #### 4.4.2 模型集成
 模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。

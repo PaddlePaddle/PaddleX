@@ -235,10 +235,10 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 
 ## 7. 开发集成/部署
 如果通用图像分类产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 若您需要将通用图像分类产线直接应用在您的 Python 项目中，可以参考如下示例代码：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/image_classification.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/image_classification.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/image_classification.yaml")
 output = pipeline.predict("./dataset/trash40/images/test/0/img_154.jpg")
 for res in output:
     res.print() # 打印预测的结构化输出
