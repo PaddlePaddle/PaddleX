@@ -33,7 +33,7 @@ for res in output:
     res.print(json_format=False)
     res.save_to_csv("./output/")
 ```
-For more information on using PaddleX's single model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using PaddleX's single model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API_en.md).
 
 ## IV. Custom Development
 If you seek higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better time series anomaly detection models. Before developing time series anomaly models with PaddleX, please ensure that the PaddleTS plugin is installed. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
@@ -259,7 +259,7 @@ Similar to model training, the following steps are required:
 * Specify the path to the model's `.yaml` configuration file (here it's `AutoEncoder_ad.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../../instructions/config_parameters_time_series.md).
+Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../../instructions/config_parameters_time_series_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
@@ -290,14 +290,14 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/inference"`
 * Specify the input data path: `-o Predict.input="..."`
-Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../../instructions/config_parameters_time_series.md).
+Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../../instructions/config_parameters_time_series_en.md).
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or directly into your own project.
 
 1. **Pipeline Integration**
 
-The time series prediction module can be integrated into PaddleX pipelines such as [Time Series Anomaly Detection](../../../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md). Simply replace the model path to update the time series prediction model. In pipeline integration, you can use service deployment to deploy your obtained model.
+The time series prediction module can be integrated into PaddleX pipelines such as [Time Series Anomaly Detection](../../../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md). Simply replace the model path to update the time series prediction model. In pipeline integration, you can use service deployment to deploy your obtained model.
 
 2. **Module Integration**
 
