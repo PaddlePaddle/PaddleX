@@ -212,7 +212,7 @@ Other relevant parameters can be set by modifying fields under `Global` and `Tra
 
 * During model training, PaddleX automatically saves the model weight files, defaulting to `output`. If you want to specify a different save path, you can set it using the `-o Global.output` field in the configuration file.
 * PaddleX abstracts away the concept of dynamic graph weights and static graph weights. During model training, it produces both dynamic and static graph weights. For model inference, it defaults to using static graph weights.
-* To train other models, specify the corresponding configuration file. The relationship between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md)..
+* To train other models, specify the corresponding configuration file. The relationship between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
 
 After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
 
