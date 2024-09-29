@@ -15,7 +15,7 @@ Unsupervised anomaly detection is a technology that automatically identifies and
 The above model accuracy indicators are measured from the MVTec_AD dataset.
 </details>
 
-## III. Quick Integration
+## III. Quick Integration  <a id="quick"> </a> 
 Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the unsupervised anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the unsupervised anomaly detection module into your project.
 
 ```python
@@ -188,4 +188,4 @@ The unsupervised anomaly detection module can be integrated into PaddleX pipelin
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the unsupervised anomaly detection module. You can refer to the Python example code in [Quick Integration](#三快速集成), simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the unsupervised anomaly detection module. You can refer to the Python example code in [Quick Integration](#quick), simply replace the model with the path to your trained model.
