@@ -115,7 +115,7 @@ In the verification results above, `check_pass` being True indicates that the da
 
 Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/doc_img_ori_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png)
 
 </details>
 

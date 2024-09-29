@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: locally through the PaddleX 
 Quick trial output example:
 <center>
 
-<img src="/tmp/images/practical_tutorials/instance_segmentation/01.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/instance_segmentation/01.png" width=600>
 
 </center>
 
@@ -104,7 +104,7 @@ Additionally, the dataset verification also analyzes the sample number distribut
 
 <center>
 
-<img src="/tmp/images/practical_tutorials/instance_segmentation/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/instance_segmentation/02.png" width=600>
 
 </center>
 
@@ -229,7 +229,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `remotesensing_demo.png` is as follows:
 <center>
 
-<img src="/tmp/images/practical_tutorials/instance_segmentation/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/instance_segmentation/03.png" width="600"/>
 
 </center>
 

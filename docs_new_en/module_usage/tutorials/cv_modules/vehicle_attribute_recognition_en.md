@@ -113,7 +113,7 @@ In the above validation results, `check_pass` being True indicates that the data
 * `attributes.val_sample_paths`: The list of relative paths to the visualization images of samples in the validation set of this dataset;
 
 Additionally, the dataset verification also analyzes the distribution of the length and width of all images in the dataset and plots a histogram (histogram.png):
-![](/tmp/images/modules/vehicle_attri/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png)
 </details>
 
 

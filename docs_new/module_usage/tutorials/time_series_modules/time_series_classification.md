@@ -124,7 +124,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 * `attributes.val_table`：该数据集训练集样本示例数据前10行信息；
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
-![](/tmp/images/modules/time_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/time_classification/01.png)
 > ❗**注**：只有通过数据校验的数据才可以训练和评估。
 
 </details>

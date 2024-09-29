@@ -2,7 +2,7 @@
 
 ## 1. Annotation Data Examples
 
-![alt text](/tmp/images/data_prepare/ocr/01.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/ocr/01.png)
 
 ## 2. PPOCRLabel Annotation
 
@@ -36,23 +36,23 @@ PPOCRLabel --lang ch  # Start in [Normal Mode] for [Detection + Recognition] sce
 1. Installation and Running: Use the above commands to install and run the program.
 2. Open Folder: Click "File" - "Open Directory" to select the folder containing images to be annotated.
 
-![alt text](/tmp/images/data_prepare/ocr/02.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/ocr/02.png)
 3. Auto Annotation: Click "Auto Annotation" to use the PP-OCR ultra-lightweight model to automatically annotate images with a file status of "X".
 
-![alt text](/tmp/images/data_prepare/ocr/03.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/ocr/03.png)
 4. Manual Annotation: Click "Rectangle Annotation" (recommended to press "W" directly in English mode), and users can manually draw bounding boxes for parts undetected by the model in the current image. Press "Q" on the keyboard to use the four-point annotation mode (or click "Edit" - "Four-point Annotation"), and users click 4 points in sequence, double-clicking the left mouse button to indicate completion.
 5. After drawing the bounding box, click "Confirm", and the detection box will be pre-assigned a "To Be Recognized" label.
 6. Re-Recognition: After drawing/adjusting all detection boxes in the image, click "Re-Recognition", and the PP-OCR model will re-recognize **all detection boxes** in the current image.
 
-![alt text](/tmp/images/data_prepare/ocr/04.png)
-![alt text](/tmp/images/data_prepare/ocr/05.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/ocr/04.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/ocr/05.png)
 7. Content Modification: Click on the recognition result to manually modify inaccurate recognition results.
 8. **Confirm Annotation: Click "Confirm", the image status changes to "√", and proceed to the next image.**
 9. Deletion: Click "Delete Image", and the image will be deleted to the Recycle Bin.
 10. Export Results: Users can manually export results through "File - Export Annotation Results" or enable automatic export by clicking "File - Auto Export Annotation Results". Manually confirmed annotations will be stored in `Label.txt` under the opened image folder. Clicking "File - Export Recognition Results" in the menu bar will save the recognition training data of such images in the `crop_img` folder, and the recognition labels will be saved in `rec_gt.txt`.
 
 
-![alt text](/tmp/images/data_prepare/ocr/06.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/ocr/06.png)
 **Notes**:
 
 * PPOCRLabel uses **folders** as the basic unit for labeling. After opening the folder containing images to be labeled, the images will not be displayed in the window bar. Instead, clicking "Select Folder" will directly import the images under the folder into the program.

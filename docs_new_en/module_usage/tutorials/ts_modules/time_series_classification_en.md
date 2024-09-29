@@ -129,7 +129,7 @@ The verification results above indicate that `check_pass` being `True` means the
 
 Furthermore, the dataset validation also involved an analysis of the distribution of sample numbers across all categories within the dataset, and a distribution histogram (histogram.png) was generated accordingly.
 
-![](/tmp/images/modules/time_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/time_classification/01.png)
 
 
 **Note**: Only data that has passed validation can be used for training and evaluation.

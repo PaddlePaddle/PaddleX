@@ -214,7 +214,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 * `attributes.val_sample_paths`: A list of relative paths to the visualized validation samples in this dataset;
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all categories in the dataset and generates a distribution histogram (`histogram.png`):
 
-![](/tmp/images/modules/instanceseg/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/instanceseg/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)

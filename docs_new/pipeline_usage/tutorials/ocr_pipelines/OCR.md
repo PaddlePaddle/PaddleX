@@ -6,7 +6,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA。基于该项目，产学研界多方开发者已快速落地多个 OCR 应用，使用场景覆盖通用、制造、金融、交通等各个领域。
 
 
-![](/tmp/images/pipelines/ocr/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png)
 
 **通用OCR产线中包含了文本检测模块和文本识别模块**，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。**如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -73,7 +73,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent)通用 OCR 产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-![](/tmp/images/pipelines/ocr/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，您可以直接从云端下载部署包，也可以使用[2.2节本地体验](#3-开发集成部署)的方式。如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
@@ -126,7 +126,7 @@ paddlex --pipeline ./ocr.yaml --input https://paddle-model-ecology.bj.bcebos.com
 其中，`dt_polys`为检测到的文本框坐标，`dt_polys`为检测到的文本框坐标，`dt_scores`为检测到文本框的置信度，`rec_text`为检测到的文本，`rec_score`为检测到文本的置信度
 
 可视化结果如下：
-![](/tmp/images/pipelines/ocr/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png)
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
 #### 2.2.2 Python脚本方式集成
 * 几行代码即可完成产线的快速推理，以通用 OCR 产线为例：

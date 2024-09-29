@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipeline: one is through the PaddleX w
 Quick trial output example:
 <center>
 
-<img src="/tmp/images/practical_tutorials/semantic_seg/01.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/semantic_seg/01.png" width=600>
 
 </center>
 
@@ -101,7 +101,7 @@ In the verification results above, `check_pass` being `True` indicates that the 
 Additionally, the dataset verification also analyzes the sample distribution across all classes and plots a histogram (`histogram.png`):
 <center>
 
-<img src="/tmp/images/practical_tutorials/semantic_seg/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/semantic_seg/02.png" width=600>
 
 </center>
 
@@ -228,7 +228,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 The prediction results will be generated under `./output`, where the prediction result for `makassaridn-road_demo.png` is shown below:
 <center>
 
-<img src="/tmp/images/practical_tutorials/semantic_seg/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/semantic_seg/03.png" width="600"/>
 
 </center>
 

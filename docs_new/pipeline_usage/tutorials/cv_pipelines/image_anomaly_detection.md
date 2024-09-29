@@ -3,7 +3,7 @@
 ## 1. 图像异常检测产线介绍
 图像异常检测是一种通过分析图像中的内容，来识别与众不同或不符合正常模式的图像处理技术。它广泛应用于工业质量检测、医疗影像分析和安全监控等领域。通过使用机器学习和深度学习算法，图像异常检测能够自动识别出图像中潜在的缺陷、异常或异常行为，从而帮助我们及时发现问题并采取相应措施。图像异常检测系统被设计用于自动检测和标记图像中的异常情况，以提高工作效率和准确性。
 
-![](/tmp/images/pipelines/image_anomaly_detection/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png)
 
 
 **图像异常检测产线中包含了无监督异常检测模块，模型的benchmark如下**：
@@ -63,7 +63,7 @@ paddlex --pipeline ./anomaly_detection.yaml --input https://paddle-model-ecology
 ```
 {'img_path': '/root/.paddlex/predict_input/uad_grid.png'}
 ```
-![](/tmp/images/pipelines/image_anomaly_detection/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png)
 
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
 
