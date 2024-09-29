@@ -35,11 +35,11 @@ class InferRequest(BaseModel):
 
 
 Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
-BoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
+Polygon: TypeAlias = Annotated[List[Point], Field(min_length=3)]
 
 
 class Text(BaseModel):
-    bbox: BoundingBox
+    poly: Polygon
     text: str
     score: float
 
@@ -76,10 +76,10 @@ def create_pipeline_app(pipeline: OCRPipeline, app_config: AppConfig) -> FastAPI
             result = await pipeline.infer(image)[0]
 
             texts: List[Text] = []
-            for bbox, text, score in zip(
+            for poly, text, score in zip(
                 result["dt_polys"], result["rec_text"], result["rec_score"]
             ):
-                texts.append(Text(bbox=bbox, text=text, score=score))
+                texts.append(Text(poly=poly, text=text, score=score))
             output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(

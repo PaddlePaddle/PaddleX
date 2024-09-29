@@ -54,18 +54,18 @@ class AnalyzeImageRequest(BaseModel):
 
 
 Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
-TextBoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
-TableBoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
+Polygon: TypeAlias = Annotated[List[Point], Field(min_length=3)]
+BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
 
 
 class Text(BaseModel):
-    bbox: TextBoundingBox
+    poly: Polygon
     text: str
     score: float
 
 
 class Table(BaseModel):
-    bbox: TableBoundingBox
+    bbox: BoundingBox
     html: str
 
 
@@ -110,7 +110,7 @@ LLMParams: TypeAlias = Union[AIStudioParams, QianfanParams]
 class BuildVectorStoreRequest(BaseModel):
     visionInfo: dict
     minChars: Optional[int] = None
-    llmRequestInterval: Optional[int] = None
+    llmRequestInterval: Optional[float] = None
     llmName: Optional[LLMName] = None
     llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
@@ -140,7 +140,7 @@ class ChatRequest(BaseModel):
     useVectorStore: bool = True
     vectorStore: Optional[dict] = None
     retrievalResult: Optional[str] = None
-    returnPrompt: bool = True
+    returnPrompts: bool = True
     llmName: Optional[LLMName] = None
     llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
@@ -347,12 +347,12 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 )
                 pp_img_futures.append(future)
                 texts: List[Text] = []
-                for bbox, text, score in zip(
+                for poly, text, score in zip(
                     item["ocr_result"]["dt_polys"],
                     item["ocr_result"]["rec_text"],
                     item["ocr_result"]["rec_score"],
                 ):
-                    texts.append(Text(bbox=bbox, text=text, score=score))
+                    texts.append(Text(poly=poly, text=text, score=score))
                 tables = [
                     Table(bbox=r["layout_bbox"], html=r["html"])
                     for r in item["table_result"]
@@ -477,7 +477,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["vector"] = request.vectorStore
             if request.retrievalResult is not None:
                 kwargs["retrieval_result"] = request.retrievalResult
-            kwargs["save_prompt"] = request.returnPrompt
+            kwargs["save_prompt"] = request.returnPrompts
             if request.llmName is not None:
                 kwargs["llm_name"] = request.llmName
             if request.llmParams is not None:

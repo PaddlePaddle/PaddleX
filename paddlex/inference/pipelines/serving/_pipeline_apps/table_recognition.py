@@ -35,7 +35,7 @@ class InferRequest(BaseModel):
 
 
 Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
-BoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
+BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
 
 
 class Table(BaseModel):
@@ -45,7 +45,7 @@ class Table(BaseModel):
 
 class InferResult(BaseModel):
     tables: List[Table]
-    tableImage: str
+    layoutImage: str
     ocrImage: str
 
 
@@ -79,19 +79,13 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
 
             tables: List[Table] = []
             for item in result["table_result"]:
-                x_min, y_min, x_max, y_max = item["layout_bbox"]
                 tables.append(
                     Table(
-                        bbox=[
-                            [x_min, y_min],
-                            [x_max, y_min],
-                            [x_max, y_max],
-                            [x_min, y_max],
-                        ],
+                        bbox=item["layout_bbox"],
                         html=item["html"],
                     )
                 )
-            table_image_base64 = serving_utils.image_to_base64(
+            layout_image_base64 = serving_utils.image_to_base64(
                 result["layout_result"].img
             )
             ocr_iamge_base64 = serving_utils.image_to_base64(result["ocr_result"].img)
@@ -102,7 +96,7 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
                 errorMsg="Success",
                 result=InferResult(
                     tables=tables,
-                    tableImage=table_image_base64,
+                    layoutImage=layout_image_base64,
                     ocrImage=ocr_iamge_base64,
                 ),
             )
