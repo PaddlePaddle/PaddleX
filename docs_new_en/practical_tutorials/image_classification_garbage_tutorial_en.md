@@ -238,10 +238,10 @@ The prediction results will be generated under `./output`, and the prediction re
 
 ## 7. Development Integration/Deployment
 If the General Image Classification Pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. If you need to directly apply the General Image Classification Pipeline in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/image_classification.yaml` configuration file to your own model path:
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/image_classification.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/image_classification.yaml")
 output = pipeline.predict("./dataset/trash40/images/test/0/img_154.jpg")
 for res in output:
     res.print() # Print the structured output of the prediction

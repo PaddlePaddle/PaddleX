@@ -237,7 +237,7 @@ The prediction results will be generated under `./output`, and the prediction re
 
 If the general instance segmentation pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
 
-1. If you need to directly apply the general instance segmentation pipeline in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/instance_segmentation.yaml` configuration file to your own model path:
 
 ```python
 from paddlex import create_pipeline

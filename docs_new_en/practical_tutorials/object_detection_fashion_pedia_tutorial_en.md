@@ -235,11 +235,11 @@ The prediction results will be generated under `./output`, and the prediction re
 ## 7. Development Integration/Deployment
 If the General Object Detection Pipeline meets your requirements for inference speed and precision in your production line, you can proceed directly with development integration/deployment.
 
-1. If you need to apply the General Object Detection Pipeline directly in your Python project, you can refer to the following sample code:
+1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/object_detection.yaml` configuration file to your own model path:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./paddlex/pipelines/object_detection.yaml")
+pipeline = create_pipeline(pipeline="paddlex/pipelines/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/object_detection/FashionPedia_demo.png")
 for res in output:
     res.print() # Print the structured output of the prediction
