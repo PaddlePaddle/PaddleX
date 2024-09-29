@@ -23,15 +23,15 @@ class _BaseTSResult(BaseResult, CSVMixin):
 
 
 class TSFcResult(_BaseTSResult):
-    def _to_csv(self, save_path):
+    def _to_csv(self):
         return self["forecast"]
 
 
 class TSClsResult(_BaseTSResult):
-    def save_to_csv(self, save_path):
+    def _to_csv(self):
         return self["classification"]
 
 
 class TSAdResult(_BaseTSResult):
-    def save_to_csv(self, save_path):
+    def _to_csv(self):
         return self["anomaly"]

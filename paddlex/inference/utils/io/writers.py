@@ -194,8 +194,7 @@ class _BaseWriterBackend(object):
 
     def write_obj(self, out_path, obj):
         """write object"""
-        out_dir = os.path.dirname(out_path)
-        os.makedirs(out_dir, exist_ok=True)
+        Path(out_path).parent.mkdir(parents=True, exist_ok=True)
         return self._write_obj(out_path, obj)
 
     def _write_obj(self, out_path, obj):
