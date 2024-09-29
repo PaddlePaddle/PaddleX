@@ -241,7 +241,7 @@ for res in output:
     res.save_to_img("./output/") # 保存结果可视化图像
     res.save_to_json("./output/") # 保存预测的结构化输出
 ```  
-更多参数请参考 [OCR产线使用教程](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)。
+更多参数请参考 [语义分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)。
 
 2. 此外，PaddleX 也提供了服务化部署方式，详细说明如下：
 
