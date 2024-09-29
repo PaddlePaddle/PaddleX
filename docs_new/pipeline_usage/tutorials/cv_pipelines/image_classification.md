@@ -1,6 +1,6 @@
-通用图像分类产线使用教程
+# 通用图像分类产线使用教程
 
-# 通用图像分类产线介绍
+## 通用图像分类产线介绍
 图像分类是一种将图像分配到预定义类别的技术。它广泛应用于物体识别、场景理解和自动标注等领域。图像分类可以识别各种物体，如动物、植物、交通标志等，并根据其特征将其归类。通过使用深度学习模型，图像分类能够自动提取图像特征并进行准确分类。通用图像分类产线用于解决图像分类任务，对给定的图像。
 
 ![](https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=d118f459d72a4321a61c94c831f0f667&docGuid=u_VtdOCxJUF8GK "")
@@ -95,19 +95,19 @@
 
 </details>
 
-# 快速开始
+## 快速开始
 PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验通用图像分类产线的效果，也可以在本地使用命令行或 Python 体验通用图像分类产线的效果。
 
-## 2.1 在线体验
+### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/100061/webUI)通用图像分类产线的效果，用官方提供的 demo 图片进行识别，例如：
 
 ![](https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=78ee34ce1c024d48a0b9895a920c8790&docGuid=u_VtdOCxJUF8GK "")
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
-## 2.2 本地体验
+### 2.2 本地体验
 在本地使用通用图像分类产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
-### 2.2.1 命令行方式体验
+#### 2.2.1 命令行方式体验
 一行命令即可快速体验图像分类产线效果
 
 ```
@@ -138,7 +138,7 @@ paddlex --pipeline ./image_classification.yaml --input https://paddle-model-ecol
 λ szzj-acg-tge0-85
 ```
 ![](https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=73f8d0f2139040cd8217f1c1bd90cc39&docGuid=u_VtdOCxJUF8GK "")
-### 2.2.2 Python脚本方式集成 
+#### 2.2.2 Python脚本方式集成 
 几行代码即可完成产线的快速推理，以通用图像分类产线为例：
 
 ```
@@ -148,9 +148,9 @@ pipeline = create_pipeline(pipeline="image_classification")
 
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
+    res.print() ## 打印预测的结构化输出
+    res.save_to_img("./output/") ## 保存结果可视化图像
+    res.save_to_json("./output/") ## 保存预测的结构化输出
 ```
 得到的结果与命令行方式相同。
 
@@ -205,11 +205,11 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/image_classification.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
+    res.print() ## 打印预测的结构化输出
+    res.save_to_img("./output/") ## 保存结果可视化图像
+    res.save_to_json("./output/") ## 保存预测的结构化输出
 ```
-# 开发集成/部署
+## 开发集成/部署
 如果通用图像分类产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
 若您需要将通用图像分类产线直接应用在您的 Python 项目中，可以参考 2.2.2 Python脚本方式中的示例代码。
@@ -221,13 +221,13 @@ for res in output:
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/lite_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
-# 二次开发
+## 二次开发
 如果通用图像分类产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用图像分类产线的在您的场景中的识别效果。
 
-## 4.1 模型微调
+### 4.1 模型微调
 由于通用图像分类产线包含图像分类模块，如果模型产线的效果不及预期，那么您需要参考[图像分类模块开发教程](../../../module_usage/tutorials/cv_modules/image_classification.md)中的**二次开发**章节，使用您的私有数据集对图像分类模型进行微调。
 
-## 4.2 模型应用
+### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
@@ -242,7 +242,7 @@ Pipeline:
 ```
 随后， 参考 *2.2 本地体验* 中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
-#  多硬件支持
+##  多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需修改 ****--device**** 参数**即可完成不同硬件之间的无缝切换。
 
 例如，您使用英伟达 GPU 进行图像分类产线的推理，使用的 Python 命令为：
