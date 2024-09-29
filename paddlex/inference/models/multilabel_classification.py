@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-MODELS = [
-    "PP-OCRv4_mobile_rec",
-    "PP-OCRv4_server_rec",
-    "ch_SVTRv2_rec",
-    "ch_RepSVTR_rec",
-]
+import numpy as np
+
+from ...utils.func_register import FuncRegister
+from ...modules.multilabel_classification.model_list import MODELS
+from ..components import *
+from ..results import MLClassResult
+from ..utils.process_hook import batchable_method
+from .image_classification import ClasPredictor
+
+
+class MLClasPredictor(ClasPredictor):
+
+    entities = [*MODELS]
+
+    def _pack_res(self, single):
+        keys = ["img_path", "class_ids", "scores"]
+        if "label_names" in single:
+            keys.append("label_names")
+        return MLClassResult({key: single[key] for key in keys})

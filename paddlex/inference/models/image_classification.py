@@ -16,7 +16,6 @@ import numpy as np
 
 from ...utils.func_register import FuncRegister
 from ...modules.image_classification.model_list import MODELS
-from ...modules.multilabel_classification.model_list import MODELS as ML_MODELS
 from ..components import *
 from ..results import TopkResult
 from .base import BasicPredictor
@@ -24,7 +23,7 @@ from .base import BasicPredictor
 
 class ClasPredictor(BasicPredictor):
 
-    entities = [*MODELS, *ML_MODELS]
+    entities = [*MODELS]
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

@@ -36,12 +36,19 @@ class TableRecPipeline(BasePipeline):
         table_batch_size=1,
         predictor_kwargs=None,
     ):
-        super().__init__(predictor_kwargs)
-        self._build_predictor(layout_model, text_det_model, text_rec_model, table_model)
+        super().__init__(predictor_kwargs=predictor_kwargs)
+        self._build_predictor(
+            layout_model, text_det_model, text_rec_model, table_model, predictor_kwargs
+        )
         self.set_predictor(layout_batch_size, text_rec_batch_size, table_batch_size)
 
     def _build_predictor(
-        self, layout_model, text_det_model, text_rec_model, table_model
+        self,
+        layout_model,
+        text_det_model,
+        text_rec_model,
+        table_model,
+        predictor_kwargs,
     ):
         self.layout_predictor = self._create_model(model=layout_model)
         self.ocr_pipeline = OCRPipeline(

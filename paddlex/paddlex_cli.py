@@ -68,7 +68,7 @@ def args_cfg():
     parser.add_argument("--model_dir", nargs="+", type=parse_str, help="")
     parser.add_argument("--input", type=str, help="")
     parser.add_argument("--save_dir", type=str, default="./", help="")
-    parser.add_argument("--device", type=str, default="gpu:0", help="")
+    parser.add_argument("--device", type=str, help="")
     parser.add_argument("--use_hpip", action="store_true")
     parser.add_argument("--serial_number", type=str)
     parser.add_argument("--update_license", action="store_true")

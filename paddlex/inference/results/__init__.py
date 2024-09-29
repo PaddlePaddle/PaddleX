@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .base import BaseResult
-from .topk import TopkResult
+from .clas import TopkResult, MLClassResult
 from .text_det import TextDetResult
 from .text_rec import TextRecResult
 from .table_rec import TableRecResult, StructureTableResult, TableResult

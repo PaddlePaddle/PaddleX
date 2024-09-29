@@ -1,13 +1,14 @@
 Global:
   pipeline_name: semantic_segmentation
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png
   
 ######################################## Setting ########################################
 # Please select the model from bellow `Support`
 
 Pipeline:
   model: PP-LiteSeg-T
-
+  batch_size: 1
+  device: "gpu:0"
 ######################################## Support ########################################
 NOTE:
   device: 

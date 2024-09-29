@@ -1,12 +1,11 @@
 Global:
-  pipeline_name: OCR
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png
+  pipeline_name: small_object_detection
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg
   
 ######################################## Setting ########################################
 # Please select the model from bellow `Support`
 
 Pipeline:
-  det_model: PP-OCRv4_mobile_det
-  rec_model: PP-OCRv4_mobile_rec
+  model: PP-YOLOE_plus_SOD-L
   batch_size: 1
   device: "gpu:0"

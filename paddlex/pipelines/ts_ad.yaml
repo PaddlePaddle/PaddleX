@@ -1,12 +1,11 @@
 Global:
-  pipeline_name: OCR
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png
+  pipeline_name: ts_ad
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv
   
 ######################################## Setting ########################################
 # Please select the model from bellow `Support`
 
 Pipeline:
-  det_model: PP-OCRv4_mobile_det
-  rec_model: PP-OCRv4_mobile_rec
+  model: DLinear_ad
   batch_size: 1
   device: "gpu:0"

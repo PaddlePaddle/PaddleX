@@ -13,8 +13,5 @@
 # limitations under the License.
 
 MODELS = [
-    "PP-OCRv4_mobile_rec",
-    "PP-OCRv4_server_rec",
-    "ch_SVTRv2_rec",
-    "ch_RepSVTR_rec",
+    "LaTeX_OCR_rec",
 ]
