@@ -23,12 +23,10 @@ def interactive_get_pipeline(pipeline):
     file_path = get_pipeline_path(pipeline)
     file_name = Path(file_path).name
 
-    target_path = (
-        input(
-            "Please enter the path that you want to save the pipeline config file: (default `./`)\n"
-        )
-        or "."
+    logging.info(
+        "Please enter the path that you want to save the pipeline config file: (default `./`)"
     )
+    target_path = input() or "."
     target_path = Path(target_path)
 
     if not target_path.suffix in (".yaml", ".yml"):
@@ -41,9 +39,8 @@ def interactive_get_pipeline(pipeline):
         target_path = target_path / file_name
 
     if target_path.exists():
-        overwrite = input(
-            f"The file({target_path}) already exists. Is it covered? (y/N): \n"
-        ).lower()
+        logging.info(f"The file({target_path}) already exists. Is it covered? (y/N):")
+        overwrite = input().lower()
         if overwrite != "y":
             logging.warning("Exit!")
             return
