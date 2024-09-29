@@ -2,16 +2,19 @@ tomark~=0.1.4
 psutil~=5.9.2
 wget
 grpcio==1.51.3
-pydantic~=1.10.1
+pydantic>=2
 editdistance
 openpyxl
 PyMuPDF==1.20.2
-qianfan==0.0.3
-langchain==0.0.292
-erniebot
 premailer
 python-docx
-unstructured
-networkx
 Pillow==9.5
 requests <= 2.29
+######## For Chatocrv3 #######
+qianfan==0.0.3
+langchain==0.1.5
+langchain-community==0.0.17
+erniebot == 0.5.0
+erniebot-agent == 0.5.0
+unstructured
+networkx
