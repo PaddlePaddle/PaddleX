@@ -65,6 +65,7 @@ def args_cfg():
     parser.add_argument("--input", type=str, default=None, help="")
     parser.add_argument("--save_path", type=str, default=None, help="")
     parser.add_argument("--device", type=str, default=None, help="")
+    parser.add_argument("--get_pipeline_config", type=str, default=None, help="")
 
     return parser.parse_args()
 
@@ -107,8 +108,8 @@ def main():
     if args.install:
         install(args)
     else:
-        if args.input is None:
-            interactive_get_pipeline(args.pipeline)
+        if args.get_pipeline_config is not None:
+            interactive_get_pipeline(args.get_pipeline_config)
         else:
             return pipeline_predict(
                 args.pipeline,
