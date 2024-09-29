@@ -27,19 +27,19 @@ PaddleX支持的插件如下，请您根据开发需求，确定所需的一个�
 
 |模型产线|模块|对应插件|
 |-|-|-|
-|通用图像分类|图像分类|PaddleClas|
-|通用目标检测|目标检测|PaddleDetection|
-|通用语义分割|语义分割|PaddleSeg|
-|通用实例分割|实例分割|PaddleDetection|
-|通用OCR|文本检测<br>文本识别|PaddleOCR|
-|通用表格识别|版面区域检测<br>表格结构识别<br>文本检测<br>文本识别|PaddleOCR<br>PaddleDetection|
-|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文档图像矫正<br>文档图像方向分类|PaddleOCR<br>PaddleDetection<br>PaddleClas |
-|时序预测|时序预测模块|PaddleTS|
-|时序异常检测|时序异常检测模块|PaddleTS|
-|时序分类|时序分类模块|PaddleTS|
-|通用多标签分类|图像多标签分类|PaddleClas|
-|小目标检测|小目标检测|PaddleDetection|
-|图像异常检测|无监督异常检测|PaddleSeg|
+|通用图像分类|图像分类|`PaddleClas`|
+|通用目标检测|目标检测|`PaddleDetection`|
+|通用语义分割|语义分割|`PaddleSeg`|
+|通用实例分割|实例分割|`PaddleDetection`|
+|通用OCR|文本检测<br>文本识别|`PaddleOCR`|
+|通用表格识别|版面区域检测<br>表格结构识别<br>文本检测<br>文本识别|`PaddleOCR`<br>`PaddleDetection`|
+|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文档图像矫正<br>文档图像方向分类|`PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
+|时序预测|时序预测模块|`PaddleTS`|
+|时序异常检测|时序异常检测模块|`PaddleTS`|
+|时序分类|时序分类模块|`PaddleTS`|
+|通用多标签分类|图像多标签分类|`PaddleClas`|
+|小目标检测|小目标检测|`PaddleDetection`|
+|图像异常检测|无监督异常检测|`PaddleSeg`|
 
 </details>
 
