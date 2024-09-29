@@ -13,14 +13,13 @@
 # limitations under the License.
 
 import math
-import tempfile
 from pathlib import Path
 from copy import deepcopy
 
 import numpy as np
 import cv2
 
-from .....utils.cache import CACHE_DIR
+from .....utils.cache import CACHE_DIR, temp_file_manager
 from ....utils.io import ImageReader, ImageWriter, PDFReader
 from ...utils.mixin import BatchSizeMixin
 from ...base import BaseComponent
@@ -92,8 +91,9 @@ class ReadImage(_BaseRead):
     def apply(self, img):
         """apply"""
         if isinstance(img, np.ndarray):
-            # TODO(gaotingquan): set delete to True
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+            with temp_file_manager.temp_file_context(
+                delete=True, suffix=".png"
+            ) as temp_file:
                 img_path = Path(temp_file.name)
                 self._writer.write(img_path, img)
                 yield [
