@@ -14,7 +14,6 @@
 
 import asyncio
 import contextlib
-import functools
 import json
 from typing import (
     Any,
@@ -26,7 +25,6 @@ from typing import (
     Tuple,
     TypeVar,
 )
-from functools import partial
 
 import aiohttp
 import fastapi
@@ -39,14 +37,14 @@ from typing_extensions import Final, ParamSpec
 
 from ..base import BasePipeline
 from .models import Response
-from .utils import generate_log_id
+from .utils import generate_log_id, async_call
 
 
 SERVING_CONFIG_KEY: Final[str] = "Serving"
 
 _PipelineT = TypeVar("_PipelineT", bound=BasePipeline)
 _P = ParamSpec("_P")
-_T = TypeVar("_T")
+_R = TypeVar("_R")
 
 
 class PipelineWrapper(Generic[_PipelineT]):
@@ -55,30 +53,24 @@ class PipelineWrapper(Generic[_PipelineT]):
         self._pipeline = pipeline
         self._lock = asyncio.Lock()
 
-    async def infer(self, data: Any) -> Any:
-        def _infer(pipeline: _PipelineT, input_: Any) -> Any:
-            output = list(pipeline(input_))
+    @property
+    def pipeline(self) -> _PipelineT:
+        return self._pipeline
+
+    async def infer(self, *args: Any, **kwargs: Any) -> Any:
+        def _infer(pipeline: _PipelineT, *args: Any, **kwargs: Any) -> Any:
+            output = list(pipeline(*args, **kwargs))
             if len(output) != 1:
                 raise RuntimeError("Expected exactly one item from the generator")
             return output[0]
 
-        async with self._lock:
-            return await self._run_in_executor(
-                functools.partial(_infer, self._pipeline), data
-            )
+        return await self.call(_infer, *args, **kwargs)
 
     async def call(
-        self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
-    ) -> _T:
+        self, func: Callable[_P, _R], *args: _P.args, **kwargs: _P.kwargs
+    ) -> _R:
         async with self._lock:
-            return await self._run_in_executor(func, *args, **kwargs)
-
-    async def _run_in_executor(
-        self, func: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
-    ) -> _T:
-        return await asyncio.get_running_loop().run_in_executor(
-            None, partial(func, *args, **kwargs)
-        )
+            return await async_call(func, *args, **kwargs)
 
 
 class AppConfig(BaseModel):

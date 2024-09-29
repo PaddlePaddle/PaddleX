@@ -80,7 +80,7 @@ def create_pipeline_app(pipeline: OCRPipeline, app_config: AppConfig) -> FastAPI
                 result["dt_polys"], result["rec_text"], result["rec_score"]
             ):
                 texts.append(Text(bbox=bbox, text=text, score=score))
-            output_image_base64 = result.to_base64()
+            output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),

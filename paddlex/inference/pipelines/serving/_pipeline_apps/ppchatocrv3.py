@@ -16,13 +16,14 @@ import asyncio
 import os
 import re
 import uuid
-from typing import List, Optional, Literal, Final, Tuple
+from typing import Awaitable, List, Optional, Literal, Final, Tuple
 from functools import partial
 from urllib.parse import urlparse, parse_qs
 
 import cv2
 import numpy as np
 from fastapi import FastAPI, HTTPException
+from numpy.typing import ArrayLike
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias, assert_never
 
@@ -44,41 +45,84 @@ class InferenceParams(BaseModel):
     maxLongSide: Optional[Annotated[int, Field(gt=0)]] = None
 
 
-class InferVisualRequest(BaseModel):
+class AnalyzeImageRequest(BaseModel):
     file: str
     fileType: Optional[FileType] = None
-    aistudioToken: Optional[str] = None
-    ernieModel: Optional[str] = None
-    useOricls: Optional[bool] = None
-    useUvdoc: Optional[bool] = None
+    useOricls: bool = True
+    useCurve: bool = True
+    useUvdoc: bool = True
     inferenceParams: Optional[InferenceParams] = None
 
 
-class InferVisualResult(BaseModel):
-    tableOcrResult: dict
-    documentType: str
-    ocrAllResult: str
-    rawImages: List[str]
-    visualOcr: List[str]
-    visualLayout: List[str]
-    htmlResult: List[str]
-    layoutAllResult: dict
+Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
+BoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
 
 
-class InferLLMRequest(BaseModel):
-    queryKey: str
-    tableOcrResult: dict
-    documentType: str
-    ocrAllResult: str
-    aistudioToken: Optional[str] = None
-    ernieModel: Optional[str] = None
+class Text(BaseModel):
+    bbox: BoundingBox
+    text: str
+    score: float
+
+
+class Table(BaseModel):
+    bbox: BoundingBox
+    html: str
+
+
+class VisionResult(BaseModel):
+    texts: List[Text]
+    tables: List[Table]
+    inputImage: str
+    ocrImage: str
+    layoutImage: str
+
+
+class AnalyzeImageResult(BaseModel):
+    visionResults: List[VisionResult]
+    visionInfo: dict
+
+
+class BuildVectorStoreRequest(BaseModel):
+    visionInfo: dict
+    maxTokens: Optional[int] = None
+    llmRequestInterval: Optional[int] = None
+
+
+class BuildVectorStoreResult(BaseModel):
+    vectorStore: str
+
+
+class RetrieveKnowledgeRequest(BaseModel):
+    keys: List[str]
+    vectorStore: str
+    visionInfo: dict
+
+
+class RetrieveKnowledgeResult(BaseModel):
+    retrievalResult: str
+
+
+class ChatRequest(BaseModel):
+    keys: List[str]
+    visionInfo: dict
+    taskDescription: Optional[str] = None
     rules: Optional[str] = None
     fewShot: Optional[str] = None
-    taskDescription: Optional[str] = None
+    useVectorStore: bool = True
+    vectorStore: Optional[str] = None
+    retrievalResult: Optional[str] = None
+    returnPrompt: bool = True
 
 
-class InferLLMResult(BaseModel):
-    llmResult: str
+class Prompts(BaseModel):
+    ocr: str
+    table: str
+    html: str
+
+
+class ChatResult(BaseModel):
+    chatResult: str
+    prompts: Optional[Prompts] = None
 
 
 def _generate_request_id() -> str:
@@ -93,7 +137,10 @@ def _infer_file_type(url: str) -> FileType:
     ext = os.path.splitext(url_parts.path)[1]
     # HACK: The support for BOS URLs with query params is implementation-based,
     # not interface-based.
-    is_bos_url = url_parts.netloc == "bj.bcebos.com"
+    is_bos_url = (
+        re.fullmatch(r"(?:bj|bd|su|gz|cd|hkg|fwh|fsh)\.bcebos\.com", url_parts.netloc)
+        is not None
+    )
     if is_bos_url and url_parts.query:
         params = parse_qs(url_parts.query)
         if (
@@ -146,16 +193,19 @@ def _bytes_to_arrays(
 
 
 async def _postprocess_image(
-    img: np.ndarray,
+    img: ArrayLike,
     request_id: str,
     filename: str,
     file_storage_config: file_storage.FileStorageConfig,
-) -> None:
+) -> str:
     key = f"{request_id}/{filename}"
     ext = os.path.splitext(filename)[1]
+    img = np.asarray(img)
     _, encoded_img = cv2.imencode(ext, img)
     encoded_img = encoded_img.tobytes()
-    file_storage.postprocess_file(encoded_img, config=file_storage_config, key=key)
+    return file_storage.postprocess_file(
+        encoded_img, config=file_storage_config, key=key
+    )
 
 
 def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> FastAPI:
@@ -173,15 +223,15 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
     ctx.extra.setdefault("max_num_imgs", _DEFAULT_MAX_NUM_IMGS)
 
     @app.post(
-        "/chatocr-visual", operation_id="analyze", responses={422: {"model": Response}}
+        "/chatocr-vision",
+        operation_id="analyzeImage",
+        responses={422: {"model": Response}},
     )
     async def _analyze_image(
-        request: InferVisualRequest,
-    ) -> ResultResponse[InferVisualResult]:
+        request: AnalyzeImageRequest,
+    ) -> ResultResponse[AnalyzeImageResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
-
-        loop = asyncio.get_running_loop()
 
         request_id = _generate_request_id()
 
@@ -200,134 +250,203 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
         else:
             file_type = request.fileType
 
-        try:
-            inputs = []
+        if request.inferenceParams:
+            max_long_side = request.inferenceParams.maxLongSide
+            if max_long_side:
+                raise HTTPException(
+                    status_code=422,
+                    detail="`max_long_side` is currently not supported.",
+                )
 
-            # images
+        try:
             file_bytes = await serving_utils.get_raw_bytes(
                 request.file, aiohttp_session
             )
-            images = await loop.run_in_executor(
-                None,
-                partial(
-                    _bytes_to_arrays,
-                    file_bytes,
-                    file_type,
-                    max_img_size=ctx.extra["max_img_size"],
-                    max_num_imgs=ctx.extra["max_num_imgs"],
-                ),
+            images = await serving_utils.call_async(
+                _bytes_to_arrays,
+                file_bytes,
+                file_type,
+                max_img_size=ctx.extra["max_img_size"],
+                max_num_imgs=ctx.extra["max_num_imgs"],
             )
-            input_ = create_triton_input(
-                np.array([images]), model_info["input_names"][0], model_info["inputs"]
+            use_oricls = request.useOricls
+            use_curve = request.useCurve
+            use_uvdoc = request.useUvdoc
+
+            result = await pipeline.infer(
+                images, use_oricls=use_oricls, use_curve=use_curve, use_uvdoc=use_uvdoc
             )
-            inputs.append(input_)
 
-            # optional_params
-            optional_params: Dict[str, Any] = {}
-            ernie_config = {}
-            if request.aistudioToken is not None:
-                ernie_config["aistudio_access_token"] = request.aistudioToken
-            if request.ernieModel is not None:
-                ernie_config["ernie_model"] = request.ernieModel
-            if ernie_config:
-                optional_params["ernie_config"] = ernie_config
-            if request.useOricls is not None:
-                optional_params["use_oricls"] = request.useOricls
-            if request.useUvdoc is not None:
-                optional_params["use_uvdoc"] = request.useUvdoc
-            if request.inferenceParams is not None:
-                inference_params = {}
-                if request.inferenceParams.maxLongSide is not None:
-                    inference_params["max_long_side"] = (
-                        request.inferenceParams.maxLongSide
-                    )
-                optional_params["inference_params"] = inference_params
-            optional_params_bytes = json.dumps(optional_params).encode("utf-8")
-            input_ = create_triton_input(
-                np.array([[optional_params_bytes]]),
-                model_info["input_names"][1],
-                model_info["inputs"],
-            )
-            inputs.append(input_)
-
-            outputs = [
-                triton_grpc.InferRequestedOutput(name)
-                for name in model_info["output_names"]
-            ]
-
-            results = await triton_client.infer(
-                model_name=MODEL_NAME,
-                model_version=MODEL_VERSION,
-                inputs=inputs,
-                outputs=outputs,
-            )
-            results = {
-                name: results.as_numpy(name) for name in model_info["output_names"]
-            }
-
-            table_ocr_result = results["table_ocr_result"][0][0].decode("utf-8")
-            table_ocr_result = json.loads(table_ocr_result)
-            document_type = results["document_type"][0][0].decode("utf-8")
-            ocr_all_result = results["ocr_all_result"][0][0].decode("utf-8")
-            raw_images = await asyncio.gather(
-                *(
-                    loop.run_in_executor(
-                        partial(
-                            _postprocess_image,
-                            img,
-                            request_id=request_id,
-                            filename=f"raw_images_{i}.jpg",
-                            file_storage_config=ctx.extra["file_storage_config"],
-                        )
-                    )
-                    for i, img in enumerate(results["raw_images"][0])
+            vision_results: List[VisionResult] = []
+            for i, (img, item) in enumerate(zip(images, result["visual_result"])):
+                pp_img_futures: List[Awaitable] = []
+                future = serving_utils.call_async(
+                    _postprocess_image,
+                    img,
+                    request_id=request_id,
+                    filename=f"input_image_{i}.jpg",
+                    file_storage_config=ctx.extra["file_storage_config"],
                 )
-            )
-            visual_ocr = await asyncio.gather(
-                *(
-                    loop.run_in_executor(
-                        partial(
-                            _postprocess_image,
-                            img,
-                            request_id=request_id,
-                            filename=f"visual_ocr_{i}.jpg",
-                            file_storage_config=ctx.extra["file_storage_config"],
-                        )
-                    )
-                    for i, img in enumerate(results["visual_ocr"][0])
+                pp_img_futures.append(future)
+                future = serving_utils.call_async(
+                    _postprocess_image,
+                    item["ocr_result"].img,
+                    request_id=request_id,
+                    filename=f"ocr_image_{i}.jpg",
+                    file_storage_config=ctx.extra["file_storage_config"],
                 )
-            )
-            visual_layout = await asyncio.gather(
-                *(
-                    loop.run_in_executor(
-                        partial(
-                            _postprocess_image,
-                            img,
-                            request_id=request_id,
-                            filename=f"visual_layout_{i}.jpg",
-                            file_storage_config=ctx.extra["file_storage_config"],
-                        )
-                    )
-                    for i, img in enumerate(results["visual_layout"][0])
+                pp_img_futures.append(future)
+                future = serving_utils.call_async(
+                    _postprocess_image,
+                    item["layout_result"].img,
+                    request_id=request_id,
+                    filename=f"layout_image_{i}.jpg",
+                    file_storage_config=ctx.extra["file_storage_config"],
                 )
-            )
-            html_result = [item.decode("utf-8") for item in results["html_result"][0]]
-            layout_all_result = results["layout_all_result"][0][0].decode("utf-8")
-            layout_all_result = json.loads(layout_all_result)
+                pp_img_futures.append(future)
+                texts: List[Text] = []
+                for bbox, text, score in zip(
+                    item["ocr_result"]["dt_polys"],
+                    item["ocr_result"]["rec_text"],
+                    item["ocr_result"]["rec_score"],
+                ):
+                    texts.append(Text(bbox=bbox, text=text, score=score))
+                tables: List[Table] = []
+                for bbox, html in zip(
+                    result["table_result"]["bbox"], result["table_result"]["html"]
+                ):
+                    tables.append(Table(bbox=bbox, html=html))
+                input_img, ocr_img, layout_img = await asyncio.gather(*pp_img_futures)
+                vision_result = VisionResult(
+                    texts=texts,
+                    tables=tables,
+                    inputImage=input_img,
+                    ocrImage=ocr_img,
+                    layoutImage=layout_img,
+                )
+                vision_results.append(vision_result)
+
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferVisualResult(
-                    tableOcrResult=table_ocr_result,
-                    documentType=document_type,
-                    ocrAllResult=ocr_all_result,
-                    rawImages=raw_images,
-                    visualOcr=visual_ocr,
-                    visualLayout=visual_layout,
-                    htmlResult=html_result,
-                    layoutAllResult=layout_all_result,
+                result=AnalyzeImageResult(
+                    visionResults=vision_results,
+                    visionInfo=result["visual_info"],
                 ),
+            )
+
+        except Exception as e:
+            logging.exception(e)
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+    @app.post(
+        "/chatocr-vector",
+        operation_id="buildVectorStore",
+        responses={422: {"model": Response}},
+    )
+    async def _build_vector_store(
+        request: BuildVectorStoreRequest,
+    ) -> ResultResponse[BuildVectorStoreResult]:
+        pipeline = ctx.pipeline
+
+        try:
+            result = await serving_utils.call_async(
+                pipeline.pipeline.get_vector_text,
+                visual_info=request.visionInfo,
+                max_tokens=request.maxTokens,
+                llm_request_interval=request.llmRequestInterval,
+            )
+
+            return ResultResponse(
+                logId=serving_utils.generate_log_id(),
+                errorCode=0,
+                errorMsg="Success",
+                result=BuildVectorStoreResult(vectorStore=result["vector"]),
+            )
+
+        except Exception as e:
+            logging.exception(e)
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+    @app.post(
+        "/chatocr-retrieval",
+        operation_id="retrieveKnowledge",
+        responses={422: {"model": Response}},
+    )
+    async def _retrieve_knowledge(
+        request: RetrieveKnowledgeRequest,
+    ) -> ResultResponse[RetrieveKnowledgeResult]:
+        pipeline = ctx.pipeline
+
+        try:
+            result = await serving_utils.call_async(
+                pipeline.pipeline.get_retrieval_text,
+                key_list=request.keys,
+                vector=request.vectorStore,
+                visual_info=request.visionInfo,
+            )
+
+            return ResultResponse(
+                logId=serving_utils.generate_log_id(),
+                errorCode=0,
+                errorMsg="Success",
+                result=RetrieveKnowledgeResult(
+                    retrievalResult=result["retrieval_result"]
+                ),
+            )
+
+        except Exception as e:
+            logging.exception(e)
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+    @app.post(
+        "/chatocr-chat", operation_id="chat", responses={422: {"model": Response}}
+    )
+    async def _chat(
+        request: ChatRequest,
+    ) -> ResultResponse[ChatResult]:
+        pipeline = ctx.pipeline
+
+        try:
+            kwargs = {
+                "key_list": request.keys,
+                "visual_info": request.visionInfo,
+            }
+            if request.taskDescription is not None:
+                kwargs["task_description"] = request.taskDescription
+            if request.rules is not None:
+                kwargs["rules"] = request.rules
+            if request.fewShot is not None:
+                kwargs["few_shot"] = request.fewShot
+            kwargs["use_vector"] = request.useVectorStore
+            if request.vectorStore is not None:
+                kwargs["vector"] = request.vectorStore
+            if request.retrievalResult is not None:
+                kwargs["retrieval_result"] = request.retrievalResult
+            kwargs["save_prompt"] = request.returnPrompt
+
+            result = await serving_utils.call_async(pipeline.pipeline.chat, **kwargs)
+
+            if result["prompt"]:
+                prompts = Prompts(
+                    ocr=result["prompt"]["ocr_prompt"],
+                    table=result["prompt"]["table_prompt"],
+                    html=result["prompt"]["html_prompt"],
+                )
+                chat_result = ChatResult(
+                    chatResult=result["chat_res"],
+                    prompts=prompts,
+                )
+            else:
+                chat_result = ChatResult(
+                    chatResult=result["chat_res"],
+                )
+            return ResultResponse(
+                logId=serving_utils.generate_log_id(),
+                errorCode=0,
+                errorMsg="Success",
+                result=chat_result,
             )
 
         except Exception as e:

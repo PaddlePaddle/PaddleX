@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 import base64
 import io
 import uuid
 from urllib.parse import urlparse
-from typing import List, Optional
+from typing import Callable, Awaitable, List, Optional, TypeVar
+from functools import partial
 
 import aiohttp
 import fitz
@@ -25,6 +27,11 @@ import numpy as np
 import pandas as pd
 import yarl
 from PIL import Image
+from typing_extensions import ParamSpec
+
+
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
 
 
 def generate_log_id() -> str:
@@ -94,3 +101,11 @@ def read_pdf(
                         image = cv2.resize(image, img_size)
             images.append(image)
     return images
+
+
+def async_call(
+    func: Callable[_P, _R], /, *args: _P.args, **kwargs: _P.kwargs
+) -> Awaitable[_R]:
+    return asyncio.get_running_loop().run_in_executor(
+        None, partial(func, *args, **kwargs)
+    )

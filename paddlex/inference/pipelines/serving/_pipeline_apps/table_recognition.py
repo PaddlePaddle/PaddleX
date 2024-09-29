@@ -82,8 +82,10 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
                 result["table_result"]["bbox"], result["table_result"]["html"]
             ):
                 tables.append(Table(bbox=bbox, html=html))
-            table_image_base64 = result["table_result"].to_base64()
-            ocr_iamge_base64 = result["ocr_result"].to_base64()
+            table_image_base64 = serving_utils.image_to_base64(
+                result["table_result"].img
+            )
+            ocr_iamge_base64 = serving_utils.image_to_base64(result["ocr_result"].img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),

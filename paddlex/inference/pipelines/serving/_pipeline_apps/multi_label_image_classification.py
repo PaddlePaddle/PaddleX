@@ -72,7 +72,7 @@ def create_pipeline_app(
                 result["class_ids"], cat_names, result["scores"]
             ):
                 categories.append(Category(id=id_, name=name, score=score))
-            output_image_base64 = result.to_base64()
+            output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),

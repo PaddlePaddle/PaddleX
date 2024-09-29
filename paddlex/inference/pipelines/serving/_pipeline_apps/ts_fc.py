@@ -52,7 +52,7 @@ def create_pipeline_app(pipeline: TSFc, app_config: AppConfig) -> FastAPI:
             result = await pipeline.infer(df)
 
             output_csv = serving_utils.data_frame_to_base64(result["forecast"])
-            output_image_base64 = result.to_base64()
+            output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
