@@ -379,7 +379,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the `.yaml` configuration file path of the model (here it's `Mask-RT-DETR-L.yaml`)
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
-* Specify the input data path: `-o Predict.input="..."`. Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+* Specify the input data path: `-o Predict.input="..."`. Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX Pipeline or into your own project.
@@ -389,4 +389,4 @@ The model can be directly integrated into the PaddleX Pipeline or into your own 
 The instance segmentation module can be integrated into the [General Instance Segmentation Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md) of PaddleX. Simply replace the model path to update the instance segmentation module of the relevant pipeline.
 
 2.**Module Integration**
-The weights you produce can be directly integrated into the instance segmentation module. Refer to the Python example code in [Quick Integration](#三快速集成), and simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the instance segmentation module. Refer to the Python example code in <a href="#lable">Quick Integration</a> , and simply replace the model with the path to your trained model.
