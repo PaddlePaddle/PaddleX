@@ -1,7 +1,7 @@
-# 版面区域定位模块开发教程
+# 版面区域检测模块开发教程
 
 ## 一、概述
-版面区域定位任务的核心是对输入的文档图像进行内容解析和区域划分。通过识别图像中的不同元素（如文字、图表、图片等），将其归类为预定义的类别（如纯文本区、标题区、表格区、图片区、列表区等），并确定这些区域在文档中的位置和大小。
+版面区域检测任务的核心是对输入的文档图像进行内容解析和区域划分。通过识别图像中的不同元素（如文字、图表、图片等），将其归类为预定义的类别（如纯文本区、标题区、表格区、图片区、列表区等），并确定这些区域在文档中的位置和大小。
 
 ## 二、支持模型列表
 
@@ -21,7 +21,7 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成whl包的安装后，几行代码即可完成版面区域定位模块的推理，可以任意切换该模块下的模型，您也可以将版面区域定位模块中的模型推理集成到您的项目中。
+完成whl包的安装后，几行代码即可完成版面区域检测模块的推理，可以任意切换该模块下的模型，您也可以将版面区域检测模块中的模型推理集成到您的项目中。
 
 ```python
 from paddlex.inference import create_model 
@@ -246,7 +246,7 @@ python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml 
 模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。
 
 1. **产线集成**
-版面区域定位模块可以集成的PaddleX产线有[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../..//pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成版面区域定位模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+版面区域检测模块可以集成的PaddleX产线有[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../..//pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成版面区域检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 1. **模块集成**
-您产出的权重可以直接集成到版面区域定位模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+您产出的权重可以直接集成到版面区域检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
