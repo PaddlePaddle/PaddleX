@@ -18,7 +18,7 @@ docker run -it --name=xxx -m 81920M --memory-swap=81920M \
     registry.baidubce.com/device/paddle-xpu:$(uname -m)-py310 bash
 ```
 ## 2、安装paddle包
-当前提供 Python3.9 的 wheel 安装包。如有其他 Python 版本需求，可以参考[飞桨官方文档](https://www.paddlepaddle.org.cn/install/quick)自行编译安装。
+当前提供 Python3.10 的 wheel 安装包。如有其他 Python 版本需求，可以参考[飞桨官方文档](https://www.paddlepaddle.org.cn/install/quick)自行编译安装。
 
 安装 Python3.10 的 wheel 安装包
 
