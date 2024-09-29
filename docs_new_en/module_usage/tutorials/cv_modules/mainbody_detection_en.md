@@ -32,7 +32,7 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
 **Note: The evaluation set for the above accuracy metrics is  PaddleClas mainbody detection dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
 
-## III. Quick Integration
+## III. Quick Integration  <a id="quick"> </a> 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, you can perform mainbody detection inference with just a few lines of code. You can easily switch between models under this module, and integrate the mainbody detection model inference into your project.
@@ -260,4 +260,4 @@ The main body detection module can be integrated into PaddleX pipelines such as 
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the main body detection module. You can refer to the Python example code in [Quick Integration](#三快速集成), simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the main body detection module. You can refer to the Python example code in [Quick Integration](#quick), simply replace the model with the path to your trained model.
