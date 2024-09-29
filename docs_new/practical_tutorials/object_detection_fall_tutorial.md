@@ -151,7 +151,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
     * `epochs_iters`：训练轮次数设置；
     * `learning_rate`：训练学习率设置；
 
-更多超参数介绍，请参考 [PaddleX 超参数介绍](../../../module_usage/instructions/config_parameters_common.md)。
+更多超参数介绍，请参考 [PaddleX 超参数介绍](../module_usage/instructions/config_parameters_common.md)。
 
 **注：**
 - 以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
