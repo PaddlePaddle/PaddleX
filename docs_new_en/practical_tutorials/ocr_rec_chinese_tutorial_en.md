@@ -29,7 +29,7 @@ After experiencing the pipeline, determine if it meets your expectations (includ
 
 ## 3. Select a Model
 
-PaddleX provides four end-to-end OCR models. For details, refer to the [Model List](../models/support_model_list_en.md). Benchmarks for some models are as follows:
+PaddleX provides four end-to-end OCR models. For details, refer to the [Model List](../support_list/models_list_en.md). Benchmarks for some models are as follows:
 
 | Model List         | Detection Hmean(%) | Recognition Avg Accuracy(%) | GPU Inference Time(ms) | CPU Inference Time(ms) | Model Size(M) |
 | --------------- | ----------- | ------------------- | --------------- | --------------- |---------------|

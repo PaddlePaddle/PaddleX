@@ -121,7 +121,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |PP-ShiTuV2_rec_CLIP_vit_base|88.69|13.1957|285.493|306.6 M|
 |PP-ShiTuV2_rec_CLIP_vit_large|91.03|51.1284|1131.28|1.05 G|
 
-**注：以上精度指标为 **[AliProducts](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/feature_extraction.md)** recall@1。**
+**注：以上精度指标为 AliProducts recall@1。**
 
 ## 文档方向分类模块
 |模型名称|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|

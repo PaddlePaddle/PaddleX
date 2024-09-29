@@ -166,4 +166,4 @@ The text detection module can be integrated into PaddleX pipelines such as the [
 
 2.**Module Integration**
 
-The model weights you produce can be directly integrated into the text detection module. Refer to the Python example code in [Quick Integration](#quick-integration), and simply replace the model with the path to your trained model.
+The model weights you produce can be directly integrated into the text detection module. Refer to the Python example code in [Quick Integration](#iii-quick-integration), and simply replace the model with the path to your trained model.
