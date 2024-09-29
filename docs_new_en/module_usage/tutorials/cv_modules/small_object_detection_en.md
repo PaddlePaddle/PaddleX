@@ -48,7 +48,7 @@ Small object detection typically refers to accurately detecting and locating sma
 
 **Note: The evaluation set for the above accuracy metrics is VisDrone-DET dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
-
+<h2 id="quick" style="display:none;"> </h2>
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
@@ -277,4 +277,4 @@ The small object detection module can be integrated into the [Small Object Detec
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the small object detection module. You can refer to the Python example code in [Quick Integration](#Integration), simply replacing the model with the path to your trained model.
+The weights you produce can be directly integrated into the small object detection module. You can refer to the Python example code in [Quick Integration](#quick), simply replacing the model with the path to your trained model.
