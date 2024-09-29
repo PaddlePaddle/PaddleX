@@ -81,7 +81,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
     </tr>
     <tr>
-        <td>文档场景信息抽取</td>
+        <td>文档场景信息抽取v3</td>
         <td><a href = "https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -927,7 +927,7 @@ for batch in output:
 * <details open>
     <summary> <b> 文本图像智能分析 </b></summary>
 
-   * [文档场景信息抽取产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+   * [文档场景信息抽取v3产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
 * <details open>
@@ -935,8 +935,6 @@ for batch in output:
 
     * [通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md)
     * [表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)
-    * 公式识别产线使用教程(coming soon)
-    * 印章识别产线使用教程(coming soon)
   </details>
 
 * <details open>
@@ -949,10 +947,6 @@ for batch in output:
    * [图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
    * [小目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
    * [图像异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
-   * 通用图像识别产线使用教程(coming soon)
-   * 行人属性识别产线使用教程(coming soon)
-   * 车辆属性识别产线使用教程(coming soon)
-   * 人脸识别产线使用教程(coming soon)
   </details>
   
 
@@ -996,31 +990,30 @@ for batch in output:
 * <details>
   <summary> <b> 图像分类 </b></summary>
 
-  * [通用图像分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_classification.md)
-  * [图像多标签分类使用教程](/docs_new/module_usage/tutorials/cv_modules/ml_classification.md)
+  * [图像分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_classification.md)
+  * [图像多标签分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/ml_classification.md)
 
-  * [行人属性识别使用教程](/docs_new/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
-  * [车辆属性识别使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
+  * [行人属性识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
+  * [车辆属性识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
 
   </details>
 
 * <details>
-  <summary> <b> 图像检索 </b></summary>
+  <summary> <b> 图像特征 </b></summary>
 
-    * [通用图像检索特征模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_recognition.md)
-    * 人脸识别检索特征模块使用教程(coming soon)
+    * [通用图像特征模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_recognition.md)
   </details>
 
 * <details>
   <summary> <b> 目标检测 </b></summary>
 
-  * [通用目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/object_detection.md)
+  * [目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/object_detection.md)
   * [小目标检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/small_object_detection.md)
   * [人脸检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/face_detection.md)
   * [主体检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/mainbody_detection.md)
   * [行人检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/human_detection.md)
   * [车辆检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_detection.md)
-  * [无监督异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)
+
   </details>
 
 * <details>
@@ -1028,6 +1021,7 @@ for batch in output:
 
   * [语义分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/semantic_segmentation.md)
   * [实例分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/instance_segmentation.md)
+  * [图像异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)
   </details>
 
 * <details>
