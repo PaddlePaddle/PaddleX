@@ -343,4 +343,4 @@ The image multi-label classification module can be integrated into the [General 
 
 2.**Module Integration**
 
-The weights you produce can be directly integrated into the image multi-label classification module. Refer to the Python example code in [Quick Integration](#三快速集成) and simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the image multi-label classification module. Refer to the Python example code in [Quick Integration](#iii-quick-integration) and simply replace the model with the path to your trained model.
