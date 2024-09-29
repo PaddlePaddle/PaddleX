@@ -6,13 +6,13 @@ This document focuses on the usage guide of PaddleX for Huawei Ascend NPU, Cambr
 ### 1.1 PaddlePaddle Installation
 First, please complete the installation of PaddlePaddle according to your hardware platform. The installation tutorials for each hardware are as follows:
 
-Ascend NPU: [Ascend NPU PaddlePaddle Installation Guide](./paddlepaddle_install_NPU.md)
+Ascend NPU: [Ascend NPU PaddlePaddle Installation Guide](./paddlepaddle_install_NPU_en.md)
 
-Cambricon MLU: [Cambricon MLU PaddlePaddle Installation Guide](./paddlepaddle_install_MLU.md)
+Cambricon MLU: [Cambricon MLU PaddlePaddle Installation Guide](./paddlepaddle_install_MLU_en.md)
 
-Kunlun XPU: [Kunlun XPU PaddlePaddle Installation Guide](./paddlepaddle_install_XPU.md)
+Kunlun XPU: [Kunlun XPU PaddlePaddle Installation Guide](./paddlepaddle_install_XPU_en.md)
 
-Hygon DCU: [Hygon DCU PaddlePaddle Installation Guide](./paddlepaddle_install_DCU.md)
+Hygon DCU: [Hygon DCU PaddlePaddle Installation Guide](./paddlepaddle_install_DCU_en.md)
 
 ### 1.2 PaddleX Installation
 Welcome to use PaddlePaddle's low-code development tool, PaddleX. Before we officially start the local installation, please clarify your development needs and choose the appropriate installation mode based on your requirements.
