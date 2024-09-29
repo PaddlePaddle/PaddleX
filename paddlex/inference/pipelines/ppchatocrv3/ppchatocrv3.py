@@ -40,7 +40,7 @@ PROMPT_FILE = os.path.join(os.path.dirname(__file__), "ch_prompt.yaml")
 class PPChatOCRPipeline(TableRecPipeline):
     """PP-ChatOCRv3 Pileline"""
 
-    entities = "chatocrv3"
+    entities = "PP-ChatOCRv3"
 
     def __init__(
         self,
