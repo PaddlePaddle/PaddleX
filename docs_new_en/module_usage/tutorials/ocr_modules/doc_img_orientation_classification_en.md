@@ -111,27 +111,11 @@ In the verification results above, `check_pass` being True indicates that the da
 * `attributes.train_samples`: The number of training samples in this dataset is 1552;
 * `attributes.val_samples`: The number of validation samples in this dataset is 2593;
 * `attributes.train_sample_paths`: A list of relative paths to visual sample images for the training set of this dataset;
-* ````
-Then, execute the following command:
+* `attributes.val_sample_paths`: A list of relative paths to the visual samples in the validation set of this dataset;
 
-```bash
-python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
-    -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/text_image_orientation
-```
+Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
 
-After data splitting, the original annotation files will be renamed to `xxx.bak` in the original path.
-
-The above parameters can also be set by appending command line arguments:
-
-```bash
-python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
-    -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/text_image_orientation \
-    -o CheckDataset.split.enable=True \
-    -o CheckDataset.split.train_percent=90 \
-    -o CheckDataset.split.val_percent=10
-```
+![](/tmp/images/modules/doc_img_ori_classification/01.png)
 
 </details>
 
@@ -213,7 +197,6 @@ Other relevant parameters can be set by modifying fields under `Global` and `Tra
 * During model training, PaddleX automatically saves the model weight files, defaulting to `output`. If you want to specify a different save path, you can set it using the `-o Global.output` field in the configuration file.
 * PaddleX abstracts away the concept of dynamic graph weights and static graph weights. During model training, it produces both dynamic and static graph weights. For model inference, it defaults to using static graph weights.
 * To train other models, specify the corresponding configuration file. The relationship between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/0PKFjfhs0UN4Qs?t=mention&mt=doc&dt=doc).
-
 After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
 
 * `train_result.json`: Training result record file, which records whether the training task was completed normally, as well as the output weight metrics and related file paths.
@@ -282,10 +265,10 @@ Alternatively, you can use the PaddleX wheel package for inference, easily integ
 
 The model can be directly integrated into the PaddleX pipeline or into your own projects.
 
-1. **Pipeline Integration**
+1.**Pipeline Integration**
 
 The document image classification module can be integrated into PaddleX pipelines such as the [Document Scene Information Extraction Pipeline (PP-ChatOCRv3)](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md). Simply replace the model path to update the The document image classification module's model.
 
-2. **Module Integration**
+2.**Module Integration**
 
 The weights you produce can be directly integrated into the document image orientation classification module. You can refer to the Python sample code in [Quick Integration](#quick-integration) and just replace the model with the path to the model you trained.

@@ -606,7 +606,7 @@ The image classification module is a crucial component in computer vision system
 </details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 After installing the wheel package, you can complete image classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the image classification module into your project.
 
