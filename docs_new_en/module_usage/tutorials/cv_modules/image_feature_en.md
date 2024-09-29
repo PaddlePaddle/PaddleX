@@ -1,4 +1,4 @@
-# Image Recognition Module Development Tutorial
+# Image Feature Module Development Tutorial
 
 ## I. Overview
 The image feature module is one of the important tasks in computer vision, primarily referring to the automatic extraction of useful features from image data using deep learning methods, to facilitate subsequent image retrieval tasks. The performance of this module directly affects the accuracy and efficiency of the subsequent tasks. In practical applications, image features typically output a set of feature vectors, which can effectively represent the content, structure, texture, and other information of the image, and will be passed as input to the subsequent retrieval module for processing.
@@ -63,7 +63,7 @@ For more information on using PaddleX's single-model inference APIs, refer to th
 If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better image feature models. Before developing image feature models with PaddleX, ensure you have installed the classification-related model training plugins for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 ### 4.1 Data Preparation
-Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides data validation functionality for each module, and **only data that passes validation can be used for model training**.  Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Multi-Label Classification Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/ml_classification_en.md).
+Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides data validation functionality for each module, and **only data that passes validation can be used for model training**.  Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Image Feature Task Module Data Annotation Tutorial](../../../data_annotations/cv_modules/image_feature_en.md).
 
 
 #### 4.1.1 Demo Data Download
