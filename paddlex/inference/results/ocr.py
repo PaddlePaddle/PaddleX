@@ -68,28 +68,31 @@ class OCRResult(CVResult):
         if txts is None or len(txts) != len(boxes):
             txts = [None] * len(boxes)
         for idx, (box, txt) in enumerate(zip(boxes, txts)):
-            if scores is not None and scores[idx] < drop_score:
+            try:
+                if scores is not None and scores[idx] < drop_score:
+                    continue
+                color = (
+                    random.randint(0, 255),
+                    random.randint(0, 255),
+                    random.randint(0, 255),
+                )
+                box = np.array(box)
+                if len(box) > 4:
+                    pts = [(x, y) for x, y in box.tolist()]
+                    draw_left.polygon(pts, outline=color, width=8)
+                    box = self.get_minarea_rect(box)
+                    height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
+                    box[:2, 1] = np.mean(box[:, 1])
+                    box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
+                draw_left.polygon(box, fill=color)
+                img_right_text = draw_box_txt_fine(
+                    (w, h), box, txt, PINGFANG_FONT_FILE_PATH
+                )
+                pts = np.array(box, np.int32).reshape((-1, 1, 2))
+                cv2.polylines(img_right_text, [pts], True, color, 1)
+                img_right = cv2.bitwise_and(img_right, img_right_text)
+            except:
                 continue
-            color = (
-                random.randint(0, 255),
-                random.randint(0, 255),
-                random.randint(0, 255),
-            )
-            box = np.array(box)
-            if len(box) > 4:
-                pts = [(x, y) for x, y in box.tolist()]
-                draw_left.polygon(pts, outline=color, width=8)
-                box = self.get_minarea_rect(box)
-                height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
-                box[:2, 1] = np.mean(box[:, 1])
-                box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
-            draw_left.polygon(box, fill=color)
-            img_right_text = draw_box_txt_fine(
-                (w, h), box, txt, PINGFANG_FONT_FILE_PATH
-            )
-            pts = np.array(box, np.int32).reshape((-1, 1, 2))
-            cv2.polylines(img_right_text, [pts], True, color, 1)
-            img_right = cv2.bitwise_and(img_right, img_right_text)
 
         img_left = Image.blend(image, img_left, 0.5)
         img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))

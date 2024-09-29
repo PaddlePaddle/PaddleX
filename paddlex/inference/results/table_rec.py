@@ -68,6 +68,24 @@ class StructureTableResult(TableRecResult, XlsxMixin):
 class TableResult(BaseResult):
     """TableResult"""
 
+    def save_to_html(self, save_path):
+        if not save_path.lower().endswith(("html")):
+            input_path = self["input_path"]
+            save_path = Path(save_path) / f"{Path(input_path).stem}"
+        else:
+            save_path = Path(save_path).stem
+        for table_result in self["table_result"]:
+            table_result.save_to_html(save_path)
+
+    def save_to_xlsx(self, save_path):
+        if not save_path.lower().endswith(("xlsx")):
+            input_path = self["input_path"]
+            save_path = Path(save_path) / f"{Path(input_path).stem}"
+        else:
+            save_path = Path(save_path).stem
+        for table_result in self["table_result"]:
+            table_result.save_to_xlsx(save_path)
+
     def save_to_img(self, save_path):
         if not save_path.lower().endswith((".jpg", ".png")):
             input_path = self["input_path"]

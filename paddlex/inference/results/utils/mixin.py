@@ -90,7 +90,7 @@ class JsonMixin:
         return self._to_json()
 
     def save_to_json(self, save_path, indent=4, ensure_ascii=False, *args, **kwargs):
-        if not save_path.endswith(".json"):
+        if not str(save_path).endswith(".json"):
             save_path = Path(save_path) / f"{Path(self['input_path']).stem}.json"
         _save_list_data(
             self._json_writer.write,
@@ -121,7 +121,7 @@ class ImgMixin:
         return image
 
     def save_to_img(self, save_path, *args, **kwargs):
-        if not save_path.lower().endswith((".jpg", ".png")):
+        if not str(save_path).lower().endswith((".jpg", ".png")):
             fp = Path(self["input_path"])
             save_path = Path(save_path) / f"{fp.stem}.{fp.suffix}"
         _save_list_data(self._img_writer.write, save_path, self.img, *args, **kwargs)
@@ -137,7 +137,7 @@ class CSVMixin:
         raise NotImplementedError
 
     def save_to_csv(self, save_path, *args, **kwargs):
-        if not save_path.endswith(".csv"):
+        if not str(save_path).endswith(".csv"):
             save_path = Path(save_path) / f"{Path(self['input_path']).stem}.csv"
         _save_list_data(
             self._csv_writer.write, save_path, self._to_csv(), *args, **kwargs
@@ -157,7 +157,7 @@ class HtmlMixin:
         return self["html"]
 
     def save_to_html(self, save_path, *args, **kwargs):
-        if not save_path.endswith(".html"):
+        if not str(save_path).endswith(".html"):
             save_path = Path(save_path) / f"{Path(self['input_path']).stem}.html"
         _save_list_data(self._html_writer.write, save_path, self.html, *args, **kwargs)
 
@@ -171,6 +171,6 @@ class XlsxMixin:
         return self["html"]
 
     def save_to_xlsx(self, save_path, *args, **kwargs):
-        if not save_path.endswith(".xlsx"):
+        if not str(save_path).endswith(".xlsx"):
             save_path = Path(save_path) / f"{Path(self['input_path']).stem}.xlsx"
         _save_list_data(self._xlsx_writer.write, save_path, self.html, *args, **kwargs)
