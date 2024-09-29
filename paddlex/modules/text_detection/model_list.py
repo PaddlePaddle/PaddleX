@@ -16,5 +16,7 @@ MODELS = [
     "PP-OCRv4_mobile_det",
     "PP-OCRv4_server_det",
     "PP-OCRv4_mobile_seal_det",
-    "PP-OCRv4_server_seal_det"
+    "PP-OCRv4_server_seal_det",
 ]
+
+CURVE_MODELS = ["PP-OCRv4_mobile_seal_det", "PP-OCRv4_server_seal_det"]

@@ -102,7 +102,7 @@ def read_pdf(
     return images
 
 
-def async_call(
+def call_async(
     func: Callable[_P, _R], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Awaitable[_R]:
     return asyncio.get_running_loop().run_in_executor(

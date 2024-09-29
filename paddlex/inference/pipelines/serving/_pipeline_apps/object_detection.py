@@ -61,7 +61,7 @@ def create_pipeline_app(pipeline: ObjectDetection, app_config: AppConfig) -> Fas
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
 
-            result = await pipeline.infer(image)
+            result = await pipeline.infer(image)[0]
 
             objects: List[DetectedObject] = []
             for obj in result["boxes"]:

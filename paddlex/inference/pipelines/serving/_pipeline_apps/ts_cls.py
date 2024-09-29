@@ -50,7 +50,7 @@ def create_pipeline_app(pipeline: TSCls, app_config: AppConfig) -> FastAPI:
             file_bytes = await serving_utils.get_raw_bytes(request.csv, aiohttp_session)
             df = serving_utils.csv_bytes_to_data_frame(file_bytes)
 
-            result = await pipeline.infer(df)
+            result = await pipeline.infer(df)[0]
 
             label = result["classification"]["classid"]
             score = result["classification"]["score"]

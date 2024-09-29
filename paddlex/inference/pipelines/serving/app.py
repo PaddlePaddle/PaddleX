@@ -20,6 +20,7 @@ from typing import (
     AsyncGenerator,
     Callable,
     Dict,
+    List,
     Generic,
     Optional,
     Tuple,
@@ -37,7 +38,7 @@ from typing_extensions import Final, ParamSpec
 
 from ..base import BasePipeline
 from .models import Response
-from .utils import async_call, generate_log_id
+from .utils import call_async, generate_log_id
 
 SERVING_CONFIG_KEY: Final[str] = "Serving"
 
@@ -56,12 +57,10 @@ class PipelineWrapper(Generic[_PipelineT]):
     def pipeline(self) -> _PipelineT:
         return self._pipeline
 
-    async def infer(self, *args: Any, **kwargs: Any) -> Any:
-        def _infer() -> Any:
+    async def infer(self, *args: Any, **kwargs: Any) -> List[Any]:
+        def _infer() -> List[Any]:
             output = list(self._pipeline(*args, **kwargs))
-            if len(output) != 1:
-                raise RuntimeError("Expected exactly one item from the generator")
-            return output[0]
+            return output
 
         return await self.call(_infer)
 
@@ -69,7 +68,7 @@ class PipelineWrapper(Generic[_PipelineT]):
         self, func: Callable[_P, _R], *args: _P.args, **kwargs: _P.kwargs
     ) -> _R:
         async with self._lock:
-            return await async_call(func, *args, **kwargs)
+            return await call_async(func, *args, **kwargs)
 
 
 class AppConfig(BaseModel):

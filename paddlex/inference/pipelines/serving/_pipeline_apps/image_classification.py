@@ -72,7 +72,7 @@ def create_pipeline_app(
                 if request.inferenceParams.topK is not None:
                     top_k = request.inferenceParams.topK
 
-            result = await pipeline.infer(image)
+            result = await pipeline.infer(image)[0]
 
             if "label_names" in result:
                 cat_names = result["label_names"]

@@ -49,7 +49,7 @@ def create_pipeline_app(pipeline: TSAd, app_config: AppConfig) -> FastAPI:
             file_bytes = await serving_utils.get_raw_bytes(request.csv, aiohttp_session)
             df = serving_utils.csv_bytes_to_data_frame(file_bytes)
 
-            result = await pipeline.infer(df)
+            result = await pipeline.infer(df)[0]
 
             output_csv = serving_utils.data_frame_to_base64(result["anomaly"])
             output_image_base64 = serving_utils.image_to_base64(result.img)

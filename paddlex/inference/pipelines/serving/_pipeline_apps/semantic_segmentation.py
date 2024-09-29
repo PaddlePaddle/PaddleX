@@ -57,7 +57,7 @@ def create_pipeline_app(
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
 
-            result = await pipeline.infer(image)
+            result = await pipeline.infer(image)[0]
 
             pred = result["pred"][0]
             size = [len(pred), len(pred[0])]

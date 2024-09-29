@@ -53,17 +53,19 @@ class AnalyzeImageRequest(BaseModel):
     inferenceParams: Optional[InferenceParams] = None
 
 
-BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
+Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
+TextBoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
+TableBoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
 
 
 class Text(BaseModel):
-    bbox: BoundingBox
+    bbox: TextBoundingBox
     text: str
     score: float
 
 
 class Table(BaseModel):
-    bbox: BoundingBox
+    bbox: TableBoundingBox
     html: str
 
 
@@ -234,7 +236,7 @@ def _bytes_to_arrays(
     return images
 
 
-async def _postprocess_image(
+def _postprocess_image(
     img: ArrayLike,
     request_id: str,
     filename: str,
@@ -320,7 +322,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
             )
 
             vision_results: List[VisionResult] = []
-            for i, (img, item) in enumerate(zip(images, result["visual_result"])):
+            for i, (img, item) in enumerate(zip(images, result[0])):
                 pp_img_futures: List[Awaitable] = []
                 future = serving_utils.call_async(
                     _postprocess_image,
@@ -355,7 +357,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                     texts.append(Text(bbox=bbox, text=text, score=score))
                 tables = [
                     Table(bbox=r["layout_bbox"], html=r["html"])
-                    for r in result["table_result"]
+                    for r in item["table_result"]
                 ]
                 input_img, ocr_img, layout_img = await asyncio.gather(*pp_img_futures)
                 vision_result = VisionResult(
@@ -373,7 +375,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 errorMsg="Success",
                 result=AnalyzeImageResult(
                     visionResults=vision_results,
-                    visionInfo=result["visual_info"],
+                    visionInfo=result[1],
                 ),
             )
 
@@ -446,9 +448,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=RetrieveKnowledgeResult(
-                    retrievalResult=result["retrieval_result"]
-                ),
+                result=RetrieveKnowledgeResult(retrievalResult=result["retrieval"]),
             )
 
         except Exception as e:
@@ -476,7 +476,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["few_shot"] = request.fewShot
             kwargs["use_vector"] = request.useVectorStore
             if request.vectorStore is not None:
-                kwargs["vector_store"] = request.vectorStore
+                kwargs["vector"] = request.vectorStore
             if request.retrievalResult is not None:
                 kwargs["retrieval_result"] = request.retrievalResult
             kwargs["save_prompt"] = request.returnPrompt
