@@ -30,7 +30,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
 
 ## 3. 选择模型
 
-PaddleX 提供了 4 个端到端的OCR模型，具体可参考 [模型列表](../models/support_model_list.md)，其中部分模型的 benchmark 如下：
+PaddleX 提供了 4 个端到端的OCR模型，具体可参考 [模型列表](../support_list/models_list.md)，其中部分模型的 benchmark 如下：
 
 | 模型列表         | 检测Hmean(%) | 识别 Avg Accuracy(%) | GPU 推理耗时(ms) | CPU 推理耗时(ms) | 模型存储大小(M) |
 | --------------- | ----------- | ------------------- | --------------- | --------------- |---------------|
