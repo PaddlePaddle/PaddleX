@@ -129,4 +129,4 @@ paddlex --install --platform gitee.com
 ```
 All packages are installed.
 ```
-更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](installation_other_devices.md)
+更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](../other_devices_support/installation_other_devices.md)

@@ -5,9 +5,8 @@ The primary purpose of image unwarping is to perform geometric transformations o
 
 ## II. Supported Model List
 
-
 |Model Name|MS-SSIM （%）|Model Size (M)| information|
-|-|-|-|-|-|-|
+|-|-|-|-|
 |UVDoc |54.4|31 M|High-precision Document Image Unwarping Model|
 
 

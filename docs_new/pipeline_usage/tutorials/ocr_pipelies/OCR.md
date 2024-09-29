@@ -296,4 +296,4 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 ```bash
 paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
