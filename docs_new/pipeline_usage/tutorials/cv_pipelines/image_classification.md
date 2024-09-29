@@ -4,6 +4,7 @@
 图像分类是一种将图像分配到预定义类别的技术。它广泛应用于物体识别、场景理解和自动标注等领域。图像分类可以识别各种物体，如动物、植物、交通标志等，并根据其特征将其归类。通过使用深度学习模型，图像分类能够自动提取图像特征并进行准确分类。
 
 ![](https://github.com/user-attachments/assets/3a35cf46-7771-41e4-a03a-9ff77badf626 "")
+
 **通用图像分类产线中包含了图像分类模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
 <details>
@@ -615,6 +616,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 您可以[在线体验](https://aistudio.baidu.com/community/app/100061/webUI)通用图像分类产线的效果，用官方提供的 demo 图片进行识别，例如：
 
 ![](https://github.com/user-attachments/assets/cd0ead1e-bf54-4b06-b8d2-0326511c4ae1 "")
+
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
@@ -633,9 +635,20 @@ paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.
 --input：待处理的输入图片的本地路径或URL
 --device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
 ```
-执行后，将提示选择图像分类产线配置文件保存路径，默认保存至当前目录，也可自定义路径。 
 
-此外，也可在执行命令时加入 `-y` 参数，则可跳过路径选择，直接将产线配置文件保存至当前目录。
+在执行上述 Python 脚本时，加载的是默认的图像分类产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+
+<details>
+   <summary> 👉点击展开</summary>
+
+```
+paddlex --get_pipeline_config image_classification
+```
+执行后，图像分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
+
+```
+paddlex --get_pipeline_config image_classification --config_save_path ./my_path
+```
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./image_classification.yaml`，只需执行：
 
@@ -643,6 +656,8 @@ paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.
 paddlex --pipeline ./image_classification.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
+
+</details>
 
 运行后，得到的结果为：
 
@@ -691,28 +706,19 @@ for res in output:
 | dict          | 支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：`{\"img\": \"/root/data1\"}`。|
 | list          | 支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]`，`[\"/root/data1\", \"/root/data2\"]`，`[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]`。|
 
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果
+（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
+
 （4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 
-| 方法         | 说明                        | 方法参数                                                                                               |
+|| 方法         | 说明                        | 方法参数                                                                                               |
 |--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | 打印结果到终端              | - format_json：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>- indent：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>- ensure_ascii：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
-| save_to_json | 将结果保存为json格式的文件   | - save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>- indent：int类型，json格式化设置，默认为4；<br>- ensure_ascii：bool类型，json格式化设置，默认为False； |
-| save_to_img  | 将结果保存为图像格式的文件  | - save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
+| print        | 打印结果到终端              | `- format_json`：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>`- indent`：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
+| save_to_json | 将结果保存为json格式的文件   | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>`- indent`：int类型，json格式化设置，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，默认为False； |
+| save_to_img  | 将结果保存为图像格式的文件  | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
 
-在执行上述 Python 脚本时，加载的是默认的图像分类产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+若您获取了配置文件，即可对图像分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-```
-paddlex --get_pipeline_config image_classification
-```
-执行后，图像分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
-
-```
-paddlex --get_pipeline_config image_classification --config_save_path ./my_path
-```
-获取配置文件后，您即可对图像分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
-
-例如，若您的配置文件保存在 `./my_path/*image_classification*.yaml` ，则只需执行：
+例如，若您的配置文件保存在 `./my_path/image_classification*.yaml` ，则只需执行：
 
 ```
 from paddlex import create_pipeline

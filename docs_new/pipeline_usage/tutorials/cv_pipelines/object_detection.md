@@ -4,6 +4,7 @@
 目标检测旨在识别图像或视频中多个对象的类别及其位置，通过生成边界框来标记这些对象。与简单的图像分类不同，目标检测不仅需要识别出图像中有哪些物体，例如人、车和动物等，还需要准确地确定每个物体在图像中的具体位置，通常以矩形框的形式表示。该技术广泛应用于自动驾驶、监控系统和智能相册等领域，依赖于深度学习模型（如YOLO、Faster R-CNN等），这些模型能够高效地提取特征并进行实时检测，显著提升了计算机对图像内容理解的能力。
 
 ![](https://github.com/user-attachments/assets/78088179-537d-440b-8369-c2919166666f "")
+
 **通用****目标检测****产线中包含了****目标检测****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
 <details>
@@ -48,6 +49,7 @@
 |YOLOX-S|40.4|184.828|474.446|32.0 M|
 |YOLOX-T|32.9|102.748|212.52|18.1 M|
 |YOLOX-X|51.8|227.361|2067.84|351.5 M|
+
 **注**：**以上精度指标为**[COCO2017](https://cocodataset.org/#home)**验证集 mAP(0.5:0.95)。****所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 </details>
@@ -59,6 +61,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 您可以[在线体验](https://aistudio.baidu.com/community/app/70230/webUI)通用目标检测产线的效果，用官方提供的 demo 图片进行识别，例如：
 
 ![](https://github.com/user-attachments/assets/df8623af-79ac-47db-b980-cd3d2659c384 "")
+
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
@@ -77,22 +80,38 @@ paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bceb
 --input：待处理的输入图片的本地路径或URL
 --device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
 ```
-执行后，将提示选择目标检测产线配置文件保存路径，默认保存至当前目录，也可自定义路径。
 
-此外，也可在执行命令时加入 `-y` 参数，则可跳过路径选择，直接将产线配置文件保存至当前目录。
+在执行上述 Python 脚本时，加载的是默认的目标检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+
+<details>
+   <summary> 👉点击展开</summary>
+
+```
+paddlex --get_pipeline_config object_detection
+```
+
+执行后，目标检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
+
+```
+paddlex --get_pipeline_config object_detection --config_save_path ./my_path
+```
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./object_detection.yaml`，只需执行：
 
 ```
 paddlex --pipeline ./object_detection.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png
 ```
+
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
+
+</details>
 
 运行后，得到的结果为：
 
 ```
 {'img_path': '/root/.paddlex/predict_input/general_object_detection_002.png', 'boxes': [{'cls_id': 49, 'label': 'orange', 'score': 0.8188097476959229, 'coordinate': [661, 93, 870, 305]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7743489146232605, 'coordinate': [76, 274, 330, 520]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7270504236221313, 'coordinate': [285, 94, 469, 297]}, {'cls_id': 46, 'label': 'banana', 'score': 0.5570532083511353, 'coordinate': [310, 361, 685, 712]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5484835505485535, 'coordinate': [764, 285, 924, 440]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5160726308822632, 'coordinate': [853, 169, 987, 303]}, {'cls_id': 60, 'label': 'dining table', 'score': 0.5142655968666077, 'coordinate': [0, 0, 1072, 720]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5101479291915894, 'coordinate': [57, 23, 213, 176]}]}
 ```
+
 ![](https://github.com/user-attachments/assets/64ea893a-aa5c-4938-9c93-12e7fc38f00c "")
 
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
@@ -100,7 +119,7 @@ paddlex --pipeline ./object_detection.yaml --input https://paddle-model-ecology.
 #### 2.2.2 Python脚本方式集成 
 几行代码即可完成产线的快速推理，以通用目标检测产线为例：
 
-```
+```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="object_detection")
@@ -134,31 +153,21 @@ for res in output:
 | dict          | 支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：`{\"img\": \"/root/data1\"}`。|
 | list          | 支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]`，`[\"/root/data1\", \"/root/data2\"]`，`[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]`。|
 
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果
+（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
+
 （4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 
 | 方法         | 说明                        | 方法参数                                                                                               |
 |--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | 打印结果到终端              | - format_json：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>- indent：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>- ensure_ascii：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
-| save_to_json | 将结果保存为json格式的文件   | - save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>- indent：int类型，json格式化设置，默认为4；<br>- ensure_ascii：bool类型，json格式化设置，默认为False； |
-| save_to_img  | 将结果保存为图像格式的文件  | - save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
+| print        | 打印结果到终端              | `- format_json`：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>`- indent`：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
+| save_to_json | 将结果保存为json格式的文件   | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>`- indent`：int类型，json格式化设置，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，默认为False； |
+| save_to_img  | 将结果保存为图像格式的文件  | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
 
-在执行上述 Python 脚本时，加载的是默认的目标检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-```
-paddlex --get_pipeline_config object_detection
-```
-执行后，目标检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
-
-```
-paddlex --get_pipeline_config object_detection --config_save_path ./my_path
-```
-
-获取配置文件后，您即可对目标检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
+若您获取了配置文件，即可对目标检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/object_detection.yaml` ，则只需执行：
 
-```
+```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png")
@@ -193,7 +202,7 @@ for res in output:
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```
+```python
 ......
 Pipeline:
   model: PicoDet-S  #可修改为微调后模型的本地路径
