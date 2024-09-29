@@ -14,8 +14,9 @@
 
 
 from pathlib import Path
-from ..utils.official_models import official_models
+from typing import Any, Dict, Optional
 
+from ..utils.official_models import official_models
 from .base import BasePredictor, BasicPredictor
 from .image_classification import ClasPredictor
 from .text_detection import TextDetPredictor
@@ -64,8 +65,8 @@ def create_predictor(
     model: str,
     device=None,
     pp_option=None,
-    use_hpip=False,
-    hpi_params=None,
+    use_hpip: bool = False,
+    hpi_params: Optional[Dict[str, Any]] = None,
     *args,
     **kwargs,
 ) -> BasePredictor:

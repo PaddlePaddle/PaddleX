@@ -62,16 +62,25 @@ def create_pipeline(
     config = parse_config(pipeline)
     pipeline_name = config["Global"]["pipeline_name"]
     pipeline_setting = config["Pipeline"]
+
+    predictor_kwargs = {"use_hpip": use_hpip}
+    if "use_hpip" in pipeline_setting:
+        predictor_kwargs["use_hpip"] = use_hpip
+    if hpi_params is not None:
+        predictor_kwargs["hpi_params"] = hpi_params
+    elif "hpi_params" in pipeline_setting:
+        predictor_kwargs["hpi_params"] = pipeline_setting.pop("hpi_params")
+    if device is not None:
+        predictor_kwargs["device"] = device
+    elif "device" in pipeline_setting:
+        predictor_kwargs["device"] = pipeline_setting.pop("device")
+    if pp_option is not None:
+        predictor_kwargs["pp_option"] = pp_option
+    elif "pp_option" in pipeline_setting:
+        predictor_kwargs["pp_option"] = pipeline_setting.pop("pp_option")
+
     pipeline_setting.update(kwargs)
-    if device:
-        pipeline_setting["device"] = device
-    if pp_option:
-        pipeline_setting["pp_option"] = pp_option
-    if use_hpip:
-        pipeline_setting["use_hpip"] = use_hpip
-
-    if hpi_params:
-        pipeline_setting["hpi_params"] = hpi_params
-
-    pipeline = BasePipeline.get(pipeline_name)(*args, **pipeline_setting)
+    pipeline = BasePipeline.get(pipeline_name)(
+        predictor_kwargs=predictor_kwargs, *args, **pipeline_setting
+    )
     return pipeline

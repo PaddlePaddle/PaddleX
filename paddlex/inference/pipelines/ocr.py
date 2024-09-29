@@ -22,8 +22,8 @@ class OCRPipeline(BasePipeline):
 
     entities = "OCR"
 
-    def __init__(self, det_model, rec_model, batch_size=1, **predictor_kwargs):
-        super().__init__(**predictor_kwargs)
+    def __init__(self, det_model, rec_model, batch_size=1, predictor_kwargs=None):
+        super().__init__(predictor_kwargs=predictor_kwargs)
         self._build_predictor(det_model, rec_model)
         self.set_predictor(batch_size)
 

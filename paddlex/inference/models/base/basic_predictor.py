@@ -34,9 +34,7 @@ class BasicPredictor(
 
     __is_base = True
 
-    def __init__(
-        self, model_dir, config=None, device=None, pp_option=None, **option_kwargs
-    ):
+    def __init__(self, model_dir, config=None, device=None, pp_option=None):
         super().__init__(model_dir=model_dir, config=config)
         self._pred_set_func_map = {}
         self._pred_set_register = FuncRegister(self._pred_set_func_map)
@@ -47,7 +45,7 @@ class BasicPredictor(
         self.pp_option = (
             pp_option
             if pp_option
-            else PaddlePredictorOption(model_name=self.model_name, **option_kwargs)
+            else PaddlePredictorOption(model_name=self.model_name)
         )
         self.pp_option.set_device(device)
         self.components = {}

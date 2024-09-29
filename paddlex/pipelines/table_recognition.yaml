@@ -10,7 +10,9 @@ Pipeline:
   table_model: SLANet
   text_det_model: PP-OCRv4_mobile_det
   text_rec_model: PP-OCRv4_mobile_rec
-  batch_size: 1
+  layout_batch_size: 1
+  text_rec_batch_size: 1
+  table_batch_size: 1
   device: "gpu:0"
 
 ######################################## Support ########################################
