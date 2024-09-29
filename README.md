@@ -19,20 +19,20 @@
 
 ## 🔍 简介
 
-PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
+PaddleX 3.0是基于飞桨框架构建的一套AI模型全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
-|                                                            **通用图像分类**                                                            |                                                            **通用/小目标检测**                                                            |                                                            **通用语义分割**                                                            |                                                            **通用实例分割**                                                            |
+|                                                            **通用图像分类**                                                            |                                                            **图像多标签分类**                                                            |                                                            **通用目标检测**                                                            |                                                            **通用实例分割**                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px"> |
-|                                                              **通用多标签分类**                                                               |                                                            **通用OCR**                                                            |                                                          **通用表格识别**                                                          |                                                          **文档场景信息抽取v3**                                                          |
+|                                                              **通用语义分割**                                                               |                                                            **图像异常检测**                                                            |                                                          **通用OCR**                                                          |                                                          **通用表格识别**                                                          |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> |
-|                                                              **时序预测**                                                              |                                                            **时序异常检测**                                                            |                                                              **时序分类**                                                              |                                                         **图像异常检测**                                                         |
+|                                                              **文本图像智能分析**                                                              |                                                            **时序预测**                                                            |                                                              **时序异常检测**                                                              |                                                         **时序分类**                                                         |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
 ## 🌟 特性
-  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的**200+飞桨模型**整合为**13条模型产线**，通过极简的Python API一键调用，快速体验模型效果。同时支持**20+单功能模块**，方便开发者进行模型组合使用。
+  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的**200+飞桨模型**整合为**19条模型产线**，通过极简的Python API一键调用，快速体验模型效果。同时支持**20+单功能模块**，方便开发者进行模型组合使用。
 
-  🚀 **提高效率降低门槛**：实现基于图形界面和统一命令的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的**8条特色模型产线**，大幅度降低迭代模型的成本。  
+  🚀 **提高效率降低门槛**：实现基于统一命令和图形界面的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的**8条特色模型产线**，大幅度降低迭代模型的成本。  
 
   🌐 **多种场景灵活部署**：支持**高性能部署**、**服务化部署**和**端侧部署**等多种部署方式，确保不同应用场景下模型的高效运行和快速响应。
 
@@ -49,10 +49,11 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码开发工具，�
 
  ## 📊 能力支持
 
-PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练效果，如果您对产线的预训练效果满意，可以直接对产线进行[高性能部署](/docs_new/pipeline_deploy/high_performance_deploy.md)/[服务化部署](/docs_new/pipeline_deploy/service_deploy.md)/[端侧部署](/docs_new/pipeline_deploy/lite_deploy.md)，如果不满意，您也可以对产线进行**二次开发**提升产线效果。完整的产线开发流程请参考[PaddleX产线开发工具本地使用教程](/docs_new/pipeline_usage/pipeline_develop_guide.md)。
+PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您可以快速体验各个产线的预训练模型效果，如果您对产线的预训练模型效果满意，可以直接对产线进行[高性能部署](/docs_new/pipeline_deploy/high_performance_deploy.md)/[服务化部署](/docs_new/pipeline_deploy/service_deploy.md)/[端侧部署](/docs_new/pipeline_deploy/lite_deploy.md)，如果不满意，您也可以使用产线的**二次开发**能力，提升效果。完整的产线开发流程请参考[PaddleX产线使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)或各产线使用[教程](#-文档)。
 
 
-此外，PaddleX为开发者提供了基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程高效模型训练与部署工具。开发者**无需代码开发**，只需要准备符合产线要求的数据集即可**快速启动模型训练**,详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
+
+此外，PaddleX为开发者提供了基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程开发工具, 详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
 
 
 <table >
@@ -67,7 +68,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
     </tr>
     <tr>
-        <td>OCR</td>
+        <td>通用OCR</td>
         <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -77,17 +78,27 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
     </tr>
     <tr>
-        <td>图像分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
+        <td>文档场景信息抽取</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
     <tr>
-        <td>目标检测</td>
+        <td>表格识别</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>通用目标检测</td>
         <td><a href = "https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -97,28 +108,28 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
     </tr>
     <tr>
-        <td>语义分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>实例分割</td>
+        <td>通用实例分割</td>
         <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>通用图像分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
     <tr>
-        <td>表格识别</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
+        <td>通用语义分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -130,9 +141,9 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>时序预测</td>
         <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
@@ -140,9 +151,9 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>时序异常检测</td>
         <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
@@ -150,31 +161,31 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>时序分类</td>
         <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>图像多标签分类</td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
     </tr>
-    <tr>
+        <tr>
         <td>小目标检测</td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+    </tr>
+        <tr>
+        <td>图像多标签分类</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
     </tr>
     <tr>
         <td>图像异常检测</td>
@@ -182,20 +193,72 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>文档场景信息抽取</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
     </tr>
+    <tr>
+        <td>公式识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>印章识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>通用图像识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>行人属性识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>车辆属性识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>人脸识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+
+    
 </table>
 
 
@@ -204,19 +267,20 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 <details>
   <summary>👉 昇腾芯能力支持</summary>
 
-<table>
+
+<table >
     <tr>
-        <th> </th>
-        <th>在线体验</th>
-        <th>快速推理</th>
-        <th>高性能部署</th>
-        <th>服务化部署</th>
-        <th>端侧部署</th>
-        <th>二次开发</th>
-        <th><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></th>
+        <td></td>
+        <td>在线体验</td>
+        <td>快速推理</td>
+        <td>高性能部署</td>
+        <td>服务化部署</td>
+        <td>端侧部署</td>
+        <td>二次开发</td>
+        <td><a href = "https://aistudio.baidu.com/pipeline/mine">星河零代码产线</a></td>
     </tr>
     <tr>
-        <td>OCR</td>
+        <td>通用OCR</td>
         <td><a href = "https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -226,17 +290,27 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
     </tr>
     <tr>
-        <td>图像分类</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
+        <td>文档场景信息抽取</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
     <tr>
-        <td>目标检测</td>
+        <td>表格识别</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>通用目标检测</td>
         <td><a href = "https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -246,28 +320,28 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
     </tr>
     <tr>
-        <td>语义分割</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>实例分割</td>
+        <td>通用实例分割</td>
         <td><a href = "https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>通用图像分类</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
     <tr>
-        <td>表格识别</td>
-        <td><a href = "https://aistudio.baidu.com/community/app/91661?source=appMineRecent">链接</a></td>
+        <td>通用语义分割</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -279,9 +353,9 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>时序预测</td>
         <td><a href = "https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
@@ -289,9 +363,9 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>时序异常检测</td>
         <td><a href = "https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
@@ -299,31 +373,31 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>时序分类</td>
         <td><a href = "https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">链接</a></td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>图像多标签分类</td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
     </tr>
-    <tr>
+        <tr>
         <td>小目标检测</td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+    </tr>
+        <tr>
+        <td>图像多标签分类</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
     </tr>
     <tr>
         <td>图像异常检测</td>
@@ -331,21 +405,75 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>文档场景信息抽取</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
-        <td>✅</td>
+        <td>🚧</td>
     </tr>
+    <tr>
+        <td>公式识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>印章识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>通用图像识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>行人属性识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>车辆属性识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td>人脸识别</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
+
+    
 </table>
+
+
 </details>
 
 
@@ -652,17 +780,23 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 ### 🛠️ 安装
 
-> ❗安装PaddleX前请先确保您有基础的Python运行环境，如果您还未安装Python环境，可以参考[运行环境准备](/docs_new/installation/installation.md#1-运行环境准备)进行安装
+> ❗安装PaddleX前请先确保您有基础的Python运行环境
+
+* **安装PaddlePaddle**
+```bash
+# cpu
+python -m pip install paddlepaddle
+
+# gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
+ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+
+# gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
+ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+```
+
+* **安装PaddleX**
 
 ```bash
-# 安装PaddlePaddle
-python -m pip install paddlepaddle # cpu
- # gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
-# gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
-
-# 安装PaddleX
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
 pip install -e .
@@ -914,11 +1048,11 @@ for batch in output:
 ## 🔥 模型产线列表
 
 <details>
-  <summary><b> 文档场景信息抽取产线 </b>/summary>
+  <summary><b> 文档场景信息抽取产线 </b></summary>
 </details>
 
 <details>
-  <summary> b>通用OCR产线  </b></summary>
+  <summary> <b>通用OCR产线  </b></summary>
 
 
 | 任务模块 | 模型            | 精度  | GPU推理耗时（ms） | CPU推理耗时 | 模型存储大小（M) | 
