@@ -1,9 +1,9 @@
-# PaddleX模型列表（CPU/GPU）
+#  PaddleX Model List（CPU/GPU）
 
-PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模块包含若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型。
+PaddleX incorporates multiple pipelines, each containing several modules, and each module includes various models. You can choose which models to use based on the benchmark data below. If you prioritize model accuracy, select models with higher accuracy. If you prioritize inference speed, choose models with faster inference. If you prioritize model storage size, select models with smaller storage sizes.
 
-## 图像分类模块
-|模型名称|Top1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Image Classification Module
+| Model Name | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |CLIP_vit_base_patch16_224|85.36|13.1957|285.493|306.5 M|
 |CLIP_vit_large_patch14_224|88.1|51.1284|1131.28|1.04 G|
@@ -86,10 +86,10 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |SwinTransformer_small_patch4_window7_224|83.21|16.3982|285.56|175.6 M|
 |SwinTransformer_tiny_patch4_window7_224|81.10|8.54846|156.306|100.1 M|
 
-**注：以上精度指标为 **[ImageNet-1k](https://www.image-net.org/index.php)** 验证集 Top1 Acc。**
+**Note: The above accuracy metrics are Top-1 Acc on the [ImageNet-1k](https://www.image-net.org/index.php) validation set.**
 
-## 图像多标签分类模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Image Multi-Label Classification Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |CLIP_vit_base_patch16_448_ML|89.15|-|-|325.6|
 |PP-HGNetV2-B0_ML|80.98|-|-|39.6|
@@ -98,47 +98,48 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |PP-LCNet_x1_0_ML|77.96|-|-|29.4|
 |ResNet50_ML|83.50|-|-|108.9|
 
-**注：以上精度指标为 [COCO2017](https://cocodataset.org/#home) 的多标签分类任务mAP。**
+**Note: The above accuracy metrics are mAP for the multi-label classification task on [COCO2017](https://cocodataset.org/#home).**
 
-## 行人属性模块
-|模型名称|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Pedestrian Attribute Module
+| Model Name | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7M  |
 
-**注：以上精度指标为 PaddleX 内部自建数据集mA。**
+**Note: The above accuracy metrics are mA on PaddleX's internal self-built dataset.**
 
-## 车辆属性模块
-|模型名称|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Vehicle Attribute Module
+| Model Name | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-LCNet_x1_0_vehicle_attribute|91.7|3.84845|9.23735|6.7 M|
 
-**注：以上精度指标为 VeRi 数据集 mA。**
+**Note: The above accuracy metrics are mA on the VeRi dataset.**
 
-## 图像特征模块
-|模型名称|recall@1（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Image Feature Module
+| Model Name | recall@1 (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-ShiTuV2_rec|84.2|5.23428|19.6005|16.3 M|
 |PP-ShiTuV2_rec_CLIP_vit_base|88.69|13.1957|285.493|306.6 M|
 |PP-ShiTuV2_rec_CLIP_vit_large|91.03|51.1284|1131.28|1.05 G|
 
-**注：以上精度指标为 **[AliProducts](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/feature_extraction.md)** recall@1。**
+**Note: The above accuracy metrics are recall@1 on [AliProducts](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/training/PP-ShiTu/feature_extraction.md).**
 
-## 文档方向分类模块
-|模型名称|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+
+## Document Orientation Classification Module
+| Model Name | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-LCNet_x1_0_doc_ori|99.26|3.84845|9.23735|7.1M|
 
-**注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。**
+**Note: The above accuracy metrics are Top-1 Acc on PaddleX's internal self-built dataset.**
 
-## 主体检测模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Main Body Detection Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-ShiTuV2_det|41.5|33.7426|537.003|27.6 M|
 
-**注：以上精度指标为 [PaddleClas主体检测数据集](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/mainbody_detection.md) mAP(0.5:0.95)。**
+**Note: The above accuracy metrics are mAP(0.5:0.95) on the [PaddleClas main body detection dataset](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/training/PP-ShiTu/mainbody_detection.md).**
 
-## 目标检测模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Object Detection Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |Cascade-FasterRCNN-ResNet50-FPN|41.1|-|-|245.4 M|
 |Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN|45.0|-|-|246.2 M|
@@ -178,49 +179,51 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |YOLOX-T|32.9|102.748|212.52|18.1 M|
 |YOLOX-X|51.8|227.361|2067.84|351.5 M|
 
-**注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 mAP(0.5:0.95)。**
+**Note: The above accuracy metrics are mAP(0.5:0.95) on the [COCO2017](https://cocodataset.org/#home) validation set.**
 
-## 小目标检测模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Small Object Detection Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-YOLOE_plus_SOD-S|25.1|65.4608|324.37|77.3 M|
 |PP-YOLOE_plus_SOD-L|31.9|57.1448|1006.98|325.0 M|
 |PP-YOLOE_plus_SOD-largesize-L|42.7|458.521|11172.7|340.5 M|
 
-**注：以上精度指标为 **[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)** 验证集 mAP(0.5:0.95)。**
+**Note: The above accuracy metrics are mAP(0.5:0.95) on the [VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset) validation set.**
 
-## 行人检测模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Pedestrian Detection Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-YOLOE-L_human|48.0|32.7754|777.691|196.1 M|
 |PP-YOLOE-S_human|42.5|15.0118|179.317|28.8 M|
 
-**注：以上精度指标为 **[CrowdHuman](https://bj.bcebos.com/v1/paddledet/data/crowdhuman.zip)** 验证集 mAP(0.5:0.95)。**
+**Note: The above accuracy metrics are mAP(0.5:0.95) on the [CrowdHuman](https://bj.bcebos.com/v1/paddledet/data/crowdhuman.zip) validation set.**
 
-## 车辆检测模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+
+## Vehicle Detection Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PP-YOLOE-L_vehicle|63.9|32.5619|775.633|196.1 M|
 |PP-YOLOE-S_vehicle|61.3|15.3787|178.441|28.8 M|
 
-**注：以上精度指标为 **[PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)** 验证集 mAP(0.5:0.95)。**
+**Note: The above accuracy metrics are mAP(0.5:0.95) on the [PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle) validation set.**
 
-## 人脸检测模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Face Detection Module
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 |PicoDet_LCNet_x2_5_face|35.8|33.7426|537.003|27.7 M|
 
-**注：以上精度指标为 **[wider_face](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)** 评估集 mAP(0.5:0.95)。**
+**Note: The above accuracy metrics are evaluated on the **[wider_face](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)** dataset using mAP(0.5:0.95).**
 
-## 异常检测模块
-|模型名称|Avg（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+
+## Abnormality Detection Module
+|Model Name|Avg (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |STFPM|96.2|-|-|21.5 M|
 
-**注：以上精度指标为 **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** 验证集 平均异常分数。**
+**Note: The above accuracy metrics are evaluated on the **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** dataset using the average anomaly score.**
 
-## 语义分割模块
-|模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Semantic Segmentation Module
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
 |Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|
@@ -237,19 +240,19 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |SegFormer-B4 (slice)|82.38|82.4336|1995.42|226.7 M|
 |SegFormer-B5 (slice)|82.58|97.3717|2420.19|229.7 M|
 
-**注：以上精度指标为 **[Cityscapes](https://www.cityscapes-dataset.com/)** 数据集 mloU。**
+**Note: The above accuracy metrics are evaluated on the **[Cityscapes](https://www.cityscapes-dataset.com/)** dataset using mIoU.**
 
-|模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |SeaFormer_base(slice)|40.92|24.4073|397.574|30.8 M|
 |SeaFormer_large (slice)|43.66|27.8123|550.464|49.8 M|
 |SeaFormer_small (slice)|38.73|19.2295|358.343|14.3 M|
 |SeaFormer_tiny (slice)|34.58|13.9496|330.132|6.1M |
 
-**注：以上精度指标为 **[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)** 数据集, slice 表示对输入图像进行了切图操作。**
+**Note: The above accuracy metrics are evaluated on the **[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)** dataset. "slice" indicates that the input image has been cropped.**
 
-## 实例分割模块
-|模型名称|Mask AP|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Instance Segmentation Module
+|Model Name|Mask AP|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |Mask-RT-DETR-H|50.6|132.693|4896.17|449.9|
 |Mask-RT-DETR-L|45.7|46.5059|2575.92|113.6|
@@ -267,77 +270,78 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |MaskRCNN-ResNeXt101-vd-FPN|39.5|-|-|370.0 M|
 |PP-YOLOE_seg-S|32.5|-|-|31.5 M|
 
-**注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 Mask AP(0.5:0.95)。**
+**Note: The above accuracy metrics are evaluated on the **[COCO2017](https://cocodataset.org/#home)** validation set using Mask AP(0.5:0.95).**
 
-## 文本检测模块
-|模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Text Detection Module
+|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_det |77.79|10.6923|120.177|4.2 M|
 |PP-OCRv4_server_det |82.69|83.3501|2434.01|100.1M|
 
-**注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。**
+**Note: The above accuracy metrics are evaluated on a self-built Chinese dataset by PaddleOCR, covering street scenes, web images, documents, and handwritten texts, with 500 images for detection.**
 
-## 印章文本检测模块
-|模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Seal Text Detection Module
+|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.7M |
 |PP-OCRv4_server_seal_det|98.21|84.341|2425.06|108.3 M|
 
-**注：以上精度指标的评估集是 PaddleX 自建的印章数据集，包含500印章图像。**
+**Note: The above accuracy metrics are evaluated on a self-built seal dataset by PaddleX, containing 500 seal images.**
 
-## 文本识别模块
-|模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Text Recognition Module
+|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_rec |78.20|7.95018|46.7868|10.6 M|
 |PP-OCRv4_server_rec |79.20|7.19439|140.179|71.2 M|
 
-**注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。**
+**Note: The above accuracy metrics are evaluated on a self-built Chinese dataset by PaddleOCR, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition.**
 
-|模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |ch_SVTRv2_rec|68.81|8.36801|165.706|73.9 M|
 
-**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)A榜。**
+**Note: The above accuracy metrics are evaluated on [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction) A-Rank.**
 
-|模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |ch_RepSVTR_rec|65.07|10.5047|51.5647|22.1 M|
 
-**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜。**
+**Note: The above accuracy metrics are evaluated on [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-Rank.**
 
-## 公式识别模块
-|模型名称|BLEU score|normed edit distance|ExpRate （%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Formula Recognition Module
+|Model Name|BLEU Score|Normed Edit Distance|ExpRate (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|-|-|
 |LaTeX_OCR_rec|0.8821|0.0823|40.01|-|-|89.7 M|
 
-**注：以上精度指标测量自 [LaTeX-OCR公式识别测试集](https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO)。**
+**Note: The above accuracy metrics are measured on the [LaTeX-OCR formula recognition test set](https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO).**
 
-## 表格结构识别模块
-|模型名称|精度（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Table Structure Recognition Module
+|Model Name|Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |SLANet|76.31|522.536|1845.37|6.9 M |
 
-**注：以上精度指标测量自 ****PubtabNet英文表格识别数据集****。**
+**Note: The above accuracy metrics are measured on the ****PubtabNet English table recognition dataset****.**
 
-## 图像矫正模块
-|模型名称|MS-SSIM （%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+## Image Rectification Module
+|Model Name|MS-SSIM (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |UVDoc|54.40|-|-|30.3 M|
 
-**注：以上精度指标测量自 ****PaddleX自建的图像矫正数据集****。**
 
-## 版面区域分析模块
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+**Note: The above accuracy metrics are measured on a self-built image rectification dataset by PaddleX.**
+
+## Layout Analysis Module
+|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4M |
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
 |RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
 
-**注：以上精度指标的评估集是 ****PaddleX 自建的版面区域分析数据集****，包含 1w 张图片。**
+**Note: The evaluation set for the above accuracy metrics is the ****PaddleX self-built Layout Analysis Dataset****, containing 10,000 images.**
 
-## 时序预测模块
-|模型名称|mse|mae|模型存储大小（M)|
+## Time Series Forecasting Module
+|Model Name|mse|mae|Model Size (M)|
 |-|-|-|-|
 |DLinear|0.382|0.394|72K|
 |NLinear|0.386|0.392|40K |
@@ -347,10 +351,10 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |TiDE|0.405|0.412|31.7M|
 |TimesNet|0.417|0.431|4.9M|
 
-**注：以上精度指标测量自 **[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)** 数据集 ****（在测试集test.csv上的评测结果）****。**
+**Note: The above accuracy metrics are measured on the **[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)** dataset ****(evaluation results on the test set test.csv)****.**
 
-## 时序异常检测模块
-|模型名称|precison|recall|f1_score|模型存储大小（M)|
+## Time Series Anomaly Detection Module
+|Model Name|Precision|Recall|f1_score|Model Size (M)|
 |-|-|-|-|-|
 |AutoEncoder_ad|99.36|84.36|91.25|52K |
 |DLinear_ad|98.98|93.96|96.41|112K|
@@ -358,13 +362,13 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |PatchTST_ad|98.78|90.70|94.57|320K |
 |TimesNet_ad|98.37|94.80|96.56|1.3M |
 
-**注：以上精度指标测量自 **[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)** 数据集。**
+**Note: The above accuracy metrics are measured on the **[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)** dataset.**
 
-## 时序分类模块
-|模型名称|acc(%)|模型存储大小（M)|
+## Time Series Classification Module
+|Model Name|acc (%)|Model Size (M)|
 |-|-|-|
 |TimesNet_cls|87.5|792K|
 
-**注：以上精度指标测量自 [UWaveGestureLibrary](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv)数据集。**
+**Note: The above accuracy metrics are measured on the [UWaveGestureLibrary](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv) dataset.**
 
->**注：以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+>**Note: All GPU inference times for the above models are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
