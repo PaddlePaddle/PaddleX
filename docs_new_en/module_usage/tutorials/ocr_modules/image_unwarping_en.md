@@ -1,13 +1,13 @@
-# Image Unwarping Module Development Tutorial
+# Text Image Unwarping Module Development Tutorial
 
 ## I. Overview
-The primary purpose of image unwarping is to perform geometric transformations on images in order to correct issues such as document distortion, tilt, perspective deformation, etc., enabling more accurate recognition by subsequent text recognition modules.
+The primary purpose of Text Image Unwarping is to perform geometric transformations on images in order to correct issues such as document distortion, tilt, perspective deformation, etc., enabling more accurate recognition by subsequent text recognition modules.
 
 ## II. Supported Model List
 
 |Model Name|MS-SSIM （%）|Model Size (M)| information|
 |-|-|-|-|
-|UVDoc |54.4|31 M|High-precision Document Image Unwarping Model|
+|UVDoc |54.4|31 M|High-precision Text Image Unwarping Model|
 
 
 **The accuracy metrics of the above models are measured on the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html) dataset.**
@@ -16,7 +16,7 @@ The primary purpose of image unwarping is to perform geometric transformations o
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
 
 
-Just a few lines of code can complete the inference of the image unwarping module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the image unwarping module into your project.
+Just a few lines of code can complete the inference of the Text Image Unwarping module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Text Image Unwarping module into your project.
 
 ```bash
 from paddlex import create_model
