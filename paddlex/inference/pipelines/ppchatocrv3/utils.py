@@ -36,8 +36,9 @@ def get_ocr_res(pipeline, input):
         return ocr_res_list
 
 
-def get_oriclas_results(inputs, predictor, img_list):
+def get_oriclas_results(inputs, predictor):
     results = []
+    img_list = [img_info["img"] for img_info in inputs]
     for input, pred in zip(inputs, predictor(img_list)):
         results.append(pred)
         angle = int(pred["label_names"][0])
@@ -45,11 +46,13 @@ def get_oriclas_results(inputs, predictor, img_list):
     return results
 
 
-def get_uvdoc_results(inputs, predictor, img_list):
+def get_uvdoc_results(inputs, predictor):
     results = []
+    img_list = [img_info["img"] for img_info in inputs]
     for input, pred in zip(inputs, predictor(img_list)):
         results.append(pred)
-        input["img"] = np.array(pred["doctr_img"], dtype=np.uint8)
+        img = np.array(pred["doctr_img"], dtype=np.uint8)
+        input["img"] = img
     return results
 
 

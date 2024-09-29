@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from ...utils.config import parse_config
+from ..utils.get_pipeline_path import get_pipeline_path
 from .base import BasePipeline
 from .single_model_pipeline import (
     _SingleModelPipeline,
@@ -37,13 +38,12 @@ from .ppchatocrv3 import PPChatOCRPipeline
 
 def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
     if not Path(pipeline).exists():
-        # XXX: using dict class to handle all pipeline configs
-        pipeline = (
-            Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline}.yaml"
-        )
-        if not Path(pipeline).exists():
-            raise Exception(f"The pipeline does not exist! ({pipeline})")
-    config = parse_config(pipeline)
+        pipeline_path = get_pipeline_path(pipeline)
+        if pipeline_path is None:
+            raise Exception(
+                f"The pipeline ({pipeline}) does not exist! Please use a pipeline name or a config yaml file!"
+            )
+    config = parse_config(pipeline_path)
     return config
 
 

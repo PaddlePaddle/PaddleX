@@ -21,6 +21,8 @@ import tempfile
 from . import create_pipeline
 from .inference.pipelines import create_pipeline_from_config, load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
+from .utils import logging
+from .utils.interactive_get_pipeline import interactive_get_pipeline
 
 
 def _install_serving_deps():
@@ -82,12 +84,13 @@ def args_cfg():
 
     ################# pipeline predict #################
     parser.add_argument("--pipeline", type=str, help="")
-    parser.add_argument("--input", type=str, help="")
+    parser.add_argument("--input", type=str, default=None, help="")
     parser.add_argument("--save_path", type=str, default=None, help="")
     parser.add_argument("--device", type=str, default=None, help="")
     parser.add_argument("--use_hpip", action="store_true")
     parser.add_argument("--serial_number", type=str)
     parser.add_argument("--update_license", action="store_true")
+    parser.add_argument("--get_pipeline_config", type=str, default=None, help="")
 
     ################# serving #################
     parser.add_argument("--serve", action="store_true")
@@ -172,12 +175,15 @@ def main():
             port=args.port,
         )
     else:
-        pipeline_predict(
-            args.pipeline,
-            args.input,
-            args.device,
-            args.save_path,
-            use_hpip=args.use_hpip,
-            serial_number=args.serial_number,
-            update_license=args.update_license,
-        )
+        if args.get_pipeline_config is not None:
+            interactive_get_pipeline(args.get_pipeline_config)
+        else:
+            return pipeline_predict(
+                args.pipeline,
+                args.input,
+                args.device,
+                args.save_path,
+                use_hpip=args.use_hpip,
+                serial_number=args.serial_number,
+                update_license=args.update_license,
+            )
