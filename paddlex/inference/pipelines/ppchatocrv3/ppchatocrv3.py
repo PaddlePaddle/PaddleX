@@ -130,6 +130,8 @@ class PPChatOCRPipeline(TableRecPipeline):
             self.curve_pipeline = OCRPipeline(
                 text_det_model=self.curve_model,
                 text_rec_model=self.text_rec_model,
+                text_det_batch_size=self.text_det_batch_size,
+                text_rec_batch_size=self.text_rec_batch_size,
                 predictor_kwargs=self.predictor_kwargs,
             )
         else:

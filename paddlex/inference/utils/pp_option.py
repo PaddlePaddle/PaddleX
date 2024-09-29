@@ -57,7 +57,7 @@ class PaddlePredictorOption(object):
         return {
             "run_mode": "paddle",
             "device": device_type,
-            "device_id": device_id[0],
+            "device_id": 0 if device_id is None else device_id[0],
             "min_subgraph_size": 3,
             "shape_info_filename": None,
             "trt_calib_mode": False,

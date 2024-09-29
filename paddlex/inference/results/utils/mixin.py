@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 import numpy as np
 from PIL import Image
+import pandas as pd
 
 from ....utils import logging
 from ...utils.io import (
@@ -37,7 +38,7 @@ def _save_list_data(save_func, save_path, data, *args, **kwargs):
         for idx, single in enumerate(data):
             save_func(
                 (
-                    save_path.parent / f"{save_path.stem}_{idx}.{save_path.suffix}"
+                    save_path.parent / f"{save_path.stem}_{idx}{save_path.suffix}"
                 ).as_posix(),
                 single,
                 *args,
@@ -48,9 +49,6 @@ def _save_list_data(save_func, save_path, data, *args, **kwargs):
 
 
 class StrMixin:
-    def __init__(self):
-        self._show_func_register()(self.print)
-
     @property
     def str(self):
         return self._to_str()
@@ -74,8 +72,12 @@ class JsonMixin:
         def _format_data(obj):
             if isinstance(obj, np.float32):
                 return float(obj)
-            if isinstance(obj, np.ndarray):
+            elif isinstance(obj, np.ndarray):
                 return [_format_data(item) for item in obj.tolist()]
+            elif isinstance(obj, pd.DataFrame):
+                return obj.to_json(orient="records", force_ascii=False)
+            elif isinstance(obj, Path):
+                return obj.as_posix()
             elif isinstance(obj, dict):
                 return type(obj)({k: _format_data(v) for k, v in obj.items()})
             elif isinstance(obj, (list, tuple)):
@@ -123,7 +125,7 @@ class ImgMixin:
     def save_to_img(self, save_path, *args, **kwargs):
         if not str(save_path).lower().endswith((".jpg", ".png")):
             fp = Path(self["input_path"])
-            save_path = Path(save_path) / f"{fp.stem}.{fp.suffix}"
+            save_path = Path(save_path) / f"{fp.stem}{fp.suffix}"
         _save_list_data(self._img_writer.write, save_path, self.img, *args, **kwargs)
 
 

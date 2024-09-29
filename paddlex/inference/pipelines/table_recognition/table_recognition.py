@@ -55,9 +55,11 @@ class TableRecPipeline(BasePipeline):
     ):
         self.layout_predictor = self._create_model(model=self.layout_model)
         self.ocr_pipeline = OCRPipeline(
-            self.text_det_model,
-            self.text_rec_model,
-            self.predictor_kwargs,
+            text_det_model=self.text_det_model,
+            text_rec_model=self.text_rec_model,
+            text_det_batch_size=self.text_det_batch_size,
+            text_rec_batch_size=self.text_rec_batch_size,
+            predictor_kwargs=self.predictor_kwargs,
         )
         self.table_predictor = self._create_model(model=self.table_model)
         self._crop_by_boxes = CropByBoxes()

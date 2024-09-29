@@ -81,13 +81,10 @@ def args_cfg():
     )
 
     ################# pipeline predict #################
-    parser.add_argument("--predict", action="store_true", default=True, help="")
     parser.add_argument("--pipeline", type=str, help="")
-    parser.add_argument("--model", nargs="+", help="")
-    parser.add_argument("--model_dir", nargs="+", type=parse_str, help="")
     parser.add_argument("--input", type=str, help="")
-    parser.add_argument("--save_dir", type=str, default="./", help="")
-    parser.add_argument("--device", type=str, help="")
+    parser.add_argument("--save_path", type=str, default=None, help="")
+    parser.add_argument("--device", type=str, default=None, help="")
     parser.add_argument("--use_hpip", action="store_true")
     parser.add_argument("--serial_number", type=str)
     parser.add_argument("--update_license", action="store_true")
@@ -132,17 +129,18 @@ def _get_hpi_params(serial_number, update_license):
 
 
 def pipeline_predict(
-    pipeline, input, device, save_dir, use_hpip, serial_number, update_license
+    pipeline, input, device, save_path, use_hpip, serial_number, update_license
 ):
     """pipeline predict"""
     hpi_params = _get_hpi_params(serial_number, update_license)
-    pipeline = create_pipeline(pipeline, use_hpip=use_hpip, hpi_params=hpi_params)
-    pipeline = create_pipeline(pipeline, device=device)
+    pipeline = create_pipeline(
+        pipeline, device=device, use_hpip=use_hpip, hpi_params=hpi_params
+    )
     result = pipeline(input)
     for res in result:
         res.print(json_format=False)
-        if save_dir:
-            res.save_all(save_path=save_dir)
+        if save_path:
+            res.save_all(save_path=save_path)
 
 
 def serve(pipeline, *, device, use_hpip, serial_number, update_license, host, port):
@@ -178,7 +176,7 @@ def main():
             args.pipeline,
             args.input,
             args.device,
-            args.save_dir,
+            args.save_path,
             use_hpip=args.use_hpip,
             serial_number=args.serial_number,
             update_license=args.update_license,

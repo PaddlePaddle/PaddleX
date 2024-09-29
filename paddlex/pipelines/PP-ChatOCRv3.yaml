@@ -1,0 +1,28 @@
+Global:
+  pipeline_name: PP-ChatOCRv3
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf
+  #input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/report.png
+Pipeline:
+  layout_model: PicoDet_layout_1x
+  table_model: SLANet
+  text_det_model: PP-OCRv4_mobile_det
+  text_rec_model: PP-OCRv4_mobile_rec
+  uvdoc_model: UVDoc
+  curve_model: PP-OCRv4_mobile_seal_det
+  oricls_model: PP-LCNet_x1_0_doc_ori
+  llm_name: "ernie-3.5"
+  llm_params: 
+    api_type: qianfan
+    ak: 
+    sk: 
+  task_prompt_yaml: None
+  user_prompt_yaml:
+  layout_batch_size: 1
+  text_det_batch_size: 1
+  text_rec_batch_size: 1
+  table_batch_size: 1
+  uvdoc_batch_size: 1
+  curve_batch_size: 1
+  oricls_batch_size: 1
+  recovery: True
+  device: "gpu"
