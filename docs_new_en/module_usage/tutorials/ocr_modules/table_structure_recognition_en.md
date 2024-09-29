@@ -18,16 +18,24 @@ Table structure recognition is a crucial component in table recognition systems,
     <th>Description</th>
   </tr>
   <tr>
-    <td>SLANet</td>
-    <td>76.31</td>
-    <td>791.73</td>
-    <td>379.87</td>
-    <td>9.3</td>
-    <td>SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+     <td>SLANet</td>
+    <td>59.52</td>
+    <td>522.536</td>
+    <td>1845.37</td>
+    <td>6.9 M</td>
+    <td rowspan="2">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+  </tr>
+   </tr>
+   <tr>
+    <td>SLANet_plus</td>
+    <td>63.69</td>
+    <td>522.536</td>
+    <td>1845.37</td>
+    <td>6.9 M</td>
   </tr>
 </table>
 
-**Note: The above accuracy metrics are measured on the PubtabNet English table recognition dataset. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The above accuracy metrics are evaluated on a self-built English table recognition dataset by PaddleX. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 </details>
 
