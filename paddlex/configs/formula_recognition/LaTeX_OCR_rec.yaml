@@ -26,7 +26,7 @@ Train:
   save_interval: 1
 
 Evaluate:
-  weight_path: "output/bbest_accurac/best_accuracy.pdparams"
+  weight_path: output/best_accuracy/best_accuracy.pdparams
   log_interval: 1
 
 Export:
