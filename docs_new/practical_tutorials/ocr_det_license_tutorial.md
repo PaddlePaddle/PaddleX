@@ -43,7 +43,7 @@ PaddleX 提供了 2 个端到端的文本检测模型，具体可参考 [模型�
 ## 4. 数据准备和校验
 ### 4.1 数据准备
 
-本教程采用 `车牌识别数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 文本检测/文本识别任务模块数据标注教程](../data_annotations/ocr_modules/text_detection\regognition.md)。
+本教程采用 `车牌识别数据集` 作为示例数据集，可通过以下命令获取示例数据集。如果您使用自备的已标注数据集，需要按照 PaddleX 的格式要求对自备数据集进行调整，以满足 PaddleX 的数据格式要求。关于数据格式介绍，您可以参考 [PaddleX 文本检测/文本识别任务模块数据标注教程](../data_annotations/ocr_modules/text_detection_recognition.md)。
 
 数据集获取命令：
 ```bash
