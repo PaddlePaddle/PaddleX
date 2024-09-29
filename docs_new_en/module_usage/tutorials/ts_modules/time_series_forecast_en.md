@@ -44,7 +44,7 @@ If you seek higher accuracy, you can leverage PaddleX's custom development capab
 
 ### 4.1 Dataset Preparation
 
-Before model training, you need to prepare a dataset for the task. PaddleX provides data validation functionality for each module. **Only data that passes validation can be used for model training.** Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Time Series Forecasting Task Module Data Preparation Tutorial](/docs_new_en/data_annotations/cv_modules/ts_forecast_en.md).
+Before model training, you need to prepare a dataset for the task. PaddleX provides data validation functionality for each module. **Only data that passes validation can be used for model training.** Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Time Series Forecasting Task Module Data Preparation Tutorial](/docs_new_en/data_annotations/time_series_modules/time_series_forecasting_en.md).
 
 #### 4.1.1 Demo Data Download
 
