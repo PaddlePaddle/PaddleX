@@ -78,12 +78,21 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
             result = await pipeline.infer(image)
 
             tables: List[Table] = []
-            for bbox, html in zip(
-                result["table_result"]["bbox"], result["table_result"]["html"]
-            ):
-                tables.append(Table(bbox=bbox, html=html))
+            for item in result["table_result"]:
+                x_min, y_min, x_max, y_max = item["layout_bbox"]
+                tables.append(
+                    Table(
+                        bbox=[
+                            [x_min, y_min],
+                            [x_max, y_min],
+                            [x_max, y_max],
+                            [x_min, y_max],
+                        ],
+                        html=item["html"],
+                    )
+                )
             table_image_base64 = serving_utils.image_to_base64(
-                result["table_result"].img
+                result["layout_result"].img
             )
             ocr_iamge_base64 = serving_utils.image_to_base64(result["ocr_result"].img)
 

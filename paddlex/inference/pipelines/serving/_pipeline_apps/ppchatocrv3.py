@@ -53,8 +53,7 @@ class AnalyzeImageRequest(BaseModel):
     inferenceParams: Optional[InferenceParams] = None
 
 
-Point: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
-BoundingBox: TypeAlias = Annotated[List[Point], Field(min_length=4, max_length=4)]
+BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
 
 
 class Text(BaseModel):
@@ -354,11 +353,10 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
                     item["ocr_result"]["rec_score"],
                 ):
                     texts.append(Text(bbox=bbox, text=text, score=score))
-                tables: List[Table] = []
-                for bbox, html in zip(
-                    result["table_result"]["bbox"], result["table_result"]["html"]
-                ):
-                    tables.append(Table(bbox=bbox, html=html))
+                tables = [
+                    Table(bbox=r["layout_bbox"], html=r["html"])
+                    for r in result["table_result"]
+                ]
                 input_img, ocr_img, layout_img = await asyncio.gather(*pp_img_futures)
                 vision_result = VisionResult(
                     texts=texts,
