@@ -15,7 +15,7 @@
 |-|-|-|
 |TimesNet_cls|87.5|792K|
 
-**注：以上精度指标测量自 **[UWaveGestureLibrary](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv)** 数据集****。**
+**注：以上精度指标测量自 [UWaveGestureLibrary](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv) 数据集。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 </details>
 
@@ -47,9 +47,20 @@ paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bce
 --input：待处理的输入序列的本地路径或URL
 --device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
 ```
-执行后，将提示选择时序分类产线配置文件保存路径，默认保存至当前目录，也可自定义路径。
 
-此外，也可在执行命令时加入 `-y` 参数，则可跳过路径选择，直接将产线配置文件保存至当前目录。
+在执行上述 Python 脚本时，加载的是默认的时序分类产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+
+<details>
+   <summary> 👉点击展开</summary>
+
+```
+paddlex --get_pipeline_yaml ts_classification
+```
+执行后，时序分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为* ./my_path*）：
+
+```
+paddlex --get_pipeline_config ts_classification --config_save_path ./my_path
+```
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ts_classification.yaml`，只需执行：
 
@@ -58,6 +69,8 @@ paddlex --pipeline ./ts_classification.yaml --input https://paddle-model-ecology
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
+</details>
+
 运行后，得到的结果为：
 
 ```
@@ -65,10 +78,11 @@ paddlex --pipeline ./ts_classification.yaml --input https://paddle-model-ecology
 sample  
 0             0  0.617688}
 ```
+
 #### 2.2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用时序分类产线为例：
 
-```
+```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="ts_classification")
@@ -102,30 +116,21 @@ for res in output:
 | dict          | 支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：`{\"img\": \"/root/data1\"}`。|
 | list          | 支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]`，`[\"/root/data1\", \"/root/data2\"]`，`[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]`。|
 
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果
+（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
+
 （4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 
 |方法|说明|方法参数|
 |-|-|-|
-|save_to_csv|将结果保存为csv格式的文件|save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
-|save_to_html|将结果保存为html格式的文件|save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
-|save_to_xlsx|将结果保存为表格格式的文件|save_path：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
+|save_to_csv|将结果保存为csv格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
+|save_to_html|将结果保存为html格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
+|save_to_xlsx|将结果保存为表格格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 
-在执行上述 Python 脚本时，加载的是默认的时序分类产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-```
-paddlex --get_pipeline_yaml ts_classification
-```
-执行后，时序分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为* ./my_path*）：
-
-```
-paddlex --get_pipeline_config ts_classification --config_save_path ./my_path
-```
-获取配置文件后，您即可对时序分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
+若您获取了配置文件，即可对时序分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/ts_classification.yaml` ，则只需执行：
 
-```
+```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/ts_forecast.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv")
@@ -150,7 +155,7 @@ for res in output:
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 
-## 二次开发
+## 4. 二次开发
 如果通用时序分类产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用时序分类产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
@@ -161,7 +166,7 @@ for res in output:
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```
+```python
 ......
 Pipeline:
   model: TimesNet_cls  #可修改为微调后模型的本地路径
@@ -171,7 +176,7 @@ Pipeline:
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
-##  多硬件支持
+##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需修改 `--device` 参数**即可完成不同硬件之间的无缝切换。
 
 例如，您使用英伟达 GPU 进行时序分类产线的推理，使用的 Python 命令为：
