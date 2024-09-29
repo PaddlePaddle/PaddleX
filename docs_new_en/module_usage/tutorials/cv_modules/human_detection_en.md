@@ -41,7 +41,7 @@ Human detection is a subtask of object detection, which utilizes computer vision
 </details>
 
 
-## III. Quick Integration  <a id="quick"> </a> 
+## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, you can perform human detection with just a few lines of code. You can easily switch between models in this module and integrate the human detection model inference into your project.
