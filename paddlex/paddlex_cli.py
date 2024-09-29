@@ -60,12 +60,9 @@ def args_cfg():
     )
 
     ################# pipeline predict #################
-    parser.add_argument("--predict", action="store_true", default=True, help="")
     parser.add_argument("--pipeline", type=str, help="")
-    parser.add_argument("--model", nargs="+", help="")
-    parser.add_argument("--model_dir", nargs="+", type=parse_str, help="")
     parser.add_argument("--input", type=str, help="")
-    parser.add_argument("--save_dir", type=str, default="./", help="")
+    parser.add_argument("--save_path", type=str, default=None, help="")
     parser.add_argument("--device", type=str, default=None, help="")
 
     return parser.parse_args()
@@ -91,14 +88,14 @@ def install(args):
     return
 
 
-def pipeline_predict(pipeline, input, device=None, save_dir=None):
+def pipeline_predict(pipeline, input, device=None, save_path=None):
     """pipeline predict"""
     pipeline = create_pipeline(pipeline, device=device)
     result = pipeline(input)
     for res in result:
         res.print(json_format=False)
-        if save_dir:
-            res.save_all(save_path=save_dir)
+        if save_path:
+            res.save_all(save_path=save_path)
 
 
 # for CLI
@@ -112,5 +109,5 @@ def main():
             args.pipeline,
             args.input,
             args.device,
-            args.save_dir,
+            args.save_path,
         )

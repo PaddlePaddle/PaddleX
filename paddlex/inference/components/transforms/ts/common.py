@@ -58,31 +58,38 @@ class ReadTS(_BaseRead):
         self._writer = CSVWriter(backend="pandas")
 
     def apply(self, ts):
-        if not isinstance(ts, str):
+        if isinstance(ts, pd.DataFrame):
             with tempfile.NamedTemporaryFile(suffix=".csv", delete=True) as temp_file:
                 input_path = Path(temp_file.name)
                 ts_path = input_path.as_posix()
                 self._writer.write(ts_path, ts)
                 yield {"input_path": input_path, "ts": ts, "ori_ts": deepcopy(ts)}
-
-        ts_path = ts
-        ts_path = self._download_from_url(ts_path)
-        file_list = self._get_files_list(ts_path)
-        batch = []
-        for ts_path in file_list:
-            ts_data = self._reader.read(ts_path)
-            batch.append(
-                {
-                    "input_path": Path(ts_path).name,
-                    "ts": ts_data,
-                    "ori_ts": deepcopy(ts_data),
-                }
-            )
-            if len(batch) >= self.batch_size:
+        elif isinstance(ts, str):
+            ts_path = ts
+            ts_path = self._download_from_url(ts_path)
+            file_list = self._get_files_list(ts_path)
+            batch = []
+            for ts_path in file_list:
+                ts_data = self._reader.read(ts_path)
+                batch.append(
+                    {
+                        "input_path": Path(ts_path).name,
+                        "ts": ts_data,
+                        "ori_ts": deepcopy(ts_data),
+                    }
+                )
+                if len(batch) >= self.batch_size:
+                    yield batch
+                    batch = []
+            if len(batch) > 0:
                 yield batch
-                batch = []
-        if len(batch) > 0:
-            yield batch
+        else:
+            raise TypeError(
+                f"ReadTS only supports the following types:\n"
+                f"1. str, indicating a CSV file path or a directory containing CSV files.\n"
+                f"2. pandas.DataFrame.\n"
+                f"However, got type: {type(ts).__name__}."
+            )
 
 
 class TSCutOff(BaseComponent):
