@@ -15,7 +15,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 **Note: The evaluation set for the above accuracy metrics is wider_face dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
 
-## III. Quick Integration
+## III. Quick Integration  <a id="quick"> </a> 
 Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the face detection module. You can switch models under this module freely, and you can also integrate the model inference of the face detection module into your project.
 
 ```python
@@ -245,4 +245,4 @@ The face detection module can be integrated into PaddleX pipelines such as **Fac
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the face detection module. You can refer to the Python example code in [Quick Integration](#三快速集成), simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the face detection module. You can refer to the Python example code in [Quick Integration](#quick), simply replace the model with the path to your trained model.
