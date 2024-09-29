@@ -62,5 +62,5 @@ class InstanceSegPredictor(DetPredictor):
         self._add_component([predictor, postprecss])
 
     def _pack_res(self, single):
-        keys = ["img_path", "boxes", "masks"]
+        keys = ["input_path", "boxes", "masks"]
         return InstanceSegResult({key: single[key] for key in keys})

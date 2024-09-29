@@ -74,5 +74,5 @@ class TextRecPredictor(BasicPredictor):
         return None
 
     def _pack_res(self, single):
-        keys = ["img_path", "rec_text", "rec_score"]
+        keys = ["input_path", "rec_text", "rec_score"]
         return TextRecResult({key: single[key] for key in keys})

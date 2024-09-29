@@ -97,9 +97,8 @@ def pipeline_predict(pipeline, input, device=None, save_dir=None):
     result = pipeline(input, device=device)
     for res in result:
         res.print(json_format=False)
-        # TODO(gaotingquan): support to save all
-        # if save_dir:
-        #     i["result"].save()
+        if save_dir:
+            res.save_all(save_path=save_dir)
 
 
 # for CLI

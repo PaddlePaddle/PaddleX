@@ -70,13 +70,13 @@ class TableRecPipeline(BasePipeline):
             self.layout_predictor(x), self.ocr_pipeline(x)
         ):
             single_img_res = {
-                "img_path": "",
+                "input_path": "",
                 "layout_result": {},
                 "ocr_result": {},
                 "table_result": [],
             }
             # update layout result
-            single_img_res["img_path"] = layout_pred["img_path"]
+            single_img_res["input_path"] = layout_pred["input_path"]
             single_img_res["layout_result"] = layout_pred
             subs_of_img = list(self._crop_by_boxes(layout_pred))
             # get cropped images with label "table"
@@ -102,7 +102,7 @@ class TableRecPipeline(BasePipeline):
         rec_text_list = []
         score_list = []
         unmatched_ocr_res = {"dt_polys": [], "rec_text": [], "rec_score": []}
-        unmatched_ocr_res["img_path"] = ocr_res["img_path"]
+        unmatched_ocr_res["input_path"] = ocr_res["input_path"]
         for i, text_box in enumerate(ocr_res["dt_polys"]):
             text_box_area = convert_4point2rect(text_box)
             if is_inside(text_box_area, box):
@@ -138,7 +138,7 @@ class TableRecPipeline(BasePipeline):
             table_res_list.append(
                 StructureTableResult(
                     {
-                        "img_path": input_img["img_path"],
+                        "input_path": input_img["input_path"],
                         "layout_bbox": [int(x) for x in input_img["box"]],
                         "bbox": ori_bbox_list,
                         "img_idx": table_index,

@@ -30,7 +30,7 @@ __all__ = [
     "ImageWriter",
     "TextWriter",
     "JsonWriter",
-    "TSWriter",
+    "CSVWriter",
     "HtmlWriter",
     "XlsxWriter",
 ]
@@ -45,7 +45,7 @@ class WriterType(enum.Enum):
     JSON = 4
     HTML = 5
     XLSX = 6
-    TS = 7
+    CSV = 7
 
 
 class _BaseWriter(object):
@@ -300,8 +300,8 @@ class UJsonWriterBackend(_BaseJsonWriterBackend):
         raise NotImplementedError
 
 
-class TSWriter(_BaseWriter):
-    """TSWriter"""
+class CSVWriter(_BaseWriter):
+    """CSVWriter"""
 
     def __init__(self, backend="pandas", **bk_args):
         super().__init__(backend=backend, **bk_args)
@@ -313,22 +313,22 @@ class TSWriter(_BaseWriter):
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
         if bk_type == "pandas":
-            return PandasTSWriterBackend(**bk_args)
+            return PandasCSVWriterBackend(**bk_args)
         else:
             raise ValueError("Unsupported backend type")
 
     def get_type(self):
         """get type"""
-        return WriterType.TS
+        return WriterType.CSV
 
 
-class _TSWriterBackend(_BaseWriterBackend):
-    """_TSWriterBackend"""
+class _CSVWriterBackend(_BaseWriterBackend):
+    """_CSVWriterBackend"""
 
     pass
 
 
-class PandasTSWriterBackend(_TSWriterBackend):
+class PandasCSVWriterBackend(_CSVWriterBackend):
     """PILImageWriterBackend"""
 
     def __init__(self):

@@ -15,18 +15,19 @@
 import numpy as np
 import cv2
 
-from ..utils.io import ImageReader
-from .base import BaseResult
+from .base import CVResult
 
 
-class TextDetResult(BaseResult):
+class TextDetResult(CVResult):
+    def __init__(self, data):
+        super().__init__(data)
+        self._img_reader.set_backend("opencv")
 
-    def _get_res_img(self):
+    def _to_img(self):
         """draw rectangle"""
         boxes = self["dt_polys"]
-        img = self._img_reader.read(self["img_path"])
-        res_img = img.copy()
+        image = self._img_reader.read(self["input_path"])
         for box in boxes:
             box = np.reshape(np.array(box).astype(int), [-1, 1, 2]).astype(np.int64)
-            cv2.polylines(res_img, [box], True, (0, 0, 255), 2)
-        return res_img
+            cv2.polylines(image, [box], True, (0, 0, 255), 2)
+        return image

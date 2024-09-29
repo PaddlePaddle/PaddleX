@@ -95,5 +95,5 @@ class ShiTuRecPredictor(BasicPredictor):
         return NormalizeFeatures()
 
     def _pack_res(self, data):
-        keys = ["img_path", "rec_feature"]
+        keys = ["input_path", "rec_feature"]
         return BaseResult({key: data[key] for key in keys})

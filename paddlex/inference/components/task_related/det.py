@@ -203,7 +203,7 @@ class WarpAffine(BaseComponent):
 class DetPostProcess(BaseComponent):
     """Save Result Transform"""
 
-    INPUT_KEYS = ["img_path", "boxes", "img_size"]
+    INPUT_KEYS = ["input_path", "boxes", "img_size"]
     OUTPUT_KEYS = ["boxes"]
     DEAULT_INPUTS = {"boxes": "boxes", "img_size": "ori_img_size"}
     DEAULT_OUTPUTS = {"boxes": "boxes"}
@@ -227,18 +227,18 @@ class CropByBoxes(BaseComponent):
     """Crop Image by Box"""
 
     YIELD_BATCH = False
-    INPUT_KEYS = ["img_path", "boxes"]
+    INPUT_KEYS = ["input_path", "boxes"]
     OUTPUT_KEYS = ["img", "box", "label"]
-    DEAULT_INPUTS = {"img_path": "img_path", "boxes": "boxes"}
+    DEAULT_INPUTS = {"input_path": "input_path", "boxes": "boxes"}
     DEAULT_OUTPUTS = {"img": "img", "box": "box", "label": "label"}
 
     def __init__(self):
         super().__init__()
         self._reader = ImageReader(backend="opencv")
 
-    def apply(self, img_path, boxes):
+    def apply(self, input_path, boxes):
         output_list = []
-        img = self._reader.read(img_path)
+        img = self._reader.read(input_path)
         for bbox in boxes:
             label_id = bbox["cls_id"]
             box = bbox["coordinate"]

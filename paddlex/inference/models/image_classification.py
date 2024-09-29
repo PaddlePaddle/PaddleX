@@ -95,7 +95,7 @@ class ClasPredictor(BasicPredictor):
         return MultiLabelThreshOutput(threshold=float(threshold), class_ids=label_list)
 
     def _pack_res(self, single):
-        keys = ["img_path", "class_ids", "scores"]
+        keys = ["input_path", "class_ids", "scores"]
         if "label_names" in single:
             keys.append("label_names")
         return TopkResult({key: single[key] for key in keys})

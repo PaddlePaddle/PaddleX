@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import BaseResult
+from ...utils import logging
+from .base import CVResult
 
 
-class TextRecResult(BaseResult):
-    def __init__(self, data):
-        super().__init__(data)
-
-    def _get_res_img(self, save_path):
-        raise Exception("Don't support to save Text Rec result to img!")
+class TextRecResult(CVResult):
+    def _to_img(self):
+        logging.warning("TextRecResult don't support save to img!")
+        return None

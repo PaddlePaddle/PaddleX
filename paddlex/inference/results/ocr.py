@@ -19,17 +19,11 @@ import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ...utils import logging
 from ...utils.fonts import PINGFANG_FONT_FILE_PATH
-from ..utils.io import ImageReader
-from .base import BaseResult
+from .base import CVResult
 
 
-class OCRResult(BaseResult):
-
-    def _check_res(self):
-        if len(self["dt_polys"]) == 0:
-            logging.warning("No text detected!")
+class OCRResult(CVResult):
 
     def get_minarea_rect(self, points):
         bounding_box = cv2.minAreaRect(points)
@@ -55,17 +49,17 @@ class OCRResult(BaseResult):
 
         return box
 
-    def _get_res_img(
+    def _to_img(
         self,
-        drop_score=0.5,
-        font_path=PINGFANG_FONT_FILE_PATH,
     ):
         """draw ocr result"""
+        # TODO(gaotingquan): mv to postprocess
+        drop_score = 0.5
+
         boxes = self["dt_polys"]
         txts = self["rec_text"]
         scores = self["rec_score"]
-        img = self._img_reader.read(self["img_path"])
-        image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        image = self._img_reader.read(self["input_path"])
         h, w = image.height, image.width
         img_left = image.copy()
         img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
@@ -74,37 +68,37 @@ class OCRResult(BaseResult):
         if txts is None or len(txts) != len(boxes):
             txts = [None] * len(boxes)
         for idx, (box, txt) in enumerate(zip(boxes, txts)):
-            try:
-                if scores is not None and scores[idx] < drop_score:
-                    continue
-                color = (
-                    random.randint(0, 255),
-                    random.randint(0, 255),
-                    random.randint(0, 255),
-                )
-                box = np.array(box)
-                if len(box) > 4:
-                    pts = [(x, y) for x, y in box.tolist()]
-                    draw_left.polygon(pts, outline=color, width=8)
-                    box = self.get_minarea_rect(box)
-                    height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
-                    box[:2, 1] = np.mean(box[:, 1])
-                    box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
-                draw_left.polygon(box, fill=color)
-                img_right_text = draw_box_txt_fine((w, h), box, txt, font_path)
-                pts = np.array(box, np.int32).reshape((-1, 1, 2))
-                cv2.polylines(img_right_text, [pts], True, color, 1)
-                img_right = cv2.bitwise_and(img_right, img_right_text)
-            except:
+            if scores is not None and scores[idx] < drop_score:
                 continue
+            color = (
+                random.randint(0, 255),
+                random.randint(0, 255),
+                random.randint(0, 255),
+            )
+            box = np.array(box)
+            if len(box) > 4:
+                pts = [(x, y) for x, y in box.tolist()]
+                draw_left.polygon(pts, outline=color, width=8)
+                box = self.get_minarea_rect(box)
+                height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
+                box[:2, 1] = np.mean(box[:, 1])
+                box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
+            draw_left.polygon(box, fill=color)
+            img_right_text = draw_box_txt_fine(
+                (w, h), box, txt, PINGFANG_FONT_FILE_PATH
+            )
+            pts = np.array(box, np.int32).reshape((-1, 1, 2))
+            cv2.polylines(img_right_text, [pts], True, color, 1)
+            img_right = cv2.bitwise_and(img_right, img_right_text)
+
         img_left = Image.blend(image, img_left, 0.5)
         img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))
         img_show.paste(Image.fromarray(img_right), (w, 0, w * 2, h))
-        return cv2.cvtColor(np.array(img_show), cv2.COLOR_RGB2BGR)
+        return img_show
 
 
-def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):
+def draw_box_txt_fine(img_size, box, txt, font_path):
     """draw box text"""
     box_height = int(
         math.sqrt((box[0][0] - box[3][0]) ** 2 + (box[0][1] - box[3][1]) ** 2)
@@ -145,7 +139,7 @@ def draw_box_txt_fine(img_size, box, txt, font_path=PINGFANG_FONT_FILE_PATH):
     return img_right_text
 
 
-def create_font(txt, sz, font_path=PINGFANG_FONT_FILE_PATH):
+def create_font(txt, sz, font_path):
     """create font"""
     font_size = int(sz[1] * 0.8)
     font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
