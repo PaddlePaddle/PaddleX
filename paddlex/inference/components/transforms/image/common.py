@@ -92,7 +92,7 @@ class ReadImage(_BaseRead):
     def apply(self, img):
         """apply"""
         if not isinstance(img, str):
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=True) as temp_file:
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
                 img_path = Path(temp_file.name)
                 self._writer.write(img_path, img)
                 yield [

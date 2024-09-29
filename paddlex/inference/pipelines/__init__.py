@@ -32,6 +32,7 @@ from .single_model_pipeline import (
 )
 from .ocr import OCRPipeline
 from .table_recognition import TableRecPipeline
+from .ppchatocrv3 import PPChatOCRPipeline
 
 
 def load_pipeline_config(pipeline: str) -> Dict[str, Any]:

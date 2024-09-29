@@ -15,6 +15,7 @@
 from ..components import SortBoxes, CropByPolys
 from ..results import OCRResult
 from .base import BasePipeline
+from ...utils import logging
 
 
 class OCRPipeline(BasePipeline):
@@ -22,15 +23,22 @@ class OCRPipeline(BasePipeline):
 
     entities = "OCR"
 
-    def __init__(self, det_model, rec_model, batch_size=1, predictor_kwargs=None):
+    def __init__(
+        self,
+        text_det_model,
+        text_rec_model,
+        text_det_batch_size=1,
+        text_rec_batch_size=1,
+        predictor_kwargs=None,
+    ):
         super().__init__(predictor_kwargs=predictor_kwargs)
-        self._build_predictor(det_model, rec_model)
-        self.set_predictor(batch_size)
+        self._build_predictor(text_det_model, text_rec_model)
+        self.set_predictor(text_det_batch_size, text_rec_batch_size)
 
-    def _build_predictor(self, det_model, rec_model):
-        self.det_model = self._create_model(det_model)
-        self.rec_model = self._create_model(rec_model)
-        self.is_curve = self.det_model.model_name in [
+    def _build_predictor(self, text_det_model, text_rec_model):
+        self.text_det_model = self._create_model(text_det_model)
+        self.text_rec_model = self._create_model(text_rec_model)
+        self.is_curve = self.text_det_model.model_name in [
             "PP-OCRv4_mobile_seal_det",
             "PP-OCRv4_server_seal_det",
         ]
@@ -39,12 +47,17 @@ class OCRPipeline(BasePipeline):
             det_box_type="poly" if self.is_curve else "quad"
         )
 
-    def set_predictor(self, batch_size):
-        self.rec_model.set_predictor(batch_size=batch_size)
+    def set_predictor(self, text_det_batch_size=None, text_rec_batch_size=None):
+        if text_det_batch_size and text_det_batch_size > 1:
+            logging.warning(
+                f"text det model only support batch_size=1 now,the setting of text_det_batch_size={text_det_batch_size} will not using! "
+            )
+        if text_rec_batch_size:
+            self.text_rec_model.set_predictor(batch_size=text_rec_batch_size)
 
     def predict(self, input, **kwargs):
         device = kwargs.get("device", "gpu")
-        for det_res in self.det_model(
+        for det_res in self.text_det_model(
             input, batch_size=kwargs.get("det_batch_size", 1), device=device
         ):
             single_img_res = (
@@ -54,7 +67,7 @@ class OCRPipeline(BasePipeline):
             single_img_res["rec_score"] = []
             if len(single_img_res["dt_polys"]) > 0:
                 all_subs_of_img = list(self._crop_by_polys(single_img_res))
-                for rec_res in self.rec_model(
+                for rec_res in self.text_rec_model(
                     all_subs_of_img,
                     batch_size=kwargs.get("rec_batch_size", 1),
                     device=device,

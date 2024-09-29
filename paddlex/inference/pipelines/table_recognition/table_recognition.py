@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import numpy as np
+from .utils import *
 from ..base import BasePipeline
 from ..ocr import OCRPipeline
+from ....utils import logging
 from ...components import CropByBoxes
 from ...results import OCRResult, TableResult, StructureTableResult
-from .utils import *
 
 
 class TableRecPipeline(BasePipeline):
@@ -32,38 +33,58 @@ class TableRecPipeline(BasePipeline):
         text_rec_model,
         table_model,
         layout_batch_size=1,
+        text_det_batch_size=1,
         text_rec_batch_size=1,
         table_batch_size=1,
         predictor_kwargs=None,
     ):
+        self.layout_model = layout_model
+        self.text_det_model = text_det_model
+        self.text_rec_model = text_rec_model
+        self.table_model = table_model
+        self.layout_batch_size = layout_batch_size
+        self.text_det_batch_size = text_det_batch_size
+        self.text_rec_batch_size = text_rec_batch_size
+        self.table_batch_size = table_batch_size
         super().__init__(predictor_kwargs=predictor_kwargs)
-        self._build_predictor(
-            layout_model, text_det_model, text_rec_model, table_model, predictor_kwargs
-        )
-        self.set_predictor(layout_batch_size, text_rec_batch_size, table_batch_size)
+        self._build_predictor()
+        # self.set_predictor(layout_batch_size, text_det_batch_size,text_rec_batch_size, table_batch_size)
 
     def _build_predictor(
         self,
-        layout_model,
-        text_det_model,
-        text_rec_model,
-        table_model,
-        predictor_kwargs,
     ):
-        self.layout_predictor = self._create_model(model=layout_model)
+        self.layout_predictor = self._create_model(model=self.layout_model)
         self.ocr_pipeline = OCRPipeline(
-            text_det_model,
-            text_rec_model,
-            predictor_kwargs=predictor_kwargs,
+            self.text_det_model,
+            self.text_rec_model,
+            self.predictor_kwargs,
         )
-        self.table_predictor = self._create_model(model=table_model)
+        self.table_predictor = self._create_model(model=self.table_model)
         self._crop_by_boxes = CropByBoxes()
         self._match = TableMatch(filter_ocr_result=False)
+        self.layout_predictor.set_predictor(batch_size=self.layout_batch_size)
+        self.ocr_pipeline.text_rec_model.set_predictor(
+            batch_size=self.text_rec_batch_size
+        )
+        self.table_predictor.set_predictor(batch_size=self.table_batch_size)
 
-    def set_predictor(self, layout_batch_size, text_rec_batch_size, table_batch_size):
-        self.layout_predictor.set_predictor(batch_size=layout_batch_size)
-        self.ocr_pipeline.rec_model.set_predictor(batch_size=text_rec_batch_size)
-        self.table_predictor.set_predictor(batch_size=table_batch_size)
+    def set_predictor(
+        self,
+        layout_batch_size=None,
+        text_det_batch_size=None,
+        text_rec_batch_size=None,
+        table_batch_size=None,
+    ):
+        if text_det_batch_size and text_det_batch_size > 1:
+            logging.warning(
+                f"text det model only support batch_size=1 now,the setting of text_det_batch_size={text_det_batch_size} will not using! "
+            )
+        if layout_batch_size:
+            self.layout_predictor.set_predictor(batch_size=layout_batch_size)
+        if text_rec_batch_size:
+            self.ocr_pipeline.rec_model.set_predictor(batch_size=text_rec_batch_size)
+        if table_batch_size:
+            self.table_predictor.set_predictor(batch_size=table_batch_size)
 
     def predict(self, x):
         for layout_pred, ocr_pred in zip(
