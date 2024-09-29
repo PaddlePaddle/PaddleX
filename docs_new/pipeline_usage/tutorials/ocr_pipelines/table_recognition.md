@@ -3,7 +3,7 @@
 ## 1. 通用表格识别产线介绍
 表格识别是一种自动从文档或图像中识别和提取表格内容及其结构的技术，广泛应用于数据录入、信息检索和文档分析等领域。通过使用计算机视觉和机器学习算法，表格识别能够将复杂的表格信息转换为可编辑的格式，方便用户进一步处理和分析数据。
 
-![](https://github.com/user-attachments/assets/0bc32ff1-10ad-425a-b84f-9950fb7b062a "")
+![](/tmp/images/pipelines/table_recognition/01.png)
 
 **通用****表格识别****产线中包含表格结构识别模块、版面区域分析模块、文本检测模块和文本识别模块**。
 
@@ -53,7 +53,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/91661/webUI)通用表格识别产线的效果，用官方提供的 demo 图片进行识别，例如：
 
-![](https://github.com/user-attachments/assets/d4fad10b-cbef-4bdb-8d49-ff9026d21c44 "")
+![](/tmp/images/pipelines/table_recognition/02.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
@@ -86,12 +86,9 @@ paddlex --pipeline ./table_recognition.yaml --input https://paddle-model-ecology
 
 运行后，得到的结果为：
 
-```
+![](/tmp/images/pipelines/table_recognition/03.png)
 
-```
-![](https://github.com/user-attachments/assets/03b0c65b-299b-40fb-bee4-be21f4c47084 "")
-
-### 2.2 Python脚本方式集成 
+### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用表格识别产线为例：
 
 ```
@@ -110,7 +107,7 @@ for res in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|

@@ -6,7 +6,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA。基于该项目，产学研界多方开发者已快速落地多个 OCR 应用，使用场景覆盖通用、制造、金融、交通等各个领域。
 
 
-![](../../../../tmp/images/pipelines/ocr/01.png)
+![](/tmp/images/pipelines/ocr/01.png)
 
 **通用OCR产线中包含了文本检测模块和文本识别模块**，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。**如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -118,9 +118,9 @@ paddlex --pipeline ./ocr.yaml --input https://paddle-model-ecology.bj.bcebos.com
 其中，`dt_polys`为检测到的文本框坐标，`dt_polys'`为检测到的文本框坐标，`dt_scores'`为检测到文本框的置信度，`rec_text'`为检测到的文本，`rec_score'`为检测到文本的置信度
 
 可视化结果如下：
-![](../../../..//tmp/images/pipelines/ocr/03.png)
+![](/tmp/images/pipelines/ocr/03.png)
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
-#### 2.2.2 Python脚本方式集成 
+#### 2.2.2 Python脚本方式集成
 * 几行代码即可完成产线的快速推理，以通用 OCR 产线为例：
 
 ```python
@@ -141,7 +141,7 @@ for batch in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化 OCR 产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
@@ -215,7 +215,7 @@ for res in output:
 ### 4.1 模型微调
 由于通用OCR产线包含两个模块（文本检测和文本识别），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/text_detection.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_detection.md#四二次开发)章节，使用您的私有数据集对文本检测模型进行微调；如果在已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_recognition.md#四二次开发)章节,对文本识别模型进行微调。 
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/text_detection.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_detection.md#四二次开发)章节，使用您的私有数据集对文本检测模型进行微调；如果在已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_recognition.md#四二次开发)章节,对文本识别模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
