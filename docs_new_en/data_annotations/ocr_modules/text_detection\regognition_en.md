@@ -91,7 +91,7 @@ python gen_ocr_train_val_test.py --trainValTestRatio 7:3:0 --datasetRootPath ../
   |- word_003.jpg
   | ...
 ```
-For more tool usage instructions, please refer to [Detailed Instructions](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README_en.md)
+For more tool usage instructions, please refer to [Detailed Instructions](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/PPOCRLabel/README.md)
 
 
 ## 3. Data Format
