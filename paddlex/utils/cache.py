@@ -15,17 +15,23 @@
 
 import os
 import os.path as osp
+from pathlib import Path
 import inspect
 import functools
 import pickle
 import hashlib
-
+import tempfile
+import atexit
 import filelock
+
+from . import logging
+
 
 DEFAULT_CACHE_DIR = osp.abspath(osp.join(os.path.expanduser("~"), ".paddlex"))
 CACHE_DIR = os.environ.get("PADDLE_PDX_CACHE_HOME", DEFAULT_CACHE_DIR)
 FUNC_CACHE_DIR = osp.join(CACHE_DIR, "func_ret")
 FILE_LOCK_DIR = osp.join(CACHE_DIR, "locks")
+TEMP_DIR = osp.join(CACHE_DIR, "temp")
 
 
 def create_cache_dir(*args, **kwargs):
@@ -99,3 +105,44 @@ def persist(cond=None):
         return _wrapper
 
     return _deco
+
+
+class TempFileManager:
+    def __init__(self):
+        self.temp_files = []
+        Path(TEMP_DIR).mkdir(parents=True, exist_ok=True)
+        atexit.register(self.cleanup)
+
+    def create_temp_file(self, **kwargs):
+        temp_file = tempfile.NamedTemporaryFile(dir=TEMP_DIR, **kwargs)
+        self.temp_files.append(temp_file)
+        return temp_file
+
+    def cleanup(self):
+        for temp_file in self.temp_files:
+            try:
+                temp_file.close()
+                os.remove(temp_file.name)
+            except FileNotFoundError as e:
+                pass
+        self.temp_files = []
+
+    class TempFileContextManager:
+        def __init__(self, manager, **kwargs):
+            self.manager = manager
+            self.kwargs = kwargs
+            self.temp_file = None
+
+        def __enter__(self):
+            self.temp_file = self.manager.create_temp_file(**self.kwargs)
+            return self.temp_file
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            if self.temp_file:
+                self.temp_file.close()
+
+    def temp_file_context(self, **kwargs):
+        return self.TempFileContextManager(self, **kwargs)
+
+
+temp_file_manager = TempFileManager()

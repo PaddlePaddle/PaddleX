@@ -201,8 +201,8 @@ def setup(
         logging.info(installer.get_deps())
 
     logging.info("Now installing the packages...")
-    install_deps_using_pip()
     installer.install(force_reinstall=False, no_deps=no_deps, constraints=constraints)
+    install_deps_using_pip()
     logging.info("All packages are installed.")
 
 

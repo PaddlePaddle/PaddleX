@@ -14,11 +14,11 @@
 
 from pathlib import Path
 from copy import deepcopy
-import tempfile
 import joblib
 import numpy as np
 import pandas as pd
 
+from .....utils.cache import CACHE_DIR, temp_file_manager
 from .....utils.download import download
 from .....utils.cache import CACHE_DIR
 from ....utils.io.readers import CSVReader
@@ -59,7 +59,9 @@ class ReadTS(_BaseRead):
 
     def apply(self, ts):
         if isinstance(ts, pd.DataFrame):
-            with tempfile.NamedTemporaryFile(suffix=".csv", delete=True) as temp_file:
+            with temp_file_manager.temp_file_context(
+                delete=True, suffix=".csv"
+            ) as temp_file:
                 input_path = Path(temp_file.name)
                 ts_path = input_path.as_posix()
                 self._writer.write(ts_path, ts)
