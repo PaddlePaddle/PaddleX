@@ -3,7 +3,7 @@
 ## 1. 通用时序异常检测产线介绍
 时序异常检测是一种识别时间序列数据中异常模式或行为的技术，广泛应用于网络安全、设备监控和金融欺诈检测等领域。它通过分析历史数据中的正常趋势和规律，来发现与预期行为显著不同的事件，例如突然增加的网络流量或异常的交易活动。时序异常检测通常使用统计方法或机器学习算法（如孤立森林、LSTM等），能够自动识别数据中的异常点，为企业和组织提供实时警报，帮助及时应对潜在风险和问题。这项技术在保障系统稳定性和安全性方面发挥着重要作用。
 
-![](https://github.com/user-attachments/assets/9552b516-889c-49fe-9680-a832d7624710 "")
+![](/tmp/images/pipelines/time_series/05.png)
 
 
 **通用****时序异常检测****产线中包含了****时序异常检测****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
@@ -31,7 +31,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/105706/webUI?source=appCenter)通用时序异常检测产线的效果，用官方提供的 demo 进行识别，例如：
 
-![](https://github.com/user-attachments/assets/c4b686ca-7287-4fd2-9ab8-f4de750bddef "")
+![](/tmp/images/pipelines/time_series/06.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
@@ -41,7 +41,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 在本地使用通用时序异常检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验时序异常检测产线效果 
+一行命令即可快速体验时序异常检测产线效果
 
 ```
 paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device gpu:0
@@ -68,7 +68,7 @@ paddlex --pipeline ./ts_ad.yaml --input https://paddle-model-ecology.bj.bcebos.c
 
 ```
 {'ts_path': '/root/.paddlex/predict_input/ts_ad.csv', 'anomaly':            label
-timestamp       
+timestamp  
 220226         0
 220227         0
 220228         0
@@ -84,7 +84,7 @@ timestamp
 [96 rows x 1 columns]}
 ```
 
-#### 2.2.2 Python脚本方式集成 
+#### 2.2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用时序异常检测产线为例：
 
 ```
@@ -103,7 +103,7 @@ for res in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
@@ -191,7 +191,7 @@ Pipeline:
 
 ##  多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需修改 `--device` 参数**即可完成不同硬件之间的无缝切换。
- 
+
 例如，您使用英伟达 GPU 进行时序异常检测产线的推理，使用的 Python 命令为：
 
 ```

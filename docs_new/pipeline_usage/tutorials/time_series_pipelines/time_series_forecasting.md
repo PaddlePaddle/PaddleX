@@ -3,7 +3,7 @@
 ## 1. 通用时序预测产线介绍
 时序预测是一种利用历史数据来预测未来趋势的技术，通过分析时间序列数据的变化模式。广泛应用于金融市场、天气预报和销售预测等领域。时序预测通常使用统计方法或深度学习模型（如LSTM、ARIMA等），能够处理数据中的时间依赖性，以提供准确的预判，帮助决策者做出更好的规划和响应。此技术在许多行业中发挥着重要作用，如能源管理、供应链优化和市场分析等。
 
-![](https://github.com/user-attachments/assets/fce28570-bcb4-49fd-828b-bddebec3c70e "")
+![](/tmp/images/pipelines/time_series/03.png)
 
 **通用****时序预测****产线中包含了****时序预测****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -29,7 +29,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/105706/webUI?source=appCenter)通用时序预测产线的效果，用官方提供的 demo 进行识别，例如：
 
-![](https://github.com/user-attachments/assets/a7f4ac04-79a6-46cb-93f2-d25b24439026 "")
+![](/tmp/images/pipelines/time_series/04.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
@@ -39,7 +39,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 在本地使用通用时序预测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验时序预测产线效果 
+一行命令即可快速体验时序预测产线效果
 
 ```
 paddlex --pipeline fs_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0
@@ -66,7 +66,7 @@ paddlex --pipeline ./fs_fc.yaml --input https://paddle-model-ecology.bj.bcebos.c
 
 ```
 {'ts_path': '/root/.paddlex/predict_input/ts_fc.csv', 'forecast':                            OT
-date                         
+date  
 2018-06-26 20:00:00  9.586131
 2018-06-26 21:00:00  9.379762
 2018-06-26 22:00:00  9.252275
@@ -82,7 +82,7 @@ date
 [96 rows x 1 columns]}
 ```
 
-#### 2.2.2 Python脚本方式集成 
+#### 2.2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用时序预测产线为例：
 
 ```
@@ -101,7 +101,7 @@ for res in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
