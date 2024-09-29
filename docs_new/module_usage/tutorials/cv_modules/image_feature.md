@@ -23,7 +23,7 @@
     <td>5.23428</td>
     <td>19.6005</td>
     <td>16.3 M</td>
-    <td rowspan="3">PP-ShiTuV2是一个通用图像识别系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
+    <td rowspan="3">PP-ShiTuV2是一个通用图像特征系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
   </tr>
   <tr>
     <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
@@ -48,7 +48,7 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成图像识别模块的推理，可以任意切换该模块下的模型，您也可以将图像识别的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成图像特征模块的推理，可以任意切换该模块下的模型，您也可以将图像特征的模块中的模型推理集成到您的项目中。
 
 ```python
 from paddlex import create_model
@@ -62,7 +62,7 @@ for res in output:
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
-如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的图像识别模型。在使用 PaddleX 开发图像识别模型之前，请务必安装 PaddleX的分类相关模型训练插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)
+如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的图像特征模型。在使用 PaddleX 开发图像特征模型之前，请务必安装 PaddleX的分类相关模型训练插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX多标签分类任务模块数据标注教程](../../../data_annotations/cv_modules/ml_classification.md)
@@ -249,7 +249,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o CheckDataset.split.gallery_percent=20 \
     -o CheckDataset.split.query_percent=10 
 ```
-> ❗注意 ：由于图像识别模型评估的特殊性，当且仅当 train、query、gallery 集合属于同一类别体系下，数据切分才有意义，在识别模型的评估过程中，必须满足 gallery 集合和 query 集合属于同一类别体系，其允许和 train 集合不在同一类别体系， 如果 gallery 集合和 query 集合与 train 集合不在同一类别体系，则数据划分后的评估没有意义，建议谨慎操作。
+> ❗注意 ：由于图像特征模型评估的特殊性，当且仅当 train、query、gallery 集合属于同一类别体系下，数据切分才有意义，在图像特征模的评估过程中，必须满足 gallery 集合和 query 集合属于同一类别体系，其允许和 train 集合不在同一类别体系， 如果 gallery 集合和 query 集合与 train 集合不在同一类别体系，则数据划分后的评估没有意义，建议谨慎操作。
 
 </details>
 
@@ -328,15 +328,15 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
 * 指定输入数据路径：`-o Predict.input="..."`. 
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-> ❗ 注意：识别模型的推理结果为一组向量，需要配合检索模块完成图像的识别。
+> ❗ 注意：图像特征模型的推理结果为一组向量，需要配合检索模块完成图像的识别。
 
 #### 4.4.2 模型集成
 模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
 
 1.**产线集成**
 
-图像识别模块可以集成的 PaddleX 产线有**通用图像识别产线**(comming soon)，只需要替换模型路径即可完成相关产线的图像识别模块的模型更新。在产线集成中，你可以使用服务化部署来部署你得到的模型。
+图像特征模块可以集成的 PaddleX 产线有**通用图像特征产线**(comming soon)，只需要替换模型路径即可完成相关产线的图像特征模块的模型更新。在产线集成中，你可以使用服务化部署来部署你得到的模型。
 
 2.**模块集成**
 
-您产出的权重可以直接集成到图像识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+您产出的权重可以直接集成到图像特征模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
