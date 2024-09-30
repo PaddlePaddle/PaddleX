@@ -50,7 +50,7 @@ You can [experience online](https://aistudio.baidu.com/community/app/100062/webU
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the model in the pipeline online**.
 
 ### 2.2 Local Experience
-Before using the General Semantic Segmentation Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.md).
+Before using the General Semantic Segmentation Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 #### 2.2.1 Command Line Experience
 Experience the semantic segmentation pipeline with a single command:
@@ -101,7 +101,7 @@ After running, the result is:
 
 The visualization images are saved in the `output` directory by default, and you can also customize it through `--save_path`.
 
-#### 2.2.2 Integration via Python Script
+#### 2.2.2 Python Script Integration
 A few lines of code can complete the quick inference of the pipeline. Taking the general semantic segmentation pipeline as an example:
 
 ```python
@@ -169,18 +169,18 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy.md).
+🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
 ## 4. Customization and Fine-tuning
 If the default model weights provided by the general semantic segmentation pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the general semantic segmentation pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general semantic segmentation pipeline includes a semantic segmentation module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/semantic_segmentation.md#Customization) section in the [Semantic Segmentation Module Development Tutorial](../../../module_usage/tutorials/cv_modules/semantic_segmentation.md) (GitHub can directly link to headings) and use your private dataset to fine-tune the semantic segmentation model.
+Since the general semantic segmentation pipeline includes a semantic segmentation module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/semantic_segmentation_en.md#iv-custom-development) section in the [Semantic Segmentation Module Development Tutorial](../../../module_usage/tutorials/cv_modules/semantic_segmentation_en.md) (GitHub can directly link to headings) and use your private dataset to fine-tune the semantic segmentation model.
 
 ### 4.2 Model Application
 After you complete fine-tuning training using your private dataset, you will obtain local model weight files.

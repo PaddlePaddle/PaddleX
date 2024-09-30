@@ -95,7 +95,7 @@ After running, the result is:
 
 The visualization image is saved in the `output` directory by default, and you can customize it through `--save_path`.
 
-#### 2.2.2 Integration via Python Script
+#### 2.2.2 Python Script Integration
 A few lines of code can complete the quick inference of the pipeline. Taking the general instance segmentation pipeline as an example:
 
 ```python
@@ -174,7 +174,7 @@ You can choose the appropriate deployment method for your model pipeline based o
 If the default model weights provided by the general instance segmentation pipeline do not meet your requirements for accuracy or speed in your scenario, you can try to further **fine-tune** the existing model using **data specific to your domain or application scenario** to improve the recognition effect of the general instance segmentation pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general instance segmentation pipeline includes an instance segmentation module, if the performance of the pipeline does not meet expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/instance_segmentation_en.md#四二次开发) section in the [Instance Segmentation Module Development Tutorial](../../../module_usage/tutorials/cv_modules/instance_segmentation_en.md).
+Since the general instance segmentation pipeline includes an instance segmentation module, if the performance of the pipeline does not meet expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/instance_segmentation_en.md#iv-custom-development) section in the [Instance Segmentation Module Development Tutorial](../../../module_usage/tutorials/cv_modules/instance_segmentation_en.md).
 
 ### 4.2 Model Application
 After you complete fine-tuning training using your private dataset, you will obtain local model weight files.
