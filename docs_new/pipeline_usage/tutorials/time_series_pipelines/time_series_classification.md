@@ -132,7 +132,7 @@ for res in output:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/ts_forecast.yaml")
+pipeline = create_pipeline(pipeline="./my_path/ts_classification.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出

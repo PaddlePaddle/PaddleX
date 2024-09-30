@@ -221,14 +221,14 @@ for res in output:
 ```bash
 ......
 Pipeline:
-  det_model: PP-OCRv4_server_det  #可修改为微调后文本检测模型的本地路径
-  det_device: "gpu"
-  rec_model: PP-OCRv4_server_rec  #可修改为微调后文本识别模型的本地路径
-  rec_batch_size: 1
-  rec_device: "gpu"
+  text_det_model: PP-OCRv4_mobile_det  #可修改为微调后文本检测模型的本地路径
+  text_rec_model: PP-OCRv4_mobile_rec  #可修改为微调后文本检测模型的本地路径
+  text_rec_batch_size: 1
+  device: "gpu:0"
 ......
 ```
 随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
+注：目前暂不支持为文本检测模型设置单独的batch_size。
 
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需修改 `--device`参数**即可完成不同硬件之间的无缝切换。
