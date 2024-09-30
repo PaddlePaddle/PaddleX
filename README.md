@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20windows-orange.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/hardware-intel cpu%2C%20gpu%2C%20xpu%2C%20npu%2C%20mlu-yellow.svg"></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows-orange.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
 
 <h4 align="center">
@@ -355,7 +355,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 * **安装PaddlePaddle**
 ```bash
 # cpu
-python -m pip install paddlepaddle
+python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
  python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
@@ -456,19 +456,19 @@ for batch in output:
 
 | 产线名称           | 对应参数               | 详细说明                                                                                                      |
 |--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取   | `pp_chatocrv3` | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 文档场景信息抽取   | `PP-ChatOCRv3-doc` | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
 | 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用实例分割       | `instance_segmentation` | [通用实例分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
 | 通用语义分割       | `semantic_segmentation` | [通用语义分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
 | 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
-| 小目标检测         | `smallobject_detection` | [小目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
+| 小目标检测         | `small_object_detection` | [小目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
 | 图像异常检测       | `image_classification` | [图像异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
 | 通用OCR            | `OCR` | [通用OCR产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md) |
 | 通用表格识别       | `table_recognition` | [通用表格识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md) |
 | 通用时序预测       | `ts_forecast` | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
 | 通用时序异常检测   | `ts_anomaly_detection` | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
-| 通用时序分类       | `ts_classification` | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
+| 通用时序分类       | `ts_cls` | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
 </details>
 
 ## 📖 文档
@@ -600,11 +600,6 @@ for batch in output:
 
 </details>
 
-<details>
-  <summary> <b> 🔗 多模块组合使用 </b></summary>
-
-  * [🧩 多功能模块组合使用教程]()
-</details>
 <details>
   <summary> <b> 🏗️ 模型产线部署 </b></summary>
 
