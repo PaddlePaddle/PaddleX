@@ -54,7 +54,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
 |RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
 
-**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout region analysis dataset containing 10,000 images. All GPU inference times are based on an NVIDIA Tesla T4 machine with
+**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout region analysis dataset containing 10,000 images. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 </details>
 
@@ -69,7 +69,7 @@ You can [experience online](https://aistudio.baidu.com/community/app/182491/webU
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the models in the pipeline online**.
 
 ### 2.2 Local Experience
-Before using the Document Scene Information Extraction v3 pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
+Before using the PP-ChatOCRv3 pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 A few lines of code are all you need to complete the quick inference of the pipeline. Using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf), taking the PP-ChatOCRv3-doc pipeline as an example:
 
