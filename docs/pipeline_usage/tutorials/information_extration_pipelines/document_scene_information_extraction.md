@@ -125,7 +125,7 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
-                            
+
 visual_result, visual_inf = predict(["contract.pdf"])
 
 for res in visual_result:
@@ -198,13 +198,13 @@ Pipeline:
   text_det_model: PP-OCRv4_server_det
   text_rec_model: PP-OCRv4_server_rec
   seal_text_det_model: PP-OCRv4_server_seal_det
-  doc_image_ori_cls_model: null 
-  doc_image_unwarp_model: null 
+  doc_image_ori_cls_model: null
+  doc_image_unwarp_model: null
   llm_name: "ernie-3.5"
-  llm_params: 
+  llm_params:
     api_type: qianfan
-    ak: 
-    sk: 
+    ak:
+    sk:
 ```
 
 在上述配置中，您可以修改产线各模块加载的模型，也可以修改使用的大模型。各模块支持模型列表请参考模块文档，大模型支持列表为：ernie-4.0、ernie-3.5、ernie-3.5-8k、ernie-lite、ernie-tiny-8k、ernie-speed、ernie-speed-128k、ernie-char-8k。
@@ -219,7 +219,7 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
-                            
+
 visual_result, visual_inf = predict(["contract.pdf"])
 
 for res in visual_result:
@@ -243,9 +243,9 @@ print(predict.chat("乙方,手机号"))
 
 下面是API参考和多语言服务调用示例：
 
-<details>  
-<summary>API参考</summary>  
-  
+<details>
+<summary>API参考</summary>
+
 对于服务提供的所有操作：
 
 - 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
@@ -339,7 +339,7 @@ print(predict.chat("乙方,手机号"))
         |`llmParams`|`object`|大语言模型API参数。|否|
 
         当前，`llmParams`可以采用如下两种形式之一：
-        
+
         ```json
         {
           "apiType": "qianfan",
@@ -378,7 +378,7 @@ print(predict.chat("乙方,手机号"))
         |`llmParams`|`object`|大语言模型API参数。|否|
 
         当前，`llmParams`可以采用如下两种形式之一：
-        
+
         ```json
         {
           "apiType": "qianfan",
@@ -423,7 +423,7 @@ print(predict.chat("乙方,手机号"))
         |`llmParams`|`object`|大语言模型API参数。|否|
 
         当前，`llmParams`可以采用如下两种形式之一：
-        
+
         ```json
         {
           "apiType": "qianfan",
@@ -457,11 +457,11 @@ print(predict.chat("乙方,手机号"))
 </details>
 
 <details>
-<summary>多语言调用服务示例</summary>  
+<summary>多语言调用服务示例</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import pprint
@@ -475,8 +475,8 @@ API_KEY = "{千帆平台API key}"
 SECRET_KEY = "{千帆平台secret key}"
 LLM_NAME = "ernie-3.5"
 LLM_PARAMS = {
-    "apiType": "qianfan", 
-    "apiKey": API_KEY, 
+    "apiType": "qianfan",
+    "apiKey": API_KEY,
     "secretKey": SECRET_KEY,
 }
 
@@ -485,8 +485,12 @@ if __name__ == "__main__":
     file_path = "./demo.jpg"
     keys = ["电话"]
 
+    with open(file_path, "rb") as file:
+        file_bytes = file.read()
+        file_data = base64.b64encode(file_bytes).decode("ascii")
+
     payload = {
-        "file": file_path,
+        "file": file_data,
         "useOricls": True,
         "useCurve": True,
         "useUvdoc": True,
@@ -577,7 +581,7 @@ if __name__ == "__main__":
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
-</details>  
+</details>
 </details>
 <br/>
 
@@ -629,7 +633,7 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
-                            device = "gpu:0" ) 
+                            device = "gpu:0" )
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu 即可：
 
@@ -638,6 +642,6 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
-                            device = "npu:0" ) 
+                            device = "npu:0" )
 ```
 若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
