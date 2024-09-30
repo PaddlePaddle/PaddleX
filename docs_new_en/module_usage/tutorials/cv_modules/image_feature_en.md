@@ -149,7 +149,7 @@ In the above validation results, `check_pass` being True indicates that the data
 
 Additionally, the dataset verification also analyzes the number of images and image categories within the dataset, and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/img_recognition/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png)
 </details>
 
 ### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)

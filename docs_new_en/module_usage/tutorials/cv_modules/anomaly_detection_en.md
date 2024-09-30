@@ -8,9 +8,9 @@ Unsupervised anomaly detection is a technology that automatically identifies and
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | ROCAUC（Avg）| GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
-|-|-|-|-|-|-|
-| STFPM | 0.962 | -  | - | 22.5 | An unsupervised anomaly detection algorithm based on representation consists of a pre-trained teacher network and a student network with the same structure. The student network detects anomalies by matching its own features with the corresponding features in the teacher network. |
+| Model | ROCAUC（Avg）| Model Size (M) | Description |
+|-|-|-|-|
+| STFPM | 0.962 | 22.5 | An unsupervised anomaly detection algorithm based on representation consists of a pre-trained teacher network and a student network with the same structure. The student network detects anomalies by matching its own features with the corresponding features in the teacher network. |
 
 The above model accuracy indicators are measured from the MVTec_AD dataset.
 </details>

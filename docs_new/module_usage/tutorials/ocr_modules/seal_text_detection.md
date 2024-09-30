@@ -112,7 +112,7 @@ python main.py -c paddlex/configs/text_detection_seal/PP-OCRv4_server_seal_det.y
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/curved_text_dec/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/curved_text_dec/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）

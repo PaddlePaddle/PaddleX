@@ -3,7 +3,7 @@
 ## 1. 图像异常检测产线介绍
 图像异常检测是一种通过分析图像中的内容，来识别与众不同或不符合正常模式的图像处理技术。它广泛应用于工业质量检测、医疗影像分析和安全监控等领域。通过使用机器学习和深度学习算法，图像异常检测能够自动识别出图像中潜在的缺陷、异常或异常行为，从而帮助我们及时发现问题并采取相应措施。图像异常检测系统被设计用于自动检测和标记图像中的异常情况，以提高工作效率和准确性。
 
-![](https://github.com/user-attachments/assets/424c8c1a-8cf8-420f-b257-b5367f576540 "")
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png)
 
 
 **图像异常检测产线中包含了无监督异常检测模块，模型的benchmark如下**：
@@ -63,11 +63,11 @@ paddlex --pipeline ./anomaly_detection.yaml --input https://paddle-model-ecology
 ```
 {'img_path': '/root/.paddlex/predict_input/uad_grid.png'}
 ```
-![](https://github.com/user-attachments/assets/5a1e41c6-fd38-4895-b21c-583f1af53873 "")
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png)
 
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
 
-### 2.2 Python脚本方式集成 
+### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以图像异常检测产线为例：
 
 ```python
@@ -86,7 +86,7 @@ for res in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
@@ -145,7 +145,7 @@ for res in output:
 如果图像异常检测产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升图像异常检测产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于图像异常检测产线包含无监督图像异常检测模块，如果模型产线的效果不及预期，那么您需要参考[无监督异常检测模块开发教程](../../../module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md#四二次开发)章节，使用您的私有数据集对图像异常检测模型进行微调。
+由于图像异常检测产线包含无监督图像异常检测模块，如果模型产线的效果不及预期，那么您需要参考[无监督异常检测模块开发教程](../../../module_usage/tutorials/cv_modules/anomaly_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/anomaly_detection.md#四二次开发)章节，使用您的私有数据集对图像异常检测模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。

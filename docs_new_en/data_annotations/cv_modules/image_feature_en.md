@@ -22,11 +22,11 @@ pip install labelme
 * Create a root directory for the dataset, e.g., `pets`.
 * Create an `images` directory (must be named `images`) within `pets` and store the images to be annotated in the `images` directory, as shown below:
 
-![alt text](/tmp/images/data_prepare/image_classification/01.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/01.png)
 
 * Create a category label file `flags.txt` in the `pets` folder for the dataset to be annotated, and write the categories of the dataset to be annotated into `flags.txt` line by line. Taking the `flags.txt` for a cat-dog classification dataset as an example, as shown below:
 
-![alt text](/tmp/images/data_prepare/image_classification/02.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/02.png)
 
 #### 1.3.2 Start Labelme
 Navigate to the root directory of the dataset to be annotated in the terminal and start the `labelme` annotation tool.
@@ -43,17 +43,17 @@ labelme images --nodata --autosave --output annotations --flags flags.txt
 #### 1.3.3 Start Image Annotation
 * After starting `labelme`, it will look like this:
 
-![alt text](/tmp/images/data_prepare/image_classification/03.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/03.png)
 * Select the category in the `Flags` interface.
 
-![alt text](/tmp/images/data_prepare/image_classification/04.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/04.png)
 
 * After annotation, click Save. (If `output` is not specified when starting `labelme`, it will prompt to select the save path upon the first save. If `autosave` is enabled, there is no need to click the Save button).
 
-![alt text](/tmp/images/data_prepare/image_classification/05.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/05.png)
 * Then click `Next Image` to annotate the next image.
 
-![alt text](/tmp/images/data_prepare/image_classification/06.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/06.png)
 
 * After annotating all images, use the [convert_to_imagenet.py](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/image_classification_dataset_prepare/convert_to_imagenet.py) to convert the annotated dataset to `ImageNet-1k` dataset format, generating `train.txt`, `val.txt`, and `label.txt`.
 
@@ -64,7 +64,7 @@ python convert_to_imagenet.py --dataset_path /path/to/dataset
 
 * The final directory structure after organization is as follows:
 
-![alt text](/tmp/images/data_prepare/image_classification/07.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/07.png)
 
 #### 1.3.4 Data Format Conversion
 After obtaining data in `LabelMe` format, the data format needs to be converted to `ShiTuRecDataset` format. Below is a code example that demonstrates how to convert the data labeled using `LabelMe` according to the previous tutorial.

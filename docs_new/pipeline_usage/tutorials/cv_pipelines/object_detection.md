@@ -3,7 +3,7 @@
 ## 1. 通用目标检测产线介绍
 目标检测旨在识别图像或视频中多个对象的类别及其位置，通过生成边界框来标记这些对象。与简单的图像分类不同，目标检测不仅需要识别出图像中有哪些物体，例如人、车和动物等，还需要准确地确定每个物体在图像中的具体位置，通常以矩形框的形式表示。该技术广泛应用于自动驾驶、监控系统和智能相册等领域，依赖于深度学习模型（如YOLO、Faster R-CNN等），这些模型能够高效地提取特征并进行实时检测，显著提升了计算机对图像内容理解的能力。
 
-![](https://github.com/user-attachments/assets/78088179-537d-440b-8369-c2919166666f "")
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/01.png)
 
 **通用****目标检测****产线中包含了****目标检测****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -60,7 +60,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/70230/webUI)通用目标检测产线的效果，用官方提供的 demo 图片进行识别，例如：
 
-![](https://github.com/user-attachments/assets/df8623af-79ac-47db-b980-cd3d2659c384 "")
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/02.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
@@ -112,11 +112,11 @@ paddlex --pipeline ./object_detection.yaml --input https://paddle-model-ecology.
 {'img_path': '/root/.paddlex/predict_input/general_object_detection_002.png', 'boxes': [{'cls_id': 49, 'label': 'orange', 'score': 0.8188097476959229, 'coordinate': [661, 93, 870, 305]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7743489146232605, 'coordinate': [76, 274, 330, 520]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7270504236221313, 'coordinate': [285, 94, 469, 297]}, {'cls_id': 46, 'label': 'banana', 'score': 0.5570532083511353, 'coordinate': [310, 361, 685, 712]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5484835505485535, 'coordinate': [764, 285, 924, 440]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5160726308822632, 'coordinate': [853, 169, 987, 303]}, {'cls_id': 60, 'label': 'dining table', 'score': 0.5142655968666077, 'coordinate': [0, 0, 1072, 720]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5101479291915894, 'coordinate': [57, 23, 213, 176]}]}
 ```
 
-![](https://github.com/user-attachments/assets/64ea893a-aa5c-4938-9c93-12e7fc38f00c "")
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png)
 
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
 
-#### 2.2.2 Python脚本方式集成 
+#### 2.2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用目标检测产线为例：
 
 ```python
@@ -135,7 +135,7 @@ for res in output:
 在上述 Python 脚本中，执行了如下几个步骤：
 
 （1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-  
+
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|

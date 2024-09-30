@@ -19,45 +19,43 @@ Welcome to use PaddlePaddle's low-code development tool, PaddleX. Before we offi
 
 PaddleX offers two installation modes: Wheel Package Installation and Plugin Installation. The following details the application scenarios and installation methods for these two modes.
 
-#### 1.2.1 Obtain PaddleX Source Code
-Please use the following command to obtain the latest source code of PaddleX from GitHub:
-
-```bash
-git clone https://github.com/PaddlePaddle/PaddleX.git
-```
-If accessing GitHub is slow, you can download from Gitee instead, using the following command:
-
-```bash
-git clone https://gitee.com/paddlepaddle/PaddleX.git
-```
-
-#### 1.2.2 Wheel Package Installation Mode
+#### 1.2.1 Wheel Package Installation Mode
 If your application scenario for PaddleX is **model inference and integration**, we recommend using the more **convenient** and **lightweight** Wheel Package Installation Mode.
 
 After installing PaddlePaddle, you can directly execute the following commands to quickly install the PaddleX Wheel package:
 
 ```bash
-cd PaddleX
-
-# Install PaddleX whl
-# -e: Install in editable mode, so changes to the current project's code will directly affect the installed PaddleX Wheel
-pip install -e .
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
 ```
 
-#### 1.2.3 Plugin Installation Mode
+#### 1.2.2 Plugin Installation Mode
 If your application scenario for PaddleX is **secondary development**, we recommend using the more **powerful** Plugin Installation Mode.
 
 After installing the PaddleX plugins you need, you can not only perform inference and integration on the models supported by the plugins but also conduct more advanced operations such as model training for secondary development.
 
 The plugins supported by PaddleX are as follows. Please determine the name(s) of the plugin(s) you need based on your development requirements:
 
-| Plugin Name | Basic Plugin Functions | Supported Pipelines | Reference Documentation |
-|-|-|-|-|
-| PaddleClas | Image Classification, Feature Extraction | General Image Classification Pipeline, General Multi-label Image Classification Pipeline, General Image Recognition Pipeline, Document Scene Information Extraction v3 Pipeline | General Image Classification Pipeline Usage Guide |
-| PaddleDetection | Object Detection, Instance Segmentation | General Object Detection Pipeline, Small Object Detection Pipeline, Document Scene Information Extraction v3 Pipeline | General Object Detection Pipeline Usage Guide |
-| PaddleOCR | OCR (Text Detection, Text Recognition), Table Recognition, Formula Recognition | General OCR Pipeline, General Table Recognition Pipeline, Document Scene Information Extraction v3 Pipeline | General OCR Pipeline Usage Guide |
-| PaddleSeg | Semantic Segmentation, Image Anomaly Detection | General Instance Segmentation Pipeline, General Semantic Segmentation Pipeline | General Semantic Segmentation Pipeline Usage Guide |
-| PaddleTS | Time Series Forecasting, Time Series Classification, Time Series Anomaly Detection | Time Series Forecasting Pipeline, Time Series Classification Pipeline, Time Series Anomaly Detection Pipeline | Time Series Forecasting Pipeline Usage Guide |
+<details>
+  <summary>👉 <b>Plugin and Pipeline Correspondence (Click to Expand)</b></summary>
+
+| Pipeline | Module | Corresponding Plugin |
+|-|-|-|
+| General Image Classification | Image Classification | `PaddleClas` |
+| General Object Detection | Object Detection | `PaddleDetection` |
+| General Semantic Segmentation | Semantic Segmentation | `PaddleSeg` |
+| General Instance Segmentation | Instance Segmentation | `PaddleDetection` |
+| General OCR | Text Detection<br>Text Recognition | `PaddleOCR` |
+| General Table Recognition | Layout Region Detection<br>Table Structure Recognition<br>Text Detection<br>Text Recognition | `PaddleOCR`<br>`PaddleDetection` |
+| Document Scene Information Extraction v3 | Table Structure Recognition<br>Layout Region Detection<br>Text Detection<br>Text Recognition<br>Seal Text Detection<br>Document Image Correction<br>Document Image Orientation Classification | `PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
+| Time Series Prediction | Time Series Prediction Module | `PaddleTS` |
+| Time Series Anomaly Detection | Time Series Anomaly Detection Module | `PaddleTS` |
+| Time Series Classification | Time Series Classification Module | `PaddleTS` |
+| General Multi-label Classification | Image Multi-label Classification | `PaddleClas` |
+| Small Object Detection | Small Object Detection | `PaddleDetection` |
+| Image Anomaly Detection | Unsupervised Anomaly Detection | `PaddleSeg` |
+
+</details>
+
 
 If the plugin(s) you need to install is/are PaddleXXX (can be multiple), after installing PaddlePaddle, you can directly execute the following commands to quickly install the corresponding PaddleX plugin(s):
 

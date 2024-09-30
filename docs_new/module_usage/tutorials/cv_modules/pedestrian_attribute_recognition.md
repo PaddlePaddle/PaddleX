@@ -113,7 +113,7 @@ python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_
 
 另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/ped_attri/image.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ped_attri/image.png)
 
 </details>
 

@@ -109,7 +109,7 @@ The verification results mentioned above indicate that `check_pass` being `True`
 
 The dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (histogram.png):
 
-![](/tmp/images/modules/layout_dec/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/layout_dec/01.png)
 
 </details>
 

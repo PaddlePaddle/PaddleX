@@ -147,7 +147,7 @@ In the above validation results, `check_pass` being True indicates that the data
 * `attributes.val_sample_paths`: A list of relative paths to the visual samples in the validation set of this dataset;
 
 Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
-![](/tmp/images/modules/ml_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)

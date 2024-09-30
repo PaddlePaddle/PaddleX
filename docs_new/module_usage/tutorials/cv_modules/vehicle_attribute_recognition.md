@@ -115,7 +115,7 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 
 另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/vehicle_attri/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）

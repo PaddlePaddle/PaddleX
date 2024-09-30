@@ -21,7 +21,7 @@ PaddleX offers two ways to experience the pipelines: locally through the PaddleX
 Quick trial output example:
 <center>
 
-<img src="/tmp/images/practical_tutorials/obeject_detection/01.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/obeject_detection/01.png" width=600>
 
 </center>
 
@@ -104,7 +104,7 @@ The above verification results indicate that the `check_pass` being `True` means
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (`histogram.png`) for visualization:
 <center>
 
-<img src="/tmp/images/practical_tutorials/obeject_detection/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/obeject_detection/02.png" width=600>
 
 </center>
 
@@ -230,7 +230,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 The prediction results will be generated under `./output`, and the prediction result for `fall.png` is shown below:
 <center>
 
-<img src="/tmp/images/practical_tutorials/obeject_detection/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/obeject_detection/03.png" width="600"/>
 
 </center>
 
