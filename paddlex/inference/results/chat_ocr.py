@@ -59,20 +59,25 @@ class VisualResult(BaseResult):
 
         oricls_save_path = f"{save_path}_oricls.jpg"
         oricls_result = self["oricls_result"]
-        oricls_result.save_to_img(oricls_save_path)
+        if oricls_result:
+            oricls_result.save_to_img(oricls_save_path)
         uvdoc_save_path = f"{save_path}_uvdoc.jpg"
         uvdoc_result = self["uvdoc_result"]
-        uvdoc_result.save_to_img(uvdoc_save_path)
+        if uvdoc_result:
+            uvdoc_result.save_to_img(uvdoc_save_path)
         curve_save_path = f"{save_path}_curve.jpg"
-        for curve_result in self["curve_result"]:
+        curve_results = self["curve_result"]
+        for curve_result in curve_results:
             curve_result.save_to_img(curve_save_path)
         layout_save_path = f"{save_path}_layout.jpg"
         layout_result = self["layout_result"]
-        layout_result.save_to_img(layout_save_path)
+        if layout_result:
+            layout_result.save_to_img(layout_save_path)
         ocr_save_path = f"{save_path}_ocr.jpg"
         table_save_path = f"{save_path}_table.jpg"
         ocr_result = self["ocr_result"]
-        ocr_result.save_to_img(ocr_save_path)
+        if ocr_result:
+            ocr_result.save_to_img(ocr_save_path)
         for table_result in self["table_result"]:
             table_result.save_to_img(table_save_path)
 
