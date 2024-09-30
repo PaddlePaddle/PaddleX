@@ -15,7 +15,7 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 > ❗ **Note**: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
 
 ### 1.2 Plugin Installation Mode
