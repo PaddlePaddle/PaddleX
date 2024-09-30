@@ -261,6 +261,15 @@ class InstanceSegConfig(DetConfig):
         """
         if device_type.lower() == "gpu":
             self["use_gpu"] = True
+        elif device_type.lower() == "xpu":
+            self["use_xpu"] = True
+            self["use_gpu"] = False
+        elif device_type.lower() == "npu":
+            self["use_npu"] = True
+            self["use_gpu"] = False
+        elif device_type.lower() == "mlu":
+            self["use_mlu"] = True
+            self["use_gpu"] = False
         else:
             assert device_type.lower() == "cpu"
             self["use_gpu"] = False
