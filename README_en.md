@@ -44,28 +44,28 @@ ntegrates numerous **ready-to-use pre-trained models**, enabling **full-process 
 
 ## 📣 Recent Updates
 
-🔥🔥 **9.30, 2024**, PaddleX 3.0 Beta1 open source version is officially released, providing **more than 200 models** that can be called with a minimalist Python API; achieve model full-process development based on unified commands, and open source the basic capabilities of the **PP-ChatOCRv3** featured model production line; support **more than 100 models for high-performance inference and service-oriented deployment** (iterating continuously), **more than 7 key visual models for edge-side deployment**; **more than 70 models have been adapted for the full development process of Ascend 910B**, **more than 15 models have been adapted for the full development process of Kunlun chips and Cambricon**
+🔥🔥 **9.30, 2024**, PaddleX 3.0 Beta1 open source version is officially released, providing **more than 200 models** that can be called with a minimalist Python API; achieve model full-process development based on unified commands, and open source the basic capabilities of the **PP-ChatOCRv3** featured model pipeline; support **more than 100 models for high-performance inference and service-oriented deployment** (iterating continuously), **more than 7 key visual models for edge-side deployment**; **more than 70 models have been adapted for the full development process of Ascend 910B**, **more than 15 models have been adapted for the full development process of Kunlun chips and Cambricon**
 
-🔥 **6.27, 2024**, PaddleX 3.0 Beta open source version is officially released, supporting the use of various mainstream hardware for production line and model development in a low-code manner on the local side.
+🔥 **6.27, 2024**, PaddleX 3.0 Beta open source version is officially released, supporting the use of various mainstream hardware for pipeline and model development in a low-code manner on the local side.
 
 🔥 **3.25, 2024**, PaddleX 3.0 cloud release, supporting the creation of pipelines in the AI Studio Galaxy Community in a zero-code manner.
 
 ## 📊 What can PaddleX do？
 
-All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the pre-trained effects of each production line. If you are satisfied with the pre-trained effects of the production line, you can directly perform [high-performance deployment](./docs/pipeline_deploy/high_performance_deploy_en.md) / [service deployment](./docs/pipeline_deploy/service_deploy_en.md) / [lite deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the production line. If not satisfied, you can also **second development** to improve the production line effect. For the complete production line development process, please refer to the [PaddleX Production Line Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
+All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance deployment](./docs/pipeline_deploy/high_performance_deploy_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the pipeline. If not satisfied, you can also **second development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
 
-In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based graphical development interface](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the production line requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Threshold"](https://aistudio.baidu.com/practical/introduce/546656605663301).
+In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based graphical development interface](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the pipeline requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Threshold"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
 <table>
     <tr>
-        <th>Model Production Line</th>
+        <th>Model pipeline</th>
         <th>Online Experience</th>
         <th>Quick Inference</th>
         <th>High-Performance Deployment</th>
         <th>Service Deployment</th>
         <th>Edge Deployment</th>
         <th>Secondary Development</th>
-        <th><a href="https://aistudio.baidu.com/pipeline/mine">Galaxy Zero-Code Production Line</a></td> 
+        <th><a href="https://aistudio.baidu.com/pipeline/mine">Galaxy Zero-Code pipeline</a></td> 
     </tr>
     <tr>
         <td>General OCR</td>
@@ -259,7 +259,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
 </table>
 
-> ❗Note: All the above features are implemented based on GPU/CPU. PaddleX can also perform fast inference and secondary development on mainstream hardware such as Kunlun, Ascend, Cambricon, and Hygon. The following table details the support status of the model production line, and for the specific list of supported models, please refer to [Model List (MLU)](../docs/support_list/model_list_mlu_en.md) / [Model List (NPU)](../docs/support_list/model_list_npu_en.md) / [Model List (XPU)](../docs/support_list/model_list_xpu_en.md) / [Model List DCU](../docs/support_list/model_list_dcu_en.md). We are adapting more models and promoting the implementation of high-performance and service-oriented deployment on mainstream hardware.
+> ❗Note: All the above features are implemented based on GPU/CPU. PaddleX can also perform fast inference and secondary development on mainstream hardware such as Kunlun, Ascend, Cambricon, and Hygon. The following table details the support status of the model pipeline, and for the specific list of supported models, please refer to [Model List (MLU)](./docs/support_list/model_list_mlu_en.md) / [Model List (NPU)](./docs/support_list/model_list_npu_en.md) / [Model List (XPU)](./docs/support_list/model_list_xpu_en.md) / [Model List DCU](./docs/support_list/model_list_dcu_en.md). We are adapting more models and promoting the implementation of high-performance and service-oriented deployment on mainstream hardware.
 
 
 <details>
@@ -267,7 +267,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 <table>
   <tr>
-    <th>Production Line Name</th>
+    <th>pipeline Name</th>
     <th>NPU 910B</th>
     <th>XPU R200/R300</th>
     <th>MLU 370X8</th>
@@ -371,7 +371,7 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 
 ### 💻 CLI Usage
 
-One command can quickly experience the production line effect, the unified CLI format is:
+One command can quickly experience the pipeline effect, the unified CLI format is:
 
 ```bash
 paddlex --pipeline [Pipeline Name] --input [Input Image] --device [Running Device]
@@ -400,26 +400,26 @@ The visualization result is as follows:
 
 </details>
 
-For other pipelines, just adjust the `pipeline` parameter to the corresponding name of the production line. Below is a list of each production line's corresponding parameter name and detailed usage explanation:
+For other pipelines, just adjust the `pipeline` parameter to the corresponding name of the pipeline. Below is a list of each pipeline's corresponding parameter name and detailed usage explanation:
 
 <details>
   <summary>👉 More CLI usage and explanations for pipelines</summary>
 
-| Production Line Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
+| pipeline Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | Document Scene Information Extraction |                                                                                                                                                                                                                              |
-| General Image Classification         | `paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg  --device gpu:0`                           |
-| General Object Detection            | `paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png  --device gpu:0`                                   |
-| General Instance Segmentation       | `paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png  --device gpu:0`                         |
-| General Semantic Segmentation       | `paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png  --device gpu:0`                              |
-| General Image Multilabel Classification | `paddlex --pipeline multilabel_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png  --device gpu:0`                                          |
-| Small Object Detection              | `paddlex --pipeline smallobject_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png  --device gpu:0`                                              |
-| Image Anomaly Detection            |                                                                                                                                                                                                                              |
-| General OCR                        | `paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png  --device gpu:0`                                                             |
-| General Table Recognition          | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg  --device gpu:0`                                             |
-| General Time Series Forecasting    | `paddlex --pipeline ts_forecast --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv  --device` gpu:0                                                                    |
-| General Time Series Anomaly Detection | `paddlex --pipeline ts_anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_anomaly_detection/test.csv  --device gpu:0` |
-| General Time Series Classification  | `paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv  --device gpu:0`       |
+| General Image Classification         | `paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`                           |
+| General Object Detection            | `paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0`                                   |
+| General Instance Segmentation       | `paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0`                         |
+| General Semantic Segmentation       | `paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png --device gpu:0`                              |
+| General Image Multilabel Classification | `paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`                                          |
+| Small Object Detection              | `paddlex --pipeline small_object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg --device gpu:0`                                              |
+| Image Anomaly Detection            | `paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0`  |
+| General OCR                        | `paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0`                                                             |
+| General Table Recognition          | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg --device gpu:0`                                             |
+| General Time Series Forecasting    | `paddlex --pipeline ts_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0`                                                                    |
+| General Time Series Anomaly Detection | `paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device gpu:0` |
+| General Time Series Classification  | `paddlex --pipeline ts_cls --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0`       |
 
 
 
@@ -427,7 +427,7 @@ For other pipelines, just adjust the `pipeline` parameter to the corresponding n
 
 ### 📝 Python Script Usage
 
-A few lines of code can complete the quick inference of the production line, the unified Python script format is as follows:
+A few lines of code can complete the quick inference of the pipeline, the unified Python script format is as follows:
 ```python
 from paddlex import create_pipeline
 
@@ -442,26 +442,26 @@ for batch in output:
 ```
 The following steps are executed:
 
-* `create_pipeline()` instantiates the production line object
-* Passes the image and calls the `predict` method of the production line object for inference prediction
+* `create_pipeline()` instantiates the pipeline object
+* Passes the image and calls the `predict` method of the pipeline object for inference prediction
 * Processes the prediction results
 
-For other pipelines in Python scripts, just adjust the `pipeline` parameter of the `create_pipeline()` method to the corresponding name of the production line. Below is a list of each production line's corresponding parameter name and detailed usage explanation:
+For other pipelines in Python scripts, just adjust the `pipeline` parameter of the `create_pipeline()` method to the corresponding name of the pipeline. Below is a list of each pipeline's corresponding parameter name and detailed usage explanation:
 <details>
   <summary>👉 More Python script usage for pipelines</summary>
 
-| Production Line Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
+| pipeline Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
 |  Image Classification       | `image_classification` | [ Image Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
 |  Object Detection       | `object_detection` | [ Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
 |  Instance Segmentation       | `instance_segmentation` | [ Instance Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md) |
 |  Semantic Segmentation       | `semantic_segmentation` | [ Semantic Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md) |
-|  Image Multi-Label Classification | `multilabel_classification` | [ Image Multi-Label Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification_en.md) |
+|  Image Multi-Label Classification | `multilabel_classification` | [ Image Multi-Label Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) |
 | Small Object Detection         | `small_object_detection` | [Small Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) |
 | Image Anomaly Detection       | `image_classification` | [Image Anomaly Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md) |
-|  OCR            | `OCR` | [ OCR Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelies/OCR_en.md) |
-|  Form Recognition       | `table_recognition` | [ Form Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelies/table_recognition_en.md) |
+|  OCR            | `OCR` | [ OCR Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) |
+|  Form Recognition       | `table_recognition` | [ Form Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) |
 |  Time Series Forecast       | `ts_forecast` | [ Time Series Forecast Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 |  Time Series Anomaly Detection   | `ts_anomaly_detection` | [ Time Series Anomaly Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
 |  Time Series Classification       | `ts_cls` | [ Time Series Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
@@ -477,48 +477,48 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 </details>
 
 <details open>
-<summary> <b> 🔥 Production Line Usage </b></summary>
+<summary> <b> 🔥 pipeline Usage </b></summary>
 
-* [📑 PaddleX Production Line Usage Overview](./docs/pipeline_usage/pipeline_develop_guide_en.md)
+* [📑 PaddleX pipeline Usage Overview](./docs/pipeline_usage/pipeline_develop_guide_en.md)
 
 * <details>
     <summary> <b> 📝 Text and Image Intelligent Analysis </b></summary>
 
-   * [📄 Document Scene Information Extraction v3 Production Line Usage Guide](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
+   * [📄 Document Scene Information Extraction v3 pipeline Usage Guide](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
   </details>
 
 * <details>
     <summary> <b> 🔍 OCR </b></summary>
 
-    * [📜 General OCR Production Line Usage Guide](./docs/pipeline_usage/tutorials/ocr_pipelies/OCR_en.md)
-    * [📊 Form Recognition Production Line Usage Guide](./docs/pipeline_usage/tutorials/ocr_pipelies/table_recognition_en.md)
+    * [📜 General OCR pipeline Usage Guide](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md)
+    * [📊 Form Recognition pipeline Usage Guide](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md)
   </details>
 
 * <details>
     <summary> <b> 🎥 Computer Vision </b></summary>
 
-   * [🖼️ General Image Classification Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
-   * [🎯 General Object Detection Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)
-   * [📋 General Instance Segmentation Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)
-   * [🗣️ General Semantic Segmentation Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)
-   * [🏷️ Image Multi-Label Classification Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md)
-   * [🔍 Small Object Detection Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
-   * [🖼️ Image Anomaly Detection Production Line Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
+   * [🖼️ General Image Classification pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
+   * [🎯 General Object Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)
+   * [📋 General Instance Segmentation pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)
+   * [🗣️ General Semantic Segmentation pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)
+   * [🏷️ Image Multi-Label Classification pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md)
+   * [🔍 Small Object Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
+   * [🖼️ Image Anomaly Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
   </details>
   
 * <details>
     <summary> <b> ⏱️ Time Series Analysis</b> </summary>
 
-   * [📈 General Time Series Forecasting Production Line Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
-   * [📉 General Time Series Anomaly Detection Production Line Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
-   * [🕒 General Time Series Classification Production Line Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
+   * [📈 General Time Series Forecasting pipeline Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
+   * [📉 General Time Series Anomaly Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
+   * [🕒 General Time Series Classification pipeline Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
   </details>
 
 * <details>
     <summary> <b>🔧 Related Documentation</b> </summary>
 
-   * [🖥️ PaddleX Production Line Command Line Usage Guide](./docs/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
-   * [📝 PaddleX Production Line Python Script Usage Guide](./docs/pipeline_usage/instructions/pipeline_python_API_en.md)
+   * [🖥️ PaddleX pipeline Command Line Usage Guide](./docs/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
+   * [📝 PaddleX pipeline Python Script Usage Guide](./docs/pipeline_usage/instructions/pipeline_python_API_en.md)
   </details>
   
 </details>
@@ -578,9 +578,9 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 * <details>
   <summary> <b> ⏱️ Time Series Analysis </b></summary>
 
-  * [📈 Time Series Forecasting Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_forecasting_en.md)
-  * [🚨 Time Series Anomaly Detection Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md)
-  * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
+  * [📈 Time Series Forecasting Module Usage Guide](./docs/module_usage/tutorials/ts_modules/time_series_forecast_en.md)
+  * [🚨 Time Series Anomaly Detection Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
+  * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/ts_modules/time_series_classification_en.md)
   </details>
     
 * <details>
@@ -594,7 +594,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 </details>
 
 <details>
-  <summary> <b> 🏗️ Model Production Line Deployment </b></summary>
+  <summary> <b> 🏗️ Model pipeline Deployment </b></summary>
 
   * [🚀 PaddleX High-Performance Deployment Guide](./docs/pipeline_deploy/high_performance_deploy_en.md)
   * [🖥️ PaddleX Service Deployment Guide](./docs/pipeline_deploy/service_deploy_en.md)
