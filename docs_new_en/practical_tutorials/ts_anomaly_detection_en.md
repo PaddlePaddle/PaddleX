@@ -189,7 +189,7 @@ Similar to model training, the following steps are required:
 * Specify the path to the model's `.yaml` configuration file (here it's `PatchTST_ad.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../instructions/config_parameters_time_series_en.md).
+Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../module_usage/instructions/config_parameters_time_series_en.md).
 
 ## 7. Integration/Deployment
 If the general-purpose time series anomaly detection pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
@@ -207,5 +207,5 @@ For more parameters, please refer to the [Time Series Anomaly Detection Pipeline
 
 2. Additionally, PaddleX's time series anomaly detection pipeline also offers a service-oriented deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PPaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md).
+Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.
