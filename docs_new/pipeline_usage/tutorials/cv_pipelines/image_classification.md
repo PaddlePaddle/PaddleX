@@ -626,7 +626,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 一行命令即可快速体验图像分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline image_classification --input /user/path/image --device gpu:0
+paddlex --pipeline image_classification --input <path_to_image> --device gpu:0
 ```
 参数说明：
 
@@ -653,7 +653,7 @@ paddlex --get_pipeline_config image_classification --config_save_path ./my_path
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./image_classification.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./image_classification.yaml --input /user/path/image
+paddlex --pipeline ./image_classification.yaml --input <path_to_image>
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -770,11 +770,11 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 例如，您使用英伟达 GPU 进行图像分类产线的推理，使用的 Python 命令为：
 
 ```
-paddlex --pipeline image_classification --input /user/path/image --device gpu:0
+paddlex --pipeline image_classification --input <path_to_image> --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu 即可：
 
 ```
-paddlex --pipeline image_classification --input /user/path/image --device npu:0
+paddlex --pipeline image_classification --input <path_to_image> --device npu:0
 ```
 若您想在更多种类的硬件上使用通用图像分类产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
