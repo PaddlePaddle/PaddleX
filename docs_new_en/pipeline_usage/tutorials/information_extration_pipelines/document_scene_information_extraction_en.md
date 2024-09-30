@@ -1,4 +1,3 @@
-```markdown
 # Document Scene Information Extraction v3 Pipeline Usage Tutorial
 
 ## 1. Introduction to Document Scene Information Extraction v3 Pipeline
@@ -53,7 +52,10 @@ The Document Scene Information Extraction v3 pipeline includes modules for **Tab
 |RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
 
-**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout region analysis dataset containing 10,000 images. All GPU inference times are based on an NVIDIA Tesla T4 machine with```markdown
+**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout region analysis dataset containing 10,000 images. All GPU inference times are based on an NVIDIA Tesla T4 machine with
+
+</details>
+
 ## 2. Quick Start
 PaddleX's pre-trained model pipelines can be quickly experienced. You can experience the effect of the Document Scene Information Extraction v3 pipeline online or locally using Python.
 
@@ -112,9 +114,14 @@ In the above Python script, the following steps are executed:
 | str | Supports passing the path of the file to be predicted, such as the local path of an image file: /root/data/img.jpg; |
 | str | Supports passing the URL of the file to be predicted, such as [example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf); |
 | str | Supports passing a local directory, which should contain files to be predicted, such as the local path: /root/data/; |
-| dict | Supports passing a dictionary type, where the key needs to correspond to the specific pipeline, such as "img```bash
+| dict | Supports passing a dictionary type, where the key needs to correspond to the specific pipeline, such as "img
+
+When executing the above command, the default Pipeline configuration file is loaded. If you need to customize the configuration file, you can use the following command to obtain it:
+
+```bash
 paddlex --get_pipeline_config PP-ChatOCRv3-doc
 ```
+
 After execution, the configuration file for the document scene information extraction v3 pipeline will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
@@ -222,4 +229,3 @@ predict = create_pipeline(pipeline="PP-ChatOCRv3-doc",
                             device = "npu:0") 
 ```
 If you want to use the General Document Scene Information Extraction v3 Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices.md).
-```
