@@ -1,4 +1,4 @@
-# 版面区域检测模块开发教程
+# 版面区域检测模块使用教程
 
 ## 一、概述
 版面区域检测任务的核心是对输入的文档图像进行内容解析和区域划分。通过识别图像中的不同元素（如文字、图表、图片等），将其归类为预定义的类别（如纯文本区、标题区、表格区、图片区、列表区等），并确定这些区域在文档中的位置和大小。
@@ -8,7 +8,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|mAP(0.5)（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
+|模型|mAP(0.5)（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
 |PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|基于PicoDet-L的高效率版面区域定位模型，包含3个类别：表格，图像和印章|
 |PicoDet_layout_1x|86.8|13.0|91.3|7.4|基于PicoDet-1x的高效率版面区域定位模型，包含文字、标题、表格、图片、列表|
@@ -21,7 +21,7 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成whl包的安装后，几行代码即可完成版面区域检测模块的推理，可以任意切换该模块下的模型，您也可以将版面区域检测模块中的模型推理集成到您的项目中。
+完成whl包的安装后，几行代码即可完成版面区域检测模块的推理，可以任意切换该模块下的模型，您也可以将版面区域检测模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg)到本地。
 
 ```python
 from paddlex.inference import create_model 
@@ -29,7 +29,7 @@ from paddlex.inference import create_model
 model_name = "PicoDet-L_layout_3cls"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg", batch_size=1)
+output = model.predict("layout.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -109,7 +109,7 @@ python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml 
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/layout_dec/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/layout_dec/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -226,12 +226,12 @@ python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml 
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测。在PaddleX中实现模型推理预测可以通过两种方式：命令行和wheel 包。
 
 #### 4.4.1 模型推理
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg)到本地。
 ```bash
 python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
+    -o Predict.input="layout.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

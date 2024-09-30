@@ -1,9 +1,9 @@
 # PaddleX 3.0 Time Series Anomaly Detection Pipeline — Equipment Anomaly Detection Application Tutorial
 
-PaddleX offers a rich set of pipelines, each consisting of one or more models that can solve specific scenario-based tasks. All PaddleX pipelines support quick trials, and if the results do not meet expectations, fine-tuning the models with private data is also supported. PaddleX provides Python APIs for easy integration of pipelines into personal projects. Before use, you need to install PaddleX. For installation instructions, please refer to [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). This tutorial introduces the usage of the pipeline tool with an example of detecting anomalies in equipment nodes.
+PaddleX offers a rich set of pipelines, each consisting of one or more models that can solve specific scenario-based tasks. All PaddleX pipelines support quick trials, and if the results do not meet expectations, fine-tuning the models with private data is also supported. PaddleX provides Python APIs for easy integration of pipelines into personal projects. Before use, you need to install PaddleX. For installation instructions, please refer to [PaddleX Local Installation Tutorial](../installation/installation_en.md). This tutorial introduces the usage of the pipeline tool with an example of detecting anomalies in equipment nodes.
 
 ## 1. Select a Pipeline
-First, choose the corresponding PaddleX pipeline based on your task scenario. This task aims to identify and mark abnormal behaviors or states in equipment nodes, helping enterprises and organizations promptly detect and resolve issues in application server nodes, thereby improving system reliability and availability. Recognizing this as a time series anomaly detection task, we will use PaddleX's Time Series Anomaly Detection Pipeline. If you are unsure about the correspondence between tasks and pipelines, you can refer to the [PaddleX Pipeline List (CPU/GPU)](../../../support_list/models_list_en.md) for an overview of pipeline capabilities.
+First, choose the corresponding PaddleX pipeline based on your task scenario. This task aims to identify and mark abnormal behaviors or states in equipment nodes, helping enterprises and organizations promptly detect and resolve issues in application server nodes, thereby improving system reliability and availability. Recognizing this as a time series anomaly detection task, we will use PaddleX's Time Series Anomaly Detection Pipeline. If you are unsure about the correspondence between tasks and pipelines, you can refer to the [PaddleX Pipeline List (CPU/GPU)](../support_list/models_list_en.md) for an overview of pipeline capabilities.
 
 ## 2. Quick Experience
 PaddleX offers two ways to experience its capabilities: locally on your machine or on the **Baidu AIStudio Community**.
@@ -21,7 +21,7 @@ for res in output:
 Note: Due to the tight correlation between time series data and scenarios, the online experience of official models for time series tasks is tailored to a specific scenario and is not a general solution. Therefore, the experience mode does not support using arbitrary files to evaluate the official model's performance. However, after training a model with your own scenario data, you can select your trained model and use data from the corresponding scenario for online experience.
 
 ## 3. Choose a Model
-PaddleX provides five end-to-end time series anomaly detection models. For details, refer to the [Model List](../../../support_list/models_list_en.md). The benchmarks of these models are as follows:
+PaddleX provides five end-to-end time series anomaly detection models. For details, refer to the [Model List](../support_list/models_list_en.md). The benchmarks of these models are as follows:
 
 | Model Name | Precision | Recall | F1-Score | Model Size (M) | Description |
 |-|-|-|-|-|-|
@@ -37,7 +37,7 @@ PaddleX provides five end-to-end time series anomaly detection models. For detai
 
 To demonstrate the entire process of time series anomaly detection, we will use the publicly available MSL (Mars Science Laboratory) dataset for model training and validation. The PSM (Planetary Science Mission) dataset, sourced from NASA, comprises 55 dimensions and includes telemetry anomaly data reported by the spacecraft's monitoring system for unexpected event anomalies (ISA). With its practical application background, it better reflects real-world anomaly scenarios and is commonly used to test and validate the performance of time series anomaly detection models. This tutorial will perform anomaly detection based on this dataset.
 
-We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](docs_new/module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md)。.
+We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md)。.
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -100,7 +100,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](docs_new/module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
+If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
 
 ## 5. Model Training and Evaluation
 ### 5.1 Model Training
@@ -125,7 +125,7 @@ Each model in PaddleX provides a configuration file for model development to set
 
 * `Global`:
   * `mode`: Mode, supporting dataset verification (`check_dataset`), model training (`train`), model evaluation (`evaluate`), and single-case testing (`predict`).
-  * `device`: Training device, options include `cpu` and `gpu`. You can check the models supported on different devices in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md) document at the same level directory.
+  * `device`: Training device, options include `cpu` and `gpu`. You can check the models supported on different devices in the [PaddleX Model List (CPU/GPU)](../support_list/models_list_en.md) document at the same level directory.
 * `Train`: Training hyperparameter settings;
   * `epochs_iters`: Number of training epochs.
   * `learning_rate`: Training learning rate.
@@ -189,7 +189,7 @@ Similar to model training, the following steps are required:
 * Specify the path to the model's `.yaml` configuration file (here it's `PatchTST_ad.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../../instructions/config_parameters_time_series_en.md).
+Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../module_usage/instructions/config_parameters_time_series_en.md).
 
 ## 7. Integration/Deployment
 If the general-purpose time series anomaly detection pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
@@ -203,9 +203,9 @@ for res in output:
     res.print() 
     res.save_to_csv("./output/") 
 ```
-For more parameters, please refer to the [Time Series Anomaly Detection Pipeline Usage Tutorial](docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
+For more parameters, please refer to the [Time Series Anomaly Detection Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
 
 2. Additionally, PaddleX's time series anomaly detection pipeline also offers a service-oriented deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PPaddleX Service-Oriented Deployment Guide](docs_new/pipeline_deploy/service_deploy_en.md).
+Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

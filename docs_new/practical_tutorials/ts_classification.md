@@ -1,9 +1,9 @@
 # PaddleX 3.0 时序分类模型产线———心跳监测时序数据分类应用教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ ](../INSTALL.md)[PaddleX本地安装教程](../../../installation/installation.md)。此处以一个心跳时序数据的分类的任务为例子，介绍模型产线工具的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。此处以一个心跳时序数据的分类的任务为例子，介绍模型产线工具的使用流程。
 
 ## 1. 选择产线
-首先，需要根据您的任务场景，选择对应的 PaddleX 产线，本任务目标就是基于心跳监测数据对时序分类模型进行训练，实现对心跳时间序列状况的分类。了解到这个任务属于时序分类任务，对应 PaddleX 的时序分类产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的 [PaddleX产线列表(CPU/GPU)](../../../support_list/models_list.md) 中了解相关产线的能力介绍。
+首先，需要根据您的任务场景，选择对应的 PaddleX 产线，本任务目标就是基于心跳监测数据对时序分类模型进行训练，实现对心跳时间序列状况的分类。了解到这个任务属于时序分类任务，对应 PaddleX 的时序分类产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的 [PaddleX产线列表(CPU/GPU)](../support_list/pipelines_list.md) 中了解相关产线的能力介绍。
 
 ## 2. 快速体验
 PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX 在本地体验，另外一种是可以在 **AI Studio 星河社区**上体验。
@@ -21,18 +21,19 @@ for res in output:
 注：由于时序数据和场景紧密相关，时序任务的在线体验官方内置模型仅是在一个特定场景下的模型方案，并非通用方案，不适用其他场景，因此体验方式不支持使用任意的文件来体验官方模型方案效果。但是，在完成自己场景数据下的模型训练之后，可以选择自己训练的模型方案，并使用对应场景的数据进行在线体验。
 
 ## 3. 选择模型
-PaddleX 提供了1个端到端的时序分类模型，具体可参考 [模型列表](../../../support_list/models_list.md)，其中模型的benchmark如下：
+PaddleX 提供了1个端到端的时序分类模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的benchmark如下：
 
 |模型名称|acc(%)|模型存储大小（M)|介绍|
 |-|-|-|-|
 |TimesNet_cls|87.5|792K|通过多周期分析，TimesNet是适应性强的高精度时序分类模型|
-**注：以上精度指标的评估集是 ****UWaveGestureLibrary**** ****。**
+
+**注：以上精度指标的评估集是 **UWaveGestureLibrary**。**
 
 ## 4. 数据准备和校验
 ### 4.1 数据准备
 为了演示时序分类任务整个流程，我们将使用公开的 [Heartbeat 数据集](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_examples.tar) 进行模型训练及验证。Heartbeat 数据集是 UEA 时间序列分类数据集的场景之一，涉及到心跳监测医学诊断这一实际任务。该数据集由多组时间序列组成，每个数据点由标签变量、群组编号和 61 个特征变量组成。该数据集通常用于测试和验证时间分类预测模型的性能。
 
-我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序分类模块开发教程](docs_new/module_usage/tutorials/time_series_modules/time_series_classification.md)。
+我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序分类模块开发教程](../module_usage/tutorials/time_series_modules/time_series_classification.md)。
 
 数据集获取命令：
 
@@ -90,7 +91,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 ### 4.3 数据集格式转换/数据集划分（非必选）
-如需对数据集格式进行转换或是重新划分数据集，可参考 [时序分类模块开发教程](docs_new/module_usage/tutorials/time_series_modules/time_series_classification.md)中的4.1.3。
+如需对数据集格式进行转换或是重新划分数据集，可参考 [时序分类模块开发教程](../module_usage/tutorials/time_series_modules/time_series_classification.md)中的4.1.3。
 
 ## 5. 模型训练和评估
 ### 5.1 模型训练
@@ -115,7 +116,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 
 * `Global`：
   * `mode`：模式，支持数据校验（`check_dataset`）、模型训练（`train`）、模型评估（`evaluate`）、单例测试（`predict`）；
-  * `device`：训练设备，可选`cpu`、`gpu`；可在该路径下[模型支持列表](../../../support_list/models_list.md)的文档中，查看不同设备上支持的模型；
+  * `device`：训练设备，可选`cpu`、`gpu`；可在该路径下[模型支持列表](../support_list/models_list.md)的文档中，查看不同设备上支持的模型；
 * `Train`：训练超参数设置；
   * `epochs_iters`：训练轮次数设置；
   * `learning_rate`：训练学习率设置；
@@ -125,7 +126,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
   * `freq`：频率，须结合自己的数据设置时间频率，如：1min、5min、1h;
   * `group_id`：一个群组编号表示的是一个时序样本，相同编号的时序序列组成一个样本。结合自己的数据设置指定群组编号的列名称, 如：group_id。
   * `static_cov_cols`：代表时序的类别编号列，同一个样本的标签相同。结合自己的数据设置类别的列名称，如：label。
-更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。
+更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 **注：**
 
@@ -153,7 +154,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 * 指定模型的`.yaml` 配置文件路径（此处为`TimesNet_cls.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 **注：** 在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/model.pdparams`。
 
@@ -177,9 +178,8 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 |实验一|5|0.00001|16|1卡|72.20%|
 |实验二|5|0.0001|16|1卡|72.20%|
 |实验三|5|0.001|16|1卡|73.20%|
+
 增大训练轮次实验结果：
-
-
 
 |实验|轮次|学习率|batch_size|训练环境|验证集准确率|
 |-|-|-|-|-|-|
@@ -200,7 +200,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir=``"./output/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 ## 7. 开发集成/部署
 如果通用时序分类产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -214,8 +214,8 @@ for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_csv("./output/") # 保存csv格式结果
 ```
-更多参数请参考[时序分类产线使用教程](docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)
+更多参数请参考[时序分类产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)
 
 2. 此外，PaddleX 时序异常检测产线也提供了服务化部署方式，详细说明如下：
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX 服务化部署指南](docs_new/pipeline_deploy/service_deploy.md)。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

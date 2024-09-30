@@ -1,4 +1,4 @@
-# 车辆检测模块开发教程
+# 车辆检测模块使用教程
 
 ## 一、概述
 车辆检测是目标检测的一个子任务，具体指使用计算机视觉技术来判断图像或视频中是否存在车辆，并给出每个车辆的具体位置信息（如边界框的坐标）。这些信息对于智能交通系统、自动驾驶、视频监控等多个领域具有重要意义。
@@ -13,7 +13,7 @@
     <th>模型</th>
     <th>mAP 0.5:0.95</th>
     <th>GPU推理耗时（ms）</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时 (ms)</th>
     <th>模型存储大小（M）</th>
     <th>介绍</th>
   </tr>
@@ -40,7 +40,7 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成wheel包的安装后，几行代码即可完成车辆检测模块的推理，可以任意切换该模块下的模型，您也可以将车辆检测的模块中的模型推理集成到您的项目中。
+完成wheel包的安装后，几行代码即可完成车辆检测模块的推理，可以任意切换该模块下的模型，您也可以将车辆检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg)到本地。
 
 ```python
 from paddlex.inference import create_model 
@@ -48,7 +48,7 @@ from paddlex.inference import create_model
 model_name = "PP-YOLOE-S_vehicle"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg", batch_size=1)
+output = model.predict("vehicle_detection.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -126,7 +126,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/vehicle_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_det/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -252,12 +252,12 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 
 您产出的权重可以直接集成到目标检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
 
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg)到本地。
 ```bash
 python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg"
+    -o Predict.input="vehicle_detection.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

@@ -12,7 +12,7 @@ The image classification module is a crucial component in computer vision system
     <th>Model</th>
     <th>Top-1 Accuracy (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -683,7 +683,7 @@ The above validation results, with check_pass being True, indicate that the data
 
 Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/image_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/image_classification/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)

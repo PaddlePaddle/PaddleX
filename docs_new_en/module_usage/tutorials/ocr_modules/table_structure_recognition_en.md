@@ -13,7 +13,7 @@ Table structure recognition is a crucial component in table recognition systems,
     <th>Model</th>
     <th>Accuracy (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -130,7 +130,6 @@ In the above validation results, `check_pass` being True indicates that the data
 * `attributes.train_sample_paths`: A list of relative paths to the visualization images of samples in the training set of this dataset;
 * `attributes.val_sample_paths`: A list of relative paths to the visualization images of samples in the validation set of this dataset.
 
-Furthermore, the dataset verification also analyzes the distribution of sample counts across all categories within the dataset and generates a histogram (histogram.png) for visualization:
 
 </details>
 

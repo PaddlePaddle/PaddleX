@@ -1,4 +1,4 @@
-# 文档图像方向分类模块开发教程
+# 文档图像方向分类模块使用教程
 
 ## 一、概述
 文档图像方向分类模块主要是将文档图像的方向区分出来，并使用后处理将其矫正。在诸如文档扫描、证照拍摄等过程中，有时为了拍摄更清晰，会将拍摄设备进行旋转，导致得到的图片也是不同方向的。此时，标准的OCR流程无法很好地应对这些数据。利用图像分类技术，可以预先判断含文字区域的文档或证件的方向，并将其进行方向调整，从而提高OCR处理的准确性。
@@ -8,7 +8,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
+|模型|Top-1 Acc（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
 |PP-LCNet_x1_0_doc_ori|99.06|3.84845|9.23735|7|基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度|
 
@@ -19,12 +19,12 @@
 
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成wheel 包的安装后，几行代码即可完成文档图像方向分类模块的推理，可以任意切换该模块下的模型，您也可以将文档图像方向分类模块中的模型推理集成到您的项目中。
+完成wheel 包的安装后，几行代码即可完成文档图像方向分类模块的推理，可以任意切换该模块下的模型，您也可以将文档图像方向分类模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_doc_ori")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg",  batch_size=1)
+output = model.predict("img_rot180_demo.jpg",  batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/demo.png")
@@ -113,7 +113,7 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/doc_img_ori_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）（折叠）
@@ -228,13 +228,13 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg)到本地。
 
 ```
 python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg"
+    -o Predict.input="img_rot180_demo.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

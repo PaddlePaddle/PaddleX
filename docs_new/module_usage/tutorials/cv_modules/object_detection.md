@@ -1,4 +1,4 @@
-# 目标检测模块开发教程
+# 目标检测模块使用教程
 
 ## 一、概述
 目标检测模块是计算机视觉系统中的关键组成部分，负责在图像或视频中定位和标记出包含特定目标的区域。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。目标检测模块通常会输出目标区域的边界框（Bounding Boxes），这些边界框将作为输入传递给目标识别模块进行后续处理。
@@ -12,7 +12,7 @@
     <th>模型</th>
     <th>mAP(%)</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时 (ms)</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -321,12 +321,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成目标检测模块的推理，可以任意切换该模块下的模型，您也可以将目标检测的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成目标检测模块的推理，可以任意切换该模块下的模型，您也可以将目标检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)到本地。
 
 ```python
 from paddlex import create_model
 model = create_model("PicoDet-S")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png", batch_size=1)
+output = model.predict("general_object_detection_002.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -415,7 +415,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/obj_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/obj_det/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -568,12 +568,12 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 
 #### 4.4.1 模型推理
 
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)到本地。
 ```bash
 python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"
+    -o Predict.input="general_object_detection_002.png"
 ```
 与模型训练和评估类似，需要如下几步：
 

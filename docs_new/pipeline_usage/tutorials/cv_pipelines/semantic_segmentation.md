@@ -3,7 +3,7 @@
 ## 1. 通用语义分割产线介绍
 语义分割是一种计算机视觉技术，旨在将图像中的每个像素分配到特定的类别，从而实现对图像内容的精细化理解。语义分割不仅要识别出图像中的物体类型，还要对每个像素进行分类，这样使得同一类别的区域能够被完整标记。例如，在一幅街景图像中，语义分割可以将行人、汽车、天空和道路等不同类别的部分逐像素区分开来，形成一个详细的标签图。这项技术广泛应用于自动驾驶、医学影像分析和人机交互等领域，通常依赖于深度学习模型（如FCN、U-Net等），通过卷积神经网络（CNN）来提取特征并实现高精度的像素级分类，从而为进一步的智能分析提供基础。
 
-![](/tmp/images/pipelines/semantic_segmentation/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/01.png)
 
 **通用****语义分割****产线中包含了****语义分割****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -46,7 +46,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/100062/webUI?source=appCenter)通用语义分割产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-![](/tmp/images/pipelines/semantic_segmentation/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/02.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
@@ -95,7 +95,7 @@ paddlex --pipeline ./semantic_segmentation.yaml --input https://paddle-model-eco
 ```
 {'img_path': '/root/.paddlex/predict_input/general_object_detection_002.png'}
 ```
-![](/tmp/images/pipelines/semantic_segmentation/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png)
 可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
 
 #### 2.2.2 Python脚本方式集成

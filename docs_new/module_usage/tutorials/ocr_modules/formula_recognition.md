@@ -1,4 +1,4 @@
-# 公式识别模块开发教程
+# 公式识别模块使用教程
 
 ## 一、概述
 公式识别模块是OCR（光学字符识别）系统中的关键组成部分，负责将图像中的数学公式转换为可编辑的文本或计算机可识别的格式。该模块的性能直接影响到整个OCR系统的准确性和效率。公式识别模块通常会输出数学公式的 LaTeX 或 MathML 代码，这些代码将作为输入传递给文本理解模块进行后续处理。
@@ -34,12 +34,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-wheel 包的安装后，几行代码即可完成公式识别模块的推理，可以任意切换该模块下的模型，您也可以将公式识别的模块中的模型推理集成到您的项目中。
+wheel 包的安装后，几行代码即可完成公式识别模块的推理，可以任意切换该模块下的模型，您也可以将公式识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("LaTeX_OCR_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png", batch_size=1)
+output = model.predict("general_formula_rec_001.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_json("./output/res.json")
@@ -122,7 +122,7 @@ python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
 
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
-![](/tmp/images/data_prepare/formula_recognition/01.jpg)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/formula_recognition/01.jpg)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -271,12 +271,12 @@ python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml  \
 
 #### 4.4.1 模型推理
 
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png)到本地。
 ```bash
 python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png"
+    -o Predict.input="general_formula_rec_001.png"
 ```
 与模型训练和评估类似，需要如下几步：
 

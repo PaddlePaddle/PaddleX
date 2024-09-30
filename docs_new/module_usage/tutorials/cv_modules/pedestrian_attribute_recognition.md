@@ -1,4 +1,4 @@
-# 行人属性识别模块开发教程
+# 行人属性识别模块使用教程
 
 ## 一、概述
 行人属性识别是计算机视觉系统中的关键组成部分，负责在图像或视频中定位和标记出行人的特定属性，如性别、年龄、衣物颜色和类型等。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。行人属性识别模块通常会输出每个行人的属性信息，这些信息将作为输入传递给其他模块（如行人跟踪、行人重识别等）进行后续处理。
@@ -8,9 +8,9 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
+|模型|mA（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
-|PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7M  |PP-LCNet_x1_0_pedestrian_attribute 是一种基于PP-LCNet的轻量级行人属性识别模型，包含26个类别|
+|PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7 M  |PP-LCNet_x1_0_pedestrian_attribute 是一种基于PP-LCNet的轻量级行人属性识别模型，包含26个类别|
 
 **注：以上精度指标为 PaddleX 内部自建数据集 mA。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 </details>
@@ -18,12 +18,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成行人属性识别模块的推理，可以任意切换该模块下的模型，您也可以将行人属性识别的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成行人属性识别模块的推理，可以任意切换该模块下的模型，您也可以将行人属性识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_pedestrian_attribute")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg", batch_size=1)
+output = model.predict("pedestrian_attribute_006.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -113,7 +113,7 @@ python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_
 
 另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/ped_attri/image.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ped_attri/image.png)
 
 </details>
 
@@ -232,13 +232,13 @@ python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg)到本地。
 
 ```bash
 python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg"
+    -o Predict.input="pedestrian_attribute_006.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

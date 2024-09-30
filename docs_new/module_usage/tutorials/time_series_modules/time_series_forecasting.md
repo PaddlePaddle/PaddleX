@@ -1,4 +1,4 @@
-# 时序预测模块开发教程
+# 时序预测模块使用教程
 
 ## 一、概述
 时序预测旨在通过分析历史数据中的模式、趋势和周期性等特征，来预测未来某一时间点或时间段内可能发生的值或状态。这有助于企业和组织做出更加精准的决策，优化资源配置，减少风险，并抓住潜在的市场机会。这些时序数据通常来自于实际应用场景中的各种传感器、经济活动、社会行为等。例如，股票价格、气温变化、网站访问量、销售数据等都是典型的时序数据。
@@ -23,12 +23,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成是时序预测模块的推理，可以任意切换该模块下的模型，您也可以将时序预测的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成是时序预测模块的推理，可以任意切换该模块下的模型，您也可以将时序预测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例数据](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("DLinear")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv", batch_size=1)
+output = model.predict("ts_fc.csv", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_csv("./output/")
@@ -307,13 +307,13 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例数据](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv)到本地。
 
 ```bash
 python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv"
+    -o Predict.input="ts_fc.csv"
 ```
 与模型训练和评估类似，需要如下几步：
 

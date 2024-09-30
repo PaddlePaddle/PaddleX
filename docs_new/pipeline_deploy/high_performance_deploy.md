@@ -4,7 +4,7 @@
 
 ## 1.高性能推理插件的安装与使用
 
-使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程]() 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的基本推理。
+使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的基本推理。
 
 ### 1.1 安装高性能推理插件
 
@@ -57,11 +57,11 @@
 
 在 [飞桨AI Studio星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 页面的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
 
-![](../../tmp/images/pipeline_deploy/image-1.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png)
 
 选择需要部署的产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
 
-![](../../tmp/images/pipeline_deploy/image-2.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png)
 
 使用序列号完成激活后，即可使用高性能推理插件。PaddleX 提供离线激活和在线激活两种方式（均只支持 Linux 系统）：
 
@@ -185,14 +185,18 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   </tr>
 
   <tr>
-    <td rowspan="4">通用表格识别</td>
+    <td rowspan="5">通用表格识别</td>
     <td>版面区域检测</td>
     <td>PicoDet_layout_1x</td>
   </tr>
 
   <tr>
-    <td>表格识别</td>
+    <td rowspan="2">表格识别</td>
     <td>SLANet</td>
+  </tr>
+
+  <tr>
+    <td>SLANet_plus</td>
   </tr>
 
   <tr>
@@ -203,5 +207,65 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   <tr>
     <td>文本识别</td>
     <td>PP-OCRv4_server_rec<br/>PP-OCRv4_mobile_rec</td>
+  </tr>
+
+  <tr>
+    <td rowspan="15">文档场景信息抽取v3产线</td>
+    <td rowspan="2">表格识别</td>
+    <td>SLANet</td>
+  </tr>
+
+  <tr>
+    <td>SLANet_plus</td>
+  </tr>
+
+  <tr>
+    <td>版面区域检测</td>
+    <td>PicoDet_layout_1x</td>
+  </tr>
+
+  <tr>
+    <td rowspan="2">文本检测</td>
+    <td>PP-OCRv4_server_det</td>
+  </tr>
+
+  <tr>
+    <td>PP-OCRv4_mobile_det</td>
+  </tr>
+
+  <tr>
+    <td rowspan="4">文本识别</td>
+    <td>PP-OCRv4_server_rec</td>
+  </tr>
+
+  <tr>
+    <td>PP-OCRv4_mobile_rec</td>
+  </tr>
+
+  <tr>
+    <td>ch_RepSVTR_rec</td>
+  </tr>
+
+  <tr>
+    <td>ch_SVTRv2_rec</td>
+  </tr>
+
+  <tr>
+    <td rowspan="2">印章文本检测</td>
+    <td>PP-OCRv4_server_seal_det</td>
+  </tr>
+
+  <tr>
+    <td>PP-OCRv4_mobile_seal_det</td>
+  </tr>
+
+  <tr>
+    <td>文本图像矫正</td>
+    <td>UVDoc</td>
+  </tr>
+
+  <tr>
+    <td>文档图像方向分类</td>
+    <td>PP-LCNet_x1_0_doc_ori</td>
   </tr>
 </table>

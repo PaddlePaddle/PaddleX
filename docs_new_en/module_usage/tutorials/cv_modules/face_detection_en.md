@@ -8,7 +8,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | mAP（%）| GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mAP（%）| GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PicoDet_LCNet_x2_5_face | 35.8 | 33.7 | 537.0 | 28.9 | Face detection model based on PicoDet_LCNet_x2_5 |
 
@@ -103,7 +103,7 @@ The verification results mentioned above indicate that `check_pass` being `True`
 
 The dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (histogram.png):
 
-![](/tmp/images/modules/face_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/face_det/01.png)
 
 </details>
 

@@ -1,4 +1,4 @@
-# 图像特征模块开发教程
+# 图像特征模块使用教程
 
 ## 一、概述
 图像特征模块是计算机视觉中的一项重要任务之一，主要指的是通过深度学习方法自动从图像数据中提取有用的特征，以便于后续的图像检索任务。该模块的性能直接影响到后续任务的准确性和效率。在实际应用中，图像特征通常会输出一组特征向量，这些向量能够有效地表示图像的内容、结构、纹理等信息，并将作为输入传递给后续的检索模块进行处理。
@@ -13,7 +13,7 @@
     <th>模型</th>
     <th>recall@1 (%)</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时 (ms)</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -48,12 +48,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成图像特征模块的推理，可以任意切换该模块下的模型，您也可以将图像特征的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成图像特征模块的推理，可以任意切换该模块下的模型，您也可以将图像特征的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg)到本地。
 
 ```python
 from paddlex import create_model
 model = create_model("PP-ShiTuV2_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg", batch_size=1)
+output = model.predict("general_image_recognition_001.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_json("./output/res.json")
@@ -152,7 +152,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 * `attributes.query_sample_paths`：该数据集查询样本可视化图片相对路径列表；
 另外，数据集校验还对数据集中图像数量和图像类别情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/img_recognition/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png)
 </details>
 
 ### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -311,13 +311,13 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行 Python 集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg)到本地。
 
 ```bash
 python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg"
+    -o Predict.input="general_image_recognition_001.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

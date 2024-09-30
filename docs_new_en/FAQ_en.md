@@ -19,4 +19,3 @@ A: Baidu AIStudio Community's Zero-Code Pipeline is the cloud-based carrier of P
 ## Q: When I encounter problems while using PaddleX, how should I provide feedback?
 
 A: Welcome to the [Discussion Area](https://github.com/PaddlePaddle/PaddleX/discussions) to communicate with a vast number of developers! If you find errors or deficiencies in PaddleX, you are also welcome to [submit an issue](https://github.com/PaddlePaddle/PaddleX/issues), and our on-duty team members will respond to your questions as soon as possible.
-```

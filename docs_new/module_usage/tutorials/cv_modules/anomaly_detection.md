@@ -1,16 +1,16 @@
-# 无监督异常检测模块开发教程
+# 图像异常检测模块使用教程
 
 ## 一、概述
-无监督异常检测任务是一种在没有标签或少量标签数据的情况下，自动识别和检测数据集中与大多数数据显著不同的异常或罕见样本的技术。这种技术广泛应用于工业制造质量控制、医疗诊断等多个领域。
+图像异常检测任务是一种在没有标签或少量标签数据的情况下，自动识别和检测数据集中与大多数数据显著不同的异常或罕见样本的技术。这种技术广泛应用于工业制造质量控制、医疗诊断等多个领域。
 
 ## 二、支持模型列表
 
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|ROCAUC（Avg）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
-|-|-|-|-|-|-|
-|STFPM|0.962|-|-|22.5|一种基于表示的无监督异常检测算法，由预训练的教师网络和结构相同的学生网络组成。学生网络通过将自身特征与教师网络中的对应特征相匹配来检测异常。|
+|模型|ROCAUC（Avg）|模型存储大小（M)|介绍|
+|-|-|-|-|
+|STFPM|0.962|22.5|一种基于表示的图像异常检测算法，由预训练的教师网络和结构相同的学生网络组成。学生网络通过将自身特征与教师网络中的对应特征相匹配来检测异常。|
 
 **以上模型精度指标测量自 MVTec_AD 数据集。**
 
@@ -19,15 +19,15 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成wheel包的安装后，几行代码即可完成无监督异常检测模块的推理，可以任意切换该模块下的模型，您也可以将无监督异常检测的模块中的模型推理集成到您的项目中。
-
+完成wheel包的安装后，几行代码即可完成图像异常检测模块的推理，可以任意切换该模块下的模型，您也可以将图像异常检测的模块中的模型推理集成到您的项目中。
+运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png)到本地。
 ```bash
 from paddlex.inference import create_model 
 
 model_name = "STFPM"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png", batch_size=1)
+output = model.predict("uad_grid.png", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -37,7 +37,7 @@ for res in output:
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
-如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的无监督异常检测模型。在使用PaddleX开发无监督异常检测模型之前，请务必安装PaddleSeg插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
+如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的图像异常检测模型。在使用PaddleX开发图像异常检测模型之前，请务必安装PaddleSeg插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX为每一个模块都提供了Demo数据集，您可以基于官方提供的 Demo 数据完成后续的开发。可以参考[PaddleX语义分割任务模块数据标注教程](../../../data_annotations/cv_modules/semantic_segmentation.md)。
@@ -160,12 +160,12 @@ python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令，运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png)到本地。
 ```bash
 python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
+    -o Predict.input="uad_grid.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
@@ -180,8 +180,8 @@ python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
 
 1.**产线集成**
 
-无监督异常检测模块可以集成的PaddleX产线有[图像异常检测产线](../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)，只需要替换模型路径即可完成相关产线的无监督异常检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+图像异常检测模块可以集成的PaddleX产线有[图像异常检测产线](../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)，只需要替换模型路径即可完成相关产线的图像异常检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.**模块集成**
 
-您产出的权重可以直接集成到无监督异常检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+您产出的权重可以直接集成到图像异常检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。

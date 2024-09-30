@@ -13,7 +13,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <th>Model</th>
         <th>Mask AP</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -22,7 +22,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>36.3</td>
         <td >-</td>
         <td >-</td>
-        <td>254.8</td>
+        <td>254.8 M</td>
         <td rowspan="2">Cascade-MaskRCNN is an improved Mask RCNN instance segmentation model that utilizes multiple detectors in a cascade, optimizing segmentation results by leveraging different IOU thresholds to address the mismatch between detection and inference stages, thereby enhancing instance segmentation accuracy.</td>
     </tr>
     <tr>
@@ -30,14 +30,14 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>39.1</td>
         <td >-</td>
         <td >-</td>
-        <td>254.7</td>
+        <td>254.7 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-H</td>
         <td>50.6</td>
         <td>132.693</td>
         <td>4896.17</td>
-        <td>449.9</td>
+        <td>449.9 M</td>
         <td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
     </tr>
     <tr>
@@ -45,7 +45,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>45.7</td>
         <td>46.5059</td>
         <td>2575.92</td>
-        <td>113.6</td>
+        <td>113.6 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-M</td>
@@ -109,7 +109,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>38.1</td>
         <td>-</td>
         <td>-</td>
-        <td>225.4 M</td>
+        <td>225.1 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNeXt101-vd-FPN</td>
@@ -214,7 +214,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 * `attributes.val_sample_paths`: A list of relative paths to the visualized validation samples in this dataset;
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all categories in the dataset and generates a distribution histogram (`histogram.png`):
 
-![](/tmp/images/modules/instanceseg/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/instanceseg/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)

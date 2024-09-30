@@ -3,7 +3,7 @@
 ## 1. 通用时序异常检测产线介绍
 时序异常检测是一种识别时间序列数据中异常模式或行为的技术，广泛应用于网络安全、设备监控和金融欺诈检测等领域。它通过分析历史数据中的正常趋势和规律，来发现与预期行为显著不同的事件，例如突然增加的网络流量或异常的交易活动。时序异常检测通常使用统计方法或机器学习算法（如孤立森林、LSTM等），能够自动识别数据中的异常点，为企业和组织提供实时警报，帮助及时应对潜在风险和问题。这项技术在保障系统稳定性和安全性方面发挥着重要作用。
 
-![](/tmp/images/pipelines/time_series/05.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/05.png)
 
 
 **通用****时序异常检测****产线中包含了****时序异常检测****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
@@ -32,7 +32,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/105706/webUI?source=appCenter)通用时序异常检测产线的效果，用官方提供的 demo 进行识别，例如：
 
-![](/tmp/images/pipelines/time_series/06.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/06.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 

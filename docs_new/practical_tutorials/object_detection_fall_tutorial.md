@@ -22,7 +22,7 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   快速体验产出推理结果示例：
   <center>
 
-  <img src="/tmp/images/practical_tutorials/obeject_detection/01.png" width=600>
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/obeject_detection/01.png" width=600>
 
   </center>
 
@@ -104,7 +104,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="/tmp/images/practical_tutorials/obeject_detection/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/obeject_detection/02.png" width=600>
 
 </center>
 
@@ -228,7 +228,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
 通过上述可在`./output`下生成预测结果，其中`fall.png`的预测结果如下：
 <center>
 
-<img src="/tmp/images/practical_tutorials/obeject_detection/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/obeject_detection/03.png" width="600"/>
 
 </center>
 

@@ -8,7 +8,7 @@ The document image orientation classification module is aim to distinguish the o
 <details>
    <summary> 👉 Model List Details</summary>
 
-| Model | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_doc_ori | 99.06 | 3.84845|9.23735 | 7 | A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270° |
 
@@ -115,7 +115,7 @@ In the verification results above, `check_pass` being True indicates that the da
 
 Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/doc_img_ori_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png)
 
 </details>
 

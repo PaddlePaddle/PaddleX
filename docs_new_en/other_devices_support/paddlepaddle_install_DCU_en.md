@@ -19,7 +19,7 @@ docker run -it --name paddle-dcu-dev -v `pwd`:/work \
 ```
 
 ## 2. Install PaddlePaddle Package
-Within the started docker container, download and install the wheel package released by PaddlePaddle's official website. **Note**: The DCU version of PaddlePaddle framework only supports Haiguang C86 architecture.
+Within the started docker container, download and install the wheel package released by PaddlePaddle's official website. **Note**: The DCU version of PaddlePaddle framework only supports Hygon C86 architecture.
 
 ```bash
 # Download and install the wheel package

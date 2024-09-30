@@ -13,7 +13,7 @@ The text recognition module is the core component of an OCR (Optical Character R
     <th>Model</th>
     <th>Recognition Avg Accuracy(%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -159,7 +159,7 @@ In the above validation result, `check_pass` being `true` indicates that the dat
 * `attributes.val_sample_paths`: A list of relative paths to the visualized validation set samples in this dataset;
 Additionally, the dataset validation also analyzes the distribution of character length ratios in the dataset and generates a distribution histogram (histogram.png):
 
-![](https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=8325d1ffedef49778a42421b93d76944&docGuid=H12geiDpbQ-_8Y "")
+![](/tmp/images/modules/text_recog/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)

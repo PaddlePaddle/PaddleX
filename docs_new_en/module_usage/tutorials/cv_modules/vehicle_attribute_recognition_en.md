@@ -8,7 +8,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_vehicle_attribute | 91.7 | 3.84845 | 9.23735 | 6.7 M | PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet. |
 
@@ -113,7 +113,7 @@ In the above validation results, `check_pass` being True indicates that the data
 * `attributes.val_sample_paths`: The list of relative paths to the visualization images of samples in the validation set of this dataset;
 
 Additionally, the dataset verification also analyzes the distribution of the length and width of all images in the dataset and plots a histogram (histogram.png):
-![](/tmp/images/modules/vehicle_attri/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png)
 </details>
 
 

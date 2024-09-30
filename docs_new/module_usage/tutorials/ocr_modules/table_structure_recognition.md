@@ -1,4 +1,4 @@
-# 表格结构识别模块开发教程
+# 表格结构识别模块使用教程
 
 ## 一、概述
 表格结构识别是表格识别系统中的重要组成部分，能够将不可编辑表格图片转换为可编辑的表格形式（例如html）。表格结构识别的目标是对表格的行、列和单元格位置进行识别，该模块的性能直接影响到整个表格识别系统的准确性和效率。表格结构识别模块通常会输出表格区域的html代码或Latex代码，这些代码将作为输入传递给表格内容识别模块进行后续处理。
@@ -12,7 +12,7 @@
     <th>模型</th>
     <th>精度（%）</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时 (ms)</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -41,12 +41,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成表格结构识别模块的推理，可以任意切换该模块下的模型，您也可以将表格结构识别的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成表格结构识别模块的推理，可以任意切换该模块下的模型，您也可以将表格结构识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("SLANet")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg", batch_size=1)
+output = model.predict("table_recognition.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -128,7 +128,6 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
 </details>
 
@@ -243,12 +242,12 @@ python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
 
 #### 4.4.1 模型推理
 
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)到本地。
 ```bash
 python main.py -c paddlex/configs/table_recognition/SLANet.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg"
+    -o Predict.input="table_recognition.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

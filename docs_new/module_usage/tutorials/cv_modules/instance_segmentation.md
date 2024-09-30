@@ -1,4 +1,4 @@
-# 实例分割模块开发教程
+# 实例分割模块使用教程
 
 ## 一、概述
 实例分割模块是计算机视觉系统中的关键组成部分，负责在图像或视频中确定并标记出包含特定对象实例的像素。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。实例分割模块通常会输出每个目标实例的像素级别的掩模（masks），这些掩模将作为输入传递给对象识别模块进行后续处理。
@@ -14,7 +14,7 @@
         <th>模型</th>
         <th>Mask AP</th>
         <th>GPU推理耗时（ms）</th>
-        <th>CPU推理耗时</th>
+        <th>CPU推理耗时 (ms)</th>
         <th>模型存储大小（M）</th>
         <th>介绍</th>
     </tr>
@@ -23,7 +23,7 @@
         <td>36.3</td>
         <td >-</td>
         <td >-</td>
-        <td>254.8</td>
+        <td>254.8 M</td>
         <td rowspan="2">Cascade-MaskRCNN 是一种改进的Mask RCNN实例分割模型，通过级联多个检测器，利用不同IOU阈值优化分割结果，解决检测与推理阶段的mismatch问题，提高了实例分割的准确性。</td>
     </tr>
     <tr>
@@ -31,14 +31,14 @@
         <td>39.1</td>
         <td >-</td>
         <td >-</td>
-        <td>254.7</td>
+        <td>254.7 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-H</td>
         <td>50.6</td>
         <td>132.693</td>
         <td>4896.17</td>
-        <td>449.9</td>
+        <td>449.9 M</td>
         <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
     </tr>
     <tr>
@@ -46,7 +46,7 @@
         <td>45.7</td>
         <td>46.5059</td>
         <td>2575.92</td>
-        <td>113.6</td>
+        <td>113.6 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-M</td>
@@ -110,7 +110,7 @@
         <td>38.1</td>
         <td>-</td>
         <td>-</td>
-        <td>225.4 M</td>
+        <td>225.1 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNeXt101-vd-FPN</td>
@@ -138,12 +138,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成实例分割模块的推理，可以任意切换该模块下的模型，您也可以将实例分割的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成实例分割模块的推理，可以任意切换该模块下的模型，您也可以将实例分割的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)到本地。
 
 ```python
 from paddlex import create_model
 model = create_model("Mask-RT-DETR-L")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png", batch_size=1)
+output = model.predict("general_instance_segmentation_004.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -215,7 +215,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/instanceseg/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/instanceseg/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -370,13 +370,13 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)到本地。
 
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
+    -o Predict.input="general_instance_segmentation_004.png"
 ```
 与模型训练和评估类似，需要如下几步：
 

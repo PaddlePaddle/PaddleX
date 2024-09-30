@@ -3,7 +3,7 @@
 ## 1. 通用时序预测产线介绍
 时序预测是一种利用历史数据来预测未来趋势的技术，通过分析时间序列数据的变化模式。广泛应用于金融市场、天气预报和销售预测等领域。时序预测通常使用统计方法或深度学习模型（如LSTM、ARIMA等），能够处理数据中的时间依赖性，以提供准确的预判，帮助决策者做出更好的规划和响应。此技术在许多行业中发挥着重要作用，如能源管理、供应链优化和市场分析等。
 
-![](/tmp/images/pipelines/time_series/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/03.png)
 
 **通用****时序预测****产线中包含了****时序预测****模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
@@ -30,7 +30,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/105706/webUI?source=appCenter)通用时序预测产线的效果，用官方提供的 demo 进行识别，例如：
 
-![](/tmp/images/pipelines/time_series/04.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/04.png)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 

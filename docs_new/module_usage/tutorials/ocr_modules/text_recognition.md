@@ -1,4 +1,4 @@
-# 文本识别模块开发教程
+# 文本识别模块使用教程
 
 ## 一、概述
 文本识别模块是OCR（光学字符识别）系统中的核心部分，负责从图像中的文本区域提取出文本信息。该模块的性能直接影响到整个OCR系统的准确性和效率。文本识别模块通常接收文本检测模块输出的文本区域的边界框（Bounding Boxes）作为输入，然后通过复杂的图像处理和深度学习算法，将图像中的文本转化为可编辑和可搜索的电子文本。文本识别结果的准确性，对于后续的信息提取和数据挖掘等应用至关重要。
@@ -13,7 +13,7 @@
         <th>模型</th>
         <th>识别 Avg Accuracy(%)</th>
         <th>GPU推理耗时（ms）</th>
-        <th>CPU推理耗时</th>
+        <th>CPU推理耗时 (ms)</th>
         <th>模型存储大小（M）</th>
         <th>介绍</th>
     </tr>
@@ -85,12 +85,12 @@
 </details>
 
 ## 三、快速集成
-在快速集成前，首先需要安装 PaddleX 的 wheel 包，wheel的安装方式请参考[PaddleX本地安装教程](../../../installation/installation.md)。完成 wheel 包的安装后，几行代码即可完成文本识别模块的推理，可以任意切换该模块下的模型，您也可以将文本识别的模块中的模型推理集成到您的项目中。
+在快速集成前，首先需要安装 PaddleX 的 wheel 包，wheel的安装方式请参考[PaddleX本地安装教程](../../../installation/installation.md)。完成 wheel 包的安装后，几行代码即可完成文本识别模块的推理，可以任意切换该模块下的模型，您也可以将文本识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png)到本地。
 
 ```python
 from paddlex import create_model
 model = create_model("PP-OCRv4_mobile_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png", batch_size=1)
+output = model.predict("general_ocr_rec_001.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -159,7 +159,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 另外，数据集校验还对数据集中所有字符长度占比的分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
-![](https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=8325d1ffedef49778a42421b93d76944&docGuid=H12geiDpbQ-_8Y "")
+![](/tmp/images/modules/text_recog/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -276,13 +276,13 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png)到本地。
 
 ```bash
 python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png"
+    -o Predict.input="general_ocr_rec_001.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
