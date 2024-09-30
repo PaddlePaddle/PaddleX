@@ -74,7 +74,7 @@ class DetPredictor(BasicPredictor):
                 3: "AREA",
                 4: "LANCZOS4",
             }[interp]
-        op = Resize(target_size=target_size, keep_ratio=keep_ratio, interp=interp)
+        op = Resize(target_size=target_size[::-1], keep_ratio=keep_ratio, interp=interp)
         return op
 
     @register("NormalizeImage")
