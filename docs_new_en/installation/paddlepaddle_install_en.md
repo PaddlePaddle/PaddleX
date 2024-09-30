@@ -20,7 +20,7 @@ Note: For more official PaddlePaddle Docker images, please refer to the [PaddleP
 
 ```bash
 # CPU
-python -m pip install paddlepaddle
+python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # GPU, this command is only suitable for machines with CUDA version 11.8
 python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
@@ -42,3 +42,5 @@ If the installation is successful, the following content will be output:
 ```bash
 3.0.0-beta1
 ```
+
+> ❗ **Note**: If you encounter any issues during the installation process, feel free to [submit an issue](https://github.com/PaddlePaddle/Paddle/issues) in the Paddle repository.
