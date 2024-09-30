@@ -265,7 +265,6 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
     
 </table>
 
-
 > ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(MLU)](../docs/support_list/model_list_mlu.md)/[模型列表(NPU)](../docs/support_list/model_list_npu.md)/[模型列表(XPU)](../docs/support_list/model_list_xpu.md)/[模型列表(DCU)](../docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
 
 <details>
@@ -452,6 +451,7 @@ for res in output:
 
 | 产线名称           | 对应参数               | 详细说明                                                                                                      |
 |--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
+
 | 文档场景信息抽取   | `PP-ChatOCRv3-doc` | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md#22-本地体验) |
 | 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md#222-python脚本方式集成) |
 | 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md#222-python脚本方式集成) |
@@ -465,6 +465,9 @@ for res in output:
 | 通用时序预测       | `ts_fc` | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md#222-python脚本方式集成) |
 | 通用时序异常检测   | `ts_ad` | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md#222-python脚本方式集成) |
 | 通用时序分类       | `ts_cls` | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md#222-python脚本方式集成) |
+
+</details>
+
 
 ## 📖 文档
 <details>
