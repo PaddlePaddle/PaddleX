@@ -461,11 +461,11 @@ for batch in output:
 | 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
 | 通用实例分割       | `instance_segmentation` | [通用实例分割产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
 | 通用语义分割       | `semantic_segmentation` | [通用语义分割产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
-| 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md) |
+| 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
 | 小目标检测         | `smallobject_detection` | [小目标检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
 | 图像异常检测       | `image_classification` | [图像异常检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
-| 通用OCR            | `OCR` | [通用OCR产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md) |
-| 通用表格识别       | `table_recognition` | [通用表格识别产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md) |
+| 通用OCR            | `OCR` | [通用OCR产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelines/OCR.md) |
+| 通用表格识别       | `table_recognition` | [通用表格识别产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md) |
 | 通用时序预测       | `ts_forecast` | [通用时序预测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
 | 通用时序异常检测   | `ts_anomaly_detection` | [通用时序异常检测产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
 | 通用时序分类       | `ts_classification` | [通用时序分类产线Python脚本使用说明](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
@@ -508,8 +508,7 @@ for batch in output:
    * [🗣️ 通用语义分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
    * [🏷️ 图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)
    * [🔍  小目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
-   * [🖼️ 图像异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
-  </details>
+   * [🖼️ 图像异常检测产线使用教程](/docs_new/module_usage/tutorials/cv_modules/anomaly_detection.md
   
 
 * <details>
@@ -543,7 +542,7 @@ for batch in output:
   * [🗺️ 版面区域检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/layout_detection.md)
   * [📊 表格结构识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/table_structure_recognition.md)
   * [📄 文档图像方向分类使用教程](/docs_new/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
-  * [🔧 文档图像矫正模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_image_unwarping.md)
+  * [🔧 文本图像矫正模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_image_unwarping.md)
   </details>
 
 * <details>
@@ -580,7 +579,7 @@ for batch in output:
 
   * [🗺️ 语义分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/semantic_segmentation.md)
   * [🔍 实例分割模块使用教程](/docs_new/module_usage/tutorials/cv_modules/instance_segmentation.md)
-  * [🚨 图像异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)
+  * [🚨 图像异常检测模块使用教程](/docs_new/module_usage/tutorials/cv_modules/anomaly_detection.md)
   </details>
 
 * <details>

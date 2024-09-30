@@ -145,7 +145,7 @@ for res in output:
 如果图像异常检测产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升图像异常检测产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于图像异常检测产线包含无监督图像异常检测模块，如果模型产线的效果不及预期，那么您需要参考[无监督异常检测模块开发教程](../../../module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/unsupervised_anomaly_detection.md#四二次开发)章节，使用您的私有数据集对图像异常检测模型进行微调。
+由于图像异常检测产线包含无监督图像异常检测模块，如果模型产线的效果不及预期，那么您需要参考[无监督异常检测模块开发教程](../../../module_usage/tutorials/cv_modules/anomaly_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/anomaly_detection.md#四二次开发)章节，使用您的私有数据集对图像异常检测模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
