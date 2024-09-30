@@ -35,7 +35,7 @@ PaddleX 提供了5个端到端的时序异常检测模型，具体可参考 [模
 ### 4.1 数据准备
 为了演示时序异常检测任务整个流程，我们将使用公开的 MSL 数据集进行模型训练及验证。PSM（火星科学实验室）数据集由来自美国国家航空航天局，具有 55 个维度，其中包含来自航天器监测系统的意外事件异常（ISA）报告的遥测异常数据。具有实际应用背景，能够更好地反映真实场景中的异常情况，通常用于测试和验证时间序列异常检测模型的性能。本教程中基于该数据集进行异常检测。
 
-我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序异常检测模块开发教程](../module_usage/tutorials/ts_modules/time_series_anomaly_detection.md)。
+我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序异常检测模块开发教程](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)。
 
 数据集获取命令：
 
@@ -94,7 +94,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 ### 4.3 数据集格式转换/数据集划分（非必选）
-如需对数据集格式进行转换或是重新划分数据集，可参考[时序异常检测模块开发教程](../module_usage/tutorials/ts_modules/time_series_anomaly_detection.md)中的4.1.3。
+如需对数据集格式进行转换或是重新划分数据集，可参考[时序异常检测模块开发教程](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)中的4.1.3。
 
 ## 5. 模型训练和评估
 ### 5.1 模型训练
