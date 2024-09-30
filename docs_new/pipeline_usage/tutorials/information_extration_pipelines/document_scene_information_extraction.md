@@ -469,11 +469,13 @@ import requests
 
 
 API_BASE_URL = "http://0.0.0.0:8080"
+API_KEY = "{千帆平台API key}"
+SECRET_KEY = "{千帆平台secret key}"
 LLM_NAME = "ernie-3.5"
 LLM_PARAMS = {
     "apiType": "qianfan", 
-    "apiKey": "4iiqB0QfvXTAENgzUwNeDjQ7", 
-    "secretKey": "sHQCw4l5A6jnzbHMa0ZvDi05GT9Qz8tZ",
+    "apiKey": API_KEY, 
+    "secretKey": SECRET_KEY,
 }
 
 
