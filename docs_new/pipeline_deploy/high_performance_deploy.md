@@ -4,7 +4,7 @@
 
 ## 1.高性能推理插件的安装与使用
 
-使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程]() 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的基本推理。
+使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的基本推理。
 
 ### 1.1 安装高性能推理插件
 
@@ -57,11 +57,11 @@
 
 在 [飞桨AI Studio星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 页面的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
 
-![](../..https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png)
 
 选择需要部署的产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
 
-![](../..https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png)
 
 使用序列号完成激活后，即可使用高性能推理插件。PaddleX 提供离线激活和在线激活两种方式（均只支持 Linux 系统）：
 
@@ -70,6 +70,8 @@
 请注意：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署模型，则必须为每台机器准备单独的序列号。
 
 ### 1.3 启用高性能推理插件
+
+在启用高性能插件前，请确保当前环境的`LD_LIBRARY_PATH`没有指定 TensorRT 目录，因为插件中已经集成了 TensorRT，避免 TensorRT 版本冲突导致插件无法正常使用。
 
 对于 PaddleX CLI，指定 `--use_hpip`，并设置序列号，即可启用高性能推理插件。如果希望进行联网激活，在第一次使用序列号时，需指定 `--update_license`，以通用图像分类产线为例：
 
