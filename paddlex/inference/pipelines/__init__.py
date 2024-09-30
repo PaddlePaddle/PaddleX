@@ -41,8 +41,10 @@ def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
         pipeline_path = get_pipeline_path(pipeline)
         if pipeline_path is None:
             raise Exception(
-                f"The pipeline ({pipeline}) does not exist! Please use a pipeline name or a config yaml file!"
+                f"The pipeline ({pipeline}) does not exist! Please use a pipeline name or a config file path!"
             )
+    else:
+        pipeline_path = pipeline
     config = parse_config(pipeline_path)
     return config
 
