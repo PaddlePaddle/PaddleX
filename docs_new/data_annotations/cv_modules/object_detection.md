@@ -6,14 +6,6 @@
 
 <div style="display: flex;">
   <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/20.png" alt="示例图片1">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/21.png" alt="示例图片1">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/22.png" alt="示例图片1">
-</div>
-
-<div style="display: flex;">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/23.png" alt="示例图片1">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/24.png" alt="示例图片1">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/25.png" alt="示例图片1">
 </div>
 
 ## 2. Labelme 标注
