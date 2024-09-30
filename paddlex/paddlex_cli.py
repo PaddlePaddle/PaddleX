@@ -14,13 +14,35 @@
 
 import os
 import argparse
-import textwrap
-from types import SimpleNamespace
+import subprocess
+import sys
+import tempfile
 
 from . import create_pipeline
+from .inference.pipelines import create_pipeline_from_config, load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils import logging
 from .utils.interactive_get_pipeline import interactive_get_pipeline
+
+
+def _install_serving_deps():
+    SERVING_DEPS = [
+        "aiohttp>=3.9",
+        "bce-python-sdk>=0.8",
+        "fastapi>=0.110",
+        "pydantic>=2",
+        "starlette>=0.36",
+        "typing_extensions>=4.11",
+        "uvicorn>=0.16",
+        "yarl>=1.9",
+    ]
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", encoding="utf-8") as f:
+        for dep in SERVING_DEPS:
+            f.write(dep + "\n")
+        f.flush()
+        return subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "-r", f.name]
+        )
 
 
 def args_cfg():
@@ -43,7 +65,7 @@ def args_cfg():
 
     ################# install pdx #################
     parser.add_argument("--install", action="store_true", default=False, help="")
-    parser.add_argument("devkits", nargs="*", default=[])
+    parser.add_argument("plugins", nargs="*", default=[])
     parser.add_argument("--no_deps", action="store_true")
     parser.add_argument("--platform", type=str, default="github.com")
     parser.add_argument(
@@ -65,7 +87,15 @@ def args_cfg():
     parser.add_argument("--input", type=str, default=None, help="")
     parser.add_argument("--save_path", type=str, default=None, help="")
     parser.add_argument("--device", type=str, default=None, help="")
+    parser.add_argument("--use_hpip", action="store_true")
+    parser.add_argument("--serial_number", type=str)
+    parser.add_argument("--update_license", action="store_true")
     parser.add_argument("--get_pipeline_config", type=str, default=None, help="")
+
+    ################# serving #################
+    parser.add_argument("--serve", action="store_true")
+    parser.add_argument("--host", type=str, default="0.0.0.0")
+    parser.add_argument("--port", type=int, default=8080)
 
     return parser.parse_args()
 
@@ -77,27 +107,55 @@ def install(args):
     # Disable eager initialization
     os.environ["PADDLE_PDX_EAGER_INIT"] = "False"
 
-    repo_names = args.devkits
-    if len(repo_names) == 0:
-        repo_names = get_all_supported_repo_names()
-    setup(
-        repo_names=repo_names,
-        no_deps=args.no_deps,
-        platform=args.platform,
-        update_repos=args.update_repos,
-        use_local_repos=args.use_local_repos,
-    )
-    return
+    plugins = args.plugins[:]
+
+    if "serving" in plugins:
+        plugins.remove("serving")
+        _install_serving_deps()
+
+    if plugins:
+        repo_names = plugins
+        if len(repo_names) == 0:
+            repo_names = get_all_supported_repo_names()
+        setup(
+            repo_names=repo_names,
+            no_deps=args.no_deps,
+            platform=args.platform,
+            update_repos=args.update_repos,
+            use_local_repos=args.use_local_repos,
+        )
+        return
 
 
-def pipeline_predict(pipeline, input, device=None, save_path=None):
+def _get_hpi_params(serial_number, update_license):
+    return {"serial_number": serial_number, "update_license": update_license}
+
+
+def pipeline_predict(
+    pipeline, input, device, save_path, use_hpip, serial_number, update_license
+):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline, device=device)
+    hpi_params = _get_hpi_params(serial_number, update_license)
+    pipeline = create_pipeline(
+        pipeline, device=device, use_hpip=use_hpip, hpi_params=hpi_params
+    )
     result = pipeline(input)
     for res in result:
         res.print(json_format=False)
         if save_path:
             res.save_all(save_path=save_path)
+
+
+def serve(pipeline, *, device, use_hpip, serial_number, update_license, host, port):
+    from .inference.pipelines.serving import create_pipeline_app, run_server
+
+    hpi_params = _get_hpi_params(serial_number, update_license)
+    pipeline_config = load_pipeline_config(pipeline)
+    pipeline = create_pipeline_from_config(
+        pipeline_config, device=device, use_hpip=use_hpip, hpi_params=hpi_params
+    )
+    app = create_pipeline_app(pipeline, pipeline_config)
+    run_server(app, host=host, port=port, debug=False)
 
 
 # for CLI
@@ -106,6 +164,16 @@ def main():
     args = args_cfg()
     if args.install:
         install(args)
+    elif args.serve:
+        serve(
+            args.pipeline,
+            device=args.device,
+            use_hpip=args.use_hpip,
+            serial_number=args.serial_number,
+            update_license=args.update_license,
+            host=args.host,
+            port=args.port,
+        )
     else:
         if args.get_pipeline_config is not None:
             interactive_get_pipeline(args.get_pipeline_config)
@@ -115,4 +183,7 @@ def main():
                 args.input,
                 args.device,
                 args.save_path,
+                use_hpip=args.use_hpip,
+                serial_number=args.serial_number,
+                update_license=args.update_license,
             )

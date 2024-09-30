@@ -29,15 +29,28 @@ from .single_model_pipeline import (
     TSCls,
     MultiLableImageClas,
     SmallObjDet,
-    AnomolyDetection,
+    AnomalyDetection,
 )
 from .ocr import OCRPipeline
 from .table_recognition import TableRecPipeline
 from .ppchatocrv3 import PPChatOCRPipeline
 
 
-def create_pipeline(
-    pipeline: str,
+def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
+    if not Path(pipeline).exists():
+        pipeline_path = get_pipeline_path(pipeline)
+        if pipeline_path is None:
+            raise Exception(
+                f"The pipeline ({pipeline}) does not exist! Please use a pipeline name or a config file path!"
+            )
+    else:
+        pipeline_path = pipeline
+    config = parse_config(pipeline_path)
+    return config
+
+
+def create_pipeline_from_config(
+    config: Dict[str, Any],
     device=None,
     pp_option=None,
     use_hpip: bool = False,
@@ -45,22 +58,6 @@ def create_pipeline(
     *args,
     **kwargs,
 ) -> BasePipeline:
-    """build model evaluater
-
-    Args:
-        pipeline (str): the pipeline name, that is name of pipeline class
-
-    Returns:
-        BasePipeline: the pipeline, which is subclass of BasePipeline.
-    """
-    if not Path(pipeline).exists():
-        pipeline_path = get_pipeline_path(pipeline)
-        if pipeline_path is None:
-            raise Exception(
-                f"The pipeline({pipeline}) don't exist! Please use the pipeline name or config yaml file!"
-            )
-    pipeline_path = pipeline
-    config = parse_config(pipeline_path)
     pipeline_name = config["Global"]["pipeline_name"]
     pipeline_setting = config["Pipeline"]
 
@@ -87,4 +84,34 @@ def create_pipeline(
     pipeline = BasePipeline.get(pipeline_name)(
         predictor_kwargs=predictor_kwargs, *args, **pipeline_setting
     )
+
     return pipeline
+
+
+def create_pipeline(
+    pipeline: str,
+    device=None,
+    pp_option=None,
+    use_hpip: bool = False,
+    hpi_params: Optional[Dict[str, Any]] = None,
+    *args,
+    **kwargs,
+) -> BasePipeline:
+    """build model evaluater
+
+    Args:
+        pipeline (str): the pipeline name, that is name of pipeline class
+
+    Returns:
+        BasePipeline: the pipeline, which is subclass of BasePipeline.
+    """
+    config = load_pipeline_config(pipeline)
+    return create_pipeline_from_config(
+        config,
+        device=device,
+        pp_option=pp_option,
+        use_hpip=use_hpip,
+        hpi_params=hpi_params,
+        *args,
+        **kwargs,
+    )

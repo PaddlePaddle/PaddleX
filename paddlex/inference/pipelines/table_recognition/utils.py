@@ -297,6 +297,8 @@ def get_ori_coordinate_for_table(x, y, table_bbox):
     Returns:
         list: list of original coordinates, eg. [[x1, y1, x2, y2, x3, y3, x4, y4]]
     """
+    if not table_bbox:
+        return table_bbox
     offset = np.array([x, y] * 4)
     table_bbox = np.array(table_bbox)
     if table_bbox.shape[-1] == 2:

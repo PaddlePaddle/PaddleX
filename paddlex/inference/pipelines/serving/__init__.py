@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-MODELS = [
-    "PP-OCRv4_mobile_det",
-    "PP-OCRv4_server_det",
-    "PP-OCRv4_mobile_seal_det",
-    "PP-OCRv4_server_seal_det",
-]
-
-CURVE_MODELS = ["PP-OCRv4_mobile_seal_det", "PP-OCRv4_server_seal_det"]
+from ._pipeline_apps import create_pipeline_app
+from .app import create_app_config
+from .server import run_server

@@ -56,7 +56,7 @@ class OCRPipeline(BasePipeline):
             self.text_rec_model.set_predictor(batch_size=text_rec_batch_size)
 
     def predict(self, input, **kwargs):
-        device = kwargs.get("device", "gpu")
+        device = kwargs.get("device", None)
         for det_res in self.text_det_model(
             input, batch_size=kwargs.get("det_batch_size", 1), device=device
         ):
