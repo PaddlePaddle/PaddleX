@@ -10,6 +10,8 @@ If your use case for PaddleX involves **model inference and integration**, we re
 
 After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install_en.md)), you can quickly install the PaddleX Wheel package by executing the following commands:
 
+> ❗ **Note**: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
+
 ```bash
 pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
 ```
