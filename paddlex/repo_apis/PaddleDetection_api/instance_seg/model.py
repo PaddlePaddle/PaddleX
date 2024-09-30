@@ -126,7 +126,11 @@ class InstanceSegModel(BaseModel):
                 cli_args.append(CLIArgument("--enable_ce", enable_ce))
 
         # PDX related settings
-        config.update({"uniform_output_enabled": True})
+        if device_type in ["npu", "xpu", "mlu"]:
+            uniform_output_enabled = False
+        else:
+            uniform_output_enabled = True
+        config.update({"uniform_output_enabled": uniform_output_enabled})
         config.update({"pdx_model_name": self.name})
         hpi_config_path = self.model_info.get("hpi_config_path", None)
         if hpi_config_path:
@@ -254,6 +258,11 @@ class InstanceSegModel(BaseModel):
         """
         config = self.config.copy()
         cli_args = []
+
+        device = kwargs.pop("device", None)
+        if device:
+            device_type, _ = parse_device(device)
+            config.update_device(device_type)
 
         if not weight_path.startswith("http"):
             weight_path = abspath(weight_path)
