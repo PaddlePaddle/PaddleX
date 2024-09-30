@@ -14,17 +14,30 @@
 
 
 class BatchSizeSetMixin:
-    def set_batch_size(self, batch_size):
+    @property
+    def batch_size(self):
+        return self.components["ReadCmp"].batch_size
+
+    @batch_size.setter
+    def batch_size(self, batch_size):
         self.components["ReadCmp"].batch_size = batch_size
 
 
 class DeviceSetMixin:
-    def set_device(self, device):
-        self.pp_option.set_device(device)
-        self.components["PPEngineCmp"].option = self.pp_option
+    @property
+    def device(self):
+        return self._pp_option.device
+
+    @device.setter
+    def device(self, device):
+        self._pp_option.device = device
 
 
 class PPOptionSetMixin:
-    def set_pp_option(self, pp_option):
-        self.pp_option = pp_option
-        self.components["PPEngineCmp"].option = self.pp_option
+    @property
+    def pp_option(self):
+        return self._pp_option
+
+    @pp_option.setter
+    def pp_option(self, pp_option):
+        self._pp_option = pp_option

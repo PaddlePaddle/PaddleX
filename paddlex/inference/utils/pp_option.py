@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...utils.func_register import FuncRegister
 from ...utils.device import parse_device, set_env_for_device, get_default_device
 from ...utils import logging
 from .new_ir_blacklist import NEWIR_BLOCKLIST
@@ -31,9 +30,6 @@ class PaddlePredictorOption(object):
     )
     SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu")
 
-    _FUNC_MAP = {}
-    register = FuncRegister(_FUNC_MAP)
-
     def __init__(self, model_name=None, **kwargs):
         super().__init__()
         self.model_name = model_name
@@ -42,12 +38,12 @@ class PaddlePredictorOption(object):
 
     def _init_option(self, **kwargs):
         for k, v in kwargs.items():
-            if k not in self._FUNC_MAP:
+            if self._has_setter(k):
+                setattr(self, k, v)
+            else:
                 raise Exception(
-                    f"{k} is not supported to set! The supported option is: \
-{list(self._FUNC_MAP.keys())}"
+                    f"{k} is not supported to set! The supported option is: {self._get_settable_attributes()}"
                 )
-            self._FUNC_MAP.get(k)(self, v)
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
@@ -67,8 +63,12 @@ class PaddlePredictorOption(object):
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
         }
 
-    @register("run_mode")
-    def set_run_mode(self, run_mode: str):
+    @property
+    def run_mode(self):
+        return self._cfg["run_mode"]
+
+    @run_mode.setter
+    def run_mode(self, run_mode: str):
         """set run mode"""
         if run_mode not in self.SUPPORT_RUN_MODE:
             support_run_mode_str = ", ".join(self.SUPPORT_RUN_MODE)
@@ -77,9 +77,20 @@ class PaddlePredictorOption(object):
             )
         self._cfg["run_mode"] = run_mode
 
-    # TODO(gaotingquan): setter
-    @register("device")
-    def set_device(self, device: str):
+    @property
+    def device_type(self):
+        return self._cfg["device"]
+
+    @property
+    def device_id(self):
+        return self._cfg["device_id"]
+
+    @property
+    def device(self):
+        return self._cfg["device"]
+
+    @device.setter
+    def device(self, device: str):
         """set device"""
         if not device:
             return
@@ -97,41 +108,69 @@ class PaddlePredictorOption(object):
             if device_ids is None or len(device_ids) > 1:
                 logging.debug(f"The device ID has been set to {device_id}.")
 
-    @register("min_subgraph_size")
-    def set_min_subgraph_size(self, min_subgraph_size: int):
+    @property
+    def min_subgraph_size(self):
+        return self._cfg["min_subgraph_size"]
+
+    @min_subgraph_size.setter
+    def min_subgraph_size(self, min_subgraph_size: int):
         """set min subgraph size"""
         if not isinstance(min_subgraph_size, int):
             raise Exception()
         self._cfg["min_subgraph_size"] = min_subgraph_size
 
-    @register("shape_info_filename")
-    def set_shape_info_filename(self, shape_info_filename: str):
+    @property
+    def shape_info_filename(self):
+        self._cfg["shape_info_filename"]
+
+    @shape_info_filename.setter
+    def shape_info_filename(self, shape_info_filename: str):
         """set shape info filename"""
         self._cfg["shape_info_filename"] = shape_info_filename
 
-    @register("trt_calib_mode")
-    def set_trt_calib_mode(self, trt_calib_mode):
+    @property
+    def trt_calib_mode(self):
+        self._cfg["trt_calib_mode"]
+
+    @trt_calib_mode.setter
+    def trt_calib_mode(self, trt_calib_mode):
         """set trt calib mode"""
         self._cfg["trt_calib_mode"] = trt_calib_mode
 
-    @register("cpu_threads")
-    def set_cpu_threads(self, cpu_threads):
+    @property
+    def cpu_threads(self):
+        self._cfg["cpu_threads"]
+
+    @cpu_threads.setter
+    def cpu_threads(self, cpu_threads):
         """set cpu threads"""
         if not isinstance(cpu_threads, int) or cpu_threads < 1:
             raise Exception()
         self._cfg["cpu_threads"] = cpu_threads
 
-    @register("trt_use_static")
-    def set_trt_use_static(self, trt_use_static):
+    @property
+    def trt_use_static(self):
+        self._cfg["trt_use_static"]
+
+    @trt_use_static.setter
+    def trt_use_static(self, trt_use_static):
         """set trt use static"""
         self._cfg["trt_use_static"] = trt_use_static
 
-    @register("delete_pass")
-    def set_delete_pass(self, delete_pass):
+    @property
+    def delete_pass(self):
+        return self._cfg["delete_pass"]
+
+    @delete_pass.setter
+    def delete_pass(self, delete_pass):
         self._cfg["delete_pass"] = delete_pass
 
-    @register("enable_new_ir")
-    def set_enable_new_ir(self, enable_new_ir: bool):
+    @property
+    def enable_new_ir(self):
+        self._cfg["enable_new_ir"]
+
+    @enable_new_ir.setter
+    def enable_new_ir(self, enable_new_ir: bool):
         """set run mode"""
         self._cfg["enable_new_ir"] = enable_new_ir
 
@@ -142,10 +181,6 @@ class PaddlePredictorOption(object):
     def get_support_device(self):
         """get supported device"""
         return self.SUPPORT_DEVICE
-
-    def get_device(self):
-        """get device"""
-        return f"{self._cfg['device']}:{self._cfg['device_id']}"
 
     def __str__(self):
         return ",  ".join([f"{k}: {v}" for k, v in self._cfg.items()])
@@ -159,3 +194,14 @@ class PaddlePredictorOption(object):
         if isinstance(obj, PaddlePredictorOption):
             return obj._cfg == self._cfg
         return False
+
+    def _has_setter(self, attr):
+        prop = getattr(self.__class__, attr, None)
+        return isinstance(prop, property) and prop.fset is not None
+
+    def _get_settable_attributes(self):
+        return [
+            name
+            for name, prop in vars(self.__class__).items()
+            if isinstance(prop, property) and prop.fset is not None
+        ]
