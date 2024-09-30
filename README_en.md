@@ -534,6 +534,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
   * [📊 Table Structure Recognition Module Usage Guide](./docs/module_usage/tutorials/ocr_modules/table_structure_recognition_en.md)
   * [📄 Document Image Orientation Classification Usage Guide](./docs/module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md)
   * [🔧 Document Image Correction Module Usage Guide](./docs/module_usage/tutorials/ocr_modules/text_image_unwarping_en.md)
+  * [📐 Formula Recognition Module Usage Guide](./docs/module_usage/tutorials/ocr_modules/formula_recognition_en.md)
   </details>
 
 * <details>
