@@ -7,7 +7,7 @@ Serving deployment is a common form of deployment in real-world production envir
 
 Serving Deployment Example Diagram:
 
-![Serving Deployment Example Diagram](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main//images/pipeline_deploy/serving.png)
+![Serving Deployment Example Diagram](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving.png)
 
 ## 1. Basic Process
 
@@ -64,19 +64,19 @@ Please refer to the **"Development Integration/Deployment"** section in the usag
 
 | Model Pipelines          | Usage Tutorials                                                  |
 |--------------------------|----------------------------------------------------------------|
-| General Image Classification Pipeline | [Tutorial for Using the General Image Classification Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
-| General Object Detection Pipeline | [Tutorial for Using the General Object Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/object_detection.md) |
-| General Semantic Segmentation Pipeline | [Tutorial for Using the General Semantic Segmentation Pipeline](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
-| General Instance Segmentation Pipeline | [Tutorial for Using the General Instance Segmentation Pipeline](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
-| General Image Multi-Label Classification Pipeline | [Tutorial for Using the General Image Multi-Label Classification Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
-| Small Object Detection Pipeline | [Tutorial for Using the Small Object Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
-| Image Anomaly Detection Pipeline | [Tutorial for Using the Image Anomaly Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
-| General OCR Pipeline | [Tutorial for Using the General OCR Pipeline](../pipeline_usage/tutorials/ocr_pipelines/OCR.md) |
-| General Table Recognition Pipeline | [Tutorial for Using the General Table Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md) |
-| Time Series Forecasting Pipeline | [Tutorial for Using the Time Series Forecasting Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
-| Time Series Anomaly Detection Pipeline | [Tutorial for Using the Time Series Anomaly Detection Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
-| Time Series Classification Pipeline | [Tutorial for Using the Time Series Classification Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
-| Document Scene Information Extraction v3 Pipeline | [Tutorial for Using the Document Scene Information Extraction v3 Pipeline](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md) |
+| General Image Classification Pipeline | [Tutorial for Using the General Image Classification Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
+| General Object Detection Pipeline | [Tutorial for Using the General Object Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/object_detection_en.md) |
+| General Semantic Segmentation Pipeline | [Tutorial for Using the General Semantic Segmentation Pipeline](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md) |
+| General Instance Segmentation Pipeline | [Tutorial for Using the General Instance Segmentation Pipeline](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md) |
+| General Image Multi-Label Classification Pipeline | [Tutorial for Using the General Image Multi-Label Classification Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) |
+| Small Object Detection Pipeline | [Tutorial for Using the Small Object Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) |
+| Image Anomaly Detection Pipeline | [Tutorial for Using the Image Anomaly Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md) |
+| General OCR Pipeline | [Tutorial for Using the General OCR Pipeline](../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) |
+| General Table Recognition Pipeline | [Tutorial for Using the General Table Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) |
+| Time Series Forecasting Pipeline | [Tutorial for Using the Time Series Forecasting Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
+| Time Series Anomaly Detection Pipeline | [Tutorial for Using the Time Series Anomaly Detection Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
+| Time Series Classification Pipeline | [Tutorial for Using the Time Series Classification Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
+| Document Scene Information Extraction v3 Pipeline | [Tutorial for Using the Document Scene Information Extraction v3 Pipeline](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md) |
 
 ## 2. Deploying Services for Production
 
