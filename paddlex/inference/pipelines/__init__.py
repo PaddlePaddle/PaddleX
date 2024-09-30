@@ -68,14 +68,17 @@ def create_pipeline(
         predictor_kwargs["use_hpip"] = use_hpip
     if hpi_params is not None:
         predictor_kwargs["hpi_params"] = hpi_params
+        pipeline_setting.pop("hpi_params")
     elif "hpi_params" in pipeline_setting:
         predictor_kwargs["hpi_params"] = pipeline_setting.pop("hpi_params")
     if device is not None:
         predictor_kwargs["device"] = device
+        pipeline_setting.pop("device")
     elif "device" in pipeline_setting:
         predictor_kwargs["device"] = pipeline_setting.pop("device")
     if pp_option is not None:
         predictor_kwargs["pp_option"] = pp_option
+        pipeline_setting.pop("pp_option")
     elif "pp_option" in pipeline_setting:
         predictor_kwargs["pp_option"] = pipeline_setting.pop("pp_option")
 
