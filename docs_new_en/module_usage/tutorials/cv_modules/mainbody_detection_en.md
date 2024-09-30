@@ -35,7 +35,7 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
 ## III. Quick Integration  <a id="quick"> </a> 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, you can perform mainbody detection inference with just a few lines of code. You can easily switch between models under this module, and integrate the mainbody detection model inference into your project.
+After installing the wheel package, you can perform mainbody detection inference with just a few lines of code. You can easily switch between models under this module, and integrate the mainbody detection model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 
 ```python
 from paddlex.inference import create_model 
@@ -43,7 +43,7 @@ from paddlex.inference import create_model
 model_name = "PP-ShiTuV2_det"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png", batch_size=1)
+output = model.predict("general_object_detection_002.png", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -236,12 +236,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 After completing model training and evaluation, you can use the trained model weights for inference predictions. In PaddleX, model inference predictions can be achieved through two methods: command line and wheel package.
 
 #### 4.4.1 Model Inference
-* To perform inference predictions through the command line, simply use the following command:
+* To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 ```bash
 python main.py -c paddlex/configs/mainbody_detection/PP-ShiTuV2_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"
+    -o Predict.input="general_object_detection_002.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

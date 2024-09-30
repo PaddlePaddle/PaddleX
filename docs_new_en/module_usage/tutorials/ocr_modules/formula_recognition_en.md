@@ -34,12 +34,12 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
-After installing the wheel package, a few lines of code can complete the inference of the formula recognition module. You can switch models under this module freely, and you can also integrate the model inference of the formula recognition module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the formula recognition module. You can switch models under this module freely, and you can also integrate the model inference of the formula recognition module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("LaTeX_OCR_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png", batch_size=1)
+output = model.predict("general_formula_rec_001.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_json("./output/res.json")
@@ -271,12 +271,12 @@ After completing model training and evaluation, you can use the trained model we
 
 
 #### 4.4.1 Model Inference
-To perform inference prediction through the command line, simply use the following command:
+To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png) to your local machine.
 ```bash
 python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png"
+    -o Predict.input="general_formula_rec_001.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

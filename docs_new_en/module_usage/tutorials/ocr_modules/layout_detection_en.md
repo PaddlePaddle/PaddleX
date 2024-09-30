@@ -21,7 +21,7 @@ The core task of structure analysis is to parse and segment the content of input
 ## III. Quick Integration  <a id="quick"> </a> 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the structure analysis module. You can switch models under this module freely, and you can also integrate the model inference of the structure analysis module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the structure analysis module. You can switch models under this module freely, and you can also integrate the model inference of the structure analysis module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 
 ```python
 from paddlex.inference import create_model 
@@ -29,7 +29,7 @@ from paddlex.inference import create_model
 model_name = "PicoDet-L_layout_3cls"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg", batch_size=1)
+output = model.predict("layout.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -227,12 +227,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 After completing model training and evaluation, you can use the trained model weights for inference predictions. In PaddleX, model inference predictions can be achieved through two methods: command line and wheel package.
 
 #### 4.4.1 Model Inference
-* To perform inference predictions through the command line, simply use the following command:
+* To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 ```bash
 python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
+    -o Predict.input="layout.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

@@ -1,18 +1,18 @@
 # 文档场景信息抽取v3产线使用教程
 
-## 1. 文档场景信息抽取产线介绍
-文档场景信息抽取（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。
+## 1. 文档场景信息抽取v3产线介绍
+文档场景信息抽取v3（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。
 
-![](https://github.com/user-attachments/assets/e742eb00-af8b-4d6d-a047-49ce6099eb5d)
+![](https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02)
 
-文档场景信息抽取**产线中包含表格结构识别模块、版面区域检测模块、文本检测模块、文本识别模块、印章文本检测模块、文本图像矫正模块、文档图像方向分类模块**。
+文档场景信息抽取v3**产线中包含表格结构识别模块、版面区域检测模块、文本检测模块、文本识别模块、印章文本检测模块、文本图像矫正模块、文档图像方向分类模块**。
 
 **如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。其中部分模型的 benchmark 如下：
 
 <details>
    <summary> 👉模型列表详情</summary>
 
-**表格识别模块模型：**
+**表格结构识别模块模型：**
 
 <table>
   <tr>
@@ -29,7 +29,7 @@
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td rowspan="2">SLANet 是百度飞桨视觉团队自研的表格结构识别模型。该模型通过采用CPU 友好型轻量级骨干网络PP-LCNet、高低层特征融合模块CSP-PAN、结构与位置信息对齐的特征解码模块SLA Head，大幅提升了表格结构识别的精度和推理速度。</td>
+    <td>SLANet 是百度飞桨视觉团队自研的表格结构识别模型。该模型通过采用CPU 友好型轻量级骨干网络PP-LCNet、高低层特征融合模块CSP-PAN、结构与位置信息对齐的特征解码模块SLA Head，大幅提升了表格结构识别的精度和推理速度。</td>
   </tr>
    <tr>
     <td>SLANet_plus</td>
@@ -37,13 +37,14 @@
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
+    <td>SLANet_plus 是百度飞桨视觉团队自研的表格结构识别模型SLANet的增强版。相较于SLANet，SLANet_plus 对无线表、复杂表格的识别能力得到了大幅提升，并降低了模型对表格定位准确性的敏感度，即使表格定位出现偏移，也能够较准确地进行识别。</td>
   </tr>
 </table>
 
 **注：以上精度指标测量PaddleX 内部自建英文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 
-**版面区域分析模块模型：**
+**版面区域检测模块模型：**
 
 |模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
 |-|-|-|-|-|
@@ -76,8 +77,8 @@
 
 |模型|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
-|PP-OCRv4_server_seal_det（超链接）|98.21|84.341|2425.06|109|PP-OCRv4的服务端印章文本检测模型，精度更高，适合在较好的服务器上部署|
-|PP-OCRv4_mobile_seal_det（超链接）|96.47|10.5878|131.813|4.6|PP-OCRv4的移动端印章文本检测模型，效率更高，适合在端侧部署|
+|PP-OCRv4_server_seal_det|98.21|84.341|2425.06|109|PP-OCRv4的服务端印章文本检测模型，精度更高，适合在较好的服务器上部署|
+|PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.6|PP-OCRv4的移动端印章文本检测模型，效率更高，适合在端侧部署|
 
 **注：以上精度指标的评估集是自建的数据集，包含500张圆形印章图像。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
@@ -86,7 +87,6 @@
 |模型|MS-SSIM （%）|模型存储大小（M)|介绍|
 |-|-|-|-|
 |UVDoc|54.40|30.3 M|高精度文本图像矫正模型|
-
 
 **模型的精度指标测量自 [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html)。**
 
@@ -103,19 +103,19 @@
 ****
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验文档场景信息抽取产线的效果，也可以在本地使用  Python 体验文档场景信息抽取产线的效果。
+PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验文档场景信息抽取v3产线的效果，也可以在本地使用  Python 体验文档场景信息抽取v3产线的效果。
 
 ### 2.1 在线体验
-您可以[在线体验](https://aistudio.baidu.com/community/app/182491/webUI)文档场景信息抽取产线的效果，用官方提供的 Demo 图片进行识别，例如：
+您可以[在线体验](https://aistudio.baidu.com/community/app/182491/webUI)文档场景信息抽取v3产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
 ![](https://github.com/user-attachments/assets/aa261b2b-b79c-4487-9323-dfcc43c3d581)
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
-在本地使用文档场景信息抽取产线前，请确保您已经按照[PaddleX本地安装教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc)完成了PaddleX的wheel包安装。
+在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc)完成了PaddleX的wheel包安装。
 
-几行代码即可完成产线的快速推理，以通用文档场景信息抽取产线为例：
+几行代码即可完成产线的快速推理，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)，以通用文档场景信息抽取v3产线为例：
 
 ```python
 from paddlex import create_pipeline
@@ -124,25 +124,26 @@ predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
                             
-visual_result, visual_inf = predict(["https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf"])
+visual_result, visual_inf = predict(["contract.pdf"])
 
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
+
+print(predict.chat("乙方,手机号"))
 ```
 **注**：请先在[百度云千帆平台](https://qianfan.cloud.baidu.com/)获取自己的ak与sk，将其填入至指定位置后才能正常调用大模型。
 
 运行后，输出结果如下：
 
-![](https://github.com/user-attachments/assets/e9c2c895-b1f7-4302-bd83-8f6a1483a752)
-
-![](https://github.com/user-attachments/assets/7a5d5755-8c74-4bf3-af66-9e6310b16c62)
-
+```
+{'chat_res': {'乙方': '股份测试有限公司', '手机号': '19331729920'}, 'prompt': ''}
+```
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化文档场景信息抽取产线对象：具体参数说明如下：
+（1）实例化 `create_pipeline` 实例化文档场景信息抽取v3产线对象：具体参数说明如下：
 
 |参数|参数说明|默认值|参数类型|
 |-|-|-|-|
@@ -151,40 +152,42 @@ for res in visual_result:
 |`llm_params`|api配置|{}|dict|
 |`device(kwargs)`|运行设备（None为自动适配）|None|str/None|
 
-（2）调用文档场景信息抽取产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+（2）调用文档场景信息抽取v3产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
 |参数类型|参数说明|
 |-|-|
 |Python Var|支持直接传入Python变量，如numpy.ndarray表示的图像数据；|
 |str|支持传入待预测数据文件路径，如图像文件的本地路径：/root/data/img.jpg；|
-|str|支持传入待预测数据文件url，如图像文件的网络url：https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png；|
+|str|支持传入待预测数据文件url，如[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)；|
 |str|支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：/root/data/；|
-|dict|支持传入字典类型，字典的key需要与具体产线对应，如文档场景信息抽取产线为"img"，字典的val支持上述类型数据，如：{"img": "/root/data1"}；|
+|dict|支持传入字典类型，字典的key需要与具体产线对应，如文档场景信息抽取v3产线为"img"，字典的val支持上述类型数据，如：{"img": "/root/data1"}；|
 |list|支持传入列表，列表元素需为上述类型数据，如[numpy.ndarray, numpy.ndarray, ]，["/root/data/img1.jpg", "/root/data/img2.jpg", ]，["/root/data1", "/root/data2", ]，[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}, ]；|
-|use_oricls_model|是否使用方向分类模型 (默认是True)|
-|use_curve_model|是否使用弯曲文本检测产线 (默认是True)|
-|use_uvdoc_model|是否使用版面矫正产线 (默认是True)|
+|use_oricls_model|是否使用方向分类模型 (默认是False)|
+|use_curve_model|是否使用弯曲文本检测产线 (默认是False)|
+|use_uvdoc_model|是否使用版面矫正产线 (默认是False)|
 
-（3）调用 predict 方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以 batch 为单位对数据进行预测，因此预测结果为 list 形式表示的一组预测结果
+（3）调用 `predict` 方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以 batch 为单位对数据进行预测，因此预测结果为 list 形式表示的一组预测结果。
 
-（4）对预测结果进行处理：每个样本的预测结果均为 dict 类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（4）调用 `predict.chat` 方法与大模型进行交互，其传入参数为需要抽取信息的关键字（支持多个），因此预测结果为 list 形式表示的一组信息抽取结果。
+
+（5）对预测结果进行处理：每个样本的预测结果均为 dict 类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 |方法|说明|方法参数|
 |-|-|-|
-|save_to_img|将结果保存为图片格式的文件|save_path：str类型，保存的文件路径；|
-|save_to_html|将结果保存为html格式的文件|save_path：str类型，保存的文件路径；|
-|save_to_xlsx|将结果保存为表格格式的文件|save_path：str类型，保存的文件路径；|
+|save_to_img|将版面分析、表格识别等结果保存为图片格式的文件|save_path：str类型，保存的文件路径；|
+|save_to_html|将表格识别等结果保存为html格式的文件|save_path：str类型，保存的文件路径；|
+|save_to_xlsx|将表格识别等结果保存为表格格式的文件|save_path：str类型，保存的文件路径；|
 
-在执行上述 Python 脚本时，加载的是默认的文档场景信息抽取产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+在执行上述 Python 脚本时，加载的是默认的文档场景信息抽取v3产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
 
 ```
 paddlex --get_pipeline_config PP-ChatOCRv3-doc
 ```
-执行后，文档场景信息抽取产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
+执行后，文档场景信息抽取v3产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
 
 ```
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --config_save_path ./my_path
 ```
-获取配置文件后，您即可对文档场景信息抽取产线各项配置进行自定义：
+获取配置文件后，您即可对文档场景信息抽取v3产线各项配置进行自定义：
 
 ```
 Pipeline:
@@ -192,9 +195,9 @@ Pipeline:
   table_model: SLANet_plus
   text_det_model: PP-OCRv4_server_det
   text_rec_model: PP-OCRv4_server_rec
-  uvdoc_model: null
-  curve_model: PP-OCRv4_server_seal_det
-  oricls_model: null
+  seal_text_det_model: PP-OCRv4_server_seal_det
+  doc_image_ori_cls_model: null 
+  doc_image_unwarp_model: null 
   llm_name: "ernie-3.5"
   llm_params: 
     api_type: qianfan
@@ -210,12 +213,19 @@ Pipeline:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
-output = pipeline.predict("pre_image.jpg.jpg")
-for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_csv("./output/") ## 保存csv格式结果
-    res.save_to_xlsx("./output/") ## 保存表格格式结果
+
+predict = create_pipeline( pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
+                            llm_name="ernie-3.5",
+                            llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
+                            
+visual_result, visual_inf = predict(["contract.pdf"])
+
+for res in visual_result:
+    res.save_to_img("./output")
+    res.save_to_html('./output')
+    res.save_to_xlsx('./output')
+
+print(predict.chat("乙方,手机号"))
 ```
 
 ## 3. 开发集成/部署
@@ -571,10 +581,10 @@ if __name__ == "__main__":
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
-如果通用文档场景信息抽取产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用表格识别产线的在您的场景中的识别效果。
+如果通用文档场景信息抽取v3产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用表格识别产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用OCR产线包含四个模块，模型产线的效果不及预期可能来自于其中任何一个模块。
+由于通用文档场景信息抽取v3产线包含四个模块，模型产线的效果不及预期可能来自于其中任何一个模块（文本图像矫正模块暂不支持二次开发）。
 
 您可以对识别效果差的图片进行分析，参考如下规则进行分析和模型微调：
 
@@ -583,7 +593,6 @@ if __name__ == "__main__":
 * 有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/text_detection.md)中的**二次开发**章节，使用您的私有数据集对文本检测模型进行微调。
 * 已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的**二次开发**章节对文本识别模型进行微调。
 * 已检测到的印章文本出现较多的识别错误，这表明印章文本检测模块模型需要进一步改进，您需要参考[印章文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/)中的**二次开发**章节对印章文本检测模型进行微调。
-* 图像存在的扭曲、倾斜等现象没有得到很好的矫正，这表明图像矫正模块模型需要进一步改进，您需要参考[文本图像矫正模块开发教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/_KlWDQOzAwTSx9?t=mention&mt=doc&dt=doc)中的**二次开发**章节对图像矫正模型进行微调。
 * 含文字区域的文档或证件的方向存在较多的识别错误，这表明文档图像方向分类模型需要进一步改进，您需要参考[文档图像方向分类模块开发教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/J5-rNhRB_xfhDZ?t=mention&mt=doc&dt=doc)中的**二次开发**章节对文档图像方向分类模型进行微调。
 
 ### 4.2 模型应用
@@ -598,9 +607,9 @@ Pipeline:
   table_model: SLANet_plus  #可修改为微调后模型的本地路径
   text_det_model: PP-OCRv4_server_det  #可修改为微调后模型的本地路径
   text_rec_model: PP-OCRv4_server_rec  #可修改为微调后模型的本地路径
-  uvdoc_model: null  #可修改为微调后模型的本地路径
-  curve_model: PP-OCRv4_server_seal_det  #可修改为微调后模型的本地路径
-  oricls_model: null  #可修改为微调后模型的本地路径
+  seal_text_det_model: PP-OCRv4_server_seal_det  #可修改为微调后模型的本地路径
+  doc_image_ori_cls_model: null   #可修改为微调后模型的本地路径
+  doc_image_unwarp_model: null   #可修改为微调后模型的本地路径
 ......
 ```
 
@@ -609,7 +618,7 @@ Pipeline:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需设置 `--device` 参数**即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行文档场景信息抽取产线的推理，使用的 Python 脚本为：
+例如，您使用英伟达 GPU 进行文档场景信息抽取v3产线的推理，使用的 Python 脚本为：
 
 ```python
 from paddlex import create_pipeline
