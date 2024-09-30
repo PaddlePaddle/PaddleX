@@ -12,7 +12,7 @@ Pedestrian attribute recognition is a crucial component in computer vision syste
 
 | Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
-| PP-LCNet_x1_0_pedestrian_attribute | 92.2 |3.84845 | 9.23735| 6.7M | PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories |
+| PP-LCNet_x1_0_pedestrian_attribute | 92.2 |3.84845 | 9.23735| 6.7 M | PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories |
 
 **Note: The above accuracy metrics are mA on PaddleX's internal self-built dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
