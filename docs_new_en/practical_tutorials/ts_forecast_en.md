@@ -40,7 +40,7 @@ Based on your actual usage scenario, select an appropriate model for training. A
 ### 4.1 Data Preparation
 To demonstrate the entire time series forecasting process, we will use the [Electricity](https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014) dataset for model training and validation. This dataset collects electricity consumption at a certain node from 2012 to 2014, with data collected every hour. Each data point consists of the current timestamp and corresponding electricity consumption. This dataset is commonly used to test and validate the performance of time series forecasting models.
 
-In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecasting_en.md).
+In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecast_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
