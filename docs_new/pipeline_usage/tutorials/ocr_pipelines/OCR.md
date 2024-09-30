@@ -81,10 +81,10 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 > ❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-* 一行命令即可快速体验OCR产线效果:
+* 一行命令即可快速体验OCR产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 ```
 参数说明：
 
@@ -112,7 +112,7 @@ paddlex --get_pipeline_config OCR --config_save_path ./my_path
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ocr.yaml`，只需执行：
 
 ```bash
-paddlex --pipeline ./ocr.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png
+paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -184,7 +184,7 @@ for batch in output:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/ocr.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png")
+output = pipeline.predict("general_ocr_002.png")
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -236,11 +236,11 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 例如，您使用英伟达 GPU 进行 OCR 产线的推理，使用的 Python 命令为：
 
 ```bash
-paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 进行修改即可：
 
 ```bash
-paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device npu:0
+paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
 若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
