@@ -7,9 +7,9 @@ Pipeline:
   table_model: SLANet_plus
   text_det_model: PP-OCRv4_server_det
   text_rec_model: PP-OCRv4_server_rec
-  uvdoc_model: UVDoc
-  curve_model: PP-OCRv4_server_seal_det
-  oricls_model: PP-LCNet_x1_0_doc_ori
+  seal_text_det_model: PP-OCRv4_server_seal_det
+  doc_image_ori_cls_model: null # PP-LCNet_x1_0_doc_ori
+  doc_image_unwarp_model: null # UVDoc
   llm_name: "ernie-3.5"
   llm_params: 
     api_type: qianfan
