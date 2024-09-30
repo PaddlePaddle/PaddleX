@@ -23,12 +23,12 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the time series anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the time series anomaly detection module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the time series anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the time series anomaly detection module into your project. Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("AutoEncoder_ad")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv", batch_size=1)
+output = model.predict("ts_ad.csv", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_csv("./output/")
@@ -278,11 +278,13 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 To perform inference predictions through the command line, simply use the following command:
 
+Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv) to your local machine.
+
 ```bash
 python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv"
+    -o Predict.input="ts_ad.csv"
 ```
 Similar to model training and evaluation, the following steps are required:
 
