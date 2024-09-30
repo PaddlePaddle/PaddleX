@@ -26,10 +26,11 @@ PaddleX supports experiencing the small object detection pipeline's effects thro
 Before using the small object detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 ### 2.1 Experience via Command Line
-Experience the small object detection pipeline with a single command:
+Experience the small object detection pipeline with a single command, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg), and replace `--input` with the local path to perform prediction.
+
 
 ```bash
-paddlex --pipeline small_object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg --device gpu:0
+paddlex --pipeline small_object_detection --input small_object_detection.jpg --device gpu:0
 ```
 Parameter Explanation:
 
@@ -56,7 +57,7 @@ paddlex --get_pipeline_config small_object_detection --config_save_path ./my_pat
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file effective. For example, if the configuration file's save path is `./small_object_detection.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./small_object_detection.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg
+paddlex --pipeline ./small_object_detection.yaml --input small_object_detection.jpg
 ```
 Here, parameters like `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file.```markdown
 
@@ -80,7 +81,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="small_object_detection")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg")
+output = pipeline.predict("small_object_detection.jpg")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save the visualized image of the result
@@ -127,7 +128,7 @@ For example, if your configuration file is saved at `./my_path/small_object_dete
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/small_object_detection.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg")
+output = pipeline.predict("small_object_detection.jpg")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save the visualization image of the result
@@ -175,12 +176,12 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for inference with the small object detection pipeline, the Python command would be:
 
 ```bash
-paddlex --pipeline multilabel_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg --device gpu:0
+paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline multilabel_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg --device npu:0
+paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
 
 If you want to use the General Small Object Detection Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).

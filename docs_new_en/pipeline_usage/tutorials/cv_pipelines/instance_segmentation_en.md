@@ -46,10 +46,11 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 Before using the General Image Classification Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 #### 2.2.1 Command Line Experience
-A single command is all you need to quickly experience the image classification pipeline:
+A single command is all you need to quickly experience the image classification pipeline, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png), and replace `--input` with the local path to perform prediction.
+
 
 ```bash
-paddlex --pipeline instance_segmentation --input  https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0
+paddlex --pipeline instance_segmentation --input  general_instance_segmentation_004.png --device gpu:0
 ```
 
 Parameter Description:
@@ -78,7 +79,7 @@ paddlex --get_pipeline_config instance_segmentation --config_save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./instance_segmentation.yaml`, simply execute:
 
 ```
-paddlex --pipeline ./instance_segmentation.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png
+paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png
 ```
 
 Where `--model`, `--device`, and other parameters do not need to be specified, and the parameters in the configuration file will be used. If parameters are still specified, the specified parameters will take precedence.
@@ -103,7 +104,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="instance_segmentation")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png")
+output = pipeline.predict("general_instance_segmentation_004.png")
 for res in output:
     res.print() # Print the structured output of the prediction
     res.save_to_img("./output/") # Save the visualization image of the result
@@ -149,7 +150,7 @@ For example, if your configuration file is saved at `./my_path/instance_segmenta
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/instance_segmentation.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png")
+output = pipeline.predict("general_instance_segmentation_004.png")
 for res in output:
     res.print() # Print the structured output of prediction
     res.save_to_img("./output/") # Save the visualized image of the result
@@ -198,12 +199,12 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for instance segmentation pipeline inference, the Python command is:
 
 ```bash
-paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0
+paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device npu:0
+paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
 ```
 
 If you want to use the General Instance Segmentation Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).

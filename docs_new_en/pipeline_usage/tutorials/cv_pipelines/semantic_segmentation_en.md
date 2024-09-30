@@ -53,10 +53,11 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 Before using the General Semantic Segmentation Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.md).
 
 #### 2.2.1 Command Line Experience
-Experience the semantic segmentation pipeline with a single command:
+Experience the semantic segmentation pipeline with a single command, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png), and replace `--input` with the local path to perform prediction.
+
 
 ```bash
-paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0
+paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device gpu:0
 ```
 
 Parameter Explanation:
@@ -84,7 +85,7 @@ paddlex --get_pipeline_config semantic_segmentation --config_save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./semantic_segmentation.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./semantic_segmentation.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png
+paddlex --pipeline ./semantic_segmentation.yaml --input makassaridn-road_demo.png
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, and the parameters in the configuration file will be used. If parameters are still specified, the specified parameters will take precedence.
@@ -109,7 +110,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="semantic_segmentation")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png")
+output = pipeline.predict("makassaridn-road_demo.png")
 for res in output:
     res.print()  # Print the structured output of the prediction
     res.save_to_img("./output/")  # Save the visualization image of the result
@@ -155,7 +156,7 @@ For example, if your configuration file is saved at `./my_path/semantic_segmenta
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/semantic_segmentation.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png")
+output = pipeline.predict("makassaridn-road_demo.png")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save the visualized image of the result
@@ -203,11 +204,11 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for semantic segmentation pipeline inference, the Python command is:
 
 ```bash
-paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0
+paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` flag in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device npu:0
+paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device npu:0
 ```
 If you want to use the General Semantic Segmentation Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices.md).

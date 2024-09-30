@@ -334,10 +334,10 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 Before using the General Object Detection Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.md).
 
 #### 2.2.1 Command Line Experience
-A single command can quickly experience the effects of the object detection pipeline:
+A single command can quickly experience the effects of the object detection pipeline, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png), and replace `--input` with the local path to perform prediction.
 
 ```bash
-paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0
+paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
 ```
 Parameter Explanation:
 
@@ -365,7 +365,7 @@ paddlex --get_pipeline_config object_detection --config_save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file effective. For example, if the configuration file save path is `./object_detection.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./object_detection.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png
+paddlex --pipeline ./object_detection.yaml --input general_object_detection_002.png
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If these parameters are still specified, the specified parameters will take precedence.
@@ -390,7 +390,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="object_detection")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png")
+output = pipeline.predict("general_object_detection_002.png")
 for res in output:
     res.print()  # Print the structured output of the prediction
     res.save_to_img("./output/")  # Save the visualized image of the result
@@ -436,7 +436,7 @@ For example, if your configuration file is saved at `./my_path/object_detection.
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png")
+output = pipeline.predict("general_object_detection_002.png")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save the visualized image of the result
@@ -486,11 +486,11 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for inference of the General Object Detection pipeline, the Python command is:
 
 ```bash
-paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0
+paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device npu:0
+paddlex --pipeline object_detection --input general_object_detection_002.png --device npu:0
 ```
 If you want to use the General Object Detection Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices.md).
