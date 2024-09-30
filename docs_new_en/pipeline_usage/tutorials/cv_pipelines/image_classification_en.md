@@ -668,7 +668,7 @@ After running, the result will be:
 
 The visualization images are saved in the `output` directory by default, and you can also customize it through `--save_path`.
 
-#### 2.2.2 Integration via Python Script
+#### 2.2.2 Python Script Integration
 A few lines of code can complete the quick inference of the pipeline. Taking the general image classification pipeline as an example:
 
 ```python
@@ -700,7 +700,7 @@ In the above Python script, the following steps are executed:
 |----------------|-------------|
 | Python Var | Supports directly passing Python variables, such as numpy.ndarray representing image data. |
 | `str` | Supports passing the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`. |
-| `str` | Supports passing the URL of the file to be predicted, such as the network URL of an image file: [Example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001). |
+| `str` | Supports passing the URL of the file to be predicted, such as the network URL of an image file: [Example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg). |
 | `str` | Supports passing a local directory, which should contain files to be predicted, such as the local path: `/root/data/`. |
 | `dict` | Supports passing a dictionary type, where the key needs to correspond to the specific task, such as "img" for the image classification task, and the value of the dictionary supports the above data types, e.g., `{"img": "/root/data1"}`. |
 | `list` | Supports passing a list, where the list elements need to be the above data types, such as `[numpy.ndarray, numpy.ndarray]`, `["/root/data/img1.jpg", "/root/data/img2.jpg"]`, `["/root/data1", "/root/data2"]`, `[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`. |
@@ -1212,7 +1212,7 @@ You can choose the appropriate deployment method for your model pipeline based o
 If the default model weights provided by the general image classification pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **data from your specific domain or application scenario** to improve the recognition performance of the general image classification pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general image classification pipeline includes an image classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/image_classification_en.md#四二次开发) section in the [Image Classification Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_classification_en.md) and use your private dataset to fine-tune the image classification model.
+Since the general image classification pipeline includes an image classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/image_classification_en.md#iv-custom-development) section in the [Image Classification Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_classification_en.md) and use your private dataset to fine-tune the image classification model.
 
 ### 4.2 Model Application
 After you have completed fine-tuning training using your private dataset, you will obtain local model weight files.
