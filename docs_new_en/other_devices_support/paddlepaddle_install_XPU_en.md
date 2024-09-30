@@ -19,7 +19,7 @@ docker run -it --name=xxx -m 81920M --memory-swap=81920M \
 ```
 
 ## 2. Install Paddle Package
-Currently, Python3.10 wheel installation packages are provided. If you have a need for other Python versions, you can refer to the [PaddlePaddle official documentation](https://www.paddlepaddle.org.cn/install/quick) to compile and install them yourself.
+Currently, Python3.10 wheel installation packages are provided. If you have a need for other Python versions, you can refer to the [PaddlePaddle official documentation](https://www.paddlepaddle.org.cn/en/install/quick) to compile and install them yourself.
 
 Install the Python3.10 wheel installation package:
 
