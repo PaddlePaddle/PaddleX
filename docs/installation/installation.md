@@ -17,7 +17,7 @@ PaddleX为您提供了两种安装模式：**Wheel包安装**和**插件安装**
 > ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
 ### 1.2 插件安装模式
 若您使用PaddleX的应用场景为**二次开发** ，那么推荐您使用**功能更加强大**的插件安装模式。

@@ -14,7 +14,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
 <details>
    <summary> 👉Model List Details</summary>
 
-**Table Structure Recognition Models**:
+**Table Structure Recognition Module Models:**
 
 <table>
   <tr>
@@ -31,7 +31,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet is a table structure recognition model developed by the PaddlePaddle Vision Team. It significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+    <td>SLANet is a table structure recognition model independently developed by Baidu's PaddlePaddle vision team. The model significantly enhances the accuracy and inference speed for table structure recognition by utilizing the CPU-friendly lightweight backbone network PP-LCNet, the CSP-PAN high-low layer feature fusion module, and the SLA Head feature decoding module that aligns structural and positional information.</td>
   </tr>
   <tr>
     <td>SLANet_plus</td>
@@ -39,22 +39,65 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet_plus is an enhanced version of SLANet. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless tables and complex tables, and reduces the model's sensitivity to the accuracy of table positioning. Even if the table positioning is offset, it can still perform accurate recognition.</td>
+    <td>SLANet_plus is an enhanced version of the SLANet model independently developed by Baidu's PaddlePaddle vision team. Compared to SLANet, SLANet_plus significantly improves the recognition capability for unbounded and complex tables, and reduces the model's sensitivity to table localization accuracy. Even if the table localization is offset, it can still accurately recognize the table structure.</td>
   </tr>
 </table>
 
-**Note: The above accuracy metrics are measured on PaddleX's internal self-built English table recognition dataset. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The above accuracy metrics are measured on PaddleX's internal English table recognition dataset. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
 
-**Layout Region Detection Models**:
+**Layout Area Detection Module Models:**
 
 |Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
-|PicoDet_layout_1x|86.8|13.036|91.2634|7.4M|
+|PicoDet_layout_1x|86.8|13.036|91.2634|7.4 M|
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
-|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
-|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
+|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1 M|
+|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2 M|
 
-**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout region analysis dataset containing 10,000 images. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The above accuracy metrics are evaluated on PaddleX's internal layout area analysis dataset, which includes 10,000 images. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+
+**Text Detection Module Models:**
+
+|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|-|-|-|-|-|
+|PP-OCRv4_mobile_det|77.79|10.6923|120.177|4.2 M|
+|PP-OCRv4_server_det|82.69|83.3501|2434.01|100.1 M|
+
+**Note: The above accuracy metrics are evaluated on PaddleOCR's internal Chinese dataset, covering multiple scenarios such as street views, web images, documents, and handwriting, with 500 images for detection. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+
+**Text Recognition Module Models:**
+
+|Model Name|Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|-|-|-|-|-|
+|PP-OCRv4_mobile_rec|78.20|7.95018|46.7868|10.6 M|
+|PP-OCRv4_server_rec|79.20|7.19439|140.179|71.2 M|
+
+**Note: The above accuracy metrics are evaluated on PaddleOCR's internal Chinese dataset, covering various scenarios such as street views, web images, documents, and handwriting, with 11,000 images for text recognition. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+
+**Seal Text Detection Module Models:**
+
+|Model|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|Description|
+|-|-|-|-|-|-|
+|PP-OCRv4_server_seal_det|98.21|84.341|2425.06|109|The server-side seal text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers.|
+|PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.6|The mobile-side seal text detection model of PP-OCRv4, with higher efficiency, suitable for edge deployment.|
+
+**Note: The above accuracy metrics are evaluated on an internal dataset containing 500 circular seal images. GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+
+**Text Image Correction Module Models:**
+
+|Model|MS-SSIM (%)|Model Size (M)|Description|
+|-|-|-|-|
+|UVDoc|54.40|30.3 M|High-precision text image correction model|
+
+**The accuracy metrics for the model are measured using the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html).**
+
+**Document Image Orientation Classification Module Models:**
+
+|Model|Top-1 Acc (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|Description|
+|-|-|-|-|-|-|
+|PP-LCNet_x1_0_doc_ori|99.06|3.84845|9.23735|7|Document image classification model based on PP-LCNet_x1_0, containing four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.|
+
+**Note: The above accuracy metrics are evaluated on an internal dataset covering various scenarios such as certificates and documents, with 1,000 images. GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
 
 </details>
 
