@@ -13,8 +13,8 @@ Pipeline:
   llm_name: "ernie-3.5"
   llm_params: 
     api_type: qianfan
-    ak: 
-    sk: 
+    ak: "api_key" # Set this to a real API key
+    sk: "secret_key"  # Set this to a real secret key
   task_prompt_yaml: None
   user_prompt_yaml:
   layout_batch_size: 1
@@ -25,4 +25,3 @@ Pipeline:
   curve_batch_size: 1
   oricls_batch_size: 1
   recovery: True
-  device: "gpu"

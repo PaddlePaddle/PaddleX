@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-MODELS = [
-    "PP-OCRv4_mobile_det",
-    "PP-OCRv4_server_det",
-    "PP-OCRv4_mobile_seal_det",
-    "PP-OCRv4_server_seal_det",
-]
+import uvicorn
+from fastapi import FastAPI
 
-CURVE_MODELS = ["PP-OCRv4_mobile_seal_det", "PP-OCRv4_server_seal_det"]
+
+def run_server(app: FastAPI, *, host: str, port: int, debug: bool) -> None:
+    # XXX: Currently, `debug` is not used.
+    uvicorn.run(app, host=host, port=port, log_level="info")
