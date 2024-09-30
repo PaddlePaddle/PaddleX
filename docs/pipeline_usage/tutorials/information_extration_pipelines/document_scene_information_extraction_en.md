@@ -224,7 +224,7 @@ Operations provided by the service are as follows:
         | `useUvdoc` | `boolean` | Whether to enable text image correction. This feature is enabled by default. | No |
         | `inferenceParams` | `object` | Inference parameters. | No |
 
-        Attributes of `inferenceParams`:
+        Properties of `inferenceParams`:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
@@ -291,7 +291,7 @@ Interact with large language models to extract key information.
     |`chatResult`|`string`|Extracted key information result.|
     |`prompts`|`object`|Prompts used.|
 
-    Attributes of `prompts`:
+    Properties of `prompts`:
 
     | Name | Type | Description |
     |------|------|-------------|

@@ -239,7 +239,7 @@ Operations provided by the service:
         |`image`|`string`|The URL of an image file accessible by the service or the Base64 encoded result of the image file content.|Yes|
         |`inferenceParams`|`object`|Inference parameters.|No|
 
-        Attributes of `inferenceParams`:
+        Properties of `inferenceParams`:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|

@@ -183,7 +183,7 @@ Operations provided by the service:
 
         |Name|Type|Description|
         |-|-|-|
-        |`labelMap`|`array`|Records the class label of each pixel in the image (arranged in row-major order). Where `255` represents an anomaly point, and `0` represents a non-anomaly point.|
+        |`labelMap`|`array`|Records the class label of each pixel in the image (arranged in row-major order), where `255` represents an anomaly point, and `0` represents a non-anomaly point.|
         |`size`|`array`|Image shape. The elements in the array are the height and width of the image in order.|
         |`image`|`string`|Anomaly detection result image. The image is in JPEG format and encoded in Base64.|
 
