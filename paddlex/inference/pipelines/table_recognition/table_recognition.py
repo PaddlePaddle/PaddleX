@@ -49,7 +49,6 @@ class TableRecPipeline(BasePipeline):
         self.predictor_kwargs = predictor_kwargs
         super().__init__(predictor_kwargs=predictor_kwargs)
         self._build_predictor()
-        # self.set_predictor(layout_batch_size, text_det_batch_size,text_rec_batch_size, table_batch_size)
 
     def _build_predictor(
         self,
@@ -85,7 +84,9 @@ class TableRecPipeline(BasePipeline):
         if layout_batch_size:
             self.layout_predictor.set_predictor(batch_size=layout_batch_size)
         if text_rec_batch_size:
-            self.ocr_pipeline.rec_model.set_predictor(batch_size=text_rec_batch_size)
+            self.ocr_pipeline.text_rec_model.set_predictor(
+                batch_size=text_rec_batch_size
+            )
         if table_batch_size:
             self.table_predictor.set_predictor(batch_size=table_batch_size)
 
