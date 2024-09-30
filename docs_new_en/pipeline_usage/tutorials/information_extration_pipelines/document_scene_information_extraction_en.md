@@ -1,7 +1,7 @@
 # PP-ChatOCRv3-doc Pipeline Usage Tutorial
 
 ## 1. Introduction to PP-ChatOCRv3-doc Pipeline
-Document Scene Information Extraction v3 (PP-ChatOCRv3) is a unique intelligent analysis solution for documents and images developed by PaddlePaddle. It combines Large Language Models (LLM) and OCR technology to provide a one-stop solution for complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating with ERNIE Bot, it fuses massive data and knowledge to achieve high accuracy and wide applicability.
+PP-ChatOCRv3-doc is a unique intelligent analysis solution for documents and images developed by PaddlePaddle. It combines Large Language Models (LLM) and OCR technology to provide a one-stop solution for complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating with ERNIE Bot, it fuses massive data and knowledge to achieve high accuracy and wide applicability.
 
 ![](https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02)
 
