@@ -12,6 +12,8 @@ PaddleX为您提供了两种安装模式：**Wheel包安装**和**插件安装**
 
 参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)安装飞桨后，您可直接执行如下指令快速安装PaddleX的Wheel包：
 
+> ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
+
 ```bash
 pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
 ```
@@ -56,7 +58,9 @@ paddlex --install PaddleXXX
 
 > ❗ 注：采用这种安装方式后，是可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel 包。
 
-接下来，我们为您提供了详细的安装教程以供参考。若您使用Linux操作系统，请参考[2. Linux安装PaddleX详细教程](#2-linux安装paddex详细教程)。
+如果上述安装方式可以安装成功，则可以跳过接下来的步骤。
+
+若您使用Linux操作系统，请参考[2. Linux安装PaddleX详细教程](#2-linux安装paddex详细教程)。其他操作系统的安装方式，敬请期待。
 
 ## 2. Linux安装PaddeX详细教程
 使用Linux安装PaddleX时，我们**强烈推荐使用PaddleX官方Docker镜像安装**，当然也可使用其他自定义方式安装。

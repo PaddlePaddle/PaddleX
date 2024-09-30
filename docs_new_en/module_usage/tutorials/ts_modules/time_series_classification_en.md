@@ -19,12 +19,12 @@ Time series classification involves identifying and categorizing different patte
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, you can perform inference for the time series classification module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the time series classification module into your project.
+After installing the wheel package, you can perform inference for the time series classification module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the time series classification module into your project. Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("TimesNet_cls")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv", batch_size=1)
+output = model.predict("ts_cls.csv", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_csv("./output/")
@@ -292,11 +292,13 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 To perform inference prediction via the command line, simply use the following command:
 
+Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv) to your local machine.
+
 ```bash
 python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv"
+    -o Predict.input="ts_cls.csv"
 ```
 Similar to model training and evaluation, the following steps are required:
 

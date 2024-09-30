@@ -19,12 +19,12 @@ The document image orientation classification module is aim to distinguish the o
 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation_en.md)
 
-Just a few lines of code can complete the inference of the document image orientation classification module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the document image orientation classification module into your project.
+Just a few lines of code can complete the inference of the document image orientation classification module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the document image orientation classification module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_doc_ori")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg", batch_size=1)
+output = model.predict("img_rot180_demo.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/demo.png")
@@ -241,13 +241,13 @@ After completing model training and evaluation, you can use the trained model we
 
 #### 4.4.1 Model Inference
 
-To perform inference predictions via the command line, simply use the following command:
+To perform inference predictions via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg"
+    -o Predict.input="img_rot180_demo.jpg"
 ```
 
 Similar to model training and evaluation, the following steps are required:
