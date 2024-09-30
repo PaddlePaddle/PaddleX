@@ -626,7 +626,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 一行命令即可快速体验图像分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline image_classification --input <path_to_image> --device gpu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ```
 参数说明：
 
@@ -653,7 +653,7 @@ paddlex --get_pipeline_config image_classification --config_save_path ./my_path
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./image_classification.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./image_classification.yaml --input <path_to_image>
+paddlex --pipeline ./image_classification.yaml --input general_image_classification_001.jpg
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -662,8 +662,7 @@ paddlex --pipeline ./image_classification.yaml --input <path_to_image>
 运行后，得到的结果为：
 
 ```
-{'img_path': '/user/path/general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': [0.62736, 0.03752, 0.03256, 0.0323, 0.03194], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
-λ szzj-acg-tge0-85
+{'img_path': './my_path/general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': [0.62736, 0.03752, 0.03256, 0.0323, 0.03194], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_classification/03.png)
 
@@ -677,7 +676,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="image_classification")
 
-output = pipeline.predict("/path/to/image")
+output = pipeline.predict("general_image_classification_001.jpg")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存结果可视化图像
@@ -723,7 +722,7 @@ for res in output:
 ```
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/image_classification.yaml")
-output = pipeline.predict("/path/to/image")
+output = pipeline.predict("general_image_classification_001.jpg")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存结果可视化图像
@@ -767,14 +766,14 @@ Pipeline:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需修改 `--device` 参数**即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行图像分类产线的推理，使用的 Python 命令为：
+例如，您使用英伟达 GPU 进行图像分类产线的推理，使用的命令为：
 
 ```
-paddlex --pipeline image_classification --input <path_to_image> --device gpu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需将 `--device` 修改为 npu 即可：
 
 ```
-paddlex --pipeline image_classification --input <path_to_image> --device npu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device npu:0
 ```
 若您想在更多种类的硬件上使用通用图像分类产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
