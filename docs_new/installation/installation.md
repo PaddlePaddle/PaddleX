@@ -12,10 +12,10 @@ PaddleX为您提供了两种安装模式：**Wheel包安装**和**插件安装**
 
 参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)安装飞桨后，您可直接执行如下指令快速安装PaddleX的Wheel包：
 
+> ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
+
 ```bash
-git clone https://github.com/PaddlePaddle/PaddleX.git
-cd PaddleX
-pip install -e .
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
 ```
 ### 1.2 插件安装模式
 若您使用PaddleX的应用场景为**二次开发** ，那么推荐您使用**功能更加强大**的插件安装模式。
@@ -24,13 +24,28 @@ pip install -e .
 
 PaddleX支持的插件如下，请您根据开发需求，确定所需的一个或多个插件名称：
 
-| 插件名称          | 插件基本功能                                  | 插件支持产线                                                                       | 
-|-------------------|-----------------------------------------------|------------------------------------------------------------------------------------|
-| `PaddleClas`      | 图像分类、特征抽取                            | 通用图像分类产线、通用图像多标签分类产线、通用图像识别产线、文档场景信息抽取v3产线 | 
-| `PaddleDetection` | 目标检测、实例分割                            | 通用目标检测产线、小目标检测产线、文档场景信息抽取v3产线                           | 
-| `PaddleOCR`       | OCR（文字检测、文字识别）、表格识别、公式识别 | 通用OCR产线、通用表格识别产线、文档场景信息抽取v3产线                              | 
-| `PaddleSeg`       | 语义分割、图像异常检测                        | 通用实例分割产线、通用语义分割产线                                                 | 
-| `PaddleTS`        | 时序预测、时序分类、时序异常检测              | 时序预测产线、时序分类产线、时序异常检测产线                                       | 
+<details>
+  <summary>👉 <b>插件和产线对应关系（点击展开）</b></summary>
+
+|模型产线|模块|对应插件|
+|-|-|-|
+|通用图像分类|图像分类|`PaddleClas`|
+|通用目标检测|目标检测|`PaddleDetection`|
+|通用语义分割|语义分割|`PaddleSeg`|
+|通用实例分割|实例分割|`PaddleDetection`|
+|通用OCR|文本检测<br>文本识别|`PaddleOCR`|
+|通用表格识别|版面区域检测<br>表格结构识别<br>文本检测<br>文本识别|`PaddleOCR`<br>`PaddleDetection`|
+|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文档图像矫正<br>文档图像方向分类|`PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
+|时序预测|时序预测模块|`PaddleTS`|
+|时序异常检测|时序异常检测模块|`PaddleTS`|
+|时序分类|时序分类模块|`PaddleTS`|
+|通用多标签分类|图像多标签分类|`PaddleClas`|
+|小目标检测|小目标检测|`PaddleDetection`|
+|图像异常检测|无监督异常检测|`PaddleSeg`|
+
+</details>
+
+
 
 若您需要安装的插件为`PaddleXXX`，在参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)安装飞桨后，您可以直接执行如下指令快速安装PaddleX的对应插件：
 
@@ -41,9 +56,11 @@ pip install -e .
 paddlex --install PaddleXXX
 ```
 
-> ❗ 注：两种安装方式并不冲突，您可以同时进行安装。
+> ❗ 注：采用这种安装方式后，是可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel 包。
 
-接下来，我们为您提供了详细的安装教程以供参考。若您使用Linux操作系统，请参考[2. Linux安装PaddleX详细教程](#2-linux安装paddex详细教程)。
+如果上述安装方式可以安装成功，则可以跳过接下来的步骤。
+
+若您使用Linux操作系统，请参考[2. Linux安装PaddleX详细教程](#2-linux安装paddex详细教程)。其他操作系统的安装方式，敬请期待。
 
 ## 2. Linux安装PaddeX详细教程
 使用Linux安装PaddleX时，我们**强烈推荐使用PaddleX官方Docker镜像安装**，当然也可使用其他自定义方式安装。

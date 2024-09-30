@@ -8,7 +8,7 @@ The document image orientation classification module is aim to distinguish the o
 <details>
    <summary> 👉 Model List Details</summary>
 
-| Model | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_doc_ori | 99.06 | 3.84845|9.23735 | 7 | A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270° |
 
@@ -19,12 +19,12 @@ The document image orientation classification module is aim to distinguish the o
 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation_en.md)
 
-Just a few lines of code can complete the inference of the document image orientation classification module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the document image orientation classification module into your project.
+Just a few lines of code can complete the inference of the document image orientation classification module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the document image orientation classification module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_doc_ori")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg", batch_size=1)
+output = model.predict("img_rot180_demo.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/demo.png")
@@ -115,7 +115,7 @@ In the verification results above, `check_pass` being True indicates that the da
 
 Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/doc_img_ori_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png)
 
 </details>
 
@@ -241,13 +241,13 @@ After completing model training and evaluation, you can use the trained model we
 
 #### 4.4.1 Model Inference
 
-To perform inference predictions via the command line, simply use the following command:
+To perform inference predictions via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg"
+    -o Predict.input="img_rot180_demo.jpg"
 ```
 
 Similar to model training and evaluation, the following steps are required:

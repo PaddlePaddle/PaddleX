@@ -1,4 +1,4 @@
-# 语义分割模块开发教程
+# 语义分割模块使用教程
 
 ## 一、概述
 语义分割是计算机视觉中的一种技术，它通过对图像中每个像素进行分类，将图像划分为不同的语义区域，每个区域对应一个具体的类别。这种技术能够生成精细的分割图，清晰地展现图像中的对象及其边界，为图像分析和理解提供有力支持。
@@ -8,7 +8,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
 |Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|
@@ -42,12 +42,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成语义分割模块的推理，可以任意切换该模块下的模型，您也可以将语义分割的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成语义分割模块的推理，可以任意切换该模块下的模型，您也可以将语义分割的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LiteSeg-T")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png", batch_size=1)
+output = model.predict("general_semantic_segmentation_002.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -120,7 +120,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/semanticseg/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/semanticseg/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）（点击展开）
@@ -279,13 +279,13 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png)到本地。
 
 ```bash
 python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png"
+    -o Predict.input="general_semantic_segmentation_002.png"
 ```
 与模型训练和评估类似，需要如下几步：
 

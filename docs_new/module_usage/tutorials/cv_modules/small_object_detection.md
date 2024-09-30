@@ -1,4 +1,4 @@
-# 小目标检测模块开发教程
+# 小目标检测模块使用教程
 
 ## 一、概述
 小目标检测通常指的是在图像或视频中精确地检测和定位尺寸较小、面积较小的目标物体。这些目标在图像中的像素尺寸通常较小，可能小于32像素×32像素（根据MS COCO等数据集的定义），且可能被背景或其他物体所掩盖，难以被肉眼直接观察出来。小目标检测是计算机视觉领域中的一个重要研究方向，旨在精准检测出图像中可视化特征极少的小目标。
@@ -15,7 +15,7 @@
     <th >mAP(0.5:0.95)</th>
     <th >mAP(0.5)</th>
     <th >GPU推理耗时（ms）</th>
-    <th >CPU推理耗时</th>
+    <th >CPU推理耗时 (ms)</th>
     <th >模型存储大小（M）</th>
     <th >介绍VisDrone</th>
   </tr>
@@ -53,7 +53,7 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成whl包的安装后，几行代码即可完成小目标检测模块的推理，可以任意切换该模块下的模型，您也可以将小目标检测的模块中的模型推理集成到您的项目中。
+完成whl包的安装后，几行代码即可完成小目标检测模块的推理，可以任意切换该模块下的模型，您也可以将小目标检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg)到本地。
 
 ```python
 from paddlex.inference import create_model 
@@ -61,7 +61,7 @@ from paddlex.inference import create_model
 model_name = "PP-YOLOE_plus_SOD-S"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg", batch_size=1)
+output = model.predict("small_object_detection.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -138,7 +138,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/smallobj_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/smallobj_det/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -256,12 +256,12 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测。在PaddleX中实现模型推理预测可以通过两种方式：命令行和wheel 包。
 
 #### 4.4.1 模型推理
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg)到本地。
 ```bash
 python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg"
+    -o Predict.input="small_object_detection.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

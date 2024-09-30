@@ -13,7 +13,7 @@ Vehicle detection is a subtask of object detection, specifically referring to th
     <th>Model</th>
     <th>mAP 0.5:0.95</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -40,7 +40,7 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 ## III. Quick Integration  <a id="quick"> </a> 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, you can complete the inference of the vehicle detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the vehicle detection module into your project.
+After installing the wheel package, you can complete the inference of the vehicle detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the vehicle detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg) to your local machine.
 
 ```python
 from paddlex.inference import create_model 
@@ -127,7 +127,7 @@ In the above validation results, `check_pass` being `True` indicates that the da
 
 The dataset validation also analyzes the distribution of sample counts across all classes in the dataset and generates a histogram (histogram.png) to visualize this distribution. 
 
-![](/tmp/images/modules/vehicle_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_det/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
@@ -251,12 +251,12 @@ The object detection module can be integrated into the [General Object Detection
 
 The weights you produced can be directly integrated into the object detection module. You can refer to the Python example code in [Quick Integration](#三快速集成), simply replace the model with the path to your trained model.
 
-* To perform inference predictions through the command line, simply use the following command:
+* To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg) to your local machine.
 ```bash
 python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg"
+    -o Predict.input="vehicle_detection.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

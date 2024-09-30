@@ -26,12 +26,12 @@ Time series forecasting aims to predict the possible values or states at a futur
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 
-Just a few lines of code can complete the inference of the Time Series Forecasting module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Time Series Forecasting module into your project.
+Just a few lines of code can complete the inference of the Time Series Forecasting module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Time Series Forecasting module into your project. Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("DLinear")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv", batch_size=1)
+output = model.predict("ts_fc.csv", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_csv("./output/")
@@ -323,12 +323,13 @@ After model training and evaluation, you can use the trained model weights for i
 #### 4.4.1 Model Inference
 To perform inference predictions via the command line, use the following command:
 
+Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv"
+    -o Predict.input="ts_fc.csv"
 ```
 
 Similar to model training and evaluation, the following steps are required:

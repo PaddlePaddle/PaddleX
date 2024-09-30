@@ -8,7 +8,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_vehicle_attribute | 91.7 | 3.84845 | 9.23735 | 6.7 M | PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet. |
 
@@ -19,12 +19,12 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 ## <span id="lable">III. Quick Integration</span>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the vehicle attribute recognition module. You can easily switch models under this module, and you can also integrate the model inference of the vehicle attribute recognition module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the vehicle attribute recognition module. You can easily switch models under this module, and you can also integrate the model inference of the vehicle attribute recognition module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_vehicle_attribute")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg", batch_size=1)
+output = model.predict("vehicle_attribute_007.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -113,7 +113,7 @@ In the above validation results, `check_pass` being True indicates that the data
 * `attributes.val_sample_paths`: The list of relative paths to the visualization images of samples in the validation set of this dataset;
 
 Additionally, the dataset verification also analyzes the distribution of the length and width of all images in the dataset and plots a histogram (histogram.png):
-![](/tmp/images/modules/vehicle_attri/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png)
 </details>
 
 
@@ -228,13 +228,13 @@ After completing model training and evaluation, you can use the trained model we
 
 
 #### 4.4.1 Model Inference
-To perform inference prediction through the command line, simply use the following command:
+To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attribute.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg"
+    -o Predict.input="vehicle_attribute_007.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

@@ -13,7 +13,7 @@ The image feature module is one of the important tasks in computer vision, prima
     <th>Model</th>
     <th>Recall@1 (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -47,12 +47,12 @@ The image feature module is one of the important tasks in computer vision, prima
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the image feature module. You can switch between models under this module freely, and you can also integrate the model inference of the image feature module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the image feature module. You can switch between models under this module freely, and you can also integrate the model inference of the image feature module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine.
 
 ```python
 from paddlex import create_model
 model = create_model("PP-ShiTuV2_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg", batch_size=1)
+output = model.predict("general_image_recognition_001.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_json("./output/res.json")
@@ -149,7 +149,7 @@ In the above validation results, `check_pass` being True indicates that the data
 
 Additionally, the dataset verification also analyzes the number of images and image categories within the dataset, and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/img_recognition/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png)
 </details>
 
 ### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
@@ -311,13 +311,13 @@ After completing model training and evaluation, you can use the trained model we
 
 
 #### 4.4.1 Model Inference
-To perform inference prediction through the command line, simply use the following command:
+To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine. 
 
 ```bash
 python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg"
+    -o Predict.input="general_image_recognition_001.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

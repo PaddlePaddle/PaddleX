@@ -21,11 +21,11 @@ pip install labelme
 * 创建数据集根目录，如 `pets`。
 * 在 `pets` 中创建 `images` 目录（必须为`images`目录），并将待标注图片存储在 `images` 目录下，如下图所示：
 
-![alt text](/tmp/images/data_prepare/image_classification/01.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/01.png)
 
 * 在 `pets` 文件夹中创建待标注数据集的类别标签文件 `flags.txt`，并在 `flags.txt` 中按行写入待标注数据集的类别。以猫狗分类数据集的 `flags.txt` 为例，如下图所示：
 
-![alt text](/tmp/images/data_prepare/image_classification/02.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/02.png)
 #### 1.3.2 启动 Labelme
 终端进入到待标注数据集根目录，并启动 `labelme` 标注工具。
 
@@ -40,17 +40,17 @@ labelme images --nodata --autosave --output annotations --flags flags.txt
 #### 1.3.3 开始图片标注
 * 启动 `labelme` 后如图所示：
 
-![alt text](/tmp/images/data_prepare/image_classification/03.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/03.png)
 * 在 `Flags` 界面选择类别。
 
-![alt text](/tmp/images/data_prepare/image_classification/04.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/04.png)
 
 * 标注好后点击存储。（若在启动 `labelme` 时未指定 `output` 字段，会在第一次存储时提示选择存储路径，若指定 `autosave` 字段使用自动保存，则无需点击存储按钮）。
 
-![alt text](/tmp/images/data_prepare/image_classification/05.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/05.png)
 * 然后点击 `Next Image` 进行下一张图片的标注。
 
-![alt text](/tmp/images/data_prepare/image_classification/06.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/06.png)
 
 * 完成全部图片的标注后，使用[convert_to_imagenet.py](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/applications/image_classification_dataset_prepare/convert_to_imagenet.py)脚本将标注好的数据集转换为 `ImageNet-1k` 数据集格式，生成 `train.txt`，`val.txt` 和`label.txt`。
 
@@ -61,7 +61,7 @@ python convert_to_imagenet.py --dataset_path /path/to/dataset
 
 * 经过整理得到的最终目录结构如下：
 
-![alt text](/tmp/images/data_prepare/image_classification/07.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/image_classification/07.png)
 
 #### 1.3.4 数据格式转换
 在获得 `LabelMe` 格式数据后，需要将数据格式转换为`ShiTuRecDataset`格式。下面给出了按照上述教程使用`LableMel`标注完成的数据并进行数据格式转换的代码示例。

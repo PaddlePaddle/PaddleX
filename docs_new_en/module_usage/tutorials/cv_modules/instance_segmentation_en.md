@@ -13,7 +13,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <th>Model</th>
         <th>Mask AP</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -22,7 +22,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>36.3</td>
         <td >-</td>
         <td >-</td>
-        <td>254.8</td>
+        <td>254.8 M</td>
         <td rowspan="2">Cascade-MaskRCNN is an improved Mask RCNN instance segmentation model that utilizes multiple detectors in a cascade, optimizing segmentation results by leveraging different IOU thresholds to address the mismatch between detection and inference stages, thereby enhancing instance segmentation accuracy.</td>
     </tr>
     <tr>
@@ -30,14 +30,14 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>39.1</td>
         <td >-</td>
         <td >-</td>
-        <td>254.7</td>
+        <td>254.7 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-H</td>
         <td>50.6</td>
         <td>132.693</td>
         <td>4896.17</td>
-        <td>449.9</td>
+        <td>449.9 M</td>
         <td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
     </tr>
     <tr>
@@ -45,7 +45,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>45.7</td>
         <td>46.5059</td>
         <td>2575.92</td>
-        <td>113.6</td>
+        <td>113.6 M</td>
     </tr>
     <tr>
         <td>Mask-RT-DETR-M</td>
@@ -109,7 +109,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>38.1</td>
         <td>-</td>
         <td>-</td>
-        <td>225.4 M</td>
+        <td>225.1 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNeXt101-vd-FPN</td>
@@ -137,12 +137,12 @@ The instance segmentation module is a crucial component in computer vision syste
 ## <span id="lable">III. Quick Integration</span>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the instance segmentation module. You can switch models under this module freely, and you can also integrate the model inference of the instance segmentation module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the instance segmentation module. You can switch models under this module freely, and you can also integrate the model inference of the instance segmentation module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png) to your local machine.
 
 ```python
 from paddlex import create_model
 model = create_model("Mask-RT-DETR-L")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png", batch_size=1)
+output = model.predict("general_instance_segmentation_004.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -214,7 +214,7 @@ In the above verification results, `check_pass` being `True` indicates that the 
 * `attributes.val_sample_paths`: A list of relative paths to the visualized validation samples in this dataset;
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all categories in the dataset and generates a distribution histogram (`histogram.png`):
 
-![](/tmp/images/modules/instanceseg/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/instanceseg/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
@@ -366,13 +366,13 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 After completing model training and evaluation, you can use the trained model weights for inference prediction or Python integration.
 
 #### 4.4.1 Model Inference
-To perform inference prediction via the command line, simply use the following command:
+To perform inference prediction via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png"
+    -o Predict.input="general_instance_segmentation_004.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

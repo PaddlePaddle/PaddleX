@@ -8,7 +8,7 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 <details>
    <summary> 👉 Model List Details</summary>
 
-|Model Name| Hmean（%）|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)| Introduce |
+|Model Name| Hmean（%）|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)| Introduce |
 |-|-|-|-|-|-|
 |PP-OCRv4_server_seal_det |98.21|84.341|2425.06|109 M|The server-side seal text detection model of PP-OCRv4 boasts higher accuracy and is suitable for deployment on better-equipped servers.|
 |PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.6 M| The mobile-side seal text detection model of PP-OCRv4, on the other hand, offers greater efficiency and is suitable for deployment on end devices.|
@@ -22,12 +22,12 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 
-Just a few lines of code can complete the inference of the Seal Text Detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Seal Text Detection module into your project.
+Just a few lines of code can complete the inference of the Seal Text Detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Seal Text Detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-OCRv4_server_seal_det")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png", batch_size=1)
+output = model.predict("seal_text_det.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -122,7 +122,7 @@ The verification results above indicate that `check_pass` being `True` means the
 
 The dataset verification also analyzes the distribution of sample numbers across all classes and plots a histogram (histogram.png):
 
-![](/tmp/images/modules/curved_text_dec/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/curved_text_dec/01.png)
 
 </details>
 
@@ -245,14 +245,14 @@ After model evaluation, the following outputs are typically produced:
 After model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-To perform inference predictions via the command line, use the following command:
+To perform inference predictions via the command line, use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
 
 
 ```bash
 python main.py -c paddlex/configs/text_detection_seal/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png"
+    -o Predict.input="seal_text_det.png"
 ```
 
 Similar to model training and evaluation, the following steps are required:

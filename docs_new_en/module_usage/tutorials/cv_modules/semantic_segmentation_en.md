@@ -8,7 +8,7 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <details>
    <summary> 👉 Model List Details</summary>
 
-|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
 |Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|
@@ -43,12 +43,12 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
 
 
-Just a few lines of code can complete the inference of the Semantic Segmentation module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Semantic Segmentation module into your project.
+Just a few lines of code can complete the inference of the Semantic Segmentation module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Semantic Segmentation module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LiteSeg-T")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png", batch_size=1)
+output = model.predict("general_semantic_segmentation_002.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -128,7 +128,7 @@ The verification results above indicate that `check_pass` being `True` means the
 
 The dataset verification also analyzes the distribution of sample numbers across all classes and plots a histogram (histogram.png):
 
-![](/tmp/images/modules/semanticseg/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/semanticseg/01.png)
 
 </details>
 
@@ -294,14 +294,14 @@ After model evaluation, the following outputs are typically produced:
 After model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-To perform inference predictions via the command line, use the following command:
+To perform inference predictions via the command line, use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png) to your local machine.
 
 
 ```bash
 python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png"
+    -o Predict.input="general_semantic_segmentation_002.png"
 ```
 
 Similar to model training and evaluation, the following steps are required:

@@ -6,12 +6,12 @@ This document will introduce how to use the [Labelme](https://github.com/wkentar
 This dataset is a fruit instance segmentation dataset, covering five different types of fruits, including photos taken from different angles of the targets. Image examples:
 
 <div style="display: flex;">
-  <img src="/tmp/images/data_prepare/instance_segmentation/01.png" alt="Example Image 1">
-  <img src="/tmp/images/data_prepare/instance_segmentation/02.png" alt="Example Image 2">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/01.png" alt="Example Image 1">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/02.png" alt="Example Image 2">
 </div>
 <div style="display: flex;">
-  <img src="/tmp/images/data_prepare/instance_segmentation/03.png" alt="Example Image 3">
-  <img src="/tmp/images/data_prepare/instance_segmentation/04.png" alt="Example Image 4">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/03.png" alt="Example Image 3">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/04.png" alt="Example Image 4">
 </div>
 
 ## 2. Labelme Annotation
@@ -33,11 +33,11 @@ pip install labelme
 * Create a root directory for the dataset, such as `fruit`.
 * Create an `images` directory (must be named `images`) within `fruit` and store the images to be annotated in the `images` directory, as shown below:
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/05.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/05.png)
 
 * Create a category label file `label.txt` in the `fruit` folder for the dataset to be annotated, and write the categories of the dataset to be annotated into `label.txt` by line. Taking the fruit instance segmentation dataset's `label.txt` as an example, as shown below:
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/06.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/06.png)
 
 #### 2.3.2 Start Labelme
 Navigate to the root directory of the dataset to be annotated in the terminal and start the `labelme` annotation tool.
@@ -54,35 +54,35 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 #### 2.3.3 Begin Image Annotation
 * After starting `labelme`, it will look like this:
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/07.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/07.png)
 * Click `Edit` to select the annotation type, choose `Create Polygons`.
 * Create polygons on the image to outline the boundaries of the segmentation areas.
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/08.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/08.png)
 * Click again to select the category of the segmentation area.
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/09.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/09.png)
 
 * After annotation, click Save. (If `output` is not specified when starting `labelme`, it will prompt to select a save path upon the first save. If `autosave` is specified, there is no need to click the Save button).
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/10.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/10.png)
 
 * Then click `Next Image` to annotate the next image.
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/11.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/11.png)
 * The final annotated label file will look like this.
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/12.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/12.png)
 
 * Adjusting Directory Structure to Obtain a Standard `labelme` Format Dataset for Fruit Instance Segmentation
 
 * Prepare the `train_anno_list.txt` and `val_anno_list.txt` text files in the root directory of your dataset. Populate these files with the paths of all `json` files in the `annotations` directory, distributing them into `train_anno_list.txt` and `val_anno_list.txt` at a specified ratio. Alternatively, you can include all paths in `train_anno_list.txt` and create an empty `val_anno_list.txt` file, intending to use a zero-code data splitting feature for re-partitioning upon upload. The specific format for filling `train_anno_list.txt` and `val_anno_list.txt` is illustrated as follows:
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/13.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/13.png)
 
 * The final directory structure after organization should resemble the following:
 
-![alt text](/tmp/images/data_prepare/instance_segmentation/14.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/14.png)
 
 * Compress the `fruit` directory into a `.tar` or `.zip` format archive to obtain the standard `labelme` format dataset for fruit instance segmentation.
 
@@ -100,7 +100,7 @@ dataset_dir                  # Root directory of the dataset, the directory name
 
 Annotation files adopt the `COCO` format. Please refer to the above specifications for data preparation. Additionally, refer to: [Example Dataset](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/instance_seg_coco_examples.tar).
 
-When using PaddleX 2.x version for instance segmentation datasets, please refer to the corresponding format conversion section in [Data Verification](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/docs/tutorials/data/dataset_check.md) to convert VOC format datasets to COCO datasets. (Note in module development documentation)
+When using PaddleX 2.x version for instance segmentation datasets, please refer to the corresponding format conversion section in [ Instance Segmentation Module Development Tutorial](../../module_usage/tutorials/cv_modules/instance_segmentation_en.md) to convert VOC format datasets to COCO datasets. (Note in module development documentation)
 
 **Note**:
 

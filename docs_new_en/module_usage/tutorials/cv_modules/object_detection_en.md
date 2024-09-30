@@ -12,7 +12,7 @@ The object detection module is a crucial component in computer vision systems, r
     <th>Model</th>
     <th>mAP(%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -322,12 +322,12 @@ The object detection module is a crucial component in computer vision systems, r
 
 > ❗ Before proceeding with quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
-After installing the wheel package, you can perform object detection inference with just a few lines of code. You can easily switch between models within the module and integrate the object detection inference into your projects.
+After installing the wheel package, you can perform object detection inference with just a few lines of code. You can easily switch between models within the module and integrate the object detection inference into your projects. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 
 ```python
 from paddlex import create_model
 model = create_model("PicoDet-S")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png", batch_size=1)
+output = model.predict("general_object_detection_002.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -419,7 +419,7 @@ In the above validation results, `check_pass` being True indicates that the data
 
 Additionally, the dataset verification also analyzes the distribution of sample numbers across all classes in the dataset and generates a histogram (histogram.png) for visualization:
 
-![](/tmp/images/modules/obj_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/obj_det/01.png)
 </details>
 
 
@@ -571,12 +571,12 @@ After completing model training and evaluation, you can use the trained model we
 
 #### 4.4.1 Model Inference
 
-* To perform inference predictions through the command line, use the following command:
+* To perform inference predictions through the command line, use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 ```bash
 python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"
+    -o Predict.input="general_object_detection_002.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

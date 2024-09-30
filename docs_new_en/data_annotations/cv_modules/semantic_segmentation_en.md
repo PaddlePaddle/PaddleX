@@ -6,15 +6,15 @@ This document will introduce how to use the [Labelme](https://github.com/wkentar
 This dataset is a manually collected street scene dataset, covering two categories of vehicles and roads, including photos taken from different angles of the targets. Image examples:
 
 <div style="display: flex;">
-  <img src="/tmp/images/data_prepare/semantic_seg/01.png" alt="Example Image 1">
-  <img src="/tmp/images/data_prepare/semantic_seg/02.png" alt="Example Image 2">
-  <img src="/tmp/images/data_prepare/semantic_seg/03.png" alt="Example Image 3">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/01.png" alt="Example Image 1">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/02.png" alt="Example Image 2">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/03.png" alt="Example Image 3">
 </div>
 
 <div style="display: flex;">
-  <img src="/tmp/images/data_prepare/semantic_seg/04.png" alt="Example Image 4">
-  <img src="/tmp/images/data_prepare/semantic_seg/05.png" alt="Example Image 5">
-  <img src="/tmp/images/data_prepare/semantic_seg/06.png" alt="Example Image 6">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/04.png" alt="Example Image 4">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/05.png" alt="Example Image 5">
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/06.png" alt="Example Image 6">
 </div>
 
 ## 2. Labelme Annotation
@@ -36,7 +36,7 @@ pip install labelme
 * Create a root directory for the dataset, such as `seg_dataset`
 * Create an `images` directory within `seg_dataset` (the directory name can be modified, but ensure the subsequent command's image directory name is correct), and store the images to be annotated in the `images` directory, as shown below:
 
-![alt text](/tmp/images/data_prepare/semantic_seg/07.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/07.png)
 
 #### 2.3.2 Launch Labelme
 Navigate to the root directory of the dataset to be annotated in the terminal and launch the `labelme` annotation tool.
@@ -57,36 +57,36 @@ labelme images --nodata --autosave --output annotations
 #### 2.3.3 Start Image Annotation
 * After launching `labelme`, it will look like this:
 
-![alt text](/tmp/images/data_prepare/semantic_seg/08.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/08.png)
 * Click "Edit" to select the annotation type
 
-![alt text](/tmp/images/data_prepare/semantic_seg/09.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/09.png)
 * Choose to create polygons
   
-![alt text](/tmp/images/data_prepare/semantic_seg/10.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/10.png)
 * Draw the target contour on the image
 
-![alt text](/tmp/images/data_prepare/semantic_seg/11.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/11.png)
 
 * When the contour line is closed as shown in the left image below, a category selection box will pop up, allowing you to input or select the target category
 
-![alt text](/tmp/images/data_prepare/semantic_seg/12.png)
-![alt text](/tmp/images/data_prepare/semantic_seg/13.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/12.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/13.png)
 
 Typically, only the foreground objects need to be labeled with their respective categories, while other pixels are automatically considered as background. If manual background labeling is required, the **category must be set to _background_**, otherwise errors may occur during dataset format conversion. For noisy parts or irrelevant sections in the image that should not participate in model training, the **__ignore__** class can be used, and the model will automatically skip those parts during training. For objects with holes, after outlining the main object, draw polygons along the edges of the holes and assign a specific category to the holes. If the hole represents background, assign it as **_background_**. An example is shown below:
 
-![alt text](/tmp/images/data_prepare/semantic_seg/14.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/14.png)
 
 * After labeling, click "Save". (If the `output` field is not specified when starting `labelme`, it will prompt to select a save path upon the first save. If `autosave` is enabled, the save button is not required.)
 
-![alt text](/tmp/images/data_prepare/semantic_seg/15.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/15.png)
 * Then click "Next Image" to proceed to the next image for labeling.
 
-![alt text](/tmp/images/data_prepare/semantic_seg/16.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/16.png)
 
 * The final labeled file will look like this:
 
-![alt text](/tmp/images/data_prepare/semantic_seg/17.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/17.png)
 
 * Adjust the directory structure to obtain a standard LabelMe format dataset for safety helmet detection:
     a. Download and execute the [directory organization script](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/format_seg_labelme_dataset.py) in the root directory of your dataset, `seg_dataset`. After executing the script, the `train_anno_list.txt` and `val_anno_list.txt` files will contain content as shown:
@@ -94,10 +94,10 @@ Typically, only the foreground objects need to be labeled with their respective 
     ```bash
     python format_seg_labelme_dataset.py
     ```
-    ![alt text](/tmp/images/data_prepare/semantic_seg/18.png)
+    ![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/18.png)
     b. The final directory structure after organization will look like this:
 
-    ![alt text](/tmp/images/data_prepare/semantic_seg/19.png)
+    ![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/semantic_seg/19.png)
 
 #### 2.3.4 Format Conversion
 After labeling with `LabelMe`, the data format needs to be converted to the `Seg` data format. Below is a code example for converting data labeled using `LabelMe` according to the above tutorial.

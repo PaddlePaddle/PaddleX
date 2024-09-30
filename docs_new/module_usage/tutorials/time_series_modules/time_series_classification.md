@@ -1,4 +1,4 @@
-# 时序分类模块开发教程
+# 时序分类模块使用教程
 
 ## 一、概述
 时序分类是通过分析数据随时间变化的趋势、周期性、季节性等因素，来识别并分类不同的时间序列模式，专门用于处理和分析时间序列数据。这种技术广泛应用于医疗诊断等领域，能够有效分类时间序列中的关键信息，为决策提供有力支持。
@@ -19,12 +19,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成是时序分类模块的推理，可以任意切换该模块下的模型，您也可以将时序分类的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成是时序分类模块的推理，可以任意切换该模块下的模型，您也可以将时序分类的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例数据](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("TimesNet_cls")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv", batch_size=1)
+output = model.predict("ts_cls.csv", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_csv("./output/")
@@ -124,7 +124,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 * `attributes.val_table`：该数据集训练集样本示例数据前10行信息；
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
-![](/tmp/images/modules/time_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/time_classification/01.png)
 > ❗**注**：只有通过数据校验的数据才可以训练和评估。
 
 </details>
@@ -280,13 +280,13 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例数据](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv)到本地。
 
 ```bash
 python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv"
+    -o Predict.input="ts_cls.csv"
 ```
 与模型训练和评估类似，需要如下几步：
 

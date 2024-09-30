@@ -21,7 +21,7 @@ docker run -it --name paddle-mlu-dev -v $(pwd):/work \
 ```
 
 ## 2. Install Paddle Package
-Within the started docker container, download and install the wheel package released by PaddlePaddle. Currently, Python 3.10 wheel packages are provided. If you require other Python versions, refer to the [PaddlePaddle official documentation](https://www.paddlepaddle.org.cn/install/quick) for compilation and installation instructions.
+Within the started docker container, download and install the wheel package released by PaddlePaddle. Currently, Python 3.10 wheel packages are provided. If you require other Python versions, refer to the [PaddlePaddle official documentation](https://www.paddlepaddle.org.cn/en/install/quick) for compilation and installation instructions.
 
 ```bash
 # Download and install the wheel package

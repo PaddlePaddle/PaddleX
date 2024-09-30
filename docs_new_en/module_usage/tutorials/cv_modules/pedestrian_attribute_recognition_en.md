@@ -10,9 +10,9 @@ Pedestrian attribute recognition is a crucial component in computer vision syste
 <details>
    <summary> 👉 Model List Details</summary>
 
-| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
-| PP-LCNet_x1_0_pedestrian_attribute | 92.2 |3.84845 | 9.23735| 6.7M | PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories |
+| PP-LCNet_x1_0_pedestrian_attribute | 92.2 |3.84845 | 9.23735| 6.7 M | PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories |
 
 **Note: The above accuracy metrics are mA on PaddleX's internal self-built dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
@@ -20,12 +20,12 @@ Pedestrian attribute recognition is a crucial component in computer vision syste
 ## <span id="lable">III. Quick Integration</span>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the pedestrian attribute recognition module. You can easily switch models under this module and integrate the model inference of pedestrian attribute recognition into your project.
+After installing the wheel package, a few lines of code can complete the inference of the pedestrian attribute recognition module. You can easily switch models under this module and integrate the model inference of pedestrian attribute recognition into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_pedestrian_attribute")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg", batch_size=1)
+output = model.predict("pedestrian_attribute_006.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -116,7 +116,7 @@ In the above validation results, `check_pass` being True indicates that the data
 
 Additionally, the dataset verification also analyzes the distribution of the length and width of all images in the dataset and plots a histogram (histogram.png):
 
-![](/tmp/images/modules/ped_attri/image.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ped_attri/image.png)
 
 </details>
 
@@ -229,13 +229,13 @@ After completing the model evaluation, an `evaluate_result.json` file will be pr
 After completing model training and evaluation, you can use the trained model weights for inference prediction or Python integration.
 
 #### 4.4.1 Model Inference
-To perform inference prediction through the command line, simply use the following command:
+To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/pedestrian_attribute/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg"
+    -o Predict.input="pedestrian_attribute_006.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

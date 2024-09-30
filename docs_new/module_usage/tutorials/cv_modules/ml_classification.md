@@ -1,4 +1,4 @@
-# 图像多标签分类模块开发教程
+# 图像多标签分类模块使用教程
 
 ## 一、概述
 图像多标签分类模块是计算机视觉系统中的重要组件，负责对输入的图像进行多标签的分类。与传统的图像分类任务只将图像分到一个类别不同，图像多标签分类任务需要将图像分到多个相关的类别。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。图像多标签分类模块通常会接收图像作为输入，然后通过深度学习或其他机器学习算法，根据图像的特性和内容，将其分类到多个预定义的类别中。例如，对于一张包含猫和狗的图像，图像多标签分类模块可能需要将其同时标记为“猫”和“狗”。这些分类标签将作为输出，供其他模块或系统进行后续的处理和分析。
@@ -18,35 +18,35 @@
   <tr>
     <td>CLIP_vit_base_patch16_448_ML</td>
     <td>89.15</td>
-    <td>325.6</td>
+    <td>325.6 M</td>
     <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B0_ML</td>
     <td>80.98</td>
-    <td>39.6</td>
+    <td>39.6 M</td>
     <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B4_ML</td>
     <td>87.96</td>
-    <td>88.5</td>
+    <td>88.5 M</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td>286.0</td>
+    <td>286.5 M</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
     <td>77.96</td>
-    <td>29.4</td>
+    <td>29.4 M</td>
     <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>ResNet50_ML</td>
     <td>83.50</td>
-    <td>108.9</td>
+    <td>108.9 M</td>
     <td>ResNet50_ML是一种基于ResNet50的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
 </table>
@@ -58,12 +58,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-wheel 包的安装后，几行代码即可完成图像多标签分类模块的推理，可以任意切换该模块下的模型，您也可以将图像多标签分类的模块中的模型推理集成到您的项目中。
+wheel 包的安装后，几行代码即可完成图像多标签分类模块的推理，可以任意切换该模块下的模型，您也可以将图像多标签分类的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_ML")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png", batch_size=1)
+output = model.predict("multilabel_classification_005.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -152,7 +152,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/ml_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -305,12 +305,12 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 
 #### 4.4.1 模型推理
 
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png)到本地。
 ```bash
 python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png"
+    -o Predict.input="multilabel_classification_005.png"
 ```
 与模型训练和评估类似，需要如下几步：
 

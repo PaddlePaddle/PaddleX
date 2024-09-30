@@ -1,9 +1,9 @@
-PaddleX 3.0 时序预测模型产线———用电量长期预测应用教程
+# PaddleX 3.0 时序预测模型产线———用电量长期预测应用教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ ](../INSTALL.md)[PaddleX本地安装教程](../../../installation/installation.md)。此处以一个用电量长期预测的任务为例子，介绍时序预测模型产线工具的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。此处以一个用电量长期预测的任务为例子，介绍时序预测模型产线工具的使用流程。
 
 ## 1. 选择产线
-首先，需要根据您的任务场景，选择对应的 PaddleX 产线，本任务目标是基于历史数据对未来一段时间电力消耗量进行预测。了解到这个任务属于时序预测任务，对应 PaddleX 的时序预测产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的 [PaddleX产线列表(CPU/GPU)](../../../support_list/models_list.md) 中了解相关产线的能力介绍。
+首先，需要根据您的任务场景，选择对应的 PaddleX 产线，本任务目标是基于历史数据对未来一段时间电力消耗量进行预测。了解到这个任务属于时序预测任务，对应 PaddleX 的时序预测产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的 [PaddleX产线列表(CPU/GPU)](../support_list/pipelines_list.md) 中了解相关产线的能力介绍。
 
 ## 2. 快速体验
 PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX 在本地体验，另外一种是可以在 **AI Studio 星河社区** 上体验。
@@ -30,6 +30,7 @@ PaddleX 提供了5个端到端的时序预测模型
 |PatchTST|0.385|0.397|2.2M|PatchTST是兼顾局部模式和全局依赖关系的高精度长时序预测模型|
 |TiDE|0.405|0.412|34.9M|TiDE是适用于处理多变量、长期的时间序列预测问题的高精度模型|
 |TimesNet|0.417|0.431|5.2M|通过多周期分析，TimesNet是适应性强的高精度时间序列分析模型|
+
 **注：以上精度指标测量自**ETTH1**测试数据集，输入序列长度为96，预测序列长度除 TiDE 外为96，TiDE为720 。**
 
 你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
@@ -38,7 +39,7 @@ PaddleX 提供了5个端到端的时序预测模型
 ### 4.1 数据准备
 为了演示时序预测任务整个流程，我们将使用电力 [Electricity](https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014) 数据集进行模型训练及验证。该数据集采集了 2012 - 2014 年的某节点耗电量，每间距 1 小时采集一次数据，每个数据点由当前时间点和对应的耗电量组成。该数据集通常用于测试和验证时间序列预测模型的性能。
 
-本教程中基于该数据集预测未来 96 小时的耗电量。我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序预测模块开发教程](docs_new/module_usage/tutorials/time_series_modules/time_series_forecasting.md)。
+本教程中基于该数据集预测未来 96 小时的耗电量。我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序预测模块开发教程](../module_usage/tutorials/time_series_modules/time_series_forecasting.md)。
 
 数据集获取命令：
 
@@ -179,7 +180,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 ### 4.3 数据集格式转换/数据集划分（非必选）
-如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。可以参考[时序预测模块开发教程](docs_new/module_usage/tutorials/time_series_modules/time_series_forecasting.md)中4.1.3。
+如需对数据集格式进行转换或是重新划分数据集，可通过修改配置文件或是追加超参数的方式进行设置。可以参考[时序预测模块开发教程](../module_usage/tutorials/time_series_modules/time_series_forecasting.md)中4.1.3。
 
 ## 5. 模型训练和评估
 ### 5.1 模型训练
@@ -204,7 +205,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 
 * `Global`：
   * `mode`：模式，支持数据校验（`check_dataset`）、模型训练（`train`）、模型评估（`evaluate`）、单例测试（`predict`）；
-  * `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`；可在该路径下[模型支持列表](../../../support_list/models_list.md)的文档中，查看不同设备上支持的模型；
+  * `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`；可在该路径下[模型支持列表](../support_list/models_list.md)的文档中，查看不同设备上支持的模型；
 * `Train`：训练超参数设置；
   * `epochs_iters`：训练轮次数设置；
   * `learning_rate`：训练学习率设置；
@@ -215,7 +216,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
   * `input_len`: 输入给模型的历史时间序列长度；输入长度建议结合实际场景及预测长度综合考虑，一般来说设置的越大，能够参考的历史信息越多，模型精度通常越高。
   * `predict_len`:希望模型预测未来序列的长度；预测长度建议结合实际场景综合考虑，一般来说设置的越大，希望预测的未来序列越长，模型精度通常越低。
   * `patience`：early stop机制参数，指在停止训练之前，容忍模型在验证集上的性能多少次连续没有改进；耐心值越大，一般训练时间越长。
-更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。
+更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 **注：**
 
@@ -254,29 +255,26 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 4. 可以发现增大训练轮次后实验四精度最高，接下来尝试增大输入长度到 144，也就是用历史 144 小时的数据，预测未来 96 小时，得到实验五的指标。精度达到 0.188。
 学习率探寻实验结果：
 
-
-
 |实验id|轮次|学习率|batch_size|输入长度|预测长度|训练环境|验证集 mse|
 |-|-|-|-|-|-|-|-|
 |实验一|5|0.0001|16|96|96|1卡|0.314|
 |实验二|5|0.001|16|96|96|1卡|0.302|
 |实验三|5|0.01|16|96|96|1卡|0.320|
+
 增大训练轮次实验结果：
-
-
 
 |实验id|轮次|学习率|batch_size|输入长度|预测长度|训练环境|验证集 mse|
 |-|-|-|-|-|-|-|-|
 |实验二|5|0.001|16|96|96|1卡|0.302|
 |实验四|30|0.001|16|96|96|1卡|0.301|
+
 增大输入长度实验结果：
-
-
 
 |实验id|轮次|学习率|batch_size|输入长度|预测长度|训练环境|验证集 mse|
 |-|-|-|-|-|-|-|-|
 |实验四|30|0.001|16|96|96|1卡|0.301|
 |实验五|30|0.001|16|144|96|1卡|0.188|
+
 ## 6. 产线测试
 将产线中的模型替换为微调后的模型进行测试，使用[本案例中的电力测试数据](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv)，进行预测：
 
@@ -294,7 +292,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir=``"./output/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 ## 7. 开发集成/部署
 如果通用时序预测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -311,5 +309,5 @@ for res in output:
 更多参数请参考时序异常检测产线使用教程
 
 2. 此外，PaddleX 时序预测产线也提供了服务化部署方式，详细说明如下：
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考PaddleX 服务化部署指南。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

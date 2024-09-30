@@ -1,4 +1,4 @@
-# 行人检测模块开发教程
+# 行人检测模块使用教程
 
 ## 一、概述
 行人检测是目标检测的一个分支任务，指使用计算机视觉技术来判断图像或视频中是否存在行人，并给出每个行人的具体位置信息。这些信息对于智能视频监控、人体行为分析、智能驾驶、智能机器人等多种应用至关重要。
@@ -14,7 +14,7 @@
     <th >mAP(0.5:0.95)</th>
     <th >mAP(0.5)</th>
     <th >GPU推理耗时（ms）</th>
-    <th >CPU推理耗时</th>
+    <th >CPU推理耗时 (ms)</th>
     <th >模型存储大小（M）</th>
     <th >介绍</th>
   </tr>
@@ -44,7 +44,7 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成wheel包的安装后，几行代码即可完成行人检测模块的推理，可以任意切换该模块下的模型，您也可以将行人检测的模块中的模型推理集成到您的项目中。
+完成wheel包的安装后，几行代码即可完成行人检测模块的推理，可以任意切换该模块下的模型，您也可以将行人检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg)到本地。
 
 ```python
 from paddlex.inference import create_model 
@@ -52,7 +52,7 @@ from paddlex.inference import create_model
 model_name = "PP-YOLOE-S_human"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg", batch_size=1)
+output = model.predict("human_detection.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -132,7 +132,7 @@ python main.py -c paddlex/configs/human_detection/PP-YOLOE-S_human.yaml \
 
 数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/ped_det/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ped_det/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -251,12 +251,12 @@ python main.py -c paddlex/configs/human_detection/PP-YOLOE-S_human.yaml \
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测。在PaddleX中实现模型推理预测可以通过两种方式：命令行和wheel 包。
 
 #### 4.4.1 模型推理
-* 通过命令行的方式进行推理预测，只需如下一条命令：
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg)到本地。
 ```bash
 python main.py -c paddlex/configs/human_detection/PP-YOLOE-S_human.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg"
+    -o Predict.input="human_detection.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

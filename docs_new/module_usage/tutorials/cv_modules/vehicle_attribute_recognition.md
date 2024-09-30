@@ -1,4 +1,4 @@
-# 车辆属性识别模块开发教程
+# 车辆属性识别模块使用教程
 
 ## 一、概述
 车辆属性识别是计算机视觉系统中的重要组成部分，其主要任务是在图像或视频中定位并标记出车辆的特定属性，如车辆类型、颜色、车牌号等。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。车辆属性识别模块通常会输出包含车辆属性信息的边界框（Bounding Boxes），这些边界框将作为输入传递给其他模块（如车辆跟踪、车辆重识别等）进行后续处理。
@@ -8,7 +8,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型|mA（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|介绍|
+|模型|mA（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
 |PP-LCNet_x1_0_vehicle_attribute|91.7|3.84845|9.23735|6.7 M|PP-LCNet_x1_0_vehicle_attribute 是一种基于PP-LCNet的轻量级车辆属性识别模型。|
 
@@ -19,12 +19,12 @@
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成车辆属性识别模块的推理，可以任意切换该模块下的模型，您也可以将车辆属性识别的模块中的模型推理集成到您的项目中。
+完成 wheel 包的安装后，几行代码即可完成车辆属性识别模块的推理，可以任意切换该模块下的模型，您也可以将车辆属性识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg)到本地。
 
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_vehicle_attribute")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg", batch_size=1)
+output = model.predict("vehicle_attribute_007.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -115,7 +115,7 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 
 另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
 
-![](/tmp/images/modules/vehicle_attri/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -229,13 +229,13 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测或者进行Python集成。
 
 #### 4.4.1 模型推理
-通过命令行的方式进行推理预测，只需如下一条命令：
+通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg)到本地。
 
 ```bash
 python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attribute.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg"
+    -o Predict.input="vehicle_attribute_007.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 

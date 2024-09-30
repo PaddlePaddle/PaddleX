@@ -18,35 +18,35 @@ The image multi-label classification module is a crucial component in computer v
   <tr>
     <td>CLIP_vit_base_patch16_448_ML</td>
     <td>89.15</td>
-    <td>325.6</td>
+    <td>325.6 M</td>
     <td>CLIP_ML is an image multi-label classification model based on CLIP, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B0_ML</td>
     <td>80.98</td>
-    <td>39.6</td>
+    <td>39.6 M</td>
     <td rowspan="3">PP-HGNetV2_ML is an image multi-label classification model based on PP-HGNetV2, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B4_ML</td>
     <td>87.96</td>
-    <td>88.5</td>
+    <td>88.5 M</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td>286.0</td>
+    <td>286.5 M</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
     <td>77.96</td>
-    <td>29.4</td>
+    <td>29.4 M</td>
     <td>PP-LCNet_ML is an image multi-label classification model based on PP-LCNet, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
   </tr>
   <tr>
     <td>ResNet50_ML</td>
     <td>83.50</td>
-    <td>108.9</td>
+    <td>108.9 M</td>
     <td>ResNet50_ML is an image multi-label classification model based on ResNet50, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
   </tr>
 </table>
@@ -57,11 +57,11 @@ The image multi-label classification module is a crucial component in computer v
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, you can complete multi-label classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the multi-label classification module into your project.
+After installing the wheel package, you can complete multi-label classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the multi-label classification module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png) to your local machine.
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_ML")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png", batch_size=1)
+output = model.predict("multilabel_classification_005.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -147,7 +147,7 @@ In the above validation results, `check_pass` being True indicates that the data
 * `attributes.val_sample_paths`: A list of relative paths to the visual samples in the validation set of this dataset;
 
 Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
-![](/tmp/images/modules/ml_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
@@ -304,13 +304,13 @@ After completing the model evaluation, an `evaluate_result.json` file will be pr
 After completing model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-* Inference predictions can be performed through the command line with just one command:
+* Inference predictions can be performed through the command line with just one command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png"
+    -o Predict.input="multilabel_classification_005.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 
