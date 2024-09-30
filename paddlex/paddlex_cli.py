@@ -92,8 +92,7 @@ def install(args):
 
 def pipeline_predict(pipeline, input, device=None, save_path=None):
     """pipeline predict"""
-    predictor_kwargs = {"device": device} if device else {}
-    pipeline = create_pipeline(pipeline)
+    pipeline = create_pipeline(pipeline, device=device)
     result = pipeline(input)
     for res in result:
         res.print(json_format=False)
