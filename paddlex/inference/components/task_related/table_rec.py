@@ -129,7 +129,7 @@ class TableLabelDecode(BaseComponent):
                     bbox = self._bbox_decode(
                         bbox, padding_size[batch_idx], ori_img_size[batch_idx]
                     )
-                    bbox_list.append(bbox.tolist())
+                    bbox_list.append(bbox.astype(int))
                 structure_list.append(text)
                 score_list.append(structure_probs[batch_idx, idx])
             structure_batch_list.append(structure_list)
@@ -163,7 +163,7 @@ class TableLabelDecode(BaseComponent):
                 bbox = gt_bbox_list[batch_idx][idx]
                 if bbox.sum() != 0:
                     bbox = self._bbox_decode(bbox, shape_list[batch_idx])
-                    bbox_list.append(bbox.tolist())
+                    bbox_list.append(bbox.astype(int))
             structure_batch_list.append(structure_list)
             bbox_batch_list.append(bbox_list)
         return bbox_batch_list, structure_batch_list

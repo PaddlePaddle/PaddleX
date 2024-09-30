@@ -28,6 +28,11 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         super().__init__()
         self._predictor_kwargs = {} if predictor_kwargs is None else predictor_kwargs
 
+    def set_predictor():
+        raise NotImplementedError(
+            "The method `set_predictor` has not been implemented yet."
+        )
+
     # alias the __call__() to predict()
     def __call__(self, *args, **kwargs):
         yield from self.predict(*args, **kwargs)

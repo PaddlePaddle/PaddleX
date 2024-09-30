@@ -282,7 +282,7 @@ class DBPostProcess(BaseComponent):
             box[:, 1] = np.clip(
                 np.round(box[:, 1] / height * dest_height), 0, dest_height
             )
-            boxes.append(box.tolist())
+            boxes.append(box)
             scores.append(score)
         return boxes, scores
 
@@ -337,7 +337,10 @@ class DBPostProcess(BaseComponent):
         distance = poly.area * unclip_ratio / poly.length
         offset = pyclipper.PyclipperOffset()
         offset.AddPath(box, pyclipper.JT_ROUND, pyclipper.ET_CLOSEDPOLYGON)
-        expanded = np.array(offset.Execute(distance))
+        try:
+            expanded = np.array(offset.Execute(distance))
+        except ValueError:
+            expanded = np.array(offset.Execute(distance)[0])
         return expanded
 
     def get_mini_boxes(self, contour):
@@ -854,7 +857,7 @@ class CropByPolys(BaseComponent):
         if len(img.shape) == 2:
             img = np.stack((img,) * 3, axis=-1)
         img_crop, image = rectifier.run(img, new_points_list, mode="homography")
-        return img_crop[0]
+        return np.array(img_crop[0], dtype=np.uint8)
 
 
 class SortBoxes(BaseComponent):
@@ -889,4 +892,4 @@ class SortBoxes(BaseComponent):
                     _boxes[j + 1] = tmp
                 else:
                     break
-        return {"dt_polys": [box.tolist() for box in _boxes]}
+        return {"dt_polys": _boxes}
