@@ -331,11 +331,11 @@ class Resize(_BaseResize):
     def apply(self, img):
         """apply"""
         target_size = self.target_size
-        original_size = img.shape[:2]
+        original_size = img.shape[:2][::-1]
 
         if self.keep_ratio:
             h, w = img.shape[0:2]
-            target_size, _ = self._rescale_size((h, w), self.target_size)
+            target_size, _ = self._rescale_size((w, h), self.target_size)
 
         if self.size_divisor:
             target_size = [
@@ -344,8 +344,8 @@ class Resize(_BaseResize):
             ]
 
         img_scale_w, img_scale_h = [
-            target_size[1] / original_size[1],
             target_size[0] / original_size[0],
+            target_size[1] / original_size[1],
         ]
         img = F.resize(img, target_size, interp=self.interp)
         return {

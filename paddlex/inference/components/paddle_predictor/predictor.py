@@ -209,7 +209,7 @@ class ImageDetPredictor(BasePaddlePredictor):
                 np.stack(scale_factors, axis=0).astype(dtype=np.float32, copy=False),
             ]
         else:
-            # img_size = [img_size[::-1] for img_size in img_size]
+            img_size = [img_size[::-1] for img_size in img_size]
             return [
                 np.stack(img_size, axis=0).astype(dtype=np.float32, copy=False),
                 np.stack(img, axis=0).astype(dtype=np.float32, copy=False),
