@@ -81,7 +81,7 @@ class PDFReader(_BaseReader):
         super().__init__(backend, **bk_args)
 
     def read(self, in_path):
-        return self._backend.read_file(in_path)
+        return self._backend.read_file(str(in_path))
 
     def _init_backend(self, bk_type, bk_args):
         return PDFReaderBackend(**bk_args)
@@ -98,7 +98,7 @@ class ImageReader(_BaseReader):
 
     def read(self, in_path):
         """read the image file from path"""
-        arr = self._backend.read_file(in_path)
+        arr = self._backend.read_file(str(in_path))
         return arr
 
     def _init_backend(self, bk_type, bk_args):
@@ -147,7 +147,7 @@ class VideoReader(_GenerativeReader):
     def read(self, in_path):
         """read vide file from path"""
         self._backend.set_pos(self.st_frame_id)
-        gen = self._backend.read_file(in_path)
+        gen = self._backend.read_file(str(in_path))
         if self.num_frames is not None:
             gen = itertools.islice(gen, self.num_frames)
         yield from gen
@@ -286,7 +286,7 @@ class CSVReader(_BaseReader):
 
     def read(self, in_path):
         """read the image file from path"""
-        arr = self._backend.read_file(in_path)
+        arr = self._backend.read_file(str(in_path))
         return arr
 
     def _init_backend(self, bk_type, bk_args):

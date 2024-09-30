@@ -95,7 +95,7 @@ class ImageWriter(_BaseWriter):
 
     def write(self, out_path, obj):
         """write"""
-        return self._backend.write_obj(out_path, obj)
+        return self._backend.write_obj(str(out_path), obj)
 
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
@@ -119,7 +119,7 @@ class TextWriter(_BaseWriter):
 
     def write(self, out_path, obj):
         """write"""
-        return self._backend.write_obj(out_path, obj)
+        return self._backend.write_obj(str(out_path), obj)
 
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
@@ -138,7 +138,7 @@ class JsonWriter(_BaseWriter):
         super().__init__(backend=backend, **bk_args)
 
     def write(self, out_path, obj, **bk_args):
-        return self._backend.write_obj(out_path, obj, **bk_args)
+        return self._backend.write_obj(str(out_path), obj, **bk_args)
 
     def _init_backend(self, bk_type, bk_args):
         if bk_type == "json":
@@ -158,7 +158,7 @@ class HtmlWriter(_BaseWriter):
         super().__init__(backend=backend, **bk_args)
 
     def write(self, out_path, obj, **bk_args):
-        return self._backend.write_obj(out_path, obj, **bk_args)
+        return self._backend.write_obj(str(out_path), obj, **bk_args)
 
     def _init_backend(self, bk_type, bk_args):
         if bk_type == "html":
@@ -176,7 +176,7 @@ class XlsxWriter(_BaseWriter):
         super().__init__(backend=backend, **bk_args)
 
     def write(self, out_path, obj, **bk_args):
-        return self._backend.write_obj(out_path, obj, **bk_args)
+        return self._backend.write_obj(str(out_path), obj, **bk_args)
 
     def _init_backend(self, bk_type, bk_args):
         if bk_type == "xlsx":
@@ -307,7 +307,7 @@ class CSVWriter(_BaseWriter):
 
     def write(self, out_path, obj):
         """write"""
-        return self._backend.write_obj(out_path, obj)
+        return self._backend.write_obj(str(out_path), obj)
 
     def _init_backend(self, bk_type, bk_args):
         """init backend"""
