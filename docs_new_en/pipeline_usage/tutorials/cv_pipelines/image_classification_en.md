@@ -622,10 +622,10 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 Before using the General Image Classification Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 #### 2.2.1 Command Line Experience
-A single command is all you need to quickly experience the image classification pipeline:
+A single command is all you need to quickly experience the image classification pipeline, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg), and replace `--input` with the local path to perform prediction.
 
 ```bash
-paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ```
 Parameter Explanation:
 
@@ -652,7 +652,7 @@ paddlex --get_pipeline_config image_classification --config_save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file take effect. For example, if the configuration file's save path is `./image_classification.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./image_classification.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
+paddlex --pipeline ./image_classification.yaml --input general_image_classification_001.jpg
 ```
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If you still specify parameters, the specified parameters will take precedence.
 
@@ -676,7 +676,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="image_classification")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+output = pipeline.predict("general_image_classification_001.jpg")
 for res in output:
     res.print()  # Print the structured output of the prediction
     res.save_to_img("./output/")  # Save the visualization image of the result
@@ -722,7 +722,7 @@ For example, if your configuration file is saved at `./my_path/image_classificat
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/image_classification.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+output = pipeline.predict("general_image_classification_001.jpg")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save the visualization image of the result
@@ -770,11 +770,11 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for inference in the image classification pipeline, the Python command is:
 
 ```bash
-paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device npu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device npu:0
 ```
 If you want to use the General Image Classification Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
