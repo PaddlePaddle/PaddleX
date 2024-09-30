@@ -62,7 +62,7 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 |Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_det|77.79|10.6923|120.177|4.2 M|
-|PP-OCRv4_server_det|82.69|83.3501|2434.01|100.1M```markdown
+|PP-OCRv4_server_det|82.69|83.3501|2434.01|100.1M|
 
 </details>
 
@@ -212,7 +212,7 @@ Analyze images with poor recognition results and follow the rules below for anal
 * If the detected table structure is incorrect (e.g., row and column recognition errors, incorrect cell positions), the table structure recognition module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md#customization) section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md) and use your private dataset to fine-tune the table structure recognition model.
 * If the table area is incorrectly located within the overall layout, the layout detection module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection.md#customization) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection.md) and use your private dataset to fine-tune the layout detection model.
 * If many texts are undetected (i.e., text miss detection), the text detection model may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition.md#customization) section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition.md) and use your private dataset to fine-tune the text detection model.
-* If many detected texts contain recognition errors (i.e., the recognized text content does not match the actual text content), the text recognition model requires further improvement. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md#customization) section```markdown
+* If many detected texts contain recognition errors (i.e., the recognized text content does not match the actual text content), the text recognition model requires further improvement. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md#customization) section.
 ### 4.2 Model Application
 After fine-tuning your model with a private dataset, you will obtain local model weights files.
 
