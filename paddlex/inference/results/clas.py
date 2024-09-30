@@ -24,6 +24,7 @@ from .base import CVResult
 
 
 class TopkResult(CVResult):
+    _HARD_FLAG = False
 
     def _to_img(self):
         """Draw label on image"""
@@ -31,6 +32,9 @@ class TopkResult(CVResult):
         label_str = f"{labels[0]} {self['scores'][0]:.2f}"
 
         image = self._img_reader.read(self["input_path"])
+        if self._HARD_FLAG:
+            image_np = np.array(image)
+            image = Image.fromarray(image_np[:, :, ::-1])
         image_size = image.size
         draw = ImageDraw.Draw(image)
         min_font_size = int(image_size[0] * 0.02)
