@@ -79,7 +79,7 @@ After execution, the result is:
 
 ```bash
 {'ts_path': '/root/.paddlex/predict_input/ts_cls.csv', 'classification':         classid     score
-sample  
+sample
 0             0  0.617688}
 ```
 
@@ -157,50 +157,50 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 Below are the API references and multi-language service invocation examples:
 
-<details>  
-<summary>API Reference</summary>  
-  
-对于服务提供的所有操作：
+<details>
+<summary>API Reference</summary>
 
-- 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
-- 当请求处理成功时，响应状态码为`200`，响应体的属性如下：
+For all operations provided by the service:
 
-    |名称|类型|含义|
-    |-|-|-|
-    |`errorCode`|`integer`|错误码。固定为`0`。|
-    |`errorMsg`|`string`|错误说明。固定为`"Success"`。|
+- Both the response body and the request body for POST requests are JSON data (JSON objects).
+- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
 
-    响应体还可能有`result`属性，类型为`object`，其中存储操作结果信息。
+    | Name | Type | Description |
+    |------|------|-------------|
+    |`errorCode`|`integer`|Error code. Fixed as `0`.|
+    |`errorMsg`|`string`|Error message. Fixed as `"Success"`.|
 
-- 当请求处理未成功时，响应体的属性如下：
+    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
 
-    |名称|类型|含义|
-    |-|-|-|
-    |`errorCode`|`integer`|错误码。与响应状态码相同。|
-    |`errorMsg`|`string`|错误说明。|
+- When the request is not processed successfully, the response body attributes are as follows:
 
-服务提供的操作如下：
+    | Name | Type | Description |
+    |------|------|-------------|
+    |`errorCode`|`integer`|Error code. Same as the response status code.|
+    |`errorMsg`|`string`|Error message.|
+
+Operations provided by the service:
 
 - **`infer`**
 
-    对时序数据进行分类。
+    Classify time-series data.
 
     `POST /time-series-classification`
 
-    - 请求体的属性如下：
+    - The request body attributes are as follows:
 
-        |名称|类型|含义|是否必填|
-        |-|-|-|-|
-        |`csv`|`string`|服务可访问的CSV文件的URL或CSV文件内容的Base64编码结果。CSV文件需要使用UTF-8编码。|是|
+        | Name | Type | Description | Required |
+        |------|------|-------------|----------|
+        |`csv`|`string`|The URL of a CSV file accessible by the service or the Base64 encoded result of the CSV file content. The CSV file must be encoded in UTF-8.|Yes|
 
-    - 请求处理成功时，响应体的`result`具有如下属性：
+    - When the request is processed successfully, the `result` in the response body has the following attributes:
 
-        |名称|类型|含义|
-        |-|-|-|
-        |`label`|`string`|类别标签。|
-        |`score`|`number`|类别得分。|
+        | Name | Type | Description |
+        |------|------|-------------|
+        |`label`|`string`|Class label.|
+        |`score`|`number`|Class score.|
 
-        `result`示例如下：
+        An example of `result` is as follows:
 
         ```json
         {
@@ -212,39 +212,36 @@ Below are the API references and multi-language service invocation examples:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>  
+<summary>Multilingual Service Invocation Examples</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import requests
 
-API_URL = "http://localhost:8080/time-series-classification" # 服务URL
+API_URL = "http://localhost:8080/time-series-classification"
 csv_path = "./test.csv"
 
-# 对本地图像进行Base64编码
 with open(csv_path, "rb") as file:
     csv_bytes = file.read()
     csv_data = base64.b64encode(csv_bytes).decode("ascii")
 
 payload = {"csv": csv_data}
 
-# 调用API
 response = requests.post(API_URL, json=payload)
 
-# 处理接口返回数据
 assert response.status_code == 200
 result = response.json()["result"]
 print(f"label: {result['label']}, score: {result['score']}")
 ```
-  
+
 </details>
 
-<details>  
-<summary>C++</summary>  
-  
+<details>
+<summary>C++</summary>
+
 ```cpp
 #include <iostream>
 #include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
@@ -259,7 +256,6 @@ int main() {
         {"Content-Type", "application/json"}
     };
 
-    // 进行Base64编码
     std::ifstream file(csvPath, std::ios::binary | std::ios::ate);
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
@@ -276,9 +272,7 @@ int main() {
     jsonObj["csv"] = encodedCsv;
     std::string body = jsonObj.dump();
 
-    // 调用API
     auto response = client.Post("/time-series-classification", headers, body, "application/json");
-    // 处理接口返回数据
     if (response && response->status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
         auto result = jsonResponse["result"];
@@ -292,12 +286,12 @@ int main() {
     return 0;
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Java</summary>  
-  
+<details>
+<summary>Java</summary>
+
 ```java
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -314,7 +308,6 @@ public class Main {
         String API_URL = "http://localhost:8080/time-series-classification";
         String csvPath = "./test.csv";
 
-        // 对本地csv进行Base64编码
         File file = new File(csvPath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
         String csvData = Base64.getEncoder().encodeToString(fileContent);
@@ -323,7 +316,6 @@ public class Main {
         ObjectNode params = objectMapper.createObjectNode();
         params.put("csv", csvData);
 
-        // 创建 OkHttpClient 实例
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
@@ -332,7 +324,6 @@ public class Main {
                 .post(body)
                 .build();
 
-        // 调用API并处理接口返回数据
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
@@ -346,86 +337,83 @@ public class Main {
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Go</summary>  
-  
+<details>
+<summary>Go</summary>
+
 ```go
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-	API_URL := "http://localhost:8080/time-series-classification"
-	csvPath := "./test.csv";
+    API_URL := "http://localhost:8080/time-series-classification"
+    csvPath := "./test.csv";
 
-	// 读取csv文件并进行Base64编码
-	csvBytes, err := ioutil.ReadFile(csvPath)
-	if err != nil {
-		fmt.Println("Error reading csv file:", err)
-		return
-	}
-	csvData := base64.StdEncoding.EncodeToString(csvBytes)
+    csvBytes, err := ioutil.ReadFile(csvPath)
+    if err != nil {
+        fmt.Println("Error reading csv file:", err)
+        return
+    }
+    csvData := base64.StdEncoding.EncodeToString(csvBytes)
 
-	payload := map[string]string{"csv": csvData} // Base64编码的文件内容
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Println("Error marshaling payload:", err)
-		return
-	}
+    payload := map[string]string{"csv": csvData}
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Println("Error marshaling payload:", err)
+        return
+    }
 
-	// 调用API
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Println("Error creating request:", err)
+        return
+    }
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
-	}
-	defer res.Body.Close()
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Println("Error sending request:", err)
+        return
+    }
+    defer res.Body.Close()
 
-	// 处理返回数据
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
-	}
-	type Response struct {
-		Result struct {
-			Label string `json:"label"`
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println("Error reading response body:", err)
+        return
+    }
+    type Response struct {
+        Result struct {
+            Label string `json:"label"`
             Score string `json:"score"`
-		} `json:"result"`
-	}
-	var respData Response
-	err = json.Unmarshal([]byte(string(body)), &respData)
-	if err != nil {
-		fmt.Println("Error unmarshaling response body:", err)
-		return
-	}
+        } `json:"result"`
+    }
+    var respData Response
+    err = json.Unmarshal([]byte(string(body)), &respData)
+    if err != nil {
+        fmt.Println("Error unmarshaling response body:", err)
+        return
+    }
 
-	fmt.Printf("label: %s, score: %s\n", respData.Result.Label, respData.Result.Score)
+    fmt.Printf("label: %s, score: %s\n", respData.Result.Label, respData.Result.Score)
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>C#</summary>  
-  
+<details>
+<summary>C#</summary>
+
 ```csharp
 using System;
 using System.IO;
@@ -444,18 +432,15 @@ class Program
     {
         var httpClient = new HttpClient();
 
-        // 对本地csv文件进行Base64编码
         byte[] csveBytes = File.ReadAllBytes(csvPath);
         string csvData = Convert.ToBase64String(csveBytes);
 
-        var payload = new JObject{ { "csv", csvData } }; // Base64编码的文件内容
+        var payload = new JObject{ { "csv", csvData } };
         var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
-        // 调用API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
         response.EnsureSuccessStatusCode();
 
-        // 处理接口返回数据
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
@@ -465,12 +450,12 @@ class Program
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Node.js</summary>  
-  
+<details>
+<summary>Node.js</summary>
+
 ```js
 const axios = require('axios');
 const fs = require('fs');
@@ -483,11 +468,10 @@ let config = {
    maxBodyLength: Infinity,
    url: API_URL,
    data: JSON.stringify({
-    'csv': encodeFileToBase64(csvPath)  // Base64编码的文件内容
+    'csv': encodeFileToBase64(csvPath)
   })
 };
 
-// 读取csv文件并转换为Base64
 function encodeFileToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
   return Buffer.from(bitmap).toString('base64');
@@ -502,23 +486,21 @@ axios.request(config)
   console.log(error);
 });
 ```
-  
+
 </details>
 
-<details>  
-<summary>PHP</summary>  
-  
+<details>
+<summary>PHP</summary>
+
 ```php
 <?php
 
-$API_URL = "http://localhost:8080/time-series-classification"; // 服务URL
+$API_URL = "http://localhost:8080/time-series-classification";
 $csv_path = "./test.csv";
 
-// 对本地csv文件进行Base64编码
 $csv_data = base64_encode(file_get_contents($csv_path));
-$payload = array("csv" => $csv_data); // Base64编码的文件内容
+$payload = array("csv" => $csv_data);
 
-// 调用API
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
@@ -526,13 +508,12 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
 
-// 处理接口返回数据
 $result = json_decode($response, true)["result"];
 echo "label: " . $result["label"] . ", score: " . $result["score"];
 
 ?>
 ```
-  
+
 </details>
 </details>
 <br/>
