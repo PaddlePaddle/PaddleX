@@ -7,7 +7,7 @@ The primary purpose of Text Image Unwarping is to perform geometric transformati
 
 |Model Name|MS-SSIM （%）|Model Size (M)| information|
 |-|-|-|-|
-|UVDoc |54.4|31 M|High-precision Text Image Unwarping Model|
+|UVDoc |54.40|30.3 M|High-precision Text Image Unwarping Model|
 
 
 **The accuracy metrics of the above models are measured on the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html) dataset.**
