@@ -344,7 +344,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 ### 🛠️ Installation
 
-> ❗Please ensure you have a basic Python runtime environment before installing PaddleX.
+> ❗Please ensure you have a basic **Python runtime environment** before installing PaddleX.
 
 * **Installing PaddlePaddle**
 ```bash
@@ -352,21 +352,20 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 python -m pip install paddlepaddle
 
 # gpu, this command is only applicable to machines with CUDA version 11.8
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/ 
 
 # gpu, this command is only applicable to machines with CUDA version 12.3
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/ 
 ```
+> ❗For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html). 
 
 * **Installing PaddleX**
 
 ```bash
-git clone https://github.com/PaddlePaddle/PaddleX.git 
-cd PaddleX
-pip install -e .
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl 
 ```
 
-For more installation methods, please refer to the [PaddleX Installation Guide](/docs_new_en/installation/installation_en.md)
+> ❗For more installation methods, refer to the [PaddleX Installation Guide](/docs_new_en/installation/installation_en.md).
 
 
 ### 💻 CLI Usage
