@@ -35,7 +35,7 @@
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td>286.0 M</td>
+    <td>286.5 M</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
