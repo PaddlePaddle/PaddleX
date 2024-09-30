@@ -125,7 +125,11 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 
 </details>
 
+<<<<<<< HEAD
 #### 2.2.2  Python Script Integration
+=======
+#### 2.2.2 Integration via Python Script
+>>>>>>> f7c64579d1846fde6c6a63dca09af1cfb51f469b
 * Quickly perform inference on the production line with just a few lines of code, taking the general OCR production line as an example:
 
 ```python
@@ -749,4 +753,8 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
 
+<<<<<<< HEAD
 If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+=======
+If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../installation/installation_other_devices_en.md).
+>>>>>>> f7c64579d1846fde6c6a63dca09af1cfb51f469b

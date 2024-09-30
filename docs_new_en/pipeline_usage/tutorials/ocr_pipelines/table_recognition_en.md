@@ -77,9 +77,15 @@ You can [experience online](https://aistudio.baidu.com/community/app/91661/webUI
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the models in the pipeline online**.
 
 ### 2.2 Local Experience
+<<<<<<< HEAD
 Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 #### 2.1.1 Command Line Experience
+=======
+Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation.md).
+
+### 2.1 Command Line Experience
+>>>>>>> f7c64579d1846fde6c6a63dca09af1cfb51f469b
 Experience the effects of the table recognition pipeline with a single command:
 
 Experience the image anomaly detection pipeline with a single command，Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with the local path to perform prediction.
@@ -126,7 +132,11 @@ After running, the result is:
 
 The visualized image is saved in the `output` directory by default, and you can customize it with `--save_path`.
 
+<<<<<<< HEAD
 #### 2.2.2 Python Script Integration
+=======
+### 2.2 Python Script Integration
+>>>>>>> f7c64579d1846fde6c6a63dca09af1cfb51f469b
 A few lines of code are all you need to quickly perform inference with the pipeline. Taking the General Table Recognition pipeline as an example:
 
 ```python
@@ -194,9 +204,15 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
+<<<<<<< HEAD
 🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
+=======
+🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy.md).
+
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.md).
+>>>>>>> f7c64579d1846fde6c6a63dca09af1cfb51f469b
 
 Below are the API references and multi-language service invocation examples:
 
