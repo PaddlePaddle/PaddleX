@@ -8,7 +8,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mloU（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
 |Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|

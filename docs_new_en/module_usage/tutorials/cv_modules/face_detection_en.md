@@ -8,7 +8,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | mAP（%）| GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mAP（%）| GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PicoDet_LCNet_x2_5_face | 35.8 | 33.7 | 537.0 | 28.9 | Face detection model based on PicoDet_LCNet_x2_5 |
 

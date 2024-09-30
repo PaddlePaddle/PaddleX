@@ -14,7 +14,7 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
     <th>mAP(0.5:0.95)</th>
     <th>mAP(0.5)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>

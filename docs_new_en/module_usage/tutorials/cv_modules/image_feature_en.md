@@ -13,7 +13,7 @@ The image feature module is one of the important tasks in computer vision, prima
     <th>Model</th>
     <th>Recall@1 (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>

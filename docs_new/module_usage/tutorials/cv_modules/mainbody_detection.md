@@ -14,7 +14,7 @@
     <th>mAP(0.5:0.95)</th>
     <th>mAP(0.5)</th>
     <th>GPU推理耗时（ms）</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时 (ms)</th>
     <th>模型存储大小（M）</th>
     <th>介绍</th>
   </tr>

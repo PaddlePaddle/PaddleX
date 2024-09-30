@@ -14,7 +14,7 @@ Human detection is a subtask of object detection, which utilizes computer vision
     <th >mAP(0.5:0.95)</th>
     <th >mAP(0.5)</th>
     <th >GPU Inference Time (ms)</th>
-    <th >CPU Inference Time</th>
+    <th >CPU Inference Time (ms)</th>
     <th >Model Size (M)</th>
     <th >Description</th>
   </tr>

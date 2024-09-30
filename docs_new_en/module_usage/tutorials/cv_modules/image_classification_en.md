@@ -12,7 +12,7 @@ The image classification module is a crucial component in computer vision system
     <th>Model</th>
     <th>Top-1 Accuracy (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>

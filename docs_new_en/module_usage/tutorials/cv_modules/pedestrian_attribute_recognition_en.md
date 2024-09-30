@@ -10,7 +10,7 @@ Pedestrian attribute recognition is a crucial component in computer vision syste
 <details>
    <summary> 👉 Model List Details</summary>
 
-| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_pedestrian_attribute | 92.2 |3.84845 | 9.23735| 6.7M | PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories |
 
