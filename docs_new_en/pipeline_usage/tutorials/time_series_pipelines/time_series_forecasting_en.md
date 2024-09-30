@@ -45,7 +45,7 @@ Experience the time series forecasting pipeline with a single command:
 Experience the image anomaly detection pipeline with a single command，Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv), and replace `--input` with the local path to perform prediction.
 
 ```bash
-paddlex --pipeline fs_fc --input ts_fc.csv --device gpu:0
+paddlex --pipeline ts_fc --input ts_fc.csv --device gpu:0
 ```
 Parameter Explanation:
 
@@ -100,7 +100,7 @@ A few lines of code can complete the quick inference of the production line. Tak
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="fs_fc")
+pipeline = create_pipeline(pipeline="ts_fc")
 
 output = pipeline.predict("ts_fc.csv")
 for res in output:
@@ -194,11 +194,11 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for inference with the time series forecasting pipeline, the Python command would be:
 
 ```bash
-paddlex --pipeline fs_fc --input ts_fc.csv --device gpu:0
+paddlex --pipeline ts_fc --input ts_fc.csv --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline fs_fc --input ts_fc.csv --device npu:0
+paddlex --pipeline ts_fc --input ts_fc.csv --device npu:0
 ```
 If you want to use the General Time Series Forecasting Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).

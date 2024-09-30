@@ -114,7 +114,7 @@ In the above Python script, the following steps are executed:
 |----------------|-------------|
 | Python Var | Supports directly passing Python variables, such as numpy.ndarray representing image data. |
 | `str` | Supports passing the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`. |
-| `str` | Supports passing the URL of the file to be predicted, such as the network URL of an image file: [Example](ts_cls.csv). |
+| `str` | Supports passing the URL of the file to be predicted, such as the network URL of an image file: [Example](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv). |
 | `str` | Supports passing a local directory, which should contain files to be predicted, such as the local path: `/root/data/`. |
 | `dict` | Supports passing a dictionary type, where the key needs to correspond to the specific task, e.g., "img" for image classification tasks, and the value of the dictionary supports the above data types, e.g., `{"img": "/root/data1"}`. |
 | `list` | Supports passing a list, where the list elements need to be of the above types, such as `[numpy.ndarray, numpy.ndarray]`, `["/root/data/img1.jpg", "/root/data/img2.jpg"]`, `["/root/data1", "/root/data2"]`, `[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`. |
