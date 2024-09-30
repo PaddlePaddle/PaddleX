@@ -185,14 +185,18 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   </tr>
 
   <tr>
-    <td rowspan="4">通用表格识别</td>
+    <td rowspan="5">通用表格识别</td>
     <td>版面区域检测</td>
     <td>PicoDet_layout_1x</td>
   </tr>
 
   <tr>
-    <td>表格识别</td>
+    <td rowspan="2">表格识别</td>
     <td>SLANet</td>
+  </tr>
+
+  <tr>
+    <td>SLANet_plus</td>
   </tr>
 
   <tr>
