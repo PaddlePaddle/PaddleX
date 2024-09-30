@@ -677,7 +677,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="image_classification")
 
-output = pipeline.predict("/path/to/your/image")
+output = pipeline.predict("/path/to/image")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存结果可视化图像
@@ -723,7 +723,7 @@ for res in output:
 ```
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/image_classification.yaml")
-output = pipeline.predict("/path/to/your/image")
+output = pipeline.predict("/path/to/image")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存结果可视化图像
