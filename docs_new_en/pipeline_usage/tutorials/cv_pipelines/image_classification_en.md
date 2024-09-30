@@ -1212,7 +1212,7 @@ You can choose the appropriate deployment method for your model pipeline based o
 If the default model weights provided by the general image classification pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **data from your specific domain or application scenario** to improve the recognition performance of the general image classification pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general image classification pipeline includes an image classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/image_classification_en.md#四二次开发) section in the [Image Classification Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_classification_en.md) and use your private dataset to fine-tune the image classification model.
+Since the general image classification pipeline includes an image classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/image_classification_en.md#iv-custom-development) section in the [Image Classification Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_classification_en.md) and use your private dataset to fine-tune the image classification model.
 
 ### 4.2 Model Application
 After you have completed fine-tuning training using your private dataset, you will obtain local model weight files.
