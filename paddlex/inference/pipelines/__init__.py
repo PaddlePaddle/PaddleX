@@ -59,6 +59,7 @@ def create_pipeline(
             raise Exception(
                 f"The pipeline({pipeline}) don't exist! Please use the pipeline name or config yaml file!"
             )
+    pipeline_path = pipeline
     config = parse_config(pipeline_path)
     pipeline_name = config["Global"]["pipeline_name"]
     pipeline_setting = config["Pipeline"]
