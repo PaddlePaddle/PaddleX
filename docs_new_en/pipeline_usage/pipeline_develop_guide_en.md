@@ -1,6 +1,6 @@
 # Overview of PaddleX Model Pipeline Usage
 
-If you have already experienced the pre-trained model pipeline effects in PaddleX and wish to proceed directly with model fine-tuning, you can jump to [Model Selection](）.
+If you have already experienced the pre-trained model pipeline effects in PaddleX and wish to proceed directly with model fine-tuning, you can jump to [Model Selection](# ).
 
 The complete PaddleX model pipeline development process is illustrated in the following diagram:
 
